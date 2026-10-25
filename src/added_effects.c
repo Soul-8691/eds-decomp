@@ -972,6 +972,54 @@ int EffectMysticSwordsmanLv2Resolve(struct ChainEntry *link, struct ChainEntry *
 }
 #endif /* HAS_CARD_MYSTIC_SWORDSMAN_LV2 && HAS_CARD_MYSTIC_SWORDSMAN_LV4 */
 
+#ifdef HAS_CARD_LIGHTNING_VORTEX
+/* ---- Lightning Vortex ----------------------------------------------------------------------------------------------
+ * Normal Spell: "Discard 1 card; destroy all face-up monsters your opponent controls."
+ * Prepare: a card to discard (2 in hand when played from the hand) and a face-up monster on the opponent's side.
+ * ChainA: the discard cost of Magic Jammer / Tribe-Infecting Virus (DuelPrompt_PostDiscardCost). Resolve: no target;
+ * every face-up monster the opponent controls then is destroyed (DestroyFieldCard + OnCardDestroyedByEffect). */
+
+static int CountOpponentFaceUpMonsters(int player)
+{
+    int zone, n = 0;
+
+    for (zone = ZONE_MONSTER_0; zone <= ZONE_MONSTER_4; zone++) {
+        struct DuelZone *z = ZoneOf(1 - player, zone);
+        if (DUEL_CARD_ID(&z->card) != 0 && z->isFaceUp)
+            n++;
+    }
+    return n;
+}
+
+int EffectLightningVortexPrepare(struct ChainEntry *card, struct ChainEntry *chainLink, u16 fromHand)
+{
+    return gDuelPlayers[card->player & 1].handCount >= 1 + fromHand && CountOpponentFaceUpMonsters(card->player) > 0;
+}
+
+int EffectLightningVortexChainA(struct ChainEntry *link, struct ChainEntry *prevLink)
+{
+    DuelPrompt_PostDiscardCost(link->player, 1, 0, 0);
+    return 1;
+}
+
+int EffectLightningVortexResolve(struct ChainEntry *link, struct ChainEntry *chainedTo)
+{
+    int opponent = 1 - link->player;
+    int zone;
+
+    if (link->negated)
+        return EFFECT_STEP_DONE;
+    for (zone = ZONE_MONSTER_0; zone <= ZONE_MONSTER_4; zone++) {
+        struct DuelZone *z = ZoneOf(opponent, zone);
+        if (DUEL_CARD_ID(&z->card) != 0 && z->isFaceUp) {
+            DestroyFieldCard(opponent, zone, 1);
+            OnCardDestroyedByEffect(link->player, opponent, zone);
+        }
+    }
+    return EFFECT_STEP_DONE;
+}
+#endif /* HAS_CARD_LIGHTNING_VORTEX */
+
 #ifdef HAS_CARD_DON_ZALOOG
 /* ---- Don Zaloog ----------------------------------------------------------------------------------------------------
  * "When this card inflicts battle damage to your opponent: You can activate 1 of these effects.
@@ -1845,6 +1893,16 @@ const struct CardEffect gAddedCardEffects[] = {
         NULL,
         NULL,
         NULL,
+        NULL,
+    },
+#endif
+#ifdef HAS_CARD_LIGHTNING_VORTEX
+    {
+        CARD_LIGHTNING_VORTEX, 0,
+        EffectLightningVortexResolve,
+        NULL,
+        EffectLightningVortexPrepare,
+        EffectLightningVortexChainA,
         NULL,
     },
 #endif

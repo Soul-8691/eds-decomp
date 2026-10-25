@@ -211,6 +211,14 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
 - `HasFlipEffect` (card_detail.c).
 - Checked in the source; not tested in an emulator.
 
+### Lightning Vortex (2026-10-25)
+- Normal Spell: "Discard 1 card; destroy all face-up monsters your opponent controls."
+- **Prepare:** a card to discard (2 in hand when played from the hand) and a face-up monster on the opponent's side.
+- **ChainA:** the discard cost `DuelPrompt_PostDiscardCost`.
+- **Resolve:** no target. Every face-up monster the opponent then controls is destroyed (`DestroyFieldCard` +
+  `OnCardDestroyedByEffect`, as Tribe-Infecting Virus does); face-down monsters stay.
+- Checked in the source and the build; not tested in an emulator.
+
 ### Don Zaloog (2026-10-25)
 - "When this card inflicts battle damage to your opponent: You can activate 1 of these effects. Discard 1 random
   card from your opponent's hand; or send the top 2 cards of your opponent's Deck to the GY."

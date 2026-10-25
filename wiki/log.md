@@ -1146,3 +1146,8 @@ updated: 2026-09-29
   decides (CPU): a random discard (DuelPrompt_PostRandomDiscard), or the top 2 Deck cards to the Graveyard.
 - Noted: Chain_Build does not call prepare handlers for pending triggers.
 - Pages: [[added-cards]].
+
+## [2026-10-25] progress | Lightning Vortex
+- Normal Spell: discard cost (DuelPrompt_PostDiscardCost), then every face-up monster the opponent controls is
+  destroyed.
+- Pages: [[added-cards]].
