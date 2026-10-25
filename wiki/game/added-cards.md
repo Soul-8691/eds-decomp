@@ -188,6 +188,18 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
   `EffectTargetableFaceUpMonsterChainB`) and banishes it; Chaos Sorcerer cannot attack that turn
   (`EffectBanishTargetNoAttackResolve`, shared with BLS's banish effect).
 
+### Exiled Force (2026-10-25)
+- **Effect.** "You can Tribute this card, then target 1 monster on the field; destroy that target." Main Phase
+  ACTIVATE from the card menu (CanActivateMonsterEffect), with no once-per-turn flag. `EffectExiledForcePrepare`
+  needs the card face up in its zone and another monster on the field.
+- **Target.** Man-Eater Bug's `EffectTargetableMonsterChainB`, wrapped by `EffectExiledForceChainB`. The pick goes
+  through `TryAddEffectTarget`, which does not consult the row's check, so the wrapper itself refuses Exiled Force
+  (an error sound, and the cursor stays). `EffectExiledForceCheck` refuses it too, for CanActivateEffect.
+- **Cost.** `TributeMonster` is called in the chainB wrapper once the target is set, not in chainA. The target step
+  runs `CanActivateEffect` again, and the prepare handler would fail once the card had left its zone. A responder
+  still sees the card Tributed before the effect resolves. Resolve: `EffectDestroyTargetResolve`.
+- Checked in the source and the build; not tested in an emulator.
+
 ### Dekoichi the Battlechanted Locomotive (2026-10-25)
 A flip effect (added to `HasFlipEffect`). It draws 1 card (`DrawCards`), plus 1 per "Bokoichi the Freightening Car" its
 controller has. Bokoichi counts only if it is added to `config/new_cards.txt` (`HAS_CARD_` guard); it is not now.

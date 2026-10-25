@@ -1002,3 +1002,9 @@ updated: 2026-09-29
 - Fix: DetachRevivingCards (src/added_effects.c, farcode) runs in BanishFieldCard and BanishBattleDestroyedCard
   before DestroyLinkedCards. It removes the link and destroys the reviving card itself.
 - Pages: [[added-cards]].
+
+## [2026-10-25] progress | Exiled Force
+- Effect: Main Phase ACTIVATE (CanActivateMonsterEffect). It targets any other monster (EffectTargetableMonsterChainB
+  through a wrapper that refuses itself), pays the Tribute once the target is chosen, and resolves with
+  EffectDestroyTargetResolve.
+- Pages: [[added-cards]].

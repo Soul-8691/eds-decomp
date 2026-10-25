@@ -99,6 +99,10 @@ int EffectBlackLusterSoldierResolve(struct ChainEntry *link, struct ChainEntry *
 int EffectBanishTargetNoAttackResolve(struct ChainEntry *link, struct ChainEntry *chainedTo);
 /* Chaos Sorcerer: banish a face-up monster (Main Phase, once per turn). */
 int EffectChaosSorcererPrepare(struct ChainEntry *card, struct ChainEntry *chainLink, u16 fromHand);
+int EffectExiledForcePrepare(struct ChainEntry *card, struct ChainEntry *chainLink, u16 fromHand);
+u16 EffectExiledForceCheck(struct ChainEntry *card, u16 pos);
+int EffectExiledForceChainB(struct ChainEntry *link, struct ChainEntry *prevLink);
+int EffectExiledForceResolve(struct ChainEntry *link, struct ChainEntry *chainedTo);
 /* Tribe-Infecting Virus: discard 1, declare a type, destroy every face-up monster of it (once per turn). */
 int EffectTribeInfectingVirusPrepare(struct ChainEntry *card, struct ChainEntry *chainLink, u16 fromHand);
 int EffectTribeInfectingVirusChainA(struct ChainEntry *link, struct ChainEntry *prevLink);

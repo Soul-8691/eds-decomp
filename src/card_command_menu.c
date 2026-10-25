@@ -494,6 +494,9 @@ int CanActivateMonsterEffect(u16 id, int player, int zone)
 #ifdef HAS_CARD_TRIBE_INFECTING_VIRUS
     case CARD_TRIBE_INFECTING_VIRUS:                        /* added card (src/added_effects.c) */
 #endif
+#ifdef HAS_CARD_EXILED_FORCE
+    case CARD_EXILED_FORCE:                                 /* added card (src/added_effects.c) */
+#endif
     case CARD_1430:
     case CARD_1432:
     case CARD_1433:

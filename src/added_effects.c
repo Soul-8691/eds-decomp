@@ -447,6 +447,60 @@ int EffectDekoichiResolve(struct ChainEntry *link, struct ChainEntry *chainedTo)
 }
 #endif /* HAS_CARD_DEKOICHI_THE_BATTLECHANTED_LOCOMOTIVE */
 
+#ifdef HAS_CARD_EXILED_FORCE
+/* ---- Exiled Force ------------------------------------------------------------------------------------------------
+ * "You can Tribute this card, then target 1 monster on the field; destroy that target."
+ * The card menu's ACTIVATE in the Main Phase (CanActivateMonsterEffect), with no once-per-turn limit: the card is
+ * gone once used. The target is any other monster (Man-Eater Bug's EffectTargetableMonsterChainB, with a wrapper that
+ * refuses Exiled Force itself). The Tribute is paid when the target is chosen rather than in chainA: the target step
+ * calls CanActivateEffect, and the prepare handler fails once the card has left its zone. The destruction is
+ * EffectDestroyTargetResolve's. */
+
+static inline int IsExiledForceHere(struct ChainEntry *card)
+{
+    struct DuelZone *z = ZoneOf(card->player, card->zone);
+    return z->isFaceUp && DUEL_CARD_ID(&z->card) == (card->card & CARD_ID_MASK);
+}
+
+int EffectExiledForcePrepare(struct ChainEntry *card, struct ChainEntry *chainLink, u16 fromHand)
+{
+    if (fromHand || card->event != RESPONSE_NONE || !IsExiledForceHere(card))
+        return 0;
+    return CountMonsters(0) + CountMonsters(1) > 1;     /* a monster besides Exiled Force */
+}
+
+/* Any monster but Exiled Force itself. */
+u16 EffectExiledForceCheck(struct ChainEntry *card, u16 pos)
+{
+    if (pos == DUEL_LOC(card->player, card->zone))
+        return 0;
+    return EffectTargetableMonsterCheck(card, pos);
+}
+
+int EffectExiledForceChainB(struct ChainEntry *link, struct ChainEntry *prevLink)
+{
+    if (!EffectTargetableMonsterChainB(link, (int)prevLink))
+        return 0;
+    if (link->numTargets == 1 && link->targets[0] == DUEL_LOC(link->player, link->zone)) {
+        link->numTargets = 0;
+        if (!link->player) {
+            /* the human picked Exiled Force: stay on the cursor */
+            PlaySE(SE_ERROR);
+            return 0;
+        }
+        return 1;               /* the CPU found no other target: the effect does nothing */
+    }
+    if (link->numTargets == 1)
+        TributeMonster(link->player, link->zone);
+    return 1;
+}
+
+int EffectExiledForceResolve(struct ChainEntry *link, struct ChainEntry *chainedTo)
+{
+    return EffectDestroyTargetResolve(link);
+}
+#endif /* HAS_CARD_EXILED_FORCE */
+
 /* ---- "Gravekeeper's" cards -----------------------------------------------------------------------------------
  * 1 if the card's name starts with "Gravekeeper's" (the archetype the Gravekeeper's cards refer to). */
 static const char sGravekeeperPrefix[] = "Gravekeeper's";
@@ -493,6 +547,16 @@ const struct CardEffect gAddedCardEffects[] = {
         EffectBlackLusterSoldierPrepare,
         NULL,
         EffectBlackLusterSoldierChainB,
+    },
+#endif
+#ifdef HAS_CARD_EXILED_FORCE
+    {
+        CARD_EXILED_FORCE, 0,
+        EffectExiledForceResolve,
+        EffectExiledForceCheck,
+        EffectExiledForcePrepare,
+        NULL,
+        EffectExiledForceChainB,
     },
 #endif
 #ifdef HAS_CARD_CHAOS_SORCERER

@@ -118,8 +118,8 @@ int BuildModStarterDeck(int choice)
 
     if (choice != STARTER_DECK_RED)
         return 0;
-    for (i = 0; i < ARRAY_COUNT(sRedStarterDeck); i++)
-        AddCardToSavedDeck(gCardNumberToId[sRedStarterDeck[i] & CARD_ID_MASK]);
+    // for (i = 0; i < ARRAY_COUNT(sRedStarterDeck); i++)
+    //     AddCardToSavedDeck(gCardNumberToId[sRedStarterDeck[i] & CARD_ID_MASK]);
     return 1;
 }
 #else
