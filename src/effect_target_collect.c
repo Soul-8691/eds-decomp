@@ -138,9 +138,9 @@ struct DuelCardPile {
  * the table through a volatile pointer so that each use loads again: the ROM does not share the repeated
  * lookups in most cases (the Nv helpers below are the cases where it does).
  */
-#define CARD_STATS_VOLATILE(id)     (((volatile const u32 *)0x08621DE0)[(id) & CARD_ID_MASK])
-#define CARD_STATS(id)              (((const u32 *)0x08621DE0)[(id) & CARD_ID_MASK])
-#define CARD_NUMBER(id)             (((const u16 *)0x08622AB4)[(id) & CARD_ID_MASK])
+#define CARD_STATS_VOLATILE(id)     (((volatile const u32 *)CARD_STATS_ADDR)[(id) & CARD_ID_MASK])
+#define CARD_STATS(id)              (((const u32 *)CARD_STATS_ADDR)[(id) & CARD_ID_MASK])
+#define CARD_NUMBER(id)             (((const u16 *)CARD_ID_TO_NUMBER_ADDR)[(id) & CARD_ID_MASK])
 
 /*
  * Stat helpers for the target filters. The variants differ only in the integer width of the parameter and

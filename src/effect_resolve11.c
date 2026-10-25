@@ -74,8 +74,8 @@ extern void ShowActivatedCardInt(int player, int cardId) asm("ShowActivatedCard"
 
 /* gCardStats (0x08621DE0) and gCardIdToNumber (0x08622AB4) through integer-constant addresses. Matching: the
  * ROM reloads the table address at each use, which the symbols do not give. */
-#define CARD_STATS(id) (((const u32 *)0x08621DE0)[(id) & CARD_ID_MASK])
-#define CARD_NUMBER(id) (((const u16 *)0x08622AB4)[(id) & CARD_ID_MASK])
+#define CARD_STATS(id) (((const u32 *)CARD_STATS_ADDR)[(id) & CARD_ID_MASK])
+#define CARD_NUMBER(id) (((const u16 *)CARD_ID_TO_NUMBER_ADDR)[(id) & CARD_ID_MASK])
 #define CARD_TYPE(id) CARD_STATS_TYPE(CARD_STATS(id))     /* enum CardType; <= 20 is a monster */
 
 /* &gDuelZones[player].zones[zone] by byte arithmetic. Matching: the ROM adds the zone term, then the player

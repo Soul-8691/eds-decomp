@@ -47,7 +47,10 @@ SECTIONS
 {chr(10).join(text)}
     }} =0
 
-    .rodata :
+    /* The data keeps its original addresses: its tables hold absolute pointers to each other. The code may
+       change size (function pointers in the tables are fixed up by tools/fixptrs.py), but not past here. */
+    ASSERT(. <= 0x08080A20, "the code has grown into the data at 0x08080A20")
+    .rodata 0x08080A20 :
     {{
 {chr(10).join(rodata)}
     }} =0

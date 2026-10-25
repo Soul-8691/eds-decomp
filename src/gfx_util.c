@@ -341,8 +341,8 @@ void UnpackCardArt8bpp(u16 cardId, u32 dst, u16 page)
     u32 lim;
     u16 m6, m12;
 
-    MemCopy16((void *)(PLTT + (pal >> 4) * 0x20), (const void *)(0x08608360 + cardId * 0x80), 0x80);
-    src = (const u16 *)(0x082A6500 + cardId * 0x10E0);
+    MemCopy16((void *)(PLTT + (pal >> 4) * 0x20), (const void *)(CARD_ART_PALETTES_ADDR + cardId * 0x80), 0x80);
+    src = (const u16 *)(CARD_ART_GFX_ADDR + cardId * 0x10E0);
     out = (u16 *)dst;
     m6 = 0x3F;
     m12 = 0xFC0;

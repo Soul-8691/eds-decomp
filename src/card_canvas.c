@@ -37,8 +37,8 @@
 /* Matching: the card tables through their integer addresses, not the card_data.h symbols: GCC reloads the
  * table address at every use instead of keeping it in a register; the symbol forms give different code
  * (include/card_data.h). Each macro names the table it reads. */
-#define CARD_STATS_WORD(id)     (((const u32 *)0x08621DE0)[(id) & CARD_ID_MASK])   /* gCardStats[id] */
-#define CARD_NUMBER(id)         (((const u16 *)0x08622AB4)[(id) & CARD_ID_MASK])   /* gCardIdToNumber[id] */
+#define CARD_STATS_WORD(id)     (((const u32 *)CARD_STATS_ADDR)[(id) & CARD_ID_MASK])   /* gCardStats[id] */
+#define CARD_NUMBER(id)         (((const u16 *)CARD_ID_TO_NUMBER_ADDR)[(id) & CARD_ID_MASK])   /* gCardIdToNumber[id] */
 #define CARD_ID_FROM_NUMBER(n)  (((const u16 *)0x08623DF4)[(n) & CARD_ID_MASK])    /* gCardNumberToId[n] */
 #define CARD_TYPE(id)           CARD_STATS_TYPE(CARD_STATS_WORD(id))                /* enum CardType of card id */
 #define CARD_KIND(id)           CARD_STATS_KIND(CARD_STATS_WORD(id))                /* monster kind (stats bits 18-19) */
@@ -211,10 +211,10 @@ void LoadCardPicture(u16 id)
     u16 *q;
     u16 m6, m12, c30;
 
-    src = (const u16 *)(0x08608360 + id * CARD_ART_PALETTE_SIZE);   /* gCardArtPalettes[id] */
+    src = (const u16 *)(CARD_ART_PALETTES_ADDR + id * CARD_ART_PALETTE_SIZE);   /* gCardArtPalettes[id] */
     dst = (u16 *)(OBJ_PLTT + 0x60);
     MemCopy16(dst, src, 0x80);
-    src = (const u16 *)(0x082A6500 + id * CARD_ART_SIZE);   /* gCardArtGfx[id] */
+    src = (const u16 *)(CARD_ART_GFX_ADDR + id * CARD_ART_SIZE);   /* gCardArtGfx[id] */
     /* m12 and c30 lose the register contest and are rematerialized by reload (ROM: movs/lsls
      * 0xFC0 into r7 in the pixel loop, 0x30 into r6 before the fix-up loop). */
     m12 = 0xFC0;

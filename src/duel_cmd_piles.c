@@ -41,8 +41,8 @@
  * Card tables read through integer-constant addresses. Matching: DuelCmd_ReturnGraveyardCardToHand only
  * matches with this form (card_data.h's symbols load the table address at another point).
  */
-#define CARD_NUMBER(id)     (((const u16 *)0x08622AB4)[(id) & CARD_ID_MASK])    /* gCardIdToNumber[id] */
-#define CARD_STATS_WORD(id) (((const u32 *)0x08621DE0)[(id) & CARD_ID_MASK])    /* gCardStats[id] */
+#define CARD_NUMBER(id)     (((const u16 *)CARD_ID_TO_NUMBER_ADDR)[(id) & CARD_ID_MASK])    /* gCardIdToNumber[id] */
+#define CARD_STATS_WORD(id) (((const u32 *)CARD_STATS_ADDR)[(id) & CARD_ID_MASK])    /* gCardStats[id] */
 
 /*
  * Card kind (enum CardKind) of a card ID, the frame the card is drawn with: the Egyptian God cards by

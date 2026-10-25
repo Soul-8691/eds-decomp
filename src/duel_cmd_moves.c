@@ -62,8 +62,8 @@ extern const u8 gJustAMomentBannerGfx[];    /* 64x32 4bpp "Just a moment" banner
  * 0x08621DE0 = gCardStats, 0x08622AB4 = gCardIdToNumber.
  */
 #define CARD_TYPE(id) \
-    ((((const u32 *)0x08621DE0)[(id) & CARD_ID_MASK] & CARD_STATS_TYPE_MASK) >> CARD_STATS_TYPE_SHIFT)
-#define CARD_NUMBER(id) (((const u16 *)0x08622AB4)[(id) & CARD_ID_MASK])
+    ((((const u32 *)CARD_STATS_ADDR)[(id) & CARD_ID_MASK] & CARD_STATS_TYPE_MASK) >> CARD_STATS_TYPE_SHIFT)
+#define CARD_NUMBER(id) (((const u16 *)CARD_ID_TO_NUMBER_ADDR)[(id) & CARD_ID_MASK])
 
 /* Sprite position argument of AddSprite*: y in the high halfword, x in the low one. */
 #define SPRITE_YX(x, y) (((y) << 16) | (x))

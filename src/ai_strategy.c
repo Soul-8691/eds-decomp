@@ -102,7 +102,7 @@ void QueueSpecialSummonFromHand(int player, int handIdx, int zone, int tributes,
 /* Use one literal-address view in both searches so their pool entry is shared. */
 static inline u16 StrategyCardNumber(u32 id)
 {
-    return ((const u16 *)0x08622AB4)[id & CARD_ID_MASK];    /* 0x08622AB4 = gCardIdToNumber */
+    return ((const u16 *)CARD_ID_TO_NUMBER_ADDR)[id & CARD_ID_MASK];    /* 0x08622AB4 = gCardIdToNumber */
 }
 
 #define STRATEGY_COMMIT() do { \
@@ -206,7 +206,7 @@ int AiStrategyValkyrion(void)
             asm("" : "+r"(players));
             bound=*(u8 *)((u32)players+countOffset);
             cards=(u32 *)((u32)players+off);
-            mask=CARD_ID_MASK; table=(const u16 *)0x08622AB4;
+            mask=CARD_ID_MASK; table=(const u16 *)CARD_ID_TO_NUMBER_ADDR;
             do {
               if(table[CARD_ID(*cards)&mask]==needle)goto queue;
               cards++; i++;
@@ -550,7 +550,7 @@ int AiStrategyDoubleMachineAtk(void)
     }
 }
 /* Value of a card for the "sacrifice the weakest" choice: 0 for type 0x15-0x17, 4000 for 0x18, else 10 * a 9-bit stats field. */
-#define CARD_STATS(id) (((const u32 *)0x08621DE0)[(id) & CARD_ID_MASK])   /* 0x08621DE0 = gCardStats */
+#define CARD_STATS(id) (((const u32 *)CARD_STATS_ADDR)[(id) & CARD_ID_MASK])   /* 0x08621DE0 = gCardStats */
 static inline int CardValue(u32 id)
 {
     int r;

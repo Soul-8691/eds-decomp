@@ -609,7 +609,7 @@ int DeckEdit_Update(void)
                         card = DeckEdit_GetListCardWide(gDeckEdit.curList, gDeckEdit.listRow[gDeckEdit.curList], gDeckEdit.listPos[gDeckEdit.curList]);
                         /* Matching: the card tables are read through their literal ROM addresses
                          * (gCardIdToNumber / gCardStats); the symbol forms allocate differently. */
-                        number = ((const u16 *)0x08622AB4)[card & CARD_ID_MASK];
+                        number = ((const u16 *)CARD_ID_TO_NUMBER_ADDR)[card & CARD_ID_MASK];
                         switch (number) {
                         case CARD_OBELISK_THE_TORMENTOR:
                             kind = CARD_KIND_RITUAL;
@@ -619,11 +619,11 @@ int DeckEdit_Update(void)
                             kind = CARD_KIND_EFFECT;
                             break;
                         default:
-                            switch ((int)((((const u32 *)0x08621DE0)[card & CARD_ID_MASK] & CARD_STATS_TYPE_MASK) >> CARD_STATS_TYPE_SHIFT)) {
+                            switch ((int)((((const u32 *)CARD_STATS_ADDR)[card & CARD_ID_MASK] & CARD_STATS_TYPE_MASK) >> CARD_STATS_TYPE_SHIFT)) {
                             case CARD_TYPE_MAGIC: kind = CARD_KIND_MAGIC; break;
                             case CARD_TYPE_TRAP: kind = CARD_KIND_TRAP; break;
                             case CARD_TYPE_TICKET: kind = CARD_KIND_TICKET; break;
-                            default: kind = (((const u32 *)0x08621DE0)[card & CARD_ID_MASK] & CARD_STATS_KIND_MASK) >> CARD_STATS_KIND_SHIFT; break;
+                            default: kind = (((const u32 *)CARD_STATS_ADDR)[card & CARD_ID_MASK] & CARD_STATS_KIND_MASK) >> CARD_STATS_KIND_SHIFT; break;
                             }
                         }
                         if (kind != CARD_KIND_FUSION) {

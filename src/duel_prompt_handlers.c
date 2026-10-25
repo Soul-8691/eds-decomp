@@ -95,9 +95,9 @@ extern const u8 gStrPromptSelectAnotherAttribute[];     /* "Select another @3Att
 
 /* Card number of a card ID through the integer address of gCardIdToNumber (0x08622AB4); the symbol gives other
  * code. */
-#define CARD_NUMBER_OF(id)      (((const u16 *)0x08622AB4)[(id) & CARD_ID_MASK])
+#define CARD_NUMBER_OF(id)      (((const u16 *)CARD_ID_TO_NUMBER_ADDR)[(id) & CARD_ID_MASK])
 /* gCardStats (0x08621DE0) by integer address, for the same reason. */
-#define CARD_STATS_OF(id)       (((const u32 *)0x08621DE0)[(id) & CARD_ID_MASK])
+#define CARD_STATS_OF(id)       (((const u32 *)CARD_STATS_ADDR)[(id) & CARD_ID_MASK])
 
 /* Matching: the random-pick handlers reach gDuel.promptStep from the base of gDuelPlayers (= &gDuel.players),
  * gDuelPlayers + 0x1B5E, and the player as gDuelPlayers + (player & 1) * sizeof(struct DuelPlayer). */

@@ -94,7 +94,7 @@ int AiRunTurnInt(void) asm("AiRunTurn");
 
 /* The card number (gCardIdToNumber) and the name record (gCardNames) of a card ID, through the tables' constant
  * addresses (the ROM loads the address as a literal instead of going through the symbol). */
-#define CARD_NUMBER_OF(id)  (((const u16 *)0x08622AB4)[(id) & CARD_ID_MASK])
+#define CARD_NUMBER_OF(id)  (((const u16 *)CARD_ID_TO_NUMBER_ADDR)[(id) & CARD_ID_MASK])
 #define CARD_NAME_OF(id)    ((const char *)0x0822C720 + ((id) << 6))
 
 /* gDuel.promptArgs[1] of a discard prompt (DuelPrompt_PostDiscard): bit 0 = only monsters may be discarded, bit 1 =
@@ -120,13 +120,13 @@ enum DiscardInputStep {
 #define CARD_TYPE_OF_SYM(id)    CARD_STATS_TYPE(*(gCardStats + ((id) & CARD_ID_MASK)))
 static inline int GetCardType(u16 cardId)
 {
-    return (((const u32 *)0x08621DE0)[cardId & CARD_ID_MASK] & CARD_STATS_TYPE_MASK) >> CARD_STATS_TYPE_SHIFT;
+    return (((const u32 *)CARD_STATS_ADDR)[cardId & CARD_ID_MASK] & CARD_STATS_TYPE_MASK) >> CARD_STATS_TYPE_SHIFT;
 }
 
 /* Magic/Trap subtype (enum SpellSubtype) of a card ID, 0 for any other card. */
 static inline int GetSpellSubtype(u16 cardId)
 {
-    u32 stats = ((const u32 *)0x08621DE0)[cardId & CARD_ID_MASK];
+    u32 stats = ((const u32 *)CARD_STATS_ADDR)[cardId & CARD_ID_MASK];
     switch ((int)((stats & CARD_STATS_TYPE_MASK) >> CARD_STATS_TYPE_SHIFT)) {
     case CARD_TYPE_TRAP:
     case CARD_TYPE_MAGIC:

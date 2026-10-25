@@ -10,7 +10,10 @@ updated: 2026-10-02
 
 The project is a byte-matching decompilation of *Yu-Gi-Oh! The Eternal Duelist Soul* (USA, `AY5E`). The Japanese release is titled *Duel Monsters 5 Expert 1*. See [[matching-decompilation]] for what "matching" means here.
 
-## Current state (2026-10-02)
+## Current state (2026-10-24)
+- **Expanded ROM (2026-10-24).** The build adds 100 cards (IDs 821–920, data from YGOPRODeck), so it no longer
+  matches the original and `make compare` fails by design. The original 820 cards and every other data
+  address are unchanged. See [[added-cards]]. The points below describe the matching decompilation it was built from.
 - **The build matches.** `make -j$(nproc) compare` (in WSL) rebuilds `eds.gba` with SHA-1 `510fbba2…`, identical to the baserom. The build is native, pokefirered-style, with agbcc installed from `../agbcc` ([[toolchain]], [[rom-free-workflow]]).
 - **Progress: 100% matched (2026-10-02, commit `d77fcef`).** All **1,976 of 1,976 functions** are in matching source, and `tools/progress.py` counts 0x7EC70/0x7EC70 code bytes (100.00%). `check_all.py` passes 112/112 units and `make compare` prints `eds.gba: OK`. No C unit has an `INCLUDE_ASM` left. 1,970 functions are C; the other 6 are authored assembly, the SWI stubs ([[bios-swi-stubs]]) and the ARM mixer ([[sound-mixer]]). [[crt0]] and the linker veneer, outside the function list, are authored assembly too. The last function was `CollectEffectTargets` ([[effect-target-collect-c]], 0x2514 bytes, the largest in the game).
   - History: the project started on 2026-09-29. 1,769 functions (89.52%) after waves 1-2 on 2026-10-01; 1,910 (96.66%, 83.35% of code bytes by `tools/progress.py`) at the wave-3 checkpoint `f7c9206`; 1,912 at `33809ed`; 1,975 (all but `CollectEffectTargets`) at `350cb09`; 1,976 (100%) at `d77fcef`, all on 2026-10-02.

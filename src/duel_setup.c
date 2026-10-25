@@ -42,9 +42,9 @@
 /* ---- Local views kept for matching ---- */
 
 /* gCardStats and gCardIdToNumber through their constant addresses (the ROM loads the mask before the table). */
-#define CARD_STATS_C(id)    (((const u32 *)0x08621DE0)[(id) & CARD_ID_MASK])
+#define CARD_STATS_C(id)    (((const u32 *)CARD_STATS_ADDR)[(id) & CARD_ID_MASK])
 #define CARD_TYPE_C(id)     CARD_STATS_TYPE(CARD_STATS_C(id))
-#define CARD_NUMBER_C(id)   (((const u16 *)0x08622AB4)[(id) & CARD_ID_MASK])
+#define CARD_NUMBER_C(id)   (((const u16 *)CARD_ID_TO_NUMBER_ADDR)[(id) & CARD_ID_MASK])
 /* gCardNumberToId through its constant address. */
 #define CARD_ID_TABLE       ((const u16 *)0x08623DF4)
 /* gCardNames through its constant address, one 0x40-byte name per card ID (the table base is reloaded per

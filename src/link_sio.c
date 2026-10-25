@@ -556,8 +556,8 @@ void DrawCardPortraitOrClear(u16 screenBlock, u16 cell, u16 cardId, u16 tileBase
         cardId &= CARD_ID_MASK;
         /* Matching: the art palette/graphics table bases stay literal (0x08608360/0x082A6500) so
          * GCSE does not hoist their pool loads. */
-        MemCopy16(0x05000100, (void *)(0x08608360 + cardId * 0x80), 0x80);
-        src = (const u16 *)(0x082A6500 + cardId * 0x10E0);
+        MemCopy16(0x05000100, (void *)(CARD_ART_PALETTES_ADDR + cardId * 0x80), 0x80);
+        src = (const u16 *)(CARD_ART_GFX_ADDR + cardId * 0x10E0);
         dst = (u16 *)(0x06004000 + off);
 
         for (i = 0; i <= 0x2CF; i++) {
@@ -584,7 +584,7 @@ void DrawCardPortraitOrClear(u16 screenBlock, u16 cell, u16 cardId, u16 tileBase
 }
 /* Matching: the gCardStats/gCardNumberToId table bases stay literal (0x08621DE0/0x08622AB4);
  * indexing the header symbols changes register allocation (see ai_steps). */
-#define CARD_STATS(id) (((const u32 *)0x08621DE0)[(id) & CARD_ID_MASK])
+#define CARD_STATS(id) (((const u32 *)CARD_STATS_ADDR)[(id) & CARD_ID_MASK])
 #define CARD_TYPE(id) ((int)CARD_STATS_TYPE(CARD_STATS(id)))
 
 /* Loads the card frame graphics for card `id` (Trap/Magic/Ticket frames, else by card number / kind). */
@@ -605,7 +605,7 @@ void Password_DrawCard(u16 id)
         tbl = gCardFrameTicketGfx;
         goto load;
     }
-    n = ((const u16 *)0x08622AB4)[id & CARD_ID_MASK];
+    n = ((const u16 *)CARD_ID_TO_NUMBER_ADDR)[id & CARD_ID_MASK];
     switch (n) {
     case CARD_OBELISK_THE_TORMENTOR:
         v = 3;
@@ -680,8 +680,8 @@ u16 FindCardByPassword(void)
     n = 0;
     bufp = buf;
     first = bufp[0];
-    for (; n <= 0x334; n++) {
-        e = (u8 *)0x08623120 + n * 4; /* gCardPasswords: 4 packed-BCD bytes per card */
+    for (; n <= CARD_ID_LAST; n++) {
+        e = (u8 *)CARD_PASSWORDS_ADDR + n * 4; /* gCardPasswords: 4 packed-BCD bytes per card */
         if (e[0] == first && e[1] == bufp[1] && e[2] == bufp[2] && e[3] == bufp[3])
             return n;
     }

@@ -102,8 +102,8 @@ extern const u16 gCardNumberToId_DarkSage;     /* gCardNumberToId[CARD_DARK_SAGE
  * Card tables through integer-constant addresses: gCardStats (0x08621DE0) and gCardIdToNumber
  * (0x08622AB4). Matching: these give the ROM's literal pools; the symbol forms generate other code.
  */
-#define CARD_STATS(id)      (((const u32 *)0x08621DE0)[(id) & CARD_ID_MASK])
-#define CARD_NUMBER(id)     (((const u16 *)0x08622AB4)[(id) & CARD_ID_MASK])
+#define CARD_STATS(id)      (((const u32 *)CARD_STATS_ADDR)[(id) & CARD_ID_MASK])
+#define CARD_NUMBER(id)     (((const u16 *)CARD_ID_TO_NUMBER_ADDR)[(id) & CARD_ID_MASK])
 #define CARD_TYPE(id)       CARD_STATS_TYPE(CARD_STATS(id))     /* enum CardType */
 /* The name record of a card ID in gCardNames (card_data.h declares it as bytes). */
 #define CARD_NAME(id)       ((const char *)gCardNames + (id) * CARD_NAME_SIZE)
@@ -371,7 +371,7 @@ int EffectTimeWizardResolve(struct ChainEntry *link)
                 int zone = gDuelScreen.selArea + gDuelScreen.selIndex;
                 int side = player & 1;
                 struct DuelZone *z = ZONE_AT(side, zone);
-                int cardNo = ((const u16 *)0x08622AB4)[CARD_ID11(CARD_WORD(z->card))];
+                int cardNo = ((const u16 *)CARD_ID_TO_NUMBER_ADDR)[CARD_ID11(CARD_WORD(z->card))];
 
                 switch (cardNo) {
                 case CARD_DARK_MAGICIAN:
@@ -416,7 +416,7 @@ int EffectTimeWizardResolve(struct ChainEntry *link)
             int player = link->player;
             u32 card = gCardListView.cards[gCardListView.top + gCardListView.cursorRow];
 
-            if (AddDeckCardToHand(player, ((const u16 *)0x08622AB4)[CARD_ID11(card)]))
+            if (AddDeckCardToHand(player, ((const u16 *)CARD_ID_TO_NUMBER_ADDR)[CARD_ID11(card)]))
                 DuelCmd_Push(PLAYER_CMD(link->player, DUEL_CMD_SHUFFLE_DECK), 0, 0, 0);
             goto done;
         }
@@ -759,7 +759,7 @@ int EffectTributeOpponentMonsterResolve(struct ChainEntry *link, int chainedTo)
                 goto pickEffectMonster;
             player = gDuelScreen.selPlayer;
             zone = gDuelScreen.selArea + gDuelScreen.selIndex;
-            switch (((const u16 *)0x08622AB4)[CARD_ID11(CARD_WORD(ZONE_AT_PLAYER_FIRST(1 & player, zone)->card))]) {
+            switch (((const u16 *)CARD_ID_TO_NUMBER_ADDR)[CARD_ID11(CARD_WORD(ZONE_AT_PLAYER_FIRST(1 & player, zone)->card))]) {
             case CARD_CATAPULT_TURTLE:
             case CARD_THE_LITTLE_SWORDSMAN_OF_AILE:
             case CARD_CANNON_SOLDIER:

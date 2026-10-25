@@ -99,8 +99,8 @@ extern const u8 gStrDesignateMonsterToHaveReturned[];       /* 0x08084000: Hane-
 
 /* Card tables through integer-constant addresses: gCardStats (0x08621DE0) and gCardIdToNumber (0x08622AB4).
  * Matching: the ROM loads the 0x7FF mask before the table literal; the symbols hoist the table literal. */
-#define CARD_STATS(id) (((const u32 *)0x08621DE0)[CARD_ID_MASK & (id)])
-#define CARD_NUMBER(id) (((const u16 *)0x08622AB4)[CARD_ID_MASK & (id)])
+#define CARD_STATS(id) (((const u32 *)CARD_STATS_ADDR)[CARD_ID_MASK & (id)])
+#define CARD_NUMBER(id) (((const u16 *)CARD_ID_TO_NUMBER_ADDR)[CARD_ID_MASK & (id)])
 #define CARD_TYPE(id) CARD_STATS_TYPE(CARD_STATS(id))     /* enum CardType */
 
 /* Append a target word (player | zone << 8, or half of a card word) to card->targets. No bounds check: the

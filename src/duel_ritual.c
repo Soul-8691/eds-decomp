@@ -114,8 +114,8 @@ extern const u8 gStrRitualTributePrompt[];
 
 /* The card tables through integer-constant addresses. Matching: these forms and the symbols gCardStats,
  * gCardIdToNumber and gCardNumberToId give different code (literal pools); each function keeps its form. */
-#define CARD_STATS_TABLE    ((const u32 *)0x08621DE0)   /* gCardStats */
-#define CARD_NUMBER_TABLE   ((const u16 *)0x08622AB4)   /* gCardIdToNumber */
+#define CARD_STATS_TABLE    ((const u32 *)CARD_STATS_ADDR)   /* gCardStats */
+#define CARD_NUMBER_TABLE   ((const u16 *)CARD_ID_TO_NUMBER_ADDR)   /* gCardIdToNumber */
 #define CARD_ID_TABLE       ((const u16 *)0x08623DF4)   /* gCardNumberToId */
 
 /* Card ID of a card word (bits 0-11), from the whole word. */

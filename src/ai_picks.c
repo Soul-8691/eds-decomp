@@ -58,8 +58,8 @@ extern const u16 gAiHandPickPriority[];     /* 0x0819D316: the 26 cards it takes
 #define CARD_EMPTY(c) ((CARD_WORD(c) << 20) == 0)
 /* The card tables through integer-constant addresses: the ROM reloads the table address at every use. These
  * are gCardStats (0x08621DE0) and gCardIdToNumber (0x08622AB4) indexed by card ID. */
-#define CARD_STATS(id) (((const u32 *)0x08621DE0)[(id) & CARD_ID_MASK])
-#define CARD_NUMBER(id) (((const u16 *)0x08622AB4)[(id) & CARD_ID_MASK])
+#define CARD_STATS(id) (((const u32 *)CARD_STATS_ADDR)[(id) & CARD_ID_MASK])
+#define CARD_NUMBER(id) (((const u16 *)CARD_ID_TO_NUMBER_ADDR)[(id) & CARD_ID_MASK])
 #define CARD_TYPE(id) CARD_STATS_TYPE(CARD_STATS(id))
 /* The same card number through the table symbol, with the index computed first (the ROM's add order). */
 #define CARD_NUMBER_SYM(id) (*(const u16 *)(((id) & CARD_ID_MASK) * 2 + (u32)gCardIdToNumber))
@@ -479,7 +479,7 @@ int AiCountExodiaInDeck(void)
             id = CARD_ID_OF(*card);
             id &= mask;
             id <<= 1;
-            table = (const u8 *)0x08622AB4;     /* gCardIdToNumber */
+            table = (const u8 *)CARD_ID_TO_NUMBER_ADDR;     /* gCardIdToNumber */
             number = *(const u16 *)(id + (u32)table);
             switch (number) {
             case CARD_RIGHT_LEG_OF_THE_FORBIDDEN_ONE:
@@ -522,7 +522,7 @@ int AiCountExodiaInGraveyard(void)
             id = CARD_ID_OF(*card);
             id &= mask;
             id <<= 1;
-            table = (const u8 *)0x08622AB4;     /* gCardIdToNumber */
+            table = (const u8 *)CARD_ID_TO_NUMBER_ADDR;     /* gCardIdToNumber */
             number = *(const u16 *)(id + (u32)table);
             switch (number) {
             case CARD_RIGHT_LEG_OF_THE_FORBIDDEN_ONE:

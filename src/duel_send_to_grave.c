@@ -29,8 +29,8 @@
  * Card tables read through integer-constant addresses: gCardIdToNumber (0x08622AB4) and gCardStats
  * (0x08621DE0). Matching: the symbol forms (card_data.h) load other literals.
  */
-#define CARD_NUMBER(id) (((const u16 *)0x08622AB4)[(id) & CARD_ID_MASK])   /* gCardIdToNumber[id] */
-#define CARD_STATS(id)  (((const u32 *)0x08621DE0)[(id) & CARD_ID_MASK])   /* gCardStats[id] */
+#define CARD_NUMBER(id) (((const u16 *)CARD_ID_TO_NUMBER_ADDR)[(id) & CARD_ID_MASK])   /* gCardIdToNumber[id] */
+#define CARD_STATS(id)  (((const u32 *)CARD_STATS_ADDR)[(id) & CARD_ID_MASK])   /* gCardStats[id] */
 #define CARD_TYPE(id)   CARD_STATS_TYPE(CARD_STATS(id))                     /* enum CardType */
 
 /* Duel command id for `player`: DUEL_CMD_PLAYER marks player 1. */

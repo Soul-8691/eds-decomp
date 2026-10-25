@@ -120,7 +120,7 @@ struct BattleStageWord {
 #define gStageWord (*(struct BattleStageWord *)((u8 *)&gDuelView + 0x1B14))
 /* Card stats word by id. Matching: the literal table address is reloaded at every use in
  * the ROM; indexing the gCardStats symbol instead would change the code. */
-#define CARD_STATS_WORD(id) (((const u32 *)0x08621DE0)[(id) & CARD_ID_MASK])
+#define CARD_STATS_WORD(id) (((const u32 *)CARD_STATS_ADDR)[(id) & CARD_ID_MASK])
 #define CARD_TYPE_OF(id) ((CARD_STATS_WORD(id) & CARD_STATS_TYPE_MASK) >> CARD_STATS_TYPE_SHIFT)
 /* Level-like value into v: 0 for Trap/Magic/Ticket, 10 for Divine, else the level bits. */
 #define CARD_LEVEL(v, id)                                                 \
@@ -394,7 +394,7 @@ u16 IsTypeForbiddenToAttack(u16 type)
 /* The narrow local ID and helper argument preserve the original lookup shape. */
 static inline u16 DuelCardNumber(u16 id)
 {
-    return ((const u16 *)0x08622AB4)[id & CARD_ID_MASK];
+    return ((const u16 *)CARD_ID_TO_NUMBER_ADDR)[id & CARD_ID_MASK];
 }
 
 u16 CanMonsterAttack(int player, int zone, u16 flag)
@@ -549,7 +549,7 @@ int Battle_CheckReplay(int player)
     if (CanMonsterAttack(player, BTH.atkSlot, 0) == 0) {
         int done = 0;
         int pl = player & 1;
-        if (((const u16 *)0x08622AB4)[(ZONE_SNAP(pl, BTH.atkSlot).card << 21) >> 21] == CARD_1336) {
+        if (((const u16 *)CARD_ID_TO_NUMBER_ADDR)[(ZONE_SNAP(pl, BTH.atkSlot).card << 21) >> 21] == CARD_1336) {
             if (ZONE_SNAP(pl, BTH.atkSlot).flag7_5) {
                 ZONE_SNAP(pl, BTH.atkSlot).flag7_5 = 0;
                 done = 1;
@@ -781,7 +781,7 @@ int BattleStage_SelectTarget(int player)
         gDuelView.battleStep++;
     }
     case 1:
-        if (IsToonMonster(((const u16 *)0x08622AB4)[id & CARD_ID_MASK]) && HasFaceUpToonMonster(1 - player)) {
+        if (IsToonMonster(((const u16 *)CARD_ID_TO_NUMBER_ADDR)[id & CARD_ID_MASK]) && HasFaceUpToonMonster(1 - player)) {
             gDuelView.battleStep = 30;
             return 0;
         }
@@ -815,7 +815,7 @@ int BattleStage_SelectTarget(int player)
         if (DuelCursor_PickTarget(PICK_PLAYER1(PICK_ANY_MONSTER))) {
             struct DuelZoneTargetView *z = ZONE_PTR_P1(gDuelScreen.selIndex);
             int cid;
-            if ((z->flags6 & 2) && (cid = z->card << 20 >> 20) > 0 && ((const u16 *)0x08622AB4)[cid & CARD_ID_MASK] == CARD_1326 && GetFaceUpFieldMagicNumber() == CARD_UMI) {
+            if ((z->flags6 & 2) && (cid = z->card << 20 >> 20) > 0 && ((const u16 *)CARD_ID_TO_NUMBER_ADDR)[cid & CARD_ID_MASK] == CARD_1326 && GetFaceUpFieldMagicNumber() == CARD_UMI) {
                 PlaySE(SE_ERROR);
                 return 0;
             }
@@ -870,7 +870,7 @@ int BattleStage_SelectTarget(int player)
     case 30:
         if (player != 0)
             return 0;
-        if (DuelCursor_PickTarget(PICK_PLAYER1(PICK_ANY_MONSTER)) && IsToonMonster(((const u16 *)0x08622AB4)[(ZONE_PTR_P1(gDuelScreen.selIndex)->card << 20 >> 20) & CARD_ID_MASK])) {
+        if (DuelCursor_PickTarget(PICK_PLAYER1(PICK_ANY_MONSTER)) && IsToonMonster(((const u16 *)CARD_ID_TO_NUMBER_ADDR)[(ZONE_PTR_P1(gDuelScreen.selIndex)->card << 20 >> 20) & CARD_ID_MASK])) {
             BTB.defSlot = gScreenSel.selIndex;
             gBattleStep.step = 3;
         }

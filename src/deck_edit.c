@@ -220,7 +220,7 @@ struct CommandMenuAnimByte {
 extern struct FrameSlotsView gDeckEditFrameSlots;     /* 0x0201F6D8 = &gDeckEdit.frameSlots */
 /* gCardIdToNumber (0x08622AB4) read by literal address: indexing the array symbol directly changes
  * the target card-list loop's register allocation. */
-#define CARD_NUMBER(id) (((const u16 *)0x08622AB4)[(id) & 0x7FF])
+#define CARD_NUMBER(id) (((const u16 *)CARD_ID_TO_NUMBER_ADDR)[(id) & 0x7FF])
 /* Callee views in the argument widths this unit's matched code uses; include/deck_edit.h (and
  * sprite.h, util.h, palette.h) have each definition's own types. */
 void MemClear16Wide(void *dst, u32 size) asm("MemClear16");
@@ -240,6 +240,7 @@ int ProhibitCardSelect_Init(void)
 {
     u16 i;
     u16 j;
+    u16 k;
     struct CursorRowByte *cursorRow;
     struct MenuVariantByte *variantByte;
     struct CommandMenuWord *menuWord;
@@ -280,13 +281,10 @@ int ProhibitCardSelect_Init(void)
     Ease_InitWide(0, 0, 0, (u8 *)&gDeckEdit + 0x628);
     ClearKatakanaFlagWide((u8 *)&gDeckEdit + 0x640);
     ObjAffineInitWide((u8 *)&gDeckEdit + 0x18B0);
-    for (i = 1; CARD_NUMBER(i) != 0xFFFF; ) {
+    for (k = 0; (i = gCardIdsByName[k]) != 0; k++) {   /* every card in name order */
         if ((u16)(CARD_NUMBER(i) - 0x76C) > 0x63) {
             DeckEdit_SetListCard(i, 0, gDeckEdit.listRow[0], gDeckEdit.listCount[gDeckEdit.listRow[0]][0]++);
         }
-        i++;
-        if (i > 0x334)
-            break;
     }
     DeckEdit_CalcScrollBar(gDeckEdit.listCount[gDeckEdit.listRow[gDeckEdit.curList]][gDeckEdit.curList],
                  gDeckEdit.listPos[gDeckEdit.curList], (u16 *)&gDeckEdit.scrollBar);

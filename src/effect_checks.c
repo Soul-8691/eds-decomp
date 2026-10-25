@@ -89,8 +89,8 @@ extern const u8 gStrSelectTributeMonster[];     /* 0x080827C4: "Please select a 
  * Card tables through integer-constant addresses: gCardStats (0x08621DE0) and gCardIdToNumber (0x08622AB4).
  * Matching: the ROM reloads the table address at each use, which the symbols do not give.
  */
-#define CARD_STATS(id) (((const u32 *)0x08621DE0)[CARD_ID_MASK & (id)])
-#define CARD_NUMBER(id) (((const u16 *)0x08622AB4)[CARD_ID_MASK & (id)])
+#define CARD_STATS(id) (((const u32 *)CARD_STATS_ADDR)[CARD_ID_MASK & (id)])
+#define CARD_NUMBER(id) (((const u16 *)CARD_ID_TO_NUMBER_ADDR)[CARD_ID_MASK & (id)])
 #define CARD_TYPE(id) CARD_STATS_TYPE(CARD_STATS(id))   /* enum CardType */
 
 /* Card numbers 1920-1999 are monster tokens. */

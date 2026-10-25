@@ -54,7 +54,7 @@ u32 DuelScreen_FadeInStepU32(void) asm("DuelScreen_FadeInStep");
 
 /* Matching: gCardIdToNumber[id] read through its integer address (0x08622AB4); the symbol form changes
  * CalcBattle. */
-#define CARD_NUMBER(id) (((const u16 *)0x08622AB4)[(id) & CARD_ID_MASK])
+#define CARD_NUMBER(id) (((const u16 *)CARD_ID_TO_NUMBER_ADDR)[(id) & CARD_ID_MASK])
 
 /* ---- Campaign steps 7, 8, 10 and the runner ---- */
 

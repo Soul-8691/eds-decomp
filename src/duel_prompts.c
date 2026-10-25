@@ -64,7 +64,7 @@ extern u16 gCardNumberToId_1520;
 /* gCardNumberToId (0x08623DF4) and gCardStats (0x08621DE0) through their integer addresses: the ROM's
  * register allocation needs these forms (integer-constant address, not the symbol). */
 #define CARD_NUMBER_TO_ID_TABLE ((const u16 *)0x08623DF4)
-#define CARD_STATS_TABLE        ((const u32 *)0x08621DE0)
+#define CARD_STATS_TABLE        ((const u32 *)CARD_STATS_ADDR)
 
 /* The text box of every prompt here: at cell (6, 2), 18 x 7 cells (19 x 7 for the long texts). */
 #define PROMPT_BOX_POS          0x206

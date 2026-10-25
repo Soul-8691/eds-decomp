@@ -172,7 +172,7 @@ void DuelCmd_TurnStart(void)
             if (spell->isFaceUp) {
                 if (gCardIdToNumber[spellId & CARD_ID_MASK] == CARD_COCOON_OF_EVOLUTION && spell->turnCounter < 12)
                     spell->turnCounter++;
-            } else if ((*(const u32 *)(0x08621DE0 + (spellId & CARD_ID_MASK) * 4) & CARD_STATS_TYPE_MASK)
+            } else if ((*(const u32 *)(CARD_STATS_ADDR + (spellId & CARD_ID_MASK) * 4) & CARD_STATS_TYPE_MASK)
                            >> CARD_STATS_TYPE_SHIFT > CARD_TYPE_REPTILE) {
                 /* a face-down Magic or Trap card (0x08621DE0 = gCardStats, integer form kept) */
                 spell->canActivate = 1;
@@ -365,7 +365,7 @@ void DuelCmd_TurnEnd(void)
              * code (also below) */
             u16 id = (*(u32 *)zone << 20) >> 20;
 
-            if (id && ((*((const u32 *)0x08621DE0 + (id & CARD_ID_MASK)) & CARD_STATS_TYPE_MASK)
+            if (id && ((*((const u32 *)CARD_STATS_ADDR + (id & CARD_ID_MASK)) & CARD_STATS_TYPE_MASK)
                            >> CARD_STATS_TYPE_SHIFT) > CARD_TYPE_REPTILE && !zone->isFaceUp)
                 zone->canActivate = 1;
         }
@@ -390,7 +390,7 @@ void DuelCmd_TurnEnd(void)
             if (id == 0)
                 continue;
             /* 0x08622AB4 = gCardIdToNumber (integer form kept) */
-            if (((const u16 *)0x08622AB4)[(u16)id & CARD_ID_MASK] == CARD_KARATE_MAN
+            if (((const u16 *)CARD_ID_TO_NUMBER_ADDR)[(u16)id & CARD_ID_MASK] == CARD_KARATE_MAN
                 && TURN_END_ZONE_PZ(player & 1, i)->isFaceUp && !TURN_END_ZONE_PZ(player & 1, i)->effectUnused)
                 destroy = 1;
             if (CountZoneLinksFromCard(player, i, CARD_1314))
@@ -425,7 +425,7 @@ void DuelCmd_TurnEnd(void)
             }
 
             /* Insect Queen that won a battle this turn: an Insect Monster Token in the first free zone */
-            if (((const u16 *)0x08622AB4)[(u16)id & CARD_ID_MASK] == CARD_INSECT_QUEEN
+            if (((const u16 *)CARD_ID_TO_NUMBER_ADDR)[(u16)id & CARD_ID_MASK] == CARD_INSECT_QUEEN
                 && gDuelPlayers[player & 1].insectQueenWonBattle && CountFreeMonsterZones(player) > 0) {
                 int target = FindFreeMonsterZone(player);
 

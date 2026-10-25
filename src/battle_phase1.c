@@ -42,7 +42,7 @@ extern const char gStrAskSubstituteTargetFmt[]; /* 0x08085ADC: "... select your 
 extern const u16 gCardNumberToId_1243;
 
 /* The card tables through their integer addresses (different literals from gCardIdToNumber / gCardNumberToId). */
-#define CARD_NUMBER_OF(id)  (((const u16 *)0x08622AB4)[(id) & CARD_ID_MASK])   /* gCardIdToNumber[id] */
+#define CARD_NUMBER_OF(id)  (((const u16 *)CARD_ID_TO_NUMBER_ADDR)[(id) & CARD_ID_MASK])   /* gCardIdToNumber[id] */
 #define CARD_ID_OF(number)  (((const u16 *)0x08623DF4)[(number)])              /* gCardNumberToId[number] */
 /* The name of a card ID as a string (gCardNames, one 64-byte record per card). */
 #define CARD_NAME(id)       (((const char (*)[64])0x0822C720)[id])
@@ -565,7 +565,7 @@ enum DamageCalcStep {
 /* The monster's number in a zone, as a u32 (the ROM does not narrow it). */
 static inline u32 CardNumberWide(u32 id)
 {
-    return ((const u16 *)0x08622AB4)[id & 0x7FF];
+    return ((const u16 *)CARD_ID_TO_NUMBER_ADDR)[id & 0x7FF];
 }
 
 /* Matching: byte view of gLinkState; byte +0x450 holds cardPromptPending (bit 0) and cardPromptAnswered

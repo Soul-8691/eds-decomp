@@ -60,8 +60,8 @@ extern void EventResponse_RequestInt(int player, int event, int arg) asm("EventR
 
 /* Matching: ROM tables read through integer-constant addresses (the ROM reloads the table address at every
  * use; the symbols gCardIdToNumber and gCardStats generate other literal pools). */
-#define CARD_NUMBER(id) (((const u16 *)0x08622AB4)[(id) & CARD_ID_MASK])   /* gCardIdToNumber */
-#define CARD_STATS_WORD(id) (((const u32 *)0x08621DE0)[(id) & CARD_ID_MASK])  /* gCardStats */
+#define CARD_NUMBER(id) (((const u16 *)CARD_ID_TO_NUMBER_ADDR)[(id) & CARD_ID_MASK])   /* gCardIdToNumber */
+#define CARD_STATS_WORD(id) (((const u32 *)CARD_STATS_ADDR)[(id) & CARD_ID_MASK])  /* gCardStats */
 
 /* Matching: the record's +0xE flag byte (active, linked, kind) is loaded as one byte and tested with masks and
  * shifts, as the ROM does; accessing the bitfields active / linked / kind separately gives other code. */
@@ -511,7 +511,7 @@ u16 SummonAction_Update(void)
                     register u16 savedId __asm__("r2") = id;
                     int number;
                     index &= savedId;
-                    number = ((const u16 *)0x08622AB4)[index];     /* gCardIdToNumber */
+                    number = ((const u16 *)CARD_ID_TO_NUMBER_ADDR)[index];     /* gCardIdToNumber */
                     switch (number) {
                     case CARD_PUMPKING_THE_KING_OF_GHOSTS:
                         ApplyPumpkingBoost(gSummonAction.player, gSummonAction.zone);
@@ -716,7 +716,7 @@ void QueueNormalSummon(int player, int handIndex, int zone, int tributes, int fa
             idMask = CARD_ID_MASK;
             value &= idMask;
             value <<= 1;
-            idToNumber = (const u16 *)0x08622AB4;   /* gCardIdToNumber */
+            idToNumber = (const u16 *)CARD_ID_TO_NUMBER_ADDR;   /* gCardIdToNumber */
             *(const u16 *)((u32)idToNumber + value);
         }
         ))) {

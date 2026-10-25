@@ -56,8 +56,8 @@ extern const u8 gListSortOptionAnims[];         /* 0x080875BC: sort option -> an
 /* The card tables are read through their literal ROM addresses: per include/card_data.h
  * the integer-constant form and the symbol form (gCardStats / gCardIdToNumber) generate
  * different code, and this unit matches with the literal form. */
-#define CARD_STATS(id)  (((const u32 *)0x08621DE0)[(id) & CARD_ID_MASK])   /* gCardStats */
-#define CARD_NUMBER(id) (((const u16 *)0x08622AB4)[(id) & CARD_ID_MASK])   /* gCardIdToNumber */
+#define CARD_STATS(id)  (((const u32 *)CARD_STATS_ADDR)[(id) & CARD_ID_MASK])   /* gCardStats */
+#define CARD_NUMBER(id) (((const u16 *)CARD_ID_TO_NUMBER_ADDR)[(id) & CARD_ID_MASK])   /* gCardIdToNumber */
 #define CARD_TYPE(id)   ((int)((CARD_STATS(id) & CARD_STATS_TYPE_MASK) >> CARD_STATS_TYPE_SHIFT))
 
 /* OamListAddSpriteGroup as ListFilter_DrawCursor and ListFilter_DrawCursorFlash call it: the
@@ -111,8 +111,9 @@ static inline u8 FS_FrameKind(u16 id)
             dst[n++] = card; \
     }
 /* Deck-edit filter and sort of card list `list`: rebuilds the lists, copies list `list` (u16 ids) to a scratch array,
-   keeps the cards of category `filter` (enum ListFilter) and sorts by `sort` (enum ListSort). The list rows are
-   reached at negative offsets from gDeckEditSortScratch (the matching pointer form; wiki/functions/deck-edit-filter-c.md). */
+   keeps the cards of category `filter` (enum ListFilter) and sorts by `sort` (enum ListSort). Row 0 of the list is
+   the source and row 1 the result (gDeckEditCardLists; the original reached them at negative offsets from
+   gDeckEditSortScratch, wiki/functions/deck-edit-filter-c.md). Non-monsters held back wait in gDeckEditSortScratch. */
 void DeckEdit_FilterAndSortList(u8 list, u8 filter, u8 sort)
 {
     u16 *src;
@@ -125,16 +126,16 @@ void DeckEdit_FilterAndSortList(u8 list, u8 filter, u8 sort)
     DeckEdit_BuildCardLists();
     switch (list) {
     case DECKEDIT_LIST_TRUNK:
-        src = base - 0x730;
-        dst = base - 0x39C;
+        src = gDeckEditCardLists[0].trunk;
+        dst = gDeckEditCardLists[1].trunk;
         break;
     case DECKEDIT_LIST_MAIN_DECK:
-        src = base - 0x3FB;
-        dst = base - 0x67;
+        src = gDeckEditCardLists[0].deck;
+        dst = gDeckEditCardLists[1].deck;
         break;
     case DECKEDIT_LIST_SIDE_DECK:
-        src = base - 0x3AB;
-        dst = base - 0x17;
+        src = gDeckEditCardLists[0].side;
+        dst = gDeckEditCardLists[1].side;
         break;
     }
     CpuSet(src, dst, gDeckEdit.listCount[0][list]);

@@ -60,10 +60,10 @@ extern const char gStrSinisterSerpentPrompt[];
 /* The ROM's integer-constant addresses: gDuelZones (0x0201930C), gCardIdToNumber (0x08622AB4), gCardStats
  * (0x08621DE0) and gCardNumberToId (0x08623DF4). Matching: the cast-literal forms give the ROM's literal
  * pools and the order of the address additions; the symbol forms generate other code. */
-#define CARD_NUMBER(id)         (((const u16 *)0x08622AB4)[(id) & CARD_ID_MASK])
-#define CARD_NUMBER_OF(word)    (((const u16 *)0x08622AB4)[((word) << 21) >> 21])   /* index: ID & 0x7FF by shifts */
+#define CARD_NUMBER(id)         (((const u16 *)CARD_ID_TO_NUMBER_ADDR)[(id) & CARD_ID_MASK])
+#define CARD_NUMBER_OF(word)    (((const u16 *)CARD_ID_TO_NUMBER_ADDR)[((word) << 21) >> 21])   /* index: ID & 0x7FF by shifts */
 #define CARD_ID_OF(number)      (((const u16 *)0x08623DF4)[number])                 /* gCardNumberToId[number] */
-#define CARD_STATS(id)          (((const u32 *)0x08621DE0)[(id) & CARD_ID_MASK])
+#define CARD_STATS(id)          (((const u32 *)CARD_STATS_ADDR)[(id) & CARD_ID_MASK])
 
 /* The card word of a zone or pile entry as one u32, and its ID by shifts (lsl #20; lsr #20). Matching: the ROM
  * loads the whole word; a .id bitfield read would load a halfword. */
@@ -550,7 +550,7 @@ void DamageOpponentPerBanishedMonster(int player)
             {
                 u16 id = CARD_ID(*cursor);
 
-                if (CARD_STATS_TYPE(((const u32 *)0x08621DE0)[id & mask]) <= CARD_TYPE_REPTILE)
+                if (CARD_STATS_TYPE(((const u32 *)CARD_STATS_ADDR)[id & mask]) <= CARD_TYPE_REPTILE)
                     n++;
                 cursor++;
             }
@@ -1332,7 +1332,7 @@ void CardMenu_SummonMonster(u16 faceUp, u16 special)
                     struct DuelZone *card = (struct DuelZone *)(offset + (int)zoneBase);
                     u32 id = CARD_ID(CARD_WORD(card->card));
                     if (id != 0 && card->isFaceUp) {
-                        const u16 *numberPtr = &((const u16 *)0x08622AB4)[id & CARD_ID_MASK];
+                        const u16 *numberPtr = &((const u16 *)CARD_ID_TO_NUMBER_ADDR)[id & CARD_ID_MASK];
                         unsigned sequence = CM_FROM_ZONES.summonSeq;
                         /* The pick must be the Tribute whose turn it is (Sanga + sequence). */
                         if (*numberPtr == sequence + CARD_SANGA_OF_THE_THUNDER) {

@@ -322,9 +322,9 @@ void DeckEdit_DrawListRowName(u16 cardId, u8 *map, u16 col, u16 row, u32 unused,
 /* Constant-address table reads (see include/card_data.h): the ROM reloads the table address at
  * every use, so these stay macros over the literal addresses (gCardStats / gCardIdToNumber)
  * instead of the symbols, whose form generates different code. */
-#define CARD_STATS(id) (((const u32 *)0x08621DE0)[(id) & CARD_ID_MASK])
+#define CARD_STATS(id) (((const u32 *)CARD_STATS_ADDR)[(id) & CARD_ID_MASK])
 #define CARD_TYPE(id) ((int)((CARD_STATS(id) & CARD_STATS_TYPE_MASK) >> CARD_STATS_TYPE_SHIFT))
-#define CARD_NUMBER(id) (((const u16 *)0x08622AB4)[(id) & CARD_ID_MASK])
+#define CARD_NUMBER(id) (((const u16 *)CARD_ID_TO_NUMBER_ADDR)[(id) & CARD_ID_MASK])
 
 /* Draw the cursor card's name (gCardNames, 0x40 bytes per id) and pick gDeckEdit.cursorCardFrame
  * for card `cardId`: the three tickets and the Egyptian Gods by card number, everything else by

@@ -627,7 +627,7 @@ static inline int GetSpellSubtype(u32 stats)
 
 /* The card tables read through their integer address (gCardStats, 0x08621DE0). Matching: each use reloads the
  * table base literal, as in the ROM; the symbol form keeps the base in a register. */
-#define STATS_BY_ADDR(id) (((u32 *)0x08621DE0)[(id) & CARD_ID_MASK])
+#define STATS_BY_ADDR(id) (((u32 *)CARD_STATS_ADDR)[(id) & CARD_ID_MASK])
 
 /* Level stars shown for a card: 0 for Trap, Magic and Ticket cards, 10 for the Egyptian Gods. */
 static inline int GetCardLevel(u32 id)
@@ -764,7 +764,7 @@ void CardListView_DrawSelectedCursorFrame(void)
 /* enum CardType of a card ID, through the integer table address (see STATS_BY_ADDR). */
 static inline u32 GetListCardType(u16 id)
 {
-    return CARD_STATS_TYPE(((const u32 *)0x08621DE0)[id & CARD_ID_MASK]);
+    return CARD_STATS_TYPE(((const u32 *)CARD_STATS_ADDR)[id & CARD_ID_MASK]);
 }
 
 /* OBJ attr2 of the CARD STATUS icons: palette 1, tiles from 0x100 (gCardListViewStatusIconsGfx). */

@@ -76,12 +76,12 @@ struct DuelRuleFlagsView { u8 unk0[0x1ACC]; u16 flags; };
  * so the repeated ID and table loads are not folded into one expression.
  */
 /* The gCardStats word of a card ID. */
-#define CARD_STATS(id) (((const u32 *)0x08621DE0)[(id) & CARD_ID_MASK])
+#define CARD_STATS(id) (((const u32 *)CARD_STATS_ADDR)[(id) & CARD_ID_MASK])
 /* Returns the enum CardType of a card ID (printed type, from its gCardStats word). */
 static inline int GetCardType(u16 id) { return CARD_STATS_TYPE(CARD_STATS(id)); }
 #define CARD_TYPE(id) GetCardType(id)
 /* Returns the card number of a card ID (gCardIdToNumber at its constant address). */
-static inline u16 GetCardNumber(int id) { return ((const u16 *)0x08622AB4)[id & CARD_ID_MASK]; }
+static inline u16 GetCardNumber(int id) { return ((const u16 *)CARD_ID_TO_NUMBER_ADDR)[id & CARD_ID_MASK]; }
 #define CARD_NUMBER(id) GetCardNumber(id)
 /* GetCardNumber through the table's symbol: the equip switch reads the number table this way, so one
  * register holds the table address across the case bodies; elsewhere the ROM reloads a constant address. */
@@ -94,7 +94,7 @@ static inline u16 GetDeclaredValue(struct DuelZone *zone) { return zone->declare
  * the top byte. volatile keeps the word read; the original qualifier is unknown. */
 static inline int GetCardAttribute(u16 id)
 {
-    return CARD_STATS_ATTR(((const volatile u32 *)0x08621DE0)[id & CARD_ID_MASK]);
+    return CARD_STATS_ATTR(((const volatile u32 *)CARD_STATS_ADDR)[id & CARD_ID_MASK]);
 }
 
 /* Printed ATK of a card: 0 for Trap, Magic and Ticket cards, 4000 for the Egyptian Gods. */

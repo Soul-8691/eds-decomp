@@ -50,7 +50,7 @@
  * table address before the index math, which shifts every reload register of
  * DuelCmd_PlaceSpellTrapFromHand by one.
  */
-#define CARD_STATS_WORD(id) (((const u32 *)0x08621DE0)[(id) & CARD_ID_MASK])    /* gCardStats[id] */
+#define CARD_STATS_WORD(id) (((const u32 *)CARD_STATS_ADDR)[(id) & CARD_ID_MASK])    /* gCardStats[id] */
 #define CARD_TYPE(id)       CARD_STATS_TYPE(CARD_STATS_WORD(id))                 /* enum CardType */
 #define CARD_SUBTYPE(id)    CARD_STATS_SUBTYPE(CARD_STATS_WORD(id))              /* enum SpellSubtype */
 

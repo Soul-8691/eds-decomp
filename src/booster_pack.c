@@ -102,9 +102,9 @@ struct PackBgScrollView {
 
 /* Card table lookups. The tables are addressed by their ROM literals on purpose: going
  * through the gCardStats[] symbols makes the compiler load different literal pools here. */
-#define CARD_STATS_WORD(id) (((const u32 *)0x08621DE0)[(id) & CARD_ID_MASK])   /* gCardStats[id] */
+#define CARD_STATS_WORD(id) (((const u32 *)CARD_STATS_ADDR)[(id) & CARD_ID_MASK])   /* gCardStats[id] */
 #define CARD_TYPE(id)       CARD_STATS_TYPE(CARD_STATS_WORD(id))                /* enum CardType */
-#define CARD_NUMBER(id)     (((const u16 *)0x08622AB4)[(id) & CARD_ID_MASK])    /* gCardIdToNumber[id] */
+#define CARD_NUMBER(id)     (((const u16 *)CARD_ID_TO_NUMBER_ADDR)[(id) & CARD_ID_MASK])    /* gCardIdToNumber[id] */
 #define CARD_ID_OF(number)  (((const u16 *)0x08623DF4)[(number)])               /* gCardNumberToId[number] */
 
 /* Slot k of a pack's slot table; the ROM walks the table with byte arithmetic. */

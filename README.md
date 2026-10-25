@@ -47,8 +47,11 @@ command below from a WSL shell in the repository.
    dumps, and other games.
 5. Build the ROM and compare it with the original:
    ```
-   make -j$(nproc) compare          # prints "eds.gba: OK" when it matches
+   make -j$(nproc)                  # builds eds.gba
    ```
+   This build adds 100 cards to the game (`config/new_cards.tsv`, wiki page `added-cards`), so `make compare` no
+   longer matches the original. `make setup` also downloads the added cards' stats, text and art from the
+   [YGOPRODeck API](https://ygoprodeck.com/api-guide/) into `assets/new_cards/` (needs network and Pillow).
 
 After setup, the build reads only `assets/` and the source code, so it no longer needs the ROM file.
 

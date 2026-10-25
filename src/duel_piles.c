@@ -43,8 +43,8 @@
  * (0x08622AB4). Matching: old_agbcc then reloads the table address at every use, inside loops too,
  * instead of hoisting it as it does for the symbols. Same tables, same bytes.
  */
-#define CARD_STATS(id)   (((const u32 *)0x08621DE0)[(id) & CARD_ID_MASK])
-#define CARD_NUMBER(id)  (((const u16 *)0x08622AB4)[(id) & CARD_ID_MASK])
+#define CARD_STATS(id)   (((const u32 *)CARD_STATS_ADDR)[(id) & CARD_ID_MASK])
+#define CARD_NUMBER(id)  (((const u16 *)CARD_ID_TO_NUMBER_ADDR)[(id) & CARD_ID_MASK])
 #define CARD_TYPE(id)    CARD_STATS_TYPE(CARD_STATS(id))      /* enum CardType */
 #define CARD_KIND(id)    CARD_STATS_KIND(CARD_STATS(id))      /* monster kind: enum CardKind 0-3 */
 /* Card numbers 1920-1999 are monster tokens. */
@@ -373,7 +373,7 @@ int FindMagicInHand(int player)
 }
 
 /* CARD_STATS with the ID mask passed in: used only by FindNonFieldMagicInHand (see its FAKEMATCH). */
-#define CARD_STATS_M(id, mask)   (((const u32 *)0x08621DE0)[(id) & (mask)])
+#define CARD_STATS_M(id, mask)   (((const u32 *)CARD_STATS_ADDR)[(id) & (mask)])
 #define CARD_TYPE_M(id, mask)    CARD_STATS_TYPE(CARD_STATS_M(id, mask))
 #define CARD_SUBTYPE_M(id, mask) CARD_STATS_SUBTYPE(CARD_STATS_M(id, mask))
 

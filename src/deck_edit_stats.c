@@ -106,16 +106,10 @@ side_count:
     }
 }
 
-/* Local view of gDeckEdit for the list rows and counts (same offsets as struct DeckEdit's
- * lists/listCount/listRow; the union reaches each list's row array from the lists base). */
+/* Local view of gDeckEdit for the list counts (same offsets as struct DeckEdit's listCount/listRow); the
+ * list rows themselves are gDeckEditCardLists. */
 struct CountState {
-    u8 pad[0x644];
-    union {
-        u16 trunkRows[1][0x394];
-        struct { u8 pad[0x66A]; u16 deckRows[1][0x394]; } deckView;
-        struct { u8 pad[0x70A]; u16 sideRows[1][0x394]; } sideView;
-    } lists;
-    u8 pad1478[0x1C];
+    u8 pad[0x1494];
     u16 listCount[2][3];
     u8 listRow[3];
 };
@@ -123,8 +117,8 @@ struct CountState {
 u32 GetCardCopiesInList(int, int);
 /* Literal table addresses (gCardStats / gCardIdToNumber), reloaded per use like the ROM;
  * see card_data.h on why the symbol form generates different code. */
-#define STATS_WORD(id) (((const u32 *)0x08621DE0)[(id) & CARD_ID_MASK])
-#define CARD_NUMBER_OF(id) (((const u16 *)0x08622AB4)[(id) & CARD_ID_MASK])
+#define STATS_WORD(id) (((const u32 *)CARD_STATS_ADDR)[(id) & CARD_ID_MASK])
+#define CARD_NUMBER_OF(id) (((const u16 *)CARD_ID_TO_NUMBER_ADDR)[(id) & CARD_ID_MASK])
 #define CARD_KIND_OF(id) ((int)CARD_STATS_TYPE(STATS_WORD(id)))
 /* Card frame kind: CARD_FRAME_RITUAL for Obelisk, CARD_FRAME_EFFECT for Slifer/Ra, 7/8/9 for
  * Magic/Trap/Ticket cards, else the stats kind bits. Direct returns (not `v = ...; break;`)
@@ -171,9 +165,9 @@ u32 DeckStats_CountCategory(u8 list, u8 category)
     u16 *cards;
     u16 i;
     switch (list) {
-    case DECKEDIT_LIST_TRUNK: cards = CS_STATE.lists.trunkRows[row]; break;
-    case DECKEDIT_LIST_MAIN_DECK: cards = CS_STATE.lists.deckView.deckRows[row]; break;
-    case DECKEDIT_LIST_SIDE_DECK: cards = CS_STATE.lists.sideView.sideRows[row]; break;
+    case DECKEDIT_LIST_TRUNK: cards = gDeckEditCardLists[row].trunk; break;
+    case DECKEDIT_LIST_MAIN_DECK: cards = gDeckEditCardLists[row].deck; break;
+    case DECKEDIT_LIST_SIDE_DECK: cards = gDeckEditCardLists[row].side; break;
     }
     switch (category) {
     case DECK_STATS_NORMAL: COUNT_KIND(CARD_FRAME_NORMAL); break;
@@ -522,7 +516,7 @@ struct TrunkInit { u8 pad0[8]; struct TrunkEntryInit e[1]; };
 #define TRUNK_INIT ((struct TrunkInit *)&gSaveData)
 int DeckEdit_Init(void)
 {
-    u16 i, j;
+    u16 i, j, k;
     struct CursorRowPageView *panel;
     MemClear16(&INIT, 0x1C5C);
     gMain.vblankFlags = 1;
@@ -547,7 +541,7 @@ int DeckEdit_Init(void)
     Ease_Init(0, 0, 0, (struct Ease *)((u8 *)&INIT + 0x628));
     ClearKatakanaFlag((u8 *)&INIT + 0x640);
     ObjAffineInit((struct ObjAffine *)((u8 *)&INIT + 0x18B0));
-    for (i = 1; i <= 0x334 && CARD_NUMBER_OF(i) != 0xFFFF; i++) {
+    for (k = 0; (i = gCardIdsByName[k]) != 0; k++) {   /* every card in name order */
         if ((u16)(CARD_NUMBER_OF(i) - CARD_NUMBER_TOKEN_FIRST) > 0x4F) {
             if (TRUNK_INIT->e[i].count)
                 DeckEdit_SetListCard(i, DECKEDIT_LIST_TRUNK, INIT.listRow[0], INIT.listCount[INIT.listRow[0]][0]++);

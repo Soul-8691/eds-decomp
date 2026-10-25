@@ -35,7 +35,7 @@ extern const u8 gExplosionAnim[];
 
 /* Card number of a card ID, read through the integer-constant address of gCardIdToNumber. Matching: the ROM
  * forms the address after the index math (with the symbol, before). Same table, same bytes. */
-#define CARD_NUMBER(id) (((const u16 *)0x08622AB4)[(id) & CARD_ID_MASK])
+#define CARD_NUMBER(id) (((const u16 *)CARD_ID_TO_NUMBER_ADDR)[(id) & CARD_ID_MASK])
 
 /* Card numbers 1920-1999 are monster tokens: they vanish instead of moving to a pile. */
 #define IS_TOKEN_NUMBER(no) ((u16)((no) - CARD_NUMBER_TOKEN_FIRST) < CARD_NUMBER_TOKEN_END - CARD_NUMBER_TOKEN_FIRST)

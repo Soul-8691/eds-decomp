@@ -85,11 +85,11 @@ extern const u8 gStrSelectGraveMagicToDeck[];       /* 0x0808379C "Select a Magi
  * Matching: these give the ROM's literal pools and reloads; the symbol forms (card_data.h) generate other
  * code.
  */
-#define CARD_STATS(id)              (((const u32 *)0x08621DE0)[(id) & CARD_ID_MASK])
-#define CARD_NUMBER(id)             (((const u16 *)0x08622AB4)[(id) & CARD_ID_MASK])
+#define CARD_STATS(id)              (((const u32 *)CARD_STATS_ADDR)[(id) & CARD_ID_MASK])
+#define CARD_NUMBER(id)             (((const u16 *)CARD_ID_TO_NUMBER_ADDR)[(id) & CARD_ID_MASK])
 #define CARD_TYPE(id)               CARD_STATS_TYPE(CARD_STATS(id))     /* enum CardType */
 /* enum CardType of a card word, indexing gCardStats with the word's low 11 bits (lsl #21; lsr #21). */
-#define CARD_WORD_TYPE(word)        CARD_STATS_TYPE(((const u32 *)0x08621DE0)[(u32)(word) << 21 >> 21])
+#define CARD_WORD_TYPE(word)        CARD_STATS_TYPE(((const u32 *)CARD_STATS_ADDR)[(u32)(word) << 21 >> 21])
 
 /*
  * &gDuelZones[side].zones[zone] by byte arithmetic, side being 0 or 1. Matching: the two forms add the zone

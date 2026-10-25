@@ -78,8 +78,8 @@ void DuelCmd_PushInt(int cmd, u16 arg2, u16 arg4, int arg6) asm("DuelCmd_Push");
  * Card tables through integer-constant addresses: gCardStats (0x08621DE0) and gCardIdToNumber
  * (0x08622AB4). Matching: these give the ROM's literal pools; the symbol forms generate other code.
  */
-#define CARD_STATS(id)      (((const u32 *)0x08621DE0)[(id) & CARD_ID_MASK])
-#define CARD_NUMBER(id)     (((const u16 *)0x08622AB4)[(id) & CARD_ID_MASK])
+#define CARD_STATS(id)      (((const u32 *)CARD_STATS_ADDR)[(id) & CARD_ID_MASK])
+#define CARD_NUMBER(id)     (((const u16 *)CARD_ID_TO_NUMBER_ADDR)[(id) & CARD_ID_MASK])
 #define CARD_TYPE(id)       CARD_STATS_TYPE(CARD_STATS(id))     /* enum CardType */
 
 /*
@@ -292,7 +292,7 @@ int EffectBanishGraveToDestroyPrepare(struct ChainEntry *card, struct ChainEntry
 {
     /* FAKEMATCH: a 64-bit temp holding the gCardStats address stops agbcc from hoisting the table
      * address out of the loop; the ROM reloads it inside. */
-    unsigned long long cardStats = 0x08621DE0;
+    unsigned long long cardStats = CARD_STATS_ADDR;
     int graveMonsters;
     int player, zone;
     int level;
@@ -474,7 +474,7 @@ int EffectSanganResolve(struct ChainEntry *link)
         ShowPickedCard(link->player,
                      CARD_ID(gCardListView.cards[gCardListView.top + gCardListView.cursorRow]));
         if (AddDeckCardToHand(link->player,
-                              ((const u16 *)0x08622AB4)[CARD_ID11(gCardListView.cards[gCardListView.top
+                              ((const u16 *)CARD_ID_TO_NUMBER_ADDR)[CARD_ID11(gCardListView.cards[gCardListView.top
                                                                                    + gCardListView.cursorRow])])
             != 0)
             DuelCmd_Push(PLAYER_CMD(link->player, DUEL_CMD_SHUFFLE_DECK), 0, 0, 0);

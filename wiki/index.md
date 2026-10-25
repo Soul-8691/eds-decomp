@@ -22,6 +22,7 @@ Start with [[overview]]. The decompilation is 100% matched since 2026-10-02: all
 - [[duel-engine]]: duel state, player/zone layout, command runner and screen state (from the shared headers).
 - [[game-overview]]: what EDS is, and the major systems.
 - [[program-flow]]: boot → `GameInit` → `MainLoop`; the scene and step-runner system; scene table.
+- [[added-cards]]: the 100 cards added beyond the original 820: IDs, numbers, YGOPRODeck data, moved tables, RAM and pointer fix-ups.
 - [[cards]]: card model (1-based alphabetical IDs vs. classic "card numbers", kinds, types).
 - [[sound-engine]]: custom Konami driver (PSG + 6 PCM voices, ARM mixer); samples, wave-RAM patterns, noise presets, pitch table. *verified data*
 - [[text-system]]: ASCII text, Shift-JIS-capable renderer, `$`/`@` markup codes.

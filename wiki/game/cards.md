@@ -4,11 +4,15 @@ type: game
 status: draft
 confidence: high
 sources: [rom-analysis, web-card-references]
-updated: 2026-10-02
+updated: 2026-10-24
 ---
 # Cards in EDS
 
 This page gives the big picture of how EDS represents cards. Addresses and layouts live on the linked data pages.
+
+> [!note] Expanded ROM (2026-10-24)
+> The build now adds 100 cards (IDs 821–920) and moves most per-card tables to the end of the ROM; the counts and
+> addresses below describe the original game. See [[added-cards]].
 
 ## Card identity
 - There are 820 cards, with IDs 1–820. That's 819 collectable cards plus the Insect Monster Token (ID 820). The public figure is 819 cards; see [[web-card-references]].

@@ -690,9 +690,9 @@ void DrawCardPortrait(u16 screenBlock, u16 cell, u16 cardId, u16 tileBase, u16 p
             map[j] = tile++;
         map += 0x20;
     }
-    MemCopy16((void *)(0x05000000 + (pal >> 4) * 32), (const void *)(0x08608360 + cardId * 0x80), 0x80);
+    MemCopy16((void *)(0x05000000 + (pal >> 4) * 32), (const void *)(CARD_ART_PALETTES_ADDR + cardId * 0x80), 0x80);
     off = tileBase * 32;
-    src = (const u16 *)(0x082A6500 + cardId * 0x10E0);
+    src = (const u16 *)(CARD_ART_GFX_ADDR + cardId * 0x10E0);
     dst = (u16 *)(0x06004000 + off);
     i = 0;
     m6 = 0x3F;

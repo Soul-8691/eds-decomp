@@ -115,8 +115,8 @@ struct TrunkCopiesByte { u8 pad0[9]; u8 copies; };
 /* The card tables are read through their literal ROM addresses: per include/card_data.h the
  * integer-constant form and the symbol form (gCardStats / gCardIdToNumber) generate different
  * code, and this unit matches with the literal form. */
-#define CARD_STATS(id) (((const u32 *)0x08621DE0)[(id) & CARD_ID_MASK])
-#define CARD_NUMBER(id) (((const u16 *)0x08622AB4)[(id) & CARD_ID_MASK])
+#define CARD_STATS(id) (((const u32 *)CARD_STATS_ADDR)[(id) & CARD_ID_MASK])
+#define CARD_NUMBER(id) (((const u16 *)CARD_ID_TO_NUMBER_ADDR)[(id) & CARD_ID_MASK])
 #define CARD_TYPE_OF(id) ((int)((CARD_STATS(id) & CARD_STATS_TYPE_MASK) >> CARD_STATS_TYPE_SHIFT))
 
 /* One raw 16-byte frame-slot entry of the ring (deck_edit.h struct FrameSlot); the slot code
@@ -139,7 +139,7 @@ void DeckEdit_DrawLevelStars(u8 *map, u16 col, u16 row, u8 perRow)
     const u32 *stats;
     int type;
     id = DeckEdit_GetListCard(gDeckEdit.curList, gDeckEdit.listRow[gDeckEdit.curList], gDeckEdit.listPos[gDeckEdit.curList]);
-    stats = &((const u32 *)0x08621DE0)[(id << 21) >> 21];   /* CARD_ID_MASK in shift form */
+    stats = &((const u32 *)CARD_STATS_ADDR)[(id << 21) >> 21];   /* CARD_ID_MASK in shift form */
     type = CARD_STATS_TYPE(*stats);
     for (;;) {
         u8 n = i;

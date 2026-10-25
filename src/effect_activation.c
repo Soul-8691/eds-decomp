@@ -51,8 +51,8 @@ extern const u8 gStrSelectMagicToDiscard[];     /* 0x08082810 "Please select a M
  * Card tables read through integer-constant addresses: gCardIdToNumber (0x08622AB4) and gCardStats
  * (0x08621DE0). Matching: the symbol forms (card_data.h) load other literals.
  */
-#define CARD_NUMBER(id) (((const u16 *)0x08622AB4)[CARD_ID_MASK & (id)])   /* gCardIdToNumber[id] */
-#define CARD_STATS(id)  (((const u32 *)0x08621DE0)[CARD_ID_MASK & (id)])   /* gCardStats[id] */
+#define CARD_NUMBER(id) (((const u16 *)CARD_ID_TO_NUMBER_ADDR)[CARD_ID_MASK & (id)])   /* gCardIdToNumber[id] */
+#define CARD_STATS(id)  (((const u32 *)CARD_STATS_ADDR)[CARD_ID_MASK & (id)])   /* gCardStats[id] */
 #define CARD_TYPE(id)   CARD_STATS_TYPE(CARD_STATS(id))                     /* enum CardType */
 
 /*
@@ -465,7 +465,7 @@ u16 CanChainHandCard(struct ChainEntry *chainLink, int player, int handIdx)
     MemCopy16(&entry, chainLink, sizeof(struct ChainEntry));
     entry.player = player;
     entry.card = cardId;
-    stats = ((const u32 *)0x08621DE0)[tableIdx];    /* gCardStats[cardId]; the mask is applied above */
+    stats = ((const u32 *)CARD_STATS_ADDR)[tableIdx];    /* gCardStats[cardId]; the mask is applied above */
     if (CARD_STATS_TYPE(stats) == CARD_TYPE_MAGIC && CARD_STATS_SUBTYPE(stats) == SPELL_QUICK_PLAY
         && GetCardSpellSpeed(cardId) >= GetCardSpellSpeed(chainLink->card)
         && CanPlaceSpellTrapCard(player, cardId))

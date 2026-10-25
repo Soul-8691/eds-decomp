@@ -865,3 +865,16 @@ updated: 2026-09-29
   `tools/dr python3 tools/check_all.py -j 8` (112/112).
 - Pages: [[toolchain]], [[agbcc]], [[rom-free-workflow]], [[decomp-workflow]], [[decomp-permuter]], [[m2c]],
   [[objdiff]], [[matching-tricks]], [[overview]], [[index]].
+
+## [2026-10-24] progress | 100 added cards (IDs 821-920), expanded ROM
+- Added the first 100 cards of `missing.txt` with stats, text, passcodes and cropped art from YGOPRODeck
+  (`config/new_cards.tsv`, `tools/newcards.py`, `assets/new_cards/`). Constants in `include/constants/cards.h`.
+- The per-card tables now have 921 entries. Names grow in place, `gCardNumberToId` stays, and the rest moved to
+  `0x08800000`+. New `gCardIdsByName` gives the alphabetical list order. The ROM is 12.9 MB.
+- Deck Edit lists moved to RAM `0x0202A000` (`gDeckEditCardLists`). `CARD_ID_COUNT` 921; the `0x334` bounds were updated.
+- The code no longer matches, so `.rodata` is pinned at `0x08080A20` (`tools/mkld.py`) and `tools/fixptrs.py`
+  relocates the 1163 function pointers in the data tables. The 221 integer table addresses in C now name symbols
+  (`CARD_*_ADDR`).
+- Found: Ring of Destruction and Shining Angel are already in EDS as Bell of Destruction and Shining Fairy.
+- Verified statically (tables, symbol addresses, pointer slots, warnings); not yet run in an emulator.
+- Pages: [[added-cards]] (new), [[cards]], [[ram-map]], [[overview]], [[index]].

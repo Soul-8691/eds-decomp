@@ -58,7 +58,7 @@ extern const u16 gCardNumberToId_1536[];               /* = &gCardNumberToId[CAR
 
 /* The card tables of card_data.h through their constant addresses: the ROM loads the table address as a
  * literal and indexes it directly instead of going through the symbol. */
-#define CARD_NUMBER_OF(id)  (((const u16 *)0x08622AB4)[(id) & CARD_ID_MASK])   /* gCardIdToNumber */
+#define CARD_NUMBER_OF(id)  (((const u16 *)CARD_ID_TO_NUMBER_ADDR)[(id) & CARD_ID_MASK])   /* gCardIdToNumber */
 #define CARD_ID_OF(number)  (((const u16 *)0x08623DF4)[(number)])              /* gCardNumberToId */
 #define CARD_NAME_OF(id)    ((const char *)0x0822C720 + ((id) << 6))           /* gCardNames record */
 
@@ -130,7 +130,7 @@ int EffectBlastJugglerCheckInts(int player, int zone) asm("EffectBlastJugglerChe
  * the stats word (gCardStats through its constant address). */
 static inline int GetCardLevel(u16 cardId)
 {
-    int type = (((const u32 *)0x08621DE0)[cardId & CARD_ID_MASK] & CARD_STATS_TYPE_MASK) >> CARD_STATS_TYPE_SHIFT;
+    int type = (((const u32 *)CARD_STATS_ADDR)[cardId & CARD_ID_MASK] & CARD_STATS_TYPE_MASK) >> CARD_STATS_TYPE_SHIFT;
     switch (type) {
     case CARD_TYPE_TRAP:
     case CARD_TYPE_MAGIC:
@@ -139,7 +139,7 @@ static inline int GetCardLevel(u16 cardId)
     case CARD_TYPE_DIVINE:
         return 10;
     default:
-        return (((const u32 *)0x08621DE0)[cardId & CARD_ID_MASK] & CARD_STATS_LEVEL_MASK) >> CARD_STATS_LEVEL_SHIFT;
+        return (((const u32 *)CARD_STATS_ADDR)[cardId & CARD_ID_MASK] & CARD_STATS_LEVEL_MASK) >> CARD_STATS_LEVEL_SHIFT;
     }
 }
 

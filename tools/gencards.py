@@ -27,6 +27,7 @@ import re
 import sys
 
 OUT = 'include/constants/cards.h'
+NEW_CARDS = 'config/new_cards.tsv'
 ALIASES = 'build/readability/cards_aliases.json'
 
 # Card numbers with no EDS card that the matched code compares, with what the code does with each (from the
@@ -81,6 +82,19 @@ def build():
     n2i = load('assets/cards/number_to_id.json')
     effects = load('assets/tables/card_effect_handlers.json')
     tj = load('build/names/types.json') if os.path.exists('build/names/types.json') else None
+
+    # The added cards (config/new_cards.tsv, tools/newcards.py): IDs 821.. with their own card numbers.
+    for line in open(NEW_CARDS, encoding='utf-8'):
+        if line.startswith('#') or line.startswith('id\t') or not line.strip():
+            continue
+        cid, num, _, nm = line.rstrip('\n').split('\t')[:4]
+        cid, num = int(cid), int(num)
+        if cid != len(names):
+            sys.exit(f'{NEW_CARDS}: card ID {cid} does not follow the {len(names) - 1} before it')
+        names.append(nm)
+        i2n += [0xFFFF] * (cid + 1 - len(i2n))
+        i2n[cid] = num
+        n2i[num] = cid
 
     # number -> (id, name) for every card ID 1..len(names)-1
     by_number = {}

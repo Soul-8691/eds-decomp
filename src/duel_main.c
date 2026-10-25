@@ -121,10 +121,10 @@ static inline u8 IsZoneDisabled(u8 *zone) { return zone[0x91] & 8; }
 
 /* gCardStats through its constant address. Matching: the ROM reloads the literal at each use, which the
  * symbol form does not give. */
-#define CARD_STATS_C(id)    (((const u32 *)0x08621DE0)[(id) & CARD_ID_MASK])
+#define CARD_STATS_C(id)    (((const u32 *)CARD_STATS_ADDR)[(id) & CARD_ID_MASK])
 /* gCardIdToNumber through its constant address (CARD_NUMBER_C) and through the symbol (CARD_NUMBER). Matching:
  * Chain_Resolve uses the constant form, Chain_Update the symbol form, as in the ROM. */
-#define CARD_NUMBER_C(id)   (((const u16 *)0x08622AB4)[(id) & CARD_ID_MASK])
+#define CARD_NUMBER_C(id)   (((const u16 *)CARD_ID_TO_NUMBER_ADDR)[(id) & CARD_ID_MASK])
 #define CARD_NUMBER(id)     (gCardIdToNumber[(id) & CARD_ID_MASK])
 
 /* Magic/Trap subtype of a stats word (enum SpellSubtype), 0 for other card types. */

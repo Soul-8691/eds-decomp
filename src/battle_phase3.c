@@ -81,9 +81,9 @@ extern void PlaceNextSpiritMessageU8(int player, u8 zone) asm("PlaceNextSpiritMe
 
 /* The card tables of card_data.h through their constant addresses: the ROM loads the table address as a
  * literal and indexes it directly instead of going through the symbol. */
-#define CARD_NUMBER_OF(id)  (((const u16 *)0x08622AB4)[(id) & CARD_ID_MASK])   /* gCardIdToNumber */
+#define CARD_NUMBER_OF(id)  (((const u16 *)CARD_ID_TO_NUMBER_ADDR)[(id) & CARD_ID_MASK])   /* gCardIdToNumber */
 #define CARD_ID_OF(number)  (((const u16 *)0x08623DF4)[(number)])              /* gCardNumberToId */
-#define CARD_STATS_OF(id)   (((const u32 *)0x08621DE0)[(id) & CARD_ID_MASK])   /* gCardStats */
+#define CARD_STATS_OF(id)   (((const u32 *)CARD_STATS_ADDR)[(id) & CARD_ID_MASK])   /* gCardStats */
 
 /* Card ID of a field zone in any of the zone views below (the card word's low 12 bits). */
 #define ZONE_ID(z)          (((z)->card << 20) >> 20)

@@ -83,7 +83,7 @@ struct DuelZoneDisabledView {
 /* gCardIdToNumber[word & 0x7FF] for a card word: the card number of its ID. Matching: read through the
  * table's integer address (0x08622AB4), which forms the index ((word << 21) >> 20) before the table
  * address; the symbol form gCardIdToNumber[] gives other code. */
-#define CARD_NUMBER_OF_WORD(word) (*(const u16 *)(0x08622AB4 + (((u32)(word) << 21) >> 20)))
+#define CARD_NUMBER_OF_WORD(word) (*(const u16 *)(CARD_ID_TO_NUMBER_ADDR + (((u32)(word) << 21) >> 20)))
 
 /* gCardNumberToId[number]; an alternate-art number (2000 + n) maps to the ID after card n's. Each unit keeps
  * its own copy of this helper (card_data.h). Matching: read through the table's integer address

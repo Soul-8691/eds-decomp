@@ -29,8 +29,8 @@
 /* gCardStats[id] and gCardIdToNumber[id] through their integer addresses 0x08621DE0 / 0x08622AB4 (HEADERS.md
  * pattern 4). Matching: GCC then reloads the table address at every use instead of keeping it in a register;
  * the symbol forms of card_data.h give different code. */
-#define CARD_STATS_WORD(id) (((const u32 *)0x08621DE0)[(id) & CARD_ID_MASK])   /* gCardStats[id] */
-#define CARD_NUMBER(id)     (((const u16 *)0x08622AB4)[(id) & CARD_ID_MASK])   /* gCardIdToNumber[id] */
+#define CARD_STATS_WORD(id) (((const u32 *)CARD_STATS_ADDR)[(id) & CARD_ID_MASK])   /* gCardStats[id] */
+#define CARD_NUMBER(id)     (((const u16 *)CARD_ID_TO_NUMBER_ADDR)[(id) & CARD_ID_MASK])   /* gCardIdToNumber[id] */
 
 /* A view of FadeToBlack (palette.h: u32 FadeToBlack(s32 step)) with a u16 parameter and result. Matching:
  * CardDetail_FadeOut tests only the low halfword of the result (lsl #16 after the call), which the u32
@@ -50,7 +50,7 @@ extern const s16 gCardDetailWaveTable[24][16];
 #define IS_TOKEN(id) \
     ((u16)(CARD_NUMBER(id) - CARD_NUMBER_TOKEN_FIRST) < CARD_NUMBER_TOKEN_END - CARD_NUMBER_TOKEN_FIRST)
 
-#define LAST_CARD_ID            (CARD_ID_COUNT - 1)     /* 820 */
+#define LAST_CARD_ID            (CARD_ID_COUNT - 1)     /* 920 */
 #define DEBUG_FIRST_CARD_ID     800                     /* World Suppression */
 #define DESCRIPTION_VIEW_HEIGHT 0x70                    /* visible lines of the description (BG3) */
 

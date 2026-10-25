@@ -47,8 +47,8 @@ extern void DuelCmdPush16(u32 cmd, u16 arg2, u16 arg4, u32 arg6) asm("DuelCmd_Pu
 
 /* Matching: the card tables are read through integer-constant addresses (the ROM reloads the table address at every
  * use; the symbol forms generate other literal pools). */
-#define CARD_NUMBER(id) (((const u16 *)0x08622AB4)[(id) & CARD_ID_MASK])       /* gCardIdToNumber */
-#define CARD_STATS(id) (((const u32 *)0x08621DE0)[(id) & CARD_ID_MASK])        /* gCardStats */
+#define CARD_NUMBER(id) (((const u16 *)CARD_ID_TO_NUMBER_ADDR)[(id) & CARD_ID_MASK])       /* gCardIdToNumber */
+#define CARD_STATS(id) (((const u32 *)CARD_STATS_ADDR)[(id) & CARD_ID_MASK])        /* gCardStats */
 #define gCardNumberToIdAddr ((const u16 *)0x08623DF4)                           /* gCardNumberToId */
 
 /* Remove every card with card number `number` from the deck of `player`. */
@@ -547,7 +547,7 @@ static inline u32 AiCardLevel(u16 id)
  */
 static inline u32 AiCardLevelMasks(u32 id, u32 mask, u32 typeMask)
 {
-    switch ((int)((((const u32 *)0x08621DE0)[id & mask] & typeMask) >> CARD_STATS_TYPE_SHIFT)) {
+    switch ((int)((((const u32 *)CARD_STATS_ADDR)[id & mask] & typeMask) >> CARD_STATS_TYPE_SHIFT)) {
     case CARD_TYPE_TRAP:
     case CARD_TYPE_MAGIC:
     case CARD_TYPE_TICKET:
@@ -555,7 +555,7 @@ static inline u32 AiCardLevelMasks(u32 id, u32 mask, u32 typeMask)
     case CARD_TYPE_DIVINE:
         return 10;
     default:
-        return CARD_STATS_LEVEL(((const u32 *)0x08621DE0)[id & mask]);
+        return CARD_STATS_LEVEL(((const u32 *)CARD_STATS_ADDR)[id & mask]);
     }
 }
 
@@ -668,7 +668,7 @@ int AiPlaySpells(void)
                     mask = loadMask;
                     do {
                         u32 id = CARD_ID(*(u32 *)((u8 *)gDuelHandP1 + i * 4));
-                        if (((((const u32 *)0x08621DE0)[id & mask] & typeMask) >> CARD_STATS_TYPE_SHIFT) <= CARD_TYPE_REPTILE
+                        if (((((const u32 *)CARD_STATS_ADDR)[id & mask] & typeMask) >> CARD_STATS_TYPE_SHIFT) <= CARD_TYPE_REPTILE
                             && IsSpecialSummonOnly(id) == 0 && AiCardLevelMasks(id, mask, typeMask) > LEVEL_MAX_NO_TRIBUTE
                             && (u16)AiTryPlaySpellTrap(CARD_CHANGE_OF_HEART))
                             return 0;

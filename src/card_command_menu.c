@@ -41,10 +41,10 @@ extern const u16 gCardNumberToId_1547[];               /* CARD_1547 (0 in EDS): 
 
 /* Matching: the card tables through their integer addresses (not the gCardStats / gCardIdToNumber symbols:
  * different literal-pool entries). */
-#define CARD_NUMBER_AT(index)   (((const u16 *)0x08622AB4)[(index)])   /* the same, for an index already masked */
+#define CARD_NUMBER_AT(index)   (((const u16 *)CARD_ID_TO_NUMBER_ADDR)[(index)])   /* the same, for an index already masked */
 #define CARD_NUMBER_OF(id)      CARD_NUMBER_AT((id) & CARD_ID_MASK)
 #define CARD_STATS_OF(id)       CARD_STATS_AT((id) & CARD_ID_MASK)
-#define CARD_STATS_AT(index)    (((const u32 *)0x08621DE0)[(index)])   /* the same, for an index already masked */
+#define CARD_STATS_AT(index)    (((const u32 *)CARD_STATS_ADDR)[(index)])   /* the same, for an index already masked */
 
 /* Byte offsets in gDuel: the zones of player 0, and a zone from there (zone * zone size + player * stride). */
 #define ZONES_OFFSET            OFFSET_OF(struct DuelState, players[0].zones)

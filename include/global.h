@@ -39,4 +39,22 @@ typedef u32 bool32;
 
 asm(".include \"asm/macros.inc\"");
 
+/* Addresses of the per-card tables that moved to the end of the ROM to hold the added cards (data/
+ * rodata_08087FD0.s). Units that read a table through an integer address (((const u32 *)0x08621DE0)[id])
+ * now use these; the externs have their own C names so they never clash with a unit's local declaration. */
+extern const u8 gCardDescriptionsAt[] asm("gCardDescriptions");
+extern const u8 gCardArtGfxAt[] asm("gCardArtGfx");
+extern const u8 gCardArtPalettesAt[] asm("gCardArtPalettes");
+extern const u8 gCardStatsAt[] asm("gCardStats");
+extern const u8 gCardIdToNumberAt[] asm("gCardIdToNumber");
+extern const u8 gCardPasswordsAt[] asm("gCardPasswords");
+#define CARD_DESCRIPTIONS_ADDR      ((u32)gCardDescriptionsAt)
+#define CARD_ART_GFX_ADDR           ((u32)gCardArtGfxAt)
+#define CARD_ART_PALETTES_ADDR      ((u32)gCardArtPalettesAt)
+#define CARD_STATS_ADDR             ((u32)gCardStatsAt)
+#define CARD_ID_TO_NUMBER_ADDR      ((u32)gCardIdToNumberAt)
+#define CARD_PASSWORDS_ADDR         ((u32)gCardPasswordsAt)
+/* Every card ID in name order, then 0 (card_data.h); the card-list builders walk it. */
+extern const u16 gCardIdsByName[];
+
 #endif /* GUARD_GLOBAL_H */

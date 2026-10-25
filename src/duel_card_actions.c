@@ -68,8 +68,8 @@ extern const u8 gStrInvalidated[];  /* "Invalidated": ChainEntry.negated */
 
 /* The card tables through integer-constant addresses: gCardIdToNumber (0x08622AB4), gCardStats
  * (0x08621DE0) and gCardNumberToId (0x08623DF4). Matching: the literal form, not the symbols. */
-#define CARD_NUMBER(id) (((const u16 *)0x08622AB4)[(id) & CARD_ID_MASK])
-#define CARD_STATS(id) (((const u32 *)0x08621DE0)[(id) & CARD_ID_MASK])
+#define CARD_NUMBER(id) (((const u16 *)CARD_ID_TO_NUMBER_ADDR)[(id) & CARD_ID_MASK])
+#define CARD_STATS(id) (((const u32 *)CARD_STATS_ADDR)[(id) & CARD_ID_MASK])
 #define CARD_TYPE(id) CARD_STATS_TYPE(CARD_STATS(id))   /* enum CardType */
 #define CARD_NUMBER_TO_ID ((const u16 *)0x08623DF4)
 

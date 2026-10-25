@@ -44,8 +44,8 @@ int CollectEffectTargetsInt(int player, int cardNumber, int param) asm("CollectE
  * Card tables through integer-constant addresses: gCardStats (0x08621DE0) and gCardIdToNumber
  * (0x08622AB4). Matching: these give the ROM's literal pools; the symbol forms generate other code.
  */
-#define CARD_STATS(id)      (((const u32 *)0x08621DE0)[(id) & CARD_ID_MASK])
-#define CARD_NUMBER(id)     (((const u16 *)0x08622AB4)[(id) & CARD_ID_MASK])
+#define CARD_STATS(id)      (((const u32 *)CARD_STATS_ADDR)[(id) & CARD_ID_MASK])
+#define CARD_NUMBER(id)     (((const u16 *)CARD_ID_TO_NUMBER_ADDR)[(id) & CARD_ID_MASK])
 #define CARD_TYPE(id)       CARD_STATS_TYPE(CARD_STATS(id))     /* enum CardType */
 
 /*

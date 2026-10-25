@@ -2,7 +2,10 @@
 # Builds natively in WSL (or Linux) with agbcc and binutils-arm-none-eabi, like the pret decomps:
 #     make setup            # once: check your ROM (put it in roms/) and extract its data into assets/
 #     make -j$(nproc)       # build eds.gba
-#     make -j$(nproc) compare   # build and check the SHA-1 against the original
+#     make -j$(nproc) compare   # build and check the SHA-1 against the original (now fails, see below)
+# The ROM holds 100 cards more than the original (config/new_cards.tsv), so it no longer matches the
+# original SHA-1; `make` still builds it. Their data comes from YGOPRODeck (tools/newcards.py fetch, run by
+# `make setup` or by the first build that needs it; needs network and Pillow).
 # agbcc is installed into tools/agbcc from a built copy of pret/agbcc next to this repository
 # (../agbcc). The first build does that automatically, or run `make agbcc`; set AGBCC_SRC to use
 # another checkout.
@@ -53,6 +56,7 @@ compare: $(ROM)
 # Check your ROM and extract the game's data into assets/ (never committed).
 setup:
 	$(PYTHON) tools/setup.py
+	$(PYTHON) tools/newcards.py fetch
 
 # agbcc, installed pokefirered-style: ../agbcc/install.sh copies the compilers, headers and
 # libgcc/libc into tools/agbcc. Every C object waits for it (order-only).
@@ -68,6 +72,7 @@ clean:
 
 $(ROM): $(ELF)
 	$(OBJCOPY) -O binary -j .text -j .rodata -j .data --gap-fill 0 $< $@
+	$(PYTHON) tools/fixptrs.py $< $@
 
 # Regenerated on every run, because the object list depends on which src/ files exist and on ASM_UNITS.
 build/ld_script.ld: units.txt tools/mkld.py $(OBJS) FORCE
@@ -85,7 +90,7 @@ build/autosyms.o: build/autosyms.s
 
 $(ELF): build/ld_script.ld build/autosyms.o $(OBJS) | $(CC1_INSTALLED)
 	$(LD) -T build/ld_script.ld -Map $(MAP) -o $@ $(OBJS) build/autosyms.o -L $(AGBLIB) -lgcc -lc
-	$(PYTHON) tools/dumpsyms.py $@ config/symbols.txt
+	$(PYTHON) tools/dumpsyms.py $@ build/symbols.txt   # config/symbols.txt keeps the original ROM's addresses
 
 # The game's data (graphics, text, audio, tables) is never committed. `make setup` extracts it from your
 # ROM into assets/, listed in config/assets.tsv; this step builds those files back into binary form.
@@ -110,7 +115,15 @@ build/asm/%.o: asm/%.s asm/macros.inc
 # They are all made by $(ASSETS_BUILT), so treat a missing one as up to date instead of failing.
 build/assets/%.bin: ;
 
-build/data/%.o: data/%.s $(ASSETS_BUILT)
+# The added cards: their data is fetched once into assets/new_cards/, then appended to the card tables.
+NEWCARDS_DATA  := assets/new_cards/cards.json
+NEWCARDS_BUILT := build/assets/.newcards
+$(NEWCARDS_DATA):
+	$(PYTHON) tools/newcards.py fetch
+$(NEWCARDS_BUILT): $(ASSETS_BUILT) $(NEWCARDS_DATA) config/new_cards.tsv tools/newcards.py $(wildcard assets/new_cards/art/*.png)
+	$(PYTHON) tools/newcards.py build
+
+build/data/%.o: data/%.s $(ASSETS_BUILT) $(NEWCARDS_BUILT)
 	@mkdir -p $(@D)
 	$(AS) $(ASFLAGS) --MD build/data/$*.d -o $@ $<
 

@@ -57,7 +57,7 @@ struct BattleSideRow {
 #define SIDE_ROW(i) ((struct BattleSideRow *)((u8 *)&gBattle + (i) * sizeof(struct BattleSide)))
 
 /* Matching: the card table is read through its integer address (a literal-pool entry of its own). */
-#define CARD_NUMBER_OF(id) (((const u16 *)0x08622AB4)[(id) & CARD_ID_MASK])
+#define CARD_NUMBER_OF(id) (((const u16 *)CARD_ID_TO_NUMBER_ADDR)[(id) & CARD_ID_MASK])
 
 /* Matching: FindAbsorbedMonsterLink is defined to return u16; this unit compares the result with 0xFFFF as an
  * int, with no narrowing of r0. */

@@ -129,7 +129,7 @@ int CanEnterBattlePhase(int player);
 struct ZoneByteView { struct DuelCard card; u16 serial; u8 flags6; u8 unk7[0x91 - 7]; u8 flags91; u8 unk92[2]; };
 #define ZONE_FLAGS6(z) (((struct ZoneByteView *)(z))->flags6)
 #define CARD_ID(w) (((w) << 20) >> 20)
-#define CARD_STATS(id) (((const u32 *)0x08621DE0)[(id) & CARD_ID_MASK])   /* gCardStats, kept as a literal address: the symbol form generates different code (card_data.h) */
+#define CARD_STATS(id) (((const u32 *)CARD_STATS_ADDR)[(id) & CARD_ID_MASK])   /* gCardStats, kept as a literal address: the symbol form generates different code (card_data.h) */
 
 /* Cost class of a card for the AI (see ai_summon): 0 for Trap, Magic and Ticket cards, 10 for
  * Divine cards, otherwise the stats level field (bits 25-28). */
@@ -236,7 +236,7 @@ int AiStepMainPhase(void)
                     /* FAKEMATCH: initialized table terms preserve cost-load scheduling.
                      * The table base stays the literal gCardStats address (0x08621DE0). */
                     register u32 off asm("r0") = idMasked << 2;
-                    register u32 base asm("r2") = 0x08621DE0;
+                    register u32 base asm("r2") = CARD_STATS_ADDR;
                     u32 stats;
                     asm("" : : "r"(off), "r"(base));
                     stats = *(const u32 *)(off + base);
@@ -254,7 +254,7 @@ int AiStepMainPhase(void)
                         u32 base;
                         id &= CARD_ID_MASK;
                         off = id << 2;
-                        base = 0x08621DE0;
+                        base = CARD_STATS_ADDR;
 
                         cost = CARD_STATS_LEVEL(*(const u32 *)(off + base));
                     }
@@ -564,7 +564,7 @@ int AiStepChangePositions(void)
                             u32 off = zone * stride;
                             struct DuelZone *z = (struct DuelZone *)(off + fieldBase);
                             {
-                                int number = *(const u16 *)(((*(u32 *)&z->card << 21) >> 20) + 0x08622AB4);
+                                int number = *(const u16 *)(((*(u32 *)&z->card << 21) >> 20) + CARD_ID_TO_NUMBER_ADDR);
                                 switch (number) {
                                 case CARD_PARASITE_PARACIDE:
                                     if (ZoneFace(savedMask, z) == 0 && canSummon) {
@@ -599,7 +599,7 @@ int AiStepChangePositions(void)
                         if ((ZONE_FLAGS6(z) & 3) == 1) {
                             /* The original call leaves the table base in r1.
                              * HasFlipEffect explicitly consumes its low half. */
-                            if (HasFlipEffect(*(const u16 *)(((*(u32 *)&z->card << 21) >> 20) + 0x08622AB4), 0x08622AB4) == 0 && ZoneSpaceCount(canSummon)) {
+                            if (HasFlipEffect(*(const u16 *)(((*(u32 *)&z->card << 21) >> 20) + CARD_ID_TO_NUMBER_ADDR), CARD_ID_TO_NUMBER_ADDR) == 0 && ZoneSpaceCount(canSummon)) {
                                 QueueFlipSummon(1, cur->subState);
                                 cur->subState++;
                                 return 0;
@@ -628,7 +628,7 @@ int AiStepChangePositions(void)
                         off *= stride;
                         z = (struct DuelZone *)(off + (u32)gDuelZonesP1);
                         if ((ZONE_FLAGS6(z) & 3) == 2 && (gDuelCtrl.aiFlags & AI_FLAG_EXODIA) != 0) {
-                            int number = *(const u16 *)(((*(u32 *)&z->card << 21) >> 20) + 0x08622AB4);
+                            int number = *(const u16 *)(((*(u32 *)&z->card << 21) >> 20) + CARD_ID_TO_NUMBER_ADDR);
                             switch (number) {
                             case CARD_WITCH_OF_THE_BLACK_FOREST:
                             case CARD_SANGAN:
@@ -835,7 +835,7 @@ int AiChooseStrategy(void)
             ok = 0;
             for (n = 0; n < gDuelPlayers.handCount1; n++) {
                 u16 id = CARD_ID(*(u32 *)(n * 4 + (u32)gDuelHandP1));
-                if (IsToonMonster(((const u16 *)0x08622AB4)[id & 0x7FF]) != 0 && CanSummonFromHand(1, id) != 0)
+                if (IsToonMonster(((const u16 *)CARD_ID_TO_NUMBER_ADDR)[id & 0x7FF]) != 0 && CanSummonFromHand(1, id) != 0)
                     ok = 1;
             }
             if (AiFindHandCardByNumber(1, CARD_TOON_WORLD) < 0)
@@ -865,7 +865,7 @@ int AiChooseStrategy(void)
             } while ((int)dz <= (int)&zones[9]);
             for (n = 0; n < gDuelPlayers.handCount1; n++) {
                 u16 id = CARD_ID(*(u32 *)(n * 4 + (u32)gDuelHandP1));
-                if (IsToonMonster(((const u16 *)0x08622AB4)[id & 0x7FF]) != 0 && CanSummonFromHand(1, id) != 0)
+                if (IsToonMonster(((const u16 *)CARD_ID_TO_NUMBER_ADDR)[id & 0x7FF]) != 0 && CanSummonFromHand(1, id) != 0)
                     ok = 1;
             }
             AiRestoreDuelState();
@@ -1005,7 +1005,7 @@ int AiStrategyCyberStein(void)
             aiWork->strategyActive = 0;
             return 0;
         }
-        if (((const u16 *)0x08622AB4)[id & 0x7FF] != CARD_CYBER_STEIN) {
+        if (((const u16 *)CARD_ID_TO_NUMBER_ADDR)[id & 0x7FF] != CARD_CYBER_STEIN) {
             aiWork->strategyActive = 0;
             return 0;
         }

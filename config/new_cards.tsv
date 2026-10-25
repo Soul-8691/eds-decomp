@@ -1,0 +1,110 @@
+# Cards added to EDS (the first 100 of missing.txt). One row per card:
+#   id       new card ID (821..920, after the 820 original IDs; every per-card table is indexed by it)
+#   number   card number (gCardIdToNumber / gCardNumberToId; free numbers below 1210, so Card Trading
+#            lists them, and not used by any card, effect key or code check)
+#   passcode YGOPRODeck card id = the 8-digit password, which also selects its data and cropped art
+#   name     the card's name (also gives its CARD_ constant in include/constants/cards.h)
+#   [game_name]  the name shown in the game when the real one is too long: the Deck Edit list rows hold 41
+#            characters (the original game shortens "Winged Dragon,Guardian of the Fortress #1" the same way)
+# tools/newcards.py fetch downloads the stats, text and art into assets/new_cards/ (never committed).
+id	number	passcode	name	game_name
+821	846	83555666	Ring of Destruction
+822	847	71413901	Breaker the Magical Warrior
+823	848	72989439	Black Luster Soldier - Envoy of the Beginning	Black Luster Soldier - Envoy of Beginning
+824	849	33184167	Tribe-Infecting Virus
+825	850	53582587	Torrential Tribute
+826	851	56120475	Sakuretsu Armor
+827	852	64697231	Trap Dustshoot
+828	853	24317029	Gravekeeper's Spy
+829	854	07572887	D.D. Warrior Lady
+830	855	74131780	Exiled Force
+831	856	14087893	Book of Moon
+832	857	87621407	Dekoichi the Battlechanted Locomotive
+833	858	09596126	Chaos Sorcerer
+834	859	37520316	Mind Control
+835	860	88240808	Kycoo the Ghost Destroyer
+836	861	72892473	Card Destruction
+837	862	16226786	Night Assailant
+838	863	32807846	Reinforcement of the Army
+839	864	83968380	Jar of Greed
+840	865	04178474	Raigeki Break
+841	866	73915051	Scapegoat
+842	867	39507162	Blade Knight
+843	868	80161395	Mystik Wok
+844	869	34853266	Tsukuyomi
+845	870	88472456	Zombyra the Dark
+846	871	46411259	Metamorphosis
+847	872	04929256	Mobius the Frost Monarch
+848	873	02134346	Asura Priest
+849	874	79853073	Cipher Soldier
+850	875	31036355	Creature Swap
+851	876	47507260	Mystic Swordsman LV2
+852	877	83986578	King Tiger Wanghu
+853	878	79575620	Injection Fairy Lily
+854	879	69162969	Lightning Vortex
+855	880	63356631	Phoenix Wing Wind Blast
+856	881	97169186	Smashing Ground
+857	882	04041838	Ninja Grandmaster Sasuke
+858	883	39168895	Berserk Gorilla
+859	884	76922029	Don Zaloog
+860	885	23205979	Spirit Reaper
+861	886	40737112	Dark Magician of Chaos
+862	887	76515293	Xing Zhen Hu
+863	888	03136426	Level Limit - Area B
+864	889	27053506	Secret Barrel
+865	890	09817927	Gyaku-Gire Panda
+866	891	87910978	Brain Control
+867	892	62279055	Magic Cylinder
+868	893	29843091	Ojama Trio
+869	894	36361633	Threatening Roar
+870	895	51945556	Zaborg the Thunder Monarch
+871	896	09637706	Des Wombat
+872	897	70074904	D.D. Assailant
+873	898	85742772	Gravity Bind
+874	899	94192409	Compulsory Evacuation Device
+875	900	18318842	Abyss Soldier
+876	901	56747793	United We Stand
+877	902	29401950	Bottomless Trap Hole
+878	903	41855169	Jowgen the Spiritualist
+879	904	73752131	Skilled Dark Magician
+880	905	06967870	Dark Scorpion - Cliff the Trap Remover
+881	906	43040603	Monster Gate
+882	907	91869203	Amazoness Archer
+883	908	58577036	Reasoning
+884	909	54704216	Nightmare Wheel
+885	910	18036057	Airknight Parshath
+886	911	27174286	Return from the Different Dimension
+887	912	32362575	Magical Merchant
+888	913	23557835	Dimension Fusion
+889	914	84636823	Spell Canceller
+890	915	95956346	Shining Angel
+891	916	30914564	Sacred Crane
+892	917	38992735	Wave-Motion Cannon
+893	918	47606319	Gigantes
+894	919	78658564	Goblin Attack Force
+895	920	69579761	Des Koala
+896	921	37576645	Reckless Greed
+897	922	58851034	Cursed Seal of the Forbidden Spell
+898	923	14878871	Rescue Cat
+899	924	98045062	Enemy Controller
+900	925	11021521	Neko Mane King
+901	926	89997728	Toon Table of Contents
+902	927	88789641	Hallowed Life Barrier
+903	928	82732705	Skill Drain
+904	929	74713516	Dark Mimic LV1
+905	930	25773409	Legendary Jujitsu Master
+906	931	15800838	Mind Crush
+907	932	77044671	Pyramid Turtle
+908	933	51632798	Fusilier Dragon, the Dual-Mode Beast
+909	934	22609617	Mataza the Zapper
+910	935	57182235	Token Thanksgiving
+911	936	04335645	Newdoria
+912	937	09156135	Apprentice Magician
+913	938	95492061	Manju of the Ten Thousand Hands
+914	813	21297224	Hysteric Fairy
+915	814	68005187	Soul Exchange
+916	815	93747864	Desert Sunlight
+917	816	78783370	Barrel Behind the Door
+918	817	74848038	Monster Reincarnation
+919	818	40133511	Bazoo the Soul-Eater
+920	819	93016201	Royal Oppression

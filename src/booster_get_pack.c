@@ -224,7 +224,7 @@ u16 IsCampaignLevel5Unlocked(void) {
     return 1;
 }
 
-/* 1 if every counted card is owned: over card ids 1 to 0x334 (820 cards), an id counts when the gate
+/* 1 if every counted card is owned: over card ids 1 to CARD_ID_LAST (920 cards), an id counts when the gate
  * value is a non-token number, and owned means trunk copies, Deck copies or Side Deck copies; a copy
  * only in the Fusion Deck does not count. */
 u16 IsCardCollectionComplete(void)
@@ -255,7 +255,7 @@ u16 IsCardCollectionComplete(void)
         }
         e++;
         id++;
-        bound = 0x334;
+        bound = CARD_ID_LAST;
     } while (id <= bound);
     if (have == total)
         return 1;

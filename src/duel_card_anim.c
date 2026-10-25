@@ -530,8 +530,6 @@ void BattleScene_DrawDamage(int side, int damage, u16 flash)
  * Matching: the ROM reaches the card art tables through integer-constant addresses (as LoadCardPicture does),
  * not through the symbols gCardArtPalettes / gCardArtGfx, so that the compiler reloads both bases.
  */
-#define CARD_ART_PALETTES_ADDR  0x08608360  /* gCardArtPalettes */
-#define CARD_ART_GFX_ADDR       0x082A6500  /* gCardArtGfx */
 
 /*
  * Loads the picture of card `cardId` for BG `bg` (0 = BG2 / player 0, 1 = BG3 / player 1): copies the card's
@@ -739,8 +737,8 @@ void BattleScene_SetCardFrameMap(int bg, int x, int y, int tile)
  * Matching: Init reads the card tables through integer-constant addresses (the compiler reloads the address at
  * each use); the symbols gCardIdToNumber / gCardStats would give other literal pools.
  */
-#define CARD_NUMBER_OF(id)  (((const u16 *)0x08622AB4)[(id) & CARD_ID_MASK])   /* gCardIdToNumber */
-#define CARD_STATS_OF(id)   (((const u32 *)0x08621DE0)[(id) & CARD_ID_MASK])   /* gCardStats */
+#define CARD_NUMBER_OF(id)  (((const u16 *)CARD_ID_TO_NUMBER_ADDR)[(id) & CARD_ID_MASK])   /* gCardIdToNumber */
+#define CARD_STATS_OF(id)   (((const u32 *)CARD_STATS_ADDR)[(id) & CARD_ID_MASK])   /* gCardStats */
 #define CARD_TYPE_OF(id)    CARD_STATS_TYPE(CARD_STATS_OF(id))
 
 /* The frame kind of a card (enum CardKind): the three Egyptian Gods are special-cased by card number, Magic /

@@ -58,8 +58,8 @@ extern struct DuelRuleFlagsView gDuelRuleFlagsView asm("gDuel");
  * Card tables through integer-constant addresses: gCardStats (0x08621DE0) and gCardIdToNumber (0x08622AB4).
  * Matching: these give the ROM's literal pools; the symbol forms generate other code.
  */
-#define CARD_STATS(id) (((const u32 *)0x08621DE0)[(id) & CARD_ID_MASK])
-#define CARD_NUMBER(id) (((const u16 *)0x08622AB4)[(id) & CARD_ID_MASK])
+#define CARD_STATS(id) (((const u32 *)CARD_STATS_ADDR)[(id) & CARD_ID_MASK])
+#define CARD_NUMBER(id) (((const u16 *)CARD_ID_TO_NUMBER_ADDR)[(id) & CARD_ID_MASK])
 #define CARD_TYPE(id) CARD_STATS_TYPE(CARD_STATS(id))     /* enum CardType; <= 20 is a monster */
 
 /*
@@ -130,7 +130,7 @@ int EffectDestroyTargetResolve(struct ChainEntry *link)
                  * volatile ldrh, as in the ROM. */
                 u32 idMask = CARD_ID_MASK;
                 u16 cardId = *(volatile u16 *)link;
-                int cardType = CARD_STATS_TYPE(((const u32 *)0x08621DE0)[idMask & cardId]);
+                int cardType = CARD_STATS_TYPE(((const u32 *)CARD_STATS_ADDR)[idMask & cardId]);
 
                 if (cardType == CARD_TYPE_MAGIC && targetZoneInt <= ZONE_MONSTER_4
                     && IsZoneTargetable(targetPlayer, targetZone) == 0)

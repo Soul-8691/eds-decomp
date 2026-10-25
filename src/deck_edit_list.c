@@ -114,7 +114,7 @@ struct SideDeckCountView {
 extern struct SideDeckCountView gDeckEditSideCounts asm("gDeckEdit");
 extern u16 DeckEdit_GetListCard(u8 list, u8 row, u16 col);
 /* gCardStats (0x08621DE0) read by literal address: the symbol form folds the base into the index add. */
-#define CARD_STATS_WORD(id) (((const u32 *)0x08621DE0)[(id) & CARD_ID_MASK])
+#define CARD_STATS_WORD(id) (((const u32 *)CARD_STATS_ADDR)[(id) & CARD_ID_MASK])
 struct FrameSlotCell { u8 bytes[16]; };
 /* List-view fields of gDeckEdit (deck_edit.h names; one of the local views this unit keeps, see the module comment). */
 struct DeckEditListView {

@@ -85,7 +85,7 @@ extern struct TrunkView gSaveData;  /* 0x02011C20 */
 
 /* gCardIdToNumber (0x08622AB4) read by literal address: indexing the array symbol directly changes
  * the target card-list loop's register allocation. */
-#define CARD_NUMBER(id) (((const u16 *)0x08622AB4)[(id) & 0x7FF])
+#define CARD_NUMBER(id) (((const u16 *)CARD_ID_TO_NUMBER_ADDR)[(id) & 0x7FF])
 
 /* Callee views in the argument widths this unit's matched code uses; include/deck_edit.h (and
  * sprite.h, util.h, palette.h) have each definition's own types. */
@@ -135,6 +135,7 @@ int TradeCardSelect_Init(void)
 {
     u16 i;
     u16 j;
+    u16 k;
     struct CursorRowByte *cursorRow;
     struct MenuVariantByte *variantByte;
     struct CommandMenuWord *menuWord;
@@ -179,7 +180,7 @@ int TradeCardSelect_Init(void)
     /* Matching: the two-case switch lists CARD_LIST_MODE_TRADE first so the ROM's block order
      * (mode 1 code first) comes out. */
     case CARD_LIST_MODE_TRADE:
-        for (i = 1; i <= 0x334 && CARD_NUMBER(i) != 0xFFFF; i++) {
+        for (k = 0; (i = gCardIdsByName[k]) != 0; k++) {   /* every card in name order */
             if ((u16)(CARD_NUMBER(i) - 0x4BA) <= 0x315 && (u16)(CARD_NUMBER(i) - 0x76C) > 0x13)
                 continue;
             if (gSaveData.trunk[i].count)
@@ -191,7 +192,7 @@ int TradeCardSelect_Init(void)
         }
         break;
     case CARD_LIST_MODE_DECK_EDIT:
-        for (i = 1; i <= 0x334 && CARD_NUMBER(i) != 0xFFFF; i++) {
+        for (k = 0; (i = gCardIdsByName[k]) != 0; k++) {   /* every card in name order */
             if ((u16)(CARD_NUMBER(i) - 0x780) > 0x4F) {
                 if (gSaveData.trunk[i].count)
                     DeckEdit_SetListCard(i, 0, gDeckEdit.listRow[0], gDeckEdit.listCount[gDeckEdit.listRow[0]][0]++);

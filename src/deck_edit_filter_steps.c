@@ -137,7 +137,7 @@ struct SwapStateByteView {          /* gDeckEdit + 0x1C5A */
 
 int SideDeckSwap_Init(void)
 {
-    u16 i, j;
+    u16 i, j, k;
     struct ListRowRingByteView *rowByte;
     struct SwapStateByteView *swapByte;
     struct CommandMenuWordView *menuWord;
@@ -174,8 +174,8 @@ int SideDeckSwap_Init(void)
     ObjAffineInit(gDeckEdit.objAffine);
     /* Card-number ROM view (gCardIdToNumber at 0x08622AB4); the mask is formed before the table base.
      * Numbers 1920-1999 (0x780..0x7CF) are the fusion monsters and stay out of both lists. */
-    for (i = 1; ((const u16 *)0x08622AB4)[i & 0x7FF] != 0xFFFF; ) {
-        if ((u16)(((const u16 *)0x08622AB4)[i & 0x7FF] - 0x780) > 0x4F) {
+    for (k = 0; (i = gCardIdsByName[k]) != 0; k++) {   /* every card in name order */
+        if ((u16)(((const u16 *)CARD_ID_TO_NUMBER_ADDR)[i & 0x7FF] - 0x780) > 0x4F) {
             u8 *trunk = (u8 *)&gSaveData;
             struct TrunkEntryByteView *entry = (struct TrunkEntryByteView *)(trunk + i * 4);
             if (TrunkDeckCopies(entry) != 0)
@@ -183,8 +183,6 @@ int SideDeckSwap_Init(void)
             if (TrunkSideCopies(entry) != 0)
                 DeckEdit_SetListCard(i, DECKEDIT_LIST_SIDE_DECK, gDeckEdit.listRow[2], gDeckEdit.listCount[gDeckEdit.listRow[2]][2]++);
         }
-        i++;
-        if (i > 0x334) break;
     }
     DeckEdit_CountSideDeckMonsters();
     DeckEdit_CalcScrollBar(gDeckEdit.listCount[gDeckEdit.listRow[gDeckEdit.curList]][gDeckEdit.curList], gDeckEdit.listPos[gDeckEdit.curList], (u16 *)&gDeckEdit.scrollBar);

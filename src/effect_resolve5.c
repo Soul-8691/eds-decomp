@@ -71,10 +71,10 @@ extern void DuelCmd_Push16(u16 cmd, u16 arg2, u16 arg4, u16 arg6) asm("DuelCmd_P
 
 /* gCardStats (0x08621DE0) and gCardIdToNumber (0x08622AB4) through integer-constant addresses. Matching:
  * the ROM reloads the table address at each use, which the symbols do not give. */
-#define CARD_STATS(id) (((const u32 *)0x08621DE0)[(id) & CARD_ID_MASK])
+#define CARD_STATS(id) (((const u32 *)CARD_STATS_ADDR)[(id) & CARD_ID_MASK])
 #define CARD_TYPE(id) CARD_STATS_TYPE(CARD_STATS(id))         /* enum CardType */
 #define IS_MONSTER_TYPE(type) ((type) <= CARD_TYPE_REPTILE)    /* types 1-20 are monsters */
-#define CARD_NUMBER(id) (((const u16 *)0x08622AB4)[(id) & CARD_ID_MASK])
+#define CARD_NUMBER(id) (((const u16 *)CARD_ID_TO_NUMBER_ADDR)[(id) & CARD_ID_MASK])
 
 /* &gDuelZones[player].zones[zone] by byte arithmetic. Matching: the ROM adds the zone term, then the player
  * term, then the gDuelZones literal. Callers pass player & 1. */

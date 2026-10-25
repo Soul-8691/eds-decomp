@@ -101,7 +101,7 @@ extern const u8 gStrDesignateSecondOwnMonster[];        /* 0x080844C0: Two-Prong
 
 /* gCardIdToNumber (0x08622AB4) through its integer-constant address. Matching: the symbol form
  * gCardIdToNumber[...] gives other code (it changes the literal pool). */
-#define CARD_NUMBER(id) (((const u16 *)0x08622AB4)[CARD_ID_MASK & (id)])
+#define CARD_NUMBER(id) (((const u16 *)CARD_ID_TO_NUMBER_ADDR)[CARD_ID_MASK & (id)])
 
 /*
  * ChainB of Patrol Robo: pick one of the opponent's face-down cards (a monster or a set Magic/Trap). No CPU

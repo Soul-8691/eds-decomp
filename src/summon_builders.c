@@ -29,8 +29,8 @@
 
 /* Matching: ROM tables read through integer-constant addresses (the ROM reloads the table address at every
  * use; the symbols generate other literal pools). */
-#define CARD_STATS(id) (((const u32 *)0x08621DE0)[(id) & CARD_ID_MASK])     /* gCardStats */
-#define CARD_NUMBER(id) (((const u16 *)0x08622AB4)[(id) & CARD_ID_MASK])    /* gCardIdToNumber */
+#define CARD_STATS(id) (((const u32 *)CARD_STATS_ADDR)[(id) & CARD_ID_MASK])     /* gCardStats */
+#define CARD_NUMBER(id) (((const u16 *)CARD_ID_TO_NUMBER_ADDR)[(id) & CARD_ID_MASK])    /* gCardIdToNumber */
 #define CARD_TYPE(id) CARD_STATS_TYPE(CARD_STATS(id))
 
 /* The card word of the CPU's (player 1) field zone i. Matching: the ROM reads player 1's zones through their own

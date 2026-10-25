@@ -98,8 +98,8 @@ extern const u8 gStrEquipFromGraveyardPrompt[]; /* 0x08083468 "%s has been sent 
  * gCardNumberToId (0x08623DF4) and gCardNames (0x0822C720). Matching: these give the ROM's literal pools and
  * reloads; the symbol forms (card_data.h) generate other code.
  */
-#define CARD_STATS(id)              (((const u32 *)0x08621DE0)[(id) & CARD_ID_MASK])
-#define CARD_NUMBER(id)             (((const u16 *)0x08622AB4)[(id) & CARD_ID_MASK])
+#define CARD_STATS(id)              (((const u32 *)CARD_STATS_ADDR)[(id) & CARD_ID_MASK])
+#define CARD_NUMBER(id)             (((const u16 *)CARD_ID_TO_NUMBER_ADDR)[(id) & CARD_ID_MASK])
 #define CARD_TYPE(id)               CARD_STATS_TYPE(CARD_STATS(id))     /* enum CardType */
 #define CARD_NUMBER_TO_ID(number)   (((const u16 *)0x08623DF4)[number])
 #define CARD_NAMES_ADDR             ((const char *)0x0822C720)

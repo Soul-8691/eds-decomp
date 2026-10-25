@@ -49,8 +49,8 @@ extern const u16 gCardNumberToId_Graverobber;                     /* = gCardNumb
 /* The card tables in both of the forms the ROM uses here: gCardStats through the symbol (pointer arithmetic),
  * and gCardStats / gCardIdToNumber through their constant addresses. */
 #define CARD_TYPE(id)       CARD_STATS_TYPE(*(gCardStats + ((id) & CARD_ID_MASK)))
-#define CARD_STATS_C(id)    (((const u32 *)0x08621DE0)[(id) & CARD_ID_MASK])
-#define CARD_NUMBER_C(id)   (((const u16 *)0x08622AB4)[(id) & CARD_ID_MASK])
+#define CARD_STATS_C(id)    (((const u32 *)CARD_STATS_ADDR)[(id) & CARD_ID_MASK])
+#define CARD_NUMBER_C(id)   (((const u16 *)CARD_ID_TO_NUMBER_ADDR)[(id) & CARD_ID_MASK])
 
 /* TakeDeckCardByNumber returns u16; CardMenu_Execute tests r0 without narrowing it. */
 #define TakeDeckCardByNumberInt ((int (*)(int, u16, void *))TakeDeckCardByNumber)

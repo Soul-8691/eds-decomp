@@ -51,8 +51,8 @@ extern u8 gDuelHandCountP1;        /* = gDuelPlayers[1].handCount (0x0201A048 + 
 
 /* Card word of a zone or pile entry and its card ID (bits 0-11). */
 #define CARD_ID(word) (((word) << 20) >> 20)
-#define CARD_NUMBER(id) (((const u16 *)0x08622AB4)[(id) & CARD_ID_MASK])   /* gCardIdToNumber */
-#define CARD_STATS(id) (((const u32 *)0x08621DE0)[(id) & CARD_ID_MASK])    /* gCardStats */
+#define CARD_NUMBER(id) (((const u16 *)CARD_ID_TO_NUMBER_ADDR)[(id) & CARD_ID_MASK])   /* gCardIdToNumber */
+#define CARD_STATS(id) (((const u32 *)CARD_STATS_ADDR)[(id) & CARD_ID_MASK])    /* gCardStats */
 #define CARD_TYPE(id) CARD_STATS_TYPE(CARD_STATS(id))
 
 /* The word of Chain_AddPending for a CPU activation: card ID | kind << 21 | player 1 << 31 (chain.h). */
@@ -417,7 +417,7 @@ int AiStepSetSpellTraps(void)
                     asm("" : : "r"(index));
                     mask = lookupMask;
                     asm("" : "+r"(mask));
-                    ((const u16 *)0x08622AB4)[index & mask];
+                    ((const u16 *)CARD_ID_TO_NUMBER_ADDR)[index & mask];
                 }
                 )) {
                 case CARD_WHITE_HOLE:
@@ -482,7 +482,7 @@ int AiStepSetSpellTraps(void)
                                 register u32 table asm("r6");
                                 id &= mask;
                                 id <<= 2;
-                                table = 0x08621DE0;
+                                table = CARD_STATS_ADDR;
                                 asm("" : : "r"(table));
                                 if ((*(u32 *)(id + table) & typeMask) >> CARD_STATS_TYPE_SHIFT == CARD_TYPE_MAGIC) ok = 1;
                             }
@@ -510,7 +510,7 @@ int AiStepSetSpellTraps(void)
                                 register u32 table asm("r6");
                                 id &= mask;
                                 off = id << 2;
-                                table = 0x08621DE0;
+                                table = CARD_STATS_ADDR;
                                 asm("" : : "r"(off), "r"(table));
                                 if ((*(u32 *)(off + table) & CARD_STATS_TYPE_MASK) >> CARD_STATS_TYPE_SHIFT == CARD_TYPE_TRAP
                                     && !zp->isFaceUp) ok = 1;
@@ -530,14 +530,14 @@ int AiStepSetSpellTraps(void)
                         asm("" : : "r"(index));
                         mask = lookupMask;
                         index &= mask;
-                        stats = ((const u32 *)0x08621DE0)[index];
+                        stats = ((const u32 *)CARD_STATS_ADDR)[index];
                         type = (stats & CARD_STATS_TYPE_MASK) >> CARD_STATS_TYPE_SHIFT;
                         if (type == CARD_TYPE_TRAP) goto doAction;
                         if (type != CARD_TYPE_MAGIC) break;
                         if (CARD_STATS_SUBTYPE(stats) == SPELL_QUICK_PLAY) ok = 1;
                         {
                             u32 off = index << 1;
-                            register u32 table asm("r2") = 0x08622AB4;
+                            register u32 table asm("r2") = CARD_ID_TO_NUMBER_ADDR;
                             asm("" : : "r"(off), "r"(table));
                             if (*(const u16 *)(off + table) == CARD_BLACK_PENDANT) ok = 1;
                         }
@@ -671,7 +671,7 @@ int AiStepPlaySimpleSpells(void)
                             mask = loadMask;
                             asm("" : "+r"(mask));
                             index = id;
-                            ((const u16 *)0x08622AB4)[index & mask];
+                            ((const u16 *)CARD_ID_TO_NUMBER_ADDR)[index & mask];
                         }) == (u16)gAiSimpleSpells[gAiState.subState]
                             && (((struct DuelZoneFlagsView *)ZONE1(gAiState.subState))->flags91 & 4)
                             && CanActivateFieldCard(&ref, 1, z)) {
@@ -861,11 +861,11 @@ int AiStepFlipSummon(void)
             q->flipZone = z + 1;
             return 0;
         }
-        if (HasFlipEffect(((const u16 *)0x08622AB4)[id & CARD_ID_MASK], 0) == 0) {
+        if (HasFlipEffect(((const u16 *)CARD_ID_TO_NUMBER_ADDR)[id & CARD_ID_MASK], 0) == 0) {
             q->flipZone++;
             return 0;
         }
-        number = ((const u16 *)0x08622AB4)[CARD_ID(*(u32 *)&ZONE1(q->flipZone)->card) & CARD_ID_MASK];
+        number = ((const u16 *)CARD_ID_TO_NUMBER_ADDR)[CARD_ID(*(u32 *)&ZONE1(q->flipZone)->card) & CARD_ID_MASK];
         switch (number) {
         case CARD_NEEDLE_WORM:
             if (CountMonsters(0) != 0)

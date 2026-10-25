@@ -37,8 +37,8 @@
  * Card tables read through integer-constant addresses. Matching: with the symbols (card_data.h) old_agbcc
  * loads the table address before the index math, the ROM after it. Same tables, same bytes.
  */
-#define CARD_NUMBER(id)     (((const u16 *)0x08622AB4)[(id) & CARD_ID_MASK])    /* gCardIdToNumber[id] */
-#define CARD_STATS_WORD(id) (((const u32 *)0x08621DE0)[(id) & CARD_ID_MASK])    /* gCardStats[id] */
+#define CARD_NUMBER(id)     (((const u16 *)CARD_ID_TO_NUMBER_ADDR)[(id) & CARD_ID_MASK])    /* gCardIdToNumber[id] */
+#define CARD_STATS_WORD(id) (((const u32 *)CARD_STATS_ADDR)[(id) & CARD_ID_MASK])    /* gCardStats[id] */
 #define CARD_TYPE(id)       CARD_STATS_TYPE(CARD_STATS_WORD(id))                 /* enum CardType */
 
 /* Card numbers 1920-1999 are monster tokens. */

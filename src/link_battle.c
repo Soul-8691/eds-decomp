@@ -91,7 +91,7 @@ extern const u16 gOpponentFieldDuelText[];          /* 0x08081C76: Valentine's /
 
 /* Matching: the matched code reads gCardIdToNumber (0x08622AB4) and gCardNumberToId (0x08623DF4) through
  * integer addresses; keep that form (build/readability/HEADERS.md, pattern 4). */
-#define CARD_NUMBER(id) (((const u16 *)0x08622AB4)[(id) & CARD_ID_MASK])
+#define CARD_NUMBER(id) (((const u16 *)CARD_ID_TO_NUMBER_ADDR)[(id) & CARD_ID_MASK])
 
 /* Card number to card ID: 0xFFFF maps to 0, an alternate-art number 2000 + n to the ID of n, plus 1. */
 static inline u16 CardNumberToId(u16 number)

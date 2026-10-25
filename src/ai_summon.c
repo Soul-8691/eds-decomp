@@ -40,8 +40,8 @@
 #define CARD_EMPTY(c) ((CARD_WORD(c) << 20) == 0)
 /* The card tables through integer-constant addresses: the ROM reloads the table address at every use. These
  * are gCardStats (0x08621DE0), gCardIdToNumber (0x08622AB4) and gCardNumberToId (0x08623DF4). */
-#define CARD_STATS(id) (((const u32 *)0x08621DE0)[(id) & CARD_ID_MASK])
-#define CARD_NUMBER(id) (((const u16 *)0x08622AB4)[(id) & CARD_ID_MASK])
+#define CARD_STATS(id) (((const u32 *)CARD_STATS_ADDR)[(id) & CARD_ID_MASK])
+#define CARD_NUMBER(id) (((const u16 *)CARD_ID_TO_NUMBER_ADDR)[(id) & CARD_ID_MASK])
 #define CARD_ID_OF_NUMBER(no) (((const u16 *)0x08623DF4)[(no) & (CARD_NUMBER_COUNT - 1)])
 #define CARD_TYPE(id) CARD_STATS_TYPE(CARD_STATS(id))
 /* Zone pointer by byte arithmetic with the zone term first (the ROM's address order); callers pass player & 1. */
@@ -570,7 +570,7 @@ int AiTryChainResponse(struct ChainEntry *entry)
     /* FAKEMATCH: the 0x7FF mask lives in a variable that the Magic Thorn case reuses for its whole index
      * chain, so the mask, switch value and table base get r1/r2/r3 as in the ROM. */
     m = CARD_ID_MASK;
-    number = ((const u16 *)0x08622AB4)[entry->card & m];
+    number = ((const u16 *)CARD_ID_TO_NUMBER_ADDR)[entry->card & m];
     switch (number) {
     case CARD_FOREST:
     case CARD_WASTELAND:
@@ -689,7 +689,7 @@ int AiTryChainResponse(struct ChainEntry *entry)
          * number of card ID 0 or 1 (0xFFFF or 439), neither of which matches: the case always returns 0. */
         m &= entry->player;
         m <<= 1;
-        m += 0x08622AB4;
+        m += CARD_ID_TO_NUMBER_ADDR;
         x = *(u16 *)m;
         if (x == CARD_MORPHING_JAR)
             return 1;

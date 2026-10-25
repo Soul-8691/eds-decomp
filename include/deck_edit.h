@@ -25,6 +25,9 @@
 #include "sprite.h"     /* struct OamList, struct ObjAffine, struct AnimBlock, struct AnimState */
 #include "text.h"       /* struct TextFlags */
 
+/* Entries of the trunk list: one per card ID (= CARD_ID_COUNT of card_data.h, which checks it). */
+#define DECK_EDIT_TRUNK_LIST_SIZE 921
+
 /* ---------------------------------------------------------------------------------------------------------- */
 /* Enums                                                                                                       */
 /* ---------------------------------------------------------------------------------------------------------- */
@@ -196,11 +199,13 @@ enum DeckStatsCategory {
 /* Structs                                                                                                     */
 /* ---------------------------------------------------------------------------------------------------------- */
 
-/* One row of the three card lists (gDeckEdit.lists[row]): card IDs, row 0 full, row 1 filtered/sorted. */
+/* One row of the three card lists (gDeckEditCardLists[row]): card IDs, row 0 full, row 1 filtered/sorted.
+ * The trunk list holds one entry per card ID, so it is sized by CARD_ID_COUNT. In the original game the rows
+ * were gDeckEdit.lists (+0x644, 821 trunk entries); they moved out of gDeckEdit to hold the added cards. */
 struct DeckEditListRow {
-    u16 trunk[821];                 /* +0x000: list 0 (Trunk) */
-    u16 deck[80];                   /* +0x66A: list 1 (Main Deck + fusion deck) */
-    u16 side[15];                   /* +0x70A: list 2 (Side Deck) */
+    u16 trunk[DECK_EDIT_TRUNK_LIST_SIZE]; /* list 0 (Trunk) */
+    u16 deck[80];                   /* list 1 (Main Deck + fusion deck) */
+    u16 side[15];                   /* list 2 (Side Deck) */
 };
 
 /* Scroll bar on the right edge of the list view (gDeckEdit.scrollBar), written by DeckEdit_CalcScrollBar and
@@ -284,8 +289,7 @@ struct DeckEdit {
                                        a map row */
     struct TextFlags textFlags;     /* +0x0640: kana flags of the map-text drawers (ClearKatakanaFlag at init); also
                                        passed as a trailing argument that some drawers ignore. Alias gDeckEditTextFlags */
-    struct DeckEditListRow lists[2]; /* +0x0644: card IDs [row]; row 0 = full lists, row 1 = filtered/sorted copy.
-                                       Read through DeckEdit_GetListCard / DeckEdit_SetListCard */
+    u8 unusedLists[0x1494 - 0x644]; /* +0x0644: the card lists of the original game, now gDeckEditCardLists */
     u16 listCount[2][3];            /* +0x1494: [row][list] number of cards */
     u8 listRow[3];                  /* +0x14A0: row shown per list: 0 full, 1 filtered/sorted. Alias gDeckEditListRow */
     u8 unk14A3;
@@ -371,7 +375,7 @@ struct SpriteDef {
 };
 
 /* Compile-time layout checks (agbcc pads every struct to 4 bytes). */
-typedef char deck_edit_h_check_row[sizeof(struct DeckEditListRow) == 0x728 ? 1 : -1];
+typedef char deck_edit_h_check_row[sizeof(struct DeckEditListRow) == 0x7F0 ? 1 : -1];
 typedef char deck_edit_h_check_bar[sizeof(struct DeckEditScrollBar) == 0x8 ? 1 : -1];
 typedef char deck_edit_h_check_slot[sizeof(struct FrameSlot) == 0x10 ? 1 : -1];
 typedef char deck_edit_h_check_ring[sizeof(struct FrameSlotRing) == 0x64 ? 1 : -1];
@@ -388,7 +392,7 @@ typedef char deck_edit_h_check_size[sizeof(struct DeckEdit) == 0x1C5C ? 1 : -1];
 typedef char deck_edit_h_check_fade[(u32)&((struct DeckEdit *)0)->fade == 0x618 ? 1 : -1];
 typedef char deck_edit_h_check_ease[(u32)&((struct DeckEdit *)0)->scrollEase == 0x628 ? 1 : -1];
 typedef char deck_edit_h_check_text[(u32)&((struct DeckEdit *)0)->textFlags == 0x640 ? 1 : -1];
-typedef char deck_edit_h_check_lists[(u32)&((struct DeckEdit *)0)->lists == 0x644 ? 1 : -1];
+typedef char deck_edit_h_check_lists[(u32)&((struct DeckEdit *)0)->unusedLists == 0x644 ? 1 : -1];
 typedef char deck_edit_h_check_count[(u32)&((struct DeckEdit *)0)->listCount == 0x1494 ? 1 : -1];
 typedef char deck_edit_h_check_scratch[(u32)&((struct DeckEdit *)0)->sortScratch == 0x14A4 ? 1 : -1];
 typedef char deck_edit_h_check_side[(u32)&((struct DeckEdit *)0)->sideMonsterCount == 0x1712 ? 1 : -1];
@@ -412,6 +416,9 @@ typedef char deck_edit_h_check_sortov[(u32)&((struct DeckEdit *)0)->sortOverride
 /* ---------------------------------------------------------------------------------------------------------- */
 
 extern struct DeckEdit gDeckEdit;                  /* 0x0201DB20: state of every card-list screen */
+/* 0x0202A000 (free EWRAM after gSceneWork's 0x8070 bytes): the three card lists [row]; row 0 = full lists,
+ * row 1 = filtered/sorted copy. Read through DeckEdit_GetListCard / DeckEdit_SetListCard. */
+extern struct DeckEditListRow gDeckEditCardLists[2];
 
 /* ROM data used by two or more units (single-unit tables stay local externs in their unit). */
 extern const u16 gDeckEditEaseCurve[];             /* [7] ease-in-out factors in 8.8: 0, 32, 64, 128, 192, 224, 256 */

@@ -20,7 +20,7 @@
 #include "constants/card_stats.h"   /* CARD_STATS_* masks and shifts, CARD_STATS_POINTS_SCALE, enum CardType */
 
 /* gCardStats (0x08621DE0) read through its address. */
-#define CARD_STATS(id) (((const u32 *)0x08621DE0)[(id) & CARD_ID_MASK])
+#define CARD_STATS(id) (((const u32 *)CARD_STATS_ADDR)[(id) & CARD_ID_MASK])
 /* The card's type (gCardStats bits 20-24, enum CardType). */
 #define CARD_TYPE_OF(id) ((int)CARD_STATS_TYPE(CARD_STATS(id)))
 /* ---- Local views kept for matching (build/readability/HEADERS.md) ----
@@ -31,21 +31,15 @@
  * tileBase argument is a u32 at the call below. The views here keep deck_edit.h's and save.h's
  * field names and offsets; build/readability/issues/deck_edit_cards.md has the details. */
 
-/* gDeckEdit (0x0201DB20, struct DeckEdit) as this unit reads it. The three card lists start at
- * +0x644, +0xCAE and +0xD4E (0x728 bytes per row) and are modelled as a union so that every list
- * access is a field of the one symbol (the ROM shares the base register across the list switch). */
+/* gDeckEdit (0x0201DB20, struct DeckEdit) as this unit reads it. The three card lists, at +0x644 in the
+ * original game, are gDeckEditCardLists now (struct DeckEditListRow in deck_edit.h): the trunk list holds
+ * one entry per card ID, CARD_ID_COUNT of them. */
 struct DeckEditView {
     u8 unk0[0x620];
     u16 listPos[3];                 /* +0x620: selected card index per list */
     u8 unk626[0x63E - 0x626];
     u16 bg0Vofs;                    /* +0x63E */
-    u8 unk640[0x644 - 0x640];
-    union {
-        u16 trunk[1][0x394];                                    /* +0x644: list 0 (trunk) */
-        struct { u8 pad[0xCAE - 0x644]; u16 cards[1][0x394]; } deck;  /* +0xCAE: list 1 (main deck) */
-        struct { u8 pad[0xD4E - 0x644]; u16 cards[1][0x394]; } side;  /* +0xD4E: list 2 (side deck) */
-    } lists;
-    u8 unk1478[0x1C];               /* (agbcc rounds the union member structs up to 4 bytes) */
+    u8 unk640[0x1494 - 0x640];      /* +0x644: the original card lists, unused */
     u16 listCount[2][3];            /* +0x1494: [row][list] number of cards */
     u8 listRow[3];                  /* +0x14A0: row shown per list (0 full, 1 filtered/sorted) */
     u8 unk14A3[0x1712 - 0x14A3];
@@ -63,10 +57,12 @@ struct DeckEditView {
 };
 extern struct DeckEditView gDeckEdit;   /* 0x0201DB20 */
 
-/* Complete two-row views of the overlapping card lists (same bases as the union above). */
-struct TrunkListView { u8 pad[0x644]; u16 cards[2][0x394]; };
-struct DeckListView { u8 pad[0xCAE]; u16 cards[2][0x394]; };
-struct SideListView { u8 pad[0xD4E]; u16 cards[2][0x394]; };
+/* The card lists [row] (deck_edit.h, which this unit does not include for its own gDeckEdit view). */
+struct DeckEditListRow { u16 trunk[CARD_ID_COUNT]; u16 deck[80]; u16 side[15]; };
+extern struct DeckEditListRow gDeckEditCardLists[2];   /* 0x0202A000 */
+#define TRUNK_LIST(row) (gDeckEditCardLists[row].trunk)
+#define DECK_LIST(row) (gDeckEditCardLists[row].deck)
+#define SIDE_LIST(row) (gDeckEditCardLists[row].side)
 
 /* Call views whose parameter widths differ from the headers (see the note above). */
 extern void RenderStringToTiles(void *str, void *tiles, u32 fg, u32 bg, u32 unused);
@@ -153,13 +149,13 @@ u32 DeckEdit_GetSelectedCardCopies(void)
         if (ST.listCount[row][0] == 0)
             return 0;
         saveWords = gSaveDataWords;
-        return ((struct TrunkCountView *)(saveWords + ((struct TrunkListView *)&ST)->cards[row][ST.listPos[0]]))->count;
+        return ((struct TrunkCountView *)(saveWords + TRUNK_LIST(row)[ST.listPos[0]]))->count;
     }
     case 1: {
         u32 rowOffset = 0x14A1;             /* &ST.listRow[1] as a byte offset */
         u8 *rows = (u8 *)((u32)&ST + rowOffset);
         u16 pos = ST.listPos[1];
-        if (DeckEdit_IsFusionMonster(((struct DeckListView *)&ST)->cards[*rows][pos])) {
+        if (DeckEdit_IsFusionMonster(DECK_LIST(*rows)[pos])) {
             u32 *saveWords;
             u32 id;
             u8 cur = *curList;
@@ -173,13 +169,13 @@ u32 DeckEdit_GetSelectedCardCopies(void)
             pos = *(u16 *)((u32)&ST.listPos + twice);
             switch (cur) {
             case 0:
-                id = ((struct TrunkListView *)&ST)->cards[row][pos];
+                id = TRUNK_LIST(row)[pos];
                 break;
             case 1:
-                id = ((struct DeckListView *)&ST)->cards[row][pos];
+                id = DECK_LIST(row)[pos];
                 break;
             case 2:
-                id = ((struct SideListView *)&ST)->cards[row][pos];
+                id = SIDE_LIST(row)[pos];
                 break;
             }
             return ((struct TrunkCopiesView *)(saveWords + (u16)id))->copiesByte >> 6;
@@ -197,13 +193,13 @@ u32 DeckEdit_GetSelectedCardCopies(void)
             pos = *(u16 *)((u32)&ST.listPos + twice);
             switch (cur) {
             case 0:
-                id = ((struct TrunkListView *)&ST)->cards[row][pos];
+                id = TRUNK_LIST(row)[pos];
                 break;
             case 1:
-                id = ((struct DeckListView *)&ST)->cards[row][pos];
+                id = DECK_LIST(row)[pos];
                 break;
             case 2:
-                id = ((struct SideListView *)&ST)->cards[row][pos];
+                id = SIDE_LIST(row)[pos];
                 break;
             }
             {
@@ -239,7 +235,7 @@ u32 DeckEdit_GetSelectedCardCopies(void)
             count = (u32)&ST;
             count += off;
             pos = *(u16 *)count;
-            return ((u32)((struct TrunkCopiesView *)(saveWords + ((struct SideListView *)&ST)->cards[row][pos]))->copiesByte << 26) >> 30;
+            return ((u32)((struct TrunkCopiesView *)(saveWords + SIDE_LIST(row)[pos]))->copiesByte << 26) >> 30;
         }
     }
     }
@@ -252,25 +248,24 @@ u16 *DeckEdit_GetActiveListRow(int list)
 {
     switch ((u8)list) {
     case 0:
-        return gDeckEdit.lists.trunk[gDeckEdit.listRow[0]];
+        return TRUNK_LIST(gDeckEdit.listRow[0]);
     case 1:
-        return gDeckEdit.lists.deck.cards[gDeckEdit.listRow[1]];
+        return DECK_LIST(gDeckEdit.listRow[1]);
     case 2:
-        return gDeckEdit.lists.side.cards[gDeckEdit.listRow[2]];
+        return SIDE_LIST(gDeckEdit.listRow[2]);
     }
 }
 /* Deck-edit list builder: rebuild row 0 of the three card lists (trunk / deck / side)
  * from the trunk counts, filtered by the list mode, then compact row 1 of every list whose row
- * selector is 1. Views local to this function: the trunk entries at 0x02011C28 (4 bytes per card
- * id) and the list state at 0x0201DB20 (rows of 821 + 80 + 15 ids, 0x728 bytes each). */
+ * selector is 1. The cards go in name order (gCardIdsByName), so the added cards sort in among the
+ * original ones. Views local to this function: the trunk entries at 0x02011C28 (4 bytes per card id)
+ * and the list counts in gDeckEdit; the lists themselves are gDeckEditCardLists. */
 struct TrunkEntryView { u16 count : 10; u16 deckCopies : 2; u16 sideCopies : 2; u16 fusionCopies : 2; u16 unk2; };
-struct SaveTrunkView { u8 unk0[8]; struct TrunkEntryView trunk[0x335]; };
+struct SaveTrunkView { u8 unk0[8]; struct TrunkEntryView trunk[0x800]; };
 extern u8 gSaveData[];   /* 0x02011C20 */
 #define gSaveTrunk (*(struct SaveTrunkView *)gSaveData)
-struct ListRowView { u16 trunk[821]; u16 deck[80]; u16 side[15]; };
 struct DeckEditBuildView {
-    u8 unk0[0x644];
-    struct ListRowView rows[2];   /* +0x644 */
+    u8 unk0[0x1494];              /* +0x644: the original card lists, now gDeckEditCardLists */
     u16 listCount[2][3];          /* +0x1494 */
     u8 listRow[3];                /* +0x14A0 */
     u8 unk14A3[0x1C5A - 0x14A3];
@@ -281,7 +276,7 @@ struct MainModeView { u8 unk0[0x4874]; u8 cardListMode : 2; u8 unk4874_2 : 6; };
 extern u8 gMain[];   /* 0x03000040 */
 #define gMainMode (*(struct MainModeView *)gMain)
 #define W gListsWork
-#define CARD_NUMBER(i) (((const u16 *)0x08622AB4)[(i) & CARD_ID_MASK])   /* gCardIdToNumber */
+#define CARD_NUMBER(i) (((const u16 *)CARD_ID_TO_NUMBER_ADDR)[(i) & CARD_ID_MASK])   /* gCardIdToNumber */
 #define OWNED_COUNT(i) (gSaveTrunk.trunk[i].count)
 #define DECK_COPIES(i) (gSaveTrunk.trunk[i].deckCopies)
 #define FUSION_COPIES(i) (gSaveTrunk.trunk[i].fusionCopies)
@@ -289,27 +284,28 @@ extern u8 gMain[];   /* 0x03000040 */
 static inline u16 ReadListEntry(u8 list, u8 row, u16 index)
 {
     switch (list) {
-    case 0: return W.rows[row].trunk[index];
-    case 1: return W.rows[row].deck[index];
-    case 2: return W.rows[row].side[index];
+    case 0: return gDeckEditCardLists[row].trunk[index];
+    case 1: return gDeckEditCardLists[row].deck[index];
+    case 2: return gDeckEditCardLists[row].side[index];
     }
 }
 static inline void WriteListEntry(u16 cardId, u8 list, u8 row, u16 index)
 {
     switch (list) {
-    case 0: W.rows[row].trunk[index] = cardId; break;
-    case 1: W.rows[row].deck[index] = cardId; break;
-    case 2: W.rows[row].side[index] = cardId; break;
+    case 0: gDeckEditCardLists[row].trunk[index] = cardId; break;
+    case 1: gDeckEditCardLists[row].deck[index] = cardId; break;
+    case 2: gDeckEditCardLists[row].side[index] = cardId; break;
     }
 }
 void DeckEdit_BuildCardLists(void)
 {
     u16 i;
+    u16 k;
     for (i = 0; i <= 2; i++)
         W.listCount[0][i] = 0;
     switch (gMainMode.cardListMode) {
     case 1:   /* Card Trading: card numbers 1210-1899 and 1920-1999 are hidden */
-        for (i = 1; i <= 0x334; i++) {
+        for (k = 0; (i = gCardIdsByName[k]) != 0; k++) {
             u16 number = CARD_NUMBER(i);
             if ((u16)(number - 0x4BA) > 0x315 || (u16)(number - 0x76C) <= 0x13) {
                 if (OWNED_COUNT(i))
@@ -326,7 +322,7 @@ void DeckEdit_BuildCardLists(void)
         }
         break;
     case 0:   /* Deck Edit: token numbers 1920-1999 are hidden */
-        for (i = 1; i <= 0x334; i++) {
+        for (k = 0; (i = gCardIdsByName[k]) != 0; k++) {
             if ((u16)(CARD_NUMBER(i) - CARD_NUMBER_TOKEN_FIRST) > 0x4F) {
                 if (OWNED_COUNT(i))
                     WriteListEntry(i, 0, 0, W.listCount[0][0]++);
@@ -342,7 +338,7 @@ void DeckEdit_BuildCardLists(void)
         }
         break;
     case 2:   /* Prohibition picker: list 0 only, card numbers 1900-1999 excluded */
-        for (i = 1; i <= 0x334; i++) {
+        for (k = 0; (i = gCardIdsByName[k]) != 0; k++) {
             if ((u16)(CARD_NUMBER(i) - 0x76C) > 0x63)
                 WriteListEntry(i, 0, 0, W.listCount[0][0]++);
         }
@@ -395,13 +391,13 @@ void DeckEdit_UpdateNameIndexLetters(void)
     u16 buf[2];
     switch (gDeckEdit.curList) {
     case 0:
-        id = gDeckEdit.lists.trunk[row][index];
+        id = TRUNK_LIST(row)[index];
         break;
     case 1:
-        id = gDeckEdit.lists.deck.cards[row][index];
+        id = DECK_LIST(row)[index];
         break;
     case 2:
-        id = gDeckEdit.lists.side.cards[row][index];
+        id = SIDE_LIST(row)[index];
         break;
     }
     nameRecord = ((const u8 *)0x0822C720) + (u16)id * CARD_NAME_SIZE;   /* gCardNames + id * 0x40 */
@@ -437,11 +433,11 @@ u16 DeckEdit_GetListCard(u8 list, u8 row, u16 index)
 {
     switch (list) {
     case 0:
-        return ((struct TrunkListView *)&gDeckEdit)->cards[row][index];
+        return TRUNK_LIST(row)[index];
     case 1:
-        return ((struct DeckListView *)&gDeckEdit)->cards[row][index];
+        return DECK_LIST(row)[index];
     case 2:
-        return ((struct SideListView *)&gDeckEdit)->cards[row][index];
+        return SIDE_LIST(row)[index];
     }
 }
 /* Write `cardId` into the same cell DeckEdit_GetListCard reads. */
@@ -449,13 +445,13 @@ void DeckEdit_SetListCard(u16 cardId, u8 list, u8 row, u16 index)
 {
     switch (list) {
     case 0:
-        gDeckEdit.lists.trunk[row][index] = cardId;
+        TRUNK_LIST(row)[index] = cardId;
         break;
     case 1:
-        gDeckEdit.lists.deck.cards[row][index] = cardId;
+        DECK_LIST(row)[index] = cardId;
         break;
     case 2:
-        gDeckEdit.lists.side.cards[row][index] = cardId;
+        SIDE_LIST(row)[index] = cardId;
         break;
     }
 }
@@ -537,7 +533,7 @@ int CompareCardsByDef(int aCard, int bCard)
 /* 1 if card a has a lower type than card b. */
 u32 CompareCardsByType(int aId, int bId)
 {
-    unsigned long long base = 0x08621DE0; /* FAKEMATCH (decomp-permuter): a 64-bit temp stops agbcc from CSEing the table address */
+    unsigned long long base = CARD_STATS_ADDR; /* FAKEMATCH (decomp-permuter): a 64-bit temp stops agbcc from CSEing the table address */
     int typeA = (int)((((const u32 *)(u32)base)[aId & CARD_ID_MASK] & CARD_STATS_TYPE_MASK) >> CARD_STATS_TYPE_SHIFT);
     return (u32)(typeA - CARD_TYPE_OF(bId)) >> 31;
 }
@@ -545,7 +541,7 @@ u32 CompareCardsByType(int aId, int bId)
 /* 1 if card a has a lower attribute (stats >> 29) than card b. */
 u32 CompareCardsByAttribute(int aId, int bId)
 {
-    unsigned long long base = 0x08621DE0; /* FAKEMATCH (decomp-permuter): see CompareCardsByType */
+    unsigned long long base = CARD_STATS_ADDR; /* FAKEMATCH (decomp-permuter): see CompareCardsByType */
     return (u32)(((((const u32 *)(u32)base)[aId & CARD_ID_MASK]) >> CARD_STATS_ATTR_SHIFT) - CARD_STATS_ATTR(CARD_STATS(bId))) >> 31;
 }
 

@@ -53,8 +53,8 @@ u16 IsToonMonsterU16(u16 cardNo) asm("IsToonMonster");
 
 /* Matching: gCardIdToNumber (0x08622AB4) and gCardStats (0x08621DE0) through their integer-constant addresses.
  * This form keeps the CARD_ID_MASK constant, not the table address, in a register (see card_data.h). */
-#define CARD_NUMBER_C(id) (((const u16 *)0x08622AB4)[(id) & CARD_ID_MASK])
-#define CARD_STATS_C(id) (((const u32 *)0x08621DE0)[(id) & CARD_ID_MASK])
+#define CARD_NUMBER_C(id) (((const u16 *)CARD_ID_TO_NUMBER_ADDR)[(id) & CARD_ID_MASK])
+#define CARD_STATS_C(id) (((const u32 *)CARD_STATS_ADDR)[(id) & CARD_ID_MASK])
 #define CARD_TYPE_C(id) CARD_STATS_TYPE(CARD_STATS_C(id))
 
 /*
@@ -495,7 +495,7 @@ int CountEnabledSpellTrapCards(int player, u16 cardNo)
         /* Matching: byte +0x91 bit 3 is the zone's isDisabled bit, tested as a byte through its own address
          * computation (the bitfield form differs at +0x36); 0x08622AB4 is gCardIdToNumber. */
         if (id && !(zoneBase[offset + i * DUEL_ZONE_SIZE + 0x91] & 8)
-            && ((const u16 *)0x08622AB4)[id & mask] == cardNo)
+            && ((const u16 *)CARD_ID_TO_NUMBER_ADDR)[id & mask] == cardNo)
             count++;
     }
     return count;

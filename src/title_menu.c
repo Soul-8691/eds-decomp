@@ -322,8 +322,8 @@ void CardDetail_DrawTextBox(u32 bg, u16 mapPos, u16 size, u16 tile, u16 colors, 
  * gCardStats (0x08621DE0) and gCardIdToNumber (0x08622AB4) read by address: the constant-address form makes
  * GCC reload the table base at each use, as the ROM does.
  */
-#define CARD_STATS_WORD(id) (((const u32 *)0x08621DE0)[(id) & CARD_ID_MASK])    /* gCardStats[id] */
-#define CARD_NUMBER(id)     (((const u16 *)0x08622AB4)[(id) & CARD_ID_MASK])    /* gCardIdToNumber[id] */
+#define CARD_STATS_WORD(id) (((const u32 *)CARD_STATS_ADDR)[(id) & CARD_ID_MASK])    /* gCardStats[id] */
+#define CARD_NUMBER(id)     (((const u16 *)CARD_ID_TO_NUMBER_ADDR)[(id) & CARD_ID_MASK])    /* gCardIdToNumber[id] */
 #define CARD_TYPE(id)       CARD_STATS_TYPE(CARD_STATS_WORD(id))                 /* enum CardType */
 
 /* Card numbers 1920-1999 are monster tokens: they have their own page and no stat sprites. */
@@ -627,7 +627,7 @@ void CardDetail_DrawInfo(u16 cardId)
         /* The description (gCardDescriptions, by address) in an 18x24-tile box on bgMapBuffer[4], which
          * scrolls (BG3) */
         CardDetail_DrawTextBox(4, BOX_XY(13, 4), BOX_XY(18, 24), 0x248, TEXT_COLORS(7, 9), 10, TEXT_XY(4, 2),
-                               (const u8 *)0x082461A0 + cardId * CARD_DESCRIPTION_SIZE, 1, 0);
+                               (const u8 *)CARD_DESCRIPTIONS_ADDR + cardId * CARD_DESCRIPTION_SIZE, 1, 0);
         if (CARD_TYPE(cardId) > CARD_TYPE_MAGIC)
             CardDetail_DrawTextBox(4, BOX_XY(13, 18), BOX_XY(17, 2), 0x369, TEXT_COLORS(6, 8), 10, TEXT_XY(3, 3),
                                    gStrNotPlayable, 0, 11);

@@ -213,7 +213,7 @@ struct ResponseFlagsView {
 
 /* Card tables through integer-constant addresses: gCardStats (0x08621DE0) and gCardNames (0x0822C720).
  * Matching: the symbol forms (card_data.h) load other literals. */
-#define CARD_STATS(id) (((const u32 *)0x08621DE0)[(id) & CARD_ID_MASK])
+#define CARD_STATS(id) (((const u32 *)CARD_STATS_ADDR)[(id) & CARD_ID_MASK])
 #define CARD_TYPE(id) CARD_STATS_TYPE(CARD_STATS(id))       /* enum CardType */
 #define CARD_NAME(id) (((const char (*)[CARD_NAME_SIZE])0x0822C720)[id])
 
@@ -240,7 +240,7 @@ int CanActivateHandCard(struct ChainEntry *ref, int player, int handIdx)
     u16 id = CARD_ID(HAND_CARD_WORD(player, handIdx));
     u32 n = CARD_ID_MASK & id;
     if (CanPlaceSpellTrapCard(player, id) != 0
-        && CARD_STATS_TYPE(((const u32 *)0x08621DE0)[n]) == CARD_TYPE_MAGIC) {
+        && CARD_STATS_TYPE(((const u32 *)CARD_STATS_ADDR)[n]) == CARD_TYPE_MAGIC) {
         if (GetCardSpellSpeed(id) > SPELL_SPEED_1)
             goto activate;
         {

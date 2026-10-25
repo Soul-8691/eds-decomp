@@ -133,10 +133,10 @@ enum BattleSideFlags {
 #define CARD_ID(word) (((word) << 20) >> 20)
 /* ROM card stats table through an integer-constant pointer (the ROM reloads the address at every
  * use; reading through gCardStats would compile differently). */
-#define CARD_STATS(id) (((const u32 *)0x08621DE0)[(id) & CARD_ID_MASK])
+#define CARD_STATS(id) (((const u32 *)CARD_STATS_ADDR)[(id) & CARD_ID_MASK])
 #define CARD_TYPE(id) ((CARD_STATS(id) & CARD_STATS_TYPE_MASK) >> CARD_STATS_TYPE_SHIFT)
 /* Card number of a card ID (gCardIdToNumber, read through its address like the stats table). */
-#define CARD_NUMBER(id) (((const u16 *)0x08622AB4)[(id) & CARD_ID_MASK])
+#define CARD_NUMBER(id) (((const u16 *)CARD_ID_TO_NUMBER_ADDR)[(id) & CARD_ID_MASK])
 /* Printed ATK of a card: 0 for Trap/Magic/Ticket, 4000 for a Divine card, else the stats field. */
 static inline u16 CardAtk(u16 id)
 {

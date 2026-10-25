@@ -5,8 +5,10 @@
  * The read-only card database in ROM (wiki/data/card-table.md, card-id-map.md, card-art.md).
  *
  * Two number spaces:
- *   card ID      1..820, the alphabetical index of every per-card table (gCardStats, gCardNames, the art);
- *                slot 0 is empty. Readers mask the ID with CARD_ID_MASK.
+ *   card ID      1..920, the index of every per-card table (gCardStats, gCardNames, the art); slot 0 is
+ *                empty. Readers mask the ID with CARD_ID_MASK. IDs 1..813 are the original cards in name
+ *                order, 814..820 the Tickets, Gods and Token, and 821..920 the added cards
+ *                (config/new_cards.tsv); gCardIdsByName lists them all in name order.
  *   card number  the language-independent Konami number (enum CardNumber, include/constants/cards.h): deck
  *                lists, packs, the effect table and every "is this card X" test. gCardIdToNumber and
  *                gCardNumberToId convert between the two.
@@ -21,8 +23,13 @@
 #include "global.h"
 #include "constants/card_stats.h"
 
-/* Card IDs: 0..820 (0 is an empty slot) */
-#define CARD_ID_COUNT               821
+/* Card IDs: 0..920 (0 is an empty slot). The original game had 821 (0..820); the added cards follow. */
+#define CARD_ID_COUNT               921
+#define CARD_ID_LAST                (CARD_ID_COUNT - 1)
+#define CARD_ID_COUNT_ORIGINAL      821
+#ifdef DECK_EDIT_TRUNK_LIST_SIZE
+STATIC_ASSERT(DECK_EDIT_TRUNK_LIST_SIZE == CARD_ID_COUNT, DeckEditTrunkListSize);
+#endif
 #define CARD_ID_MASK                0x7FF       /* applied by every table reader */
 
 /* Card numbers */
@@ -67,6 +74,10 @@ extern const u16 gCardArtGfx[];
 /* 0x08608360: 64-colour BGR555 art palette per card ID (CARD_ART_PALETTE_SIZE bytes each);
  * UnpackCardArt8bpp copies entry cardId. */
 extern const u8 gCardArtPalettes[];
+
+/* Every card ID 1..CARD_ID_LAST in name order (the original IDs keep their relative order; the Tickets, Gods
+ * and Token stay last), then 0. The Deck Edit lists are built in this order. */
+extern const u16 gCardIdsByName[];
 
 /* ---- Table indexed by card number ---- */
 

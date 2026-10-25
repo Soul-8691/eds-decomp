@@ -53,8 +53,8 @@ extern const u8 gStrPromptSelectOneOfFive[];            /* "Select 1 card from o
 
 /* gCardIdToNumber, gCardStats and gPulseScaleCurve through their integer addresses (0x08622AB4, 0x08621DE0,
  * 0x081A4424): the ROM's register allocation needs these forms (the symbols give other code). */
-#define CARD_NUMBER_C(id)       (((const u16 *)0x08622AB4)[(id) & CARD_ID_MASK])
-#define CARD_STATS_C(id)        (((const u32 *)0x08621DE0)[(id) & CARD_ID_MASK])
+#define CARD_NUMBER_C(id)       (((const u16 *)CARD_ID_TO_NUMBER_ADDR)[(id) & CARD_ID_MASK])
+#define CARD_STATS_C(id)        (((const u32 *)CARD_STATS_ADDR)[(id) & CARD_ID_MASK])
 #define CARD_TYPE_C(id)         CARD_STATS_TYPE(CARD_STATS_C(id))
 #define PULSE_SCALE_CURVE       ((const u16 *)0x081A4424)
 

@@ -95,7 +95,7 @@ struct DeckReorderWords {
 
 /* Card number of a card ID through the integer address of gCardIdToNumber (0x08622AB4): the ROM needs this
  * form (the symbol gives other code). */
-#define CARD_NUMBER_OF(id)      (((const u16 *)0x08622AB4)[(id) & CARD_ID_MASK])
+#define CARD_NUMBER_OF(id)      (((const u16 *)CARD_ID_TO_NUMBER_ADDR)[(id) & CARD_ID_MASK])
 /* Card ID, bits 0-11, of a card word held as a u32. */
 #define CARD_WORD_ID(word)      (((word) << 20) >> 20)
 

@@ -10,7 +10,8 @@ Claude writes and maintains the wiki. The human curates sources, directs the wor
 ```
 (cd ../agbcc && ./build.sh)                 # once: pret/agbcc checked out next to this repo
 make setup                                  # once: check the ROM in roms/, extract assets/
-make -j$(nproc) compare                     # full build + SHA-1 check (eds.gba: OK); installs tools/agbcc first
+make -j$(nproc)                             # full build; installs tools/agbcc first
+make -j$(nproc) compare                     # SHA-1 check: fails now that 100 cards are added (wiki/game/added-cards.md)
 tools/dr python3 tools/check.py <unit>      # per-unit match check (safe to run concurrently)
 tools/dr python3 tools/check_all.py         # every unit (the CI gate)
 ```

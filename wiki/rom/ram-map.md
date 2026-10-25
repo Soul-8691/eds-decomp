@@ -107,6 +107,7 @@ The whole of EWRAM is zeroed at boot. The addresses below are **base literals** 
 | `0x0201F7D0` / `0x0201F7E0` | `gCalendar` (hypothesis) | verified | `0x08001F08`–`0x080036FC` | Calendar scene state |
 | `0x0201F814` | `gRecord` (hypothesis) | verified | `0x08003AF4`–`0x08003F88` | Record scene state |
 | `0x02020310` | (unnamed) | seen | 51 functions, `0x08026194`–`0x08064BA0` | a card-list / detail viewer (it can return to the menu with B: `0x08029DCC`) |
+| `0x0202A000` | `gDeckEditCardLists` | modified build | Deck Edit code | added 2026-10-24: the Deck Edit card lists (2 rows × 0x7F0), moved out of `gDeckEdit` +0x644 to hold 921 card IDs. See [[added-cards]]. |
 | `0x02030000`, `0x02031014`, `0x0203A614` | (unnamed) | seen | few | large buffers |
 
 ## Open questions

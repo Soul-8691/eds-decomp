@@ -457,7 +457,7 @@ u32 CardTrading_Exchange(void)
     /* Matching: gCardIdToNumber (0x08622AB4) and gCardNumberToId (0x08623DF4) stay literal; indexing
      * the card_data.h symbols instead changes register allocation (same lesson as link_sio.c). The
      * peer's card number: 0xFFFF = none, < 2000 plain, 2000 and up wraps with a +1. */
-    if (LinkSyncStep(gCardTrading.linkMsgId, ((const u16 *)0x08622AB4)[gCardTrading.tradeCardId & CARD_ID_MASK], &gCardTrading.link)) {
+    if (LinkSyncStep(gCardTrading.linkMsgId, ((const u16 *)CARD_ID_TO_NUMBER_ADDR)[gCardTrading.tradeCardId & CARD_ID_MASK], &gCardTrading.link)) {
         u16 id;
         u32 n;
 
