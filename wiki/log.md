@@ -972,3 +972,8 @@ updated: 2026-09-29
   (hand revealed, cursor pick), repeated with SE_ERROR until a monster is picked; the CPU takes the first monster.
   ReturnHandCardToDeck (bottom) + DUEL_CMD_SHUFFLE_DECK. No monster in that hand: nothing happens.
 - Pages: [[added-cards]].
+
+## [2026-10-25] progress | Dekoichi the Battlechanted Locomotive
+- `src/added_effects.c`: flip effect (HasFlipEffect): DrawCards 1, plus CountMonstersByNumber of Bokoichi the
+  Freightening Car when that card is in the list (HAS_ guard; it is not, so Dekoichi draws 1).
+- Pages: [[added-cards]].

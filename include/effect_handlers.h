@@ -104,6 +104,8 @@ int EffectTorrentialTributePrepare(struct ChainEntry *card, struct ChainEntry *c
 /* Trap Dustshoot: return a monster from the opponent's hand (4 or more cards) to its Deck. */
 int EffectTrapDustshootPrepare(struct ChainEntry *card, struct ChainEntry *chainLink, u16 fromHand);
 int EffectTrapDustshootResolve(struct ChainEntry *link, struct ChainEntry *chainedTo);
+/* Dekoichi the Battlechanted Locomotive (flip): draw 1, plus 1 per Bokoichi the Freightening Car controlled. */
+int EffectDekoichiResolve(struct ChainEntry *link, struct ChainEntry *chainedTo);
 
 /* ChainA (activation costs) */
 /* Activation cost: pay the card's LP cost (500 to 5000, half for Solemn Judgment). Always returns 1. */

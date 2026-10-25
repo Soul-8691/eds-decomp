@@ -609,6 +609,9 @@ u32 HasFlipEffect(u16 cardNo, int inBattleArg)
 #ifdef HAS_CARD_GRAVEKEEPERS_SPY
     case CARD_GRAVEKEEPERS_SPY:     /* added card (src/added_effects.c) */
 #endif
+#ifdef HAS_CARD_DEKOICHI_THE_BATTLECHANTED_LOCOMOTIVE
+    case CARD_DEKOICHI_THE_BATTLECHANTED_LOCOMOTIVE:    /* added card (src/added_effects.c) */
+#endif
     case CARD_1254:     /* 1254-1524: not in EDS */
     case CARD_1255:
     case CARD_1256:

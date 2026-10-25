@@ -165,6 +165,10 @@ bits. They keep those bits as their low bits and have high bits in the bytes the
 rewritten), Deck Edit (cards, list, prohibit, stats, widgets, filter steps), booster code, the debug give-all. Saves
 from the original game load unchanged; the format is a superset.
 
+### Dekoichi the Battlechanted Locomotive (2026-10-25)
+A flip effect (added to `HasFlipEffect`). It draws 1 card (`DrawCards`), plus 1 per "Bokoichi the Freightening Car" its
+controller has. Bokoichi counts only if it is added to `config/new_cards.txt` (`HAS_CARD_` guard); it is not now.
+
 ### Trap Dustshoot (2026-10-25)
 - **Activation.** Only while the opponent holds 4 or more cards (prepare).
 - **Resolve.** It uses Confiscation's prompt `PROMPT_PICK_OPPONENT_HAND_CARD`, which reveals the opponent's hand for a

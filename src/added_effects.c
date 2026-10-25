@@ -396,6 +396,24 @@ int EffectTrapDustshootResolve(struct ChainEntry *link, struct ChainEntry *chain
 }
 #endif /* HAS_CARD_TRAP_DUSTSHOOT */
 
+#ifdef HAS_CARD_DEKOICHI_THE_BATTLECHANTED_LOCOMOTIVE
+/* ---- Dekoichi the Battlechanted Locomotive --------------------------------------------------------------------
+ * "FLIP: Draw 1 card, then draw 1 more card for each 'Bokoichi the Freightening Car' you control."
+ * A flip effect (HasFlipEffect, card_detail.c). Bokoichi counts only when it is one of the added cards. */
+int EffectDekoichiResolve(struct ChainEntry *link, struct ChainEntry *chainedTo)
+{
+    int count = 1;
+
+    if (link->negated)
+        return EFFECT_STEP_DONE;
+#ifdef HAS_CARD_BOKOICHI_THE_FREIGHTENING_CAR
+    count += CountMonstersByNumber(link->player, CARD_BOKOICHI_THE_FREIGHTENING_CAR);
+#endif
+    DrawCards(link->player, count);
+    return EFFECT_STEP_DONE;
+}
+#endif /* HAS_CARD_DEKOICHI_THE_BATTLECHANTED_LOCOMOTIVE */
+
 /* ---- "Gravekeeper's" cards -----------------------------------------------------------------------------------
  * 1 if the card's name starts with "Gravekeeper's" (the archetype the Gravekeeper's cards refer to). */
 static const char sGravekeeperPrefix[] = "Gravekeeper's";
@@ -470,6 +488,16 @@ const struct CardEffect gAddedCardEffects[] = {
         EffectTrapDustshootResolve,
         NULL,
         EffectTrapDustshootPrepare,
+        NULL,
+        NULL,
+    },
+#endif
+#ifdef HAS_CARD_DEKOICHI_THE_BATTLECHANTED_LOCOMOTIVE
+    {
+        CARD_DEKOICHI_THE_BATTLECHANTED_LOCOMOTIVE, 0,
+        EffectDekoichiResolve,
+        NULL,
+        NULL,
         NULL,
         NULL,
     },
