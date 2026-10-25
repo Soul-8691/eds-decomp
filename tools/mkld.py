@@ -11,6 +11,7 @@ for line in open(units_file):
         units.append(line)
 real = [u for u in units if not u.startswith('@')]
 rodata_moved = {u.split()[1] for u in units if u.startswith('@rodata ')}
+far_code = [u.split()[1] for u in units if u.startswith('@farcode ')]
 assert len(real) == len(objs), (len(real), len(objs))
 obj_of = dict(zip(real, objs))
 
@@ -25,11 +26,14 @@ for u in units:
             text.append(f'        *libc.a:{m}.o(.text)')
         text.append('        *libgcc.a:*(.text) *libc.a:*(.text)')
         continue
+    if u.startswith('@farcode '):
+        continue
     if u.startswith('@rodata '):
         rodata.append(f'        {obj_of[u.split()[1]]}(.rodata)')
         continue
     o = obj_of[u]
-    text.append(f'        {o}(.text)')
+    if u not in far_code:
+        text.append(f'        {o}(.text)')
     if u not in rodata_moved:
         rodata.append(f'        {o}(.rodata)')
 
@@ -54,6 +58,15 @@ SECTIONS
     {{
 {chr(10).join(rodata)}
     }} =0
+
+    /* The added cards' code (@farcode units) goes into the range the moved card tables left free, which is
+       within bl range of the game's code; the data from gCardNumberToId on keeps its address. */
+    .text.added :
+    {{
+{chr(10).join(f'        {obj_of[u]}(.text)' for u in far_code)}
+    }} =0
+    ASSERT(. <= 0x08623DF4, "the added code does not fit before gCardNumberToId (0x08623DF4)")
+    .rodata.pinned 0x08623DF4 : {{ *(.rodata.pinned) }} =0
 
     /* Anything else that would land in ROM is appended here so `make compare` catches it. */
     .data : {{ *(.data*) *(.rodata*) }}

@@ -653,8 +653,10 @@ gCardNames: @ 0x0822C720
 	.space 0xCD40 * 2 - CARD_ID_COUNT * 0x40
 @ cards/descriptions.json (strings)
 @ cards/descriptions.json, cards/art, cards/stats.csv, cards/id_to_number.json, cards/passwords.csv: moved to
-@ the end of the ROM (newcards tables below); the old ranges stay free
-	.space 0x08623DF4 - 0x082461A0
+@ the end of the ROM (newcards tables below). The old ranges are free: tools/mkld.py puts the code of the
+@ @farcode units there (the added cards' effects, units.txt), and the rest of this file is a section of its own,
+@ .rodata.pinned, which it places at 0x08623DF4 so that every later address stays the original one.
+	.section .rodata.pinned, "a"
 @ cards/number_to_id.json (u16)
 	.global gCardNumberToId
 gCardNumberToId: @ 0x08623DF4

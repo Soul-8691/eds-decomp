@@ -1,6 +1,8 @@
 # Link order. A unit links src/<unit>.c, src/<unit>.s, asm/<unit>.s or data/<unit>.s
 # (first that exists). "@libs" = libgcc/libc; "@rodata <unit>" places that unit's
-# .rodata at that point of the .rodata section instead of next to its .text.
+# .rodata at that point of the .rodata section instead of next to its .text; "@farcode <unit>" puts that
+# unit's .text in the ROM range the moved card tables left free (0x082461A0-0x08623DF4), after the data, so
+# that the added cards' code does not grow the game's code (tools/mkld.py).
 crt0
 bustup_scene
 bustup_runner
@@ -116,8 +118,11 @@ sound_driver
 sound_mixer_arm
 sdk/libagbsyscall
 sdk/agb_sram
+added_effects
+@farcode added_effects
 @libs
 veneer
 rodata_08080A20
 @rodata sdk/agb_sram
 rodata_08087FD0
+@rodata added_effects

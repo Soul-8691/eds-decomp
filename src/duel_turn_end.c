@@ -366,7 +366,7 @@ u16 DuelLink_RunRemoteChainA(void)
         gChain.effectIndex = FindCardEffect(link->remoteEntries[0].card);
         if (gChain.effectIndex < 0)
             return 1;
-        gChain.chainA = (ChainHandlerFn)gCardEffects[gChain.effectIndex].chainA;
+        gChain.chainA = (ChainHandlerFn)CARD_EFFECT_ROW(gChain.effectIndex).chainA;
         if (gChain.chainA == NULL)
             return 1;
         gChain.costStep = 0;
@@ -392,7 +392,7 @@ u16 DuelLink_RunRemoteChainB(void)
         gChain.effectIndex = FindCardEffect(link->remoteEntries[0].card);
         if (gChain.effectIndex < 0)
             return 1;
-        gChain.chainB = (ChainHandlerFn)gCardEffects[gChain.effectIndex].chainB;
+        gChain.chainB = (ChainHandlerFn)CARD_EFFECT_ROW(gChain.effectIndex).chainB;
         if (gChain.chainB == NULL)
             return 1;
         gChain.targetStep = 0;
@@ -433,7 +433,7 @@ u16 DuelLink_RunRemoteResolve(void)
         gChain.effectIndex = FindCardEffect(gLinkState.remoteEntries[0].card);
         if (gChain.effectIndex < 0)
             return 1;
-        gChain.resolve = (ChainResolveFn)gCardEffects[gChain.effectIndex].resolve;
+        gChain.resolve = (ChainResolveFn)CARD_EFFECT_ROW(gChain.effectIndex).resolve;
         if (gChain.resolve == NULL)
             return 1;
         gChain.effectStep = EFFECT_STEP_START;

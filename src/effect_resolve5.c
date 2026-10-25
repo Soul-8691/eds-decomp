@@ -740,7 +740,7 @@ int EffectFairysHandMirrorResolve(struct ChainEntry *link, struct ChainEntry *ch
         MemCopy16(&gChain.proxyLink, link, sizeof(struct ChainEntry));
         gChain.proxyLink.card = chainedTo->card;
         gChain.proxyLink.player = chainedTo->player;
-        gChain.proxyResolve = gCardEffects[FindCardEffect(chainedTo->card)].resolve;
+        gChain.proxyResolve = CARD_EFFECT_ROW(FindCardEffect(chainedTo->card)).resolve;
         if (gChain.proxyResolve == NULL) {
             /* FAKEMATCH: dead store; it keeps the step pointer from being shared with the setup block, so
              * the base is reloaded from the pool and link stays in r7. */

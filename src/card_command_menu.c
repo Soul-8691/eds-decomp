@@ -443,7 +443,8 @@ static inline int CardTypeOfId(u16 id)
  *   Catapult Turtle, Cannon Soldier     need a tributable monster (CountTributableMonsters(player, -1) > 0)
  *   The Little Swordsman of Aile        needs one other than itself
  *   Time Wizard, Monster Eye, Cyber-Stein, Goddess of Whim, Gale Dogra, Barrel Dragon, Valkyrion the Magna
- *   Warrior, Karate Man, keys 1430-1444 and 1510     CanActivateEffectInZone(player, zone, 0)
+ *   Warrior, Karate Man, keys 1430-1444 and 1510,
+ *   Breaker the Magical Warrior (added card)         CanActivateEffectInZone(player, zone, 0)
  *   Blast Juggler, Patrol Robo, Jigen Bakudan        only in the Standby Phase (event 2)
  *   Red-Eyes B. Dragon, Zoa             equipped with Metalmorph and with Red-Eyes Black Metal Dragon /
  *                                       Metalzoa in the deck (not while key 1418 is on a field)
@@ -481,6 +482,9 @@ int CanActivateMonsterEffect(u16 id, int player, int zone)
     case CARD_BARREL_DRAGON:
     case CARD_VALKYRION_THE_MAGNA_WARRIOR:
     case CARD_KARATE_MAN:
+#ifdef HAS_CARD_BREAKER_THE_MAGICAL_WARRIOR
+    case CARD_BREAKER_THE_MAGICAL_WARRIOR:  /* added card (src/added_effects.c) */
+#endif
     case CARD_1430:
     case CARD_1432:
     case CARD_1433:

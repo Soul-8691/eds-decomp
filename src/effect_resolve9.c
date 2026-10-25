@@ -375,7 +375,7 @@ int EffectReflectPlayerMagicResolve(struct ChainEntry *link, struct ChainEntry *
 
             gChain.proxyLink.player = otherPlayer;
         }
-        gChain.proxyResolve = gCardEffects[FindCardEffect(gChain.proxyLink.card)].resolve;
+        gChain.proxyResolve = CARD_EFFECT_ROW(FindCardEffect(gChain.proxyLink.card)).resolve;
     }
     switch (CARD_NUMBER(chainedTo->card)) {
     case CARD_MOOYAN_CURRY ... CARD_OOKAZI:

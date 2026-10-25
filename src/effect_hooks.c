@@ -649,7 +649,8 @@ int EffectSpiritMessagePrepare(void)
 
 /*
  * Binary search of gCardEffects (426 rows, sorted by card number) for the row of a card ID: the key is the card
- * number gCardIdToNumber[cardId & 0x7FF]. Returns the row index, or -1 if the card has no effect.
+ * number gCardIdToNumber[cardId & 0x7FF]. Without a row there, the added cards' gAddedCardEffects is searched
+ * (row CARD_EFFECT_ROWS_ORIGINAL + its index). Returns the row index, or -1 if the card has no effect.
  */
 int FindCardEffect(u32 cardId)
 {
@@ -664,7 +665,7 @@ int FindCardEffect(u32 cardId)
         if (key == number)
             return mid;
         if (lo == hi)
-            return -1;
+            break;
         if (key > number)
             lo = mid;
         if (key < number)
@@ -672,6 +673,11 @@ int FindCardEffect(u32 cardId)
         if ((lo + hi) / 2 == mid)
             lo = hi;
     }
+    for (lo = 0; gAddedCardEffects[lo].number != 0xFFFF; lo++) {
+        if (gAddedCardEffects[lo].number == key)
+            return CARD_EFFECT_ROWS_ORIGINAL + lo;
+    }
+    return -1;
 }
 
 /*
@@ -685,7 +691,7 @@ u16 CanEffectTargetZone(u16 *card, int player, int zone)
         int row = FindCardEffect(*card);
         u16 (*check)(struct ChainEntry *, u16);
 
-        if (row < 0 || (check = gCardEffects[row].check) == 0)
+        if (row < 0 || (check = CARD_EFFECT_ROW(row).check) == 0)
             return 1;
         return check((struct ChainEntry *)card, (u8)player | (u8)zone << 8);
     }

@@ -68,6 +68,13 @@ typedef char effect_h_check_card_effect_chain_b[(u32)&((struct CardEffect *)0)->
  * (gAlias_0819A9D4), for a separate literal-pool entry. */
 extern const struct CardEffect gCardEffects[];
 
+/* The effect rows of the added cards (src/added_effects.c), ending with number 0xFFFF. FindCardEffect numbers
+ * them after the CARD_EFFECT_ROWS_ORIGINAL rows of gCardEffects; read any row through CARD_EFFECT_ROW. */
+#define CARD_EFFECT_ROWS_ORIGINAL 426
+extern const struct CardEffect gAddedCardEffects[];
+const struct CardEffect *GetCardEffectRow(int row);
+#define CARD_EFFECT_ROW(row) (*GetCardEffectRow(row))
+
 /* Return value of a multi-step resolve handler, kept in gChain.effectStep: Chain_Resolve calls the
  * handler with EFFECT_STEP_START first, then once per frame with the value it returned last, until it
  * returns EFFECT_STEP_DONE. The handlers count down from 0x80; a value a handler has no case for (0x78 or
@@ -171,7 +178,8 @@ enum FusionSlot {
 
 /* --- Effect table lookup -------------------------------------------------------------------------------- */
 
-/* Index of the gCardEffects row of a card id (binary search on its card number), or -1. */
+/* Effect-table row of a card id (binary search of gCardEffects on its card number, then gAddedCardEffects:
+ * CARD_EFFECT_ROWS_ORIGINAL + its index), or -1. */
 int FindCardEffect(u32 cardId);
 /* Does the Check handler of card's effect accept (player, zone)? 1 when the card has no row or no Check
  * handler, 0 for card == NULL. card is a struct ChainEntry (the definition takes u16 *). */

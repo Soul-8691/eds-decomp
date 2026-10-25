@@ -341,8 +341,8 @@ int CanActivateEffect(struct ChainEntry *card, struct ChainEntry *chainLink, u16
     }
     if (idx < 0)
         return FALSE;
-    check = gCardEffects[idx].check;
-    prepare = (u16 (*)(struct ChainEntry *, struct ChainEntry *, u16))gCardEffects[idx].prepare;
+    check = CARD_EFFECT_ROW(idx).check;
+    prepare = (u16 (*)(struct ChainEntry *, struct ChainEntry *, u16))CARD_EFFECT_ROW(idx).prepare;
     if (check == NULL && prepare == NULL)
         return TRUE;
     if (prepare != NULL && !prepare(card, chainLink, fromHand))

@@ -778,8 +778,8 @@ int Chain_Build(void)
             gChain.chainA = NULL;
             gChain.chainB = NULL;
         } else {
-            gChain.chainA = (ChainStepFunc)gCardEffects[r].chainA;
-            gChain.chainB = (ChainStepFunc)gCardEffects[r].chainB;
+            gChain.chainA = (ChainStepFunc)CARD_EFFECT_ROW(r).chainA;
+            gChain.chainB = (ChainStepFunc)CARD_EFFECT_ROW(r).chainB;
         }
         if (BUILD_LINK.skipChainA)
             gChain.chainA = NULL;

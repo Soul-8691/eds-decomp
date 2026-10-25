@@ -83,6 +83,14 @@ int EffectOpponentFaceUpMonsterCheck(struct ChainEntry *card, u16 pos);
 /* Any card in a spell/trap or field zone (Heavy Storm, Mystical Space Typhoon, Giant Trunade, ...). */
 int EffectAnySpellTrapCheck(struct ChainEntry *card, u16 pos);
 
+/* Added cards (src/added_effects.c). Breaker the Magical Warrior: one row for its Normal Summon trigger (place a
+ * Spell Counter) and its activated effect (remove it to destroy 1 Spell/Trap); the link's event selects. */
+int EffectBreakerTheMagicalWarriorPrepare(struct ChainEntry *card, struct ChainEntry *chainLink, u16 fromHand);
+u16 EffectBreakerTheMagicalWarriorCheck(struct ChainEntry *card, u16 pos);
+int EffectBreakerTheMagicalWarriorChainA(struct ChainEntry *link, struct ChainEntry *prevLink);
+int EffectBreakerTheMagicalWarriorChainB(struct ChainEntry *link, struct ChainEntry *prevLink);
+int EffectBreakerTheMagicalWarriorResolve(struct ChainEntry *link, struct ChainEntry *chainedTo);
+
 /* ChainA (activation costs) */
 /* Activation cost: pay the card's LP cost (500 to 5000, half for Solemn Judgment). Always returns 1. */
 int EffectPayLifePointsChainA(struct ChainEntry *link);

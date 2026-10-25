@@ -974,8 +974,8 @@ int DuelLink_AnswerActivateQuery(void)
                 gAnswerChain.chainB = NULL;
             } else {
                 /* struct CardEffect declares the handlers int-returning, struct ChainState u16-returning. */
-                gAnswerChain.chainA = (ChainHandler)gAnswerEffects[n].chainA;
-                gAnswerChain.chainB = (ChainHandler)gAnswerEffects[n].chainB;
+                gAnswerChain.chainA = (ChainHandler)CARD_EFFECT_ROW(n).chainA;
+                gAnswerChain.chainB = (ChainHandler)CARD_EFFECT_ROW(n).chainB;
             }
         }
         gAnswerChain.costStep = 0;

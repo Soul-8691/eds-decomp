@@ -208,7 +208,7 @@ u32 Chain_Resolve(void)
             return 1;
         }
         /* (struct CardEffect declares the handler int-returning, struct ChainState u32-returning.) */
-        gChain.resolve = (ChainResolveFunc)gCardEffects[gChain.effectIndex].resolve;
+        gChain.resolve = (ChainResolveFunc)CARD_EFFECT_ROW(gChain.effectIndex).resolve;
         if (!gChain.resolve) {
             RESOLVE_LINK_DONE();
             return 1;

@@ -104,11 +104,50 @@ raw. Changing C code changes function sizes, so:
 - The 'All' filter's held-back non-monsters moved from `gDeckEdit.sortScratch` (310 slots, enough for only 84
   added Spells/Traps) to `gDeckEditHeldBack` (`0x0202C200`, one slot per card ID).
 
-## Duels
-The added cards have no rows in `gCardEffects`, and `FindCardEffect` returns -1 for them. Monsters therefore play as
-vanilla monsters. Spells and traps cannot be activated (`CanActivateEffect` needs a row); they can still be set.
-Every `FindCardEffect` caller handles -1 except the two proxy-resolve paths, which only run for cards that already
-have an effect.
+## Duels and card effects
+An added card without an effect plays as a vanilla monster, or as a Spell/Trap that can be set but not activated:
+`FindCardEffect` finds no row and returns -1, which every caller handles except the two proxy-resolve paths, and
+those run only for cards that have an effect.
+
+**Effects of added cards** live in `src/added_effects.c`:
+- **Table.** `gAddedCardEffects` holds rows like `gCardEffects` (`struct CardEffect`, keyed by `CARD_<NAME>`,
+  ending with number 0xFFFF). `FindCardEffect` searches it after the original 426 rows and returns
+  `CARD_EFFECT_ROWS_ORIGINAL` + its index. Every row read goes through `CARD_EFFECT_ROW(row)` /
+  `GetCardEffectRow` (`include/effect.h`): duel_main, duel_response, duel_setup, duel_turn_end,
+  effect_activation, effect_hooks, effect_resolve5 and effect_resolve9. The rows point at their handlers by symbol,
+  so `tools/fixptrs.py` is not involved.
+- **Placement.** The unit is `@farcode` in `units.txt`: its code goes into the range the moved card tables left
+  free (from `0x082461A0`, after its `.rodata`; within `bl` range of all game code). The rest of
+  `data/rodata_08087FD0.s` is section `.rodata.pinned` at `0x08623DF4`. So added effects cost none of the game
+  code's slack before the pinned data at `0x08080A20` (0x33C bytes left).
+- **Guards.** Each card's code is under `#ifdef HAS_CARD_<NAME>`, which `tools/newcards.py` defines in
+  `build/include/card_count.h` for every listed card. Taking a card off the list removes its effect instead of
+  breaking the build.
+- **Hooks keyed by card number.** Effects that the duel code triggers by number also need a `case` there, under the
+  same guard:
+  - "when Normal Summoned" triggers: `ExecuteSummonAction` and `ExecuteSummonActionAskPosition` (summon_checks.c);
+  - Flip Summon triggers: `SummonStep_Flip` (summon_action.c);
+  - the card menu's ACTIVATE for a face-up monster: `CanActivateMonsterEffect` (card_command_menu.c);
+  - stat changes: card_stats.c.
+
+### Breaker the Magical Warrior (implemented 2026-10-24)
+"When this card is Normal Summoned: place 1 Spell Counter on it (max. 1). Gains 300 ATK for each Spell Counter on
+it. You can remove 1 Spell Counter from this card; target 1 Spell/Trap on the field; destroy that target."
+- **Spell Counter.** A `ZONE_LINK_ATK_300_PER_VALUE` link from Breaker's own card ID, count 1. The stat code already
+  gives 300 ATK per count (card_stats.c). `DuelCmd_TurnStart` only strips such links from its own list of
+  once-per-turn monsters, and `ClearZone` drops the link when the card leaves the field.
+- **One effect row, two effects**, told apart by the chain link's `event`:
+  - `RESPONSE_SUMMONED` with `loc0` = its own zone: the trigger that the two Normal Summon paths queue (not for a
+    Set, a Flip Summon or a Special Summon). Resolve queues `QueueAddZoneLink` if Breaker is still face up there
+    and has no counter.
+  - `RESPONSE_NONE`: the activated effect from the Main Phase card menu (`CanActivateMonsterEffect` → prepare:
+    face up with a counter; check: `EffectAnySpellTrapCheck`, so a Spell/Trap must be on the field). ChainA (the
+    cost) removes the counter (`QueueRemoveZoneLink`). ChainB picks the target (`EffectSpellTrapTargetChainB`) and
+    resolve destroys it (`EffectDestroyTargetResolve`). These are Mystical Space Typhoon's handlers.
+- **Not modelled.** Counters are not removed if the monster is turned face down. No EDS card does that, and
+  Book of Moon is added without an effect. The CPU never has Breaker in its decks.
+- **Verified statically.** The row is in the ROM with card number 143 and five Thumb handler pointers. The pinned
+  data keeps its addresses, and the build has no new warnings. Not yet run in an emulator.
 
 ## Verification (2026-10-24)
 - The 821 original entries of every moved table are byte-identical to the original ROM. Number↔ID round-trips for all

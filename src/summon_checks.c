@@ -629,6 +629,9 @@ int ExecuteSummonAction(void)
         case CARD_1240:
         case CARD_1246:
         case CARD_1332:
+#ifdef HAS_CARD_BREAKER_THE_MAGICAL_WARRIOR
+        case CARD_BREAKER_THE_MAGICAL_WARRIOR:  /* added card: place a Spell Counter (src/added_effects.c) */
+#endif
             a = gSummonAction.player << 31;
             t = (gSummonAction.zone << 16) | SUMMONED_TRIGGER_BITS;
             Chain_AddPending(a | t | gSummonAction.cardId, gSummonAction.player | (gSummonAction.zone << 8));
@@ -759,6 +762,9 @@ int ExecuteSummonActionAskPosition(void)
         case CARD_1240:
         case CARD_1246:
         case CARD_1332:
+#ifdef HAS_CARD_BREAKER_THE_MAGICAL_WARRIOR
+        case CARD_BREAKER_THE_MAGICAL_WARRIOR:  /* added card: place a Spell Counter (src/added_effects.c) */
+#endif
             a = gSummonAction.player << 31;
             t = (gSummonAction.zone << 16) | SUMMONED_TRIGGER_BITS;
             Chain_AddPending(a | t | gSummonAction.cardId, gSummonAction.player | (gSummonAction.zone << 8));
