@@ -135,6 +135,7 @@ void DestroyPlayerMonsters(int player, u16 withEffects)
 void BanishBattleDestroyedCard(int player, int zone, u16 *card)
 {
     DuelCmd_Push(PLAYER_CMD(player, DUEL_CMD_ADD_CARD_TO_BANISHED), card[0], card[1], 0);
+    DetachRevivingCards(player, zone); /* mod: no Graveyard triggers for a banished revived monster */
     DestroyLinkedCards(player, zone, 1);
 }
 
@@ -255,8 +256,10 @@ void BanishFieldCard(int player, int zone, u16 flagged)
         DuelCmd_Push(PLAYER_CMD(player, DUEL_CMD_BANISH_FLAGGED), zone, 1, 0);
     else
         DuelCmd_Push(PLAYER_CMD(player, DUEL_CMD_BANISH), zone, 1, 0);
-    if (zone <= ZONE_MONSTER_4)
+    if (zone <= ZONE_MONSTER_4) {
+        DetachRevivingCards(player, zone); /* mod: no Graveyard triggers for a banished revived monster */
         DestroyLinkedCards(player, zone, 1);
+    }
     if (CARD_NUMBER(id) == CARD_PROHIBITION)
         DuelCmd_Push(PLAYER_CMD(player, DUEL_CMD_REMOVE_PROHIBITION), zone, 0, 0);
     if (zone == ZONE_FIELD && ZONE(player, zone)->isFaceUp)

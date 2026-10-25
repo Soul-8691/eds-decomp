@@ -1,6 +1,7 @@
 Breaker the Magical Warrior: Needs to remove token
+Black Luster Soldier - Envoy of the Beginning: AI doesn't special summon
 D.D. Warrior Lady:
 - AI always activates effect
 - Needs to be able to be responded to or negated
 Trap Dustshoot: AI picks first card in hand
-Chaos Sorcerer: Searchers still fire when banished
+Chaos Sorcerer: AI doesn't special summon

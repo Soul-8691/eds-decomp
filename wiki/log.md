@@ -986,3 +986,19 @@ updated: 2026-09-29
   (EffectTargetableFaceUpMonsterCheck / ChainB), EffectBanishTargetNoAttackResolve, which is now also BLS's banish
   effect.
 - Pages: [[added-cards]].
+
+## [2026-10-25] query | Do banished monsters fire "sent to the Graveyard" searchers?
+- No. Sangan / Witch of the Black Forest (and the other send-to-Graveyard triggers) are queued only by
+  SendFieldCardToGrave, SendBattleDestroyedCardToGraveyard, TributeMonster and SendFusionMaterialToGrave. The banish
+  paths of the added cards, BanishFieldCard (Chaos Sorcerer, BLS, D.D. Warrior Lady's survivors) and
+  BanishBattleDestroyedCard (D.D. Warrior Lady's destroyed monsters), queue no trigger. Checked in the source, not
+  in an emulator.
+- Pages: [[added-cards]].
+
+## [2026-10-25] progress | No searcher triggers for banished Call of the Haunted / Premature Burial monsters
+- Bug: banishing a revived monster destroyed its Call of the Haunted / Premature Burial through DestroyLinkedCards
+  while the monster was still linked and in its zone. The card's SendFieldCardToGrave case then sent the monster
+  to the Graveyard with triggers (Sangan, Witch of the Black Forest).
+- Fix: DetachRevivingCards (src/added_effects.c, farcode) runs in BanishFieldCard and BanishBattleDestroyedCard
+  before DestroyLinkedCards. It removes the link and destroys the reviving card itself.
+- Pages: [[added-cards]].

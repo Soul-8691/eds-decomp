@@ -4,7 +4,7 @@ type: game
 status: draft
 confidence: high
 sources: [rom-analysis, web-card-references]
-updated: 2026-10-24
+updated: 2026-10-25
 ---
 # Added cards
 
@@ -164,6 +164,21 @@ bits. They keep those bits as their low bits and have high bits in the bytes the
 `Get/SetTrunk{Deck,Side,Fusion}Copies`** (`src/mod_save.c`): collection.c (whose add/remove/trim functions were
 rewritten), Deck Edit (cards, list, prohibit, stats, widgets, filter steps), booster code, the debug give-all. Saves
 from the original game load unchanged; the format is a superset.
+
+### Banishing and "sent to the Graveyard" triggers
+A monster that the added cards banish does not run "sent to the Graveyard" effects such as Sangan's or Witch of the
+Black Forest's. Those triggers are queued only by `SendFieldCardToGrave`, `SendBattleDestroyedCardToGraveyard`,
+`TributeMonster` and `SendFusionMaterialToGrave`. `BanishFieldCard` (Chaos Sorcerer, BLS, D.D. Warrior Lady) and
+`BanishBattleDestroyedCard` (D.D. Warrior Lady) queue none. Checked in the source on 2026-10-25.
+
+**Revived monsters (fixed 2026-10-25).** A monster revived by Call of the Haunted or Premature Burial was an
+exception. The banish calls `DestroyLinkedCards`, which destroys the reviving card while the monster still holds
+its link to it (`ZONE_LINK_CONTINUOUS` or `ZONE_LINK_EQUIP`). That card's `SendFieldCardToGrave` case then finds the
+monster, which is still in its zone because the banish is only queued, and calls `SendFieldCardToGrave(monster, 1, 1)`.
+That queues the Graveyard trigger. Now `BanishFieldCard` and `BanishBattleDestroyedCard` first call
+`DetachRevivingCards` (src/added_effects.c). It removes the link (`RemoveZoneLinkAt`, which takes effect at once)
+and then destroys the Call of the Haunted (unless disabled) or Premature Burial itself, so nothing finds the monster.
+The rest goes through `DestroyLinkedCards` as before. Checked in the source and the build; not tested in an emulator.
 
 ### Chaos Sorcerer (2026-10-25)
 - **Summon.** The same as Black Luster Soldier - Envoy of the Beginning's: Special Summon only, banishing 1 LIGHT and

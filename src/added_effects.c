@@ -565,3 +565,33 @@ const struct CardEffect *GetCardEffectRow(int row)
         return &gAddedCardEffects[row - CARD_EFFECT_ROWS_ORIGINAL];
     return &gCardEffects[row];
 }
+
+/*
+ * The monster in (player, zone) is about to be banished. First detach it from the Call of the Haunted (not
+ * disabled) or Premature Burial that revived it, then destroy that card. Otherwise DestroyLinkedCards would
+ * destroy the card while the monster is still linked, and its "destroy the revived monster" step would send
+ * the monster (still in its zone, since the banish is only queued) to the Graveyard as well. That queues
+ * Sangan's or Witch of the Black Forest's trigger for a banished monster.
+ */
+void DetachRevivingCards(int player, int zone)
+{
+    struct DuelZone *z = ZoneOf(player, zone);
+    int i = 0;
+
+    while (i < z->numLinks) {
+        u16 target = z->links[i];
+        u8 kind = z->linkKinds[i];
+        int linkPlayer = DUEL_LOC_PLAYER(target);
+        int linkZone = DUEL_LOC_ZONE(target);
+        struct DuelZone *linked = ZoneOf(linkPlayer, linkZone);
+        u16 number = ((const u16 *)CARD_ID_TO_NUMBER_ADDR)[DUEL_CARD_ID(&linked->card) & CARD_ID_MASK];
+
+        if ((kind == ZONE_LINK_CONTINUOUS && number == CARD_CALL_OF_THE_HAUNTED && !linked->isDisabled)
+            || (kind == ZONE_LINK_EQUIP && number == CARD_PREMATURE_BURIAL)) {
+            RemoveZoneLinkAt(player, zone, i);
+            DestroyFieldCard(linkPlayer, linkZone, 1);
+        } else {
+            i++;
+        }
+    }
+}

@@ -82,6 +82,9 @@ int CanPayLightDarkBanishCost(int player);
 int LightDarkBanishAttribute(void);
 /* 1 if card `id` is a monster whose name starts with "Gravekeeper's" (src/added_effects.c). */
 int IsGravekeeperMonster(u16 id);
+/* Before a monster is banished: detach and destroy the Call of the Haunted / Premature Burial that revived it
+ * (src/added_effects.c), so it is not also sent to the Graveyard with its triggers. */
+void DetachRevivingCards(int player, int zone);
 
 /* Return value of a multi-step resolve handler, kept in gChain.effectStep: Chain_Resolve calls the
  * handler with EFFECT_STEP_START first, then once per frame with the value it returned last, until it
