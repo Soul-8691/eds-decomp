@@ -1,0 +1,20 @@
+WCT06-only cards with raw usage ≥ 1% in any of: Chaos Return, Stein, Chimeratech, Demise, Trooper, Zombie, Perfect Circle, DAD Return, Gladiator
+(source pool: 326 cards from WCT06_only.txt)
+(15 matched)
+
+name	Chaos Return	Stein	Chimeratech	Demise	Trooper	Zombie	Perfect Circle	DAD Return	Gladiator
+Crush Card Virus	— (not in pool)	— (not in pool)	— (not in pool)	2.04%	6.29%	9.77%	18.47%	13.17%	25.78%
+Malevolent Catastrophe	— (not in pool)	— (not in pool)	— (not in pool)	— (not in pool)	— (not in pool)	— (not in pool)	15.53%	4.94%	0.22%
+Shrink	0.00%	0.00%	5.75%	8.84%	2.52%	14.94%	10.71%	2.47%	6.67%
+Legacy of Yata-Garasu	— (not in pool)	— (not in pool)	— (not in pool)	— (not in pool)	— (not in pool)	— (not in pool)	11.78%	0.00%	0.00%
+Green Gadget	— (not in pool)	— (not in pool)	10.34%	3.40%	2.31%	4.60%	3.88%	2.47%	0.89%
+Red Gadget	— (not in pool)	— (not in pool)	10.34%	3.40%	2.31%	4.60%	3.88%	2.47%	0.89%
+Yellow Gadget	— (not in pool)	— (not in pool)	10.34%	3.40%	2.31%	4.60%	3.88%	2.47%	0.89%
+Magical Stone Excavation	— (not in pool)	— (not in pool)	— (not in pool)	8.16%	1.05%	0.57%	1.34%	7.41%	0.00%
+Marshmallon	— (not in pool)	— (not in pool)	— (not in pool)	— (not in pool)	— (not in pool)	— (not in pool)	7.90%	2.06%	0.22%
+Foolish Burial	— (not in pool)	— (not in pool)	— (not in pool)	— (not in pool)	— (not in pool)	— (not in pool)	6.83%	0.82%	5.11%
+Doomcaliber Knight	— (not in pool)	— (not in pool)	— (not in pool)	— (not in pool)	— (not in pool)	— (not in pool)	— (not in pool)	3.70%	2.22%
+Van'Dalgyon the Dark Dragon Lord	— (not in pool)	— (not in pool)	— (not in pool)	— (not in pool)	— (not in pool)	— (not in pool)	— (not in pool)	2.47%	0.67%
+Shield Crush	— (not in pool)	— (not in pool)	— (not in pool)	— (not in pool)	— (not in pool)	— (not in pool)	2.41%	0.41%	1.56%
+Soul Taker	— (not in pool)	— (not in pool)	— (not in pool)	— (not in pool)	— (not in pool)	— (not in pool)	2.14%	0.82%	0.44%
+Goblin Zombie	— (not in pool)	— (not in pool)	— (not in pool)	— (not in pool)	— (not in pool)	— (not in pool)	— (not in pool)	1.23%	0.00%

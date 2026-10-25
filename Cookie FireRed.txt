@@ -1,0 +1,30 @@
+Pokemon FireRed
+but with cookies
+Mascot: Kingler
+Use pokefirered
+Use Adric's title screen logo generator
+Use vanilla FireRed (Helvetica Neue) font
+Add Yu-Gi-Oh! cards
+Add Showdown!
+Add EDOPro duels
+Historical YGO formats (up to Reaper)
+Separate bag pocket for YGO cards
+Deck builder
+Showdown! [Gen 3] OU bot
+pkmn/ps
+Goat format
+Other Metas
+Showdown! OMs bot support
+Banlists per format
+Multiple decks per format
+Other 9 are Yugi Muto/Joey/Kaiba/Pegasus/Marik/Yami Marik/Yami Bakura/Yami Yugi and Victory (05-09 OCG)
+Custom EDOPRO cards from historical formats
+Make sure all cards are early version effects in the ROM
+Duelist Point (DP) system
+Start out with 5000 DP
+Cards are from 10-1000 DP
+Buy packs with DP (all are 1000 DP at beginning)
+Packs are by attribute/race/spells/traps/ocg/tcg
+Rank cards
+Price cards
+Price packs
