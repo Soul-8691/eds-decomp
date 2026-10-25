@@ -79,6 +79,8 @@ const struct CardEffect *GetCardEffectRow(int row);
  * monster zone, a LIGHT and a DARK monster in the Graveyard), and which attribute the summon steps banish now. */
 int CanPayBlackLusterSoldierCost(int player);
 int BlackLusterSoldierBanishAttribute(void);
+/* 1 if card `id` is a monster whose name starts with "Gravekeeper's" (src/added_effects.c). */
+int IsGravekeeperMonster(u16 id);
 
 /* Return value of a multi-step resolve handler, kept in gChain.effectStep: Chain_Resolve calls the
  * handler with EFFECT_STEP_START first, then once per frame with the value it returned last, until it

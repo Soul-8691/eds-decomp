@@ -321,6 +321,30 @@ int EffectTorrentialTributePrepare(struct ChainEntry *card, struct ChainEntry *c
 }
 #endif /* HAS_CARD_TORRENTIAL_TRIBUTE */
 
+/* ---- "Gravekeeper's" cards -----------------------------------------------------------------------------------
+ * 1 if the card's name starts with "Gravekeeper's" (the archetype the Gravekeeper's cards refer to). */
+static const char sGravekeeperPrefix[] = "Gravekeeper's";
+
+int IsGravekeeperMonster(u16 id)
+{
+    const u8 *name = gCardNames + (id & CARD_ID_MASK) * CARD_NAME_SIZE;
+    int i;
+
+    if (CARD_STATS_TYPE(gCardStats[id & CARD_ID_MASK]) > CARD_TYPE_REPTILE)
+        return 0;
+    for (i = 0; sGravekeeperPrefix[i] != 0; i++) {
+        if (name[i] != (u8)sGravekeeperPrefix[i])
+            return 0;
+    }
+    return 1;
+}
+
+/* ---- Gravekeeper's Spy ----------------------------------------------------------------------------------------
+ * "FLIP: Special Summon 1 'Gravekeeper's' monster with 1500 or less ATK from your Deck."
+ * A flip effect (HasFlipEffect, card_detail.c), resolved by the floaters' handler EffectSpecialSummonFromDeckResolve:
+ * it asks the human, lists the candidates (CollectEffectTargets, effect_target_collect.c: deck "Gravekeeper's"
+ * monsters with ATK 1500 or less, not Fusion or Ritual), Special Summons the pick in Attack Position and shuffles. */
+
 /* ---- The effect table of the added cards ------------------------------------------------------------------- */
 
 /* Rows like gCardEffects' (struct CardEffect), any order, ending with number 0xFFFF. */
@@ -361,6 +385,16 @@ const struct CardEffect gAddedCardEffects[] = {
         (int (*)(struct ChainEntry *, struct ChainEntry *))EffectDarkHoleResolve,
         NULL,
         EffectTorrentialTributePrepare,
+        NULL,
+        NULL,
+    },
+#endif
+#ifdef HAS_CARD_GRAVEKEEPERS_SPY
+    {
+        CARD_GRAVEKEEPERS_SPY, 0,
+        (int (*)(struct ChainEntry *, struct ChainEntry *))EffectSpecialSummonFromDeckResolve,
+        NULL,
+        NULL,
         NULL,
         NULL,
     },

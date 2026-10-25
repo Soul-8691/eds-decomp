@@ -119,7 +119,8 @@ those run only for cards that have an effect.
 - **Placement.** The unit is `@farcode` in `units.txt`: its code goes into the range the moved card tables left
   free (from `0x082461A0`, after its `.rodata`; within `bl` range of all game code). The rest of
   `data/rodata_08087FD0.s` is section `.rodata.pinned` at `0x08623DF4`. So added effects cost none of the game
-  code's slack before the pinned data at `0x08080A20` (0x33C bytes left).
+  code's slack before the pinned data at `0x08080A20`. Each hook added inside the game's units still costs a
+  few bytes there (0x558 left on 2026-10-25, after moving the rewritten saved-deck functions to `src/mod_save.c`).
 - **Guards.** Each card's code is under `#ifdef HAS_CARD_<NAME>`, which `tools/newcards.py` defines in
   `build/include/card_count.h` for every listed card. Taking a card off the list removes its effect instead of
   breaking the build.
@@ -163,6 +164,14 @@ bits. They keep those bits as their low bits and have high bits in the bytes the
 `Get/SetTrunk{Deck,Side,Fusion}Copies`** (`src/mod_save.c`): collection.c (whose add/remove/trim functions were
 rewritten), Deck Edit (cards, list, prohibit, stats, widgets, filter steps), booster code, the debug give-all. Saves
 from the original game load unchanged; the format is a superset.
+
+### Gravekeeper's Spy (2026-10-25)
+A flip effect: it is added to `HasFlipEffect` (card_detail.c), so it triggers on a Flip Summon and when it is flipped
+by an attack. It resolves with the floaters' `EffectSpecialSummonFromDeckResolve`: Yes/No for the human, a Deck list,
+then a Special Summon in a face-up position of the player's choice (`QueueSpecialSummonChoosePosition`, the
+position menu; the CPU uses `AiShouldSetMonster`) and a shuffle. The other users of that handler (the floaters)
+keep Attack Position. Its `CollectEffectTargets` case lists deck monsters whose name
+starts with "Gravekeeper's" (`IsGravekeeperMonster`), with ATK 1500 or less, excluding Fusion and Ritual monsters.
 
 ### Torrential Tribute (2026-10-25)
 A Normal Trap for the response window a summon opens: Normal, Flip or Special Summon by either player (not a Set),

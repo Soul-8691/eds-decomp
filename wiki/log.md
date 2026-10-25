@@ -938,3 +938,18 @@ updated: 2026-09-29
 - `src/added_effects.c`: Normal Trap answering a summon's response window (RESPONSE_SUMMONED / FLIP_SUMMONED /
   SPECIAL_SUMMONED, not SET; the summoned monster at loc0), then Dark Hole's resolve (every monster destroyed).
 - Pages: [[added-cards]].
+
+## [2026-10-25] progress | Gravekeeper's Spy
+- `src/added_effects.c`: flip effect (HasFlipEffect, card_detail.c) resolved by the floaters' handler
+  EffectSpecialSummonFromDeckResolve; its CollectEffectTargets case lists deck monsters named "Gravekeeper's..."
+  (IsGravekeeperMonster: name prefix) with ATK 1500 or less, not Fusion or Ritual.
+- Pages: [[added-cards]].
+
+## [2026-10-25] progress | Gravekeeper's Spy summons in either position; main-code slack restored
+- EffectSpecialSummonFromDeckResolve (effect_resolve6.c): for Gravekeeper's Spy, QueueSpecialSummonChoosePosition
+  (human: the position menu; CPU: AiShouldSetMonster), face up either way. The floaters (Giant Rat, ..., Mystic
+  Tomato) keep Attack Position, as their texts say.
+- The main code had only 0x2C bytes left before the pinned data at 0x08080A20. IsBelowCardCopyLimit and the
+  AddCardToSaved* / RemoveCardFromSaved* / TrimSavedDecksToCopyLimits group moved from collection.c to
+  src/mod_save.c (far code), leaving 0x558 bytes.
+- Pages: [[added-cards]].

@@ -598,6 +598,16 @@ int EffectSpecialSummonFromDeckResolve(struct ChainEntry *link)
                          ((u16 *)card)[1], 0);
             return EFFECT_STEP_5;
         case EFFECT_STEP_5:         /* Special Summon it face up in Attack Position */
+#ifdef HAS_CARD_GRAVEKEEPERS_SPY
+            /* Added: Gravekeeper's Spy summons in either face-up position: the human picks it in the position menu,
+             * the CPU through AiShouldSetMonster (SummonStep_SpecialChoosePosition). The floaters keep Attack
+             * Position, as their texts say. */
+            if (CARD_NUMBER(link->card) == CARD_GRAVEKEEPERS_SPY) {
+                QueueSpecialSummonChoosePosition(link->player,
+                    (struct DuelCard *)&gCardListView.cards[gCardListView.cursorRow + gCardListView.top], 1, 0);
+                return EFFECT_STEP_6;
+            }
+#endif
             QueueSpecialSummon(link->player,
                                (struct DuelCard *)&gCardListView.cards[gCardListView.cursorRow + gCardListView.top],
                                1, 0, 0);

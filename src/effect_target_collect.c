@@ -738,6 +738,26 @@ u16 CollectEffectTargets(int player, u16 cardNumber, int param)
         }
         break;
     }
+#ifdef HAS_CARD_GRAVEKEEPERS_SPY
+    case CARD_GRAVEKEEPERS_SPY:
+    {
+        /* Added card: deck "Gravekeeper's" monsters with ATK of at most 1500, not Fusion or Ritual. */
+        u32 id;
+        u32 type;
+
+        for (i = 0; i < PLAYER(player).deckCount; i++) {
+            id = CARD_ID(*PILE_WORD_FLAT(gDuelDecks, i, player));
+            type = CARD_STATS_TYPE(CARD_STATS(id));
+            if (type > CARD_TYPE_REPTILE || CardAttackOfType(id, type) > STAT_LIMIT)
+                continue;
+            if (CardKind(id) == CARD_KIND_RITUAL || CardKind(id) == CARD_KIND_FUSION)
+                continue;
+            if (IsGravekeeperMonster(id))
+                ADD_TARGET_DOWHILE(PLAYER(player).deck[i], CARDLIST_SRC_DECK);
+        }
+        break;
+    }
+#endif
     case CARD_SENJU_OF_THE_THOUSAND_HANDS:
     {
         /* Deck Ritual monsters. */
