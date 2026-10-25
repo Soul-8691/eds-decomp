@@ -211,6 +211,21 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
 - `HasFlipEffect` (card_detail.c).
 - Checked in the source; not tested in an emulator.
 
+### Creature Swap (2026-10-25)
+- Normal Spell: "Each player chooses 1 monster they control and switches control of those monsters with each other.
+  Those monsters cannot change their battle positions for the rest of this turn."
+- **Prepare:** both players control a monster.
+- **Resolve** (`EffectCreatureSwapResolve`): nothing is targeted, so the choices are made here.
+  - **Choices.** The human picks one of their monsters with the cursor, in steps like
+    `EffectGainOpponentMonsterStatsResolve`; a pick off their side plays the error sound. The CPU gives its weakest
+    monster (`AiFindWeakestMonster`).
+  - **Swap.** Invader of the Throne's `SwapFieldCards` (`DUEL_CMD_SWAP_ZONES`, with the swapped cards'
+    control-change rules such as Ameba's).
+  - **Lock.** `DUEL_CMD_SET_POSITION_LOCKED` on both zones. The card menu refuses a position change for a locked
+    zone, and `DuelCmd_TurnStart` clears the flag at the start of its controller's next turn.
+- **Not modelled:** in a Link Battle, the remote player's monster is chosen by the CPU rule.
+- Checked in the source and the build; not tested in an emulator.
+
 ### Mystic Swordsman LV2 (2026-10-25)
 - "If this card attacks a face-down Defense Position monster: Destroy the monster immediately with this card's
   effect without flipping it face-up or applying damage calculation. At the End Phase of a turn in which this card

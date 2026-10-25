@@ -1135,3 +1135,8 @@ updated: 2026-09-29
   step.
 - gModDuel (EWRAM 0x0202FF04) and ModDuelInit, called by DuelPhase_Init, clear the mod's duel state each duel.
 - Pages: [[added-cards]].
+
+## [2026-10-25] progress | Creature Swap
+- Normal Spell: at resolution the human picks a monster with the cursor and the CPU gives its weakest.
+  SwapFieldCards swaps them, then DUEL_CMD_SET_POSITION_LOCKED locks both until their controller's next turn.
+- Pages: [[added-cards]].

@@ -972,6 +972,56 @@ int EffectMysticSwordsmanLv2Resolve(struct ChainEntry *link, struct ChainEntry *
 }
 #endif /* HAS_CARD_MYSTIC_SWORDSMAN_LV2 && HAS_CARD_MYSTIC_SWORDSMAN_LV4 */
 
+#ifdef HAS_CARD_CREATURE_SWAP
+/* ---- Creature Swap -------------------------------------------------------------------------------------------------
+ * Normal Spell: "Each player chooses 1 monster they control and switches control of those monsters with each other.
+ * Those monsters cannot change their battle positions for the rest of this turn."
+ * Nothing is targeted: the choices are made at resolution. The human picks one of their monsters with the cursor
+ * (as in EffectGainOpponentMonsterStatsResolve), the CPU gives its weakest (AiFindWeakestMonster). The swap is
+ * Invader of the Throne's (SwapFieldCards: DUEL_CMD_SWAP_ZONES and the control-change rules of the swapped cards),
+ * then both monsters are locked in their position (DUEL_CMD_SET_POSITION_LOCKED; DuelCmd_TurnStart clears the flag at
+ * the start of their controller's next turn). */
+
+static const u8 sStrCreatureSwapPick[] = "Select one of your monsters to give to the opponent.";
+
+int EffectCreatureSwapPrepare(struct ChainEntry *card, struct ChainEntry *chainLink, u16 fromHand)
+{
+    return CountMonsters(0) > 0 && CountMonsters(1) > 0;
+}
+
+int EffectCreatureSwapResolve(struct ChainEntry *link, struct ChainEntry *chainedTo)
+{
+    int humanZone, cpuZone;
+
+    if (link->negated)
+        return EFFECT_STEP_DONE;
+    switch (gChain.effectStep) {
+    case EFFECT_STEP_START:
+        if (CountMonsters(0) == 0 || CountMonsters(1) == 0)
+            return EFFECT_STEP_DONE;
+        TextBoxOpen(TEXTBOX_POS(6, 2), TEXTBOX_SIZE(18, 7), TEXTBOX_FLAGS_DEFAULT, sStrCreatureSwapPick);
+        return EFFECT_STEP_2;
+    case EFFECT_STEP_2:
+        if (DuelCursor_PickTarget(PICK_ANY_MONSTER) == 0)
+            return EFFECT_STEP_2;
+        humanZone = gDuelScreen.selArea + gDuelScreen.selIndex;
+        if (gDuelScreen.selPlayer != 0 || humanZone > ZONE_MONSTER_4 || DUEL_CARD_ID(&ZoneOf(0, humanZone)->card) == 0) {
+            PlaySE(SE_ERROR);
+            return EFFECT_STEP_2;
+        }
+        cpuZone = AiFindWeakestMonster(1, -1, 1, 1);
+        if (cpuZone < 0 || DUEL_CARD_ID(&ZoneOf(1, cpuZone)->card) == 0)
+            return EFFECT_STEP_DONE;
+        SwapFieldCards(link->player, DUEL_LOC(0, humanZone), DUEL_LOC(1, cpuZone));
+        /* after the swap the zones hold the other player's monster */
+        DuelCmd_Push(DUEL_CMD_SET_POSITION_LOCKED, humanZone, 1, 0);
+        DuelCmd_Push(DUEL_CMD_PLAYER | DUEL_CMD_SET_POSITION_LOCKED, cpuZone, 1, 0);
+        return EFFECT_STEP_DONE;
+    }
+    return EFFECT_STEP_DONE;
+}
+#endif /* HAS_CARD_CREATURE_SWAP */
+
 #ifdef HAS_CARD_INJECTION_FAIRY_LILY
 /* ---- Injection Fairy Lily ------------------------------------------------------------------------------------------
  * "During either player's Damage Step, when this card attacks or is attacked: You can pay 2000 LP; this card gains
@@ -1721,6 +1771,16 @@ const struct CardEffect gAddedCardEffects[] = {
         EffectMysticSwordsmanLv2Resolve,
         NULL,
         NULL,
+        NULL,
+        NULL,
+    },
+#endif
+#ifdef HAS_CARD_CREATURE_SWAP
+    {
+        CARD_CREATURE_SWAP, 0,
+        EffectCreatureSwapResolve,
+        NULL,
+        EffectCreatureSwapPrepare,
         NULL,
         NULL,
     },
