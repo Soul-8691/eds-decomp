@@ -1089,3 +1089,11 @@ updated: 2026-09-29
 - The Tsukuyomi hooks made the code overlap the pinned data at 0x08080A20 by 0x80 bytes. `@farcode dice_scene`
   (units.txt) moves that original unit (0x145C bytes) after the data, leaving 0x13DC bytes of slack.
 - Pages: [[added-cards]].
+
+## [2026-10-25] progress | Scapegoat and the Sheep Token
+- Scapegoat reuses the leftover handlers of effect key 1245 (EffectNoSummonFourFreeZonesPrepare,
+  EffectSummonFourTokensResolve: four TOKEN_KIND_2 tokens and the summon locks).
+- The tokens need a card at number 1922: Sheep Token was added to config/new_cards.txt. tools/newcards.py now gives
+  tokens the fixed number of their token kind (TOKEN_NUMBERS), with the stats and text given there, Normal-Monster
+  stats and no password.
+- Pages: [[added-cards]].

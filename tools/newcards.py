@@ -12,7 +12,7 @@ the cropped card image becomes assets/new_cards/art/<passcode>.png, a 72x80 inde
 names not yet cached are downloaded (network and Pillow are needed then). None of this is committed.
 
 `build` (stdlib only once everything is cached) gives the cards IDs 821, 822, ... in list order and card numbers
-from the free numbers (free_numbers), then appends them to the original 821-entry tables that tools/assets.py
+from the free numbers (free_numbers); a token takes the fixed number of its token kind instead (TOKEN_NUMBERS), then appends them to the original 821-entry tables that tools/assets.py
 built: build/assets/newcards__*.bin, plus newcards__name_order.bin (every card ID in name order, then 0). It also
 writes the card count for C and assembly (build/include/card_count.h and .inc), build/new_cards.tsv (the
 assignment) and the CARD_ constants of the added cards in include/constants/cards.h. Files are only rewritten
@@ -53,6 +53,14 @@ MAX_IDS = min(0xCD40 * 2 // NAME_SIZE,  # gCardNames grows in place into the unu
 # Card numbers for the added cards. Card Trading hides 1210-1899 (except added cards, which it lists by ID);
 # 1211-1552 are effect-table keys and the numbers the duel code tests, and 1900-1999 are Tickets, Gods and tokens.
 NUMBER_BANDS = [(1, 1210), (1600, 1900)]
+# Tokens (YGOPRODeck type "Token") take the fixed number of their token kind instead: DUEL_CMD_SUMMON_TOKEN places
+# the card of number 1920 + kind (enum TokenKind, include/constants/duel_cmds.h). Like the original Insect Monster
+# Token (1920) they have no password, and the token number range keeps them out of the trunk and the card lists.
+# YGOPRODeck leaves a token's stats to the card that summons it, so they are given here, with the text.
+TOKEN_NUMBERS = {
+    'Sheep Token': dict(number=1922,    # TOKEN_KIND_2: Scapegoat (EffectSummonFourTokensResolve)
+                        race='Beast', attribute='EARTH', level=1, atk=0, desc='A token summoned by Scapegoat.'),
+}
 
 # YGOPRODeck race -> EDS monster type (gCardTypeNames), attribute -> EDS attribute, Spell/Trap race -> subtype.
 MONSTER_TYPES = {
@@ -270,6 +278,8 @@ def stats_word(c):
         if c['type'] == 'Spell Card':
             return CARD_TYPE_MAGIC << 20 | sub << 17
         return 1 << 29 | CARD_TYPE_TRAP << 20 | sub << 17
+    if c['type'] == 'Token':
+        c = dict(c, type='Normal Monster')     # stats like the Insect Monster Token's: kind 0
     if c['race'] not in MONSTER_TYPES or c.get('attribute') not in ATTRIBUTES:
         fail(f'{c["name"]}: a {c["race"]}/{c.get("attribute")} {c["type"]} cannot be shown in EDS (no such '
              f'monster type or attribute)')
@@ -331,13 +341,26 @@ def cmd_build():
     make_art([cache[n] for n, _ in rows])
     numbers = free_numbers()
     cap = min(len(numbers), MAX_IDS - OLD_COUNT)
-    if len(rows) > cap:
+    n2i_old = struct.unpack('<2048H', open(f'{IN}/cards__number_to_id.json.bin', 'rb').read())
+    if sum(1 for n, _ in rows if cache[n]['type'] != 'Token') > len(numbers) or len(rows) > MAX_IDS - OLD_COUNT:
         fail(f'{len(rows)} cards listed, but only {cap} fit (free card numbers: {len(numbers)}, card IDs: '
              f'{MAX_IDS - OLD_COUNT})')
     new = []
+    free = iter(numbers)
     for k, (name, game_name) in enumerate(rows):
         c = dict(cache[name])
-        c.update(id=OLD_COUNT + k, number=numbers[k], name=name, game_name=game_name)
+        if c['type'] == 'Token':
+            if name not in TOKEN_NUMBERS:
+                fail(f'{name}: a token needs the number of its token kind in TOKEN_NUMBERS (tools/newcards.py); '
+                     f'known: {", ".join(TOKEN_NUMBERS)}')
+            token = dict(TOKEN_NUMBERS[name])
+            number = token.pop('number')
+            c.update(token, **{'def': 0})
+            if n2i_old[number]:
+                fail(f'{name}: card number {number} already has a card')
+        else:
+            number = next(free)
+        c.update(id=OLD_COUNT + k, number=number, name=name, game_name=game_name)
         new.append(c)
     total = OLD_COUNT + len(new)
 
@@ -364,7 +387,7 @@ def cmd_build():
         pals.append(struct.pack('<64H', *[A.rgb_to_bgr555(p) for p in (plte + [(0, 0, 0)] * 64)[:64]]))
         stats.append(struct.pack('<I', stats_word(c)))
         i2n.append(struct.pack('<H', c['number']))
-        pws.append(bcd(c['passcode']))
+        pws.append(bytes([0xFF] * 4) if c['type'] == 'Token' else bcd(c['passcode']))   # tokens: no password
         keys.append(struct.pack('<H', next_key))
         next_key += 1
         n2i[c['number']] = c['id']

@@ -17,3 +17,5 @@ Blade Knight
 Raigeki Break
 Sakuretsu Armor
 Tsukuyomi
+Scapegoat
+Sheep Token

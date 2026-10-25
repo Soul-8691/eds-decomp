@@ -211,6 +211,26 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
 - `HasFlipEffect` (card_detail.c).
 - Checked in the source; not tested in an emulator.
 
+### Scapegoat and the Sheep Token (2026-10-25)
+- Quick-Play Spell: "Special Summon 4 'Sheep Tokens' (Beast/EARTH/Level 1/ATK 0/DEF 0) in Defense Position. You
+  cannot Summon other monsters the turn you activate this card." EDS still holds the handlers of the OCG Scapegoat
+  of the engine it was built on, under effect key 1245. The prepare is `EffectNoSummonFourFreeZonesPrepare`: 4 free
+  monster zones and no summon this turn. The resolve is `EffectSummonFourTokensResolve`: four
+  `DUEL_CMD_SUMMON_TOKEN` of `TOKEN_KIND_2` in Defense Position, then `DUEL_CMD_SET_SUMMON_LOCKS` (Normal and
+  Special). Scapegoat's row reuses both; it is guarded on `HAS_CARD_SCAPEGOAT` and `HAS_CARD_SHEEP_TOKEN`.
+- **The token card.** `DuelCmd_SummonToken` places `gCardNumberToId[1920 + kind]`, and EDS has a card only at 1920
+  (Insect Monster Token). So `Sheep Token` is in config/new_cards.txt, appended last so the other IDs keep their
+  places. `tools/newcards.py` gives a token (YGOPRODeck type "Token") the fixed number of its kind from
+  `TOKEN_NUMBERS` (Sheep Token: 1922) instead of a free number, with the stats and text given there (YGOPRODeck
+  leaves them to the summoning card). It gets Normal-Monster stats (kind 0) and no password (0xFFFFFFFF), as the
+  Insect Monster Token has. Verified in the built tables: ID 1110, number 1922, Beast/EARTH/Level 1/0/0.
+- The token number range (1920-1999) keeps it out of the starting trunk (`GiveStartingTrunk`), the Deck Edit and
+  Card Trading lists (unowned), the prohibition picker and the Password screen. Its other token behaviour (it
+  vanishes when it leaves the field) is the game's own, by number.
+- The CPU: its strategy code still names key 1245 (ai_strategy.c, ai_deck.c, ai_turn_steps.c), not
+  `CARD_SCAPEGOAT`, so it does not play Scapegoat on purpose.
+- Checked in the source and the build; not tested in an emulator.
+
 ### Book of Moon (2026-10-25)
 - Quick-Play Spell: "Target 1 face-up monster on the field; change that target to face-down Defense Position." It
   targets like Chaos Sorcerer (`EffectTargetableFaceUpMonsterCheck` / `ChainB`). `EffectBookOfMoonResolve` first

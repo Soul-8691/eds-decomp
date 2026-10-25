@@ -1127,6 +1127,21 @@ const struct CardEffect gAddedCardEffects[] = {
         EffectBlackLusterSoldierChainB,
     },
 #endif
+#if defined(HAS_CARD_SCAPEGOAT) && defined(HAS_CARD_SHEEP_TOKEN)     /* the tokens are the Sheep Token card */
+    /* Quick-Play Spell: "Special Summon 4 'Sheep Tokens' (Beast/EARTH/Level 1/ATK 0/DEF 0) in Defense Position. You
+     * cannot Summon other monsters the turn you activate this card." The game's own handlers of effect key 1245
+     * (the OCG Scapegoat of the engine EDS was built on): the prepare needs 4 free monster zones and no summon this
+     * turn; the resolve summons four TOKEN_KIND_2 tokens, card number 1922, which is the Sheep Token of the added
+     * cards (tools/newcards.py TOKEN_NUMBERS), and locks the player's Normal and Special Summons for the turn. */
+    {
+        CARD_SCAPEGOAT, 0,
+        (int (*)(struct ChainEntry *, struct ChainEntry *))EffectSummonFourTokensResolve,
+        NULL,
+        (int (*)(struct ChainEntry *, struct ChainEntry *, u16))EffectNoSummonFourFreeZonesPrepare,
+        NULL,
+        NULL,
+    },
+#endif
 #ifdef HAS_CARD_BOOK_OF_MOON
     {
         CARD_BOOK_OF_MOON, 0,

@@ -1277,6 +1277,7 @@ enum CardNumber {
     CARD_BUBBLE_CRASH = 1087,                             /* id 1107, added card */
     CARD_AUTONOMOUS_ACTION_UNIT = 1088,                   /* id 1108, added card */
     CARD_AQUA_SPIRIT = 1089,                              /* id 1109, added card */
+    CARD_SHEEP_TOKEN = 1922,                              /* id 1110, added card */
     /* ---- end of the added cards ---- */
 };
 
