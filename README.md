@@ -49,9 +49,11 @@ command below from a WSL shell in the repository.
    ```
    make -j$(nproc)                  # builds eds.gba
    ```
-   This build adds 100 cards to the game (`config/new_cards.tsv`, wiki page `added-cards`), so `make compare` no
-   longer matches the original. `make setup` also downloads the added cards' stats, text and art from the
-   [YGOPRODeck API](https://ygoprodeck.com/api-guide/) into `assets/new_cards/` (needs network and Pillow).
+   This build adds the cards listed in `config/new_cards.txt` to the game (one card name per line; wiki page
+   `added-cards`), so `make compare` no longer matches the original. To change them, edit the list and run
+   `make`: it downloads the stats, text and art of cards it has not seen from the
+   [YGOPRODeck API](https://ygoprodeck.com/api-guide/) into `assets/new_cards/` (needs network and Pillow then).
+   `python3 tools/newcards.py capacity` says how many cards fit.
 
 After setup, the build reads only `assets/` and the source code, so it no longer needs the ROM file.
 

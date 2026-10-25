@@ -304,10 +304,10 @@ void DeckEdit_BuildCardLists(void)
     for (i = 0; i <= 2; i++)
         W.listCount[0][i] = 0;
     switch (gMainMode.cardListMode) {
-    case 1:   /* Card Trading: card numbers 1210-1899 and 1920-1999 are hidden */
+    case 1:   /* Card Trading: card numbers 1210-1899 and 1920-1999 are hidden, except for the added cards */
         for (k = 0; (i = gCardIdsByName[k]) != 0; k++) {
             u16 number = CARD_NUMBER(i);
-            if ((u16)(number - 0x4BA) > 0x315 || (u16)(number - 0x76C) <= 0x13) {
+            if ((u16)(number - 0x4BA) > 0x315 || (u16)(number - 0x76C) <= 0x13 || i >= CARD_ID_COUNT_ORIGINAL) {
                 if (OWNED_COUNT(i))
                     WriteListEntry(i, 0, 0, W.listCount[0][0]++);
                 if ((s32)((u32)W.swapFlags << 26) < 0) { /* sideSwapMode: main-deck copies only */

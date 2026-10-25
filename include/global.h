@@ -39,6 +39,19 @@ typedef u32 bool32;
 
 asm(".include \"asm/macros.inc\"");
 
+/* Card IDs: 821 in the original game (0..820), plus the cards of config/new_cards.txt, whose count
+ * tools/newcards.py writes to build/include/card_count.h. Tools that preprocess without that file (check.py, ...)
+ * see the original game. */
+#define CARD_ID_COUNT_ORIGINAL 821
+#if defined(__has_include)
+#if __has_include("card_count.h")
+#include "card_count.h"
+#endif
+#endif
+#ifndef CARD_ID_COUNT_ADDED
+#define CARD_ID_COUNT_ADDED 0
+#endif
+
 /* Addresses of the per-card tables that moved to the end of the ROM to hold the added cards (data/
  * rodata_08087FD0.s). Units that read a table through an integer address (((const u32 *)0x08621DE0)[id])
  * now use these; the externs have their own C names so they never clash with a unit's local declaration. */

@@ -5,10 +5,10 @@
  * The read-only card database in ROM (wiki/data/card-table.md, card-id-map.md, card-art.md).
  *
  * Two number spaces:
- *   card ID      1..920, the index of every per-card table (gCardStats, gCardNames, the art); slot 0 is
- *                empty. Readers mask the ID with CARD_ID_MASK. IDs 1..813 are the original cards in name
- *                order, 814..820 the Tickets, Gods and Token, and 821..920 the added cards
- *                (config/new_cards.tsv); gCardIdsByName lists them all in name order.
+ *   card ID      1..CARD_ID_LAST, the index of every per-card table (gCardStats, gCardNames, the art); slot 0
+ *                is empty. Readers mask the ID with CARD_ID_MASK. IDs 1..813 are the original cards in name
+ *                order, 814..820 the Tickets, Gods and Token, and 821.. the added cards (config/new_cards.txt);
+ *                gCardIdsByName lists them all in name order.
  *   card number  the language-independent Konami number (enum CardNumber, include/constants/cards.h): deck
  *                lists, packs, the effect table and every "is this card X" test. gCardIdToNumber and
  *                gCardNumberToId convert between the two.
@@ -23,13 +23,10 @@
 #include "global.h"
 #include "constants/card_stats.h"
 
-/* Card IDs: 0..920 (0 is an empty slot). The original game had 821 (0..820); the added cards follow. */
-#define CARD_ID_COUNT               921
+/* Card IDs: 0..CARD_ID_LAST (0 is an empty slot). The original game has 821 (0..820); the added cards follow
+ * (CARD_ID_COUNT_ORIGINAL and CARD_ID_COUNT_ADDED are in global.h). */
+#define CARD_ID_COUNT               (CARD_ID_COUNT_ORIGINAL + CARD_ID_COUNT_ADDED)
 #define CARD_ID_LAST                (CARD_ID_COUNT - 1)
-#define CARD_ID_COUNT_ORIGINAL      821
-#ifdef DECK_EDIT_TRUNK_LIST_SIZE
-STATIC_ASSERT(DECK_EDIT_TRUNK_LIST_SIZE == CARD_ID_COUNT, DeckEditTrunkListSize);
-#endif
 #define CARD_ID_MASK                0x7FF       /* applied by every table reader */
 
 /* Card numbers */

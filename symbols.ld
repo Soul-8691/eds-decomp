@@ -8,6 +8,7 @@ gMain_oamBuffer = 0x03004470;
 gBgTileBuffer = 0x02010014;
 gScratchBuffer = 0x02030000;
 gDeckEditCardLists = 0x0202A000;
+gDeckEditHeldBack = 0x0202C200;
 gTextCanvas = 0x02000000;
 gSaveData = 0x02011C20;
 gSaveDataSignature = 0x02013D86;

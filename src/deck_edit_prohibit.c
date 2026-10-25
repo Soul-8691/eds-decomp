@@ -181,7 +181,8 @@ int TradeCardSelect_Init(void)
      * (mode 1 code first) comes out. */
     case CARD_LIST_MODE_TRADE:
         for (k = 0; (i = gCardIdsByName[k]) != 0; k++) {   /* every card in name order */
-            if ((u16)(CARD_NUMBER(i) - 0x4BA) <= 0x315 && (u16)(CARD_NUMBER(i) - 0x76C) > 0x13)
+            if ((u16)(CARD_NUMBER(i) - 0x4BA) <= 0x315 && (u16)(CARD_NUMBER(i) - 0x76C) > 0x13
+                && i < CARD_ID_COUNT_ORIGINAL)       /* the added cards are listed whatever their number */
                 continue;
             if (gSaveData.trunk[i].count)
                 DeckEdit_SetListCard(i, 0, gDeckEdit.listRow[0], gDeckEdit.listCount[gDeckEdit.listRow[0]][0]++);

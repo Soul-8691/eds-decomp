@@ -27,7 +27,20 @@ import re
 import sys
 
 OUT = 'include/constants/cards.h'
-NEW_CARDS = 'config/new_cards.tsv'
+# The constants of the added cards (config/new_cards.txt) are a block that tools/newcards.py writes; a
+# regeneration keeps it.
+ADDED_BEGIN = '    /* ---- Added cards (config/new_cards.txt)'
+ADDED_END = '    /* ---- end of the added cards ---- */'
+
+
+def keep_added_block(text, path):
+    """Copy the added-cards block of the current header at `path` into `text`, before the enum's closing brace."""
+    cur = open(path).read() if os.path.exists(path) else ''
+    if ADDED_BEGIN not in cur:
+        return text
+    block = cur[cur.index(ADDED_BEGIN):cur.index(ADDED_END) + len(ADDED_END) + 1]
+    end = text.rindex('\n};') + 1
+    return text[:end] + block + text[end:]
 ALIASES = 'build/readability/cards_aliases.json'
 
 # Card numbers with no EDS card that the matched code compares, with what the code does with each (from the
@@ -82,19 +95,6 @@ def build():
     n2i = load('assets/cards/number_to_id.json')
     effects = load('assets/tables/card_effect_handlers.json')
     tj = load('build/names/types.json') if os.path.exists('build/names/types.json') else None
-
-    # The added cards (config/new_cards.tsv, tools/newcards.py): IDs 821.. with their own card numbers.
-    for line in open(NEW_CARDS, encoding='utf-8'):
-        if line.startswith('#') or line.startswith('id\t') or not line.strip():
-            continue
-        cid, num, _, nm = line.rstrip('\n').split('\t')[:4]
-        cid, num = int(cid), int(num)
-        if cid != len(names):
-            sys.exit(f'{NEW_CARDS}: card ID {cid} does not follow the {len(names) - 1} before it')
-        names.append(nm)
-        i2n += [0xFFFF] * (cid + 1 - len(i2n))
-        i2n[cid] = num
-        n2i[num] = cid
 
     # number -> (id, name) for every card ID 1..len(names)-1
     by_number = {}
@@ -209,7 +209,7 @@ def main():
     ap.add_argument('--check', action='store_true')
     a = ap.parse_args()
     entries, aliases, renamed = build()
-    text = render(entries)
+    text = keep_added_block(render(entries), a.out)
     if a.check:
         cur = open(a.out).read() if os.path.exists(a.out) else ''
         if cur != text:

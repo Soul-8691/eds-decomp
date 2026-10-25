@@ -1,5 +1,5 @@
 ---
-title: Added cards (100 cards beyond the original 820)
+title: Added cards (config/new_cards.txt)
 type: game
 status: draft
 confidence: high
@@ -8,47 +8,71 @@ updated: 2026-10-24
 ---
 # Added cards
 
-On 2026-10-24 the game was expanded with 100 cards: the first 100 entries of `missing.txt` (Goat-format cards that EDS
-lacks). The ROM no longer matches the original, so `make compare` fails by design; `make` builds the expanded ROM.
-Static checks are below; the expanded ROM has not been run in an emulator yet.
+The game is expanded with the cards listed in **`config/new_cards.txt`**, one English card name per line (100 on
+2026-10-24: the first 100 of `missing.txt`, Goat-format cards that EDS lacks). The ROM no longer matches the
+original, so `make compare` fails by design; `make` builds the expanded ROM.
 
-## Card identities
-- `config/new_cards.tsv` (committed) lists each added card: **card ID** 821–920 (in `missing.txt` order), **card
-  number**, the 8-digit **passcode**, the name, and an optional shorter in-game name.
-- Card numbers 846–938 and 813–819. They are free numbers below 1210, so Card Trading lists them (it hides
-  1210–1899 and 1920–1999, see [[deck-edit-cards-c]]). None of them is an effect-table key, a deck or pack entry, or a number the code tests
-  (checked against `card_effect_handlers.json`, every table asset and the C sources).
-- Constants: `include/constants/cards.h` has `CARD_<NAME> = <number>` for each, marked "added card".
-- Stats, text, passcodes and art come from the YGOPRODeck API (https://ygoprodeck.com/api-guide/):
-  `tools/newcards.py fetch` (run by `make setup`, or by the first build that needs it) writes
-  `assets/new_cards/cards.json` and `assets/new_cards/art/NNN.png`. Art is the cropped card image, centre-cropped to 9:10,
-  scaled to 72×80, reduced to BGR555 precision and quantized to 64 colours ([[card-art]] format). Like all of
-  `assets/`, none of it is committed.
-- Mapping: YGOPRODeck race to EDS type (Dragon 1 … Reptile 20), attribute LIGHT..WIND to 1..6. Every added monster
-  is an effect monster (kind 1), and Spell/Trap race to subtype (Normal 0, Counter 1, Field 2, Equip 3, Continuous
-  4, Quick-Play 5). Text loses line breaks and `●` bullets. All descriptions fit the 0x1E0-byte record; the longest is 394 characters.
-- **Names are at most 41 characters.** A Deck Edit list row draws its name into a 21-tile slot of 2 characters
-  per tile (`DeckEdit_GetListRowTile`: `slot * 21 + 0x30C`, ring of 7). The longest original name is 41
-  characters ("Winged Dragon,Guardian of the Fortress #1", shortened by Konami the same way). "Black Luster Soldier -
-  Envoy of the Beginning" (45) is shown as "Black Luster Soldier - Envoy of Beginning".
+## Changing the added cards
+Edit `config/new_cards.txt` and run `make`. That is the whole workflow:
+- Names must be spelled as on YGOPRODeck. An unknown name stops the build with suggestions ("did you mean: Pot of
+  Greed; ...").
+- A name longer than 41 characters needs a shorter in-game name after a `|`, e.g.
+  `Black Luster Soldier - Envoy of the Beginning | Black Luster Soldier - Envoy of Beginning`. The reason:
+  a Deck Edit list row draws its name into a 21-tile slot of 2 characters per tile
+  (`DeckEdit_GetListRowTile`: `slot * 21 + 0x30C`, ring of 7). The longest original name is 41 characters
+  ("Winged Dragon,Guardian of the Fortress #1", which Konami shortened the same way).
+- Cards EDS cannot show stop the build: monster types or attributes it lacks, and Link/XYZ/Synchro/Pendulum cards.
+- **IDs follow the list order** (821, 822, ...), so inserting or removing a line changes the IDs after it, and a
+  save made with another list shows other cards. Append to keep existing saves meaningful.
+- **Capacity:** `python3 tools/newcards.py capacity`; 615 cards with the current data. The limit is the free card
+  numbers (below). The name bank would allow 821 cards and the 0x7FF ID mask 1227. RAM checks are compile-time
+  asserts in `include/deck_edit.h`. The whole of `missing.txt` (291 cards, ROM 13.9 MB) was built as a test.
 
-> [!warning] Two added cards duplicate original cards
-> EDS already has **Ring of Destruction** as "Bell of Destruction" (ID 61) and **Shining Angel** as "Shining Fairy"
-> (ID 628), with the same passcodes (83555666, 95956346). The added copies are IDs 821 and 890. `FindCardByPassword`
-> returns the first match, so those passwords still give the original cards.
+## How it works (`tools/newcards.py build`, run by `make`)
+- **Data:** for each name not yet in `assets/new_cards/cards.json`, the build asks the YGOPRODeck API
+  (https://ygoprodeck.com/api-guide/) and caches the type, race, attribute, level, ATK/DEF, text and passcode
+  by name. The cropped image becomes `assets/new_cards/art/<passcode>.png`: centre-cropped to 9:10, scaled
+  to 72×80, reduced to BGR555 precision and quantized to 64 colours ([[card-art]] format). Only new names need the
+  network and Pillow, and an edited PNG is kept. `tools/newcards.py fetch [--force]` refreshes every card. Like all
+  of `assets/`, none of it is committed.
+- **Card numbers** come from the free numbers, in order. A free number has no original card, is not a
+  `CARD_` constant of `cards.h` (the cards and the numbers the code tests), is not an effect-table key, and is not
+  any integer in the extracted game tables (deck lists, packs, AI lists; excluding unrelated integers costs
+  nothing). They are drawn from two bands:
+  - 1–1209;
+  - 1600–1899, above the effect keys (1211–1552) and every number the duel code tests (up to 1526).
+
+  Card Trading hides numbers 1210–1899, so it now lists the added cards by ID instead
+  (`DeckEdit_BuildCardLists`, `TradeCardSelect_Init`). The assignment is in `build/new_cards.tsv`.
+- **Generated files** (rewritten only when they change):
+  - `build/include/card_count.h` (`CARD_ID_COUNT_ADDED`, included by `include/global.h` when present, so tools
+    that preprocess without it, such as `check.py`, see the original game);
+  - `build/include/card_count.inc` (`CARD_ID_COUNT` for `data/rodata_08087FD0.s`);
+  - the "Added cards" block at the end of enum CardNumber in `include/constants/cards.h`. `tools/gencards.py`
+    keeps the block when it regenerates the header.
+- **Mapping:** YGOPRODeck race maps to an EDS type (Dragon 1 … Reptile 20), and attribute LIGHT..WIND to 1..6. Monsters
+  get their kind from the card type. Spell/Trap race maps to a subtype (Normal 0, Counter 1, Field 2, Equip 3,
+  Continuous 4, Quick-Play 5, Ritual 6). Text loses line breaks and `●` bullets, and a text over 479 characters
+  is cut at a word with "...".
+
+> [!warning] Ring of Destruction and Shining Angel are already in EDS
+> They are "Bell of Destruction" (ID 61) and "Shining Fairy" (ID 628), with the same passcodes (83555666,
+> 95956346). `FindCardByPassword` returns the first match, so those passwords give the original cards. Other
+> renamed EDS cards may also be in `missing.txt`.
 
 ## ROM layout
-- `gCardNames` (`0x0822C720`) grows in place into the unused second name bank (921 × 0x40).
+- `gCardNames` (`0x0822C720`) grows in place into the unused second name bank (`CARD_ID_COUNT` × 0x40; the
+  assembler stops if it does not fit).
 - `gCardNumberToId` stays at `0x08623DF4` (2048 entries, unchanged size). Its address-suffixed entry aliases keep working.
-- The other per-card tables move to the end of the ROM, after `0x08800000`, each with 921 entries. Their old ranges become
+- The other per-card tables move to the end of the ROM, after `0x08800000`, each with `CARD_ID_COUNT` entries. Their old ranges become
   zero: `gCardDescriptions` 0x08800000, `gCardArtGfx`, `gCardArtPalettes`, `gCardStats`, `gCardIdToNumber` (+
   `gCardIdToNumber_821` padding and the out-of-range `gCardIdToNumber_1081`), `gCardPasswords` and `gCardSortKeys`
   ([[card-id-map]]). The final addresses are in `build/eds.map`.
 - New table `gCardIdsByName`: every card ID in name order, then 0. Sort key as in [[card-name-table]]:
   lower case, hyphens dropped. The original IDs keep their relative order, and the Tickets, Gods and Token stay last.
 - The data layout is hand-edited in `data/rodata_08087FD0.s` (a `tools/assets.py gen-data` run would undo it).
-  `tools/newcards.py build` makes the 921-entry tables from the original 821-entry ones plus `assets/new_cards/`.
-- The ROM is 12.9 MB.
+  `tools/newcards.py build` makes the CARD_ID_COUNT-entry tables from the original 821-entry ones plus `assets/new_cards/`.
+- The ROM is 12.9 MB with 100 added cards, plus about 5 KB per added card.
 
 ### Keeping the rest of the ROM valid
 The data tables hold absolute pointers: function pointers come from `config/functions.tsv`, and data pointers are
@@ -63,11 +87,12 @@ raw. Changing C code changes function sizes, so:
   `CARD_*_ADDR` from `include/global.h`, which name the moved symbols.
 
 ## Code and RAM changes
-- `CARD_ID_COUNT` is 921 (`CARD_ID_LAST` 920, `CARD_ID_COUNT_ORIGINAL` 821) in `include/card_data.h`. Bounds that
+- `CARD_ID_COUNT` = `CARD_ID_COUNT_ORIGINAL` (821) + `CARD_ID_COUNT_ADDED` (`include/card_data.h`,
+  `include/global.h`). Bounds that
   were `0x334` use it: `IsCardCollectionComplete`, `FindCardByPassword`, `DebugGetAllCards`. Simon's gift and the
   Card Detail debug browser already used `CARD_ID_COUNT`, and so does `GeneratePackCards`'s random packs.
 - **Deck Edit lists moved to RAM `0x0202A000`** (`gDeckEditCardLists[2]`, `struct DeckEditListRow` of
-  921 + 80 + 15 IDs = 0x7F0 bytes per row). The original rows (`gDeckEdit` +0x644, 821 trunk entries, 0x728 per row) could not grow
+  `CARD_ID_COUNT` + 80 + 15 IDs per row, at most 0x2200 bytes for both rows). The original rows (`gDeckEdit` +0x644, 821 trunk entries, 0x728 per row) could not grow
   without moving every later `gDeckEdit` field into `gCardTrading` (`0x0201F780`). The old block is now
   `gDeckEdit.unusedLists`. `0x0202A000` is after `gSceneWork`'s largest view (0x8070 bytes from `0x02020310`), and
   no code or data refers to `0x02028000`–`0x02030000` ([[ram-map]]). The save needs no change:
@@ -76,8 +101,8 @@ raw. Changing C code changes function sizes, so:
   order in the Trunk/Deck/Side lists, Card Trading, the Prohibition picker and the side-deck swap:
   `DeckEdit_BuildCardLists`, `DeckEdit_Init`, `ProhibitCardSelect_Init`, `TradeCardSelect_Init`,
   `SideDeckSwap_Init`. The 'Name' sort keeps this order.
-- The 'All' filter's held-back non-monsters (`gDeckEdit.sortScratch`, 310 slots) still fit: 226 original
-  non-monsters plus 47 added.
+- The 'All' filter's held-back non-monsters moved from `gDeckEdit.sortScratch` (310 slots, enough for only 84
+  added Spells/Traps) to `gDeckEditHeldBack` (`0x0202C200`, one slot per card ID).
 
 ## Duels
 The added cards have no rows in `gCardEffects`, and `FindCardEffect` returns -1 for them. Monsters therefore play as

@@ -3,9 +3,9 @@
 #     make setup            # once: check your ROM (put it in roms/) and extract its data into assets/
 #     make -j$(nproc)       # build eds.gba
 #     make -j$(nproc) compare   # build and check the SHA-1 against the original (now fails, see below)
-# The ROM holds 100 cards more than the original (config/new_cards.tsv), so it no longer matches the
-# original SHA-1; `make` still builds it. Their data comes from YGOPRODeck (tools/newcards.py fetch, run by
-# `make setup` or by the first build that needs it; needs network and Pillow).
+# The ROM adds the cards listed in config/new_cards.txt (one name per line), so it no longer matches the
+# original SHA-1; `make` still builds it. Their data comes from YGOPRODeck: the build downloads the cards it
+# has not seen yet (needs network and Pillow then). `python3 tools/newcards.py capacity` says how many fit.
 # agbcc is installed into tools/agbcc from a built copy of pret/agbcc next to this repository
 # (../agbcc). The first build does that automatically, or run `make agbcc`; set AGBCC_SRC to use
 # another checkout.
@@ -28,7 +28,7 @@ AGBLIB   := $(AGBCC_DIR)/lib
 PYTHON   := python3
 
 ASFLAGS  := -mcpu=arm7tdmi -mthumb-interwork -I .
-CPPFLAGS := -nostdinc -undef -I include -I $(AGBCC_DIR)/include -iquote .
+CPPFLAGS := -nostdinc -undef -I include -I build/include -I $(AGBCC_DIR)/include -iquote .
 # Game code: old_agbcc -O2. The Konami sound driver uses agbcc -O2 -fprologue-bugfix and
 # AgbSram agbcc -O1; per-unit compiler+flags live in config/cflags.txt.
 DEFAULT_CC1    := old_agbcc
@@ -94,7 +94,7 @@ $(ELF): build/ld_script.ld build/autosyms.o $(OBJS) | $(CC1_INSTALLED)
 
 # The game's data (graphics, text, audio, tables) is never committed. `make setup` extracts it from your
 # ROM into assets/, listed in config/assets.tsv; this step builds those files back into binary form.
-ASSET_FILES  := $(shell find assets -type f 2>/dev/null)
+ASSET_FILES  := $(shell find assets -path assets/new_cards -prune -o -type f -print 2>/dev/null)
 ASSETS_BUILT := build/assets/.built
 $(ASSETS_BUILT): config/assets.tsv config/functions.tsv tools/assets.py $(wildcard tools/assetfmt/*.py) $(ASSET_FILES)
 	@test -d assets || { echo "error: assets/ not found. Put your copy of the game in roms/ and run 'make setup' (see README.md)."; exit 1; }
@@ -116,12 +116,13 @@ build/asm/%.o: asm/%.s asm/macros.inc
 build/assets/%.bin: ;
 
 # The added cards: their data is fetched once into assets/new_cards/, then appended to the card tables.
-NEWCARDS_DATA  := assets/new_cards/cards.json
+# It also writes the card count (build/include/card_count.h/.inc) and the cards' constants in
+# include/constants/cards.h, only when they change; the empty rule makes make look at them again afterwards.
 NEWCARDS_BUILT := build/assets/.newcards
-$(NEWCARDS_DATA):
-	$(PYTHON) tools/newcards.py fetch
-$(NEWCARDS_BUILT): $(ASSETS_BUILT) $(NEWCARDS_DATA) config/new_cards.tsv tools/newcards.py $(wildcard assets/new_cards/art/*.png)
+NEWCARDS_GEN   := build/include/card_count.h build/include/card_count.inc include/constants/cards.h
+$(NEWCARDS_BUILT): $(ASSETS_BUILT) config/new_cards.txt tools/newcards.py $(wildcard assets/new_cards/art/*.png)
 	$(PYTHON) tools/newcards.py build
+$(NEWCARDS_GEN): $(NEWCARDS_BUILT) ;
 
 build/data/%.o: data/%.s $(ASSETS_BUILT) $(NEWCARDS_BUILT)
 	@mkdir -p $(@D)
@@ -133,7 +134,7 @@ build/srcasm/%.o: src/%.s
 	$(AS) $(ASFLAGS) --MD build/srcasm/$*.d -o $@ $<
 
 # C units go through cpp, agbcc and as. Functions not yet matched stay as INCLUDE_ASM(...).
-build/src/%.o: src/%.c config/cflags.txt | $(CC1_INSTALLED)
+build/src/%.o: src/%.c config/cflags.txt | $(CC1_INSTALLED) build/include/card_count.h
 	@mkdir -p $(@D)
 	$(CPP) $(CPPFLAGS) -MMD -MP -MF build/src/$*.d -MT $@ $< -o build/src/$*.i
 	$(call unit_cc,$*) $(call unit_cflags,$*) build/src/$*.i -o build/src/$*.s
@@ -154,7 +155,7 @@ objdiff-report: objdiff.json $(OBJDIFF_OBJS) $(patsubst src/%.s,build/srcasm/%.o
 	$(PYTHON) tools/mkobjdiff.py --summary build/report.json
 	$(PYTHON) tools/check_report.py build/report.json
 
-build/objdiff/raw/%.o: src/%.c config/cflags.txt | $(CC1_INSTALLED)
+build/objdiff/raw/%.o: src/%.c config/cflags.txt | $(CC1_INSTALLED) build/include/card_count.h
 	@mkdir -p $(@D)
 	$(CPP) $(CPPFLAGS) -DOBJDIFF_BASE $< -o build/objdiff/raw/$*.i
 	$(call unit_cc,$*) $(call unit_cflags,$*) build/objdiff/raw/$*.i -o build/objdiff/raw/$*.s

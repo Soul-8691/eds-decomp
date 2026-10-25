@@ -11,7 +11,8 @@ updated: 2026-10-02
 The project is a byte-matching decompilation of *Yu-Gi-Oh! The Eternal Duelist Soul* (USA, `AY5E`). The Japanese release is titled *Duel Monsters 5 Expert 1*. See [[matching-decompilation]] for what "matching" means here.
 
 ## Current state (2026-10-24)
-- **Expanded ROM (2026-10-24).** The build adds 100 cards (IDs 821–920, data from YGOPRODeck), so it no longer
+- **Expanded ROM (2026-10-24).** The build adds the cards of `config/new_cards.txt` (100 now, up to 615;
+  data from YGOPRODeck), so it no longer
   matches the original and `make compare` fails by design. The original 820 cards and every other data
   address are unchanged. See [[added-cards]]. The points below describe the matching decompilation it was built from.
 - **The build matches.** `make -j$(nproc) compare` (in WSL) rebuilds `eds.gba` with SHA-1 `510fbba2…`, identical to the baserom. The build is native, pokefirered-style, with agbcc installed from `../agbcc` ([[toolchain]], [[rom-free-workflow]]).

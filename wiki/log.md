@@ -878,3 +878,13 @@ updated: 2026-09-29
 - Found: Ring of Destruction and Shining Angel are already in EDS as Bell of Destruction and Shining Fairy.
 - Verified statically (tables, symbol addresses, pointer slots, warnings); not yet run in an emulator.
 - Pages: [[added-cards]] (new), [[cards]], [[ram-map]], [[overview]], [[index]].
+
+## [2026-10-24] progress | Added cards from a text list, any number that fits
+- `config/new_cards.txt` (one card name per line, optional `| in-game name`) replaces `config/new_cards.tsv`.
+  `tools/newcards.py build` (run by `make`) looks new names up on YGOPRODeck, caches them by name (art by
+  passcode), and assigns IDs in list order and card numbers from the free numbers (1-1209 and 1600-1899).
+  It writes `build/include/card_count.h`/`.inc` and the added-cards block of `include/constants/cards.h`.
+- The card count is generated everywhere (`CARD_ID_COUNT_ADDED`). Card Trading lists added cards by ID. The
+  held-back list of the sorted 'All' filter moved to `gDeckEditHeldBack` (`0x0202C200`).
+- Capacity 615. Tested with all 291 names of `missing.txt` (tables verified, ROM 13.9 MB), then back to 100.
+- Pages: [[added-cards]], [[overview]], [[index]].

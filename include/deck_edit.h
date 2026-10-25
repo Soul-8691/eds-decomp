@@ -25,8 +25,8 @@
 #include "sprite.h"     /* struct OamList, struct ObjAffine, struct AnimBlock, struct AnimState */
 #include "text.h"       /* struct TextFlags */
 
-/* Entries of the trunk list: one per card ID (= CARD_ID_COUNT of card_data.h, which checks it). */
-#define DECK_EDIT_TRUNK_LIST_SIZE 921
+/* Entries of the trunk list: one per card ID (CARD_ID_COUNT of card_data.h). */
+#define DECK_EDIT_TRUNK_LIST_SIZE (CARD_ID_COUNT_ORIGINAL + CARD_ID_COUNT_ADDED)
 
 /* ---------------------------------------------------------------------------------------------------------- */
 /* Enums                                                                                                       */
@@ -375,7 +375,10 @@ struct SpriteDef {
 };
 
 /* Compile-time layout checks (agbcc pads every struct to 4 bytes). */
-typedef char deck_edit_h_check_row[sizeof(struct DeckEditListRow) == 0x7F0 ? 1 : -1];
+typedef char deck_edit_h_check_row[sizeof(struct DeckEditListRow)
+                                   == (((DECK_EDIT_TRUNK_LIST_SIZE + 80 + 15) * 2 + 3) & ~3) ? 1 : -1];
+/* gDeckEditCardLists (0x0202A000) must end before gDeckEditHeldBack (0x0202C200). */
+typedef char deck_edit_h_check_lists_ram[sizeof(struct DeckEditListRow) * 2 <= 0x2200 ? 1 : -1];
 typedef char deck_edit_h_check_bar[sizeof(struct DeckEditScrollBar) == 0x8 ? 1 : -1];
 typedef char deck_edit_h_check_slot[sizeof(struct FrameSlot) == 0x10 ? 1 : -1];
 typedef char deck_edit_h_check_ring[sizeof(struct FrameSlotRing) == 0x64 ? 1 : -1];
@@ -419,6 +422,9 @@ extern struct DeckEdit gDeckEdit;                  /* 0x0201DB20: state of every
 /* 0x0202A000 (free EWRAM after gSceneWork's 0x8070 bytes): the three card lists [row]; row 0 = full lists,
  * row 1 = filtered/sorted copy. Read through DeckEdit_GetListCard / DeckEdit_SetListCard. */
 extern struct DeckEditListRow gDeckEditCardLists[2];
+/* 0x0202C200: the non-monsters held back while a sorted 'All' filter is built (DeckEdit_FilterAndSortList), one
+ * entry per card ID at most. In the original game this was gDeckEdit.sortScratch (310 entries). */
+extern u16 gDeckEditHeldBack[];
 
 /* ROM data used by two or more units (single-unit tables stay local externs in their unit). */
 extern const u16 gDeckEditEaseCurve[];             /* [7] ease-in-out factors in 8.8: 0, 32, 64, 128, 192, 224, 256 */

@@ -1,0 +1,110 @@
+# Cards added to EDS after its 820 original cards, one per line, in the order they get card IDs (821, 822, ...).
+# Edit this list and run `make`: tools/newcards.py looks each name up on YGOPRODeck
+# (https://ygoprodeck.com/api-guide/), downloads its stats, text and cropped art into assets/new_cards/, and
+# assigns card IDs and card numbers. Use the exact English card name as YGOPRODeck spells it.
+#
+# A name longer than 41 characters does not fit a Deck Edit list row; give the name to show in the game after
+# a "|":   Black Luster Soldier - Envoy of the Beginning | Black Luster Soldier - Envoy of Beginning
+# Lines starting with # and blank lines are ignored.
+# Changing the list changes the card IDs after the change, so saves made with another list show other cards.
+
+Ring of Destruction
+Breaker the Magical Warrior
+Black Luster Soldier - Envoy of the Beginning | Black Luster Soldier - Envoy of Beginning
+Tribe-Infecting Virus
+Torrential Tribute
+Sakuretsu Armor
+Trap Dustshoot
+Gravekeeper's Spy
+D.D. Warrior Lady
+Exiled Force
+Book of Moon
+Dekoichi the Battlechanted Locomotive
+Chaos Sorcerer
+Mind Control
+Kycoo the Ghost Destroyer
+Card Destruction
+Night Assailant
+Reinforcement of the Army
+Jar of Greed
+Raigeki Break
+Scapegoat
+Blade Knight
+Mystik Wok
+Tsukuyomi
+Zombyra the Dark
+Metamorphosis
+Mobius the Frost Monarch
+Asura Priest
+Cipher Soldier
+Creature Swap
+Mystic Swordsman LV2
+King Tiger Wanghu
+Injection Fairy Lily
+Lightning Vortex
+Phoenix Wing Wind Blast
+Smashing Ground
+Ninja Grandmaster Sasuke
+Berserk Gorilla
+Don Zaloog
+Spirit Reaper
+Dark Magician of Chaos
+Xing Zhen Hu
+Level Limit - Area B
+Secret Barrel
+Gyaku-Gire Panda
+Brain Control
+Magic Cylinder
+Ojama Trio
+Threatening Roar
+Zaborg the Thunder Monarch
+Des Wombat
+D.D. Assailant
+Gravity Bind
+Compulsory Evacuation Device
+Abyss Soldier
+United We Stand
+Bottomless Trap Hole
+Jowgen the Spiritualist
+Skilled Dark Magician
+Dark Scorpion - Cliff the Trap Remover
+Monster Gate
+Amazoness Archer
+Reasoning
+Nightmare Wheel
+Airknight Parshath
+Return from the Different Dimension
+Magical Merchant
+Dimension Fusion
+Spell Canceller
+Shining Angel
+Sacred Crane
+Wave-Motion Cannon
+Gigantes
+Goblin Attack Force
+Des Koala
+Reckless Greed
+Cursed Seal of the Forbidden Spell
+Rescue Cat
+Enemy Controller
+Neko Mane King
+Toon Table of Contents
+Hallowed Life Barrier
+Skill Drain
+Dark Mimic LV1
+Legendary Jujitsu Master
+Mind Crush
+Pyramid Turtle
+Fusilier Dragon, the Dual-Mode Beast
+Mataza the Zapper
+Token Thanksgiving
+Newdoria
+Apprentice Magician
+Manju of the Ten Thousand Hands
+Hysteric Fairy
+Soul Exchange
+Desert Sunlight
+Barrel Behind the Door
+Monster Reincarnation
+Bazoo the Soul-Eater
+Royal Oppression

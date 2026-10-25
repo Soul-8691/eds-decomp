@@ -26,8 +26,6 @@
 #include "sprite.h"                 /* struct AnimBlock, struct AnimState, AnimBlockInit, AnimBlockTick, AnimBlockDraw, OamListFlush, OamListClear (OamListAddSpriteGroup: word form below) */
 
 /* ---- ROM data used only here ---- */
-extern u16 gDeckEditSortScratch[];   /* 0x0201EFC4 = gDeckEdit.sortScratch: base of the list-row
-                                 pointer arithmetic in DeckEdit_FilterAndSortList */
 extern const struct SpriteDef gListFilterCursorSprites[];   /* 0x081A715C */
 extern const struct SpriteDef gListFilterFlashSprites[];    /* 0x081A71CC */
 extern const u8 gListFilterAnimScripts[];       /* 0x081A6118 */
@@ -113,7 +111,7 @@ static inline u8 FS_FrameKind(u16 id)
 /* Deck-edit filter and sort of card list `list`: rebuilds the lists, copies list `list` (u16 ids) to a scratch array,
    keeps the cards of category `filter` (enum ListFilter) and sorts by `sort` (enum ListSort). Row 0 of the list is
    the source and row 1 the result (gDeckEditCardLists; the original reached them at negative offsets from
-   gDeckEditSortScratch, wiki/functions/deck-edit-filter-c.md). Non-monsters held back wait in gDeckEditSortScratch. */
+   gDeckEditSortScratch, wiki/functions/deck-edit-filter-c.md). Non-monsters held back wait in gDeckEditHeldBack. */
 void DeckEdit_FilterAndSortList(u8 list, u8 filter, u8 sort)
 {
     u16 *src;
@@ -121,7 +119,7 @@ void DeckEdit_FilterAndSortList(u8 list, u8 filter, u8 sort)
     int n = 0;
     u16 n2 = 0;
     u16 i;
-    u16 *base = gDeckEditSortScratch;
+    u16 *base = gDeckEditHeldBack;
 
     DeckEdit_BuildCardLists();
     switch (list) {
