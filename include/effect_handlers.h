@@ -99,6 +99,8 @@ int EffectBlackLusterSoldierResolve(struct ChainEntry *link, struct ChainEntry *
 int EffectTribeInfectingVirusPrepare(struct ChainEntry *card, struct ChainEntry *chainLink, u16 fromHand);
 int EffectTribeInfectingVirusChainA(struct ChainEntry *link, struct ChainEntry *prevLink);
 int EffectTribeInfectingVirusResolve(struct ChainEntry *link, struct ChainEntry *chainedTo);
+/* Torrential Tribute: answers a summon; destroys every monster (Dark Hole's resolve). */
+int EffectTorrentialTributePrepare(struct ChainEntry *card, struct ChainEntry *chainLink, u16 fromHand);
 
 /* ChainA (activation costs) */
 /* Activation cost: pay the card's LP cost (500 to 5000, half for Solemn Judgment). Always returns 1. */

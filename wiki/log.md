@@ -933,3 +933,8 @@ updated: 2026-09-29
   the trunk (original and added; monster tokens excluded, like DebugGetAllCards).
 - The card list is now 289 added cards (config/new_cards.txt).
 - Pages: [[added-cards]].
+
+## [2026-10-25] progress | Torrential Tribute
+- `src/added_effects.c`: Normal Trap answering a summon's response window (RESPONSE_SUMMONED / FLIP_SUMMONED /
+  SPECIAL_SUMMONED, not SET; the summoned monster at loc0), then Dark Hole's resolve (every monster destroyed).
+- Pages: [[added-cards]].

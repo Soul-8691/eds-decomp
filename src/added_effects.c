@@ -302,6 +302,25 @@ int EffectTribeInfectingVirusResolve(struct ChainEntry *link, struct ChainEntry 
 }
 #endif /* HAS_CARD_TRIBE_INFECTING_VIRUS */
 
+#ifdef HAS_CARD_TORRENTIAL_TRIBUTE
+/* ---- Torrential Tribute --------------------------------------------------------------------------------------
+ * "When a monster(s) is Summoned: Destroy all monsters on the field."
+ * A Normal Trap answering the response window that a summon opens (SummonAction_Update, EventResponse_Run): event
+ * RESPONSE_SUMMONED, RESPONSE_FLIP_SUMMONED or RESPONSE_SPECIAL_SUMMONED (not RESPONSE_SET), with the summoned
+ * monster at loc0, like Trap Hole (EffectTrapHolePrepare) but for any monster and either player's summon. The
+ * effect is Dark Hole's (EffectDarkHoleResolve: every monster, the opponent's first). */
+int EffectTorrentialTributePrepare(struct ChainEntry *card, struct ChainEntry *chainLink, u16 fromHand)
+{
+    switch (card->event) {
+    case RESPONSE_SUMMONED:
+    case RESPONSE_FLIP_SUMMONED:
+    case RESPONSE_SPECIAL_SUMMONED:
+        return DUEL_CARD_ID(&ZoneOf(DUEL_LOC_PLAYER(card->loc0), DUEL_LOC_ZONE(card->loc0))->card) != 0;
+    }
+    return 0;
+}
+#endif /* HAS_CARD_TORRENTIAL_TRIBUTE */
+
 /* ---- The effect table of the added cards ------------------------------------------------------------------- */
 
 /* Rows like gCardEffects' (struct CardEffect), any order, ending with number 0xFFFF. */
@@ -334,6 +353,16 @@ const struct CardEffect gAddedCardEffects[] = {
         EffectTribeInfectingVirusPrepare,
         EffectTribeInfectingVirusChainA,
         (int (*)(struct ChainEntry *, struct ChainEntry *))EffectDeclareTypeChainB,
+    },
+#endif
+#ifdef HAS_CARD_TORRENTIAL_TRIBUTE
+    {
+        CARD_TORRENTIAL_TRIBUTE, 0,
+        (int (*)(struct ChainEntry *, struct ChainEntry *))EffectDarkHoleResolve,
+        NULL,
+        EffectTorrentialTributePrepare,
+        NULL,
+        NULL,
     },
 #endif
     { 0xFFFF },

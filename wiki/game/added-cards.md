@@ -164,6 +164,11 @@ bits. They keep those bits as their low bits and have high bits in the bytes the
 rewritten), Deck Edit (cards, list, prohibit, stats, widgets, filter steps), booster code, the debug give-all. Saves
 from the original game load unchanged; the format is a superset.
 
+### Torrential Tribute (2026-10-25)
+A Normal Trap for the response window a summon opens: Normal, Flip or Special Summon by either player (not a Set),
+with the summoned monster at `loc0`, like Trap Hole's prepare but for any monster. It resolves with Dark Hole's
+handler (`EffectDarkHoleResolve`), which destroys every monster, the opponent's first.
+
 ### Tribe-Infecting Virus (2026-10-25)
 Main Phase menu effect, once per turn: discard 1 card (Magic Jammer's cost prompt), declare a Monster Type (DNA
 Surgery's type prompt), destroy every face-up monster of that type on the field, the opponent's first. It does not
