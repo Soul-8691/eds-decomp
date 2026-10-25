@@ -1181,3 +1181,8 @@ updated: 2026-09-29
 - Effect key 1214 is the engine's Magic Cylinder (EffectAttackResponsePrepare/Resolve, CPU logic in ai_summon.c).
   ENGINE_NUMBERS gives the added card that number.
 - Pages: [[added-cards]].
+
+## [2026-10-25] progress | Magical Merchant
+- Flip effect: the Deck's monsters above the first Spell/Trap go to the Graveyard, and that card is added
+  (AddDeckCardToHand).
+- Pages: [[added-cards]].

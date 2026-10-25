@@ -972,6 +972,37 @@ int EffectMysticSwordsmanLv2Resolve(struct ChainEntry *link, struct ChainEntry *
 }
 #endif /* HAS_CARD_MYSTIC_SWORDSMAN_LV2 && HAS_CARD_MYSTIC_SWORDSMAN_LV4 */
 
+#ifdef HAS_CARD_MAGICAL_MERCHANT
+/* ---- Magical Merchant ------------------------------------------------------------------------------------------------
+ * "FLIP: Excavate cards from the top of your Deck until you excavate a Spell/Trap. Add that card to your hand, also
+ * send the remaining cards to the GY."
+ * A flip effect (HasFlipEffect, card_detail.c). The top of the Deck is deck[0]. The monsters above the first
+ * Spell/Trap go to the Graveyard (DUEL_CMD_SEND_DECK_CARD_TO_GRAVEYARD, one by one); with no Spell/Trap at all the
+ * whole Deck goes. The Spell/Trap is shown and added with Sangan's AddDeckCardToHand, which takes the first card of
+ * that number in the Deck: that one, as every card above it is a monster. */
+int EffectMagicalMerchantResolve(struct ChainEntry *link, struct ChainEntry *chainedTo)
+{
+    struct DuelPlayer *p = &gDuelPlayers[link->player & 1];
+    u16 cmd = link->player ? DUEL_CMD_PLAYER | DUEL_CMD_SEND_DECK_CARD_TO_GRAVEYARD : DUEL_CMD_SEND_DECK_CARD_TO_GRAVEYARD;
+    int i;
+
+    if (link->negated)
+        return EFFECT_STEP_DONE;
+    for (i = 0; i < p->deckCount; i++) {
+        u16 id = DUEL_CARD_ID(&p->deck[i]);
+        if (CARD_STATS_TYPE(gCardStats[id & CARD_ID_MASK]) > CARD_TYPE_REPTILE)
+            break;
+        DuelCmd_Push(cmd, ((u16 *)&p->deck[i])[0], ((u16 *)&p->deck[i])[1], 0);
+    }
+    if (i < p->deckCount) {
+        u16 id = DUEL_CARD_ID(&p->deck[i]);
+        ShowPickedCard(link->player, id);
+        AddDeckCardToHand(link->player, ((const u16 *)CARD_ID_TO_NUMBER_ADDR)[id & CARD_ID_MASK]);
+    }
+    return EFFECT_STEP_DONE;
+}
+#endif /* HAS_CARD_MAGICAL_MERCHANT */
+
 #ifdef HAS_CARD_SPIRIT_REAPER
 /* ---- Spirit Reaper -------------------------------------------------------------------------------------------------
  * "Cannot be destroyed by battle. After this card is targeted by an effect, destroy this card. When this card inflicts
@@ -1958,6 +1989,16 @@ const struct CardEffect gAddedCardEffects[] = {
         NULL,
         NULL,
         (int (*)(struct ChainEntry *, struct ChainEntry *))EffectTargetableMonsterChainB,
+    },
+#endif
+#ifdef HAS_CARD_MAGICAL_MERCHANT
+    {
+        CARD_MAGICAL_MERCHANT, 0,
+        EffectMagicalMerchantResolve,
+        NULL,
+        NULL,
+        NULL,
+        NULL,
     },
 #endif
 #ifdef HAS_CARD_MIND_CONTROL

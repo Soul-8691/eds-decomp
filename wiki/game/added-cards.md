@@ -211,6 +211,17 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
 - `HasFlipEffect` (card_detail.c).
 - Checked in the source; not tested in an emulator.
 
+### Magical Merchant (2026-10-25)
+- "FLIP: Excavate cards from the top of your Deck until you excavate a Spell/Trap. Add that card to your hand, also
+  send the remaining cards to the GY."
+- **Flip:** a `HasFlipEffect` case. `EffectMagicalMerchantResolve` walks the Deck from the top (`deck[0]`) and
+  sends each monster before the first Spell/Trap to the Graveyard (`DUEL_CMD_SEND_DECK_CARD_TO_GRAVEYARD`).
+- **The Spell/Trap:** shown (`ShowPickedCard`) and added with `AddDeckCardToHand`, Sangan's add. That takes the
+  first card of its number, which is this one, since everything above it is a monster.
+- **No Spell/Trap:** the whole Deck goes to the Graveyard. A player whose Deck is then empty decks out at the next
+  draw (player 0 cannot). The Deck is not shuffled.
+- Checked in the source and the build; not tested in an emulator.
+
 ### Magic Cylinder (2026-10-25)
 - Normal Trap: "When an opponent's monster declares an attack: Target the attacking monster; negate the attack, and
   if you do, inflict damage to your opponent equal to its ATK."
