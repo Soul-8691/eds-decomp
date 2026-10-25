@@ -1161,3 +1161,8 @@ updated: 2026-09-29
 - EffectTakeControlChainB had no cursor mask for an unlisted card number. CARD_MIND_CONTROL now takes Change of
   Heart's mask (PICK_PLAYER1(PICK_ANY_MONSTER)) and prompt.
 - Pages: [[added-cards]].
+
+## [2026-10-25] progress | Spirit Reaper
+- CalcBattle clears its destroyed flag. TryAddEffectTarget reports targets to OnFieldCardTargeted, which destroys a
+  face-up Reaper (not for Tribute picks). White Magical Hat's battle-damage discard covers it too.
+- Pages: [[added-cards]].

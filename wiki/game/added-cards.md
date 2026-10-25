@@ -211,6 +211,23 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
 - `HasFlipEffect` (card_detail.c).
 - Checked in the source; not tested in an emulator.
 
+### Spirit Reaper (2026-10-25)
+- "Cannot be destroyed by battle. After this card is targeted by an effect, destroy this card. When this card
+  inflicts battle damage to your opponent: Discard 1 random card from their hand."
+- **No effect row.** Three hooks:
+  - **Battle.** `CalcBattle` (campaign.c), at the end with the other card rules, clears its `destroyed` flag as
+    attacker or target. A face-down Reaper attacked is flipped first (`BattleStage_RevealDefender`), so it survives
+    too. Battle damage is still calculated.
+  - **Targeted.** `TryAddEffectTarget` (effect_targets1.c, the routine that records a picked field target and points
+    at it) calls `OnFieldCardTargeted`. A face-up Spirit Reaper there is destroyed at once (`DestroyFieldCard`), so
+    the targeting effect finds it gone when it resolves. Not for picks that Tribute rather than target (Catapult
+    Turtle, Cannon Soldier, The Little Swordsman of Aile, Metamorphosis).
+  - **Battle damage.** White Magical Hat's two cases in `BattleStage_InflictDamage`, as attacker and as target:
+    `DuelPrompt_PostRandomDiscard` for the damaged player.
+- **Not covered:** a handler that adds a field target with `AddEffectTarget` directly instead of
+  `TryAddEffectTarget` does not destroy it.
+- Checked in the source and the build; not tested in an emulator.
+
 ### Mind Control (2026-10-25)
 - Normal Spell: "Target 1 monster your opponent controls; take control of it until the End Phase, but it cannot
   declare an attack or be Tributed."

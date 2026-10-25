@@ -972,6 +972,41 @@ int EffectMysticSwordsmanLv2Resolve(struct ChainEntry *link, struct ChainEntry *
 }
 #endif /* HAS_CARD_MYSTIC_SWORDSMAN_LV2 && HAS_CARD_MYSTIC_SWORDSMAN_LV4 */
 
+#ifdef HAS_CARD_SPIRIT_REAPER
+/* ---- Spirit Reaper -------------------------------------------------------------------------------------------------
+ * "Cannot be destroyed by battle. After this card is targeted by an effect, destroy this card. When this card inflicts
+ * battle damage to your opponent: Discard 1 random card from their hand."
+ *   CalcBattle (campaign.c)                   its destroyed flag is cleared, as attacker or target
+ *   TryAddEffectTarget (effect_targets1.c)     OnFieldCardTargeted: a face-up Spirit Reaper that an effect targets is
+ *                                              destroyed at once (its own effect, so the targeting effect finds it gone)
+ *   BattleStage_InflictDamage (battle_phase2.c) White Magical Hat's case: the opponent discards 1 random card
+ * TryAddEffectTarget also records the picks of a few effects that Tribute rather than target (Catapult Turtle's
+ * EffectTributeTargetChainB and Metamorphosis); those do not count. */
+void OnFieldCardTargeted(struct ChainEntry *link, int player, int zone)
+{
+    struct DuelZone *z;
+    u16 id;
+
+    if (zone > ZONE_MONSTER_4)
+        return;
+    switch (((const u16 *)CARD_ID_TO_NUMBER_ADDR)[link->card & CARD_ID_MASK]) {
+    case CARD_CATAPULT_TURTLE:
+    case CARD_CANNON_SOLDIER:
+    case CARD_THE_LITTLE_SWORDSMAN_OF_AILE:
+#ifdef HAS_CARD_METAMORPHOSIS
+    case CARD_METAMORPHOSIS:
+#endif
+        return;     /* a Tribute, not a target */
+    }
+    z = ZoneOf(player, zone);
+    id = DUEL_CARD_ID(&z->card);
+    if (id == 0 || !z->isFaceUp || ((const u16 *)CARD_ID_TO_NUMBER_ADDR)[id & CARD_ID_MASK] != CARD_SPIRIT_REAPER)
+        return;
+    ShowCardEffect(player, id);
+    DestroyFieldCard(player, zone, 1);
+}
+#endif /* HAS_CARD_SPIRIT_REAPER */
+
 #ifdef HAS_CARD_MIND_CONTROL
 /* ---- Mind Control --------------------------------------------------------------------------------------------------
  * Normal Spell: "Target 1 monster your opponent controls; take control of it until the End Phase, but it cannot

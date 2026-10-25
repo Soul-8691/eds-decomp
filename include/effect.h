@@ -106,6 +106,8 @@ int IsNightAssailantTarget(u16 id);
 void OnMonsterTurnedFaceDown(int player, int zone);
 /* Reinforcement of the Army (src/added_effects.c): a Level 4 or lower Warrior monster. */
 int IsReinforcementTarget(u16 id);
+/* Spirit Reaper (src/added_effects.c): TryAddEffectTarget reports each field target here. */
+void OnFieldCardTargeted(struct ChainEntry *link, int player, int zone);
 /* Metamorphosis (src/added_effects.c): a Fusion Monster of the given Level. */
 int IsMetamorphosisFusion(u16 id, int level);
 void QueueNightAssailantTrigger(int player, u16 id);

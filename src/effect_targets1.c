@@ -137,6 +137,9 @@ u16 TryAddEffectTarget(struct ChainEntry *card, int player, int zone)
         DuelCmd_Push(card->player ? DUEL_CMD_PLAYER | DUEL_CMD_POINT_AT_CARD : DUEL_CMD_POINT_AT_CARD,
                      player, (u8)index << 8 | area, 0);
         AddEffectTarget(card, (u8)player | (u8)zone << 8);     /* DUEL_LOC, in the ROM's operand order */
+#ifdef HAS_CARD_SPIRIT_REAPER
+        OnFieldCardTargeted(card, player, zone);    /* added card: Spirit Reaper is destroyed when targeted */
+#endif
         return 1;
     }
     return 0;

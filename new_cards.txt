@@ -30,3 +30,4 @@ Creature Swap
 Don Zaloog
 Lightning Vortex
 Mind Control
+Spirit Reaper

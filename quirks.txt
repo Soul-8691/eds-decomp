@@ -8,3 +8,4 @@ Raigeki Break:
 - "first" card activation wording
 - Possible failure bug with only 1 card in hand
 Scapegoat: AI doesn't play
+Spirit Reaper: Might not self-destruct when targeted

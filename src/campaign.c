@@ -397,6 +397,13 @@ void CalcBattle(int attacker, u16 zeroAtk)
         DEFENDER_SIDE.damage = 0;
     if (ATTACKER_SIDE.damage && CountActiveCardsOnFieldExcept(attacker, CARD_1423, -1) > 0)
         ATTACKER_SIDE.damage = 0;
+#ifdef HAS_CARD_SPIRIT_REAPER
+    /* added card: Spirit Reaper cannot be destroyed by battle */
+    if (CARD_NUMBER(ATTACKER_SIDE.cardId) == CARD_SPIRIT_REAPER)
+        ATTACKER_SIDE.destroyed = 0;
+    if (CARD_NUMBER(DEFENDER_SIDE.cardId) == CARD_SPIRIT_REAPER)
+        DEFENDER_SIDE.destroyed = 0;
+#endif
     for (i = 0; i <= 1; i++)
         gBattleView.side[i].destroyedCopy = gBattleView.side[i].destroyed;
 }

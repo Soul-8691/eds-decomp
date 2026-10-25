@@ -126,6 +126,9 @@ int BattleStage_InflictDamage(int player)
             /* Effects of the monster that dealt the damage (the target's, for the attacker's player). */
             switch (CARD_NUMBER_OF(gBattle.side[1 - player].cardId)) {
             case CARD_WHITE_MAGICAL_HAT:
+#ifdef HAS_CARD_SPIRIT_REAPER
+            case CARD_SPIRIT_REAPER:    /* added card */
+#endif
                 ShowCardEffect(1 - player, gBattle.side[1 - player].cardId);
                 DuelPrompt_PostRandomDiscard(player, 1, 1);
                 break;
@@ -196,6 +199,9 @@ int BattleStage_InflictDamage(int player)
             /* Effects of the monster that dealt the damage (the attacker's, for the defender's player). */
             switch (CARD_NUMBER_OF(gBattle.side[player].cardId)) {
             case CARD_WHITE_MAGICAL_HAT:
+#ifdef HAS_CARD_SPIRIT_REAPER
+            case CARD_SPIRIT_REAPER:    /* added card */
+#endif
                 ShowCardEffect(player, gBattle.side[player].cardId);
                 DuelPrompt_PostRandomDiscard(1 - player, 1, 1);
                 break;
