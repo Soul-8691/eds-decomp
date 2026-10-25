@@ -12,7 +12,8 @@ the cropped card image becomes assets/new_cards/art/<passcode>.png, a 72x80 inde
 names not yet cached are downloaded (network and Pillow are needed then). None of this is committed.
 
 `build` (stdlib only once everything is cached) gives the cards IDs 821, 822, ... in list order and card numbers
-from the free numbers (free_numbers); a token takes the fixed number of its token kind instead (TOKEN_NUMBERS), then appends them to the original 821-entry tables that tools/assets.py
+from the free numbers (free_numbers); a token takes the fixed number of its token kind instead (TOKEN_NUMBERS), and a card the engine knows by an effect
+key takes that key (ENGINE_NUMBERS); then it appends them to the original 821-entry tables that tools/assets.py
 built: build/assets/newcards__*.bin, plus newcards__name_order.bin (every card ID in name order, then 0). It also
 writes the card count for C and assembly (build/include/card_count.h and .inc), build/new_cards.tsv (the
 assignment) and the CARD_ constants of the added cards in include/constants/cards.h. Files are only rewritten
@@ -60,6 +61,12 @@ NUMBER_BANDS = [(1, 1210), (1600, 1900)]
 TOKEN_NUMBERS = {
     'Sheep Token': dict(number=1922,    # TOKEN_KIND_2: Scapegoat (EffectSummonFourTokensResolve)
                         race='Beast', attribute='EARTH', level=1, atk=0, desc='A token summoned by Scapegoat.'),
+}
+# Cards the game engine already knows by an effect-table key with no EDS card: they take that number, and with it the
+# engine's own code and data for it (effect row, Fusion recipe, the special cases that test the number).
+ENGINE_NUMBERS = {
+    'Thousand-Eyes Idol': 1333,     # the second material of recipe 1334 (gFusionRecipes2: 730 + 1333)
+    'Thousand-Eyes Restrict': 1334, # key 1334: Relinquished's absorb, the attack/position lock, recipe 730 + 1333
 }
 
 # YGOPRODeck race -> EDS monster type (gCardTypeNames), attribute -> EDS attribute, Spell/Trap race -> subtype.
@@ -342,7 +349,8 @@ def cmd_build():
     numbers = free_numbers()
     cap = min(len(numbers), MAX_IDS - OLD_COUNT)
     n2i_old = struct.unpack('<2048H', open(f'{IN}/cards__number_to_id.json.bin', 'rb').read())
-    if sum(1 for n, _ in rows if cache[n]['type'] != 'Token') > len(numbers) or len(rows) > MAX_IDS - OLD_COUNT:
+    if (sum(1 for n, _ in rows if cache[n]['type'] != 'Token' and n not in ENGINE_NUMBERS) > len(numbers)
+            or len(rows) > MAX_IDS - OLD_COUNT):
         fail(f'{len(rows)} cards listed, but only {cap} fit (free card numbers: {len(numbers)}, card IDs: '
              f'{MAX_IDS - OLD_COUNT})')
     new = []
@@ -356,6 +364,10 @@ def cmd_build():
             token = dict(TOKEN_NUMBERS[name])
             number = token.pop('number')
             c.update(token, **{'def': 0})
+            if n2i_old[number]:
+                fail(f'{name}: card number {number} already has a card')
+        elif name in ENGINE_NUMBERS:
+            number = ENGINE_NUMBERS[name]
             if n2i_old[number]:
                 fail(f'{name}: card number {number} already has a card')
         else:

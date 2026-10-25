@@ -211,6 +211,27 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
 - `HasFlipEffect` (card_detail.c).
 - Checked in the source; not tested in an emulator.
 
+### Thousand-Eyes Restrict and Thousand-Eyes Idol (2026-10-25)
+- **The engine already has the card.** Effect key 1334 (no EDS card) is the old Thousand-Eyes Restrict of the engine
+  EDS was built on, and the game still carries all of it:
+  - **Recipe:** gFusionRecipes2 holds 1334 = 730 (Relinquished) + 1333, and 1334 is in Polymerization's
+    2-material list (effect_fusion.c).
+  - **Effect row:** Relinquished's `EffectRelinquishedResolve`, `EffectOpponentMonsterCheck` and `ChainB`.
+  - **Absorb:** the menu's ACTIVATE (card_command_menu.c: no absorbed monster yet, a free Spell/Trap zone, once
+    per turn through effectUnused, re-armed in duel_cmd_turn.c). Its ATK/DEF become the absorbed monster's
+    (card_stats.c, `ZONE_LINK_ABSORBED`), and the absorbed monster is destroyed in its place in battle
+    (battle_phase2.c). It counts as an Effect Monster (card_detail.c).
+  - **Lock:** while a 1334 is face up, every other monster can neither attack (`CanMonsterAttack`,
+    card_menu_input.c, which the CPU uses too) nor change position (the card menu, card_command_menu.c).
+- **Card numbers.** `tools/newcards.py` gives such cards the engine's number (`ENGINE_NUMBERS`): Thousand-Eyes
+  Restrict 1334 and Thousand-Eyes Idol 1333, the recipe's second material. Thousand-Eyes Idol was added to
+  config/new_cards.txt, appended last. No added effect row and no recipe change was needed. Verified in the built
+  tables: ID 1111 = number 1334 (Fusion), ID 1129 = number 1333 (Normal), both DARK Spellcaster Level 1, 0/0.
+- **One fix.** `EffectRelinquishedResolve` (effect_resolve3.c) only absorbed when the card was Relinquished, so
+  key 1334 never absorbed. It now accepts `CARD_1334` too.
+- The engine's text, like the card's, takes an opponent's monster (max. 1).
+- Checked in the source and the build; not tested in an emulator.
+
 ### Metamorphosis (2026-10-25)
 - Normal Spell: "Tribute 1 monster. Special Summon 1 Fusion Monster from your Extra Deck with the same Level as the
   Tributed monster."

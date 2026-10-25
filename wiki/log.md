@@ -1103,3 +1103,10 @@ updated: 2026-09-29
   on the pick. The Fusion Monster of that Level is picked from the Fusion Deck (CollectEffectTargets with
   param = Level) and Special Summoned with Cyber-Stein's steps.
 - Pages: [[added-cards]].
+
+## [2026-10-25] progress | Thousand-Eyes Restrict and Thousand-Eyes Idol
+- Effect key 1334 is the engine's Thousand-Eyes Restrict (recipe 730 + 1333, Relinquished's absorb handlers, the
+  attack/position lock). tools/newcards.py ENGINE_NUMBERS gives the added cards those numbers (Restrict 1334,
+  Idol 1333). Thousand-Eyes Idol was added to the list.
+- EffectRelinquishedResolve now absorbs for key 1334 too (it tested only Relinquished).
+- Pages: [[added-cards]].

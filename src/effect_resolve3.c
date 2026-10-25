@@ -225,8 +225,9 @@ int EffectRelinquishedResolve(struct ChainEntry *link)
 
                 /* FAKEMATCH: the r7 clobber stops reload reusing the 0xD64 constant in r7, as the ROM reloads it */
                 asm volatile("" ::: "r7");
-                /* it is Relinquished, */
-                if (CARD_NUMBER(CARD_ID11(CARD_WORD(own2->card))) == CARD_RELINQUISHED) {
+                /* it is Relinquished (mod: or key 1334, Thousand-Eyes Restrict, which shares this resolve), */
+                if (CARD_NUMBER(CARD_ID11(CARD_WORD(own2->card))) == CARD_RELINQUISHED
+                    || CARD_NUMBER(CARD_ID11(CARD_WORD(own2->card))) == CARD_1334) {
                     int side3 = 1 & link->player;
                     struct DuelZone *own3 = ZONE_AT(side3, link->zone);
 
