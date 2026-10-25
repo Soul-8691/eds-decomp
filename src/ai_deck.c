@@ -99,6 +99,8 @@ void RemoveOverLimitDeckCards(int player)
 /* gOpponentDecks[duelist] (0x0819DC6C) and gOpponentAltDecks (0x0819DD34): the card numbers of each CPU deck. */
 extern const struct DeckList gOpponentDecks[];
 extern const struct DeckList gOpponentAltDecks[];
+/* Added: a replacement deck for an opponent, or NULL (src/mod_decks.c). */
+const struct DeckList *GetOpponentDeckOverride(int opponent);
 /* Matching: the deck is cleared through the deck symbol with byte offsets: the deck (0x140 bytes), the fusion
  * deck at +0x280 (0xA44 - 0x7C4) and the two counts at -0x7C1 (deckCount) and -0x7BF (fusionCount). */
 extern u8 gDuelDeckP1Bytes[] asm("gDuelDeckP1");
@@ -122,7 +124,9 @@ void LoadOpponentDeck(u16 useAltDeck)
     if (opponent != 0) {
         if (opponent == DUELIST_RARE_HUNTER)
             gDuelCtrl.aiFlags |= AI_FLAG_EXODIA;
-        list = useAltDeck != 0 ? &gOpponentAltDecks[opponent] : &gOpponentDecks[opponent];
+        list = GetOpponentDeckOverride(opponent);       /* added: replacement decks (src/mod_decks.c) */
+        if (list == NULL)
+            list = useAltDeck != 0 ? &gOpponentAltDecks[opponent] : &gOpponentDecks[opponent];
         /* FAKEMATCH: keep r5 live so the list pointer lands in r6 as in the ROM. */
         __asm__ __volatile__("" : : : "r5");
         for (k = 0; k < list->count; k++)

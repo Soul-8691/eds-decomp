@@ -292,9 +292,16 @@ void DuelCmd_ShuffleDeck(void)
     }
 }
 
+/* Added: the human player (player 0) cannot deck out, except in a Link Battle, where both games must agree on
+ * the result: drawing from an empty deck just draws nothing. */
+static inline int CanDeckOut(int player)
+{
+    return player != 0 || gDuelCtrl.isLinkDuel;
+}
+
 /* 0x61 DUEL_CMD_DRAW_CARDS: the acting player draws arg4 cards, one animation each (arg2 is passed to
  * DuelDrawCard, which ignores it). A player who has to draw from an empty deck gets deckOut and loses the
- * duel (Duel_CheckWin). */
+ * duel (Duel_CheckWin), unless CanDeckOut says otherwise; then the draw stops at the empty deck. */
 void DuelCmd_DrawCards(void)
 {
     struct DuelLoc from, to;
@@ -306,7 +313,8 @@ void DuelCmd_DrawCards(void)
         gDuelCmd.step++;
         if (gDuelPlayers[player].deckCount != 0)
             break;
-        gDuelPlayers[player].deckOut = 1;
+        if (CanDeckOut(player))
+            gDuelPlayers[player].deckOut = 1;
         gDuelCmd.running = 0;
         break;
     case 1:     /* the top card flies face down from the deck to the next hand slot */
@@ -318,7 +326,7 @@ void DuelCmd_DrawCards(void)
     case 2:     /* draw it; repeat from step 1 while cards remain */
         DuelDrawCard2(player, gDuelCmd.arg2);
         gDuelCmd.arg4--;
-        if (gDuelCmd.arg4 != 0) {
+        if (gDuelCmd.arg4 != 0 && (gDuelPlayers[player].deckCount != 0 || CanDeckOut(player))) {
             gDuelCmd.timer = 0;
             gDuelCmd.step--;
             break;

@@ -899,3 +899,18 @@ updated: 2026-09-29
 - Layout: `@farcode` units (units.txt, tools/mkld.py) put their code in the freed card-table range from
   0x082461A0; the data from gCardNumberToId on is `.rodata.pinned` at 0x08623DF4. Verified data addresses unchanged.
 - Pages: [[added-cards]].
+
+## [2026-10-24] progress | Red starter deck is 3 Breakers; decks under 40 cards may duel
+- `BuildStarterDeck` (title_screen.c): the Red deck (STARTER_DECK_RED) skips the starter pools and gets only 3 Breaker
+  the Magical Warrior (guarded by HAS_CARD_BREAKER_THE_MAGICAL_WARRIOR; without it the Red deck is the original).
+- `DECK_MIN_CARDS` (include/save.h) is 1 instead of 40: Campaign_StartDay and LinkBattle_Init accept any non-empty deck.
+- Pages: [[added-cards]].
+
+## [2026-10-24] progress | No deck-out for the player; Yugi plays Magic/Trap only
+- `DuelCmd_DrawCards` (duel_cmd_deck.c): outside Link Battles player 0 never gets `deckOut`; a draw from an empty
+  deck draws nothing, and a multi-card draw stops when the deck runs out. The CPU still decks out.
+- New unit `src/mod_decks.c` (`@farcode`/`@rodata`): `GetOpponentDeckOverride`, which `LoadOpponentDeck` asks first.
+  Yugi Muto (DUELIST_YUGI) gets 40 weak Magic/Trap cards: Sparks, Hinotama, Ookazi; Dian Keto, Red Medicine, Soul of the
+  Pure, Goblin's Secret Remedy; Yami, Sogen, Umi, Forest; Trap Hole, Reinforcements, Castle Walls, Waboku, Fake Trap.
+  No Forbidden/Limited cards (verified decoded from the built ROM).
+- Pages: [[added-cards]].

@@ -19,6 +19,7 @@
 #include "save.h"
 #include "debug.h"
 #include "card_data.h"
+#include "constants/cards.h"
 #include "booster.h"
 #include "calendar.h"
 #include "title_screen.h"
@@ -265,6 +266,7 @@ static inline u16 CardNumberToId(u16 number)
  * Builds the starting deck for `choice` (enum StarterDeck, taken % 3): shuffles each of the 11
  * gStarterDeckPools (count * 4 random swaps) and adds its first pick0/pick1/pick2 cards to the saved deck.
  * A card number with no card ID goes to DebugPrintf (a stub in the retail game) instead.
+ * Added: the Red deck is only 3 Breaker the Magical Warrior (an added card, config/new_cards.txt).
  */
 void BuildStarterDeck(s32 choice)
 {
@@ -273,7 +275,14 @@ void BuildStarterDeck(s32 choice)
     u32 poolIndex;
     s32 i, picks;
 
-    for (poolIndex = 0; poolIndex <= 10; pool++, poolIndex++) {
+#ifdef HAS_CARD_BREAKER_THE_MAGICAL_WARRIOR
+    /* The Red deck is only 3 Breaker the Magical Warrior (added below). */
+    if (choice % 3 == STARTER_DECK_RED)
+        poolIndex = 11;
+    else
+#endif
+        poolIndex = 0;
+    for (; poolIndex <= 10; pool++, poolIndex++) {
         const u16 *src = pool->cards;
 
         for (i = 0; i < pool->count; i++)
@@ -307,6 +316,12 @@ void BuildStarterDeck(s32 choice)
                 DebugPrintf(gStrStarterDeckErrorFmt, number);
         }
     }
+#ifdef HAS_CARD_BREAKER_THE_MAGICAL_WARRIOR
+    if (choice % 3 == STARTER_DECK_RED) {
+        for (i = 0; i < 3; i++)
+            AddCardToSavedDeck(CardNumberToId(CARD_BREAKER_THE_MAGICAL_WARRIOR));
+    }
+#endif
     DebugPrintFlush();
 }
 

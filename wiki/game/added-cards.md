@@ -146,6 +146,10 @@ it. You can remove 1 Spell Counter from this card; target 1 Spell/Trap on the fi
     resolve destroys it (`EffectDestroyTargetResolve`). These are Mystical Space Typhoon's handlers.
 - **Not modelled.** Counters are not removed if the monster is turned face down. No EDS card does that, and
   Book of Moon is added without an effect. The CPU never has Breaker in its decks.
+- **Starter deck.** The Red starter deck is only 3 Breakers (`BuildStarterDeck`), and decks of fewer than 40
+  cards may duel (`DECK_MIN_CARDS` is 1).
+- **Other changes.** The human player cannot deck out outside Link Battles (`DuelCmd_DrawCards`). Yugi Muto plays
+  a weak Magic/Trap-only deck (`src/mod_decks.c`, `GetOpponentDeckOverride`).
 - **Verified statically.** The row is in the ROM with card number 143 and five Thumb handler pointers. The pinned
   data keeps its addresses, and the build has no new warnings. Not yet run in an emulator.
 
