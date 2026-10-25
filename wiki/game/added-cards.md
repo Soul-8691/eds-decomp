@@ -203,6 +203,16 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
 - Continuous links (Spellbinding Circle, Call of the Haunted) stay, as in the real rules.
 - Checked in the source and the build; not tested in an emulator.
 
+### Sakuretsu Armor (2026-10-25)
+"When an opponent's monster declares an attack: Target the attacking monster; destroy that target." Normal Trap
+(`gAddedCardEffects` row in `added_effects.c`).
+- **Prepare:** set on the field (`fromHand == 0`), `RESPONSE_ATTACK_DECLARED`, opponent's attacking monster still
+  face-up in Attack Position at `loc0`, and `CanCardTargetZone` allows it.
+- **Check:** only `loc0` (the attacker).
+- **Target (chainB):** auto-sets `targets[0] = loc0` (no cursor).
+- **Resolve:** `EffectDestroyTargetResolve`.
+- Checked in the source; not tested in an emulator.
+
 ### Raigeki Break (2026-10-25)
 "Discard 1 card, then target 1 card on the field; destroy it." Normal Trap (`gAddedCardEffects` row in
 `added_effects.c`).

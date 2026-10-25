@@ -359,6 +359,58 @@ int EffectTorrentialTributePrepare(struct ChainEntry *card, struct ChainEntry *c
 }
 #endif /* HAS_CARD_TORRENTIAL_TRIBUTE */
 
+#ifdef HAS_CARD_SAKURETSU_ARMOR
+/* ---- Sakuretsu Armor -----------------------------------------------------------------------------------------
+ * "When an opponent's monster declares an attack: Target the attacking monster; destroy that target."
+ * Normal Trap during RESPONSE_ATTACK_DECLARED (loc0 = attacker, loc1 = attack target), like Negate Attack /
+ * Enchanted Javelin. Only loc0 is a legal target; chainB sets it; EffectDestroyTargetResolve destroys it. */
+
+static int SakuretsuAttackerValid(struct ChainEntry *card)
+{
+    u8 attackerPlayer = DUEL_LOC_PLAYER(card->loc0);
+    int zone = DUEL_LOC_ZONE(card->loc0);
+    struct DuelZone *z;
+
+    if (attackerPlayer == card->player)
+        return 0;
+    z = ZoneOf(attackerPlayer & 1, zone);
+    if (DUEL_CARD_ID(&z->card) == 0 || !z->isFaceUp || z->isDefense)
+        return 0;
+    return CanCardTargetZone(card->card, attackerPlayer, zone);
+}
+
+int EffectSakuretsuArmorPrepare(struct ChainEntry *card, struct ChainEntry *chainLink, u16 fromHand)
+{
+    if (fromHand != 0)
+        return 0;
+    if (card->event != RESPONSE_ATTACK_DECLARED)
+        return 0;
+    return SakuretsuAttackerValid(card);
+}
+
+u16 EffectSakuretsuArmorCheck(struct ChainEntry *card, u16 pos)
+{
+    if (pos != card->loc0)
+        return 0;
+    return SakuretsuAttackerValid(card);
+}
+
+int EffectSakuretsuArmorChainB(struct ChainEntry *link, struct ChainEntry *prevLink)
+{
+    link->numTargets = 0;
+    if (SakuretsuAttackerValid(link) == 0)
+        return 1;
+    link->targets[0] = link->loc0;
+    link->numTargets = 1;
+    return 1;
+}
+
+int EffectSakuretsuArmorResolve(struct ChainEntry *link, struct ChainEntry *chainedTo)
+{
+    return EffectDestroyTargetResolve(link);
+}
+#endif /* HAS_CARD_SAKURETSU_ARMOR */
+
 #ifdef HAS_CARD_D_D_WARRIOR_LADY
 /* ---- D.D. Warrior Lady ----------------------------------------------------------------------------------------
  * "After damage calculation, if this card battled an opponent's monster: You can banish that monster, also banish
@@ -1061,6 +1113,16 @@ const struct CardEffect gAddedCardEffects[] = {
         EffectTorrentialTributePrepare,
         NULL,
         NULL,
+    },
+#endif
+#ifdef HAS_CARD_SAKURETSU_ARMOR
+    {
+        CARD_SAKURETSU_ARMOR, 0,
+        EffectSakuretsuArmorResolve,
+        EffectSakuretsuArmorCheck,
+        EffectSakuretsuArmorPrepare,
+        NULL,
+        EffectSakuretsuArmorChainB,
     },
 #endif
 #ifdef HAS_CARD_TRAP_DUSTSHOOT

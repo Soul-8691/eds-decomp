@@ -116,6 +116,11 @@ u16 EffectRaigekiBreakCheck(struct ChainEntry *card, u16 pos);
 int EffectRaigekiBreakChainA(struct ChainEntry *link, struct ChainEntry *prevLink);
 int EffectRaigekiBreakChainB(struct ChainEntry *link, struct ChainEntry *prevLink);
 int EffectRaigekiBreakResolve(struct ChainEntry *link, struct ChainEntry *chainedTo);
+/* Sakuretsu Armor: when an opponent's monster declares an attack, destroy that attacking monster. */
+int EffectSakuretsuArmorPrepare(struct ChainEntry *card, struct ChainEntry *chainLink, u16 fromHand);
+u16 EffectSakuretsuArmorCheck(struct ChainEntry *card, u16 pos);
+int EffectSakuretsuArmorChainB(struct ChainEntry *link, struct ChainEntry *prevLink);
+int EffectSakuretsuArmorResolve(struct ChainEntry *link, struct ChainEntry *chainedTo);
 /* Tribe-Infecting Virus: discard 1, declare a type, destroy every face-up monster of it (once per turn). */
 int EffectTribeInfectingVirusPrepare(struct ChainEntry *card, struct ChainEntry *chainLink, u16 fromHand);
 int EffectTribeInfectingVirusChainA(struct ChainEntry *link, struct ChainEntry *prevLink);

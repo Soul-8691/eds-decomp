@@ -1072,3 +1072,7 @@ updated: 2026-09-29
 - Added card effect row reuses key 1511 resolve and battle-damage triggers; CountActiveKycooOnField for the
   graveyard-banish lock; CollectEffectTargets and resolve use CARD_NUMBER(link->card).
 - Pages: [[added-cards]].
+
+## [2026-10-25] progress | Sakuretsu Armor
+- Attack-response trap (`RESPONSE_ATTACK_DECLARED`): auto-target `loc0`, `EffectDestroyTargetResolve`.
+- Pages: [[added-cards]].
