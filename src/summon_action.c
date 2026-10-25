@@ -487,6 +487,16 @@ u16 SummonAction_Update(void)
             if (card != 0) {
                 int id = card;
                 int wasFaceUp = zone->isFaceUp;
+#ifdef HAS_CARD_TSUKUYOMI
+                if (((const u16 *)CARD_ID_TO_NUMBER_ADDR)[id & CARD_ID_MASK] == CARD_TSUKUYOMI) {
+                    int kind = (int)SUMMON_FLAGS_KIND(flags);
+
+                    if (kind == SUMMON_ACTION_NORMAL || kind == SUMMON_ACTION_NORMAL_CHOOSE_POSITION)
+                        TsukuyomiAfterNormalSummon(action->player, action->zone, id, wasFaceUp);
+                    else if (kind == SUMMON_ACTION_FLIP)
+                        TsukuyomiMarkForEndReturn(action->player, action->zone);
+                }
+#endif
                 DuelCursor_Select(action->player, 0, action->zone);
                 /* Key 1429: for a monster Special Summoned from the graveyard, draw one card per copy. */
                 if (action->statusFlags & ZONE_STATUS_FROM_GRAVEYARD) {

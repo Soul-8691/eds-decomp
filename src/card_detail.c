@@ -615,6 +615,9 @@ u32 HasFlipEffect(u16 cardNo, int inBattleArg)
 #ifdef HAS_CARD_NIGHT_ASSAILANT
     case CARD_NIGHT_ASSAILANT:      /* added card (src/added_effects.c) */
 #endif
+#ifdef HAS_CARD_TSUKUYOMI
+    case CARD_TSUKUYOMI:            /* added card (src/added_effects.c) */
+#endif
     case CARD_1254:     /* 1254-1524: not in EDS */
     case CARD_1255:
     case CARD_1256:

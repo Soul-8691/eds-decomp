@@ -744,6 +744,9 @@ int DuelPhase_End(void)
             if (player) msg = DUEL_CMD_SET_EXTRA_BATTLE_PHASE | DUEL_CMD_PLAYER;
             DuelCmd_PushU16(msg, 0, 0, 0);
             EndPhase_ReturnWickedWormBeast(player);
+#ifdef HAS_CARD_TSUKUYOMI
+            EndPhase_ReturnTsukuyomi(player);
+#endif
             END_STEP++;
         }
         return 0;

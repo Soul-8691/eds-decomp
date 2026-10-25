@@ -102,6 +102,11 @@ int BladeKnightNegatesBattleFlipEffect(void);
 int FlipEffectsLockedForTurn(void);
 void LockFlipEffectsForTurn(void);
 void ClearFlipEffectsLockForTurn(void);
+/* Tsukuyomi (src/added_effects.c): cannot be Special Summoned. */
+int IsCannotSpecialSummon(u16 cardId);
+void TsukuyomiMarkForEndReturn(int player, int zone);
+void TsukuyomiAfterNormalSummon(int player, int zone, u16 cardId, int faceUp);
+void EndPhase_ReturnTsukuyomi(int player);
 
 /* Return value of a multi-step resolve handler, kept in gChain.effectStep: Chain_Resolve calls the
  * handler with EFFECT_STEP_START first, then once per frame with the value it returned last, until it

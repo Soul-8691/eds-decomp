@@ -333,9 +333,16 @@ int BattleStage_TriggerFlipEffect(int player)
         if (FlipEffectsLockedForTurn())
             canActivate = 0;
         if (canActivate != 0) {
+            u32 trigger;
+            u32 kindEvent;
+
+#ifdef HAS_CARD_TSUKUYOMI
+            if (CARD_NUMBER_OF(gBattle.flipCardId) == CARD_TSUKUYOMI)
+                TsukuyomiMarkForEndReturn(1 - player, gBattle.defSlot);
+#endif
             /* Matching: separate statements, as in InflictDamage. */
-            u32 trigger = ((1 - player) & 1) << 31;
-            u32 kindEvent = gBattle.defSlot << 16;
+            trigger = ((1 - player) & 1) << 31;
+            kindEvent = gBattle.defSlot << 16;
             kindEvent |= TRIGGER_BATTLE_FLIP_EFFECT;
             trigger |= kindEvent;
             trigger |= gBattle.flipCardId;

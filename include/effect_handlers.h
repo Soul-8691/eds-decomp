@@ -116,6 +116,8 @@ u16 EffectRaigekiBreakCheck(struct ChainEntry *card, u16 pos);
 int EffectRaigekiBreakChainA(struct ChainEntry *link, struct ChainEntry *prevLink);
 int EffectRaigekiBreakChainB(struct ChainEntry *link, struct ChainEntry *prevLink);
 int EffectRaigekiBreakResolve(struct ChainEntry *link, struct ChainEntry *chainedTo);
+/* Tsukuyomi: flip / face-up Normal Summon only; shares Book of Moon resolve. */
+int EffectTsukuyomiPrepare(struct ChainEntry *card, struct ChainEntry *chainLink, u16 fromHand);
 /* Sakuretsu Armor: when an opponent's monster declares an attack, destroy that attacking monster. */
 int EffectSakuretsuArmorPrepare(struct ChainEntry *card, struct ChainEntry *chainLink, u16 fromHand);
 u16 EffectSakuretsuArmorCheck(struct ChainEntry *card, u16 pos);

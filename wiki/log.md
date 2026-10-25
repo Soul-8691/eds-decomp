@@ -1076,3 +1076,16 @@ updated: 2026-09-29
 ## [2026-10-25] progress | Sakuretsu Armor
 - Attack-response trap (`RESPONSE_ATTACK_DECLARED`): auto-target `loc0`, `EffectDestroyTargetResolve`.
 - Pages: [[added-cards]].
+
+## [2026-10-25] progress | Tsukuyomi
+- FLIP effect shares Book of Moon resolve and face-up monster targeting; `HasFlipEffect` case.
+- Pages: [[added-cards]].
+
+## [2026-10-25] progress | Tsukuyomi (full effect)
+- Cannot Special Summon; face-up Normal Summon trigger; End Phase return; `EffectTsukuyomiPrepare`.
+- Pages: [[added-cards]].
+
+## [2026-10-25] progress | Code slack: dice_scene moved to far code
+- The Tsukuyomi hooks made the code overlap the pinned data at 0x08080A20 by 0x80 bytes. `@farcode dice_scene`
+  (units.txt) moves that original unit (0x145C bytes) after the data, leaving 0x13DC bytes of slack.
+- Pages: [[added-cards]].

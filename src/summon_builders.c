@@ -186,6 +186,8 @@ void QueueSpecialSummon(int player, struct DuelCard *card, u16 faceUp, u16 isDef
 {
     struct SummonAction *action;
 
+    if (IsCannotSpecialSummon(CARD_ID(CARD_WORD(*card))) != 0)
+        return;
     if (CountActiveCardsOnField(0, CARD_LIGHT_OF_INTERVENTION) != 0
         || CountActiveCardsOnField(1, CARD_LIGHT_OF_INTERVENTION) != 0)
         faceUp = 1;
@@ -219,6 +221,8 @@ void QueueSpecialSummonChoosePosition(int player, struct DuelCard *card, u16 fac
 {
     struct SummonAction *action;
 
+    if (IsCannotSpecialSummon(CARD_ID(CARD_WORD(*card))) != 0)
+        return;
     if (CountActiveCardsOnField(0, CARD_LIGHT_OF_INTERVENTION) != 0
         || CountActiveCardsOnField(1, CARD_LIGHT_OF_INTERVENTION) != 0)
         faceUp = 1;
@@ -278,6 +282,8 @@ void QueueSpecialSummonFromHand(int player, int handIndex, int zone, int tribute
         gSummonAction.hasTribute2 = 0;
     }
     gSummonAction.cardId = CARD_ID(*(u32 *)((player & 1) * PLAYER_STRIDE + handIndex * 4 + (u32)gDuelHands));
+    if (IsCannotSpecialSummon(gSummonAction.cardId) != 0)
+        return;
     gSummonAction.kind = SUMMON_ACTION_SPECIAL_FROM_HAND;
     gSummonAction.statusFlags = ZONE_STATUS_SPECIAL_SUMMONED | ZONE_STATUS_UNK14;
     PayChainEnergyCost(player);

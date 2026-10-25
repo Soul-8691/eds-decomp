@@ -623,13 +623,14 @@ void OnMonsterTurnedFaceDown(int player, int zone)
     RemoveZoneLink(DUEL_LOC(player, zone), 0, ZONE_LINK_ATK_300_PER_VALUE);
 }
 
-#ifdef HAS_CARD_BOOK_OF_MOON
-/* ---- Book of Moon --------------------------------------------------------------------------------------------------
- * Quick-Play Spell: "Target 1 face-up monster on the field; change that target to face-down Defense Position."
- * The target is a face-up monster (EffectTargetableFaceUpMonsterCheck / ChainB, as Chaos Sorcerer's). The resolve
- * first destroys the target's Equip Cards (they cannot equip a face-down monster; a destroyed Premature Burial takes
- * the monster with it). Then DUEL_CMD_CHANGE_POSITION puts a monster in Attack Position into Defense Position, and
- * DUEL_CMD_FLIP_CARD turns it face down, which removes its counters (OnMonsterTurnedFaceDown). */
+#if defined(HAS_CARD_BOOK_OF_MOON) || defined(HAS_CARD_TSUKUYOMI)
+/* ---- Book of Moon / Tsukuyomi ------------------------------------------------------------------------------------
+ * Book of Moon (Quick-Play Spell) and Tsukuyomi (FLIP) share the same effect: target 1 face-up monster on the
+ * field; change it to face-down Defense Position. Targeting uses EffectTargetableFaceUpMonsterCheck / ChainB
+ * (Chaos Sorcerer's pickers). The resolve first destroys the target's Equip Cards (they cannot equip a face-down
+ * monster; a destroyed Premature Burial takes the monster with it). Then DUEL_CMD_CHANGE_POSITION puts a monster
+ * in Attack Position into Defense Position, and DUEL_CMD_FLIP_CARD turns it face down, which removes its counters
+ * (OnMonsterTurnedFaceDown). Tsukuyomi is listed in HasFlipEffect (card_detail.c). */
 int EffectBookOfMoonResolve(struct ChainEntry *link, struct ChainEntry *chainedTo)
 {
     u16 equips[32];
@@ -661,7 +662,118 @@ int EffectBookOfMoonResolve(struct ChainEntry *link, struct ChainEntry *chainedT
     DuelCmd_Push(cmd, zone, 0, 0);
     return EFFECT_STEP_DONE;
 }
-#endif /* HAS_CARD_BOOK_OF_MOON */
+#endif /* HAS_CARD_BOOK_OF_MOON || HAS_CARD_TSUKUYOMI */
+
+#ifdef HAS_CARD_TSUKUYOMI
+#ifndef CARD_NUMBER
+#define CARD_NUMBER(id) (((const u16 *)CARD_ID_TO_NUMBER_ADDR)[(id) & CARD_ID_MASK])
+#endif
+/* ---- Tsukuyomi (summon restriction, triggers, End Phase return) -----------------------------------------------
+ * "Cannot be Special Summoned. If this card is Normal Summoned or flipped face-up: Target 1 face-up monster …
+ * Once per turn, during the End Phase, if this card was Normal Summoned or flipped face-up this turn: Return it
+ * to the hand."
+ * The flip-to-face-down effect shares EffectBookOfMoonResolve; EffectTsukuyomiPrepare limits activation to
+ * Normal Summon (face-up), Flip Summon and battle flip. TsukuyomiAfterNormalSummon (summon_action.c) marks End
+ * Phase return and queues the field effect when Normal Summoned face-up. HasFlipEffect + SummonStep_Flip handle
+ * Flip Summon; battle_phase2 marks End Phase return on battle flip. EndPhase_ReturnTsukuyomi (battle_phase3.c)
+ * returns marked copies during the End Phase. */
+
+static u8 sTsukuyomiEndReturnMask[2];
+
+#define TSUKUYOMI_MONSTER_TRIGGER(event) (((event) << 25) | (CHAIN_KIND_MONSTER << 21))
+
+static inline u16 TsukuyomiPlayerCmd(int player, u16 cmd)
+{
+    return player ? cmd | DUEL_CMD_PLAYER : cmd;
+}
+
+int IsCannotSpecialSummon(u16 cardId)
+{
+    if (CARD_NUMBER(cardId) == CARD_TSUKUYOMI)
+        return 1;
+    return 0;
+}
+
+void TsukuyomiMarkForEndReturn(int player, int zone)
+{
+    if (zone >= ZONE_MONSTER_0 && zone <= ZONE_MONSTER_4)
+        sTsukuyomiEndReturnMask[player & 1] |= (u8)(1 << zone);
+}
+
+static int IsTsukuyomiHere(struct ChainEntry *card)
+{
+    struct DuelZone *z = ZoneOf(card->player, card->zone);
+
+    return z->isFaceUp && DUEL_CARD_ID(&z->card) == (card->card & CARD_ID_MASK);
+}
+
+int EffectTsukuyomiPrepare(struct ChainEntry *card, struct ChainEntry *chainLink, u16 fromHand)
+{
+    if (fromHand != 0 || !IsTsukuyomiHere(card))
+        return 0;
+    switch (card->event) {
+    case RESPONSE_FLIP_SUMMONED:
+    case RESPONSE_BATTLE_FLIP_EFFECT:
+    case RESPONSE_FLIPPED:
+        return 1;
+    case RESPONSE_SUMMONED:
+        return card->loc0 == DUEL_LOC(card->player, card->zone);
+    default:
+        return 0;
+    }
+}
+
+void TsukuyomiAfterNormalSummon(int player, int zone, u16 cardId, int faceUp)
+{
+    TsukuyomiMarkForEndReturn(player, zone);
+    if (faceUp == 0)
+        return;
+    if (CountActiveCardsOnField(0, CARD_1530) != 0 || CountActiveCardsOnField(1, CARD_1530) != 0)
+        return;
+    if (FlipEffectsLockedForTurn())
+        return;
+    {
+        struct ChainEntry test;
+
+        test.player = player;
+        test.zone = zone;
+        test.card = cardId;
+        test.event = RESPONSE_SUMMONED;
+        test.loc0 = DUEL_LOC(player, zone);
+        if (CanActivateEffect(&test, NULL, 0) == 0)
+            return;
+        {
+            u32 trigger = (u32)(player & 1) << 31;
+            u32 destination = (u32)zone << 16;
+
+            destination |= TSUKUYOMI_MONSTER_TRIGGER(RESPONSE_SUMMONED);
+            trigger |= destination | cardId;
+            Chain_AddPending(trigger, DUEL_LOC(player, zone));
+        }
+    }
+}
+
+void EndPhase_ReturnTsukuyomi(int player)
+{
+    int zone;
+    u8 mask = sTsukuyomiEndReturnMask[player & 1];
+
+    for (zone = ZONE_MONSTER_0; zone <= ZONE_MONSTER_4; zone++) {
+        if ((mask & (1 << zone)) == 0)
+            continue;
+        {
+            struct DuelZone *z = ZoneOf(player, zone);
+            u16 id = DUEL_CARD_ID(&z->card);
+
+            if (id != 0 && CARD_NUMBER(id) == CARD_TSUKUYOMI) {
+                DuelCmd_Push(TsukuyomiPlayerCmd(player, DUEL_CMD_SHOW_CARD_EFFECT), id, 1, 0);
+                ReturnFieldCardToHand(player, zone, 0);
+            }
+        }
+    }
+    sTsukuyomiEndReturnMask[player & 1] = 0;
+}
+#endif /* HAS_CARD_TSUKUYOMI */
 
 #ifdef HAS_CARD_REINFORCEMENT_OF_THE_ARMY
 /* ---- Reinforcement of the Army -----------------------------------------------------------------------------------
@@ -1021,6 +1133,16 @@ const struct CardEffect gAddedCardEffects[] = {
         EffectBookOfMoonResolve,
         (u16 (*)(struct ChainEntry *, u16))EffectTargetableFaceUpMonsterCheck,
         NULL,
+        NULL,
+        (int (*)(struct ChainEntry *, struct ChainEntry *))EffectTargetableFaceUpMonsterChainB,
+    },
+#endif
+#ifdef HAS_CARD_TSUKUYOMI
+    {
+        CARD_TSUKUYOMI, 0,
+        EffectBookOfMoonResolve,
+        (u16 (*)(struct ChainEntry *, u16))EffectTargetableFaceUpMonsterCheck,
+        EffectTsukuyomiPrepare,
         NULL,
         (int (*)(struct ChainEntry *, struct ChainEntry *))EffectTargetableFaceUpMonsterChainB,
     },

@@ -121,6 +121,13 @@ those run only for cards that have an effect.
   `data/rodata_08087FD0.s` is section `.rodata.pinned` at `0x08623DF4`. So added effects cost none of the game
   code's slack before the pinned data at `0x08080A20`. Each hook added inside the game's units still costs a
   few bytes there (0x558 left on 2026-10-25, after moving the rewritten saved-deck functions to `src/mod_save.c`).
+- **Slack (2026-10-25).** The Tsukuyomi hooks pushed the code 0x80 bytes past `0x08080A20` ("the code has grown into
+  the data"). The original unit `dice_scene` (0x145C bytes: the Dice, Destiny Board and Exodia scenes) is now
+  `@farcode` too, which leaves 0x13DC bytes of slack (code end `0x0807F644`). Any unit can move this way; mkld.py
+  takes `@farcode` for any unit. Its callers reach it through `bl` and symbols, and `tools/fixptrs.py` fixes its
+  pointers in the data tables by name. Before moving one, check that no code refers to its functions by raw address
+  (only the asm comments did here), and that it holds no ARM or IWRAM code. A short `b` across units would fail at
+  link time. `check.py dice_scene` gives the same result with or without the move.
 - **Guards.** Each card's code is under `#ifdef HAS_CARD_<NAME>`, which `tools/newcards.py` defines in
   `build/include/card_count.h` for every listed card. Taking a card off the list removes its effect instead of
   breaking the build.
@@ -193,6 +200,16 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
 - **Effect.** Main Phase ACTIVATE, once per turn: it targets a face-up monster (`EffectTargetableFaceUpMonsterCheck` /
   `EffectTargetableFaceUpMonsterChainB`) and banishes it; Chaos Sorcerer cannot attack that turn
   (`EffectBanishTargetNoAttackResolve`, shared with BLS's banish effect).
+
+### Tsukuyomi (2026-10-25)
+- **Cannot be Special Summoned** (`IsCannotSpecialSummon` blocks `QueueSpecialSummon*` in summon_builders.c).
+- **Field effect** when Normal Summoned face-up, Flip Summoned, or flipped face-up in battle: same as Book of
+  Moon (`EffectBookOfMoonResolve`, face-up monster target handlers). `EffectTsukuyomiPrepare` gates events;
+  face-up Normal Summon queues `RESPONSE_SUMMONED` from `TsukuyomiAfterNormalSummon` (summon_action.c).
+- **End Phase:** if it was Normal Summoned or flipped face-up this turn, `EndPhase_ReturnTsukuyomi` returns it
+  to the hand (set-only Normal Summon still returns, without firing the field effect).
+- `HasFlipEffect` (card_detail.c).
+- Checked in the source; not tested in an emulator.
 
 ### Book of Moon (2026-10-25)
 - Quick-Play Spell: "Target 1 face-up monster on the field; change that target to face-down Defense Position." It
