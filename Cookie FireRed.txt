@@ -17,7 +17,8 @@ Other Metas
 Showdown! OMs bot support
 Banlists per format
 Multiple decks per format
-Other 9 are Yugi Muto/Joey/Kaiba/Pegasus/Marik/Yami Marik/Yami Bakura/Yami Yugi and Victory (05-09 OCG)
+Yugi Muto/Joey/Kaiba/Pegasus/Marik/Yami Marik/Yami Bakura/Yami Yugi
+Up until Victory OCG format (05-09)
 Custom EDOPRO cards from historical formats
 Make sure all cards are early version effects in the ROM
 Duelist Point (DP) system
