@@ -924,3 +924,12 @@ updated: 2026-09-29
   plus 2 Dark Holes to the trunk; Yugi Muto's deck is competitive. Both decoded from the ROM and checked against the
   Forbidden/Limited list.
 - Pages: [[added-cards]].
+
+## [2026-10-25] progress | Tribe-Infecting Virus; every card x8 in the trunk at the start
+- Tribe-Infecting Virus (`src/added_effects.c`): Main Phase menu effect, once per turn (effectUnused, re-armed by
+  DuelCmd_TurnStart): discard 1 (Magic Jammer's DuelPrompt_PostDiscardCost), declare a type (DNA Surgery's
+  EffectDeclareTypeChainB), destroy every face-up monster of that type, the opponent's first (no targeting).
+- `GiveStartingTrunk` (src/mod_decks.c), called first by BuildStarterDeck: a new game starts with 8 of every card ID in
+  the trunk (original and added; monster tokens excluded, like DebugGetAllCards).
+- The card list is now 289 added cards (config/new_cards.txt).
+- Pages: [[added-cards]].

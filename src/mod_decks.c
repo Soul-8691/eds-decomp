@@ -2,6 +2,7 @@
  * mod_decks: decks that replace the original ones. Not part of the original ROM.
  *   GetOpponentDeckOverride   opponent decks (gOpponentDecks); LoadOpponentDeck (ai_deck.c) asks it first
  *   BuildModStarterDeck       starter decks; BuildStarterDeck (title_screen.c) asks it first
+ *   GiveStartingTrunk         the cards a new game starts with in the trunk (BuildStarterDeck)
  * Like added_effects, this unit is @farcode and @rodata at the end in units.txt, so it does not move the game's
  * code or data. Decks keep to the Forbidden/Limited list (gCardCopyLimits): LoadOpponentDeck drops every copy of
  * a card that is over its limit, and AddCardToSavedDeck refuses the copies over it.
@@ -65,10 +66,28 @@ const struct DeckList *GetOpponentDeckOverride(int opponent)
     return NULL;
 }
 
+/* Copies of every card a new game puts in the trunk. */
+#define STARTING_TRUNK_COPIES 8
+
+/* A new game starts with STARTING_TRUNK_COPIES of every card in the trunk: all card IDs, original and added, except
+ * the monster tokens (card numbers 1920-1999), the same cards as the debug "Get all card" (DebugGetAllCards). */
+void GiveStartingTrunk(void)
+{
+    u32 id, k;
+
+    for (id = 1; id <= CARD_ID_LAST; id++) {
+        u16 number = gCardIdToNumber[id];
+        if (number == 0xFFFF || (u16)(number - CARD_NUMBER_TOKEN_FIRST) < CARD_NUMBER_TOKEN_END - CARD_NUMBER_TOKEN_FIRST)
+            continue;
+        for (k = 0; k < STARTING_TRUNK_COPIES; k++)
+            AddCardToTrunk(id);
+    }
+}
+
 #if defined(HAS_CARD_BLACK_LUSTER_SOLDIER_ENVOY_OF_THE_BEGINNING) && defined(HAS_CARD_BREAKER_THE_MAGICAL_WARRIOR)
 /* The Red starter deck: Black Luster Soldier - Envoy of the Beginning with LIGHT and DARK monsters to banish for
  * it: strong Normal monsters, the LIGHT/DARK floaters Shining Fairy and Mystic Tomato, Breaker the Magical Warrior,
- * and Dark Hole (limited: 1 in the deck, see sRedStarterTrunk). 40 cards. */
+ * and Dark Hole (limited: 1 in the deck). 40 cards. */
 static const u16 sRedStarterDeck[] = {
     X3(X2(CARD_BLACK_LUSTER_SOLDIER_ENVOY_OF_THE_BEGINNING)), X2(CARD_BLACK_LUSTER_SOLDIER_ENVOY_OF_THE_BEGINNING),
     X3(CARD_BREAKER_THE_MAGICAL_WARRIOR),
@@ -91,11 +110,6 @@ static const u16 sRedStarterDeck[] = {
 
 STATIC_ASSERT(ARRAY_COUNT(sRedStarterDeck) == 40, RedStarterDeckSize);
 
-/* Cards the Red starter deck puts in the trunk: the Dark Holes the deck has no room for under its limit. */
-static const u16 sRedStarterTrunk[] = {
-    X2(CARD_DARK_HOLE),
-};
-
 /* Build the saved Deck of starter deck `choice` (enum StarterDeck) when this build replaces it; returns 1 then,
  * 0 to let BuildStarterDeck build the original. */
 int BuildModStarterDeck(int choice)
@@ -104,10 +118,8 @@ int BuildModStarterDeck(int choice)
 
     if (choice != STARTER_DECK_RED)
         return 0;
-    for (i = 0; i < ARRAY_COUNT(sRedStarterDeck); i++)
-        AddCardToSavedDeck(gCardNumberToId[sRedStarterDeck[i] & CARD_ID_MASK]);
-    for (i = 0; i < ARRAY_COUNT(sRedStarterTrunk); i++)
-        AddCardToTrunk(gCardNumberToId[sRedStarterTrunk[i] & CARD_ID_MASK]);
+    // for (i = 0; i < ARRAY_COUNT(sRedStarterDeck); i++)
+    //     AddCardToSavedDeck(gCardNumberToId[sRedStarterDeck[i] & CARD_ID_MASK]);
     return 1;
 }
 #else

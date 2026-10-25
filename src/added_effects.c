@@ -25,6 +25,7 @@
 #include "constants/duel_cmds.h"
 #include "duel_cmd.h"
 #include "text_box.h"
+#include "duel_prompt.h"
 
 /* ---- Spell Counters ----------------------------------------------------------------------------------------
  * A Spell Counter on a monster is a ZONE_LINK_ATK_300_PER_VALUE link from the monster's own card ID: the link's
@@ -247,6 +248,60 @@ int EffectBlackLusterSoldierResolve(struct ChainEntry *link, struct ChainEntry *
 }
 #endif /* HAS_CARD_BLACK_LUSTER_SOLDIER_ENVOY_OF_THE_BEGINNING */
 
+#ifdef HAS_CARD_TRIBE_INFECTING_VIRUS
+/* ---- Tribe-Infecting Virus -----------------------------------------------------------------------------------
+ * "Once per turn: You can discard 1 card, then declare 1 Monster Type; destroy all face-up monsters of the declared
+ * Type on the field."
+ * An activated effect from the card menu in the Main Phase (CanActivateMonsterEffect), once per turn through the
+ * zone's effectUnused flag (DuelCmd_TurnStart sets it again). The pieces are the game's own: the discard cost of
+ * Magic Jammer (DuelPrompt_PostDiscardCost), the type prompt of DNA Surgery (EffectDeclareTypeChainB: targets[0] is
+ * the enum CardType) and the destruction of Eradicating Aerosol (DestroyFieldCard + OnCardDestroyedByEffect, the
+ * opponent's monsters first). The Virus does not target, so face-up is the only condition. */
+
+int EffectTribeInfectingVirusPrepare(struct ChainEntry *card, struct ChainEntry *chainLink, u16 fromHand)
+{
+    struct DuelZone *z;
+
+    if (fromHand || card->event != RESPONSE_NONE)
+        return 0;
+    z = ZoneOf(card->player, card->zone);
+    if (!z->isFaceUp || DUEL_CARD_ID(&z->card) != (card->card & CARD_ID_MASK) || !z->effectUnused)
+        return 0;
+    return gDuelPlayers[card->player & 1].handCount != 0;   /* a card to discard */
+}
+
+/* Cost: discard 1 card; the effect is used for this turn. */
+int EffectTribeInfectingVirusChainA(struct ChainEntry *link, struct ChainEntry *prevLink)
+{
+    u16 cmd = link->player ? DUEL_CMD_PLAYER | DUEL_CMD_SET_EFFECT_UNUSED : DUEL_CMD_SET_EFFECT_UNUSED;
+
+    DuelPrompt_PostDiscardCost(link->player, 1, 0, 0);
+    DuelCmd_Push(cmd, link->zone, 0, 0);
+    return 1;
+}
+
+int EffectTribeInfectingVirusResolve(struct ChainEntry *link, struct ChainEntry *chainedTo)
+{
+    int round, side, zone;
+    u32 type;
+
+    if (link->negated || link->numTargets != 1)
+        return EFFECT_STEP_DONE;
+    type = link->targets[0];
+    for (round = 0; round <= 1; round++) {
+        side = round ? link->player : 1 - link->player;
+        for (zone = ZONE_MONSTER_0; zone <= ZONE_MONSTER_4; zone++) {
+            struct DuelZone *z = ZoneOf(side, zone);
+            if (DUEL_CARD_ID(&z->card) != 0 && z->isFaceUp && GetZoneCardType(side, zone) == type) {
+                DestroyFieldCard(side, zone, 1);
+                OnCardDestroyedByEffect(link->player, side, zone);
+            }
+        }
+    }
+    return EFFECT_STEP_DONE;
+}
+#endif /* HAS_CARD_TRIBE_INFECTING_VIRUS */
+
 /* ---- The effect table of the added cards ------------------------------------------------------------------- */
 
 /* Rows like gCardEffects' (struct CardEffect), any order, ending with number 0xFFFF. */
@@ -269,6 +324,16 @@ const struct CardEffect gAddedCardEffects[] = {
         EffectBlackLusterSoldierPrepare,
         NULL,
         EffectBlackLusterSoldierChainB,
+    },
+#endif
+#ifdef HAS_CARD_TRIBE_INFECTING_VIRUS
+    {
+        CARD_TRIBE_INFECTING_VIRUS, 0,
+        EffectTribeInfectingVirusResolve,
+        NULL,
+        EffectTribeInfectingVirusPrepare,
+        EffectTribeInfectingVirusChainA,
+        (int (*)(struct ChainEntry *, struct ChainEntry *))EffectDeclareTypeChainB,
     },
 #endif
     { 0xFFFF },

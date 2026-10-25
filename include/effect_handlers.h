@@ -95,6 +95,10 @@ int EffectBlackLusterSoldierPrepare(struct ChainEntry *card, struct ChainEntry *
 u16 EffectBlackLusterSoldierCheck(struct ChainEntry *card, u16 pos);
 int EffectBlackLusterSoldierChainB(struct ChainEntry *link, struct ChainEntry *prevLink);
 int EffectBlackLusterSoldierResolve(struct ChainEntry *link, struct ChainEntry *chainedTo);
+/* Tribe-Infecting Virus: discard 1, declare a type, destroy every face-up monster of it (once per turn). */
+int EffectTribeInfectingVirusPrepare(struct ChainEntry *card, struct ChainEntry *chainLink, u16 fromHand);
+int EffectTribeInfectingVirusChainA(struct ChainEntry *link, struct ChainEntry *prevLink);
+int EffectTribeInfectingVirusResolve(struct ChainEntry *link, struct ChainEntry *chainedTo);
 
 /* ChainA (activation costs) */
 /* Activation cost: pay the card's LP cost (500 to 5000, half for Solemn Judgment). Always returns 1. */

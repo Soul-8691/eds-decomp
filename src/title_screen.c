@@ -23,6 +23,8 @@
 
 /* Added: a starter deck of this build (src/mod_decks.c); returns 1 when it built `choice`. */
 int BuildModStarterDeck(int choice);
+/* Added: every card x8 in the trunk at the start of a new game (src/mod_decks.c). */
+void GiveStartingTrunk(void);
 #include "calendar.h"
 #include "title_screen.h"
 
@@ -268,7 +270,8 @@ static inline u16 CardNumberToId(u16 number)
  * Builds the starting deck for `choice` (enum StarterDeck, taken % 3): shuffles each of the 11
  * gStarterDeckPools (count * 4 random swaps) and adds its first pick0/pick1/pick2 cards to the saved deck.
  * A card number with no card ID goes to DebugPrintf (a stub in the retail game) instead.
- * Added: a starter deck that BuildModStarterDeck (src/mod_decks.c) builds replaces the original one.
+ * Added: the trunk first gets 8 of every card (GiveStartingTrunk), and a starter deck that BuildModStarterDeck
+ * (src/mod_decks.c) builds replaces the original one.
  */
 void BuildStarterDeck(s32 choice)
 {
@@ -277,6 +280,7 @@ void BuildStarterDeck(s32 choice)
     u32 poolIndex;
     s32 i, picks;
 
+    GiveStartingTrunk();
     if (BuildModStarterDeck(choice % 3)) {
         DebugPrintFlush();
         return;

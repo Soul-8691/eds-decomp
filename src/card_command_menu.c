@@ -488,6 +488,9 @@ int CanActivateMonsterEffect(u16 id, int player, int zone)
 #ifdef HAS_CARD_BLACK_LUSTER_SOLDIER_ENVOY_OF_THE_BEGINNING
     case CARD_BLACK_LUSTER_SOLDIER_ENVOY_OF_THE_BEGINNING:  /* added card (src/added_effects.c) */
 #endif
+#ifdef HAS_CARD_TRIBE_INFECTING_VIRUS
+    case CARD_TRIBE_INFECTING_VIRUS:                        /* added card (src/added_effects.c) */
+#endif
     case CARD_1430:
     case CARD_1432:
     case CARD_1433:

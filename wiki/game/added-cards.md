@@ -164,6 +164,16 @@ bits. They keep those bits as their low bits and have high bits in the bytes the
 rewritten), Deck Edit (cards, list, prohibit, stats, widgets, filter steps), booster code, the debug give-all. Saves
 from the original game load unchanged; the format is a superset.
 
+### Tribe-Infecting Virus (2026-10-25)
+Main Phase menu effect, once per turn: discard 1 card (Magic Jammer's cost prompt), declare a Monster Type (DNA
+Surgery's type prompt), destroy every face-up monster of that type on the field, the opponent's first. It does not
+target. Hooks: `CanActivateMonsterEffect`, `DuelCmd_TurnStart` (re-arms `effectUnused`).
+
+### Starting trunk (2026-10-25)
+A new game puts 8 copies of every card in the trunk (`GiveStartingTrunk`, called by `BuildStarterDeck`): every
+original and added card except the monster tokens. Owning every card also meets the collection conditions, such as
+Grandpa's and Pegasus' unlocks.
+
 ### Black Luster Soldier - Envoy of the Beginning (2026-10-25)
 - **Summon.** Special Summon only (`IsSpecialSummonOnly`, so the hand menu offers only Sp. Summon / Sp. Set).
   `CanSummonFromHand` needs a free zone and a LIGHT and a DARK monster in the Graveyard
