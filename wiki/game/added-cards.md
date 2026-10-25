@@ -188,6 +188,12 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
   `EffectTargetableFaceUpMonsterChainB`) and banishes it; Chaos Sorcerer cannot attack that turn
   (`EffectBanishTargetNoAttackResolve`, shared with BLS's banish effect).
 
+### Jar of Greed (2026-10-25)
+- Normal Trap, "Draw 1 card." `EffectJarOfGreedResolve` (DrawCards 1, unless negated). The row has no prepare or
+  check, like Gift of the Mystical Elf's, so `CanActivateEffect` passes it: a Set Jar of Greed can be activated in
+  any response window, at Trap speed.
+- Checked in the source and the build; not tested in an emulator.
+
 ### Night Assailant (2026-10-25)
 - **Flip.** "Target 1 monster your opponent controls; destroy that target." Listed in `HasFlipEffect`
   (card_detail.c). It uses Crass Clown's opponent-monster target (`EffectOpponentMonsterCheck` /

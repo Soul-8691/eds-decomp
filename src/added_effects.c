@@ -447,6 +447,18 @@ int EffectDekoichiResolve(struct ChainEntry *link, struct ChainEntry *chainedTo)
 }
 #endif /* HAS_CARD_DEKOICHI_THE_BATTLECHANTED_LOCOMOTIVE */
 
+#ifdef HAS_CARD_JAR_OF_GREED
+/* ---- Jar of Greed --------------------------------------------------------------------------------------------------
+ * Normal Trap: "Draw 1 card." A row with no prepare or check, like Gift of the Mystical Elf's: CanActivateEffect
+ * lets a Set Jar of Greed be activated in any response window, at Trap speed. */
+int EffectJarOfGreedResolve(struct ChainEntry *link, struct ChainEntry *chainedTo)
+{
+    if (!link->negated)
+        DrawCards(link->player, 1);
+    return EFFECT_STEP_DONE;
+}
+#endif /* HAS_CARD_JAR_OF_GREED */
+
 #ifdef HAS_CARD_NIGHT_ASSAILANT
 /* ---- Night Assailant ---------------------------------------------------------------------------------------------
  * "FLIP: Target 1 monster your opponent controls; destroy that target.
@@ -616,6 +628,16 @@ const struct CardEffect gAddedCardEffects[] = {
         EffectBlackLusterSoldierPrepare,
         NULL,
         EffectBlackLusterSoldierChainB,
+    },
+#endif
+#ifdef HAS_CARD_JAR_OF_GREED
+    {
+        CARD_JAR_OF_GREED, 0,
+        EffectJarOfGreedResolve,
+        NULL,
+        NULL,
+        NULL,
+        NULL,
     },
 #endif
 #ifdef HAS_CARD_NIGHT_ASSAILANT

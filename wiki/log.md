@@ -1015,3 +1015,7 @@ updated: 2026-09-29
   (QueueNightAssailantTrigger) when the Graveyard holds a Flip monster other than Night Assailant. The pick goes
   through Mask of Darkness's card-list viewer and resolve.
 - Pages: [[added-cards]].
+
+## [2026-10-25] progress | Jar of Greed
+- Normal Trap, draw 1: EffectJarOfGreedResolve, with no prepare or check (as Gift of the Mystical Elf's row).
+- Pages: [[added-cards]].
