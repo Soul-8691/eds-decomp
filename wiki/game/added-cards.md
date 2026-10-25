@@ -211,6 +211,18 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
 - `HasFlipEffect` (card_detail.c).
 - Checked in the source; not tested in an emulator.
 
+### Zaborg the Thunder Monarch (2026-10-25)
+- "When this card is Tribute Summoned: Target 1 monster on the field; destroy that target."
+- **Trigger.** It joins Breaker's case in both Normal Summon paths (`ExecuteSummonAction` /
+  `ExecuteSummonActionAskPosition`, summon_checks.c), which queue a `RESPONSE_SUMMONED` trigger. It is Level 5, so
+  that summon always has a Tribute. A Set, a Flip Summon and a Special Summon do not trigger it.
+- **Row:** Man-Eater Bug's handlers (`EffectTargetableMonsterCheck`, `EffectTargetableMonsterChainB`,
+  `EffectDestroyTargetResolve`). The effect is mandatory, as on the card, so Zaborg targets itself when it is the
+  only monster.
+- **Edge (as Man-Eater Bug):** the target step re-checks `CanActivateEffect` against the previous chain link. If
+  another trigger starts the same chain first, the spell-speed rule refuses the monster and Zaborg picks no target.
+- Checked in the source and the build; not tested in an emulator.
+
 ### Spirit Reaper (2026-10-25)
 - "Cannot be destroyed by battle. After this card is targeted by an effect, destroy this card. When this card
   inflicts battle damage to your opponent: Discard 1 random card from their hand."

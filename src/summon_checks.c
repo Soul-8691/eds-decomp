@@ -643,6 +643,9 @@ int ExecuteSummonAction(void)
 #ifdef HAS_CARD_BREAKER_THE_MAGICAL_WARRIOR
         case CARD_BREAKER_THE_MAGICAL_WARRIOR:  /* added card: place a Spell Counter (src/added_effects.c) */
 #endif
+#ifdef HAS_CARD_ZABORG_THE_THUNDER_MONARCH
+        case CARD_ZABORG_THE_THUNDER_MONARCH:   /* added card: Level 5, so this summon is a Tribute Summon */
+#endif
             a = gSummonAction.player << 31;
             t = (gSummonAction.zone << 16) | SUMMONED_TRIGGER_BITS;
             Chain_AddPending(a | t | gSummonAction.cardId, gSummonAction.player | (gSummonAction.zone << 8));
@@ -780,6 +783,9 @@ int ExecuteSummonActionAskPosition(void)
         case CARD_1332:
 #ifdef HAS_CARD_BREAKER_THE_MAGICAL_WARRIOR
         case CARD_BREAKER_THE_MAGICAL_WARRIOR:  /* added card: place a Spell Counter (src/added_effects.c) */
+#endif
+#ifdef HAS_CARD_ZABORG_THE_THUNDER_MONARCH
+        case CARD_ZABORG_THE_THUNDER_MONARCH:   /* added card: Level 5, so this summon is a Tribute Summon */
 #endif
             a = gSummonAction.player << 31;
             t = (gSummonAction.zone << 16) | SUMMONED_TRIGGER_BITS;

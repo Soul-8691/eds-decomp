@@ -1946,6 +1946,20 @@ const struct CardEffect gAddedCardEffects[] = {
         NULL,
     },
 #endif
+#ifdef HAS_CARD_ZABORG_THE_THUNDER_MONARCH
+    /* Zaborg the Thunder Monarch: "When this card is Tribute Summoned: Target 1 monster on the field; destroy that
+     * target." The two Normal Summon paths (ExecuteSummonAction / ExecuteSummonActionAskPosition, summon_checks.c)
+     * queue its RESPONSE_SUMMONED trigger in Breaker's case; it is Level 5, so that summon always has a Tribute. The
+     * handlers are Man-Eater Bug's (any monster, itself too when it is the only one; mandatory, as on the card). */
+    {
+        CARD_ZABORG_THE_THUNDER_MONARCH, 0,
+        (int (*)(struct ChainEntry *, struct ChainEntry *))EffectDestroyTargetResolve,
+        (u16 (*)(struct ChainEntry *, u16))EffectTargetableMonsterCheck,
+        NULL,
+        NULL,
+        (int (*)(struct ChainEntry *, struct ChainEntry *))EffectTargetableMonsterChainB,
+    },
+#endif
 #ifdef HAS_CARD_MIND_CONTROL
     {
         CARD_MIND_CONTROL, 0,

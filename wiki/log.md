@@ -1166,3 +1166,8 @@ updated: 2026-09-29
 - CalcBattle clears its destroyed flag. TryAddEffectTarget reports targets to OnFieldCardTargeted, which destroys a
   face-up Reaper (not for Tribute picks). White Magical Hat's battle-damage discard covers it too.
 - Pages: [[added-cards]].
+
+## [2026-10-25] progress | Zaborg the Thunder Monarch
+- Breaker's Normal Summon trigger case in summon_checks.c (Level 5: always a Tribute Summon); Man-Eater Bug's
+  target-and-destroy handlers.
+- Pages: [[added-cards]].
