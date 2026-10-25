@@ -452,6 +452,22 @@ int BattleStage_DestroyMonsters(int player)
         }
     }
 #endif
+#ifdef HAS_CARD_D_D_ASSAILANT
+    /* Added: D.D. Assailant destroyed by battle banishes itself and the monster it battled: the battle goes on as
+     * after a Yes to D.D. Warrior Lady (destroyed monsters banished instead of sent to the Graveyard, a survivor
+     * banished below). Mandatory, so nobody is asked. */
+    {
+        int side;
+        for (side = 0; side <= 1; side++) {
+            int who = side ? 1 - player : player;
+            if (CARD_NUMBER_OF(gBattle.side[who].cardId) == CARD_D_D_ASSAILANT && gBattle.side[who].destroyed) {
+                ShowCardEffect(who, gBattle.side[who].cardId);
+                gBattle.ddWarriorLady = DD_WARRIOR_LADY_YES;
+                break;
+            }
+        }
+    }
+#endif
 #if defined(HAS_CARD_MYSTIC_SWORDSMAN_LV2) && defined(HAS_CARD_MYSTIC_SWORDSMAN_LV4)
     MysticSwordsmanAfterBattle(player);     /* added card: note its battle kills (src/added_effects.c) */
 #endif
@@ -663,8 +679,8 @@ int BattleStage_DestroyMonsters(int player)
         } else if (!done)
             BanishBattleDestroyedCard(1 - player, gBattle.defSlot, (u16 *)&gBattle.zones[1 - player]);
     }
-#ifdef HAS_CARD_D_D_WARRIOR_LADY
-    /* Added: D.D. Warrior Lady's Yes also banishes the monsters that survived the battle. */
+#if defined(HAS_CARD_D_D_WARRIOR_LADY) || defined(HAS_CARD_D_D_ASSAILANT)
+    /* Added: D.D. Warrior Lady's Yes (and D.D. Assailant) also banishes the monsters that survived the battle. */
     if (gBattle.ddWarriorLady == DD_WARRIOR_LADY_YES) {
         if (!gBattle.side[player].destroyed && ZONE_HAS_CARD(&gDuelPlayers[player & 1].zones[gBattle.atkSlot]))
             BanishFieldCard(player, gBattle.atkSlot, 0);

@@ -211,6 +211,18 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
 - `HasFlipEffect` (card_detail.c).
 - Checked in the source; not tested in an emulator.
 
+### D.D. Assailant (2026-10-25)
+- "After damage calculation, when this card is destroyed by battle with an opponent's monster: Banish that monster,
+  also banish this card."
+- **No effect row.** `BattleStage_DestroyMonsters` (battle_phase2.c), right after D.D. Warrior Lady's question: when
+  a D.D. Assailant is on either side and the battle destroyed it, it shows the card and sets `gBattle.ddWarriorLady =
+  DD_WARRIOR_LADY_YES`. The battle then goes on as after a Yes to D.D. Warrior Lady: every destroyed monster is
+  banished instead of sent to the Graveyard (`BanishBattleDestroyedCard`, Dimensional Warrior's path), and a survivor
+  is banished at the end (`BanishFieldCard`). That last block and the reset of the state are now guarded on either
+  card being listed. The effect is mandatory, so nobody is asked.
+- The banished monsters do not run Graveyard effects ([[added-cards#Banishing and "sent to the Graveyard" triggers]]).
+- Checked in the source and the build; not tested in an emulator.
+
 ### Zaborg the Thunder Monarch (2026-10-25)
 - "When this card is Tribute Summoned: Target 1 monster on the field; destroy that target."
 - **Trigger.** It joins Breaker's case in both Normal Summon paths (`ExecuteSummonAction` /

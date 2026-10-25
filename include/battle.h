@@ -56,7 +56,7 @@ struct Battle {
     u16 flipCardId;             /* +0x2: card ID of the defender flipped face up by the attack, else 0 */
     u8 calculated:1;            /* +0x4 bit 0: set by CalcBattle */
     u8 unk4_1:7;
-    u8 ddWarriorLady;           /* +0x5: added: D.D. Warrior Lady's question in BattleStage_DestroyMonsters
+    u8 ddWarriorLady;           /* +0x5: added: D.D. Warrior Lady's question (D.D. Assailant sets YES) in BattleStage_DestroyMonsters
                                  * (enum DDWarriorLadyState); back to 0 when the stage is done */
     u8 unk6[2];
     struct BattleSide side[2];  /* +0x08: per player */

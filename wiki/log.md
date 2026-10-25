@@ -1171,3 +1171,8 @@ updated: 2026-09-29
 - Breaker's Normal Summon trigger case in summon_checks.c (Level 5: always a Tribute Summon); Man-Eater Bug's
   target-and-destroy handlers.
 - Pages: [[added-cards]].
+
+## [2026-10-25] progress | D.D. Assailant
+- BattleStage_DestroyMonsters: destroyed by battle, it sets D.D. Warrior Lady's YES state, so both battling
+  monsters are banished. The survivor block is guarded on either card.
+- Pages: [[added-cards]].
