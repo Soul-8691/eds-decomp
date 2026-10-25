@@ -1110,3 +1110,8 @@ updated: 2026-09-29
   Idol 1333). Thousand-Eyes Idol was added to the list.
 - EffectRelinquishedResolve now absorbs for key 1334 too (it tested only Relinquished).
 - Pages: [[added-cards]].
+
+## [2026-10-25] progress | Phoenix Wing Wind Blast
+- Normal Spell: discard cost (DuelPrompt_PostDiscardCost), then a pick of an opponent's card (no CanActivateEffect
+  re-check after the cost), resolved with ReturnFieldCardToDeck.
+- Pages: [[added-cards]].

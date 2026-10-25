@@ -30,6 +30,7 @@
 #include "constants/sound.h"
 #include "card_list_view.h"
 #include "summon.h"
+#include "ai.h"
 #include "battle.h"
 #include "main.h"                   /* gMain.newKeys */
 #include "duel_screen.h"            /* DuelCursor_PickTarget, gDuelScreen */
@@ -777,6 +778,104 @@ void EndPhase_ReturnTsukuyomi(int player)
 }
 #endif /* HAS_CARD_TSUKUYOMI */
 
+#ifdef HAS_CARD_PHOENIX_WING_WIND_BLAST
+/* ---- Phoenix Wing Wind Blast ---------------------------------------------------------------------------------------
+ * Normal Spell: "Discard 1 card, then target 1 card your opponent controls; place that target on the top of the Deck."
+ * Cost: the discard of Magic Jammer / Tribe-Infecting Virus (DuelPrompt_PostDiscardCost). Target: any card in the
+ * opponent's monster, Spell/Trap or Field zones that the card may target (CanCardTargetZone), as Raigeki Break but on
+ * one side. The target step does not ask CanActivateEffect again: the discard is paid by then, and the prepare
+ * handler counts the hand. Resolve: ReturnFieldCardToDeck (to the top of its owner's Deck; a Fusion Monster goes to
+ * the Fusion Deck and a token is destroyed, the game's rules for DUEL_CMD_RETURN_TO_DECK). */
+
+static const u8 sStrPhoenixWingPick[] = "Designate the opponent's card to place on top of the Deck.";
+
+#define PHOENIX_WING_PICK (PICK_PLAYER1(PICK_ANY_MONSTER | PICK_ANY_SPELL_TRAP))
+
+u16 EffectPhoenixWingWindBlastCheck(struct ChainEntry *card, u16 pos)
+{
+    int player = (u8)pos;
+    int zone = pos >> 8;
+
+    if (player == card->player || zone > ZONE_FIELD || !CanCardTargetZone(card->card, player, zone))
+        return 0;
+    return DUEL_CARD_ID(&ZoneOf(player, zone)->card) != 0;
+}
+
+int EffectPhoenixWingWindBlastPrepare(struct ChainEntry *card, struct ChainEntry *chainLink, u16 fromHand)
+{
+    int zone;
+
+    /* a card to discard besides this one when it is played from the hand */
+    if (gDuelPlayers[card->player & 1].handCount < 1 + fromHand)
+        return 0;
+    for (zone = 0; zone <= ZONE_FIELD; zone++) {
+        if (EffectPhoenixWingWindBlastCheck(card, DUEL_LOC(1 - card->player, zone)))
+            return 1;
+    }
+    return 0;
+}
+
+int EffectPhoenixWingWindBlastChainA(struct ChainEntry *link, struct ChainEntry *prevLink)
+{
+    DuelPrompt_PostDiscardCost(link->player, 1, 0, 0);
+    return 1;
+}
+
+int EffectPhoenixWingWindBlastChainB(struct ChainEntry *link, struct ChainEntry *prevLink)
+{
+    int opponent = 1 - link->player;
+    int zone;
+
+    if (link->player) {
+        /* CPU: the human's strongest monster, else its first Spell/Trap */
+        link->numTargets = 0;
+        zone = CountMonsters(opponent) > 0 ? AiFindStrongestMonster(opponent, -1, 1, 1) : -1;
+        if (zone >= 0 && EffectPhoenixWingWindBlastCheck(link, DUEL_LOC(opponent, zone))
+            && TryAddEffectTarget(link, opponent, zone))
+            return 1;
+        for (zone = 0; zone <= ZONE_FIELD; zone++) {
+            if (EffectPhoenixWingWindBlastCheck(link, DUEL_LOC(opponent, zone)) && TryAddEffectTarget(link, opponent, zone))
+                return 1;
+        }
+        return 1;
+    }
+    switch (gChain.targetStep) {
+    case 0:
+        link->numTargets = 0;
+        TextBoxOpen(TEXTBOX_POS(6, 2), TEXTBOX_SIZE(18, 7), TEXTBOX_FLAGS_DEFAULT, sStrPhoenixWingPick);
+        gChain.targetStep++;
+        return 0;
+    default:
+        if (gMain.newKeys & B_BUTTON) {
+            gChain.targetStep = 0;
+            return 0;
+        }
+        if (DuelCursor_PickTarget(PHOENIX_WING_PICK) != 0) {
+            int pickPlayer = gDuelScreen.selPlayer;
+            int pickZone = gDuelScreen.selArea + gDuelScreen.selIndex;
+
+            if (EffectPhoenixWingWindBlastCheck(link, DUEL_LOC(pickPlayer, pickZone))
+                && TryAddEffectTarget(link, pickPlayer, pickZone))
+                return 1;
+            PlaySE(SE_ERROR);
+        }
+        return 0;
+    }
+}
+
+int EffectPhoenixWingWindBlastResolve(struct ChainEntry *link, struct ChainEntry *chainedTo)
+{
+    if (!link->negated && link->numTargets == 1) {
+        int player = (u8)link->targets[0];
+        int zone = link->targets[0] >> 8;
+
+        if (DUEL_CARD_ID(&ZoneOf(player, zone)->card) != 0)
+            ReturnFieldCardToDeck(player, zone);
+    }
+    return EFFECT_STEP_DONE;
+}
+#endif /* HAS_CARD_PHOENIX_WING_WIND_BLAST */
+
 #ifdef HAS_CARD_METAMORPHOSIS
 /* ---- Metamorphosis -------------------------------------------------------------------------------------------------
  * Normal Spell: "Tribute 1 monster. Special Summon 1 Fusion Monster from your Extra Deck with the same Level as the
@@ -1268,6 +1367,16 @@ const struct CardEffect gAddedCardEffects[] = {
         EffectBlackLusterSoldierPrepare,
         NULL,
         EffectBlackLusterSoldierChainB,
+    },
+#endif
+#ifdef HAS_CARD_PHOENIX_WING_WIND_BLAST
+    {
+        CARD_PHOENIX_WING_WIND_BLAST, 0,
+        EffectPhoenixWingWindBlastResolve,
+        EffectPhoenixWingWindBlastCheck,
+        EffectPhoenixWingWindBlastPrepare,
+        EffectPhoenixWingWindBlastChainA,
+        EffectPhoenixWingWindBlastChainB,
     },
 #endif
 #ifdef HAS_CARD_METAMORPHOSIS

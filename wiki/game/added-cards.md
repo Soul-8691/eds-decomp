@@ -211,6 +211,20 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
 - `HasFlipEffect` (card_detail.c).
 - Checked in the source; not tested in an emulator.
 
+### Phoenix Wing Wind Blast (2026-10-25)
+- Normal Spell: "Discard 1 card, then target 1 card your opponent controls; place that target on the top of the
+  Deck."
+- **Prepare:** a card to discard (2 in hand when played from the hand), and a card the opponent controls that it may
+  target.
+- **ChainA:** the discard cost `DuelPrompt_PostDiscardCost`, as for Raigeki Break and Tribe-Infecting Virus.
+- **ChainB** (`EffectPhoenixWingWindBlastChainB`): a cursor pick among the opponent's monster, Spell/Trap and Field
+  zones (`PICK_PLAYER1(...)`, `EffectPhoenixWingWindBlastCheck`). The CPU takes the human's strongest monster, else
+  their first card. Unlike Raigeki Break's ChainB it does not call `CanActivateEffect` again: the discard is paid by
+  then, and the hand count of the prepare could fail.
+- **Resolve:** `ReturnFieldCardToDeck`, which puts the card on top of its owner's Deck. A Fusion Monster goes to the
+  Fusion Deck and a token is destroyed, the game's own rules for that command.
+- Checked in the source and the build; not tested in an emulator.
+
 ### Thousand-Eyes Restrict and Thousand-Eyes Idol (2026-10-25)
 - **The engine already has the card.** Effect key 1334 (no EDS card) is the old Thousand-Eyes Restrict of the engine
   EDS was built on, and the game still carries all of it:
