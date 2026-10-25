@@ -1059,6 +1059,10 @@ updated: 2026-09-29
   battle win / destroyed defender.
 - Pages: [[added-cards]].
 
+## [2026-10-25] progress | Raigeki Break
+- Normal Trap: discard 1 (`EffectRaigekiBreakChainA`), target any field card, `EffectDestroyTargetResolve`.
+- Pages: [[added-cards]].
+
 ## [2026-10-25] progress | Blade Knight flip negation (card id)
 - `IsBladeKnightCard` matches card number or name; negation uses `gDuel.turnPlayer`, `battleValue` win test, flip
   target id match (ROM list: `config/new_cards.txt` only).

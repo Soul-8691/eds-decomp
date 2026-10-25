@@ -203,6 +203,17 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
 - Continuous links (Spellbinding Circle, Call of the Haunted) stay, as in the real rules.
 - Checked in the source and the build; not tested in an emulator.
 
+### Raigeki Break (2026-10-25)
+"Discard 1 card, then target 1 card on the field; destroy it." Normal Trap (`gAddedCardEffects` row in
+`added_effects.c`).
+- **Prepare:** at least `1 + fromHand` cards in hand (one to discard; from hand, the trap itself counts toward
+  `fromHand`), another card on the field that `CanCardTargetZone` allows (monsters and Spell/Trap/Field zones).
+- **Cost (chainA):** `DuelPrompt_PostDiscardCost` for 1 card (same as Tribe-Infecting Virus / Magic Jammer).
+- **Target (chainB):** any occupied zone on either side; human cursor `PICK_ANY_MONSTER | PICK_ANY_SPELL_TRAP`;
+  prompt `gStrDesignateFirstCardToDestroy` (Greenkappa's "card" wording, not monster-only text).
+- **Resolve:** `EffectDestroyTargetResolve`.
+- Checked in the source; not tested in an emulator.
+
 ### Reinforcement of the Army (2026-10-25)
 - Normal Spell: "Add 1 Level 4 or lower Warrior monster from your Deck to your hand." The resolve is Sangan's own
   `EffectSanganResolve`, which is generic: it lists `CollectEffectTargets` for the card number, lets the human pick

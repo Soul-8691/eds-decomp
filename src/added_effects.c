@@ -29,6 +29,8 @@
 #include "sound.h"
 #include "constants/sound.h"
 #include "battle.h"
+#include "main.h"                   /* gMain.newKeys */
+#include "duel_screen.h"            /* DuelCursor_PickTarget, gDuelScreen */
 
 /* ---- Spell Counters ----------------------------------------------------------------------------------------
  * A Spell Counter on a monster is a ZONE_LINK_ATK_300_PER_VALUE link from the monster's own card ID: the link's
@@ -429,6 +431,118 @@ int EffectTrapDustshootResolve(struct ChainEntry *link, struct ChainEntry *chain
     return EFFECT_STEP_END;
 }
 #endif /* HAS_CARD_TRAP_DUSTSHOOT */
+
+#ifdef HAS_CARD_RAIGEKI_BREAK
+/* ---- Raigeki Break -------------------------------------------------------------------------------------------
+ * "Discard 1 card, then target 1 card on the field; destroy it."
+ * Normal Trap from the field (or hand): discard cost like Tribe-Infecting Virus / Magic Jammer
+ * (DuelPrompt_PostDiscardCost), target any card on either side (monsters and Spell/Trap zones, CanCardTargetZone),
+ * destroy with EffectDestroyTargetResolve. */
+
+extern const u8 gStrDesignateFirstCardToDestroy[];      /* Greenkappa: any card on the field */
+
+#define RAIGEKI_BREAK_POS(player, zone) ((u8)(player) | ((u8)(zone) << 8))
+#define RAIGEKI_BREAK_PICK (PICK_BOTH_SIDES(PICK_ANY_MONSTER | PICK_ANY_SPELL_TRAP))
+
+static int RaigekiBreakHasTarget(struct ChainEntry *card)
+{
+    int player;
+    int zone;
+
+    for (player = 0; player <= 1; player++) {
+        for (zone = 0; zone <= ZONE_FIELD; zone++) {
+            if (EffectRaigekiBreakCheck(card, RAIGEKI_BREAK_POS(player, zone)))
+                return 1;
+        }
+    }
+    return 0;
+}
+
+int EffectRaigekiBreakPrepare(struct ChainEntry *card, struct ChainEntry *chainLink, u16 fromHand)
+{
+    if (chainLink != NULL)
+        return 0;
+    if (gDuelPlayers[card->player & 1].handCount < 1 + fromHand)
+        return 0;
+    return RaigekiBreakHasTarget(card);
+}
+
+u16 EffectRaigekiBreakCheck(struct ChainEntry *card, u16 pos)
+{
+    int player = (u8)pos;
+    int zone = pos >> 8;
+    struct DuelZone *target;
+
+    if (!CanCardTargetZone(card->card, player, zone))
+        return 0;
+    if (zone <= ZONE_MONSTER_4) {
+        target = ZoneOf(player, zone);
+        return DUEL_CARD_ID(&target->card) != 0;
+    }
+    if (zone >= ZONE_SPELL_0 && zone <= ZONE_FIELD) {
+        target = ZoneOf(player, zone);
+        return DUEL_CARD_ID(&target->card) != 0;
+    }
+    return 0;
+}
+
+int EffectRaigekiBreakChainA(struct ChainEntry *link, struct ChainEntry *prevLink)
+{
+    DuelPrompt_PostDiscardCost(link->player, 1, 0, 0);
+    return 1;
+}
+
+int EffectRaigekiBreakChainB(struct ChainEntry *link, struct ChainEntry *prevLink)
+{
+    if (link->player) {
+        int player;
+        int zone;
+
+        link->numTargets = 0;
+        if (CanActivateEffect(link, prevLink, 0) == 0)
+            return 1;
+        for (player = 0; player <= 1; player++) {
+            for (zone = 0; zone <= ZONE_FIELD; zone++) {
+                if (EffectRaigekiBreakCheck(link, RAIGEKI_BREAK_POS(player, zone))) {
+                    if (TryAddEffectTarget(link, player, zone) != 0)
+                        return 1;
+                }
+            }
+        }
+        return 1;
+    }
+    switch (gChain.targetStep) {
+    case 0:
+        link->numTargets = 0;
+        if (CanActivateEffect(link, prevLink, 0) == 0)
+            return 1;
+        TextBoxOpen(0x206, 0x712, TEXTBOX_FLAGS_DEFAULT, gStrDesignateFirstCardToDestroy);
+        gChain.targetStep++;
+        return 0;
+    default:
+        if (gMain.newKeys & B_BUTTON) {
+            gChain.targetStep = 0;
+            return 0;
+        }
+        if (DuelCursor_PickTarget(RAIGEKI_BREAK_PICK) != 0) {
+            int pickPlayer = gDuelScreen.selPlayer;
+            int pickZone = gDuelScreen.selArea + gDuelScreen.selIndex;
+
+            if (EffectRaigekiBreakCheck(link, RAIGEKI_BREAK_POS(pickPlayer, pickZone))) {
+                if (TryAddEffectTarget(link, pickPlayer, pickZone) != 0)
+                    return 1;
+            }
+            PlaySE(SE_ERROR);
+        }
+        return 0;
+    }
+}
+
+int EffectRaigekiBreakResolve(struct ChainEntry *link, struct ChainEntry *chainedTo)
+{
+    return EffectDestroyTargetResolve(link);
+}
+#endif /* HAS_CARD_RAIGEKI_BREAK */
 
 #ifdef HAS_CARD_DEKOICHI_THE_BATTLECHANTED_LOCOMOTIVE
 /* ---- Dekoichi the Battlechanted Locomotive --------------------------------------------------------------------
@@ -957,6 +1071,16 @@ const struct CardEffect gAddedCardEffects[] = {
         EffectTrapDustshootPrepare,
         NULL,
         NULL,
+    },
+#endif
+#ifdef HAS_CARD_RAIGEKI_BREAK
+    {
+        CARD_RAIGEKI_BREAK, 0,
+        EffectRaigekiBreakResolve,
+        EffectRaigekiBreakCheck,
+        EffectRaigekiBreakPrepare,
+        EffectRaigekiBreakChainA,
+        EffectRaigekiBreakChainB,
     },
 #endif
 #ifdef HAS_CARD_DEKOICHI_THE_BATTLECHANTED_LOCOMOTIVE

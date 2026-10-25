@@ -110,6 +110,12 @@ int EffectExiledForcePrepare(struct ChainEntry *card, struct ChainEntry *chainLi
 u16 EffectExiledForceCheck(struct ChainEntry *card, u16 pos);
 int EffectExiledForceChainB(struct ChainEntry *link, struct ChainEntry *prevLink);
 int EffectExiledForceResolve(struct ChainEntry *link, struct ChainEntry *chainedTo);
+/* Raigeki Break: discard 1, then destroy 1 card on the field. */
+int EffectRaigekiBreakPrepare(struct ChainEntry *card, struct ChainEntry *chainLink, u16 fromHand);
+u16 EffectRaigekiBreakCheck(struct ChainEntry *card, u16 pos);
+int EffectRaigekiBreakChainA(struct ChainEntry *link, struct ChainEntry *prevLink);
+int EffectRaigekiBreakChainB(struct ChainEntry *link, struct ChainEntry *prevLink);
+int EffectRaigekiBreakResolve(struct ChainEntry *link, struct ChainEntry *chainedTo);
 /* Tribe-Infecting Virus: discard 1, declare a type, destroy every face-up monster of it (once per turn). */
 int EffectTribeInfectingVirusPrepare(struct ChainEntry *card, struct ChainEntry *chainLink, u16 fromHand);
 int EffectTribeInfectingVirusChainA(struct ChainEntry *link, struct ChainEntry *prevLink);
