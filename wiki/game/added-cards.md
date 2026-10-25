@@ -211,6 +211,20 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
 - `HasFlipEffect` (card_detail.c).
 - Checked in the source; not tested in an emulator.
 
+### Ninja Grandmaster Sasuke (2026-10-25)
+- "If this card attacks a Defense Position monster, destroy that monster immediately with this card's effect without
+  applying damage calculation."
+- **No effect row.** `BattleStage_RevealDefender` (battle_phase1.c) calls `NinjaGrandmasterSasukeAttack` at its
+  first step, before a face-down target is flipped, so the target's flip effect does not run. For a face-up Sasuke
+  attacking a monster in Defense Position (face up or down), it does three things:
+  - pushes `DUEL_CMD_MARK_ATTACKED`, which the skipped `DAMAGE_STEP_MARK_ATTACKER` would push;
+  - shows the card and destroys the target by effect (`DestroyFieldCard` with triggers, so Sangan and Witch search;
+    `OnCardDestroyedByEffect`);
+  - sets the stage to `BATTLE_STAGE_END_ATTACK`.
+- So there is no Damage Step response window, no damage calculation, no battle damage and no "destroyed by battle"
+  effects. D.D. Warrior Lady's prompt and Black Luster Soldier's second attack are in the skipped destroy stage.
+- Checked in the source and the build; not tested in an emulator.
+
 ### Injection Fairy Lily (2026-10-25)
 - "During either player's Damage Step, when this card attacks or is attacked: You can pay 2000 LP; this card gains
   3000 ATK during the Damage Step only."

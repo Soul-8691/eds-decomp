@@ -1121,3 +1121,8 @@ updated: 2026-09-29
   2000 LP queues a 3000 ZONE_LINK_ATK_BONUS link, removed again in BattleStage_EndAttack. The state is at EWRAM
   0x0202FF00 (gInjectionFairyLily, symbols.ld).
 - Pages: [[added-cards]].
+
+## [2026-10-25] progress | Ninja Grandmaster Sasuke
+- BattleStage_RevealDefender, before the flip: Sasuke attacking a Defense Position monster marks the attack,
+  destroys the target by effect and jumps to BATTLE_STAGE_END_ATTACK (NinjaGrandmasterSasukeAttack).
+- Pages: [[added-cards]].

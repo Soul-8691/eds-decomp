@@ -89,6 +89,9 @@ void DetachRevivingCards(int player, int zone);
  * removal of its 3000 ATK after the battle (BattleStage_EndAttack). */
 void InjectionFairyLilyResetBattle(void);
 int InjectionFairyLilyDamageStep(int player);
+/* Ninja Grandmaster Sasuke (src/added_effects.c): attacking a Defense Position monster destroys it before the Damage
+ * Step (BattleStage_RevealDefender); 1 if it did, and the battle went on to BATTLE_STAGE_END_ATTACK. */
+int NinjaGrandmasterSasukeAttack(int player);
 void InjectionFairyLilyEndAttack(int player);
 /* Night Assailant (src/added_effects.c): its discard effect's targets, and the trigger DiscardHandCard queues. */
 int IsNightAssailantTarget(u16 id);

@@ -415,6 +415,11 @@ int BattleStage_RevealDefender(int player)
 
     if (BATTLE_BYTES.direct)
         return 1;
+#ifdef HAS_CARD_NINJA_GRANDMASTER_SASUKE
+    /* added card: it destroys a Defense Position target before it is flipped (src/added_effects.c) */
+    if (gDuelBattleStep.step == REVEAL_STEP_FLIP && NinjaGrandmasterSasukeAttack(player))
+        return 0;
+#endif
     e = (u8 *)&gDuel;
     switch (gDuelBattleStep.step) {
     case REVEAL_STEP_FLIP: {

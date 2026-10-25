@@ -778,6 +778,38 @@ void EndPhase_ReturnTsukuyomi(int player)
 }
 #endif /* HAS_CARD_TSUKUYOMI */
 
+#ifdef HAS_CARD_NINJA_GRANDMASTER_SASUKE
+/* ---- Ninja Grandmaster Sasuke --------------------------------------------------------------------------------------
+ * "If this card attacks a Defense Position monster, destroy that monster immediately with this card's effect without
+ * applying damage calculation."
+ * No effect row: BattleStage_RevealDefender (battle_phase1.c) calls this before it flips the target, so a face-down
+ * target is destroyed without being flipped (no flip effect). The attack is marked as made (DUEL_CMD_MARK_ATTACKED,
+ * as the Damage Step would), the target is destroyed by the card's effect (DestroyFieldCard with its Graveyard
+ * triggers, OnCardDestroyedByEffect), and the battle jumps to BATTLE_STAGE_END_ATTACK: no damage calculation, no
+ * battle damage, no "destroyed by battle" effects. */
+int NinjaGrandmasterSasukeAttack(int player)
+{
+    struct DuelZone *attacker = ZoneOf(player, gBattle.atkSlot);
+    struct DuelZone *target;
+    int opponent = 1 - player;
+    u16 id = DUEL_CARD_ID(&attacker->card);
+
+    if (gBattle.direct || id == 0 || !attacker->isFaceUp
+        || ((const u16 *)CARD_ID_TO_NUMBER_ADDR)[id & CARD_ID_MASK] != CARD_NINJA_GRANDMASTER_SASUKE)
+        return 0;
+    target = ZoneOf(opponent, gBattle.defSlot);
+    if (DUEL_CARD_ID(&target->card) == 0 || !target->isDefense)
+        return 0;
+    DuelCmd_Push(player ? DUEL_CMD_PLAYER | DUEL_CMD_MARK_ATTACKED : DUEL_CMD_MARK_ATTACKED, gBattle.atkSlot, 1, 0);
+    ShowCardEffect(player, id);
+    DestroyFieldCard(opponent, gBattle.defSlot, 1);
+    OnCardDestroyedByEffect(player, opponent, gBattle.defSlot);
+    gDuel.battleStage = BATTLE_STAGE_END_ATTACK;
+    gDuel.battleStep = 0;
+    return 1;
+}
+#endif /* HAS_CARD_NINJA_GRANDMASTER_SASUKE */
+
 #ifdef HAS_CARD_INJECTION_FAIRY_LILY
 /* ---- Injection Fairy Lily ------------------------------------------------------------------------------------------
  * "During either player's Damage Step, when this card attacks or is attacked: You can pay 2000 LP; this card gains
