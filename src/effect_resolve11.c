@@ -190,7 +190,7 @@ int EffectBanishOpponentGraveMonstersResolve(struct ChainEntry *link)
         case EFFECT_STEP_2:
             if (gChain.effectSubStep == 0)
                 return EFFECT_STEP_DONE;
-            if (CollectEffectTargetsInt(link->player, CARD_1511, 0) == 0)
+            if (CollectEffectTargetsInt(link->player, CARD_NUMBER(link->card), 0) == 0)
                 return EFFECT_STEP_DONE;
             TextBoxOpen(TEXTBOX_XY(6, 2), TEXTBOX_XY(18, 7), TEXTBOX_FLAGS_DEFAULT,
                         gChain.effectSubStep == 2 ? gStrBanishOpponentGraveMonsterQuestion

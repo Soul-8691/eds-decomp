@@ -260,7 +260,7 @@ int EffectMonsterRebornPrepare(struct ChainEntry *card, int chainLink, int fromH
  */
 int EffectGravediggerGhoulPrepare(struct ChainEntry *card)
 {
-    if (CountActiveCardsOnField(1 - card->player, CARD_1511) > 0)
+    if (CountActiveKycooOnField(1 - card->player) > 0)
         return 0;
     return CollectEffectTargetsInt(card->player, CARD_NUMBER(card->card), 0) > 0;
 }
@@ -418,7 +418,7 @@ int EffectTributeToTheDoomedPrepare(struct ChainEntry *card)
 /* Soul Release: key 1511 not in effect on the opponent's side, and either graveyard holds a card. */
 int EffectSoulReleasePrepare(struct ChainEntry *card)
 {
-    if (CountActiveCardsOnField(1 - card->player, CARD_1511) > 0)
+    if (CountActiveKycooOnField(1 - card->player) > 0)
         return 0;
     if (gDuelPlayers[0].graveCount == 0 && gDuelPlayers[1].graveCount == 0)
         return 0;

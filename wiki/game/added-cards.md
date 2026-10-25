@@ -283,6 +283,24 @@ position menu; the CPU uses `AiShouldSetMonster`) and a shuffle. The other users
 keep Attack Position. Its `CollectEffectTargets` case lists deck monsters whose name
 starts with "Gravekeeper's" (`IsGravekeeperMonster`), with ATK 1500 or less, excluding Fusion and Ritual monsters.
 
+### Kycoo the Ghost Destroyer (2026-10-25)
+"When this card inflicts Battle Damage to your opponent's Life Points, you can remove from play up to 2 Monster
+Cards from your opponent's Graveyard." The original duel code already models this as effect key **`CARD_1511`**
+(`EffectBanishOpponentGraveMonstersResolve`, battle-damage pending triggers in `BattleStage_InflictDamage`).
+The added card reuses that resolve handler and the same `CollectEffectTargets` body (opponent's graveyard
+monsters).
+- **Row** (`gAddedCardEffects`): `CARD_KYCOO_THE_GHOST_DESTROYER`, resolve
+  `EffectBanishOpponentGraveMonstersResolve`, prepare `EffectKycooTheGhostDestroyerPrepare` (battle damage to the
+  opponent and at least one valid graveyard target).
+- **Battle hooks:** `battle_phase2.c` queues the same pending triggers as `CARD_1511` when Kycoo inflicts battle
+  damage (direct or deflected).
+- **Graveyard lock:** `CountActiveKycooOnField` counts face-up `CARD_1511` and `CARD_KYCOO_THE_GHOST_DESTROYER`;
+  Gravedigger Ghoul, Soul Release, key 1532 and banish-from-grave Special Summon costs use it instead of testing
+  only `CARD_1511`.
+- **Resolve target list:** `EffectBanishOpponentGraveMonstersResolve` asks `CollectEffectTargets` with
+  `CARD_NUMBER(link->card)` so the added card and key 1511 share one implementation.
+- Checked in the source; not tested in an emulator.
+
 ### Torrential Tribute (2026-10-25)
 A Normal Trap for the response window a summon opens: Normal, Flip or Special Summon by either player (not a Set),
 with the summoned monster at `loc0`, like Trap Hole's prepare but for any monster. It resolves with Dark Hole's

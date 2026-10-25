@@ -302,7 +302,7 @@ int CanPayBanishSummonCost(int player, u16 cardId)
     /* FAKEMATCH: retain the initialized attribute across the opponent-card test. */
     asm("" : "+r"(attribute));
     fromField = gDuelPlayers[player & 1].banishCostFromField;
-    if (CountActiveCardsOnField(1 - player, CARD_1511) > 0 && fromField == 0)
+    if (CountActiveKycooOnField(1 - player) > 0 && fromField == 0)
         return 0;
     switch (CARD_NUMBER_C(cardId)) {
     case CARD_1514:

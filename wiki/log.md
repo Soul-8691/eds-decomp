@@ -1040,3 +1040,8 @@ updated: 2026-09-29
 - In Magical Hats' resolve, after the hidden monster gets its links back, QueueRemoveZoneLink drops its
   ZONE_LINK_ATK_300_PER_VALUE link (unless Light of Intervention keeps the hats face up).
 - Pages: [[added-cards]].
+
+## [2026-10-25] progress | Kycoo the Ghost Destroyer
+- Added card effect row reuses key 1511 resolve and battle-damage triggers; CountActiveKycooOnField for the
+  graveyard-banish lock; CollectEffectTargets and resolve use CARD_NUMBER(link->card).
+- Pages: [[added-cards]].

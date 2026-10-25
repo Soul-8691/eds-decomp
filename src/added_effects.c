@@ -688,6 +688,43 @@ int EffectExiledForceResolve(struct ChainEntry *link, struct ChainEntry *chained
 }
 #endif /* HAS_CARD_EXILED_FORCE */
 
+/* ---- Kycoo the Ghost Destroyer -------------------------------------------------------------------------------
+ * Reuses effect key 1511's handlers (EffectBanishOpponentGraveMonstersResolve, battle damage triggers in
+ * battle_phase2.c). While face up, it blocks graveyard banish effects the same way CARD_1511 does. */
+
+#define ENTRY_EVENT_BYTE(entry) (((u8 *)(entry))[3] >> 2)
+#define LOC1_LOW_BYTE(entry) (((u8 *)(entry))[8])
+
+int CollectEffectTargetsInt(int player, int cardNumber, int param) asm("CollectEffectTargets");
+
+int CountActiveKycooOnField(int player)
+{
+    int n = CountActiveCardsOnField(player, CARD_1511);
+
+#ifdef HAS_CARD_KYCOO_THE_GHOST_DESTROYER
+    n += CountActiveCardsOnField(player, CARD_KYCOO_THE_GHOST_DESTROYER);
+#endif
+    return n;
+}
+
+#ifdef HAS_CARD_KYCOO_THE_GHOST_DESTROYER
+/* Optional trigger after battle damage: the opponent took damage and has a monster in the Graveyard. */
+int EffectKycooTheGhostDestroyerPrepare(struct ChainEntry *card, struct ChainEntry *chainLink, u16 fromHand)
+{
+    if (fromHand != 0 || chainLink != NULL)
+        return 0;
+    switch (ENTRY_EVENT_BYTE(card)) {
+    case RESPONSE_BATTLE_DAMAGE:
+    case RESPONSE_BATTLE_DEFLECTED_DAMAGE:
+        if ((LOC1_LOW_BYTE(card) & 0xF) == card->player)
+            return 0;
+        return CollectEffectTargetsInt(card->player, CARD_KYCOO_THE_GHOST_DESTROYER, 0) > 0;
+    default:
+        return 0;
+    }
+}
+#endif /* HAS_CARD_KYCOO_THE_GHOST_DESTROYER */
+
 /* ---- "Gravekeeper's" cards -----------------------------------------------------------------------------------
  * 1 if the card's name starts with "Gravekeeper's" (the archetype the Gravekeeper's cards refer to). */
 static const char sGravekeeperPrefix[] = "Gravekeeper's";
@@ -794,6 +831,16 @@ const struct CardEffect gAddedCardEffects[] = {
         EffectExiledForcePrepare,
         NULL,
         EffectExiledForceChainB,
+    },
+#endif
+#ifdef HAS_CARD_KYCOO_THE_GHOST_DESTROYER
+    {
+        CARD_KYCOO_THE_GHOST_DESTROYER, 0,
+        (int (*)(struct ChainEntry *, struct ChainEntry *))EffectBanishOpponentGraveMonstersResolve,
+        NULL,
+        EffectKycooTheGhostDestroyerPrepare,
+        NULL,
+        NULL,
     },
 #endif
 #ifdef HAS_CARD_CHAOS_SORCERER

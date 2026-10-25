@@ -992,6 +992,9 @@ u16 CollectEffectTargets(int player, u16 cardNumber, int param)
         break;
     }
     case CARD_1511:
+#ifdef HAS_CARD_KYCOO_THE_GHOST_DESTROYER
+    case CARD_KYCOO_THE_GHOST_DESTROYER:
+#endif
     {
         /* Monsters in the opponent's graveyard. */
         u32 *word;

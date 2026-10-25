@@ -299,7 +299,7 @@ int EffectBanishGraveToDestroyPrepare(struct ChainEntry *card, struct ChainEntry
 
     if (fromHand != 0 || chainLink != NULL)
         return 0;
-    if (CountActiveCardsOnField(1 - card->player, CARD_1511) > 0)
+    if (CountActiveKycooOnField(1 - card->player) > 0)
         return 0;
     graveMonsters = CountGraveyardMonsters(card->player);
     if (graveMonsters == 0)
