@@ -23,9 +23,10 @@ Custom EDOPRO cards from historical formats
 Make sure all cards are early version effects in the ROM
 Duelist Point (DP) system
 Start out with 5000 DP
-Cards are from 10-1000 DP
+Cards are from 10-1000 DP (all are 500 DP at beginning)
 Buy packs with DP (all are 1000 DP at beginning)
 Packs are by attribute/race/spells/traps/ocg/tcg
 Rank cards
 Price cards
 Price packs
+Unlock one format at a time
