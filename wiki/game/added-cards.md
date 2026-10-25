@@ -188,6 +188,15 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
   `EffectTargetableFaceUpMonsterChainB`) and banishes it; Chaos Sorcerer cannot attack that turn
   (`EffectBanishTargetNoAttackResolve`, shared with BLS's banish effect).
 
+### Card Destruction (2026-10-25)
+- Normal Spell: "Both players discard as many cards as possible from their hands, then each player draws the same
+  number of cards they discarded." `EffectCardDestructionResolve`; no prepare, so it activates like Pot of Greed.
+- Each hand (the activating player's first) goes through `DiscardHandCard` by index. The "compact the hand" operand
+  is set only on the last card, so the indices stay valid. The discard triggers therefore run: Night Assailant, and
+  Electric Snake and Minar for the opponent's hand (`byOpponentEffect` set). Then each player draws their count; a
+  CPU with too short a deck decks out (player 0 cannot).
+- Checked in the source and the build; not tested in an emulator.
+
 ### Jar of Greed (2026-10-25)
 - Normal Trap, "Draw 1 card." `EffectJarOfGreedResolve` (DrawCards 1, unless negated). The row has no prepare or
   check, like Gift of the Mystical Elf's, so `CanActivateEffect` passes it: a Set Jar of Greed can be activated in
@@ -206,8 +215,7 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
   using `IsNightAssailantTarget`). It resolves with `EffectMaskOfDarknessResolve`. The CPU's pick is
   `AiPickCardListEntry`'s default (best ATK+DEF).
 - **"Flip monster"** means a monster that `HasFlipEffect(number, 0)` lists, i.e. the flip effects the game codes.
-- **Covered:** every `DiscardHandCard` caller (discard costs, Card Destruction-style effects, the end-of-turn
-  hand-size discard). **Not covered:** a Night Assailant sent from the hand as a Fusion material
+- **Covered:** every `DiscardHandCard` caller (discard costs, Card Destruction, the end-of-turn hand-size discard). **Not covered:** a Night Assailant sent from the hand as a Fusion material
   (`DUEL_CMD_SEND_HAND_FUSION_MATERIAL_TO_GRAVEYARD` in effect_fusion.c), and the direct
   `DUEL_CMD_SEND_HAND_CARD_TO_GRAVEYARD` pushes in duel_card_actions.c (Crush Card on draw) and duel_ritual.c.
 - Checked in the source and the build; not tested in an emulator.

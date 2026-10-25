@@ -447,6 +447,35 @@ int EffectDekoichiResolve(struct ChainEntry *link, struct ChainEntry *chainedTo)
 }
 #endif /* HAS_CARD_DEKOICHI_THE_BATTLECHANTED_LOCOMOTIVE */
 
+#ifdef HAS_CARD_CARD_DESTRUCTION
+/* ---- Card Destruction ----------------------------------------------------------------------------------------------
+ * Normal Spell: "Both players discard as many cards as possible from their hands, then each player draws the same
+ * number of cards they discarded." No prepare: it may be activated like Pot of Greed. Each hand is discarded through
+ * DiscardHandCard by index, with the hand compacted only after its last card (the indices stay valid until then), so
+ * the discard triggers run (Night Assailant; Electric Snake and Minar for the opponent's hand, discarded by an
+ * opponent's effect). Then the draws: a player whose deck runs out decks out as usual (player 0 cannot). */
+int EffectCardDestructionResolve(struct ChainEntry *link, struct ChainEntry *chainedTo)
+{
+    int counts[2];
+    int side, player, i;
+
+    if (link->negated)
+        return EFFECT_STEP_DONE;
+    for (side = 0; side <= 1; side++) {
+        player = side ? 1 - link->player : link->player;
+        counts[side] = gDuelPlayers[player & 1].handCount;
+        for (i = 0; i < counts[side]; i++)
+            DiscardHandCard(player, i, side, i == counts[side] - 1);
+    }
+    for (side = 0; side <= 1; side++) {
+        player = side ? 1 - link->player : link->player;
+        if (counts[side] > 0)
+            DrawCards(player, counts[side]);
+    }
+    return EFFECT_STEP_DONE;
+}
+#endif /* HAS_CARD_CARD_DESTRUCTION */
+
 #ifdef HAS_CARD_JAR_OF_GREED
 /* ---- Jar of Greed --------------------------------------------------------------------------------------------------
  * Normal Trap: "Draw 1 card." A row with no prepare or check, like Gift of the Mystical Elf's: CanActivateEffect
@@ -628,6 +657,16 @@ const struct CardEffect gAddedCardEffects[] = {
         EffectBlackLusterSoldierPrepare,
         NULL,
         EffectBlackLusterSoldierChainB,
+    },
+#endif
+#ifdef HAS_CARD_CARD_DESTRUCTION
+    {
+        CARD_CARD_DESTRUCTION, 0,
+        EffectCardDestructionResolve,
+        NULL,
+        NULL,
+        NULL,
+        NULL,
     },
 #endif
 #ifdef HAS_CARD_JAR_OF_GREED

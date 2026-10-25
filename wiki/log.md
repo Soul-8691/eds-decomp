@@ -1019,3 +1019,8 @@ updated: 2026-09-29
 ## [2026-10-25] progress | Jar of Greed
 - Normal Trap, draw 1: EffectJarOfGreedResolve, with no prepare or check (as Gift of the Mystical Elf's row).
 - Pages: [[added-cards]].
+
+## [2026-10-25] progress | Card Destruction
+- Normal Spell: EffectCardDestructionResolve discards both hands through DiscardHandCard (with the triggers), then
+  each player draws as many cards as they discarded.
+- Pages: [[added-cards]].

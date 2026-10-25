@@ -99,6 +99,7 @@ int EffectBlackLusterSoldierResolve(struct ChainEntry *link, struct ChainEntry *
 int EffectBanishTargetNoAttackResolve(struct ChainEntry *link, struct ChainEntry *chainedTo);
 /* Chaos Sorcerer: banish a face-up monster (Main Phase, once per turn). */
 int EffectChaosSorcererPrepare(struct ChainEntry *card, struct ChainEntry *chainLink, u16 fromHand);
+int EffectCardDestructionResolve(struct ChainEntry *link, struct ChainEntry *chainedTo);
 int EffectJarOfGreedResolve(struct ChainEntry *link, struct ChainEntry *chainedTo);
 u16 EffectNightAssailantCheck(struct ChainEntry *card, u16 pos);
 int EffectNightAssailantChainB(struct ChainEntry *link, struct ChainEntry *prevLink);
