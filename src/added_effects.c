@@ -447,6 +447,34 @@ int EffectDekoichiResolve(struct ChainEntry *link, struct ChainEntry *chainedTo)
 }
 #endif /* HAS_CARD_DEKOICHI_THE_BATTLECHANTED_LOCOMOTIVE */
 
+#ifdef HAS_CARD_REINFORCEMENT_OF_THE_ARMY
+/* ---- Reinforcement of the Army -----------------------------------------------------------------------------------
+ * Normal Spell: "Add 1 Level 4 or lower Warrior monster from your Deck to your hand."
+ * Sangan's resolve (EffectSanganResolve) does the search: it lists CollectEffectTargets (effect_target_collect.c:
+ * IsReinforcementTarget) for the card number, lets the human pick (the CPU: AiPickCardListEntry), adds the card and
+ * shuffles. The prepare handler needs such a monster in the deck, so the Spell is not wasted. */
+
+/* 1 if card `id` is a Level 4 or lower Warrior monster. */
+int IsReinforcementTarget(u16 id)
+{
+    u32 stats = gCardStats[id & CARD_ID_MASK];
+
+    return CARD_STATS_TYPE(stats) == CARD_TYPE_WARRIOR && CARD_STATS_LEVEL(stats) <= 4;
+}
+
+int EffectReinforcementOfTheArmyPrepare(struct ChainEntry *card, struct ChainEntry *chainLink, u16 fromHand)
+{
+    struct DuelPlayer *p = &gDuelPlayers[card->player & 1];
+    int i;
+
+    for (i = 0; i < p->deckCount; i++) {
+        if (IsReinforcementTarget(DUEL_CARD_ID(&p->deck[i])))
+            return 1;
+    }
+    return 0;
+}
+#endif /* HAS_CARD_REINFORCEMENT_OF_THE_ARMY */
+
 #ifdef HAS_CARD_CARD_DESTRUCTION
 /* ---- Card Destruction ----------------------------------------------------------------------------------------------
  * Normal Spell: "Both players discard as many cards as possible from their hands, then each player draws the same
@@ -657,6 +685,16 @@ const struct CardEffect gAddedCardEffects[] = {
         EffectBlackLusterSoldierPrepare,
         NULL,
         EffectBlackLusterSoldierChainB,
+    },
+#endif
+#ifdef HAS_CARD_REINFORCEMENT_OF_THE_ARMY
+    {
+        CARD_REINFORCEMENT_OF_THE_ARMY, 0,
+        (int (*)(struct ChainEntry *, struct ChainEntry *))EffectSanganResolve,
+        NULL,
+        EffectReinforcementOfTheArmyPrepare,
+        NULL,
+        NULL,
     },
 #endif
 #ifdef HAS_CARD_CARD_DESTRUCTION

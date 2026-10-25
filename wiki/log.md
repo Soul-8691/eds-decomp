@@ -1024,3 +1024,8 @@ updated: 2026-09-29
 - Normal Spell: EffectCardDestructionResolve discards both hands through DiscardHandCard (with the triggers), then
   each player draws as many cards as they discarded.
 - Pages: [[added-cards]].
+
+## [2026-10-25] progress | Reinforcement of the Army
+- Normal Spell: the search is Sangan's EffectSanganResolve, with a CollectEffectTargets case for Level 4 or lower
+  deck Warriors (IsReinforcementTarget). The prepare needs one in the deck.
+- Pages: [[added-cards]].

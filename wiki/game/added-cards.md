@@ -188,6 +188,14 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
   `EffectTargetableFaceUpMonsterChainB`) and banishes it; Chaos Sorcerer cannot attack that turn
   (`EffectBanishTargetNoAttackResolve`, shared with BLS's banish effect).
 
+### Reinforcement of the Army (2026-10-25)
+- Normal Spell: "Add 1 Level 4 or lower Warrior monster from your Deck to your hand." The resolve is Sangan's own
+  `EffectSanganResolve`, which is generic: it lists `CollectEffectTargets` for the card number, lets the human pick
+  in the card-list viewer (the CPU: `AiPickCardListEntry`'s best ATK+DEF), adds the card and shuffles the deck.
+- The list is a `CollectEffectTargets` case using `IsReinforcementTarget` (type Warrior, Level 4 or lower; Ritual
+  Warriors count). `EffectReinforcementOfTheArmyPrepare` needs one in the deck, so the Spell cannot be wasted.
+- Checked in the source and the build; not tested in an emulator.
+
 ### Card Destruction (2026-10-25)
 - Normal Spell: "Both players discard as many cards as possible from their hands, then each player draws the same
   number of cards they discarded." `EffectCardDestructionResolve`; no prepare, so it activates like Pot of Greed.

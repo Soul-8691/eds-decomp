@@ -738,6 +738,15 @@ u16 CollectEffectTargets(int player, u16 cardNumber, int param)
         }
         break;
     }
+#ifdef HAS_CARD_REINFORCEMENT_OF_THE_ARMY
+    case CARD_REINFORCEMENT_OF_THE_ARMY:
+        /* Added card: deck Warrior monsters of Level 4 or lower. */
+        for (i = 0; i < PLAYER(player).deckCount; i++) {
+            if (IsReinforcementTarget(CARD_ID(*PILE_WORD_FLAT(gDuelDecks, i, player))))
+                ADD_TARGET_DOWHILE(PLAYER(player).deck[i], CARDLIST_SRC_DECK);
+        }
+        break;
+#endif
 #ifdef HAS_CARD_NIGHT_ASSAILANT
     case CARD_NIGHT_ASSAILANT:
         /* Added card: Graveyard Flip monsters other than Night Assailant. */
