@@ -977,3 +977,12 @@ updated: 2026-09-29
 - `src/added_effects.c`: flip effect (HasFlipEffect): DrawCards 1, plus CountMonstersByNumber of Bokoichi the
   Freightening Car when that card is in the list (HAS_ guard; it is not, so Dekoichi draws 1).
 - Pages: [[added-cards]].
+
+## [2026-10-25] progress | Chaos Sorcerer
+- Shares BLS - Envoy of the Beginning's summon (banish 1 LIGHT + 1 DARK from the GY) through
+  HAS_LIGHT_DARK_BANISH_SUMMON (global.h): IsSpecialSummonOnly, CanSummonFromHand (CanPayLightDarkBanishCost), the
+  SUMMON_STEP_BLS_* steps, the CollectEffectTargets case (LightDarkBanishAttribute).
+- Effect: Main Phase menu (CanActivateMonsterEffect), once per turn (DuelCmd_TurnStart re-arm): face-up target
+  (EffectTargetableFaceUpMonsterCheck / ChainB), EffectBanishTargetNoAttackResolve, which is now also BLS's banish
+  effect.
+- Pages: [[added-cards]].

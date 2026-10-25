@@ -165,6 +165,14 @@ bits. They keep those bits as their low bits and have high bits in the bytes the
 rewritten), Deck Edit (cards, list, prohibit, stats, widgets, filter steps), booster code, the debug give-all. Saves
 from the original game load unchanged; the format is a superset.
 
+### Chaos Sorcerer (2026-10-25)
+- **Summon.** The same as Black Luster Soldier - Envoy of the Beginning's: Special Summon only, banishing 1 LIGHT and
+  1 DARK monster from the Graveyard. The hooks are shared under `HAS_LIGHT_DARK_BANISH_SUMMON` (global.h; defined when
+  either card is listed), with `CanPayLightDarkBanishCost` and `LightDarkBanishAttribute`.
+- **Effect.** Main Phase ACTIVATE, once per turn: it targets a face-up monster (`EffectTargetableFaceUpMonsterCheck` /
+  `EffectTargetableFaceUpMonsterChainB`) and banishes it; Chaos Sorcerer cannot attack that turn
+  (`EffectBanishTargetNoAttackResolve`, shared with BLS's banish effect).
+
 ### Dekoichi the Battlechanted Locomotive (2026-10-25)
 A flip effect (added to `HasFlipEffect`). It draws 1 card (`DrawCards`), plus 1 per "Bokoichi the Freightening Car" its
 controller has. Bokoichi counts only if it is added to `config/new_cards.txt` (`HAS_CARD_` guard); it is not now.

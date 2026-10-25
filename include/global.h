@@ -51,6 +51,10 @@ asm(".include \"asm/macros.inc\"");
 #ifndef CARD_ID_COUNT_ADDED
 #define CARD_ID_COUNT_ADDED 0
 #endif
+/* Added cards that share code (src/added_effects.c): the "banish 1 LIGHT and 1 DARK monster from your GY" summon. */
+#if defined(HAS_CARD_BLACK_LUSTER_SOLDIER_ENVOY_OF_THE_BEGINNING) || defined(HAS_CARD_CHAOS_SORCERER)
+#define HAS_LIGHT_DARK_BANISH_SUMMON 1
+#endif
 
 /* Addresses of the per-card tables that moved to the end of the ROM to hold the added cards (data/
  * rodata_08087FD0.s). Units that read a table through an integer address (((const u32 *)0x08621DE0)[id])

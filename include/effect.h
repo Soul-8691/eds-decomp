@@ -75,10 +75,11 @@ extern const struct CardEffect gAddedCardEffects[];
 const struct CardEffect *GetCardEffectRow(int row);
 #define CARD_EFFECT_ROW(row) (*GetCardEffectRow(row))
 
-/* Black Luster Soldier - Envoy of the Beginning's summon (src/added_effects.c): can `player` pay its cost (a free
- * monster zone, a LIGHT and a DARK monster in the Graveyard), and which attribute the summon steps banish now. */
-int CanPayBlackLusterSoldierCost(int player);
-int BlackLusterSoldierBanishAttribute(void);
+/* The summon of Black Luster Soldier - Envoy of the Beginning and Chaos Sorcerer (src/added_effects.c): can
+ * `player` pay its cost (a free monster zone, a LIGHT and a DARK monster in the Graveyard), and which attribute the
+ * summon steps banish now. */
+int CanPayLightDarkBanishCost(int player);
+int LightDarkBanishAttribute(void);
 /* 1 if card `id` is a monster whose name starts with "Gravekeeper's" (src/added_effects.c). */
 int IsGravekeeperMonster(u16 id);
 

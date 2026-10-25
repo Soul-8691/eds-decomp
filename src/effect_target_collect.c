@@ -1054,9 +1054,14 @@ u16 CollectEffectTargets(int player, u16 cardNumber, int param)
     }
 #ifdef HAS_CARD_BLACK_LUSTER_SOLDIER_ENVOY_OF_THE_BEGINNING
     case CARD_BLACK_LUSTER_SOLDIER_ENVOY_OF_THE_BEGINNING:
+#endif
+#ifdef HAS_CARD_CHAOS_SORCERER
+    case CARD_CHAOS_SORCERER:
+#endif
+#ifdef HAS_LIGHT_DARK_BANISH_SUMMON
     {
-        /* Added card: the Graveyard monsters of the attribute its summon banishes now (LIGHT, then DARK). */
-        int attribute = BlackLusterSoldierBanishAttribute();
+        /* Added cards: the Graveyard monsters of the attribute their summon banishes now (LIGHT, then DARK). */
+        int attribute = LightDarkBanishAttribute();
 
         for (i = 0; i < PLAYER(player).graveCount; i++) {
             u32 stats = CARD_STATS(CARD_ID(*PILE_WORD_FLAT(gDuelGraveyards, i, player)));

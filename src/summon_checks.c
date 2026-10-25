@@ -416,9 +416,14 @@ int CanSummonFromHand(int player, u16 cardId)
         return 0;
 #ifdef HAS_CARD_BLACK_LUSTER_SOLDIER_ENVOY_OF_THE_BEGINNING
     case CARD_BLACK_LUSTER_SOLDIER_ENVOY_OF_THE_BEGINNING:   /* added card: banish 1 LIGHT and 1 DARK */
+#endif
+#ifdef HAS_CARD_CHAOS_SORCERER
+    case CARD_CHAOS_SORCERER:                                /* added card: banish 1 LIGHT and 1 DARK */
+#endif
+#ifdef HAS_LIGHT_DARK_BANISH_SUMMON
         if (CanSpecialSummon(player) == 0)
             return 0;
-        return (u16)CanPayBlackLusterSoldierCost(player);
+        return (u16)CanPayLightDarkBanishCost(player);
 #endif
     case CARD_RED_EYES_BLACK_METAL_DRAGON:
     case CARD_HARPIE_LADY_SISTERS:

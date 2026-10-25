@@ -3,3 +3,4 @@ D.D. Warrior Lady:
 - AI always activates effect
 - Needs to be able to be responded to or negated
 Trap Dustshoot: AI picks first card in hand
+Chaos Sorcerer: Searchers still fire when banished

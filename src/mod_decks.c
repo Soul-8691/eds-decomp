@@ -89,7 +89,7 @@ void GiveStartingTrunk(void)
  * it: strong Normal monsters, the LIGHT/DARK floaters Shining Fairy and Mystic Tomato, Breaker the Magical Warrior,
  * and Dark Hole (limited: 1 in the deck). 40 cards. */
 static const u16 sRedStarterDeck[] = {
-    X3(X2(CARD_BLACK_LUSTER_SOLDIER_ENVOY_OF_THE_BEGINNING)), X2(CARD_BLACK_LUSTER_SOLDIER_ENVOY_OF_THE_BEGINNING),
+    X3(X2(CARD_CHAOS_SORCERER)), X2(CARD_CHAOS_SORCERER),
     X3(CARD_BREAKER_THE_MAGICAL_WARRIOR),
     X3(CARD_SHINING_FAIRY),
     X3(CARD_MYSTIC_TOMATO),
@@ -118,8 +118,8 @@ int BuildModStarterDeck(int choice)
 
     if (choice != STARTER_DECK_RED)
         return 0;
-    // for (i = 0; i < ARRAY_COUNT(sRedStarterDeck); i++)
-    //     AddCardToSavedDeck(gCardNumberToId[sRedStarterDeck[i] & CARD_ID_MASK]);
+    for (i = 0; i < ARRAY_COUNT(sRedStarterDeck); i++)
+        AddCardToSavedDeck(gCardNumberToId[sRedStarterDeck[i] & CARD_ID_MASK]);
     return 1;
 }
 #else

@@ -95,6 +95,10 @@ int EffectBlackLusterSoldierPrepare(struct ChainEntry *card, struct ChainEntry *
 u16 EffectBlackLusterSoldierCheck(struct ChainEntry *card, u16 pos);
 int EffectBlackLusterSoldierChainB(struct ChainEntry *link, struct ChainEntry *prevLink);
 int EffectBlackLusterSoldierResolve(struct ChainEntry *link, struct ChainEntry *chainedTo);
+/* Black Luster Soldier's and Chaos Sorcerer's banish effect: banish targets[0]; the card cannot attack this turn. */
+int EffectBanishTargetNoAttackResolve(struct ChainEntry *link, struct ChainEntry *chainedTo);
+/* Chaos Sorcerer: banish a face-up monster (Main Phase, once per turn). */
+int EffectChaosSorcererPrepare(struct ChainEntry *card, struct ChainEntry *chainLink, u16 fromHand);
 /* Tribe-Infecting Virus: discard 1, declare a type, destroy every face-up monster of it (once per turn). */
 int EffectTribeInfectingVirusPrepare(struct ChainEntry *card, struct ChainEntry *chainLink, u16 fromHand);
 int EffectTribeInfectingVirusChainA(struct ChainEntry *link, struct ChainEntry *prevLink);

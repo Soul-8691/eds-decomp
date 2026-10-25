@@ -127,31 +127,10 @@ int EffectBreakerTheMagicalWarriorResolve(struct ChainEntry *link, struct ChainE
 }
 #endif /* HAS_CARD_BREAKER_THE_MAGICAL_WARRIOR */
 
-#ifdef HAS_CARD_BLACK_LUSTER_SOLDIER_ENVOY_OF_THE_BEGINNING
-/* ---- Black Luster Soldier - Envoy of the Beginning ----------------------------------------------------------
- * "Cannot be Normal Summoned/Set. Must first be Special Summoned (from your hand) by banishing 1 LIGHT and 1 DARK
- * monster from your GY. Once per turn, you can activate 1 of these effects.
- *  - Target 1 monster on the field; banish it. This card cannot attack the turn this effect is activated.
- *  - During the Damage Step, if this attacking card destroys an opponent's monster by battle: it can make a
- *    second attack in a row."
- *
- * Summon: IsSpecialSummonOnly (card_detail.c) makes the hand menu offer only the Special Summon commands;
- * CanSummonFromHand (summon_checks.c) asks CanPayBlackLusterSoldierCost; the summon steps (effect_hooks.c,
- * SUMMON_STEP_BLS_*) banish one LIGHT, then one DARK monster from the Graveyard through the card-list viewer, whose
- * list CollectEffectTargets (effect_target_collect.c) builds with BlackLusterSoldierBanishAttribute.
- * Effects: one row, told apart by the link's event; both use the zone's effectUnused flag (once per turn, set again
- * by DuelCmd_TurnStart):
- *   RESPONSE_NONE              the menu's ACTIVATE in the Main Phase (CanActivateMonsterEffect): target a monster
- *                              (Man-Eater Bug's EffectTargetableMonsterCheck / ChainB), banish it, no attack
- *   RESPONSE_BATTLE_DESTROYED  queued by BattleStage_DestroyMonsters (battle_phase2.c) when it attacked, destroyed
- *                              the target and survived: on Yes, its attack mark is cleared so it can attack again */
-
-static const u8 sStrBlsAttackAgain[] = "Use Black Luster Soldier's effect to attack again?";
-
-static inline int IsBlsBattleTrigger(struct ChainEntry *link)
-{
-    return link->event == RESPONSE_BATTLE_DESTROYED && link->loc0 == DUEL_LOC(link->player, link->zone);
-}
+#ifdef HAS_LIGHT_DARK_BANISH_SUMMON
+/* ---- Shared by Black Luster Soldier - Envoy of the Beginning and Chaos Sorcerer --------------------------------
+ * Their summon (banish 1 LIGHT and 1 DARK monster from the Graveyard) and their "banish the target; this card cannot
+ * attack this turn" effect, once per turn through effectUnused. */
 
 /* 1 if the Graveyard of `player` has a monster of `attribute`. */
 static int HasGraveyardMonsterOfAttribute(int player, int attribute)
@@ -168,16 +147,65 @@ static int HasGraveyardMonsterOfAttribute(int player, int attribute)
 }
 
 /* The summon cost: a free monster zone and a LIGHT and a DARK monster in the Graveyard (CanSummonFromHand). */
-int CanPayBlackLusterSoldierCost(int player)
+int CanPayLightDarkBanishCost(int player)
 {
     return CountFreeMonsterZones(player) > 0 && HasGraveyardMonsterOfAttribute(player, ATTRIBUTE_LIGHT)
            && HasGraveyardMonsterOfAttribute(player, ATTRIBUTE_DARK);
 }
 
 /* The attribute the summon steps are banishing now: LIGHT first (summonSeq 0), then DARK. */
-int BlackLusterSoldierBanishAttribute(void)
+int LightDarkBanishAttribute(void)
 {
     return gDuel.cardMenu.summonSeq == 0 ? ATTRIBUTE_LIGHT : ATTRIBUTE_DARK;
+}
+
+/* Banish the target (targets[0]); the activating monster cannot attack this turn and its effect is used. */
+int EffectBanishTargetNoAttackResolve(struct ChainEntry *link, struct ChainEntry *chainedTo)
+{
+    struct DuelZone *z = ZoneOf(link->player, link->zone);
+    u16 cmd;
+
+    if (!link->negated && link->numTargets == 1) {
+        int targetPlayer = (u8)link->targets[0];
+        int targetZone = link->targets[0] >> 8;
+        if (DUEL_CARD_ID(&ZoneOf(targetPlayer, targetZone)->card) != 0)
+            BanishFieldCard(targetPlayer, targetZone, 0);
+    }
+    if (z->isFaceUp && DUEL_CARD_ID(&z->card) == (link->card & CARD_ID_MASK)) {
+        cmd = link->player ? DUEL_CMD_PLAYER | DUEL_CMD_SET_CANNOT_ATTACK : DUEL_CMD_SET_CANNOT_ATTACK;
+        DuelCmd_Push(cmd, link->zone, 1, 0);
+        cmd = link->player ? DUEL_CMD_PLAYER | DUEL_CMD_SET_EFFECT_UNUSED : DUEL_CMD_SET_EFFECT_UNUSED;
+        DuelCmd_Push(cmd, link->zone, 0, 0);
+    }
+    return EFFECT_STEP_DONE;
+}
+#endif /* HAS_LIGHT_DARK_BANISH_SUMMON */
+
+#ifdef HAS_CARD_BLACK_LUSTER_SOLDIER_ENVOY_OF_THE_BEGINNING
+/* ---- Black Luster Soldier - Envoy of the Beginning ----------------------------------------------------------
+ * "Cannot be Normal Summoned/Set. Must first be Special Summoned (from your hand) by banishing 1 LIGHT and 1 DARK
+ * monster from your GY. Once per turn, you can activate 1 of these effects.
+ *  - Target 1 monster on the field; banish it. This card cannot attack the turn this effect is activated.
+ *  - During the Damage Step, if this attacking card destroys an opponent's monster by battle: it can make a
+ *    second attack in a row."
+ *
+ * Summon: IsSpecialSummonOnly (card_detail.c) makes the hand menu offer only the Special Summon commands;
+ * CanSummonFromHand (summon_checks.c) asks CanPayLightDarkBanishCost; the summon steps (effect_hooks.c,
+ * SUMMON_STEP_BLS_*) banish one LIGHT, then one DARK monster from the Graveyard through the card-list viewer, whose
+ * list CollectEffectTargets (effect_target_collect.c) builds with LightDarkBanishAttribute (shared with Chaos
+ * Sorcerer).
+ * Effects: one row, told apart by the link's event; both use the zone's effectUnused flag (once per turn, set again
+ * by DuelCmd_TurnStart):
+ *   RESPONSE_NONE              the menu's ACTIVATE in the Main Phase (CanActivateMonsterEffect): target a monster
+ *                              (Man-Eater Bug's EffectTargetableMonsterCheck / ChainB), banish it, no attack
+ *   RESPONSE_BATTLE_DESTROYED  queued by BattleStage_DestroyMonsters (battle_phase2.c) when it attacked, destroyed
+ *                              the target and survived: on Yes, its attack mark is cleared so it can attack again */
+
+static const u8 sStrBlsAttackAgain[] = "Use Black Luster Soldier's effect to attack again?";
+
+static inline int IsBlsBattleTrigger(struct ChainEntry *link)
+{
+    return link->event == RESPONSE_BATTLE_DESTROYED && link->loc0 == DUEL_LOC(link->player, link->zone);
 }
 
 int EffectBlackLusterSoldierPrepare(struct ChainEntry *card, struct ChainEntry *chainLink, u16 fromHand)
@@ -217,22 +245,8 @@ int EffectBlackLusterSoldierResolve(struct ChainEntry *link, struct ChainEntry *
     int here = z->isFaceUp && DUEL_CARD_ID(&z->card) == (link->card & CARD_ID_MASK);
     u16 cmd;
 
-    if (link->event != RESPONSE_BATTLE_DESTROYED) {
-        /* Banish the target; this card cannot attack this turn. The effect is used either way. */
-        if (!link->negated && link->numTargets == 1) {
-            int targetPlayer = (u8)link->targets[0];
-            int targetZone = link->targets[0] >> 8;
-            if (DUEL_CARD_ID(&ZoneOf(targetPlayer, targetZone)->card) != 0)
-                BanishFieldCard(targetPlayer, targetZone, 0);
-        }
-        if (here) {
-            cmd = link->player ? DUEL_CMD_PLAYER | DUEL_CMD_SET_CANNOT_ATTACK : DUEL_CMD_SET_CANNOT_ATTACK;
-            DuelCmd_Push(cmd, link->zone, 1, 0);
-            cmd = link->player ? DUEL_CMD_PLAYER | DUEL_CMD_SET_EFFECT_UNUSED : DUEL_CMD_SET_EFFECT_UNUSED;
-            DuelCmd_Push(cmd, link->zone, 0, 0);
-        }
-        return EFFECT_STEP_DONE;
-    }
+    if (link->event != RESPONSE_BATTLE_DESTROYED)
+        return EffectBanishTargetNoAttackResolve(link, chainedTo);
     /* The second attack: the human is asked first (the CPU always takes it). */
     if (link->negated || !here)
         return EFFECT_STEP_DONE;
@@ -249,6 +263,25 @@ int EffectBlackLusterSoldierResolve(struct ChainEntry *link, struct ChainEntry *
     return EFFECT_STEP_DONE;
 }
 #endif /* HAS_CARD_BLACK_LUSTER_SOLDIER_ENVOY_OF_THE_BEGINNING */
+
+#ifdef HAS_CARD_CHAOS_SORCERER
+/* ---- Chaos Sorcerer --------------------------------------------------------------------------------------------
+ * "Cannot be Normal Summoned/Set. Must first be Special Summoned (from your hand) by banishing 1 LIGHT and 1 DARK
+ * monster from your GY. Once per turn: You can target 1 face-up monster on the field; banish it. This card cannot
+ * attack the turn you activate this effect."
+ * The summon is Black Luster Soldier - Envoy of the Beginning's (the same hooks, HAS_LIGHT_DARK_BANISH_SUMMON). The
+ * effect is the card menu's ACTIVATE in the Main Phase (CanActivateMonsterEffect), once per turn (effectUnused, set
+ * again by DuelCmd_TurnStart); the target is a face-up monster (EffectTargetableFaceUpMonsterCheck / ChainB). */
+int EffectChaosSorcererPrepare(struct ChainEntry *card, struct ChainEntry *chainLink, u16 fromHand)
+{
+    struct DuelZone *z;
+
+    if (fromHand || card->event != RESPONSE_NONE)
+        return 0;
+    z = ZoneOf(card->player, card->zone);
+    return z->isFaceUp && DUEL_CARD_ID(&z->card) == (card->card & CARD_ID_MASK) && z->effectUnused;
+}
+#endif /* HAS_CARD_CHAOS_SORCERER */
 
 #ifdef HAS_CARD_TRIBE_INFECTING_VIRUS
 /* ---- Tribe-Infecting Virus -----------------------------------------------------------------------------------
@@ -460,6 +493,16 @@ const struct CardEffect gAddedCardEffects[] = {
         EffectBlackLusterSoldierPrepare,
         NULL,
         EffectBlackLusterSoldierChainB,
+    },
+#endif
+#ifdef HAS_CARD_CHAOS_SORCERER
+    {
+        CARD_CHAOS_SORCERER, 0,
+        EffectBanishTargetNoAttackResolve,
+        (u16 (*)(struct ChainEntry *, u16))EffectTargetableFaceUpMonsterCheck,
+        EffectChaosSorcererPrepare,
+        NULL,
+        (int (*)(struct ChainEntry *, struct ChainEntry *))EffectTargetableFaceUpMonsterChainB,
     },
 #endif
 #ifdef HAS_CARD_TRIBE_INFECTING_VIRUS

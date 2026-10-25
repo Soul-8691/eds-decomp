@@ -1111,6 +1111,11 @@ void CardMenu_SummonMonster(u16 faceUp, u16 special)
             break;
 #ifdef HAS_CARD_BLACK_LUSTER_SOLDIER_ENVOY_OF_THE_BEGINNING
         case CARD_BLACK_LUSTER_SOLDIER_ENVOY_OF_THE_BEGINNING:
+#endif
+#ifdef HAS_CARD_CHAOS_SORCERER
+        case CARD_CHAOS_SORCERER:
+#endif
+#ifdef HAS_LIGHT_DARK_BANISH_SUMMON
             CM.summonTributes = 0;
             CM.summonSeq = 0;
             CM.tributeSources = 0;
@@ -1638,10 +1643,11 @@ void CardMenu_SummonMonster(u16 faceUp, u16 special)
             BANISH_LISTED_CARD();
         CM_FROM_PLAYERS.step++;
         break;
-#ifdef HAS_CARD_BLACK_LUSTER_SOLDIER_ENVOY_OF_THE_BEGINNING
-    /* ---- Black Luster Soldier - Envoy of the Beginning: banish one LIGHT, then one DARK Graveyard monster ---- */
+#ifdef HAS_LIGHT_DARK_BANISH_SUMMON
+    /* ---- Black Luster Soldier - Envoy of the Beginning, Chaos Sorcerer: banish one LIGHT, then one DARK Graveyard
+     * monster ---- */
     case SUMMON_STEP_BLS_PROMPT:
-        FormatStr(text, gStrBanishGraveyardMonster, gAttributeNames[BlackLusterSoldierBanishAttribute() - 1]);
+        FormatStr(text, gStrBanishGraveyardMonster, gAttributeNames[LightDarkBanishAttribute() - 1]);
         OPEN_PROMPT(text);
         CM.step++;
         break;
