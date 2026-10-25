@@ -393,6 +393,33 @@ int BattleStage_DestroyMonsters(int player)
         return 1;
     }
 
+#ifdef HAS_CARD_D_D_WARRIOR_LADY
+    /* Added: D.D. Warrior Lady in the battle asks its controller first (the CPU always uses it), before the
+     * destroyed monsters leave the field. On Yes both monsters are banished below, like in a Dimensional Warrior
+     * battle. */
+    {
+        int dd = -1;
+        if (CARD_NUMBER_OF(gBattle.side[player].cardId) == CARD_D_D_WARRIOR_LADY)
+            dd = player;
+        else if (CARD_NUMBER_OF(gBattle.side[1 - player].cardId) == CARD_D_D_WARRIOR_LADY)
+            dd = 1 - player;
+        if (dd >= 0) {
+            switch (gBattle.ddWarriorLady) {
+            case DD_WARRIOR_LADY_NOT_ASKED:
+                if (dd != 0) {
+                    gBattle.ddWarriorLady = DD_WARRIOR_LADY_YES;
+                    break;
+                }
+                DuelPrompt_Post(dd, PROMPT_CONFIRM_CARD_EFFECT, CARD_D_D_WARRIOR_LADY, 0);
+                gBattle.ddWarriorLady = DD_WARRIOR_LADY_ASKED;
+                return 0;
+            case DD_WARRIOR_LADY_ASKED:
+                gBattle.ddWarriorLady = gDuel.promptResult ? DD_WARRIOR_LADY_YES : DD_WARRIOR_LADY_NO;
+                break;
+            }
+        }
+    }
+#endif
     /* ---- The attacking monster ---- */
     switch (CARD_NUMBER_OF(gBattle.side[player].cardId)) {
     case CARD_DIMENSIONAL_WARRIOR:
@@ -461,7 +488,8 @@ int BattleStage_DestroyMonsters(int player)
             done = 1;
         }
         if (CARD_NUMBER_OF(gBattle.side[1 - player].cardId) != CARD_DIMENSIONAL_WARRIOR
-            && CARD_NUMBER_OF(gBattle.side[player].cardId) != CARD_DIMENSIONAL_WARRIOR) {
+            && CARD_NUMBER_OF(gBattle.side[player].cardId) != CARD_DIMENSIONAL_WARRIOR
+            && gBattle.ddWarriorLady != DD_WARRIOR_LADY_YES) {
             if (!done) {
                 /* A switch, not `number >= CARD_1254 && number <= CARD_1256`: the ROM reloads the number and
                  * tests both bounds. */
@@ -571,7 +599,8 @@ int BattleStage_DestroyMonsters(int player)
             done = 1;
         }
         if (CARD_NUMBER_OF(gBattle.side[1 - player].cardId) != CARD_DIMENSIONAL_WARRIOR
-            && CARD_NUMBER_OF(gBattle.side[player].cardId) != CARD_DIMENSIONAL_WARRIOR) {
+            && CARD_NUMBER_OF(gBattle.side[player].cardId) != CARD_DIMENSIONAL_WARRIOR
+            && gBattle.ddWarriorLady != DD_WARRIOR_LADY_YES) {
             if (!done) {
                 switch (CARD_NUMBER_OF(gBattle.side[1 - player].cardId)) {
                 case CARD_1254:
@@ -599,6 +628,17 @@ int BattleStage_DestroyMonsters(int player)
         } else if (!done)
             BanishBattleDestroyedCard(1 - player, gBattle.defSlot, (u16 *)&gBattle.zones[1 - player]);
     }
+#ifdef HAS_CARD_D_D_WARRIOR_LADY
+    /* Added: D.D. Warrior Lady's Yes also banishes the monsters that survived the battle. */
+    if (gBattle.ddWarriorLady == DD_WARRIOR_LADY_YES) {
+        if (!gBattle.side[player].destroyed && ZONE_HAS_CARD(&gDuelPlayers[player & 1].zones[gBattle.atkSlot]))
+            BanishFieldCard(player, gBattle.atkSlot, 0);
+        if (!gBattle.side[1 - player].destroyed
+            && ZONE_HAS_CARD(&gDuelPlayers[(1 - player) & 1].zones[gBattle.defSlot]))
+            BanishFieldCard(1 - player, gBattle.defSlot, 0);
+    }
+    gBattle.ddWarriorLady = DD_WARRIOR_LADY_NOT_ASKED;
+#endif
     gDuel.battleStep++;
     return 0;
 }

@@ -165,6 +165,15 @@ bits. They keep those bits as their low bits and have high bits in the bytes the
 rewritten), Deck Edit (cards, list, prohibit, stats, widgets, filter steps), booster code, the debug give-all. Saves
 from the original game load unchanged; the format is a superset.
 
+### D.D. Warrior Lady (2026-10-25)
+There is no effect row. The effect lives in `BattleStage_DestroyMonsters` (battle_phase2.c). When D.D. Warrior Lady is
+in a battle with a monster, the stage first asks her controller, before any destroyed monster leaves the field. The
+human gets `PROMPT_CONFIRM_CARD_EFFECT`, with its text case in `DuelPrompt_ConfirmCardEffect`; the CPU always says Yes.
+The answer is kept in `gBattle.ddWarriorLady` (+0x5, a byte the original never used). On Yes the stage runs like a
+Dimensional Warrior battle: a destroyed monster is banished (`BanishBattleDestroyedCard`) instead of sent to the
+Graveyard, and a monster that survived is banished too (`BanishFieldCard`). It can't be chained to, unlike the real
+card's effect.
+
 ### Gravekeeper's Spy (2026-10-25)
 A flip effect: it is added to `HasFlipEffect` (card_detail.c), so it triggers on a Flip Summon and when it is flipped
 by an attack. It resolves with the floaters' `EffectSpecialSummonFromDeckResolve`: Yes/No for the human, a Deck list,

@@ -172,6 +172,13 @@ u32 DuelPrompt_ConfirmCardEffect(int player, u16 cardNumber)
         case CARD_1519:
             TextBoxOpen(PROMPT_BOX_POS, PROMPT_BOX_SIZE, TEXTBOX_FLAGS_DEFAULT, gStrPromptChangeOpponentPosition);
             break;
+#ifdef HAS_CARD_D_D_WARRIOR_LADY
+        case CARD_D_D_WARRIOR_LADY: {   /* added card (battle_phase2.c, src/added_effects.c) */
+            extern const u8 gStrDDWarriorLadyPrompt[];
+            TextBoxOpen(PROMPT_BOX_POS, PROMPT_BOX_SIZE, TEXTBOX_FLAGS_DEFAULT, gStrDDWarriorLadyPrompt);
+            break;
+        }
+#endif
         }
         TextBoxSetMenu(TEXTBOX_MENU_YES_NO, NULL, NULL);
         gDuel.promptStep++;

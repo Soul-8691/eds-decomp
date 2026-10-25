@@ -953,3 +953,16 @@ updated: 2026-09-29
   AddCardToSaved* / RemoveCardFromSaved* / TrimSavedDecksToCopyLimits group moved from collection.c to
   src/mod_save.c (far code), leaving 0x558 bytes.
 - Pages: [[added-cards]].
+
+## [2026-10-25] progress | D.D. Warrior Lady
+- `src/added_effects.c` + battle_phase2.c: queued like Dimensional Warrior from BattleStage_DestroyMonsters (attacker
+  or target; TRIGGER_MONSTER_BATTLED, loc0 attacker, loc1 target). Optional (human Yes/No, CPU yes); banishes
+  whichever of the two monsters is still on the field (battle-destroyed ones have gone to the Graveyard).
+- Pages: [[added-cards]].
+
+## [2026-10-25] progress | D.D. Warrior Lady fixed: banished instead of sent to the Graveyard
+- The first version asked after the battle, so a destroyed D.D. Warrior Lady had already gone to the Graveyard
+  (reported by the user). Now BattleStage_DestroyMonsters asks first (PROMPT_CONFIRM_CARD_EFFECT; CPU: Yes),
+  keeps the answer in gBattle.ddWarriorLady, and on Yes banishes destroyed monsters the way Dimensional Warrior does,
+  plus the survivors. The chain trigger and effect row are gone.
+- Pages: [[added-cards]].

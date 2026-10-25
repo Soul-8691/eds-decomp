@@ -321,6 +321,17 @@ int EffectTorrentialTributePrepare(struct ChainEntry *card, struct ChainEntry *c
 }
 #endif /* HAS_CARD_TORRENTIAL_TRIBUTE */
 
+#ifdef HAS_CARD_D_D_WARRIOR_LADY
+/* ---- D.D. Warrior Lady ----------------------------------------------------------------------------------------
+ * "After damage calculation, if this card battled an opponent's monster: You can banish that monster, also banish
+ * this card."
+ * No effect row: the effect lives in BattleStage_DestroyMonsters (battle_phase2.c), which asks its controller before
+ * the destroyed monsters leave the field (the human through PROMPT_CONFIRM_CARD_EFFECT with this text; the CPU always
+ * says Yes). On Yes the battle goes on like a Dimensional Warrior battle: a destroyed monster is banished instead of
+ * sent to the Graveyard, and a monster that survived is banished too. */
+const u8 gStrDDWarriorLadyPrompt[] = "Use D.D. Warrior Lady's effect to banish both monsters?";
+#endif /* HAS_CARD_D_D_WARRIOR_LADY */
+
 /* ---- "Gravekeeper's" cards -----------------------------------------------------------------------------------
  * 1 if the card's name starts with "Gravekeeper's" (the archetype the Gravekeeper's cards refer to). */
 static const char sGravekeeperPrefix[] = "Gravekeeper's";
