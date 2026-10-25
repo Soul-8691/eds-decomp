@@ -211,6 +211,17 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
 - `HasFlipEffect` (card_detail.c).
 - Checked in the source; not tested in an emulator.
 
+### Smashing Ground (2026-10-25)
+- Normal Spell: "Destroy the 1 face-up monster your opponent controls that has the highest DEF (your choice, if
+  tied)."
+- **Prepare:** the opponent has a face-up monster.
+- **Resolve** (`EffectSmashingGroundResolve`, like Widespread Ruin's highest-ATK search): no target.
+  - It takes the highest current DEF (`GetZoneCardDef`) among the opponent's face-up monsters.
+  - A single one is destroyed at once. On a tie the human picks among them with the cursor (another pick plays the
+    error sound), and the CPU takes the first.
+  - The destruction is `DestroyFieldCard` + `OnCardDestroyedByEffect`. Face-down monsters are ignored.
+- Checked in the source and the build; not tested in an emulator.
+
 ### Magical Merchant (2026-10-25)
 - "FLIP: Excavate cards from the top of your Deck until you excavate a Spell/Trap. Add that card to your hand, also
   send the remaining cards to the GY."

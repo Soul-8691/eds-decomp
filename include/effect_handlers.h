@@ -107,6 +107,8 @@ int EffectLightningVortexPrepare(struct ChainEntry *card, struct ChainEntry *cha
 int EffectLightningVortexChainA(struct ChainEntry *link, struct ChainEntry *prevLink);
 int EffectLightningVortexResolve(struct ChainEntry *link, struct ChainEntry *chainedTo);
 int EffectDonZaloogResolve(struct ChainEntry *link, struct ChainEntry *chainedTo);
+int EffectSmashingGroundPrepare(struct ChainEntry *card, struct ChainEntry *chainLink, u16 fromHand);
+int EffectSmashingGroundResolve(struct ChainEntry *link, struct ChainEntry *chainedTo);
 int EffectMagicalMerchantResolve(struct ChainEntry *link, struct ChainEntry *chainedTo);
 int EffectCreatureSwapPrepare(struct ChainEntry *card, struct ChainEntry *chainLink, u16 fromHand);
 int EffectCreatureSwapResolve(struct ChainEntry *link, struct ChainEntry *chainedTo);

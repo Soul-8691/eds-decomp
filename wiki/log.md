@@ -1186,3 +1186,8 @@ updated: 2026-09-29
 - Flip effect: the Deck's monsters above the first Spell/Trap go to the Graveyard, and that card is added
   (AddDeckCardToHand).
 - Pages: [[added-cards]].
+
+## [2026-10-25] progress | Smashing Ground
+- Normal Spell: destroys the opponent's face-up monster with the highest DEF; on a tie the human picks with the
+  cursor and the CPU takes the first.
+- Pages: [[added-cards]].

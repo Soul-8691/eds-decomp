@@ -972,6 +972,89 @@ int EffectMysticSwordsmanLv2Resolve(struct ChainEntry *link, struct ChainEntry *
 }
 #endif /* HAS_CARD_MYSTIC_SWORDSMAN_LV2 && HAS_CARD_MYSTIC_SWORDSMAN_LV4 */
 
+#ifdef HAS_CARD_SMASHING_GROUND
+/* ---- Smashing Ground -----------------------------------------------------------------------------------------------
+ * Normal Spell: "Destroy the 1 face-up monster your opponent controls that has the highest DEF (your choice, if tied)."
+ * No target. Prepare: the opponent has a face-up monster. Resolve, like Widespread Ruin's highest-ATK search: the
+ * highest DEF among the opponent's face-up monsters (GetZoneCardDef); on a tie the human picks one of them with the
+ * cursor (another pick plays the error sound), the CPU takes the first. Then DestroyFieldCard +
+ * OnCardDestroyedByEffect. */
+
+static const u8 sStrSmashingGroundPick[] = "Select the monster with the highest DEF to destroy.";
+
+/* The highest DEF among the face-up monsters of `player` (-1: none); *count gets how many have it, *first the first. */
+static int HighestFaceUpDef(int player, int *count, int *first)
+{
+    int zone, best = -1;
+
+    *count = 0;
+    *first = -1;
+    for (zone = ZONE_MONSTER_0; zone <= ZONE_MONSTER_4; zone++) {
+        struct DuelZone *z = ZoneOf(player, zone);
+        int def;
+
+        if (DUEL_CARD_ID(&z->card) == 0 || !z->isFaceUp)
+            continue;
+        def = GetZoneCardDef(player, zone);
+        if (def > best) {
+            best = def;
+            *count = 1;
+            *first = zone;
+        } else if (def == best) {
+            (*count)++;
+        }
+    }
+    return best;
+}
+
+int EffectSmashingGroundPrepare(struct ChainEntry *card, struct ChainEntry *chainLink, u16 fromHand)
+{
+    int count, first;
+
+    return HighestFaceUpDef(1 - card->player, &count, &first) >= 0;
+}
+
+static void SmashingGroundDestroy(struct ChainEntry *link, int opponent, int zone)
+{
+    DestroyFieldCard(opponent, zone, 1);
+    OnCardDestroyedByEffect(link->player, opponent, zone);
+}
+
+int EffectSmashingGroundResolve(struct ChainEntry *link, struct ChainEntry *chainedTo)
+{
+    int opponent = 1 - link->player;
+    int best, count, first, zone;
+
+    if (link->negated)
+        return EFFECT_STEP_DONE;
+    best = HighestFaceUpDef(opponent, &count, &first);
+    if (best < 0)
+        return EFFECT_STEP_DONE;
+    switch (gChain.effectStep) {
+    case EFFECT_STEP_START:
+        if (count == 1 || link->player) {
+            SmashingGroundDestroy(link, opponent, first);
+            return EFFECT_STEP_DONE;
+        }
+        TextBoxOpen(TEXTBOX_POS(6, 2), TEXTBOX_SIZE(18, 7), TEXTBOX_FLAGS_DEFAULT, sStrSmashingGroundPick);
+        return EFFECT_STEP_2;
+    case EFFECT_STEP_2:
+        /* the human picks among the tied monsters on the opponent's side (player 1) */
+        if (DuelCursor_PickTarget(PICK_PLAYER1(PICK_FACE_UP_MONSTER_ANY)) == 0)
+            return EFFECT_STEP_2;
+        zone = gDuelScreen.selArea + gDuelScreen.selIndex;
+        if (gDuelScreen.selPlayer != opponent || zone > ZONE_MONSTER_4 || !ZoneOf(opponent, zone)->isFaceUp
+            || DUEL_CARD_ID(&ZoneOf(opponent, zone)->card) == 0 || (int)GetZoneCardDef(opponent, zone) != best) {
+            PlaySE(SE_ERROR);
+            return EFFECT_STEP_2;
+        }
+        SmashingGroundDestroy(link, opponent, zone);
+        return EFFECT_STEP_DONE;
+    }
+    return EFFECT_STEP_DONE;
+}
+#endif /* HAS_CARD_SMASHING_GROUND */
+
 #ifdef HAS_CARD_MAGICAL_MERCHANT
 /* ---- Magical Merchant ------------------------------------------------------------------------------------------------
  * "FLIP: Excavate cards from the top of your Deck until you excavate a Spell/Trap. Add that card to your hand, also
@@ -1989,6 +2072,16 @@ const struct CardEffect gAddedCardEffects[] = {
         NULL,
         NULL,
         (int (*)(struct ChainEntry *, struct ChainEntry *))EffectTargetableMonsterChainB,
+    },
+#endif
+#ifdef HAS_CARD_SMASHING_GROUND
+    {
+        CARD_SMASHING_GROUND, 0,
+        EffectSmashingGroundResolve,
+        NULL,
+        EffectSmashingGroundPrepare,
+        NULL,
+        NULL,
     },
 #endif
 #ifdef HAS_CARD_MAGICAL_MERCHANT
