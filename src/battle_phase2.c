@@ -320,11 +320,18 @@ int BattleStage_TriggerFlipEffect(int player)
 
     if (gBattle.flipEffectPending) {
         opponent = 1 - player;
-        canActivate = (u16)CanActivateEffectOfCard(opponent, gBattle.flipCardId, 0);
+#ifdef HAS_CARD_BLADE_KNIGHT
+        if (BladeKnightNegatesBattleFlipEffect())
+            canActivate = 0;
+        else
+#endif
+            canActivate = (u16)CanActivateEffectOfCard(opponent, gBattle.flipCardId, 0);
         if (CARD_NUMBER_OF(gBattle.flipCardId) == CARD_PARASITE_PARACIDE) {
             if (gBattle.side[opponent].destroyed)
                 canActivate = 0;
         }
+        if (FlipEffectsLockedForTurn())
+            canActivate = 0;
         if (canActivate != 0) {
             /* Matching: separate statements, as in InflictDamage. */
             u32 trigger = ((1 - player) & 1) << 31;

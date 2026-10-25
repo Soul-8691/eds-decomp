@@ -30,6 +30,7 @@
 #include "summon.h"                 /* CanSpecialSummon */
 #include "effect.h"                 /* gCardEffects, FindCardEffect, enum SpellSpeed; the rules defined here */
 #include "effect_handlers.h"        /* the handlers defined here, EffectBlastJugglerCheck */
+#include "battle.h"                 /* gBattle, BladeKnightNegatesBattleFlipEffect */
 
 /* ---- Local views kept for matching ---- */
 
@@ -311,6 +312,21 @@ int CanActivateEffect(struct ChainEntry *card, struct ChainEntry *chainLink, u16
 
     if (IsCardProhibited(card->card))
         return FALSE;
+    if (FlipEffectsLockedForTurn()) {
+        switch (card->event) {
+        case RESPONSE_FLIPPED:
+        case RESPONSE_BATTLE_FLIP_EFFECT:
+        case RESPONSE_FLIP_SUMMONED:
+            if (HasFlipEffect(CARD_NUMBER(card->card), 0) || HasFlipEffect(CARD_NUMBER(card->card), 1))
+                return FALSE;
+            break;
+        }
+    }
+#ifdef HAS_CARD_BLADE_KNIGHT
+    if (card->event == RESPONSE_BATTLE_FLIP_EFFECT && !gBattle.direct && card->card == gBattle.flipCardId
+        && BladeKnightNegatesBattleFlipEffect())
+        return FALSE;
+#endif
     if (chainLink) {
         if (GetCardSpellSpeed(card->card) < GetCardSpellSpeed(chainLink->card))
             return FALSE;

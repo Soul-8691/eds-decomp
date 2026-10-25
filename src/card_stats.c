@@ -1,5 +1,6 @@
 #include "global.h"
 #include "duel.h"                   /* struct DuelZone / DuelPlayer / DuelState, gDuel*, Count* queries, GetZoneCardStats */
+#include "effect.h"                 /* IsBladeKnightCard (added card) */
 #include "card_data.h"              /* gCardIdToNumber, CARD_ID_MASK, CARD_STATS_* extractors */
 #include "constants/cards.h"        /* CARD_* card numbers */
 #include "constants/card_stats.h"   /* enum CardType, CardAttribute */
@@ -648,6 +649,10 @@ void GetZoneCardStats(int player, int zone, struct ZoneCardStats *out)
     }
 
     /* 4a. The monster's own effect. */
+#ifdef HAS_CARD_BLADE_KNIGHT
+    if (IsBladeKnightCard(out->id) && gDuelPlayers[player & 1].handCount <= 1)
+        addAtk += 400;
+#endif
     switch (CARD_NUMBER(out->id)) {
     case CARD_SWAMP_BATTLEGUARD:
         addAtk += CountActiveCardsOnField(player, CARD_LAVA_BATTLEGUARD) * 500;

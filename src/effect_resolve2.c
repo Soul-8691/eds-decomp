@@ -585,7 +585,7 @@ int EffectAcidTrapHoleResolve(struct ChainEntry *link)
             } else {
                 ShowDestroyedCardInt(targetPlayer, id);
                 if (HasFlipEffect(CARD_NUMBER(id), 0) != 0 && CountActiveCardsOnField(0, CARD_1530) == 0
-                    && CountActiveCardsOnField(1, CARD_1530) == 0) {
+                    && CountActiveCardsOnField(1, CARD_1530) == 0 && !FlipEffectsLockedForTurn()) {
                     /* Trigger word (Chain_AddPending): card | zone << 16 | kind << 21 | event << 25 |
                      * player << 31. Matching: separate statements; in one expression fold moves the
                      * constant next to side << 31. */

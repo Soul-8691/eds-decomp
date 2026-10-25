@@ -28,6 +28,7 @@
 #include "duel_prompt.h"
 #include "sound.h"
 #include "constants/sound.h"
+#include "battle.h"
 
 /* ---- Spell Counters ----------------------------------------------------------------------------------------
  * A Spell Counter on a monster is a ZONE_LINK_ATK_300_PER_VALUE link from the monster's own card ID: the link's
@@ -724,6 +725,81 @@ int EffectKycooTheGhostDestroyerPrepare(struct ChainEntry *card, struct ChainEnt
     }
 }
 #endif /* HAS_CARD_KYCOO_THE_GHOST_DESTROYER */
+
+/* ---- Blade Knight --------------------------------------------------------------------------------------------
+ * +400 ATK at 0–1 cards in hand is in card_stats.c. When its controller has no other monsters, Flip Effects of
+ * monsters destroyed by battle with it do not activate (BattleStage_TriggerFlipEffect). */
+
+#ifdef HAS_CARD_BLADE_KNIGHT
+#define CARD_NUMBER(id) (((const u16 *)CARD_ID_TO_NUMBER_ADDR)[(id) & CARD_ID_MASK])
+
+static const u8 sBladeKnightName[] = "Blade Knight";
+
+int IsBladeKnightCard(u16 cardId)
+{
+    const u8 *name;
+    int i;
+
+    if ((cardId & CARD_ID_MASK) < 821)
+        return 0;
+    if (CARD_NUMBER(cardId) == CARD_BLADE_KNIGHT)
+        return 1;
+    name = gCardNames + (cardId & CARD_ID_MASK) * CARD_NAME_SIZE;
+    for (i = 0; sBladeKnightName[i] != 0; i++) {
+        if (name[i] != sBladeKnightName[i])
+            return 0;
+    }
+    return name[i] == 0;
+}
+
+int BladeKnightNegatesBattleFlipEffect(void)
+{
+    int attackerPlayer;
+    int defenderPlayer;
+    u16 atkId;
+    u16 flipNo;
+
+    if (gBattle.direct || gBattle.flipCardId == 0)
+        return 0;
+    attackerPlayer = gDuel.turnPlayer & 1;
+    defenderPlayer = (1 - attackerPlayer) & 1;
+    atkId = DUEL_CARD_ID(&gDuelPlayers[attackerPlayer].zones[gBattle.atkSlot]);
+    if (!IsBladeKnightCard(atkId))
+        return 0;
+    if (CountMonsters(attackerPlayer) != 1)
+        return 0;
+    /* Attacker must win (flip monster destroyed by this battle). */
+    if (gBattle.side[attackerPlayer].battleValue <= gBattle.side[defenderPlayer].battleValue)
+        return 0;
+    if ((gBattle.flipCardId & CARD_ID_MASK)
+        != (gBattle.side[defenderPlayer].cardId & CARD_ID_MASK))
+        return 0;
+    flipNo = CARD_NUMBER(gBattle.flipCardId);
+    if (!HasFlipEffect(flipNo, 1) && !HasFlipEffect(flipNo, 0))
+        return 0;
+    return 1;
+}
+#endif /* HAS_CARD_BLADE_KNIGHT */
+
+/* ---- Dark Ruler Ha Des ---------------------------------------------------------------------------------------
+ * "When this card is Tribute Summoned: Flip Effects cannot be activated for the rest of this turn." */
+
+static u8 sFlipEffectsLockedForTurn;
+
+int FlipEffectsLockedForTurn(void)
+{
+    return sFlipEffectsLockedForTurn != 0;
+}
+
+void LockFlipEffectsForTurn(void)
+{
+    sFlipEffectsLockedForTurn = 1;
+}
+
+void ClearFlipEffectsLockForTurn(void)
+{
+    sFlipEffectsLockedForTurn = 0;
+}
 
 /* ---- "Gravekeeper's" cards -----------------------------------------------------------------------------------
  * 1 if the card's name starts with "Gravekeeper's" (the archetype the Gravekeeper's cards refer to). */

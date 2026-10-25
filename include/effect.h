@@ -94,6 +94,14 @@ int IsReinforcementTarget(u16 id);
 void QueueNightAssailantTrigger(int player, u16 id);
 /* Face-up copies of Kycoo the Ghost Destroyer (CARD_1511 effect key and/or CARD_KYCOO_THE_GHOST_DESTROYER). */
 int CountActiveKycooOnField(int player);
+/* Blade Knight (added card): id or card-number match (src/added_effects.c). */
+int IsBladeKnightCard(u16 cardId);
+/* Blade Knight alone: battle-flip effect of a Flip monster it destroys (src/added_effects.c). */
+int BladeKnightNegatesBattleFlipEffect(void);
+/* Dark Ruler Ha Des: 1 while Flip Effects cannot be activated for the rest of the turn (src/added_effects.c). */
+int FlipEffectsLockedForTurn(void);
+void LockFlipEffectsForTurn(void);
+void ClearFlipEffectsLockForTurn(void);
 
 /* Return value of a multi-step resolve handler, kept in gChain.effectStep: Chain_Resolve calls the
  * handler with EFFECT_STEP_START first, then once per frame with the value it returned last, until it

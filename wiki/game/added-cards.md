@@ -283,6 +283,18 @@ position menu; the CPU uses `AiShouldSetMonster`) and a shuffle. The other users
 keep Attack Position. Its `CollectEffectTargets` case lists deck monsters whose name
 starts with "Gravekeeper's" (`IsGravekeeperMonster`), with ATK 1500 or less, excluding Fusion and Ritual monsters.
 
+### Blade Knight (2026-10-25)
+"Gains 400 ATK while you have 1 or less cards in your hand. If you control no other monsters, the effects of
+Flip monsters destroyed by battle with this card are negated." No `gAddedCardEffects` row (passive rules only).
+- **+400 ATK:** `GetZoneCardStats` (`card_stats.c`) adds 400 ATK when its controller's `handCount` is 0 or 1.
+- **Flip negation:** `IsBladeKnightCard` matches `CARD_BLADE_KNIGHT` **or** in-game name `"Blade Knight"`.
+  `BladeKnightNegatesBattleFlipEffect` uses `gDuel.turnPlayer`,
+  `gBattle.atkSlot`, exactly one monster on that side, `battleValue` showing the attacker won, and
+  `gBattle.flipCardId` matching the defender. Hooks: `BattleStage_TriggerFlipEffect`, `CanActivateEffect`,
+  clear `flipEffectPending` after `CalcBattle`.
+- No piercing battle damage (not part of this card's effect).
+- Checked in the source; not tested in an emulator.
+
 ### Kycoo the Ghost Destroyer (2026-10-25)
 "When this card inflicts Battle Damage to your opponent's Life Points, you can remove from play up to 2 Monster
 Cards from your opponent's Graveyard." The original duel code already models this as effect key **`CARD_1511`**

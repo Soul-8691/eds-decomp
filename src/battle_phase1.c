@@ -445,6 +445,8 @@ int BattleStage_RevealDefender(int player)
         BATTLE_BYTES.flipEffectPending = HasFlipEffect(CARD_NUMBER_OF(id), 1);
         if (CountActiveCardsOnField(0, CARD_1530) != 0 || CountActiveCardsOnField(1, CARD_1530) != 0)
             BATTLE_BYTES.flipEffectPending = 0;
+        if (FlipEffectsLockedForTurn())
+            BATTLE_BYTES.flipEffectPending = 0;
         number = CARD_NUMBER_OF(BATTLE_BYTES.flipCardId);
         if (number == CARD_BLAST_SPHERE || number == CARD_KISEITAI) {
             int opponent = 1 - player;
@@ -645,6 +647,10 @@ int BattleStage_DamageCalc(int player)
         u16 number;
 
         CalcBattle(player, 0);
+#ifdef HAS_CARD_BLADE_KNIGHT
+        if (BATTLE_BYTES.flipEffectPending && BladeKnightNegatesBattleFlipEffect())
+            BATTLE_BYTES.flipEffectPending = 0;
+#endif
         if (!BATTLE_BYTES.direct) {
             opponent = 1 - player;
             if (DefenderFlags(opponent) & 2) {
@@ -858,6 +864,8 @@ int BattleStage_DamageCalc(int player)
         battle->flipCardId = id;
         battle->flipEffectPending = HasFlipEffect(CARD_NUMBER_OF(id), 1);
         if (CountActiveCardsOnField(0, CARD_1530) != 0 || CountActiveCardsOnField(1, CARD_1530) != 0)
+            battle->flipEffectPending = 0;
+        if (FlipEffectsLockedForTurn())
             battle->flipEffectPending = 0;
         QueueAddZoneLink(1 - player, gCardNumberToId_1243, LOC(1 - player, gBattle.defSlot), ZONE_LINK_CARD_EFFECT);
         CalcBattle(player, 0);

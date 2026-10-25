@@ -1041,6 +1041,29 @@ updated: 2026-09-29
   ZONE_LINK_ATK_300_PER_VALUE link (unless Light of Intervention keeps the hats face up).
 - Pages: [[added-cards]].
 
+## [2026-10-25] progress | Blade Knight
+- +400 ATK at 0–1 cards in hand (card_stats.c); piercing vs Defense Position monsters (CalcBattle, like key 1341).
+- Pages: [[added-cards]].
+
+## [2026-10-25] progress | Blade Knight (no piercing)
+- Removed mistaken `CalcBattle` piercing hook; GOAT Blade Knight is +400 ATK only (card_stats.c).
+- Pages: [[added-cards]].
+
+## [2026-10-25] progress | Blade Knight flip negation
+- When alone on the field, negates Flip Effects of monsters destroyed by battle with Blade Knight
+  (`BladeKnightNegatesBattleFlipEffect`, battle_phase1/2).
+- Pages: [[added-cards]].
+
+## [2026-10-25] progress | Blade Knight flip negation fix
+- Identify Blade Knight from `gBattle.atkSlot`; gate `CanActivateEffect` on `RESPONSE_BATTLE_FLIP_EFFECT`; require
+  battle win / destroyed defender.
+- Pages: [[added-cards]].
+
+## [2026-10-25] progress | Blade Knight flip negation (card id)
+- `IsBladeKnightCard` matches card number or name; negation uses `gDuel.turnPlayer`, `battleValue` win test, flip
+  target id match (ROM list: `config/new_cards.txt` only).
+- Pages: [[added-cards]].
+
 ## [2026-10-25] progress | Kycoo the Ghost Destroyer
 - Added card effect row reuses key 1511 resolve and battle-damage triggers; CountActiveKycooOnField for the
   graveyard-banish lock; CollectEffectTargets and resolve use CARD_NUMBER(link->card).

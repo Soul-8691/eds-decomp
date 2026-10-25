@@ -23,6 +23,7 @@
 #include "duel_flow.h"              /* gDuelCtrl */
 
 #include "duel.h"                   /* struct DuelCard / DuelZone / DuelPlayer / DuelState, gDuel, ... */
+#include "effect.h"                 /* ClearFlipEffectsLockForTurn */
 #include "duel_cmd.h"               /* gDuelCmd, DuelCmd_Push, gScatterScaleCurve */
 #include "duel_screen.h"            /* gDuelScreen, DuelScreen_*, GetAreaX/Y, the card-image loaders, card grid */
 
@@ -287,6 +288,8 @@ void DuelCmd_TurnEnd(void)
     int player = gDuelCmd.cmd >> 15;
     int i;
     int j;
+
+    ClearFlipEffectsLockForTurn();
 
     if ((s8)gDuelCmd.step == 0) {      /* FAKEMATCH: the (s8) cast is needed to match */
         DuelScreen_ScrollToZone(player, DUEL_AREA_MONSTER);

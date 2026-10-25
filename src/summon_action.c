@@ -219,7 +219,8 @@ u16 SummonStep_Flip(void)
         /* A monster with a flip effect activates it, unless key 1530 is on either field. */
         if (HasFlipEffect(CARD_NUMBER(gSummonAction.cardId), 0)) {
             if (CanActivateEffectOfCard(gSummonAction.player, DUEL_CARD_ID(&SummonZone(&gSummonAction)->card), 0) &&
-                !CountActiveCardsOnField(0, CARD_1530) && !CountActiveCardsOnField(1, CARD_1530)) {
+                !CountActiveCardsOnField(0, CARD_1530) && !CountActiveCardsOnField(1, CARD_1530)
+                && !FlipEffectsLockedForTurn()) {
                 int player = gSummonAction.player;
                 u32 trigger = (u32)(player & 1) << 31;
                 int zone = gSummonAction.zone;
