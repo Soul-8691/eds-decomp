@@ -1,5 +1,5 @@
 import sys, capstone
-rom=open('/work/baserom.gba','rb').read()
+rom=open('baserom.gba','rb').read()
 mode=sys.argv[1]; a=int(sys.argv[2],16); n=int(sys.argv[3],16)
 md=capstone.Cs(capstone.CS_ARCH_ARM, capstone.CS_MODE_THUMB if mode=='t' else capstone.CS_MODE_ARM)
 off=a-0x08000000

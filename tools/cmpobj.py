@@ -4,7 +4,7 @@
 # at the given absolute address; then compares each placed section with the ROM byte-for-byte.
 import sys, subprocess, os
 from elftools.elf.elffile import ELFFile
-rom=open('/work/baserom.gba','rb').read()
+rom=open('baserom.gba','rb').read()
 obj=sys.argv[1]; secs={}; syms={}
 for a in sys.argv[2:]:
     k,v=a.split('=')

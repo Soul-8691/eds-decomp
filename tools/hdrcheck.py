@@ -33,8 +33,8 @@ from pycparser import c_ast, c_parser  # noqa: E402
 import genprotos as gp  # noqa: E402
 
 PLAN = 'build/readability/header_plan.json'
-CC = [('/opt/agbcc/bin/old_agbcc', ['-mthumb-interwork', '-Wimplicit', '-Wparentheses', '-O2', '-fhex-asm']),
-      ('/opt/agbcc/bin/agbcc', ['-mthumb-interwork', '-O2', '-fhex-asm'])]
+CC = [('tools/agbcc/bin/old_agbcc', ['-mthumb-interwork', '-Wimplicit', '-Wparentheses', '-O2', '-fhex-asm']),
+      ('tools/agbcc/bin/agbcc', ['-mthumb-interwork', '-O2', '-fhex-asm'])]
 
 
 def rel(path):
@@ -49,7 +49,7 @@ def compile_check(hdr):
         c = os.path.join(d, 't.c')
         open(c, 'w').write(src)
         i = os.path.join(d, 't.i')
-        r = subprocess.run(['cpp', '-nostdinc', '-undef', '-I', 'include', '-I', '/opt/agbcc/include', '-iquote',
+        r = subprocess.run(['cpp', '-nostdinc', '-undef', '-I', 'include', '-I', 'tools/agbcc/include', '-iquote',
                             '.', c, '-o', i], capture_output=True, text=True)
         if r.returncode:
             return [f'cpp: {r.stderr.strip()[:600]}']

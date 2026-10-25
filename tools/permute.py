@@ -24,9 +24,9 @@ from check import baseline_syms, unit_cflags, unit_range, run  # noqa: E402
 from match_drafts import BLOCK, draft_body  # noqa: E402
 
 BASE = 0x08000000
-AGBCC_DIR = os.environ.get('AGBCC_DIR', '/opt/agbcc')
+AGBCC_DIR = os.environ.get('AGBCC_DIR', os.path.abspath('tools/agbcc'))
 
-# decomp-permuter weights for register-allocation near-misses (default weights: /opt/permuter/default_weights.toml)
+# decomp-permuter weights for register-allocation near-misses (default weights: ~/.eds-tools/permuter/default_weights.toml)
 REGALLOC_WEIGHTS = {
     'perm_temp_for_expr': 80, 'perm_reorder_decls': 60, 'perm_reorder_stmts': 40, 'perm_commutative': 40,
     'perm_randomize_internal_type': 30, 'perm_chain_assignment': 25, 'perm_refer_to_var': 25,
@@ -274,7 +274,7 @@ arm-none-eabi-ld -T {ab}/link.ld -o "$3" "$T/a.o" {ab}/syms.o
     print(f'set up {d} (target 0x{fa:08X}, 0x{fsize:X} bytes)')
 
     if a.run:
-        cmd = ['timeout', f'{int(a.minutes * 60)}', 'python3', os.path.join(os.environ.get('PERMUTER_DIR', '/opt/permuter'), 'permuter.py'), d, '-j', str(a.j),
+        cmd = ['timeout', f'{int(a.minutes * 60)}', 'python3', os.path.join(os.environ.get('PERMUTER_DIR', os.path.expanduser('~/.eds-tools/permuter')), 'permuter.py'), d, '-j', str(a.j),
                '--stop-on-zero', '--best-only', '--no-ignore-branch-targets']
         print(' '.join(cmd))
         subprocess.run(cmd)

@@ -264,8 +264,8 @@ def cmd_dump(func, flags):
     sys.path.insert(0, 'tools')
     import check
     cc, cflags = check.unit_cflags(unit)
-    script = (f'set -e; cpp -nostdinc -undef -I include -I /opt/agbcc/include -iquote . {d}/unit.c -o {d}/unit.i; '
-              f'cd {d}; /opt/agbcc/bin/{cc} {" ".join(cflags)} {" ".join(flags)} unit.i -o unit.s')
+    script = (f'set -e; cpp -nostdinc -undef -I include -I tools/agbcc/include -iquote . {d}/unit.c -o {d}/unit.i; '
+              f'cd {d}; {ROOT}/tools/agbcc/bin/{cc} {" ".join(cflags)} {" ".join(flags)} unit.i -o unit.s')
     r = subprocess.run([DR, 'sh', '-c', script], capture_output=True, text=True)
     print((r.stdout + r.stderr)[-2000:])
     print(f'dumps in {d}/:', ' '.join(sorted(os.listdir(d))))

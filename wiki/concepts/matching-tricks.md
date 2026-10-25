@@ -40,12 +40,12 @@ At the 2026-09-30 held checkpoint, 291 fallbacks remained: 261 had parked C and 
 
 1. Regenerate `build/decomp-queue/queue.json` while writers are held. Claim a source unit, then inspect its current compiled mismatch and the linked unit/sibling pages. The queue identifies matched-source siblings and batches up to eight functions per unit.
 2. Reuse a matched sibling before retranslating an existing draft. Apply the relevant width, ABI, expression or scope recipe to related functions together; retain function-specific differences.
-3. Compile a small variant grid in one Docker invocation. Record the candidate/source/compiler context and the exact remaining discrepancy. A syntax failure or malformed extraction is not matching evidence.
+3. Compile a small variant grid in one script invocation. Record the candidate/source/compiler context and the exact remaining discrepancy. A syntax failure or malformed extraction is not matching evidence.
 4. Time-box allocation searches. Start with a two- or three-minute focused permuter run; extend only if the candidate improves or new evidence changes the search. Keep at most two jobs, each with at most two workers, within the documented shared-host budget. Do not rerun an unchanged failed grid blindly. [[decomp-permuter]]
 5. Review behavior/ABI and accept each source change only after a complete-unit byte match. Keep nonmatching drafts parked. Hold all source writers for combined ROM/report checkpoints; full builds need not run for each private candidate.
 6. Update this catalog and the unit page when a new trick succeeds or a bounded family fails. Advance both metrics with sibling wins and larger-function streams. (Historical: at checkpoint 48, 85.27% of functions were in source and the source counter covered 57.76% of code bytes, with validated objdiff at 57.72%. Both reached 100% on 2026-10-02.)
 
-The existing Docker image supplies the compiler, disassembler, decompiler and search dependencies. Reuse prepared function contexts and run candidate loops inside Docker; avoid host installs and repeated container setup per variant. A C draft is a starting point; translation alone does not advance matching coverage. [[toolchain]], [[m2c]]
+The native toolchain (`tools/agbcc` plus the `tools/setup_native.sh` extras) supplies the compiler, disassembler, decompiler and search dependencies. Reuse prepared function contexts and run candidate loops in one shell script rather than one tool invocation per variant. A C draft is a starting point; translation alone does not advance matching coverage. [[toolchain]], [[m2c]]
 
 ## Compiler, prologue, padding and pools
 

@@ -24,7 +24,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from target import ROM, known_symbols  # noqa: E402  (the real ROM, or assembled originals without it)
 
 BASE = 0x08000000
-AGBCC_DIR = os.environ.get('AGBCC_DIR', '/opt/agbcc')
+AGBCC_DIR = os.environ.get('AGBCC_DIR', os.path.abspath('tools/agbcc'))
 
 
 def run(cmd, **kw):

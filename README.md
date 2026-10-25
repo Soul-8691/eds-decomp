@@ -23,23 +23,31 @@ its graphics, text, card data, fonts and sound into a local `assets/` folder tha
 
 ## Building
 
-The toolchain runs in Docker, so Docker is the only thing you install.
+The build runs natively in WSL (or any Linux), the same way as pret's decomps such as pokefirered. Run every
+command below from a WSL shell in the repository.
 
-1. Copy your dump of the USA release into the `roms/` folder. Either the `.gba` file or the `.zip` it came in
+1. Install the build tools:
+   ```
+   sudo apt install build-essential binutils-arm-none-eabi git python3
+   ```
+2. Build [agbcc](https://github.com/pret/agbcc) next to this repository, so that it sits at `../agbcc`:
+   ```
+   git clone https://github.com/pret/agbcc ../agbcc
+   (cd ../agbcc && ./build.sh)
+   ```
+   The first `make` installs it into `tools/agbcc` (by running `../agbcc/install.sh`); `make agbcc` does only
+   that step. To use a checkout somewhere else, pass `AGBCC_SRC=<path>`.
+3. Copy your dump of the USA release into the `roms/` folder. Either the `.gba` file or the `.zip` it came in
    works. The build needs the version with SHA-1 `510fbba212aca9bab95ea12f8fd933e62ee34dea`.
-2. Build the toolchain image once:
+4. Check the ROM and extract its data:
    ```
-   docker build -t eds-decomp docker/
-   ```
-3. Check the ROM and extract its data:
-   ```
-   tools/dr make setup
+   make setup
    ```
    If the file isn't the right one, setup says why. It recognizes the Japanese release, patched or trimmed
    dumps, and other games.
-4. Build the ROM and compare it with the original:
+5. Build the ROM and compare it with the original:
    ```
-   tools/dr make -j8 compare        # prints "eds.gba: OK" when it matches
+   make -j$(nproc) compare          # prints "eds.gba: OK" when it matches
    ```
 
 After setup, the build reads only `assets/` and the source code, so it no longer needs the ROM file.
@@ -106,8 +114,9 @@ assembly (`asm/nonmatching/<unit>/<func>.s`), and the tools compare compiled C a
   reassemble to the ROM exactly, which `tools/dr python3 tools/target.py --verify` confirms when a ROM is present.
 - Symbols whose address can't be read from their name are listed in `config/symbols.txt`. Every full build
   regenerates it.
-- Without Docker, `tools/setup_native.sh` installs the toolchain natively, and `tools/dr` then runs commands
-  directly.
+- The analysis tools (capstone, pyelftools, decomp-permuter, m2c, objdiff-cli) are optional extras that
+  `tools/setup_native.sh` installs into `~/.eds-tools`. `tools/dr <cmd>` runs a command from the repository
+  root with them on the path.
 
 The full-ROM check (`make compare`) and any work that reads game data, such as graphics, text or tables,
 still need the ROM, so they happen locally.

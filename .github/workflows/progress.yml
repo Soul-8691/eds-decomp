@@ -16,14 +16,21 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Build toolchain image
-        run: docker build -t eds-decomp docker/
+      # Same layout as a local build: agbcc built in ../agbcc, installed into tools/agbcc by the Makefile.
+      - name: Install toolchain
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends binutils-arm-none-eabi
+          git clone --depth 1 https://github.com/pret/agbcc ../agbcc
+          (cd ../agbcc && ./build.sh)
+          make agbcc
+          sudo curl -fsSL -o /usr/local/bin/objdiff-cli \
+            https://github.com/encounter/objdiff/releases/download/v3.8.2/objdiff-cli-linux-x86_64
+          sudo chmod +x /usr/local/bin/objdiff-cli
 
       # The gate: every C unit (and authored assembly unit) must still match its original bytes.
       - name: Every unit matches its original assembly
-        run: |
-          docker run --rm -u "$(id -u):$(id -g)" -v "$PWD":/work -w /work eds-decomp \
-            python3 tools/check_all.py -j "$(nproc)"
+        run: python3 tools/check_all.py -j "$(nproc)"
 
       # A pull request may not turn matching C back into assembly fallbacks.
       - name: Progress does not go backwards
@@ -37,9 +44,7 @@ jobs:
           [ "$head" -ge "$base" ]
 
       - name: Generate objdiff report
-        run: |
-          docker run --rm -u "$(id -u):$(id -g)" -v "$PWD":/work -w /work eds-decomp \
-            make -j"$(nproc)" objdiff-report
+        run: make -j"$(nproc)" objdiff-report
 
       - name: Check report
         run: python3 tools/check_report.py build/report.json
@@ -49,4 +54,3 @@ jobs:
         with:
           name: AY5E_report
           path: build/report.json
-

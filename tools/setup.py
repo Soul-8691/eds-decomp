@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """Find and check your copy of the game, then extract its data into assets/.
 
-  tools/dr make setup                       # looks in roms/ (and the repository root) for the game
-  tools/dr python3 tools/setup.py FILE      # or name the file; it must be inside this repository
+  make setup                                # looks in roms/ (and the repository root) for the game
+  python3 tools/setup.py FILE               # or name the file; it must be inside this repository
 
 Accepts a .gba file or a .zip containing one. The ROM must be the USA release (game code AY5E) with
 SHA-1 510fbba212aca9bab95ea12f8fd933e62ee34dea. A matching file is saved as roms/base_eng.gba,
@@ -97,7 +97,7 @@ def main():
     link_baserom()
     print(f'ROM OK: {label} (SHA-1 {SHA1[:12]}...), saved as {TARGET}')
     assets.cmd_extract('baserom.gba')
-    print('Setup done. Build with:  tools/dr make -j8 compare')
+    print('Setup done. Build with:  make -j$(nproc) compare')
 
 
 if __name__ == '__main__':

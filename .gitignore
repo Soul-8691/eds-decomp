@@ -5,8 +5,9 @@
 roms/
 assets/
 
-# Build output and generated files.
+# Build output and generated files. tools/agbcc is installed from ../agbcc (see Makefile).
 build/
+tools/agbcc/
 __pycache__/
 objdiff.json
 

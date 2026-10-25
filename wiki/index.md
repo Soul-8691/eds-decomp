@@ -70,7 +70,7 @@ Start with [[overview]]. The decompilation is 100% matched since 2026-10-02: all
 - [[assets]]: `make setup` extracts all 83 data ranges from your ROM into editable files (JSON, CSV, text, PNG, WAV, PAL) and the build reads them back byte-identical; plugin mechanism, every format family, edit constraints. *verified*
 - [[rom-free-workflow]]: checking and permuting without the ROM (target bytes from the original assembly, `config/symbols.txt`, native setup, CI gate) for GitHub agents. *verified*
 - [[agent-tooling]]: current lead-only continuation and no-restart policy; historical parallel tooling, handoffs, matching helpers and verification.
-- [[toolchain]]: Docker image, disassembler, build, check tools.
+- [[toolchain]]: native WSL build (Makefile + agbcc), disassembler, check tools.
 - [[agbcc]]: the compiler (confirmed).
 - [[decomp-permuter]]: random-rewrite search for near-miss drafts (`tools/permute.py`).
 - [[regoracle]]: register-allocation oracle (`tools/regoracle.py` plus a tracing agbcc patch). It shows which pseudos differ from the ROM's registers and why, then inverse-solves the allocation order and checks the answer by recompiling. *verified (`--verify-compiler` 112/112)*

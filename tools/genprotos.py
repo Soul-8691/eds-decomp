@@ -68,7 +68,7 @@ def c_units():
 
 def cpp(path):
     r = subprocess.run(['cpp', '-nostdinc', '-undef', '-DOBJDIFF_BASE', '-I', 'include', '-I',
-                        '/opt/agbcc/include', '-iquote', '.', path], capture_output=True, text=True)
+                        'tools/agbcc/include', '-iquote', '.', path], capture_output=True, text=True)
     if r.returncode:
         raise RuntimeError(f'cpp failed: {r.stderr.strip()[:300]}')
     return r.stdout

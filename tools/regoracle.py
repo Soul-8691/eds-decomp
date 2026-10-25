@@ -87,7 +87,7 @@ AGBCC_REPO = 'https://github.com/pret/agbcc'
 AGBCC_COMMIT = 'da598c1d918402c42c0c0d7128ba14567f3175e9'
 PATCH = 'tools/regoracle_agbcc.patch'
 BUILD = 'build/regoracle'
-STOCK_DIR = os.environ.get('AGBCC_DIR', '/opt/agbcc')
+STOCK_DIR = os.environ.get('AGBCC_DIR', os.path.abspath('tools/agbcc'))
 BASE = 0x08000000
 
 

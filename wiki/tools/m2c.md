@@ -8,7 +8,7 @@ updated: 2026-10-01
 ---
 # m2c
 
-[m2c](https://github.com/matt-kempster/m2c) ("machine code to C") is the decompiler behind decomp.me. It supports ARM (`-t arm-gcc-c`). It is installed in the Docker image at `/opt/m2c`.
+[m2c](https://github.com/matt-kempster/m2c) ("machine code to C") is the decompiler behind decomp.me. It supports ARM (`-t arm-gcc-c`). `tools/setup_native.sh` installs it at `~/.eds-tools/m2c` (`M2C_DIR=` overrides; before 2026-10-24 it lived in the Docker image at `/opt/m2c`).
 
 ## Usage
 ```

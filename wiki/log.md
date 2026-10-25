@@ -851,3 +851,17 @@ updated: 2026-09-29
   `Matching:`, and a few other units had pins with no tag at all.
 - Pages: [[shared-headers]].
 - Verified: `tools/dr python3 tools/check_all.py` (112/112). `make compare` was not run (no ROM in the cloud session).
+
+## [2026-10-24] setup | Native WSL build: pokefirered-style Makefile + agbcc, Docker removed
+- The build no longer uses Docker. `make -j$(nproc) compare` runs natively in WSL with the distro's
+  `binutils-arm-none-eabi`, host `cpp`, and agbcc installed into `tools/agbcc` (git-ignored) from a built
+  pret/agbcc checkout at `../agbcc` via its `install.sh`, as pokefirered does. The Makefile does the install on
+  the first build (`make agbcc`; `AGBCC_SRC=` overrides). `docker/Dockerfile` is deleted; CI clones and builds
+  agbcc on the runner. The emulator image (`docker/emu`, [[emulator]]) is unchanged.
+- `tools/dr` now just runs a command from the repo root (sourcing `~/.eds-tools/env.sh` when present);
+  `tools/setup_native.sh` installs only the optional extras. Python tools default to `tools/agbcc` instead of
+  `/opt/agbcc`, and to `~/.eds-tools/{permuter,m2c}`.
+- Verified in WSL Ubuntu from a clean tree: `make setup`, `make -j8 compare` (eds.gba: OK, ~65 s), and
+  `tools/dr python3 tools/check_all.py -j 8` (112/112).
+- Pages: [[toolchain]], [[agbcc]], [[rom-free-workflow]], [[decomp-workflow]], [[decomp-permuter]], [[m2c]],
+  [[objdiff]], [[matching-tricks]], [[overview]], [[index]].

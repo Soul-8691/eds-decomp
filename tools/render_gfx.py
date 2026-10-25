@@ -1,12 +1,11 @@
 #!/usr/bin/env python3
 """Render EDS graphics to PNG for inspection (needs Pillow; stdlib decoders).
 
-Pillow is NOT in the toolchain image. Install it into a throwaway dir and point
+Pillow is not part of the toolchain. Install it into a throwaway dir and point
 PYLIB at it, and ALWAYS write output outside the repo (never commit game assets):
 
-  docker run --rm -v "$PWD":/work -v <scratch>:/scratch -w /work eds-decomp:latest \
-      sh -c 'pip install -q --target /scratch/pylib pillow; \
-             PYLIB=/scratch/pylib python3 tools/render_gfx.py card 1 /scratch/card1.png'
+  pip install -q --target <scratch>/pylib pillow
+  PYLIB=<scratch>/pylib python3 tools/render_gfx.py card 1 <scratch>/card1.png
 
 Modes (addresses are 0x08xxxxxx):
   card <id> <out.png>                   card art id (1..820), 72x80, 6bpp + 64-colour palette

@@ -46,7 +46,7 @@ def _strip_attributes(t):
 
 def preprocess(path):
     r = subprocess.run(['cpp', '-P', '-nostdinc', '-undef', '-DOBJDIFF_BASE', '-I', 'include', '-I',
-                        '/opt/agbcc/include', '-iquote', '.', path], capture_output=True, text=True)
+                        'tools/agbcc/include', '-iquote', '.', path], capture_output=True, text=True)
     t = r.stdout
     t = _strip_attributes(t)        # balanced: __attribute__((packed, aligned(2))); packing itself is ignored
     # asm labels first: a label continued on its own line (`f(...)\n    asm("sym");`) would otherwise look like a
