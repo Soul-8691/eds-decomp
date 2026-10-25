@@ -5,3 +5,4 @@ D.D. Warrior Lady:
 Trap Dustshoot: AI picks first card in hand
 Chaos Sorcerer: AI doesn't special summon
 Raigeki Break: "first" card activation wording
+Scapegoat: AI doesn't play
