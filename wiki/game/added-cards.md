@@ -165,6 +165,13 @@ bits. They keep those bits as their low bits and have high bits in the bytes the
 rewritten), Deck Edit (cards, list, prohibit, stats, widgets, filter steps), booster code, the debug give-all. Saves
 from the original game load unchanged; the format is a superset.
 
+### Trap Dustshoot (2026-10-25)
+- **Activation.** Only while the opponent holds 4 or more cards (prepare).
+- **Resolve.** It uses Confiscation's prompt `PROMPT_PICK_OPPONENT_HAND_CARD`, which reveals the opponent's hand for a
+  cursor pick. A pick that is not a monster plays `SE_ERROR` and the prompt runs again. The CPU takes the first monster
+  in the hand. The card goes to the bottom of the Deck (`ReturnHandCardToDeck`), and the Deck is shuffled.
+- **No monster.** If the hand holds no monster, nothing happens, and the hand is not shown either.
+
 ### D.D. Warrior Lady (2026-10-25)
 There is no effect row. The effect lives in `BattleStage_DestroyMonsters` (battle_phase2.c). When D.D. Warrior Lady is
 in a battle with a monster, the stage first asks her controller, before any destroyed monster leaves the field. The

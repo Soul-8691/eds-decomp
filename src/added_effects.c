@@ -26,6 +26,8 @@
 #include "duel_cmd.h"
 #include "text_box.h"
 #include "duel_prompt.h"
+#include "sound.h"
+#include "constants/sound.h"
 
 /* ---- Spell Counters ----------------------------------------------------------------------------------------
  * A Spell Counter on a monster is a ZONE_LINK_ATK_300_PER_VALUE link from the monster's own card ID: the link's
@@ -332,6 +334,68 @@ int EffectTorrentialTributePrepare(struct ChainEntry *card, struct ChainEntry *c
 const u8 gStrDDWarriorLadyPrompt[] = "Use D.D. Warrior Lady's effect to banish both monsters?";
 #endif /* HAS_CARD_D_D_WARRIOR_LADY */
 
+#ifdef HAS_CARD_TRAP_DUSTSHOOT
+/* ---- Trap Dustshoot -------------------------------------------------------------------------------------------
+ * "Activate only if your opponent has 4 or more cards in their hand. Look at your opponent's hand, select 1 Monster
+ * Card in it, and return that card to its owner's Deck."
+ * The pick is Confiscation's (PROMPT_PICK_OPPONENT_HAND_CARD: the opponent's hand is revealed and the cursor picks a
+ * card); a card that is not a monster plays the error sound and the prompt runs again. The CPU takes the first
+ * monster in the human's hand. The card goes to the bottom of the Deck (ReturnHandCardToDeck), which is then
+ * shuffled. With no monster in the opponent's hand nothing happens. */
+
+/* Index of the first monster in the hand of `player`, or -1. */
+static int FindHandMonster(int player)
+{
+    struct DuelPlayer *p = &gDuelPlayers[player & 1];
+    int i;
+
+    for (i = 0; i < p->handCount; i++) {
+        if (CARD_STATS_TYPE(gCardStats[DUEL_CARD_ID(&p->hand[i]) & CARD_ID_MASK]) <= CARD_TYPE_REPTILE)
+            return i;
+    }
+    return -1;
+}
+
+int EffectTrapDustshootPrepare(struct ChainEntry *card, struct ChainEntry *chainLink, u16 fromHand)
+{
+    return gDuelPlayers[(1 - card->player) & 1].handCount >= 4;
+}
+
+int EffectTrapDustshootResolve(struct ChainEntry *link, struct ChainEntry *chainedTo)
+{
+    int opponent = 1 - link->player;
+    int slot;
+
+    if (link->negated)
+        return EFFECT_STEP_DONE;
+    switch (gChain.effectStep) {
+    case EFFECT_STEP_START:
+        if (FindHandMonster(opponent) < 0)
+            return EFFECT_STEP_DONE;
+        if (link->player) {                 /* the CPU */
+            slot = FindHandMonster(opponent);
+            break;
+        }
+        DuelPrompt_Post(link->player, PROMPT_PICK_OPPONENT_HAND_CARD, 0, 0);
+        return EFFECT_STEP_2;
+    case EFFECT_STEP_2:                     /* promptResult: the picked hand slot */
+        slot = gDuel.promptResult;
+        if (CARD_STATS_TYPE(gCardStats[DUEL_CARD_ID(&gDuelPlayers[opponent & 1].hand[slot]) & CARD_ID_MASK])
+            > CARD_TYPE_REPTILE) {
+            PlaySE(SE_ERROR);
+            DuelPrompt_Post(link->player, PROMPT_PICK_OPPONENT_HAND_CARD, 0, 0);
+            return EFFECT_STEP_2;
+        }
+        break;
+    default:
+        return EFFECT_STEP_DONE;
+    }
+    ReturnHandCardToDeck(opponent, slot, 0);
+    DuelCmd_Push(opponent ? DUEL_CMD_PLAYER | DUEL_CMD_SHUFFLE_DECK : DUEL_CMD_SHUFFLE_DECK, 0, 0, 0);
+    return EFFECT_STEP_END;
+}
+#endif /* HAS_CARD_TRAP_DUSTSHOOT */
+
 /* ---- "Gravekeeper's" cards -----------------------------------------------------------------------------------
  * 1 if the card's name starts with "Gravekeeper's" (the archetype the Gravekeeper's cards refer to). */
 static const char sGravekeeperPrefix[] = "Gravekeeper's";
@@ -396,6 +460,16 @@ const struct CardEffect gAddedCardEffects[] = {
         (int (*)(struct ChainEntry *, struct ChainEntry *))EffectDarkHoleResolve,
         NULL,
         EffectTorrentialTributePrepare,
+        NULL,
+        NULL,
+    },
+#endif
+#ifdef HAS_CARD_TRAP_DUSTSHOOT
+    {
+        CARD_TRAP_DUSTSHOOT, 0,
+        EffectTrapDustshootResolve,
+        NULL,
+        EffectTrapDustshootPrepare,
         NULL,
         NULL,
     },

@@ -966,3 +966,9 @@ updated: 2026-09-29
   keeps the answer in gBattle.ddWarriorLady, and on Yes banishes destroyed monsters the way Dimensional Warrior does,
   plus the survivors. The chain trigger and effect row are gone.
 - Pages: [[added-cards]].
+
+## [2026-10-25] progress | Trap Dustshoot
+- `src/added_effects.c`: prepare = the opponent holds 4+ cards. Resolve = Confiscation's PROMPT_PICK_OPPONENT_HAND_CARD
+  (hand revealed, cursor pick), repeated with SE_ERROR until a monster is picked; the CPU takes the first monster.
+  ReturnHandCardToDeck (bottom) + DUEL_CMD_SHUFFLE_DECK. No monster in that hand: nothing happens.
+- Pages: [[added-cards]].

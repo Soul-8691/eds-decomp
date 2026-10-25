@@ -101,6 +101,9 @@ int EffectTribeInfectingVirusChainA(struct ChainEntry *link, struct ChainEntry *
 int EffectTribeInfectingVirusResolve(struct ChainEntry *link, struct ChainEntry *chainedTo);
 /* Torrential Tribute: answers a summon; destroys every monster (Dark Hole's resolve). */
 int EffectTorrentialTributePrepare(struct ChainEntry *card, struct ChainEntry *chainLink, u16 fromHand);
+/* Trap Dustshoot: return a monster from the opponent's hand (4 or more cards) to its Deck. */
+int EffectTrapDustshootPrepare(struct ChainEntry *card, struct ChainEntry *chainLink, u16 fromHand);
+int EffectTrapDustshootResolve(struct ChainEntry *link, struct ChainEntry *chainedTo);
 
 /* ChainA (activation costs) */
 /* Activation cost: pay the card's LP cost (500 to 5000, half for Solemn Judgment). Always returns 1. */
