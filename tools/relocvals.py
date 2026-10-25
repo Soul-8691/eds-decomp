@@ -4,7 +4,7 @@ Usage: relocvals.py file.o rom_address_of_text"""
 import sys, struct
 from elftools.elf.elffile import ELFFile
 from elftools.elf.relocation import RelocationSection
-rom = open('/work/baserom.gba', 'rb').read()
+rom = open('baserom.gba', 'rb').read()
 base = int(sys.argv[2], 16) - 0x08000000
 with open(sys.argv[1], 'rb') as f:
     e = ELFFile(f)

@@ -4,7 +4,7 @@ type: tool
 status: solid
 confidence: high
 sources: [rom-analysis]
-updated: 2026-10-02
+updated: 2026-10-24
 ---
 # Working without the ROM
 
@@ -14,7 +14,7 @@ Goal: let GitHub-connected agents and CI work on the matching decomp without the
 - **Targets come from the original assembly.** `tools/target.py` exposes `ROM`, which is the real `baserom.gba` when present. Without it, a slice-only view assembles the containing unit's `asm/<unit>.s` (with `asm/nonmatching/<unit>/*.s`), links it alone at the unit's ROM address with symbol stubs, and returns the bytes. Results are cached in `build/target-cache/`. `check.py`, `permute.py`, `check_all.py` and the private scripts that slice `check.ROM` all use it.
 - **Verified equivalence (2026-10-01):** `tools/dr python3 tools/target.py --verify` with the ROM reports **112/112 code units: assembled original == ROM**. Data, the header and graphics aren't covered; only the full link sees them.
 - Without `build/eds.elf`, symbols come from `config/symbols.txt`. It lists the 69 global symbols whose address can't be derived from `config/functions.tsv`, `symbols.ld` or a `_XXXXXXXX` suffix (libgcc, `IntrMain`, SDK labels, …). `tools/dumpsyms.py` regenerates it after every full link (Makefile hook), and `check.py` merges it with `build/eds.elf` when that exists.
-- **No Docker:** `tools/setup_native.sh [PREFIX]` installs binutils, builds pret/agbcc, and sets up a venv with capstone/pyelftools plus, optionally, decomp-permuter, m2c and objdiff-cli. It writes `PREFIX/env.sh`. `tools/dr` runs commands directly when Docker is missing or `EDS_NATIVE=1`. Tool paths are configurable through `AGBCC_DIR` (Makefile, `check.py`, `permute.py`, `m2c_draft.py`) and `PERMUTER_DIR`.
+- **Toolchain:** everything is native (no Docker since 2026-10-24). agbcc comes from a pret/agbcc checkout at `../agbcc`, installed into `tools/agbcc` by the Makefile; CI clones and builds it the same way. `tools/setup_native.sh [PREFIX]` installs the optional extras (a venv with capstone/pyelftools, decomp-permuter, m2c, objdiff-cli) and writes `PREFIX/env.sh`, which `tools/dr` sources. Tool paths are configurable through `AGBCC_DIR` (Makefile and Python tools), `PERMUTER_DIR` and `M2C_DIR`.
 
 ## The CI gate (`.github/workflows/progress.yml`)
 1. `tools/check_all.py`: every C unit reports `unit bytes MATCH`, and every authored assembly unit (`src/<u>.s`, for example the ARM mixer) assembles to the same bytes as its original. 112/112 pass without a ROM in about 15 s.

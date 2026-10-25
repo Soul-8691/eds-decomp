@@ -21,13 +21,13 @@ parallel ownership workflow are in [[agent-tooling]].
 
 ## Build
 
-Everything runs in Docker, through `tools/dr`, so the host stays clean. Build the image once with `docker build -t eds-decomp docker/`.
+The build runs natively in WSL (pokefirered-style Makefile + agbcc; see [[toolchain]]). Build agbcc once in `../agbcc`; the first `make` installs it into `tools/agbcc`.
 
 ```sh
-tools/dr make -j8 compare     # full build of eds.gba, then SHA-1 check against the baserom
+make -j$(nproc) compare       # full build of eds.gba, then SHA-1 check against the baserom
 ```
 
-`baserom.gba` is a symlink to the original ROM. Since the asset pipeline (2026-10-01; complete 2026-10-02), the ROM is read only once: `tools/dr make setup` extracts all data into editable files in `assets/`, and the build makes `build/assets/*.bin` from them. After setup the build matches without the ROM. See [[assets]]. (Earlier, `data/*.s` `.incbin`ed the ROM directly, so it had to be present.)
+`baserom.gba` is a symlink to the original ROM. Since the asset pipeline (2026-10-01; complete 2026-10-02), the ROM is read only once: `make setup` extracts all data into editable files in `assets/`, and the build makes `build/assets/*.bin` from them. After setup the build matches without the ROM. See [[assets]]. (Earlier, `data/*.s` `.incbin`ed the ROM directly, so it had to be present.)
 
 ## Layout
 

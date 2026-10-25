@@ -4,11 +4,11 @@ type: tool
 status: verified
 confidence: high
 sources: [rom-analysis, general-knowledge]
-updated: 2026-09-29
+updated: 2026-10-24
 ---
 # agbcc
 
-agbcc is pret's reconstruction of the GCC 2.95-based C compiler from Nintendo's GBA SDK (banner: `gcc 2.9-arm-000512 for Thumb/elf`). pokeruby, pokeemerald, pokefirered and many other GBA decomps use it. The Docker image (`eds-decomp:latest`) builds it from `pret/agbcc` into `/opt/agbcc`:
+agbcc is pret's reconstruction of the GCC 2.95-based C compiler from Nintendo's GBA SDK (banner: `gcc 2.9-arm-000512 for Thumb/elf`). pokeruby, pokeemerald, pokefirered and many other GBA decomps use it. As in pokefirered, it is built in a `pret/agbcc` checkout next to the repo (`../agbcc`, `./build.sh`), and the Makefile installs it into `tools/agbcc` with that checkout's `install.sh` the first time it is missing (`make agbcc`; `AGBCC_SRC=` picks another checkout). The Python tools default to `tools/agbcc` too (`AGBCC_DIR=` overrides). Until 2026-10-24 a Docker image built it into `/opt/agbcc`:
 
 | Binary | What it is | Used by EDS for |
 |---|---|---|

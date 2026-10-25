@@ -29,7 +29,7 @@ sys.path.insert(0, os.path.dirname(__file__))
 from check import baseline_syms  # noqa: E402
 from permute import strip_other_fns  # noqa: E402
 
-M2C = ['python3', '/opt/m2c/m2c.py', '-t', 'arm-gcc-c']
+M2C = ['python3', os.path.join(os.environ.get('M2C_DIR', os.path.expanduser('~/.eds-tools/m2c')), 'm2c.py'), '-t', 'arm-gcc-c']
 
 
 def functions():
@@ -90,7 +90,7 @@ def context(unit, tmp):
     src = f'src/{unit}.c'
     ctx = f'{tmp}/ctx.c'
     inp = src if os.path.exists(src) else 'include/global.h'
-    r = subprocess.run(['cpp', '-P', '-nostdinc', '-undef', '-I', 'include', '-I', os.environ.get('AGBCC_DIR', '/opt/agbcc') + '/include',
+    r = subprocess.run(['cpp', '-P', '-nostdinc', '-undef', '-I', 'include', '-I', os.environ.get('AGBCC_DIR', os.path.abspath('tools/agbcc')) + '/include',
                         '-iquote', '.', inp], capture_output=True, text=True)
     if r.returncode:
         return None

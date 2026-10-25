@@ -925,7 +925,7 @@ def compare_assets(us_rom, jp_rom, out=OUT, chunk=64, samples=48):
 # ------------------------------------------------------------------------------------------------
 # Compiler test: USA C recompiled and linked at the JP address
 # ------------------------------------------------------------------------------------------------
-AGBCC = '/opt/agbcc'
+AGBCC = os.path.abspath('tools/agbcc')
 DEFAULT_CC = ('old_agbcc', '-mthumb-interwork -Wimplicit -Wparentheses -O2 -fhex-asm')
 
 

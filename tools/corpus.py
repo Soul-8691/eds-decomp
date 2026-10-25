@@ -24,7 +24,7 @@ from concurrent.futures import ThreadPoolExecutor
 
 ROOT = 'build/corpus'
 OUT = f'{ROOT}/_s'
-AGBCC = os.environ.get('AGBCC_DIR', '/opt/agbcc')
+AGBCC = os.environ.get('AGBCC_DIR', os.path.abspath('tools/agbcc'))
 DEFINES = ['-D__INTELLISENSE__', '-DMODERN=0', '-DNDEBUG', '-DENGLISH', '-DUSA', '-DREVISION=0',
            '-DGAME_VERSION=0', '-DFIRERED', '-DBUGFIX=0', '-DPLATFORM_GBA=1', '-DNON_MATCHING=0']
 

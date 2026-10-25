@@ -5,18 +5,20 @@ Alongside the code, Claude maintains a persistent **LLM wiki** in `wiki/`, which
 
 Claude writes and maintains the wiki. The human curates sources, directs the work, and asks questions.
 
-## Build (all in Docker; never install toolchains on the host)
+## Build (native, in WSL or Linux; no Docker)
 
 ```
-docker build -t eds-decomp docker/          # once
-tools/dr make setup                         # once: check the ROM in roms/, extract assets/
-tools/dr make -j8 compare                   # full build + SHA-1 check (eds.gba: OK)
+(cd ../agbcc && ./build.sh)                 # once: pret/agbcc checked out next to this repo
+make setup                                  # once: check the ROM in roms/, extract assets/
+make -j$(nproc) compare                     # full build + SHA-1 check (eds.gba: OK); installs tools/agbcc first
 tools/dr python3 tools/check.py <unit>      # per-unit match check (safe to run concurrently)
 tools/dr python3 tools/check_all.py         # every unit (the CI gate)
 ```
+The build needs `make`, `cpp`, `python3` and `binutils-arm-none-eabi`. agbcc lives in `tools/agbcc` (git-ignored),
+installed pokefirered-style from `../agbcc` (`AGBCC_SRC=` overrides). `tools/dr` runs a command from the repo root.
 `check.py`, `check_all.py` and `permute.py` also work without the ROM, taking their targets from the original
 assembly (`tools/target.py`). See `wiki/tools/rom-free-workflow.md`.
-Without Docker (e.g. web sandboxes): `tools/setup_native.sh`, then `. ~/.eds-tools/env.sh`; `tools/dr` then runs commands directly.
+Optional analysis extras (capstone/pyelftools venv, permuter, m2c, objdiff-cli): `tools/setup_native.sh`; `tools/dr` sources `~/.eds-tools/env.sh`.
 Code lives in units (`units.txt`): `src/<unit>.c` with `INCLUDE_ASM` for unmatched functions, or `asm/<unit>.s`.
 The decomp workflow, conventions and matching tips are in `wiki/concepts/decomp-workflow.md`.
 Naming convention for decompiled symbols: pret-style (`CamelCase` functions, `gCamelCase` globals, `sub_08XXXXXX`/`gUnk_0XXXXXXX` until named).

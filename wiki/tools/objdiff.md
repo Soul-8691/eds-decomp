@@ -8,7 +8,7 @@ updated: 2026-10-01
 ---
 # objdiff
 
-[objdiff](https://github.com/encounter/objdiff) is an object-file differ, and it generates the progress report that [decomp.dev](https://decomp.dev/projects) displays. `objdiff-cli` v3.8.2 is installed in the Docker image at `/usr/local/bin/objdiff-cli`.
+[objdiff](https://github.com/encounter/objdiff) is an object-file differ, and it generates the progress report that [decomp.dev](https://decomp.dev/projects) displays. `objdiff-cli` v3.8.2 is installed by `tools/setup_native.sh` at `~/.eds-tools/bin/objdiff-cli` (CI downloads it directly).
 
 ## Usage in this repo
 ```

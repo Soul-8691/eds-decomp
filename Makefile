@@ -1,8 +1,11 @@
 # Yu-Gi-Oh! The Eternal Duelist Soul (USA) - matching decompilation.
-# Run everything inside the toolchain container:
-#     tools/dr make setup        # once: check your ROM (put it in roms/) and extract its data into assets/
-#     tools/dr make -j8          # build eds.gba
-#     tools/dr make compare      # build and check the SHA-1 against the original
+# Builds natively in WSL (or Linux) with agbcc and binutils-arm-none-eabi, like the pret decomps:
+#     make setup            # once: check your ROM (put it in roms/) and extract its data into assets/
+#     make -j$(nproc)       # build eds.gba
+#     make -j$(nproc) compare   # build and check the SHA-1 against the original
+# agbcc is installed into tools/agbcc from a built copy of pret/agbcc next to this repository
+# (../agbcc). The first build does that automatically, or run `make agbcc`; set AGBCC_SRC to use
+# another checkout.
 
 ROM      := eds.gba
 ELF      := build/eds.elf
@@ -14,7 +17,8 @@ AS       := $(PREFIX)as
 LD       := $(PREFIX)ld
 OBJCOPY  := $(PREFIX)objcopy
 CPP      := cpp
-AGBCC_DIR ?= /opt/agbcc
+AGBCC_SRC ?= ../agbcc
+AGBCC_DIR ?= tools/agbcc
 CC1      := $(AGBCC_DIR)/bin/agbcc
 CC1_OLD  := $(AGBCC_DIR)/bin/old_agbcc
 AGBLIB   := $(AGBCC_DIR)/lib
@@ -37,7 +41,7 @@ UNITS    := $(shell sed -e 's/\#.*//' -e '/^[[:space:]]*$$/d' -e '/^@/d' units.t
 unit_obj  = $(if $(and $(wildcard src/$(1).c),$(if $(filter $(1),$(ASM_UNITS)),,y)),build/src/$(1).o,$(if $(wildcard src/$(1).s),build/srcasm/$(1).o,$(if $(wildcard asm/$(1).s),build/asm/$(1).o,build/data/$(1).o)))
 OBJS     := $(foreach u,$(UNITS),$(call unit_obj,$(u)))
 
-.PHONY: all compare clean tidy objdiff-report setup FORCE
+.PHONY: all compare clean tidy objdiff-report setup agbcc FORCE
 .SECONDARY:
 .DELETE_ON_ERROR:
 
@@ -49,6 +53,15 @@ compare: $(ROM)
 # Check your ROM and extract the game's data into assets/ (never committed).
 setup:
 	$(PYTHON) tools/setup.py
+
+# agbcc, installed pokefirered-style: ../agbcc/install.sh copies the compilers, headers and
+# libgcc/libc into tools/agbcc. Every C object waits for it (order-only).
+CC1_INSTALLED := $(AGBCC_DIR)/bin/old_agbcc
+agbcc: $(CC1_INSTALLED)
+$(CC1_INSTALLED):
+	@test -f $(AGBCC_SRC)/old_agbcc -a -f $(AGBCC_SRC)/agbcc -a -f $(AGBCC_SRC)/libgcc.a || { echo "error: no built agbcc in $(AGBCC_SRC). Clone https://github.com/pret/agbcc next to this repository and run ./build.sh there (or set AGBCC_SRC)."; exit 1; }
+	cd $(AGBCC_SRC) && ./install.sh $(CURDIR)
+	chmod +x $(AGBCC_DIR)/bin/*
 
 clean:
 	rm -rf build $(ROM)
@@ -70,7 +83,7 @@ build/autosyms.s: $(OBJS) symbols.ld tools/autosyms.py
 build/autosyms.o: build/autosyms.s
 	$(AS) $(ASFLAGS) -o $@ $<
 
-$(ELF): build/ld_script.ld build/autosyms.o $(OBJS)
+$(ELF): build/ld_script.ld build/autosyms.o $(OBJS) | $(CC1_INSTALLED)
 	$(LD) -T build/ld_script.ld -Map $(MAP) -o $@ $(OBJS) build/autosyms.o -L $(AGBLIB) -lgcc -lc
 	$(PYTHON) tools/dumpsyms.py $@ config/symbols.txt
 
@@ -79,7 +92,7 @@ $(ELF): build/ld_script.ld build/autosyms.o $(OBJS)
 ASSET_FILES  := $(shell find assets -type f 2>/dev/null)
 ASSETS_BUILT := build/assets/.built
 $(ASSETS_BUILT): config/assets.tsv config/functions.tsv tools/assets.py $(wildcard tools/assetfmt/*.py) $(ASSET_FILES)
-	@test -d assets || { echo "error: assets/ not found. Put your copy of the game in roms/ and run 'tools/dr make setup' (see README.md)."; exit 1; }
+	@test -d assets || { echo "error: assets/ not found. Put your copy of the game in roms/ and run 'make setup' (see README.md)."; exit 1; }
 	$(PYTHON) tools/assets.py build
 
 build/asm/crt0.o: $(ASSETS_BUILT)   # cartridge header
@@ -107,7 +120,7 @@ build/srcasm/%.o: src/%.s
 	$(AS) $(ASFLAGS) --MD build/srcasm/$*.d -o $@ $<
 
 # C units go through cpp, agbcc and as. Functions not yet matched stay as INCLUDE_ASM(...).
-build/src/%.o: src/%.c config/cflags.txt
+build/src/%.o: src/%.c config/cflags.txt | $(CC1_INSTALLED)
 	@mkdir -p $(@D)
 	$(CPP) $(CPPFLAGS) -MMD -MP -MF build/src/$*.d -MT $@ $< -o build/src/$*.i
 	$(call unit_cc,$*) $(call unit_cflags,$*) build/src/$*.i -o build/src/$*.s
@@ -128,7 +141,7 @@ objdiff-report: objdiff.json $(OBJDIFF_OBJS) $(patsubst src/%.s,build/srcasm/%.o
 	$(PYTHON) tools/mkobjdiff.py --summary build/report.json
 	$(PYTHON) tools/check_report.py build/report.json
 
-build/objdiff/raw/%.o: src/%.c config/cflags.txt
+build/objdiff/raw/%.o: src/%.c config/cflags.txt | $(CC1_INSTALLED)
 	@mkdir -p $(@D)
 	$(CPP) $(CPPFLAGS) -DOBJDIFF_BASE $< -o build/objdiff/raw/$*.i
 	$(call unit_cc,$*) $(call unit_cflags,$*) build/objdiff/raw/$*.i -o build/objdiff/raw/$*.s

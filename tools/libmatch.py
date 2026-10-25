@@ -1,6 +1,6 @@
 import sys, glob, os
 from elftools.elf.elffile import ELFFile
-rom = open('/work/baserom.gba','rb').read()
+rom = open('baserom.gba','rb').read()
 def text_and_mask(path):
     with open(path,'rb') as f:
         e = ELFFile(f)

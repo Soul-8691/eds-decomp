@@ -13,7 +13,7 @@ updated: 2026-10-01
 It is the tool for drafts that are only off by a few registers or by instruction order ([[decomp-workflow]]).
 
 ## Setup
-- It is installed in the Docker image at `/opt/permuter`, with pycparser, toml and Levenshtein in the venv. Both `eds-decomp` and `eds-opencode` include it.
+- `tools/setup_native.sh` installs it at `~/.eds-tools/permuter` (`PERMUTER_DIR=` overrides), with pycparser, toml and Levenshtein in the venv. (Before 2026-10-24 it lived in the Docker image at `/opt/permuter`.)
 - `tools/permute.py <unit> <func>` builds a job in `build/permuter/<func>/`:
   - `base.c`: the `#if 0 /* NONMATCHING */` draft directly above the function's `INCLUDE_ASM` line, or `--from F.c`. The unit is preprocessed, and every other function is reduced to a prototype. `static inline` helpers are kept so they still inline.
   - `target.o`: `asm/nonmatching/<unit>/<func>.s` assembled and linked at the function's ROM address. The script checks that its bytes equal the ROM.

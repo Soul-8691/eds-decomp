@@ -1,13 +1,14 @@
 #!/bin/sh
-# Install the EDS toolchain natively, for environments that can't run Docker (web agents, CI
-# sandboxes). Mirrors docker/Dockerfile. Never needs or touches a ROM.
+# Install the optional EDS analysis tools natively (WSL or Linux): a Python venv with capstone and
+# pyelftools, decomp-permuter, m2c and objdiff-cli. The build itself needs none of these; it only needs
+# make, cpp, python3, binutils-arm-none-eabi and agbcc in tools/agbcc (from ../agbcc, see README.md).
+# Never needs or touches a ROM.
 #
 #   tools/setup_native.sh [PREFIX]        # default PREFIX: $HOME/.eds-tools
-#   . "$PREFIX/env.sh"                     # then: tools/dr python3 tools/check.py <unit>
+#                                          # tools/dr sources $PREFIX/env.sh automatically
 #
-# Needs: a C compiler, make, git, python3 (+venv), and binutils-arm-none-eabi. On Debian/Ubuntu
-# the script installs missing system packages with apt-get (via sudo when not root).
-# Optional extras (decomp-permuter, objdiff-cli, m2c) install unless EDS_MINIMAL=1.
+# On Debian/Ubuntu the script installs missing system packages with apt-get (via sudo when not root).
+# The permuter, objdiff-cli and m2c are skipped when EDS_MINIMAL=1.
 set -eu
 PREFIX="${1:-$HOME/.eds-tools}"
 mkdir -p "$PREFIX"
@@ -26,14 +27,6 @@ if [ -n "$need_pkgs" ]; then
     else
         echo "please install:$need_pkgs" >&2; exit 1
     fi
-fi
-
-# agbcc (pret's reconstruction of the GBA SDK's GCC 2.95 compilers) + its libgcc/libc.
-if [ ! -x "$PREFIX/agbcc/bin/old_agbcc" ]; then
-    rm -rf "$PREFIX/src-agbcc" && git clone --depth 1 https://github.com/pret/agbcc "$PREFIX/src-agbcc"
-    (cd "$PREFIX/src-agbcc" && ./build.sh && mkdir -p "$PREFIX/agbcc-dest/tools" && ./install.sh "$PREFIX/agbcc-dest")
-    rm -rf "$PREFIX/agbcc" && mv "$PREFIX/agbcc-dest/tools/agbcc" "$PREFIX/agbcc"
-    rm -rf "$PREFIX/agbcc-dest" "$PREFIX/src-agbcc"
 fi
 
 # Python tools.
@@ -55,10 +48,9 @@ if [ "${EDS_MINIMAL:-0}" != "1" ]; then
 fi
 
 cat > "$PREFIX/env.sh" <<ENV
-# Source this to use the native EDS toolchain (tools/dr then runs commands directly).
-export EDS_NATIVE=1
-export AGBCC_DIR="$PREFIX/agbcc"
+# Optional EDS analysis tools; tools/dr sources this file.
+export M2C_DIR="$PREFIX/m2c"
 export PERMUTER_DIR="$PREFIX/permuter"
-export PATH="$PREFIX/venv/bin:$PREFIX/agbcc/bin:$PREFIX/bin:\$PATH"
+export PATH="$PREFIX/venv/bin:$PREFIX/bin:\$PATH"
 ENV
-echo "Toolchain ready. Run:  . \"$PREFIX/env.sh\"   then  tools/dr python3 tools/check_all.py"
+echo "Extras ready in $PREFIX; tools/dr picks them up (or: . \"$PREFIX/env.sh\")."
