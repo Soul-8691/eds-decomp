@@ -28,6 +28,8 @@
 #include "duel_prompt.h"
 #include "sound.h"
 #include "constants/sound.h"
+#include "card_list_view.h"
+#include "summon.h"
 #include "battle.h"
 #include "main.h"                   /* gMain.newKeys */
 #include "duel_screen.h"            /* DuelCursor_PickTarget, gDuelScreen */
@@ -775,6 +777,147 @@ void EndPhase_ReturnTsukuyomi(int player)
 }
 #endif /* HAS_CARD_TSUKUYOMI */
 
+#ifdef HAS_CARD_METAMORPHOSIS
+/* ---- Metamorphosis -------------------------------------------------------------------------------------------------
+ * Normal Spell: "Tribute 1 monster. Special Summon 1 Fusion Monster from your Extra Deck with the same Level as the
+ * Tributed monster."
+ * Prepare: one of the player's monsters has the Level of a Fusion Monster in the Fusion Deck. ChainB picks it with
+ * Catapult Turtle's EffectTributeTargetChainB (the CPU: its highest-Level such monster), refuses a monster with no
+ * such Fusion, then Tributes it (the cost, paid once the pick is made, as Exiled Force's) and keeps its Level in
+ * targets[1]. Resolve: Cyber-Stein's steps with a list of the Fusion Monsters of that Level (CollectEffectTargets,
+ * effect_target_collect.c: IsMetamorphosisFusion with param = the Level); the CPU takes the highest ATK. */
+
+static inline int MonsterLevel(u16 id)
+{
+    return CARD_STATS_LEVEL(gCardStats[id & CARD_ID_MASK]);
+}
+
+/* 1 if card `id` is a Fusion Monster of Level `level`. */
+int IsMetamorphosisFusion(u16 id, int level)
+{
+    u32 stats = gCardStats[id & CARD_ID_MASK];
+
+    return CARD_STATS_TYPE(stats) <= CARD_TYPE_REPTILE && CARD_STATS_KIND(stats) == CARD_KIND_FUSION
+           && (int)CARD_STATS_LEVEL(stats) == level;
+}
+
+/* 1 if the Fusion Deck of `player` holds a Fusion Monster of Level `level`. */
+static int HasFusionOfLevel(int player, int level)
+{
+    struct DuelPlayer *p = &gDuelPlayers[player & 1];
+    int i;
+
+    for (i = 0; i < p->fusionCount; i++) {
+        if (IsMetamorphosisFusion(DUEL_CARD_ID(&p->fusionDeck[i]), level))
+            return 1;
+    }
+    return 0;
+}
+
+/* 1 if the monster in (player, zone) may be Tributed for Metamorphosis. */
+static int IsMetamorphosisTribute(int player, int zone)
+{
+    u16 id;
+
+    if (zone > ZONE_MONSTER_4)
+        return 0;
+    id = DUEL_CARD_ID(&ZoneOf(player, zone)->card);
+    return id != 0 && HasFusionOfLevel(player, MonsterLevel(id));
+}
+
+int EffectMetamorphosisPrepare(struct ChainEntry *card, struct ChainEntry *chainLink, u16 fromHand)
+{
+    int zone;
+
+    for (zone = ZONE_MONSTER_0; zone <= ZONE_MONSTER_4; zone++) {
+        if (IsMetamorphosisTribute(card->player, zone))
+            return 1;
+    }
+    return 0;
+}
+
+int EffectMetamorphosisChainB(struct ChainEntry *link, struct ChainEntry *prevLink)
+{
+    int player, zone;
+
+    if (link->player) {
+        int best = -1, bestLevel = -1;
+
+        link->numTargets = 0;
+        for (zone = ZONE_MONSTER_0; zone <= ZONE_MONSTER_4; zone++) {
+            if (IsMetamorphosisTribute(link->player, zone)
+                && MonsterLevel(DUEL_CARD_ID(&ZoneOf(link->player, zone)->card)) > bestLevel) {
+                best = zone;
+                bestLevel = MonsterLevel(DUEL_CARD_ID(&ZoneOf(link->player, zone)->card));
+            }
+        }
+        if (best < 0 || !TryAddEffectTarget(link, link->player, best))
+            return 1;
+    } else {
+        if (!EffectTributeTargetChainB(link))
+            return 0;
+        if (link->numTargets != 1)
+            return 1;
+        if ((u8)link->targets[0] != link->player || !IsMetamorphosisTribute(link->player, link->targets[0] >> 8)) {
+            /* no Fusion Monster of its Level: stay on the cursor */
+            link->numTargets = 0;
+            PlaySE(SE_ERROR);
+            return 0;
+        }
+    }
+    player = (u8)link->targets[0];
+    zone = link->targets[0] >> 8;
+    AddEffectTarget(link, MonsterLevel(DUEL_CARD_ID(&ZoneOf(player, zone)->card)));
+    TributeMonster(player, zone);
+    return 1;
+}
+
+int EffectMetamorphosisResolve(struct ChainEntry *link, struct ChainEntry *chainedTo)
+{
+    int level = link->targets[1];
+    u16 *picked;
+    u16 cmd;
+
+    if (link->negated || link->numTargets != 2)
+        return EFFECT_STEP_DONE;
+    switch (gChain.effectStep) {
+    case EFFECT_STEP_START:
+        if (CountFreeMonsterZones(link->player) == 0
+            || CollectEffectTargets(link->player, CARD_METAMORPHOSIS, level) == 0)
+            return EFFECT_STEP_DONE;
+        if (link->player) {
+            int i, best = 0;
+
+            for (i = 1; i < gCardListView.count; i++) {
+                if (CARD_STATS_ATK(gCardStats[gCardListView.cards[i] & CARD_ID_MASK])
+                    > CARD_STATS_ATK(gCardStats[gCardListView.cards[best] & CARD_ID_MASK]))
+                    best = i;
+            }
+            gCardListView.cursorRow = 0;
+            gCardListView.top = best;
+            return EFFECT_STEP_3;
+        }
+        TextBoxOpen(TEXTBOX_POS(5, 2), TEXTBOX_SIZE(20, 9), TEXTBOX_FLAGS_DEFAULT, gStrCyberSteinSelectPrompt);
+        return EFFECT_STEP_2;
+    case EFFECT_STEP_2:
+        CardListView_Open(link->player, -1, CARD_METAMORPHOSIS, level);
+        return EFFECT_STEP_3;
+    case EFFECT_STEP_3:
+        picked = (u16 *)&gCardListView.cards[gCardListView.cursorRow + gCardListView.top];
+        cmd = link->player ? DUEL_CMD_PLAYER | DUEL_CMD_REMOVE_CARD_FROM_FUSION_DECK
+                           : DUEL_CMD_REMOVE_CARD_FROM_FUSION_DECK;
+        DuelCmd_Push(cmd, picked[0], picked[1], 0);
+        return EFFECT_STEP_4;
+    case EFFECT_STEP_4:
+        QueueSpecialSummon(link->player,
+                           (struct DuelCard *)&gCardListView.cards[gCardListView.cursorRow + gCardListView.top], 1, 0,
+                           0);
+        return EFFECT_STEP_END;
+    }
+    return EFFECT_STEP_DONE;
+}
+#endif /* HAS_CARD_METAMORPHOSIS */
+
 #ifdef HAS_CARD_REINFORCEMENT_OF_THE_ARMY
 /* ---- Reinforcement of the Army -----------------------------------------------------------------------------------
  * Normal Spell: "Add 1 Level 4 or lower Warrior monster from your Deck to your hand."
@@ -1125,6 +1268,16 @@ const struct CardEffect gAddedCardEffects[] = {
         EffectBlackLusterSoldierPrepare,
         NULL,
         EffectBlackLusterSoldierChainB,
+    },
+#endif
+#ifdef HAS_CARD_METAMORPHOSIS
+    {
+        CARD_METAMORPHOSIS, 0,
+        EffectMetamorphosisResolve,
+        NULL,
+        EffectMetamorphosisPrepare,
+        NULL,
+        EffectMetamorphosisChainB,
     },
 #endif
 #if defined(HAS_CARD_SCAPEGOAT) && defined(HAS_CARD_SHEEP_TOKEN)     /* the tokens are the Sheep Token card */

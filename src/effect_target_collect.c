@@ -738,6 +738,15 @@ u16 CollectEffectTargets(int player, u16 cardNumber, int param)
         }
         break;
     }
+#ifdef HAS_CARD_METAMORPHOSIS
+    case CARD_METAMORPHOSIS:
+        /* Added card: Fusion Deck Fusion Monsters whose Level is param (the Tributed monster's). */
+        for (i = 0; i < PLAYER(player).fusionCount; i++) {
+            if (IsMetamorphosisFusion(CARD_ID(*PILE_WORD_FLAT(PLAYERS_FUSION_DECK, i, player)), param))
+                ADD_TARGET_DOWHILE(PLAYER(player).fusionDeck[i], CARDLIST_SRC_FUSION_DECK);
+        }
+        break;
+#endif
 #ifdef HAS_CARD_REINFORCEMENT_OF_THE_ARMY
     case CARD_REINFORCEMENT_OF_THE_ARMY:
         /* Added card: deck Warrior monsters of Level 4 or lower. */

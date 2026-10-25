@@ -1097,3 +1097,9 @@ updated: 2026-09-29
   tokens the fixed number of their token kind (TOKEN_NUMBERS), with the stats and text given there, Normal-Monster
   stats and no password.
 - Pages: [[added-cards]].
+
+## [2026-10-25] progress | Metamorphosis
+- Normal Spell: Tribute picked with EffectTributeTargetChainB (refusing a Level with no Fusion Monster) and paid
+  on the pick. The Fusion Monster of that Level is picked from the Fusion Deck (CollectEffectTargets with
+  param = Level) and Special Summoned with Cyber-Stein's steps.
+- Pages: [[added-cards]].

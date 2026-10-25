@@ -211,6 +211,23 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
 - `HasFlipEffect` (card_detail.c).
 - Checked in the source; not tested in an emulator.
 
+### Metamorphosis (2026-10-25)
+- Normal Spell: "Tribute 1 monster. Special Summon 1 Fusion Monster from your Extra Deck with the same Level as the
+  Tributed monster."
+- **Prepare** (`EffectMetamorphosisPrepare`): one of the player's monsters has the Level of a Fusion Monster in the
+  Fusion Deck.
+- **Tribute** (`EffectMetamorphosisChainB`): the human picks with Catapult Turtle's `EffectTributeTargetChainB`. A
+  monster whose Level matches no Fusion Monster is refused (an error sound, and the cursor stays). The CPU takes its
+  highest-Level qualifying monster. The monster is then Tributed (`TributeMonster`) as soon as the pick is made, as
+  for Exiled Force. Its Level goes to `targets[1]`, so `numTargets` is 2.
+- **Resolve** (`EffectMetamorphosisResolve`): Cyber-Stein's steps and prompt. A `CollectEffectTargets` case lists
+  the Fusion Deck's Fusion Monsters of that Level (`IsMetamorphosisFusion`, the Level passed as `param`, which
+  `CardListView_Open` passes through). Then `DUEL_CMD_REMOVE_CARD_FROM_FUSION_DECK` and `QueueSpecialSummon`, face
+  up in Attack Position. The CPU takes the highest ATK. It does not use `AiPickCardListEntry`, which lists with
+  `param` 0.
+- The Level is the card's printed Level (gCardStats).
+- Checked in the source and the build; not tested in an emulator.
+
 ### Scapegoat and the Sheep Token (2026-10-25)
 - Quick-Play Spell: "Special Summon 4 'Sheep Tokens' (Beast/EARTH/Level 1/ATK 0/DEF 0) in Defense Position. You
   cannot Summon other monsters the turn you activate this card." EDS still holds the handlers of the OCG Scapegoat

@@ -91,6 +91,8 @@ int IsNightAssailantTarget(u16 id);
 void OnMonsterTurnedFaceDown(int player, int zone);
 /* Reinforcement of the Army (src/added_effects.c): a Level 4 or lower Warrior monster. */
 int IsReinforcementTarget(u16 id);
+/* Metamorphosis (src/added_effects.c): a Fusion Monster of the given Level. */
+int IsMetamorphosisFusion(u16 id, int level);
 void QueueNightAssailantTrigger(int player, u16 id);
 /* Face-up copies of Kycoo the Ghost Destroyer (CARD_1511 effect key and/or CARD_KYCOO_THE_GHOST_DESTROYER). */
 int CountActiveKycooOnField(int player);
