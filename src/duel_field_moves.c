@@ -597,6 +597,11 @@ void DiscardHandCard(int player, int handIdx, u16 byOpponentEffect, u16 compactH
             Chain_AddPending(trigger | zoneEvent | id, 0);
         }
         break;
+#ifdef HAS_CARD_NIGHT_ASSAILANT
+    case CARD_NIGHT_ASSAILANT:      /* added card (src/added_effects.c) */
+        QueueNightAssailantTrigger(player, id);
+        break;
+#endif
     }
     /* Matching: the card number stays in one local, used for the count and the table index. */
     thorns = CountActiveCardsOnField(1 - player, cardNo = CARD_MAGIC_THORN);

@@ -188,6 +188,24 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
   `EffectTargetableFaceUpMonsterChainB`) and banishes it; Chaos Sorcerer cannot attack that turn
   (`EffectBanishTargetNoAttackResolve`, shared with BLS's banish effect).
 
+### Night Assailant (2026-10-25)
+- **Flip.** "Target 1 monster your opponent controls; destroy that target." Listed in `HasFlipEffect`
+  (card_detail.c). It uses Crass Clown's opponent-monster target (`EffectOpponentMonsterCheck` /
+  `EffectOpponentMonsterChainB`) and Man-Eater Bug's `EffectDestroyTargetResolve`.
+- **Discarded.** "When this card is sent from your hand to the GY: target 1 Flip monster in your GY, except
+  Night Assailant; add it to your hand." `DiscardHandCard` (duel_field_moves.c) calls `QueueNightAssailantTrigger`,
+  which queues an off-field `RESPONSE_DISCARDED` trigger, built like card 1242's. It is queued only when the
+  Graveyard holds a target, because pending triggers enter the chain without a prepare or check. The target is picked
+  in Mask of Darkness's card-list viewer (`EffectCardListTargetChainB`; the list is a `CollectEffectTargets` case
+  using `IsNightAssailantTarget`). It resolves with `EffectMaskOfDarknessResolve`. The CPU's pick is
+  `AiPickCardListEntry`'s default (best ATK+DEF).
+- **"Flip monster"** means a monster that `HasFlipEffect(number, 0)` lists, i.e. the flip effects the game codes.
+- **Covered:** every `DiscardHandCard` caller (discard costs, Card Destruction-style effects, the end-of-turn
+  hand-size discard). **Not covered:** a Night Assailant sent from the hand as a Fusion material
+  (`DUEL_CMD_SEND_HAND_FUSION_MATERIAL_TO_GRAVEYARD` in effect_fusion.c), and the direct
+  `DUEL_CMD_SEND_HAND_CARD_TO_GRAVEYARD` pushes in duel_card_actions.c (Crush Card on draw) and duel_ritual.c.
+- Checked in the source and the build; not tested in an emulator.
+
 ### Exiled Force (2026-10-25)
 - **Effect.** "You can Tribute this card, then target 1 monster on the field; destroy that target." Main Phase
   ACTIVATE from the card menu (CanActivateMonsterEffect), with no once-per-turn flag. `EffectExiledForcePrepare`

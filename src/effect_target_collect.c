@@ -738,6 +738,15 @@ u16 CollectEffectTargets(int player, u16 cardNumber, int param)
         }
         break;
     }
+#ifdef HAS_CARD_NIGHT_ASSAILANT
+    case CARD_NIGHT_ASSAILANT:
+        /* Added card: Graveyard Flip monsters other than Night Assailant. */
+        for (i = 0; i < PLAYER(player).graveCount; i++) {
+            if (IsNightAssailantTarget(CARD_ID(*PILE_WORD_FLAT(gDuelGraveyards, i, player))))
+                ADD_TARGET_DOWHILE(PLAYER(player).graveyard[i], CARDLIST_SRC_GRAVEYARD);
+        }
+        break;
+#endif
 #ifdef HAS_CARD_GRAVEKEEPERS_SPY
     case CARD_GRAVEKEEPERS_SPY:
     {

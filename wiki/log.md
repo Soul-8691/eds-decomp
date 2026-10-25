@@ -1008,3 +1008,10 @@ updated: 2026-09-29
   through a wrapper that refuses itself), pays the Tribute once the target is chosen, and resolves with
   EffectDestroyTargetResolve.
 - Pages: [[added-cards]].
+
+## [2026-10-25] progress | Night Assailant
+- Flip: an opponent's monster (Crass Clown's target), destroyed (EffectDestroyTargetResolve).
+- Discarded from the hand: DiscardHandCard queues a RESPONSE_DISCARDED off-field trigger
+  (QueueNightAssailantTrigger) when the Graveyard holds a Flip monster other than Night Assailant. The pick goes
+  through Mask of Darkness's card-list viewer and resolve.
+- Pages: [[added-cards]].

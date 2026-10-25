@@ -447,6 +447,75 @@ int EffectDekoichiResolve(struct ChainEntry *link, struct ChainEntry *chainedTo)
 }
 #endif /* HAS_CARD_DEKOICHI_THE_BATTLECHANTED_LOCOMOTIVE */
 
+#ifdef HAS_CARD_NIGHT_ASSAILANT
+/* ---- Night Assailant ---------------------------------------------------------------------------------------------
+ * "FLIP: Target 1 monster your opponent controls; destroy that target.
+ *  When this card is sent from your hand to the GY: Target 1 Flip monster in your GY, except 'Night Assailant'; add
+ *  it to your hand."
+ * One row, told apart by the link's event:
+ *   flip                 a flip effect (HasFlipEffect, card_detail.c): Crass Clown's opponent-monster target
+ *                        (EffectOpponentMonsterCheck / ChainB), Man-Eater Bug's EffectDestroyTargetResolve
+ *   RESPONSE_DISCARDED   the off-field trigger that DiscardHandCard (duel_field_moves.c) queues through
+ *                        QueueNightAssailantTrigger, only when the Graveyard holds a target; the list
+ *                        (CollectEffectTargets, effect_target_collect.c: IsNightAssailantTarget) goes through
+ *                        Mask of Darkness's card-list viewer and EffectMaskOfDarknessResolve.
+ * A "Flip monster" is one that HasFlipEffect lists (the coded flip effects). */
+
+/* The packed chain entry of a trigger (struct ChainEntry, chain.h), as in duel_field_moves.c. */
+#define TRIGGER_ZONE(zone) ((zone) << 16)
+#define TRIGGER_KIND(kind) ((kind) << 21)
+#define TRIGGER_EVENT(event) ((event) << 25)
+#define TRIGGER_PLAYER(player) ((player) << 31)
+
+/* 1 if card `id` may be added by the discard effect: a Flip monster other than Night Assailant. */
+int IsNightAssailantTarget(u16 id)
+{
+    u16 number = ((const u16 *)CARD_ID_TO_NUMBER_ADDR)[id & CARD_ID_MASK];
+
+    if (CARD_STATS_TYPE(gCardStats[id & CARD_ID_MASK]) > CARD_TYPE_REPTILE || number == CARD_NIGHT_ASSAILANT)
+        return 0;
+    return HasFlipEffect(number, 0) != 0;
+}
+
+/* Night Assailant (card ID `id`) was discarded from the hand of `player`: queue its trigger if the Graveyard has a
+ * target (the trigger's zone field holds the player, as for card 1242). */
+void QueueNightAssailantTrigger(int player, u16 id)
+{
+    struct DuelPlayer *p = &gDuelPlayers[player & 1];
+    int i;
+
+    for (i = 0; i < p->graveCount; i++) {
+        if (IsNightAssailantTarget(DUEL_CARD_ID(&p->graveyard[i]))) {
+            Chain_AddPending(TRIGGER_PLAYER(player & 1) | TRIGGER_ZONE(0x1F & player)
+                                 | TRIGGER_EVENT(RESPONSE_DISCARDED) | TRIGGER_KIND(CHAIN_KIND_OFF_FIELD) | id,
+                             0);
+            return;
+        }
+    }
+}
+
+u16 EffectNightAssailantCheck(struct ChainEntry *card, u16 pos)
+{
+    if (card->event == RESPONSE_DISCARDED)
+        return 1;
+    return EffectOpponentMonsterCheck(card, pos);
+}
+
+int EffectNightAssailantChainB(struct ChainEntry *link, struct ChainEntry *prevLink)
+{
+    if (link->event == RESPONSE_DISCARDED)
+        return EffectCardListTargetChainB(link);
+    return EffectOpponentMonsterChainB(link);
+}
+
+int EffectNightAssailantResolve(struct ChainEntry *link, struct ChainEntry *chainedTo)
+{
+    if (link->event == RESPONSE_DISCARDED)
+        return EffectMaskOfDarknessResolve(link);
+    return EffectDestroyTargetResolve(link);
+}
+#endif /* HAS_CARD_NIGHT_ASSAILANT */
+
 #ifdef HAS_CARD_EXILED_FORCE
 /* ---- Exiled Force ------------------------------------------------------------------------------------------------
  * "You can Tribute this card, then target 1 monster on the field; destroy that target."
@@ -547,6 +616,16 @@ const struct CardEffect gAddedCardEffects[] = {
         EffectBlackLusterSoldierPrepare,
         NULL,
         EffectBlackLusterSoldierChainB,
+    },
+#endif
+#ifdef HAS_CARD_NIGHT_ASSAILANT
+    {
+        CARD_NIGHT_ASSAILANT, 0,
+        EffectNightAssailantResolve,
+        EffectNightAssailantCheck,
+        NULL,
+        NULL,
+        EffectNightAssailantChainB,
     },
 #endif
 #ifdef HAS_CARD_EXILED_FORCE

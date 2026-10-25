@@ -85,6 +85,9 @@ int IsGravekeeperMonster(u16 id);
 /* Before a monster is banished: detach and destroy the Call of the Haunted / Premature Burial that revived it
  * (src/added_effects.c), so it is not also sent to the Graveyard with its triggers. */
 void DetachRevivingCards(int player, int zone);
+/* Night Assailant (src/added_effects.c): its discard effect's targets, and the trigger DiscardHandCard queues. */
+int IsNightAssailantTarget(u16 id);
+void QueueNightAssailantTrigger(int player, u16 id);
 
 /* Return value of a multi-step resolve handler, kept in gChain.effectStep: Chain_Resolve calls the
  * handler with EFFECT_STEP_START first, then once per frame with the value it returned last, until it
