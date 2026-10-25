@@ -528,17 +528,17 @@ void DeckEdit_BeginCardMove(u8 *move)
         if (frameKind == CARD_KIND_FUSION) {
             trunk = (u8 *)&gSaveDeckSizes;
 
-            copies = TRUNK_COPIES(trunk, DeckEdit_GetListCard(gDeckEdit.curList, gDeckEdit.listRow[gDeckEdit.curList], gDeckEdit.listPos[gDeckEdit.curList])) >> 6;
+            copies = GetTrunkFusionCopies(DeckEdit_GetListCard(gDeckEdit.curList, gDeckEdit.listRow[gDeckEdit.curList], gDeckEdit.listPos[gDeckEdit.curList]));
         } else {
             trunk = (u8 *)&gSaveDeckSizes;
 
-            copies = ((u32)TRUNK_COPIES(trunk, DeckEdit_GetListCard(gDeckEdit.curList, gDeckEdit.listRow[gDeckEdit.curList], gDeckEdit.listPos[gDeckEdit.curList])) << 28) >> 30;
+            copies = GetTrunkDeckCopies(DeckEdit_GetListCard(gDeckEdit.curList, gDeckEdit.listRow[gDeckEdit.curList], gDeckEdit.listPos[gDeckEdit.curList]));
         }
         break;
     case DECKEDIT_LIST_SIDE_DECK:
         trunk = (u8 *)&gSaveDeckSizes;
 
-        copies = ((u32)TRUNK_COPIES(trunk, DeckEdit_GetListCard(2, gDeckEdit.listRow[2], gDeckEdit.listPos[2])) << 26) >> 30;
+        copies = GetTrunkSideCopies(DeckEdit_GetListCard(2, gDeckEdit.listRow[2], gDeckEdit.listPos[2]));
         break;
     }
     if (copies == 1) {
@@ -818,16 +818,16 @@ void DeckEdit_UpdateCardMove(u8 *move)
             }
             if (frameKind == CARD_KIND_FUSION) {
                 u8 *trunk = (u8 *)&gSaveDeckSizes;
-                copies = TRUNK_COPIES(trunk, CARDC()) >> 6;
+                copies = GetTrunkFusionCopies(CARDC());
             } else {
                 u8 *trunk = (u8 *)&gSaveDeckSizes;
-                copies = ((u32)TRUNK_COPIES(trunk, CARDC()) << 28) >> 30;
+                copies = GetTrunkDeckCopies(CARDC());
             }
             break;
         case DECKEDIT_LIST_SIDE_DECK:
             {
                 u8 *trunk = (u8 *)&gSaveDeckSizes;
-                copies = ((u32)TRUNK_COPIES(trunk, DeckEdit_GetListCard(2, DE.listRow[2], DE.listPos[2])) << 26) >> 30;
+                copies = GetTrunkSideCopies(DeckEdit_GetListCard(2, DE.listRow[2], DE.listPos[2]));
             }
             break;
         }

@@ -146,10 +146,37 @@ it. You can remove 1 Spell Counter from this card; target 1 Spell/Trap on the fi
     resolve destroys it (`EffectDestroyTargetResolve`). These are Mystical Space Typhoon's handlers.
 - **Not modelled.** Counters are not removed if the monster is turned face down. No EDS card does that, and
   Book of Moon is added without an effect. The CPU never has Breaker in its decks.
-- **Starter deck.** The Red starter deck is only 3 Breakers (`BuildStarterDeck`), and decks of fewer than 40
-  cards may duel (`DECK_MIN_CARDS` is 1).
-- **Other changes.** The human player cannot deck out outside Link Battles (`DuelCmd_DrawCards`). Yugi Muto plays
-  a weak Magic/Trap-only deck (`src/mod_decks.c`, `GetOpponentDeckOverride`).
+- **Decks of this build** (`src/mod_decks.c`; keep to the Forbidden/Limited list):
+  - **Red starter deck:** 8 BLS - Envoy of the Beginning, 3 Breaker, 3 Shining Fairy, 3 Mystic Tomato, 1 Dark Hole,
+    and 22 strong LIGHT/DARK Normal monsters (40). Dark Hole is limited to 1, so the other 2 go to the trunk
+    (`BuildModStarterDeck`, called by `BuildStarterDeck`).
+  - **Yugi Muto:** a competitive 40-card deck (`GetOpponentDeckOverride`): Jinzo, Summoned Skull, Vorse Raider,
+    floaters and searchers, the limited staples, Mystical Space Typhoon, Trap Hole.
+- **Other rules.** Decks of fewer than 40 cards may duel (`DECK_MIN_CARDS` 1), and the human player cannot deck
+  out outside Link Battles (`DuelCmd_DrawCards`).
+
+### No 3-copy limit (2026-10-25)
+`GetCardCopyLimit` returns `CARD_COPY_LIMIT_NONE` (99) for a card that is not on the Forbidden/Limited list; that
+list's limits (0/1/2) still apply. In the original game the per-deck copy counters of `struct TrunkEntry` are 2
+bits. They keep those bits as their low bits and have high bits in the bytes the original never used: deck +4 bits
+(up to 63), side +2 (up to 15), fusion +3 (up to 31). **Every reader and writer goes through
+`Get/SetTrunk{Deck,Side,Fusion}Copies`** (`src/mod_save.c`): collection.c (whose add/remove/trim functions were
+rewritten), Deck Edit (cards, list, prohibit, stats, widgets, filter steps), booster code, the debug give-all. Saves
+from the original game load unchanged; the format is a superset.
+
+### Black Luster Soldier - Envoy of the Beginning (2026-10-25)
+- **Summon.** Special Summon only (`IsSpecialSummonOnly`, so the hand menu offers only Sp. Summon / Sp. Set).
+  `CanSummonFromHand` needs a free zone and a LIGHT and a DARK monster in the Graveyard
+  (`CanPayBlackLusterSoldierCost`). The summon steps `SUMMON_STEP_BLS_*` (effect_hooks.c) banish one LIGHT, then
+  one DARK monster through the Graveyard list (`CollectEffectTargets` case, `BlackLusterSoldierBanishAttribute`).
+- **Effects** (one row, once per turn via `effectUnused`; `DuelCmd_TurnStart` re-arms it):
+  - Main Phase, from the menu (`CanActivateMonsterEffect`): target a monster on the field (Man-Eater Bug's check and
+    target pick), banish it (`BanishFieldCard`); BLS cannot attack this turn (`DUEL_CMD_SET_CANNOT_ATTACK`).
+  - Attack again: `BattleStage_DestroyMonsters` queues a `RESPONSE_BATTLE_DESTROYED` trigger when the attacking BLS
+    destroyed the target and survived. Resolve asks the human Yes/No (the CPU always takes it), then clears its
+    `attackedMask` bit.
+- **Not modelled.** The CPU never Special Summons it (no CPU deck has it). The text box string is new.
+
 - **Verified statically.** The row is in the ROM with card number 143 and five Thumb handler pointers. The pinned
   data keeps its addresses, and the build has no new warnings. Not yet run in an emulator.
 

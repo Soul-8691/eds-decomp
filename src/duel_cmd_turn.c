@@ -153,6 +153,9 @@ void DuelCmd_TurnStart(void)
                 case CARD_RELINQUISHED:
                 case CARD_BARREL_DRAGON:
                 case CARD_KARATE_MAN:
+#ifdef HAS_CARD_BLACK_LUSTER_SOLDIER_ENVOY_OF_THE_BEGINNING
+                case CARD_BLACK_LUSTER_SOLDIER_ENVOY_OF_THE_BEGINNING:   /* added card: once per turn */
+#endif
                 case CARD_1334:
                 case CARD_1513:
                     monster->effectUnused = 1;

@@ -109,10 +109,10 @@ void DeckEdit_DrawCardCounts(u8 list)
 {
     struct DeckEditView *state = &gDeckEdit;
     DRAW_COUNT(TRUNK_COUNT(CUR_CARD()), 2, 1, 0x30, 0x88);
-    DRAW_COUNT(((u32)(TRUNK_COPIES(CUR_CARD()) << 28) >> 30) + (TRUNK_COPIES(CUR_CARD()) >> 6), 2, 1, 0x68, 0x77);
+    DRAW_COUNT(GetTrunkDeckCopies(CUR_CARD()) + GetTrunkFusionCopies(CUR_CARD()), 2, 1, 0x68, 0x77);
     DRAW_COUNT(gSaveDeckSize[0] + gSaveFusionDeckSize[0], 2, 1, 0x68, 0x88);
     CUR_CARD(); /* result unused in the ROM too */
-    DRAW_COUNT((u32)(TRUNK_COPIES(CUR_CARD()) << 26) >> 30, 2, 1, 0xA8, 0x77);
+    DRAW_COUNT(GetTrunkSideCopies(CUR_CARD()), 2, 1, 0xA8, 0x77);
     DRAW_COUNT(SAVE_SIDE_DECK_SIZE, 2, 1, 0xA8, 0x88);
     switch (list) {
     case 0:
@@ -140,108 +140,24 @@ void DeckEdit_DrawCardCounts(u8 list)
  * list; DeckEdit_IsFusionMonster is pure, so the nested selectors remain in 0..2. */
 u32 DeckEdit_GetSelectedCardCopies(void)
 {
-    struct DeckEditView *state = &ST;
-    u8 *curList = &state->curList;
-    switch (*curList) {
-    case 0: {
-        u32 row = ST.listRow[0];
-        u32 *saveWords;
-        if (ST.listCount[row][0] == 0)
-            return 0;
-        saveWords = gSaveDataWords;
-        return ((struct TrunkCountView *)(saveWords + TRUNK_LIST(row)[ST.listPos[0]]))->count;
-    }
-    case 1: {
-        u32 rowOffset = 0x14A1;             /* &ST.listRow[1] as a byte offset */
-        u8 *rows = (u8 *)((u32)&ST + rowOffset);
-        u16 pos = ST.listPos[1];
-        if (DeckEdit_IsFusionMonster(DECK_LIST(*rows)[pos])) {
-            u32 *saveWords;
-            u32 id;
-            u8 cur = *curList;
-            u32 twice = cur * 2;
-            u16 pos;
-            u8 row;
-            row = ST.listRow[cur];
-            if (ST.listCount[row][cur] == 0)
-                return 0;
-            saveWords = gSaveDataWords;
-            pos = *(u16 *)((u32)&ST.listPos + twice);
-            switch (cur) {
-            case 0:
-                id = TRUNK_LIST(row)[pos];
-                break;
-            case 1:
-                id = DECK_LIST(row)[pos];
-                break;
-            case 2:
-                id = SIDE_LIST(row)[pos];
-                break;
-            }
-            return ((struct TrunkCopiesView *)(saveWords + (u16)id))->copiesByte >> 6;
-        } else {
-            u32 *saveWords;
-            u32 id;
-            u8 cur = *curList;
-            u32 twice = cur * 2;
-            u16 pos;
-            u8 row;
-            row = ST.listRow[cur];
-            if (ST.listCount[row][cur] == 0)
-                return 0;
-            saveWords = gSaveDataWords;
-            pos = *(u16 *)((u32)&ST.listPos + twice);
-            switch (cur) {
-            case 0:
-                id = TRUNK_LIST(row)[pos];
-                break;
-            case 1:
-                id = DECK_LIST(row)[pos];
-                break;
-            case 2:
-                id = SIDE_LIST(row)[pos];
-                break;
-            }
-            {
-                /* FAKEMATCH: retain the selected ID while forming its trunk offset. */
-                register u32 copy asm("r1") = id;
-                register u32 offset asm("r0");
-                asm("" : : "r"(copy));
-                offset = (u16)copy * 4;
-                return ((u32)((struct TrunkCopiesView *)((u32)saveWords + offset))->copiesByte << 28) >> 30;
-            }
-        }
-    }
-    case 2: {
-        /* FAKEMATCH: staged state addresses and the live row-selector offset. */
-        register u32 count asm("r0");
-        u32 co;
-        u32 *saveWords;
-        register u32 ro asm("r2") = 0x14A2;     /* &ST.listRow[2] as a byte offset */
-        u32 row;
-        count = (u32)&ST;
-        count += ro;
-        row = *(u8 *)count;
-        asm("" : : "r"(ro));
-        count = (u32)&ST;
-        count += row * 6;
-        co = 0x1498;                            /* &ST.listCount[row][2] relative to the row base */
-        if (*(u16 *)(count + co) == 0)
-            return 0;
-        saveWords = gSaveDataWords;
-        {
-            u32 off = 0x624;                    /* &ST.listPos[2] as a byte offset */
-            u32 pos;
-            count = (u32)&ST;
-            count += off;
-            pos = *(u16 *)count;
-            return ((u32)((struct TrunkCopiesView *)(saveWords + SIDE_LIST(row)[pos]))->copiesByte << 26) >> 30;
-        }
-    }
-    }
-    return 0;
-}
+    u8 list = ST.curList;
+    u8 row = ST.listRow[list];
+    u16 id;
 
+    if (list > 2 || ST.listCount[row][list] == 0)
+        return 0;
+    id = DeckEdit_GetListCard(list, row, ST.listPos[list]);
+    switch (list) {
+    case 0:
+        return TRUNK_COUNT(id);
+    case 1:
+        if (DeckEdit_IsFusionMonster(id))
+            return GetTrunkFusionCopies(id);
+        return GetTrunkDeckCopies(id);
+    default:
+        return GetTrunkSideCopies(id);
+    }
+}
 #undef ST
 /* Pointer to the row (0x728 bytes) of card list `list` selected by the per-list row index listRow[list]. */
 u16 *DeckEdit_GetActiveListRow(int list)
@@ -278,9 +194,9 @@ extern u8 gMain[];   /* 0x03000040 */
 #define W gListsWork
 #define CARD_NUMBER(i) (((const u16 *)CARD_ID_TO_NUMBER_ADDR)[(i) & CARD_ID_MASK])   /* gCardIdToNumber */
 #define OWNED_COUNT(i) (gSaveTrunk.trunk[i].count)
-#define DECK_COPIES(i) (gSaveTrunk.trunk[i].deckCopies)
-#define FUSION_COPIES(i) (gSaveTrunk.trunk[i].fusionCopies)
-#define SIDE_COPIES(i) (gSaveTrunk.trunk[i].sideCopies)
+#define DECK_COPIES(i) GetTrunkDeckCopies(i)
+#define FUSION_COPIES(i) GetTrunkFusionCopies(i)
+#define SIDE_COPIES(i) GetTrunkSideCopies(i)
 static inline u16 ReadListEntry(u8 list, u8 row, u16 index)
 {
     switch (list) {

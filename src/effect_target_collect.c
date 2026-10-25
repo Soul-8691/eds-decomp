@@ -1032,6 +1032,20 @@ u16 CollectEffectTargets(int player, u16 cardNumber, int param)
         }
         break;
     }
+#ifdef HAS_CARD_BLACK_LUSTER_SOLDIER_ENVOY_OF_THE_BEGINNING
+    case CARD_BLACK_LUSTER_SOLDIER_ENVOY_OF_THE_BEGINNING:
+    {
+        /* Added card: the Graveyard monsters of the attribute its summon banishes now (LIGHT, then DARK). */
+        int attribute = BlackLusterSoldierBanishAttribute();
+
+        for (i = 0; i < PLAYER(player).graveCount; i++) {
+            u32 stats = CARD_STATS(CARD_ID(*PILE_WORD_FLAT(gDuelGraveyards, i, player)));
+            if (CARD_STATS_TYPE(stats) <= CARD_TYPE_REPTILE && (int)CARD_STATS_ATTR(stats) == attribute)
+                ADD_TARGET_DOWHILE(PLAYER(player).graveyard[i], CARDLIST_SRC_GRAVEYARD);
+        }
+        break;
+    }
+#endif
     case CARD_1524:
     {
         /* Graveyard cards that are Polymerization materials (isFusionMaterial); read by

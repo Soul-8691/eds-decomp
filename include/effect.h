@@ -75,6 +75,11 @@ extern const struct CardEffect gAddedCardEffects[];
 const struct CardEffect *GetCardEffectRow(int row);
 #define CARD_EFFECT_ROW(row) (*GetCardEffectRow(row))
 
+/* Black Luster Soldier - Envoy of the Beginning's summon (src/added_effects.c): can `player` pay its cost (a free
+ * monster zone, a LIGHT and a DARK monster in the Graveyard), and which attribute the summon steps banish now. */
+int CanPayBlackLusterSoldierCost(int player);
+int BlackLusterSoldierBanishAttribute(void);
+
 /* Return value of a multi-step resolve handler, kept in gChain.effectStep: Chain_Resolve calls the
  * handler with EFFECT_STEP_START first, then once per frame with the value it returned last, until it
  * returns EFFECT_STEP_DONE. The handlers count down from 0x80; a value a handler has no case for (0x78 or

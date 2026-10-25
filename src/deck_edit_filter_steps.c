@@ -42,12 +42,12 @@ struct TrunkEntryByteView {
 /* Return the extracted count before testing it, preserving both bit reads. */
 static inline int TrunkDeckCopies(struct TrunkEntryByteView *entry)
 {
-    return entry->deckCopies;
+    return GetTrunkDeckCopies(((u8 *)entry - (u8 *)&gSaveData) / 4);
 }
 
 static inline int TrunkSideCopies(struct TrunkEntryByteView *entry)
 {
-    return entry->sideCopies;
+    return GetTrunkSideCopies(((u8 *)entry - (u8 *)&gSaveData) / 4);
 }
 
 /* Matching: this unit declares DeckEdit_GetListCard with a full-width result; the search in

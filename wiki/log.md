@@ -914,3 +914,13 @@ updated: 2026-09-29
   Pure, Goblin's Secret Remedy; Yami, Sogen, Umi, Forest; Trap Hole, Reinforcements, Castle Walls, Waboku, Fake Trap.
   No Forbidden/Limited cards (verified decoded from the built ROM).
 - Pages: [[added-cards]].
+
+## [2026-10-25] progress | BLS - Envoy of the Beginning; no 3-copy limit; new Red starter and Yugi decks
+- Copy limit: unlisted cards have no limit (`CARD_COPY_LIMIT_NONE`); the trunk copy counters gained high bits
+  (`src/mod_save.c`, struct TrunkEntry). All readers and writers go through `Get/SetTrunk*Copies`.
+- Black Luster Soldier - Envoy of the Beginning: banish-LIGHT-and-DARK Special Summon (new summon steps and target
+  list), banish-a-monster effect and attack-again trigger (`src/added_effects.c`, battle_phase2.c hook).
+- `src/mod_decks.c`: the Red starter deck is BLS x8 with LIGHT/DARK support (no Newdoria: its effect is not coded),
+  plus 2 Dark Holes to the trunk; Yugi Muto's deck is competitive. Both decoded from the ROM and checked against the
+  Forbidden/Limited list.
+- Pages: [[added-cards]].

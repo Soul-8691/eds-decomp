@@ -63,47 +63,17 @@ u16 DeckStats_ClearState(void)
 u32 GetCardCopiesInList(int listWord, int cardWord)
 {
     int list = (u16)listWord;
-    register int selector asm("r3") = list;
-    u32 id;
+    u16 id = (u16)cardWord;
 
-    id = (u16)cardWord;
-
-    if (list == 1) goto main_count;
-    if (list > 1) goto above_one;
-    if (list == 0) goto owned_count;
+    switch (list) {
+    case 0:
+        return gSaveData.trunk[id].count;
+    case 1:
+        return GetTrunkDeckCopies(id) + GetTrunkFusionCopies(id);
+    case 2:
+        return GetTrunkSideCopies(id);
+    }
     return list;
-above_one:
-    if (selector == 2) goto side_count;
-    return list;
-owned_count:
-    {
-        u32 base = (u32)&gSaveData;
-        struct TrunkEntryView *entry;
-
-        entry = (struct TrunkEntryView *)(id * 4 + base);
-        return entry->count;
-    }
-main_count:
-    {
-        u32 base = (u32)&gSaveData;
-        u8 *entry;
-        u32 packed;
-        u32 main;
-
-        entry = (u8 *)(id * 4 + base);
-        packed = entry[9];
-        main = (packed << 28) >> 30;
-
-        return main + (packed >> 6);
-    }
-side_count:
-    {
-        u32 base = (u32)&gSaveData;
-        struct TrunkEntryView *entry;
-
-        entry = (struct TrunkEntryView *)(id * 4 + base);
-        return entry->sideCopies;
-    }
 }
 
 /* Local view of gDeckEdit for the list counts (same offsets as struct DeckEdit's listCount/listRow); the
@@ -545,9 +515,9 @@ int DeckEdit_Init(void)
         if ((u16)(CARD_NUMBER_OF(i) - CARD_NUMBER_TOKEN_FIRST) > 0x4F) {
             if (TRUNK_INIT->e[i].count)
                 DeckEdit_SetListCard(i, DECKEDIT_LIST_TRUNK, INIT.listRow[0], INIT.listCount[INIT.listRow[0]][0]++);
-            if (TRUNK_INIT->e[i].deckCopies || TRUNK_INIT->e[i].fusionCopies)
+            if (GetTrunkDeckCopies(i) || GetTrunkFusionCopies(i))
                 DeckEdit_SetListCard(i, DECKEDIT_LIST_MAIN_DECK, INIT.listRow[1], INIT.listCount[INIT.listRow[1]][1]++);
-            if (TRUNK_INIT->e[i].sideCopies)
+            if (GetTrunkSideCopies(i))
                 DeckEdit_SetListCard(i, DECKEDIT_LIST_SIDE_DECK, INIT.listRow[2], INIT.listCount[INIT.listRow[2]][2]++);
         }
     }

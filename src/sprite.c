@@ -901,7 +901,7 @@ void DebugGetAllCards(void) {
             r = (struct CardRec *)(s + id * 4);
             do {
                 AddCardToTrunk(idv >> 16);
-            } while (r->e.c.count + r->e.b.deckCopies + r->e.b.sideCopies + r->e.b.fusionCopies <= 2);
+            } while (r->e.c.count + GetTrunkDeckCopies(id) + GetTrunkSideCopies(id) + GetTrunkFusionCopies(id) <= 2);
         }
         id = next;
     }

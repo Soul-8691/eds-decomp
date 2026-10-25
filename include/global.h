@@ -67,6 +67,12 @@ extern const u8 gCardPasswordsAt[] asm("gCardPasswords");
 #define CARD_STATS_ADDR             ((u32)gCardStatsAt)
 #define CARD_ID_TO_NUMBER_ADDR      ((u32)gCardIdToNumberAt)
 #define CARD_PASSWORDS_ADDR         ((u32)gCardPasswordsAt)
+/* Copies of a card in the saved Deck, Side Deck and Fusion Deck (src/mod_save.c, struct TrunkEntry in save.h):
+ * every unit reads them through these, since the counters are wider than in the original game. */
+u32 GetTrunkDeckCopies(u16 id);
+u32 GetTrunkSideCopies(u16 id);
+u32 GetTrunkFusionCopies(u16 id);
+
 /* Every card ID in name order, then 0 (card_data.h); the card-list builders walk it. */
 extern const u16 gCardIdsByName[];
 

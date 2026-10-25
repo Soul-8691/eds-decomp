@@ -407,6 +407,19 @@ int BattleStage_DestroyMonsters(int player)
                                       | (LOC((1 - player), gBattle.defSlot)) << 16);
         }
         break;
+#ifdef HAS_CARD_BLACK_LUSTER_SOLDIER_ENVOY_OF_THE_BEGINNING
+    case CARD_BLACK_LUSTER_SOLDIER_ENVOY_OF_THE_BEGINNING:
+        /* Added card: it destroyed the target and survived, its effect is unused this turn: queue its "attack
+         * again" trigger (src/added_effects.c). */
+        if (!IsBattleEffectBlockedFor(player) && gBattle.side[1 - player].destroyed && !gBattle.side[player].destroyed
+            && gDuelPlayers[player & 1].zones[gBattle.atkSlot].effectUnused) {
+            u32 trigger = player << 31;
+            trigger |= gBattle.atkSlot << 16 | CHAIN_KIND_MONSTER << 21 | RESPONSE_BATTLE_DESTROYED << 25;
+            trigger |= gBattle.side[player].cardId;
+            Chain_AddPending(trigger, LOC(player, gBattle.atkSlot));
+        }
+        break;
+#endif
     case CARD_ZONE_EATER:
     case CARD_SWORDSMAN_FROM_A_FOREIGN_LAND:
         if (!IsBattleEffectBlockedFor(player)) {

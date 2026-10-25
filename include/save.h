@@ -36,17 +36,33 @@ enum SaveOptionFlags {
 
 /* One card of the collection, gSaveData.trunk[cardId] (4 bytes per card id).
  * The trunk is the pool of unused copies: `count` excludes the copies placed in the three saved decks,
- * which are counted separately in the 2-bit fields (at most 3 copies of a card per list). */
+ * which are counted separately. In the original game each of those counters is 2 bits (at most 3 copies of a
+ * card per list). This build has no 3-copy limit, so each counter has high bits in bytes +2/+3, which the
+ * original never used: read and write them with Get/SetTrunk*Copies (src/mod_save.c). */
 struct TrunkEntry {
     u16 count:10;               /* +0x0 bits 0-9: copies in the trunk, max 0x3FF (some units call it owned) */
-    u16 deckCopies:2;           /* +0x1 bits 2-3: copies in the saved Deck */
-    u16 sideCopies:2;           /* +0x1 bits 4-5: copies in the saved Side Deck */
-    u16 fusionCopies:2;         /* +0x1 bits 6-7: copies in the saved Fusion Deck */
+    u16 deckCopies:2;           /* +0x1 bits 2-3: copies in the saved Deck (low bits) */
+    u16 sideCopies:2;           /* +0x1 bits 4-5: copies in the saved Side Deck (low bits) */
+    u16 fusionCopies:2;         /* +0x1 bits 6-7: copies in the saved Fusion Deck (low bits) */
     u8 flag0:1;                 /* +0x2 bit 0: no reader found */
     u8 passwordUsed:1;          /* +0x2 bit 1: this card's password was redeemed (Password_RevealAndGiveCard) */
-    u8 unk2_2:6;                /* +0x2 bits 2-7 */
-    u8 unk3;                    /* +0x3 */
+    u8 fusionCopiesHi:3;        /* +0x2 bits 2-4: added: fusionCopies >> 2 (up to 20 copies) */
+    u8 unk2_5:3;                /* +0x2 bits 5-7 */
+    u8 deckCopiesHi:4;          /* +0x3 bits 0-3: added: deckCopies >> 2 (up to 60 copies) */
+    u8 sideCopiesHi:2;          /* +0x3 bits 4-5: added: sideCopies >> 2 (up to 15 copies) */
+    u8 unk3_6:2;                /* +0x3 bits 6-7 */
 };
+
+/* Copies of card `id` in the saved Deck, Side Deck and Fusion Deck (struct TrunkEntry, all bits). */
+u32 GetTrunkDeckCopies(u16 id);
+u32 GetTrunkSideCopies(u16 id);
+u32 GetTrunkFusionCopies(u16 id);
+void SetTrunkDeckCopies(u16 id, u32 copies);
+void SetTrunkSideCopies(u16 id, u32 copies);
+void SetTrunkFusionCopies(u16 id, u32 copies);
+
+/* GetCardCopyLimit of a card that is not on the Forbidden/Limited list (3 in the original game). */
+#define CARD_COPY_LIMIT_NONE 99
 
 /* Win/loss/draw counts against one opponent, gSaveData.duelRecords[DuelistId]. Each counter saturates
  * (RecordDuelWin/Loss/Draw). */

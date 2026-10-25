@@ -122,6 +122,8 @@ added_effects
 @farcode added_effects
 mod_decks
 @farcode mod_decks
+mod_save
+@farcode mod_save
 @libs
 veneer
 rodata_08080A20
@@ -129,3 +131,4 @@ rodata_08080A20
 rodata_08087FD0
 @rodata added_effects
 @rodata mod_decks
+@rodata mod_save

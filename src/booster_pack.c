@@ -77,15 +77,15 @@ static inline int TrunkCount(struct TrunkEntryView *entry)
 }
 static inline int TrunkDeckCopies(struct TrunkEntryView *entry)
 {
-    return ((struct TrunkCopiesView *)entry)->deckCopies;
+    return GetTrunkDeckCopies(((u8 *)entry - (u8 *)&gSaveData) / 4);
 }
 static inline int TrunkSideCopies(struct TrunkEntryView *entry)
 {
-    return ((struct TrunkCopiesView *)entry)->sideCopies;
+    return GetTrunkSideCopies(((u8 *)entry - (u8 *)&gSaveData) / 4);
 }
 static inline int TrunkFusionCopies(struct TrunkEntryView *entry)
 {
-    return ((struct TrunkCopiesView *)entry)->fusionCopies;
+    return GetTrunkFusionCopies(((u8 *)entry - (u8 *)&gSaveData) / 4);
 }
 
 /*

@@ -262,7 +262,7 @@ void DeckEdit_CountSideDeckMonsters(void)
                 break;
             default:
                 id = DeckEdit_GetListCard(2, i, j);
-                gDeckEditSideCounts.sideMonsterCount[i] += gSaveData.trunk[(u16)id].sideCopies;
+                gDeckEditSideCounts.sideMonsterCount[i] += GetTrunkSideCopies((u16)id);
                 break;
             }
         }

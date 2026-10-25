@@ -856,6 +856,9 @@ enum SummonStep {
     SUMMON_STEP_KEY_1257_PROMPT_2 = 82,
     SUMMON_STEP_KEY_1257_PICK_2 = 83,
     SUMMON_STEP_KEY_1257_SUMMON = 84,
+    SUMMON_STEP_BLS_PROMPT = 90,            /* added: Black Luster Soldier - Envoy of the Beginning banishes one */
+    SUMMON_STEP_BLS_PICK = 91,              /* LIGHT (summonSeq 0), then one DARK (1) Graveyard monster */
+    SUMMON_STEP_BLS_BANISH = 92,
 };
 
 /* The level of a card ID as the Tribute rules see it: Trap, Magic and Ticket cards 0, Divine-Beasts 10,
@@ -912,6 +915,7 @@ extern const char gStrBanishGraveyardMonster[];         /* "Select from Graveyar
 extern const char gStrWater[];                          /* "WATER" */
 extern const char gStrEarth[];                          /* "EARTH" */
 extern const char gStrWind[];                           /* "WIND" */
+extern const char *const gAttributeNames[];             /* 0x0819D264: LIGHT, DARK, WATER, FIRE, EARTH, WIND */
 extern const char gStrTributeEitherFromField[];         /* "Select from Field either %s or %s as Tribute." */
 extern const char gStrTributeOneFromField[];            /* "Select from Field %s as Tribute." */
 
@@ -1105,6 +1109,14 @@ void CardMenu_SummonMonster(u16 faceUp, u16 special)
             CM.tributeSources = 0;
             CM.step = SUMMON_STEP_BANISH_ATTRIBUTE_PROMPT;
             break;
+#ifdef HAS_CARD_BLACK_LUSTER_SOLDIER_ENVOY_OF_THE_BEGINNING
+        case CARD_BLACK_LUSTER_SOLDIER_ENVOY_OF_THE_BEGINNING:
+            CM.summonTributes = 0;
+            CM.summonSeq = 0;
+            CM.tributeSources = 0;
+            CM.step = SUMMON_STEP_BLS_PROMPT;
+            break;
+#endif
         case CARD_1350:
             switch (CM.command) {
             case CARDMENU_CMD_SP_SUMMON:
@@ -1626,6 +1638,27 @@ void CardMenu_SummonMonster(u16 faceUp, u16 special)
             BANISH_LISTED_CARD();
         CM_FROM_PLAYERS.step++;
         break;
+#ifdef HAS_CARD_BLACK_LUSTER_SOLDIER_ENVOY_OF_THE_BEGINNING
+    /* ---- Black Luster Soldier - Envoy of the Beginning: banish one LIGHT, then one DARK Graveyard monster ---- */
+    case SUMMON_STEP_BLS_PROMPT:
+        FormatStr(text, gStrBanishGraveyardMonster, gAttributeNames[BlackLusterSoldierBanishAttribute() - 1]);
+        OPEN_PROMPT(text);
+        CM.step++;
+        break;
+    case SUMMON_STEP_BLS_PICK:
+        CardListView_Open(CM.player, CARDLIST_AREA_EFFECT_TARGETS, CARD_NUMBER(CM.cardMenuCard), 0);
+        CM.step++;
+        break;
+    case SUMMON_STEP_BLS_BANISH:
+        BanishGraveyardCard(CM.player, (u16 *)&gCardListView.cards[gCardListView.top + gCardListView.cursorRow]);
+        if (CM.summonSeq == 0) {
+            CM.summonSeq = 1;
+            CM.step = SUMMON_STEP_BLS_PROMPT;
+        } else {
+            CM.step = SUMMON_STEP_BANISH_SUMMON;
+        }
+        break;
+#endif
     case SUMMON_STEP_BANISH_SUMMON:
         QueueSpecialSummonFromHand(CM.player, CM.index, FindFreeMonsterZone(CM.player), 0, faceUp);
         CM.confirmed = 0;

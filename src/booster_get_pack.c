@@ -230,33 +230,17 @@ u16 IsCampaignLevel5Unlocked(void) {
 u16 IsCardCollectionComplete(void)
 {
     s32 have = 0;
-    /* FAKEMATCH: register pins retain ROM counter registers and rematerialized loop bound. */
-    register s32 total __asm__("r4") = 0;
-    register s32 id __asm__("r3") = 1;
-    u16 key = gCardIdToNumber_821[0];
-    u32 limit = 0x77F;
-    struct SaveData *s = &gSaveData;
-    struct TrunkEntry *e = &s->trunk[1];
-    register s32 bound __asm__("r0");
-    do {
-        if (key <= limit) {
-            u32 v;
+    s32 total = 0;
+    s32 id;
+    u16 key = gCardIdToNumber_821[0];       /* the padding entry, read once as the gate value (as the ROM does) */
+
+    for (id = 1; id <= CARD_ID_LAST; id++) {
+        if (key <= 0x77F) {
             total++;
-            /* Matching: the ROM tests the fields with shifts, not bitfield masks: count != 0, then the
-             * Deck and Side Deck copies out of byte +1. */
-            v = *(u16 *)e;
-            if ((v << 22) != 0) {
+            if (gSaveData.trunk[id].count != 0 || GetTrunkDeckCopies(id) != 0 || GetTrunkSideCopies(id) != 0)
                 have++;
-            } else {
-                u32 b = ((u8 *)e)[1];
-                if (((b << 28) >> 30) != 0 || ((b << 26) >> 30) != 0)
-                    have++;
-            }
         }
-        e++;
-        id++;
-        bound = CARD_ID_LAST;
-    } while (id <= bound);
+    }
     if (have == total)
         return 1;
     return 0;
@@ -291,14 +275,9 @@ u16 IsOpponentUnlocked(u16 id) {
     }
     case DUELIST_PEGASUS: {
         /* Toon World owned, the same trunk test as IsCardCollectionComplete. */
-        u8 *base = (u8 *)&gSaveData;
-        u8 *p = base + gCardNumberToId_ToonWorld[0] * 4;
-        u32 v = *(u16 *)(p + 8);
-        u32 b;
-        if ((v << 22) != 0)
-            return 1;
-        b = p[9];
-        if (((b << 28) >> 30) != 0 || ((b << 26) >> 30) != 0)
+        u16 toonWorld = gCardNumberToId_ToonWorld[0];
+        if (gSaveData.trunk[toonWorld].count != 0 || GetTrunkDeckCopies(toonWorld) != 0
+            || GetTrunkSideCopies(toonWorld) != 0)
             return 1;
         return 0;
     }

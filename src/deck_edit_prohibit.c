@@ -186,9 +186,9 @@ int TradeCardSelect_Init(void)
                 continue;
             if (gSaveData.trunk[i].count)
                 DeckEdit_SetListCard(i, 0, gDeckEdit.listRow[0], gDeckEdit.listCount[gDeckEdit.listRow[0]][0]++);
-            if (gSaveData.trunk[i].deckCopies || gSaveData.trunk[i].fusionCopies)
+            if (GetTrunkDeckCopies(i) || GetTrunkFusionCopies(i))
                 DeckEdit_SetListCard(i, 1, gDeckEdit.listRow[1], gDeckEdit.listCount[gDeckEdit.listRow[1]][1]++);
-            if (gSaveData.trunk[i].sideCopies)
+            if (GetTrunkSideCopies(i))
                 DeckEdit_SetListCard(i, 2, gDeckEdit.listRow[2], gDeckEdit.listCount[gDeckEdit.listRow[2]][2]++);
         }
         break;
@@ -197,9 +197,9 @@ int TradeCardSelect_Init(void)
             if ((u16)(CARD_NUMBER(i) - 0x780) > 0x4F) {
                 if (gSaveData.trunk[i].count)
                     DeckEdit_SetListCard(i, 0, gDeckEdit.listRow[0], gDeckEdit.listCount[gDeckEdit.listRow[0]][0]++);
-                if (gSaveData.trunk[i].deckCopies || gSaveData.trunk[i].fusionCopies)
+                if (GetTrunkDeckCopies(i) || GetTrunkFusionCopies(i))
                     DeckEdit_SetListCard(i, 1, gDeckEdit.listRow[1], gDeckEdit.listCount[gDeckEdit.listRow[1]][1]++);
-                if (gSaveData.trunk[i].sideCopies)
+                if (GetTrunkSideCopies(i))
                     DeckEdit_SetListCard(i, 2, gDeckEdit.listRow[2], gDeckEdit.listCount[gDeckEdit.listRow[2]][2]++);
             }
         }

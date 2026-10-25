@@ -90,6 +90,11 @@ u16 EffectBreakerTheMagicalWarriorCheck(struct ChainEntry *card, u16 pos);
 int EffectBreakerTheMagicalWarriorChainA(struct ChainEntry *link, struct ChainEntry *prevLink);
 int EffectBreakerTheMagicalWarriorChainB(struct ChainEntry *link, struct ChainEntry *prevLink);
 int EffectBreakerTheMagicalWarriorResolve(struct ChainEntry *link, struct ChainEntry *chainedTo);
+/* Black Luster Soldier - Envoy of the Beginning: banish a monster (menu) or attack again (battle trigger). */
+int EffectBlackLusterSoldierPrepare(struct ChainEntry *card, struct ChainEntry *chainLink, u16 fromHand);
+u16 EffectBlackLusterSoldierCheck(struct ChainEntry *card, u16 pos);
+int EffectBlackLusterSoldierChainB(struct ChainEntry *link, struct ChainEntry *prevLink);
+int EffectBlackLusterSoldierResolve(struct ChainEntry *link, struct ChainEntry *chainedTo);
 
 /* ChainA (activation costs) */
 /* Activation cost: pay the card's LP cost (500 to 5000, half for Solemn Judgment). Always returns 1. */
