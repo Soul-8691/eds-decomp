@@ -605,7 +605,13 @@ int EffectMagicalHatsResolve(struct ChainEntry *link)
             /* the monster gets its links back */
             if (CARD_TYPE(CARD_ID11((u32)gChainEffectCardHalves.effectCards[gChain.effectSubStep].lo))
                 <= CARD_TYPE_REPTILE)
+            {
                 DuelCmd_Push(CMD_FOR_PLAYER((u8)link->targets[0], DUEL_CMD_MOVE_ZONE_LINKS), ZONE_FIELD, (u16)zone, 0);
+                /* mod: hidden face down, the monster loses its Spell Counter (Breaker the Magical Warrior) */
+                if (!faceUp)
+                    QueueRemoveZoneLink((u8)link->targets[0], 0, DUEL_LOC((u8)link->targets[0], zone),
+                                        ZONE_LINK_ATK_300_PER_VALUE);
+            }
             gChain.effectSubStep++;
             if (gChain.effectSubStep <= 2)
                 return HATS_STEP_SET_HATS;

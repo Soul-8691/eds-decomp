@@ -148,8 +148,10 @@ it. You can remove 1 Spell Counter from this card; target 1 Spell/Trap on the fi
 - **Face down (2026-10-25).** A monster turned face down loses its counters. `DuelCmd_FlipCard` (duel_cmd_field.c)
   calls `OnMonsterTurnedFaceDown` (src/added_effects.c) when it leaves a monster face down. That function removes
   the zone's `ZONE_LINK_ATK_300_PER_VALUE` link at once (`RemoveZoneLink`). It covers Book of Moon and any later
-  face-down effect. **Not covered:** Magical Hats, which parks the attacked monster's links and moves them back
-  (`DUEL_CMD_MOVE_ZONE_LINKS`), so a Breaker hidden under a hat keeps its counter.
+  face-down effect. Magical Hats does not use the flip command: it parks the attacked monster's links and
+  moves them back to its hat zone (`DUEL_CMD_MOVE_ZONE_LINKS`). In `EffectMagicalHatsResolve` (effect_resolve3.c)
+  that move is now followed by `QueueRemoveZoneLink(..., ZONE_LINK_ATK_300_PER_VALUE)` on the hat zone, unless
+  Light of Intervention makes the hats face up.
 - The CPU never has Breaker in its decks.
 - **Decks of this build** (`src/mod_decks.c`; keep to the Forbidden/Limited list):
   - **Red starter deck:** 8 BLS - Envoy of the Beginning, 3 Breaker, 3 Shining Fairy, 3 Mystic Tomato, 1 Dark Hole,

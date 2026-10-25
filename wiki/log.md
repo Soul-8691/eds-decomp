@@ -1035,3 +1035,8 @@ updated: 2026-09-29
 - DuelCmd_FlipCard calls OnMonsterTurnedFaceDown, which removes the Spell Counter link (Breaker the Magical
   Warrior). Magical Hats is not covered (it keeps the links).
 - Pages: [[added-cards]].
+
+## [2026-10-25] progress | Magical Hats removes Spell Counters
+- In Magical Hats' resolve, after the hidden monster gets its links back, QueueRemoveZoneLink drops its
+  ZONE_LINK_ATK_300_PER_VALUE link (unless Light of Intervention keeps the hats face up).
+- Pages: [[added-cards]].
