@@ -1176,3 +1176,8 @@ updated: 2026-09-29
 - BattleStage_DestroyMonsters: destroyed by battle, it sets D.D. Warrior Lady's YES state, so both battling
   monsters are banished. The survivor block is guarded on either card.
 - Pages: [[added-cards]].
+
+## [2026-10-25] progress | Magic Cylinder
+- Effect key 1214 is the engine's Magic Cylinder (EffectAttackResponsePrepare/Resolve, CPU logic in ai_summon.c).
+  ENGINE_NUMBERS gives the added card that number.
+- Pages: [[added-cards]].

@@ -211,6 +211,19 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
 - `HasFlipEffect` (card_detail.c).
 - Checked in the source; not tested in an emulator.
 
+### Magic Cylinder (2026-10-25)
+- Normal Trap: "When an opponent's monster declares an attack: Target the attacking monster; negate the attack, and
+  if you do, inflict damage to your opponent equal to its ATK."
+- **The engine already has it** as effect key 1214. Its row is `EffectAttackResponsePrepare` (an opponent's attack
+  declaration, from the field) and `EffectAttackResponseResolve`: `DUEL_CMD_NEGATE_ATTACK` (the battle goes to
+  `BATTLE_STAGE_END_ATTACK` and the attacker is marked), then the attacker's controller loses LP equal to its ATK.
+  The CPU's Set-Trap logic has a case for it (ai_summon.c: when the attacker's ATK is high enough).
+- `tools/newcards.py` `ENGINE_NUMBERS` gives Magic Cylinder number 1214; no code change. Verified in the built
+  tables: ID 866 = number 1214, Normal Trap.
+- **Side effect.** The added cards after it in the list moved down one free number, as for Thousand-Eyes Restrict.
+  This is harmless: the `CARD_*` constants are regenerated, and the saved trunk is indexed by card ID.
+- Checked in the source and the build; not tested in an emulator.
+
 ### D.D. Assailant (2026-10-25)
 - "After damage calculation, when this card is destroyed by battle with an opponent's monster: Banish that monster,
   also banish this card."
