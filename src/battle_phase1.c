@@ -629,6 +629,9 @@ int BattleStage_DamageCalc(int player)
         if (!handled)
             DuelCmd_Push(player ? DUEL_CMD_PLAYER | DUEL_CMD_MARK_ATTACKED : DUEL_CMD_MARK_ATTACKED,
                          gBattle.atkSlot, 1, 0);
+#ifdef HAS_CARD_INJECTION_FAIRY_LILY
+        InjectionFairyLilyResetBattle();    /* added card (src/added_effects.c) */
+#endif
         i = ZONE_SPELL_0;
         opponent = 1 - player;
         /* Every face-up, enabled Mirror Wall of the opponent gets a link to the attacker. */
@@ -646,6 +649,10 @@ int BattleStage_DamageCalc(int player)
         int opponent;
         u16 number;
 
+#ifdef HAS_CARD_INJECTION_FAIRY_LILY
+        if (InjectionFairyLilyDamageStep(player))   /* added card: its prompt or payment first */
+            return 0;
+#endif
         CalcBattle(player, 0);
 #ifdef HAS_CARD_BLADE_KNIGHT
         if (BATTLE_BYTES.flipEffectPending && BladeKnightNegatesBattleFlipEffect())

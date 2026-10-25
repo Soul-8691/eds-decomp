@@ -1115,3 +1115,9 @@ updated: 2026-09-29
 - Normal Spell: discard cost (DuelPrompt_PostDiscardCost), then a pick of an opponent's card (no CanActivateEffect
   re-check after the cost), resolved with ReturnFieldCardToDeck.
 - Pages: [[added-cards]].
+
+## [2026-10-25] progress | Injection Fairy Lily
+- Battle-code effect, as D.D. Warrior Lady: before CalcBattle the human is asked, or the CPU decides. Paying
+  2000 LP queues a 3000 ZONE_LINK_ATK_BONUS link, removed again in BattleStage_EndAttack. The state is at EWRAM
+  0x0202FF00 (gInjectionFairyLily, symbols.ld).
+- Pages: [[added-cards]].

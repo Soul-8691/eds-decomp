@@ -211,6 +211,27 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
 - `HasFlipEffect` (card_detail.c).
 - Checked in the source; not tested in an emulator.
 
+### Injection Fairy Lily (2026-10-25)
+- "During either player's Damage Step, when this card attacks or is attacked: You can pay 2000 LP; this card gains
+  3000 ATK during the Damage Step only."
+- **No effect row.** EDS offers no face-up monster in a response window, only Set Spell/Trap cards and the hand
+  (`EventResponse_Update`). So, as for D.D. Warrior Lady, the effect lives in the battle code:
+  - `BattleStage_DamageCalc`, `DAMAGE_STEP_MARK_ATTACKER` (once per attack): `InjectionFairyLilyResetBattle`.
+  - `DAMAGE_STEP_CALC`, before `CalcBattle`: `InjectionFairyLilyDamageStep` checks the attacker, then the target
+    (not for a direct attack). It acts for a face-up Lily whose controller has more than 2000 LP. The human is
+    asked through `PROMPT_CONFIRM_CARD_EFFECT` (text in duel_prompts.c). The CPU pays when the 3000 ATK would turn
+    the battle; on a direct attack, when it has more than 4000 LP. Paying shows the card, queues `DUEL_CMD_LOSE_LP`
+    2000 (as a cost) and a `ZONE_LINK_ATK_BONUS` link of 3000, then returns 1. The stage waits, because
+    `DuelMainStep` runs the phase handlers only when the command queue and the prompts are idle, so `CalcBattle`
+    sees the new ATK.
+  - `BattleStage_EndAttack`: `InjectionFairyLilyEndAttack` removes that exact link (kind 4, value 3000; Riryoku's
+    bonus has the same kind) from a Lily that was boosted.
+- **State:** `gInjectionFairyLily` (step and boosted sides) at EWRAM `0x0202FF00` in `symbols.ld`. It is free RAM
+  below `gScratchBuffer`, like the Deck Edit lists at `0x0202A000`; nothing in src/, asm/ or data/ refers to
+  `0x0202D000`-`0x0202FFFF`.
+- **Not modelled:** in a Link Battle, the remote player's Lily is decided by the CPU rule.
+- Checked in the source and the build; not tested in an emulator.
+
 ### Phoenix Wing Wind Blast (2026-10-25)
 - Normal Spell: "Discard 1 card, then target 1 card your opponent controls; place that target on the top of the
   Deck."

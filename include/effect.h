@@ -85,6 +85,11 @@ int IsGravekeeperMonster(u16 id);
 /* Before a monster is banished: detach and destroy the Call of the Haunted / Premature Burial that revived it
  * (src/added_effects.c), so it is not also sent to the Graveyard with its triggers. */
 void DetachRevivingCards(int player, int zone);
+/* Injection Fairy Lily (src/added_effects.c): its Damage Step prompt and payment (BattleStage_DamageCalc) and the
+ * removal of its 3000 ATK after the battle (BattleStage_EndAttack). */
+void InjectionFairyLilyResetBattle(void);
+int InjectionFairyLilyDamageStep(int player);
+void InjectionFairyLilyEndAttack(int player);
 /* Night Assailant (src/added_effects.c): its discard effect's targets, and the trigger DiscardHandCard queues. */
 int IsNightAssailantTarget(u16 id);
 /* DuelCmd_FlipCard turned the monster in (player, zone) face down: it loses its counters (src/added_effects.c). */

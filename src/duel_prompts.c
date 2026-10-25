@@ -172,6 +172,13 @@ u32 DuelPrompt_ConfirmCardEffect(int player, u16 cardNumber)
         case CARD_1519:
             TextBoxOpen(PROMPT_BOX_POS, PROMPT_BOX_SIZE, TEXTBOX_FLAGS_DEFAULT, gStrPromptChangeOpponentPosition);
             break;
+#ifdef HAS_CARD_INJECTION_FAIRY_LILY
+        case CARD_INJECTION_FAIRY_LILY: {   /* added card (battle_phase1.c, src/added_effects.c) */
+            extern const u8 gStrInjectionFairyLilyPrompt[];
+            TextBoxOpen(PROMPT_BOX_POS, PROMPT_BOX_SIZE, TEXTBOX_FLAGS_DEFAULT, gStrInjectionFairyLilyPrompt);
+            break;
+        }
+#endif
 #ifdef HAS_CARD_D_D_WARRIOR_LADY
         case CARD_D_D_WARRIOR_LADY: {   /* added card (battle_phase2.c, src/added_effects.c) */
             extern const u8 gStrDDWarriorLadyPrompt[];

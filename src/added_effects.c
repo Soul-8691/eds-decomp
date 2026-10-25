@@ -778,6 +778,164 @@ void EndPhase_ReturnTsukuyomi(int player)
 }
 #endif /* HAS_CARD_TSUKUYOMI */
 
+#ifdef HAS_CARD_INJECTION_FAIRY_LILY
+/* ---- Injection Fairy Lily ------------------------------------------------------------------------------------------
+ * "During either player's Damage Step, when this card attacks or is attacked: You can pay 2000 LP; this card gains
+ * 3000 ATK during the Damage Step only."
+ * EDS offers no face-up monster in a response window (only Set Spell/Trap cards and the hand), so, like D.D. Warrior
+ * Lady, the effect lives in the battle code:
+ *   BattleStage_DamageCalc, DAMAGE_STEP_MARK_ATTACKER   InjectionFairyLilyResetBattle
+ *   BattleStage_DamageCalc, DAMAGE_STEP_CALC            InjectionFairyLilyDamageStep, before CalcBattle: the
+ *                                                       attacker, then the target, when it is a face-up Lily whose
+ *                                                       controller has more than 2000 LP. The human is asked
+ *                                                       (PROMPT_CONFIRM_CARD_EFFECT); the CPU pays when the 3000
+ *                                                       ATK turn the battle (or for a direct attack, with more than
+ *                                                       4000 LP). Paying queues DUEL_CMD_LOSE_LP (a cost) and a
+ *                                                       ZONE_LINK_ATK_BONUS link of 3000; the stage waits a frame
+ *                                                       so that CalcBattle sees it.
+ *   BattleStage_EndAttack                               InjectionFairyLilyEndAttack: the 3000 link goes again.
+ * The state is gInjectionFairyLily (EWRAM 0x0202FF00, symbols.ld). */
+
+const u8 gStrInjectionFairyLilyPrompt[] = "Pay 2000 LP to give Injection Fairy Lily 3000 more ATK?";
+
+#define LILY_COST   2000
+#define LILY_BONUS  3000
+
+enum InjectionFairyLilyStep {
+    LILY_STEP_ATTACKER = 0,
+    LILY_STEP_ATTACKER_ASKED = 1,
+    LILY_STEP_TARGET = 2,
+    LILY_STEP_TARGET_ASKED = 3,
+    LILY_STEP_DONE = 4,
+};
+
+struct InjectionFairyLilyState {
+    u8 step;        /* enum InjectionFairyLilyStep */
+    u8 boosted;     /* bit 0: the attacker has the 3000 link, bit 1: the target */
+};
+extern struct InjectionFairyLilyState gInjectionFairyLily;
+
+/* The monster of the battle on `side` (0 the attacker, 1 the target) of the attack of `attacker`. */
+static int BattleMonster(int attacker, int side, int *who, int *zone)
+{
+    if (side == 0) {
+        *who = attacker;
+        *zone = gBattle.atkSlot;
+        return 1;
+    }
+    if (gBattle.direct)
+        return 0;
+    *who = 1 - attacker;
+    *zone = gBattle.defSlot;
+    return 1;
+}
+
+/* 1 if that monster is a face-up Injection Fairy Lily whose controller can pay. */
+static int CanUseLily(int attacker, int side, int *who, int *zone)
+{
+    struct DuelZone *z;
+    u16 id;
+
+    if (!BattleMonster(attacker, side, who, zone))
+        return 0;
+    z = ZoneOf(*who, *zone);
+    id = DUEL_CARD_ID(&z->card);
+    return id != 0 && z->isFaceUp
+           && ((const u16 *)CARD_ID_TO_NUMBER_ADDR)[id & CARD_ID_MASK] == CARD_INJECTION_FAIRY_LILY
+           && gDuelPlayers[*who & 1].lifePoints > LILY_COST;
+}
+
+/* The CPU pays when the 3000 ATK turn the battle (a direct attack: with LP to spare). */
+static int CpuWantsLily(int attacker, int side, int who, int zone)
+{
+    int otherWho, otherZone;
+    u32 atk = GetZoneCardAtk(who, zone);
+    u32 value;
+
+    if (!BattleMonster(attacker, 1 - side, &otherWho, &otherZone))
+        return gDuelPlayers[who & 1].lifePoints > 2 * LILY_COST;
+    if (DUEL_CARD_ID(&ZoneOf(otherWho, otherZone)->card) == 0)
+        return 0;
+    value = ZoneOf(otherWho, otherZone)->isDefense ? GetZoneCardDef(otherWho, otherZone)
+                                                   : GetZoneCardAtk(otherWho, otherZone);
+    return atk <= value && atk + LILY_BONUS > value;
+}
+
+static void ActivateLily(int side, int who, int zone)
+{
+    ShowCardEffect(who, DUEL_CARD_ID(&ZoneOf(who, zone)->card));
+    DuelCmd_Push(who ? DUEL_CMD_PLAYER | DUEL_CMD_LOSE_LP : DUEL_CMD_LOSE_LP, LILY_COST, 1, 0);
+    QueueAddZoneLink(who, LILY_BONUS, DUEL_LOC(who, zone), ZONE_LINK_ATK_BONUS);
+    gInjectionFairyLily.boosted |= 1 << side;
+}
+
+void InjectionFairyLilyResetBattle(void)
+{
+    gInjectionFairyLily.step = LILY_STEP_ATTACKER;
+    gInjectionFairyLily.boosted = 0;
+}
+
+/* Before CalcBattle; 1 while it waits (a prompt, or the commands of a payment), 0 when CalcBattle may run. */
+int InjectionFairyLilyDamageStep(int player)
+{
+    int who, zone, side;
+
+    for (;;) {
+        switch (gInjectionFairyLily.step) {
+        case LILY_STEP_ATTACKER:
+        case LILY_STEP_TARGET:
+            side = gInjectionFairyLily.step == LILY_STEP_TARGET;
+            if (!CanUseLily(player, side, &who, &zone)) {
+                gInjectionFairyLily.step += 2;
+                break;
+            }
+            if (who != 0) {
+                gInjectionFairyLily.step += 2;
+                if (CpuWantsLily(player, side, who, zone)) {
+                    ActivateLily(side, who, zone);
+                    return 1;
+                }
+                break;
+            }
+            DuelPrompt_Post(0, PROMPT_CONFIRM_CARD_EFFECT, CARD_INJECTION_FAIRY_LILY, 0);
+            gInjectionFairyLily.step++;
+            return 1;
+        case LILY_STEP_ATTACKER_ASKED:
+        case LILY_STEP_TARGET_ASKED:
+            side = gInjectionFairyLily.step == LILY_STEP_TARGET_ASKED;
+            gInjectionFairyLily.step++;
+            if (gDuel.promptResult && CanUseLily(player, side, &who, &zone)) {
+                ActivateLily(side, who, zone);
+                return 1;
+            }
+            break;
+        default:
+            return 0;
+        }
+    }
+}
+
+/* After the battle: the 3000 ATK of the Damage Step go again. */
+void InjectionFairyLilyEndAttack(int player)
+{
+    int side, who, zone, i;
+
+    for (side = 0; side <= 1; side++) {
+        if (!(gInjectionFairyLily.boosted & (1 << side)) || !BattleMonster(player, side, &who, &zone))
+            continue;
+        for (i = 0; i < ZoneOf(who, zone)->numLinks; i++) {
+            struct DuelZone *z = ZoneOf(who, zone);
+            if ((u8)z->linkKinds[i] == ZONE_LINK_ATK_BONUS && z->links[i] == LILY_BONUS) {
+                RemoveZoneLinkAt(who, zone, i);
+                break;
+            }
+        }
+    }
+    InjectionFairyLilyResetBattle();
+    gInjectionFairyLily.step = LILY_STEP_DONE;
+}
+#endif /* HAS_CARD_INJECTION_FAIRY_LILY */
+
 #ifdef HAS_CARD_PHOENIX_WING_WIND_BLAST
 /* ---- Phoenix Wing Wind Blast ---------------------------------------------------------------------------------------
  * Normal Spell: "Discard 1 card, then target 1 card your opponent controls; place that target on the top of the Deck."

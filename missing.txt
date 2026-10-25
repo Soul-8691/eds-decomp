@@ -7,7 +7,6 @@ Cipher Soldier
 Creature Swap
 Mystic Swordsman LV2
 King Tiger Wanghu
-Injection Fairy Lily
 Lightning Vortex
 Smashing Ground
 Ninja Grandmaster Sasuke

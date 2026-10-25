@@ -9,6 +9,8 @@ gBgTileBuffer = 0x02010014;
 gScratchBuffer = 0x02030000;
 gDeckEditCardLists = 0x0202A000;
 gDeckEditHeldBack = 0x0202C200;
+/* Mod variables in free EWRAM (below gScratchBuffer): Injection Fairy Lily's battle state (src/added_effects.c). */
+gInjectionFairyLily = 0x0202FF00;
 gTextCanvas = 0x02000000;
 gSaveData = 0x02011C20;
 gSaveDataSignature = 0x02013D86;

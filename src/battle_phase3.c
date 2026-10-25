@@ -123,6 +123,9 @@ int BattleStage_EndAttack(int player)
     int opponent, opponentSide;
     u8 *e;
     struct ZoneFlagsView *zn;
+#ifdef HAS_CARD_INJECTION_FAIRY_LILY
+    InjectionFairyLilyEndAttack(player);    /* added card: its 3000 ATK end with the battle */
+#endif
     if (Duel_CheckWinInt() != 0)
         return 1;
     opponent = 1 - player;
