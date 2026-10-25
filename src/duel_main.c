@@ -504,6 +504,7 @@ u16 Duel_CheckWin(void)
  * turn, tell the partner we are ready and go to the opponent's turn. Returns 1 to go on to the opening. */
 u32 DuelPhase_Init(void)
 {
+    ModDuelInit();      /* mod: the added cards' duel state (src/added_effects.c) */
     gDuel.turnPlayer = gMainResultView.firstPlayer;
     if ((gDuelCtrl.isLinkDuel) && gDuel.turnPlayer) {
         gDuel.turnCount++;

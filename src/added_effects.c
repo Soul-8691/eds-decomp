@@ -40,6 +40,12 @@
  * count (high byte) is the number of counters, and the stat code (card_stats.c) already gives the monster 300
  * ATK per unit. The link goes with the card when it leaves the field. */
 
+/* The packed chain entry of a trigger (struct ChainEntry, chain.h), as in duel_field_moves.c. */
+#define TRIGGER_ZONE(zone) ((zone) << 16)
+#define TRIGGER_KIND(kind) ((kind) << 21)
+#define TRIGGER_EVENT(event) ((event) << 25)
+#define TRIGGER_PLAYER(player) ((player) << 31)
+
 static inline struct DuelZone *ZoneOf(int player, int zone)
 {
     return &gDuelPlayers[player & 1].zones[zone];
@@ -778,27 +784,43 @@ void EndPhase_ReturnTsukuyomi(int player)
 }
 #endif /* HAS_CARD_TSUKUYOMI */
 
-#ifdef HAS_CARD_NINJA_GRANDMASTER_SASUKE
-/* ---- Ninja Grandmaster Sasuke --------------------------------------------------------------------------------------
- * "If this card attacks a Defense Position monster, destroy that monster immediately with this card's effect without
- * applying damage calculation."
+#if defined(HAS_CARD_NINJA_GRANDMASTER_SASUKE) || defined(HAS_CARD_MYSTIC_SWORDSMAN_LV2)
+/* ---- Attackers that destroy the target before the Damage Step ---------------------------------------------------
+ * Ninja Grandmaster Sasuke: "If this card attacks a Defense Position monster, destroy that monster immediately with
+ * this card's effect without applying damage calculation."
+ * Mystic Swordsman LV2: "If this card attacks a face-down Defense Position monster: Destroy the monster immediately
+ * with this card's effect without flipping it face-up or applying damage calculation."
  * No effect row: BattleStage_RevealDefender (battle_phase1.c) calls this before it flips the target, so a face-down
  * target is destroyed without being flipped (no flip effect). The attack is marked as made (DUEL_CMD_MARK_ATTACKED,
  * as the Damage Step would), the target is destroyed by the card's effect (DestroyFieldCard with its Graveyard
  * triggers, OnCardDestroyedByEffect), and the battle jumps to BATTLE_STAGE_END_ATTACK: no damage calculation, no
- * battle damage, no "destroyed by battle" effects. */
-int NinjaGrandmasterSasukeAttack(int player)
+ * battle damage, no "destroyed by battle" effects (so no Mystic Swordsman level-up either). */
+int DestroyTargetBeforeDamageStep(int player)
 {
     struct DuelZone *attacker = ZoneOf(player, gBattle.atkSlot);
     struct DuelZone *target;
     int opponent = 1 - player;
     u16 id = DUEL_CARD_ID(&attacker->card);
+    int destroy = 0;
 
-    if (gBattle.direct || id == 0 || !attacker->isFaceUp
-        || ((const u16 *)CARD_ID_TO_NUMBER_ADDR)[id & CARD_ID_MASK] != CARD_NINJA_GRANDMASTER_SASUKE)
+    if (gBattle.direct || id == 0 || !attacker->isFaceUp)
         return 0;
     target = ZoneOf(opponent, gBattle.defSlot);
-    if (DUEL_CARD_ID(&target->card) == 0 || !target->isDefense)
+    if (DUEL_CARD_ID(&target->card) == 0)
+        return 0;
+    switch (((const u16 *)CARD_ID_TO_NUMBER_ADDR)[id & CARD_ID_MASK]) {
+#ifdef HAS_CARD_NINJA_GRANDMASTER_SASUKE
+    case CARD_NINJA_GRANDMASTER_SASUKE:
+        destroy = target->isDefense;
+        break;
+#endif
+#ifdef HAS_CARD_MYSTIC_SWORDSMAN_LV2
+    case CARD_MYSTIC_SWORDSMAN_LV2:
+        destroy = target->isDefense && !target->isFaceUp;
+        break;
+#endif
+    }
+    if (!destroy)
         return 0;
     DuelCmd_Push(player ? DUEL_CMD_PLAYER | DUEL_CMD_MARK_ATTACKED : DUEL_CMD_MARK_ATTACKED, gBattle.atkSlot, 1, 0);
     ShowCardEffect(player, id);
@@ -808,7 +830,147 @@ int NinjaGrandmasterSasukeAttack(int player)
     gDuel.battleStep = 0;
     return 1;
 }
-#endif /* HAS_CARD_NINJA_GRANDMASTER_SASUKE */
+#endif /* HAS_CARD_NINJA_GRANDMASTER_SASUKE || HAS_CARD_MYSTIC_SWORDSMAN_LV2 */
+
+/* ---- Mod state of a duel -----------------------------------------------------------------------------------------
+ * gModDuel (EWRAM 0x0202FF04, symbols.ld) holds what the added cards remember during a duel; DuelPhase_Init
+ * (duel_main.c) clears it with ModDuelInit, since that RAM is not cleared otherwise. */
+struct ModDuelState {
+    u16 battleKills;    /* Mystic Swordsman LV2: bit player * 5 + zone, it destroyed a monster by battle this turn */
+};
+extern struct ModDuelState gModDuel;
+
+void ModDuelInit(void)
+{
+    gModDuel.battleKills = 0;
+#ifdef HAS_CARD_INJECTION_FAIRY_LILY
+    InjectionFairyLilyResetBattle();
+#endif
+}
+
+#if defined(HAS_CARD_MYSTIC_SWORDSMAN_LV2) && defined(HAS_CARD_MYSTIC_SWORDSMAN_LV4)
+/* ---- Mystic Swordsman LV2: the level-up ---------------------------------------------------------------------------
+ * "At the End Phase of a turn in which this card destroyed a monster by battle: You can send this card to the GY;
+ * Special Summon 1 'Mystic Swordsman LV4' from your hand or Deck."
+ *   BattleStage_DestroyMonsters (battle_phase2.c)  MysticSwordsmanAfterBattle: an LV2 (attacking or attacked) whose
+ *                                                  opponent's monster is destroyed by the battle gets its bit in
+ *                                                  gModDuel.battleKills.
+ *   DuelPhase_End (battle_phase3.c)                EndPhase_MysticSwordsmanLevelUp: each marked zone that still holds
+ *                                                  a face-up LV2 queues a trigger (RESPONSE_NONE, its zone), then the
+ *                                                  marks are cleared.
+ *   the trigger's resolve                          the human is asked (the CPU always says Yes), the LV2 is sent to
+ *                                                  the Graveyard and an LV4 is taken from the Deck (else the hand);
+ *                                                  the next step, once those commands ran (so the LV2's zone is free),
+ *                                                  Special Summons it (QueueSpecialSummonChoosePosition). */
+
+static const u8 sStrMysticSwordsmanLevelUp[] = "Send Mystic Swordsman LV2 to the Graveyard to Special Summon "
+                                               "Mystic Swordsman LV4?";
+
+static inline int IsCardNumberAt(int player, int zone, u16 number)
+{
+    struct DuelZone *z = ZoneOf(player, zone);
+    u16 id = DUEL_CARD_ID(&z->card);
+
+    return id != 0 && z->isFaceUp && ((const u16 *)CARD_ID_TO_NUMBER_ADDR)[id & CARD_ID_MASK] == number;
+}
+
+void MysticSwordsmanAfterBattle(int player)
+{
+    int side, who, zone;
+
+    for (side = 0; side <= 1; side++) {
+        who = side ? 1 - player : player;
+        zone = side ? gBattle.defSlot : gBattle.atkSlot;
+        if (gBattle.direct && side)
+            continue;
+        if (((const u16 *)CARD_ID_TO_NUMBER_ADDR)[gBattle.side[who].cardId & CARD_ID_MASK] == CARD_MYSTIC_SWORDSMAN_LV2
+            && gBattle.side[1 - who].destroyed)
+            gModDuel.battleKills |= 1 << (who * 5 + zone);
+    }
+}
+
+void EndPhase_MysticSwordsmanLevelUp(int turnPlayer)
+{
+    int pass, player, zone;
+
+    for (pass = 0; pass <= 1; pass++) {
+        player = pass ? 1 - turnPlayer : turnPlayer;
+        for (zone = ZONE_MONSTER_0; zone <= ZONE_MONSTER_4; zone++) {
+            if ((gModDuel.battleKills & (1 << (player * 5 + zone)))
+                && IsCardNumberAt(player, zone, CARD_MYSTIC_SWORDSMAN_LV2))
+                Chain_AddPending(TRIGGER_PLAYER(player & 1) | TRIGGER_ZONE(zone) | TRIGGER_KIND(CHAIN_KIND_MONSTER)
+                                     | TRIGGER_EVENT(RESPONSE_NONE) | DUEL_CARD_ID(&ZoneOf(player, zone)->card),
+                                 DUEL_LOC(player, zone));
+        }
+    }
+    gModDuel.battleKills = 0;
+}
+
+/* Index of the first Mystic Swordsman LV4 in the deck (or hand), or -1. */
+static int FindLv4(struct DuelCard *pile, int count)
+{
+    int i;
+
+    for (i = 0; i < count; i++) {
+        if (((const u16 *)CARD_ID_TO_NUMBER_ADDR)[DUEL_CARD_ID(&pile[i]) & CARD_ID_MASK] == CARD_MYSTIC_SWORDSMAN_LV4)
+            return i;
+    }
+    return -1;
+}
+
+int EffectMysticSwordsmanLv2Resolve(struct ChainEntry *link, struct ChainEntry *chainedTo)
+{
+    struct DuelPlayer *p = &gDuelPlayers[link->player & 1];
+    int i;
+    u16 *halves;
+    u16 cmd;
+
+    if (link->negated)
+        return EFFECT_STEP_DONE;
+    switch (gChain.effectStep) {
+    case EFFECT_STEP_START:
+        if (!IsCardNumberAt(link->player, link->zone, CARD_MYSTIC_SWORDSMAN_LV2)
+            || (FindLv4(p->deck, p->deckCount) < 0 && FindLv4(p->hand, p->handCount) < 0))
+            return EFFECT_STEP_DONE;
+        if (link->player)
+            return EFFECT_STEP_3;
+        TextBoxOpen(TEXTBOX_POS(5, 2), TEXTBOX_SIZE(20, 9), TEXTBOX_FLAGS_DEFAULT, sStrMysticSwordsmanLevelUp);
+        TextBoxSetMenu(TEXTBOX_MENU_YES_NO, NULL, NULL);
+        return EFFECT_STEP_2;
+    case EFFECT_STEP_2:
+        if (!gTextBox.result)
+            return EFFECT_STEP_DONE;
+        /* fall through */
+    case EFFECT_STEP_3:
+        if (!IsCardNumberAt(link->player, link->zone, CARD_MYSTIC_SWORDSMAN_LV2))
+            return EFFECT_STEP_DONE;
+        SendFieldCardToGrave(link->player, link->zone, 0, 1);
+        if ((i = FindLv4(p->deck, p->deckCount)) >= 0) {
+            CopyDuelCard((u32 *)&gChain.effectCard, (u32 *)&p->deck[i]);
+            halves = (u16 *)&p->deck[i];
+            cmd = link->player ? DUEL_CMD_PLAYER | DUEL_CMD_REMOVE_CARD_FROM_DECK : DUEL_CMD_REMOVE_CARD_FROM_DECK;
+            DuelCmd_Push(cmd, halves[0], halves[1], 0);
+            cmd = link->player ? DUEL_CMD_PLAYER | DUEL_CMD_SHUFFLE_DECK : DUEL_CMD_SHUFFLE_DECK;
+            DuelCmd_Push(cmd, 0, 0, 0);
+        } else if ((i = FindLv4(p->hand, p->handCount)) >= 0) {
+            CopyDuelCard((u32 *)&gChain.effectCard, (u32 *)&p->hand[i]);
+            halves = (u16 *)&p->hand[i];
+            cmd = link->player ? DUEL_CMD_PLAYER | DUEL_CMD_REMOVE_CARD_FROM_HAND : DUEL_CMD_REMOVE_CARD_FROM_HAND;
+            DuelCmd_Push(cmd, halves[0], halves[1], 0);
+            cmd = link->player ? DUEL_CMD_PLAYER | DUEL_CMD_COMPACT_HAND : DUEL_CMD_COMPACT_HAND;
+            DuelCmd_Push(cmd, 0, 0, 0);
+        } else {
+            return EFFECT_STEP_DONE;
+        }
+        return EFFECT_STEP_4;
+    case EFFECT_STEP_4:
+        /* the LV2's zone is free now */
+        QueueSpecialSummonChoosePosition(link->player, &gChain.effectCard, 1, 0);
+        return EFFECT_STEP_END;
+    }
+    return EFFECT_STEP_DONE;
+}
+#endif /* HAS_CARD_MYSTIC_SWORDSMAN_LV2 && HAS_CARD_MYSTIC_SWORDSMAN_LV4 */
 
 #ifdef HAS_CARD_INJECTION_FAIRY_LILY
 /* ---- Injection Fairy Lily ------------------------------------------------------------------------------------------
@@ -1290,12 +1452,6 @@ int EffectJarOfGreedResolve(struct ChainEntry *link, struct ChainEntry *chainedT
  *                        Mask of Darkness's card-list viewer and EffectMaskOfDarknessResolve.
  * A "Flip monster" is one that HasFlipEffect lists (the coded flip effects). */
 
-/* The packed chain entry of a trigger (struct ChainEntry, chain.h), as in duel_field_moves.c. */
-#define TRIGGER_ZONE(zone) ((zone) << 16)
-#define TRIGGER_KIND(kind) ((kind) << 21)
-#define TRIGGER_EVENT(event) ((event) << 25)
-#define TRIGGER_PLAYER(player) ((player) << 31)
-
 /* 1 if card `id` may be added by the discard effect: a Flip monster other than Night Assailant. */
 int IsNightAssailantTarget(u16 id)
 {
@@ -1557,6 +1713,16 @@ const struct CardEffect gAddedCardEffects[] = {
         EffectBlackLusterSoldierPrepare,
         NULL,
         EffectBlackLusterSoldierChainB,
+    },
+#endif
+#if defined(HAS_CARD_MYSTIC_SWORDSMAN_LV2) && defined(HAS_CARD_MYSTIC_SWORDSMAN_LV4)
+    {
+        CARD_MYSTIC_SWORDSMAN_LV2, 0,
+        EffectMysticSwordsmanLv2Resolve,
+        NULL,
+        NULL,
+        NULL,
+        NULL,
     },
 #endif
 #ifdef HAS_CARD_PHOENIX_WING_WIND_BLAST

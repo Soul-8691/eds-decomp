@@ -89,9 +89,16 @@ void DetachRevivingCards(int player, int zone);
  * removal of its 3000 ATK after the battle (BattleStage_EndAttack). */
 void InjectionFairyLilyResetBattle(void);
 int InjectionFairyLilyDamageStep(int player);
-/* Ninja Grandmaster Sasuke (src/added_effects.c): attacking a Defense Position monster destroys it before the Damage
- * Step (BattleStage_RevealDefender); 1 if it did, and the battle went on to BATTLE_STAGE_END_ATTACK. */
-int NinjaGrandmasterSasukeAttack(int player);
+/* Ninja Grandmaster Sasuke, Mystic Swordsman LV2 (src/added_effects.c): the attacker destroys a (face-down) Defense
+ * Position target before the Damage Step (BattleStage_RevealDefender); 1 if it did, and the battle went on to
+ * BATTLE_STAGE_END_ATTACK. */
+int DestroyTargetBeforeDamageStep(int player);
+/* The mod state of a duel (src/added_effects.c), cleared by DuelPhase_Init. */
+void ModDuelInit(void);
+/* Mystic Swordsman LV2 (src/added_effects.c): its battle kills (BattleStage_DestroyMonsters) and its End Phase
+ * level-up trigger (DuelPhase_End). */
+void MysticSwordsmanAfterBattle(int player);
+void EndPhase_MysticSwordsmanLevelUp(int turnPlayer);
 void InjectionFairyLilyEndAttack(int player);
 /* Night Assailant (src/added_effects.c): its discard effect's targets, and the trigger DiscardHandCard queues. */
 int IsNightAssailantTarget(u16 id);

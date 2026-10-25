@@ -11,6 +11,7 @@ gDeckEditCardLists = 0x0202A000;
 gDeckEditHeldBack = 0x0202C200;
 /* Mod variables in free EWRAM (below gScratchBuffer): Injection Fairy Lily's battle state (src/added_effects.c). */
 gInjectionFairyLily = 0x0202FF00;
+gModDuel = 0x0202FF04;
 gTextCanvas = 0x02000000;
 gSaveData = 0x02011C20;
 gSaveDataSignature = 0x02013D86;

@@ -1126,3 +1126,12 @@ updated: 2026-09-29
 - BattleStage_RevealDefender, before the flip: Sasuke attacking a Defense Position monster marks the attack,
   destroys the target by effect and jumps to BATTLE_STAGE_END_ATTACK (NinjaGrandmasterSasukeAttack).
 - Pages: [[added-cards]].
+
+## [2026-10-25] progress | Mystic Swordsman LV2; duel-start mod state
+- LV2's attack shares Sasuke's battle function, now DestroyTargetBeforeDamageStep with a per-card condition
+  (face-down Defense Position for LV2).
+- Level-up: battle kills are noted in BattleStage_DestroyMonsters. DuelPhase_End queues a trigger for each marked
+  face-up LV2; its resolve asks, sends the LV2 to the GY, then Special Summons LV4 from the Deck or hand in a later
+  step.
+- gModDuel (EWRAM 0x0202FF04) and ModDuelInit, called by DuelPhase_Init, clear the mod's duel state each duel.
+- Pages: [[added-cards]].

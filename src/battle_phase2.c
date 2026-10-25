@@ -440,6 +440,9 @@ int BattleStage_DestroyMonsters(int player)
         }
     }
 #endif
+#if defined(HAS_CARD_MYSTIC_SWORDSMAN_LV2) && defined(HAS_CARD_MYSTIC_SWORDSMAN_LV4)
+    MysticSwordsmanAfterBattle(player);     /* added card: note its battle kills (src/added_effects.c) */
+#endif
     /* ---- The attacking monster ---- */
     switch (CARD_NUMBER_OF(gBattle.side[player].cardId)) {
     case CARD_DIMENSIONAL_WARRIOR:

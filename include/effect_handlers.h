@@ -103,6 +103,7 @@ u16 EffectPhoenixWingWindBlastCheck(struct ChainEntry *card, u16 pos);
 int EffectPhoenixWingWindBlastPrepare(struct ChainEntry *card, struct ChainEntry *chainLink, u16 fromHand);
 int EffectPhoenixWingWindBlastChainA(struct ChainEntry *link, struct ChainEntry *prevLink);
 int EffectPhoenixWingWindBlastChainB(struct ChainEntry *link, struct ChainEntry *prevLink);
+int EffectMysticSwordsmanLv2Resolve(struct ChainEntry *link, struct ChainEntry *chainedTo);
 int EffectPhoenixWingWindBlastResolve(struct ChainEntry *link, struct ChainEntry *chainedTo);
 int EffectMetamorphosisPrepare(struct ChainEntry *card, struct ChainEntry *chainLink, u16 fromHand);
 int EffectMetamorphosisChainB(struct ChainEntry *link, struct ChainEntry *prevLink);

@@ -211,10 +211,35 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
 - `HasFlipEffect` (card_detail.c).
 - Checked in the source; not tested in an emulator.
 
+### Mystic Swordsman LV2 (2026-10-25)
+- "If this card attacks a face-down Defense Position monster: Destroy the monster immediately with this card's
+  effect without flipping it face-up or applying damage calculation. At the End Phase of a turn in which this card
+  destroyed a monster by battle: You can send this card to the GY; Special Summon 1 'Mystic Swordsman LV4' from your
+  hand or Deck."
+- **The attack.** It uses Sasuke's `DestroyTargetBeforeDamageStep`, which now has a per-card condition: Sasuke takes
+  any Defense Position target, LV2 only a face-down one. That destruction is by effect, so it is not a battle kill.
+- **Battle kills.** `BattleStage_DestroyMonsters` calls `MysticSwordsmanAfterBattle` once per battle, after D.D.
+  Warrior Lady's question. An LV2 on either side whose opponent's monster the battle destroyed gets bit
+  `player * 5 + zone` in `gModDuel.battleKills`.
+- **Level-up.** `DuelPhase_End` (next to Tsukuyomi's hook) calls `EndPhase_MysticSwordsmanLevelUp`. Each marked zone
+  that still holds a face-up LV2 queues a pending trigger (kind monster, `RESPONSE_NONE`, its zone); then the marks
+  are cleared. `EffectMysticSwordsmanLv2Resolve` runs in steps:
+  - **Ask.** The human gets Yes/No; the CPU always says Yes.
+  - **Pay.** It sends the LV2 to the Graveyard (`SendFieldCardToGrave`, not destroyed) and takes an LV4 from the
+    Deck (then shuffles), else from the hand. The card is kept in `gChain.effectCard`.
+  - **Summon.** The next step, after those commands ran, calls `QueueSpecialSummonChoosePosition`. That function
+    picks the free zone when it is called, and the LV2's zone must be empty by then.
+  - The row is guarded on both LV2 and LV4 being listed.
+- **Not modelled:** the hand/Deck choice. The Deck is taken first.
+- **Duel state.** `gModDuel` is at EWRAM `0x0202FF04` (symbols.ld). `DuelPhase_Init` (duel_main.c) now calls
+  `ModDuelInit`, which clears it and Injection Fairy Lily's state at the start of every duel.
+- Checked in the source and the build; not tested in an emulator.
+
 ### Ninja Grandmaster Sasuke (2026-10-25)
 - "If this card attacks a Defense Position monster, destroy that monster immediately with this card's effect without
   applying damage calculation."
-- **No effect row.** `BattleStage_RevealDefender` (battle_phase1.c) calls `NinjaGrandmasterSasukeAttack` at its
+- **No effect row.** `BattleStage_RevealDefender` (battle_phase1.c) calls `DestroyTargetBeforeDamageStep` (shared
+  with Mystic Swordsman LV2) at its
   first step, before a face-down target is flipped, so the target's flip effect does not run. For a face-up Sasuke
   attacking a monster in Defense Position (face up or down), it does three things:
   - pushes `DUEL_CMD_MARK_ATTACKED`, which the skipped `DAMAGE_STEP_MARK_ATTACKER` would push;

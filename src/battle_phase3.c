@@ -750,6 +750,9 @@ int DuelPhase_End(void)
 #ifdef HAS_CARD_TSUKUYOMI
             EndPhase_ReturnTsukuyomi(player);
 #endif
+#if defined(HAS_CARD_MYSTIC_SWORDSMAN_LV2) && defined(HAS_CARD_MYSTIC_SWORDSMAN_LV4)
+            EndPhase_MysticSwordsmanLevelUp(player);    /* added card (src/added_effects.c) */
+#endif
             END_STEP++;
         }
         return 0;
