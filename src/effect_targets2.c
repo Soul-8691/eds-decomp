@@ -426,6 +426,9 @@ int EffectTakeControlChainB(struct ChainEntry *link)
                         gStrDesignateMonsterToSwitchControl);
             break;
         case CARD_CHANGE_OF_HEART:
+#ifdef HAS_CARD_MIND_CONTROL
+        case CARD_MIND_CONTROL:     /* added card */
+#endif
             if (CountMonstersFiltered(one - link->player, 0, 0) == 0)
                 return 1;
             TextBoxOpen(TARGET_PROMPT_POS, TARGET_PROMPT_SIZE, TEXTBOX_FLAGS_DEFAULT,
@@ -453,6 +456,9 @@ int EffectTakeControlChainB(struct ChainEntry *link)
     switch (CARD_NUMBER(link->card)) {
     case CARD_INVADER_OF_THE_THRONE:
     case CARD_CHANGE_OF_HEART:
+#ifdef HAS_CARD_MIND_CONTROL
+    case CARD_MIND_CONTROL:     /* added card: it uses this handler too (src/added_effects.c) */
+#endif
         mask = PICK_PLAYER1(PICK_ANY_MONSTER);
         break;
     case CARD_SNATCH_STEAL:

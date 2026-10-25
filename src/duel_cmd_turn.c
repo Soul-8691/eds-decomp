@@ -431,6 +431,9 @@ void DuelCmd_TurnEnd(void)
             /* FAKEMATCH: the card numbers go through u16 locals; a constant argument is propagated into the
              * inline function and gives other code. */
             { u16 cardNo = CARD_CHANGE_OF_HEART; ReturnControlAtTurnEnd(player, i, cardNo); }
+#ifdef HAS_CARD_MIND_CONTROL
+            { u16 cardNo = CARD_MIND_CONTROL; ReturnControlAtTurnEnd(player, i, cardNo); }   /* added card */
+#endif
             if (player == gDuelCmd.cmd >> 15) {
                 u16 cardNo = CARD_1255;
                 ReturnControlAtTurnEnd(player, i, cardNo);

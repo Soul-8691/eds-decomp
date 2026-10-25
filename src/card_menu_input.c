@@ -397,6 +397,9 @@ static inline u16 DuelCardNumber(u16 id)
     return ((const u16 *)CARD_ID_TO_NUMBER_ADDR)[id & CARD_ID_MASK];
 }
 
+#ifdef HAS_CARD_MIND_CONTROL
+int IsMindControlled(int player, int zone);     /* added card (src/added_effects.c) */
+#endif
 u16 CanMonsterAttack(int player, int zone, u16 flag)
 {
     struct DuelZoneWord *zn = &gDuelPlayerZones[player & 1].zones[zone];
@@ -446,6 +449,10 @@ u16 CanMonsterAttack(int player, int zone, u16 flag)
         if (DuelCardNumber(id) != CARD_1334)
             return 0;
     }
+#ifdef HAS_CARD_MIND_CONTROL
+    if (IsMindControlled(player, zone))         /* added card: a monster taken by Mind Control */
+        return 0;
+#endif
     if (flag != 0) {
         switch (DuelCardNumber(id)) {
         case CARD_DARK_ELF:

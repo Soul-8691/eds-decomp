@@ -77,9 +77,17 @@ int FindFreeMonsterZone(int player)
  * card number 1418 is active (face up, not negated) on neither field. 1418 is not an EDS card, but the
  * engine still checks it: it forbids all tributes.
  */
+#ifdef HAS_CARD_MIND_CONTROL
+int IsMindControlled(int player, int zone);     /* added card (src/added_effects.c) */
+#endif
 u16 IsTributableMonster(int player, int zone)
 {
     u32 cardId = ZONE_CARD_ID(player, zone);
+
+#ifdef HAS_CARD_MIND_CONTROL
+    if (IsMindControlled(player, zone))         /* added card: a monster taken by Mind Control */
+        return FALSE;
+#endif
 
     if (cardId != 0 && !IS_TOKEN(cardId) && CARD_TYPE(cardId) <= CARD_TYPE_REPTILE
         && CountActiveCardsOnField(0, CARD_1418) <= 0 && CountActiveCardsOnField(1, CARD_1418) <= 0)

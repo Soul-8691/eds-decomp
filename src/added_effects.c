@@ -972,6 +972,21 @@ int EffectMysticSwordsmanLv2Resolve(struct ChainEntry *link, struct ChainEntry *
 }
 #endif /* HAS_CARD_MYSTIC_SWORDSMAN_LV2 && HAS_CARD_MYSTIC_SWORDSMAN_LV4 */
 
+#ifdef HAS_CARD_MIND_CONTROL
+/* ---- Mind Control --------------------------------------------------------------------------------------------------
+ * Normal Spell: "Target 1 monster your opponent controls; take control of it until the End Phase, but it cannot
+ * declare an attack or be Tributed."
+ * The row is Change of Heart's: EffectChangeOfHeartPrepare, EffectOpponentMonsterCheck, EffectTakeControlChainB and
+ * EffectChangeOfHeartResolve, which moves the monster to a free zone of the player and gives it a
+ * ZONE_LINK_CARD_EFFECT link from the activating card, here Mind Control. That link is what the rest keys on:
+ *   DuelCmd_TurnEnd (duel_cmd_turn.c)   ReturnControlAtTurnEnd(player, zone, CARD_MIND_CONTROL), as for Change of Heart
+ *   CanMonsterAttack (card_menu_input.c) and IsTributableMonster (duel_zones.c)   IsMindControlled refuses it. */
+int IsMindControlled(int player, int zone)
+{
+    return CountZoneLinksFromCard(player, zone, CARD_MIND_CONTROL) > 0;
+}
+#endif /* HAS_CARD_MIND_CONTROL */
+
 #ifdef HAS_CARD_LIGHTNING_VORTEX
 /* ---- Lightning Vortex ----------------------------------------------------------------------------------------------
  * Normal Spell: "Discard 1 card; destroy all face-up monsters your opponent controls."
@@ -1894,6 +1909,16 @@ const struct CardEffect gAddedCardEffects[] = {
         NULL,
         NULL,
         NULL,
+    },
+#endif
+#ifdef HAS_CARD_MIND_CONTROL
+    {
+        CARD_MIND_CONTROL, 0,
+        (int (*)(struct ChainEntry *, struct ChainEntry *))EffectChangeOfHeartResolve,
+        (u16 (*)(struct ChainEntry *, u16))EffectOpponentMonsterCheck,
+        (int (*)(struct ChainEntry *, struct ChainEntry *, u16))EffectChangeOfHeartPrepare,
+        NULL,
+        (int (*)(struct ChainEntry *, struct ChainEntry *))EffectTakeControlChainB,
     },
 #endif
 #ifdef HAS_CARD_LIGHTNING_VORTEX

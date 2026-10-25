@@ -211,6 +211,25 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
 - `HasFlipEffect` (card_detail.c).
 - Checked in the source; not tested in an emulator.
 
+### Mind Control (2026-10-25)
+- Normal Spell: "Target 1 monster your opponent controls; take control of it until the End Phase, but it cannot
+  declare an attack or be Tributed."
+- **Row:** Change of Heart's handlers (`EffectChangeOfHeartPrepare`, `EffectOpponentMonsterCheck`,
+  `EffectTakeControlChainB`, `EffectChangeOfHeartResolve`). The resolve moves the target to a free zone of the
+  player and links it to the activating card (`ZONE_LINK_CARD_EFFECT` from `link->card`), here Mind Control.
+- **Return:** `DuelCmd_TurnEnd` (duel_cmd_turn.c) now also calls `ReturnControlAtTurnEnd(player, i,
+  CARD_MIND_CONTROL)` next to Change of Heart's: the monster goes back, or is destroyed if the owner has no free zone.
+- **Restrictions:** `IsMindControlled` (the zone has a link from Mind Control) makes `CanMonsterAttack`
+  (card_menu_input.c; the CPU's attack pick uses it too) and `IsTributableMonster` (duel_zones.c; the summon and
+  cost tribute checks) refuse the monster.
+- **Target step fix (2026-10-25).** `EffectTakeControlChainB` (effect_targets2.c) sets its cursor mask in a
+  `switch` on the card number with no default (only five original numbers used it). For Mind Control the mask stayed
+  unset and no target could be picked; the cursor stayed on the card. `CARD_MIND_CONTROL` is now in Change of Heart's
+  case there, and in the prompt switch above it.
+- **Not added:** Mind Control is not in the single-target redirect lists (Fairy's Hand Mirror and similar:
+  `CanRedirectEffectToZone` and two others) that name Change of Heart.
+- Checked in the source and the build; not tested in an emulator.
+
 ### Lightning Vortex (2026-10-25)
 - Normal Spell: "Discard 1 card; destroy all face-up monsters your opponent controls."
 - **Prepare:** a card to discard (2 in hand when played from the hand) and a face-up monster on the opponent's side.

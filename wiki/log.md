@@ -1151,3 +1151,13 @@ updated: 2026-09-29
 - Normal Spell: discard cost (DuelPrompt_PostDiscardCost), then every face-up monster the opponent controls is
   destroyed.
 - Pages: [[added-cards]].
+
+## [2026-10-25] progress | Mind Control
+- Change of Heart's row. ReturnControlAtTurnEnd for CARD_MIND_CONTROL in DuelCmd_TurnEnd. IsMindControlled keeps
+  the monster out of CanMonsterAttack and IsTributableMonster.
+- Pages: [[added-cards]].
+
+## [2026-10-25] progress | Mind Control: target pick fixed
+- EffectTakeControlChainB had no cursor mask for an unlisted card number. CARD_MIND_CONTROL now takes Change of
+  Heart's mask (PICK_PLAYER1(PICK_ANY_MONSTER)) and prompt.
+- Pages: [[added-cards]].
