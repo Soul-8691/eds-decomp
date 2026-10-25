@@ -447,6 +447,55 @@ int EffectDekoichiResolve(struct ChainEntry *link, struct ChainEntry *chainedTo)
 }
 #endif /* HAS_CARD_DEKOICHI_THE_BATTLECHANTED_LOCOMOTIVE */
 
+/* ---- Monsters turned face down ----------------------------------------------------------------------------------
+ * DuelCmd_FlipCard (duel_cmd_field.c) calls this when it turns the monster in (player, zone) face down: a face-down
+ * monster loses its counters, so the Spell Counter link (ZONE_LINK_ATK_300_PER_VALUE, one per zone; Breaker the
+ * Magical Warrior) goes. It runs inside the command, so the link is removed at once. */
+void OnMonsterTurnedFaceDown(int player, int zone)
+{
+    RemoveZoneLink(DUEL_LOC(player, zone), 0, ZONE_LINK_ATK_300_PER_VALUE);
+}
+
+#ifdef HAS_CARD_BOOK_OF_MOON
+/* ---- Book of Moon --------------------------------------------------------------------------------------------------
+ * Quick-Play Spell: "Target 1 face-up monster on the field; change that target to face-down Defense Position."
+ * The target is a face-up monster (EffectTargetableFaceUpMonsterCheck / ChainB, as Chaos Sorcerer's). The resolve
+ * first destroys the target's Equip Cards (they cannot equip a face-down monster; a destroyed Premature Burial takes
+ * the monster with it). Then DUEL_CMD_CHANGE_POSITION puts a monster in Attack Position into Defense Position, and
+ * DUEL_CMD_FLIP_CARD turns it face down, which removes its counters (OnMonsterTurnedFaceDown). */
+int EffectBookOfMoonResolve(struct ChainEntry *link, struct ChainEntry *chainedTo)
+{
+    u16 equips[32];
+    int count = 0;
+    int player, zone, i;
+    struct DuelZone *z;
+    u16 cmd;
+
+    if (link->negated || link->numTargets != 1)
+        return EFFECT_STEP_DONE;
+    player = (u8)link->targets[0];
+    zone = link->targets[0] >> 8;
+    z = ZoneOf(player, zone);
+    if (zone > ZONE_MONSTER_4 || DUEL_CARD_ID(&z->card) == 0 || !z->isFaceUp)
+        return EFFECT_STEP_DONE;
+    for (i = 0; i < z->numLinks; i++) {
+        u16 target = z->links[i];
+        if ((z->linkKinds[i] == ZONE_LINK_EQUIP || z->linkKinds[i] == ZONE_LINK_EQUIP_ATK_200)
+            && DUEL_CARD_ID(&ZoneOf(DUEL_LOC_PLAYER(target), DUEL_LOC_ZONE(target))->card) != 0)
+            equips[count++] = target;
+    }
+    for (i = 0; i < count; i++)
+        DestroyFieldCard(DUEL_LOC_PLAYER(equips[i]), DUEL_LOC_ZONE(equips[i]), 1);
+    if (!z->isDefense) {
+        cmd = player ? DUEL_CMD_PLAYER | DUEL_CMD_CHANGE_POSITION : DUEL_CMD_CHANGE_POSITION;
+        DuelCmd_Push(cmd, zone, 0, 0);
+    }
+    cmd = player ? DUEL_CMD_PLAYER | DUEL_CMD_FLIP_CARD : DUEL_CMD_FLIP_CARD;
+    DuelCmd_Push(cmd, zone, 0, 0);
+    return EFFECT_STEP_DONE;
+}
+#endif /* HAS_CARD_BOOK_OF_MOON */
+
 #ifdef HAS_CARD_REINFORCEMENT_OF_THE_ARMY
 /* ---- Reinforcement of the Army -----------------------------------------------------------------------------------
  * Normal Spell: "Add 1 Level 4 or lower Warrior monster from your Deck to your hand."
@@ -685,6 +734,16 @@ const struct CardEffect gAddedCardEffects[] = {
         EffectBlackLusterSoldierPrepare,
         NULL,
         EffectBlackLusterSoldierChainB,
+    },
+#endif
+#ifdef HAS_CARD_BOOK_OF_MOON
+    {
+        CARD_BOOK_OF_MOON, 0,
+        EffectBookOfMoonResolve,
+        (u16 (*)(struct ChainEntry *, u16))EffectTargetableFaceUpMonsterCheck,
+        NULL,
+        NULL,
+        (int (*)(struct ChainEntry *, struct ChainEntry *))EffectTargetableFaceUpMonsterChainB,
     },
 #endif
 #ifdef HAS_CARD_REINFORCEMENT_OF_THE_ARMY

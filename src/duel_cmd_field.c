@@ -22,6 +22,9 @@
 #include "duel_cmd.h"               /* struct DuelCmd, gDuelCmd */
 #include "duel_screen.h"            /* DuelAnim_*, DuelCursor_Select, DuelScreen_*, DrawAllAreaTiles, GetZoneArea */
 
+/* Mod (src/added_effects.c): a monster turned face down loses its counters. */
+void OnMonsterTurnedFaceDown(int player, int zone);
+
 /* Local view of DuelAnim_MoveCard (duel_screen.h, u16 cardId): the same symbol called with a u32 card ID, by
  * DuelCmd_SendToGraveyard and DuelCmd_Banish. With the header's u16 parameter the argument set-up (mov r0, ip)
  * moves one instruction earlier; the other four calls use the header prototype. */
@@ -122,6 +125,8 @@ void DuelCmd_FlipCard(void)
         zone->isFaceUp = !zone->isFaceUp;
         if (zone->isFaceUp)
             zone->serial = DUEL_SERIAL_FROM_ZONES++;
+        else if (slot <= ZONE_MONSTER_4)
+            OnMonsterTurnedFaceDown(player, slot);  /* mod: a face-down monster loses its counters */
         DuelCursor_Select(player, DUEL_AREA_MONSTER, slot);
         DrawAllAreaTiles();
         gDuelCmd.running = 0;

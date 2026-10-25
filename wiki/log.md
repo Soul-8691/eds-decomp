@@ -1029,3 +1029,9 @@ updated: 2026-09-29
 - Normal Spell: the search is Sangan's EffectSanganResolve, with a CollectEffectTargets case for Level 4 or lower
   deck Warriors (IsReinforcementTarget). The prepare needs one in the deck.
 - Pages: [[added-cards]].
+
+## [2026-10-25] progress | Book of Moon; counters go when a monster is turned face down
+- Book of Moon: a face-up target. Its equips are destroyed, then CHANGE_POSITION (if in Attack) and FLIP_CARD.
+- DuelCmd_FlipCard calls OnMonsterTurnedFaceDown, which removes the Spell Counter link (Breaker the Magical
+  Warrior). Magical Hats is not covered (it keeps the links).
+- Pages: [[added-cards]].

@@ -87,6 +87,8 @@ int IsGravekeeperMonster(u16 id);
 void DetachRevivingCards(int player, int zone);
 /* Night Assailant (src/added_effects.c): its discard effect's targets, and the trigger DiscardHandCard queues. */
 int IsNightAssailantTarget(u16 id);
+/* DuelCmd_FlipCard turned the monster in (player, zone) face down: it loses its counters (src/added_effects.c). */
+void OnMonsterTurnedFaceDown(int player, int zone);
 /* Reinforcement of the Army (src/added_effects.c): a Level 4 or lower Warrior monster. */
 int IsReinforcementTarget(u16 id);
 void QueueNightAssailantTrigger(int player, u16 id);

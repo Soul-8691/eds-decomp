@@ -145,8 +145,12 @@ it. You can remove 1 Spell Counter from this card; target 1 Spell/Trap on the fi
     face up with a counter; check: `EffectAnySpellTrapCheck`, so a Spell/Trap must be on the field). ChainA (the
     cost) removes the counter (`QueueRemoveZoneLink`). ChainB picks the target (`EffectSpellTrapTargetChainB`) and
     resolve destroys it (`EffectDestroyTargetResolve`). These are Mystical Space Typhoon's handlers.
-- **Not modelled.** Counters are not removed if the monster is turned face down. No EDS card does that, and
-  Book of Moon is added without an effect. The CPU never has Breaker in its decks.
+- **Face down (2026-10-25).** A monster turned face down loses its counters. `DuelCmd_FlipCard` (duel_cmd_field.c)
+  calls `OnMonsterTurnedFaceDown` (src/added_effects.c) when it leaves a monster face down. That function removes
+  the zone's `ZONE_LINK_ATK_300_PER_VALUE` link at once (`RemoveZoneLink`). It covers Book of Moon and any later
+  face-down effect. **Not covered:** Magical Hats, which parks the attacked monster's links and moves them back
+  (`DUEL_CMD_MOVE_ZONE_LINKS`), so a Breaker hidden under a hat keeps its counter.
+- The CPU never has Breaker in its decks.
 - **Decks of this build** (`src/mod_decks.c`; keep to the Forbidden/Limited list):
   - **Red starter deck:** 8 BLS - Envoy of the Beginning, 3 Breaker, 3 Shining Fairy, 3 Mystic Tomato, 1 Dark Hole,
     and 22 strong LIGHT/DARK Normal monsters (40). Dark Hole is limited to 1, so the other 2 go to the trunk
@@ -187,6 +191,15 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
 - **Effect.** Main Phase ACTIVATE, once per turn: it targets a face-up monster (`EffectTargetableFaceUpMonsterCheck` /
   `EffectTargetableFaceUpMonsterChainB`) and banishes it; Chaos Sorcerer cannot attack that turn
   (`EffectBanishTargetNoAttackResolve`, shared with BLS's banish effect).
+
+### Book of Moon (2026-10-25)
+- Quick-Play Spell: "Target 1 face-up monster on the field; change that target to face-down Defense Position." It
+  targets like Chaos Sorcerer (`EffectTargetableFaceUpMonsterCheck` / `ChainB`). `EffectBookOfMoonResolve` first
+  destroys the target's Equip Cards, because they cannot equip a face-down monster; a destroyed Premature Burial
+  takes its monster with it. A monster in Attack Position then gets `DUEL_CMD_CHANGE_POSITION`, and every target gets
+  `DUEL_CMD_FLIP_CARD` (it toggles face up / face down). The flip removes its counters (`OnMonsterTurnedFaceDown`).
+- Continuous links (Spellbinding Circle, Call of the Haunted) stay, as in the real rules.
+- Checked in the source and the build; not tested in an emulator.
 
 ### Reinforcement of the Army (2026-10-25)
 - Normal Spell: "Add 1 Level 4 or lower Warrior monster from your Deck to your hand." The resolve is Sangan's own
