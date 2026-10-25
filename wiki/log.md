@@ -1140,3 +1140,9 @@ updated: 2026-09-29
 - Normal Spell: at resolution the human picks a monster with the cursor and the CPU gives its weakest.
   SwapFieldCards swaps them, then DUEL_CMD_SET_POSITION_LOCKED locks both until their controller's next turn.
 - Pages: [[added-cards]].
+
+## [2026-10-25] progress | Don Zaloog
+- In both battle-damage trigger lists of BattleStage_InflictDamage (like Kycoo). The resolve asks (human) or
+  decides (CPU): a random discard (DuelPrompt_PostRandomDiscard), or the top 2 Deck cards to the Graveyard.
+- Noted: Chain_Build does not call prepare handlers for pending triggers.
+- Pages: [[added-cards]].

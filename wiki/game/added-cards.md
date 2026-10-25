@@ -211,6 +211,22 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
 - `HasFlipEffect` (card_detail.c).
 - Checked in the source; not tested in an emulator.
 
+### Don Zaloog (2026-10-25)
+- "When this card inflicts battle damage to your opponent: You can activate 1 of these effects. Discard 1 random
+  card from your opponent's hand; or send the top 2 cards of your opponent's Deck to the GY."
+- **Trigger.** It is in both of `BattleStage_InflictDamage`'s battle-damage trigger lists, next to Kycoo: as the
+  attacker (`RESPONSE_BATTLE_DAMAGE`), and as the target when the attacker's player takes the damage
+  (`RESPONSE_BATTLE_DEFLECTED_DAMAGE`). The low nibble of `loc1` is the damaged player.
+- **Resolve** (`EffectDonZaloogResolve`). `Chain_Build` never calls a prepare handler for pending triggers (checked:
+  it only runs chainA/chainB), so the resolve checks the event and the damaged player itself.
+  - **Human:** Yes/No for the random discard (when the opponent has a hand), then Yes/No for the Deck; No to both
+    uses nothing.
+  - **CPU:** it discards if it can, else sends the Deck cards.
+  - **Discard:** White Magical Hat's `DuelPrompt_PostRandomDiscard(opponent, 1, 1)`, a discard by an opponent's
+    effect.
+  - **Deck:** `DUEL_CMD_SEND_DECK_CARD_TO_GRAVEYARD` for `deck[0]` and `deck[1]` (the top is index 0).
+- Checked in the source and the build; not tested in an emulator.
+
 ### Creature Swap (2026-10-25)
 - Normal Spell: "Each player chooses 1 monster they control and switches control of those monsters with each other.
   Those monsters cannot change their battle positions for the rest of this turn."

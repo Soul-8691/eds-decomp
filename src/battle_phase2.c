@@ -142,6 +142,9 @@ int BattleStage_InflictDamage(int player)
 #ifdef HAS_CARD_KYCOO_THE_GHOST_DESTROYER
             case CARD_KYCOO_THE_GHOST_DESTROYER:
 #endif
+#ifdef HAS_CARD_DON_ZALOOG
+            case CARD_DON_ZALOOG:       /* added card (src/added_effects.c) */
+#endif
                 {
                     /* Matching: separate statements keep the ROM's order of the OR chain. */
                     u32 trigger = ((1 - player) & 1) << 31;
@@ -208,6 +211,9 @@ int BattleStage_InflictDamage(int player)
             case CARD_1511:
 #ifdef HAS_CARD_KYCOO_THE_GHOST_DESTROYER
             case CARD_KYCOO_THE_GHOST_DESTROYER:
+#endif
+#ifdef HAS_CARD_DON_ZALOOG
+            case CARD_DON_ZALOOG:       /* added card (src/added_effects.c) */
 #endif
                 {
                     u32 trigger = (player & 1) << 31;

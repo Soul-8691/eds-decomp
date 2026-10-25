@@ -972,6 +972,79 @@ int EffectMysticSwordsmanLv2Resolve(struct ChainEntry *link, struct ChainEntry *
 }
 #endif /* HAS_CARD_MYSTIC_SWORDSMAN_LV2 && HAS_CARD_MYSTIC_SWORDSMAN_LV4 */
 
+#ifdef HAS_CARD_DON_ZALOOG
+/* ---- Don Zaloog ----------------------------------------------------------------------------------------------------
+ * "When this card inflicts battle damage to your opponent: You can activate 1 of these effects.
+ *  - Discard 1 random card from your opponent's hand.
+ *  - Send the top 2 cards of your opponent's Deck to the GY."
+ * BattleStage_InflictDamage (battle_phase2.c) queues its battle-damage trigger like Kycoo's: as the attacker
+ * (RESPONSE_BATTLE_DAMAGE) and as the target when the attacker's player takes the damage
+ * (RESPONSE_BATTLE_DEFLECTED_DAMAGE). The low nibble of loc1 is the damaged player. Pending triggers are not checked
+ * by a prepare handler, so the resolve checks everything and asks: the human gets Yes/No for the discard, then for
+ * the Deck; the CPU discards if it can, else sends the Deck cards. The discard is White Magical Hat's
+ * (DuelPrompt_PostRandomDiscard, by an opponent's effect); the Deck cards go one by one
+ * (DUEL_CMD_SEND_DECK_CARD_TO_GRAVEYARD, the top card is deck[0]). */
+
+static const u8 sStrDonZaloogDiscard[] = "Use Don Zaloog's effect to discard 1 random card from the opponent's hand?";
+static const u8 sStrDonZaloogMill[] = "Use Don Zaloog's effect to send the top 2 cards of the opponent's Deck to the "
+                                      "Graveyard?";
+
+static void DonZaloogMill(int opponent)
+{
+    struct DuelPlayer *o = &gDuelPlayers[opponent & 1];
+    u16 cmd = opponent ? DUEL_CMD_PLAYER | DUEL_CMD_SEND_DECK_CARD_TO_GRAVEYARD : DUEL_CMD_SEND_DECK_CARD_TO_GRAVEYARD;
+    int i;
+
+    for (i = 0; i < 2 && i < o->deckCount; i++)
+        DuelCmd_Push(cmd, ((u16 *)&o->deck[i])[0], ((u16 *)&o->deck[i])[1], 0);
+}
+
+int EffectDonZaloogResolve(struct ChainEntry *link, struct ChainEntry *chainedTo)
+{
+    int opponent = 1 - link->player;
+    struct DuelPlayer *o = &gDuelPlayers[opponent & 1];
+
+    if (link->negated)
+        return EFFECT_STEP_DONE;
+    switch (gChain.effectStep) {
+    case EFFECT_STEP_START:
+        if ((link->event != RESPONSE_BATTLE_DAMAGE && link->event != RESPONSE_BATTLE_DEFLECTED_DAMAGE)
+            || (link->loc1 & 0xF) == link->player)
+            return EFFECT_STEP_DONE;
+        if (link->player) {
+            ShowCardEffect(link->player, link->card & CARD_ID_MASK);
+            if (o->handCount != 0)
+                DuelPrompt_PostRandomDiscard(opponent, 1, 1);
+            else
+                DonZaloogMill(opponent);
+            return EFFECT_STEP_DONE;
+        }
+        if (o->handCount != 0) {
+            TextBoxOpen(TEXTBOX_POS(5, 2), TEXTBOX_SIZE(20, 9), TEXTBOX_FLAGS_DEFAULT, sStrDonZaloogDiscard);
+            TextBoxSetMenu(TEXTBOX_MENU_YES_NO, NULL, NULL);
+            return EFFECT_STEP_2;
+        }
+        goto ask_mill;
+    case EFFECT_STEP_2:
+        if (gTextBox.result) {
+            DuelPrompt_PostRandomDiscard(opponent, 1, 1);
+            return EFFECT_STEP_DONE;
+        }
+    ask_mill:
+        if (o->deckCount == 0)
+            return EFFECT_STEP_DONE;
+        TextBoxOpen(TEXTBOX_POS(5, 2), TEXTBOX_SIZE(20, 9), TEXTBOX_FLAGS_DEFAULT, sStrDonZaloogMill);
+        TextBoxSetMenu(TEXTBOX_MENU_YES_NO, NULL, NULL);
+        return EFFECT_STEP_3;
+    case EFFECT_STEP_3:
+        if (gTextBox.result)
+            DonZaloogMill(opponent);
+        return EFFECT_STEP_DONE;
+    }
+    return EFFECT_STEP_DONE;
+}
+#endif /* HAS_CARD_DON_ZALOOG */
+
 #ifdef HAS_CARD_CREATURE_SWAP
 /* ---- Creature Swap -------------------------------------------------------------------------------------------------
  * Normal Spell: "Each player chooses 1 monster they control and switches control of those monsters with each other.
@@ -1769,6 +1842,16 @@ const struct CardEffect gAddedCardEffects[] = {
     {
         CARD_MYSTIC_SWORDSMAN_LV2, 0,
         EffectMysticSwordsmanLv2Resolve,
+        NULL,
+        NULL,
+        NULL,
+        NULL,
+    },
+#endif
+#ifdef HAS_CARD_DON_ZALOOG
+    {
+        CARD_DON_ZALOOG, 0,
+        EffectDonZaloogResolve,
         NULL,
         NULL,
         NULL,
