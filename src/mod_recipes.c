@@ -5,8 +5,10 @@
  *                           the rows after the sheet; the scene uses it as its title)
  *   CB_DeckRecipes          the scene (MainMenu_Launch starts it)
  *   DeckRecipes_OnNewGame   BuildStarterDeck (title_screen.c): the new game's deck belongs to no recipe yet
- * Up to RECIPE_COUNT recipes, each a saved Deck, Side Deck and Fusion Deck list, live in SRAM after the save image
- * (RECIPE_SRAM; the game's save is 0x2170 bytes of the 32 KiB). One recipe is in use: it is the player's current
+ * Up to RECIPE_COUNT recipes, each a name and a saved Deck, Side Deck and Fusion Deck list, live in SRAM after the
+ * save image (RECIPE_SRAM; the game's save is 0x2170 bytes of the 32 KiB). The first ones start as the decks of
+ * GetRecipePreset (src/mod_decks.c), named after their .ydk files; like any recipe they can be replaced or cleared.
+ * A recipe saved with SELECT takes the name of the recipe in use (none: "Custom deck"). One recipe is in use: it is the player's current
  * deck, stored back into its slot whenever the scene opens or switches. Switching to another recipe puts every card
  * of the three decks back into the trunk, then takes the recipe's cards out of the trunk; a card the trunk no longer
  * holds (or that the copy limits refuse) is left out and counted as missing.
@@ -26,7 +28,11 @@
 #include "text.h"
 #include "save.h"
 #include "sound.h"
+#include "card_data.h"
 #include "constants/sound.h"
+
+/* src/mod_decks.c */
+int GetRecipePreset(int n, const char **name, const u16 **cards, u32 *count);
 
 extern const u8 gMainMenuObjPal[], gMainMenuObjGfx[];
 extern const u16 gMainMenuSkyImage[];
@@ -34,7 +40,9 @@ extern const u16 gMainMenuSkyImage[];
 #define RECIPE_COUNT        50
 #define RECIPE_NONE         0xFF
 #define RECIPE_SRAM         ((u8 *)SRAM + 0x4000)
-#define RECIPE_MAGIC        0x31504352      /* "RCP1" */
+#define RECIPE_MAGIC        0x32504352      /* "RCP2" */
+#define RECIPE_NAME_SIZE    32
+#define RECIPE_SUMMARY_SIZE (4 + RECIPE_NAME_SIZE)  /* the sizes and the name, read for the list */
 
 /* One recipe in SRAM. */
 struct RecipeSlot {
@@ -42,6 +50,7 @@ struct RecipeSlot {
     u8 sideSize;
     u8 fusionSize;
     u8 used;
+    char name[RECIPE_NAME_SIZE];    /* empty: "Custom deck" */
     u16 deck[DECK_MAX_CARDS];
     u16 side[SIDE_DECK_MAX_CARDS];
     u16 fusion[FUSION_DECK_MAX_CARDS];
@@ -71,7 +80,7 @@ struct DeckRecipes {
     u8 confirm;                     /* enum RecipeConfirm: the first press of SELECT/START on confirmSlot */
     u8 confirmSlot;
     u8 pad[3];
-    u8 sizes[RECIPE_COUNT][4];      /* deckSize, sideSize, fusionSize, used of every slot */
+    u8 sizes[RECIPE_COUNT][RECIPE_SUMMARY_SIZE];  /* deckSize, sideSize, fusionSize, used, name of every slot */
     char status[64];
     struct RecipeSlot buf;
 };
@@ -204,18 +213,23 @@ static void WriteSlot(int n)
     struct DeckRecipes *s = &gDeckRecipes;
 
     WriteSramEx((u8 *)&s->buf, RECIPE_SLOT_SRAM(n), sizeof(struct RecipeSlot));
-    s->sizes[n][0] = s->buf.deckSize;
-    s->sizes[n][1] = s->buf.sideSize;
-    s->sizes[n][2] = s->buf.fusionSize;
-    s->sizes[n][3] = s->buf.used;
+    MemCopy16(s->sizes[n], &s->buf, RECIPE_SUMMARY_SIZE);
 }
 
-/* The player's current Deck, Side Deck and Fusion Deck into buf. */
+/* The player's current Deck, Side Deck and Fusion Deck into buf, named as the recipe in use. */
 static void CurrentDeckToBuf(void)
 {
     struct RecipeSlot *b = &gDeckRecipes.buf;
+    char name[RECIPE_NAME_SIZE];
+    int i;
 
+    if (gDeckRecipes.active < RECIPE_COUNT)
+        MemCopy16(name, gDeckRecipes.sizes[gDeckRecipes.active] + 4, RECIPE_NAME_SIZE);
+    else
+        name[0] = 0;
     MemClear16(b, sizeof(*b));
+    for (i = 0; i < RECIPE_NAME_SIZE - 1 && name[i]; i++)
+        b->name[i] = name[i];
     b->used = 1;
     b->deckSize = gSaveData.deckSize;
     b->sideSize = gSaveData.sideDeckSize;
@@ -295,7 +309,36 @@ static int SwitchTo(int n)
     return missing;
 }
 
-/* Read the slot sizes; set up the SRAM area the first time; give the current deck a slot when it has none. */
+/* Preset n into buf (0 past the last one): Fusion Monsters to the Fusion Deck, the rest to the Deck. */
+static int PresetToBuf(int n)
+{
+    struct RecipeSlot *b = &gDeckRecipes.buf;
+    const char *name;
+    const u16 *cards;
+    u32 count, i;
+
+    MemClear16(b, sizeof(*b));
+    if (!GetRecipePreset(n, &name, &cards, &count))
+        return 0;
+    b->used = 1;
+    for (i = 0; i < RECIPE_NAME_SIZE - 1 && name[i]; i++)
+        b->name[i] = name[i];
+    for (i = 0; i < count; i++) {
+        u16 id = gCardNumberToId[cards[i] & CARD_ID_MASK];
+        u32 stats = gCardStats[id & CARD_ID_MASK];
+
+        if (CARD_STATS_TYPE(stats) <= CARD_TYPE_REPTILE && CARD_STATS_KIND(stats) == CARD_KIND_FUSION) {
+            if (b->fusionSize < FUSION_DECK_MAX_CARDS)
+                b->fusion[b->fusionSize++] = id;
+        } else if (b->deckSize < DECK_MAX_CARDS) {
+            b->deck[b->deckSize++] = id;
+        }
+    }
+    return 1;
+}
+
+/* Read the slot summaries; set up the SRAM area the first time (the presets, then empty slots); give the current
+ * deck a slot when it has none. */
 static void LoadRecipes(void)
 {
     struct DeckRecipes *s = &gDeckRecipes;
@@ -304,14 +347,17 @@ static void LoadRecipes(void)
 
     ReadHeader(&h);
     if (h.magic != RECIPE_MAGIC) {
-        MemClear16(&s->buf, sizeof(s->buf));
-        for (n = 0; n < RECIPE_COUNT; n++)
+        for (n = 0; n < RECIPE_COUNT; n++) {
+            PresetToBuf(n);
             WriteSlot(n);
+        }
         h.active = RECIPE_NONE;
         WriteActive(RECIPE_NONE);
     }
-    for (n = 0; n < RECIPE_COUNT; n++)
-        ReadSram(RECIPE_SLOT_SRAM(n), s->sizes[n], 4);
+    for (n = 0; n < RECIPE_COUNT; n++) {
+        ReadSram(RECIPE_SLOT_SRAM(n), s->sizes[n], RECIPE_SUMMARY_SIZE);
+        s->sizes[n][RECIPE_SUMMARY_SIZE - 1] = 0;
+    }
     s->active = h.active < RECIPE_COUNT ? h.active : RECIPE_NONE;
     if (s->active == RECIPE_NONE) {
         for (n = 0; n < RECIPE_COUNT; n++) {
@@ -351,12 +397,11 @@ void DeckRecipes_OnNewGame(void)
 #define COLOR_HELP      TEXT_SIZE_COLOR(10, 10)
 #define COLOR_SHADOW    TEXT_SIZE_COLOR(10, 1)
 
+#define COUNTS_X        186     /* the "D40 S0 F3" column */
+
 static const char sStrEmpty[] = "(empty)";
-static const char sStrDeck[] = "Deck ";
-static const char sStrSide[] = "  Side ";
-static const char sStrFusion[] = "  Fusion ";
-static const char sStrInUse[] = "  - in use";
-static const char sStrHelp1[] = "A: use this recipe   B: back   L/R: page";
+static const char sStrCustom[] = "Custom deck";
+static const char sStrHelp1[] = "A: use   B: back   L/R: page   *: in use";
 static const char sStrHelp2[] = "SELECT: save deck here   START: clear";
 static const char sStrRecipe[] = "Recipe ";
 static const char sStrNowUsing[] = " is now your deck.";
@@ -402,10 +447,15 @@ static char *StatusRecipe(int n)
     return AppendNum(AppendStr(gDeckRecipes.status, sStrRecipe), n + 1, 2);
 }
 
+static void DrawText(int x, int y, u16 color, const char *text)
+{
+    TextDrawString(x + 1, y + 1, COLOR_SHADOW, (const u8 *)text);
+    TextDrawString(x, y, color, (const u8 *)text);
+}
+
 static void DrawLine(int y, u16 color, const char *text)
 {
-    TextDrawString(9, y + 1, COLOR_SHADOW, (const u8 *)text);
-    TextDrawString(8, y, color, (const u8 *)text);
+    DrawText(8, y, color, text);
 }
 
 static void Render(void)
@@ -418,23 +468,29 @@ static void Render(void)
     TextCanvasInitEx(32, CANVAS_ROWS, 0, 0);
     for (i = 0; i < ROWS_VISIBLE; i++) {
         int n = s->scroll + i;
+        u16 color = n == s->cursor ? COLOR_CURSOR : COLOR_ROW;
+        const char *name = (const char *)s->sizes[n] + 4;
+        int deck = s->sizes[n][0], side = s->sizes[n][1], fusion = s->sizes[n][2];
 
+        if (n == s->active) {
+            deck = gSaveData.deckSize;
+            side = gSaveData.sideDeckSize;
+            fusion = gSaveData.fusionDeckSize;
+        }
         p = AppendStr(line, n == s->cursor ? "> " : "   ");
         p = AppendNum(p, n + 1, 2);
-        p = AppendStr(p, "   ");
-        if (n == s->active) {
-            p = AppendNum(AppendStr(p, sStrDeck), gSaveData.deckSize, 1);
-            p = AppendNum(AppendStr(p, sStrSide), gSaveData.sideDeckSize, 1);
-            p = AppendNum(AppendStr(p, sStrFusion), gSaveData.fusionDeckSize, 1);
-            AppendStr(p, sStrInUse);
-        } else if (s->sizes[n][3]) {
-            p = AppendNum(AppendStr(p, sStrDeck), s->sizes[n][0], 1);
-            p = AppendNum(AppendStr(p, sStrSide), s->sizes[n][1], 1);
-            AppendNum(AppendStr(p, sStrFusion), s->sizes[n][2], 1);
-        } else {
+        p = AppendStr(p, n == s->active ? " * " : "   ");
+        if (n != s->active && !s->sizes[n][3]) {
             AppendStr(p, sStrEmpty);
+            DrawLine(i * ROW_HEIGHT, color, line);
+            continue;
         }
-        DrawLine(i * ROW_HEIGHT, n == s->cursor ? COLOR_CURSOR : COLOR_ROW, line);
+        AppendStr(p, name[0] ? name : sStrCustom);
+        DrawLine(i * ROW_HEIGHT, color, line);
+        p = AppendNum(AppendStr(line, "D"), deck, 1);
+        p = AppendNum(AppendStr(p, " S"), side, 1);
+        AppendNum(AppendStr(p, " F"), fusion, 1);
+        DrawText(COUNTS_X, i * ROW_HEIGHT, color, line);
     }
     DrawLine(ROWS_VISIBLE * ROW_HEIGHT + 3, COLOR_STATUS, s->status);
     DrawLine(ROWS_VISIBLE * ROW_HEIGHT + 15, COLOR_HELP, sStrHelp1);

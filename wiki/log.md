@@ -1341,3 +1341,8 @@ updated: 2026-09-29
 - New unit src/mod_recipes.c: main-menu item 7 (label composed from the sheet's letters), 50 recipes in SRAM at
   0x0E004000, switching returns every deck card to the trunk before taking the recipe's; New Game hook.
 - Pages: [[deck-recipes]], index.
+
+## [2026-10-26] progress | Deck Recipes presets and names
+- Recipes have names; slots 01-06 start as the six .ydk decks (GetRecipePreset in mod_decks.c), replaceable like
+  any recipe. SRAM magic bumped to RCP2.
+- Pages: [[deck-recipes]].

@@ -3,6 +3,7 @@
  *   GetOpponentDeckOverride   opponent decks (gOpponentDecks); LoadOpponentDeck (ai_deck.c) asks it first
  *  *   BuildModStarterDeck       starter decks (Red, Green, Black); BuildStarterDeck (title_screen.c) asks it first
  *   GiveStartingTrunk         the cards a new game starts with in the trunk (BuildStarterDeck)
+ *   GetRecipePreset           the decks the Deck Recipes start with (src/mod_recipes.c), named after their .ydk files
  * Like added_effects, this unit is @farcode and @rodata at the end in units.txt, so it does not move the game's
  * code or data. Decks keep to the Forbidden/Limited list (gCardCopyLimits): LoadOpponentDeck drops every copy of
  * a card that is over its limit, and AddCardToSavedDeck refuses the copies over it.
@@ -378,6 +379,53 @@ const struct DeckList *GetOpponentDeckOverride(int opponent)
 #endif
     }
     return NULL;
+}
+
+/* The first Deck Recipes (src/mod_recipes.c), in order, named as their .ydk files. A deck this build leaves out
+ * (its cards are not all listed) is skipped. */
+struct RecipePreset {
+    const char *name;
+    const struct DeckList *list;
+};
+
+static const char sNameSoulControl[] = "El Duelista DEX-Soul Control";
+static const char sNameVanillaBeat[] = "ellietincan-Vanilla Beat";
+static const char sNameStallMill[] = "DK-ZERO-Stall Mill";
+static const char sNameChaosTurbo[] = "LR-Chaos Turbo";
+static const char sNameWarrior[] = "sdlkilla-Warrior";
+static const char sNameGoatControl[] = "geistD-Goat Control";
+
+static const struct RecipePreset sRecipePresets[] = {
+#ifdef MOD_TRISTAN_SOUL_CONTROL
+    { sNameSoulControl, &sTristanSoulControlList },
+#endif
+#ifdef MOD_TRISTAN_VANILLA_BEAT
+    { sNameVanillaBeat, &sTristanVanillaBeatList },
+#endif
+#ifdef MOD_TRISTAN_STALL_MILL
+    { sNameStallMill, &sTristanStallMillList },
+#endif
+#ifdef MOD_RED_DECK
+    { sNameChaosTurbo, &sRedDeckList },
+#endif
+#ifdef MOD_JOEY_DECK
+    { sNameWarrior, &sJoeyDeckList },
+#endif
+#ifdef MOD_BAKURA_DECK
+    { sNameGoatControl, &sBakuraDeckList },
+#endif
+    { NULL, NULL },
+};
+
+/* Preset recipe n: its name, and its cards (card numbers) and count; 0 past the last one. */
+int GetRecipePreset(int n, const char **name, const u16 **cards, u32 *count)
+{
+    if (n < 0 || n >= (int)ARRAY_COUNT(sRecipePresets) - 1)
+        return 0;
+    *name = sRecipePresets[n].name;
+    *cards = sRecipePresets[n].list->cards;
+    *count = sRecipePresets[n].list->count;
+    return 1;
 }
 
 /* Copies of every card a new game puts in the trunk. */

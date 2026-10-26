@@ -25,10 +25,29 @@ An eighth main-menu item added by this build (`src/mod_recipes.c`, a `@farcode`/
   - The card icons sit 4 px from the outline on each side, as in every highlighted label.
   - `MainMenu_Init` writes the label to tiles 0x200-0x23F, the two tile rows after the 0x4000-byte sheet.
 
+## Preset recipes
+The SRAM area is set up on the first visit with recipes 01-06 from `GetRecipePreset` (src/mod_decks.c). These are the
+mod's deck tables, named after their .ydk files:
+
+| Slot | Name | Deck table |
+|---|---|---|
+| 01 | El Duelista DEX-Soul Control | Tristan's Soul Control |
+| 02 | ellietincan-Vanilla Beat | Tristan's Vanilla Beat |
+| 03 | DK-ZERO-Stall Mill | Tristan's Stall Mill |
+| 04 | LR-Chaos Turbo | Red starter and Tea |
+| 05 | sdlkilla-Warrior | Joey (Green starter) |
+| 06 | geistD-Goat Control | Bakura (Black starter) |
+
+- Fusion Monsters in a table go to the recipe's Fusion Deck. There are no Side Decks, as with the opponents' decks.
+- A table that this build leaves out (its cards aren't all in the card list) is skipped.
+- Presets are ordinary recipes: SELECT replaces one with the current deck, and START clears it.
+- **Names.** A recipe saved with SELECT takes the name of the recipe in use, and stays named when Deck Edit changes
+  it. A recipe with no name shows "Custom deck".
+
 ## Storage
-- **SRAM.** From `0x0E004000`, after the 0x2170-byte save. A header (magic `"RCP1"`, the active slot) is followed
-  by 50 slots. Each slot holds the three list sizes, a used flag, and `deck[60]`, `side[15]`, `fusion[20]`
-  (194 bytes).
+- **SRAM.** From `0x0E004000`, after the 0x2170-byte save. A header (magic `"RCP2"`, the active slot) is followed
+  by 50 slots. Each slot holds the three list sizes, a used flag, `name[32]`, and `deck[60]`, `side[15]`,
+  `fusion[20]` (226 bytes). A different magic (including the first build's `"RCP1"`) sets the area up again.
 - **Recipe in use.** One recipe is in use: it is the current deck, and it is stored back into its slot when the
   scene opens, on every switch, and on exit (Deck Edit changes reach it this way).
 - **New Game.** `BuildStarterDeck` calls `DeckRecipes_OnNewGame`, which clears the active slot so the starter deck
@@ -53,6 +72,6 @@ An empty recipe gives an empty deck, which can't duel (`DECK_MIN_CARDS`) until i
 ## Screen
 The menu's sky (BG1) and palette, with the highlighted label as the title. The list, status and help are drawn on a
 32 x 16 tile text canvas (`TextCanvasToTiles` into OBJ tile 0x40), shown as 32 x 16 sprites as in `mod_banlist`.
-Colours from the menu palette: rows 8, cursor 7, status 3, help 10, shadow 1.
+Rows read `> 01 * name` (`*` marks the recipe in use), with `D40 S0 F3` at x = 186. Colours from the menu palette: rows 8, cursor 7, status 3, help 10, shadow 1.
 
 Related: [[main-menu]], [[save-type]], [[added-cards]].
