@@ -23,6 +23,7 @@
 
 /* Added: a starter deck of this build (src/mod_decks.c); returns 1 when it built `choice`. */
 int BuildModStarterDeck(int choice);
+void DeckRecipes_OnNewGame(void);
 /* Added: every card x8 in the trunk at the start of a new game (src/mod_decks.c). */
 void GiveStartingTrunk(void);
 #include "calendar.h"
@@ -281,6 +282,7 @@ void BuildStarterDeck(s32 choice)
     s32 i, picks;
 
     GiveStartingTrunk();
+    DeckRecipes_OnNewGame();        /* added: the new deck belongs to no recipe yet (src/mod_recipes.c) */
     if (BuildModStarterDeck(choice % 3)) {
         DebugPrintFlush();
         return;

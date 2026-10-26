@@ -33,7 +33,8 @@ enum MainMenuItem {
     MAIN_MENU_CALENDAR = 4,
     MAIN_MENU_CARD_TRADING = 5,
     MAIN_MENU_PASSWORD = 6,
-    MAIN_MENU_COUNT = 7,
+    MAIN_MENU_DECK_RECIPES = 7,     /* added: CB_DeckRecipes (src/mod_recipes.c); gMainMenuTable has 7 entries */
+    MAIN_MENU_COUNT = 8,
 };
 
 /* Page scroll of the Record screen: gRecordScreen.scrollDir; scrollDir - 1 indexes gRecordScrollHofs. */

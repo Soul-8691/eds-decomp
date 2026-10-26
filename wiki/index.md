@@ -22,6 +22,7 @@ Start with [[overview]]. The decompilation is 100% matched since 2026-10-02: all
 - [[duel-engine]]: duel state, player/zone layout, command runner and screen state (from the shared headers).
 - [[game-overview]]: what EDS is, and the major systems.
 - [[program-flow]]: boot → `GameInit` → `MainLoop`; the scene and step-runner system; scene table.
+- [[deck-recipes]]: the added main-menu item that stores 50 deck recipes in SRAM and switches between them through the trunk.
 - [[added-cards]]: cards added beyond the original 820 from the text list `config/new_cards.txt`: workflow, capacity, YGOPRODeck data, moved tables, RAM and pointer fix-ups.
 - [[cards]]: card model (1-based alphabetical IDs vs. classic "card numbers", kinds, types).
 - [[sound-engine]]: custom Konami driver (PSG + 6 PCM voices, ARM mixer); samples, wave-RAM patterns, noise presets, pitch table. *verified data*

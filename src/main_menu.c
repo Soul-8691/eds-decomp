@@ -30,7 +30,11 @@
 /* ---- Local data: ROM tables and images only this unit uses ---- */
 
 typedef u16 (*StepFunc)(void);
-extern const StepFunc gMainMenuTable[MAIN_MENU_COUNT]; /* 0x081984D8: scene callback per enum MainMenuItem */
+extern const StepFunc gMainMenuTable[MAIN_MENU_COUNT - 1]; /* 0x081984D8: scene callback per enum MainMenuItem
+                                                          * (the added MAIN_MENU_DECK_RECIPES has none) */
+/* Added: the Deck Recipes item (src/mod_recipes.c). */
+void DeckRecipes_BuildLabel(u16 *dst);
+u16 CB_DeckRecipes(void);
 extern const StepFunc gMainMenuSteps[];            /* 0x081984F4: CB_MainMenu steps, NULL-terminated */
 extern const StepFunc gRecordSteps[];              /* 0x08198588: CB_Record steps, NULL-terminated */
 
@@ -212,7 +216,7 @@ void OpponentSelect_DrawDuelistInfo(u16 duelistId)
 /* ---- Main menu ---- */
 
 /*
- * Draws the "MENU" header (four 32x16 sprites at y = 10) and the 7 item rows (four sprites each, 16 px
+ * Draws the "MENU" header (four 32x16 sprites at y = 10) and the item rows (four sprites each, 16 px
  * apart from y = 0x1D). Row i uses OBJ tiles 0x40 + i * 0x40; the row under the cursor uses the highlighted
  * labels 0x10 tiles further.
  */
@@ -265,6 +269,7 @@ u16 MainMenu_Init(void)
     default:
         CopyDoubleWords((void *)OBJ_PLTT, gMainMenuObjPal, 0x20);
         CopyDoubleWords((void *)OBJ_VRAM0, gMainMenuObjGfx, 0x4000);
+        DeckRecipes_BuildLabel((u16 *)(OBJ_VRAM0 + 0x4000));   /* added: item 7's label, tiles 0x200-0x23F */
         LoadBgImage(0, 0, 0x20, gMainMenuSkyImage);
         return 1;
     }
@@ -280,7 +285,7 @@ u16 MainMenu_FadeIn(void)
     return FadeFromBlack(1);
 }
 
-/* Main menu step 2: Up/Down move the cursor, wrapping over the 7 items; A confirms (returns 1). */
+/* Main menu step 2: Up/Down move the cursor, wrapping over the items; A confirms (returns 1). */
 u16 MainMenu_HandleInput(void)
 {
     MainMenu_DrawItems();
@@ -309,7 +314,10 @@ u16 MainMenu_Launch(void)
     MainMenu_DrawItems();
     if (FadeToBlackU16(2)) {
         gMain.subStep = 0;
-        SetMainCallback(gMainMenuTable[gMainMenuCursor]);
+        if (gMainMenuCursor == MAIN_MENU_DECK_RECIPES)     /* added */
+            SetMainCallback(CB_DeckRecipes);
+        else
+            SetMainCallback(gMainMenuTable[gMainMenuCursor]);
     }
     return 0;
 }

@@ -1336,3 +1336,8 @@ updated: 2026-09-29
 - 2000 LP cost; both players' banished monsters come back, one per step (the activator's first), through Return from
   the Different Dimension's helpers. Monsters that cannot be Special Summoned now stay banished for both cards.
 - Pages: [[added-cards]].
+
+## [2026-10-26] progress | Deck Recipes
+- New unit src/mod_recipes.c: main-menu item 7 (label composed from the sheet's letters), 50 recipes in SRAM at
+  0x0E004000, switching returns every deck card to the trunk before taking the recipe's; New Game hook.
+- Pages: [[deck-recipes]], index.
