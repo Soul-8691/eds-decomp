@@ -35,6 +35,10 @@ extern const StepFunc gMainMenuTable[MAIN_MENU_COUNT - 1]; /* 0x081984D8: scene 
 /* Added: the Deck Recipes item (src/mod_recipes.c). */
 void DeckRecipes_BuildLabel(u16 *dst);
 u16 CB_DeckRecipes(void);
+/* Added: the Booster Packs item (src/mod_packs.c). */
+void PackShop_BuildLabel(u16 *dst);
+void PackShop_Start(void);
+u16 CB_PackShop(void);
 extern const StepFunc gMainMenuSteps[];            /* 0x081984F4: CB_MainMenu steps, NULL-terminated */
 extern const StepFunc gRecordSteps[];              /* 0x08198588: CB_Record steps, NULL-terminated */
 
@@ -269,6 +273,7 @@ u16 MainMenu_Init(void)
         CopyDoubleWords((void *)OBJ_PLTT, gMainMenuObjPal, 0x20);
         CopyDoubleWords((void *)OBJ_VRAM0, gMainMenuObjGfx, 0x4000);
         DeckRecipes_BuildLabel((u16 *)(OBJ_VRAM0 + 0x4000));   /* added: item 7's label, tiles 0x200-0x23F */
+        PackShop_BuildLabel((u16 *)(OBJ_VRAM0 + 0x4800));      /* added: item 8's label, tiles 0x240-0x27F */
         LoadBgImage(0, 0, 0x20, gMainMenuSkyImage);
         return 1;
     }
@@ -313,9 +318,12 @@ u16 MainMenu_Launch(void)
     MainMenu_DrawItems();
     if (FadeToBlackU16(2)) {
         gMain.subStep = 0;
-        if (gMainMenuCursor == MAIN_MENU_DECK_RECIPES)     /* added */
+        if (gMainMenuCursor == MAIN_MENU_DECK_RECIPES) {   /* added */
             SetMainCallback(CB_DeckRecipes);
-        else
+        } else if (gMainMenuCursor == MAIN_MENU_BOOSTER_PACKS) {
+            PackShop_Start();
+            SetMainCallback(CB_PackShop);
+        } else
             SetMainCallback(gMainMenuTable[gMainMenuCursor]);
     }
     return 0;

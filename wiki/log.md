@@ -1354,3 +1354,8 @@ updated: 2026-09-29
 ## [2026-10-26] progress | Fix Soul Exchange activation
 - Key 1220's prepare required the player's own monster instead of the opponent's; changed under HAS_CARD_SOUL_EXCHANGE.
 - Pages: [[added-cards]].
+
+## [2026-10-26] progress | Booster Packs menu item
+- New unit src/mod_packs.c: main-menu item 8 runs the game's Get-a-pack steps over the unlocked packs, B leaves,
+  packs loop back to the list; DP stubs (free for now). BuildMenuLabel generalised in mod_recipes.c.
+- Pages: [[pack-shop]], [[deck-recipes]], index.

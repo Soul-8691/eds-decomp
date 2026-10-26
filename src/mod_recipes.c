@@ -1,8 +1,9 @@
 /*
  * mod_recipes: Deck Recipes, the main menu's eighth item. Not part of the original ROM.
- *   DeckRecipes_BuildLabel  the "Deck Recipes" menu label, plain and highlighted, put together from the letters of
- *                           the other labels in gMainMenuObjGfx (MainMenu_Init calls it for tiles 0x200-0x23F,
- *                           the rows after the sheet; the scene uses it as its title)
+ *   BuildMenuLabel          a menu label, plain and highlighted, put together from the letters of the other labels
+ *                           in gMainMenuObjGfx (also for mod_packs' "Booster Packs")
+ *   DeckRecipes_BuildLabel  the "Deck Recipes" label (MainMenu_Init calls it for tiles 0x200-0x23F, the rows after
+ *                           the sheet; the scene uses it as its title)
  *   CB_DeckRecipes          the scene (MainMenu_Launch starts it)
  *   DeckRecipes_OnNewGame   BuildStarterDeck (title_screen.c): the new game's deck belongs to no recipe yet
  * Up to RECIPE_COUNT recipes, each a name and a saved Deck, Side Deck and Fusion Deck list, live in SRAM after the
@@ -105,8 +106,6 @@ static const struct LabelChunk sLabelChunks[] = {
     { 6, 50, 55 },      /* "s" of Password */
 };
 
-#define LABEL_WIDTH     91                      /* the chunks' widths */
-#define LABEL_X         (63 - LABEL_WIDTH / 2)  /* centred as the other labels */
 #define ICON_WIDTH      11                      /* the card icons of the highlighted labels (Deck Edit's row) */
 #define ICON_LEFT_X     143
 #define ICON_RIGHT_X    229
@@ -145,15 +144,25 @@ static int ChunkPixel(const struct LabelChunk *c, int x, int y)
  * Writes the label into the two tile rows at dst (2D mapping): plain at x 0-127, highlighted at x 128-255, as the
  * sheet's own labels. The plain letters get Deck Edit's colours (9 above the x-height, 8 below). The highlighted
  * letters keep the sheet's pixels that touch the chunk's plain ones (the fill and its 1-pixel outline); an outline
- * pixel does not cover a pixel already drawn. The card icons sit 4 pixels from the outline on each side.
+ * pixel does not cover a pixel already drawn. The card icons sit 4 pixels from the outline on each side. The text
+ * is centred as the sheet's labels (on x 63); at most 96 pixels wide, or the icons leave the label.
  */
-void DeckRecipes_BuildLabel(u16 *dst)
+void BuildMenuLabel(const struct LabelChunk *chunks, int count, u16 *dst)
 {
     const struct LabelChunk *c;
-    int x, y, i, j, dx = LABEL_X;
+    int x, y, i, j, dx, width = 0;
 
+    for (c = chunks; c < chunks + count; c++)
+        width += c->x1 - c->x0 + 1;
+    dx = 63 - width / 2;
     MemClear16(dst, 64 * 32);
-    for (c = sLabelChunks; c < sLabelChunks + ARRAY_COUNT(sLabelChunks); c++) {
+    for (y = 0; y < 16; y++) {
+        for (i = 0; i < ICON_WIDTH; i++) {
+            PutPixel(dst, dx + 128 - 16 + i, y, SheetPixel(ICON_LEFT_X + i, 3 * 16 + y));
+            PutPixel(dst, dx + width - 1 + 128 + 6 + i, y, SheetPixel(ICON_RIGHT_X + i, 3 * 16 + y));
+        }
+    }
+    for (c = chunks; c < chunks + count; c++) {
         int sy = (c->item + 1) * 16;
 
         for (y = 0; y < 16; y++) {
@@ -178,12 +187,11 @@ void DeckRecipes_BuildLabel(u16 *dst)
         }
         dx += c->x1 - c->x0 + 1;
     }
-    for (y = 0; y < 16; y++) {
-        for (i = 0; i < ICON_WIDTH; i++) {
-            PutPixel(dst, LABEL_X + 128 - 16 + i, y, SheetPixel(ICON_LEFT_X + i, 3 * 16 + y));
-            PutPixel(dst, LABEL_X + LABEL_WIDTH - 1 + 128 + 6 + i, y, SheetPixel(ICON_RIGHT_X + i, 3 * 16 + y));
-        }
-    }
+}
+
+void DeckRecipes_BuildLabel(u16 *dst)
+{
+    BuildMenuLabel(sLabelChunks, ARRAY_COUNT(sLabelChunks), dst);
 }
 
 /* ---- The recipes in SRAM ---- */

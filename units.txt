@@ -128,6 +128,8 @@ mod_banlist
 @farcode mod_banlist
 mod_recipes
 @farcode mod_recipes
+mod_packs
+@farcode mod_packs
 # An original unit moved out of the game's code to give the hooks of the added cards room before the pinned data
 # at 0x08080A20 (its functions are reached through bl and symbols; fixptrs.py fixes its pointers in the tables).
 @farcode dice_scene
@@ -141,3 +143,4 @@ rodata_08087FD0
 @rodata mod_save
 @rodata mod_banlist
 @rodata mod_recipes
+@rodata mod_packs
