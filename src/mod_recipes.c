@@ -385,7 +385,7 @@ void DeckRecipes_OnNewGame(void)
 #define TITLE_TILE      0x000           /* the label (two tile rows) */
 #define CANVAS_TILE     0x040           /* the text canvas, 32 x 16 tiles */
 #define CANVAS_ROWS     16
-#define CANVAS_Y        26
+#define CANVAS_Y        22
 #define ROWS_VISIBLE    8
 #define ROW_HEIGHT      12
 #define OBJ_TILE(n)     (OBJ_VRAM0 + (n) * 0x20)
@@ -492,9 +492,9 @@ static void Render(void)
         AppendNum(AppendStr(p, " F"), fusion, 1);
         DrawText(COUNTS_X, i * ROW_HEIGHT, color, line);
     }
-    DrawLine(ROWS_VISIBLE * ROW_HEIGHT + 3, COLOR_STATUS, s->status);
-    DrawLine(ROWS_VISIBLE * ROW_HEIGHT + 15, COLOR_HELP, sStrHelp1);
-    DrawLine(ROWS_VISIBLE * ROW_HEIGHT + 25, COLOR_HELP, sStrHelp2);
+    DrawLine(ROWS_VISIBLE * ROW_HEIGHT, COLOR_HELP, sStrHelp1);         /* right under the list */
+    DrawLine(ROWS_VISIBLE * ROW_HEIGHT + 10, COLOR_HELP, sStrHelp2);
+    DrawLine(ROWS_VISIBLE * ROW_HEIGHT + 23, COLOR_STATUS, s->status);
     TextCanvasToTiles((u16 *)OBJ_TILE(CANVAS_TILE), 0);
 }
 
@@ -503,7 +503,7 @@ static void DrawSprites(void)
     int r, c;
 
     for (c = 0; c < 4; c++)
-        AddSprite((6 << 16) | (0x38 + c * 32), SPRITE_SHAPE_32x16, TITLE_TILE + 0x10 + c * 4);
+        AddSprite((4 << 16) | (0x38 + c * 32), SPRITE_SHAPE_32x16, TITLE_TILE + 0x10 + c * 4);
     for (r = 0; r < CANVAS_ROWS / 2; r++) {
         for (c = 0; c < 8; c++)
             AddSprite(((CANVAS_Y + r * 16) << 16) | (c * 32), SPRITE_SHAPE_32x16, CANVAS_TILE + r * 0x40 + c * 4);

@@ -13,7 +13,7 @@ An eighth main-menu item added by this build (`src/mod_recipes.c`, a `@farcode`/
 
 ## Main menu
 - `MAIN_MENU_DECK_RECIPES = 7`, `MAIN_MENU_COUNT = 8` (`include/main_menu.h`). `gMainMenuTable` still has 7 entries, so
-  `MainMenu_Launch` starts `CB_DeckRecipes` for item 7 itself. Row 7 is drawn at y = 141.
+  `MainMenu_Launch` starts `CB_DeckRecipes` for item 7 itself. The "MENU" header is no longer drawn, and the 8 rows are centred (`MAIN_MENU_TOP_Y` = 16, 16 px apart; the original started at y = 0x1D under the header).
 - **Label.** `DeckRecipes_BuildLabel` builds the label at run time from the other labels in `gMainMenuObjGfx`
   (`0x087DE878`, 2D, 32 tiles a row; item i is pixel row (i+1)*16, plain at x 0-127, highlighted at x+128).
   - Letter sources: "Deck " from Deck Edit, "Rec" from Record, "i" and "p" from Campaign, "e" from Deck, "s" from

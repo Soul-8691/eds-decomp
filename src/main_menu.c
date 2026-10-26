@@ -216,27 +216,26 @@ void OpponentSelect_DrawDuelistInfo(u16 duelistId)
 /* ---- Main menu ---- */
 
 /*
- * Draws the "MENU" header (four 32x16 sprites at y = 10) and the item rows (four sprites each, 16 px
- * apart from y = 0x1D). Row i uses OBJ tiles 0x40 + i * 0x40; the row under the cursor uses the highlighted
- * labels 0x10 tiles further.
+ * Draws the item rows (four 32x16 sprites each, 16 px apart from MAIN_MENU_TOP_Y). Row i uses OBJ tiles
+ * 0x40 + i * 0x40; the row under the cursor uses the highlighted labels 0x10 tiles further.
+ * Changed: the original also drew a "MENU" header (tiles 0-15 at y = 10) and started the rows at y = 0x1D; the
+ * header is gone and the 8 rows are centred on the screen.
  */
+#define MAIN_MENU_TOP_Y ((160 - MAIN_MENU_COUNT * 16) / 2)
+
 void MainMenu_DrawItems(void)
 {
     s32 i;
     u32 x;
 
-    AddSprite((10 << 16) | 0x38, SPRITE_SHAPE_32x16, 0);
-    AddSprite((10 << 16) | 0x58, SPRITE_SHAPE_32x16, 4);
-    AddSprite((10 << 16) | 0x78, SPRITE_SHAPE_32x16, 8);
-    AddSprite((10 << 16) | 0x98, SPRITE_SHAPE_32x16, 12);
     for (i = 0, x = 0x38; i < MAIN_MENU_COUNT; i++) {
         u16 tile = i * 0x40 + 0x40;
         if (gMainMenuCursor == i)
             tile += 0x10;
-        AddSprite(((i * 16 + 0x1D) << 16) | x, SPRITE_SHAPE_32x16, tile);
-        AddSprite(((i * 16 + 0x1D) << 16) | 0x58, SPRITE_SHAPE_32x16, tile + 4);
-        AddSprite(((i * 16 + 0x1D) << 16) | 0x78, SPRITE_SHAPE_32x16, tile + 8);
-        AddSprite(((i * 16 + 0x1D) << 16) | 0x98, SPRITE_SHAPE_32x16, tile + 12);
+        AddSprite(((i * 16 + MAIN_MENU_TOP_Y) << 16) | x, SPRITE_SHAPE_32x16, tile);
+        AddSprite(((i * 16 + MAIN_MENU_TOP_Y) << 16) | 0x58, SPRITE_SHAPE_32x16, tile + 4);
+        AddSprite(((i * 16 + MAIN_MENU_TOP_Y) << 16) | 0x78, SPRITE_SHAPE_32x16, tile + 8);
+        AddSprite(((i * 16 + MAIN_MENU_TOP_Y) << 16) | 0x98, SPRITE_SHAPE_32x16, tile + 12);
     }
 }
 

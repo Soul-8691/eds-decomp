@@ -1346,3 +1346,7 @@ updated: 2026-09-29
 - Recipes have names; slots 01-06 start as the six .ydk decks (GetRecipePreset in mod_decks.c), replaceable like
   any recipe. SRAM magic bumped to RCP2.
 - Pages: [[deck-recipes]].
+
+## [2026-10-26] progress | Main menu without the MENU header
+- MainMenu_DrawItems no longer draws the header; the 8 rows start at y = 16 (centred).
+- Pages: [[deck-recipes]].
