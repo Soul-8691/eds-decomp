@@ -368,6 +368,25 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
   human gets, and it has more than 3000 LP.
 - Checked in the source and the build; not tested in an emulator.
 
+### Fairy Box (2026-10-26)
+- Continuous Trap: "When your opponent's monster declares an attack: Toss a coin and call it. If you call it right,
+  the attacking monster's ATK becomes 0 until the end of the Battle Phase. During each of your Standby Phases, pay
+  500 Life Points or destroy this card."
+- **The engine already has it** as effect key 1424 (the source's "OCG Fairy Box" hypothesis is confirmed by its
+  behaviour). `ENGINE_NUMBERS` gives the card that number (ID 1135 = 1424).
+  - **Activation:** prepare `EffectAttackResponsePrepare`.
+  - **Each attack:** face up on the defender's side, it is chained at once when the opponent declares an attack
+    (`BattleStage_RespondToAttack`, `RESPOND_STEP_CHAIN_AUTO`).
+  - **Resolve:** `EffectCoinTossZeroAttackerResolve`. The human calls heads/tails, the CPU at random;
+    `DUEL_CMD_TOSS_COIN` shows the toss, and a right call pushes `DUEL_CMD_ZERO_ATTACKER_ATK`. The engine zeroes
+    the ATK for that battle rather than to the end of the Battle Phase: the same in practice, since a monster
+    attacks once.
+  - **Upkeep:** 500 LP in its controller's Standby Phase (`GetMaintenanceLpCost`, `STANDBY_STEP_ASK_PAY_LP`); it
+    is destroyed when unpaid or unaffordable.
+  - **CPU:** its trap logic knows the key (ai_summon.c).
+- Added to `config/new_cards.txt` for the Android opponent's Tomato Control deck.
+- Checked in the source and the build; not tested in an emulator.
+
 ### Return from the Different Dimension (2026-10-26)
 - Normal Trap: "Pay half your Life Points; Special Summon as many of your banished monsters as possible. During the
   End Phase, banish all monsters that were Special Summoned by this effect."

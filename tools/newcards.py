@@ -73,6 +73,10 @@ ENGINE_NUMBERS = {
                                     # Graveyard monsters, +300 ATK each), the link ends at its controller's next turn
     'Magic Cylinder': 1214,         # key 1214: EffectAttackResponsePrepare / Resolve (negate the attack, the
                                     # attacker's player loses its ATK); the CPU's trap logic knows it (ai_summon.c)
+    'Fairy Box': 1424,              # key 1424: chained at once when the opponent declares an attack
+                                    # (BattleStage_RespondToAttack), EffectCoinTossZeroAttackerResolve (call a coin;
+                                    # right: the attacker's ATK is 0 for the battle), 500 LP each Standby Phase
+                                    # (GetMaintenanceLpCost); the CPU's trap logic knows it (ai_summon.c)
 }
 
 # YGOPRODeck race -> EDS monster type (gCardTypeNames), attribute -> EDS attribute, Spell/Trap race -> subtype.

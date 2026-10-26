@@ -1460,3 +1460,8 @@ updated: 2026-09-29
   presets 11-12 (Chaos Turbo, Warrior, Goat Control now 13-15). Fairy Box added to new_cards.txt.
 - mod_dp.c: DEFAULT_CARD_COST 500 -> 3000 (cards no unlocked format prices or pools).
 - Pages: [[deck-recipes]], [[yugi-kaiba-opponent]], [[duelist-points]].
+
+## [2026-10-26] progress | Fairy Box
+- tools/newcards.py ENGINE_NUMBERS: Fairy Box = 1424, the engine's coin-toss attack trap (auto-chained on attack
+  declaration, ATK 0 on a right call, 500 LP Standby upkeep, CPU logic).
+- Pages: [[added-cards]], [[yugi-kaiba-opponent]].

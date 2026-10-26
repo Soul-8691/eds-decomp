@@ -1296,11 +1296,11 @@ enum CardNumber {
     CARD_MAGICAL_SCIENTIST = 1176,                        /* id 1132, added card */
     CARD_CHAOS_EMPEROR_DRAGON_ENVOY_OF_THE_END = 1184,    /* id 1133, added card */
     CARD_CYBER_DRAGON = 1185,                             /* id 1134, added card */
-    CARD_FAIRY_BOX = 1186,                                /* id 1135, added card */
     CARD_MAGIC_CYLINDER = 1214,                           /* id 866, added card */
     CARD_SOUL_EXCHANGE = 1220,                            /* id 913, added card */
     CARD_THOUSAND_EYES_IDOL = 1333,                       /* id 1129, added card */
     CARD_THOUSAND_EYES_RESTRICT = 1334,                   /* id 1111, added card */
+    CARD_FAIRY_BOX = 1424,                                /* id 1135, added card */
     CARD_BAZOO_THE_SOUL_EATER = 1513,                     /* id 917, added card */
     CARD_SHEEP_TOKEN = 1922,                              /* id 1110, added card */
     /* ---- end of the added cards ---- */
