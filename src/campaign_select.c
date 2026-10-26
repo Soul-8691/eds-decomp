@@ -76,7 +76,10 @@ extern struct Coords16 gOpponentSelectSlotPosRW[5] asm("gOpponentSelectSlotPos")
 #define OBJ_TILE_8BPP(n)    (OBJ_VRAM0 + (n) * 0x40)    /* 8bpp tile n, as passed to AddSprite8bpp */
 
 #define LAST_SLOT           (OPPONENTS_PER_PAGE - 1)
-#define PAGE_DUELIST(page, slot) gOpponentSelectDuelists[(page) * OPPONENTS_PER_PAGE + (slot)]
+/* Changed: the mod places the opponents (src/mod_opponents.c sPageDuelists) instead of gOpponentSelectDuelists. */
+u16 ModPageDuelist(int page, int slot);
+int ModOpponentSelectStart(void);
+#define PAGE_DUELIST(page, slot) ModPageDuelist((page), (slot))
 
 /*
  * Draws the Calendar's sprites for one frame: cursor, arrows and headers (Calendar_DrawCursorAndHeader), the
@@ -380,6 +383,12 @@ u16 OpponentSelect_Init(void)
     gMain.vblankFlags = VBLANK_COPY_OAM;
     MemCopy16((void *)OBJ_PALETTE(0), gOpponentSelectObjPal, 0x60);
     MemCopy16((void *)OBJ_TILE_8BPP(0x100), gOpponentSelectObjTiles, 0x1000);
+    {   /* added: open on the newest unlocked format (src/mod_opponents.c) */
+        int start = ModOpponentSelectStart();
+
+        gOpponentSelect.page = start / OPPONENTS_PER_PAGE;
+        gOpponentSelect.cursor = start % OPPONENTS_PER_PAGE;
+    }
     OpponentSelect_SnapCursor(gOpponentSelect.cursor);
     OpponentSelect_LoadPage(gOpponentSelect.page);
     return 1;

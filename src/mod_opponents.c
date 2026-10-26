@@ -1,19 +1,22 @@
 /*
  * mod_opponents: the Campaign's opponents in this build. Not part of the original ROM.
- * The opponent select keeps its five pages and the game's duelist IDs (gOpponentSelectDuelists, the records, the
- * decks), but each ID now stands for one of these (sOpponents):
+ * The opponent select keeps its pages and the game's duelist IDs (the records, the decks), but each ID now stands
+ * for one of these (sOpponents), and sPageDuelists places them (instead of gOpponentSelectDuelists):
  *   FORMAT  an opponent per format, named after it; the player's deck must be legal in it (BanlistBlocksDuel,
  *           src/mod_banlist.c, with the format's banlist and card pool from src/mod_banlists.c). Only the first is
  *           open at the start; beating format k sWinsToUnlockNext[k] times opens format k + 1.
- *           Page 0: Yugi-Kaiba (Tristan's slot). Pages 1-3, in slot order: Critter, Imperial, Treasure, Android,
- *           Joey-Pegasus | Fiber, Yata, Scientist, Vampire, Chaos | Warrior, Goat, Cyber, Reaper.
- *   DECK    page 4: an opponent per deck (src/mod_decks.c), always open: the LR-Chaos Turbo, sdlkilla-Warrior and
+ *           They fill pages 0-2 in unlock order.
+ *   DECK    page 3: an opponent per deck (src/mod_decks.c), always open: the LR-Chaos Turbo, sdlkilla-Warrior and
  *           geistD-Goat Control decks.
- *   HIDDEN  every other slot (page 0's four others, page 3's fifth, page 4's fifth): no name, the stone cover over
- *           the portrait, the cursor skips it, never open.
+ *   HIDDEN  the duelist IDs not placed, and the empty slots (duelist 0: page 3's last two, page 4): no name, the
+ *           stone cover over the portrait, the cursor skips them, never open. Page 4 cannot be reached.
+ * Within a page the opponents follow the cursor's ring from the top left (slots 2, 3, 4, 0, 1: top left, top right,
+ * right, bottom, left), so each one sits next to the one before it.
  *   ModIsOpponentUnlocked    IsOpponentUnlocked (booster_get_pack.c) asks it first
  *   ModSlotHidden            the opponent select (campaign_select.c): names, cursor
- *   ModNextPageOpen          the opponent select: every page can be visited (locked opponents show covers)
+ *   ModPageDuelist           the duelist of a page's slot (campaign_select.c PAGE_DUELIST)
+ *   ModOpponentSelectStart   OpponentSelect_Init: the select opens on the newest unlocked format
+ *   ModNextPageOpen          the opponent select: pages 0-3 can be visited (locked opponents show covers)
  *   ModOpponentSelectName    the slot names
  *   ModOpponentSelectPortraits  card art drawn into the portraits that have one (DrawArtPortrait)
  *   ModSkipsDuelDialogue     no dialogue before or after a duel with these opponents (campaign_steps.c)
@@ -33,8 +36,7 @@
 #include "constants/cards.h"
 #include "constants/game.h"
 
-/* The opponent select's tables (campaign_select.c). */
-extern u16 gOpponentSelectDuelists[];
+/* The opponent select's page pictures (campaign_select.c). */
 extern struct Mode4Bitmap gOpponentSelectPageBgs[5];
 
 enum OpponentKind {
@@ -188,6 +190,22 @@ static const u8 sWinsToUnlockNext[FORMAT_COUNT - 1] = {
     1,      /* Cyber        -> Reaper */
 };
 
+/* The duelist of each [page][slot] (slots: 0 bottom, 1 left, 2 top left, 3 top right, 4 right); 0 = empty. */
+#define PAGE_COUNT      4               /* pages that can be visited */
+static const u8 sPageDuelists[5][5] = {
+    /*  bottom                left                top left               top right              right */
+    { DUELIST_ESPA_ROBA,    DUELIST_MAI,        DUELIST_TRISTAN,       DUELIST_REX,           DUELIST_MAKO },
+    { DUELIST_UMBRA_LUMIS,  DUELIST_MARIK,      DUELIST_WEEVIL,        DUELIST_RARE_HUNTER,   DUELIST_ARKANA },
+    { DUELIST_YAMI_BAKURA,  DUELIST_YAMI_YUGI,  DUELIST_STRINGS,       DUELIST_KAIBA,         DUELIST_ISHIZU },
+    { 0,                    0,                  DUELIST_SIMON,         DUELIST_PEGASUS,       DUELIST_GRANDPA },
+    { 0,                    0,                  0,                     0,                     0 },
+};
+
+u16 ModPageDuelist(int page, int slot)
+{
+    return sPageDuelists[page][slot];
+}
+
 static const struct ModOpponent *Opponent(u16 duelist)
 {
     return &sOpponents[duelist < ARRAY_COUNT(sOpponents) ? duelist : 0];
@@ -243,12 +261,29 @@ int ModUnlockedFormatCount(void)
 
 int ModSlotHidden(int page, int slot)
 {
-    return Opponent(gOpponentSelectDuelists[page * 5 + slot])->kind == KIND_HIDDEN;
+    return Opponent(ModPageDuelist(page, slot))->kind == KIND_HIDDEN;
 }
 
 int ModNextPageOpen(int page)
 {
-    return page < 4;
+    return page < PAGE_COUNT - 1;
+}
+
+/* Where the opponent select opens: page * 5 + slot of the newest unlocked format. */
+int ModOpponentSelectStart(void)
+{
+    int newest = ModUnlockedFormatCount() - 1;
+    int page, slot;
+
+    for (page = 0; page < PAGE_COUNT; page++) {
+        for (slot = 0; slot < 5; slot++) {
+            const struct ModOpponent *o = Opponent(ModPageDuelist(page, slot));
+
+            if (o->kind == KIND_FORMAT && o->order == newest)
+                return page * 5 + slot;
+        }
+    }
+    return 2;           /* page 0, top left */
 }
 
 const u8 *ModOpponentSelectName(u16 duelist, const u8 *name)
@@ -360,7 +395,7 @@ void ModOpponentSelectPortraits(int page)
     int slot, i, scanned = 0;
 
     for (slot = 0; slot < 5; slot++) {
-        u16 duelist = gOpponentSelectDuelists[page * 5 + slot];
+        u16 duelist = ModPageDuelist(page, slot);
         const struct ModOpponent *o = Opponent(duelist);
 
         if (o->portrait == 0 || !ModIsOpponentUnlocked(duelist))

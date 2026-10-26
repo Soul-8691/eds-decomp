@@ -1465,3 +1465,8 @@ updated: 2026-09-29
 - tools/newcards.py ENGINE_NUMBERS: Fairy Box = 1424, the engine's coin-toss attack trap (auto-chained on attack
   declaration, ATK 0 on a right call, 500 LP Standby upkeep, CPU logic).
 - Pages: [[added-cards]], [[yugi-kaiba-opponent]].
+
+## [2026-10-26] progress | Opponent placement
+- mod_opponents.c sPageDuelists places the opponents (formats on pages 0-2 in unlock order along the cursor ring from
+  the top left, decks on page 3); PAGE_DUELIST uses it; page 4 unreachable; the select opens on the newest format.
+- Pages: [[yugi-kaiba-opponent]].

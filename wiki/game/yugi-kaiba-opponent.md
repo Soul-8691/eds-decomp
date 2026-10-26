@@ -14,13 +14,25 @@ stay keyed by ID). Checked in the source and the build (portraits also in a Pyth
 not tested in an emulator.
 
 ## The opponents
-| Page | Slots 0-4 (IDs) | As |
-|---|---|---|
-| 0 | Yugi, Tea, **Tristan**, Bakura, Joey | Yugi-Kaiba; the rest hidden |
-| 1 | Rex, Mako, Espa Roba, Mai, Weevil | Critter, Imperial, Treasure, Android, Joey-Pegasus |
-| 2 | Rare Hunter, Arkana, Umbra & Lumis, Marik, Strings | Fiber, Yata, Scientist, Vampire, Chaos |
-| 3 | Kaiba, Ishizu, Yami Bakura, Yami Yugi, Shadi | Warrior, Goat, Cyber, Reaper; Shadi hidden |
-| 4 | (empty), Simon, Pegasus, Grandpa, Duel Computer | LR-Chaos Turbo, sdlkilla-Warrior, geistD-Goat Control; Duel Computer hidden |
+`sPageDuelists` (mod_opponents.c) places them; `PAGE_DUELIST` in campaign_select.c asks `ModPageDuelist` instead of
+the ROM's `gOpponentSelectDuelists`. The formats fill pages 0-2 in unlock order. Within a page they follow the
+cursor's ring from the top left (slots 2, 3, 4, 0, 1: top left, top right, right, bottom, left), so each opponent sits
+next to the one before it.
+
+| Page | Top left | Top right | Right | Bottom | Left |
+|---|---|---|---|---|---|
+| 0 | Yugi-Kaiba (Tristan) | Critter (Rex) | Imperial (Mako) | Treasure (Espa Roba) | Android (Mai) |
+| 1 | Joey-Pegasus (Weevil) | Fiber (Rare Hunter) | Yata (Arkana) | Scientist (Umbra & Lumis) | Vampire (Marik) |
+| 2 | Chaos (Strings) | Warrior (Kaiba) | Goat (Ishizu) | Cyber (Yami Bakura) | Reaper (Yami Yugi) |
+| 3 | LR-Chaos Turbo (Simon) | sdlkilla-Warrior (Pegasus) | geistD-Goat Control (Grandpa) | (empty) | (empty) |
+
+- **Names in brackets** are the duelist IDs, which key the records, decks and unlocks.
+- **Hidden.** The IDs not placed (Yugi, Tea, Joey, Bakura, Shadi, Duel Computer) are hidden. Page 4 is empty and
+  can't be reached (`ModNextPageOpen`: pages 0-3).
+- **Opening position.** The select opens on the newest unlocked format (`ModOpponentSelectStart`, in
+  `OpponentSelect_Init`).
+- **History.** The first version kept the ROM's placement (formats from page 1, slot order), which put Critter at
+  page 1's bottom centre instead of next to Yugi-Kaiba.
 
 ## Format opponents
 - **Unlocks.** They unlock in that order (Yugi-Kaiba open from the start). Beating format k
