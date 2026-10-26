@@ -350,6 +350,25 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
 - Number side effect as for Magic Cylinder: the added cards after it in the list moved down one free number.
 - Checked in the source and the build; not tested in an emulator.
 
+### Reasoning (2026-10-26)
+- Normal Spell: "Your opponent declares a monster Level from 1 to 12. Excavate cards from the top of your Deck until
+  you excavate a monster that can be Normal Summoned/Set, then, if that monster is the same Level as the one declared
+  by your opponent, send all excavated cards to the GY. If not, Special Summon the excavated monster, also send the
+  remaining cards to the GY."
+- **Excavation.** Monster Gate's (`IsGateMonster`), so the row is guarded on both cards being listed. Prepare: an
+  eligible monster in the Deck.
+- **Declaration.** The engine has no Level prompt.
+  - When the CPU activates it, the human gets "Declare a monster Level." with a new Level menu: `LevelMenu_Draw` /
+    `LevelMenu_HandleInput`, made like the Monster Type menu of `DuelPrompt_SelectType` (LEFT/RIGHT cycle 1-12,
+    A confirms, starting at 4). It draws "Level N" into the Type menu's OBJ label tiles (0x364, palette 15).
+  - When the human activates it, the CPU declares Level 4 (the most common Level; it cannot see the Deck) and a text
+    box says so.
+  - The Level is kept in `gChain.effectSubStep`.
+- **Result.** The monster is shown. At the declared Level, it and the cards before it go to the Graveyard. Otherwise
+  the cards before it do, and the monster leaves the Deck; the next step Special Summons it face up in the position
+  the player picks.
+- Checked in the source and the build; not tested in an emulator.
+
 ### Monster Gate (2026-10-26)
 - Normal Spell: "Tribute 1 monster; excavate cards from the top of your Deck until you excavate a monster that can be
   Normal Summoned/Set. Special Summon it, also send the other excavated cards to the GY." No engine key does this.

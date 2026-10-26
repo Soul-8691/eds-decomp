@@ -131,6 +131,8 @@ int EffectSacredCraneResolve(struct ChainEntry *link, struct ChainEntry *chained
 int EffectMonsterGatePrepare(struct ChainEntry *card, struct ChainEntry *chainLink, u16 fromHand);
 int EffectMonsterGateChainB(struct ChainEntry *link, struct ChainEntry *prevLink);
 int EffectMonsterGateResolve(struct ChainEntry *link, struct ChainEntry *chainedTo);
+int EffectReasoningPrepare(struct ChainEntry *card, struct ChainEntry *chainLink, u16 fromHand);
+int EffectReasoningResolve(struct ChainEntry *link, struct ChainEntry *chainedTo);
 int EffectCreatureSwapPrepare(struct ChainEntry *card, struct ChainEntry *chainLink, u16 fromHand);
 int EffectCreatureSwapResolve(struct ChainEntry *link, struct ChainEntry *chainedTo);
 int EffectMysticSwordsmanLv2Resolve(struct ChainEntry *link, struct ChainEntry *chainedTo);

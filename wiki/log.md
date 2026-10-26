@@ -1316,3 +1316,8 @@ updated: 2026-09-29
 - Tribute cost on the pick (Catapult Turtle's ChainB), then excavation from the Deck top: the cards before the first
   Normal-Summonable monster go to the Graveyard, and that monster is Special Summoned (either position).
 - Pages: [[added-cards]].
+
+## [2026-10-26] progress | Reasoning
+- Monster Gate's excavation with a declared Level: a new Level menu for the human (made like the Type menu); the
+  CPU declares 4.
+- Pages: [[added-cards]].

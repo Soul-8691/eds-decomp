@@ -31,6 +31,10 @@
 #include "card_list_view.h"
 #include "summon.h"
 #include "card_menu.h"
+#include "gba.h"
+#include "text.h"
+#include "sprite.h"
+#include "util.h"
 #include "ai.h"
 #include "battle.h"
 #include "main.h"                   /* gMain.newKeys */
@@ -1938,6 +1942,145 @@ int EffectMonsterGateResolve(struct ChainEntry *link, struct ChainEntry *chained
 }
 #endif /* HAS_CARD_MONSTER_GATE */
 
+#if defined(HAS_CARD_REASONING) && defined(HAS_CARD_MONSTER_GATE)
+/* ---- Reasoning -----------------------------------------------------------------------------------------------------
+ * Normal Spell: "Your opponent declares a monster Level from 1 to 12. Excavate cards from the top of your Deck until
+ * you excavate a monster that can be Normal Summoned/Set, then, if that monster is the same Level as the one declared
+ * by your opponent, send all excavated cards to the GY. If not, Special Summon the excavated monster, also send the
+ * remaining cards to the GY."
+ * The excavation is Monster Gate's (IsGateMonster, so this needs Monster Gate listed too). The declaration:
+ *   the human declares (the CPU activated it): a text box with a Level menu (LevelMenu_Draw / LevelMenu_HandleInput,
+ *   made like the Monster Type menu of DuelPrompt_SelectType: LEFT/RIGHT, A), starting at Level 4;
+ *   the CPU declares (the human activated it): Level 4, the most common Level (it cannot see the Deck), shown in a
+ *   text box.
+ * The Level is kept in gChain.effectSubStep. The monster leaves the Deck, and the next step Special Summons it face up
+ * in the position the player picks. */
+
+#define REASONING_CPU_LEVEL 4
+
+static const u8 sStrReasoningDeclare[] = "Declare a monster Level.";
+static const u8 sStrReasoningCpuDeclares[] = "Your opponent declares Level 4.";
+static const u8 sStrReasoningLevel[] = "Level ";
+
+#define LEVEL_LABEL_PALETTE     (OBJ_PLTT + 15 * 0x20)
+#define LEVEL_LABEL_TILE        0x364               /* the Type menu's label tiles (duel_prompt_handlers.c) */
+#define LEVEL_LABEL_TILES       ((u16 *)(OBJ_VRAM0 + LEVEL_LABEL_TILE * 0x20))
+
+static void LevelMenu_Draw(void)
+{
+    struct TextBox *box = &gTextBox;
+    u32 x = (box->x + 1) << 3;
+    u32 y = (box->revealRow - box->height) << 3;
+
+    if (box->menuTimer == 0) {
+        char label[12];
+        int i, level = box->result + 1;
+
+        for (i = 0; sStrReasoningLevel[i]; i++)
+            label[i] = sStrReasoningLevel[i];
+        if (level >= 10)
+            label[i++] = '1';
+        label[i++] = '0' + level % 10;
+        label[i] = 0;
+        MemCopy16((void *)LEVEL_LABEL_PALETTE, gSystemFontPal, 0x20);
+        TextCanvasInit(0xC, 2);
+        TextDrawString(1, 1, TEXT_SIZE_COLOR(10, 15), (const u8 *)label);
+        TextDrawString(0, 0, TEXT_SIZE_COLOR(10, 2), (const u8 *)label);
+        TextCanvasToTiles(LEVEL_LABEL_TILES, 0);
+        box->menuTimer++;
+    }
+    AddSprite(x | (y << 16), SPRITE_SHAPE_32x8, LEVEL_LABEL_TILE | OAM_ATTR2_PALETTE(15));
+    AddSprite((x + 0x20) | (y << 16), SPRITE_SHAPE_32x8, (LEVEL_LABEL_TILE + 4) | OAM_ATTR2_PALETTE(15));
+    AddSprite(x | ((y + 8) << 16), SPRITE_SHAPE_32x8, (LEVEL_LABEL_TILE + 12) | OAM_ATTR2_PALETTE(15));
+    AddSprite((x + 0x20) | ((y + 8) << 16), SPRITE_SHAPE_32x8, (LEVEL_LABEL_TILE + 16) | OAM_ATTR2_PALETTE(15));
+}
+
+static u16 LevelMenu_HandleInput(void)
+{
+    struct TextBox *box = &gTextBox;
+
+    if (box->menuTimer == 0)
+        return 0;
+    if (box->menuState == TEXTBOX_MENU_STATE_SELECT) {
+        box->menuState++;
+        return 0;
+    }
+    if (gMain.newKeys & DPAD_LEFT) {
+        box->result = (box->result + 11) % 12;
+        box->menuTimer = 0;
+        return 0;
+    }
+    if (gMain.newKeys & DPAD_RIGHT) {
+        box->result = (box->result + 1) % 12;
+        box->menuTimer = 0;
+        return 0;
+    }
+    return (gMain.newKeys & A_BUTTON) != 0;
+}
+
+int EffectReasoningPrepare(struct ChainEntry *card, struct ChainEntry *chainLink, u16 fromHand)
+{
+    struct DuelPlayer *p = &gDuelPlayers[card->player & 1];
+    int i;
+
+    for (i = 0; i < p->deckCount; i++) {
+        if (IsGateMonster(DUEL_CARD_ID(&p->deck[i])))
+            return 1;
+    }
+    return 0;
+}
+
+int EffectReasoningResolve(struct ChainEntry *link, struct ChainEntry *chainedTo)
+{
+    struct DuelPlayer *p = &gDuelPlayers[link->player & 1];
+    u16 toGrave = link->player ? DUEL_CMD_PLAYER | DUEL_CMD_SEND_DECK_CARD_TO_GRAVEYARD : DUEL_CMD_SEND_DECK_CARD_TO_GRAVEYARD;
+    u16 remove = link->player ? DUEL_CMD_PLAYER | DUEL_CMD_REMOVE_CARD_FROM_DECK : DUEL_CMD_REMOVE_CARD_FROM_DECK;
+    int i;
+
+    if (link->negated)
+        return EFFECT_STEP_DONE;
+    switch (gChain.effectStep) {
+    case EFFECT_STEP_START:
+        if (link->player) {
+            /* the human declares */
+            TextBoxOpen(TEXTBOX_POS(6, 2), TEXTBOX_SIZE(15, 4), TEXTBOX_FLAGS_DEFAULT, sStrReasoningDeclare);
+            TextBoxSetMenu(TEXTBOX_MENU_CUSTOM, LevelMenu_Draw, LevelMenu_HandleInput);
+            gTextBox.result = REASONING_CPU_LEVEL - 1;
+            return EFFECT_STEP_2;
+        }
+        gChain.effectSubStep = REASONING_CPU_LEVEL;
+        TextBoxOpen(TEXTBOX_POS(6, 2), TEXTBOX_SIZE(18, 4), TEXTBOX_FLAGS_DEFAULT, sStrReasoningCpuDeclares);
+        return EFFECT_STEP_3;
+    case EFFECT_STEP_2:
+        gChain.effectSubStep = gTextBox.result + 1;
+        /* fall through */
+    case EFFECT_STEP_3:
+        for (i = 0; i < p->deckCount; i++) {
+            u16 id = DUEL_CARD_ID(&p->deck[i]);
+            u16 *halves = (u16 *)&p->deck[i];
+
+            if (IsGateMonster(id)) {
+                ShowRevealedCard(link->player, id);
+                if ((int)CARD_STATS_LEVEL(gCardStats[id & CARD_ID_MASK]) == gChain.effectSubStep) {
+                    DuelCmd_Push(toGrave, halves[0], halves[1], 0);     /* the declared Level: all to the GY */
+                    return EFFECT_STEP_DONE;
+                }
+                CopyDuelCard((u32 *)&gChain.effectCard, (u32 *)&p->deck[i]);
+                DuelCmd_Push(remove, halves[0], halves[1], 0);
+                return EFFECT_STEP_4;
+            }
+            DuelCmd_Push(toGrave, halves[0], halves[1], 0);
+        }
+        return EFFECT_STEP_DONE;
+    case EFFECT_STEP_4:
+        if (CountFreeMonsterZones(link->player) > 0)
+            QueueSpecialSummonChoosePosition(link->player, &gChain.effectCard, 1, 0);
+        return EFFECT_STEP_END;
+    }
+    return EFFECT_STEP_DONE;
+}
+#endif /* HAS_CARD_REASONING && HAS_CARD_MONSTER_GATE */
+
 #ifdef HAS_CARD_MIND_CONTROL
 /* ---- Mind Control --------------------------------------------------------------------------------------------------
  * Normal Spell: "Target 1 monster your opponent controls; take control of it until the End Phase, but it cannot
@@ -3401,6 +3544,16 @@ const struct CardEffect gAddedCardEffects[] = {
         EffectMonsterGatePrepare,
         NULL,
         EffectMonsterGateChainB,
+    },
+#endif
+#if defined(HAS_CARD_REASONING) && defined(HAS_CARD_MONSTER_GATE)
+    {
+        CARD_REASONING, 0,
+        EffectReasoningResolve,
+        NULL,
+        EffectReasoningPrepare,
+        NULL,
+        NULL,
     },
 #endif
 #ifdef HAS_CARD_MIND_CONTROL
