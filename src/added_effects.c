@@ -1796,6 +1796,37 @@ int BazooCpuResolve(struct ChainEntry *link)
 }
 #endif /* HAS_CARD_BAZOO_THE_SOUL_EATER */
 
+#ifdef HAS_CARD_SACRED_CRANE
+/* ---- Sacred Crane --------------------------------------------------------------------------------------------------
+ * "If this card is Special Summoned: Draw 1 card." AddedCardsSummoned (from SummonAction_Update, summon_action.c, once
+ * the monster is placed) queues its trigger for a Special Summon (SUMMON_ACTION_SPECIAL*, any position); the resolve
+ * draws 1. Mandatory, as written. */
+int EffectSacredCraneResolve(struct ChainEntry *link, struct ChainEntry *chainedTo)
+{
+    if (!link->negated)
+        DrawCards(link->player, 1);
+    return EFFECT_STEP_DONE;
+}
+#endif /* HAS_CARD_SACRED_CRANE */
+
+#if defined(HAS_CARD_DARK_MAGICIAN_OF_CHAOS) || defined(HAS_CARD_SACRED_CRANE)
+/* SummonAction_Update calls this for every summon once the monster is in (player, zone): `kind` is the
+ * enum SummonActionKind, faceUp its position. */
+void AddedCardsSummoned(int player, int zone, u16 id, int kind, int faceUp)
+{
+#ifdef HAS_CARD_DARK_MAGICIAN_OF_CHAOS
+    DarkMagicianOfChaosSummoned(player, zone, id, kind, faceUp);
+#endif
+#ifdef HAS_CARD_SACRED_CRANE
+    if (((const u16 *)CARD_ID_TO_NUMBER_ADDR)[id & CARD_ID_MASK] == CARD_SACRED_CRANE
+        && kind >= SUMMON_ACTION_SPECIAL)
+        Chain_AddPending(TRIGGER_PLAYER(player & 1) | TRIGGER_ZONE(zone) | TRIGGER_KIND(CHAIN_KIND_MONSTER)
+                             | TRIGGER_EVENT(RESPONSE_SPECIAL_SUMMONED) | (id & CARD_ID_MASK),
+                         DUEL_LOC(player, zone));
+#endif
+}
+#endif
+
 #ifdef HAS_CARD_MIND_CONTROL
 /* ---- Mind Control --------------------------------------------------------------------------------------------------
  * Normal Spell: "Target 1 monster your opponent controls; take control of it until the End Phase, but it cannot
@@ -3229,6 +3260,16 @@ const struct CardEffect gAddedCardEffects[] = {
     {
         CARD_PYRAMID_TURTLE, 0,
         (int (*)(struct ChainEntry *, struct ChainEntry *))EffectSpecialSummonFromDeckResolve,
+        NULL,
+        NULL,
+        NULL,
+        NULL,
+    },
+#endif
+#ifdef HAS_CARD_SACRED_CRANE
+    {
+        CARD_SACRED_CRANE, 0,
+        EffectSacredCraneResolve,
         NULL,
         NULL,
         NULL,

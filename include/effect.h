@@ -104,6 +104,8 @@ void AddedCardsAfterBattle(int player);
  * banish it instead of letting it leave the field. */
 int IsFaceUpDarkMagicianOfChaos(int player, int zone);
 void DarkMagicianOfChaosSummoned(int player, int zone, u16 id, int kind, int faceUp);
+/* Every summon, once the monster is placed (SummonAction_Update): the added cards' summon effects (src/added_effects.c). */
+void AddedCardsSummoned(int player, int zone, u16 id, int kind, int faceUp);
 void EndPhase_DarkMagicianOfChaos(int turnPlayer);
 void EndPhase_MysticSwordsmanLevelUp(int turnPlayer);
 void InjectionFairyLilyEndAttack(int player);

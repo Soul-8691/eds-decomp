@@ -127,6 +127,7 @@ int EffectDarkMimicLv1Prepare(struct ChainEntry *card, struct ChainEntry *chainL
 int EffectDarkMimicLv1Resolve(struct ChainEntry *link, struct ChainEntry *chainedTo);
 int EffectBottomlessTrapHolePrepare(struct ChainEntry *card, struct ChainEntry *chainLink, u16 fromHand);
 int EffectBottomlessTrapHoleResolve(struct ChainEntry *link, struct ChainEntry *chainedTo);
+int EffectSacredCraneResolve(struct ChainEntry *link, struct ChainEntry *chainedTo);
 int EffectCreatureSwapPrepare(struct ChainEntry *card, struct ChainEntry *chainLink, u16 fromHand);
 int EffectCreatureSwapResolve(struct ChainEntry *link, struct ChainEntry *chainedTo);
 int EffectMysticSwordsmanLv2Resolve(struct ChainEntry *link, struct ChainEntry *chainedTo);

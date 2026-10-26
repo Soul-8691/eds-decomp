@@ -350,6 +350,16 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
 - Number side effect as for Magic Cylinder: the added cards after it in the list moved down one free number.
 - Checked in the source and the build; not tested in an emulator.
 
+### Sacred Crane (2026-10-26)
+- "If this card is Special Summoned: Draw 1 card."
+- **Hook.** `SummonAction_Update` (summon_action.c) now calls one `AddedCardsSummoned(player, zone, id, kind, faceUp)`
+  for every summon once the monster is placed. It replaces the Dark Magician of Chaos call there and calls
+  `DarkMagicianOfChaosSummoned` itself.
+- **Trigger.** For a Sacred Crane with a Special Summon kind (`SUMMON_ACTION_SPECIAL*`, any position), it queues a
+  monster trigger with `RESPONSE_SPECIAL_SUMMONED`. The resolve `EffectSacredCraneResolve` draws 1 unless negated.
+  It is mandatory, as written.
+- Checked in the source and the build; not tested in an emulator.
+
 ### Bazoo the Soul-Eater (2026-10-26)
 - "Once per turn: You can banish up to 3 monsters from your Graveyard; this card gains 300 ATK for each, until the end
   of your opponent's turn."
@@ -516,7 +526,7 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
   it from play." So there is no once-per-turn limit, and the Spell is added even if the card has left the field by the
   End Phase.
 - **Summon mark.** `SummonAction_Update` (summon_action.c, next to Tsukuyomi's hook) calls
-  `DarkMagicianOfChaosSummoned`. A face-up Normal Summon or any Special Summon sets bit `player * 5 + zone` in
+  `DarkMagicianOfChaosSummoned` (through `AddedCardsSummoned` since 2026-10-26). A face-up Normal Summon or any Special Summon sets bit `player * 5 + zone` in
   `gModDuel.chaosSummoned`; a Set or a Flip Summon does not. `ModDuelInit` clears it at the start of a duel.
 - **End Phase.** `DuelPhase_End` (battle_phase3.c, next to the Tsukuyomi and Mystic Swordsman hooks) calls
   `EndPhase_DarkMagicianOfChaos`, which queues a trigger for each mark whose player has a Spell in the Graveyard,

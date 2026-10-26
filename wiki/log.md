@@ -1306,3 +1306,8 @@ updated: 2026-09-29
 - Effect key 1513 is the engine's Bazoo (menu ACTIVATE, EffectBanishGraveForAtkResolve, re-armed at turn start);
   ENGINE_NUMBERS gives the card 1513. A CPU path, BazooCpuResolve, was added for the UI-only resolve.
 - Pages: [[added-cards]].
+
+## [2026-10-26] progress | Sacred Crane
+- SummonAction_Update's added-card call became AddedCardsSummoned (Dark Magician of Chaos's mark, Sacred Crane's
+  Special Summon trigger); EffectSacredCraneResolve draws 1.
+- Pages: [[added-cards]].
