@@ -406,6 +406,9 @@ u16 OpponentSelect_FadeIn(void)
 /* Mod (src/mod_banlist.c): Tristan's format check and its warning. */
 int BanlistBlocksDuel(u16 duelist);
 int BanlistView_Run(void);
+/* Mod (src/mod_banlist.c): Tristan's name and portrait as the "Yugi-Kaiba" opponent. */
+const u8 *ModOpponentSelectName(u16 duelist, const u8 *name);
+void ModOpponentSelectPortraits(int page);
 
 u16 OpponentSelect_HandleInput(void)
 {
@@ -725,7 +728,8 @@ void OpponentSelect_LoadPage(s32 page)
             TextDrawString(0x30 - StrLen((const char *)gUnknownOpponentName) * 5 / 2, slot * 16,
                            TEXT_SIZE_COLOR(10, 1), gUnknownOpponentName);
         } else {
-            const u8 *name = gOpponentSelectNames[page * OPPONENTS_PER_PAGE + slot];
+            const u8 *name = ModOpponentSelectName(PAGE_DUELIST(page, slot),       /* changed */
+                                                   gOpponentSelectNames[page * OPPONENTS_PER_PAGE + slot]);
             s32 halfWidth = StrLen((const char *)name) * 5 / 2;
 
             TextDrawString(0x31 - halfWidth, slot * 16 + 1, TEXT_SIZE_COLOR(10, 5), name);
@@ -746,4 +750,5 @@ void OpponentSelect_LoadPage(s32 page)
     MemCopy16((void *)OBJ_PALETTE(3), gOpponentSelectTextPal, 0x20);
     MemCopy16((void *)OBJ_TILE(0x280), gOpponentSelectDigitTiles, 0x140);
     MemCopy16((void *)OBJ_TILE(0x2A0), gOpponentSelectDimDigitTiles, 0x140);
+    ModOpponentSelectPortraits(page);   /* added */
 }

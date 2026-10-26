@@ -1397,3 +1397,8 @@ updated: 2026-09-29
 - PackListDP_Draw rendered both DP text lines on the frame a slide ends, on top of the list redrawing its covers.
   It now renders one changed line a frame, only while the list is idle (no slide, no cover upload pending).
 - Pages: [[duelist-points]].
+
+## [2026-10-26] progress | Tristan as the Yugi-Kaiba opponent
+- mod_banlist.c: "Yugi-Kaiba" name on the opponent select; La Jinn's card art drawn into his Mode 4 portrait
+  (nearest-colour mapping plus free palette entries); no dialogue before/after his duels (campaign_steps.c hooks).
+- Pages: [[yugi-kaiba-opponent]], index.

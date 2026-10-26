@@ -68,6 +68,9 @@ extern const u16 gCardNumberToId_GloryOfTheKingsHand;   /* gCardNumberToId[CARD_
  * gMain.opponentFixed: an event or an open match chose the opponent); 1 starts the pre-duel dialogue; 2
  * waits for it to close. Returns 1 after that.
  */
+/* Mod (src/mod_banlist.c): the Yugi-Kaiba opponent (Tristan) has no dialogue before or after a duel. */
+int ModSkipsDuelDialogue(u16 duelist);
+
 u16 Campaign_SelectOpponent(void)
 {
     switch (gMain.subStep) {
@@ -82,6 +85,8 @@ u16 Campaign_SelectOpponent(void)
         gMain.subStep++;
         /* fall through */
     case 1:
+        if (ModSkipsDuelDialogue(gMain.opponent))   /* added */
+            return 1;
         Campaign_StartPreDuelDialogue();
         gMain.subStep++;
         /* fall through */
@@ -488,6 +493,14 @@ u16 Campaign_ShowDuelResult(void)
                 break;
             }
         }
+        if (!matchDecided && ModSkipsDuelDialogue(opp)) {
+            /* added: no between-duels text; straight to the side-deck swap */
+            RESET_SEQ_STATE();
+            gMain.opponentFixed = 1;
+            gMain.subStep = RESULT_STEP_SIDE_DECK;
+            PlayBGM(SONG_MATCH_CONTINUES);
+            return 0;
+        }
         if (!matchDecided) {
             switch (gDuel.result) {
             case DUEL_RESULT_WIN:
@@ -557,6 +570,8 @@ u16 Campaign_ShowDuelResult(void)
                 break;
             }
         }
+        if (ModSkipsDuelDialogue(opp))     /* added: no result text */
+            return 1;
         StartDialogue(text);
         RESET_SEQ_STATE();
         gMain.subStep++;
@@ -574,6 +589,13 @@ u16 Campaign_ShowDuelResult(void)
         break;
     case RESULT_STEP_SIDE_DECK:
         if (SideDeckSwap_RunU32()) {
+            if (ModSkipsDuelDialogue(opp)) {    /* added: no next-duel text */
+                gMain.seqIndexCampaign -= CAMPAIGN_STEP_RESULT - CAMPAIGN_STEP_TURN_ORDER;
+                gMain.subStep = 0;
+                gMain.seqState0 = 0;
+                RESET_SEQ_STATE();
+                break;
+            }
             StartDialogue(gOpponentNextMatchDuelText[opp]);
             RESET_SEQ_STATE();
             gMain.subStep++;
