@@ -1423,3 +1423,9 @@ updated: 2026-09-29
   check (mod_banlist.c) now works for every format through mod_banlists.c's tables; format_yugi_kaiba.h retired.
   IsOpponentUnlocked defers to the mod; all pages open; the cursor skips hidden slots.
 - Pages: [[yugi-kaiba-opponent]], index.
+
+## [2026-10-26] progress | Card prices follow the unlocked formats
+- tools/cardprices.py: a usage price table per format; GetCardCost takes the newest unlocked format that prices the
+  card, then 5 for a card of any unlocked format's pool, else 500. mod_opponents.c: ModUnlockedFormatCount,
+  ModFormatBanlist.
+- Pages: [[duelist-points]].

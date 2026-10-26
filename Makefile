@@ -134,7 +134,7 @@ build/src/mod_banlist.o: $(BANLISTS_GEN)
 
 # Password-machine card prices from the Yugi-Kaiba usage statistics (src/mod_dp.c).
 PRICES_GEN := build/include/card_prices.h
-$(PRICES_GEN): tools/cardprices.py tools/banlist.py usage/yugi-kaiba.json banlists/yugi-kaiba_ban.json card_pools/yugi-kaiba.txt $(NEWCARDS_BUILT)
+$(PRICES_GEN): tools/cardprices.py tools/banlist.py $(wildcard usage/*.json) $(wildcard banlists/*_ban.json) $(NEWCARDS_BUILT)
 	@mkdir -p $(@D)
 	$(PYTHON) tools/cardprices.py $@
 build/src/mod_dp.o: $(PRICES_GEN)

@@ -155,6 +155,35 @@ int ModIsOpponentUnlocked(u16 duelist)
     return 0;
 }
 
+/* The banlist of the format opponent at `order` in the unlock order, -1 for none. */
+int ModFormatBanlist(int order)
+{
+    u32 d;
+
+    for (d = 0; d < ARRAY_COUNT(sOpponents); d++) {
+        if (sOpponents[d].kind == KIND_FORMAT && sOpponents[d].order == order)
+            return sOpponents[d].banlist;
+    }
+    return -1;
+}
+
+/* How many formats are unlocked (they unlock in order, so these are orders 0 to the count - 1). */
+int ModUnlockedFormatCount(void)
+{
+    u32 d;
+    int k;
+
+    for (k = 0; k < FORMAT_COUNT; k++) {
+        for (d = 0; d < ARRAY_COUNT(sOpponents); d++) {
+            if (sOpponents[d].kind == KIND_FORMAT && sOpponents[d].order == k)
+                break;
+        }
+        if (d == ARRAY_COUNT(sOpponents) || !ModIsOpponentUnlocked(d))
+            break;
+    }
+    return k;
+}
+
 int ModSlotHidden(int page, int slot)
 {
     return Opponent(gOpponentSelectDuelists[page * 5 + slot])->kind == KIND_HIDDEN;
