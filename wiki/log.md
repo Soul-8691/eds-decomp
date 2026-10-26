@@ -1454,3 +1454,9 @@ updated: 2026-09-29
 - mod_decks.c: Aretos-Tomato Control and bsocks-Relinquished (main + extra); the Imperial opponent picks 80/20;
   presets 09-10 (Chaos Turbo, Warrior, Goat Control now 11-13).
 - Pages: [[deck-recipes]], [[yugi-kaiba-opponent]].
+
+## [2026-10-26] progress | Android's decks; recipe presets 11-12; default card price 3000
+- mod_decks.c: Jazz-Tomato Control and paoloNS-Vanilla Beat (main + extra); the Android opponent picks 80/20;
+  presets 11-12 (Chaos Turbo, Warrior, Goat Control now 13-15). Fairy Box added to new_cards.txt.
+- mod_dp.c: DEFAULT_CARD_COST 500 -> 3000 (cards no unlocked format prices or pools).
+- Pages: [[deck-recipes]], [[yugi-kaiba-opponent]], [[duelist-points]].

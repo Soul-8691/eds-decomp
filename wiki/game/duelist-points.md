@@ -35,7 +35,7 @@ DP live in the save image: `gSaveData.dpLow` (+0x215A) and `dpHigh` (+0x215C), a
     decks use the card. So unlocking a format (e.g. Critter after Yugi-Kaiba) re-prices the cards its decks use,
     and every other card keeps its price.
   - **Fallbacks.** A card none of the unlocked formats' decks use costs 5 if it is in an unlocked format's card
-    pool (`FormatCardLimit` != 0xFF), else `DEFAULT_CARD_COST` (500).
+    pool (`FormatCardLimit` != 0xFF), else `DEFAULT_CARD_COST` (3000).
   - **Yugi-Kaiba examples.** Pot of Greed 3000, Swords of Revealing Light 1463, Man-Eater Bug 1000.
 - **Duel rewards.** `sDuelistRewards`: by `enum DuelistId`, 1000 each.
   `Campaign_RecordDuelResult` (campaign_steps.c) calls `AwardDuelDP(gMain.opponent)` on a win.

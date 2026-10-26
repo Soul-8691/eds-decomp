@@ -35,7 +35,9 @@ not tested in an emulator.
   - Treasure plays dump truck-Tomato Control 80%, SolEmerald69-Recruiter Control 10% and bsocks-Germ Burn 10%
     (`TreasureDeck`).
   - Imperial plays Aretos-Tomato Control 80% and bsocks-Relinquished 20% (`ImperialDeck`).
-  - The other 11 keep their original duelists' decks for now.
+  - Android plays Jazz-Tomato Control 80% and paoloNS-Vanilla Beat 20% (`AndroidDeck`). Fairy Box was added to
+    `config/new_cards.txt` for Tomato Control (its effect is not coded).
+  - The other 10 keep their original duelists' decks for now.
   - The .ydk files are in `decks/`. Their passcodes resolve through the built password table, which stores each
     passcode as 4 BCD bytes in digit order.
 - **Portraits.** Yugi-Kaiba La Jinn, Critter Sangan, Imperial Imperial Order, Treasure Confiscation, Android Jinzo,

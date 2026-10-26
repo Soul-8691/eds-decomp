@@ -33,7 +33,7 @@
 /* ---- Prices and rewards (edit these) ---- */
 
 #define DEFAULT_PACK_COST       1000
-#define DEFAULT_CARD_COST       500
+#define DEFAULT_CARD_COST       3000
 #define DEFAULT_DUELIST_REWARD  1000
 
 struct PackCost {

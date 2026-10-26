@@ -692,6 +692,115 @@ static const struct DeckList *ImperialDeck(void)
 }
 #endif
 
+/* The Android format opponent (Mai Valentine's slot, src/mod_opponents.c): one of two decks per duel (AndroidDeck):
+ * Tomato Control 80%, Vanilla Beat 20% (decks/Jazz-Tomato Control.ydk, decks/paoloNS-Vanilla Beat.ydk; main and
+ * extra decks). Fairy Box (21598948) was added to config/new_cards.txt for Tomato Control. */
+#if defined(HAS_CARD_BAZOO_THE_SOUL_EATER) && defined(HAS_CARD_KYCOO_THE_GHOST_DESTROYER) \
+    && defined(HAS_CARD_JAR_OF_GREED) && defined(HAS_CARD_MAGIC_CYLINDER) && defined(HAS_CARD_SKULL_LAIR) \
+    && defined(HAS_CARD_TORRENTIAL_TRIBUTE) && defined(HAS_CARD_THE_LAST_WARRIOR_FROM_ANOTHER_PLANET) \
+    && defined(HAS_CARD_THOUSAND_EYES_RESTRICT) && defined(HAS_CARD_FAIRY_BOX)
+#define MOD_ANDROID_TOMATO_CONTROL 1
+static const u16 sAndroidTomatoControl[] = {
+    /* Monsters (14) */
+    X2(CARD_BAZOO_THE_SOUL_EATER),
+    CARD_CANNON_SOLDIER,
+    CARD_JINZO,
+    X2(CARD_KYCOO_THE_GHOST_DESTROYER),
+    CARD_MASKED_SORCERER,
+    X3(CARD_MYSTIC_TOMATO),
+    CARD_SANGAN,
+    CARD_WITCH_OF_THE_BLACK_FOREST,
+    X2(CARD_GEMINI_ELF),
+    /* Spells (14) */
+    CARD_CHANGE_OF_HEART,
+    CARD_CONFISCATION,
+    CARD_DARK_HOLE,
+    CARD_DELINQUENT_DUO,
+    CARD_MONSTER_REBORN,
+    X3(CARD_MYSTICAL_SPACE_TYPHOON),
+    CARD_PAINFUL_CHOICE,
+    CARD_POT_OF_GREED,
+    CARD_RAIGEKI,
+    CARD_SNATCH_STEAL,
+    CARD_SWORDS_OF_REVEALING_LIGHT,
+    CARD_THE_FORCEFUL_SENTRY,
+    /* Traps (12) */
+    CARD_CALL_OF_THE_HAUNTED,
+    CARD_FAIRY_BOX,
+    CARD_IMPERIAL_ORDER,
+    X3(CARD_JAR_OF_GREED),
+    CARD_MAGIC_CYLINDER,
+    CARD_MIRROR_FORCE,
+    CARD_SKULL_LAIR,
+    CARD_TIME_SEAL,
+    X2(CARD_TORRENTIAL_TRIBUTE),
+    /* Fusion Deck (15) */
+    X3(CARD_DARKFIRE_DRAGON),
+    X3(CARD_DRAGONESS_THE_WICKED_KNIGHT),
+    X3(CARD_THE_LAST_WARRIOR_FROM_ANOTHER_PLANET),
+    X3(CARD_THOUSAND_EYES_RESTRICT),
+    X3(CARD_WARRIOR_OF_TRADITION),
+};
+STATIC_ASSERT(ARRAY_COUNT(sAndroidTomatoControl) == 40 + 15, AndroidTomatoControlSize);
+static const struct DeckList sAndroidTomatoControlList = { sAndroidTomatoControl, ARRAY_COUNT(sAndroidTomatoControl), 0 };
+#endif
+
+#if defined(HAS_CARD_BAZOO_THE_SOUL_EATER) && defined(HAS_CARD_KYCOO_THE_GHOST_DESTROYER) \
+    && defined(HAS_CARD_JAR_OF_GREED) && defined(HAS_CARD_SKULL_LAIR) && defined(HAS_CARD_TORRENTIAL_TRIBUTE) \
+    && defined(HAS_CARD_BLACK_SKULL_DRAGON)
+#define MOD_ANDROID_VANILLA_BEAT 1
+static const u16 sAndroidVanillaBeat[] = {
+    /* Monsters (15) */
+    X3(CARD_BAZOO_THE_SOUL_EATER),
+    CARD_CYBER_JAR,
+    CARD_JINZO,
+    X3(CARD_KYCOO_THE_GHOST_DESTROYER),
+    CARD_MAGICIAN_OF_FAITH,
+    CARD_MORPHING_JAR,
+    CARD_SANGAN,
+    CARD_WITCH_OF_THE_BLACK_FOREST,
+    X3(CARD_GEMINI_ELF),
+    /* Spells (15) */
+    CARD_CHANGE_OF_HEART,
+    CARD_CONFISCATION,
+    CARD_DARK_HOLE,
+    CARD_DELINQUENT_DUO,
+    X2(CARD_HEAVY_STORM),
+    CARD_MONSTER_REBORN,
+    X3(CARD_MYSTICAL_SPACE_TYPHOON),
+    CARD_PAINFUL_CHOICE,
+    CARD_POT_OF_GREED,
+    CARD_RAIGEKI,
+    CARD_SNATCH_STEAL,
+    CARD_THE_FORCEFUL_SENTRY,
+    /* Traps (10) */
+    CARD_CALL_OF_THE_HAUNTED,
+    CARD_IMPERIAL_ORDER,
+    CARD_JAR_OF_GREED,
+    CARD_MIRROR_FORCE,
+    CARD_SKULL_LAIR,
+    X3(CARD_SOLEMN_JUDGMENT),
+    X2(CARD_TORRENTIAL_TRIBUTE),
+    /* Fusion Deck (15) */
+    X3(CARD_BICKURIBOX),
+    X3(CARD_BLACK_SKULL_DRAGON),
+    X3(CARD_CHARUBIN_THE_FIRE_KNIGHT),
+    X3(CARD_CYBER_SAURUS),
+    X3(CARD_TWIN_HEADED_THUNDER_DRAGON),
+};
+STATIC_ASSERT(ARRAY_COUNT(sAndroidVanillaBeat) == 40 + 15, AndroidVanillaBeatSize);
+static const struct DeckList sAndroidVanillaBeatList = { sAndroidVanillaBeat, ARRAY_COUNT(sAndroidVanillaBeat), 0 };
+#endif
+
+#if defined(MOD_ANDROID_TOMATO_CONTROL) && defined(MOD_ANDROID_VANILLA_BEAT)
+#define MOD_ANDROID_DECKS 1
+/* The Android opponent's deck for this duel: Tomato Control 8 in 10, Vanilla Beat 2 in 10. */
+static const struct DeckList *AndroidDeck(void)
+{
+    return (u32)Random() % 10 < 8 ? &sAndroidTomatoControlList : &sAndroidVanillaBeatList;
+}
+#endif
+
 /* The replacement deck of opponent `opponent` (enum DuelistId), or NULL to keep the original. */
 const struct DeckList *GetOpponentDeckOverride(int opponent)
 {
@@ -705,6 +814,10 @@ const struct DeckList *GetOpponentDeckOverride(int opponent)
 #ifdef MOD_TRISTAN_DECKS
     case DUELIST_TRISTAN:
         return TristanDeck();
+#endif
+#ifdef MOD_ANDROID_DECKS
+    case DUELIST_MAI:                   /* the Android format opponent */
+        return AndroidDeck();
 #endif
 #ifdef MOD_IMPERIAL_DECKS
     case DUELIST_MAKO:                  /* the Imperial format opponent */
@@ -760,6 +873,8 @@ static const char sNameRecruiterControl[] = "SolEmerald69-Recruiter Control";
 static const char sNameGermBurn[] = "bsocks-Germ Burn";
 static const char sNameImperialTomato[] = "Aretos-Tomato Control";
 static const char sNameRelinquished[] = "bsocks-Relinquished";
+static const char sNameAndroidTomato[] = "Jazz-Tomato Control";
+static const char sNameAndroidVanilla[] = "paoloNS-Vanilla Beat";
 static const char sNameChaosTurbo[] = "LR-Chaos Turbo";
 static const char sNameWarrior[] = "sdlkilla-Warrior";
 static const char sNameGoatControl[] = "geistD-Goat Control";
@@ -786,6 +901,12 @@ static const struct RecipePreset sRecipePresets[] = {
 #ifdef MOD_IMPERIAL_DECKS
     { sNameImperialTomato, &sImperialTomatoControlList },
     { sNameRelinquished, &sImperialRelinquishedList },
+#endif
+#ifdef MOD_ANDROID_TOMATO_CONTROL
+    { sNameAndroidTomato, &sAndroidTomatoControlList },
+#endif
+#ifdef MOD_ANDROID_VANILLA_BEAT
+    { sNameAndroidVanilla, &sAndroidVanillaBeatList },
 #endif
 #ifdef MOD_RED_DECK
     { sNameChaosTurbo, &sRedDeckList },
