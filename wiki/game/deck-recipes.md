@@ -40,35 +40,38 @@ mod's deck tables, named after their .ydk files:
 
 - Fusion Monsters in a table go to the recipe's Fusion Deck. There are no Side Decks, as with the opponents' decks.
 - A table that this build leaves out (its cards aren't all in the card list) is skipped.
-- Presets are ordinary recipes: SELECT replaces one with the current deck, and START clears it.
-- **Names.** A recipe saved with SELECT takes the name of the recipe in use, and stays named when Deck Edit changes
-  it. A recipe with no name shows "Custom deck".
+- Presets are ordinary recipes: they can be replaced, renamed or cleared.
 
 ## Storage
 - **SRAM.** From `0x0E004000`, after the 0x2170-byte save. A header (magic `"RCP2"`, the active slot) is followed
   by 50 slots. Each slot holds the three list sizes, a used flag, `name[32]`, and `deck[60]`, `side[15]`,
   `fusion[20]` (226 bytes). A different magic (including the first build's `"RCP1"`) sets the area up again.
-- **Recipe in use.** One recipe is in use: it is the current deck, and it is stored back into its slot when the
-  scene opens, on every switch, and on exit (Deck Edit changes reach it this way).
 - **New Game.** `BuildStarterDeck` calls `DeckRecipes_OnNewGame`, which clears the recipes: it erases the header's
   magic, so the next visit sets the area up again with the six presets and empty slots. The starter deck then takes
   the first empty slot (07).
 - **RAM.** The scene state is `gDeckRecipes` (EWRAM `0x0202E400`, symbols.ld).
 
-## Switching (A)
-1. Store the current deck into the recipe in use.
-2. Put every Deck, Side Deck and Fusion Deck card back into the trunk (`AddCardToTrunk`, list counters to 0).
-3. Take the new recipe's cards out of the trunk (`AddCardToSaved*Deck`, then `RemoveCardFromTrunk`). A card the trunk
-   doesn't hold, or that the copy limits refuse, is counted as missing and reported.
-4. `SaveGame`.
+## Load and save (rewritten 2026-10-26)
+A recipe is a template: it changes only when the player saves to it, renames it or clears it.
 
-An empty recipe gives an empty deck, which can't duel (`DECK_MIN_CARDS`) until it's built in Deck Edit.
-
-## Other keys
-- **SELECT, twice:** saves the current deck into the slot.
-- **START, twice:** clears the slot. The recipe in use can't be cleared.
-- **L/R:** page by 8.
-- **B:** back to the menu.
+- **The mark.** `header.active` marks the recipe last loaded or saved (`*` in the list). It is only a mark. The first
+  model wrote the current deck back into the "recipe in use" on every visit, switch and exit, so loading a preset
+  and saving to a new slot overwrote the preset too (reported bug).
+- **A on a slot** opens its actions in place of the help line (LEFT/RIGHT, A, B):
+  - **Load.** If the current deck isn't the marked recipe's lists (or there's no mark) and has cards, a second A
+    is asked for ("Your deck is not saved"). Then every card of the three decks goes back to the trunk
+    (`ReturnDecksToTrunk`) and the recipe's cards come out of it (`AddCardToSaved*Deck`, then
+    `RemoveCardFromTrunk`). Cards the trunk lacks, or that the banlist refuses, are counted as missing; the recipe
+    keeps them. Then the slot is marked and the game saves.
+  - **Save here.** An empty slot opens the name entry (starting from the marked recipe's name). A used slot asks
+    for a second A and keeps its name. The slot is marked.
+  - **Rename.** The name entry.
+  - **Clear.** After a second A; clearing the marked slot removes the mark.
+- **Name entry.** A 13 x 6 grid of keys: A-Z, a-z, 0-9, `- / . ' & ! ? ( ) : + , #`, and Spc/Del/End. Controls:
+  A types, B deletes, START (or End) finishes, SELECT cancels. Names are up to 28 characters, which fits a list
+  row before the counts; an empty name shows as "Custom deck".
+- **First visit after set-up** (first use, or after a New Game). The current deck is saved, unnamed, into the first
+  empty slot and marked.
 
 ## Screen
 The menu's sky (BG1) and palette, with the highlighted label as the title. The list, status and help are drawn on a

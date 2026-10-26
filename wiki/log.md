@@ -1379,3 +1379,9 @@ updated: 2026-09-29
 ## [2026-10-26] progress | New Game resets Deck Recipes
 - DeckRecipes_OnNewGame erases the recipe header, so a new game starts with only the six preset recipes.
 - Pages: [[deck-recipes]].
+
+## [2026-10-26] progress | Deck Recipes: load/save model and naming
+- Fixed: the recipe "in use" was written back on every visit/switch/exit, so saving a loaded preset to a new slot
+  also overwrote the preset. Recipes now change only by Save/Rename/Clear; Load asks before dropping an unsaved
+  deck. A opens Load/Save here/Rename/Clear/Cancel; a name entry grid for new and renamed recipes.
+- Pages: [[deck-recipes]].

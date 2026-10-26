@@ -9,10 +9,15 @@
  * Up to RECIPE_COUNT recipes, each a name and a saved Deck, Side Deck and Fusion Deck list, live in SRAM after the
  * save image (RECIPE_SRAM; the game's save is 0x2170 bytes of the 32 KiB). The first ones start as the decks of
  * GetRecipePreset (src/mod_decks.c), named after their .ydk files; like any recipe they can be replaced or cleared.
- * A recipe saved with SELECT takes the name of the recipe in use (none: "Custom deck"). One recipe is in use: it is the player's current
- * deck, stored back into its slot whenever the scene opens or switches. Switching to another recipe puts every card
- * of the three decks back into the trunk, then takes the recipe's cards out of the trunk; a card the trunk no longer
- * holds (or that the copy limits refuse) is left out and counted as missing.
+ * A recipe changes only when the player saves to it, renames it or clears it. A on a slot opens its actions:
+ *   Load       put every card of the three decks back into the trunk, then take the recipe's cards out of it; a card
+ *              the trunk no longer holds (or that the copy limits refuse) is left out and counted as missing. When
+ *              the current deck is not saved in a recipe, a second A is asked for.
+ *   Save here  the current deck into the slot: an empty slot asks for a name (the name entry), a used one keeps its
+ *              name after a second A
+ *   Rename     the name entry
+ *   Clear      after a second A
+ * The recipe last loaded or saved is marked (header.active); it is only a mark, and it is never written back.
  * The scene looks like the main menu: its sky, palette and the label as the title; the list is drawn as in
  * mod_banlist (a 32-tile text canvas copied into the OBJ tiles, 2D mapping, and shown as 32 x 16 sprites).
  * Like the other mod units, this one is @farcode and @rodata in units.txt and keeps its state at a fixed EWRAM
@@ -67,20 +72,37 @@ struct RecipeHeader {
 typedef char mod_recipes_check_sram[sizeof(struct RecipeHeader) + RECIPE_COUNT * sizeof(struct RecipeSlot)
                                     <= 0x4000 ? 1 : -1];
 
-enum RecipeConfirm {
-    CONFIRM_NONE,
-    CONFIRM_SAVE,
-    CONFIRM_CLEAR,
+enum RecipeMode {
+    MODE_LIST,                      /* the list; A opens the actions */
+    MODE_MENU,                      /* the actions of the cursor's slot (enum RecipeAction) */
+    MODE_NAME,                      /* the name entry */
 };
 
-/* The scene's state: gDeckRecipes (EWRAM 0x0202E400, symbols.ld: free RAM after gBanlistView). */
+enum RecipeAction {
+    ACTION_LOAD,
+    ACTION_SAVE,
+    ACTION_RENAME,
+    ACTION_CLEAR,
+    ACTION_CANCEL,
+    ACTION_COUNT,
+};
+
+#define RECIPE_NAME_MAX     28      /* what fits a list row before the counts */
+
+/* The scene's state: gDeckRecipes (EWRAM 0x0202E400, symbols.ld: free RAM after gBanlistView; ends by 0x0202EC80). */
 struct DeckRecipes {
     u8 cursor;
     u8 scroll;
-    u8 active;
-    u8 confirm;                     /* enum RecipeConfirm: the first press of SELECT/START on confirmSlot */
-    u8 confirmSlot;
-    u8 pad[3];
+    u8 active;                      /* the recipe last loaded or saved, RECIPE_NONE */
+    u8 mode;                        /* enum RecipeMode */
+    u8 action;                      /* MODE_MENU: the action under the cursor */
+    u8 confirm;                     /* MODE_MENU: 1 after the first A of an action that asks for two */
+    u8 nameForSave;                 /* MODE_NAME: 1 = save the deck under the name, 0 = rename */
+    u8 keyRow;                      /* MODE_NAME: the key under the cursor */
+    u8 keyCol;
+    u8 nameLen;
+    u8 pad[2];
+    char name[RECIPE_NAME_SIZE];    /* MODE_NAME: the name being entered */
     u8 sizes[RECIPE_COUNT][RECIPE_SUMMARY_SIZE];  /* deckSize, sideSize, fusionSize, used, name of every slot */
     char status[64];
     struct RecipeSlot buf;
@@ -224,17 +246,12 @@ static void WriteSlot(int n)
     MemCopy16(s->sizes[n], &s->buf, RECIPE_SUMMARY_SIZE);
 }
 
-/* The player's current Deck, Side Deck and Fusion Deck into buf, named as the recipe in use. */
-static void CurrentDeckToBuf(void)
+/* The player's current Deck, Side Deck and Fusion Deck into buf, with the given name. */
+static void CurrentDeckToBuf(const char *name)
 {
     struct RecipeSlot *b = &gDeckRecipes.buf;
-    char name[RECIPE_NAME_SIZE];
     int i;
 
-    if (gDeckRecipes.active < RECIPE_COUNT)
-        MemCopy16(name, gDeckRecipes.sizes[gDeckRecipes.active] + 4, RECIPE_NAME_SIZE);
-    else
-        name[0] = 0;
     MemClear16(b, sizeof(*b));
     for (i = 0; i < RECIPE_NAME_SIZE - 1 && name[i]; i++)
         b->name[i] = name[i];
@@ -247,13 +264,46 @@ static void CurrentDeckToBuf(void)
     MemCopy16(b->fusion, gSaveData.fusionDeck, sizeof(b->fusion));
 }
 
-/* The recipe in use takes the player's current deck (the Deck Edit changes since the last time). */
-static void StoreActive(void)
+/* The name of slot n (empty for none). */
+static const char *SlotName(int n)
 {
-    if (gDeckRecipes.active < RECIPE_COUNT) {
-        CurrentDeckToBuf();
-        WriteSlot(gDeckRecipes.active);
+    return (const char *)gDeckRecipes.sizes[n] + 4;
+}
+
+static void SetActive(int n)
+{
+    gDeckRecipes.active = n;
+    WriteActive(n);
+}
+
+/* 1 when loading another recipe would lose the current deck: it has cards and differs from the recipe last loaded
+ * or saved (there is none, or its lists differ). */
+static int IsDeckUnsaved(void)
+{
+    struct RecipeSlot *b = &gDeckRecipes.buf;
+    int i;
+
+    if (gSaveData.deckSize + gSaveData.sideDeckSize + gSaveData.fusionDeckSize == 0)
+        return 0;
+    if (gDeckRecipes.active >= RECIPE_COUNT)
+        return 1;
+    ReadSlot(gDeckRecipes.active);
+    if (!b->used || b->deckSize != gSaveData.deckSize || b->sideSize != gSaveData.sideDeckSize
+        || b->fusionSize != gSaveData.fusionDeckSize)
+        return 1;
+    for (i = 0; i < b->deckSize; i++) {
+        if (b->deck[i] != gSaveData.deck[i])
+            return 1;
     }
+    for (i = 0; i < b->sideSize; i++) {
+        if (b->side[i] != gSaveData.sideDeck[i])
+            return 1;
+    }
+    for (i = 0; i < b->fusionSize; i++) {
+        if (b->fusion[i] != gSaveData.fusionDeck[i])
+            return 1;
+    }
+    return 0;
 }
 
 /* Every card of the three decks back to the trunk. */
@@ -297,22 +347,20 @@ static int TakeFromTrunk(const u16 *ids, int n, void (*add)(u16), const u16 *siz
     return missing;
 }
 
-/* Recipe n becomes the deck in use; returns the cards the trunk could not give. */
+/* Load recipe n as the player's deck (the recipe itself is not changed); returns the cards the trunk could not
+ * give. */
 static int SwitchTo(int n)
 {
     struct RecipeSlot *b = &gDeckRecipes.buf;
     int missing;
 
-    StoreActive();
     ReturnDecksToTrunk();
     ReadSlot(n);
     missing = TakeFromTrunk(b->deck, b->used ? b->deckSize : 0, AddCardToSavedDeck, &gSaveData.deckSize);
     missing += TakeFromTrunk(b->side, b->used ? b->sideSize : 0, AddCardToSavedSideDeck, &gSaveData.sideDeckSize);
     missing += TakeFromTrunk(b->fusion, b->used ? b->fusionSize : 0, AddCardToSavedFusionDeck,
                              &gSaveData.fusionDeckSize);
-    gDeckRecipes.active = n;
-    WriteActive(n);
-    StoreActive();
+    SetActive(n);
     SaveGame();
     return missing;
 }
@@ -345,16 +393,17 @@ static int PresetToBuf(int n)
     return 1;
 }
 
-/* Read the slot summaries; set up the SRAM area the first time (the presets, then empty slots); give the current
- * deck a slot when it has none. */
+/* Read the slot summaries. The first time (or after a New Game) set the SRAM area up: the presets, then empty
+ * slots, and the current deck (unnamed) in the first empty one. */
 static void LoadRecipes(void)
 {
     struct DeckRecipes *s = &gDeckRecipes;
     struct RecipeHeader h;
-    int n;
+    int n, setUp;
 
     ReadHeader(&h);
-    if (h.magic != RECIPE_MAGIC) {
+    setUp = h.magic != RECIPE_MAGIC;
+    if (setUp) {
         for (n = 0; n < RECIPE_COUNT; n++) {
             PresetToBuf(n);
             WriteSlot(n);
@@ -367,16 +416,16 @@ static void LoadRecipes(void)
         s->sizes[n][RECIPE_SUMMARY_SIZE - 1] = 0;
     }
     s->active = h.active < RECIPE_COUNT ? h.active : RECIPE_NONE;
-    if (s->active == RECIPE_NONE) {
+    if (setUp && gSaveData.deckSize + gSaveData.sideDeckSize + gSaveData.fusionDeckSize != 0) {
         for (n = 0; n < RECIPE_COUNT; n++) {
             if (!s->sizes[n][3]) {
-                s->active = n;
-                WriteActive(n);
+                CurrentDeckToBuf("");
+                WriteSlot(n);
+                SetActive(n);
                 break;
             }
         }
     }
-    StoreActive();
 }
 
 /* A New Game clears the recipes: the header loses its magic, so the next visit sets the area up again (the presets,
@@ -410,20 +459,50 @@ void DeckRecipes_OnNewGame(void)
 
 static const char sStrEmpty[] = "(empty)";
 static const char sStrCustom[] = "Custom deck";
-static const char sStrHelp1[] = "A: use   B: back   L/R: page   *: in use";
-static const char sStrHelp2[] = "SELECT: save deck here   START: clear";
+static const char sStrHelp1[] = "A: options   B: back   L/R: page";
+static const char sStrHelp2[] = "*: the recipe last loaded or saved";
+static const char sStrMenuHelp[] = "LEFT/RIGHT: choose   A: OK   B: cancel";
+static const char sStrNameHelp1[] = "A: type   B: delete";
+static const char sStrNameHelp2[] = "START: done   SELECT: cancel";
+static const char sStrNamePrompt[] = "Name: ";
 static const char sStrRecipe[] = "Recipe ";
-static const char sStrNowUsing[] = " is now your deck.";
+static const char sStrLoaded[] = " is now your deck.";
 static const char sStrMissing[] = " cards were not in the trunk.";
 static const char sStrMissing1[] = " card was not in the trunk.";
-static const char sStrAlready[] = " is already your deck.";
-static const char sStrIsCurrent[] = " is your current deck.";
-static const char sStrPressSelect[] = "Press SELECT again to save your deck as ";
-static const char sStrPressStart[] = "Press START again to clear recipe ";
+static const char sStrUnsaved[] = "Your deck is not saved. A again: load anyway.";
+static const char sStrReplace[] = "A again: replace it with your deck.";
+static const char sStrClearAsk[] = "A again: clear it.";
 static const char sStrSaved[] = "Your deck was saved as recipe ";
+static const char sStrRenamed[] = " was renamed.";
 static const char sStrCleared[] = " was cleared.";
 static const char sStrIsEmpty[] = " is empty.";
-static const char sStrInUseClear[] = " is in use; it cannot be cleared.";
+
+static const char *const sActionNames[ACTION_COUNT] = {
+    "Load", "Save here", "Rename", "Clear", "Cancel",
+};
+
+/* The name entry's keys: 6 rows of 13. KEY_SPACE, KEY_DELETE and KEY_DONE are drawn as words. */
+#define KEY_ROWS    6
+#define KEY_COLS    13
+#define KEY_SPACE   1
+#define KEY_DELETE  2
+#define KEY_DONE    3
+#define KEY_X       14
+#define KEY_STEP    17
+#define KEY_Y       14
+
+static const u8 sKeys[KEY_ROWS][KEY_COLS] = {
+    { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M' },
+    { 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z' },
+    { 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm' },
+    { 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z' },
+    { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '-', '/', '.' },
+    { '\'', '&', '!', '?', '(', ')', ':', '+', ',', '#', KEY_SPACE, KEY_DELETE, KEY_DONE },
+};
+
+static const char sStrKeySpace[] = "Spc";
+static const char sStrKeyDelete[] = "Del";
+static const char sStrKeyDone[] = "End";
 
 static char *AppendStr(char *dst, const char *src)
 {
@@ -467,43 +546,86 @@ static void DrawLine(int y, u16 color, const char *text)
     DrawText(8, y, color, text);
 }
 
-static void Render(void)
+static void RenderList(void)
 {
     struct DeckRecipes *s = &gDeckRecipes;
     char line[64];
     char *p;
     int i;
 
-    TextCanvasInitEx(32, CANVAS_ROWS, 0, 0);
     for (i = 0; i < ROWS_VISIBLE; i++) {
         int n = s->scroll + i;
         u16 color = n == s->cursor ? COLOR_CURSOR : COLOR_ROW;
-        const char *name = (const char *)s->sizes[n] + 4;
-        int deck = s->sizes[n][0], side = s->sizes[n][1], fusion = s->sizes[n][2];
+        const char *name = SlotName(n);
 
-        if (n == s->active) {
-            deck = gSaveData.deckSize;
-            side = gSaveData.sideDeckSize;
-            fusion = gSaveData.fusionDeckSize;
-        }
         p = AppendStr(line, n == s->cursor ? "> " : "   ");
         p = AppendNum(p, n + 1, 2);
         p = AppendStr(p, n == s->active ? " * " : "   ");
-        if (n != s->active && !s->sizes[n][3]) {
+        if (!s->sizes[n][3]) {
             AppendStr(p, sStrEmpty);
             DrawLine(i * ROW_HEIGHT, color, line);
             continue;
         }
         AppendStr(p, name[0] ? name : sStrCustom);
         DrawLine(i * ROW_HEIGHT, color, line);
-        p = AppendNum(AppendStr(line, "D"), deck, 1);
-        p = AppendNum(AppendStr(p, " S"), side, 1);
-        AppendNum(AppendStr(p, " F"), fusion, 1);
+        p = AppendNum(AppendStr(line, "D"), s->sizes[n][0], 1);
+        p = AppendNum(AppendStr(p, " S"), s->sizes[n][1], 1);
+        AppendNum(AppendStr(p, " F"), s->sizes[n][2], 1);
         DrawText(COUNTS_X, i * ROW_HEIGHT, color, line);
     }
-    DrawLine(ROWS_VISIBLE * ROW_HEIGHT, COLOR_HELP, sStrHelp1);         /* right under the list */
-    DrawLine(ROWS_VISIBLE * ROW_HEIGHT + 10, COLOR_HELP, sStrHelp2);
+    if (s->mode == MODE_MENU) {
+        int x = 8;
+
+        for (i = 0; i < ACTION_COUNT; i++) {
+            DrawText(x, ROWS_VISIBLE * ROW_HEIGHT, i == s->action ? COLOR_CURSOR : COLOR_ROW, sActionNames[i]);
+            x += gTextCanvas.right - x + 14;
+        }
+        DrawLine(ROWS_VISIBLE * ROW_HEIGHT + 10, COLOR_HELP, sStrMenuHelp);
+    } else {
+        DrawLine(ROWS_VISIBLE * ROW_HEIGHT, COLOR_HELP, sStrHelp1);     /* right under the list */
+        DrawLine(ROWS_VISIBLE * ROW_HEIGHT + 10, COLOR_HELP, sStrHelp2);
+    }
     DrawLine(ROWS_VISIBLE * ROW_HEIGHT + 23, COLOR_STATUS, s->status);
+}
+
+static void RenderNameEntry(void)
+{
+    struct DeckRecipes *s = &gDeckRecipes;
+    char line[48];
+    int r, c;
+
+    AppendStr(AppendStr(AppendStr(line, sStrNamePrompt), s->name), s->nameLen < RECIPE_NAME_MAX ? "_" : "");
+    DrawLine(0, COLOR_CURSOR, line);
+    for (r = 0; r < KEY_ROWS; r++) {
+        for (c = 0; c < KEY_COLS; c++) {
+            u8 key = sKeys[r][c];
+            u16 color = r == s->keyRow && c == s->keyCol ? COLOR_CURSOR : COLOR_ROW;
+
+            if (key == KEY_SPACE) {
+                DrawText(KEY_X + c * KEY_STEP - 2, KEY_Y + r * ROW_HEIGHT, color, sStrKeySpace);
+            } else if (key == KEY_DELETE) {
+                DrawText(KEY_X + c * KEY_STEP - 2, KEY_Y + r * ROW_HEIGHT, color, sStrKeyDelete);
+            } else if (key == KEY_DONE) {
+                DrawText(KEY_X + c * KEY_STEP - 2, KEY_Y + r * ROW_HEIGHT, color, sStrKeyDone);
+            } else {
+                line[0] = key;
+                line[1] = 0;
+                DrawText(KEY_X + c * KEY_STEP, KEY_Y + r * ROW_HEIGHT, color, line);
+            }
+        }
+    }
+    DrawLine(ROWS_VISIBLE * ROW_HEIGHT, COLOR_HELP, sStrNameHelp1);
+    DrawLine(ROWS_VISIBLE * ROW_HEIGHT + 10, COLOR_HELP, sStrNameHelp2);
+    DrawLine(ROWS_VISIBLE * ROW_HEIGHT + 23, COLOR_STATUS, s->status);
+}
+
+static void Render(void)
+{
+    TextCanvasInitEx(32, CANVAS_ROWS, 0, 0);
+    if (gDeckRecipes.mode == MODE_NAME)
+        RenderNameEntry();
+    else
+        RenderList();
     TextCanvasToTiles((u16 *)OBJ_TILE(CANVAS_TILE), 0);
 }
 
@@ -530,9 +652,207 @@ static void MoveCursor(int n)
         s->scroll = s->cursor;
     if (s->cursor >= s->scroll + ROWS_VISIBLE)
         s->scroll = s->cursor - ROWS_VISIBLE + 1;
-    s->confirm = CONFIRM_NONE;
     s->status[0] = 0;
     PlaySE(SE_CURSOR);
+}
+
+/* Open the name entry for the cursor's slot, starting from name. */
+static void StartNameEntry(int forSave, const char *name)
+{
+    struct DeckRecipes *s = &gDeckRecipes;
+
+    s->mode = MODE_NAME;
+    s->nameForSave = forSave;
+    s->keyRow = 0;
+    s->keyCol = 0;
+    MemClear16(s->name, sizeof(s->name));
+    for (s->nameLen = 0; s->nameLen < RECIPE_NAME_MAX && name[s->nameLen]; s->nameLen++)
+        s->name[s->nameLen] = name[s->nameLen];
+    StatusRecipe(s->cursor);
+}
+
+/* START or End in the name entry: save the deck under the name, or rename the slot. */
+static void FinishNameEntry(void)
+{
+    struct DeckRecipes *s = &gDeckRecipes;
+    int n = s->cursor, i;
+
+    if (s->nameForSave) {
+        CurrentDeckToBuf(s->name);
+        WriteSlot(n);
+        SetActive(n);
+        AppendStr(AppendNum(AppendStr(s->status, sStrSaved), n + 1, 2), ".");
+    } else {
+        ReadSlot(n);
+        MemClear16(s->buf.name, sizeof(s->buf.name));
+        for (i = 0; i < RECIPE_NAME_SIZE - 1 && s->name[i]; i++)
+            s->buf.name[i] = s->name[i];
+        WriteSlot(n);
+        AppendStr(StatusRecipe(n), sStrRenamed);
+    }
+    s->mode = MODE_LIST;
+    PlaySE(SE_CONFIRM);
+}
+
+static void HandleNameEntry(void)
+{
+    struct DeckRecipes *s = &gDeckRecipes;
+    u16 keys = gMain.newKeys;
+
+    if (keys & SELECT_BUTTON) {
+        s->mode = MODE_LIST;
+        s->status[0] = 0;
+        PlaySE(SE_CANCEL);
+    } else if (keys & START_BUTTON) {
+        FinishNameEntry();
+    } else if (keys & B_BUTTON) {
+        if (s->nameLen > 0) {
+            s->name[--s->nameLen] = 0;
+            PlaySE(SE_CANCEL);
+        }
+    } else if (keys & DPAD_UP) {
+        s->keyRow = (s->keyRow + KEY_ROWS - 1) % KEY_ROWS;
+        PlaySE(SE_CURSOR);
+    } else if (keys & DPAD_DOWN) {
+        s->keyRow = (s->keyRow + 1) % KEY_ROWS;
+        PlaySE(SE_CURSOR);
+    } else if (keys & DPAD_LEFT) {
+        s->keyCol = (s->keyCol + KEY_COLS - 1) % KEY_COLS;
+        PlaySE(SE_CURSOR);
+    } else if (keys & DPAD_RIGHT) {
+        s->keyCol = (s->keyCol + 1) % KEY_COLS;
+        PlaySE(SE_CURSOR);
+    } else if (keys & A_BUTTON) {
+        u8 key = sKeys[s->keyRow][s->keyCol];
+
+        if (key == KEY_DONE) {
+            FinishNameEntry();
+        } else if (key == KEY_DELETE) {
+            if (s->nameLen > 0)
+                s->name[--s->nameLen] = 0;
+            PlaySE(SE_CANCEL);
+        } else if (s->nameLen < RECIPE_NAME_MAX) {
+            s->name[s->nameLen++] = key == KEY_SPACE ? ' ' : key;
+            s->name[s->nameLen] = 0;
+            PlaySE(SE_CONFIRM);
+        } else {
+            PlaySE(SE_ERROR);
+        }
+    } else {
+        return;
+    }
+    Render();
+}
+
+/* A in the actions of the cursor's slot. */
+static void DoAction(void)
+{
+    struct DeckRecipes *s = &gDeckRecipes;
+    int n = s->cursor, used = s->sizes[n][3], missing;
+    char *p;
+
+    switch (s->action) {
+    case ACTION_LOAD:
+        if (!used) {
+            AppendStr(StatusRecipe(n), sStrIsEmpty);
+            break;
+        }
+        if (!s->confirm && IsDeckUnsaved()) {
+            AppendStr(s->status, sStrUnsaved);
+            s->confirm = 1;
+            PlaySE(SE_CURSOR);
+            return;
+        }
+        missing = SwitchTo(n);
+        p = AppendStr(StatusRecipe(n), sStrLoaded);
+        if (missing != 0)
+            AppendStr(AppendNum(AppendStr(p, " "), missing, 1), missing == 1 ? sStrMissing1 : sStrMissing);
+        s->mode = MODE_LIST;
+        PlaySE(SE_CONFIRM);
+        return;
+    case ACTION_SAVE:
+        if (!used) {
+            StartNameEntry(1, s->active < RECIPE_COUNT ? SlotName(s->active) : "");
+            PlaySE(SE_CONFIRM);
+            return;
+        }
+        if (!s->confirm) {
+            AppendStr(AppendStr(StatusRecipe(n), ": "), sStrReplace);
+            s->confirm = 1;
+            PlaySE(SE_CURSOR);
+            return;
+        }
+        ReadSlot(n);
+        MemCopy16(s->name, s->buf.name, sizeof(s->name));
+        CurrentDeckToBuf(s->name);
+        WriteSlot(n);
+        SetActive(n);
+        AppendStr(AppendNum(AppendStr(s->status, sStrSaved), n + 1, 2), ".");
+        s->mode = MODE_LIST;
+        PlaySE(SE_CONFIRM);
+        return;
+    case ACTION_RENAME:
+        if (!used) {
+            AppendStr(StatusRecipe(n), sStrIsEmpty);
+            break;
+        }
+        StartNameEntry(0, SlotName(n));
+        PlaySE(SE_CONFIRM);
+        return;
+    case ACTION_CLEAR:
+        if (!used) {
+            AppendStr(StatusRecipe(n), sStrIsEmpty);
+            break;
+        }
+        if (!s->confirm) {
+            AppendStr(AppendStr(StatusRecipe(n), ": "), sStrClearAsk);
+            s->confirm = 1;
+            PlaySE(SE_CURSOR);
+            return;
+        }
+        MemClear16(&s->buf, sizeof(s->buf));
+        WriteSlot(n);
+        if (s->active == n)
+            SetActive(RECIPE_NONE);
+        AppendStr(StatusRecipe(n), sStrCleared);
+        s->mode = MODE_LIST;
+        PlaySE(SE_CONFIRM);
+        return;
+    default:
+        s->mode = MODE_LIST;
+        s->status[0] = 0;
+        PlaySE(SE_CANCEL);
+        return;
+    }
+    s->mode = MODE_LIST;        /* refused: the slot is empty */
+    PlaySE(SE_ERROR);
+}
+
+static void HandleMenu(void)
+{
+    struct DeckRecipes *s = &gDeckRecipes;
+    u16 keys = gMain.newKeys;
+
+    if (keys & B_BUTTON) {
+        s->mode = MODE_LIST;
+        s->status[0] = 0;
+        PlaySE(SE_CANCEL);
+    } else if (keys & DPAD_LEFT) {
+        s->action = (s->action + ACTION_COUNT - 1) % ACTION_COUNT;
+        s->confirm = 0;
+        s->status[0] = 0;
+        PlaySE(SE_CURSOR);
+    } else if (keys & DPAD_RIGHT) {
+        s->action = (s->action + 1) % ACTION_COUNT;
+        s->confirm = 0;
+        s->status[0] = 0;
+        PlaySE(SE_CURSOR);
+    } else if (keys & A_BUTTON) {
+        DoAction();
+    } else {
+        return;
+    }
+    Render();
 }
 
 /* Returns 1 when the player leaves. */
@@ -540,71 +860,34 @@ static int HandleInput(void)
 {
     struct DeckRecipes *s = &gDeckRecipes;
     u16 keys = gMain.newKeys;
-    int n = s->cursor, missing;
-    char *p;
+    int n = s->cursor;
 
+    if (s->mode == MODE_NAME) {
+        HandleNameEntry();
+        return 0;
+    }
+    if (s->mode == MODE_MENU) {
+        HandleMenu();
+        return 0;
+    }
     if (keys & B_BUTTON) {
         PlaySE(SE_CANCEL);
         return 1;
     }
-    if (keys & DPAD_UP)
+    if (keys & DPAD_UP) {
         MoveCursor((n + RECIPE_COUNT - 1) % RECIPE_COUNT);
-    else if (keys & DPAD_DOWN)
+    } else if (keys & DPAD_DOWN) {
         MoveCursor((n + 1) % RECIPE_COUNT);
-    else if (keys & L_BUTTON)
+    } else if (keys & L_BUTTON) {
         MoveCursor(n >= ROWS_VISIBLE ? n - ROWS_VISIBLE : 0);
-    else if (keys & R_BUTTON)
+    } else if (keys & R_BUTTON) {
         MoveCursor(n + ROWS_VISIBLE < RECIPE_COUNT ? n + ROWS_VISIBLE : RECIPE_COUNT - 1);
-    else if (keys & A_BUTTON) {
-        s->confirm = CONFIRM_NONE;
-        if (n == s->active) {
-            AppendStr(StatusRecipe(n), sStrAlready);
-            PlaySE(SE_ERROR);
-        } else {
-            missing = SwitchTo(n);
-            p = AppendStr(StatusRecipe(n), sStrNowUsing);
-            if (missing != 0)
-                AppendStr(AppendNum(AppendStr(p, " "), missing, 1), missing == 1 ? sStrMissing1 : sStrMissing);
-            PlaySE(SE_CONFIRM);
-        }
-    } else if (keys & SELECT_BUTTON) {
-        if (n == s->active) {
-            AppendStr(StatusRecipe(n), sStrIsCurrent);
-            s->confirm = CONFIRM_NONE;
-            PlaySE(SE_ERROR);
-        } else if (s->confirm != CONFIRM_SAVE || s->confirmSlot != n) {
-            AppendStr(AppendNum(AppendStr(s->status, sStrPressSelect), n + 1, 2), ".");
-            s->confirm = CONFIRM_SAVE;
-            s->confirmSlot = n;
-            PlaySE(SE_CURSOR);
-        } else {
-            CurrentDeckToBuf();
-            WriteSlot(n);
-            AppendStr(AppendNum(AppendStr(s->status, sStrSaved), n + 1, 2), ".");
-            s->confirm = CONFIRM_NONE;
-            PlaySE(SE_CONFIRM);
-        }
-    } else if (keys & START_BUTTON) {
-        if (n == s->active) {
-            AppendStr(StatusRecipe(n), sStrInUseClear);
-            s->confirm = CONFIRM_NONE;
-            PlaySE(SE_ERROR);
-        } else if (!s->sizes[n][3]) {
-            AppendStr(StatusRecipe(n), sStrIsEmpty);
-            s->confirm = CONFIRM_NONE;
-            PlaySE(SE_ERROR);
-        } else if (s->confirm != CONFIRM_CLEAR || s->confirmSlot != n) {
-            AppendStr(AppendNum(AppendStr(s->status, sStrPressStart), n + 1, 2), ".");
-            s->confirm = CONFIRM_CLEAR;
-            s->confirmSlot = n;
-            PlaySE(SE_CURSOR);
-        } else {
-            MemClear16(&s->buf, sizeof(s->buf));
-            WriteSlot(n);
-            AppendStr(StatusRecipe(n), sStrCleared);
-            s->confirm = CONFIRM_NONE;
-            PlaySE(SE_CONFIRM);
-        }
+    } else if (keys & A_BUTTON) {
+        s->mode = MODE_MENU;
+        s->action = s->sizes[n][3] ? ACTION_LOAD : ACTION_SAVE;
+        s->confirm = 0;
+        s->status[0] = 0;
+        PlaySE(SE_CONFIRM);
     } else {
         return 0;
     }
@@ -662,7 +945,6 @@ u16 CB_DeckRecipes(void)
     case 2:
         DrawSprites();
         if (HandleInput()) {
-            StoreActive();
             FadeOutBGM();
             gMain.seqIndex1++;
         }
