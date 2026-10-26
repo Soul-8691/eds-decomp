@@ -350,6 +350,27 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
 - Number side effect as for Magic Cylinder: the added cards after it in the list moved down one free number.
 - Checked in the source and the build; not tested in an emulator.
 
+### Dark Mimic LV1 (2026-10-26)
+- The card data's text: "FLIP: Draw 1 card. Once per turn, during your Standby Phase: You can send this card to the GY;
+  Special Summon 1 'Dark Mimic LV3' from your hand or Deck." (The "draw 2 if flipped by an attack" clause is LV3's.)
+- **One row, told apart by the event.** A flip (`HasFlipEffect`) draws 1. `RESPONSE_OWN_STANDBY` is the level-up.
+  `EffectDarkMimicLv1Prepare` passes a flip, and for the level-up needs the card face up in its zone and an LV3 in the
+  Deck or hand.
+- **Level-up**, as Jigen Bakudan's Standby effect. The human activates it from the card menu during the Standby
+  Phase's `STANDBY_STEP_FIELD`; it joins the Standby cases of `CanActivateMonsterEffect`, `HasActivatableStandbyCard`
+  (duel_phases.c) and the card menu's Activate in duel_cmd_queue.c, which queues the event `RESPONSE_OWN_STANDBY`.
+  It is also in the Standby case of `CardMenu_GetMonsterCommands` (card_command_menu.c), the list that gives a
+  monster Activate in the Standby Phase; it was missing at first, so the menu offered nothing (fixed 2026-10-26).
+  The resolve is `LevelUpResolve` with no question.
+- **Shared level-up.** `LevelUpResolve` is Mystic Swordsman LV2's former resolve, made general (`from`, `to`, an
+  optional Yes/No). LV2 now calls it with its question.
+- **CPU.** `STANDBY_STEP_FIELD` waited for the human's cursor even on the CPU's turn whenever the CPU had an
+  activatable Standby card. On the CPU's turn it now calls `AiStandbyActivations` (the CPU's first face-up LV1 that
+  may level up, once per turn by `gModDuel.aiStandbyTurn`) and then skips the step. This also ends the waits the
+  original game had with the CPU's Jigen Bakudan, Blast Juggler, Patrol Robo or Curse of Fiend, which the CPU never
+  activated anyway.
+- Checked in the source and the build; not tested in an emulator.
+
 ### Xing Zhen Hu (2026-10-26)
 - Continuous Trap, the card data's (older) text: "Activate by selecting 2 Set Spell or Trap Cards on the field. The
   selected Spell or Trap Cards cannot be activated." Engine key 1312 (`EffectLockMagicTrapResolve`) is a different

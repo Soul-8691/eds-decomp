@@ -1275,3 +1275,14 @@ updated: 2026-09-29
 - The menu tests a Set Spell with CanActivateEffectOfCard, whose entry has no zone, so the CanActivateEffect check
   missed it. IsZoneLockedByXingZhenHu is now also asked by CardMenu_GetSpellTrapCommands and CanActivateFieldCard.
 - Pages: [[added-cards]].
+
+## [2026-10-26] progress | Dark Mimic LV1
+- Flip: draw 1. Standby Phase level-up to LV3 through the Jigen Bakudan-style Standby activation (human) and
+  AiStandbyActivations (CPU, in STANDBY_STEP_FIELD, which no longer waits for the human's cursor on the CPU's turn).
+  Mystic Swordsman LV2's level-up became the shared LevelUpResolve.
+- Pages: [[added-cards]].
+
+## [2026-10-26] progress | Dark Mimic LV1: Standby Activate in the menu
+- CardMenu_GetMonsterCommands' Standby case has its own card list (Blast Juggler, Patrol Robo, Jigen Bakudan);
+  Dark Mimic LV1 was added there, so the menu offers Activate.
+- Pages: [[added-cards]].

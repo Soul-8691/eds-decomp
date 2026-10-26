@@ -256,6 +256,9 @@ void CardMenu_Execute(void)
             case CARD_BLAST_JUGGLER:
             case CARD_PATROL_ROBO:
             case CARD_JIGEN_BAKUDAN:
+#ifdef HAS_CARD_DARK_MIMIC_LV1
+            case CARD_DARK_MIMIC_LV1:       /* added card */
+#endif
                 /* Standby Phase monsters: the effect is queued with the event RESPONSE_OWN_STANDBY. */
                 Chain_AddPending(((MENU.player & 1) << 31)
                                  | (ev = (((MENU.index + MENU.area) & 0x1F) << 16)

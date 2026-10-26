@@ -113,6 +113,8 @@ int IsNightAssailantTarget(u16 id);
 void OnMonsterTurnedFaceDown(int player, int zone);
 /* Reinforcement of the Army (src/added_effects.c): a Level 4 or lower Warrior monster. */
 int IsReinforcementTarget(u16 id);
+/* Dark Mimic LV1 (src/added_effects.c): the CPU's Standby Phase activations (DuelPhase_Standby). */
+int AiStandbyActivations(int player);
 /* Xing Zhen Hu (src/added_effects.c): 1 if `card` is a Set card it locks (CanActivateEffect refuses it). */
 int IsLockedByXingZhenHu(struct ChainEntry *card);
 int IsZoneLockedByXingZhenHu(int player, int zone);

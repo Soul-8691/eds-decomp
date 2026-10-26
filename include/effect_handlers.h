@@ -123,6 +123,8 @@ int EffectXingZhenHuPrepare(struct ChainEntry *card, struct ChainEntry *chainLin
 u16 EffectXingZhenHuCheck(struct ChainEntry *card, u16 pos);
 int EffectXingZhenHuChainB(struct ChainEntry *link, struct ChainEntry *prevLink);
 int EffectXingZhenHuResolve(struct ChainEntry *link, struct ChainEntry *chainedTo);
+int EffectDarkMimicLv1Prepare(struct ChainEntry *card, struct ChainEntry *chainLink, u16 fromHand);
+int EffectDarkMimicLv1Resolve(struct ChainEntry *link, struct ChainEntry *chainedTo);
 int EffectCreatureSwapPrepare(struct ChainEntry *card, struct ChainEntry *chainLink, u16 fromHand);
 int EffectCreatureSwapResolve(struct ChainEntry *link, struct ChainEntry *chainedTo);
 int EffectMysticSwordsmanLv2Resolve(struct ChainEntry *link, struct ChainEntry *chainedTo);

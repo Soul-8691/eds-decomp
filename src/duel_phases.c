@@ -457,6 +457,9 @@ int HasActivatableStandbyCard(int player)
             case CARD_PATROL_ROBO:
             case CARD_BLAST_JUGGLER:
             case CARD_JIGEN_BAKUDAN:
+#ifdef HAS_CARD_DARK_MIMIC_LV1
+            case CARD_DARK_MIMIC_LV1:   /* added card */
+#endif
                 if (zone > ZONE_MONSTER_4)
                     continue;
                 /* Matching: the zone is addressed again here; reusing z changes the register allocation. */
@@ -813,6 +816,15 @@ int DuelPhase_Standby(void)
         return 0;
     case STANDBY_STEP_FIELD:
         /* The player may activate optional Standby effects with the field cursor; B asks to complete the phase. */
+#ifdef HAS_CARD_DARK_MIMIC_LV1
+        if (player != 0) {      /* mod: the CPU decides by itself instead of waiting for the cursor */
+            if (AiStandbyActivations(player))
+                return 0;
+            DuelCursor_Refresh();
+            gDuel.phaseStep = STANDBY_STEP_MAINTENANCE_START;
+            return 0;
+        }
+#endif
         if ((u16)HasActivatableStandbyCard(player) == 0) {
             DuelCursor_Refresh();
             gDuel.phaseStep = STANDBY_STEP_MAINTENANCE_START;

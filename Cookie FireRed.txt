@@ -32,3 +32,4 @@ Price packs
 Unlock one format at a time
 Make duels possible in pokefirered
 Multiple banlists
+Get rid of original banlist

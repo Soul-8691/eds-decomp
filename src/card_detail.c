@@ -615,6 +615,9 @@ u32 HasFlipEffect(u16 cardNo, int inBattleArg)
 #ifdef HAS_CARD_NIGHT_ASSAILANT
     case CARD_NIGHT_ASSAILANT:      /* added card (src/added_effects.c) */
 #endif
+#ifdef HAS_CARD_DARK_MIMIC_LV1
+    case CARD_DARK_MIMIC_LV1:       /* added card (src/added_effects.c) */
+#endif
 #ifdef HAS_CARD_MAGICAL_MERCHANT
     case CARD_MAGICAL_MERCHANT:     /* added card (src/added_effects.c) */
 #endif

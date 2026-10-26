@@ -55,6 +55,7 @@ struct ModDuelState {
     u16 chaosSummoned;          /* Dark Magician of Chaos: bit player * 5 + zone, Normal or Special Summoned this turn */
     u8 tsukuyomiEndReturn[2];   /* Tsukuyomi: per player, bit zone, return it to the hand in the End Phase */
     u8 flipEffectsLocked;       /* flip effects cannot be activated this turn */
+    u16 aiStandbyTurn;          /* AiStandbyActivations: the turn (gDuel.turnCount) it last ran */
 };
 extern struct ModDuelState gModDuel;
 
@@ -854,10 +855,101 @@ void ModDuelInit(void)
     gModDuel.tsukuyomiEndReturn[0] = 0;
     gModDuel.tsukuyomiEndReturn[1] = 0;
     gModDuel.flipEffectsLocked = 0;
+    gModDuel.aiStandbyTurn = 0xFFFF;
 #ifdef HAS_CARD_INJECTION_FAIRY_LILY
     InjectionFairyLilyResetBattle();
 #endif
 }
+
+#if (defined(HAS_CARD_MYSTIC_SWORDSMAN_LV2) && defined(HAS_CARD_MYSTIC_SWORDSMAN_LV4)) \
+    || (defined(HAS_CARD_DARK_MIMIC_LV1) && defined(HAS_CARD_DARK_MIMIC_LV3))
+/* ---- LV monsters: send this card to the GY, Special Summon the next level from the Deck or hand -------------------
+ * Shared by Mystic Swordsman LV2 (asks the human first) and Dark Mimic LV1 (activated from the card menu, so it does
+ * not ask). LevelUpResolve's steps: the card `from` must still be face up in link's zone and a `to` in the Deck or
+ * hand; it goes to the Graveyard (SendFieldCardToGrave, not destroyed) and a `to` is taken from the Deck (then
+ * shuffled), else the hand, kept in gChain.effectCard; the next step, once those commands ran (the zone is free),
+ * Special Summons it (QueueSpecialSummonChoosePosition picks the free zone when called). Not modelled: the hand/Deck
+ * choice (the Deck is taken first). */
+
+static inline int IsCardNumberAt(int player, int zone, u16 number)
+{
+    struct DuelZone *z = ZoneOf(player, zone);
+    u16 id = DUEL_CARD_ID(&z->card);
+
+    return id != 0 && z->isFaceUp && ((const u16 *)CARD_ID_TO_NUMBER_ADDR)[id & CARD_ID_MASK] == number;
+}
+
+/* Index of the first card of `number` in the pile, or -1. */
+static int FindCardNumberIn(struct DuelCard *pile, int count, u16 number)
+{
+    int i;
+
+    for (i = 0; i < count; i++) {
+        if (((const u16 *)CARD_ID_TO_NUMBER_ADDR)[DUEL_CARD_ID(&pile[i]) & CARD_ID_MASK] == number)
+            return i;
+    }
+    return -1;
+}
+
+static int HasLevelUpTarget(int player, u16 to)
+{
+    struct DuelPlayer *p = &gDuelPlayers[player & 1];
+
+    return FindCardNumberIn(p->deck, p->deckCount, to) >= 0 || FindCardNumberIn(p->hand, p->handCount, to) >= 0;
+}
+
+/* `question`: the human's Yes/No text, or NULL to go ahead at once (the CPU never asks). */
+static int LevelUpResolve(struct ChainEntry *link, u16 from, u16 to, const u8 *question)
+{
+    struct DuelPlayer *p = &gDuelPlayers[link->player & 1];
+    int i;
+    u16 *halves;
+    u16 cmd;
+
+    if (link->negated)
+        return EFFECT_STEP_DONE;
+    switch (gChain.effectStep) {
+    case EFFECT_STEP_START:
+        if (!IsCardNumberAt(link->player, link->zone, from) || !HasLevelUpTarget(link->player, to))
+            return EFFECT_STEP_DONE;
+        if (link->player || question == NULL)
+            return EFFECT_STEP_3;
+        TextBoxOpen(TEXTBOX_POS(5, 2), TEXTBOX_SIZE(20, 9), TEXTBOX_FLAGS_DEFAULT, question);
+        TextBoxSetMenu(TEXTBOX_MENU_YES_NO, NULL, NULL);
+        return EFFECT_STEP_2;
+    case EFFECT_STEP_2:
+        if (!gTextBox.result)
+            return EFFECT_STEP_DONE;
+        /* fall through */
+    case EFFECT_STEP_3:
+        if (!IsCardNumberAt(link->player, link->zone, from))
+            return EFFECT_STEP_DONE;
+        SendFieldCardToGrave(link->player, link->zone, 0, 1);
+        if ((i = FindCardNumberIn(p->deck, p->deckCount, to)) >= 0) {
+            CopyDuelCard((u32 *)&gChain.effectCard, (u32 *)&p->deck[i]);
+            halves = (u16 *)&p->deck[i];
+            cmd = link->player ? DUEL_CMD_PLAYER | DUEL_CMD_REMOVE_CARD_FROM_DECK : DUEL_CMD_REMOVE_CARD_FROM_DECK;
+            DuelCmd_Push(cmd, halves[0], halves[1], 0);
+            cmd = link->player ? DUEL_CMD_PLAYER | DUEL_CMD_SHUFFLE_DECK : DUEL_CMD_SHUFFLE_DECK;
+            DuelCmd_Push(cmd, 0, 0, 0);
+        } else if ((i = FindCardNumberIn(p->hand, p->handCount, to)) >= 0) {
+            CopyDuelCard((u32 *)&gChain.effectCard, (u32 *)&p->hand[i]);
+            halves = (u16 *)&p->hand[i];
+            cmd = link->player ? DUEL_CMD_PLAYER | DUEL_CMD_REMOVE_CARD_FROM_HAND : DUEL_CMD_REMOVE_CARD_FROM_HAND;
+            DuelCmd_Push(cmd, halves[0], halves[1], 0);
+            cmd = link->player ? DUEL_CMD_PLAYER | DUEL_CMD_COMPACT_HAND : DUEL_CMD_COMPACT_HAND;
+            DuelCmd_Push(cmd, 0, 0, 0);
+        } else {
+            return EFFECT_STEP_DONE;
+        }
+        return EFFECT_STEP_4;
+    case EFFECT_STEP_4:
+        QueueSpecialSummonChoosePosition(link->player, &gChain.effectCard, 1, 0);
+        return EFFECT_STEP_END;
+    }
+    return EFFECT_STEP_DONE;
+}
+#endif
 
 #if defined(HAS_CARD_MYSTIC_SWORDSMAN_LV2) && defined(HAS_CARD_MYSTIC_SWORDSMAN_LV4)
 /* ---- Mystic Swordsman LV2: the level-up ---------------------------------------------------------------------------
@@ -876,14 +968,6 @@ void ModDuelInit(void)
 
 static const u8 sStrMysticSwordsmanLevelUp[] = "Send Mystic Swordsman LV2 to the Graveyard to Special Summon "
                                                "Mystic Swordsman LV4?";
-
-static inline int IsCardNumberAt(int player, int zone, u16 number)
-{
-    struct DuelZone *z = ZoneOf(player, zone);
-    u16 id = DUEL_CARD_ID(&z->card);
-
-    return id != 0 && z->isFaceUp && ((const u16 *)CARD_ID_TO_NUMBER_ADDR)[id & CARD_ID_MASK] == number;
-}
 
 void MysticSwordsmanAfterBattle(int player)
 {
@@ -918,70 +1002,72 @@ void EndPhase_MysticSwordsmanLevelUp(int turnPlayer)
 }
 
 /* Index of the first Mystic Swordsman LV4 in the deck (or hand), or -1. */
-static int FindLv4(struct DuelCard *pile, int count)
-{
-    int i;
-
-    for (i = 0; i < count; i++) {
-        if (((const u16 *)CARD_ID_TO_NUMBER_ADDR)[DUEL_CARD_ID(&pile[i]) & CARD_ID_MASK] == CARD_MYSTIC_SWORDSMAN_LV4)
-            return i;
-    }
-    return -1;
-}
-
 int EffectMysticSwordsmanLv2Resolve(struct ChainEntry *link, struct ChainEntry *chainedTo)
 {
-    struct DuelPlayer *p = &gDuelPlayers[link->player & 1];
-    int i;
-    u16 *halves;
-    u16 cmd;
-
-    if (link->negated)
-        return EFFECT_STEP_DONE;
-    switch (gChain.effectStep) {
-    case EFFECT_STEP_START:
-        if (!IsCardNumberAt(link->player, link->zone, CARD_MYSTIC_SWORDSMAN_LV2)
-            || (FindLv4(p->deck, p->deckCount) < 0 && FindLv4(p->hand, p->handCount) < 0))
-            return EFFECT_STEP_DONE;
-        if (link->player)
-            return EFFECT_STEP_3;
-        TextBoxOpen(TEXTBOX_POS(5, 2), TEXTBOX_SIZE(20, 9), TEXTBOX_FLAGS_DEFAULT, sStrMysticSwordsmanLevelUp);
-        TextBoxSetMenu(TEXTBOX_MENU_YES_NO, NULL, NULL);
-        return EFFECT_STEP_2;
-    case EFFECT_STEP_2:
-        if (!gTextBox.result)
-            return EFFECT_STEP_DONE;
-        /* fall through */
-    case EFFECT_STEP_3:
-        if (!IsCardNumberAt(link->player, link->zone, CARD_MYSTIC_SWORDSMAN_LV2))
-            return EFFECT_STEP_DONE;
-        SendFieldCardToGrave(link->player, link->zone, 0, 1);
-        if ((i = FindLv4(p->deck, p->deckCount)) >= 0) {
-            CopyDuelCard((u32 *)&gChain.effectCard, (u32 *)&p->deck[i]);
-            halves = (u16 *)&p->deck[i];
-            cmd = link->player ? DUEL_CMD_PLAYER | DUEL_CMD_REMOVE_CARD_FROM_DECK : DUEL_CMD_REMOVE_CARD_FROM_DECK;
-            DuelCmd_Push(cmd, halves[0], halves[1], 0);
-            cmd = link->player ? DUEL_CMD_PLAYER | DUEL_CMD_SHUFFLE_DECK : DUEL_CMD_SHUFFLE_DECK;
-            DuelCmd_Push(cmd, 0, 0, 0);
-        } else if ((i = FindLv4(p->hand, p->handCount)) >= 0) {
-            CopyDuelCard((u32 *)&gChain.effectCard, (u32 *)&p->hand[i]);
-            halves = (u16 *)&p->hand[i];
-            cmd = link->player ? DUEL_CMD_PLAYER | DUEL_CMD_REMOVE_CARD_FROM_HAND : DUEL_CMD_REMOVE_CARD_FROM_HAND;
-            DuelCmd_Push(cmd, halves[0], halves[1], 0);
-            cmd = link->player ? DUEL_CMD_PLAYER | DUEL_CMD_COMPACT_HAND : DUEL_CMD_COMPACT_HAND;
-            DuelCmd_Push(cmd, 0, 0, 0);
-        } else {
-            return EFFECT_STEP_DONE;
-        }
-        return EFFECT_STEP_4;
-    case EFFECT_STEP_4:
-        /* the LV2's zone is free now */
-        QueueSpecialSummonChoosePosition(link->player, &gChain.effectCard, 1, 0);
-        return EFFECT_STEP_END;
-    }
-    return EFFECT_STEP_DONE;
+    return LevelUpResolve(link, CARD_MYSTIC_SWORDSMAN_LV2, CARD_MYSTIC_SWORDSMAN_LV4, sStrMysticSwordsmanLevelUp);
 }
 #endif /* HAS_CARD_MYSTIC_SWORDSMAN_LV2 && HAS_CARD_MYSTIC_SWORDSMAN_LV4 */
+
+#ifdef HAS_CARD_DARK_MIMIC_LV1
+/* ---- Dark Mimic LV1 ------------------------------------------------------------------------------------------------
+ * "FLIP: Draw 1 card. Once per turn, during your Standby Phase: You can send this card to the GY; Special Summon 1
+ *  'Dark Mimic LV3' from your hand or Deck." (the card data's text)
+ * One row, told apart by the event: a flip (HasFlipEffect, card_detail.c) draws 1; RESPONSE_OWN_STANDBY is the
+ * level-up (LevelUpResolve), activated like Jigen Bakudan's Standby effect: the human from the card menu during
+ * STANDBY_STEP_FIELD (CanActivateMonsterEffect, HasActivatableStandbyCard, the card menu's Standby case in
+ * duel_cmd_queue.c), the CPU through AiStandbyActivations, which DuelPhase_Standby calls on its turn. */
+
+int EffectDarkMimicLv1Prepare(struct ChainEntry *card, struct ChainEntry *chainLink, u16 fromHand)
+{
+    if (card->event != RESPONSE_OWN_STANDBY)
+        return 1;                       /* the flip effect */
+#ifdef HAS_CARD_DARK_MIMIC_LV3
+    return !fromHand && IsCardNumberAt(card->player, card->zone, CARD_DARK_MIMIC_LV1)
+           && HasLevelUpTarget(card->player, CARD_DARK_MIMIC_LV3);
+#else
+    return 0;
+#endif
+}
+
+int EffectDarkMimicLv1Resolve(struct ChainEntry *link, struct ChainEntry *chainedTo)
+{
+    if (link->event == RESPONSE_OWN_STANDBY) {
+#ifdef HAS_CARD_DARK_MIMIC_LV3
+        return LevelUpResolve(link, CARD_DARK_MIMIC_LV1, CARD_DARK_MIMIC_LV3, NULL);
+#else
+        return EFFECT_STEP_DONE;
+#endif
+    }
+    if (!link->negated)
+        DrawCards(link->player, 1);
+    return EFFECT_STEP_DONE;
+}
+
+/* The CPU's Standby Phase activations (DuelPhase_Standby, STANDBY_STEP_FIELD, on the CPU's turn; that step otherwise
+ * waits for the human's cursor): its first face-up Dark Mimic LV1 that may level up, once per turn. 1 if it queued
+ * one. */
+int AiStandbyActivations(int player)
+{
+    int zone;
+
+    if (gModDuel.aiStandbyTurn == gDuel.turnCount)
+        return 0;
+    gModDuel.aiStandbyTurn = gDuel.turnCount;
+    for (zone = ZONE_MONSTER_0; zone <= ZONE_MONSTER_4; zone++) {
+        u16 id = DUEL_CARD_ID(&ZoneOf(player, zone)->card);
+
+        if (IsCardNumberAt(player, zone, CARD_DARK_MIMIC_LV1)
+            && CanActivateEffectInZone(player, zone, RESPONSE_OWN_STANDBY)) {
+            DuelCmd_Push(DUEL_CMD_PLAYER | DUEL_CMD_POINT_AT_CARD, player, (u8)zone << 8, 0);
+            Chain_AddPending(TRIGGER_PLAYER(player & 1) | TRIGGER_ZONE(zone) | TRIGGER_KIND(CHAIN_KIND_MONSTER)
+                                 | TRIGGER_EVENT(RESPONSE_OWN_STANDBY) | id,
+                             0);
+            return 1;
+        }
+    }
+    return 0;
+}
+#endif /* HAS_CARD_DARK_MIMIC_LV1 */
 
 #ifdef HAS_CARD_ZOMBYRA_THE_DARK
 /* ---- Zombyra the Dark ----------------------------------------------------------------------------------------------
@@ -3023,6 +3109,16 @@ const struct CardEffect gAddedCardEffects[] = {
         EffectXingZhenHuPrepare,
         NULL,
         EffectXingZhenHuChainB,
+    },
+#endif
+#ifdef HAS_CARD_DARK_MIMIC_LV1
+    {
+        CARD_DARK_MIMIC_LV1, 0,
+        EffectDarkMimicLv1Resolve,
+        NULL,
+        EffectDarkMimicLv1Prepare,
+        NULL,
+        NULL,
     },
 #endif
 #ifdef HAS_CARD_MIND_CONTROL

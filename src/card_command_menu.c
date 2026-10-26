@@ -512,6 +512,9 @@ int CanActivateMonsterEffect(u16 id, int player, int zone)
     case CARD_BLAST_JUGGLER:
     case CARD_PATROL_ROBO:
     case CARD_JIGEN_BAKUDAN:
+#ifdef HAS_CARD_DARK_MIMIC_LV1
+    case CARD_DARK_MIMIC_LV1:                               /* added card (src/added_effects.c) */
+#endif
         if ((gDuelBytes[0x1B12] & 0x1C) != PHASE_STANDBY << 2)   /* gDuel.phase != PHASE_STANDBY */
             return 0;
         return CanActivateEffectInZone(player, zone, RESPONSE_OWN_STANDBY);
@@ -634,6 +637,9 @@ u16 CardMenu_GetMonsterCommands(u16 id, int player, int zone)
             case CARD_BLAST_JUGGLER:
             case CARD_PATROL_ROBO:
             case CARD_JIGEN_BAKUDAN:
+#ifdef HAS_CARD_DARK_MIMIC_LV1
+            case CARD_DARK_MIMIC_LV1:   /* added card: its level-up (src/added_effects.c) */
+#endif
                 if (CanActivateEffectInZoneInt(player, zone, RESPONSE_OWN_STANDBY) != 0)
                     flags |= CARDMENU_MASK_ACTIVATE;
                 break;
