@@ -9,3 +9,4 @@ Raigeki Break:
 - Possible failure bug with only 1 card in hand
 Scapegoat: AI doesn't play
 Spirit Reaper: Might not self-destruct when targeted
+Zombyra the Dark: Keeps ATK loss on flip face-down
