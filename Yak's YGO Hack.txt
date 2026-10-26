@@ -1,20 +1,6 @@
-Pokemon FireRed
-but with cookies
-Mascot: Kingler
-Use pokefirered
-Use Adric's title screen logo generator
-Use vanilla FireRed (Helvetica Neue) font
-Add Yu-Gi-Oh! cards
-Add Showdown!
-Add EDOPro duels
 Historical YGO formats (up to Reaper)
 Separate bag pocket for YGO cards
-Deck builder
-Showdown! [Gen 3] OU bot
-pkmn/ps
 Goat format
-Other Metas
-Showdown! OMs bot support
 Banlists per format
 Multiple decks per format
 Yugi Muto/Joey/Kaiba/Pegasus/Marik/Yami Marik/Yami Bakura/Yami Yugi
@@ -30,7 +16,6 @@ Rank cards
 Price cards
 Price packs
 Unlock one format at a time
-Make duels possible in pokefirered
 Multiple banlists
 Get rid of original banlist
 Up to 50 deck recipes
