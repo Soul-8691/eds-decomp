@@ -68,7 +68,7 @@ extern const u16 gCardNumberToId_GloryOfTheKingsHand;   /* gCardNumberToId[CARD_
  * gMain.opponentFixed: an event or an open match chose the opponent); 1 starts the pre-duel dialogue; 2
  * waits for it to close. Returns 1 after that.
  */
-/* Mod (src/mod_banlist.c): the Yugi-Kaiba opponent (Tristan) has no dialogue before or after a duel. */
+/* Mod (src/mod_opponents.c): this build's opponents have no dialogue before or after a duel. */
 int ModSkipsDuelDialogue(u16 duelist);
 
 u16 Campaign_SelectOpponent(void)

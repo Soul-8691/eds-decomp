@@ -246,8 +246,13 @@ u16 IsCardCollectionComplete(void)
     return 0;
 }
 
-/* Unlock condition for opponent `id` (enum DuelistId, 1 to 24); returns 1 when fulfilled. */
+/* Added: this build's opponents and their unlocks (src/mod_opponents.c). */
+int ModIsOpponentUnlocked(u16 duelist);
+
+/* Unlock condition for opponent `id` (enum DuelistId, 1 to 24); returns 1 when fulfilled. Changed: this build's
+ * opponents unlock as ModIsOpponentUnlocked says; the original conditions below are no longer reached. */
 u16 IsOpponentUnlocked(u16 id) {
+    return ModIsOpponentUnlocked(id);
     switch (id) {
     case DUELIST_REX:
     case DUELIST_ESPA_ROBA:

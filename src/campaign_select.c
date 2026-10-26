@@ -406,9 +406,11 @@ u16 OpponentSelect_FadeIn(void)
 /* Mod (src/mod_banlist.c): Tristan's format check and its warning. */
 int BanlistBlocksDuel(u16 duelist);
 int BanlistView_Run(void);
-/* Mod (src/mod_banlist.c): Tristan's name and portrait as the "Yugi-Kaiba" opponent. */
+/* Mod (src/mod_opponents.c): this build's opponents: names, portraits, hidden slots, pages. */
 const u8 *ModOpponentSelectName(u16 duelist, const u8 *name);
 void ModOpponentSelectPortraits(int page);
+int ModSlotHidden(int page, int slot);
+int ModNextPageOpen(int page);
 
 u16 OpponentSelect_HandleInput(void)
 {
@@ -421,21 +423,21 @@ u16 OpponentSelect_HandleInput(void)
     OpponentSelect_DrawDuelistInfo(PAGE_DUELIST(gOpponentSelect.page, gOpponentSelect.cursor));
 
     if (gMain.newKeys & DPAD_LEFT) {
-        if (gOpponentSelect.cursor < LAST_SLOT)
-            gOpponentSelect.cursor++;
-        else
-            gOpponentSelect.cursor = 0;
-        if (gOpponentSelect.page == OPPONENT_SELECT_LAST_PAGE && gOpponentSelect.cursor == 0)
-            gOpponentSelect.cursor = 1;
+        do {        /* changed: the mod's hidden slots (ModSlotHidden, which counts the last page's slot 0) are skipped */
+            if (gOpponentSelect.cursor < LAST_SLOT)
+                gOpponentSelect.cursor++;
+            else
+                gOpponentSelect.cursor = 0;
+        } while (ModSlotHidden(gOpponentSelect.page, gOpponentSelect.cursor));
         PlaySE(SE_CURSOR);
     }
     if (gMain.newKeys & DPAD_RIGHT) {
-        if (gOpponentSelect.cursor != 0)
-            gOpponentSelect.cursor--;
-        else
-            gOpponentSelect.cursor = LAST_SLOT;
-        if (gOpponentSelect.page == OPPONENT_SELECT_LAST_PAGE && gOpponentSelect.cursor == 0)
-            gOpponentSelect.cursor = LAST_SLOT;
+        do {
+            if (gOpponentSelect.cursor != 0)
+                gOpponentSelect.cursor--;
+            else
+                gOpponentSelect.cursor = LAST_SLOT;
+        } while (ModSlotHidden(gOpponentSelect.page, gOpponentSelect.cursor));
         PlaySE(SE_CURSOR);
     }
     if (gMain.newKeys & L_BUTTON) {
@@ -447,22 +449,9 @@ u16 OpponentSelect_HandleInput(void)
         PlaySE(SE_ERROR);
     }
     if (gMain.newKeys & R_BUTTON) {
-        /* From page N (counted from 0), page N + 1 opens at campaign level N + 2. */
-        nextPageOpen = 0;
-        switch (gOpponentSelect.page) {
-        case 0:
-            nextPageOpen = IsCampaignLevel2Unlocked();
-            break;
-        case 1:
-            nextPageOpen = IsCampaignLevel3Unlocked();
-            break;
-        case 2:
-            nextPageOpen = IsCampaignLevel4Unlocked();
-            break;
-        case 3:
-            nextPageOpen = IsCampaignLevel5Unlocked();
-            break;
-        }
+        /* Changed: every page can be visited (ModNextPageOpen); the original opened page N + 1 at campaign
+         * level N + 2. */
+        nextPageOpen = ModNextPageOpen(gOpponentSelect.page);
         if (nextPageOpen) {
             PlaySE(SE_CURSOR);
             gMain.seqIndex1 = OPPSEL_STEP_NEXT_PAGE;
@@ -633,21 +622,7 @@ void OpponentSelect_DrawPageArrows(void)
 
     if (gOpponentSelect.page != 0)
         AddSprite8bpp(0x60 << 16, SPRITE_SHAPE_16x16, 0x12C);
-    nextPageOpen = 0;
-    switch (gOpponentSelect.page) {
-    case 0:
-        nextPageOpen = IsCampaignLevel2Unlocked();
-        break;
-    case 1:
-        nextPageOpen = IsCampaignLevel3Unlocked();
-        break;
-    case 2:
-        nextPageOpen = IsCampaignLevel4Unlocked();
-        break;
-    case 3:
-        nextPageOpen = IsCampaignLevel5Unlocked();
-        break;
-    }
+    nextPageOpen = ModNextPageOpen(gOpponentSelect.page);     /* changed, as in OpponentSelect_HandleInput */
     if (nextPageOpen)
         AddSprite8bpp((0x60 << 16) | 0xE0, SPRITE_SHAPE_16x16, 0x12E);
 }
@@ -714,6 +689,12 @@ void OpponentSelect_LoadPage(s32 page)
         gOpponentSelect.cursor = LAST_SLOT;
         OpponentSelect_SnapCursor(gOpponentSelect.cursor);
     }
+    if (ModSlotHidden(page, gOpponentSelect.cursor)) {     /* added: off the mod's hidden slots */
+        for (i = 0; i <= LAST_SLOT && ModSlotHidden(page, i); i++)
+            ;
+        gOpponentSelect.cursor = i;
+        OpponentSelect_SnapCursor(gOpponentSelect.cursor);
+    }
 
     /* Names: 10-px font centred on x = 48, colour 1 over a colour-5 shadow at (+1, +1). */
     TextCanvasInitEx(32, 10, 0, 0); /* 32 x 10 tiles */
@@ -722,6 +703,8 @@ void OpponentSelect_LoadPage(s32 page)
 
         if (count != OPPONENTS_PER_PAGE)
             slot = i + 1;
+        if (ModSlotHidden(page, slot))      /* added: a hidden slot has no name */
+            continue;
         if (IsOpponentUnlockedS32(PAGE_DUELIST(page, slot)) == 0) {
             TextDrawString(0x31 - StrLen((const char *)gUnknownOpponentName) * 5 / 2, slot * 16 + 1,
                            TEXT_SIZE_COLOR(10, 5), gUnknownOpponentName);

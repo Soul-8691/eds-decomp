@@ -377,6 +377,19 @@ const struct DeckList *GetOpponentDeckOverride(int opponent)
     case DUELIST_BAKURA:
         return &sBakuraDeckList;
 #endif
+    /* The deck opponents of page 4 (src/mod_opponents.c). */
+#ifdef MOD_RED_DECK
+    case DUELIST_SIMON:
+        return &sRedDeckList;
+#endif
+#ifdef MOD_JOEY_DECK
+    case DUELIST_PEGASUS:
+        return &sJoeyDeckList;
+#endif
+#ifdef MOD_BAKURA_DECK
+    case DUELIST_GRANDPA:
+        return &sBakuraDeckList;
+#endif
     }
     return NULL;
 }

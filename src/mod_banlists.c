@@ -110,6 +110,38 @@ s32 GetBanlistCopyLimit(u32 id)
     return CARD_COPY_LIMIT_NONE;
 }
 
+/* For the format opponents' check (src/mod_banlist.c): the copies of card number `number` (base number) a deck
+ * may hold in banlist n's format: 0xFF if not in its card pool, its Forbidden/Limited limit, else 3. */
+int FormatCardLimit(int n, u16 number)
+{
+    const struct Banlist *b = &sBanlists[n];
+    int lo = 0, hi = b->count - 1;
+
+    if (!InBanlistPool(b, number))
+        return 0xFF;
+    while (lo <= hi) {
+        int mid = (lo + hi) / 2;
+
+        if (b->limits[mid].number == number)
+            return b->limits[mid].limit;
+        if (b->limits[mid].number < number)
+            lo = mid + 1;
+        else
+            hi = mid - 1;
+    }
+    return 3;
+}
+
+const char *BanlistName(int n)
+{
+    return sBanlists[n].name;
+}
+
+const char *BanlistDate(int n)
+{
+    return sBanlists[n].date;
+}
+
 /* Put banlist n in use and move the saved decks' copies over its limits back to the trunk; returns the cards moved. */
 static int SetActiveBanlist(int n)
 {

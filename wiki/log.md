@@ -1416,3 +1416,10 @@ updated: 2026-09-29
 ## [2026-10-26] progress | Unused Yugi-Kaiba pool cards cost 5 DP
 - tools/cardprices.py UNUSED_PRICE 10 -> 5.
 - Pages: [[duelist-points]].
+
+## [2026-10-26] progress | Format and deck opponents
+- New unit src/mod_opponents.c: duelist IDs re-labelled as 15 format opponents (unlocked in order, separate
+  sWinsToUnlockNext constants) and 3 deck opponents (page 4, card-art portraits); other slots hidden. The format
+  check (mod_banlist.c) now works for every format through mod_banlists.c's tables; format_yugi_kaiba.h retired.
+  IsOpponentUnlocked defers to the mod; all pages open; the cursor skips hidden slots.
+- Pages: [[yugi-kaiba-opponent]], index.
