@@ -1331,3 +1331,8 @@ updated: 2026-09-29
 - The resolve returned `EFFECT_STEP_END` (a step number, 100) when nothing was left, so the chain called it forever;
   it now returns `EFFECT_STEP_DONE`.
 - Pages: [[added-cards]].
+
+## [2026-10-26] progress | Dimension Fusion
+- 2000 LP cost; both players' banished monsters come back, one per step (the activator's first), through Return from
+  the Different Dimension's helpers. Monsters that cannot be Special Summoned now stay banished for both cards.
+- Pages: [[added-cards]].

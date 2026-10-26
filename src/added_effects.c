@@ -2084,7 +2084,7 @@ int EffectReasoningResolve(struct ChainEntry *link, struct ChainEntry *chainedTo
 }
 #endif /* HAS_CARD_REASONING && HAS_CARD_MONSTER_GATE */
 
-#ifdef HAS_CARD_RETURN_FROM_THE_DIFFERENT_DIMENSION
+#if defined(HAS_CARD_RETURN_FROM_THE_DIFFERENT_DIMENSION) || defined(HAS_CARD_DIMENSION_FUSION)
 /* ---- Return from the Different Dimension ---------------------------------------------------------------------------
  * Normal Trap: "Pay half your Life Points; Special Summon as many of your banished monsters as possible. During the End
  * Phase, banish all monsters that were Special Summoned by this effect."
@@ -2096,7 +2096,9 @@ int EffectReasoningResolve(struct ChainEntry *link, struct ChainEntry *chainedTo
  *            (QueueSpecialSummonChoosePosition; the chain waits for each summon). Each one's zone and card ID go to
  *            gModDuel.dimensionReturn.
  *   DuelPhase_End (battle_phase3.c)  EndPhase_ReturnFromTheDifferentDimension banishes the marked monsters still in
- *            their zones, then clears the marks. */
+ *            their zones, then clears the marks.
+ * A monster that cannot be Special Summoned (IsCannotSpecialSummon) stays banished: QueueSpecialSummonChoosePosition
+ * would drop it after it left the pile. Dimension Fusion shares the helpers. */
 
 static int IsDimensionReturnMonster(struct DuelPlayer *p, int i)
 {
@@ -2105,6 +2107,7 @@ static int IsDimensionReturnMonster(struct DuelPlayer *p, int i)
 
     return (p->banishedInfo[i] & 0xFF) == BANISH_NORMAL
            && CARD_STATS_TYPE(gCardStats[id & CARD_ID_MASK]) <= CARD_TYPE_REPTILE
+           && !IsCannotSpecialSummon(id & CARD_ID_MASK)
            && (u16)(number - CARD_NUMBER_TOKEN_FIRST) >= CARD_NUMBER_TOKEN_END - CARD_NUMBER_TOKEN_FIRST;
 }
 
@@ -2125,6 +2128,39 @@ static int StrongestDimensionReturn(int player)
     return best;
 }
 
+static int CountDimensionReturns(int player)
+{
+    struct DuelPlayer *p = &gDuelPlayers[player & 1];
+    int i, n = 0;
+
+    for (i = 0; i < p->banishedCount; i++)
+        n += IsDimensionReturnMonster(p, i);
+    return n;
+}
+
+/* Special Summon the player's strongest such monster (the position is the player's pick), marking its zone for the
+ * End Phase if asked. 0 with no zone or no monster. */
+static int DimensionReturnOne(int player, int mark)
+{
+    struct DuelPlayer *p = &gDuelPlayers[player & 1];
+    struct DuelCard card;
+    int zone = FindFreeMonsterZone(player);
+    int i = StrongestDimensionReturn(player);
+
+    if (zone < 0 || i < 0)
+        return 0;
+    card = p->banished[i];
+    RemoveBanishedCardAt(player, i);
+    if (mark) {
+        gModDuel.dimensionReturn |= 1 << ((player & 1) * 5 + zone);
+        gModDuel.dimensionReturnIds[(player & 1) * 5 + zone] = DUEL_CARD_ID(&card);
+    }
+    QueueSpecialSummonChoosePosition(player, &card, 1, 0);
+    return 1;
+}
+#endif /* HAS_CARD_RETURN_FROM_THE_DIFFERENT_DIMENSION || HAS_CARD_DIMENSION_FUSION */
+
+#ifdef HAS_CARD_RETURN_FROM_THE_DIFFERENT_DIMENSION
 int EffectReturnFromTheDifferentDimensionPrepare(struct ChainEntry *card, struct ChainEntry *chainLink, u16 fromHand)
 {
     return !fromHand && CountFreeMonsterZones(card->player) > 0 && StrongestDimensionReturn(card->player) >= 0;
@@ -2141,23 +2177,10 @@ int EffectReturnFromTheDifferentDimensionChainA(struct ChainEntry *link, struct 
 
 int EffectReturnFromTheDifferentDimensionResolve(struct ChainEntry *link, struct ChainEntry *chainedTo)
 {
-    struct DuelPlayer *p = &gDuelPlayers[link->player & 1];
-    struct DuelCard card;
-    int i, zone;
-
     if (link->negated)
         return EFFECT_STEP_DONE;
-    /* EFFECT_STEP_START and every later call: one more monster, if possible */
-    zone = FindFreeMonsterZone(link->player);
-    i = StrongestDimensionReturn(link->player);
-    if (zone < 0 || i < 0)
-        return EFFECT_STEP_DONE;    /* the last summon is done: the link is finished */
-    card = p->banished[i];
-    RemoveBanishedCardAt(link->player, i);
-    gModDuel.dimensionReturn |= 1 << ((link->player & 1) * 5 + zone);
-    gModDuel.dimensionReturnIds[(link->player & 1) * 5 + zone] = DUEL_CARD_ID(&card);
-    QueueSpecialSummonChoosePosition(link->player, &card, 1, 0);
-    return EFFECT_STEP_2;
+    /* EFFECT_STEP_START and every later call: one more monster, if possible; done once the last summon is */
+    return DimensionReturnOne(link->player, 1) ? EFFECT_STEP_2 : EFFECT_STEP_DONE;
 }
 
 void EndPhase_ReturnFromTheDifferentDimension(void)
@@ -2175,6 +2198,43 @@ void EndPhase_ReturnFromTheDifferentDimension(void)
     gModDuel.dimensionReturn = 0;
 }
 #endif /* HAS_CARD_RETURN_FROM_THE_DIFFERENT_DIMENSION */
+
+#ifdef HAS_CARD_DIMENSION_FUSION
+/* ---- Dimension Fusion ----------------------------------------------------------------------------------------------
+ * Normal Spell: "Pay 2000 Life Points. Both players Special Summon as many of their removed from play monsters as
+ * possible."
+ *   prepare  2000 LP, and a free zone and a banished monster (Return from the Different Dimension's kind) for either
+ *            player
+ *   chainA   2000 LP (DUEL_CMD_LOSE_LP, a cost)
+ *   resolve  one monster per step, the strongest ATK first (DimensionReturnOne): the activating player's until none
+ *            can come, then the opponent's; each player picks their own monsters' positions. */
+
+static int CanDimensionFuse(int player)
+{
+    return CountFreeMonsterZones(player) > 0 && StrongestDimensionReturn(player) >= 0;
+}
+
+int EffectDimensionFusionPrepare(struct ChainEntry *card, struct ChainEntry *chainLink, u16 fromHand)
+{
+    return gDuelPlayers[card->player & 1].lifePoints >= 2000
+           && (CanDimensionFuse(card->player) || CanDimensionFuse(1 - card->player));
+}
+
+int EffectDimensionFusionChainA(struct ChainEntry *link, struct ChainEntry *prevLink)
+{
+    DuelCmd_Push(link->player ? DUEL_CMD_PLAYER | DUEL_CMD_LOSE_LP : DUEL_CMD_LOSE_LP, 2000, 1, 0);
+    return 1;
+}
+
+int EffectDimensionFusionResolve(struct ChainEntry *link, struct ChainEntry *chainedTo)
+{
+    if (link->negated)
+        return EFFECT_STEP_DONE;
+    if (DimensionReturnOne(link->player, 0) || DimensionReturnOne(1 - link->player, 0))
+        return EFFECT_STEP_2;
+    return EFFECT_STEP_DONE;
+}
+#endif /* HAS_CARD_DIMENSION_FUSION */
 
 #ifdef HAS_CARD_MIND_CONTROL
 /* ---- Mind Control --------------------------------------------------------------------------------------------------
@@ -3451,12 +3511,18 @@ int AiShouldActivateAddedCard(struct ChainEntry *entry)
                    || entry->event == RESPONSE_FLIP_SUMMONED || entry->event == RESPONSE_SPECIAL_SUMMONED);
 #endif
 #ifdef HAS_CARD_RETURN_FROM_THE_DIFFERENT_DIMENSION
-    case CARD_RETURN_FROM_THE_DIFFERENT_DIMENSION: {    /* two or more monsters back, with LP to spare */
-        struct DuelPlayer *p = &gDuelPlayers[AI_PLAYER];
-        int i, n = 0;
-        for (i = 0; i < p->banishedCount; i++)
-            n += IsDimensionReturnMonster(p, i);
-        return n >= 2 && CountFreeMonsterZones(AI_PLAYER) >= 2 && p->lifePoints > 2000;
+    case CARD_RETURN_FROM_THE_DIFFERENT_DIMENSION:     /* two or more monsters back, with LP to spare */
+        return CountDimensionReturns(AI_PLAYER) >= 2 && CountFreeMonsterZones(AI_PLAYER) >= 2
+               && gDuelPlayers[AI_PLAYER].lifePoints > 2000;
+#endif
+#ifdef HAS_CARD_DIMENSION_FUSION
+    case CARD_DIMENSION_FUSION: {               /* two or more monsters back, more than the human gets */
+        int mine = CountDimensionReturns(AI_PLAYER), theirs = CountDimensionReturns(1 - AI_PLAYER);
+        if (mine > CountFreeMonsterZones(AI_PLAYER))
+            mine = CountFreeMonsterZones(AI_PLAYER);
+        if (theirs > CountFreeMonsterZones(1 - AI_PLAYER))
+            theirs = CountFreeMonsterZones(1 - AI_PLAYER);
+        return mine >= 2 && mine > theirs && gDuelPlayers[AI_PLAYER].lifePoints > 3000;
     }
 #endif
 #ifdef HAS_CARD_XING_ZHEN_HU
@@ -3667,6 +3733,16 @@ const struct CardEffect gAddedCardEffects[] = {
         NULL,
         EffectReturnFromTheDifferentDimensionPrepare,
         EffectReturnFromTheDifferentDimensionChainA,
+        NULL,
+    },
+#endif
+#ifdef HAS_CARD_DIMENSION_FUSION
+    {
+        CARD_DIMENSION_FUSION, 0,
+        EffectDimensionFusionResolve,
+        NULL,
+        EffectDimensionFusionPrepare,
+        EffectDimensionFusionChainA,
         NULL,
     },
 #endif

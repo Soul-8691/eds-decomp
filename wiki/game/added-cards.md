@@ -350,6 +350,19 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
 - Number side effect as for Magic Cylinder: the added cards after it in the list moved down one free number.
 - Checked in the source and the build; not tested in an emulator.
 
+### Dimension Fusion (2026-10-26)
+- Normal Spell: "Pay 2000 Life Points. Both players Special Summon as many of their removed from play monsters as
+  possible."
+- Shares Return from the Different Dimension's helpers (`DimensionReturnOne`, `StrongestDimensionReturn`), without
+  the End Phase mark.
+- **Prepare.** At least 2000 LP, plus a free zone and an eligible banished monster for either player. **Cost:**
+  ChainA pushes `DUEL_CMD_LOSE_LP` 2000.
+- **Resolve.** One monster per step, strongest ATK first: the activating player's until none can come, then the
+  opponent's. Each player picks their own monsters' positions.
+- **CPU.** Activates it when at least 2 of its monsters would come back (capped by its free zones), more than the
+  human gets, and it has more than 3000 LP.
+- Checked in the source and the build; not tested in an emulator.
+
 ### Return from the Different Dimension (2026-10-26)
 - Normal Trap: "Pay half your Life Points; Special Summon as many of your banished monsters as possible. During the
   End Phase, banish all monsters that were Special Summoned by this effect."
@@ -364,6 +377,10 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
   `DuelPhase_End` (battle_phase3.c), banishes each marked monster still in its zone (same card ID), then clears the
   marks.
 - **CPU.** Activates it with two or more eligible monsters, two free zones and more than 2000 LP.
+- A monster that cannot be Special Summoned (`IsCannotSpecialSummon`) stays banished:
+  `QueueSpecialSummonChoosePosition` would drop it after it left the pile.
+- Fixed: the resolve returned `EFFECT_STEP_END` (a step number) when nothing was left, a soft-lock; it now returns
+  `EFFECT_STEP_DONE`.
 - Checked in the source and the build; not tested in an emulator.
 
 ### Reasoning (2026-10-26)
