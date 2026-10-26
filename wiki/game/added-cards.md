@@ -211,6 +211,21 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
 - `HasFlipEffect` (card_detail.c).
 - Checked in the source; not tested in an emulator.
 
+### Zombyra the Dark (2026-10-25)
+- "This card cannot attack directly. Each time this card destroys a monster by battle, it loses 200 ATK."
+- **No effect row.**
+  - **Direct attacks.** A direct attack is what happens when the opponent has no monster (`CanAttackDirectly` only
+    lists the monsters that may attack directly past the opponent's monsters). So `CanMonsterAttack`
+    (card_menu_input.c) refuses Zombyra while the opponent has no monster. The CPU's attack pick (ai_picks.c)
+    lists its attackers with the same test.
+  - **ATK loss.** `BattleStage_DestroyMonsters` now calls one `AddedCardsAfterBattle` for the added cards'
+    battle-kill effects (Mystic Swordsman LV2 and Zombyra). A Zombyra that survives a battle which destroyed the
+    other monster queues a self link `ZONE_LINK_KIND(ZONE_LINK_ATK_DOWN_200, 1)` from its own card ID. `AddZoneLink`
+    raises the count of an existing link with the same target, and the stat code takes 200 per count. The link goes
+    with the card when it leaves the field.
+- **Not modelled:** turned face down, it keeps the lost ATK; on the real card its effects would reset.
+- Checked in the source and the build; not tested in an emulator.
+
 ### Smashing Ground (2026-10-25)
 - Normal Spell: "Destroy the 1 face-up monster your opponent controls that has the highest DEF (your choice, if
   tied)."
@@ -352,7 +367,7 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
   hand or Deck."
 - **The attack.** It uses Sasuke's `DestroyTargetBeforeDamageStep`, which now has a per-card condition: Sasuke takes
   any Defense Position target, LV2 only a face-down one. That destruction is by effect, so it is not a battle kill.
-- **Battle kills.** `BattleStage_DestroyMonsters` calls `MysticSwordsmanAfterBattle` once per battle, after D.D.
+- **Battle kills.** `BattleStage_DestroyMonsters` calls `MysticSwordsmanAfterBattle` (through `AddedCardsAfterBattle`) once per battle, after D.D.
   Warrior Lady's question. An LV2 on either side whose opponent's monster the battle destroyed gets bit
   `player * 5 + zone` in `gModDuel.battleKills`.
 - **Level-up.** `DuelPhase_End` (next to Tsukuyomi's hook) calls `EndPhase_MysticSwordsmanLevelUp`. Each marked zone

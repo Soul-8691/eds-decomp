@@ -972,6 +972,48 @@ int EffectMysticSwordsmanLv2Resolve(struct ChainEntry *link, struct ChainEntry *
 }
 #endif /* HAS_CARD_MYSTIC_SWORDSMAN_LV2 && HAS_CARD_MYSTIC_SWORDSMAN_LV4 */
 
+#ifdef HAS_CARD_ZOMBYRA_THE_DARK
+/* ---- Zombyra the Dark ----------------------------------------------------------------------------------------------
+ * "This card cannot attack directly. Each time this card destroys a monster by battle, it loses 200 ATK."
+ *   CanMonsterAttack (card_menu_input.c; the CPU's attacker list uses it too)   it may not attack while the opponent
+ *                                                                              has no monster (that is a direct attack)
+ *   BattleStage_DestroyMonsters (battle_phase2.c, AddedCardsAfterBattle)        when it survives a battle that
+ *                                                                              destroyed the other monster, a self link
+ *                                                                              ZONE_LINK_ATK_DOWN_200 (from its card ID;
+ *                                                                              AddZoneLink raises the count of an
+ *                                                                              existing one) takes 200 ATK more
+ * The link goes with the card when it leaves the field. */
+static void ZombyraAfterBattle(int player)
+{
+    int side, who, zone;
+
+    for (side = 0; side <= 1; side++) {
+        if (gBattle.direct && side)
+            continue;
+        who = side ? 1 - player : player;
+        zone = side ? gBattle.defSlot : gBattle.atkSlot;
+        if (((const u16 *)CARD_ID_TO_NUMBER_ADDR)[gBattle.side[who].cardId & CARD_ID_MASK] == CARD_ZOMBYRA_THE_DARK
+            && gBattle.side[1 - who].destroyed && !gBattle.side[who].destroyed)
+            QueueAddZoneLink(who, gBattle.side[who].cardId & CARD_ID_MASK, DUEL_LOC(who, zone),
+                             ZONE_LINK_KIND(ZONE_LINK_ATK_DOWN_200, 1));
+    }
+}
+#endif /* HAS_CARD_ZOMBYRA_THE_DARK */
+
+#if (defined(HAS_CARD_MYSTIC_SWORDSMAN_LV2) && defined(HAS_CARD_MYSTIC_SWORDSMAN_LV4)) \
+    || defined(HAS_CARD_ZOMBYRA_THE_DARK)
+/* BattleStage_DestroyMonsters calls this once per battle, before the destroyed monsters leave the field. */
+void AddedCardsAfterBattle(int player)
+{
+#if defined(HAS_CARD_MYSTIC_SWORDSMAN_LV2) && defined(HAS_CARD_MYSTIC_SWORDSMAN_LV4)
+    MysticSwordsmanAfterBattle(player);
+#endif
+#ifdef HAS_CARD_ZOMBYRA_THE_DARK
+    ZombyraAfterBattle(player);
+#endif
+}
+#endif
+
 #ifdef HAS_CARD_SMASHING_GROUND
 /* ---- Smashing Ground -----------------------------------------------------------------------------------------------
  * Normal Spell: "Destroy the 1 face-up monster your opponent controls that has the highest DEF (your choice, if tied)."

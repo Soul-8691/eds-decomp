@@ -98,6 +98,8 @@ void ModDuelInit(void);
 /* Mystic Swordsman LV2 (src/added_effects.c): its battle kills (BattleStage_DestroyMonsters) and its End Phase
  * level-up trigger (DuelPhase_End). */
 void MysticSwordsmanAfterBattle(int player);
+/* The battle-kill hooks of the added cards (Mystic Swordsman LV2, Zombyra the Dark), from BattleStage_DestroyMonsters. */
+void AddedCardsAfterBattle(int player);
 void EndPhase_MysticSwordsmanLevelUp(int turnPlayer);
 void InjectionFairyLilyEndAttack(int player);
 /* Night Assailant (src/added_effects.c): its discard effect's targets, and the trigger DiscardHandCard queues. */

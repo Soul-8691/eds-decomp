@@ -1191,3 +1191,9 @@ updated: 2026-09-29
 - Normal Spell: destroys the opponent's face-up monster with the highest DEF; on a tie the human picks with the
   cursor and the CPU takes the first.
 - Pages: [[added-cards]].
+
+## [2026-10-25] progress | Zombyra the Dark
+- CanMonsterAttack refuses it while the opponent has no monster (no direct attack). Each battle kill it survives
+  adds to a stacking ZONE_LINK_ATK_DOWN_200 self link, from the new AddedCardsAfterBattle hook (shared with
+  Mystic Swordsman LV2).
+- Pages: [[added-cards]].

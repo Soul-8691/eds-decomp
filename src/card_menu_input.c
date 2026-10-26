@@ -453,6 +453,11 @@ u16 CanMonsterAttack(int player, int zone, u16 flag)
     if (IsMindControlled(player, zone))         /* added card: a monster taken by Mind Control */
         return 0;
 #endif
+#ifdef HAS_CARD_ZOMBYRA_THE_DARK
+    /* added card: Zombyra the Dark cannot attack directly (the opponent has no monster to attack) */
+    if (DuelCardNumber(id) == CARD_ZOMBYRA_THE_DARK && CountMonsters(1 - player) == 0)
+        return 0;
+#endif
     if (flag != 0) {
         switch (DuelCardNumber(id)) {
         case CARD_DARK_ELF:
