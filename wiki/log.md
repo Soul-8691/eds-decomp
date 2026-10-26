@@ -1449,3 +1449,8 @@ updated: 2026-09-29
 - mod_decks.c: Tomato Control, Recruiter Control, Germ Burn (main + extra); the Treasure opponent picks 80/10/10;
   presets 06-08 (Chaos Turbo, Warrior, Goat Control now 09-11). Recipe rows cut names over 28 characters.
 - Pages: [[deck-recipes]], [[yugi-kaiba-opponent]].
+
+## [2026-10-26] progress | Imperial's decks; recipe presets 09-10
+- mod_decks.c: Aretos-Tomato Control and bsocks-Relinquished (main + extra); the Imperial opponent picks 80/20;
+  presets 09-10 (Chaos Turbo, Warrior, Goat Control now 11-13).
+- Pages: [[deck-recipes]], [[yugi-kaiba-opponent]].

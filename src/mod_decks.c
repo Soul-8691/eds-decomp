@@ -587,6 +587,111 @@ static const struct DeckList *TreasureDeck(void)
     return &sTreasureTomatoControlList;
 }
 
+/* The Imperial format opponent (Mako Tsunami's slot, src/mod_opponents.c): one of two decks per duel (ImperialDeck):
+ * Tomato Control 80%, Relinquished 20% (decks/Aretos-Tomato Control.ydk, decks/bsocks-Relinquished.ydk; main and
+ * extra decks). Thousand Dragon is the .ydk's 41462083. Both run the added Black Skull Dragon and Thousand-Eyes
+ * Restrict. */
+#if defined(HAS_CARD_BLACK_SKULL_DRAGON) && defined(HAS_CARD_THOUSAND_EYES_RESTRICT)
+#define MOD_IMPERIAL_DECKS 1
+static const u16 sImperialTomatoControl[] = {
+    /* Monsters (17) */
+    X3(CARD_MECHANICALCHASER),
+    CARD_GIANT_SOLDIER_OF_STONE,
+    CARD_JINZO,
+    X2(CARD_MAGICIAN_OF_FAITH),
+    X2(CARD_MAN_EATER_BUG),
+    CARD_MORPHING_JAR,
+    X3(CARD_MYSTIC_TOMATO),
+    X2(CARD_SANGAN),
+    CARD_WITCH_OF_THE_BLACK_FOREST,
+    CARD_CANNON_SOLDIER,
+    /* Spells (18) */
+    X3(CARD_MYSTICAL_SPACE_TYPHOON),
+    X2(CARD_NOBLEMAN_OF_CROSSOUT),
+    CARD_FISSURE,
+    CARD_RAIGEKI,
+    CARD_DARK_HOLE,
+    CARD_CHANGE_OF_HEART,
+    CARD_SNATCH_STEAL,
+    CARD_DELINQUENT_DUO,
+    CARD_CONFISCATION,
+    CARD_THE_FORCEFUL_SENTRY,
+    CARD_HEAVY_STORM,
+    CARD_PAINFUL_CHOICE,
+    CARD_POT_OF_GREED,
+    CARD_MONSTER_REBORN,
+    CARD_PREMATURE_BURIAL,
+    /* Traps (5) */
+    CARD_CALL_OF_THE_HAUNTED,
+    CARD_IMPERIAL_ORDER,
+    CARD_MIRROR_FORCE,
+    CARD_TRAP_HOLE,
+    CARD_DUST_TORNADO,
+    /* Fusion Deck (15) */
+    CARD_BLACK_SKULL_DRAGON,
+    CARD_TWIN_HEADED_THUNDER_DRAGON,
+    CARD_LABYRINTH_TANK,
+    CARD_THOUSAND_DRAGON,
+    CARD_ROARING_OCEAN_SNAKE,
+    CARD_PUNISHED_EAGLE,
+    CARD_KWAGAR_HERCULES,
+    CARD_WARRIOR_OF_TRADITION,
+    CARD_DEEPSEA_SHARK,
+    CARD_MUSICIAN_KING,
+    CARD_DARKFIRE_DRAGON,
+    CARD_DRAGONESS_THE_WICKED_KNIGHT,
+    X3(CARD_THOUSAND_EYES_RESTRICT),
+};
+STATIC_ASSERT(ARRAY_COUNT(sImperialTomatoControl) == 40 + 15, ImperialTomatoControlSize);
+static const struct DeckList sImperialTomatoControlList = { sImperialTomatoControl,
+                                                            ARRAY_COUNT(sImperialTomatoControl), 0 };
+
+static const u16 sImperialRelinquished[] = {
+    /* Monsters (19) */
+    CARD_JINZO,
+    X3(CARD_MAGICIAN_OF_FAITH),
+    X3(CARD_MYSTIC_TOMATO),
+    X2(CARD_SANGAN),
+    X2(CARD_SENJU_OF_THE_THOUSAND_HANDS),
+    X2(CARD_SONIC_BIRD),
+    CARD_WITCH_OF_THE_BLACK_FOREST,
+    X3(CARD_MECHANICALCHASER),
+    X2(CARD_RELINQUISHED),
+    /* Spells (15) */
+    X2(CARD_BLACK_ILLUSION_RITUAL),
+    CARD_CHANGE_OF_HEART,
+    CARD_CONFISCATION,
+    CARD_DARK_HOLE,
+    CARD_DELINQUENT_DUO,
+    CARD_MONSTER_REBORN,
+    X3(CARD_MYSTICAL_SPACE_TYPHOON),
+    CARD_POT_OF_GREED,
+    CARD_PREMATURE_BURIAL,
+    CARD_RAIGEKI,
+    CARD_SNATCH_STEAL,
+    CARD_THE_FORCEFUL_SENTRY,
+    /* Traps (6) */
+    CARD_CALL_OF_THE_HAUNTED,
+    CARD_IMPERIAL_ORDER,
+    CARD_MIRROR_FORCE,
+    X3(CARD_SOLEMN_JUDGMENT),
+    /* Fusion Deck (15) */
+    X3(CARD_BLACK_SKULL_DRAGON),
+    X3(CARD_LABYRINTH_TANK),
+    X3(CARD_METAL_DRAGON),
+    X3(CARD_THOUSAND_EYES_RESTRICT),
+    X3(CARD_TWIN_HEADED_THUNDER_DRAGON),
+};
+STATIC_ASSERT(ARRAY_COUNT(sImperialRelinquished) == 40 + 15, ImperialRelinquishedSize);
+static const struct DeckList sImperialRelinquishedList = { sImperialRelinquished, ARRAY_COUNT(sImperialRelinquished), 0 };
+
+/* The Imperial opponent's deck for this duel: Tomato Control 8 in 10, Relinquished 2 in 10. */
+static const struct DeckList *ImperialDeck(void)
+{
+    return (u32)Random() % 10 < 8 ? &sImperialTomatoControlList : &sImperialRelinquishedList;
+}
+#endif
+
 /* The replacement deck of opponent `opponent` (enum DuelistId), or NULL to keep the original. */
 const struct DeckList *GetOpponentDeckOverride(int opponent)
 {
@@ -600,6 +705,10 @@ const struct DeckList *GetOpponentDeckOverride(int opponent)
 #ifdef MOD_TRISTAN_DECKS
     case DUELIST_TRISTAN:
         return TristanDeck();
+#endif
+#ifdef MOD_IMPERIAL_DECKS
+    case DUELIST_MAKO:                  /* the Imperial format opponent */
+        return ImperialDeck();
 #endif
     case DUELIST_ESPA_ROBA:             /* the Treasure format opponent */
         return TreasureDeck();
@@ -649,6 +758,8 @@ static const char sNameMukaMukaTurbo[] = "Gyomberman-Muka Muka Turbo";
 static const char sNameTomatoControl[] = "dump truck-Tomato Control";
 static const char sNameRecruiterControl[] = "SolEmerald69-Recruiter Control";
 static const char sNameGermBurn[] = "bsocks-Germ Burn";
+static const char sNameImperialTomato[] = "Aretos-Tomato Control";
+static const char sNameRelinquished[] = "bsocks-Relinquished";
 static const char sNameChaosTurbo[] = "LR-Chaos Turbo";
 static const char sNameWarrior[] = "sdlkilla-Warrior";
 static const char sNameGoatControl[] = "geistD-Goat Control";
@@ -672,6 +783,10 @@ static const struct RecipePreset sRecipePresets[] = {
     { sNameRecruiterControl, &sTreasureRecruiterControlList },
 #endif
     { sNameGermBurn, &sTreasureGermBurnList },
+#ifdef MOD_IMPERIAL_DECKS
+    { sNameImperialTomato, &sImperialTomatoControlList },
+    { sNameRelinquished, &sImperialRelinquishedList },
+#endif
 #ifdef MOD_RED_DECK
     { sNameChaosTurbo, &sRedDeckList },
 #endif

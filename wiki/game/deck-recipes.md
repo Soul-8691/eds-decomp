@@ -26,7 +26,7 @@ An eighth main-menu item added by this build (`src/mod_recipes.c`, a `@farcode`/
   - `MainMenu_Init` writes the label to tiles 0x200-0x23F, the two tile rows after the 0x4000-byte sheet.
 
 ## Preset recipes
-The SRAM area is set up on the first visit (and after a New Game) with recipes 01-11 from `GetRecipePreset` (src/mod_decks.c). These are the
+The SRAM area is set up on the first visit (and after a New Game) with recipes 01-13 from `GetRecipePreset` (src/mod_decks.c). These are the
 mod's deck tables, named after their .ydk files:
 
 | Slot | Name | Deck table |
@@ -39,9 +39,11 @@ mod's deck tables, named after their .ydk files:
 | 06 | dump truck-Tomato Control | the Treasure opponent (80%) |
 | 07 | SolEmerald69-Recruiter Control | the Treasure opponent (10%) |
 | 08 | bsocks-Germ Burn | the Treasure opponent (10%) |
-| 09 | LR-Chaos Turbo | Red starter, Tea, the Chaos Turbo deck opponent |
-| 10 | sdlkilla-Warrior | Green starter, the Warrior deck opponent |
-| 11 | geistD-Goat Control | Black starter, the Goat Control deck opponent |
+| 09 | Aretos-Tomato Control | the Imperial opponent (80%) |
+| 10 | bsocks-Relinquished | the Imperial opponent (20%) |
+| 11 | LR-Chaos Turbo | Red starter, Tea, the Chaos Turbo deck opponent |
+| 12 | sdlkilla-Warrior | Green starter, the Warrior deck opponent |
+| 13 | geistD-Goat Control | Black starter, the Goat Control deck opponent |
 
 - Fusion Monsters in a table go to the recipe's Fusion Deck. There are no Side Decks, as with the opponents' decks.
 - A table that this build leaves out (its cards aren't all in the card list) is skipped.
