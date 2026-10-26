@@ -757,12 +757,20 @@ int EffectDestroyAndGiveMonsterChainB(struct ChainEntry *link)
 
 /* ChainB of key 1220 (no EDS card): prompt, then a pick among the opponent's monsters to tribute; returns 1
  * after the pick even if TryAddEffectTarget refused it. B goes back to step 0. */
+#ifdef HAS_CARD_SOUL_EXCHANGE
+int SoulExchangeCpuChainB(struct ChainEntry *link);     /* mod (src/added_effects.c) */
+#endif
 int EffectTributeOpponentMonsterChainB(struct ChainEntry *link)
 {
     u8 *chain = gChainBytes;
     u8 *step = chain + TARGET_STEP;
     /* FAKEMATCH: one shared zero for the step-0 return and the B branch (see EffectBlockAttackChainB). */
     int zero = 0;
+
+#ifdef HAS_CARD_SOUL_EXCHANGE
+    if (link->player)           /* mod: the CPU's Soul Exchange; the steps below are UI */
+        return SoulExchangeCpuChainB(link);
+#endif
 
     if (*step == 0) {
         link->numTargets = 0;

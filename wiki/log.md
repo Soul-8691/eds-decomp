@@ -1244,3 +1244,9 @@ updated: 2026-09-29
 - TristanDeck: Soul Control 50%, Vanilla Beat 30%, Stall Mill 20% (Random() % 10, once per duel in
   LoadOpponentDeck). Main decks of the three new .ydk files, verified against the compiled arrays.
 - Pages: [[added-cards]].
+
+## [2026-10-25] progress | Soul Exchange
+- Effect key 1220 is the engine's Soul Exchange; ENGINE_NUMBERS gives the card 1220. The engine's summon paths
+  Tributed the opponent's zone 0 (packed DUEL_LOC passed as the player): fixed. A CPU target and resolve were added
+  (SoulExchangeCpuChainB / SoulExchangeCpuResolve).
+- Pages: [[added-cards]].

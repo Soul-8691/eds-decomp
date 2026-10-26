@@ -67,6 +67,8 @@ TOKEN_NUMBERS = {
 ENGINE_NUMBERS = {
     'Thousand-Eyes Idol': 1333,     # the second material of recipe 1334 (gFusionRecipes2: 730 + 1333)
     'Thousand-Eyes Restrict': 1334, # key 1334: Relinquished's absorb, the attack/position lock, recipe 730 + 1333
+    'Soul Exchange': 1220,          # key 1220: EffectCanTributeOpponentMonsterPrepare, EffectSkipBattlePhaseChainA,
+                                    # EffectTributeOpponentMonsterChainB / Resolve (CPU path: src/added_effects.c)
     'Magic Cylinder': 1214,         # key 1214: EffectAttackResponsePrepare / Resolve (negate the attack, the
                                     # attacker's player loses its ATK); the CPU's trap logic knows it (ai_summon.c)
 }

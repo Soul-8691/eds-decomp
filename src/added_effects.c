@@ -2378,6 +2378,85 @@ int IsGravekeeperMonster(u16 id)
  * it asks the human, lists the candidates (CollectEffectTargets, effect_target_collect.c: deck "Gravekeeper's"
  * monsters with ATK 1500 or less, not Fusion or Ritual), Special Summons the pick in Attack Position and shuffles. */
 
+#ifdef HAS_CARD_SOUL_EXCHANGE
+/* ---- Soul Exchange -------------------------------------------------------------------------------------------------
+ * Normal Spell: "Target 1 monster your opponent controls; this turn, if you Tribute a monster, you must Tribute that
+ * monster, as if you controlled it. You cannot conduct your Battle Phase the turn you activate this card."
+ * The engine's effect key 1220 (tools/newcards.py ENGINE_NUMBERS gives the card that number): prepare
+ * EffectCanTributeOpponentMonsterPrepare (Main Phase 1, a level 5+ monster to Tribute Summon or a Catapult Turtle-like
+ * monster), chainA EffectSkipBattlePhaseChainA, chainB EffectTributeOpponentMonsterChainB, resolve
+ * EffectTributeOpponentMonsterResolve (a Tribute Summon from the hand, or the Tribute of a Catapult Turtle, The Little
+ * Swordsman of Aile or Cannon Soldier). Two fixes in effect_resolve8.c: the summon paths Tributed the opponent's zone 0
+ * (the packed target was passed as the player), and the steps are cursor UI only, so the CPU gets these: */
+
+/* The CPU targets the human's strongest monster. */
+int SoulExchangeCpuChainB(struct ChainEntry *link)
+{
+    int zone = AiFindStrongestMonster(0, -1, 1, 1);
+
+    link->numTargets = 0;
+    if (zone >= 0)
+        TryAddEffectTarget(link, 0, zone);
+    return 1;
+}
+
+/* The CPU's own weakest monster it may Tribute, -1 for none. */
+static int WeakestOwnTribute(int player)
+{
+    int zone, best = -1;
+    u32 bestAtk = 0;
+
+    for (zone = ZONE_MONSTER_0; zone <= ZONE_MONSTER_4; zone++) {
+        if (IsTributableMonster(player, zone) && (best < 0 || GetZoneCardAtk(player, zone) < bestAtk)) {
+            best = zone;
+            bestAtk = GetZoneCardAtk(player, zone);
+        }
+    }
+    return best;
+}
+
+/* The CPU Tribute Summons its strongest level 5+ hand monster with the target (and, for level 7+, its own weakest
+ * monster). */
+int SoulExchangeCpuResolve(struct ChainEntry *link)
+{
+    struct DuelPlayer *p = &gDuelPlayers[link->player & 1];
+    int targetPlayer = (u8)link->targets[0];
+    int targetZone = link->targets[0] >> 8;
+    int i, best = -1, zone, own;
+    u32 bestAtk = 0;
+
+    if (link->numTargets < 1 || DUEL_CARD_ID(&ZoneOf(targetPlayer, targetZone)->card) == 0 || p->normalSummonUsed)
+        return EFFECT_STEP_DONE;
+    own = WeakestOwnTribute(link->player);
+    for (i = 0; i < p->handCount; i++) {
+        u16 id = DUEL_CARD_ID(&p->hand[i]);
+        u32 stats = gCardStats[id & CARD_ID_MASK];
+        int level = CARD_STATS_LEVEL(stats);
+
+        if (CARD_STATS_TYPE(stats) > CARD_TYPE_REPTILE || IsSpecialSummonOnly(id) || level <= 4)
+            continue;
+        if (level <= 6 ? FindFreeMonsterZone(link->player) < 0 : own < 0)
+            continue;
+        if (best < 0 || CARD_STATS_ATK(stats) > bestAtk) {
+            best = i;
+            bestAtk = CARD_STATS_ATK(stats);
+        }
+    }
+    if (best < 0)
+        return EFFECT_STEP_DONE;
+    TributeMonster(targetPlayer, targetZone);
+    if (CARD_STATS_LEVEL(gCardStats[DUEL_CARD_ID(&p->hand[best]) & CARD_ID_MASK]) > 6) {
+        TributeMonster(link->player, own);
+        zone = own;
+    } else {
+        zone = FindFreeMonsterZone(link->player);
+    }
+    p->normalSummonUsed = 1;
+    QueueNormalSummonChoosePosition(link->player, best, zone, 0);
+    return EFFECT_STEP_DONE;
+}
+#endif /* HAS_CARD_SOUL_EXCHANGE */
+
 /* ---- The CPU and the added cards --------------------------------------------------------------------------------
  * The CPU's logic decides card by card, by card number (ai_deck.c, ai_summon.c, ai_turn_steps.c), so it never chose
  * an added card: AiPlaySpells only tries its fixed lists, AiShouldActivateSetCard says no to every card it does not

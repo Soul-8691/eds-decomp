@@ -56,6 +56,10 @@ int EffectCatapultTurtleResolve2(struct ChainEntry *link, int chainedTo) asm("Ef
 int EffectTheLittleSwordsmanOfAileResolve2(struct ChainEntry *link, int chainedTo)
     asm("EffectTheLittleSwordsmanOfAileResolve");
 
+#ifdef HAS_CARD_SOUL_EXCHANGE
+int SoulExchangeCpuResolve(struct ChainEntry *link);    /* mod (src/added_effects.c) */
+#endif
+
 /* Prompts used only by this unit (the coin toss and key 1220 prompts are in effect.h). */
 extern const char gStrPromptTributeToSpecialSummonFmt[];  /* 0x08083214: "Do you wish to tribute %s and
                                                            * Special Summon %s?" */
@@ -633,6 +637,10 @@ int EffectTributeOpponentMonsterResolve(struct ChainEntry *link, int chainedTo)
     char text[0x80]; /* unused: the ROM reserves these 0x80 stack bytes and never touches them */
 
     if (!link->negated) {
+#ifdef HAS_CARD_SOUL_EXCHANGE
+        if (link->player)       /* mod: the CPU's Soul Exchange (src/added_effects.c); the steps below are UI */
+            return SoulExchangeCpuResolve(link);
+#endif
         switch (gChain.effectStep) {
         case TRIBUTE_OPP_CHECK:
             if (EffectCanTributeOpponentMonsterPrepare3(link, chainedTo, 0) != 0)
@@ -720,7 +728,8 @@ int EffectTributeOpponentMonsterResolve(struct ChainEntry *link, int chainedTo)
             if (GetCardType(cardId) <= CARD_TYPE_REPTILE && IsSpecialSummonOnly(cardId) == 0) {
                 if (GetCardLevel(cardId) > 4) {
                     if (GetCardLevel(cardId) <= 6) {
-                        TributeMonster(link->targets[0], 0);
+                        /* mod: the target itself (the ROM passed the packed DUEL_LOC as the player, zone 0) */
+                        TributeMonster((u8)link->targets[0], link->targets[0] >> 8);
                         QueueNormalSummonChoosePosition(link->player, handIndex, FindFreeMonsterZone(link->player),
                                                         0);
                         return TRIBUTE_OPP_SUMMON_DONE;
@@ -739,7 +748,7 @@ int EffectTributeOpponentMonsterResolve(struct ChainEntry *link, int chainedTo)
             if (DuelCursor_PickTarget(PICK_ANY_MONSTER) == 0)
                 goto pickSecondTribute;
             if (IsTributableMonsterInt(link->player, gDuelScreen.selIndex) != 0) {
-                TributeMonster(link->targets[0], 0);
+                TributeMonster((u8)link->targets[0], link->targets[0] >> 8);    /* mod: as above */
                 TributeMonster(link->player, gDuelScreen.selIndex);
                 /* the second tribute's zone is free now */
                 QueueNormalSummonChoosePosition(link->player, link->targets[1], gDuelScreen.selIndex, 0);

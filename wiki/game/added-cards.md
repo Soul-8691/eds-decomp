@@ -171,8 +171,7 @@ it. You can remove 1 Spell Counter from this card; target 1 Spell/Trap on the fi
     `LoadOpponentDeck` (its only caller, once per duel) asks. Soul Control 5 in 10 (`El Duelista DEX-Soul
     Control.ydk`), Vanilla Beat 3 in 10 (`ellietincan-Vanilla Beat.ydk`), Stall Mill 2 in 10 (`DK-ZERO-Stall
     Mill.ydk`, 43 cards). Main decks only. All counts are within `gCardCopyLimits`; verified from
-    `build/src/mod_decks.o` against the three main decks. Soul Exchange (Soul Control, Stall Mill) has no coded
-    effect yet.
+    `build/src/mod_decks.o` against the three main decks.
   - **Green and Black starter decks (2026-10-25):** Green is Joey's Warrior list, Black is Bakura's Goat Control list
     (the user asked for "the other 2 ydks"; the colours were matched by Claude). `BuildModStarterDeck` now picks the
     list by `choice`. It sends a Fusion Monster to the saved Fusion Deck (`AddCardToSavedFusionDeck`), so Black also
@@ -325,6 +324,30 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
     `DuelPrompt_PostRandomDiscard` for the damaged player.
 - **Not covered:** a handler that adds a field target with `AddEffectTarget` directly instead of
   `TryAddEffectTarget` does not destroy it.
+- Checked in the source and the build; not tested in an emulator.
+
+### Soul Exchange (2026-10-25)
+- Normal Spell: "Target 1 monster your opponent controls; this turn, if you Tribute a monster, you must Tribute that
+  monster, as if you controlled it. You cannot conduct your Battle Phase the turn you activate this card."
+- **The engine already has it** as effect key 1220, and `ENGINE_NUMBERS` gives the card that number (ID 913 = 1220).
+  The row:
+  - prepare `EffectCanTributeOpponentMonsterPrepare`: Main Phase 1, and a level 5+ monster in hand (with a free
+    zone, or for level 7+ another Tribute) or a face-up Catapult Turtle / The Little Swordsman of Aile / Cannon
+    Soldier;
+  - chainA `EffectSkipBattlePhaseChainA`;
+  - chainB `EffectTributeOpponentMonsterChainB`;
+  - resolve `EffectTributeOpponentMonsterResolve`: a Tribute Summon from the hand (it uses up the Normal Summon), or
+    the target as the Tribute of one of those effects.
+- **Engine bug fixed** (effect_resolve8.c). Both summon paths called `TributeMonster(link->targets[0], 0)`, passing
+  the packed DUEL_LOC as the player and zone 0, so the opponent's zone 0 was Tributed whatever the target. They now
+  pass `(u8)targets[0], targets[0] >> 8`.
+- **CPU path.** Both steps were cursor UI, and Tristan's decks run Soul Exchange.
+  - `EffectTributeOpponentMonsterChainB` (effect_targets3.c) calls `SoulExchangeCpuChainB` for the CPU: the human's
+    strongest monster.
+  - The resolve calls `SoulExchangeCpuResolve`: it Tribute Summons the CPU's strongest level 5+ hand monster (level 5-6
+    with a free zone; level 7+ also Tributes its own weakest monster) and uses up its Normal Summon.
+  - `AiPlayAddedCards` plays the card when its prepare passes.
+- Number side effect as for Magic Cylinder: the added cards after it in the list moved down one free number.
 - Checked in the source and the build; not tested in an emulator.
 
 ### The CPU and the added cards (2026-10-25)
