@@ -22,16 +22,16 @@
 /* Yugi Muto: a competitive deck: strong Normal monsters, the classic floaters and searchers, and the best Magic
  * and Trap cards at their limits. */
 static const u16 sYugiDeck[] = {
-    X3(CARD_BOTTOMLESS_TRAP_HOLE),
-    X3(CARD_BOTTOMLESS_TRAP_HOLE),
-    X3(CARD_BOTTOMLESS_TRAP_HOLE),
-    X3(CARD_BOTTOMLESS_TRAP_HOLE),
-    X3(CARD_BOTTOMLESS_TRAP_HOLE),
-    X3(CARD_BOTTOMLESS_TRAP_HOLE),
-    X3(CARD_BOTTOMLESS_TRAP_HOLE),
-    X3(CARD_BOTTOMLESS_TRAP_HOLE),
-    X3(CARD_BOTTOMLESS_TRAP_HOLE),
-    X3(CARD_BOTTOMLESS_TRAP_HOLE),
+    X3(CARD_7_COLORED_FISH),
+    X3(CARD_7_COLORED_FISH),
+    X3(CARD_7_COLORED_FISH),
+    X3(CARD_7_COLORED_FISH),
+    X3(CARD_7_COLORED_FISH),
+    X3(CARD_7_COLORED_FISH),
+    X3(CARD_7_COLORED_FISH),
+    X3(CARD_7_COLORED_FISH),
+    X3(CARD_7_COLORED_FISH),
+    X3(CARD_7_COLORED_FISH),
 };
 
 static const struct DeckList sYugiDeckList = { sYugiDeck, ARRAY_COUNT(sYugiDeck), 0 };

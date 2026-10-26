@@ -1291,3 +1291,8 @@ updated: 2026-09-29
 - Normal Trap on the summon window (Normal, Flip, Special): the opponent's face-up monster with 1500+ ATK is
   banished (BanishFieldCard).
 - Pages: [[added-cards]].
+
+## [2026-10-26] progress | Pyramid Turtle
+- A floater: the battle-destroyed trigger list, a CollectEffectTargets case (Deck Zombies, DEF <= 2000) and
+  EffectSpecialSummonFromDeckResolve.
+- Pages: [[added-cards]].

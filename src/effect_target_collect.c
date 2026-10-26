@@ -768,6 +768,20 @@ u16 CollectEffectTargets(int player, u16 cardNumber, int param)
         }
         break;
 #endif
+#ifdef HAS_CARD_PYRAMID_TURTLE
+    case CARD_PYRAMID_TURTLE:
+    {
+        /* Added card: deck Zombie monsters with DEF of at most 2000. */
+        u32 id;
+
+        for (i = 0; i < PLAYER(player).deckCount; i++) {
+            id = CARD_ID(*PILE_WORD_FLAT(gDuelDecks, i, player));
+            if (CARD_STATS_TYPE(CARD_STATS(id)) == CARD_TYPE_ZOMBIE && CardDefense(id) <= 2000)
+                ADD_TARGET_DOWHILE(PLAYER(player).deck[i], CARDLIST_SRC_DECK);
+        }
+        break;
+    }
+#endif
 #ifdef HAS_CARD_GRAVEKEEPERS_SPY
     case CARD_GRAVEKEEPERS_SPY:
     {

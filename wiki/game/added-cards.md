@@ -350,6 +350,18 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
 - Number side effect as for Magic Cylinder: the added cards after it in the list moved down one free number.
 - Checked in the source and the build; not tested in an emulator.
 
+### Pyramid Turtle (2026-10-26)
+- "When this card is destroyed by battle and sent to the GY: You can Special Summon 1 Zombie monster with 2000 or
+  less DEF from your Deck." It is a floater like Mystic Tomato:
+  - **Trigger:** a case in the "destroyed in battle" trigger list of `SendBattleDestroyedCardToGraveyard`
+    (duel_field_moves.c). A Pyramid Turtle banished instead (D.D. Warrior Lady, Dark Magician of Chaos) does not
+    reach that list, so it does not trigger.
+  - **List:** a `CollectEffectTargets` case for Deck Zombie monsters with DEF 2000 or less.
+  - **Resolve:** `EffectSpecialSummonFromDeckResolve`. The human is asked and picks in the card-list viewer; the CPU
+    takes `AiPickCardListEntry`'s best ATK+DEF. The summon is in Attack Position (the older text says so; the current
+    one does not name a position), then the Deck is shuffled.
+- Checked in the source and the build; not tested in an emulator.
+
 ### Bottomless Trap Hole (2026-10-26)
 - Normal Trap: "When your opponent Summons a monster(s) with 1500 or more ATK: Destroy that monster(s) with 1500 or
   more ATK, and if you do, banish it."

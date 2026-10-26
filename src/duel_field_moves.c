@@ -188,6 +188,9 @@ void SendBattleDestroyedCardToGraveyard(int defender, int player, int zone, u16 
     case CARD_THE_UNHAPPY_MAIDEN: case CARD_GIANT_RAT: case CARD_UFO_TURTLE:
     case CARD_GIANT_GERM: case CARD_NIMBLE_MOMONGA: case CARD_SHINING_FAIRY: case CARD_MOTHER_GRIZZLY:
     case CARD_FLYING_KAMAKIRI_1: case CARD_MYSTIC_TOMATO:
+#ifdef HAS_CARD_PYRAMID_TURTLE
+    case CARD_PYRAMID_TURTLE:       /* added card: a floater (src/added_effects.c) */
+#endif
     case CARD_1241: case CARD_1242: case CARD_1257: case CARD_1405:
         {
             u32 trigger = TRIGGER_PLAYER(owner);
