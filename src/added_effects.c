@@ -1293,6 +1293,9 @@ void OnFieldCardTargeted(struct ChainEntry *link, int player, int zone)
 #ifdef HAS_CARD_METAMORPHOSIS
     case CARD_METAMORPHOSIS:
 #endif
+#ifdef HAS_CARD_MONSTER_GATE
+    case CARD_MONSTER_GATE:
+#endif
         return;     /* a Tribute, not a target */
     }
     z = ZoneOf(player, zone);
@@ -1826,6 +1829,114 @@ void AddedCardsSummoned(int player, int zone, u16 id, int kind, int faceUp)
 #endif
 }
 #endif
+
+#ifdef HAS_CARD_MONSTER_GATE
+/* ---- Monster Gate --------------------------------------------------------------------------------------------------
+ * Normal Spell: "Tribute 1 monster; excavate cards from the top of your Deck until you excavate a monster that can be
+ * Normal Summoned/Set. Special Summon it, also send the other excavated cards to the GY."
+ *   prepare  a monster the player may Tribute, and a Deck monster that can be Normal Summoned/Set
+ *   chainB   the cost: Catapult Turtle's EffectTributeTargetChainB pick (a monster that cannot be Tributed is
+ *            refused), Tributed at once as Metamorphosis does; the CPU Tributes its weakest monster
+ *   resolve  from the top of the Deck (deck[0]): the cards before the first such monster go to the Graveyard, the
+ *            monster leaves the Deck; the next step (the commands done) Special Summons it face up in the
+ *            position the player picks (QueueSpecialSummonChoosePosition). With none, every card goes. */
+
+/* A monster that can be Normal Summoned/Set: not Fusion, Ritual, Special-Summon-only or a token. */
+static int IsGateMonster(u16 id)
+{
+    u32 stats = gCardStats[id & CARD_ID_MASK];
+    u16 number = ((const u16 *)CARD_ID_TO_NUMBER_ADDR)[id & CARD_ID_MASK];
+
+    return CARD_STATS_TYPE(stats) <= CARD_TYPE_REPTILE && CARD_STATS_KIND(stats) != CARD_KIND_FUSION
+           && CARD_STATS_KIND(stats) != CARD_KIND_RITUAL && !IsSpecialSummonOnly(id)
+           && (u16)(number - CARD_NUMBER_TOKEN_FIRST) >= CARD_NUMBER_TOKEN_END - CARD_NUMBER_TOKEN_FIRST;
+}
+
+static int GateWeakestTribute(int player)
+{
+    int zone, best = -1;
+    u32 bestAtk = 0;
+
+    for (zone = ZONE_MONSTER_0; zone <= ZONE_MONSTER_4; zone++) {
+        if (IsTributableMonster(player, zone) && (best < 0 || GetZoneCardAtk(player, zone) < bestAtk)) {
+            best = zone;
+            bestAtk = GetZoneCardAtk(player, zone);
+        }
+    }
+    return best;
+}
+
+int EffectMonsterGatePrepare(struct ChainEntry *card, struct ChainEntry *chainLink, u16 fromHand)
+{
+    struct DuelPlayer *p = &gDuelPlayers[card->player & 1];
+    int i;
+
+    if (CountTributableMonsters(card->player, -1) == 0)
+        return 0;
+    for (i = 0; i < p->deckCount; i++) {
+        if (IsGateMonster(DUEL_CARD_ID(&p->deck[i])))
+            return 1;
+    }
+    return 0;
+}
+
+int EffectMonsterGateChainB(struct ChainEntry *link, struct ChainEntry *prevLink)
+{
+    int zone;
+
+    if (link->player) {
+        link->numTargets = 0;
+        zone = GateWeakestTribute(link->player);
+        if (zone >= 0)
+            TributeMonster(link->player, zone);
+        return 1;
+    }
+    if (!EffectTributeTargetChainB(link))
+        return 0;
+    if (link->numTargets != 1)
+        return 1;
+    zone = link->targets[0] >> 8;
+    if ((u8)link->targets[0] != link->player || !IsTributableMonster(link->player, zone)) {
+        link->numTargets = 0;
+        PlaySE(SE_ERROR);
+        return 0;
+    }
+    link->numTargets = 0;       /* a cost, not a target */
+    TributeMonster(link->player, zone);
+    return 1;
+}
+
+int EffectMonsterGateResolve(struct ChainEntry *link, struct ChainEntry *chainedTo)
+{
+    struct DuelPlayer *p = &gDuelPlayers[link->player & 1];
+    u16 toGrave = link->player ? DUEL_CMD_PLAYER | DUEL_CMD_SEND_DECK_CARD_TO_GRAVEYARD : DUEL_CMD_SEND_DECK_CARD_TO_GRAVEYARD;
+    u16 remove = link->player ? DUEL_CMD_PLAYER | DUEL_CMD_REMOVE_CARD_FROM_DECK : DUEL_CMD_REMOVE_CARD_FROM_DECK;
+    int i;
+
+    if (link->negated)
+        return EFFECT_STEP_DONE;
+    switch (gChain.effectStep) {
+    case EFFECT_STEP_START:
+        for (i = 0; i < p->deckCount; i++) {
+            u16 *halves = (u16 *)&p->deck[i];
+
+            if (IsGateMonster(DUEL_CARD_ID(&p->deck[i]))) {
+                ShowRevealedCard(link->player, DUEL_CARD_ID(&p->deck[i]));
+                CopyDuelCard((u32 *)&gChain.effectCard, (u32 *)&p->deck[i]);
+                DuelCmd_Push(remove, halves[0], halves[1], 0);
+                return EFFECT_STEP_2;
+            }
+            DuelCmd_Push(toGrave, halves[0], halves[1], 0);
+        }
+        return EFFECT_STEP_DONE;
+    case EFFECT_STEP_2:
+        if (CountFreeMonsterZones(link->player) > 0)
+            QueueSpecialSummonChoosePosition(link->player, &gChain.effectCard, 1, 0);
+        return EFFECT_STEP_END;
+    }
+    return EFFECT_STEP_DONE;
+}
+#endif /* HAS_CARD_MONSTER_GATE */
 
 #ifdef HAS_CARD_MIND_CONTROL
 /* ---- Mind Control --------------------------------------------------------------------------------------------------
@@ -2972,6 +3083,12 @@ static int AiWantsSpell(u16 number)
     case CARD_SCAPEGOAT:                        /* kept for the human's attack (AiShouldActivateAddedCard) */
         return 0;
 #endif
+#ifdef HAS_CARD_MONSTER_GATE
+    case CARD_MONSTER_GATE: {                   /* Tribute a weak monster for whatever the Deck gives */
+        int zone = GateWeakestTribute(AI_PLAYER);
+        return zone >= 0 && GetZoneCardAtk(AI_PLAYER, zone) < 1500;
+    }
+#endif
 #ifdef HAS_CARD_BOOK_OF_MOON
     case CARD_BOOK_OF_MOON:                     /* clears the way for the CPU's attack */
         return CountFaceUpMonsters(AI_HUMAN) > 0 && CountMonsters(AI_PLAYER) > 0;
@@ -3274,6 +3391,16 @@ const struct CardEffect gAddedCardEffects[] = {
         NULL,
         NULL,
         NULL,
+    },
+#endif
+#ifdef HAS_CARD_MONSTER_GATE
+    {
+        CARD_MONSTER_GATE, 0,
+        EffectMonsterGateResolve,
+        NULL,
+        EffectMonsterGatePrepare,
+        NULL,
+        EffectMonsterGateChainB,
     },
 #endif
 #ifdef HAS_CARD_MIND_CONTROL

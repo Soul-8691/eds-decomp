@@ -350,6 +350,22 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
 - Number side effect as for Magic Cylinder: the added cards after it in the list moved down one free number.
 - Checked in the source and the build; not tested in an emulator.
 
+### Monster Gate (2026-10-26)
+- Normal Spell: "Tribute 1 monster; excavate cards from the top of your Deck until you excavate a monster that can be
+  Normal Summoned/Set. Special Summon it, also send the other excavated cards to the GY." No engine key does this.
+- **Eligible monster** (`IsGateMonster`): not Fusion, Ritual, Special-Summon-only (`IsSpecialSummonOnly`) or a token.
+- **Prepare:** a monster the player may Tribute (`CountTributableMonsters`), and such a monster in the Deck.
+- **Cost (chainB).** Catapult Turtle's `EffectTributeTargetChainB` pick; a monster that cannot be Tributed
+  (`IsTributableMonster`) is refused. It is Tributed at once, as for Metamorphosis, and not kept as a target. Spirit
+  Reaper's `OnFieldCardTargeted` ignores Monster Gate's pick, since a Tribute is not a target. The CPU Tributes its
+  weakest monster.
+- **Resolve.** From the top of the Deck (`deck[0]`), the cards before the first eligible monster go to the Graveyard
+  (`DUEL_CMD_SEND_DECK_CARD_TO_GRAVEYARD`). The monster is shown and leaves the Deck. The next step, once those
+  commands ran, Special Summons it face up in the position the player picks (`QueueSpecialSummonChoosePosition`;
+  the text names none). With no eligible monster left, every card goes to the Graveyard.
+- **CPU:** `AiWantsSpell` plays it when its weakest Tributable monster has less than 1500 ATK.
+- Checked in the source and the build; not tested in an emulator.
+
 ### Sacred Crane (2026-10-26)
 - "If this card is Special Summoned: Draw 1 card."
 - **Hook.** `SummonAction_Update` (summon_action.c) now calls one `AddedCardsSummoned(player, zone, id, kind, faceUp)`

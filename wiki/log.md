@@ -1311,3 +1311,8 @@ updated: 2026-09-29
 - SummonAction_Update's added-card call became AddedCardsSummoned (Dark Magician of Chaos's mark, Sacred Crane's
   Special Summon trigger); EffectSacredCraneResolve draws 1.
 - Pages: [[added-cards]].
+
+## [2026-10-26] progress | Monster Gate
+- Tribute cost on the pick (Catapult Turtle's ChainB), then excavation from the Deck top: the cards before the first
+  Normal-Summonable monster go to the Graveyard, and that monster is Special Summoned (either position).
+- Pages: [[added-cards]].
