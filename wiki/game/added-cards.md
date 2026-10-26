@@ -350,6 +350,36 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
 - Number side effect as for Magic Cylinder: the added cards after it in the list moved down one free number.
 - Checked in the source and the build; not tested in an emulator.
 
+### Compulsory Evacuation Device (2026-10-26)
+- Normal Trap: "Target 1 monster on the field; return that target to the hand."
+- **Row:** Hane-Hane's handlers. `EffectTargetableMonsterCheck` / `EffectTargetableMonsterChainB` take any monster
+  (the CPU takes the human's strongest first); `EffectReturnTargetToHandResolve` returns it with
+  `ReturnFieldCardToHand` (owner's hand, a Fusion Monster to the Fusion Deck, a token destroyed).
+- With no prepare, a Set copy may answer any response window that has a monster to target.
+- The target prompt is Hane-Hane's ("Designate the monster to have returned"), from its case in
+  `EffectTargetableMonsterChainB`.
+- **CPU:** `AiShouldActivateAddedCard` uses it only against an attack or a summon, when the human has a monster.
+- Checked in the source and the build; not tested in an emulator.
+
+### Tristan's format check (2026-10-25)
+- Tristan's duels require the Yugi-Kaiba format (May 2002). `tools/banlist.py` turns the repository's
+  `yugi-kaiba.txt` (card pool) and `yugi-kaiba_ban.json` (Forbidden/Limited list) into
+  `build/include/format_yugi_kaiba.h` (a Makefile rule).
+  - Names are matched to EDS cards exactly, then ignoring case and punctuation, then through `ALIASES`
+    ("Red-Eyes Black Dragon" is EDS's "Red-Eyes B. Dragon").
+  - Four pool cards are not in EDS and are skipped: Baron of the Fiend Sword, Dark Titan of Terror, Mystic Clown,
+    Sorcerer of the Doomed.
+  - Result: 181 pool cards and 12 limits (10 limited, 2 semi-limited).
+- **Check** (`src/mod_banlist.c`, a far-code unit). `OpponentSelect_HandleInput` (campaign_select.c) calls
+  `BanlistBlocksDuel` when an opponent is picked. For Tristan it sums the saved Deck, Side Deck and Fusion Deck copies
+  of each card (alternate art counted as the same card). A card is illegal if it is not in the pool or exceeds its
+  limit (3 when the list does not name it).
+- **Warning.** With any illegal card the duel does not start: the error sound plays and a scrollable list opens
+  (UP/DOWN, A/B to close), with a header and one line per card ("x3 Pot of Greed - limit 1"). It is drawn into the
+  name-banner OBJ tiles (0x2C0) as 8 x 5 sprites over the darkened background, and closing reloads the page.
+  `BanlistView_Run` runs first in `OpponentSelect_HandleInput` while it is open. The state is `gBanlistView`, at
+  EWRAM 0x0202E000 (symbols.ld).
+
 ### The CPU and the added cards (2026-10-25)
 - **Why the CPU did not use them.** Its logic is a set of per-card-number scripts, and no added card is named in
   them. Only added cards that took an engine number the scripts know (Magic Cylinder 1214, Thousand-Eyes Restrict

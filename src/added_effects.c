@@ -2743,6 +2743,12 @@ int AiShouldActivateAddedCard(struct ChainEntry *entry)
     case CARD_SCAPEGOAT:                        /* against an attack, or with nothing to defend */
         return entry->event == RESPONSE_ATTACK_DECLARED || CountMonsters(AI_PLAYER) == 0;
 #endif
+#ifdef HAS_CARD_COMPULSORY_EVACUATION_DEVICE
+    case CARD_COMPULSORY_EVACUATION_DEVICE:     /* against an attack or a summon (the target step takes the strongest) */
+        return CountMonsters(AI_HUMAN) > 0
+               && (entry->event == RESPONSE_ATTACK_DECLARED || entry->event == RESPONSE_SUMMONED
+                   || entry->event == RESPONSE_FLIP_SUMMONED || entry->event == RESPONSE_SPECIAL_SUMMONED);
+#endif
 #ifdef HAS_CARD_BOOK_OF_MOON
     case CARD_BOOK_OF_MOON:                     /* against the attacker (the target step takes the strongest) */
         return entry->event == RESPONSE_ATTACK_DECLARED && CountFaceUpMonsters(AI_HUMAN) > 0;
@@ -2847,6 +2853,20 @@ const struct CardEffect gAddedCardEffects[] = {
         EffectBrainControlPrepare,
         EffectBrainControlChainA,
         EffectBrainControlChainB,
+    },
+#endif
+#ifdef HAS_CARD_COMPULSORY_EVACUATION_DEVICE
+    /* Compulsory Evacuation Device, Normal Trap: "Target 1 monster on the field; return that target to the hand."
+     * Hane-Hane's handlers (any monster, EffectReturnTargetToHandResolve: to its owner's hand, a Fusion Monster to the
+     * Fusion Deck, a token destroyed). No prepare: a Set copy may answer any window in which a monster can be
+     * targeted (EffectTargetableMonsterCheck). The CPU uses it against an attack or a summon (AiShouldActivateAddedCard). */
+    {
+        CARD_COMPULSORY_EVACUATION_DEVICE, 0,
+        (int (*)(struct ChainEntry *, struct ChainEntry *))EffectReturnTargetToHandResolve,
+        (u16 (*)(struct ChainEntry *, u16))EffectTargetableMonsterCheck,
+        NULL,
+        NULL,
+        (int (*)(struct ChainEntry *, struct ChainEntry *))EffectTargetableMonsterChainB,
     },
 #endif
 #ifdef HAS_CARD_MIND_CONTROL

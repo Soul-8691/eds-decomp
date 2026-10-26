@@ -1256,3 +1256,12 @@ updated: 2026-09-29
   (EWRAM 0x0202FF04) and is cleared by ModDuelInit. .ewram is 0 bytes again.
 - Note: the user's crashes on 2026-10-25 were a stale eds.ips that mGBA applied to every new build, not the code.
 - Pages: [[added-cards]].
+
+## [2026-10-25] progress | Tristan's format check (Yugi-Kaiba, May 2002)
+- tools/banlist.py builds the card pool and limits from yugi-kaiba.txt / yugi-kaiba_ban.json. src/mod_banlist.c
+  checks the player's decks when Tristan is picked and shows a scrollable warning instead of starting the duel.
+- Pages: [[added-cards]].
+
+## [2026-10-26] progress | Compulsory Evacuation Device
+- Normal Trap with Hane-Hane's handlers and prompt; the CPU uses it against attacks and summons.
+- Pages: [[added-cards]].

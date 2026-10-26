@@ -791,6 +791,9 @@ int EffectTargetableMonsterChainB(struct ChainEntry *link, int prevLink)
             TextBoxOpen(TARGET_PROMPT_POS, TARGET_PROMPT_SIZE, TEXTBOX_FLAGS_DEFAULT, gStrDesignateMonsterToDestroy);
             break;
         case CARD_HANE_HANE:
+#ifdef HAS_CARD_COMPULSORY_EVACUATION_DEVICE
+        case CARD_COMPULSORY_EVACUATION_DEVICE:     /* added card: the same prompt */
+#endif
             TextBoxOpen(TARGET_PROMPT_POS, TARGET_PROMPT_SIZE, TEXTBOX_FLAGS_DEFAULT,
                         gStrDesignateMonsterToHaveReturned);
             break;
