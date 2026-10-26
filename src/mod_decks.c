@@ -255,6 +255,123 @@ STATIC_ASSERT(ARRAY_COUNT(sRedStarterDeck) == 40, RedStarterDeckSize);
 static const struct DeckList sRedDeckList = { sRedStarterDeck, ARRAY_COUNT(sRedStarterDeck), 0 };
 #endif
 
+
+/* Tristan Taylor: one of three decks at weighted random, per duel (GetOpponentDeckOverride): Soul Control 50%,
+ * Vanilla Beat 30%, Stall Mill 20% (El Duelista DEX-Soul Control.ydk, ellietincan-Vanilla Beat.ydk,
+ * DK-ZERO-Stall Mill.ydk; main decks only). */
+#if defined(HAS_CARD_SOUL_EXCHANGE)
+#define MOD_TRISTAN_SOUL_CONTROL 1
+static const u16 sTristanSoulControl[] = {
+    /* Monsters (20) */
+    X3(CARD_MAN_EATER_BUG),
+    CARD_TRAP_MASTER,
+    CARD_WALL_OF_ILLUSION,
+    X3(CARD_BATTLE_OX),
+    X3(CARD_GIANT_SOLDIER_OF_STONE),
+    X3(CARD_LA_JINN_THE_MYSTICAL_GENIE_OF_THE_LAMP),
+    X3(CARD_NEO_THE_MAGIC_SWORDSMAN),
+    X3(CARD_SUMMONED_SKULL),
+    /* Spells (12) */
+    CARD_CHANGE_OF_HEART,
+    CARD_DARK_HOLE,
+    X3(CARD_FISSURE),
+    CARD_MONSTER_REBORN,
+    CARD_POT_OF_GREED,
+    CARD_RAIGEKI,
+    X2(CARD_SOUL_EXCHANGE),
+    X2(CARD_SWORDS_OF_REVEALING_LIGHT),
+    /* Traps (8) */
+    X3(CARD_REINFORCEMENTS),
+    X3(CARD_TRAP_HOLE),
+    CARD_ULTIMATE_OFFERING,
+    CARD_WABOKU,
+};
+STATIC_ASSERT(ARRAY_COUNT(sTristanSoulControl) == 40, TristanSoulControlSize);
+#endif
+#ifdef MOD_TRISTAN_SOUL_CONTROL
+static const struct DeckList sTristanSoulControlList = { sTristanSoulControl, ARRAY_COUNT(sTristanSoulControl), 0 };
+#endif
+#if 1
+#define MOD_TRISTAN_VANILLA_BEAT 1
+static const u16 sTristanVanillaBeat[] = {
+    /* Monsters (20) */
+    X3(CARD_MAN_EATER_BUG),
+    X3(CARD_TRAP_MASTER),
+    X3(CARD_BATTLE_OX),
+    X3(CARD_GIANT_SOLDIER_OF_STONE),
+    X3(CARD_LA_JINN_THE_MYSTICAL_GENIE_OF_THE_LAMP),
+    X3(CARD_NEO_THE_MAGIC_SWORDSMAN),
+    X2(CARD_SUMMONED_SKULL),
+    /* Spells (11) */
+    CARD_CHANGE_OF_HEART,
+    CARD_DARK_HOLE,
+    CARD_DE_SPELL,
+    X3(CARD_FISSURE),
+    CARD_MONSTER_REBORN,
+    CARD_POT_OF_GREED,
+    CARD_RAIGEKI,
+    X2(CARD_SWORDS_OF_REVEALING_LIGHT),
+    /* Traps (9) */
+    X3(CARD_REINFORCEMENTS),
+    X3(CARD_TRAP_HOLE),
+    X3(CARD_WABOKU),
+};
+STATIC_ASSERT(ARRAY_COUNT(sTristanVanillaBeat) == 40, TristanVanillaBeatSize);
+#endif
+#ifdef MOD_TRISTAN_VANILLA_BEAT
+static const struct DeckList sTristanVanillaBeatList = { sTristanVanillaBeat, ARRAY_COUNT(sTristanVanillaBeat), 0 };
+#endif
+#if defined(HAS_CARD_CARD_DESTRUCTION) \
+    && defined(HAS_CARD_SOUL_EXCHANGE)
+#define MOD_TRISTAN_STALL_MILL 1
+static const u16 sTristanStallMill[] = {
+    /* Monsters (21) */
+    X3(CARD_GYAKUTENNO_MEGAMI),
+    X3(CARD_GIANT_SOLDIER_OF_STONE),
+    X3(CARD_AQUA_MADOOR),
+    X3(CARD_WALL_OF_ILLUSION),
+    X3(CARD_MYSTICAL_ELF),
+    X3(CARD_SPIRIT_OF_THE_HARP),
+    X3(CARD_MAN_EATER_BUG),
+    /* Spells (13) */
+    CARD_RAIGEKI,
+    CARD_DARK_HOLE,
+    CARD_MONSTER_REBORN,
+    CARD_CHANGE_OF_HEART,
+    CARD_POT_OF_GREED,
+    X2(CARD_SWORDS_OF_REVEALING_LIGHT),
+    X3(CARD_FISSURE),
+    CARD_CARD_DESTRUCTION,
+    X2(CARD_SOUL_EXCHANGE),
+    /* Traps (9) */
+    X3(CARD_ULTIMATE_OFFERING),
+    X3(CARD_WABOKU),
+    X3(CARD_TRAP_HOLE),
+};
+STATIC_ASSERT(ARRAY_COUNT(sTristanStallMill) == 43, TristanStallMillSize);
+#endif
+#ifdef MOD_TRISTAN_STALL_MILL
+static const struct DeckList sTristanStallMillList = { sTristanStallMill, ARRAY_COUNT(sTristanStallMill), 0 };
+#endif
+
+#if defined(MOD_TRISTAN_SOUL_CONTROL) && defined(MOD_TRISTAN_VANILLA_BEAT) && defined(MOD_TRISTAN_STALL_MILL)
+#define MOD_TRISTAN_DECKS 1
+int Random(void);   /* util.h */
+
+/* Tristan's deck for this duel: Soul Control 5 in 10, Vanilla Beat 3 in 10, Stall Mill 2 in 10. LoadOpponentDeck
+ * asks once per duel. */
+static const struct DeckList *TristanDeck(void)
+{
+    u32 roll = (u32)Random() % 10;
+
+    if (roll < 5)
+        return &sTristanSoulControlList;
+    if (roll < 8)
+        return &sTristanVanillaBeatList;
+    return &sTristanStallMillList;
+}
+#endif
+
 /* The replacement deck of opponent `opponent` (enum DuelistId), or NULL to keep the original. */
 const struct DeckList *GetOpponentDeckOverride(int opponent)
 {
@@ -264,6 +381,10 @@ const struct DeckList *GetOpponentDeckOverride(int opponent)
 #ifdef MOD_RED_DECK
     case DUELIST_TEA:
         return &sRedDeckList;
+#endif
+#ifdef MOD_TRISTAN_DECKS
+    case DUELIST_TRISTAN:
+        return TristanDeck();
 #endif
 #ifdef MOD_JOEY_DECK
     case DUELIST_JOEY:

@@ -167,6 +167,12 @@ it. You can remove 1 Spell Counter from this card; target 1 Spell/Trap on the fi
   - **Yugi Muto:** a competitive 40-card deck (`GetOpponentDeckOverride`): Jinzo, Summoned Skull, Vorse Raider,
     floaters and searchers, the limited staples, Mystical Space Typhoon, Trap Hole.
   - **Tea (`DUELIST_TEA`):** the Red starter deck's LR-Chaos Turbo list (`sRedDeckList`).
+  - **Tristan (`DUELIST_TRISTAN`), weighted random per duel:** `TristanDeck` rolls `Random() % 10` when
+    `LoadOpponentDeck` (its only caller, once per duel) asks. Soul Control 5 in 10 (`El Duelista DEX-Soul
+    Control.ydk`), Vanilla Beat 3 in 10 (`ellietincan-Vanilla Beat.ydk`), Stall Mill 2 in 10 (`DK-ZERO-Stall
+    Mill.ydk`, 43 cards). Main decks only. All counts are within `gCardCopyLimits`; verified from
+    `build/src/mod_decks.o` against the three main decks. Soul Exchange (Soul Control, Stall Mill) has no coded
+    effect yet.
   - **Green and Black starter decks (2026-10-25):** Green is Joey's Warrior list, Black is Bakura's Goat Control list
     (the user asked for "the other 2 ydks"; the colours were matched by Claude). `BuildModStarterDeck` now picks the
     list by `choice`. It sends a Fusion Monster to the saved Fusion Deck (`AddCardToSavedFusionDeck`), so Black also

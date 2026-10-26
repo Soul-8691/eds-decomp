@@ -1239,3 +1239,8 @@ updated: 2026-09-29
 - Tea uses the LR-Chaos Turbo list. Green = Warrior (Joey's), Black = Goat Control (Bakura's, with its Fusion
   Monsters routed to the saved Fusion Deck). BuildModStarterDeck picks by choice.
 - Pages: [[added-cards]].
+
+## [2026-10-25] progress | Tristan's weighted random decks
+- TristanDeck: Soul Control 50%, Vanilla Beat 30%, Stall Mill 20% (Random() % 10, once per duel in
+  LoadOpponentDeck). Main decks of the three new .ydk files, verified against the compiled arrays.
+- Pages: [[added-cards]].
