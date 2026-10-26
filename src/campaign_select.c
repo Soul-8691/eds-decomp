@@ -403,10 +403,16 @@ u16 OpponentSelect_FadeIn(void)
  * opponent stores it in gMain.opponent and returns 1. B goes to OPPSEL_STEP_CANCEL, which fades out and
  * returns to the main menu. Returns 0 otherwise.
  */
+/* Mod (src/mod_banlist.c): Tristan's format check and its warning. */
+int BanlistBlocksDuel(u16 duelist);
+int BanlistView_Run(void);
+
 u16 OpponentSelect_HandleInput(void)
 {
     u16 nextPageOpen;
 
+    if (BanlistView_Run())      /* mod: the format warning is open */
+        return 0;
     OpponentSelect_DrawCursor(gOpponentSelect.cursor, 0);
     OpponentSelect_DrawLockedCovers(0);
     OpponentSelect_DrawDuelistInfo(PAGE_DUELIST(gOpponentSelect.page, gOpponentSelect.cursor));
@@ -463,6 +469,8 @@ u16 OpponentSelect_HandleInput(void)
     }
     if (gMain.newKeys & A_BUTTON) {
         if (IsOpponentUnlockedS32(PAGE_DUELIST(gOpponentSelect.page, gOpponentSelect.cursor))) {
+            if (BanlistBlocksDuel(PAGE_DUELIST(gOpponentSelect.page, gOpponentSelect.cursor)))
+                return 0;       /* mod: an illegal deck for this opponent's format: the warning opened */
             gMain.opponent = PAGE_DUELIST(gOpponentSelect.page, gOpponentSelect.cursor);
             PlaySE(SE_CONFIRM);
             return 1;

@@ -124,6 +124,13 @@ $(NEWCARDS_BUILT): $(ASSETS_BUILT) config/new_cards.txt tools/newcards.py $(wild
 	$(PYTHON) tools/newcards.py build
 $(NEWCARDS_GEN): $(NEWCARDS_BUILT) ;
 
+# The Yugi-Kaiba format (card pool and Forbidden/Limited list) that src/mod_banlist.c checks for Tristan.
+FORMAT_GEN := build/include/format_yugi_kaiba.h
+$(FORMAT_GEN): tools/banlist.py yugi-kaiba.txt yugi-kaiba_ban.json $(NEWCARDS_BUILT)
+	@mkdir -p $(@D)
+	$(PYTHON) tools/banlist.py $@
+build/src/mod_banlist.o: $(FORMAT_GEN)
+
 build/data/%.o: data/%.s $(ASSETS_BUILT) $(NEWCARDS_BUILT)
 	@mkdir -p $(@D)
 	$(AS) $(ASFLAGS) --MD build/data/$*.d -o $@ $<

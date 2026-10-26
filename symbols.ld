@@ -12,6 +12,8 @@ gDeckEditHeldBack = 0x0202C200;
 /* Mod variables in free EWRAM (below gScratchBuffer): Injection Fairy Lily's battle state (src/added_effects.c). */
 gInjectionFairyLily = 0x0202FF00;
 gModDuel = 0x0202FF04;
+/* Mod: the format warning of src/mod_banlist.c (free RAM after the Deck Edit lists, which end by 0x0202D200). */
+gBanlistView = 0x0202E000;
 gTextCanvas = 0x02000000;
 gSaveData = 0x02011C20;
 gSaveDataSignature = 0x02013D86;
