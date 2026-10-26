@@ -351,15 +351,18 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
 - Checked in the source and the build; not tested in an emulator.
 
 ### Pyramid Turtle (2026-10-26)
-- "When this card is destroyed by battle and sent to the GY: You can Special Summon 1 Zombie monster with 2000 or
-  less DEF from your Deck." It is a floater like Mystic Tomato:
+- The user's text (2026-10-26): "When this card is sent to the Graveyard as a result of battle, you may select 1
+  Zombie-Type monster with a DEF of 2000 or less from your Deck and Special Summon it to the field in face up Attack or
+  Defense Position (no Tribute is required for monsters of Level 5 or more). The Deck is then shuffled." It is a
+  floater like Mystic Tomato:
   - **Trigger:** a case in the "destroyed in battle" trigger list of `SendBattleDestroyedCardToGraveyard`
     (duel_field_moves.c). A Pyramid Turtle banished instead (D.D. Warrior Lady, Dark Magician of Chaos) does not
     reach that list, so it does not trigger.
   - **List:** a `CollectEffectTargets` case for Deck Zombie monsters with DEF 2000 or less.
   - **Resolve:** `EffectSpecialSummonFromDeckResolve`. The human is asked and picks in the card-list viewer; the CPU
-    takes `AiPickCardListEntry`'s best ATK+DEF. The summon is in Attack Position (the older text says so; the current
-    one does not name a position), then the Deck is shuffled.
+    takes `AiPickCardListEntry`'s best ATK+DEF. The summon is face up in either position, through Gravekeeper's Spy's
+    branch of the resolve (`QueueSpecialSummonChoosePosition`: the human's position menu, the CPU's
+    `AiShouldSetMonster`). Then the Deck is shuffled. Any Level (a Special Summon needs no Tribute).
 - Checked in the source and the build; not tested in an emulator.
 
 ### Bottomless Trap Hole (2026-10-26)

@@ -1296,3 +1296,8 @@ updated: 2026-09-29
 - A floater: the battle-destroyed trigger list, a CollectEffectTargets case (Deck Zombies, DEF <= 2000) and
   EffectSpecialSummonFromDeckResolve.
 - Pages: [[added-cards]].
+
+## [2026-10-26] progress | Pyramid Turtle: either position
+- With the user's full text, Pyramid Turtle summons face up in Attack or Defense Position: it joins Gravekeeper's
+  Spy's QueueSpecialSummonChoosePosition branch of EffectSpecialSummonFromDeckResolve.
+- Pages: [[added-cards]].

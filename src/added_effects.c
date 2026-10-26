@@ -3176,11 +3176,13 @@ const struct CardEffect gAddedCardEffects[] = {
     },
 #endif
 #ifdef HAS_CARD_PYRAMID_TURTLE
-    /* Pyramid Turtle: "When this card is destroyed by battle and sent to the GY: You can Special Summon 1 Zombie monster
-     * with 2000 or less DEF from your Deck." A floater like Mystic Tomato: its "destroyed in battle" trigger in
-     * SendBattleDestroyedCardToGraveyard (duel_field_moves.c; banished instead, it does not trigger), the floaters'
-     * resolve (asked, picked in the card-list viewer, Attack Position, shuffle) and a CollectEffectTargets case
-     * (effect_target_collect.c: deck Zombies with DEF 2000 or less). */
+    /* Pyramid Turtle: "When this card is sent to the Graveyard as a result of battle, you may select 1 Zombie-Type
+     * monster with a DEF of 2000 or less from your Deck and Special Summon it to the field in face up Attack or Defense
+     * Position (no Tribute is required for monsters of Level 5 or more). The Deck is then shuffled."
+     * A floater like Mystic Tomato: its "destroyed in battle" trigger in SendBattleDestroyedCardToGraveyard
+     * (duel_field_moves.c; banished instead, it does not trigger), the floaters' resolve (asked, picked in the
+     * card-list viewer, either face-up position as for Gravekeeper's Spy, shuffle) and a CollectEffectTargets case
+     * (effect_target_collect.c: deck Zombies with DEF 2000 or less, any Level). */
     {
         CARD_PYRAMID_TURTLE, 0,
         (int (*)(struct ChainEntry *, struct ChainEntry *))EffectSpecialSummonFromDeckResolve,

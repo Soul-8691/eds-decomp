@@ -598,11 +598,18 @@ int EffectSpecialSummonFromDeckResolve(struct ChainEntry *link)
                          ((u16 *)card)[1], 0);
             return EFFECT_STEP_5;
         case EFFECT_STEP_5:         /* Special Summon it face up in Attack Position */
+#if defined(HAS_CARD_GRAVEKEEPERS_SPY) || defined(HAS_CARD_PYRAMID_TURTLE)
+            /* Added: Gravekeeper's Spy and Pyramid Turtle summon in either face-up position: the human picks it in
+             * the position menu, the CPU through AiShouldSetMonster (SummonStep_SpecialChoosePosition). The other
+             * floaters keep Attack Position, as their texts say. */
+            if (0
 #ifdef HAS_CARD_GRAVEKEEPERS_SPY
-            /* Added: Gravekeeper's Spy summons in either face-up position: the human picks it in the position menu,
-             * the CPU through AiShouldSetMonster (SummonStep_SpecialChoosePosition). The floaters keep Attack
-             * Position, as their texts say. */
-            if (CARD_NUMBER(link->card) == CARD_GRAVEKEEPERS_SPY) {
+                || CARD_NUMBER(link->card) == CARD_GRAVEKEEPERS_SPY
+#endif
+#ifdef HAS_CARD_PYRAMID_TURTLE
+                || CARD_NUMBER(link->card) == CARD_PYRAMID_TURTLE
+#endif
+                ) {
                 QueueSpecialSummonChoosePosition(link->player,
                     (struct DuelCard *)&gCardListView.cards[gCardListView.cursorRow + gCardListView.top], 1, 0);
                 return EFFECT_STEP_6;
