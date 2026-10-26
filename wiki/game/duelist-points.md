@@ -44,6 +44,16 @@ DP live in the save image: `gSaveData.dpLow` (+0x215A) and `dpHigh` (+0x215C), a
 - **Any number of copies.** `Password_RollAndCheck` now accepts a valid password when `CanBuyCard`: the player has
   the card's price and the trunk holds fewer than 0x3FF copies. The one-copy-per-password check
   (`trunk[].passwordUsed`) is gone; the flag is still set.
+- **Confirmation.** After the reveal, a box in the centre of the screen asks "Buy <card name>?" / "Price: <cost>
+  DP  A: buy  B: cancel".
+  - Black text on white, with a 1-px black border.
+  - Its width is the longer line + 2 x 8 px, rounded up to 32 (at most 256).
+  - It is 32 px tall, at y = 64.
+  - Rendered by `PasswordDP_SetConfirm` when `Password_RollAndCheck` accepts the password: two 32 x 2 tile canvases,
+    white via `TextCanvasToTiles`' bgColor, border pixels written into the canvas, 2D OBJ tiles 0x340/0x380.
+  - Uses its own OBJ palette 14 (1 white, 2 black); drawn by `PasswordDP_DrawConfirm`. A goes on to the purchase. B fades out (reveal
+  state 4) and ends the scene without the card or the payment. The question is on screen a frame before A/B count,
+  so the A that skips the reveal animation doesn't answer it.
 - **Buying.** `Password_RevealAndGiveCard` takes the price (`SpendDP`) when it adds the card.
 - **Refusal.** The USED step now means "can't pay": it blinks "Need <price> DP!" (`PasswordDP_SetNotEnough`) in
   place of the USED sprite.

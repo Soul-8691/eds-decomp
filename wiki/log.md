@@ -1476,3 +1476,11 @@ updated: 2026-09-29
   there skipped the list after a "new packs" notice: original bug). REWARD_STEP_CHOOSE: the mod's opponents skip the
   calendar-event rewards and loss penalties, so a win always goes to the pack list.
 - Pages: [[yugi-kaiba-opponent]].
+
+## [2026-10-26] progress | Password machine asks before buying
+- The reveal step shows "Buy <card>? Price: N DP  A: buy  B: cancel"; B ends the scene without buying.
+- Pages: [[duelist-points]].
+
+## [2026-10-26] progress | Purchase question as a centred box
+- PasswordDP_SetConfirm/DrawConfirm: black text on a white bordered box in the centre (OBJ palette 14).
+- Pages: [[duelist-points]].

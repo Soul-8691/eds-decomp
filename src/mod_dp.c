@@ -278,6 +278,9 @@ struct ModDP {
     u16 packNotEnough;      /* frames left of "Not enough DP!" on the pack list */
     u16 passwordNotEnoughWidth;
     u32 passwordShownDP;
+    u16 passwordConfirmWidth[2];    /* the "Buy ...?" lines (PasswordDP_SetConfirm) */
+    u8 passwordConfirmShown;        /* 1 once they have been on screen a frame (A/B count from then) */
+    u8 pad2;
 };
 extern struct ModDP gModDP;
 
@@ -399,6 +402,88 @@ void PasswordDP_SetNotEnough(u16 id)
 
     AppendStr(AppendNum(AppendStr(line, sStrNeed), GetCardCost(id)), sStrNeedSuffix);
     gModDP.passwordNotEnoughWidth = DpText_Render(PASSWORD_NOT_ENOUGH_TILE, line, FONT_COLOR, FONT_SHADOW);
+}
+
+#define PASSWORD_CONFIRM_TILE   0x340   /* two lines: 0x340 and 0x380 (rows 26-29) */
+
+static const char sStrBuy[] = "Buy ";
+static const char sStrPrice[] = "Price: ";
+static const char sStrBuyHelp[] = " DP     A: buy     B: cancel";
+
+/* The question box: OBJ palette 14 (unused by the password scene) with colour 1 white, 2 black. */
+#define BOX_PALETTE     14
+#define BOX_WHITE       1
+#define BOX_BLACK       2
+#define BOX_TEXT        TEXT_SIZE_COLOR(10, BOX_BLACK)
+#define BOX_MARGIN      8       /* pixels each side of the longer line */
+
+/* Width in pixels of text in the 10-px font (drawn into a scratch canvas). */
+static int TextWidth(const char *text)
+{
+    TextCanvasInitEx(32, 2, 0, 0);
+    TextDrawString(0, 0, BOX_TEXT, (const u8 *)text);
+    return gTextCanvas.right + 1;
+}
+
+/* Pixel (x, y) of the 32 x 2 tile canvas. */
+static void CanvasPixel(int x, int y, u8 color)
+{
+    gTextCanvas.pixels[((y >> 3) * 32 + (x >> 3)) * 64 + (y & 7) * 8 + (x & 7)] = color;
+}
+
+/* One half (16 px tall) of the box: white, the text (textWidth px) centred in boxWidth at textY, the black border's
+ * sides and its top (top) or bottom row. */
+static void RenderBoxLine(u32 tile, const char *text, int textWidth, int boxWidth, int textY, int top)
+{
+    int x, y;
+
+    TextCanvasInitEx(32, 2, 0, 0);
+    TextDrawString((boxWidth - textWidth) / 2, textY, BOX_TEXT, (const u8 *)text);
+    for (x = 0; x < boxWidth; x++)
+        CanvasPixel(x, top ? 0 : 15, BOX_BLACK);
+    for (y = 0; y < 16; y++) {
+        CanvasPixel(0, y, BOX_BLACK);
+        CanvasPixel(boxWidth - 1, y, BOX_BLACK);
+    }
+    TextCanvasToTiles(OBJ_TILE(tile), BOX_WHITE);
+}
+
+/* Password_RollAndCheck found card id and the player can pay: render the question box, "Buy <name>?" over
+ * "Price: <cost> DP  A: buy  B: cancel", black on white with a black border, for the reveal step. */
+void PasswordDP_SetConfirm(u16 id)
+{
+    struct ModDP *s = &gModDP;
+    const char *name = (const char *)(gCardNames + (id & CARD_ID_MASK) * CARD_NAME_SIZE);
+    char line0[64], line1[48];
+    int w0, w1, boxWidth;
+    u16 *pal = (u16 *)(OBJ_PLTT + BOX_PALETTE * 0x20);
+
+    pal[BOX_WHITE] = 0x7FFF;
+    pal[BOX_BLACK] = 0x0000;
+    AppendStr(AppendStr(AppendStr(line0, sStrBuy), name), "?");
+    AppendStr(AppendNum(AppendStr(line1, sStrPrice), GetCardCost(id)), sStrBuyHelp);
+    w0 = TextWidth(line0);
+    w1 = TextWidth(line1);
+    boxWidth = ((w0 > w1 ? w0 : w1) + 2 * BOX_MARGIN + 31) & ~31;
+    if (boxWidth > 256)
+        boxWidth = 256;
+    RenderBoxLine(PASSWORD_CONFIRM_TILE, line0, w0, boxWidth, 4, 1);
+    RenderBoxLine(PASSWORD_CONFIRM_TILE + LINE_TILES, line1, w1, boxWidth, 1, 0);
+    s->passwordConfirmWidth[0] = boxWidth;
+    s->passwordConfirmShown = 0;
+}
+
+/* The reveal step's question box, in the centre of the screen. Returns 1 if A/B may answer it (it has been shown). */
+int PasswordDP_DrawConfirm(void)
+{
+    struct ModDP *s = &gModDP;
+    int ready = s->passwordConfirmShown;
+    int w = s->passwordConfirmWidth[0];
+
+    DpText_Draw(120 - w / 2, 64, PASSWORD_CONFIRM_TILE, BOX_PALETTE, w);
+    DpText_Draw(120 - w / 2, 80, PASSWORD_CONFIRM_TILE + LINE_TILES, BOX_PALETTE, w);
+    s->passwordConfirmShown = 1;
+    return ready;
 }
 
 /* The password scene starts: render its line again. */

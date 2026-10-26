@@ -83,6 +83,8 @@ void PasswordDP_Draw(void);
 void PasswordDP_Reset(void);
 void PasswordDP_SetNotEnough(u16 id);
 void PasswordDP_DrawNotEnough(void);
+void PasswordDP_SetConfirm(u16 id);
+int PasswordDP_DrawConfirm(void);
 
 /* No shared header declares PlaySE yet (same local form as duel_response.c and link_sio.c). */
 void PlaySE(u32 seId);
@@ -140,6 +142,7 @@ u32 Password_RollAndCheck(void)
             MemClear16(s, 8);
             gMain.seqIndex1 += 3; /* -> PASSWORD_STEP_ERROR */
         } else if (CanBuyCard(s->card)) {      /* changed: was passwordUsed == 0 (one copy per password) */
+            PasswordDP_SetConfirm(s->card);     /* added: the reveal step asks before buying */
             MemCopy16(s, s->password, 8);
             Password_DrawCard(s->card);
             gMain.bgHofs[2] = 0;
@@ -175,10 +178,22 @@ u32 Password_RevealAndGiveCard(void)
     }
     switch (gMain.seqState1) {
     case 0:
+        /* Changed: "Buy <card>? Price: <cost> DP": A buys, B fades out without buying (state 4). The question is on
+         * screen a frame before A/B count, so the A that skips the reveal does not answer it. */
         Password_DrawDigits();
-        if (gMain.newKeys & (A_BUTTON | B_BUTTON))
+        if (!PasswordDP_DrawConfirm())
+            return 0;
+        if (gMain.newKeys & A_BUTTON) {
+            PlaySE(SE_CONFIRM);
             gMain.seqState1++;
+        } else if (gMain.newKeys & B_BUTTON) {
+            PlaySE(SE_CANCEL);
+            gMain.seqState1 = 4;
+        }
         return 0;
+    case 4:
+        Password_DrawDigits();
+        return FadeToBlackU16(4) != 0;
     case 1:
         Password_DrawDigits();
         if (FadeToBlackU16(4)) {
