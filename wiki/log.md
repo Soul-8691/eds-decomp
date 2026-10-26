@@ -1392,3 +1392,8 @@ updated: 2026-09-29
   name to all its card numbers (second Polymerization); aliases for B. Skull Dragon and Kuwagata a. Tristan's pool
   moved to card_pools/yugi-kaiba.txt.
 - Pages: [[banlists-menu]], index.
+
+## [2026-10-26] progress | Booster Packs: cover change lag
+- PackListDP_Draw rendered both DP text lines on the frame a slide ends, on top of the list redrawing its covers.
+  It now renders one changed line a frame, only while the list is idle (no slide, no cover upload pending).
+- Pages: [[duelist-points]].

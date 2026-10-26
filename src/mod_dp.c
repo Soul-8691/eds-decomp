@@ -274,22 +274,27 @@ void MainMenuDP_Draw(void)
 #define FONT_SHADOW         TEXT_SIZE_COLOR(10, 15)
 
 /* The list's lines: "<pack name>   <cost> DP" at the top, "You have <DP> DP   A: open   B: back" (or "Not enough
- * DP!") at the bottom. Drawn each frame while the list is up; rendered again when the pack or the DP change. */
-void PackListDP_Draw(u16 packId, const char *packName)
+ * DP!") at the bottom. Drawn each frame while the list is up. A line is rendered again when what it shows changes,
+ * one line a frame and only when `idle` (the list is not sliding or uploading covers): a slide's last frame redraws
+ * the covers, and rendering text on top of that made the cover change lag. */
+void PackListDP_Draw(u16 packId, const char *packName, int idle)
 {
     struct ModDP *s = &gModDP;
     char line[96];
     char *p;
 
-    if (s->packShownId != packId || s->packShownDP != GetDP() || s->packShownFlag != (s->packNotEnough != 0)) {
+    if (!idle) {
+        /* keep the lines shown */
+    } else if (s->packShownId != packId) {
         s->packShownId = packId;
-        s->packShownDP = GetDP();
-        s->packShownFlag = s->packNotEnough != 0;
         MemCopy16((void *)(OBJ_PLTT + FONT_PALETTE * 0x20), gSystemFontPal, 0x20);
         p = AppendStr(line, packName);
         p = AppendStr(p, "   ");
         AppendStr(AppendNum(p, GetPackCost(packId)), sStrDPSuffix);
         s->packTopWidth = DpText_Render(PACK_TOP_TILE, line, FONT_COLOR, FONT_SHADOW);
+    } else if (s->packShownDP != GetDP() || s->packShownFlag != (s->packNotEnough != 0)) {
+        s->packShownDP = GetDP();
+        s->packShownFlag = s->packNotEnough != 0;
         if (s->packNotEnough) {
             p = AppendStr(line, sStrNotEnough);
         } else {
@@ -314,6 +319,9 @@ void PackListDP_NotEnough(void)
 void PackListDP_Reset(void)
 {
     gModDP.packShownId = 0xFFFF;
+    gModDP.packShownDP = 0xFFFFFFFF;
+    gModDP.packTopWidth = 0;        /* nothing shown until the first render */
+    gModDP.packBottomWidth = 0;
     gModDP.packNotEnough = 0;
 }
 

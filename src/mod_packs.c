@@ -28,7 +28,7 @@
 u32 GetDP(void);
 int SpendDP(u32 amount);
 u32 GetPackCost(u16 packId);
-void PackListDP_Draw(u16 packId, const char *packName);
+void PackListDP_Draw(u16 packId, const char *packName, int idle);
 void PackListDP_NotEnough(void);
 void PackListDP_Reset(void);
 
@@ -177,7 +177,8 @@ u16 CB_PackShop(void)
         if (gMain.seqState1 == 0)
             PackListDP_Reset();
         else if ((gMain.seqState1 == 1 && gSceneWork.state >= 2) || gMain.seqState1 == 2)
-            PackListDP_Draw(CentrePackId(), CentrePack()->name);
+            PackListDP_Draw(CentrePackId(), CentrePack()->name,
+                            gSceneWork.slideFrame == 0 && !(gSceneWork.flags & 1));
     }
     if (CB_GetPack()) {
         SaveGame();         /* the cards are in the trunk; the scene does not change, so nothing else saves */
