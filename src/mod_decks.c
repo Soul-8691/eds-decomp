@@ -22,34 +22,20 @@
 /* Yugi Muto: a competitive deck: strong Normal monsters, the classic floaters and searchers, and the best Magic
  * and Trap cards at their limits. */
 static const u16 sYugiDeck[] = {
-    /* Monsters (19) */
-    CARD_JINZO,
-    X3(CARD_SUMMONED_SKULL),
-    X3(CARD_VORSE_RAIDER),
-    X2(CARD_LA_JINN_THE_MYSTICAL_GENIE_OF_THE_LAMP),
-    X2(CARD_SANGAN),
-    X2(CARD_WITCH_OF_THE_BLACK_FOREST),
-    X2(CARD_MAN_EATER_BUG),
-    X2(CARD_MYSTIC_TOMATO),
-    CARD_SINISTER_SERPENT,
-    CARD_CYBER_JAR,
-    /* Magic (15) */
-    CARD_RAIGEKI,
-    CARD_DARK_HOLE,
-    CARD_HARPIES_FEATHER_DUSTER,
-    CARD_MONSTER_REBORN,
-    CARD_POT_OF_GREED,
-    CARD_CHANGE_OF_HEART,
-    CARD_SNATCH_STEAL,
-    CARD_HEAVY_STORM,
-    X2(CARD_SWORDS_OF_REVEALING_LIGHT),
-    X3(CARD_MYSTICAL_SPACE_TYPHOON),
-    X2(CARD_GRACEFUL_CHARITY),
-    /* Traps (6) */
-    CARD_MIRROR_FORCE,
-    CARD_CALL_OF_THE_HAUNTED,
-    X3(CARD_TRAP_HOLE),
-    CARD_WABOKU,
+    X3(CARD_XING_ZHEN_HU),
+    X3(CARD_XING_ZHEN_HU),
+    X3(CARD_XING_ZHEN_HU),
+    X3(CARD_XING_ZHEN_HU),
+    X3(CARD_XING_ZHEN_HU),
+    X3(CARD_XING_ZHEN_HU),
+    X3(CARD_XING_ZHEN_HU),
+    X3(CARD_XING_ZHEN_HU),
+    X3(CARD_XING_ZHEN_HU),
+    X3(CARD_XING_ZHEN_HU),
+    X3(CARD_XING_ZHEN_HU),
+    X3(CARD_XING_ZHEN_HU),
+    X3(CARD_XING_ZHEN_HU),
+    CARD_XING_ZHEN_HU,
 };
 
 static const struct DeckList sYugiDeckList = { sYugiDeck, ARRAY_COUNT(sYugiDeck), 0 };

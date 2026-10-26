@@ -312,6 +312,10 @@ int CanActivateEffect(struct ChainEntry *card, struct ChainEntry *chainLink, u16
 
     if (IsCardProhibited(card->card))
         return FALSE;
+#ifdef HAS_CARD_XING_ZHEN_HU
+    if (!fromHand && IsLockedByXingZhenHu(card))   /* added card: a Set card locked by Xing Zhen Hu */
+        return FALSE;
+#endif
     if (FlipEffectsLockedForTurn()) {
         switch (card->event) {
         case RESPONSE_FLIPPED:

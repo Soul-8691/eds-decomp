@@ -119,6 +119,10 @@ int EffectBrainControlChainB(struct ChainEntry *link, struct ChainEntry *prevLin
 int EffectSmashingGroundPrepare(struct ChainEntry *card, struct ChainEntry *chainLink, u16 fromHand);
 int EffectSmashingGroundResolve(struct ChainEntry *link, struct ChainEntry *chainedTo);
 int EffectMagicalMerchantResolve(struct ChainEntry *link, struct ChainEntry *chainedTo);
+int EffectXingZhenHuPrepare(struct ChainEntry *card, struct ChainEntry *chainLink, u16 fromHand);
+u16 EffectXingZhenHuCheck(struct ChainEntry *card, u16 pos);
+int EffectXingZhenHuChainB(struct ChainEntry *link, struct ChainEntry *prevLink);
+int EffectXingZhenHuResolve(struct ChainEntry *link, struct ChainEntry *chainedTo);
 int EffectCreatureSwapPrepare(struct ChainEntry *card, struct ChainEntry *chainLink, u16 fromHand);
 int EffectCreatureSwapResolve(struct ChainEntry *link, struct ChainEntry *chainedTo);
 int EffectMysticSwordsmanLv2Resolve(struct ChainEntry *link, struct ChainEntry *chainedTo);

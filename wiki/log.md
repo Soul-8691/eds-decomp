@@ -1265,3 +1265,13 @@ updated: 2026-09-29
 ## [2026-10-26] progress | Compulsory Evacuation Device
 - Normal Trap with Hane-Hane's handlers and prompt; the CPU uses it against attacks and summons.
 - Pages: [[added-cards]].
+
+## [2026-10-26] progress | Xing Zhen Hu
+- Continuous Trap: two Set targets get a ZONE_LINK_CONTINUOUS link from it; CanActivateEffect refuses a Set card
+  locked by a face-up, enabled Xing Zhen Hu (IsLockedByXingZhenHu). The CPU uses it on two of the human's Set cards.
+- Pages: [[added-cards]].
+
+## [2026-10-26] progress | Xing Zhen Hu: the lock now holds
+- The menu tests a Set Spell with CanActivateEffectOfCard, whose entry has no zone, so the CanActivateEffect check
+  missed it. IsZoneLockedByXingZhenHu is now also asked by CardMenu_GetSpellTrapCommands and CanActivateFieldCard.
+- Pages: [[added-cards]].

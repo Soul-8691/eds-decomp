@@ -1481,6 +1481,148 @@ int EffectBrainControlChainB(struct ChainEntry *link, struct ChainEntry *prevLin
 }
 #endif /* HAS_CARD_BRAIN_CONTROL */
 
+#ifdef HAS_CARD_XING_ZHEN_HU
+/* ---- Xing Zhen Hu --------------------------------------------------------------------------------------------------
+ * Continuous Trap: "Activate by selecting 2 Set Spell or Trap Cards on the field. The selected Spell or Trap Cards
+ * cannot be activated." (the card data's text)
+ * Like Spellbinding Circle on a monster: the resolve gives each target still Set a ZONE_LINK_CONTINUOUS link whose
+ * value is Xing Zhen Hu's DUEL_LOC. CanActivateEffect (effect_activation.c) asks IsLockedByXingZhenHu first, so a
+ * locked Set card is refused everywhere (card menu, response windows, CPU). The lock holds while that zone holds a
+ * face-up, enabled Xing Zhen Hu; a target that leaves takes its links with it (ClearZone).
+ *   prepare  two Set Spell/Trap cards on the field besides this one (the Set Xing Zhen Hu counts as Set)
+ *   chainB   two different Set cards with the cursor (B starts again); the CPU takes the human's */
+
+static const u8 sStrXingZhenHuPick[] = "Select 2 Set Spell or Trap Cards.";
+
+#define XING_PICK (PICK_BOTH_SIDES(PICK_FACE_DOWN_SPELL_TRAP))
+
+static int IsXingTarget(struct ChainEntry *card, int player, int zone)
+{
+    struct DuelZone *z;
+
+    if (zone < ZONE_SPELL_0 || zone > ZONE_SPELL_4 || (player == card->player && zone == card->zone))
+        return 0;
+    z = ZoneOf(player, zone);
+    return DUEL_CARD_ID(&z->card) != 0 && !z->isFaceUp && CanCardTargetZone(card->card, player, zone);
+}
+
+static int CountXingTargets(struct ChainEntry *card, int onlyPlayer)
+{
+    int player, zone, n = 0;
+
+    for (player = 0; player <= 1; player++) {
+        if (onlyPlayer >= 0 && player != onlyPlayer)
+            continue;
+        for (zone = ZONE_SPELL_0; zone <= ZONE_SPELL_4; zone++)
+            n += IsXingTarget(card, player, zone);
+    }
+    return n;
+}
+
+/* 1 if the Set card in (player, zone) is locked: its zone holds a ZONE_LINK_CONTINUOUS link from a face-up, enabled
+ * Xing Zhen Hu. Asked where the zone is known: the card menu (CardMenu_GetSpellTrapCommands) and the response windows
+ * (CanActivateFieldCard). */
+int IsZoneLockedByXingZhenHu(int player, int zone)
+{
+    struct DuelZone *z;
+    int i;
+
+    if (zone < ZONE_SPELL_0 || zone > ZONE_SPELL_4)
+        return 0;
+    z = ZoneOf(player, zone);
+    if (DUEL_CARD_ID(&z->card) == 0)
+        return 0;
+    for (i = 0; i < z->numLinks; i++) {
+        if ((u8)z->linkKinds[i] == ZONE_LINK_CONTINUOUS) {
+            u16 loc = z->links[i];
+            struct DuelZone *src = ZoneOf(DUEL_LOC_PLAYER(loc), DUEL_LOC_ZONE(loc));
+            u16 id = DUEL_CARD_ID(&src->card);
+
+            if (id != 0 && src->isFaceUp && !src->isDisabled
+                && ((const u16 *)CARD_ID_TO_NUMBER_ADDR)[id & CARD_ID_MASK] == CARD_XING_ZHEN_HU)
+                return 1;
+        }
+    }
+    return 0;
+}
+
+/* The same for a chain entry, from CanActivateEffect: only when its zone holds its card (CanActivateEffectOfCard
+ * leaves the zone unset, so the card menu also asks IsZoneLockedByXingZhenHu). */
+int IsLockedByXingZhenHu(struct ChainEntry *card)
+{
+    if (card->zone < ZONE_SPELL_0 || card->zone > ZONE_SPELL_4
+        || DUEL_CARD_ID(&ZoneOf(card->player, card->zone)->card) != (card->card & CARD_ID_MASK))
+        return 0;
+    return IsZoneLockedByXingZhenHu(card->player, card->zone);
+}
+
+int EffectXingZhenHuPrepare(struct ChainEntry *card, struct ChainEntry *chainLink, u16 fromHand)
+{
+    return !fromHand && CountXingTargets(card, -1) >= 2;
+}
+
+u16 EffectXingZhenHuCheck(struct ChainEntry *card, u16 pos)
+{
+    return IsXingTarget(card, (u8)pos, pos >> 8);
+}
+
+int EffectXingZhenHuChainB(struct ChainEntry *link, struct ChainEntry *prevLink)
+{
+    int player, zone;
+
+    if (link->player) {
+        /* the CPU: the human's Set cards first, then its own */
+        link->numTargets = 0;
+        for (player = 0; player <= 1 && link->numTargets < 2; player++) {
+            for (zone = ZONE_SPELL_0; zone <= ZONE_SPELL_4 && link->numTargets < 2; zone++) {
+                if (IsXingTarget(link, player, zone))
+                    TryAddEffectTarget(link, player, zone);
+            }
+        }
+        return 1;
+    }
+    switch (gChain.targetStep) {
+    case 0:
+        link->numTargets = 0;
+        TextBoxOpen(TEXTBOX_POS(6, 2), TEXTBOX_SIZE(18, 7), TEXTBOX_FLAGS_DEFAULT, sStrXingZhenHuPick);
+        gChain.targetStep++;
+        return 0;
+    default:
+        if (gMain.newKeys & B_BUTTON) {
+            gChain.targetStep = 0;
+            return 0;
+        }
+        if (DuelCursor_PickTarget(XING_PICK) != 0) {
+            player = gDuelScreen.selPlayer;
+            zone = gDuelScreen.selArea + gDuelScreen.selIndex;
+            if (IsXingTarget(link, player, zone)
+                && !(link->numTargets == 1 && link->targets[0] == DUEL_LOC(player, zone))
+                && TryAddEffectTarget(link, player, zone))
+                return link->numTargets >= 2;
+            PlaySE(SE_ERROR);
+        }
+        return 0;
+    }
+}
+
+int EffectXingZhenHuResolve(struct ChainEntry *link, struct ChainEntry *chainedTo)
+{
+    int i;
+
+    if (link->negated)
+        return EFFECT_STEP_DONE;
+    for (i = 0; i < link->numTargets && i < 2; i++) {
+        int player = (u8)link->targets[i];
+        int zone = link->targets[i] >> 8;
+        struct DuelZone *z = ZoneOf(player, zone);
+
+        if (DUEL_CARD_ID(&z->card) != 0 && !z->isFaceUp)
+            QueueAddZoneLink(link->player, DUEL_LOC(link->player, link->zone), link->targets[i], ZONE_LINK_CONTINUOUS);
+    }
+    return EFFECT_STEP_DONE;
+}
+#endif /* HAS_CARD_XING_ZHEN_HU */
+
 #ifdef HAS_CARD_MIND_CONTROL
 /* ---- Mind Control --------------------------------------------------------------------------------------------------
  * Normal Spell: "Target 1 monster your opponent controls; take control of it until the End Phase, but it cannot
@@ -2749,6 +2891,10 @@ int AiShouldActivateAddedCard(struct ChainEntry *entry)
                && (entry->event == RESPONSE_ATTACK_DECLARED || entry->event == RESPONSE_SUMMONED
                    || entry->event == RESPONSE_FLIP_SUMMONED || entry->event == RESPONSE_SPECIAL_SUMMONED);
 #endif
+#ifdef HAS_CARD_XING_ZHEN_HU
+    case CARD_XING_ZHEN_HU:                     /* only on two of the human's Set cards */
+        return CountXingTargets(entry, AI_HUMAN) >= 2;
+#endif
 #ifdef HAS_CARD_BOOK_OF_MOON
     case CARD_BOOK_OF_MOON:                     /* against the attacker (the target step takes the strongest) */
         return entry->event == RESPONSE_ATTACK_DECLARED && CountFaceUpMonsters(AI_HUMAN) > 0;
@@ -2867,6 +3013,16 @@ const struct CardEffect gAddedCardEffects[] = {
         NULL,
         NULL,
         (int (*)(struct ChainEntry *, struct ChainEntry *))EffectTargetableMonsterChainB,
+    },
+#endif
+#ifdef HAS_CARD_XING_ZHEN_HU
+    {
+        CARD_XING_ZHEN_HU, 0,
+        EffectXingZhenHuResolve,
+        EffectXingZhenHuCheck,
+        EffectXingZhenHuPrepare,
+        NULL,
+        EffectXingZhenHuChainB,
     },
 #endif
 #ifdef HAS_CARD_MIND_CONTROL

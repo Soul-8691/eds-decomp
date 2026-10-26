@@ -824,6 +824,10 @@ int CanActivateFieldCard(struct ChainEntry *ref, int player, int zone)
         return 0;
     if (CARD_TYPE(id) <= CARD_TYPE_REPTILE)
         return 0;                           /* a monster */
+#ifdef HAS_CARD_XING_ZHEN_HU
+    if (IsZoneLockedByXingZhenHu(player, zone))     /* added card: locked by Xing Zhen Hu */
+        return 0;
+#endif
     /* Outside the player's own turn only a card of spell speed 2 or more may be activated. */
     if (TURN_FLAGS_PLAYER((u32)TURN_FLAGS_VIA_ZONES) != player) {
         if (GetCardSpellSpeed(id) <= SPELL_SPEED_1)

@@ -113,6 +113,9 @@ int IsNightAssailantTarget(u16 id);
 void OnMonsterTurnedFaceDown(int player, int zone);
 /* Reinforcement of the Army (src/added_effects.c): a Level 4 or lower Warrior monster. */
 int IsReinforcementTarget(u16 id);
+/* Xing Zhen Hu (src/added_effects.c): 1 if `card` is a Set card it locks (CanActivateEffect refuses it). */
+int IsLockedByXingZhenHu(struct ChainEntry *card);
+int IsZoneLockedByXingZhenHu(int player, int zone);
 /* Spirit Reaper (src/added_effects.c): TryAddEffectTarget reports each field target here. */
 void OnFieldCardTargeted(struct ChainEntry *link, int player, int zone);
 /* Metamorphosis (src/added_effects.c): a Fusion Monster of the given Level. */

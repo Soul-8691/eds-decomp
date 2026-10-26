@@ -784,5 +784,9 @@ int CardMenu_GetSpellTrapCommands(u16 id, int player, int zone)
             flags &= (u16)~CARDMENU_MASK_ACTIVATE;
         break;
     }
+#ifdef HAS_CARD_XING_ZHEN_HU
+    if (IsZoneLockedByXingZhenHu(player, zone + ZONE_SPELL_0))     /* added card: locked by Xing Zhen Hu */
+        flags &= (u16)~CARDMENU_MASK_ACTIVATE;
+#endif
     return flags;
 }

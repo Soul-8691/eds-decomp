@@ -350,6 +350,29 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
 - Number side effect as for Magic Cylinder: the added cards after it in the list moved down one free number.
 - Checked in the source and the build; not tested in an emulator.
 
+### Xing Zhen Hu (2026-10-26)
+- Continuous Trap, the card data's (older) text: "Activate by selecting 2 Set Spell or Trap Cards on the field. The
+  selected Spell or Trap Cards cannot be activated." Engine key 1312 (`EffectLockMagicTrapResolve`) is a different
+  card (Cold Wave), so this is new code.
+- **Lock.** As Spellbinding Circle does for a monster, the resolve gives each target still Set a
+  `ZONE_LINK_CONTINUOUS` link whose value is Xing Zhen Hu's DUEL_LOC. `IsZoneLockedByXingZhenHu(player, zone)`
+  is true for a Set card whose zone holds such a link from a face-up, enabled Xing Zhen Hu. It is asked where the
+  zone is known:
+  - the card menu, `CardMenu_GetSpellTrapCommands` (card_command_menu.c), drops Activate;
+  - the response windows, `CanActivateFieldCard` (effect_targets4.c, the human's and the CPU's), refuse the card;
+  - `CanActivateEffect` (`IsLockedByXingZhenHu`) refuses it when the entry's zone holds that card (the CPU's
+    `AiTryPlaySpellTrap`).
+- **Fix (2026-10-26).** The first version only asked `CanActivateEffect`. But the menu tests a Set Spell with
+  `CanActivateEffectOfCard`, whose entry leaves the zone unset (stack garbage), so locked Set Spells could still be
+  activated.
+- **Ending the lock.** The lock ends when Xing Zhen Hu leaves or is disabled, since the source check fails. A target
+  that leaves takes the link with it (`ClearZone`).
+- **Prepare:** two Set Spell/Trap cards besides itself (a Set Xing Zhen Hu is face-down too).
+- **ChainB:** two different Set cards with the cursor (the error sound for a repeat; B starts again). The CPU takes
+  the human's Set cards first.
+- **CPU:** `AiShouldActivateAddedCard` activates it only when the human has two Set cards.
+- Checked in the source and the build; not tested in an emulator.
+
 ### Compulsory Evacuation Device (2026-10-26)
 - Normal Trap: "Target 1 monster on the field; return that target to the hand."
 - **Row:** Hane-Hane's handlers. `EffectTargetableMonsterCheck` / `EffectTargetableMonsterChainB` take any monster
