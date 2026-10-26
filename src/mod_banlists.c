@@ -110,6 +110,16 @@ s32 GetBanlistCopyLimit(u32 id)
     return CARD_COPY_LIMIT_NONE;
 }
 
+/* 1 if card id is in the card pool of the Deck Edit banlist in use. */
+int IsInActiveBanlistPool(u32 id)
+{
+    u16 number = gCardIdToNumber[id & CARD_ID_MASK];
+
+    if (number >= CARD_NUMBER_ALT_ART && number != 0xFFFF)
+        number -= CARD_NUMBER_ALT_ART;
+    return InBanlistPool(&sBanlists[GetActiveBanlist()], number);
+}
+
 /* For the format opponents' check (src/mod_banlist.c): the copies of card number `number` (base number) a deck
  * may hold in banlist n's format: 0xFF if not in its card pool, its Forbidden/Limited limit, else 3. */
 int FormatCardLimit(int n, u16 number)

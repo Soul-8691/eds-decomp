@@ -18,6 +18,8 @@
  *   Rename     the name entry
  *   Clear      after a second A
  * The recipe last loaded or saved is marked (header.active); it is only a mark, and it is never written back.
+ * A load that leaves cards out lists them (MODE_LEFT_OUT) with the reason: the Deck Edit banlist in use (forbidden,
+ * limited, not in its card pool: src/mod_banlists.c) or no copy left in the trunk.
  * The scene looks like the main menu: its sky, palette and the label as the title; the list is drawn as in
  * mod_banlist (a 32-tile text canvas copied into the OBJ tiles, 2D mapping, and shown as 32 x 16 sprites).
  * Like the other mod units, this one is @farcode and @rodata in units.txt and keeps its state at a fixed EWRAM
@@ -39,6 +41,11 @@
 
 /* src/mod_decks.c */
 int GetRecipePreset(int n, const char **name, const u16 **cards, u32 *count);
+/* src/mod_banlists.c: the Deck Edit banlist in use */
+int GetActiveBanlist(void);
+s32 GetBanlistCopyLimit(u32 id);
+int IsInActiveBanlistPool(u32 id);
+const char *BanlistName(int banlist);
 
 extern const u8 gMainMenuObjPal[], gMainMenuObjGfx[];
 extern const u16 gMainMenuSkyImage[];
@@ -76,6 +83,26 @@ enum RecipeMode {
     MODE_LIST,                      /* the list; A opens the actions */
     MODE_MENU,                      /* the actions of the cursor's slot (enum RecipeAction) */
     MODE_NAME,                      /* the name entry */
+    MODE_LEFT_OUT,                  /* the cards the last load left out */
+};
+
+/* Why a load left a card out (struct LeftOut). */
+enum LeftOutReason {
+    LEFT_OUT_FORBIDDEN,             /* the banlist allows 0 */
+    LEFT_OUT_LIMITED,               /* the banlist allows `limit` and the deck has them */
+    LEFT_OUT_NOT_IN_POOL,           /* not in the banlist's card pool */
+    LEFT_OUT_NO_COPY,               /* no copy left in the trunk */
+    LEFT_OUT_LIST_FULL,             /* the list holds its maximum */
+};
+
+#define LEFT_OUT_MAX    64
+
+struct LeftOut {
+    u16 id;
+    u8 count;
+    u8 reason;                      /* enum LeftOutReason */
+    u8 limit;
+    u8 pad;
 };
 
 enum RecipeAction {
@@ -105,6 +132,10 @@ struct DeckRecipes {
     char name[RECIPE_NAME_SIZE];    /* MODE_NAME: the name being entered */
     u8 sizes[RECIPE_COUNT][RECIPE_SUMMARY_SIZE];  /* deckSize, sideSize, fusionSize, used, name of every slot */
     char status[64];
+    u8 leftOutCount;                /* MODE_LEFT_OUT: entries */
+    u8 leftOutScroll;
+    u8 pad2[2];
+    struct LeftOut leftOut[LEFT_OUT_MAX];
     struct RecipeSlot buf;
 };
 extern struct DeckRecipes gDeckRecipes;
@@ -329,20 +360,59 @@ static void ReturnDecksToTrunk(void)
 }
 
 /* Take ids[0..n) out of the trunk into a saved list (add, which grows *size); returns the cards left out. */
-static int TakeFromTrunk(const u16 *ids, int n, void (*add)(u16), const u16 *size)
+/* Note card id as left out for `reason` (one entry per card and reason). */
+static void NoteLeftOut(u16 id, int reason, int limit)
+{
+    struct DeckRecipes *s = &gDeckRecipes;
+    int i;
+
+    for (i = 0; i < s->leftOutCount; i++) {
+        if (s->leftOut[i].id == id && s->leftOut[i].reason == reason) {
+            s->leftOut[i].count++;
+            return;
+        }
+    }
+    if (s->leftOutCount < LEFT_OUT_MAX) {
+        s->leftOut[i].id = id;
+        s->leftOut[i].count = 1;
+        s->leftOut[i].reason = reason;
+        s->leftOut[i].limit = limit;
+        s->leftOutCount++;
+    }
+}
+
+/* Take ids[0..n) out of the trunk into a saved list (add, which grows *size; copies, its copies of a card); returns
+ * the cards left out, noted with their reason: the banlist first (the list already holds what it allows), then the
+ * trunk, then a full list. */
+static int TakeFromTrunk(const u16 *ids, int n, void (*add)(u16), const u16 *size, u32 (*copies)(u16), int max)
 {
     int i, missing = 0;
 
     for (i = 0; i < n; i++) {
         u16 id = ids[i];
         u16 before = *size;
+        s32 limit;
 
         if (gSaveData.trunk[id].count != 0)
             add(id);
-        if (*size != before)
+        if (*size != before) {
             RemoveCardFromTrunk(id);
-        else
-            missing++;
+            continue;
+        }
+        missing++;
+        limit = GetBanlistCopyLimit(id);
+        if ((s32)copies(id) >= limit) {
+            if (!IsInActiveBanlistPool(id))
+                NoteLeftOut(id, LEFT_OUT_NOT_IN_POOL, 0);
+            else
+                NoteLeftOut(id, limit == 0 ? LEFT_OUT_FORBIDDEN : LEFT_OUT_LIMITED, limit);
+        } else if (gSaveData.trunk[id].count == 0) {
+            NoteLeftOut(id, LEFT_OUT_NO_COPY, 0);
+        } else if (*size >= max) {
+            NoteLeftOut(id, LEFT_OUT_LIST_FULL, 0);
+        } else {
+            NoteLeftOut(id, LEFT_OUT_NO_COPY, 0);
+        }
     }
     return missing;
 }
@@ -356,10 +426,14 @@ static int SwitchTo(int n)
 
     ReturnDecksToTrunk();
     ReadSlot(n);
-    missing = TakeFromTrunk(b->deck, b->used ? b->deckSize : 0, AddCardToSavedDeck, &gSaveData.deckSize);
-    missing += TakeFromTrunk(b->side, b->used ? b->sideSize : 0, AddCardToSavedSideDeck, &gSaveData.sideDeckSize);
+    gDeckRecipes.leftOutCount = 0;
+    gDeckRecipes.leftOutScroll = 0;
+    missing = TakeFromTrunk(b->deck, b->used ? b->deckSize : 0, AddCardToSavedDeck, &gSaveData.deckSize,
+                            GetTrunkDeckCopies, DECK_MAX_CARDS);
+    missing += TakeFromTrunk(b->side, b->used ? b->sideSize : 0, AddCardToSavedSideDeck, &gSaveData.sideDeckSize,
+                             GetTrunkSideCopies, SIDE_DECK_MAX_CARDS);
     missing += TakeFromTrunk(b->fusion, b->used ? b->fusionSize : 0, AddCardToSavedFusionDeck,
-                             &gSaveData.fusionDeckSize);
+                             &gSaveData.fusionDeckSize, GetTrunkFusionCopies, FUSION_DECK_MAX_CARDS);
     SetActive(n);
     SaveGame();
     return missing;
@@ -467,8 +541,8 @@ static const char sStrNameHelp2[] = "START: done   SELECT: cancel";
 static const char sStrNamePrompt[] = "Name: ";
 static const char sStrRecipe[] = "Recipe ";
 static const char sStrLoaded[] = " is now your deck.";
-static const char sStrMissing[] = " cards were not in the trunk.";
-static const char sStrMissing1[] = " card was not in the trunk.";
+static const char sStrMissing[] = " cards were left out.";
+static const char sStrMissing1[] = " card was left out.";
 static const char sStrUnsaved[] = "Your deck is not saved. A again: load anyway.";
 static const char sStrReplace[] = "A again: replace it with your deck.";
 static const char sStrClearAsk[] = "A again: clear it.";
@@ -476,6 +550,18 @@ static const char sStrSaved[] = "Your deck was saved as recipe ";
 static const char sStrRenamed[] = " was renamed.";
 static const char sStrCleared[] = " was cleared.";
 static const char sStrIsEmpty[] = " is empty.";
+static const char sStrLeftOutHead[] = " card(s) left out (banlist: ";
+static const char sStrLeftOutHelp1[] = "UP/DOWN: scroll   A/B: close";
+static const char sStrLeftOutHelp2[] = "Deck Edit's banlist is set in Banlists.";
+static const char sStrReasonForbidden[] = "forbidden";
+static const char sStrReasonLimited[] = "limited to ";
+static const char sStrReasonPool[] = "not in pool";
+static const char sStrReasonNoCopy[] = "none in trunk";
+static const char sStrReasonFull[] = "list full";
+
+#define LEFT_OUT_ROWS       7           /* entry rows under the heading */
+#define LEFT_OUT_NAME_CHARS 26          /* "xN " + name + ".." ends by x 163, before the reason */
+#define LEFT_OUT_REASON_X   170
 
 static const char *const sActionNames[ACTION_COUNT] = {
     "Load", "Save here", "Rename", "Clear", "Cancel",
@@ -619,11 +705,64 @@ static void RenderNameEntry(void)
     DrawLine(ROWS_VISIBLE * ROW_HEIGHT + 23, COLOR_STATUS, s->status);
 }
 
+/* The cards the last load left out: a heading (count, banlist), then "xN name" and the reason. */
+static void RenderLeftOut(void)
+{
+    struct DeckRecipes *s = &gDeckRecipes;
+    char line[64];
+    char *p;
+    int i, total = 0;
+
+    for (i = 0; i < s->leftOutCount; i++)
+        total += s->leftOut[i].count;
+    p = AppendNum(line, total, 1);
+    p = AppendStr(p, sStrLeftOutHead);
+    AppendStr(AppendStr(p, BanlistName(GetActiveBanlist())), "):");
+    DrawLine(0, COLOR_STATUS, line);
+    for (i = 0; i < LEFT_OUT_ROWS && s->leftOutScroll + i < s->leftOutCount; i++) {
+        struct LeftOut *e = &s->leftOut[s->leftOutScroll + i];
+        const char *name = (const char *)(gCardNames + (e->id & CARD_ID_MASK) * CARD_NAME_SIZE);
+        int k;
+
+        p = AppendNum(AppendStr(line, "x"), e->count, 1);
+        p = AppendStr(p, " ");
+        for (k = 0; k < LEFT_OUT_NAME_CHARS && name[k]; k++)
+            *p++ = name[k];
+        *p = 0;
+        if (name[k])
+            AppendStr(p, "..");
+        DrawLine((i + 1) * ROW_HEIGHT, COLOR_ROW, line);
+        switch (e->reason) {
+        case LEFT_OUT_FORBIDDEN:
+            AppendStr(line, sStrReasonForbidden);
+            break;
+        case LEFT_OUT_LIMITED:
+            AppendNum(AppendStr(line, sStrReasonLimited), e->limit, 1);
+            break;
+        case LEFT_OUT_NOT_IN_POOL:
+            AppendStr(line, sStrReasonPool);
+            break;
+        case LEFT_OUT_LIST_FULL:
+            AppendStr(line, sStrReasonFull);
+            break;
+        default:
+            AppendStr(line, sStrReasonNoCopy);
+            break;
+        }
+        DrawText(LEFT_OUT_REASON_X, (i + 1) * ROW_HEIGHT, COLOR_CURSOR, line);
+    }
+    DrawLine(ROWS_VISIBLE * ROW_HEIGHT, COLOR_HELP, sStrLeftOutHelp1);
+    DrawLine(ROWS_VISIBLE * ROW_HEIGHT + 10, COLOR_HELP, sStrLeftOutHelp2);
+    DrawLine(ROWS_VISIBLE * ROW_HEIGHT + 23, COLOR_STATUS, s->status);
+}
+
 static void Render(void)
 {
     TextCanvasInitEx(32, CANVAS_ROWS, 0, 0);
     if (gDeckRecipes.mode == MODE_NAME)
         RenderNameEntry();
+    else if (gDeckRecipes.mode == MODE_LEFT_OUT)
+        RenderLeftOut();
     else
         RenderList();
     TextCanvasToTiles((u16 *)OBJ_TILE(CANVAS_TILE), 0);
@@ -767,7 +906,7 @@ static void DoAction(void)
         p = AppendStr(StatusRecipe(n), sStrLoaded);
         if (missing != 0)
             AppendStr(AppendNum(AppendStr(p, " "), missing, 1), missing == 1 ? sStrMissing1 : sStrMissing);
-        s->mode = MODE_LIST;
+        s->mode = s->leftOutCount != 0 ? MODE_LEFT_OUT : MODE_LIST;
         PlaySE(SE_CONFIRM);
         return;
     case ACTION_SAVE:
@@ -868,6 +1007,22 @@ static int HandleInput(void)
     }
     if (s->mode == MODE_MENU) {
         HandleMenu();
+        return 0;
+    }
+    if (s->mode == MODE_LEFT_OUT) {
+        if (keys & (A_BUTTON | B_BUTTON)) {
+            s->mode = MODE_LIST;
+            PlaySE(SE_CANCEL);
+        } else if ((keys & DPAD_UP) && s->leftOutScroll > 0) {
+            s->leftOutScroll--;
+            PlaySE(SE_CURSOR);
+        } else if ((keys & DPAD_DOWN) && s->leftOutScroll + LEFT_OUT_ROWS < s->leftOutCount) {
+            s->leftOutScroll++;
+            PlaySE(SE_CURSOR);
+        } else {
+            return 0;
+        }
+        Render();
         return 0;
     }
     if (keys & B_BUTTON) {

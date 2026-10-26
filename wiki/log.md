@@ -1439,3 +1439,8 @@ updated: 2026-09-29
 - mod_decks.c: Jazz-Masked Control and Gyomberman-Muka Muka Turbo (main + extra), the Critter opponent picks 60/40;
   both added as Deck Recipe presets 04-05 (Chaos Turbo, Warrior, Goat Control now 06-08).
 - Pages: [[deck-recipes]], [[yugi-kaiba-opponent]].
+
+## [2026-10-26] progress | Deck Recipes: explain left-out cards
+- A load that leaves cards out now lists them with the reason (banlist forbidden/limited/not in pool, none in trunk,
+  list full). Soul Control's 35 cards under Goat: 5 cards the Goat banlist refuses.
+- Pages: [[deck-recipes]].

@@ -63,8 +63,13 @@ A recipe is a template: it changes only when the player saves to it, renames it 
   - **Load.** If the current deck isn't the marked recipe's lists (or there's no mark) and has cards, a second A
     is asked for ("Your deck is not saved"). Then every card of the three decks goes back to the trunk
     (`ReturnDecksToTrunk`) and the recipe's cards come out of it (`AddCardToSaved*Deck`, then
-    `RemoveCardFromTrunk`). Cards the trunk lacks, or that the banlist refuses, are counted as missing; the recipe
-    keeps them. Then the slot is marked and the game saves.
+    `RemoveCardFromTrunk`). Cards the trunk lacks, or that the banlist refuses, are left out; the recipe keeps them.
+    Then the slot is marked and the game saves.
+  - **Left-out list.** If cards were left out, a list opens (`MODE_LEFT_OUT`): "N card(s) left out (banlist: X)",
+    then "xN name" with the reason: forbidden, limited to N, not in pool (the Deck Edit banlist in use), none in
+    trunk, or list full. The banlist wins when the list already holds what it allows. Up/Down scroll, A or B
+    closes. Example: Soul Control under the default Goat banlist leaves out Change of Heart, Dark Hole, Monster
+    Reborn and Raigeki (forbidden) and a second Swords of Revealing Light (limited to 1).
   - **Save here.** An empty slot opens the name entry (starting from the marked recipe's name). A used slot asks
     for a second A and keeps its name. The slot is marked.
   - **Rename.** The name entry.
