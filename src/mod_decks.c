@@ -455,6 +455,138 @@ static const struct DeckList *CritterDeck(void)
 }
 #endif
 
+/* The Treasure format opponent (Espa Roba's slot, src/mod_opponents.c): one of three decks per duel (TreasureDeck):
+ * Tomato Control 80%, Recruiter Control 10%, Germ Burn 10% (decks/dump truck-Tomato Control.ydk,
+ * decks/SolEmerald69-Recruiter Control.ydk, decks/bsocks-Germ Burn.ydk; main and extra decks). Thousand Dragon is
+ * the .ydk's 41462083. */
+static const u16 sTreasureTomatoControl[] = {
+    /* Monsters (18) */
+    CARD_CANNON_SOLDIER,
+    X3(CARD_MAGICIAN_OF_FAITH),
+    X3(CARD_MAN_EATER_BUG),
+    X3(CARD_MYSTIC_TOMATO),
+    X2(CARD_SANGAN),
+    X2(CARD_WITCH_OF_THE_BLACK_FOREST),
+    CARD_GIANT_SOLDIER_OF_STONE,
+    X3(CARD_MECHANICALCHASER),
+    /* Spells (17) */
+    CARD_CHANGE_OF_HEART,
+    CARD_CONFISCATION,
+    CARD_DARK_HOLE,
+    CARD_DELINQUENT_DUO,
+    X3(CARD_FISSURE),
+    CARD_HEAVY_STORM,
+    CARD_MONSTER_REBORN,
+    X3(CARD_MYSTICAL_SPACE_TYPHOON),
+    CARD_PAINFUL_CHOICE,
+    CARD_POT_OF_GREED,
+    CARD_RAIGEKI,
+    CARD_SNATCH_STEAL,
+    CARD_THE_FORCEFUL_SENTRY,
+    /* Traps (5) */
+    CARD_MIRROR_FORCE,
+    CARD_SEVEN_TOOLS_OF_THE_BANDIT,
+    X3(CARD_TRAP_HOLE),
+    /* Fusion Deck (15) */
+    X3(CARD_CHARUBIN_THE_FIRE_KNIGHT),
+    X3(CARD_DARKFIRE_DRAGON),
+    X3(CARD_DRAGONESS_THE_WICKED_KNIGHT),
+    X3(CARD_FLAME_GHOST),
+    X3(CARD_FLAME_SWORDSMAN),
+};
+STATIC_ASSERT(ARRAY_COUNT(sTreasureTomatoControl) == 40 + 15, TreasureTomatoControlSize);
+static const struct DeckList sTreasureTomatoControlList = { sTreasureTomatoControl, ARRAY_COUNT(sTreasureTomatoControl), 0 };
+
+#if defined(HAS_CARD_BLACK_SKULL_DRAGON)
+#define MOD_TREASURE_RECRUITER_CONTROL 1
+static const u16 sTreasureRecruiterControl[] = {
+    /* Monsters (17) */
+    X3(CARD_MYSTIC_TOMATO),
+    X2(CARD_SANGAN),
+    X2(CARD_WITCH_OF_THE_BLACK_FOREST),
+    CARD_CANNON_SOLDIER,
+    X3(CARD_MOTHER_GRIZZLY),
+    CARD_CATAPULT_TURTLE,
+    X2(CARD_MECHANICALCHASER),
+    X2(CARD_MAGICIAN_OF_FAITH),
+    CARD_CYBER_JAR,
+    /* Spells (18) */
+    CARD_PAINFUL_CHOICE,
+    CARD_POT_OF_GREED,
+    X2(CARD_LAST_WILL),
+    CARD_MONSTER_REBORN,
+    CARD_RAIGEKI,
+    CARD_DARK_HOLE,
+    CARD_CHANGE_OF_HEART,
+    CARD_SNATCH_STEAL,
+    CARD_DELINQUENT_DUO,
+    CARD_CONFISCATION,
+    CARD_THE_FORCEFUL_SENTRY,
+    X3(CARD_MYSTICAL_SPACE_TYPHOON),
+    CARD_HEAVY_STORM,
+    X2(CARD_RUSH_RECKLESSLY),
+    /* Traps (5) */
+    CARD_MIRROR_FORCE,
+    X2(CARD_TRAP_HOLE),
+    X2(CARD_WABOKU),
+    /* Fusion Deck (15) */
+    X3(CARD_BLACK_SKULL_DRAGON),
+    X3(CARD_TWIN_HEADED_THUNDER_DRAGON),
+    X3(CARD_LABYRINTH_TANK),
+    X2(CARD_THOUSAND_DRAGON),
+    X2(CARD_BICKURIBOX),
+    X2(CARD_MUSICIAN_KING),
+};
+STATIC_ASSERT(ARRAY_COUNT(sTreasureRecruiterControl) == 40 + 15, TreasureRecruiterControlSize);
+static const struct DeckList sTreasureRecruiterControlList = { sTreasureRecruiterControl,
+                                                               ARRAY_COUNT(sTreasureRecruiterControl), 0 };
+#endif
+
+static const u16 sTreasureGermBurn[] = {
+    /* Monsters (18) */
+    CARD_CANNON_SOLDIER,
+    CARD_CYBER_JAR,
+    X3(CARD_GIANT_GERM),
+    X3(CARD_MYSTIC_TOMATO),
+    X3(CARD_NIMBLE_MOMONGA),
+    X2(CARD_SANGAN),
+    X3(CARD_SPEAR_CRETIN),
+    X2(CARD_WITCH_OF_THE_BLACK_FOREST),
+    /* Spells (15) */
+    X3(CARD_CHAIN_ENERGY),
+    CARD_CHANGE_OF_HEART,
+    CARD_CONFISCATION,
+    CARD_DARK_HOLE,
+    CARD_DELINQUENT_DUO,
+    X3(CARD_GIANT_TRUNADE),
+    CARD_MONSTER_REBORN,
+    CARD_POT_OF_GREED,
+    CARD_RAIGEKI,
+    CARD_THE_FORCEFUL_SENTRY,
+    CARD_TOLL,
+    /* Traps (7) */
+    X3(CARD_JUST_DESSERTS),
+    X3(CARD_MAGIC_JAMMER),
+    CARD_MIRROR_FORCE,
+};
+STATIC_ASSERT(ARRAY_COUNT(sTreasureGermBurn) == 40, TreasureGermBurnSize);
+static const struct DeckList sTreasureGermBurnList = { sTreasureGermBurn, ARRAY_COUNT(sTreasureGermBurn), 0 };
+
+/* The Treasure opponent's deck for this duel: Tomato Control 8 in 10, Recruiter Control 1 in 10, Germ Burn 1 in 10
+ * (Recruiter Control's share goes to Tomato Control when it is not in the build). */
+static const struct DeckList *TreasureDeck(void)
+{
+    u32 roll = (u32)Random() % 10;
+
+    if (roll == 9)
+        return &sTreasureGermBurnList;
+#ifdef MOD_TREASURE_RECRUITER_CONTROL
+    if (roll == 8)
+        return &sTreasureRecruiterControlList;
+#endif
+    return &sTreasureTomatoControlList;
+}
+
 /* The replacement deck of opponent `opponent` (enum DuelistId), or NULL to keep the original. */
 const struct DeckList *GetOpponentDeckOverride(int opponent)
 {
@@ -469,6 +601,8 @@ const struct DeckList *GetOpponentDeckOverride(int opponent)
     case DUELIST_TRISTAN:
         return TristanDeck();
 #endif
+    case DUELIST_ESPA_ROBA:             /* the Treasure format opponent */
+        return TreasureDeck();
     case DUELIST_REX:                   /* the Critter format opponent */
 #ifdef MOD_CRITTER_MASKED_CONTROL
         return CritterDeck();
@@ -512,6 +646,9 @@ static const char sNameVanillaBeat[] = "ellietincan-Vanilla Beat";
 static const char sNameStallMill[] = "DK-ZERO-Stall Mill";
 static const char sNameMaskedControl[] = "Jazz-Masked Control";
 static const char sNameMukaMukaTurbo[] = "Gyomberman-Muka Muka Turbo";
+static const char sNameTomatoControl[] = "dump truck-Tomato Control";
+static const char sNameRecruiterControl[] = "SolEmerald69-Recruiter Control";
+static const char sNameGermBurn[] = "bsocks-Germ Burn";
 static const char sNameChaosTurbo[] = "LR-Chaos Turbo";
 static const char sNameWarrior[] = "sdlkilla-Warrior";
 static const char sNameGoatControl[] = "geistD-Goat Control";
@@ -530,6 +667,11 @@ static const struct RecipePreset sRecipePresets[] = {
     { sNameMaskedControl, &sCritterMaskedControlList },
 #endif
     { sNameMukaMukaTurbo, &sCritterMukaMukaTurboList },
+    { sNameTomatoControl, &sTreasureTomatoControlList },
+#ifdef MOD_TREASURE_RECRUITER_CONTROL
+    { sNameRecruiterControl, &sTreasureRecruiterControlList },
+#endif
+    { sNameGermBurn, &sTreasureGermBurnList },
 #ifdef MOD_RED_DECK
     { sNameChaosTurbo, &sRedDeckList },
 #endif

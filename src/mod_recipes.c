@@ -652,7 +652,18 @@ static void RenderList(void)
             DrawLine(i * ROW_HEIGHT, color, line);
             continue;
         }
-        AppendStr(p, name[0] ? name : sStrCustom);
+        if (!name[0]) {
+            AppendStr(p, sStrCustom);
+        } else {
+            int k;
+
+            /* a name longer than RECIPE_NAME_MAX (a preset's .ydk name) is cut before the counts */
+            for (k = 0; name[k] && (k < RECIPE_NAME_MAX - 2 || (k < RECIPE_NAME_MAX && !name[RECIPE_NAME_MAX])); k++)
+                *p++ = name[k];
+            *p = 0;
+            if (name[k])
+                AppendStr(p, "..");
+        }
         DrawLine(i * ROW_HEIGHT, color, line);
         p = AppendNum(AppendStr(line, "D"), s->sizes[n][0], 1);
         p = AppendNum(AppendStr(p, " S"), s->sizes[n][1], 1);

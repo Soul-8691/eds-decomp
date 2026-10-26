@@ -26,7 +26,7 @@ An eighth main-menu item added by this build (`src/mod_recipes.c`, a `@farcode`/
   - `MainMenu_Init` writes the label to tiles 0x200-0x23F, the two tile rows after the 0x4000-byte sheet.
 
 ## Preset recipes
-The SRAM area is set up on the first visit (and after a New Game) with recipes 01-08 from `GetRecipePreset` (src/mod_decks.c). These are the
+The SRAM area is set up on the first visit (and after a New Game) with recipes 01-11 from `GetRecipePreset` (src/mod_decks.c). These are the
 mod's deck tables, named after their .ydk files:
 
 | Slot | Name | Deck table |
@@ -36,9 +36,12 @@ mod's deck tables, named after their .ydk files:
 | 03 | DK-ZERO-Stall Mill | Tristan's Stall Mill |
 | 04 | Jazz-Masked Control | the Critter opponent (60%) |
 | 05 | Gyomberman-Muka Muka Turbo | the Critter opponent (40%) |
-| 06 | LR-Chaos Turbo | Red starter, Tea, the Chaos Turbo deck opponent |
-| 07 | sdlkilla-Warrior | Green starter, the Warrior deck opponent |
-| 08 | geistD-Goat Control | Black starter, the Goat Control deck opponent |
+| 06 | dump truck-Tomato Control | the Treasure opponent (80%) |
+| 07 | SolEmerald69-Recruiter Control | the Treasure opponent (10%) |
+| 08 | bsocks-Germ Burn | the Treasure opponent (10%) |
+| 09 | LR-Chaos Turbo | Red starter, Tea, the Chaos Turbo deck opponent |
+| 10 | sdlkilla-Warrior | Green starter, the Warrior deck opponent |
+| 11 | geistD-Goat Control | Black starter, the Goat Control deck opponent |
 
 - Fusion Monsters in a table go to the recipe's Fusion Deck. There are no Side Decks, as with the opponents' decks.
 - A table that this build leaves out (its cards aren't all in the card list) is skipped.
@@ -86,3 +89,5 @@ The menu's sky (BG1) and palette, with the highlighted label as the title. The l
 Rows read `> 01 * name` (`*` marks the recipe in use), with `D40 S0 F3` at x = 186. Colours from the menu palette: rows 8, cursor 7, status 3, help 10, shadow 1.
 
 Related: [[main-menu]], [[save-type]], [[added-cards]].
+
+List rows cut a name longer than 28 characters to 26 and "..".

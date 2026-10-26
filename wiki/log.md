@@ -1444,3 +1444,8 @@ updated: 2026-09-29
 - A load that leaves cards out now lists them with the reason (banlist forbidden/limited/not in pool, none in trunk,
   list full). Soul Control's 35 cards under Goat: 5 cards the Goat banlist refuses.
 - Pages: [[deck-recipes]].
+
+## [2026-10-26] progress | Treasure's decks; recipe presets 06-08
+- mod_decks.c: Tomato Control, Recruiter Control, Germ Burn (main + extra); the Treasure opponent picks 80/10/10;
+  presets 06-08 (Chaos Turbo, Warrior, Goat Control now 09-11). Recipe rows cut names over 28 characters.
+- Pages: [[deck-recipes]], [[yugi-kaiba-opponent]].

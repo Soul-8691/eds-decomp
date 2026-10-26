@@ -32,7 +32,9 @@ not tested in an emulator.
 - **Decks.**
   - Yugi-Kaiba plays the three Yugi-Kaiba .ydk decks (Soul Control 50%, Vanilla Beat 30%, Stall Mill 20%).
   - Critter plays Jazz-Masked Control 60% and Gyomberman-Muka Muka Turbo 40% (`CritterDeck`, main + extra decks).
-  - The other 13 keep their original duelists' decks for now.
+  - Treasure plays dump truck-Tomato Control 80%, SolEmerald69-Recruiter Control 10% and bsocks-Germ Burn 10%
+    (`TreasureDeck`).
+  - The other 12 keep their original duelists' decks for now.
   - The .ydk files are in `decks/`. Their passcodes resolve through the built password table, which stores each
     passcode as 4 BCD bytes in digit order.
 - **Portraits.** Yugi-Kaiba La Jinn, Critter Sangan, Imperial Imperial Order, Treasure Confiscation, Android Jinzo,
