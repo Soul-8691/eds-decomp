@@ -348,6 +348,11 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
     with a free zone; level 7+ also Tributes its own weakest monster) and uses up its Normal Summon.
   - `AiPlayAddedCards` plays the card when its prepare passes.
 - Number side effect as for Magic Cylinder: the added cards after it in the list moved down one free number.
+- **Prepare fixed** (effect_prepare2.c, under `HAS_CARD_SOUL_EXCHANGE`). The engine's key 1220 required a monster of
+  the *player's* (`CountMonsters(card->player)`), so the card couldn't be used on an empty field, its usual play. It
+  never checked the opponent's side either. It now requires an opponent's monster (`CountMonsters(1 - player)`).
+  The other conditions are unchanged: Main Phase 1, Normal Summon unused, a level 5-6 with a free zone or a level 7+
+  with one own Tribute (or a face-up Catapult Turtle / Little Swordsman of Aile / Cannon Soldier).
 - Checked in the source and the build; not tested in an emulator.
 
 ### Dimension Fusion (2026-10-26)

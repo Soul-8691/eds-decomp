@@ -1350,3 +1350,7 @@ updated: 2026-09-29
 ## [2026-10-26] progress | Main menu without the MENU header
 - MainMenu_DrawItems no longer draws the header; the 8 rows start at y = 16 (centred).
 - Pages: [[deck-recipes]].
+
+## [2026-10-26] progress | Fix Soul Exchange activation
+- Key 1220's prepare required the player's own monster instead of the opponent's; changed under HAS_CARD_SOUL_EXCHANGE.
+- Pages: [[added-cards]].

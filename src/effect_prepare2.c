@@ -371,8 +371,15 @@ int EffectCanTributeOpponentMonsterPrepare(struct ChainEntry *card)
 
     if (gDuel.phase != PHASE_MAIN1)
         return 0;
+#ifdef HAS_CARD_SOUL_EXCHANGE
+    /* Changed for the added Soul Exchange (src/added_effects.c): the card needs a monster of the opponent's to
+     * target, not one of the player's (the original refused it on an empty field, its usual play). */
+    if (CountMonsters(1 - card->player) == 0)
+        return 0;
+#else
     if (CountMonsters(card->player) == 0)
         return 0;
+#endif
     if (CountActiveCardsOnField(0, CARD_1418) > 0 || CountActiveCardsOnField(1, CARD_1418) > 0)
         return 0;
     for (i = ZONE_MONSTER_0; i <= ZONE_MONSTER_4; i++) {
