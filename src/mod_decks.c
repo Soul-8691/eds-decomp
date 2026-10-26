@@ -1,7 +1,7 @@
 /*
  * mod_decks: decks that replace the original ones. Not part of the original ROM.
  *   GetOpponentDeckOverride   opponent decks (gOpponentDecks); LoadOpponentDeck (ai_deck.c) asks it first
- *   BuildModStarterDeck       starter decks (Red, Green, Black); BuildStarterDeck (title_screen.c) asks it first
+ *  *   BuildModStarterDeck       starter decks (Red, Green, Black); BuildStarterDeck (title_screen.c) asks it first
  *   GiveStartingTrunk         the cards a new game starts with in the trunk (BuildStarterDeck)
  * Like added_effects, this unit is @farcode and @rodata at the end in units.txt, so it does not move the game's
  * code or data. Decks keep to the Forbidden/Limited list (gCardCopyLimits): LoadOpponentDeck drops every copy of
@@ -115,6 +115,18 @@ static const struct DeckList sJoeyDeckList = { sJoeyDeck, ARRAY_COUNT(sJoeyDeck)
 
 /* Bakura: the "geistD-Goat Control" deck (geistD-Goat Control.ydk, main and extra deck): Scapegoat and Metamorphosis into
  * Thousand-Eyes Restrict, flip monsters and Tsukuyomi, Black Luster Soldier and Dark Magician of Chaos. */
+
+ // For later when these cards are actually coded
+    // && defined(HAS_CARD_DARK_BALTER_THE_TERRIBLE) \
+    // && defined(HAS_CARD_DARK_BLADE_THE_DRAGON_KNIGHT) \
+    // && defined(HAS_CARD_FIEND_SKULL_DRAGON) \
+    // && defined(HAS_CARD_GATLING_DRAGON) \
+    // && defined(HAS_CARD_KING_DRAGUN) \
+    // && defined(HAS_CARD_OJAMA_KING) \
+    // && defined(HAS_CARD_REAPER_ON_THE_NIGHTMARE) \
+    // && defined(HAS_CARD_RYU_SENSHI) \
+    // && defined(HAS_CARD_THE_LAST_WARRIOR_FROM_ANOTHER_PLANET) \
+ 
 #if defined(HAS_CARD_ABYSS_SOLDIER) \
     && defined(HAS_CARD_BLACK_LUSTER_SOLDIER_ENVOY_OF_THE_BEGINNING) \
     && defined(HAS_CARD_BREAKER_THE_MAGICAL_WARRIOR) \
@@ -129,15 +141,6 @@ static const struct DeckList sJoeyDeckList = { sJoeyDeck, ARRAY_COUNT(sJoeyDeck)
     && defined(HAS_CARD_JAR_OF_GREED) \
     && defined(HAS_CARD_TORRENTIAL_TRIBUTE) \
     && defined(HAS_CARD_TRAP_DUSTSHOOT) \
-    // && defined(HAS_CARD_DARK_BALTER_THE_TERRIBLE) \
-    // && defined(HAS_CARD_DARK_BLADE_THE_DRAGON_KNIGHT) \
-    // && defined(HAS_CARD_FIEND_SKULL_DRAGON) \
-    // && defined(HAS_CARD_GATLING_DRAGON) \
-    // && defined(HAS_CARD_KING_DRAGUN) \
-    // && defined(HAS_CARD_OJAMA_KING) \
-    // && defined(HAS_CARD_REAPER_ON_THE_NIGHTMARE) \
-    // && defined(HAS_CARD_RYU_SENSHI) \
-    // && defined(HAS_CARD_THE_LAST_WARRIOR_FROM_ANOTHER_PLANET) \
     && defined(HAS_CARD_THOUSAND_EYES_RESTRICT)
 #define MOD_BAKURA_DECK 1
 static const u16 sBakuraDeck[] = {
