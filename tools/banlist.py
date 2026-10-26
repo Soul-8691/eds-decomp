@@ -5,8 +5,9 @@
   python3 tools/banlist.py --all build/include/banlists.h             # the selectable banlists (src/mod_banlists.c)
 
 Inputs (repository root):
-  yugi-kaiba.txt, one card name per line (the legal card pool of Tristan's format), and banlists/yugi-kaiba_ban.json;
-  banlists/<name>_ban.json, the Deck Edit banlists, in the order of BANLISTS.
+  card_pools/yugi-kaiba.txt, one card name per line (the legal card pool of Tristan's format), and banlists/yugi-kaiba_ban.json;
+  banlists/<name>_ban.json and card_pools/<name>.txt, the Deck Edit banlists and their card pools, in the order
+  of BANLISTS (a card outside the pool may not be in a deck).
 The banlists are YGOPRODeck-style ("forbidden", "limited", "semiLimited" arrays of entries with a "cardName"; the
 other arrays, such as "unlimited", list cards that came off the list and are ignored). Names are matched against the
 built card names (build/assets/newcards__names.bin, original and added cards), first exactly, then ignoring case,
@@ -18,7 +19,7 @@ import json
 import struct
 import sys
 
-POOL = 'yugi-kaiba.txt'
+POOL = 'card_pools/yugi-kaiba.txt'
 BANLIST = 'banlists/yugi-kaiba_ban.json'
 NAMES = 'build/assets/newcards__names.bin'
 ID_TO_NUMBER = 'build/assets/newcards__id_to_number.bin'
@@ -28,26 +29,29 @@ ALT_ART = 2000
 ALIASES = {
     'Red-Eyes Black Dragon': 'Red-Eyes B. Dragon',
     'Ring of Destruction': 'Bell of Destruction',  # not in the game; its stand-in takes its limit
+    'Black Skull Dragon': 'B. Skull Dragon',
+    'Kuwagata α': 'Kuwagata a',
 }
 LIMITS = {'forbidden': 0, 'limited': 1, 'semiLimited': 2}
-# The selectable banlists: (menu name, file under banlists/), in menu order.
+# The selectable banlists: (menu name, banlist file stem, card pool file stems: the pool is their union).
 BANLISTS = [
-    ('Yugi-Kaiba', 'yugi-kaiba'),
-    ('Critter', 'critter'),
-    ('Treasure', 'treasure'),
-    ('Imperial', 'imperial'),
-    ('Android', 'android'),
-    ('Joey-Pegasus', 'joey-pegasus'),
-    ('Fiber', 'fiber'),
-    ('Yata', 'yata'),
-    ('Scientist', 'scientist'),
-    ('Vampire', 'vampire'),
-    ('Chaos', 'chaos'),
-    ('Warrior', 'warrior'),
-    ('Goat/Cyber', 'goat'),         # goat_ban.json and cyber_ban.json are the same list (April 2005)
-    ('Reaper', 'reaper'),
+    ('Yugi-Kaiba', 'yugi-kaiba', ['yugi-kaiba']),
+    ('Critter', 'critter', ['critter']),
+    ('Treasure', 'treasure', ['treasure']),
+    ('Imperial', 'imperial', ['imperial']),
+    ('Android', 'android', ['android']),
+    ('Joey-Pegasus', 'joey-pegasus', ['joey-pegasus']),
+    ('Fiber', 'fiber', ['fiber']),
+    ('Yata', 'yata', ['yata']),
+    ('Scientist', 'scientist', ['scientist']),
+    ('Vampire', 'vampire', ['vampire']),
+    ('Chaos', 'chaos', ['chaos']),
+    ('Warrior', 'warrior', ['warrior']),
+    ('Goat', 'goat', ['goat']),
+    ('Cyber', 'cyber', ['cyber']),     # the same Forbidden/Limited list as Goat (April 2005), a larger pool
+    ('Reaper', 'reaper', ['reaper']),
 ]
-DEFAULT_BANLIST = 'Goat/Cyber'  # new games start with it
+DEFAULT_BANLIST = 'Goat'        # new games start with it
 
 
 def norm(s):
@@ -66,7 +70,8 @@ def new_card_aliases():
 
 
 def card_lookup():
-    """A function from a card name to its EDS card number (None when there is no such card)."""
+    """A function from a card name to its EDS card numbers (None when there is no such card). A card can have more
+    than one number (the two Polymerizations); alternate-art numbers are folded into the base number."""
     aliases = dict(ALIASES, **new_card_aliases())
     names = open(NAMES, 'rb').read()
     i2n = open(ID_TO_NUMBER, 'rb').read()
@@ -78,8 +83,8 @@ def card_lookup():
             continue
         if number >= ALT_ART:
             number -= ALT_ART
-        exact.setdefault(name, number)
-        folded.setdefault(norm(name), number)
+        exact.setdefault(name, set()).add(number)
+        folded.setdefault(norm(name), set()).add(number)
 
     def lookup(name):
         name = aliases.get(name, name)
@@ -93,11 +98,12 @@ def read_limits(path, lookup, missing):
     limits = {}
     for key, limit in LIMITS.items():
         for entry in ban.get(key, []):
-            number = lookup(entry['cardName'])
-            if number is None:
+            numbers = lookup(entry['cardName'])
+            if numbers is None:
                 missing.append(entry['cardName'])
             else:
-                limits[number] = limit
+                for number in numbers:
+                    limits[number] = limit
     return limits, ban.get('id', '')
 
 
@@ -115,19 +121,25 @@ def report(missing):
         print(f'banlist: no EDS card named "{name}" (skipped)', file=sys.stderr)
 
 
-def format_header(out):
-    lookup = card_lookup()
-    missing = []
+def read_pool(path, lookup, missing):
+    """The card numbers of a card pool file (one card name per line)."""
     pool = set()
-    for line in open(POOL, encoding='utf-8'):
+    for line in open(path, encoding='utf-8'):
         name = line.strip()
         if not name:
             continue
-        number = lookup(name)
-        if number is None:
+        numbers = lookup(name)
+        if numbers is None:
             missing.append(name)
         else:
-            pool.add(number)
+            pool |= numbers
+    return pool
+
+
+def format_header(out):
+    lookup = card_lookup()
+    missing = []
+    pool = read_pool(POOL, lookup, missing)
     limits, date = read_limits(BANLIST, lookup, missing)
     report(missing)
 
@@ -150,22 +162,34 @@ def format_header(out):
 def banlists_header(out):
     lookup = card_lookup()
     missing = []
-    lines = ['/* Generated by tools/banlist.py --all from banlists/*_ban.json. Do not edit. */',
+    pool_missing = []
+    lines = ['/* Generated by tools/banlist.py --all from banlists/*_ban.json and card_pools/*.txt. Do not edit. */',
              f'#define BANLIST_COUNT {len(BANLISTS)}',
-             f'#define BANLIST_DEFAULT {[n for n, _ in BANLISTS].index(DEFAULT_BANLIST)}   /* {DEFAULT_BANLIST} */', '']
+             f'#define BANLIST_DEFAULT {[b[0] for b in BANLISTS].index(DEFAULT_BANLIST)}   /* {DEFAULT_BANLIST} */', '']
     rows = []
-    for i, (name, stem) in enumerate(BANLISTS):
+    for i, (name, stem, pools) in enumerate(BANLISTS):
         limits, date = read_limits(f'banlists/{stem}_ban.json', lookup, missing)
+        pool = set()
+        for pool_stem in pools:
+            pool |= read_pool(f'card_pools/{pool_stem}.txt', lookup, pool_missing)
         counts = [sum(1 for l in limits.values() if l == k) for k in range(3)]
         lines.append(f'/* {name} ({date}) */')
         lines.append(f'static const struct FormatLimit sBanlist{i}[] = {{')
         lines += [f'    {{ {n}, {l} }},' for n, l in sorted(limits.items())]
+        lines += ['};', f'/* {name}: the card pool, sorted card numbers. */',
+                  f'static const u16 sBanlistPool{i}[] = {{']
+        nums = sorted(pool)
+        for k in range(0, len(nums), 16):
+            lines.append('    ' + ', '.join(str(n) for n in nums[k:k + 16]) + ',')
         lines += ['};', '']
-        rows.append(f'    {{ "{name}", "{date}", sBanlist{i}, {len(limits)}, {{ {counts[0]}, {counts[1]}, {counts[2]} }} }},')
+        rows.append(f'    {{ "{name}", "{date}", sBanlist{i}, {len(limits)}, {{ {counts[0]}, {counts[1]}, {counts[2]} }}, '
+                    f'sBanlistPool{i}, {len(nums)} }},')
     lines.append('static const struct Banlist sBanlists[BANLIST_COUNT] = {')
     lines += rows
     lines += ['};', '']
     report(missing)
+    # The pools name every real card of their time; most are not in EDS, so only the count is reported.
+    print(f'banlist: {len(set(pool_missing))} card pool names have no EDS card (not playable)', file=sys.stderr)
     write_if_changed(out, '\n'.join(lines))
 
 

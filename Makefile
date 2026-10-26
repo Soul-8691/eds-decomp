@@ -126,14 +126,14 @@ $(NEWCARDS_GEN): $(NEWCARDS_BUILT) ;
 
 # The Yugi-Kaiba format (card pool and Forbidden/Limited list) that src/mod_banlist.c checks for Tristan.
 FORMAT_GEN := build/include/format_yugi_kaiba.h
-$(FORMAT_GEN): tools/banlist.py yugi-kaiba.txt banlists/yugi-kaiba_ban.json $(NEWCARDS_BUILT)
+$(FORMAT_GEN): tools/banlist.py card_pools/yugi-kaiba.txt banlists/yugi-kaiba_ban.json $(NEWCARDS_BUILT)
 	@mkdir -p $(@D)
 	$(PYTHON) tools/banlist.py $@
 build/src/mod_banlist.o: $(FORMAT_GEN)
 
 # The Deck Edit banlists (banlists/*_ban.json) that src/mod_banlists.c offers.
 BANLISTS_GEN := build/include/banlists.h
-$(BANLISTS_GEN): tools/banlist.py $(wildcard banlists/*_ban.json) $(NEWCARDS_BUILT)
+$(BANLISTS_GEN): tools/banlist.py $(wildcard banlists/*_ban.json) $(wildcard card_pools/*.txt) $(NEWCARDS_BUILT)
 	@mkdir -p $(@D)
 	$(PYTHON) tools/banlist.py --all $@
 build/src/mod_banlists.o: $(BANLISTS_GEN)

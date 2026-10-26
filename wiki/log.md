@@ -1385,3 +1385,10 @@ updated: 2026-09-29
   also overwrote the preset. Recipes now change only by Save/Rename/Clear; Load asks before dropping an unsaved
   deck. A opens Load/Save here/Rename/Clear/Cancel; a name entry grid for new and renamed recipes.
 - Pages: [[deck-recipes]].
+
+## [2026-10-26] progress | Banlist card pools; Goat and Cyber split
+- card_pools/<name>.txt per banlist: a card outside the pool gets limit 0 (Deck Edit, saved decks, recipes, switch
+  trimming). Goat and Cyber are separate again (same list, different pools); Goat is the default. Name lookup maps a
+  name to all its card numbers (second Polymerization); aliases for B. Skull Dragon and Kuwagata a. Tristan's pool
+  moved to card_pools/yugi-kaiba.txt.
+- Pages: [[banlists-menu]], index.

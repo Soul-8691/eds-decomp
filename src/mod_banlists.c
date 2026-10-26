@@ -1,15 +1,16 @@
 /*
  * mod_banlists: Banlists, the main menu's tenth item: the Forbidden/Limited list Deck Edit uses. Not part of the
  * original ROM.
- *   GetBanlistCopyLimit   copies of a card the saved decks may hold under the banlist in use: 0 forbidden, 1
- *                         limited, 2 semi-limited, else CARD_COPY_LIMIT_NONE (this build has no 3-copy limit).
+ *   GetBanlistCopyLimit   copies of a card the saved decks may hold under the banlist in use: 0 forbidden (or not
+ *                         in the banlist's card pool, card_pools/<name>.txt), 1 limited, 2 semi-limited, else
+ *                         CARD_COPY_LIMIT_NONE (this build has no 3-copy limit).
  *                         src/mod_save.c asks it (IsBelowCardCopyLimit, AddCardToSaved*, TrimSavedDecksToCopyLimits);
  *                         the CPU's decks keep the game's own list (GetCardCopyLimit, RemoveOverLimitDeckCards).
  *   BanlistsMenu_BuildLabel  the "Banlists" menu label (MainMenu_Init, tiles 0x280-0x2BF; BuildMenuLabel)
  *   CB_Banlists           the scene: the banlists, A puts one in use, B goes back
  * The banlists come from banlists/<name>_ban.json (tools/banlist.py --all: build/include/banlists.h), in the order
  * of BANLISTS there; the game's original list is not one of them. The one in use is saved in gSaveData.banlist
- * (index + 1; 0, as in a new game or a save from before, is BANLIST_DEFAULT, Goat/Cyber). Putting another one in
+ * (index + 1; 0, as in a new game or a save from before, is BANLIST_DEFAULT, Goat). Putting another one in
  * use moves the saved decks' copies over its limits back to the trunk.
  * Like the other mod units, this one is @farcode and @rodata in units.txt and keeps its state at a fixed EWRAM
  * address (gBanlistsMenu, symbols.ld), never in .bss.
@@ -40,6 +41,8 @@ struct Banlist {
     const struct FormatLimit *limits;   /* sorted by card number */
     u16 count;
     u8 counts[3];                       /* forbidden, limited, semi-limited */
+    const u16 *pool;                    /* the card pool: sorted card numbers */
+    u16 poolCount;
 };
 
 #include "banlists.h"
@@ -64,6 +67,26 @@ int GetActiveBanlist(void)
     return v >= 1 && v <= BANLIST_COUNT ? v - 1 : BANLIST_DEFAULT;
 }
 
+/* 1 if card number `number` (base number) is in banlist b's card pool. */
+static int InBanlistPool(const struct Banlist *b, u16 number)
+{
+    int lo = 0, hi = b->poolCount - 1;
+
+    while (lo <= hi) {
+        int mid = (lo + hi) / 2;
+
+        if (b->pool[mid] == number)
+            return 1;
+        if (b->pool[mid] < number)
+            lo = mid + 1;
+        else
+            hi = mid - 1;
+    }
+    return 0;
+}
+
+/* A card outside the banlist's card pool counts as forbidden (0), so Deck Edit, the saved-deck functions, Deck
+ * Recipes and the switch of banlists all keep it out of the decks. */
 s32 GetBanlistCopyLimit(u32 id)
 {
     const struct Banlist *b = &sBanlists[GetActiveBanlist()];
@@ -72,6 +95,8 @@ s32 GetBanlistCopyLimit(u32 id)
 
     if (number >= CARD_NUMBER_ALT_ART && number != 0xFFFF)
         number -= CARD_NUMBER_ALT_ART;
+    if (!InBanlistPool(b, number))
+        return 0;
     while (lo <= hi) {
         int mid = (lo + hi) / 2;
 
