@@ -94,6 +94,13 @@ whose name plates and portraits are BG images (`Record_DrawPage`).
 - **After the duel.** `Campaign_ShowDuelResult` returns without the result text.
 - **In a match.** Between duels it goes straight to the Side Deck swap.
 
+## Rewards
+- **Event days.** `Campaign_GiveRewards`'s choose step ignores the calendar event for these opponents. A win always
+  goes to the regular pick-a-pack list (no fixed holiday/event packs, no tournament tickets), and a loss has no
+  penalty (no Rare Hunter card loss).
+- **Stale reward pack.** The "new packs" step now clears `gMain.rewardPack` in both branches. The original
+  cleared it only without a notice, so a magazine day's pack left there opened at once and skipped the list.
+
 ## Unchanged
 Calendar events (Rare Hunter days, tournaments, magazine days) still work by ID, so an event can fix the opponent
 to one of these slots.

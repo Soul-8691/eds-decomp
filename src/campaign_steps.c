@@ -199,6 +199,15 @@ u16 Campaign_GiveRewards(void)
         gMain.subStep = REWARD_STEP_CHOOSE;
         return 0;
     case REWARD_STEP_CHOOSE:
+        /* Added: this build's opponents (src/mod_opponents.c) have no calendar-event rewards or penalties: a win
+         * always leads to the regular pick-a-pack list, a loss to nothing. */
+        if (ModSkipsDuelDialogue(gMain.opponent)) {
+            RESET_SEQ_STATE();
+            if (gDuel.result != DUEL_RESULT_WIN)
+                return 1;
+            gMain.subStep++;
+            return 0;
+        }
         switch (gDuel.result) {
         case DUEL_RESULT_WIN:
             RESET_SEQ_STATE();
@@ -339,6 +348,10 @@ u16 Campaign_GiveRewards(void)
     case REWARD_STEP_NEW_PACKS_TEXT:
         {
             u16 newPacks = gSaveData.unlockNotices & 2;
+            /* Fixed: the regular pack list also after the "new packs" text. The original cleared rewardPack only
+             * in the no-notice branch, so a pack left there by a magazine day (Campaign_DeliverMagazines /
+             * GetRewardPack) or an event skipped the list and opened at once. */
+            gMain.rewardPack = 0;
             if (newPacks) {
                 gSaveData.unlockNotices &= ~2;
                 StartDialogue(351);

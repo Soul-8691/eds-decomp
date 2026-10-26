@@ -1470,3 +1470,9 @@ updated: 2026-09-29
 - mod_opponents.c sPageDuelists places the opponents (formats on pages 0-2 in unlock order along the cursor ring from
   the top left, decks on page 3); PAGE_DUELIST uses it; page 4 unreachable; the select opens on the newest format.
 - Pages: [[yugi-kaiba-opponent]].
+
+## [2026-10-26] progress | Pick a pack after every win
+- campaign_steps.c: REWARD_STEP_NEW_PACKS_TEXT clears gMain.rewardPack in both branches (a magazine day's pack left
+  there skipped the list after a "new packs" notice: original bug). REWARD_STEP_CHOOSE: the mod's opponents skip the
+  calendar-event rewards and loss penalties, so a win always goes to the pack list.
+- Pages: [[yugi-kaiba-opponent]].
