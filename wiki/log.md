@@ -1197,3 +1197,8 @@ updated: 2026-09-29
   adds to a stacking ZONE_LINK_ATK_DOWN_200 self link, from the new AddedCardsAfterBattle hook (shared with
   Mystic Swordsman LV2).
 - Pages: [[added-cards]].
+
+## [2026-10-25] progress | Brain Control
+- 800 LP cost (chainA). EffectTakeControlChainB with Snatch Steal's face-up mask, wrapped to refuse monsters that
+  cannot be Normal Summoned/Set. Change of Heart's resolve, and ReturnControlAtTurnEnd for CARD_BRAIN_CONTROL.
+- Pages: [[added-cards]].

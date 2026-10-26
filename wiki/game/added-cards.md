@@ -302,6 +302,21 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
   `TryAddEffectTarget` does not destroy it.
 - Checked in the source and the build; not tested in an emulator.
 
+### Brain Control (2026-10-25)
+- Normal Spell: "Pay 800 LP, then target 1 face-up monster your opponent controls that can be Normal Summoned/Set;
+  take control of it until the End Phase."
+- It takes control the Change of Heart way, as Mind Control does. `EffectChangeOfHeartResolve` moves the monster and
+  links it to Brain Control. `DuelCmd_TurnEnd` returns it (`ReturnControlAtTurnEnd(player, i, CARD_BRAIN_CONTROL)`,
+  next to Change of Heart's and Mind Control's). No attack or Tribute restriction.
+- **Prepare:** more than 800 LP, a free monster zone, and a monster that `IsBrainControlTarget` accepts. That means
+  the opponent's, face up and targetable, and not a Fusion, Ritual, Special-Summon-only monster or token.
+- **ChainA:** `DUEL_CMD_LOSE_LP` 800 (a cost).
+- **ChainB:** `EffectTakeControlChainB`, with `CARD_BRAIN_CONTROL` added to Snatch Steal's cases there (face-up
+  prompt and cursor mask). A wrapper refuses an invalid pick: the human hears the error sound and stays on the
+  cursor while a valid monster remains. The CPU's pick, the human's strongest monster, is replaced by the strongest
+  valid one.
+- Checked in the source and the build; not tested in an emulator.
+
 ### Mind Control (2026-10-25)
 - Normal Spell: "Target 1 monster your opponent controls; take control of it until the End Phase, but it cannot
   declare an attack or be Tributed."

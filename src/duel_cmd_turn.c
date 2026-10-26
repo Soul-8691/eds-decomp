@@ -434,6 +434,9 @@ void DuelCmd_TurnEnd(void)
 #ifdef HAS_CARD_MIND_CONTROL
             { u16 cardNo = CARD_MIND_CONTROL; ReturnControlAtTurnEnd(player, i, cardNo); }   /* added card */
 #endif
+#ifdef HAS_CARD_BRAIN_CONTROL
+            { u16 cardNo = CARD_BRAIN_CONTROL; ReturnControlAtTurnEnd(player, i, cardNo); }  /* added card */
+#endif
             if (player == gDuelCmd.cmd >> 15) {
                 u16 cardNo = CARD_1255;
                 ReturnControlAtTurnEnd(player, i, cardNo);

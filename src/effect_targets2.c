@@ -436,6 +436,9 @@ int EffectTakeControlChainB(struct ChainEntry *link)
             break;
         case CARD_SNATCH_STEAL:
         case CARD_1514:
+#ifdef HAS_CARD_BRAIN_CONTROL
+        case CARD_BRAIN_CONTROL:    /* added card */
+#endif
             if (CountMonstersFiltered(1 - link->player, 1, 0) == 0)
                 return 1;
             TextBoxOpen(TARGET_PROMPT_POS, TARGET_PROMPT_SIZE, TEXTBOX_FLAGS_DEFAULT,
@@ -464,6 +467,9 @@ int EffectTakeControlChainB(struct ChainEntry *link)
     case CARD_SNATCH_STEAL:
     case CARD_1244:
     case CARD_1514:
+#ifdef HAS_CARD_BRAIN_CONTROL
+    case CARD_BRAIN_CONTROL:    /* added card: a face-up monster (src/added_effects.c) */
+#endif
         mask = PICK_PLAYER1(PICK_FACE_UP_MONSTER_ANY);
         break;
     }

@@ -37,3 +37,4 @@ Magic Cylinder
 Magical Merchant
 Smashing Ground
 Zombyra the Dark
+Brain Control

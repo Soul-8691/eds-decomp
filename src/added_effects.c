@@ -1163,6 +1163,103 @@ void OnFieldCardTargeted(struct ChainEntry *link, int player, int zone)
 }
 #endif /* HAS_CARD_SPIRIT_REAPER */
 
+#ifdef HAS_CARD_BRAIN_CONTROL
+/* ---- Brain Control -------------------------------------------------------------------------------------------------
+ * Normal Spell: "Pay 800 LP, then target 1 face-up monster your opponent controls that can be Normal Summoned/Set;
+ * take control of it until the End Phase."
+ * Change of Heart's way, like Mind Control: EffectChangeOfHeartResolve moves the target and links it to this card
+ * (ZONE_LINK_CARD_EFFECT), and DuelCmd_TurnEnd returns it (ReturnControlAtTurnEnd with CARD_BRAIN_CONTROL).
+ *   prepare  more than 800 LP, a free monster zone, and a monster IsBrainControlTarget accepts
+ *   chainA   the 800 LP (DUEL_CMD_LOSE_LP as a cost)
+ *   chainB   EffectTakeControlChainB with Snatch Steal's face-up cursor (effect_targets2.c), wrapped: a monster that
+ *            cannot be Normal Summoned/Set (a Fusion, Ritual or Special-Summon-only monster, a token) is refused, and
+ *            the CPU, whose pick is the human's strongest monster, takes the strongest valid one instead */
+
+#define BRAIN_CONTROL_COST 800
+
+static int IsBrainControlTarget(struct ChainEntry *link, int player, int zone)
+{
+    struct DuelZone *z;
+    u16 id;
+    u32 stats;
+
+    if (player == link->player || zone > ZONE_MONSTER_4)
+        return 0;
+    z = ZoneOf(player, zone);
+    id = DUEL_CARD_ID(&z->card);
+    if (id == 0 || !z->isFaceUp || !CanCardTargetZone(link->card, player, zone))
+        return 0;
+    stats = gCardStats[id & CARD_ID_MASK];
+    if (CARD_STATS_TYPE(stats) > CARD_TYPE_REPTILE || CARD_STATS_KIND(stats) == CARD_KIND_FUSION
+        || CARD_STATS_KIND(stats) == CARD_KIND_RITUAL || IsSpecialSummonOnly(id))
+        return 0;
+    return (u16)(((const u16 *)CARD_ID_TO_NUMBER_ADDR)[id & CARD_ID_MASK] - CARD_NUMBER_TOKEN_FIRST)
+           >= CARD_NUMBER_TOKEN_END - CARD_NUMBER_TOKEN_FIRST;
+}
+
+u16 EffectBrainControlCheck(struct ChainEntry *card, u16 pos)
+{
+    return IsBrainControlTarget(card, (u8)pos, pos >> 8);
+}
+
+int EffectBrainControlPrepare(struct ChainEntry *card, struct ChainEntry *chainLink, u16 fromHand)
+{
+    int zone;
+
+    if (gDuelPlayers[card->player & 1].lifePoints <= BRAIN_CONTROL_COST || CountFreeMonsterZones(card->player) == 0)
+        return 0;
+    for (zone = ZONE_MONSTER_0; zone <= ZONE_MONSTER_4; zone++) {
+        if (IsBrainControlTarget(card, 1 - card->player, zone))
+            return 1;
+    }
+    return 0;
+}
+
+int EffectBrainControlChainA(struct ChainEntry *link, struct ChainEntry *prevLink)
+{
+    DuelCmd_Push(link->player ? DUEL_CMD_PLAYER | DUEL_CMD_LOSE_LP : DUEL_CMD_LOSE_LP, BRAIN_CONTROL_COST, 1, 0);
+    return 1;
+}
+
+int EffectBrainControlChainB(struct ChainEntry *link, struct ChainEntry *prevLink)
+{
+    int opponent = 1 - link->player;
+
+    if (!EffectTakeControlChainB(link))
+        return 0;
+    if (link->numTargets == 1 && IsBrainControlTarget(link, (u8)link->targets[0], link->targets[0] >> 8))
+        return 1;
+    link->numTargets = 0;
+    if (!link->player) {
+        int zone;
+
+        /* the human picked a monster that cannot be Normal Summoned/Set: stay on the cursor, while there is a
+         * valid one */
+        for (zone = ZONE_MONSTER_0; zone <= ZONE_MONSTER_4; zone++) {
+            if (IsBrainControlTarget(link, opponent, zone)) {
+                PlaySE(SE_ERROR);
+                return 0;
+            }
+        }
+        return 1;
+    }
+    {
+        int zone, best = -1;
+        u32 bestAtk = 0;
+
+        for (zone = ZONE_MONSTER_0; zone <= ZONE_MONSTER_4; zone++) {
+            if (IsBrainControlTarget(link, opponent, zone) && (best < 0 || GetZoneCardAtk(opponent, zone) > bestAtk)) {
+                best = zone;
+                bestAtk = GetZoneCardAtk(opponent, zone);
+            }
+        }
+        if (best >= 0)
+            TryAddEffectTarget(link, opponent, best);
+    }
+    return 1;
+}
+#endif /* HAS_CARD_BRAIN_CONTROL */
+
 #ifdef HAS_CARD_MIND_CONTROL
 /* ---- Mind Control --------------------------------------------------------------------------------------------------
  * Normal Spell: "Target 1 monster your opponent controls; take control of it until the End Phase, but it cannot
@@ -2134,6 +2231,16 @@ const struct CardEffect gAddedCardEffects[] = {
         NULL,
         NULL,
         NULL,
+    },
+#endif
+#ifdef HAS_CARD_BRAIN_CONTROL
+    {
+        CARD_BRAIN_CONTROL, 0,
+        (int (*)(struct ChainEntry *, struct ChainEntry *))EffectChangeOfHeartResolve,
+        EffectBrainControlCheck,
+        EffectBrainControlPrepare,
+        EffectBrainControlChainA,
+        EffectBrainControlChainB,
     },
 #endif
 #ifdef HAS_CARD_MIND_CONTROL

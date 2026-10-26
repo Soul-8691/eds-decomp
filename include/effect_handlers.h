@@ -107,6 +107,10 @@ int EffectLightningVortexPrepare(struct ChainEntry *card, struct ChainEntry *cha
 int EffectLightningVortexChainA(struct ChainEntry *link, struct ChainEntry *prevLink);
 int EffectLightningVortexResolve(struct ChainEntry *link, struct ChainEntry *chainedTo);
 int EffectDonZaloogResolve(struct ChainEntry *link, struct ChainEntry *chainedTo);
+u16 EffectBrainControlCheck(struct ChainEntry *card, u16 pos);
+int EffectBrainControlPrepare(struct ChainEntry *card, struct ChainEntry *chainLink, u16 fromHand);
+int EffectBrainControlChainA(struct ChainEntry *link, struct ChainEntry *prevLink);
+int EffectBrainControlChainB(struct ChainEntry *link, struct ChainEntry *prevLink);
 int EffectSmashingGroundPrepare(struct ChainEntry *card, struct ChainEntry *chainLink, u16 fromHand);
 int EffectSmashingGroundResolve(struct ChainEntry *link, struct ChainEntry *chainedTo);
 int EffectMagicalMerchantResolve(struct ChainEntry *link, struct ChainEntry *chainedTo);
