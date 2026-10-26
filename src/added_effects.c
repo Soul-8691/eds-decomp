@@ -1753,6 +1753,49 @@ int EffectXingZhenHuResolve(struct ChainEntry *link, struct ChainEntry *chainedT
 }
 #endif /* HAS_CARD_XING_ZHEN_HU */
 
+#ifdef HAS_CARD_BAZOO_THE_SOUL_EATER
+/* ---- Bazoo the Soul-Eater ------------------------------------------------------------------------------------------
+ * "Once per turn: You can banish up to 3 monsters from your Graveyard; this card gains 300 ATK for each, until the end
+ * of your opponent's turn."
+ * The engine's effect key 1513 (ENGINE_NUMBERS gives the card that number): the card menu's ACTIVATE once per turn
+ * (effectUnused) with a monster in the player's Graveyard, EffectBanishGraveForAtkResolve (asks before each of up to 3
+ * picks, then a ZONE_LINK_ATK_300_PER_VALUE link of the count), and DuelCmd_TurnStart re-arms it and drops the link at
+ * its controller's next turn. That resolve is UI only, so the CPU gets BazooCpuResolve (effect_resolve11.c calls it):
+ * its 3 weakest Graveyard monsters (fewer if it has fewer), then the same link and once-per-turn mark. */
+int BazooCpuResolve(struct ChainEntry *link)
+{
+    struct DuelPlayer *p = &gDuelPlayers[link->player & 1];
+    u8 used[80];
+    int n, i, count = 0;
+    u16 cmd = link->player ? DUEL_CMD_PLAYER | DUEL_CMD_BANISH_GRAVEYARD_CARD : DUEL_CMD_BANISH_GRAVEYARD_CARD;
+
+    for (i = 0; i < p->graveCount && i < 80; i++)
+        used[i] = 0;
+    for (n = 0; n < 3; n++) {
+        int best = -1;
+        u32 bestAtk = 0;
+
+        for (i = 0; i < p->graveCount && i < 80; i++) {
+            u32 stats = gCardStats[DUEL_CARD_ID(&p->graveyard[i]) & CARD_ID_MASK];
+            if (!used[i] && CARD_STATS_TYPE(stats) <= CARD_TYPE_REPTILE && (best < 0 || CARD_STATS_ATK(stats) < bestAtk)) {
+                best = i;
+                bestAtk = CARD_STATS_ATK(stats);
+            }
+        }
+        if (best < 0)
+            break;
+        used[best] = 1;
+        DuelCmd_Push(cmd, ((u16 *)&p->graveyard[best])[0], ((u16 *)&p->graveyard[best])[1], 0);
+        count++;
+    }
+    if (count != 0)
+        QueueAddZoneLink(link->player, link->card, DUEL_LOC(link->player, link->zone),
+                         ZONE_LINK_KIND(ZONE_LINK_ATK_300_PER_VALUE, count));
+    DuelCmd_Push(link->player ? DUEL_CMD_PLAYER | DUEL_CMD_SET_EFFECT_UNUSED : DUEL_CMD_SET_EFFECT_UNUSED, link->zone, 0, 0);
+    return EFFECT_STEP_DONE;
+}
+#endif /* HAS_CARD_BAZOO_THE_SOUL_EATER */
+
 #ifdef HAS_CARD_MIND_CONTROL
 /* ---- Mind Control --------------------------------------------------------------------------------------------------
  * Normal Spell: "Target 1 monster your opponent controls; take control of it until the End Phase, but it cannot

@@ -69,6 +69,8 @@ ENGINE_NUMBERS = {
     'Thousand-Eyes Restrict': 1334, # key 1334: Relinquished's absorb, the attack/position lock, recipe 730 + 1333
     'Soul Exchange': 1220,          # key 1220: EffectCanTributeOpponentMonsterPrepare, EffectSkipBattlePhaseChainA,
                                     # EffectTributeOpponentMonsterChainB / Resolve (CPU path: src/added_effects.c)
+    'Bazoo the Soul-Eater': 1513,   # key 1513: menu ACTIVATE once per turn, EffectBanishGraveForAtkResolve (up to 3 own
+                                    # Graveyard monsters, +300 ATK each), the link ends at its controller's next turn
     'Magic Cylinder': 1214,         # key 1214: EffectAttackResponsePrepare / Resolve (negate the attack, the
                                     # attacker's player loses its ATK); the CPU's trap logic knows it (ai_summon.c)
 }

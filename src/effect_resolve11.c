@@ -296,8 +296,15 @@ int EffectTributeToSummonFusionResolve(struct ChainEntry *link)
  *   5      banish the picked card (for its owner, card word bit 12); back to 2, or to 9 after 3 picks.
  *   9      add the ATK link if any card was banished, then (also from any other step) mark the effect used.
  */
+#ifdef HAS_CARD_BAZOO_THE_SOUL_EATER
+int BazooCpuResolve(struct ChainEntry *link);   /* mod (src/added_effects.c) */
+#endif
 int EffectBanishGraveForAtkResolve(struct ChainEntry *link)
 {
+#ifdef HAS_CARD_BAZOO_THE_SOUL_EATER
+    if (!link->negated && link->player)     /* mod: the steps below are UI; the CPU picks by itself */
+        return BazooCpuResolve(link);
+#endif
     if (!link->negated) {
         switch (gChain.effectStep) {
         case EFFECT_STEP_START:

@@ -1301,3 +1301,8 @@ updated: 2026-09-29
 - With the user's full text, Pyramid Turtle summons face up in Attack or Defense Position: it joins Gravekeeper's
   Spy's QueueSpecialSummonChoosePosition branch of EffectSpecialSummonFromDeckResolve.
 - Pages: [[added-cards]].
+
+## [2026-10-26] progress | Bazoo the Soul-Eater
+- Effect key 1513 is the engine's Bazoo (menu ACTIVATE, EffectBanishGraveForAtkResolve, re-armed at turn start);
+  ENGINE_NUMBERS gives the card 1513. A CPU path, BazooCpuResolve, was added for the UI-only resolve.
+- Pages: [[added-cards]].

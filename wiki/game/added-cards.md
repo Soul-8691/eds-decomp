@@ -350,6 +350,24 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
 - Number side effect as for Magic Cylinder: the added cards after it in the list moved down one free number.
 - Checked in the source and the build; not tested in an emulator.
 
+### Bazoo the Soul-Eater (2026-10-26)
+- "Once per turn: You can banish up to 3 monsters from your Graveyard; this card gains 300 ATK for each, until the end
+  of your opponent's turn."
+- **The engine already has it** as effect key 1513 (key 1344, which the battle code also names, is a different,
+  handler-less key). `ENGINE_NUMBERS` gives the card that number: ID 917 = 1513. The engine's version:
+  - **Activation:** the card menu's ACTIVATE (`CanActivateMonsterEffect`: once per turn by `effectUnused`, and a
+    monster in the player's Graveyard). Prepare `EffectGravediggerGhoulPrepare` refuses while the opponent has an
+    active Kycoo.
+  - **Resolve:** `EffectBanishGraveForAtkResolve` asks before each of up to 3 picks (`CollectEffectTargets` case 1513:
+    the player's Graveyard monsters), then adds a `ZONE_LINK_ATK_300_PER_VALUE` link with the count and marks the
+    effect used.
+  - **Duration:** `DuelCmd_TurnStart` re-arms it and removes the link at its controller's next turn, so the ATK lasts
+    through the opponent's turn.
+- **CPU path.** That resolve is UI only. `effect_resolve11.c` now hands the CPU's activation to `BazooCpuResolve`,
+  which banishes its 3 weakest Graveyard monsters (or fewer), then adds the same link and mark. The CPU activates it
+  through `AiPlayAddedCards`.
+- Checked in the source and the build; not tested in an emulator.
+
 ### Pyramid Turtle (2026-10-26)
 - The user's text (2026-10-26): "When this card is sent to the Graveyard as a result of battle, you may select 1
   Zombie-Type monster with a DEF of 2000 or less from your Deck and Special Summon it to the field in face up Attack or
