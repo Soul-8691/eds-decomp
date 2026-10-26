@@ -302,6 +302,22 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
   `TryAddEffectTarget` does not destroy it.
 - Checked in the source and the build; not tested in an emulator.
 
+### Abyss Soldier (2026-10-25)
+- "Once per turn: You can discard 1 WATER monster; return 1 card on the field to the hand."
+- **Activation.** The card menu's ACTIVATE in the Main Phase (`CanActivateMonsterEffect`), once per turn through
+  `effectUnused` (re-armed by `DuelCmd_TurnStart`), as for Tribe-Infecting Virus.
+- **Prepare:** face up in its zone, effect unused, a WATER monster in hand (not planted or graverobbed), and a card
+  on the field it may target.
+- **ChainA (cost).** The human gets `PROMPT_DISCARD_COST` with the new flag `DISCARD_FLAG_WATER` (4) beside
+  monsters-only (1). `DiscardPrompt_TryDiscardSelected` (duel_turn_end.c) refuses a card that is not a WATER monster
+  (`IsWaterMonster`). The CPU discards its first WATER monster directly, since the prompt's CPU pick ignores its flags.
+  `DUEL_CMD_SET_EFFECT_UNUSED` 0 uses up the turn's effect.
+- **ChainB:** a cursor pick of any card on either field (monster, Spell/Trap or Field zone; `CanCardTargetZone`).
+  There is no `CanActivateEffect` re-check, since the cost is paid by then. The CPU returns the human's strongest
+  monster, else their first card.
+- **Resolve:** `ReturnFieldCardToHand` (owner's hand; a Fusion Monster to the Fusion Deck; a token is destroyed).
+- Checked in the source and the build; not tested in an emulator.
+
 ### Brain Control (2026-10-25)
 - Normal Spell: "Pay 800 LP, then target 1 face-up monster your opponent controls that can be Normal Summoned/Set;
   take control of it until the End Phase."

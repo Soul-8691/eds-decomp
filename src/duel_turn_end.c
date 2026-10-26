@@ -101,6 +101,10 @@ int AiRunTurnInt(void) asm("AiRunTurn");
  * the discard is forced by the opponent's effect. */
 #define DISCARD_FLAG_MONSTERS_ONLY  1
 #define DISCARD_FLAG_BY_OPPONENT    2
+#define DISCARD_FLAG_WATER          4   /* added: WATER monsters only (Abyss Soldier, src/added_effects.c) */
+#ifdef HAS_CARD_ABYSS_SOLDIER
+int IsWaterMonster(u16 id);             /* src/added_effects.c */
+#endif
 
 /* gTextBox.menuTimer as the sub-step of DiscardPrompt_HandleInput. */
 enum DiscardInputStep {
@@ -611,6 +615,10 @@ u16 DiscardPrompt_TryDiscardSelected(u16 monstersOnly, u16 byOpponent)
                 ok = 0;
             if (value.graverobbed)
                 ok = 0;
+#ifdef HAS_CARD_ABYSS_SOLDIER
+            if ((gDuel.promptArgs[1] & DISCARD_FLAG_WATER) && !IsWaterMonster(value.id))
+                ok = 0;
+#endif
             if (ok != 0) {
                 DiscardHandCard(0, index, byOpponent, 1);
                 return 1;

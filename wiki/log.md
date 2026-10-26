@@ -1202,3 +1202,9 @@ updated: 2026-09-29
 - 800 LP cost (chainA). EffectTakeControlChainB with Snatch Steal's face-up mask, wrapped to refuse monsters that
   cannot be Normal Summoned/Set. Change of Heart's resolve, and ReturnControlAtTurnEnd for CARD_BRAIN_CONTROL.
 - Pages: [[added-cards]].
+
+## [2026-10-25] progress | Abyss Soldier
+- Menu ACTIVATE, once per turn (Virus's hooks). Discard cost with a new DISCARD_FLAG_WATER honoured by
+  DiscardPrompt_TryDiscardSelected (the CPU discards directly). Any field card is returned with
+  ReturnFieldCardToHand.
+- Pages: [[added-cards]].

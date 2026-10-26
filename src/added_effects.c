@@ -1163,6 +1163,143 @@ void OnFieldCardTargeted(struct ChainEntry *link, int player, int zone)
 }
 #endif /* HAS_CARD_SPIRIT_REAPER */
 
+#ifdef HAS_CARD_ABYSS_SOLDIER
+/* ---- Abyss Soldier -------------------------------------------------------------------------------------------------
+ * "Once per turn: You can discard 1 WATER monster; return 1 card on the field to the hand."
+ * The card menu's ACTIVATE in the Main Phase (CanActivateMonsterEffect), once per turn (effectUnused, set again by
+ * DuelCmd_TurnStart), like Tribe-Infecting Virus.
+ *   chainA   the cost. The human gets the discard-cost prompt with DISCARD_FLAG_WATER (duel_turn_end.c: a pick must
+ *            be a WATER monster, IsWaterMonster); the CPU discards its first WATER monster at once (the prompt's CPU
+ *            pick ignores its flags). The effect is used for the turn.
+ *   chainB   any card on the field it may target (monster, Spell/Trap and Field zones). The step does not ask
+ *            CanActivateEffect again: the cost is paid by then. The CPU returns the human's strongest monster, else
+ *            the human's first card.
+ *   resolve  ReturnFieldCardToHand (to its owner's hand; a Fusion Monster goes to the Fusion Deck, a token is
+ *            destroyed). */
+
+static const u8 sStrAbyssSoldierPick[] = "Designate the card to return to the hand.";
+
+#define ABYSS_SOLDIER_PICK (PICK_BOTH_SIDES(PICK_ANY_MONSTER | PICK_ANY_SPELL_TRAP))
+
+int IsWaterMonster(u16 id)
+{
+    u32 stats = gCardStats[id & CARD_ID_MASK];
+
+    return CARD_STATS_TYPE(stats) <= CARD_TYPE_REPTILE && CARD_STATS_ATTR(stats) == ATTRIBUTE_WATER;
+}
+
+static int FindWaterMonsterInHand(int player)
+{
+    struct DuelPlayer *p = &gDuelPlayers[player & 1];
+    int i;
+
+    for (i = 0; i < p->handCount; i++) {
+        if (IsWaterMonster(DUEL_CARD_ID(&p->hand[i])) && !p->hand[i].planted && !p->hand[i].graverobbed)
+            return i;
+    }
+    return -1;
+}
+
+static int AbyssSoldierCanTarget(struct ChainEntry *link, int player, int zone)
+{
+    if (zone > ZONE_FIELD || !CanCardTargetZone(link->card, player, zone))
+        return 0;
+    return DUEL_CARD_ID(&ZoneOf(player, zone)->card) != 0;
+}
+
+int EffectAbyssSoldierPrepare(struct ChainEntry *card, struct ChainEntry *chainLink, u16 fromHand)
+{
+    struct DuelZone *z;
+    int player, zone;
+
+    if (fromHand || card->event != RESPONSE_NONE)
+        return 0;
+    z = ZoneOf(card->player, card->zone);
+    if (!z->isFaceUp || DUEL_CARD_ID(&z->card) != (card->card & CARD_ID_MASK) || !z->effectUnused
+        || FindWaterMonsterInHand(card->player) < 0)
+        return 0;
+    for (player = 0; player <= 1; player++) {
+        for (zone = 0; zone <= ZONE_FIELD; zone++) {
+            if (AbyssSoldierCanTarget(card, player, zone))
+                return 1;
+        }
+    }
+    return 0;
+}
+
+u16 EffectAbyssSoldierCheck(struct ChainEntry *card, u16 pos)
+{
+    return AbyssSoldierCanTarget(card, (u8)pos, pos >> 8);
+}
+
+int EffectAbyssSoldierChainA(struct ChainEntry *link, struct ChainEntry *prevLink)
+{
+    u16 cmd = link->player ? DUEL_CMD_PLAYER | DUEL_CMD_SET_EFFECT_UNUSED : DUEL_CMD_SET_EFFECT_UNUSED;
+
+    if (link->player) {
+        int i = FindWaterMonsterInHand(link->player);
+        if (i >= 0)
+            DiscardHandCard(link->player, i, 0, 1);
+    } else {
+        /* PROMPT_DISCARD_COST of 1 card: monsters only (1) and WATER only (4, DISCARD_FLAG_WATER) */
+        DuelPrompt_Post(0, PROMPT_DISCARD_COST, 1, 1 | 4);
+    }
+    DuelCmd_Push(cmd, link->zone, 0, 0);
+    return 1;
+}
+
+int EffectAbyssSoldierChainB(struct ChainEntry *link, struct ChainEntry *prevLink)
+{
+    int opponent = 1 - link->player;
+    int zone;
+
+    if (link->player) {
+        link->numTargets = 0;
+        zone = CountMonsters(opponent) > 0 ? AiFindStrongestMonster(opponent, -1, 1, 1) : -1;
+        if (zone >= 0 && AbyssSoldierCanTarget(link, opponent, zone) && TryAddEffectTarget(link, opponent, zone))
+            return 1;
+        for (zone = 0; zone <= ZONE_FIELD; zone++) {
+            if (AbyssSoldierCanTarget(link, opponent, zone) && TryAddEffectTarget(link, opponent, zone))
+                return 1;
+        }
+        return 1;
+    }
+    switch (gChain.targetStep) {
+    case 0:
+        link->numTargets = 0;
+        TextBoxOpen(TEXTBOX_POS(6, 2), TEXTBOX_SIZE(18, 7), TEXTBOX_FLAGS_DEFAULT, sStrAbyssSoldierPick);
+        gChain.targetStep++;
+        return 0;
+    default:
+        if (gMain.newKeys & B_BUTTON) {
+            gChain.targetStep = 0;
+            return 0;
+        }
+        if (DuelCursor_PickTarget(ABYSS_SOLDIER_PICK) != 0) {
+            int pickPlayer = gDuelScreen.selPlayer;
+            int pickZone = gDuelScreen.selArea + gDuelScreen.selIndex;
+
+            if (AbyssSoldierCanTarget(link, pickPlayer, pickZone) && TryAddEffectTarget(link, pickPlayer, pickZone))
+                return 1;
+            PlaySE(SE_ERROR);
+        }
+        return 0;
+    }
+}
+
+int EffectAbyssSoldierResolve(struct ChainEntry *link, struct ChainEntry *chainedTo)
+{
+    if (!link->negated && link->numTargets == 1) {
+        int player = (u8)link->targets[0];
+        int zone = link->targets[0] >> 8;
+
+        if (DUEL_CARD_ID(&ZoneOf(player, zone)->card) != 0)
+            ReturnFieldCardToHand(player, zone, 0);
+    }
+    return EFFECT_STEP_DONE;
+}
+#endif /* HAS_CARD_ABYSS_SOLDIER */
+
 #ifdef HAS_CARD_BRAIN_CONTROL
 /* ---- Brain Control -------------------------------------------------------------------------------------------------
  * Normal Spell: "Pay 800 LP, then target 1 face-up monster your opponent controls that can be Normal Summoned/Set;
@@ -2231,6 +2368,16 @@ const struct CardEffect gAddedCardEffects[] = {
         NULL,
         NULL,
         NULL,
+    },
+#endif
+#ifdef HAS_CARD_ABYSS_SOLDIER
+    {
+        CARD_ABYSS_SOLDIER, 0,
+        EffectAbyssSoldierResolve,
+        EffectAbyssSoldierCheck,
+        EffectAbyssSoldierPrepare,
+        EffectAbyssSoldierChainA,
+        EffectAbyssSoldierChainB,
     },
 #endif
 #ifdef HAS_CARD_BRAIN_CONTROL

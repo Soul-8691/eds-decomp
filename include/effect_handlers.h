@@ -107,6 +107,11 @@ int EffectLightningVortexPrepare(struct ChainEntry *card, struct ChainEntry *cha
 int EffectLightningVortexChainA(struct ChainEntry *link, struct ChainEntry *prevLink);
 int EffectLightningVortexResolve(struct ChainEntry *link, struct ChainEntry *chainedTo);
 int EffectDonZaloogResolve(struct ChainEntry *link, struct ChainEntry *chainedTo);
+int EffectAbyssSoldierPrepare(struct ChainEntry *card, struct ChainEntry *chainLink, u16 fromHand);
+u16 EffectAbyssSoldierCheck(struct ChainEntry *card, u16 pos);
+int EffectAbyssSoldierChainA(struct ChainEntry *link, struct ChainEntry *prevLink);
+int EffectAbyssSoldierChainB(struct ChainEntry *link, struct ChainEntry *prevLink);
+int EffectAbyssSoldierResolve(struct ChainEntry *link, struct ChainEntry *chainedTo);
 u16 EffectBrainControlCheck(struct ChainEntry *card, u16 pos);
 int EffectBrainControlPrepare(struct ChainEntry *card, struct ChainEntry *chainLink, u16 fromHand);
 int EffectBrainControlChainA(struct ChainEntry *link, struct ChainEntry *prevLink);

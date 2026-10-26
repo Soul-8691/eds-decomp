@@ -163,6 +163,9 @@ void DuelCmd_TurnStart(void)
 #ifdef HAS_CARD_TRIBE_INFECTING_VIRUS
                 case CARD_TRIBE_INFECTING_VIRUS:                         /* added card: once per turn */
 #endif
+#ifdef HAS_CARD_ABYSS_SOLDIER
+                case CARD_ABYSS_SOLDIER:                                 /* added card: once per turn */
+#endif
                 case CARD_1334:
                 case CARD_1513:
                     monster->effectUnused = 1;
