@@ -497,6 +497,9 @@ u16 SummonAction_Update(void)
                         TsukuyomiMarkForEndReturn(action->player, action->zone);
                 }
 #endif
+#ifdef HAS_CARD_DARK_MAGICIAN_OF_CHAOS
+                DarkMagicianOfChaosSummoned(action->player, action->zone, id, (int)SUMMON_FLAGS_KIND(flags), wasFaceUp);
+#endif
                 DuelCursor_Select(action->player, 0, action->zone);
                 /* Key 1429: for a monster Special Summoned from the graveyard, draw one card per copy. */
                 if (action->statusFlags & ZONE_STATUS_FROM_GRAVEYARD) {

@@ -80,6 +80,7 @@ enum DDWarriorLadyState {
     DD_WARRIOR_LADY_ASKED = 1,      /* the prompt is posted; its answer is in gDuel.promptResult */
     DD_WARRIOR_LADY_YES = 2,
     DD_WARRIOR_LADY_NO = 3,
+    DD_BANISH_DESTROYED = 4,        /* added: Dark Magician of Chaos battled: destroyed monsters are banished, survivors stay */
 };
 
 /* ---- Running the Battle Phase ---- */

@@ -100,6 +100,11 @@ void ModDuelInit(void);
 void MysticSwordsmanAfterBattle(int player);
 /* The battle-kill hooks of the added cards (Mystic Swordsman LV2, Zombyra the Dark), from BattleStage_DestroyMonsters. */
 void AddedCardsAfterBattle(int player);
+/* Dark Magician of Chaos (src/added_effects.c): its summon mark, its End Phase trigger, and the test of the hooks that
+ * banish it instead of letting it leave the field. */
+int IsFaceUpDarkMagicianOfChaos(int player, int zone);
+void DarkMagicianOfChaosSummoned(int player, int zone, u16 id, int kind, int faceUp);
+void EndPhase_DarkMagicianOfChaos(int turnPlayer);
 void EndPhase_MysticSwordsmanLevelUp(int turnPlayer);
 void InjectionFairyLilyEndAttack(int player);
 /* Night Assailant (src/added_effects.c): its discard effect's targets, and the trigger DiscardHandCard queues. */

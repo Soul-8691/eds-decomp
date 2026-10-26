@@ -468,6 +468,14 @@ int BattleStage_DestroyMonsters(int player)
         }
     }
 #endif
+#ifdef HAS_CARD_DARK_MAGICIAN_OF_CHAOS
+    /* Added: Dark Magician of Chaos in the battle: the monsters it destroys are banished, and so is it when it is
+     * destroyed (src/added_effects.c). */
+    if (gBattle.ddWarriorLady != DD_WARRIOR_LADY_YES
+        && (CARD_NUMBER_OF(gBattle.side[player].cardId) == CARD_DARK_MAGICIAN_OF_CHAOS
+            || CARD_NUMBER_OF(gBattle.side[1 - player].cardId) == CARD_DARK_MAGICIAN_OF_CHAOS))
+        gBattle.ddWarriorLady = DD_BANISH_DESTROYED;
+#endif
 #if (defined(HAS_CARD_MYSTIC_SWORDSMAN_LV2) && defined(HAS_CARD_MYSTIC_SWORDSMAN_LV4)) \
     || defined(HAS_CARD_ZOMBYRA_THE_DARK)
     AddedCardsAfterBattle(player);  /* added cards: their battle kills (src/added_effects.c) */
@@ -541,7 +549,7 @@ int BattleStage_DestroyMonsters(int player)
         }
         if (CARD_NUMBER_OF(gBattle.side[1 - player].cardId) != CARD_DIMENSIONAL_WARRIOR
             && CARD_NUMBER_OF(gBattle.side[player].cardId) != CARD_DIMENSIONAL_WARRIOR
-            && gBattle.ddWarriorLady != DD_WARRIOR_LADY_YES) {
+            && gBattle.ddWarriorLady != DD_WARRIOR_LADY_YES && gBattle.ddWarriorLady != DD_BANISH_DESTROYED) {
             if (!done) {
                 /* A switch, not `number >= CARD_1254 && number <= CARD_1256`: the ROM reloads the number and
                  * tests both bounds. */
@@ -652,7 +660,7 @@ int BattleStage_DestroyMonsters(int player)
         }
         if (CARD_NUMBER_OF(gBattle.side[1 - player].cardId) != CARD_DIMENSIONAL_WARRIOR
             && CARD_NUMBER_OF(gBattle.side[player].cardId) != CARD_DIMENSIONAL_WARRIOR
-            && gBattle.ddWarriorLady != DD_WARRIOR_LADY_YES) {
+            && gBattle.ddWarriorLady != DD_WARRIOR_LADY_YES && gBattle.ddWarriorLady != DD_BANISH_DESTROYED) {
             if (!done) {
                 switch (CARD_NUMBER_OF(gBattle.side[1 - player].cardId)) {
                 case CARD_1254:
@@ -680,7 +688,7 @@ int BattleStage_DestroyMonsters(int player)
         } else if (!done)
             BanishBattleDestroyedCard(1 - player, gBattle.defSlot, (u16 *)&gBattle.zones[1 - player]);
     }
-#if defined(HAS_CARD_D_D_WARRIOR_LADY) || defined(HAS_CARD_D_D_ASSAILANT)
+#if defined(HAS_CARD_D_D_WARRIOR_LADY) || defined(HAS_CARD_D_D_ASSAILANT) || defined(HAS_CARD_DARK_MAGICIAN_OF_CHAOS)
     /* Added: D.D. Warrior Lady's Yes (and D.D. Assailant) also banishes the monsters that survived the battle. */
     if (gBattle.ddWarriorLady == DD_WARRIOR_LADY_YES) {
         if (!gBattle.side[player].destroyed && ZONE_HAS_CARD(&gDuelPlayers[player & 1].zones[gBattle.atkSlot]))

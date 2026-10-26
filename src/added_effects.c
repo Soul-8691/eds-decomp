@@ -837,12 +837,14 @@ int DestroyTargetBeforeDamageStep(int player)
  * (duel_main.c) clears it with ModDuelInit, since that RAM is not cleared otherwise. */
 struct ModDuelState {
     u16 battleKills;    /* Mystic Swordsman LV2: bit player * 5 + zone, it destroyed a monster by battle this turn */
+    u16 chaosSummoned;  /* Dark Magician of Chaos: bit player * 5 + zone, Normal or Special Summoned this turn */
 };
 extern struct ModDuelState gModDuel;
 
 void ModDuelInit(void)
 {
     gModDuel.battleKills = 0;
+    gModDuel.chaosSummoned = 0;
 #ifdef HAS_CARD_INJECTION_FAIRY_LILY
     InjectionFairyLilyResetBattle();
 #endif
@@ -1162,6 +1164,79 @@ void OnFieldCardTargeted(struct ChainEntry *link, int player, int zone)
     DestroyFieldCard(player, zone, 1);
 }
 #endif /* HAS_CARD_SPIRIT_REAPER */
+
+#ifdef HAS_CARD_DARK_MAGICIAN_OF_CHAOS
+/* ---- Dark Magician of Chaos (the 2005 text) -------------------------------------------------------------------------
+ * "When this card is Normal or Special Summoned, select 1 Spell Card from your Graveyard during the End Phase, and add
+ *  it to your hand. If this card destroys a monster by battle, remove that monster from play. If this face-up card is
+ *  removed from the field, remove it from play."
+ *   SummonAction_Update (summon_action.c)  DarkMagicianOfChaosSummoned: a face-up Normal Summon or any Special Summon
+ *                                          sets its bit in gModDuel.chaosSummoned (a Set or a Flip Summon does not)
+ *   DuelPhase_End (battle_phase3.c)        EndPhase_DarkMagicianOfChaos: a trigger for each marked zone whose player
+ *                                          has a Spell in the Graveyard (the summon was enough: the card need not be
+ *                                          on the field any more); the marks are cleared. Its row is Magician of
+ *                                          Faith's: the Graveyard Spells in the card-list viewer
+ *                                          (EffectCardListTargetChainB, CollectEffectTargets case shared with it,
+ *                                          AiPickCardListEntry's case too), added by EffectMaskOfDarknessResolve
+ *   BattleStage_DestroyMonsters            with it in the battle, the destroyed monsters are banished instead of sent
+ *                                          to the Graveyard (gBattle.ddWarriorLady = DD_BANISH_DESTROYED; survivors
+ *                                          stay)
+ *   SendFieldCardToGrave, TributeMonster, ReturnFieldCardToHand, ReturnFieldCardToDeck
+ *                                          IsFaceUpDarkMagicianOfChaos: the face-up card is banished instead
+ *                                          (BanishFieldCard) */
+
+int IsFaceUpDarkMagicianOfChaos(int player, int zone)
+{
+    struct DuelZone *z;
+    u16 id;
+
+    if (zone > ZONE_MONSTER_4)
+        return 0;
+    z = ZoneOf(player, zone);
+    id = DUEL_CARD_ID(&z->card);
+    return id != 0 && z->isFaceUp
+           && ((const u16 *)CARD_ID_TO_NUMBER_ADDR)[id & CARD_ID_MASK] == CARD_DARK_MAGICIAN_OF_CHAOS;
+}
+
+void DarkMagicianOfChaosSummoned(int player, int zone, u16 id, int kind, int faceUp)
+{
+    if (((const u16 *)CARD_ID_TO_NUMBER_ADDR)[id & CARD_ID_MASK] != CARD_DARK_MAGICIAN_OF_CHAOS)
+        return;
+    if (kind == SUMMON_ACTION_FLIP || ((kind == SUMMON_ACTION_NORMAL || kind == SUMMON_ACTION_NORMAL_CHOOSE_POSITION)
+                                       && !faceUp))
+        return;
+    gModDuel.chaosSummoned |= 1 << ((player & 1) * 5 + zone);
+}
+
+static int HasGraveyardSpell(int player)
+{
+    struct DuelPlayer *p = &gDuelPlayers[player & 1];
+    int i;
+
+    for (i = 0; i < p->graveCount; i++) {
+        if (CARD_STATS_TYPE(gCardStats[DUEL_CARD_ID(&p->graveyard[i]) & CARD_ID_MASK]) == CARD_TYPE_MAGIC)
+            return 1;
+    }
+    return 0;
+}
+
+void EndPhase_DarkMagicianOfChaos(int turnPlayer)
+{
+    int pass, player, zone;
+
+    for (pass = 0; pass <= 1; pass++) {
+        player = pass ? 1 - turnPlayer : turnPlayer;
+        for (zone = ZONE_MONSTER_0; zone <= ZONE_MONSTER_4; zone++) {
+            if ((gModDuel.chaosSummoned & (1 << (player * 5 + zone))) && HasGraveyardSpell(player))
+                Chain_AddPending(TRIGGER_PLAYER(player & 1) | TRIGGER_ZONE(zone) | TRIGGER_KIND(CHAIN_KIND_MONSTER)
+                                     | TRIGGER_EVENT(RESPONSE_NONE)
+                                     | gCardNumberToId[CARD_DARK_MAGICIAN_OF_CHAOS],
+                                 DUEL_LOC(player, zone));
+        }
+    }
+    gModDuel.chaosSummoned = 0;
+}
+#endif /* HAS_CARD_DARK_MAGICIAN_OF_CHAOS */
 
 #ifdef HAS_CARD_ABYSS_SOLDIER
 /* ---- Abyss Soldier -------------------------------------------------------------------------------------------------
@@ -2368,6 +2443,16 @@ const struct CardEffect gAddedCardEffects[] = {
         NULL,
         NULL,
         NULL,
+    },
+#endif
+#ifdef HAS_CARD_DARK_MAGICIAN_OF_CHAOS
+    {
+        CARD_DARK_MAGICIAN_OF_CHAOS, 0,
+        (int (*)(struct ChainEntry *, struct ChainEntry *))EffectMaskOfDarknessResolve,
+        NULL,
+        NULL,
+        NULL,
+        (int (*)(struct ChainEntry *, struct ChainEntry *))EffectCardListTargetChainB,
     },
 #endif
 #ifdef HAS_CARD_ABYSS_SOLDIER

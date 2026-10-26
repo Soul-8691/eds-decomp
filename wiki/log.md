@@ -1219,3 +1219,9 @@ updated: 2026-09-29
 - The 15 extra-deck cards of geistD-Goat Control.ydk were appended to sBakuraDeck (AddCardNumberToDeckTop puts
   Fusion Monsters into the Fusion Deck); verified against the .ydk.
 - Pages: [[added-cards]].
+
+## [2026-10-25] progress | Dark Magician of Chaos (2005 text)
+- Summon mark (SummonAction_Update) and an End Phase trigger with Magician of Faith's Graveyard Spell pick. The new
+  battle state DD_BANISH_DESTROYED banishes the destroyed monsters. The leave-the-field hooks (SendFieldCardToGrave,
+  TributeMonster, ReturnFieldCardToHand/Deck) banish it instead.
+- Pages: [[added-cards]].

@@ -482,6 +482,9 @@ u16 CollectEffectTargets(int player, u16 cardNumber, int param)
         break;
     }
     case CARD_MAGICIAN_OF_FAITH:
+#ifdef HAS_CARD_DARK_MAGICIAN_OF_CHAOS
+    case CARD_DARK_MAGICIAN_OF_CHAOS:   /* added card: the same Graveyard Spells */
+#endif
     {
         /* Graveyard Magic cards. */
         u32 *word;

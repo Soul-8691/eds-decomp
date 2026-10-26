@@ -179,8 +179,7 @@ it. You can remove 1 Spell Counter from this card; target 1 Spell/Trap on the fi
     `MOD_BAKURA_DECK`), so taking one of them off the list drops that deck instead of breaking the build. Verified:
     the arrays decoded from `build/src/mod_decks.o` match the three main decks card for card.
   - **Limits.** The Red starter deck and Joey use their main decks only. Bakura's Fusion Deck gives Metamorphosis its
-    targets (Thousand-Eyes Restrict at Level 1, Dark Balter, and others). Dark Magician of
-    Chaos (Bakura) has no coded effect yet. The CPU plays added cards only through the generic logic.
+    targets (Thousand-Eyes Restrict at Level 1, Dark Balter, and others). The CPU plays added cards only through the generic logic.
 - **Other rules.** Decks of fewer than 40 cards may duel (`DECK_MIN_CARDS` 1), and the human player cannot deck
   out outside Link Battles (`DuelCmd_DrawCards`).
 
@@ -315,6 +314,30 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
     `DuelPrompt_PostRandomDiscard` for the damaged player.
 - **Not covered:** a handler that adds a field target with `AddEffectTarget` directly instead of
   `TryAddEffectTarget` does not destroy it.
+- Checked in the source and the build; not tested in an emulator.
+
+### Dark Magician of Chaos (2026-10-25, the 2005 text)
+- Coded as the card was printed in 2005 (at the user's request), not the current errata: "When this card is Normal or
+  Special Summoned, select 1 Spell Card from your Graveyard during the End Phase, and add it to your hand. If this card
+  destroys a monster by battle, remove that monster from play. If this face-up card is removed from the field, remove
+  it from play." So there is no once-per-turn limit, and the Spell is added even if the card has left the field by the
+  End Phase.
+- **Summon mark.** `SummonAction_Update` (summon_action.c, next to Tsukuyomi's hook) calls
+  `DarkMagicianOfChaosSummoned`. A face-up Normal Summon or any Special Summon sets bit `player * 5 + zone` in
+  `gModDuel.chaosSummoned`; a Set or a Flip Summon does not. `ModDuelInit` clears it at the start of a duel.
+- **End Phase.** `DuelPhase_End` (battle_phase3.c, next to the Tsukuyomi and Mystic Swordsman hooks) calls
+  `EndPhase_DarkMagicianOfChaos`, which queues a trigger for each mark whose player has a Spell in the Graveyard,
+  then clears the marks. The row is Magician of Faith's: `EffectCardListTargetChainB` over the Graveyard Spells
+  (Magician of Faith's `CollectEffectTargets` case, and its `AiPickCardListEntry` case for the CPU), then
+  `EffectMaskOfDarknessResolve`. The text says "select", so it is mandatory and the list has no way to decline.
+- **Battle.** In `BattleStage_DestroyMonsters`, with Dark Magician of Chaos on either side, `gBattle.ddWarriorLady`
+  becomes the new `DD_BANISH_DESTROYED` (4), unless D.D. Warrior Lady's Yes is in force. Destroyed monsters are then
+  banished (`BanishBattleDestroyedCard`) instead of sent to the Graveyard, and survivors stay. This covers both the
+  monster it destroys and itself when it is destroyed.
+- **Leaving the field.** `SendFieldCardToGrave`, `TributeMonster` (still returns 1), `ReturnFieldCardToHand` and
+  `ReturnFieldCardToDeck` banish a face-up Dark Magician of Chaos instead (`IsFaceUpDarkMagicianOfChaos`,
+  `BanishFieldCard`).
+- **Not covered:** use as a Fusion material from the field (`SendFusionMaterialToGrave`).
 - Checked in the source and the build; not tested in an emulator.
 
 ### Abyss Soldier (2026-10-25)

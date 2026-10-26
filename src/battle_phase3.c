@@ -753,6 +753,9 @@ int DuelPhase_End(void)
 #if defined(HAS_CARD_MYSTIC_SWORDSMAN_LV2) && defined(HAS_CARD_MYSTIC_SWORDSMAN_LV4)
             EndPhase_MysticSwordsmanLevelUp(player);    /* added card (src/added_effects.c) */
 #endif
+#ifdef HAS_CARD_DARK_MAGICIAN_OF_CHAOS
+            EndPhase_DarkMagicianOfChaos(player);       /* added card (src/added_effects.c) */
+#endif
             END_STEP++;
         }
         return 0;

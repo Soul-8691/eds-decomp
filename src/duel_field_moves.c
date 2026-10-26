@@ -274,6 +274,13 @@ void ReturnFieldCardToHand(int player, int zone, u16 cmdArg)
 {
     u32 id = DUEL_CARD_ID(ZONE(player, zone));
 
+#ifdef HAS_CARD_DARK_MAGICIAN_OF_CHAOS
+    if (IsFaceUpDarkMagicianOfChaos(player, zone)) {   /* added card: removed from play instead */
+        BanishFieldCard(player, zone, 0);
+        return;
+    }
+#endif
+
     if (id == 0)
         return;
     if (IS_TOKEN_NUMBER(CARD_NUMBER(id)))
@@ -301,6 +308,13 @@ void ReturnFieldCardToHand(int player, int zone, u16 cmdArg)
 void ReturnFieldCardToDeck(int player, int zone)
 {
     u32 id = DUEL_CARD_ID(ZONE(player, zone));
+
+#ifdef HAS_CARD_DARK_MAGICIAN_OF_CHAOS
+    if (IsFaceUpDarkMagicianOfChaos(player, zone)) {   /* added card: removed from play instead */
+        BanishFieldCard(player, zone, 0);
+        return;
+    }
+#endif
 
     if (id == 0)
         return;

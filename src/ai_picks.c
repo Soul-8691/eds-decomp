@@ -181,6 +181,9 @@ int AiPickCardListEntry(u16 cardId)
     }
     switch (CARD_NUMBER(cardId)) {
     case CARD_MAGICIAN_OF_FAITH:
+#ifdef HAS_CARD_DARK_MAGICIAN_OF_CHAOS
+    case CARD_DARK_MAGICIAN_OF_CHAOS:   /* added card */
+#endif
     case CARD_MASK_OF_DARKNESS:
     case CARD_GRAVEROBBER:
         /* Is any of the 13 power cards in the list? */

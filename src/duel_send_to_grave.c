@@ -176,6 +176,12 @@ void SendFieldCardToGrave(int player, int zone, u16 destroyed, u16 runTriggers)
         if (zone == ZONE_FIELD && ZONE(player, zone)->isFaceUp)
             DuelCmd_Push(PLAYER_CMD(player, DUEL_CMD_SET_FIELD_BACKGROUND), 0, 0, 0);
     }
+#ifdef HAS_CARD_DARK_MAGICIAN_OF_CHAOS
+    if (IsFaceUpDarkMagicianOfChaos(player, zone)) {   /* added card: removed from play instead */
+        BanishFieldCard(player, zone, 0);
+        return;
+    }
+#endif
     if (CountFaceUpMonstersByNumber(0, CARD_BANISHER_OF_THE_LIGHT) > 0
         || CountFaceUpMonstersByNumber(1, CARD_BANISHER_OF_THE_LIGHT) > 0) {
         DuelCmd_Push(PLAYER_CMD(player, DUEL_CMD_BANISH), zone, destroyed, 0);
@@ -524,6 +530,12 @@ int TributeMonster(int player, int zone)
         return 0;
     if (id != 0) {
         struct DuelZone *z = &gDuelPlayers[player & 1].zones[zone];
+#ifdef HAS_CARD_DARK_MAGICIAN_OF_CHAOS
+        if (IsFaceUpDarkMagicianOfChaos(player, zone)) {   /* added card: removed from play instead */
+            BanishFieldCard(player, zone, 0);
+            return 1;
+        }
+#endif
         if (CountFaceUpMonstersByNumber(0, CARD_BANISHER_OF_THE_LIGHT) > 0
             || CountFaceUpMonstersByNumber(1, CARD_BANISHER_OF_THE_LIGHT) > 0) {
             DuelCmd_Push(PLAYER_CMD(player, DUEL_CMD_BANISH), zone, 1, 0);
