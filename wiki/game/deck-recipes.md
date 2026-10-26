@@ -50,8 +50,9 @@ mod's deck tables, named after their .ydk files:
   `fusion[20]` (226 bytes). A different magic (including the first build's `"RCP1"`) sets the area up again.
 - **Recipe in use.** One recipe is in use: it is the current deck, and it is stored back into its slot when the
   scene opens, on every switch, and on exit (Deck Edit changes reach it this way).
-- **New Game.** `BuildStarterDeck` calls `DeckRecipes_OnNewGame`, which clears the active slot so the starter deck
-  doesn't overwrite a recipe. On the next visit, the current deck takes the first empty slot.
+- **New Game.** `BuildStarterDeck` calls `DeckRecipes_OnNewGame`, which clears the recipes: it erases the header's
+  magic, so the next visit sets the area up again with the six presets and empty slots. The starter deck then takes
+  the first empty slot (07).
 - **RAM.** The scene state is `gDeckRecipes` (EWRAM `0x0202E400`, symbols.ld).
 
 ## Switching (A)

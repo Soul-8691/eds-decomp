@@ -1375,3 +1375,7 @@ updated: 2026-09-29
 ## [2026-10-26] progress | Ring of Destruction as Bell of Destruction
 - tools/banlist.py ALIASES: the banlists' Ring of Destruction limits apply to Bell of Destruction.
 - Pages: [[banlists-menu]].
+
+## [2026-10-26] progress | New Game resets Deck Recipes
+- DeckRecipes_OnNewGame erases the recipe header, so a new game starts with only the six preset recipes.
+- Pages: [[deck-recipes]].

@@ -5,7 +5,7 @@
  *   DeckRecipes_BuildLabel  the "Deck Recipes" label (MainMenu_Init calls it for tiles 0x200-0x23F, the rows after
  *                           the sheet; the scene uses it as its title)
  *   CB_DeckRecipes          the scene (MainMenu_Launch starts it)
- *   DeckRecipes_OnNewGame   BuildStarterDeck (title_screen.c): the new game's deck belongs to no recipe yet
+ *   DeckRecipes_OnNewGame   BuildStarterDeck (title_screen.c): a New Game clears the recipes back to the presets
  * Up to RECIPE_COUNT recipes, each a name and a saved Deck, Side Deck and Fusion Deck list, live in SRAM after the
  * save image (RECIPE_SRAM; the game's save is 0x2170 bytes of the 32 KiB). The first ones start as the decks of
  * GetRecipePreset (src/mod_decks.c), named after their .ydk files; like any recipe they can be replaced or cleared.
@@ -379,13 +379,14 @@ static void LoadRecipes(void)
     StoreActive();
 }
 
+/* A New Game clears the recipes: the header loses its magic, so the next visit sets the area up again (the presets,
+ * then empty slots, the new deck taking the first empty one). */
 void DeckRecipes_OnNewGame(void)
 {
     struct RecipeHeader h;
 
-    ReadHeader(&h);
-    if (h.magic == RECIPE_MAGIC)
-        WriteActive(RECIPE_NONE);
+    MemClear16(&h, sizeof(h));
+    WriteSramEx((u8 *)&h, RECIPE_SRAM, sizeof(h));
 }
 
 /* ---- The scene ---- */
