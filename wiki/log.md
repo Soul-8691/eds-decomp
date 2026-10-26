@@ -1402,3 +1402,17 @@ updated: 2026-09-29
 - mod_banlist.c: "Yugi-Kaiba" name on the opponent select; La Jinn's card art drawn into his Mode 4 portrait
   (nearest-colour mapping plus free palette entries); no dialogue before/after his duels (campaign_steps.c hooks).
 - Pages: [[yugi-kaiba-opponent]], index.
+
+## [2026-10-26] progress | Password card prices from Yugi-Kaiba usage
+- tools/cardprices.py: price = deck share (main+side) * 3000 + deck share (extra) * 300, x3 limited, x1.5
+  semi-limited; 10 for unused Yugi-Kaiba pool cards; others stay 500. GetCardCost binary-searches the table.
+- Pages: [[duelist-points]].
+
+## [2026-10-26] progress | Card prices: drop the x3
+- tools/cardprices.py BASE 3000 -> 1000 (main + side share * 1000, extra share * 100); the limited x3 and
+  semi-limited x1.5 stay.
+- Pages: [[duelist-points]].
+
+## [2026-10-26] progress | Unused Yugi-Kaiba pool cards cost 5 DP
+- tools/cardprices.py UNUSED_PRICE 10 -> 5.
+- Pages: [[duelist-points]].

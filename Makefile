@@ -138,6 +138,13 @@ $(BANLISTS_GEN): tools/banlist.py $(wildcard banlists/*_ban.json) $(wildcard car
 	$(PYTHON) tools/banlist.py --all $@
 build/src/mod_banlists.o: $(BANLISTS_GEN)
 
+# Password-machine card prices from the Yugi-Kaiba usage statistics (src/mod_dp.c).
+PRICES_GEN := build/include/card_prices.h
+$(PRICES_GEN): tools/cardprices.py tools/banlist.py usage/yugi-kaiba.json banlists/yugi-kaiba_ban.json card_pools/yugi-kaiba.txt $(NEWCARDS_BUILT)
+	@mkdir -p $(@D)
+	$(PYTHON) tools/cardprices.py $@
+build/src/mod_dp.o: $(PRICES_GEN)
+
 build/data/%.o: data/%.s $(ASSETS_BUILT) $(NEWCARDS_BUILT)
 	@mkdir -p $(@D)
 	$(AS) $(ASFLAGS) --MD build/data/$*.d -o $@ $<
