@@ -56,12 +56,158 @@ static const struct DeckList sYugiDeckList = { sYugiDeck, ARRAY_COUNT(sYugiDeck)
 
 STATIC_ASSERT(ARRAY_COUNT(sYugiDeck) == 40, YugiDeckSize);
 
+/* Joey Wheeler: the "sdlkilla-Warrior" deck (sdlkilla-Warrior.ydk, main deck only): Warriors with Reinforcement of the
+ * Army, D.D. Warrior Lady, Blade Knight, Exiled Force and Ninja Grandmaster Sasuke, and a Trap line-up. */
+#if defined(HAS_CARD_BLACK_LUSTER_SOLDIER_ENVOY_OF_THE_BEGINNING) \
+    && defined(HAS_CARD_BLADE_KNIGHT) \
+    && defined(HAS_CARD_BREAKER_THE_MAGICAL_WARRIOR) \
+    && defined(HAS_CARD_D_D_WARRIOR_LADY) \
+    && defined(HAS_CARD_DON_ZALOOG) \
+    && defined(HAS_CARD_EXILED_FORCE) \
+    && defined(HAS_CARD_KYCOO_THE_GHOST_DESTROYER) \
+    && defined(HAS_CARD_MYSTIC_SWORDSMAN_LV2) \
+    && defined(HAS_CARD_NINJA_GRANDMASTER_SASUKE) \
+    && defined(HAS_CARD_TRIBE_INFECTING_VIRUS) \
+    && defined(HAS_CARD_REINFORCEMENT_OF_THE_ARMY) \
+    && defined(HAS_CARD_JAR_OF_GREED) \
+    && defined(HAS_CARD_SAKURETSU_ARMOR) \
+    && defined(HAS_CARD_TORRENTIAL_TRIBUTE) \
+    && defined(HAS_CARD_TRAP_DUSTSHOOT)
+#define MOD_JOEY_DECK 1
+static const u16 sJoeyDeck[] = {
+    /* Monsters (13) */
+    CARD_BLACK_LUSTER_SOLDIER_ENVOY_OF_THE_BEGINNING,
+    X3(CARD_BLADE_KNIGHT),
+    CARD_BREAKER_THE_MAGICAL_WARRIOR,
+    CARD_D_D_WARRIOR_LADY,
+    CARD_DON_ZALOOG,
+    CARD_EXILED_FORCE,
+    X2(CARD_KYCOO_THE_GHOST_DESTROYER),
+    CARD_MYSTIC_SWORDSMAN_LV2,
+    CARD_NINJA_GRANDMASTER_SASUKE,
+    CARD_TRIBE_INFECTING_VIRUS,
+    /* Spells (11) */
+    CARD_DELINQUENT_DUO,
+    CARD_GRACEFUL_CHARITY,
+    CARD_HEAVY_STORM,
+    CARD_MYSTICAL_SPACE_TYPHOON,
+    X2(CARD_NOBLEMAN_OF_CROSSOUT),
+    CARD_POT_OF_GREED,
+    CARD_PREMATURE_BURIAL,
+    X2(CARD_REINFORCEMENT_OF_THE_ARMY),
+    CARD_SNATCH_STEAL,
+    /* Traps (16) */
+    X2(CARD_JAR_OF_GREED),
+    CARD_MIRROR_FORCE,
+    CARD_BELL_OF_DESTRUCTION,
+    X3(CARD_SAKURETSU_ARMOR),
+    X3(CARD_SOLEMN_JUDGMENT),
+    CARD_TORRENTIAL_TRIBUTE,
+    X2(CARD_TRAP_DUSTSHOOT),
+    X2(CARD_DUST_TORNADO),
+    CARD_CALL_OF_THE_HAUNTED,
+};
+STATIC_ASSERT(ARRAY_COUNT(sJoeyDeck) == 40, JoeyDeckSize);
+#endif
+#ifdef MOD_JOEY_DECK
+static const struct DeckList sJoeyDeckList = { sJoeyDeck, ARRAY_COUNT(sJoeyDeck), 0 };
+#endif
+
+/* Bakura: the "geistD-Goat Control" deck (geistD-Goat Control.ydk, main and extra deck): Scapegoat and Metamorphosis into
+ * Thousand-Eyes Restrict, flip monsters and Tsukuyomi, Black Luster Soldier and Dark Magician of Chaos. */
+#if defined(HAS_CARD_ABYSS_SOLDIER) \
+    && defined(HAS_CARD_BLACK_LUSTER_SOLDIER_ENVOY_OF_THE_BEGINNING) \
+    && defined(HAS_CARD_BREAKER_THE_MAGICAL_WARRIOR) \
+    && defined(HAS_CARD_D_D_WARRIOR_LADY) \
+    && defined(HAS_CARD_DARK_MAGICIAN_OF_CHAOS) \
+    && defined(HAS_CARD_MAGICAL_MERCHANT) \
+    && defined(HAS_CARD_TRIBE_INFECTING_VIRUS) \
+    && defined(HAS_CARD_TSUKUYOMI) \
+    && defined(HAS_CARD_CREATURE_SWAP) \
+    && defined(HAS_CARD_METAMORPHOSIS) \
+    && defined(HAS_CARD_SCAPEGOAT) \
+    && defined(HAS_CARD_JAR_OF_GREED) \
+    && defined(HAS_CARD_TORRENTIAL_TRIBUTE) \
+    && defined(HAS_CARD_TRAP_DUSTSHOOT) \
+    && defined(HAS_CARD_DARK_BALTER_THE_TERRIBLE) \
+    && defined(HAS_CARD_DARK_BLADE_THE_DRAGON_KNIGHT) \
+    && defined(HAS_CARD_FIEND_SKULL_DRAGON) \
+    && defined(HAS_CARD_GATLING_DRAGON) \
+    && defined(HAS_CARD_KING_DRAGUN) \
+    && defined(HAS_CARD_OJAMA_KING) \
+    && defined(HAS_CARD_REAPER_ON_THE_NIGHTMARE) \
+    && defined(HAS_CARD_RYU_SENSHI) \
+    && defined(HAS_CARD_THE_LAST_WARRIOR_FROM_ANOTHER_PLANET) \
+    && defined(HAS_CARD_THOUSAND_EYES_RESTRICT)
+#define MOD_BAKURA_DECK 1
+static const u16 sBakuraDeck[] = {
+    /* Monsters (15) */
+    CARD_ABYSS_SOLDIER,
+    CARD_BLACK_LUSTER_SOLDIER_ENVOY_OF_THE_BEGINNING,
+    CARD_BREAKER_THE_MAGICAL_WARRIOR,
+    CARD_CYBER_JAR,
+    CARD_D_D_WARRIOR_LADY,
+    CARD_DARK_MAGICIAN_OF_CHAOS,
+    X2(CARD_MAGICAL_MERCHANT),
+    X2(CARD_MAGICIAN_OF_FAITH),
+    CARD_MORPHING_JAR,
+    CARD_SANGAN,
+    CARD_SINISTER_SERPENT,
+    CARD_TRIBE_INFECTING_VIRUS,
+    CARD_TSUKUYOMI,
+    /* Spells (14) */
+    CARD_CREATURE_SWAP,
+    CARD_DELINQUENT_DUO,
+    CARD_GRACEFUL_CHARITY,
+    CARD_HEAVY_STORM,
+    X3(CARD_METAMORPHOSIS),
+    X2(CARD_NOBLEMAN_OF_CROSSOUT),
+    CARD_POT_OF_GREED,
+    CARD_PREMATURE_BURIAL,
+    X2(CARD_SCAPEGOAT),
+    CARD_SNATCH_STEAL,
+    /* Traps (11) */
+    X3(CARD_JAR_OF_GREED),
+    CARD_MIRROR_FORCE,
+    CARD_BELL_OF_DESTRUCTION,
+    X3(CARD_SOLEMN_JUDGMENT),
+    CARD_TORRENTIAL_TRIBUTE,
+    X2(CARD_TRAP_DUSTSHOOT),
+    /* Fusion Deck (15), the .ydk's extra deck: LoadOpponentDeck (AddCardNumberToDeckTop) puts Fusion Monsters there */
+    CARD_DARK_BALTER_THE_TERRIBLE,
+    CARD_DARK_BLADE_THE_DRAGON_KNIGHT,
+    CARD_DARKFIRE_DRAGON,
+    CARD_DRAGONESS_THE_WICKED_KNIGHT,
+    CARD_FIEND_SKULL_DRAGON,
+    CARD_GATLING_DRAGON,
+    CARD_GILTIA_THE_D_KNIGHT,
+    CARD_KING_DRAGUN,
+    CARD_OJAMA_KING,
+    CARD_REAPER_ON_THE_NIGHTMARE,
+    CARD_RYU_SENSHI,
+    CARD_THE_LAST_WARRIOR_FROM_ANOTHER_PLANET,
+    X3(CARD_THOUSAND_EYES_RESTRICT),
+};
+STATIC_ASSERT(ARRAY_COUNT(sBakuraDeck) == 40 + 15, BakuraDeckSize);
+#endif
+#ifdef MOD_BAKURA_DECK
+static const struct DeckList sBakuraDeckList = { sBakuraDeck, ARRAY_COUNT(sBakuraDeck), 0 };
+#endif
+
 /* The replacement deck of opponent `opponent` (enum DuelistId), or NULL to keep the original. */
 const struct DeckList *GetOpponentDeckOverride(int opponent)
 {
     switch (opponent) {
     case DUELIST_YUGI:
         return &sYugiDeckList;
+#ifdef MOD_JOEY_DECK
+    case DUELIST_JOEY:
+        return &sJoeyDeckList;
+#endif
+#ifdef MOD_BAKURA_DECK
+    case DUELIST_BAKURA:
+        return &sBakuraDeckList;
+#endif
     }
     return NULL;
 }
@@ -84,31 +230,62 @@ void GiveStartingTrunk(void)
     }
 }
 
-#if defined(HAS_CARD_BLACK_LUSTER_SOLDIER_ENVOY_OF_THE_BEGINNING) && defined(HAS_CARD_BREAKER_THE_MAGICAL_WARRIOR)
-/* The Red starter deck: Black Luster Soldier - Envoy of the Beginning with LIGHT and DARK monsters to banish for
- * it: strong Normal monsters, the LIGHT/DARK floaters Shining Fairy and Mystic Tomato, Breaker the Magical Warrior,
- * and Dark Hole (limited: 1 in the deck). 40 cards. */
+/* The Red starter deck: the "LR-Chaos Turbo" deck (LR-Chaos Turbo.ydk, main deck only): Black Luster Soldier and
+ * Chaos Sorcerer fed by LIGHT and DARK flip monsters, Thunder Dragon and the discard/draw Spells. */
+#if defined(HAS_CARD_BLACK_LUSTER_SOLDIER_ENVOY_OF_THE_BEGINNING) \
+    && defined(HAS_CARD_BREAKER_THE_MAGICAL_WARRIOR) \
+    && defined(HAS_CARD_CHAOS_SORCERER) \
+    && defined(HAS_CARD_DEKOICHI_THE_BATTLECHANTED_LOCOMOTIVE) \
+    && defined(HAS_CARD_GRAVEKEEPERS_SPY) \
+    && defined(HAS_CARD_NIGHT_ASSAILANT) \
+    && defined(HAS_CARD_TRIBE_INFECTING_VIRUS) \
+    && defined(HAS_CARD_TSUKUYOMI) \
+    && defined(HAS_CARD_BOOK_OF_MOON) \
+    && defined(HAS_CARD_CARD_DESTRUCTION) \
+    && defined(HAS_CARD_MIND_CONTROL) \
+    && defined(HAS_CARD_JAR_OF_GREED) \
+    && defined(HAS_CARD_PHOENIX_WING_WIND_BLAST) \
+    && defined(HAS_CARD_TORRENTIAL_TRIBUTE) \
+    && defined(HAS_CARD_TRAP_DUSTSHOOT)
+#define MOD_RED_DECK 1
 static const u16 sRedStarterDeck[] = {
-    X3(X2(CARD_CHAOS_SORCERER)), X2(CARD_CHAOS_SORCERER),
-    X3(CARD_BREAKER_THE_MAGICAL_WARRIOR),
-    X3(CARD_SHINING_FAIRY),
-    X3(CARD_MYSTIC_TOMATO),
-    CARD_DARK_HOLE,
-    /* Normal monsters: level 4 */
-    X3(CARD_VORSE_RAIDER),                          /* DARK 1900 */
-    X3(CARD_DUNAMES_DARK_WITCH),                    /* LIGHT 1800 */
-    X3(CARD_LA_JINN_THE_MYSTICAL_GENIE_OF_THE_LAMP), /* DARK 1800 */
-    X3(CARD_NEO_THE_MAGIC_SWORDSMAN),               /* LIGHT 1700 */
-    X2(CARD_MECHANICALCHASER),                      /* DARK 1850 */
-    X2(CARD_GUARDIAN_OF_THE_THRONE_ROOM),           /* LIGHT 1650 */
-    /* Normal monsters: Tribute Summons */
-    X2(CARD_SUMMONED_SKULL),                        /* DARK 2500, level 6 */
-    X2(CARD_BLUE_EYES_WHITE_DRAGON),                /* LIGHT 3000, level 8 */
-    CARD_DARK_MAGICIAN,                             /* DARK 2500, level 7 */
-    CARD_RED_EYES_B_DRAGON,                         /* DARK 2400, level 7 */
+    /* Monsters (20) */
+    CARD_BLACK_LUSTER_SOLDIER_ENVOY_OF_THE_BEGINNING,
+    CARD_BREAKER_THE_MAGICAL_WARRIOR,
+    X2(CARD_CHAOS_SORCERER),
+    X2(CARD_DEKOICHI_THE_BATTLECHANTED_LOCOMOTIVE),
+    X3(CARD_GRAVEKEEPERS_SPY),
+    X2(CARD_MAGICIAN_OF_FAITH),
+    X2(CARD_NIGHT_ASSAILANT),
+    CARD_SANGAN,
+    CARD_SINISTER_SERPENT,
+    X3(CARD_THUNDER_DRAGON),
+    CARD_TRIBE_INFECTING_VIRUS,
+    CARD_TSUKUYOMI,
+    /* Spells (13) */
+    CARD_BOOK_OF_MOON,
+    CARD_CARD_DESTRUCTION,
+    CARD_DELINQUENT_DUO,
+    CARD_GRACEFUL_CHARITY,
+    CARD_HEAVY_STORM,
+    CARD_MIND_CONTROL,
+    CARD_MYSTICAL_SPACE_TYPHOON,
+    X2(CARD_NOBLEMAN_OF_CROSSOUT),
+    CARD_POT_OF_GREED,
+    CARD_SNATCH_STEAL,
+    X2(CARD_UPSTART_GOBLIN),
+    /* Traps (7) */
+    CARD_JAR_OF_GREED,
+    CARD_MIRROR_FORCE,
+    X2(CARD_PHOENIX_WING_WIND_BLAST),
+    CARD_BELL_OF_DESTRUCTION,
+    CARD_TORRENTIAL_TRIBUTE,
+    CARD_TRAP_DUSTSHOOT,
 };
-
 STATIC_ASSERT(ARRAY_COUNT(sRedStarterDeck) == 40, RedStarterDeckSize);
+#endif
+
+#ifdef MOD_RED_DECK
 
 /* Build the saved Deck of starter deck `choice` (enum StarterDeck) when this build replaces it; returns 1 then,
  * 0 to let BuildStarterDeck build the original. */

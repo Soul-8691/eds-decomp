@@ -1208,3 +1208,14 @@ updated: 2026-09-29
   DiscardPrompt_TryDiscardSelected (the CPU discards directly). Any field card is returned with
   ReturnFieldCardToHand.
 - Pages: [[added-cards]].
+
+## [2026-10-25] progress | Decks from .ydk files: Red starter, Joey, Bakura
+- Red starter = LR-Chaos Turbo, Joey = sdlkilla-Warrior, Bakura = geistD-Goat Control (main decks only). The
+  passcodes were mapped through the built password table; the decks are guarded on their added cards and were
+  verified against the compiled arrays.
+- Pages: [[added-cards]].
+
+## [2026-10-25] progress | Bakura's Fusion Deck
+- The 15 extra-deck cards of geistD-Goat Control.ydk were appended to sBakuraDeck (AddCardNumberToDeckTop puts
+  Fusion Monsters into the Fusion Deck); verified against the .ydk.
+- Pages: [[added-cards]].

@@ -161,11 +161,26 @@ it. You can remove 1 Spell Counter from this card; target 1 Spell/Trap on the fi
   Light of Intervention makes the hats face up.
 - The CPU never has Breaker in its decks.
 - **Decks of this build** (`src/mod_decks.c`; keep to the Forbidden/Limited list):
-  - **Red starter deck:** 8 BLS - Envoy of the Beginning, 3 Breaker, 3 Shining Fairy, 3 Mystic Tomato, 1 Dark Hole,
-    and 22 strong LIGHT/DARK Normal monsters (40). Dark Hole is limited to 1, so the other 2 go to the trunk
-    (`BuildModStarterDeck`, called by `BuildStarterDeck`).
+  - **Red starter deck (2026-10-25):** the main deck of `LR-Chaos Turbo.ydk` (repository root): BLS - Envoy of the
+    Beginning, Chaos Sorcerer, flip monsters, Thunder Dragon, the discard/draw Spells (`BuildModStarterDeck`, called
+    by `BuildStarterDeck`). It replaces the earlier 8-BLS deck.
   - **Yugi Muto:** a competitive 40-card deck (`GetOpponentDeckOverride`): Jinzo, Summoned Skull, Vorse Raider,
     floaters and searchers, the limited staples, Mystical Space Typhoon, Trap Hole.
+  - **Joey Wheeler (`DUELIST_JOEY`):** the main deck of `sdlkilla-Warrior.ydk`.
+  - **Bakura (`DUELIST_BAKURA`):** the main and extra deck of `geistD-Goat Control.ydk` (40 + 15). A `struct
+    DeckList` has one card list; `LoadOpponentDeck` adds each card with `AddCardNumberToDeckTop` (ai_summon.c), which
+    puts a Fusion Monster into the Fusion Deck. So the 15 extra-deck cards are appended to `sBakuraDeck`, and its
+    guard includes the added Fusion monsters. Verified from `build/src/mod_decks.o`: the 40 main cards and the 15
+    Fusion monsters match the .ydk's `#main` and `#extra`.
+  - **How the .ydk decks were made.** The .ydk numbers are passcodes. Each was mapped through the built
+    `gCardPasswords` (original and added cards) to a card ID, then to its card number and `CARD_*` constant; all 120
+    resolved. Only the `#main` sections were used (40 each), and all their counts are within `gCardCopyLimits`.
+    Each deck is guarded on the `HAS_CARD_*` of its added cards (`MOD_RED_DECK`, `MOD_JOEY_DECK`,
+    `MOD_BAKURA_DECK`), so taking one of them off the list drops that deck instead of breaking the build. Verified:
+    the arrays decoded from `build/src/mod_decks.o` match the three main decks card for card.
+  - **Limits.** The Red starter deck and Joey use their main decks only. Bakura's Fusion Deck gives Metamorphosis its
+    targets (Thousand-Eyes Restrict at Level 1, Dark Balter, and others). Dark Magician of
+    Chaos (Bakura) has no coded effect yet. The CPU plays added cards only through the generic logic.
 - **Other rules.** Decks of fewer than 40 cards may duel (`DECK_MIN_CARDS` 1), and the human player cannot deck
   out outside Link Battles (`DuelCmd_DrawCards`).
 
