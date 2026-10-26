@@ -1250,3 +1250,9 @@ updated: 2026-09-29
   Tributed the opponent's zone 0 (packed DUEL_LOC passed as the player): fixed. A CPU target and resolve were added
   (SoulExchangeCpuChainB / SoulExchangeCpuResolve).
 - Pages: [[added-cards]].
+
+## [2026-10-25] progress | Mod state out of .bss
+- The Tsukuyomi and flip-lock state (3 bytes of .bss, linked at 0x02000000 over gTextCanvas) moved into gModDuel
+  (EWRAM 0x0202FF04) and is cleared by ModDuelInit. .ewram is 0 bytes again.
+- Note: the user's crashes on 2026-10-25 were a stale eds.ips that mGBA applied to every new build, not the code.
+- Pages: [[added-cards]].

@@ -524,6 +524,10 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
 - **Not modelled:** the hand/Deck choice. The Deck is taken first.
 - **Duel state.** `gModDuel` is at EWRAM `0x0202FF04` (symbols.ld). `DuelPhase_Init` (duel_main.c) now calls
   `ModDuelInit`, which clears it and Injection Fairy Lily's state at the start of every duel.
+- **No `static` variables in mod code (2026-10-25).** The linker script puts `.bss` at 0x02000000, on top of
+  `gTextCanvas`. Two such variables (`sTsukuyomiEndReturnMask[2]` and `sFlipEffectsLockedForTurn`, 3 bytes) were
+  overwritten by text drawing and wrote into it. They are now `gModDuel.tsukuyomiEndReturn[2]` and
+  `gModDuel.flipEffectsLocked`, cleared by `ModDuelInit`. The `.ewram` section of build/eds.map must stay 0 bytes long.
 - Checked in the source and the build; not tested in an emulator.
 
 ### Ninja Grandmaster Sasuke (2026-10-25)

@@ -47,6 +47,17 @@
 #define TRIGGER_EVENT(event) ((event) << 25)
 #define TRIGGER_PLAYER(player) ((player) << 31)
 
+/* What the added cards remember during a duel: gModDuel (EWRAM 0x0202FF04, symbols.ld, free RAM below gScratchBuffer).
+ * DuelPhase_Init clears it with ModDuelInit. A `static` variable here would go to .bss, which the linker puts at
+ * 0x02000000, over gTextCanvas: keep such state in this block. */
+struct ModDuelState {
+    u16 battleKills;            /* Mystic Swordsman LV2: bit player * 5 + zone, destroyed a monster by battle this turn */
+    u16 chaosSummoned;          /* Dark Magician of Chaos: bit player * 5 + zone, Normal or Special Summoned this turn */
+    u8 tsukuyomiEndReturn[2];   /* Tsukuyomi: per player, bit zone, return it to the hand in the End Phase */
+    u8 flipEffectsLocked;       /* flip effects cannot be activated this turn */
+};
+extern struct ModDuelState gModDuel;
+
 static inline struct DuelZone *ZoneOf(int player, int zone)
 {
     return &gDuelPlayers[player & 1].zones[zone];
@@ -688,7 +699,6 @@ int EffectBookOfMoonResolve(struct ChainEntry *link, struct ChainEntry *chainedT
  * Flip Summon; battle_phase2 marks End Phase return on battle flip. EndPhase_ReturnTsukuyomi (battle_phase3.c)
  * returns marked copies during the End Phase. */
 
-static u8 sTsukuyomiEndReturnMask[2];
 
 #define TSUKUYOMI_MONSTER_TRIGGER(event) (((event) << 25) | (CHAIN_KIND_MONSTER << 21))
 
@@ -707,7 +717,7 @@ int IsCannotSpecialSummon(u16 cardId)
 void TsukuyomiMarkForEndReturn(int player, int zone)
 {
     if (zone >= ZONE_MONSTER_0 && zone <= ZONE_MONSTER_4)
-        sTsukuyomiEndReturnMask[player & 1] |= (u8)(1 << zone);
+        gModDuel.tsukuyomiEndReturn[player & 1] |= (u8)(1 << zone);
 }
 
 static int IsTsukuyomiHere(struct ChainEntry *card)
@@ -766,7 +776,7 @@ void TsukuyomiAfterNormalSummon(int player, int zone, u16 cardId, int faceUp)
 void EndPhase_ReturnTsukuyomi(int player)
 {
     int zone;
-    u8 mask = sTsukuyomiEndReturnMask[player & 1];
+    u8 mask = gModDuel.tsukuyomiEndReturn[player & 1];
 
     for (zone = ZONE_MONSTER_0; zone <= ZONE_MONSTER_4; zone++) {
         if ((mask & (1 << zone)) == 0)
@@ -781,7 +791,7 @@ void EndPhase_ReturnTsukuyomi(int player)
             }
         }
     }
-    sTsukuyomiEndReturnMask[player & 1] = 0;
+    gModDuel.tsukuyomiEndReturn[player & 1] = 0;
 }
 #endif /* HAS_CARD_TSUKUYOMI */
 
@@ -836,16 +846,14 @@ int DestroyTargetBeforeDamageStep(int player)
 /* ---- Mod state of a duel -----------------------------------------------------------------------------------------
  * gModDuel (EWRAM 0x0202FF04, symbols.ld) holds what the added cards remember during a duel; DuelPhase_Init
  * (duel_main.c) clears it with ModDuelInit, since that RAM is not cleared otherwise. */
-struct ModDuelState {
-    u16 battleKills;    /* Mystic Swordsman LV2: bit player * 5 + zone, it destroyed a monster by battle this turn */
-    u16 chaosSummoned;  /* Dark Magician of Chaos: bit player * 5 + zone, Normal or Special Summoned this turn */
-};
-extern struct ModDuelState gModDuel;
 
 void ModDuelInit(void)
 {
     gModDuel.battleKills = 0;
     gModDuel.chaosSummoned = 0;
+    gModDuel.tsukuyomiEndReturn[0] = 0;
+    gModDuel.tsukuyomiEndReturn[1] = 0;
+    gModDuel.flipEffectsLocked = 0;
 #ifdef HAS_CARD_INJECTION_FAIRY_LILY
     InjectionFairyLilyResetBattle();
 #endif
@@ -2337,21 +2345,20 @@ int BladeKnightNegatesBattleFlipEffect(void)
 /* ---- Dark Ruler Ha Des ---------------------------------------------------------------------------------------
  * "When this card is Tribute Summoned: Flip Effects cannot be activated for the rest of this turn." */
 
-static u8 sFlipEffectsLockedForTurn;
 
 int FlipEffectsLockedForTurn(void)
 {
-    return sFlipEffectsLockedForTurn != 0;
+    return gModDuel.flipEffectsLocked != 0;
 }
 
 void LockFlipEffectsForTurn(void)
 {
-    sFlipEffectsLockedForTurn = 1;
+    gModDuel.flipEffectsLocked = 1;
 }
 
 void ClearFlipEffectsLockForTurn(void)
 {
-    sFlipEffectsLockedForTurn = 0;
+    gModDuel.flipEffectsLocked = 0;
 }
 
 /* ---- "Gravekeeper's" cards -----------------------------------------------------------------------------------
