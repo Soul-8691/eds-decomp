@@ -357,6 +357,9 @@ static inline int CallZoneZero(int side)
  * 1423, 1424, 1447, 1528 and 1536. By the board: Bell of Destruction, Just Desserts, Magic Thorn, Gift of the
  * Mystical Elf, Mirror Force, key 1214, Ceasefire, Aqua Chorus and key 1425. Everything else gives 0.
  * Card numbers 1214 and 1425 are effect keys with no EDS card. */
+/* Mod (src/added_effects.c): the CPU's answer for a Set added card. */
+int AiShouldActivateAddedCard(struct ChainEntry *entry);
+
 int AiShouldActivateSetCard(struct ChainEntry *entry)
 {
     int a;
@@ -513,7 +516,7 @@ int AiShouldActivateSetCard(struct ChainEntry *entry)
             return 1;
         return 0;
     }
-    return 0;
+    return AiShouldActivateAddedCard(entry);     /* mod: the added cards (src/added_effects.c) */
 }
 
 /* Find the first face-down, activatable set card with card number `number` in player 1's spell/trap zones

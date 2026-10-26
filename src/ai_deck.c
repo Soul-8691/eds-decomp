@@ -29,6 +29,8 @@
 #include "duel_cmd.h"               /* DuelCmd_Push */
 #include "duel_flow.h"              /* gDuelCtrl */
 #include "effect.h"                 /* CanActivateEffect */
+/* Mod (src/added_effects.c): the CPU's use of the added cards. */
+int AiPlayAddedCards(void);
 #include "effect_handlers.h"        /* EffectEquipTargetCheck, EffectBackupSoldierPrepare, ... */
 #include "save.h"                   /* GetCardCopyLimit */
 #include "util.h"                   /* MemClear16, Random */
@@ -767,6 +769,8 @@ int AiPlaySpells(void)
                 if ((u16)AiTryPlaySpellTrap(gAiEquipSpells[gAiState.listIndex])) return 0;
             }
         }
+        if (AiPlayAddedCards())     /* mod: the added cards (src/added_effects.c) */
+            return 0;
         break;
     case AI_SPELLS_EXODIA_CLEAR:
         if (!AiCountExodiaOnField() && (CountMonstersByNumber(1, CARD_SANGAN) > 0 || CountMonstersByNumber(1, CARD_WITCH_OF_THE_BLACK_FOREST) > 0)

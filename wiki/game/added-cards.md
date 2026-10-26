@@ -166,6 +166,11 @@ it. You can remove 1 Spell Counter from this card; target 1 Spell/Trap on the fi
     by `BuildStarterDeck`). It replaces the earlier 8-BLS deck.
   - **Yugi Muto:** a competitive 40-card deck (`GetOpponentDeckOverride`): Jinzo, Summoned Skull, Vorse Raider,
     floaters and searchers, the limited staples, Mystical Space Typhoon, Trap Hole.
+  - **Tea (`DUELIST_TEA`):** the Red starter deck's LR-Chaos Turbo list (`sRedDeckList`).
+  - **Green and Black starter decks (2026-10-25):** Green is Joey's Warrior list, Black is Bakura's Goat Control list
+    (the user asked for "the other 2 ydks"; the colours were matched by Claude). `BuildModStarterDeck` now picks the
+    list by `choice`. It sends a Fusion Monster to the saved Fusion Deck (`AddCardToSavedFusionDeck`), so Black also
+    gets Bakura's Fusion Deck, and everything else to the saved Deck.
   - **Joey Wheeler (`DUELIST_JOEY`):** the main deck of `sdlkilla-Warrior.ydk`.
   - **Bakura (`DUELIST_BAKURA`):** the main and extra deck of `geistD-Goat Control.ydk` (40 + 15). A `struct
     DeckList` has one card list; `LoadOpponentDeck` adds each card with `AddCardNumberToDeckTop` (ai_summon.c), which
@@ -314,6 +319,45 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
     `DuelPrompt_PostRandomDiscard` for the damaged player.
 - **Not covered:** a handler that adds a field target with `AddEffectTarget` directly instead of
   `TryAddEffectTarget` does not destroy it.
+- Checked in the source and the build; not tested in an emulator.
+
+### The CPU and the added cards (2026-10-25)
+- **Why the CPU did not use them.** Its logic is a set of per-card-number scripts, and no added card is named in
+  them. Only added cards that took an engine number the scripts know (Magic Cylinder 1214, Thousand-Eyes Restrict
+  1334) were covered.
+  - `AiPlaySpells` (ai_deck.c) only tries its fixed lists (`gAiGenericSpells`, `gAiEquipSpells` and the named
+    cards).
+  - `AiShouldActivateSetCard` (ai_summon.c) returns 0 for every card it does not name, so Set added Traps were never
+    activated. `AiStepSetSpellTraps` already Set any Trap or Quick-Play it does not name.
+  - `AiActivateMonsterEffects` only knows `gAiEffectMonsters` (Time Wizard, Cannon Soldier, Relinquished, Barrel
+    Dragon).
+  - The summon choice skips Special-Summon-only monsters, and the LIGHT/DARK summon steps of BLS and Chaos Sorcerer
+    are a card-list UI with no CPU branch.
+  - `PROMPT_SELECT_TYPE` (Tribe-Infecting Virus' declaration) has no CPU branch, so it would have shown the menu to
+    the human.
+- **The fix** (src/added_effects.c, "The CPU and the added cards"), for card IDs from `CARD_ID_COUNT_ORIGINAL` on:
+  - `AiPlayAddedCards`, called at the end of `AiPlaySpells`' `AI_SPELLS_LISTS`, one action per call:
+    - it Special Summons BLS or Chaos Sorcerer from the hand (banishing the weakest LIGHT and DARK Graveyard
+      monsters, `BanishGraveyardCard`, `QueueSpecialSummonFromHand`);
+    - it activates the card-menu effects of face-up added monsters (`CanActivateMonsterEffect`, then point at the
+      zone and `Chain_AddPending`, as `AiActivateMonsterEffects` does);
+    - it plays added Magic cards from the hand or Set (`AiTryPlaySpellTrap`, which makes the game's own checks).
+  - `AiShouldActivateAddedCard`, returned at the end of `AiShouldActivateSetCard` instead of 0: yes for an added card,
+    whose prepare handler has already accepted the window.
+  - `EffectTribeInfectingVirusChainB`: the CPU declares the Type that costs the human the most face-up monsters
+    (theirs minus its own); the human keeps DNA Surgery's prompt.
+- **Policies** (the target steps' CPU branches take the human's side first, so each effect waits for a human target):
+  - Breaker: the human has a Spell/Trap.
+  - BLS: the human has a monster. Chaos Sorcerer: the human has a face-up monster.
+  - Virus: a Type gains more than it costs, and the CPU has a card to discard.
+  - Exiled Force: the human has a stronger face-up monster or a face-down one.
+  - Abyss Soldier: the human has a card. Thousand-Eyes Restrict: the human has a monster.
+  - Card Destruction: the human holds more cards than the CPU would discard.
+  - Creature Swap: the CPU's weakest monster is weaker than the human's strongest face-up one.
+  - Book of Moon (Main Phase): both sides have monsters. Scapegoat: never from the hand in the Main Phase; it is kept
+    to be Set.
+  - Set cards: Torrential Tribute when the human has more monsters; Scapegoat against an attack or with no CPU
+    monster; Book of Moon against an attack; every other added card always.
 - Checked in the source and the build; not tested in an emulator.
 
 ### Dark Magician of Chaos (2026-10-25, the 2005 text)

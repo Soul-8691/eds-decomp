@@ -1,7 +1,7 @@
 /*
  * mod_decks: decks that replace the original ones. Not part of the original ROM.
  *   GetOpponentDeckOverride   opponent decks (gOpponentDecks); LoadOpponentDeck (ai_deck.c) asks it first
- *   BuildModStarterDeck       starter decks; BuildStarterDeck (title_screen.c) asks it first
+ *   BuildModStarterDeck       starter decks (Red, Green, Black); BuildStarterDeck (title_screen.c) asks it first
  *   GiveStartingTrunk         the cards a new game starts with in the trunk (BuildStarterDeck)
  * Like added_effects, this unit is @farcode and @rodata at the end in units.txt, so it does not move the game's
  * code or data. Decks keep to the Forbidden/Limited list (gCardCopyLimits): LoadOpponentDeck drops every copy of
@@ -129,15 +129,15 @@ static const struct DeckList sJoeyDeckList = { sJoeyDeck, ARRAY_COUNT(sJoeyDeck)
     && defined(HAS_CARD_JAR_OF_GREED) \
     && defined(HAS_CARD_TORRENTIAL_TRIBUTE) \
     && defined(HAS_CARD_TRAP_DUSTSHOOT) \
-    && defined(HAS_CARD_DARK_BALTER_THE_TERRIBLE) \
-    && defined(HAS_CARD_DARK_BLADE_THE_DRAGON_KNIGHT) \
-    && defined(HAS_CARD_FIEND_SKULL_DRAGON) \
-    && defined(HAS_CARD_GATLING_DRAGON) \
-    && defined(HAS_CARD_KING_DRAGUN) \
-    && defined(HAS_CARD_OJAMA_KING) \
-    && defined(HAS_CARD_REAPER_ON_THE_NIGHTMARE) \
-    && defined(HAS_CARD_RYU_SENSHI) \
-    && defined(HAS_CARD_THE_LAST_WARRIOR_FROM_ANOTHER_PLANET) \
+    // && defined(HAS_CARD_DARK_BALTER_THE_TERRIBLE) \
+    // && defined(HAS_CARD_DARK_BLADE_THE_DRAGON_KNIGHT) \
+    // && defined(HAS_CARD_FIEND_SKULL_DRAGON) \
+    // && defined(HAS_CARD_GATLING_DRAGON) \
+    // && defined(HAS_CARD_KING_DRAGUN) \
+    // && defined(HAS_CARD_OJAMA_KING) \
+    // && defined(HAS_CARD_REAPER_ON_THE_NIGHTMARE) \
+    // && defined(HAS_CARD_RYU_SENSHI) \
+    // && defined(HAS_CARD_THE_LAST_WARRIOR_FROM_ANOTHER_PLANET) \
     && defined(HAS_CARD_THOUSAND_EYES_RESTRICT)
 #define MOD_BAKURA_DECK 1
 static const u16 sBakuraDeck[] = {
@@ -174,63 +174,27 @@ static const u16 sBakuraDeck[] = {
     CARD_TORRENTIAL_TRIBUTE,
     X2(CARD_TRAP_DUSTSHOOT),
     /* Fusion Deck (15), the .ydk's extra deck: LoadOpponentDeck (AddCardNumberToDeckTop) puts Fusion Monsters there */
-    CARD_DARK_BALTER_THE_TERRIBLE,
-    CARD_DARK_BLADE_THE_DRAGON_KNIGHT,
-    CARD_DARKFIRE_DRAGON,
-    CARD_DRAGONESS_THE_WICKED_KNIGHT,
-    CARD_FIEND_SKULL_DRAGON,
-    CARD_GATLING_DRAGON,
-    CARD_GILTIA_THE_D_KNIGHT,
-    CARD_KING_DRAGUN,
-    CARD_OJAMA_KING,
-    CARD_REAPER_ON_THE_NIGHTMARE,
-    CARD_RYU_SENSHI,
-    CARD_THE_LAST_WARRIOR_FROM_ANOTHER_PLANET,
+    // CARD_DARK_BALTER_THE_TERRIBLE,
+    // CARD_DARK_BLADE_THE_DRAGON_KNIGHT,
+    // CARD_DARKFIRE_DRAGON,
+    // CARD_DRAGONESS_THE_WICKED_KNIGHT,
+    // CARD_FIEND_SKULL_DRAGON,
+    // CARD_GATLING_DRAGON,
+    // CARD_GILTIA_THE_D_KNIGHT,
+    // CARD_KING_DRAGUN,
+    // CARD_OJAMA_KING,
+    // CARD_REAPER_ON_THE_NIGHTMARE,
+    // CARD_RYU_SENSHI,
+    // CARD_THE_LAST_WARRIOR_FROM_ANOTHER_PLANET,
     X3(CARD_THOUSAND_EYES_RESTRICT),
 };
-STATIC_ASSERT(ARRAY_COUNT(sBakuraDeck) == 40 + 15, BakuraDeckSize);
+STATIC_ASSERT(ARRAY_COUNT(sBakuraDeck) == 40 + 3, BakuraDeckSize);
 #endif
 #ifdef MOD_BAKURA_DECK
 static const struct DeckList sBakuraDeckList = { sBakuraDeck, ARRAY_COUNT(sBakuraDeck), 0 };
 #endif
 
-/* The replacement deck of opponent `opponent` (enum DuelistId), or NULL to keep the original. */
-const struct DeckList *GetOpponentDeckOverride(int opponent)
-{
-    switch (opponent) {
-    case DUELIST_YUGI:
-        return &sYugiDeckList;
-#ifdef MOD_JOEY_DECK
-    case DUELIST_JOEY:
-        return &sJoeyDeckList;
-#endif
-#ifdef MOD_BAKURA_DECK
-    case DUELIST_BAKURA:
-        return &sBakuraDeckList;
-#endif
-    }
-    return NULL;
-}
-
-/* Copies of every card a new game puts in the trunk. */
-#define STARTING_TRUNK_COPIES 8
-
-/* A new game starts with STARTING_TRUNK_COPIES of every card in the trunk: all card IDs, original and added, except
- * the monster tokens (card numbers 1920-1999), the same cards as the debug "Get all card" (DebugGetAllCards). */
-void GiveStartingTrunk(void)
-{
-    u32 id, k;
-
-    for (id = 1; id <= CARD_ID_LAST; id++) {
-        u16 number = gCardIdToNumber[id];
-        if (number == 0xFFFF || (u16)(number - CARD_NUMBER_TOKEN_FIRST) < CARD_NUMBER_TOKEN_END - CARD_NUMBER_TOKEN_FIRST)
-            continue;
-        for (k = 0; k < STARTING_TRUNK_COPIES; k++)
-            AddCardToTrunk(id);
-    }
-}
-
-/* The Red starter deck: the "LR-Chaos Turbo" deck (LR-Chaos Turbo.ydk, main deck only): Black Luster Soldier and
+/* The Red starter deck and Tea: the "LR-Chaos Turbo" deck (LR-Chaos Turbo.ydk, main deck only): Black Luster Soldier and
  * Chaos Sorcerer fed by LIGHT and DARK flip monsters, Thunder Dragon and the discard/draw Spells. */
 #if defined(HAS_CARD_BLACK_LUSTER_SOLDIER_ENVOY_OF_THE_BEGINNING) \
     && defined(HAS_CARD_BREAKER_THE_MAGICAL_WARRIOR) \
@@ -284,24 +248,86 @@ static const u16 sRedStarterDeck[] = {
 };
 STATIC_ASSERT(ARRAY_COUNT(sRedStarterDeck) == 40, RedStarterDeckSize);
 #endif
-
 #ifdef MOD_RED_DECK
+static const struct DeckList sRedDeckList = { sRedStarterDeck, ARRAY_COUNT(sRedStarterDeck), 0 };
+#endif
 
-/* Build the saved Deck of starter deck `choice` (enum StarterDeck) when this build replaces it; returns 1 then,
- * 0 to let BuildStarterDeck build the original. */
+/* The replacement deck of opponent `opponent` (enum DuelistId), or NULL to keep the original. */
+const struct DeckList *GetOpponentDeckOverride(int opponent)
+{
+    switch (opponent) {
+    case DUELIST_YUGI:
+        return &sYugiDeckList;
+#ifdef MOD_RED_DECK
+    case DUELIST_TEA:
+        return &sRedDeckList;
+#endif
+#ifdef MOD_JOEY_DECK
+    case DUELIST_JOEY:
+        return &sJoeyDeckList;
+#endif
+#ifdef MOD_BAKURA_DECK
+    case DUELIST_BAKURA:
+        return &sBakuraDeckList;
+#endif
+    }
+    return NULL;
+}
+
+/* Copies of every card a new game puts in the trunk. */
+#define STARTING_TRUNK_COPIES 8
+
+/* A new game starts with STARTING_TRUNK_COPIES of every card in the trunk: all card IDs, original and added, except
+ * the monster tokens (card numbers 1920-1999), the same cards as the debug "Get all card" (DebugGetAllCards). */
+void GiveStartingTrunk(void)
+{
+    u32 id, k;
+
+    for (id = 1; id <= CARD_ID_LAST; id++) {
+        u16 number = gCardIdToNumber[id];
+        if (number == 0xFFFF || (u16)(number - CARD_NUMBER_TOKEN_FIRST) < CARD_NUMBER_TOKEN_END - CARD_NUMBER_TOKEN_FIRST)
+            continue;
+        for (k = 0; k < STARTING_TRUNK_COPIES; k++)
+            AddCardToTrunk(id);
+    }
+}
+
+
+/* Build the saved Deck (and Fusion Deck) of starter deck `choice` (enum StarterDeck) when this build replaces it:
+ * Red is LR-Chaos Turbo, Green Joey's Warrior deck, Black Bakura's Goat Control deck (with its Fusion Monsters). A
+ * Fusion Monster goes to the saved Fusion Deck. Returns 1 then, 0 to let BuildStarterDeck build the original. */
 int BuildModStarterDeck(int choice)
 {
+    const struct DeckList *list = NULL;
     u32 i;
 
-    if (choice != STARTER_DECK_RED)
+    switch (choice) {
+#ifdef MOD_RED_DECK
+    case STARTER_DECK_RED:
+        list = &sRedDeckList;
+        break;
+#endif
+#ifdef MOD_JOEY_DECK
+    case STARTER_DECK_GREEN:
+        list = &sJoeyDeckList;
+        break;
+#endif
+#ifdef MOD_BAKURA_DECK
+    case STARTER_DECK_BLACK:
+        list = &sBakuraDeckList;
+        break;
+#endif
+    }
+    if (list == NULL)
         return 0;
-    for (i = 0; i < ARRAY_COUNT(sRedStarterDeck); i++)
-        AddCardToSavedDeck(gCardNumberToId[sRedStarterDeck[i] & CARD_ID_MASK]);
+    for (i = 0; i < list->count; i++) {
+        u16 id = gCardNumberToId[list->cards[i] & CARD_ID_MASK];
+        u32 stats = gCardStats[id & CARD_ID_MASK];
+
+        if (CARD_STATS_TYPE(stats) <= CARD_TYPE_REPTILE && CARD_STATS_KIND(stats) == CARD_KIND_FUSION)
+            AddCardToSavedFusionDeck(id);
+        else
+            AddCardToSavedDeck(id);
+    }
     return 1;
 }
-#else
-int BuildModStarterDeck(int choice)
-{
-    return 0;
-}
-#endif

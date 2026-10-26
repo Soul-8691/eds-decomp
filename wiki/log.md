@@ -1225,3 +1225,17 @@ updated: 2026-09-29
   battle state DD_BANISH_DESTROYED banishes the destroyed monsters. The leave-the-field hooks (SendFieldCardToGrave,
   TributeMonster, ReturnFieldCardToHand/Deck) banish it instead.
 - Pages: [[added-cards]].
+
+## [2026-10-25] progress | The CPU uses the added cards
+- Cause: the CPU's logic names cards one by one (AiPlaySpells' lists, AiShouldActivateSetCard, gAiEffectMonsters),
+  and the BLS/Chaos Sorcerer summon and the Virus' type prompt have no CPU branch.
+- Fix: AiPlayAddedCards at the end of AiPlaySpells (LIGHT/DARK Special Summon, added monster effects, added Magic
+  cards), AiShouldActivateAddedCard at the end of AiShouldActivateSetCard, and a CPU branch for the Virus' Type.
+  Each has a small per-card policy.
+- Also: Bakura's deck size check set to 40 + 3 after the user's edit of its Fusion Deck.
+- Pages: [[added-cards]].
+
+## [2026-10-25] progress | Tea and the Green/Black starter decks
+- Tea uses the LR-Chaos Turbo list. Green = Warrior (Joey's), Black = Goat Control (Bakura's, with its Fusion
+  Monsters routed to the saved Fusion Deck). BuildModStarterDeck picks by choice.
+- Pages: [[added-cards]].

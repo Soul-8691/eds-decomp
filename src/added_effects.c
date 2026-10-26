@@ -30,6 +30,7 @@
 #include "constants/sound.h"
 #include "card_list_view.h"
 #include "summon.h"
+#include "card_menu.h"
 #include "ai.h"
 #include "battle.h"
 #include "main.h"                   /* gMain.newKeys */
@@ -2377,6 +2378,293 @@ int IsGravekeeperMonster(u16 id)
  * it asks the human, lists the candidates (CollectEffectTargets, effect_target_collect.c: deck "Gravekeeper's"
  * monsters with ATK 1500 or less, not Fusion or Ritual), Special Summons the pick in Attack Position and shuffles. */
 
+/* ---- The CPU and the added cards --------------------------------------------------------------------------------
+ * The CPU's logic decides card by card, by card number (ai_deck.c, ai_summon.c, ai_turn_steps.c), so it never chose
+ * an added card: AiPlaySpells only tries its fixed lists, AiShouldActivateSetCard says no to every card it does not
+ * name, AiActivateMonsterEffects only knows gAiEffectMonsters, and the summon choice skips Special-Summon-only
+ * monsters. (Added Traps and Quick-Play Spells were already Set: AiStepSetSpellTraps Sets any Trap it does not name.)
+ * These fallbacks cover the added cards (IDs from CARD_ID_COUNT_ORIGINAL on), with a small policy per card:
+ *   AiPlayAddedCards (end of AiPlaySpells' AI_SPELLS_LISTS)  in the Main Phase: Special Summon Black Luster Soldier /
+ *       Chaos Sorcerer (banish the weakest LIGHT and DARK monsters of the Graveyard), activate the card-menu effects of
+ *       face-up added monsters (CanActivateMonsterEffect), and play added Magic cards (AiTryPlaySpellTrap, which makes
+ *       the hand and set-card checks and plays the card)
+ *   AiShouldActivateAddedCard (end of AiShouldActivateSetCard)  a Set added card in an activation window; its prepare
+ *       handler has accepted the window already (CanActivateFieldCard) */
+
+#define AI_PLAYER 1
+#define AI_HUMAN 0
+#define CPU_CHAIN_KIND_MONSTER (0x80000000 | (CHAIN_KIND_MONSTER << 21))
+
+static inline int IsAddedCardId(u16 id)
+{
+    return (id & CARD_ID_MASK) >= CARD_ID_COUNT_ORIGINAL;
+}
+
+static inline u16 CardNumberOfId(u16 id)
+{
+    return ((const u16 *)CARD_ID_TO_NUMBER_ADDR)[id & CARD_ID_MASK];
+}
+
+static int CountFaceUpMonsters(int player)
+{
+    int zone, n = 0;
+
+    for (zone = ZONE_MONSTER_0; zone <= ZONE_MONSTER_4; zone++) {
+        struct DuelZone *z = ZoneOf(player, zone);
+        if (DUEL_CARD_ID(&z->card) != 0 && z->isFaceUp)
+            n++;
+    }
+    return n;
+}
+
+static int CountSpellTrapCards(int player)
+{
+    int zone, n = 0;
+
+    for (zone = ZONE_SPELL_0; zone <= ZONE_FIELD; zone++) {
+        if (DUEL_CARD_ID(&ZoneOf(player, zone)->card) != 0)
+            n++;
+    }
+    return n;
+}
+
+/* The highest ATK of the face-up monsters of `player`, -1 for none. */
+static int StrongestFaceUpAtk(int player)
+{
+    int zone, best = -1;
+
+    for (zone = ZONE_MONSTER_0; zone <= ZONE_MONSTER_4; zone++) {
+        struct DuelZone *z = ZoneOf(player, zone);
+        if (DUEL_CARD_ID(&z->card) != 0 && z->isFaceUp && (int)GetZoneCardAtk(player, zone) > best)
+            best = GetZoneCardAtk(player, zone);
+    }
+    return best;
+}
+
+#ifdef HAS_CARD_TRIBE_INFECTING_VIRUS
+/* The Monster Type whose face-up monsters on the field would cost the human the most (theirs minus the CPU's);
+ * *gain gets that difference. */
+static int AiBestVirusType(int *gain)
+{
+    int type, zone, side, best = 0, bestGain = 0;
+
+    for (type = 1; type <= CARD_TYPE_REPTILE; type++) {
+        int g = 0;
+        for (side = 0; side <= 1; side++) {
+            for (zone = ZONE_MONSTER_0; zone <= ZONE_MONSTER_4; zone++) {
+                struct DuelZone *z = ZoneOf(side, zone);
+                if (DUEL_CARD_ID(&z->card) != 0 && z->isFaceUp && (int)GetZoneCardType(side, zone) == type)
+                    g += side == AI_HUMAN ? 1 : -1;
+            }
+        }
+        if (g > bestGain) {
+            bestGain = g;
+            best = type;
+        }
+    }
+    *gain = bestGain;
+    return best;
+}
+
+/* Tribe-Infecting Virus' type declaration: DNA Surgery's prompt for the human; the CPU declares AiBestVirusType
+ * (the prompt has no CPU branch). */
+int EffectTribeInfectingVirusChainB(struct ChainEntry *link, struct ChainEntry *prevLink)
+{
+    int gain;
+
+    if (link->player) {
+        link->numTargets = 0;
+        AddEffectTarget(link, AiBestVirusType(&gain));
+        return 1;
+    }
+    return EffectDeclareTypeChainB(link);
+}
+#endif
+
+/* Should the CPU use the card-menu effect of its added monster `number` now? (CanActivateMonsterEffect said it may.) */
+static int AiWantsMonsterEffect(u16 number, int zone)
+{
+    switch (number) {
+#ifdef HAS_CARD_BREAKER_THE_MAGICAL_WARRIOR
+    case CARD_BREAKER_THE_MAGICAL_WARRIOR:      /* the target step takes the human's cards first */
+        return CountSpellTrapCards(AI_HUMAN) > 0;
+#endif
+#ifdef HAS_CARD_BLACK_LUSTER_SOLDIER_ENVOY_OF_THE_BEGINNING
+    case CARD_BLACK_LUSTER_SOLDIER_ENVOY_OF_THE_BEGINNING:
+        return CountMonsters(AI_HUMAN) > 0;
+#endif
+#ifdef HAS_CARD_CHAOS_SORCERER
+    case CARD_CHAOS_SORCERER:
+        return CountFaceUpMonsters(AI_HUMAN) > 0;
+#endif
+#ifdef HAS_CARD_TRIBE_INFECTING_VIRUS
+    case CARD_TRIBE_INFECTING_VIRUS: {
+        int gain;
+        AiBestVirusType(&gain);
+        return gain > 0 && gDuelPlayers[AI_PLAYER].handCount > 0;
+    }
+#endif
+#ifdef HAS_CARD_EXILED_FORCE
+    case CARD_EXILED_FORCE:                     /* only for a human monster stronger than itself */
+        return CountMonsters(AI_HUMAN) > 0
+               && (StrongestFaceUpAtk(AI_HUMAN) > (int)GetZoneCardAtk(AI_PLAYER, zone)
+                   || CountFaceUpMonsters(AI_HUMAN) < CountMonsters(AI_HUMAN));
+#endif
+#ifdef HAS_CARD_ABYSS_SOLDIER
+    case CARD_ABYSS_SOLDIER:
+        return CountMonsters(AI_HUMAN) > 0 || CountSpellTrapCards(AI_HUMAN) > 0;
+#endif
+#ifdef HAS_CARD_THOUSAND_EYES_RESTRICT
+    case CARD_THOUSAND_EYES_RESTRICT:
+        return CountMonsters(AI_HUMAN) > 0;
+#endif
+    }
+    return 1;
+}
+
+/* Should the CPU play its added Magic card `number` in its Main Phase now? (AiTryPlaySpellTrap checks that it may.) */
+static int AiWantsSpell(u16 number)
+{
+    switch (number) {
+#ifdef HAS_CARD_CARD_DESTRUCTION
+    case CARD_CARD_DESTRUCTION:                 /* when the human holds more cards than the CPU would discard */
+        return gDuelPlayers[AI_PLAYER].handCount - 1 < gDuelPlayers[AI_HUMAN].handCount;
+#endif
+#ifdef HAS_CARD_CREATURE_SWAP
+    case CARD_CREATURE_SWAP: {                  /* give the weakest monster for a stronger one */
+        int weakest = AiFindWeakestMonster(AI_PLAYER, -1, 1, 1);
+        return weakest >= 0 && StrongestFaceUpAtk(AI_HUMAN) > (int)GetZoneCardAtk(AI_PLAYER, weakest);
+    }
+#endif
+#ifdef HAS_CARD_SCAPEGOAT
+    case CARD_SCAPEGOAT:                        /* kept for the human's attack (AiShouldActivateAddedCard) */
+        return 0;
+#endif
+#ifdef HAS_CARD_BOOK_OF_MOON
+    case CARD_BOOK_OF_MOON:                     /* clears the way for the CPU's attack */
+        return CountFaceUpMonsters(AI_HUMAN) > 0 && CountMonsters(AI_PLAYER) > 0;
+#endif
+    }
+    return 1;
+}
+
+#ifdef HAS_LIGHT_DARK_BANISH_SUMMON
+/* The Graveyard index of the weakest monster of `attribute` of the CPU (not `skip`), -1 for none. */
+static int WeakestGraveyardMonsterOf(int attribute, int skip)
+{
+    struct DuelPlayer *p = &gDuelPlayers[AI_PLAYER];
+    int i, best = -1;
+    u32 bestAtk = 0;
+
+    for (i = 0; i < p->graveCount; i++) {
+        u32 stats = gCardStats[DUEL_CARD_ID(&p->graveyard[i]) & CARD_ID_MASK];
+        if (i != skip && CARD_STATS_TYPE(stats) <= CARD_TYPE_REPTILE && (int)CARD_STATS_ATTR(stats) == attribute
+            && (best < 0 || CARD_STATS_ATK(stats) < bestAtk)) {
+            best = i;
+            bestAtk = CARD_STATS_ATK(stats);
+        }
+    }
+    return best;
+}
+
+/* Special Summon Black Luster Soldier or Chaos Sorcerer from the CPU's hand, banishing the weakest LIGHT and DARK
+ * monsters of its Graveyard (the human's summon steps are a card-list UI with no CPU branch). 1 if it did. */
+static int AiLightDarkBanishSummon(void)
+{
+    struct DuelPlayer *p = &gDuelPlayers[AI_PLAYER];
+    int i, light, dark;
+    u16 cards[2][2];
+
+    if (!CanPayLightDarkBanishCost(AI_PLAYER))
+        return 0;
+    for (i = 0; i < p->handCount; i++) {
+        u16 number = CardNumberOfId(DUEL_CARD_ID(&p->hand[i]));
+        if (
+#ifdef HAS_CARD_BLACK_LUSTER_SOLDIER_ENVOY_OF_THE_BEGINNING
+            number != CARD_BLACK_LUSTER_SOLDIER_ENVOY_OF_THE_BEGINNING &&
+#endif
+#ifdef HAS_CARD_CHAOS_SORCERER
+            number != CARD_CHAOS_SORCERER &&
+#endif
+            1)
+            continue;
+        light = WeakestGraveyardMonsterOf(ATTRIBUTE_LIGHT, -1);
+        dark = WeakestGraveyardMonsterOf(ATTRIBUTE_DARK, light);
+        if (light < 0 || dark < 0)
+            return 0;
+        /* copy both card words first: the banish commands only run later, but keep the halves stable */
+        cards[0][0] = ((u16 *)&p->graveyard[light])[0];
+        cards[0][1] = ((u16 *)&p->graveyard[light])[1];
+        cards[1][0] = ((u16 *)&p->graveyard[dark])[0];
+        cards[1][1] = ((u16 *)&p->graveyard[dark])[1];
+        ShowCardEffect(AI_PLAYER, DUEL_CARD_ID(&p->hand[i]));
+        BanishGraveyardCard(AI_PLAYER, cards[0]);
+        BanishGraveyardCard(AI_PLAYER, cards[1]);
+        QueueSpecialSummonFromHand(AI_PLAYER, i, FindFreeMonsterZone(AI_PLAYER), 0, 1);
+        return 1;
+    }
+    return 0;
+}
+#endif
+
+int AiPlayAddedCards(void)
+{
+    struct DuelPlayer *p = &gDuelPlayers[AI_PLAYER];
+    int zone, i;
+
+#ifdef HAS_LIGHT_DARK_BANISH_SUMMON
+    if (CountFreeMonsterZones(AI_PLAYER) > 0 && AiLightDarkBanishSummon())
+        return 1;
+#endif
+    /* the card-menu effects of face-up added monsters */
+    for (zone = ZONE_MONSTER_0; zone <= ZONE_MONSTER_4; zone++) {
+        struct DuelZone *z = ZoneOf(AI_PLAYER, zone);
+        u16 id = DUEL_CARD_ID(&z->card);
+
+        if (id == 0 || !z->isFaceUp || !IsAddedCardId(id) || !CanActivateMonsterEffect(id, AI_PLAYER, zone)
+            || !AiWantsMonsterEffect(CardNumberOfId(id), zone))
+            continue;
+        DuelCmd_Push(DUEL_CMD_PLAYER | DUEL_CMD_POINT_AT_CARD, AI_PLAYER, (u8)zone << 8, 0);
+        Chain_AddPending(((u32)(zone & 0x1F) << 16) | id | CPU_CHAIN_KIND_MONSTER, 0);
+        return 1;
+    }
+    /* added Magic cards, in the hand or Set */
+    for (i = 0; i < p->handCount; i++) {
+        u16 id = DUEL_CARD_ID(&p->hand[i]);
+        if (IsAddedCardId(id) && CARD_STATS_TYPE(gCardStats[id & CARD_ID_MASK]) == CARD_TYPE_MAGIC
+            && AiWantsSpell(CardNumberOfId(id)) && AiTryPlaySpellTrap(CardNumberOfId(id)))
+            return 1;
+    }
+    for (zone = ZONE_SPELL_0; zone <= ZONE_SPELL_4; zone++) {
+        u16 id = DUEL_CARD_ID(&ZoneOf(AI_PLAYER, zone)->card);
+        if (id != 0 && IsAddedCardId(id) && CARD_STATS_TYPE(gCardStats[id & CARD_ID_MASK]) == CARD_TYPE_MAGIC
+            && AiWantsSpell(CardNumberOfId(id)) && AiTryPlaySpellTrap(CardNumberOfId(id)))
+            return 1;
+    }
+    return 0;
+}
+
+int AiShouldActivateAddedCard(struct ChainEntry *entry)
+{
+    if (!IsAddedCardId(entry->card))
+        return 0;
+    switch (CardNumberOfId(entry->card)) {
+#ifdef HAS_CARD_TORRENTIAL_TRIBUTE
+    case CARD_TORRENTIAL_TRIBUTE:               /* it destroys the CPU's monsters too */
+        return CountMonsters(AI_HUMAN) > CountMonsters(AI_PLAYER);
+#endif
+#ifdef HAS_CARD_SCAPEGOAT
+    case CARD_SCAPEGOAT:                        /* against an attack, or with nothing to defend */
+        return entry->event == RESPONSE_ATTACK_DECLARED || CountMonsters(AI_PLAYER) == 0;
+#endif
+#ifdef HAS_CARD_BOOK_OF_MOON
+    case CARD_BOOK_OF_MOON:                     /* against the attacker (the target step takes the strongest) */
+        return entry->event == RESPONSE_ATTACK_DECLARED && CountFaceUpMonsters(AI_HUMAN) > 0;
+#endif
+    }
+    return 1;
+}
+
 /* ---- The effect table of the added cards ------------------------------------------------------------------- */
 
 /* Rows like gCardEffects' (struct CardEffect), any order, ending with number 0xFFFF. */
@@ -2647,7 +2935,7 @@ const struct CardEffect gAddedCardEffects[] = {
         NULL,
         EffectTribeInfectingVirusPrepare,
         EffectTribeInfectingVirusChainA,
-        (int (*)(struct ChainEntry *, struct ChainEntry *))EffectDeclareTypeChainB,
+        EffectTribeInfectingVirusChainB,
     },
 #endif
 #ifdef HAS_CARD_TORRENTIAL_TRIBUTE
