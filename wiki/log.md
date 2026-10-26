@@ -1429,3 +1429,8 @@ updated: 2026-09-29
   card, then 5 for a card of any unlocked format's pool, else 500. mod_opponents.c: ModUnlockedFormatCount,
   ModFormatBanlist.
 - Pages: [[duelist-points]].
+
+## [2026-10-26] progress | Format opponent portraits
+- mod_opponents.c: card-art portraits for the 14 other formats; added Fiber Jar, Yata-Garasu, Magical Scientist,
+  Chaos Emperor Dragon - Envoy of the End and Cyber Dragon to config/new_cards.txt (no effects yet).
+- Pages: [[yugi-kaiba-opponent]].

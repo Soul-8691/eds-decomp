@@ -31,6 +31,14 @@ not tested in an emulator.
   illegal, a warning lists the offending cards ("Deck not legal for <format> (<date>)").
 - **Decks.** Yugi-Kaiba plays the three Yugi-Kaiba .ydk decks. The other 14 keep their original duelists' decks for
   now.
+- **Portraits.** Yugi-Kaiba La Jinn, Critter Sangan, Imperial Imperial Order, Treasure Confiscation, Android Jinzo,
+  Joey-Pegasus Graceful Charity, Fiber Fiber Jar, Yata Yata-Garasu, Scientist Magical Scientist, Vampire Vampire
+  Lord, Chaos Chaos Emperor Dragon - Envoy of the End, Warrior D.D. Warrior Lady, Goat Scapegoat, Cyber Cyber Dragon,
+  Reaper Spirit Reaper. Fiber Jar, Yata-Garasu, Magical Scientist, Chaos Emperor Dragon and Cyber Dragon were added
+  to `config/new_cards.txt` for these (IDs 1130-1134; their effects are not coded). An added portrait card that is
+  not in the build leaves the page's own portrait (the `ART_*` guards).
+- **Free palette entries.** Page 1 has 26, page 2 94 and page 3 23. A Python preview of the three pages looked
+  clean.
 
 ## Deck opponents
 Always open, with no format check:
