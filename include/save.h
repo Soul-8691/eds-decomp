@@ -95,7 +95,9 @@ struct SaveData {
     u16 deckSize;                           /* +0x20C8: entries in deck[] */
     u16 sideDeckSize;                       /* +0x20CA: entries in sideDeck[] */
     u16 fusionDeckSize;                     /* +0x20CC: entries in fusionDeck[] */
-    u16 unk20CE;                            /* +0x20CE */
+    u16 banlist;                            /* +0x20CE: added: the Deck Edit banlist, index + 1 (0: the
+                                             *          default; src/mod_banlists.c). The original never uses
+                                             *          +0x20CE (no code offset or address for it in the ROM) */
     struct DuelRecord duelRecords[32];      /* +0x20D0: indexed by enum DuelistId (1..24 used) */
     u16 days;                               /* +0x2150: in-game day count, +1 per Campaign duel
                                              *          (DayCountToDate converts it to a date) */

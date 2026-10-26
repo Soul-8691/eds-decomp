@@ -20,6 +20,9 @@ gDeckRecipes = 0x0202E400;
 gPackShop = 0x0202F000;
 /* Mod: the DP lines of src/mod_dp.c. */
 gModDP = 0x0202F100;
+/* Mod: the Banlists scene of src/mod_banlists.c, and the main menu's scroll (main_menu.c). */
+gBanlistsMenu = 0x0202F200;
+gMainMenuScroll = 0x0202F260;
 gTextCanvas = 0x02000000;
 gSaveData = 0x02011C20;
 gSaveDataSignature = 0x02013D86;

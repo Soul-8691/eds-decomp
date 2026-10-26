@@ -13,6 +13,10 @@
 #include "constants/cards.h"
 #include "save.h"
 
+/* src/mod_banlists.c: the copies allowed under the Deck Edit banlist in use (the saved decks use it instead of
+ * GetCardCopyLimit, the game's own list, which the CPU's decks keep). */
+s32 GetBanlistCopyLimit(u32 id);
+
 /* From collection.c: the debug check of a card ID. */
 void DebugCheckCardId(u16 id);
 
@@ -80,7 +84,7 @@ void SetTrunkFusionCopies(u16 id, u32 copies)
 #define NUMBER_TO_ID(n) (gCardNumberToId[(n) & CARD_ID_MASK])
 u32 IsBelowCardCopyLimit(u16 id) {
     s32 sum = GetTrunkDeckCopies(id) + GetTrunkSideCopies(id) + GetTrunkFusionCopies(id);
-    s32 limit = GetCardCopyLimit(id);
+    s32 limit = GetBanlistCopyLimit(id);
     u16 key = gCardIdToNumber[id & CARD_ID_MASK];
     switch (key) {
     case CARD_POLYMERIZATION:
@@ -168,7 +172,7 @@ void AddCardToSavedDeck(u16 id) {
     u32 copies;
     DebugCheckCardId(id);
     copies = GetTrunkDeckCopies(id);
-    if (copies < GetCardCopyLimit(id) && gSaveData.deckSize < DECK_MAX_CARDS) {
+    if (copies < GetBanlistCopyLimit(id) && gSaveData.deckSize < DECK_MAX_CARDS) {
         SetTrunkDeckCopies(id, copies + 1);
         gSaveData.deck[gSaveData.deckSize++] = id;
     }
@@ -177,7 +181,7 @@ void AddCardToSavedSideDeck(u16 id) {
     u32 copies;
     DebugCheckCardId(id);
     copies = GetTrunkSideCopies(id);
-    if (copies < GetCardCopyLimit(id) && gSaveData.sideDeckSize < SIDE_DECK_MAX_CARDS) {
+    if (copies < GetBanlistCopyLimit(id) && gSaveData.sideDeckSize < SIDE_DECK_MAX_CARDS) {
         SetTrunkSideCopies(id, copies + 1);
         gSaveData.sideDeck[gSaveData.sideDeckSize++] = id;
     }
@@ -186,7 +190,7 @@ void AddCardToSavedFusionDeck(u16 id) {
     u32 copies;
     DebugCheckCardId(id);
     copies = GetTrunkFusionCopies(id);
-    if (copies < GetCardCopyLimit(id) && gSaveData.fusionDeckSize < FUSION_DECK_MAX_CARDS) {
+    if (copies < GetBanlistCopyLimit(id) && gSaveData.fusionDeckSize < FUSION_DECK_MAX_CARDS) {
         SetTrunkFusionCopies(id, copies + 1);
         gSaveData.fusionDeck[gSaveData.fusionDeckSize++] = id;
     }
@@ -244,7 +248,7 @@ static void TrimSavedListToCopyLimits(u16 *list, u16 *size)
     u32 i = 0;
     while (i < *size) {
         u16 id = list[i];
-        s32 limit = GetCardCopyLimit(id);
+        s32 limit = GetBanlistCopyLimit(id);
         int removed = 0;
         while ((s32)(GetTrunkDeckCopies(id) + GetTrunkSideCopies(id)) > limit) {
             if (GetTrunkSideCopies(id) != 0)

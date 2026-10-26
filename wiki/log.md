@@ -1365,3 +1365,13 @@ updated: 2026-09-29
   5000 to start, pack prices (1000), password card prices (500, any number of copies), 1000 per Campaign win;
   DP shown on the main menu, pack list and password screen.
 - Pages: [[duelist-points]], [[pack-shop]], index.
+
+## [2026-10-26] progress | Banlists menu
+- New unit src/mod_banlists.c and tools/banlist.py --all: 14 banlists from banlists/*_ban.json (Goat/Cyber merged,
+  default), saved in gSaveData +0x20CE; mod_save.c limits use them; switching trims the decks. Main menu scrolls
+  (8 of 10 rows). Generator also reads new_cards.txt aliases; Yugi-Kaiba JSON moved to banlists/.
+- Pages: [[banlists-menu]], index.
+
+## [2026-10-26] progress | Ring of Destruction as Bell of Destruction
+- tools/banlist.py ALIASES: the banlists' Ring of Destruction limits apply to Bell of Destruction.
+- Pages: [[banlists-menu]].

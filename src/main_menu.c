@@ -37,6 +37,9 @@ void DeckRecipes_BuildLabel(u16 *dst);
 u16 CB_DeckRecipes(void);
 /* Added: the Booster Packs item (src/mod_packs.c). */
 void PackShop_BuildLabel(u16 *dst);
+/* Added: the Banlists item (src/mod_banlists.c). */
+void BanlistsMenu_BuildLabel(u16 *dst);
+u16 CB_Banlists(void);
 /* Added: the player's DP (src/mod_dp.c). */
 void MainMenuDP_Render(void);
 void MainMenuDP_Draw(void);
@@ -226,23 +229,36 @@ void OpponentSelect_DrawDuelistInfo(u16 duelistId)
  * Draws the item rows (four 32x16 sprites each, 16 px apart from MAIN_MENU_TOP_Y). Row i uses OBJ tiles
  * 0x40 + i * 0x40; the row under the cursor uses the highlighted labels 0x10 tiles further.
  * Changed: the original also drew a "MENU" header (tiles 0-15 at y = 10) and started the rows at y = 0x1D; the
- * header is gone and the 8 rows are centred on the screen.
+ * header is gone, and the added items make more rows than the screen holds: MAIN_MENU_VISIBLE of them are shown,
+ * centred, and the list scrolls with the cursor (gMainMenuScroll).
  */
-#define MAIN_MENU_TOP_Y ((160 - MAIN_MENU_COUNT * 16) / 2)
+#define MAIN_MENU_VISIBLE 8
+#define MAIN_MENU_TOP_Y ((160 - MAIN_MENU_VISIBLE * 16) / 2)
+
+/* Added: the first row shown (EWRAM, symbols.ld; any value is put in range here, so it needs no set-up). */
+extern u8 gMainMenuScroll;
 
 void MainMenu_DrawItems(void)
 {
-    s32 i;
+    s32 i, j;
     u32 x;
 
-    for (i = 0, x = 0x38; i < MAIN_MENU_COUNT; i++) {
-        u16 tile = i * 0x40 + 0x40;
+    if (gMainMenuScroll > MAIN_MENU_COUNT - MAIN_MENU_VISIBLE)
+        gMainMenuScroll = MAIN_MENU_COUNT - MAIN_MENU_VISIBLE;
+    if (gMainMenuCursor < gMainMenuScroll)
+        gMainMenuScroll = gMainMenuCursor;
+    if (gMainMenuCursor >= gMainMenuScroll + MAIN_MENU_VISIBLE)
+        gMainMenuScroll = gMainMenuCursor - MAIN_MENU_VISIBLE + 1;
+    for (j = 0, x = 0x38; j < MAIN_MENU_VISIBLE; j++) {
+        u16 tile;
+        i = gMainMenuScroll + j;
+        tile = i * 0x40 + 0x40;
         if (gMainMenuCursor == i)
             tile += 0x10;
-        AddSprite(((i * 16 + MAIN_MENU_TOP_Y) << 16) | x, SPRITE_SHAPE_32x16, tile);
-        AddSprite(((i * 16 + MAIN_MENU_TOP_Y) << 16) | 0x58, SPRITE_SHAPE_32x16, tile + 4);
-        AddSprite(((i * 16 + MAIN_MENU_TOP_Y) << 16) | 0x78, SPRITE_SHAPE_32x16, tile + 8);
-        AddSprite(((i * 16 + MAIN_MENU_TOP_Y) << 16) | 0x98, SPRITE_SHAPE_32x16, tile + 12);
+        AddSprite(((j * 16 + MAIN_MENU_TOP_Y) << 16) | x, SPRITE_SHAPE_32x16, tile);
+        AddSprite(((j * 16 + MAIN_MENU_TOP_Y) << 16) | 0x58, SPRITE_SHAPE_32x16, tile + 4);
+        AddSprite(((j * 16 + MAIN_MENU_TOP_Y) << 16) | 0x78, SPRITE_SHAPE_32x16, tile + 8);
+        AddSprite(((j * 16 + MAIN_MENU_TOP_Y) << 16) | 0x98, SPRITE_SHAPE_32x16, tile + 12);
     }
     MainMenuDP_Draw();      /* added */
 }
@@ -278,7 +294,8 @@ u16 MainMenu_Init(void)
         CopyDoubleWords((void *)OBJ_VRAM0, gMainMenuObjGfx, 0x4000);
         DeckRecipes_BuildLabel((u16 *)(OBJ_VRAM0 + 0x4000));   /* added: item 7's label, tiles 0x200-0x23F */
         PackShop_BuildLabel((u16 *)(OBJ_VRAM0 + 0x4800));      /* added: item 8's label, tiles 0x240-0x27F */
-        MainMenuDP_Render();                                    /* added: "DP n", tiles 0x280-0x2BF */
+        BanlistsMenu_BuildLabel((u16 *)(OBJ_VRAM0 + 0x5000));  /* added: item 9's label, tiles 0x280-0x2BF */
+        MainMenuDP_Render();                                    /* added: "DP n", tiles 0x2C0-0x2FF */
         LoadBgImage(0, 0, 0x20, gMainMenuSkyImage);
         return 1;
     }
@@ -328,6 +345,8 @@ u16 MainMenu_Launch(void)
         } else if (gMainMenuCursor == MAIN_MENU_BOOSTER_PACKS) {
             PackShop_Start();
             SetMainCallback(CB_PackShop);
+        } else if (gMainMenuCursor == MAIN_MENU_BANLISTS) {
+            SetMainCallback(CB_Banlists);
         } else
             SetMainCallback(gMainMenuTable[gMainMenuCursor]);
     }
