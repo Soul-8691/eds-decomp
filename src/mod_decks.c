@@ -17,6 +17,8 @@
 #include "constants/game.h"
 #include "booster.h"
 
+int Random(void);   /* util.h */
+
 #define X2(card) card, card
 #define X3(card) card, card, card
 
@@ -339,7 +341,6 @@ static const struct DeckList sTristanStallMillList = { sTristanStallMill, ARRAY_
 
 #if defined(MOD_TRISTAN_SOUL_CONTROL) && defined(MOD_TRISTAN_VANILLA_BEAT) && defined(MOD_TRISTAN_STALL_MILL)
 #define MOD_TRISTAN_DECKS 1
-int Random(void);   /* util.h */
 
 /* Tristan's deck for this duel: Soul Control 5 in 10, Vanilla Beat 3 in 10, Stall Mill 2 in 10. LoadOpponentDeck
  * asks once per duel. */
@@ -352,6 +353,105 @@ static const struct DeckList *TristanDeck(void)
     if (roll < 8)
         return &sTristanVanillaBeatList;
     return &sTristanStallMillList;
+}
+#endif
+
+/* The Critter format opponent (Rex Raptor's slot, src/mod_opponents.c): one of two decks per duel (CritterDeck):
+ * Masked Control 60%, Muka Muka Turbo 40% (decks/Jazz-Masked Control.ydk, decks/Gyomberman-Muka Muka Turbo.ydk; main
+ * and extra decks: LoadOpponentDeck puts the Fusion Monsters in the Fusion Deck). Thousand Dragon is the .ydk's
+ * 41462083. */
+#if defined(HAS_CARD_BLACK_SKULL_DRAGON)
+#define MOD_CRITTER_MASKED_CONTROL 1
+static const u16 sCritterMaskedControl[] = {
+    /* Monsters (18) */
+    CARD_CANNON_SOLDIER,
+    CARD_JIRAI_GUMO,
+    CARD_KURIBOH,
+    X2(CARD_MAGICIAN_OF_FAITH),
+    X2(CARD_MASKED_SORCERER),
+    X2(CARD_MUKA_MUKA),
+    X2(CARD_SANGAN),
+    CARD_WHITE_MAGICAL_HAT,
+    X2(CARD_WITCH_OF_THE_BLACK_FOREST),
+    CARD_GIANT_SOLDIER_OF_STONE,
+    X3(CARD_LA_JINN_THE_MYSTICAL_GENIE_OF_THE_LAMP),
+    /* Spells (13) */
+    CARD_CHANGE_OF_HEART,
+    CARD_DARK_HOLE,
+    X2(CARD_FISSURE),
+    X2(CARD_HEAVY_STORM),
+    X2(CARD_LAST_WILL),
+    CARD_MONSTER_REBORN,
+    CARD_POT_OF_GREED,
+    CARD_RAIGEKI,
+    X2(CARD_SWORDS_OF_REVEALING_LIGHT),
+    /* Traps (9) */
+    CARD_MIRROR_FORCE,
+    X3(CARD_SOLEMN_JUDGMENT),
+    X2(CARD_TRAP_HOLE),
+    X3(CARD_WABOKU),
+    /* Fusion Deck (15) */
+    X3(CARD_BLACK_SKULL_DRAGON),
+    X3(CARD_GAIA_THE_DRAGON_CHAMPION),
+    X3(CARD_LABYRINTH_TANK),
+    X3(CARD_THOUSAND_DRAGON),
+    X3(CARD_TWIN_HEADED_THUNDER_DRAGON),
+};
+STATIC_ASSERT(ARRAY_COUNT(sCritterMaskedControl) == 40 + 15, CritterMaskedControlSize);
+static const struct DeckList sCritterMaskedControlList = { sCritterMaskedControl, ARRAY_COUNT(sCritterMaskedControl), 0 };
+#endif
+
+#define MOD_CRITTER_MUKA_MUKA_TURBO 1
+static const u16 sCritterMukaMukaTurbo[] = {
+    /* Monsters (20) */
+    CARD_CANNON_SOLDIER,
+    X3(CARD_MAGICIAN_OF_FAITH),
+    CARD_MASKED_SORCERER,
+    X3(CARD_MUKA_MUKA),
+    X2(CARD_SANGAN),
+    X3(CARD_THUNDER_DRAGON),
+    X2(CARD_WITCH_OF_THE_BLACK_FOREST),
+    X2(CARD_GIANT_SOLDIER_OF_STONE),
+    X3(CARD_LA_JINN_THE_MYSTICAL_GENIE_OF_THE_LAMP),
+    /* Spells (15) */
+    CARD_CHANGE_OF_HEART,
+    CARD_DARK_HOLE,
+    X3(CARD_FISSURE),
+    X2(CARD_HEAVY_STORM),
+    X3(CARD_LAST_WILL),
+    CARD_MONSTER_REBORN,
+    CARD_POT_OF_GREED,
+    CARD_RAIGEKI,
+    X2(CARD_SWORDS_OF_REVEALING_LIGHT),
+    /* Traps (5) */
+    CARD_MIRROR_FORCE,
+    CARD_ROBBIN_GOBLIN,
+    X3(CARD_TRAP_HOLE),
+    /* Fusion Deck (15) */
+    CARD_CHARUBIN_THE_FIRE_KNIGHT,
+    CARD_CYBER_SAURUS,
+    CARD_DARKFIRE_DRAGON,
+    CARD_DEEPSEA_SHARK,
+    CARD_DRAGONESS_THE_WICKED_KNIGHT,
+    CARD_EMPRESS_JUDGE,
+    CARD_FLAME_GHOST,
+    CARD_FUSIONIST,
+    CARD_GAIA_THE_DRAGON_CHAMPION,
+    CARD_GILTIA_THE_D_KNIGHT,
+    CARD_KARBONALA_WARRIOR,
+    CARD_METAL_DRAGON,
+    CARD_MUSICIAN_KING,
+    CARD_PUNISHED_EAGLE,
+    CARD_ROARING_OCEAN_SNAKE,
+};
+STATIC_ASSERT(ARRAY_COUNT(sCritterMukaMukaTurbo) == 40 + 15, CritterMukaMukaTurboSize);
+static const struct DeckList sCritterMukaMukaTurboList = { sCritterMukaMukaTurbo, ARRAY_COUNT(sCritterMukaMukaTurbo), 0 };
+
+#ifdef MOD_CRITTER_MASKED_CONTROL
+/* The Critter opponent's deck for this duel: Masked Control 6 in 10, Muka Muka Turbo 4 in 10. */
+static const struct DeckList *CritterDeck(void)
+{
+    return (u32)Random() % 10 < 6 ? &sCritterMaskedControlList : &sCritterMukaMukaTurboList;
 }
 #endif
 
@@ -368,6 +468,12 @@ const struct DeckList *GetOpponentDeckOverride(int opponent)
 #ifdef MOD_TRISTAN_DECKS
     case DUELIST_TRISTAN:
         return TristanDeck();
+#endif
+    case DUELIST_REX:                   /* the Critter format opponent */
+#ifdef MOD_CRITTER_MASKED_CONTROL
+        return CritterDeck();
+#else
+        return &sCritterMukaMukaTurboList;
 #endif
 #ifdef MOD_JOEY_DECK
     case DUELIST_JOEY:
@@ -404,6 +510,8 @@ struct RecipePreset {
 static const char sNameSoulControl[] = "El Duelista DEX-Soul Control";
 static const char sNameVanillaBeat[] = "ellietincan-Vanilla Beat";
 static const char sNameStallMill[] = "DK-ZERO-Stall Mill";
+static const char sNameMaskedControl[] = "Jazz-Masked Control";
+static const char sNameMukaMukaTurbo[] = "Gyomberman-Muka Muka Turbo";
 static const char sNameChaosTurbo[] = "LR-Chaos Turbo";
 static const char sNameWarrior[] = "sdlkilla-Warrior";
 static const char sNameGoatControl[] = "geistD-Goat Control";
@@ -418,6 +526,10 @@ static const struct RecipePreset sRecipePresets[] = {
 #ifdef MOD_TRISTAN_STALL_MILL
     { sNameStallMill, &sTristanStallMillList },
 #endif
+#ifdef MOD_CRITTER_MASKED_CONTROL
+    { sNameMaskedControl, &sCritterMaskedControlList },
+#endif
+    { sNameMukaMukaTurbo, &sCritterMukaMukaTurboList },
 #ifdef MOD_RED_DECK
     { sNameChaosTurbo, &sRedDeckList },
 #endif

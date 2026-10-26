@@ -26,7 +26,7 @@ An eighth main-menu item added by this build (`src/mod_recipes.c`, a `@farcode`/
   - `MainMenu_Init` writes the label to tiles 0x200-0x23F, the two tile rows after the 0x4000-byte sheet.
 
 ## Preset recipes
-The SRAM area is set up on the first visit with recipes 01-06 from `GetRecipePreset` (src/mod_decks.c). These are the
+The SRAM area is set up on the first visit (and after a New Game) with recipes 01-08 from `GetRecipePreset` (src/mod_decks.c). These are the
 mod's deck tables, named after their .ydk files:
 
 | Slot | Name | Deck table |
@@ -34,9 +34,11 @@ mod's deck tables, named after their .ydk files:
 | 01 | El Duelista DEX-Soul Control | Tristan's Soul Control |
 | 02 | ellietincan-Vanilla Beat | Tristan's Vanilla Beat |
 | 03 | DK-ZERO-Stall Mill | Tristan's Stall Mill |
-| 04 | LR-Chaos Turbo | Red starter and Tea |
-| 05 | sdlkilla-Warrior | Joey (Green starter) |
-| 06 | geistD-Goat Control | Bakura (Black starter) |
+| 04 | Jazz-Masked Control | the Critter opponent (60%) |
+| 05 | Gyomberman-Muka Muka Turbo | the Critter opponent (40%) |
+| 06 | LR-Chaos Turbo | Red starter, Tea, the Chaos Turbo deck opponent |
+| 07 | sdlkilla-Warrior | Green starter, the Warrior deck opponent |
+| 08 | geistD-Goat Control | Black starter, the Goat Control deck opponent |
 
 - Fusion Monsters in a table go to the recipe's Fusion Deck. There are no Side Decks, as with the opponents' decks.
 - A table that this build leaves out (its cards aren't all in the card list) is skipped.
@@ -47,7 +49,7 @@ mod's deck tables, named after their .ydk files:
   by 50 slots. Each slot holds the three list sizes, a used flag, `name[32]`, and `deck[60]`, `side[15]`,
   `fusion[20]` (226 bytes). A different magic (including the first build's `"RCP1"`) sets the area up again.
 - **New Game.** `BuildStarterDeck` calls `DeckRecipes_OnNewGame`, which clears the recipes: it erases the header's
-  magic, so the next visit sets the area up again with the six presets and empty slots. The starter deck then takes
+  magic, so the next visit sets the area up again with the presets and empty slots. The starter deck then takes
   the first empty slot (07).
 - **RAM.** The scene state is `gDeckRecipes` (EWRAM `0x0202E400`, symbols.ld).
 

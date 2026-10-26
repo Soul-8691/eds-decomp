@@ -1434,3 +1434,8 @@ updated: 2026-09-29
 - mod_opponents.c: card-art portraits for the 14 other formats; added Fiber Jar, Yata-Garasu, Magical Scientist,
   Chaos Emperor Dragon - Envoy of the End and Cyber Dragon to config/new_cards.txt (no effects yet).
 - Pages: [[yugi-kaiba-opponent]].
+
+## [2026-10-26] progress | Critter's decks; recipe presets 04-05
+- mod_decks.c: Jazz-Masked Control and Gyomberman-Muka Muka Turbo (main + extra), the Critter opponent picks 60/40;
+  both added as Deck Recipe presets 04-05 (Chaos Turbo, Warrior, Goat Control now 06-08).
+- Pages: [[deck-recipes]], [[yugi-kaiba-opponent]].

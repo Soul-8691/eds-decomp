@@ -29,8 +29,12 @@ not tested in an emulator.
 - **Format check.** Picking one runs `BanlistBlocksDuel` (src/mod_banlist.c) with the format's banlist and card pool
   (`FormatCardLimit`, src/mod_banlists.c: 0xFF outside the pool, else the list's limit, else 3). If the deck is
   illegal, a warning lists the offending cards ("Deck not legal for <format> (<date>)").
-- **Decks.** Yugi-Kaiba plays the three Yugi-Kaiba .ydk decks. The other 14 keep their original duelists' decks for
-  now.
+- **Decks.**
+  - Yugi-Kaiba plays the three Yugi-Kaiba .ydk decks (Soul Control 50%, Vanilla Beat 30%, Stall Mill 20%).
+  - Critter plays Jazz-Masked Control 60% and Gyomberman-Muka Muka Turbo 40% (`CritterDeck`, main + extra decks).
+  - The other 13 keep their original duelists' decks for now.
+  - The .ydk files are in `decks/`. Their passcodes resolve through the built password table, which stores each
+    passcode as 4 BCD bytes in digit order.
 - **Portraits.** Yugi-Kaiba La Jinn, Critter Sangan, Imperial Imperial Order, Treasure Confiscation, Android Jinzo,
   Joey-Pegasus Graceful Charity, Fiber Fiber Jar, Yata Yata-Garasu, Scientist Magical Scientist, Vampire Vampire
   Lord, Chaos Chaos Emperor Dragon - Envoy of the End, Warrior D.D. Warrior Lady, Goat Scapegoat, Cyber Cyber Dragon,
