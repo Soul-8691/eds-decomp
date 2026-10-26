@@ -350,6 +350,19 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
 - Number side effect as for Magic Cylinder: the added cards after it in the list moved down one free number.
 - Checked in the source and the build; not tested in an emulator.
 
+### Bottomless Trap Hole (2026-10-26)
+- Normal Trap: "When your opponent Summons a monster(s) with 1500 or more ATK: Destroy that monster(s) with 1500 or
+  more ATK, and if you do, banish it."
+- **Window.** It answers Torrential Tribute's summon window: `RESPONSE_SUMMONED`, `RESPONSE_FLIP_SUMMONED` or
+  `RESPONSE_SPECIAL_SUMMONED`, with the summoned monster at `loc0`. Trap Hole's own handlers test their card numbers
+  and only Normal / Flip Summons, so they are not reused.
+- **Condition** (`BottomlessTarget`, at activation and again at resolution): the monster is the opponent's, face up,
+  with 1500 or more ATK.
+- **Resolve:** `BanishFieldCard`; the monster never reaches the Graveyard, so Graveyard effects (Sangan, Witch) do not
+  run.
+- **CPU:** a Set copy goes off whenever the human's summon qualifies (`AiShouldActivateAddedCard`'s default yes).
+- Checked in the source and the build; not tested in an emulator.
+
 ### Dark Mimic LV1 (2026-10-26)
 - The card data's text: "FLIP: Draw 1 card. Once per turn, during your Standby Phase: You can send this card to the GY;
   Special Summon 1 'Dark Mimic LV3' from your hand or Deck." (The "draw 2 if flipped by an attack" clause is LV3's.)

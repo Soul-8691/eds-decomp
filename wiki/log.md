@@ -1286,3 +1286,8 @@ updated: 2026-09-29
 - CardMenu_GetMonsterCommands' Standby case has its own card list (Blast Juggler, Patrol Robo, Jigen Bakudan);
   Dark Mimic LV1 was added there, so the menu offers Activate.
 - Pages: [[added-cards]].
+
+## [2026-10-26] progress | Bottomless Trap Hole
+- Normal Trap on the summon window (Normal, Flip, Special): the opponent's face-up monster with 1500+ ATK is
+  banished (BanishFieldCard).
+- Pages: [[added-cards]].

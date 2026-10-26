@@ -362,6 +362,50 @@ int EffectTribeInfectingVirusResolve(struct ChainEntry *link, struct ChainEntry 
 }
 #endif /* HAS_CARD_TRIBE_INFECTING_VIRUS */
 
+#ifdef HAS_CARD_BOTTOMLESS_TRAP_HOLE
+/* ---- Bottomless Trap Hole ------------------------------------------------------------------------------------------
+ * Normal Trap: "When your opponent Summons a monster(s) with 1500 or more ATK: Destroy that monster(s) with 1500 or
+ * more ATK, and if you do, banish it."
+ * Torrential Tribute's summon window (RESPONSE_SUMMONED, RESPONSE_FLIP_SUMMONED or RESPONSE_SPECIAL_SUMMONED, the
+ * summoned monster at loc0); Trap Hole's own handlers test their card numbers and only Normal / Flip Summons. The
+ * monster must be the opponent's, face up, with 1500 or more ATK, at activation and at resolution. It is banished
+ * (BanishFieldCard: no Graveyard, so no Graveyard effects). */
+
+#define BOTTOMLESS_MIN_ATK 1500
+
+static int BottomlessTarget(struct ChainEntry *card)
+{
+    int player = DUEL_LOC_PLAYER(card->loc0);
+    int zone = DUEL_LOC_ZONE(card->loc0);
+    struct DuelZone *z;
+
+    switch (card->event) {
+    case RESPONSE_SUMMONED:
+    case RESPONSE_FLIP_SUMMONED:
+    case RESPONSE_SPECIAL_SUMMONED:
+        break;
+    default:
+        return 0;
+    }
+    if (player == card->player || zone > ZONE_MONSTER_4)
+        return 0;
+    z = ZoneOf(player, zone);
+    return DUEL_CARD_ID(&z->card) != 0 && z->isFaceUp && (int)GetZoneCardAtk(player, zone) >= BOTTOMLESS_MIN_ATK;
+}
+
+int EffectBottomlessTrapHolePrepare(struct ChainEntry *card, struct ChainEntry *chainLink, u16 fromHand)
+{
+    return !fromHand && BottomlessTarget(card);
+}
+
+int EffectBottomlessTrapHoleResolve(struct ChainEntry *link, struct ChainEntry *chainedTo)
+{
+    if (!link->negated && BottomlessTarget(link))
+        BanishFieldCard(DUEL_LOC_PLAYER(link->loc0), DUEL_LOC_ZONE(link->loc0), 0);
+    return EFFECT_STEP_DONE;
+}
+#endif /* HAS_CARD_BOTTOMLESS_TRAP_HOLE */
+
 #ifdef HAS_CARD_TORRENTIAL_TRIBUTE
 /* ---- Torrential Tribute --------------------------------------------------------------------------------------
  * "When a monster(s) is Summoned: Destroy all monsters on the field."
@@ -3117,6 +3161,16 @@ const struct CardEffect gAddedCardEffects[] = {
         EffectDarkMimicLv1Resolve,
         NULL,
         EffectDarkMimicLv1Prepare,
+        NULL,
+        NULL,
+    },
+#endif
+#ifdef HAS_CARD_BOTTOMLESS_TRAP_HOLE
+    {
+        CARD_BOTTOMLESS_TRAP_HOLE, 0,
+        EffectBottomlessTrapHoleResolve,
+        NULL,
+        EffectBottomlessTrapHolePrepare,
         NULL,
         NULL,
     },

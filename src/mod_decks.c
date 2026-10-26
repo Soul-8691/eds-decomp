@@ -22,25 +22,21 @@
 /* Yugi Muto: a competitive deck: strong Normal monsters, the classic floaters and searchers, and the best Magic
  * and Trap cards at their limits. */
 static const u16 sYugiDeck[] = {
-    X3(CARD_XING_ZHEN_HU),
-    X3(CARD_XING_ZHEN_HU),
-    X3(CARD_XING_ZHEN_HU),
-    X3(CARD_XING_ZHEN_HU),
-    X3(CARD_XING_ZHEN_HU),
-    X3(CARD_XING_ZHEN_HU),
-    X3(CARD_XING_ZHEN_HU),
-    X3(CARD_XING_ZHEN_HU),
-    X3(CARD_XING_ZHEN_HU),
-    X3(CARD_XING_ZHEN_HU),
-    X3(CARD_XING_ZHEN_HU),
-    X3(CARD_XING_ZHEN_HU),
-    X3(CARD_XING_ZHEN_HU),
-    CARD_XING_ZHEN_HU,
+    X3(CARD_BOTTOMLESS_TRAP_HOLE),
+    X3(CARD_BOTTOMLESS_TRAP_HOLE),
+    X3(CARD_BOTTOMLESS_TRAP_HOLE),
+    X3(CARD_BOTTOMLESS_TRAP_HOLE),
+    X3(CARD_BOTTOMLESS_TRAP_HOLE),
+    X3(CARD_BOTTOMLESS_TRAP_HOLE),
+    X3(CARD_BOTTOMLESS_TRAP_HOLE),
+    X3(CARD_BOTTOMLESS_TRAP_HOLE),
+    X3(CARD_BOTTOMLESS_TRAP_HOLE),
+    X3(CARD_BOTTOMLESS_TRAP_HOLE),
 };
 
 static const struct DeckList sYugiDeckList = { sYugiDeck, ARRAY_COUNT(sYugiDeck), 0 };
 
-STATIC_ASSERT(ARRAY_COUNT(sYugiDeck) == 40, YugiDeckSize);
+STATIC_ASSERT(ARRAY_COUNT(sYugiDeck) == 30, YugiDeckSize);
 
 /* Joey Wheeler: the "sdlkilla-Warrior" deck (sdlkilla-Warrior.ydk, main deck only): Warriors with Reinforcement of the
  * Army, D.D. Warrior Lady, Blade Knight, Exiled Force and Ninja Grandmaster Sasuke, and a Trap line-up. */
