@@ -1,0 +1,51 @@
+---
+title: Duelist Points (mod)
+type: game
+status: draft
+confidence: medium
+sources: [rom-analysis]
+updated: 2026-10-26
+---
+# Duelist Points (mod)
+
+Duelist Points (DP) are added by this build (`src/mod_dp.c`, `@farcode`/`@rodata`). They're earned by beating
+Campaign duelists and spent on booster packs ([[pack-shop]]) and on password cards. Checked in the source and the
+build; not tested in an emulator.
+
+## Storage
+DP live in the save image: `gSaveData.dpLow` (+0x215A) and `dpHigh` (+0x215C), a u32 capped at 999,999.
+`gSaveData.dpInit` (+0x2163) is 0xD5 once DP are set.
+
+- **Starting DP.** A save without the marker starts with 5000 DP: a New Game (`InitSaveData` clears it) or a save
+  from before DP.
+- **Why these fields are free (verified).** The original never uses them. A scan of the ROM code area
+  (0x08000000-0x08088000) found no literal-pool word holding their offsets (0x215A, 0x215C, 0x2163, also 0x20CE)
+  or their absolute addresses. Every neighbouring known field's offset appears 3-9 times (0x2150, 0x2158, 0x215E,
+  0x2160, 0x2162, 0x2164).
+
+## Prices and rewards (tables in mod_dp.c)
+- **Packs.** `sPackCosts`: one row per pack id, all 1000 for now; a pack not listed costs `DEFAULT_PACK_COST`.
+- **Password cards.** `GetCardCost`: `DEFAULT_CARD_COST` (500) for every card, unless `sCardCosts` lists the card
+  number with its own price.
+- **Duel rewards.** `sDuelistRewards`: by `enum DuelistId`, 1000 each.
+  `Campaign_RecordDuelResult` (campaign_steps.c) calls `AwardDuelDP(gMain.opponent)` on a win.
+
+## Password machine
+- **Any number of copies.** `Password_RollAndCheck` now accepts a valid password when `CanBuyCard`: the player has
+  the card's price and the trunk holds fewer than 0x3FF copies. The one-copy-per-password check
+  (`trunk[].passwordUsed`) is gone; the flag is still set.
+- **Buying.** `Password_RevealAndGiveCard` takes the price (`SpendDP`) when it adds the card.
+- **Refusal.** The USED step now means "can't pay": it blinks "Need <price> DP!" (`PasswordDP_SetNotEnough`) in
+  place of the USED sprite.
+- **Display.** `CB_Password` shows "DP n" at the top right during the entry, roll, reveal and messages. The text
+  uses OBJ tiles 0x2C0+ (2D mapping; the scene's own OBJ graphics end at 0x2BF) and palette 15 = `gSystemFontPal`.
+
+## Display
+`DpText_*` draws one line of text into a 32 x 2 tile canvas, copies it to OBJ tiles and shows it as 32 x 8
+sprites. The same row stride works for 1D and 2D mapping. Each screen re-renders only when its value changes.
+
+- **Main menu.** "DP n" at the bottom right (tiles 0x280-0x2BF, menu palette 0, colours 10/1).
+- **Pack list.** The centre pack's name and price at the top, "You have n DP  A: open  B: back" at the bottom
+  (1D tiles 0x200/0x240, palette 15). A refused pack shows "Not enough DP!" for two seconds.
+
+Related: [[pack-shop]], [[save-type]], [[deck-recipes]].

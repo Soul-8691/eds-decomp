@@ -8,8 +8,9 @@
  *                         (PackList_AddUnlockedPacks), then the opening and the five-card reveal, the cards going
  *                         to the trunk. Added around them: B on the list goes back to the main menu, a finished
  *                         pack comes back to the list (on the pack just opened), and the pack price check.
- * Duelist Points (DP) are not implemented yet, so every pack is free: PackShop_CanOpen always allows it and
- * PackShop_Pay takes nothing. DP will go there (PackShop_Cost gives the price).
+ * A pack costs Duelist Points (src/mod_dp.c: GetPackCost); a pack the player cannot pay for is refused ("Not
+ * enough DP!"). The list shows the centre pack's name and price at the top and the player's DP at the bottom
+ * (PackListDP_Draw).
  * Like the other mod units, this one is @farcode and @rodata in units.txt and keeps its state at a fixed EWRAM
  * address (gPackShop, symbols.ld), never in .bss.
  */
@@ -22,6 +23,14 @@
 #include "booster.h"
 #include "save.h"
 #include "constants/sound.h"
+
+/* src/mod_dp.c */
+u32 GetDP(void);
+int SpendDP(u32 amount);
+u32 GetPackCost(u16 packId);
+void PackListDP_Draw(u16 packId, const char *packName);
+void PackListDP_NotEnough(void);
+void PackListDP_Reset(void);
 
 /* src/mod_recipes.c */
 struct LabelChunk {
@@ -66,23 +75,22 @@ void PackShop_BuildLabel(u16 *dst)
     BuildMenuLabel(sLabelChunks, ARRAY_COUNT(sLabelChunks), dst);
 }
 
-/* ---- Duelist Points (not implemented yet: every pack is free) ---- */
+/* ---- Duelist Points ---- */
 
-/* The DP price of a pack. */
 static u32 PackShop_Cost(u16 packId)
 {
-    return 0;
+    return GetPackCost(packId);
 }
 
-/* 1 if the player may open the pack (DP: can pay PackShop_Cost). */
+/* 1 if the player can pay for the pack. */
 static int PackShop_CanOpen(u16 packId)
 {
-    return PackShop_Cost(packId) == 0;
+    return GetDP() >= PackShop_Cost(packId);
 }
 
-/* Pay for the pack the player opens (DP: take PackShop_Cost). */
 static void PackShop_Pay(u16 packId)
 {
+    SpendDP(PackShop_Cost(packId));
 }
 
 /* ---- The scene ---- */
@@ -92,10 +100,15 @@ void PackShop_Start(void)
     gPackShop.started = 0;
 }
 
-/* The pack in the list's centre slot. */
+/* The gPackInfo row of the pack in the list's centre slot. */
+static const struct PackInfo *CentrePack(void)
+{
+    return &gPackInfo[gSceneWork.packRows[(gSceneWork.firstIndex + gSceneWork.centerSlot) % gSceneWork.packCount]];
+}
+
 static u16 CentrePackId(void)
 {
-    return gPackInfo[gSceneWork.packRows[(gSceneWork.firstIndex + gSceneWork.centerSlot) % gSceneWork.packCount]].id;
+    return CentrePack()->id;
 }
 
 /*
@@ -150,6 +163,7 @@ u16 CB_PackShop(void)
 
                 if (!PackShop_CanOpen(packId)) {
                     PlaySE(SE_ERROR);
+                    PackListDP_NotEnough();
                     gMain.newKeys &= ~A_BUTTON;
                 } else {
                     PackShop_Pay(packId);
@@ -158,6 +172,12 @@ u16 CB_PackShop(void)
                 }
             }
         }
+    }
+    if (gMain.seqIndex1 == GETPACK_STEP_SELECT) {
+        if (gMain.seqState1 == 0)
+            PackListDP_Reset();
+        else if ((gMain.seqState1 == 1 && gSceneWork.state >= 2) || gMain.seqState1 == 2)
+            PackListDP_Draw(CentrePackId(), CentrePack()->name);
     }
     if (CB_GetPack()) {
         SaveGame();         /* the cards are in the trunk; the scene does not change, so nothing else saves */

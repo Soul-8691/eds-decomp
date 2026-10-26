@@ -74,6 +74,16 @@ struct CardTradingFlagPair {
     u8 unk4[0x24];
 };
 
+/* Added: Duelist Points (src/mod_dp.c). A password buys its card for GetCardCost DP, any number of times; the
+ * USED step now says the player cannot pay ("Need <cost> DP!"). */
+int CanBuyCard(u16 id);
+u32 GetCardCost(u16 id);
+int SpendDP(u32 amount);
+void PasswordDP_Draw(void);
+void PasswordDP_Reset(void);
+void PasswordDP_SetNotEnough(u16 id);
+void PasswordDP_DrawNotEnough(void);
+
 /* No shared header declares PlaySE yet (same local form as duel_response.c and link_sio.c). */
 void PlaySE(u32 seId);
 
@@ -129,13 +139,14 @@ u32 Password_RollAndCheck(void)
         if (s->card == 0) {
             MemClear16(s, 8);
             gMain.seqIndex1 += 3; /* -> PASSWORD_STEP_ERROR */
-        } else if (gSaveData.trunk[s->card].passwordUsed == 0) {
+        } else if (CanBuyCard(s->card)) {      /* changed: was passwordUsed == 0 (one copy per password) */
             MemCopy16(s, s->password, 8);
             Password_DrawCard(s->card);
             gMain.bgHofs[2] = 0;
             REG_BG2HOFS = 0;
             return 1;
         } else {
+            PasswordDP_SetNotEnough(s->card);   /* added */
             MemClear16(s, 8);
             gMain.seqIndex1 += 6; /* -> PASSWORD_STEP_USED */
         }
@@ -172,6 +183,7 @@ u32 Password_RevealAndGiveCard(void)
         Password_DrawDigits();
         if (FadeToBlackU16(4)) {
             gSaveData.trunk[gPassword.card].passwordUsed = 1;
+            SpendDP(GetCardCost(gPassword.card));   /* added */
             AddCardToTrunk(gPassword.card);
             CardDetail_Init(gPassword.card, 0, 0);
             gMain.seqState1++;
@@ -224,7 +236,7 @@ u32 Password_ShowUsed(void)
                 PlaySE(SE_PASSWORD_REJECT);
         }
         if (gPassword.blink & 0x20)
-            AddSprite(0x80028, 0x4080, 0x110B);
+            PasswordDP_DrawNotEnough();     /* changed: was the USED sprite (0x110B) */
         if (!(gMain.newKeys & START_BUTTON)) {
             gPassword.timer++;
             return 0;
@@ -237,6 +249,13 @@ u32 CB_Password(void)
 {
     u16 (*fn)(void) = gPasswordSteps[gMain.seqIndex1];
 
+    /* Added: the player's DP over the entry, roll, reveal and message steps (not the card detail). */
+    if (gMain.seqIndex1 == PASSWORD_STEP_INIT_VIDEO)
+        PasswordDP_Reset();
+    else if ((gMain.seqIndex1 >= PASSWORD_STEP_FADE_IN && gMain.seqIndex1 <= PASSWORD_STEP_ROLL)
+             || (gMain.seqIndex1 == PASSWORD_STEP_REVEAL && gMain.seqState1 < 2)
+             || gMain.seqIndex1 == PASSWORD_STEP_ERROR || gMain.seqIndex1 == PASSWORD_STEP_USED)
+        PasswordDP_Draw();
     if (fn) {
         if (fn()) {
             gMain.seqIndex1++;

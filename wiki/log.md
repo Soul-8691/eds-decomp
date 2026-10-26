@@ -1359,3 +1359,9 @@ updated: 2026-09-29
 - New unit src/mod_packs.c: main-menu item 8 runs the game's Get-a-pack steps over the unlocked packs, B leaves,
   packs loop back to the list; DP stubs (free for now). BuildMenuLabel generalised in mod_recipes.c.
 - Pages: [[pack-shop]], [[deck-recipes]], index.
+
+## [2026-10-26] progress | Duelist Points
+- New unit src/mod_dp.c: DP in gSaveData +0x215A/+0x215C (+0x2163 marker; verified unused by a ROM literal scan),
+  5000 to start, pack prices (1000), password card prices (500, any number of copies), 1000 per Campaign win;
+  DP shown on the main menu, pack list and password screen.
+- Pages: [[duelist-points]], [[pack-shop]], index.

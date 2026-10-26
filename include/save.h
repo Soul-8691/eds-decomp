@@ -107,15 +107,17 @@ struct SaveData {
                                              *          the next roll is Random() % 12 */
     u16 lastOpponent;                       /* +0x2158: opponent of the last recorded duel (RecordDuel*);
                                              *          selects the rematch dialogue */
-    u16 unk215A;                            /* +0x215A */
-    u16 unk215C;                            /* +0x215C */
+    u16 dpLow;                              /* +0x215A: added: Duelist Points, low half (src/mod_dp.c; the
+                                             *          original never uses +0x215A/+0x215C/+0x2163: no code
+                                             *          offset or address for them in the ROM) */
+    u16 dpHigh;                             /* +0x215C: added: Duelist Points, high half */
     u16 tournamentRound;                    /* +0x215E: November tournament rounds won this year (0..3);
                                              *          reset after the final and on Dec 31 */
     u16 sugorokuQualified;                  /* +0x2160: 1 after winning the June SUGOROKU prelim; enables
                                              *          the match the next day */
     u8 championshipWins;                    /* +0x2162: National Championship titles (saturates at 0xFF;
                                              *          pack 22 unlocks when > 1) */
-    u8 unk2163;                             /* +0x2163 */
+    u8 dpInit;                              /* +0x2163: added: 0xD5 once DP are set up (else GetDP gives 5000) */
     u16 unlockNotices;                      /* +0x2164: bit 0 new opponents, bit 1 new packs; set by
                                              *          Campaign_RecordDuelResult, cleared once shown */
     char signature[8];                      /* +0x2166: "DMEX1INT" (WriteSaveSignature); its last two

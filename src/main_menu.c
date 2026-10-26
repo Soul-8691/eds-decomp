@@ -37,6 +37,9 @@ void DeckRecipes_BuildLabel(u16 *dst);
 u16 CB_DeckRecipes(void);
 /* Added: the Booster Packs item (src/mod_packs.c). */
 void PackShop_BuildLabel(u16 *dst);
+/* Added: the player's DP (src/mod_dp.c). */
+void MainMenuDP_Render(void);
+void MainMenuDP_Draw(void);
 void PackShop_Start(void);
 u16 CB_PackShop(void);
 extern const StepFunc gMainMenuSteps[];            /* 0x081984F4: CB_MainMenu steps, NULL-terminated */
@@ -241,6 +244,7 @@ void MainMenu_DrawItems(void)
         AddSprite(((i * 16 + MAIN_MENU_TOP_Y) << 16) | 0x78, SPRITE_SHAPE_32x16, tile + 8);
         AddSprite(((i * 16 + MAIN_MENU_TOP_Y) << 16) | 0x98, SPRITE_SHAPE_32x16, tile + 12);
     }
+    MainMenuDP_Draw();      /* added */
 }
 
 /*
@@ -274,6 +278,7 @@ u16 MainMenu_Init(void)
         CopyDoubleWords((void *)OBJ_VRAM0, gMainMenuObjGfx, 0x4000);
         DeckRecipes_BuildLabel((u16 *)(OBJ_VRAM0 + 0x4000));   /* added: item 7's label, tiles 0x200-0x23F */
         PackShop_BuildLabel((u16 *)(OBJ_VRAM0 + 0x4800));      /* added: item 8's label, tiles 0x240-0x27F */
+        MainMenuDP_Render();                                    /* added: "DP n", tiles 0x280-0x2BF */
         LoadBgImage(0, 0, 0x20, gMainMenuSkyImage);
         return 1;
     }

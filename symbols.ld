@@ -18,6 +18,8 @@ gBanlistView = 0x0202E000;
 gDeckRecipes = 0x0202E400;
 /* Mod: the Booster Packs scene of src/mod_packs.c (after gDeckRecipes, which ends by 0x0202EC40). */
 gPackShop = 0x0202F000;
+/* Mod: the DP lines of src/mod_dp.c. */
+gModDP = 0x0202F100;
 gTextCanvas = 0x02000000;
 gSaveData = 0x02011C20;
 gSaveDataSignature = 0x02013D86;

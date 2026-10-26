@@ -128,6 +128,8 @@ u16 Campaign_SetupDuel(void)
  * unlockNotices bit 0 (new opponents, text 350 on the next day); if it unlocked more of the Get Pack list,
  * set bit 1 (text 351, shown by Campaign_GiveRewards).
  */
+void AwardDuelDP(u16 duelist);
+
 void Campaign_RecordDuelResult(void)
 {
     /* Matching: compared as signed below, so GetCampaignLevel's u32 result is read as int. */
@@ -142,6 +144,7 @@ void Campaign_RecordDuelResult(void)
     switch (gDuel.result) {
     case DUEL_RESULT_WIN:
         RecordDuelWin(gMain.opponent);
+        AwardDuelDP(gMain.opponent);    /* added: src/mod_dp.c */
         break;
     case DUEL_RESULT_LOSE:
         RecordDuelLoss(gMain.opponent);

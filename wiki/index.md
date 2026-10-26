@@ -22,6 +22,7 @@ Start with [[overview]]. The decompilation is 100% matched since 2026-10-02: all
 - [[duel-engine]]: duel state, player/zone layout, command runner and screen state (from the shared headers).
 - [[game-overview]]: what EDS is, and the major systems.
 - [[program-flow]]: boot → `GameInit` → `MainLoop`; the scene and step-runner system; scene table.
+- [[duelist-points]]: the added DP currency (5000 at the start, earned per Campaign win, spent on packs and password cards; stored in free save bytes).
 - [[pack-shop]]: the added Booster Packs main-menu item (the unlocked packs on the usual pack-opening screens; DP hooks for later).
 - [[deck-recipes]]: the added main-menu item that stores 50 deck recipes in SRAM and switches between them through the trunk.
 - [[added-cards]]: cards added beyond the original 820 from the text list `config/new_cards.txt`: workflow, capacity, YGOPRODeck data, moved tables, RAM and pointer fix-ups.
