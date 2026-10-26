@@ -1321,3 +1321,13 @@ updated: 2026-09-29
 - Monster Gate's excavation with a declared Level: a new Level menu for the human (made like the Type menu); the
   CPU declares 4.
 - Pages: [[added-cards]].
+
+## [2026-10-26] progress | Return from the Different Dimension
+- Half the LP as a cost; the banished monsters come back one per step, strongest first; an End Phase hook banishes
+  the ones still on the field. CPU policy: 2+ monsters, 2 free zones, LP > 2000.
+- Pages: [[added-cards]].
+
+## [2026-10-26] progress | Fix Return from the Different Dimension soft-lock
+- The resolve returned `EFFECT_STEP_END` (a step number, 100) when nothing was left, so the chain called it forever;
+  it now returns `EFFECT_STEP_DONE`.
+- Pages: [[added-cards]].

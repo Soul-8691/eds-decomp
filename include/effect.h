@@ -107,6 +107,8 @@ void DarkMagicianOfChaosSummoned(int player, int zone, u16 id, int kind, int fac
 /* Every summon, once the monster is placed (SummonAction_Update): the added cards' summon effects (src/added_effects.c). */
 void AddedCardsSummoned(int player, int zone, u16 id, int kind, int faceUp);
 void EndPhase_DarkMagicianOfChaos(int turnPlayer);
+/* Return from the Different Dimension (src/added_effects.c): the End Phase banish of the monsters it summoned. */
+void EndPhase_ReturnFromTheDifferentDimension(void);
 void EndPhase_MysticSwordsmanLevelUp(int turnPlayer);
 void InjectionFairyLilyEndAttack(int player);
 /* Night Assailant (src/added_effects.c): its discard effect's targets, and the trigger DiscardHandCard queues. */

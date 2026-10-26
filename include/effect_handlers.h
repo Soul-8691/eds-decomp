@@ -133,6 +133,9 @@ int EffectMonsterGateChainB(struct ChainEntry *link, struct ChainEntry *prevLink
 int EffectMonsterGateResolve(struct ChainEntry *link, struct ChainEntry *chainedTo);
 int EffectReasoningPrepare(struct ChainEntry *card, struct ChainEntry *chainLink, u16 fromHand);
 int EffectReasoningResolve(struct ChainEntry *link, struct ChainEntry *chainedTo);
+int EffectReturnFromTheDifferentDimensionPrepare(struct ChainEntry *card, struct ChainEntry *chainLink, u16 fromHand);
+int EffectReturnFromTheDifferentDimensionChainA(struct ChainEntry *link, struct ChainEntry *prevLink);
+int EffectReturnFromTheDifferentDimensionResolve(struct ChainEntry *link, struct ChainEntry *chainedTo);
 int EffectCreatureSwapPrepare(struct ChainEntry *card, struct ChainEntry *chainLink, u16 fromHand);
 int EffectCreatureSwapResolve(struct ChainEntry *link, struct ChainEntry *chainedTo);
 int EffectMysticSwordsmanLv2Resolve(struct ChainEntry *link, struct ChainEntry *chainedTo);

@@ -350,6 +350,22 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
 - Number side effect as for Magic Cylinder: the added cards after it in the list moved down one free number.
 - Checked in the source and the build; not tested in an emulator.
 
+### Return from the Different Dimension (2026-10-26)
+- Normal Trap: "Pay half your Life Points; Special Summon as many of your banished monsters as possible. During the
+  End Phase, banish all monsters that were Special Summoned by this effect."
+- **Prepare.** A free monster zone and an eligible monster in the player's banished pile: banished normally
+  (`BANISH_NORMAL`, not face down or until the End Phase) and not a token.
+- **Cost.** ChainA pushes `DUEL_CMD_LOSE_LP` for half the LP.
+- **Resolve.** One monster per step while zones and monsters remain, the strongest ATK first. Each one leaves the
+  pile (`RemoveBanishedCardAt`) and is Special Summoned face up in the position the player picks
+  (`QueueSpecialSummonChoosePosition`). Its zone and card ID go to `gModDuel.dimensionReturn` /
+  `dimensionReturnIds` (cleared by `ModDuelInit`).
+- **End Phase.** `EndPhase_ReturnFromTheDifferentDimension`, called next to the Dark Magician of Chaos hook in
+  `DuelPhase_End` (battle_phase3.c), banishes each marked monster still in its zone (same card ID), then clears the
+  marks.
+- **CPU.** Activates it with two or more eligible monsters, two free zones and more than 2000 LP.
+- Checked in the source and the build; not tested in an emulator.
+
 ### Reasoning (2026-10-26)
 - Normal Spell: "Your opponent declares a monster Level from 1 to 12. Excavate cards from the top of your Deck until
   you excavate a monster that can be Normal Summoned/Set, then, if that monster is the same Level as the one declared

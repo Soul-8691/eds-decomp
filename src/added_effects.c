@@ -60,6 +60,8 @@ struct ModDuelState {
     u8 tsukuyomiEndReturn[2];   /* Tsukuyomi: per player, bit zone, return it to the hand in the End Phase */
     u8 flipEffectsLocked;       /* flip effects cannot be activated this turn */
     u16 aiStandbyTurn;          /* AiStandbyActivations: the turn (gDuel.turnCount) it last ran */
+    u16 dimensionReturn;        /* Return from the Different Dimension: bit player * 5 + zone, banish in the End Phase */
+    u16 dimensionReturnIds[10]; /* ... and the card ID summoned into that zone */
 };
 extern struct ModDuelState gModDuel;
 
@@ -904,6 +906,7 @@ void ModDuelInit(void)
     gModDuel.tsukuyomiEndReturn[1] = 0;
     gModDuel.flipEffectsLocked = 0;
     gModDuel.aiStandbyTurn = 0xFFFF;
+    gModDuel.dimensionReturn = 0;
 #ifdef HAS_CARD_INJECTION_FAIRY_LILY
     InjectionFairyLilyResetBattle();
 #endif
@@ -2080,6 +2083,98 @@ int EffectReasoningResolve(struct ChainEntry *link, struct ChainEntry *chainedTo
     return EFFECT_STEP_DONE;
 }
 #endif /* HAS_CARD_REASONING && HAS_CARD_MONSTER_GATE */
+
+#ifdef HAS_CARD_RETURN_FROM_THE_DIFFERENT_DIMENSION
+/* ---- Return from the Different Dimension ---------------------------------------------------------------------------
+ * Normal Trap: "Pay half your Life Points; Special Summon as many of your banished monsters as possible. During the End
+ * Phase, banish all monsters that were Special Summoned by this effect."
+ *   prepare  a free monster zone and a monster in the player's banished pile (banished normally: not face down or
+ *            until the End Phase; not a token)
+ *   chainA   half the LP (DUEL_CMD_LOSE_LP, a cost)
+ *   resolve  one monster per step while zones and monsters remain, the strongest ATK first: out of the banished pile
+ *            (RemoveBanishedCardAt) and Special Summoned face up in the position the player picks
+ *            (QueueSpecialSummonChoosePosition; the chain waits for each summon). Each one's zone and card ID go to
+ *            gModDuel.dimensionReturn.
+ *   DuelPhase_End (battle_phase3.c)  EndPhase_ReturnFromTheDifferentDimension banishes the marked monsters still in
+ *            their zones, then clears the marks. */
+
+static int IsDimensionReturnMonster(struct DuelPlayer *p, int i)
+{
+    u16 id = DUEL_CARD_ID(&p->banished[i]);
+    u16 number = ((const u16 *)CARD_ID_TO_NUMBER_ADDR)[id & CARD_ID_MASK];
+
+    return (p->banishedInfo[i] & 0xFF) == BANISH_NORMAL
+           && CARD_STATS_TYPE(gCardStats[id & CARD_ID_MASK]) <= CARD_TYPE_REPTILE
+           && (u16)(number - CARD_NUMBER_TOKEN_FIRST) >= CARD_NUMBER_TOKEN_END - CARD_NUMBER_TOKEN_FIRST;
+}
+
+/* The banished-pile index of the player's strongest such monster, -1 for none. */
+static int StrongestDimensionReturn(int player)
+{
+    struct DuelPlayer *p = &gDuelPlayers[player & 1];
+    int i, best = -1;
+    u32 bestAtk = 0;
+
+    for (i = 0; i < p->banishedCount; i++) {
+        u32 atk = CARD_STATS_ATK(gCardStats[DUEL_CARD_ID(&p->banished[i]) & CARD_ID_MASK]);
+        if (IsDimensionReturnMonster(p, i) && (best < 0 || atk > bestAtk)) {
+            best = i;
+            bestAtk = atk;
+        }
+    }
+    return best;
+}
+
+int EffectReturnFromTheDifferentDimensionPrepare(struct ChainEntry *card, struct ChainEntry *chainLink, u16 fromHand)
+{
+    return !fromHand && CountFreeMonsterZones(card->player) > 0 && StrongestDimensionReturn(card->player) >= 0;
+}
+
+int EffectReturnFromTheDifferentDimensionChainA(struct ChainEntry *link, struct ChainEntry *prevLink)
+{
+    int half = gDuelPlayers[link->player & 1].lifePoints / 2;
+
+    if (half > 0)
+        DuelCmd_Push(link->player ? DUEL_CMD_PLAYER | DUEL_CMD_LOSE_LP : DUEL_CMD_LOSE_LP, half, 1, 0);
+    return 1;
+}
+
+int EffectReturnFromTheDifferentDimensionResolve(struct ChainEntry *link, struct ChainEntry *chainedTo)
+{
+    struct DuelPlayer *p = &gDuelPlayers[link->player & 1];
+    struct DuelCard card;
+    int i, zone;
+
+    if (link->negated)
+        return EFFECT_STEP_DONE;
+    /* EFFECT_STEP_START and every later call: one more monster, if possible */
+    zone = FindFreeMonsterZone(link->player);
+    i = StrongestDimensionReturn(link->player);
+    if (zone < 0 || i < 0)
+        return EFFECT_STEP_DONE;    /* the last summon is done: the link is finished */
+    card = p->banished[i];
+    RemoveBanishedCardAt(link->player, i);
+    gModDuel.dimensionReturn |= 1 << ((link->player & 1) * 5 + zone);
+    gModDuel.dimensionReturnIds[(link->player & 1) * 5 + zone] = DUEL_CARD_ID(&card);
+    QueueSpecialSummonChoosePosition(link->player, &card, 1, 0);
+    return EFFECT_STEP_2;
+}
+
+void EndPhase_ReturnFromTheDifferentDimension(void)
+{
+    int player, zone;
+
+    for (player = 0; player <= 1; player++) {
+        for (zone = ZONE_MONSTER_0; zone <= ZONE_MONSTER_4; zone++) {
+            int bit = player * 5 + zone;
+            if ((gModDuel.dimensionReturn & (1 << bit))
+                && DUEL_CARD_ID(&ZoneOf(player, zone)->card) == gModDuel.dimensionReturnIds[bit])
+                BanishFieldCard(player, zone, 0);
+        }
+    }
+    gModDuel.dimensionReturn = 0;
+}
+#endif /* HAS_CARD_RETURN_FROM_THE_DIFFERENT_DIMENSION */
 
 #ifdef HAS_CARD_MIND_CONTROL
 /* ---- Mind Control --------------------------------------------------------------------------------------------------
@@ -3355,6 +3450,15 @@ int AiShouldActivateAddedCard(struct ChainEntry *entry)
                && (entry->event == RESPONSE_ATTACK_DECLARED || entry->event == RESPONSE_SUMMONED
                    || entry->event == RESPONSE_FLIP_SUMMONED || entry->event == RESPONSE_SPECIAL_SUMMONED);
 #endif
+#ifdef HAS_CARD_RETURN_FROM_THE_DIFFERENT_DIMENSION
+    case CARD_RETURN_FROM_THE_DIFFERENT_DIMENSION: {    /* two or more monsters back, with LP to spare */
+        struct DuelPlayer *p = &gDuelPlayers[AI_PLAYER];
+        int i, n = 0;
+        for (i = 0; i < p->banishedCount; i++)
+            n += IsDimensionReturnMonster(p, i);
+        return n >= 2 && CountFreeMonsterZones(AI_PLAYER) >= 2 && p->lifePoints > 2000;
+    }
+#endif
 #ifdef HAS_CARD_XING_ZHEN_HU
     case CARD_XING_ZHEN_HU:                     /* only on two of the human's Set cards */
         return CountXingTargets(entry, AI_HUMAN) >= 2;
@@ -3553,6 +3657,16 @@ const struct CardEffect gAddedCardEffects[] = {
         NULL,
         EffectReasoningPrepare,
         NULL,
+        NULL,
+    },
+#endif
+#ifdef HAS_CARD_RETURN_FROM_THE_DIFFERENT_DIMENSION
+    {
+        CARD_RETURN_FROM_THE_DIFFERENT_DIMENSION, 0,
+        EffectReturnFromTheDifferentDimensionResolve,
+        NULL,
+        EffectReturnFromTheDifferentDimensionPrepare,
+        EffectReturnFromTheDifferentDimensionChainA,
         NULL,
     },
 #endif
