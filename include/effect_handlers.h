@@ -143,6 +143,7 @@ int EffectSkullLairCheck(struct ChainEntry *card, u16 pos);
 int EffectSkullLairPrepare(struct ChainEntry *card, struct ChainEntry *chainLink, u16 fromHand);
 int EffectSkullLairChainB(struct ChainEntry *link, struct ChainEntry *prevLink);
 int EffectSkullLairResolve(struct ChainEntry *link, struct ChainEntry *chainedTo);
+int EffectFiberJarResolve(struct ChainEntry *link, struct ChainEntry *chainedTo);
 int EffectCreatureSwapPrepare(struct ChainEntry *card, struct ChainEntry *chainLink, u16 fromHand);
 int EffectCreatureSwapResolve(struct ChainEntry *link, struct ChainEntry *chainedTo);
 int EffectMysticSwordsmanLv2Resolve(struct ChainEntry *link, struct ChainEntry *chainedTo);

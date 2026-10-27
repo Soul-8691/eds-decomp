@@ -2405,6 +2405,53 @@ int EffectSkullLairResolve(struct ChainEntry *link, struct ChainEntry *chainedTo
 }
 #endif /* HAS_CARD_SKULL_LAIR */
 
+#ifdef HAS_CARD_FIBER_JAR
+/* ---- Fiber Jar ---------------------------------------------------------------------------------------------------
+ * FLIP: "Each player shuffles all cards from their hand, field, and Graveyard into the Deck, then draws 5 cards."
+ * (card_detail.c HasFlipEffect lists it.) For each player, all queued (deferred) commands:
+ *   field     ReturnFieldCardToDeck on every zone, the Spell/Trap and Field zones first (an equip goes back
+ *             before its monster's DestroyLinkedCards could send it to the Graveyard; DuelCmd_ReturnToDeck skips
+ *             an emptied zone). Tokens are destroyed, as ReturnFieldCardToDeck does.
+ *   hand      DUEL_CMD_RETURN_HAND_CARD_TO_DECK, last card first (the indices stay valid)
+ *   Graveyard its Fusion Monsters to the Fusion Deck at once (TakeGraveyardCardAt, AddCardToFusionDeck), then
+ *             DUEL_CMD_RETURN_GRAVEYARD_TO_DECK (the rest, with anything the field sent there; it would put a
+ *             Fusion Monster in the Deck). A field Fusion Monster goes to the Fusion Deck (DuelCmd_ReturnToDeck).
+ * then each Deck is shuffled and each player draws 5 (DrawCards). Fiber Jar itself goes back with the field. */
+int EffectFiberJarResolve(struct ChainEntry *link, struct ChainEntry *chainedTo)
+{
+    int p, zone, i;
+
+    if (link->negated)
+        return EFFECT_STEP_DONE;
+    for (p = 0; p <= 1; p++) {
+        u16 player = p ? DUEL_CMD_PLAYER : 0;
+
+        for (zone = ZONE_SPELL_0; zone <= ZONE_FIELD; zone++)
+            ReturnFieldCardToDeck(p, zone);
+        for (zone = ZONE_MONSTER_0; zone <= ZONE_MONSTER_4; zone++)
+            ReturnFieldCardToDeck(p, zone);
+        for (i = gDuelPlayers[p].handCount - 1; i >= 0; i--)
+            DuelCmd_Push(player | DUEL_CMD_RETURN_HAND_CARD_TO_DECK, i, 1, 0);
+        /* the Graveyard's Fusion Monsters to the Fusion Deck now (DUEL_CMD_RETURN_GRAVEYARD_TO_DECK would put them
+         * in the Deck: AddCardToDeckTop) */
+        for (i = gDuelPlayers[p].graveCount - 1; i >= 0; i--) {
+            if (IsFusionMonster(DUEL_CARD_ID(&gDuelPlayers[p].graveyard[i]))) {
+                struct DuelCard card;
+
+                TakeGraveyardCardAt(p, i, &card);
+                AddCardToFusionDeck(p, &card);
+            }
+        }
+        DuelCmd_Push(player | DUEL_CMD_RETURN_GRAVEYARD_TO_DECK, 0, 0, 0);
+    }
+    for (p = 0; p <= 1; p++) {
+        DuelCmd_Push(p ? DUEL_CMD_PLAYER | DUEL_CMD_SHUFFLE_DECK : DUEL_CMD_SHUFFLE_DECK, 0, 0, 0);
+        DrawCards(p, 5);
+    }
+    return EFFECT_STEP_DONE;
+}
+#endif /* HAS_CARD_FIBER_JAR */
+
 #ifdef HAS_CARD_MIND_CONTROL
 /* ---- Mind Control --------------------------------------------------------------------------------------------------
  * Normal Spell: "Target 1 monster your opponent controls; take control of it until the End Phase, but it cannot
@@ -3975,6 +4022,16 @@ const struct CardEffect gAddedCardEffects[] = {
         EffectSkullLairPrepare,
         NULL,
         EffectSkullLairChainB,
+    },
+#endif
+#ifdef HAS_CARD_FIBER_JAR
+    {
+        CARD_FIBER_JAR, 0,
+        EffectFiberJarResolve,
+        NULL,
+        NULL,
+        NULL,
+        NULL,
     },
 #endif
 #ifdef HAS_CARD_MIND_CONTROL

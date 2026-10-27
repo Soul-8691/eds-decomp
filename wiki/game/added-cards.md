@@ -368,6 +368,20 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
   human gets, and it has more than 3000 LP.
 - Checked in the source and the build; not tested in an emulator.
 
+### Fiber Jar (2026-10-26)
+- FLIP: "Each player shuffles all cards from their hand, field, and Graveyard into the Deck, then draws 5 cards."
+  `EffectFiberJarResolve` (a resolve-only row; card_detail.c `HasFlipEffect` lists it).
+- **For each player:**
+  - **Field.** `ReturnFieldCardToDeck` on every zone, Spell/Trap and Field zones first. Tokens are destroyed;
+    `DuelCmd_ReturnToDeck` skips a zone emptied meanwhile and sends Fusion Monsters to the Fusion Deck.
+  - **Hand.** `DUEL_CMD_RETURN_HAND_CARD_TO_DECK`, last card first.
+  - **Graveyard.** Its Fusion Monsters move to the Fusion Deck at once (`TakeGraveyardCardAt` +
+    `AddCardToFusionDeck`), because `DUEL_CMD_RETURN_GRAVEYARD_TO_DECK` (Penguin Knight's) uses
+    `AddCardToDeckTop` for every card; then that command takes the rest.
+- **Then** both Decks are shuffled (`DUEL_CMD_SHUFFLE_DECK`) and both players draw 5 (`DrawCards`). Banished cards
+  stay banished.
+- Checked in the source and the build; not tested in an emulator.
+
 ### Dark Ruler Ha Des (fixed 2026-10-26)
 - Effect Monster: "Cannot be Special Summoned from the GY. Negate the effects of monsters destroyed by battle with
   Fiend monsters you control."

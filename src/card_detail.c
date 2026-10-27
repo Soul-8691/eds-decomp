@@ -621,6 +621,9 @@ u32 HasFlipEffect(u16 cardNo, int inBattleArg)
 #ifdef HAS_CARD_MAGICAL_MERCHANT
     case CARD_MAGICAL_MERCHANT:     /* added card (src/added_effects.c) */
 #endif
+#ifdef HAS_CARD_FIBER_JAR
+    case CARD_FIBER_JAR:            /* added card (src/added_effects.c) */
+#endif
 #ifdef HAS_CARD_TSUKUYOMI
     case CARD_TSUKUYOMI:            /* added card (src/added_effects.c) */
 #endif

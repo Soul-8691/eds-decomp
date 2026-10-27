@@ -1508,3 +1508,8 @@ updated: 2026-09-29
   destroy in battle lose their battle-destroyed triggers and Flip effects. The mistaken Tribute Summon flip lock is
   removed.
 - Pages: [[added-cards]].
+
+## [2026-10-26] progress | Fiber Jar
+- added_effects.c EffectFiberJarResolve + HasFlipEffect: hand, field and Graveyard back to the Deck (Graveyard Fusion
+  Monsters to the Fusion Deck), shuffle, draw 5, for both players.
+- Pages: [[added-cards]].
