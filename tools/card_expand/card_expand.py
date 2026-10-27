@@ -100,10 +100,17 @@ def counts(last):
 # ---- ROM tables -------------------------------------------------------------------------------------
 # Kept in place, grown forward: names (into the unused all-zero name bank, up to id 1641),
 # descriptions (into the old art), ID->number (into the old passwords, up to id 2463), number->ID.
-# Moved: stats and passwords (into the old palettes), art and palettes (past the 8 MiB ROM end).
-def layout(last):
+# Moved: stats and passwords (into the old palettes), art and palettes (past the 8 MiB ROM end, from `base`).
+ART_BASE = 0x08800000
+
+def check_base(base):
+    if base < ART_BASE or base % 4:
+        sys.exit(f'base {base:#x} must be word-aligned and at least {ART_BASE:#x} (the end of the original ROM)')
+
+def layout(last, base=ART_BASE):
+    check_base(base)
     n = last + 1
-    art = 0x08800000
+    art = base
     pal = art + n * 0x10E0
     stats = 0x08608360
     pw = stats + n * 4
@@ -112,8 +119,8 @@ def layout(last):
     return {'gCardArt': (0x082A6500, art), 'gCardArtPalettes': (0x08608360, pal),
             'gCardStats': (0x08621DE0, stats), 'gCardPasswords': (0x08623120, pw)}, pal + n * 0x80
 
-def pointers(last, refs_csv):
-    moves, rom_end = layout(last)
+def pointers(last, refs_csv, base=ART_BASE):
+    moves, rom_end = layout(last, base)
     for r in csv.DictReader(open(refs_csv)):
         if r['function'] == '(data)':
             continue  # u16 pairs in a game table, not pointers
@@ -134,12 +141,14 @@ if __name__ == '__main__':
     ap.add_argument('--rom'); ap.add_argument('--out')
     ap.add_argument('--ram-only', action='store_true', help='only the Deck Edit list relocation (for testing)')
     ap.add_argument('--move-scratch', action='store_true', help='also move the List Filter non-monster scratch (needed past 310 spell/trap/ticket/god cards)')
+    ap.add_argument('--base', type=lambda s: int(s, 0), default=ART_BASE,
+                    help=f'ROM address of the moved art; the palettes follow it (default {ART_BASE:#x})')
     a = ap.parse_args()
     assert 821 <= a.last + 1 <= 2048
     moves, rom_end = {}, None
     if not a.ram_only:
         counts(a.last)
-        moves, rom_end = pointers(a.last, a.refs)
+        moves, rom_end = pointers(a.last, a.refs, a.base)
     if a.move_scratch:
         word(0x080693D8, 0x0201EFC4, NEW_SCRATCH, 'DeckEdit_FilterAndSortList: non-monster scratch')
         word(0x08069A88, 0x0201EFC4, NEW_SCRATCH, 'DeckEdit_FilterAndSortList: non-monster scratch copy-back')

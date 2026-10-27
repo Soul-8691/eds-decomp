@@ -33,8 +33,9 @@ LAST_ID defaults to the smallest value the code patch can encode (imm8 << n) tha
 the last real card become hidden placeholders (card number 1999, no name, blank art). IsCardCollectionComplete
 counts every ID up to LAST_ID, placeholders included. --move-scratch (moving the List Filter's non-monster
 buffer) is switched on by itself when there are more than 310 spell/trap/ticket/god cards. Unless --no-code,
-the code patches from card_expand.py are applied first (or recognised as already applied). The ROM grows to the
-next power of two that holds the art. The script checks that the existing cards come out byte-identical to the
+the code patches from card_expand.py are applied first (or recognised as already applied). The art starts at
+--base (default 0x08800000, the end of the original ROM) with the palettes right after it; a later base leaves
+the space before it free for other data. The ROM grows to the next power of two that holds the art. The script checks that the existing cards come out byte-identical to the
 ROM, and warns about card numbers that clash or are reserved and about duplicate passwords.
 New effect monsters, spells and traps have no row in the effect table, so in a duel they do nothing.
 """
@@ -425,10 +426,10 @@ def check_numbers(id2n, n2id, real, pws):
 
 
 # ----------------------------------------------------------------------------------------------- code
-def apply_code(rom, last, scratch):
+def apply_code(rom, last, scratch, base):
     ce = load('card_expand', os.path.join(HERE, 'card_expand.py'))
     ce.counts(last)
-    ce.pointers(last, os.path.join(HERE, 'card_table_refs.csv'))
+    ce.pointers(last, os.path.join(HERE, 'card_table_refs.csv'), base)
     if scratch:
         ce.word(0x080693D8, 0x0201EFC4, ce.NEW_SCRATCH, 'scratch')
         ce.word(0x08069A88, 0x0201EFC4, ce.NEW_SCRATCH, 'scratch')
@@ -440,7 +441,7 @@ def apply_code(rom, last, scratch):
     if old != len(ce.P):
         bad = [hex(ad) for ad, o, nw, _ in ce.P if at(ad, o) != o and at(ad, nw) != nw][:5]
         die(f'code patch: {len(ce.P) - old} sites hold neither the original nor the patched bytes (e.g. {bad}); '
-            'start from the original ROM, or patch it with the same LAST_ID / --move-scratch')
+            'start from the original ROM, or patch it with the same LAST_ID / --move-scratch / --base')
     for ad, o, nw, _ in ce.P:
         rom[ad - ROM:ad - ROM + len(nw)] = nw
     return f'{len(ce.P)} sites patched'
@@ -460,10 +461,14 @@ def main():
     ap.add_argument('--no-code', action='store_true', help='the ROM already has the code patches (or apply them yourself)')
     ap.add_argument('--move-scratch', action='store_true', help='always move the List Filter non-monster buffer')
     ap.add_argument('--fill', type=lambda s: int(s, 0), default=0xFF, help='byte for the added ROM space (default 0xFF)')
+    ap.add_argument('--base', type=lambda s: int(s, 0), default=0x08800000,
+                    help='ROM address where the moved art starts, the palettes right after it (default 0x08800000); '
+                         'the space between 0x08800000 and it is left as --fill bytes')
     a = ap.parse_args()
 
     A = load('eds_assets', os.path.join(REPO, 'tools', 'assets.py'))
     ce = load('card_expand_layout', os.path.join(HERE, 'card_expand.py'))
+    ce.check_base(a.base)
     t = read_cards(a.cards, A)
     base = len(t['names'])
     entries = read_list(a.list) if a.list else []
@@ -486,7 +491,7 @@ def main():
     others = sum((struct.unpack('<I', s)[0] >> 20 & 31) >= TYPE_TRAP for s in t['stats'][1:real])
     scratch = a.move_scratch or others > SCRATCH_LIMIT
     try:
-        moves, rom_end = ce.layout(last)
+        moves, rom_end = ce.layout(last, a.base)
     except AssertionError as e:
         die(str(e))
     new = {k: moves[tb][1] for k, tb in [('art', 'gCardArt'), ('pal', 'gCardArtPalettes'), ('stats', 'gCardStats'),
@@ -519,7 +524,7 @@ def main():
     old_bytes = {k: bytes(rom[s - ROM:s - ROM + sz * 821]) for k, (s, sz) in orig.items()}
     old_n2id = bytes(rom[N2ID - ROM:N2ID - ROM + 4096])
 
-    status = 'skipped (--no-code)' if a.no_code else apply_code(rom, last, scratch)
+    status = 'skipped (--no-code)' if a.no_code else apply_code(rom, last, scratch, a.base)
     size = 0x800000
     while ROM + size < rom_end:
         size *= 2
