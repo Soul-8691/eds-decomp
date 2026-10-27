@@ -1529,3 +1529,12 @@ updated: 2026-09-29
 - added_effects.c: no Special Summon, End Phase return of face-up copies, battle damage skips the damaged player's
   next Draw Phase (DUEL_CMD_SKIP_NEXT_DRAW_PHASE); hooks in battle_phase2.c / battle_phase3.c.
 - Pages: [[added-cards]].
+
+## [2026-10-26] progress | Starter decks are the Yugi-Kaiba decks
+- BuildModStarterDeck: Red = Soul Control, Green = Vanilla Beat, Black = Stall Mill (was Chaos Turbo / Warrior /
+  Goat Control).
+- Pages: [[deck-recipes]].
+
+## [2026-10-26] progress | Yugi-Kaiba is the default banlist
+- tools/banlist.py DEFAULT_BANLIST = Yugi-Kaiba (new games, and saves that never picked a banlist).
+- Pages: [[banlists-menu]], index.

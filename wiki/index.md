@@ -24,7 +24,7 @@ Start with [[overview]]. The decompilation is 100% matched since 2026-10-02: all
 - [[program-flow]]: boot → `GameInit` → `MainLoop`; the scene and step-runner system; scene table.
 - [[release-build]]: `make release` (eds_release.gba) versus `make` (testing): deck out, starting trunk, 40-card decks, 3 copies, format unlocks by 10 wins.
 - [[yugi-kaiba-opponent]]: the Campaign opponents of this build: 15 format opponents unlocked in order (Yugi-Kaiba first), 3 deck opponents, hidden slots, card-art portraits, no dialogue.
-- [[banlists-menu]]: the added Banlists main-menu item: 15 selectable Forbidden/Limited lists and card pools for Deck Edit (Goat by default); the menu now scrolls.
+- [[banlists-menu]]: the added Banlists main-menu item: 15 selectable Forbidden/Limited lists and card pools for Deck Edit (Yugi-Kaiba by default); the menu now scrolls.
 - [[duelist-points]]: the added DP currency (5000 at the start, earned per Campaign win, spent on packs and password cards; stored in free save bytes).
 - [[pack-shop]]: the added Booster Packs main-menu item (the unlocked packs on the usual pack-opening screens; DP hooks for later).
 - [[deck-recipes]]: the added main-menu item that stores 50 deck recipes in SRAM and switches between them through the trunk.

@@ -51,7 +51,7 @@ BANLISTS = [
     ('Cyber', 'cyber', ['cyber']),     # the same Forbidden/Limited list as Goat (April 2005), a larger pool
     ('Reaper', 'reaper', ['reaper']),
 ]
-DEFAULT_BANLIST = 'Goat'        # new games start with it
+DEFAULT_BANLIST = 'Yugi-Kaiba'  # new games start with it
 
 
 def norm(s):

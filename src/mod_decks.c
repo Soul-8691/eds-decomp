@@ -1209,27 +1209,27 @@ void GiveStartingTrunk(void)
 
 
 /* Build the saved Deck (and Fusion Deck) of starter deck `choice` (enum StarterDeck) when this build replaces it:
- * Red is LR-Chaos Turbo, Green Joey's Warrior deck, Black Bakura's Goat Control deck (with its Fusion Monsters). A
- * Fusion Monster goes to the saved Fusion Deck. Returns 1 then, 0 to let BuildStarterDeck build the original. */
+ * the three Yugi-Kaiba decks (Tristan's): Red is El Duelista DEX-Soul Control, Green ellietincan-Vanilla Beat, Black
+ * DK-ZERO-Stall Mill. A Fusion Monster goes to the saved Fusion Deck. Returns 1 then, 0 to let BuildStarterDeck build the original. */
 int BuildModStarterDeck(int choice)
 {
     const struct DeckList *list = NULL;
     u32 i;
 
     switch (choice) {
-#ifdef MOD_RED_DECK
+#ifdef MOD_TRISTAN_SOUL_CONTROL
     case STARTER_DECK_RED:
-        list = &sRedDeckList;
+        list = &sTristanSoulControlList;
         break;
 #endif
-#ifdef MOD_JOEY_DECK
+#ifdef MOD_TRISTAN_VANILLA_BEAT
     case STARTER_DECK_GREEN:
-        list = &sJoeyDeckList;
+        list = &sTristanVanillaBeatList;
         break;
 #endif
-#ifdef MOD_BAKURA_DECK
+#ifdef MOD_TRISTAN_STALL_MILL
     case STARTER_DECK_BLACK:
-        list = &sBakuraDeckList;
+        list = &sTristanStallMillList;
         break;
 #endif
     }

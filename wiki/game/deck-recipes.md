@@ -31,9 +31,9 @@ mod's deck tables, named after their .ydk files:
 
 | Slot | Name | Deck table |
 |---|---|---|
-| 01 | El Duelista DEX-Soul Control | Tristan's Soul Control |
-| 02 | ellietincan-Vanilla Beat | Tristan's Vanilla Beat |
-| 03 | DK-ZERO-Stall Mill | Tristan's Stall Mill |
+| 01 | El Duelista DEX-Soul Control | Red starter, Tristan's Soul Control |
+| 02 | ellietincan-Vanilla Beat | Green starter, Tristan's Vanilla Beat |
+| 03 | DK-ZERO-Stall Mill | Black starter, Tristan's Stall Mill |
 | 04 | Jazz-Masked Control | the Critter opponent (60%) |
 | 05 | Gyomberman-Muka Muka Turbo | the Critter opponent (40%) |
 | 06 | dump truck-Tomato Control | the Treasure opponent (80%) |
@@ -47,9 +47,9 @@ mod's deck tables, named after their .ydk files:
 | 14 | ellietincan-Vanilla Beat (JP) | the Joey-Pegasus opponent (20%) |
 | 15 | Aretos-Tomato Control (Fiber) | the Fiber opponent (80%) |
 | 16 | GBO-Recruiter Control | the Fiber opponent (20%) |
-| 17 | LR-Chaos Turbo | Red starter, Tea, the Chaos Turbo deck opponent |
-| 18 | sdlkilla-Warrior | Green starter, the Warrior deck opponent |
-| 19 | geistD-Goat Control | Black starter, the Goat Control deck opponent |
+| 17 | LR-Chaos Turbo | Tea, the Chaos Turbo deck opponent |
+| 18 | sdlkilla-Warrior | the Warrior deck opponent |
+| 19 | geistD-Goat Control | the Goat Control deck opponent |
 
 - Fusion Monsters in a table go to the recipe's Fusion Deck. There are no Side Decks, as with the opponents' decks.
 - A table that this build leaves out (its cards aren't all in the card list) is skipped.

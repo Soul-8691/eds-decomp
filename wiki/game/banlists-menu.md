@@ -49,7 +49,7 @@ Warrior, Goat, Cyber, Reaper. Each has a card pool, `card_pools/<name>.txt`.
 
 ## Saving and switching
 - **Saved choice.** `gSaveData.banlist` (+0x20CE) holds the index + 1. Verified unused by the original, by the same
-  ROM literal scan as [[duelist-points]]. 0 (a New Game, or an older save) means `BANLIST_DEFAULT`, Goat.
+  ROM literal scan as [[duelist-points]]. 0 (a New Game, or an older save) means `BANLIST_DEFAULT`, Yugi-Kaiba (Goat until 2026-10-26).
 - **Switching (A).** `SetActiveBanlist` trims the saved Deck and Side Deck (`TrimSavedDecksToCopyLimits`) and the
   Fusion Deck to the new limits, moving the extra copies to the trunk. It then saves, and the status line says how
   many cards moved.

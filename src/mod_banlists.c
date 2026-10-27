@@ -10,7 +10,7 @@
  *   CB_Banlists           the scene: the banlists, A puts one in use, B goes back
  * The banlists come from banlists/<name>_ban.json (tools/banlist.py --all: build/include/banlists.h), in the order
  * of BANLISTS there; the game's original list is not one of them. The one in use is saved in gSaveData.banlist
- * (index + 1; 0, as in a new game or a save from before, is BANLIST_DEFAULT, Goat). Putting another one in
+ * (index + 1; 0, as in a new game or a save from before, is BANLIST_DEFAULT, Yugi-Kaiba). Putting another one in
  * use moves the saved decks' copies over its limits back to the trunk.
  * Like the other mod units, this one is @farcode and @rodata in units.txt and keeps its state at a fixed EWRAM
  * address (gBanlistsMenu, symbols.ld), never in .bss.
