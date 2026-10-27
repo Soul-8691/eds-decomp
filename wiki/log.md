@@ -1617,3 +1617,6 @@ updated: 2026-09-29
 
 ## [2026-10-27] progress | README: coded cards list
 - README.md: the new-cards section says every card in the root new_cards.txt is fully coded with its effects.
+
+## [2026-10-27] progress | CPU keeps strong monsters in Attack Position
+- src/added_effects.c AiShouldRetreatToDefense: retreats only when the monster has under 1700 ATK (RETREAT_KEEP_ATK) or the strongest face-up human monster has 1000+ more ATK (RETREAT_GAP). README.md updated.

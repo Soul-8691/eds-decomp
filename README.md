@@ -54,7 +54,8 @@ next one.
   no longer scrolls either.
 - **Smarter CPU.**
   - It switches a monster that can't beat any of yours to Defense Position when you have a face-up monster with
-    higher ATK, instead of leaving it to be run over.
+    higher ATK, instead of leaving it to be run over. A monster with 1700 ATK or more stays in Attack Position
+    unless your strongest monster has at least 1000 more ATK than it.
   - It crashes into your monsters with equal ATK when it has no better attack, unless another of its monsters can
     beat yours outright.
 - **Debug mode** (testing builds only, not in the release). You start with 8 copies of every card, and you can't

@@ -3793,11 +3793,15 @@ int AiPlayAddedCards(void)
 
 /* AiStepChangePositions (ai_steps.c), for a CPU monster that can beat none of the human's monsters: 1 if it is face
  * up in Attack Position and a face-up monster of the human (in either position: it can attack next turn) has higher
- * ATK, so the CPU switches it to Defense Position instead of leaving it to be run over. */
+ * ATK, so the CPU switches it to Defense Position instead of leaving it to be run over. A strong monster
+ * (RETREAT_KEEP_ATK or more) stays in Attack Position unless the strongest threat outclasses it by RETREAT_GAP. */
+#define RETREAT_KEEP_ATK    1700
+#define RETREAT_GAP         1000
+
 int AiShouldRetreatToDefense(int zone)
 {
     struct DuelZone *z = ZoneOf(1, zone);
-    u32 atk;
+    u32 atk, best = 0;
     int i;
 
     if (DUEL_CARD_ID(&z->card) == 0 || !z->isFaceUp || z->isDefense)
@@ -3806,10 +3810,12 @@ int AiShouldRetreatToDefense(int zone)
     for (i = ZONE_MONSTER_0; i <= ZONE_MONSTER_4; i++) {
         struct DuelZone *h = ZoneOf(0, i);
 
-        if (DUEL_CARD_ID(&h->card) != 0 && h->isFaceUp && GetZoneCardAtk(0, i) > atk)
-            return 1;
+        if (DUEL_CARD_ID(&h->card) != 0 && h->isFaceUp && GetZoneCardAtk(0, i) > best)
+            best = GetZoneCardAtk(0, i);
     }
-    return 0;
+    if (best <= atk)
+        return 0;
+    return atk < RETREAT_KEEP_ATK || best - atk >= RETREAT_GAP;
 }
 
 int AiShouldActivateAddedCard(struct ChainEntry *entry)
