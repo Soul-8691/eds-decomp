@@ -6,5 +6,5 @@ New features:
 - Up to 50 "deck recipes", with about 15 of them being preset to staple decks of the first 5 FL formats and Goat; if you do not have a card, it does not show up in the deck.
 - Banlists start menu option: You choose your banlist for deck construction. If your current deck contains cards that are banned, they are sent back to the trunk.
 - Duelist Points (DP) system: You start out with 5000 DP. The card passwords system prompts you for a purchase and gives you the card DP, which ranges from 5-3000 depending on how used it is in the furthest unlocked format.
-- Pack opener start menu option: Open packs for 1000 DP each, currently (will be different in the release build). Packs will be TCG/OCG up until Reaper/Victory format, as well as by attribute/type/spells/traps if there's enough cards.
-- Further plans: 8 actual duelists (Yugi Muto/Joey/Kaiba/Pegasus/Marik/Yami Marik/Yami Bakura/Yami Yugi) and all the OCG formats will be unlocked after beating Reaper.
+- Pack opener start menu option: Open packs for 1000 DP each, currently (will be different in the release build). Packs will be TCG/OCG up until Reaper/Victory format, as well as by attribute/type/spells/traps given enough cards.
+- Further plans: 8 actual duelists (Yugi Muto/Joey/Kaiba/Pegasus/Marik/Yami Marik/Yami Bakura/Yami Yugi) and OCG formats up until Victory will be unlocked after beating Reaper.
