@@ -266,7 +266,7 @@ u32 DuelFieldFadeFromBlack(s32 step);
 u32 DuelFieldFadeToWhite(s32 step);
 /* Undoes DuelFieldFadeToWhite; returns 1 at level 0 (blend cleared). */
 u32 DuelFieldFadeFromWhite(s32 step);
-/* VBlank callback: decrements gDuelScreen.fieldBgScroll and writes it to BG0 HOFS and VOFS. */
+/* VBlank callback: keeps the BG0 field background still (the original scrolled it via fieldBgScroll). */
 void DuelScreen_VBlank(void);
 /* BG0-3 control: background texture (priority 3), board (256x512), card cells / LP / phases (256x512), text
  * box (priority 0). */

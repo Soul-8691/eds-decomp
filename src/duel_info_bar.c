@@ -808,13 +808,12 @@ int TextBoxUpdate(void)
 }
 
 
-/* VBlank callback of the duel screen: scrolls the BG0 field background one pixel diagonally per frame. */
+/* VBlank callback of the duel screen. The original scrolls the BG0 field background one pixel diagonally per frame
+ * (fieldBgScroll - 1 into both BG0 offsets); changed: the background stays still. */
 void DuelScreen_VBlank(void)
 {
-    int scroll = gDuelScreen.fieldBgScroll - 1;
-    gDuelScreen.fieldBgScroll = scroll;
-    REG_BG0VOFS = scroll;
-    REG_BG0HOFS = scroll;
+    REG_BG0VOFS = 0;
+    REG_BG0HOFS = 0;
 }
 
 /*

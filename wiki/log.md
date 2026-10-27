@@ -1543,3 +1543,8 @@ updated: 2026-09-29
 - New README.md from yak_hack.txt: the 15 formats in unlock order, the features, a short note on how added cards are
   coded, build steps. yak_hack.txt says "Critter 10 times before Treasure"; the game unlocks Imperial before Treasure.
 - Pages: (none; README.md).
+
+## [2026-10-27] progress | Duel background stays still
+- duel_info_bar.c DuelScreen_VBlank: BG0 (the field background) offsets kept at 0 instead of drifting one pixel
+  diagonally per frame (fieldBgScroll is no longer stepped); duel_screen.h comment; README feature line.
+- Pages: (none; README.md).

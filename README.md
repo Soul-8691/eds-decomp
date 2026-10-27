@@ -49,6 +49,7 @@ next one.
 - **Booster Packs** (main menu). Open any unlocked pack for 1000 DP each for now; prices will change in the release.
   Packs will cover the TCG/OCG sets up to Reaper/Victory format, plus attribute/race/Spell/Trap packs once there are
   enough cards.
+- **Still duel background.** The field background no longer scrolls during duels.
 - **Debug mode** (testing builds only, not in the release). You start with 8 copies of every card, and you can't
   deck out. Decks can be under 40 cards, can hold any number of copies of a card, and ignore banlists. Every format
   is unlocked.
