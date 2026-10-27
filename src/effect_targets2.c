@@ -613,6 +613,9 @@ int EffectTargetableFaceUpMonsterChainB(struct ChainEntry *link)
         switch (CARD_NUMBER(link->card)) {
         case CARD_BELL_OF_DESTRUCTION:
         case CARD_1451:
+#ifdef HAS_CARD_SKULL_LAIR
+        case CARD_SKULL_LAIR:       /* added card (src/added_effects.c) */
+#endif
             TextBoxOpen(TARGET_PROMPT_POS, TARGET_PROMPT_SIZE, TEXTBOX_FLAGS_DEFAULT,
                         gStrDesignateOneMonsterToDestroy);
             break;

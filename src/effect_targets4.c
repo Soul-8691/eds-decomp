@@ -837,6 +837,9 @@ int CanActivateFieldCard(struct ChainEntry *ref, int player, int zone)
     switch (CARD_NUMBER(id)) {
     case CARD_1324:
     case CARD_ULTIMATE_OFFERING:
+#ifdef HAS_CARD_SKULL_LAIR
+    case CARD_SKULL_LAIR:          /* added card: also face up (src/added_effects.c) */
+#endif
     case CARD_1428:
     case CARD_1532:
         faceUp = 0;

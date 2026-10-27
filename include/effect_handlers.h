@@ -139,6 +139,10 @@ int EffectReturnFromTheDifferentDimensionResolve(struct ChainEntry *link, struct
 int EffectDimensionFusionPrepare(struct ChainEntry *card, struct ChainEntry *chainLink, u16 fromHand);
 int EffectDimensionFusionChainA(struct ChainEntry *link, struct ChainEntry *prevLink);
 int EffectDimensionFusionResolve(struct ChainEntry *link, struct ChainEntry *chainedTo);
+int EffectSkullLairCheck(struct ChainEntry *card, u16 pos);
+int EffectSkullLairPrepare(struct ChainEntry *card, struct ChainEntry *chainLink, u16 fromHand);
+int EffectSkullLairChainB(struct ChainEntry *link, struct ChainEntry *prevLink);
+int EffectSkullLairResolve(struct ChainEntry *link, struct ChainEntry *chainedTo);
 int EffectCreatureSwapPrepare(struct ChainEntry *card, struct ChainEntry *chainLink, u16 fromHand);
 int EffectCreatureSwapResolve(struct ChainEntry *link, struct ChainEntry *chainedTo);
 int EffectMysticSwordsmanLv2Resolve(struct ChainEntry *link, struct ChainEntry *chainedTo);

@@ -2236,6 +2236,175 @@ int EffectDimensionFusionResolve(struct ChainEntry *link, struct ChainEntry *cha
 }
 #endif /* HAS_CARD_DIMENSION_FUSION */
 
+#ifdef HAS_CARD_SKULL_LAIR
+/* ---- Skull Lair -------------------------------------------------------------------------------------------------
+ * Continuous Trap: "Remove from play any number of Monster Cards in your Graveyard to destroy 1 face-up monster on the
+ * field whose Level is equal to the number of the cards you removed from play."
+ * Like Ultimate Offering it can be activated again while face up (card_command_menu.c, effect_activation.c,
+ * effect_targets4.c list it), each time:
+ *   check    a face-up monster (either side) the card may target, of Level 1 to the monsters in the player's
+ *            Graveyard (it is the target filter of the pick too)
+ *   prepare  such a monster exists
+ *   chainB   the target: EffectTargetableFaceUpMonsterChainB; the CPU's pick (the human's strongest) is replaced by
+ *            its best legal one (SkullLairBestTarget: the human's strongest such monster)
+ *   resolve  the target still face up and still legal: as many Graveyard monsters as its Level are banished (the
+ *            human picks each one in the Graveyard list, as Bazoo's; the CPU banishes its weakest), then it is
+ *            destroyed. */
+
+/* Monsters in the player's Graveyard. */
+static int GraveMonsterCount(int player)
+{
+    struct DuelPlayer *p = &gDuelPlayers[player & 1];
+    int i, n = 0;
+
+    for (i = 0; i < p->graveCount; i++) {
+        if (CARD_STATS_TYPE(gCardStats[DUEL_CARD_ID(&p->graveyard[i]) & CARD_ID_MASK]) <= CARD_TYPE_REPTILE)
+            n++;
+    }
+    return n;
+}
+
+/* The Level of the face-up monster at (player, zone), 0 for none. */
+static int FaceUpMonsterLevel(int player, int zone)
+{
+    struct DuelZone *z = ZoneOf(player, zone);
+    u16 id = DUEL_CARD_ID(&z->card);
+
+    if (zone > ZONE_MONSTER_4 || id == 0 || !z->isFaceUp)
+        return 0;
+    return CARD_STATS_LEVEL(gCardStats[id & CARD_ID_MASK]);
+}
+
+int EffectSkullLairCheck(struct ChainEntry *card, u16 pos)
+{
+    int level;
+
+    if (!EffectTargetableFaceUpMonsterCheck(card, pos))
+        return 0;
+    level = FaceUpMonsterLevel((u8)pos, pos >> 8);
+    return level >= 1 && level <= GraveMonsterCount(card->player);
+}
+
+/* The CPU's target: the human's strongest legal monster, else -1. */
+static int SkullLairBestTarget(struct ChainEntry *link)
+{
+    int zone, best = -1;
+    u32 bestAtk = 0;
+
+    for (zone = ZONE_MONSTER_0; zone <= ZONE_MONSTER_4; zone++) {
+        if (EffectSkullLairCheck(link, zone << 8 | (1 - link->player))
+            && (best < 0 || GetZoneCardAtk(1 - link->player, zone) > bestAtk)) {
+            best = zone;
+            bestAtk = GetZoneCardAtk(1 - link->player, zone);
+        }
+    }
+    return best;
+}
+
+int EffectSkullLairPrepare(struct ChainEntry *card, struct ChainEntry *chainLink, u16 fromHand)
+{
+    int player, zone;
+
+    for (player = 0; player <= 1; player++) {
+        for (zone = ZONE_MONSTER_0; zone <= ZONE_MONSTER_4; zone++) {
+            if (EffectSkullLairCheck(card, zone << 8 | player))
+                return 1;
+        }
+    }
+    return 0;
+}
+
+int EffectSkullLairChainB(struct ChainEntry *link, struct ChainEntry *prevLink)
+{
+    int zone;
+
+    if (link->player) {
+        link->numTargets = 0;
+        zone = SkullLairBestTarget(link);
+        if (zone >= 0)
+            TryAddEffectTarget(link, 1 - link->player, zone);
+        return 1;
+    }
+    if (!EffectTargetableFaceUpMonsterChainB(link))
+        return 0;
+    if (link->numTargets == 1 && !EffectSkullLairCheck(link, link->targets[0])) {
+        link->numTargets = 0;       /* a Level the Graveyard cannot pay: pick again */
+        PlaySE(SE_ERROR);
+        return 0;
+    }
+    return 1;
+}
+
+/* The CPU banishes its weakest Graveyard monster. */
+static void BanishWeakestGraveMonster(int player)
+{
+    struct DuelPlayer *p = &gDuelPlayers[player & 1];
+    int i, best = -1;
+    u32 bestAtk = 0;
+
+    for (i = 0; i < p->graveCount; i++) {
+        u32 stats = gCardStats[DUEL_CARD_ID(&p->graveyard[i]) & CARD_ID_MASK];
+
+        if (CARD_STATS_TYPE(stats) <= CARD_TYPE_REPTILE && (best < 0 || CARD_STATS_ATK(stats) < bestAtk)) {
+            best = i;
+            bestAtk = CARD_STATS_ATK(stats);
+        }
+    }
+    if (best >= 0) {
+        u16 *halves = (u16 *)&p->graveyard[best];
+
+        DuelCmd_Push(player ? DUEL_CMD_PLAYER | DUEL_CMD_BANISH_GRAVEYARD_CARD : DUEL_CMD_BANISH_GRAVEYARD_CARD,
+                     halves[0], halves[1], 0);
+    }
+}
+
+int EffectSkullLairResolve(struct ChainEntry *link, struct ChainEntry *chainedTo)
+{
+    int player, zone, i;
+
+    if (link->negated || link->numTargets != 1)
+        return EFFECT_STEP_DONE;
+    player = (u8)link->targets[0];
+    zone = link->targets[0] >> 8;
+    switch (gChain.effectStep) {
+    case EFFECT_STEP_START:
+        if (!EffectSkullLairCheck(link, link->targets[0]))
+            return EFFECT_STEP_DONE;
+        gChain.effectSubStep = FaceUpMonsterLevel(player, zone);    /* monsters still to banish */
+        if (link->player) {
+            for (i = 0; i < gChain.effectSubStep; i++)
+                BanishWeakestGraveMonster(link->player);
+            return EFFECT_STEP_5;
+        }
+        /* fall through */
+    case EFFECT_STEP_2:
+        TextBoxOpen(TEXTBOX_POS(6, 2), TEXTBOX_SIZE(18, 7), TEXTBOX_FLAGS_DEFAULT, gStrSelectGraveCardToBanishForAtk);
+        return EFFECT_STEP_3;
+    case EFFECT_STEP_3:
+        CardListView_Open(link->player, -1, CARD_SKULL_LAIR, 0);
+        return EFFECT_STEP_4;
+    case EFFECT_STEP_4: {
+        u16 *picked = (u16 *)&gCardListView.cards[gCardListView.cursorRow + gCardListView.top];
+
+        DuelCmd_Push((int)(gCardListView.cards[gCardListView.cursorRow + gCardListView.top] << 19) < 0
+                         ? DUEL_CMD_PLAYER | DUEL_CMD_BANISH_GRAVEYARD_CARD
+                         : DUEL_CMD_BANISH_GRAVEYARD_CARD,
+                     picked[0], picked[1], 0);
+        if (--gChain.effectSubStep > 0)
+            return EFFECT_STEP_2;
+        return EFFECT_STEP_5;
+    }
+    case EFFECT_STEP_5:
+        if (FaceUpMonsterLevel(player, zone) != 0) {
+            DestroyFieldCardByEffect(player, zone);
+            OnCardDestroyedByEffect(link->player, player, zone);
+        }
+        break;
+    }
+    return EFFECT_STEP_DONE;
+}
+#endif /* HAS_CARD_SKULL_LAIR */
+
 #ifdef HAS_CARD_MIND_CONTROL
 /* ---- Mind Control --------------------------------------------------------------------------------------------------
  * Normal Spell: "Target 1 monster your opponent controls; take control of it until the End Phase, but it cannot
@@ -3525,6 +3694,17 @@ int AiShouldActivateAddedCard(struct ChainEntry *entry)
         return mine >= 2 && mine > theirs && gDuelPlayers[AI_PLAYER].lifePoints > 3000;
     }
 #endif
+#ifdef HAS_CARD_SKULL_LAIR
+    case CARD_SKULL_LAIR: {                     /* destroy one of the human's monsters worth 1000+ ATK */
+        struct ChainEntry probe;
+        int zone;
+
+        probe.player = AI_PLAYER;
+        probe.card = gCardNumberToId[CARD_SKULL_LAIR];
+        zone = SkullLairBestTarget(&probe);
+        return zone >= 0 && GetZoneCardAtk(1 - AI_PLAYER, zone) >= 1000;
+    }
+#endif
 #ifdef HAS_CARD_XING_ZHEN_HU
     case CARD_XING_ZHEN_HU:                     /* only on two of the human's Set cards */
         return CountXingTargets(entry, AI_HUMAN) >= 2;
@@ -3744,6 +3924,16 @@ const struct CardEffect gAddedCardEffects[] = {
         EffectDimensionFusionPrepare,
         EffectDimensionFusionChainA,
         NULL,
+    },
+#endif
+#ifdef HAS_CARD_SKULL_LAIR
+    {
+        CARD_SKULL_LAIR, 0,
+        EffectSkullLairResolve,
+        (u16 (*)(struct ChainEntry *, u16))EffectSkullLairCheck,
+        EffectSkullLairPrepare,
+        NULL,
+        EffectSkullLairChainB,
     },
 #endif
 #ifdef HAS_CARD_MIND_CONTROL

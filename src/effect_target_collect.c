@@ -1032,6 +1032,9 @@ u16 CollectEffectTargets(int player, u16 cardNumber, int param)
         }
         break;
     }
+#ifdef HAS_CARD_SKULL_LAIR
+    case CARD_SKULL_LAIR:       /* added card: the monsters it may banish (src/added_effects.c) */
+#endif
     case CARD_1513:
     {
         /* Monsters in the graveyard; no Toon filter. */

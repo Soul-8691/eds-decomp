@@ -368,6 +368,27 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
   human gets, and it has more than 3000 LP.
 - Checked in the source and the build; not tested in an emulator.
 
+### Skull Lair (2026-10-26)
+- Continuous Trap: "Remove from play any number of Monster Cards in your Graveyard to destroy 1 face-up monster on the
+  field whose Level is equal to the number of the cards you removed from play."
+- **Reuse.** Like Ultimate Offering it can be activated again while face up. `CARD_SKULL_LAIR` joins
+  Ultimate Offering's face-up case in `CardMenu_GetSpellTrapCommands`, the chain-response check
+  (effect_activation.c) and `CanActivateFieldCard` (effect_targets4.c).
+- **Check** `EffectSkullLairCheck`. A face-up monster the card may target (`EffectTargetableFaceUpMonsterCheck`) of
+  Level 1 to the monsters in the player's Graveyard; it is the target filter of the pick too. **Prepare:** such a
+  monster exists on either side.
+- **ChainB** `EffectSkullLairChainB`.
+  - Human: `EffectTargetableFaceUpMonsterChainB` with Bell of Destruction's "designate one monster to destroy"
+    prompt (effect_targets2.c). An unpayable Level is refused with `SE_ERROR`.
+  - CPU: the human's strongest legal monster (`SkullLairBestTarget`).
+- **Resolve** `EffectSkullLairResolve`. If the target is still legal, Level-many Graveyard monsters are banished
+  (`DUEL_CMD_BANISH_GRAVEYARD_CARD`), then it is destroyed (`DestroyFieldCardByEffect`, `OnCardDestroyedByEffect`).
+  - Human: picks each banished monster in the Graveyard list, as Bazoo does (`CardListView_Open` with
+    `CARD_SKULL_LAIR`; `CollectEffectTargets` shares Bazoo's key-1513 case, the Graveyard monsters).
+  - CPU: banishes its weakest.
+- **CPU policy.** Activates it on a human monster of 1000+ ATK.
+- Checked in the source and the build; not tested in an emulator.
+
 ### Fairy Box (2026-10-26)
 - Continuous Trap: "When your opponent's monster declares an attack: Toss a coin and call it. If you call it right,
   the attacking monster's ATK becomes 0 until the end of the Battle Phase. During each of your Standby Phases, pay

@@ -1490,3 +1490,8 @@ updated: 2026-09-29
   picks 80/20; presets 13-14 (Chaos Turbo, Warrior, Goat Control now 15-17). Uncoded effects in them: Dark Balter the
   Terrible, Fiend Skull Dragon, Ryu Senshi, Skull Lair, The Last Warrior from Another Planet.
 - Pages: [[deck-recipes]], [[yugi-kaiba-opponent]].
+
+## [2026-10-26] progress | Skull Lair
+- added_effects.c: check/prepare/chainB/resolve (target of Level <= Graveyard monsters; banish that many, picked by
+  the human like Bazoo; destroy); reusable face up like Ultimate Offering; CPU policy.
+- Pages: [[added-cards]].
