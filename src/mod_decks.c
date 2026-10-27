@@ -914,6 +914,127 @@ static const struct DeckList *JoeyPegasusDeck(void)
 }
 #endif
 
+/* The Fiber format opponent (the Rare Hunter's slot, src/mod_opponents.c): one of two decks per duel (FiberDeck):
+ * Tomato Control 80%, Recruiter Control 20% (decks/Aretos-Tomato Control (Fiber).ydk, decks/GBO-Recruiter
+ * Control.ydk; main and extra decks). Super Robolady (75923050) was added to config/new_cards.txt for Tomato
+ * Control. */
+#if defined(HAS_CARD_BAZOO_THE_SOUL_EATER) && defined(HAS_CARD_KYCOO_THE_GHOST_DESTROYER) \
+    && defined(HAS_CARD_INJECTION_FAIRY_LILY) && defined(HAS_CARD_EXILED_FORCE) && defined(HAS_CARD_FIBER_JAR) \
+    && defined(HAS_CARD_JAR_OF_GREED) && defined(HAS_CARD_TORRENTIAL_TRIBUTE) && defined(HAS_CARD_BLACK_SKULL_DRAGON) \
+    && defined(HAS_CARD_THE_LAST_WARRIOR_FROM_ANOTHER_PLANET) && defined(HAS_CARD_RYU_SENSHI) \
+    && defined(HAS_CARD_SUPER_ROBOLADY) && defined(HAS_CARD_SUPER_ROBOYAROU) \
+    && defined(HAS_CARD_DARK_BALTER_THE_TERRIBLE) && defined(HAS_CARD_FIEND_SKULL_DRAGON) \
+    && defined(HAS_CARD_THOUSAND_EYES_RESTRICT)
+#define MOD_FIBER_TOMATO_CONTROL 1
+static const u16 sFiberTomatoControl[] = {
+    /* Monsters (15) */
+    X3(CARD_GEMINI_ELF),
+    CARD_BAZOO_THE_SOUL_EATER,
+    CARD_KYCOO_THE_GHOST_DESTROYER,
+    CARD_WITCH_OF_THE_BLACK_FOREST,
+    CARD_SANGAN,
+    X3(CARD_MYSTIC_TOMATO),
+    CARD_SINISTER_SERPENT,
+    CARD_INJECTION_FAIRY_LILY,
+    CARD_EXILED_FORCE,
+    CARD_FIBER_JAR,
+    CARD_MAGICIAN_OF_FAITH,
+    /* Spells (16) */
+    CARD_SNATCH_STEAL,
+    CARD_CHANGE_OF_HEART,
+    CARD_DELINQUENT_DUO,
+    CARD_CONFISCATION,
+    CARD_THE_FORCEFUL_SENTRY,
+    X3(CARD_MYSTICAL_SPACE_TYPHOON),
+    CARD_RAIGEKI,
+    CARD_DARK_HOLE,
+    CARD_NOBLEMAN_OF_CROSSOUT,
+    CARD_PAINFUL_CHOICE,
+    CARD_POT_OF_GREED,
+    X2(CARD_GRACEFUL_CHARITY),
+    CARD_MONSTER_REBORN,
+    /* Traps (9) */
+    CARD_CALL_OF_THE_HAUNTED,
+    CARD_IMPERIAL_ORDER,
+    CARD_MIRROR_FORCE,
+    CARD_TORRENTIAL_TRIBUTE,
+    CARD_TRAP_HOLE,
+    CARD_TIME_SEAL,
+    X3(CARD_JAR_OF_GREED),
+    /* Fusion Deck (15) */
+    CARD_BLACK_SKULL_DRAGON,
+    CARD_TWIN_HEADED_THUNDER_DRAGON,
+    CARD_LABYRINTH_TANK,
+    CARD_THE_LAST_WARRIOR_FROM_ANOTHER_PLANET,
+    CARD_ROARING_OCEAN_SNAKE,
+    CARD_RYU_SENSHI,
+    CARD_SUPER_ROBOLADY,
+    CARD_SUPER_ROBOYAROU,
+    CARD_DARK_BALTER_THE_TERRIBLE,
+    CARD_FIEND_SKULL_DRAGON,
+    CARD_MUSICIAN_KING,
+    CARD_DARKFIRE_DRAGON,
+    CARD_DRAGONESS_THE_WICKED_KNIGHT,
+    X2(CARD_THOUSAND_EYES_RESTRICT),
+};
+STATIC_ASSERT(ARRAY_COUNT(sFiberTomatoControl) == 40 + 15, FiberTomatoControlSize);
+static const struct DeckList sFiberTomatoControlList = { sFiberTomatoControl, ARRAY_COUNT(sFiberTomatoControl), 0 };
+#endif
+
+#if defined(HAS_CARD_DARK_RULER_HA_DES) && defined(HAS_CARD_EXILED_FORCE) && defined(HAS_CARD_INJECTION_FAIRY_LILY) \
+    && defined(HAS_CARD_YATA_GARASU) && defined(HAS_CARD_CREATURE_SWAP) && defined(HAS_CARD_MAGIC_CYLINDER) \
+    && defined(HAS_CARD_TORRENTIAL_TRIBUTE)
+#define MOD_FIBER_RECRUITER_CONTROL 1
+static const u16 sFiberRecruiterControl[] = {
+    /* Monsters (13) */
+    CARD_DARK_RULER_HA_DES,
+    CARD_EXILED_FORCE,
+    X3(CARD_GIANT_RAT),
+    CARD_INJECTION_FAIRY_LILY,
+    CARD_JINZO,
+    X3(CARD_MYSTIC_TOMATO),
+    CARD_SANGAN,
+    CARD_WITCH_OF_THE_BLACK_FOREST,
+    CARD_YATA_GARASU,
+    /* Spells (22) */
+    CARD_CHANGE_OF_HEART,
+    CARD_CONFISCATION,
+    X2(CARD_CREATURE_SWAP),
+    CARD_DARK_HOLE,
+    CARD_DELINQUENT_DUO,
+    X2(CARD_GRACEFUL_CHARITY),
+    CARD_HARPIES_FEATHER_DUSTER,
+    CARD_HEAVY_STORM,
+    CARD_MONSTER_REBORN,
+    X3(CARD_MYSTICAL_SPACE_TYPHOON),
+    X2(CARD_NOBLEMAN_OF_CROSSOUT),
+    CARD_PAINFUL_CHOICE,
+    CARD_POT_OF_GREED,
+    CARD_PREMATURE_BURIAL,
+    CARD_RAIGEKI,
+    CARD_SNATCH_STEAL,
+    CARD_THE_FORCEFUL_SENTRY,
+    /* Traps (5) */
+    CARD_CALL_OF_THE_HAUNTED,
+    CARD_IMPERIAL_ORDER,
+    CARD_MAGIC_CYLINDER,
+    CARD_MIRROR_FORCE,
+    CARD_TORRENTIAL_TRIBUTE,
+};
+STATIC_ASSERT(ARRAY_COUNT(sFiberRecruiterControl) == 40, FiberRecruiterControlSize);
+static const struct DeckList sFiberRecruiterControlList = { sFiberRecruiterControl,
+                                                            ARRAY_COUNT(sFiberRecruiterControl), 0 };
+#endif
+
+#if defined(MOD_FIBER_TOMATO_CONTROL) && defined(MOD_FIBER_RECRUITER_CONTROL)
+#define MOD_FIBER_DECKS 1
+/* The Fiber opponent's deck for this duel: Tomato Control 8 in 10, Recruiter Control 2 in 10. */
+static const struct DeckList *FiberDeck(void)
+{
+    return (u32)Random() % 10 < 8 ? &sFiberTomatoControlList : &sFiberRecruiterControlList;
+}
+#endif
+
 /* The replacement deck of opponent `opponent` (enum DuelistId), or NULL to keep the original. */
 const struct DeckList *GetOpponentDeckOverride(int opponent)
 {
@@ -927,6 +1048,10 @@ const struct DeckList *GetOpponentDeckOverride(int opponent)
 #ifdef MOD_TRISTAN_DECKS
     case DUELIST_TRISTAN:
         return TristanDeck();
+#endif
+#ifdef MOD_FIBER_DECKS
+    case DUELIST_RARE_HUNTER:           /* the Fiber format opponent */
+        return FiberDeck();
 #endif
 #ifdef MOD_JOEY_PEGASUS_DECKS
     case DUELIST_WEEVIL:                /* the Joey-Pegasus format opponent */
@@ -994,6 +1119,8 @@ static const char sNameAndroidTomato[] = "Jazz-Tomato Control";
 static const char sNameAndroidVanilla[] = "paoloNS-Vanilla Beat";
 static const char sNameJoeyPegasusTomato[] = "AJTBLS-Tomato Control";
 static const char sNameJoeyPegasusVanilla[] = "ellietincan-Vanilla Beat (JP)";
+static const char sNameFiberTomato[] = "Aretos-Tomato Control (Fiber)";
+static const char sNameFiberRecruiter[] = "GBO-Recruiter Control";
 static const char sNameChaosTurbo[] = "LR-Chaos Turbo";
 static const char sNameWarrior[] = "sdlkilla-Warrior";
 static const char sNameGoatControl[] = "geistD-Goat Control";
@@ -1032,6 +1159,12 @@ static const struct RecipePreset sRecipePresets[] = {
 #endif
 #ifdef MOD_JOEY_PEGASUS_VANILLA_BEAT
     { sNameJoeyPegasusVanilla, &sJoeyPegasusVanillaBeatList },
+#endif
+#ifdef MOD_FIBER_TOMATO_CONTROL
+    { sNameFiberTomato, &sFiberTomatoControlList },
+#endif
+#ifdef MOD_FIBER_RECRUITER_CONTROL
+    { sNameFiberRecruiter, &sFiberRecruiterControlList },
 #endif
 #ifdef MOD_RED_DECK
     { sNameChaosTurbo, &sRedDeckList },

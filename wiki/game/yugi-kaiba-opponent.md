@@ -50,7 +50,10 @@ next to the one before it.
   - Android plays Jazz-Tomato Control 80% and paoloNS-Vanilla Beat 20% (`AndroidDeck`). Fairy Box was added to
     `config/new_cards.txt` for Tomato Control (engine key 1424, see [[added-cards]]).
   - Joey-Pegasus plays AJTBLS-Tomato Control 80% and ellietincan-Vanilla Beat (JP) 20% (`JoeyPegasusDeck`).
-  - The other 9 keep their original duelists' decks for now.
+  - Fiber plays Aretos-Tomato Control (Fiber) 80% and GBO-Recruiter Control 20% (`FiberDeck`). Super Robolady was
+    added to `config/new_cards.txt` for Tomato Control. The Rare Hunter's Exodia AI flag (ai_deck.c) is now set only
+    with his original deck.
+  - The other 8 keep their original duelists' decks for now.
   - Cards in these decks with no coded effect yet: Dark Balter the Terrible, Fiend Skull Dragon, Ryu Senshi (Joey-
     Pegasus Tomato Control's Fusion Deck), Skull Lair and The Last Warrior from Another Planet (Joey-Pegasus Vanilla
     Beat and both Android decks).

@@ -1495,3 +1495,10 @@ updated: 2026-09-29
 - added_effects.c: check/prepare/chainB/resolve (target of Level <= Graveyard monsters; banish that many, picked by
   the human like Bazoo; destroy); reusable face up like Ultimate Offering; CPU policy.
 - Pages: [[added-cards]].
+
+## [2026-10-26] progress | Fiber's decks; recipe presets 15-16
+- mod_decks.c: Aretos-Tomato Control (Fiber) and GBO-Recruiter Control; the Fiber opponent picks 80/20; presets 15-16
+  (Chaos Turbo, Warrior, Goat Control now 17-19). Super Robolady added to new_cards.txt. ai_deck.c: the Exodia AI
+  flag only with the Rare Hunter's own deck. Uncoded effects in them: Fiber Jar, Yata-Garasu, Ryu Senshi, Super
+  Robolady, Super Roboyarou, Dark Balter the Terrible, Fiend Skull Dragon, The Last Warrior from Another Planet.
+- Pages: [[deck-recipes]], [[yugi-kaiba-opponent]].

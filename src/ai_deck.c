@@ -124,9 +124,10 @@ void LoadOpponentDeck(u16 useAltDeck)
     gDuelDeckP1Bytes[-0x7C1] = zero;    /* deckCount */
     gDuelDeckP1Bytes[-0x7BF] = zero;    /* fusionCount */
     if (opponent != 0) {
-        if (opponent == DUELIST_RARE_HUNTER)
-            gDuelCtrl.aiFlags |= AI_FLAG_EXODIA;
         list = GetOpponentDeckOverride(opponent);       /* added: replacement decks (src/mod_decks.c) */
+        /* changed: the Exodia AI only with the Rare Hunter's own deck (his slot plays other decks in this build) */
+        if (opponent == DUELIST_RARE_HUNTER && list == NULL)
+            gDuelCtrl.aiFlags |= AI_FLAG_EXODIA;
         if (list == NULL)
             list = useAltDeck != 0 ? &gOpponentAltDecks[opponent] : &gOpponentDecks[opponent];
         /* FAKEMATCH: keep r5 live so the list pointer lands in r6 as in the ROM. */

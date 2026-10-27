@@ -1296,6 +1296,7 @@ enum CardNumber {
     CARD_MAGICAL_SCIENTIST = 1176,                        /* id 1132, added card */
     CARD_CHAOS_EMPEROR_DRAGON_ENVOY_OF_THE_END = 1184,    /* id 1133, added card */
     CARD_CYBER_DRAGON = 1185,                             /* id 1134, added card */
+    CARD_SUPER_ROBOLADY = 1186,                           /* id 1136, added card */
     CARD_MAGIC_CYLINDER = 1214,                           /* id 866, added card */
     CARD_SOUL_EXCHANGE = 1220,                            /* id 913, added card */
     CARD_THOUSAND_EYES_IDOL = 1333,                       /* id 1129, added card */
