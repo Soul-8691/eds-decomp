@@ -643,10 +643,28 @@ void AiEvalAttack(int attackerZone, int targetZone, struct AttackPlan *plan)
  * once with damage = the monster's ATK, and 1 is returned. Otherwise AiEvalAttack runs against every
  * occupied human monster zone and the best winning plan is kept: the first one found, replaced by one with
  * more damage or, when the damage is not larger (not only on a tie), by one whose target has more DEF.
- * Returns plan->wins: 1 if a winning attack exists, else 0. */
+ * Changed: with no winning attack, the first equal-ATK Attack Position target is taken (both destroyed), unless
+ * another CPU monster that can still attack has higher ATK than it (AiOtherAttackerBeats: that one beats it).
+ * Returns plan->wins: 1 if an attack is planned, else 0. */
+/* Added: 1 if another CPU monster that can still attack (CanMonsterAttackInt, as AiChooseAttack) has more ATK than
+ * the human's Attack Position monster in targetZone, so it can beat it outright: a crash into it is not needed. */
+static int AiOtherAttackerBeats(int attackerZone, int targetZone)
+{
+    int targetAtk = GetZoneCardAtk(0, targetZone);
+    int i;
+
+    for (i = 0; i < MONSTER_ZONE_COUNT; i++) {
+        if (i != attackerZone && CanMonsterAttackInt(1, i, 1) && (int)GetZoneCardAtk(1, i) > targetAtk)
+            return 1;
+    }
+    return 0;
+}
+
 u16 AiFindAttackTarget(int attackerZone, struct AttackPlan *plan)
 {
     struct AttackPlan candidate;
+    struct AttackPlan crash;    /* added: a trade with an equal-ATK Attack Position monster */
+    int haveCrash = 0;
     int i;
 
     if (CanAttackDirectly(1, attackerZone) != 0 || CountMonsters(0) == 0) {
@@ -666,8 +684,14 @@ u16 AiFindAttackTarget(int attackerZone, struct AttackPlan *plan)
         if (CARD_EMPTY(ZONE_AT(0, i)->card))
             continue;
         AiEvalAttack(attackerZone, i, &candidate);
-        if (!candidate.wins)
+        if (!candidate.wins) {
+            if (!haveCrash && candidate.attackerDestroyed && candidate.targetDestroyed
+                && !AiOtherAttackerBeats(attackerZone, i)) {
+                MemCopy16(&crash, &candidate, sizeof(struct AttackPlan));
+                haveCrash = 1;
+            }
             continue;
+        }
         /* Matching: the DEF compare below is signed (the ROM's int GetZoneCardDef); the shared prototype
          * returns u32, hence the casts. */
         if (!plan->wins) {
@@ -678,13 +702,19 @@ u16 AiFindAttackTarget(int attackerZone, struct AttackPlan *plan)
             MemCopy16(plan, &candidate, sizeof(struct AttackPlan));
         }
     }
+    /* Changed: with no winning attack, the CPU crashes into a monster of equal ATK (both are destroyed), unless
+     * a stronger CPU monster can beat it instead; the original never attacked into a tie. */
+    if (!plan->wins && haveCrash) {
+        MemCopy16(plan, &crash, sizeof(struct AttackPlan));
+        plan->wins = 1;
+    }
     return plan->wins;
 }
 
 /* Does an attacker with `atk` beat player 0's monster in `zone`? The monster counts by DEF in Defense
  * Position (scaled when face down, for duelists 1-10, as in AiEvalAttack) or by ATK in Attack Position.
- * An Attack Position monster with equal ATK counts as beaten only when the CPU has more monsters than the
- * human. Returns 1 or 0. */
+ * An Attack Position monster with equal ATK counts as beaten (changed: the original required the CPU to have
+ * more monsters than the human). Returns 1 or 0. */
 u16 AiCanBeatMonster(int atk, int zone)
 {
     struct DuelZone *target = ZONE_AT(0, zone);
@@ -703,12 +733,10 @@ u16 AiCanBeatMonster(int atk, int zone)
     }
     if (value < atk)
         return 1;
-    if (value == atk) {
-        if (!(ZONE_AT(0, zone)->isDefense)) {
-            if (CountMonsters(1) > CountMonsters(0))
-                return 1;
-        }
-    }
+    /* Changed: an Attack Position monster of equal ATK counts as beaten (the CPU crashes into it, see
+     * AiFindAttackTarget); the original required the CPU to have more monsters than the human. */
+    if (value == atk && !(ZONE_AT(0, zone)->isDefense))
+        return 1;
     return 0;
 }
 

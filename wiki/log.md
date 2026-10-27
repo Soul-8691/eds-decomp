@@ -1548,3 +1548,17 @@ updated: 2026-09-29
 - duel_info_bar.c DuelScreen_VBlank: BG0 (the field background) offsets kept at 0 instead of drifting one pixel
   diagonally per frame (fieldBgScroll is no longer stepped); duel_screen.h comment; README feature line.
 - Pages: (none; README.md).
+
+## [2026-10-27] progress | CPU retreats to Defense Position
+- ai_steps.c AiStepChangePositions: a CPU monster that can beat none of the human's monsters, face up in Attack
+  Position, switches to Defense Position when a face-up human monster has higher ATK (AiShouldRetreatToDefense,
+  added_effects.c). The original left it in Attack Position. Summoning already sets monsters that are outclassed
+  (AiShouldSetMonster).
+- Pages: (none).
+
+## [2026-10-27] progress | CPU crashes into equal ATK
+- ai_picks.c: AiFindAttackTarget takes a trade with an equal-ATK Attack Position monster when it has no winning
+  attack; AiCanBeatMonster counts equal ATK as beaten (the original only with more CPU monsters), so such a monster
+  also stays in Attack Position (AiShouldRetreatToDefense retreats only from higher ATK).
+- Pages: (none).
+- Refined: no crash into a monster that another CPU monster able to attack can beat outright (AiOtherAttackerBeats).

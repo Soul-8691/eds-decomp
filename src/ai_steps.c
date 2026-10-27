@@ -107,6 +107,8 @@ int CountZoneLinksFromCard(int player, int zone, u16 cardNo);
 u32 GetZoneCardAtk(u32 player, u32 zone);
 int CountMonsters(int player);
 void ChangeBattlePosition(int player, int zone, u16 arg2, u16 arg3);
+/* Added (src/added_effects.c): a face-up Attack Position monster the human can run over. */
+int AiShouldRetreatToDefense(int zone);
 u32 HasFlipEffect(u16 cardNo, int flags);
 int CountFreeMonsterZones(int player);
 int CountFaceUpMonstersByNumber(int player, u16 cardNo);
@@ -619,6 +621,15 @@ int AiStepChangePositions(void)
                             }
                         }
                     } else {
+                        /* Added: a monster that can beat nothing goes to Defense Position when one of the
+                         * human's face-up monsters has higher ATK (the original left it in Attack Position).
+                         * Before the block below, whose stride is pinned to r0 (a call would clobber it). */
+                        if (AiShouldRetreatToDefense(AI->subState)) {
+                            ChangeBattlePosition(1, AI->subState, 0, 0);
+                            AI->subState++;
+                            return 0;
+                        }
+                    {
                         struct AiState *cur = AI;
                         /* FAKEMATCH: initialize stride before loading the index. */
                         register u32 stride asm("r0") = 0x94;
@@ -638,6 +649,7 @@ int AiStepChangePositions(void)
                                 break;
                             }
                         }
+                    }
                     }
                 }
                 AI->subState++;

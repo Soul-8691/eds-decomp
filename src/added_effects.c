@@ -3791,6 +3791,27 @@ int AiPlayAddedCards(void)
     return 0;
 }
 
+/* AiStepChangePositions (ai_steps.c), for a CPU monster that can beat none of the human's monsters: 1 if it is face
+ * up in Attack Position and a face-up monster of the human (in either position: it can attack next turn) has higher
+ * ATK, so the CPU switches it to Defense Position instead of leaving it to be run over. */
+int AiShouldRetreatToDefense(int zone)
+{
+    struct DuelZone *z = ZoneOf(1, zone);
+    u32 atk;
+    int i;
+
+    if (DUEL_CARD_ID(&z->card) == 0 || !z->isFaceUp || z->isDefense)
+        return 0;
+    atk = GetZoneCardAtk(1, zone);
+    for (i = ZONE_MONSTER_0; i <= ZONE_MONSTER_4; i++) {
+        struct DuelZone *h = ZoneOf(0, i);
+
+        if (DUEL_CARD_ID(&h->card) != 0 && h->isFaceUp && GetZoneCardAtk(0, i) > atk)
+            return 1;
+    }
+    return 0;
+}
+
 int AiShouldActivateAddedCard(struct ChainEntry *entry)
 {
     if (!IsAddedCardId(entry->card))
