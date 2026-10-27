@@ -45,7 +45,7 @@ next one.
   - You start with 5000 DP and earn more by winning duels.
   - The card password machine now sells cards: it shows the price and asks before buying.
   - Prices run from 5 to 3000 DP, depending on how much the card is played in the furthest format you've unlocked.
-  Cards not in the current furthest format you've unlocked are priced at 3000 DP.
+  Cards not in the current furthest format you've unlocked are priced at 3000 DP. [CARD_PRICES.md](CARD_PRICES.md) lists each format's prices.
 - **Booster Packs** (main menu). Open any unlocked pack for 1000 DP each for now; prices will change in the release.
   Packs will cover the TCG/OCG sets up to Reaper/Victory format, plus attribute/race/Spell/Trap packs once there are
   enough cards.

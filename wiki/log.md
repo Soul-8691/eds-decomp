@@ -1604,3 +1604,6 @@ updated: 2026-09-29
 
 ## [2026-10-27] progress | Treasure unlocks before Imperial
 - src/mod_opponents.c: Treasure (Espa Roba) is format 3 and Imperial (Mako) format 4, in banlist date order; page 0 places Treasure after Critter on the cursor ring. README.md, DECKS.md and [[yugi-kaiba-opponent]] reordered.
+
+## [2026-10-27] query | CARD_PRICES.md
+- tools/cardprices.py --md: CARD_PRICES.md (repo root), each format's own prices (only cards in its usage stats; no carried-over or pool prices), with limits. README.md links it.
