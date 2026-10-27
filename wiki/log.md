@@ -894,3 +894,18 @@ updated: 2026-09-29
   reserved non-card numbers in `cards.h`. Documented how alternate art works (base + 2000, ID = base ID + 1,
   same card for `IsSameCardName`). Replaced the stale "move all eight tables" note.
 - Pages: [[card-capacity]], [[card-expand]].
+
+## [2026-10-27] setup | Card table writer for expanded ROMs
+- `tools/card_expand/write_tables.py`: original ROM + extended `assets/cards/` -> expanded ROM (code patches,
+  power-of-two growth, every table at its new address, encoded with the `tools/assets.py` converters).
+  `test_tables.py`: Unicorn comparison of the game's table readers. Passed at last ID 820 (byte-identical),
+  824 (4 clones) and 1640 (`--pad`); the code-only ROM fails it, as it should.
+- Pages: [[card-expand]].
+
+## [2026-10-27] setup | write_tables.py rips new cards from YGOPRODeck
+- `tools/card_expand/write_tables.py` now adds the cards in `new_cards.txt`: YGOPRODeck API v7 lookups (batched,
+  cached in `assets/new_cards/`), stats/subtype/password/text/art conversion, automatic card numbers (free
+  0-1209 first, reserved effect keys skipped, tokens 1921+), automatic LAST_ID and `--move-scratch`.
+- 314 cards (Anti-Spell Fragrance removed: it is EDS's Anti-Magic Fragrance) -> last ID 1136, 16 MiB;
+  existing tables byte-identical, `test_tables.py` PASS, new IDs checked in Unicorn.
+- Pages: [[card-expand]].
