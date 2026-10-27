@@ -1607,3 +1607,6 @@ updated: 2026-09-29
 
 ## [2026-10-27] query | CARD_PRICES.md
 - tools/cardprices.py --md: CARD_PRICES.md (repo root), each format's own prices (only cards in its usage stats; no carried-over or pool prices), with limits. README.md links it.
+
+## [2026-10-27] progress | README: patches folder
+- README.md: a Playing section pointing to the IPS patches in patches/ (release and debug, demo up to Fiber).

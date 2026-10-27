@@ -77,6 +77,12 @@ next one.
   Cylinder, Soul Exchange, Fairy Box and Thousand-Eyes Restrict. Those reuse that existing code instead of being
   written from scratch.
 
+## Playing
+
+Ready-made IPS patches are in the [`patches/`](patches/) folder: a release build and a debug build (the demo, up to
+Fiber). Apply one to your own USA ROM of *The Eternal Duelist Soul* (AY5E) with any IPS patcher, or let an emulator
+that auto-loads patches, such as mGBA, apply it.
+
 ## Building
 
 This hack is built on a [matching decompilation](wiki/overview.md) of the game. You need your own copy of the USA ROM;
