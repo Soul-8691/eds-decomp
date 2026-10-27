@@ -292,11 +292,15 @@ void DuelCmd_ShuffleDeck(void)
     }
 }
 
-/* Added: the human player (player 0) cannot deck out, except in a Link Battle, where both games must agree on
- * the result: drawing from an empty deck just draws nothing. */
+/* Added (make, not make release): the human player (player 0) cannot deck out, except in a Link Battle, where both
+ * games must agree on the result: drawing from an empty deck just draws nothing. */
 static inline int CanDeckOut(int player)
 {
+#if MOD_RELEASE
+    return 1;
+#else
     return player != 0 || gDuelCtrl.isLinkDuel;
+#endif
 }
 
 /* 0x61 DUEL_CMD_DRAW_CARDS: the acting player draws arg4 cards, one animation each (arg2 is passed to

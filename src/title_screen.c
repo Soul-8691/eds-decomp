@@ -281,7 +281,9 @@ void BuildStarterDeck(s32 choice)
     u32 poolIndex;
     s32 i, picks;
 
-    GiveStartingTrunk();
+#if !MOD_RELEASE
+    GiveStartingTrunk();            /* make (testing) only: 8 of every card */
+#endif
     DeckRecipes_OnNewGame();        /* added: the new deck belongs to no recipe yet (src/mod_recipes.c) */
     if (BuildModStarterDeck(choice % 3)) {
         DebugPrintFlush();

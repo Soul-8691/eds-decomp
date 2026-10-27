@@ -1513,3 +1513,9 @@ updated: 2026-09-29
 - added_effects.c EffectFiberJarResolve + HasFlipEffect: hand, field and Graveyard back to the Deck (Graveyard Fusion
   Monsters to the Fusion Deck), shuffle, draw 5, for both players.
 - Pages: [[added-cards]].
+
+## [2026-10-26] setup | make release
+- Makefile RELEASE / release target / build/include/mod_config.h (MOD_RELEASE via global.h). Release: deck out,
+  no starting trunk, 40-card minimum, 3 copies, formats unlocked by 10 wins each; make: the eased rules, all formats
+  open.
+- Pages: [[release-build]], index, CLAUDE.md.

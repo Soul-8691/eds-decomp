@@ -51,6 +51,16 @@ asm(".include \"asm/macros.inc\"");
 #ifndef CARD_ID_COUNT_ADDED
 #define CARD_ID_COUNT_ADDED 0
 #endif
+/* MOD_RELEASE: 1 for `make release` (the build players get), 0 for `make` (testing). The Makefile writes it to
+ * build/include/mod_config.h; without that file (tools that preprocess alone) it is 0. */
+#if defined(__has_include)
+#if __has_include("mod_config.h")
+#include "mod_config.h"
+#endif
+#endif
+#ifndef MOD_RELEASE
+#define MOD_RELEASE 0
+#endif
 /* Added cards that share code (src/added_effects.c): the "banish 1 LIGHT and 1 DARK monster from your GY" summon. */
 #if defined(HAS_CARD_BLACK_LUSTER_SOLDIER_ENVOY_OF_THE_BEGINNING) || defined(HAS_CARD_CHAOS_SORCERER)
 #define HAS_LIGHT_DARK_BANISH_SUMMON 1

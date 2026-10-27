@@ -24,8 +24,11 @@ enum SavedDeckCapacity {
     SIDE_DECK_MAX_CARDS = 15,
     FUSION_DECK_MAX_CARDS = 20,
     DECK_MAX_CARDS = 60,
-    DECK_MIN_CARDS = 1,         /* a smaller deck cannot duel (text 401: LinkBattle_Init, Campaign_StartDay); 40 in
-                                 * the original game, lowered so that decks of under 40 cards can duel */
+#if MOD_RELEASE
+    DECK_MIN_CARDS = 40,        /* a smaller deck cannot duel (text 401: LinkBattle_Init, Campaign_StartDay) */
+#else
+    DECK_MIN_CARDS = 1,         /* lowered for testing (make, not make release) so decks under 40 cards can duel */
+#endif
 };
 
 /* gSaveData.options bits (Options screen; read by IsSeEnabled / IsBgmEnabled). */
@@ -62,7 +65,11 @@ void SetTrunkSideCopies(u16 id, u32 copies);
 void SetTrunkFusionCopies(u16 id, u32 copies);
 
 /* GetCardCopyLimit of a card that is not on the Forbidden/Limited list (3 in the original game). */
-#define CARD_COPY_LIMIT_NONE 99
+#if MOD_RELEASE
+#define CARD_COPY_LIMIT_NONE 3      /* make release: the 3-copy limit, as the original game */
+#else
+#define CARD_COPY_LIMIT_NONE 99     /* make (testing): no copy limit */
+#endif
 
 /* Win/loss/draw counts against one opponent, gSaveData.duelRecords[DuelistId]. Each counter saturates
  * (RecordDuelWin/Loss/Draw). */

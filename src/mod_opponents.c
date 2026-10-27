@@ -4,7 +4,8 @@
  * for one of these (sOpponents), and sPageDuelists places them (instead of gOpponentSelectDuelists):
  *   FORMAT  an opponent per format, named after it; the player's deck must be legal in it (BanlistBlocksDuel,
  *           src/mod_banlist.c, with the format's banlist and card pool from src/mod_banlists.c). Only the first is
- *           open at the start; beating format k sWinsToUnlockNext[k] times opens format k + 1.
+ *           open at the start; beating format k sWinsToUnlockNext[k] times (10) opens format k + 1. That is
+ *           make release; a plain make (testing) opens every format.
  *           They fill pages 0-2 in unlock order.
  *   DECK    page 3: an opponent per deck (src/mod_decks.c), always open: the LR-Chaos Turbo, sdlkilla-Warrior and
  *           geistD-Goat Control decks.
@@ -172,22 +173,22 @@ static const struct ModOpponent sOpponents[] = {
     [DUELIST_DUEL_COMPUTER] = HIDDEN,
 };
 
-/* Wins against format k (in unlock order) that open format k + 1. */
+/* Wins against format k (in unlock order) that open format k + 1 (make release; with make every format is open). */
 static const u8 sWinsToUnlockNext[FORMAT_COUNT - 1] = {
-    1,      /* Yugi-Kaiba   -> Critter */
-    1,      /* Critter      -> Imperial */
-    1,      /* Imperial     -> Treasure */
-    1,      /* Treasure     -> Android */
-    1,      /* Android      -> Joey-Pegasus */
-    1,      /* Joey-Pegasus -> Fiber */
-    1,      /* Fiber        -> Yata */
-    1,      /* Yata         -> Scientist */
-    1,      /* Scientist    -> Vampire */
-    1,      /* Vampire      -> Chaos */
-    1,      /* Chaos        -> Warrior */
-    1,      /* Warrior      -> Goat */
-    1,      /* Goat         -> Cyber */
-    1,      /* Cyber        -> Reaper */
+    10,     /* Yugi-Kaiba   -> Critter */
+    10,     /* Critter      -> Imperial */
+    10,     /* Imperial     -> Treasure */
+    10,     /* Treasure     -> Android */
+    10,     /* Android      -> Joey-Pegasus */
+    10,     /* Joey-Pegasus -> Fiber */
+    10,     /* Fiber        -> Yata */
+    10,     /* Yata         -> Scientist */
+    10,     /* Scientist    -> Vampire */
+    10,     /* Vampire      -> Chaos */
+    10,     /* Chaos        -> Warrior */
+    10,     /* Warrior      -> Goat */
+    10,     /* Goat         -> Cyber */
+    10,     /* Cyber        -> Reaper */
 };
 
 /* The duelist of each [page][slot] (slots: 0 bottom, 1 left, 2 top left, 3 top right, 4 right); 0 = empty. */
@@ -221,6 +222,9 @@ int ModIsOpponentUnlocked(u16 duelist)
         return 1;
     if (o->kind != KIND_FORMAT)
         return 0;
+#if !MOD_RELEASE
+    return 1;           /* make (testing): every format open */
+#endif
     if (o->order == 0)
         return 1;
     for (d = 0; d < ARRAY_COUNT(sOpponents); d++) {

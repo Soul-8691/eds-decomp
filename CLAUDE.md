@@ -11,6 +11,7 @@ Claude writes and maintains the wiki. The human curates sources, directs the wor
 (cd ../agbcc && ./build.sh)                 # once: pret/agbcc checked out next to this repo
 make setup                                  # once: check the ROM in roms/, extract assets/
 make -j$(nproc)                             # full build; installs tools/agbcc first
+make -j$(nproc) release                     # eds_release.gba: the player build (wiki/tools/release-build.md)
 make -j$(nproc) compare                     # SHA-1 check: fails now that cards are added (wiki/game/added-cards.md)
 # Added cards: config/new_cards.txt, one card name per line; `make` fetches and builds them (tools/newcards.py).
 tools/dr python3 tools/check.py <unit>      # per-unit match check (safe to run concurrently)
