@@ -1524,3 +1524,8 @@ updated: 2026-09-29
 - make (not release): GetBanlistCopyLimit returns no limit (banlist and pool ignored in the deck builder);
   BanlistBlocksDuel never blocks a format opponent.
 - Pages: [[release-build]].
+
+## [2026-10-26] progress | Yata-Garasu
+- added_effects.c: no Special Summon, End Phase return of face-up copies, battle damage skips the damaged player's
+  next Draw Phase (DUEL_CMD_SKIP_NEXT_DRAW_PHASE); hooks in battle_phase2.c / battle_phase3.c.
+- Pages: [[added-cards]].

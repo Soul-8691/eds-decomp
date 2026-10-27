@@ -136,6 +136,11 @@ int BattleStage_InflictDamage(int player)
                 ShowCardEffect(1 - player, gBattle.side[1 - player].cardId);
                 DrawCards(1 - player, 1);
                 break;
+#ifdef HAS_CARD_YATA_GARASU
+            case CARD_YATA_GARASU:      /* added card: the damaged player skips their next Draw Phase */
+                YataGarasuDealtDamage(1 - player, gBattle.side[1 - player].cardId);
+                break;
+#endif
             case CARD_THE_BISTRO_BUTCHER:
                 ShowCardEffect(1 - player, gBattle.side[1 - player].cardId);
                 DrawCards(player, 2);
@@ -209,6 +214,11 @@ int BattleStage_InflictDamage(int player)
                 ShowCardEffect(player, gBattle.side[player].cardId);
                 DrawCards(player, 1);
                 break;
+#ifdef HAS_CARD_YATA_GARASU
+            case CARD_YATA_GARASU:      /* added card */
+                YataGarasuDealtDamage(player, gBattle.side[player].cardId);
+                break;
+#endif
             case CARD_THE_BISTRO_BUTCHER:
                 ShowCardEffect(player, gBattle.side[player].cardId);
                 DrawCards(1 - player, 2);

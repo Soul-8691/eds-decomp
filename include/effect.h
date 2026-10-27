@@ -109,6 +109,9 @@ void AddedCardsSummoned(int player, int zone, u16 id, int kind, int faceUp);
 void EndPhase_DarkMagicianOfChaos(int turnPlayer);
 /* Return from the Different Dimension (src/added_effects.c): the End Phase banish of the monsters it summoned. */
 void EndPhase_ReturnFromTheDifferentDimension(void);
+/* Yata-Garasu (src/added_effects.c): back to the hand at the End Phase; its battle damage skips a Draw Phase. */
+void EndPhase_ReturnYataGarasu(void);
+void YataGarasuDealtDamage(int player, u16 id);
 void EndPhase_MysticSwordsmanLevelUp(int turnPlayer);
 void InjectionFairyLilyEndAttack(int player);
 /* Night Assailant (src/added_effects.c): its discard effect's targets, and the trigger DiscardHandCard queues. */

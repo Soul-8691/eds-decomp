@@ -368,6 +368,20 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
   human gets, and it has more than 3000 LP.
 - Checked in the source and the build; not tested in an emulator.
 
+### Yata-Garasu (2026-10-26)
+- Spirit monster: "This card cannot be Special Summoned. This card returns to its owner's hand during the End Phase of
+  the turn it is Normal Summoned or flipped face-up. When this card inflicts Battle Damage to your opponent, they skip
+  their next Draw Phase."
+- **No Special Summon.** `IsCannotSpecialSummon` lists it.
+- **End Phase.** `EndPhase_ReturnYataGarasu` (DuelPhase_End, next to the Dark Magician of Chaos / Return from the
+  Different Dimension hooks) returns every face-up Yata-Garasu to its owner's hand (`ReturnFieldCardToHand`). No
+  turn record is kept: a face-up one at an End Phase was Normal Summoned or flipped that turn, since it always
+  leaves at the End Phase and can't be Special Summoned. A Set one stays.
+- **Battle damage.** `BattleStage_InflictDamage` steps 0 and 2 (battle_phase2.c), as Masked Sorcerer.
+  `YataGarasuDealtDamage` shows the card and pushes `DUEL_CMD_SKIP_NEXT_DRAW_PHASE` (Time Seal's command) for the
+  damaged player; `DuelPhase_Draw` consumes the flag.
+- Checked in the source and the build; not tested in an emulator.
+
 ### Fiber Jar (2026-10-26)
 - FLIP: "Each player shuffles all cards from their hand, field, and Graveyard into the Deck, then draws 5 cards."
   `EffectFiberJarResolve` (a resolve-only row; card_detail.c `HasFlipEffect` lists it).

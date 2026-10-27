@@ -759,6 +759,9 @@ int DuelPhase_End(void)
 #ifdef HAS_CARD_RETURN_FROM_THE_DIFFERENT_DIMENSION
             EndPhase_ReturnFromTheDifferentDimension(); /* added card (src/added_effects.c) */
 #endif
+#ifdef HAS_CARD_YATA_GARASU
+            EndPhase_ReturnYataGarasu();                /* added card (src/added_effects.c) */
+#endif
             END_STEP++;
         }
         return 0;

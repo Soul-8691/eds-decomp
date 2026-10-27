@@ -762,6 +762,10 @@ int IsCannotSpecialSummon(u16 cardId)
 {
     if (CARD_NUMBER(cardId) == CARD_TSUKUYOMI)
         return 1;
+#ifdef HAS_CARD_YATA_GARASU
+    if (CARD_NUMBER(cardId) == CARD_YATA_GARASU)    /* "This card cannot be Special Summoned." */
+        return 1;
+#endif
     return 0;
 }
 
@@ -2451,6 +2455,45 @@ int EffectFiberJarResolve(struct ChainEntry *link, struct ChainEntry *chainedTo)
     return EFFECT_STEP_DONE;
 }
 #endif /* HAS_CARD_FIBER_JAR */
+
+#ifdef HAS_CARD_YATA_GARASU
+/* ---- Yata-Garasu ---------------------------------------------------------------------------------------------------
+ * "This card cannot be Special Summoned. This card returns to its owner's hand during the End Phase of the turn it is
+ * Normal Summoned or flipped face-up. When this card inflicts Battle Damage to your opponent, they skip their next Draw
+ * Phase."
+ *   IsCannotSpecialSummon lists it (QueueSpecialSummon* refuse it; CanReviveGraveyardCard's IsSpecialSummonOnly path
+ *   does not apply, but the summon itself is refused).
+ *   EndPhase_ReturnYataGarasu (DuelPhase_End, battle_phase3.c): every face-up Yata-Garasu on the field goes back to its
+ *   owner's hand. A face-up one at an End Phase was Normal Summoned or flipped face up that turn (it always leaves at
+ *   the End Phase, and it cannot be Special Summoned), so no record of the turn is needed.
+ *   Battle damage (BattleStage_InflictDamage steps 0 and 2, battle_phase2.c): DUEL_CMD_SKIP_NEXT_DRAW_PHASE (Time
+ *   Seal's command) for the damaged player. */
+void EndPhase_ReturnYataGarasu(void)
+{
+    int player, zone;
+
+    for (player = 0; player <= 1; player++) {
+        for (zone = ZONE_MONSTER_0; zone <= ZONE_MONSTER_4; zone++) {
+            struct DuelZone *z = ZoneOf(player, zone);
+            u16 id = DUEL_CARD_ID(&z->card);
+
+            if (id != 0 && z->isFaceUp && CARD_NUMBER(id) == CARD_YATA_GARASU) {
+                DuelCmd_Push(player ? DUEL_CMD_PLAYER | DUEL_CMD_SHOW_CARD_EFFECT : DUEL_CMD_SHOW_CARD_EFFECT, id, 1, 0);
+                ReturnFieldCardToHand(player, zone, 0);
+            }
+        }
+    }
+}
+
+/* Battle damage by Yata-Garasu (owned by `player`): the damaged player skips their next Draw Phase. */
+void YataGarasuDealtDamage(int player, u16 id)
+{
+    int opponent = 1 - (player & 1);
+
+    ShowCardEffect(player, id);
+    DuelCmd_Push(opponent ? DUEL_CMD_PLAYER | DUEL_CMD_SKIP_NEXT_DRAW_PHASE : DUEL_CMD_SKIP_NEXT_DRAW_PHASE, 0, 0, 0);
+}
+#endif /* HAS_CARD_YATA_GARASU */
 
 #ifdef HAS_CARD_MIND_CONTROL
 /* ---- Mind Control --------------------------------------------------------------------------------------------------
