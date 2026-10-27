@@ -1519,3 +1519,8 @@ updated: 2026-09-29
   no starting trunk, 40-card minimum, 3 copies, formats unlocked by 10 wins each; make: the eased rules, all formats
   open.
 - Pages: [[release-build]], index, CLAUDE.md.
+
+## [2026-10-26] setup | No banlists in the testing build
+- make (not release): GetBanlistCopyLimit returns no limit (banlist and pool ignored in the deck builder);
+  BanlistBlocksDuel never blocks a format opponent.
+- Pages: [[release-build]].

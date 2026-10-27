@@ -28,6 +28,8 @@ updated: 2026-10-26
 | `DECK_MIN_CARDS` (save.h) | 1 | 40 |
 | `CARD_COPY_LIMIT_NONE` (save.h) | 99 (no copy limit) | 3 |
 | Format opponents (`ModIsOpponentUnlocked`, mod_opponents.c) | all open | Yugi-Kaiba open; each next one after 10 wins (`sWinsToUnlockNext`) |
+| Deck builder banlist (`GetBanlistCopyLimit`, mod_banlists.c) | ignored (no limits, no card pool) | the Banlists menu's list and pool |
+| Format check against opponents (`BanlistBlocksDuel`, mod_banlist.c) | none | the opponent's format |
 
 ## Checked
 Both builds were checked in the preprocessed units:

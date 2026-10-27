@@ -93,6 +93,9 @@ s32 GetBanlistCopyLimit(u32 id)
     u16 number = gCardIdToNumber[id & CARD_ID_MASK];
     int lo = 0, hi = b->count - 1;
 
+#if !MOD_RELEASE
+    return CARD_COPY_LIMIT_NONE;    /* make (testing): the deck builder ignores the banlist and its card pool */
+#endif
     if (number >= CARD_NUMBER_ALT_ART && number != 0xFFFF)
         number -= CARD_NUMBER_ALT_ART;
     if (!InBanlistPool(b, number))

@@ -205,6 +205,9 @@ int BanlistBlocksDuel(u16 duelist)
     struct BanlistView *v = &gBanlistView;
 
     v->active = 0;
+#if !MOD_RELEASE
+    return 0;                       /* make (testing): no format check against the opponents */
+#endif
     if (ModOpponentFormat(duelist) < 0)
         return 0;
     v->format = ModOpponentFormat(duelist);
