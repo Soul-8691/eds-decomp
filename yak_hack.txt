@@ -1,0 +1,10 @@
+**Yak's YGO Hack**
+This will be a hack of Eternal Duelist Soul that will follow the Format Library pantheon of TCG formats up until Reaper. This means 15 formats will be included. I have already added 50 Goat-era cards and will probably add about 50 more. You will have to clear Yugi-Kaiba 10 times before you can unlock any other formats (in this case, Critter); Critter 10 times before Treasure; and so on. Each "duelist" (format) has a weighted random chance of using powerful deck types from their respective formats, usually 2-3, but sometimes more. The duelist's pics have been changed to their format-named card (or FL pic if not named after a card), and the dialogue has been removed from duelists. The first 5 duelists are fully coded.
+
+New features:
+- Debug mode: Only for testing purposes, will not be included in the release build; start out with 8 copies of *every card*, no decking out, can have less than 40 cards in a deck, and infinite copies of a card in your deck (as long as it's legal in the banlist format).
+- Up to 50 "deck recipes", with about 15 of them being preset to staple decks of the first 5 FL formats and Goat; if you do not have a card, it does not show up in the deck.
+- Banlists start menu option: You choose your banlist for deck construction. If your current deck contains cards that are banned, they are sent back to the trunk.
+- Duelist Points (DP) system: You start out with 5000 DP. The card passwords system prompts you for a purchase and gives you the card DP, which ranges from 5-3000 depending on how used it is in the furthest unlocked format.
+- Pack opener start menu option: Open packs for 1000 DP each, currently (will be different in the release build). Packs will be TCG/OCG up until Reaper/Victory format, as well as by attribute/type/spells/traps if there's enough cards.
+- Further plans: 8 actual duelists (Yugi Muto/Joey/Kaiba/Pegasus/Marik/Yami Marik/Yami Bakura/Yami Yugi) and all the OCG formats will be unlocked after beating Reaper.
