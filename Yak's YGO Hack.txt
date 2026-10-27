@@ -1,5 +1,4 @@
 Historical YGO formats (up to Reaper)
-Separate bag pocket for YGO cards
 Goat format
 Banlists per format
 Multiple decks per format
