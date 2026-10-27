@@ -1538,3 +1538,8 @@ updated: 2026-09-29
 ## [2026-10-26] progress | Yugi-Kaiba is the default banlist
 - tools/banlist.py DEFAULT_BANLIST = Yugi-Kaiba (new games, and saves that never picked a banlist).
 - Pages: [[banlists-menu]], index.
+
+## [2026-10-27] setup | README.md for the hack
+- New README.md from yak_hack.txt: the 15 formats in unlock order, the features, a short note on how added cards are
+  coded, build steps. yak_hack.txt says "Critter 10 times before Treasure"; the game unlocks Imperial before Treasure.
+- Pages: (none; README.md).

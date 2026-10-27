@@ -1,139 +1,86 @@
-# Yu-Gi-Oh! The Eternal Duelist Soul decompilation
+# Yak's YGO Hack
 
-[![Build](https://github.com/CosmicScribe64/eds-decomp/actions/workflows/progress.yml/badge.svg)](https://github.com/CosmicScribe64/eds-decomp/actions/workflows/progress.yml)
-[![Code](https://decomp.dev/CosmicScribe64/eds-decomp.svg?mode=shield&measure=code&label=Code)](https://decomp.dev/CosmicScribe64/eds-decomp)
-[![Functions](https://decomp.dev/CosmicScribe64/eds-decomp.svg?mode=shield&measure=functions&label=Functions)](https://decomp.dev/CosmicScribe64/eds-decomp)
+A hack of *Yu-Gi-Oh! The Eternal Duelist Soul* (GBA) that follows the
+[Format Library](https://www.formatlibrary.com/) pantheon of TCG formats, from Yugi-Kaiba up to Reaper. About 50
+Goat-era cards have been added so far, with roughly 50 more planned.
 
-A matching decompilation of *Yu-Gi-Oh! The Eternal Duelist Soul* for the Game Boy Advance (USA, `AY5E`).
-The C and assembly in this repository rebuild a ROM that is byte-for-byte identical to the original.
+## The formats
 
-Only the USA release is covered. The Japanese release (*Yu-Gi-Oh! Duel Monsters 5 Expert 1*, `AY5J`) is
-not a translation of this game: its duel engine and data model were reworked, it has 928 cards instead of
-821, and it links a Mobile Adapter GB library the USA build lacks. A matching Japanese build would be a
-separate project; [`wiki/rom/rom-versions.md`](wiki/rom/rom-versions.md) has the full comparison.
+Each format is a Campaign "duelist". You start with Yugi-Kaiba only; beating a format **10 times** unlocks the
+next one.
 
-As of October 2026 the decompilation is complete: all 1,976 of the game's functions match. 1,970 are written
-in C; the other 6 are hand-written assembly, as they most likely were originally: the 3 ARM routines of the
-sound mixer and the 3 BIOS call stubs from Nintendo's SDK library. The built ROM is byte-for-byte identical to
-the original. The work now is readability: shared headers, harmonized symbol names and per-unit cleanup, all
-while keeping the match.
+| # | Format | Banlist |
+|---|---|---|
+| 1 | Yugi-Kaiba | May 2002 |
+| 2 | Critter | July 2002 |
+| 3 | Imperial | December 2002 |
+| 4 | Treasure | October 2002 |
+| 5 | Android | April 2003 |
+| 6 | Joey-Pegasus | May 2003 |
+| 7 | Fiber | July 2003 |
+| 8 | Yata | August 2003 |
+| 9 | Scientist | November 2003 |
+| 10 | Vampire | February 2004 |
+| 11 | Chaos | April 2004 |
+| 12 | Warrior | October 2004 |
+| 13 | Goat | April 2005 |
+| 14 | Cyber | April 2005 |
+| 15 | Reaper | October 2005 |
 
-**This repository contains no game data.** You supply your own copy of the game, and a setup step extracts
-its graphics, text, card data, fonts and sound into a local `assets/` folder that the build reads.
+- **Decks.** Each format duelist picks one of 2-3 (sometimes more) strong decks from its format, at weighted
+  random. The first 7 duelists are fully coded.
+- **Your deck.** It has to be legal in that format's banlist and card pool to duel them.
+- **Portraits.** Each duelist's portrait is its format's namesake card (or the Format Library picture when the
+  format isn't named after a card).
+- **No dialogue.** Duelists don't talk before or after a duel.
+
+## Features
+
+- **Deck Recipes.** Up to 50 saved decks, about 20 of them preset to staple decks of the first seven formats and
+  Goat. Loading a recipe takes the cards from your trunk; any you don't have are left out (the game tells you which,
+  and why). The deck recipes will eventually include all 15 TCG formats.
+- **Banlists** (main menu). Choose the banlist your deck is built under. Cards your current deck can no longer hold
+  go back to the trunk.
+- **Duelist Points (DP).**
+  - You start with 5000 DP and earn more by winning duels.
+  - The card password machine now sells cards: it shows the price and asks before buying.
+  - Prices run from 5 to 3000 DP, depending on how much the card is played in the furthest format you've unlocked.
+  Cards not in the current furthest format you've unlocked are priced at 3000 DP.
+- **Booster Packs** (main menu). Open any unlocked pack for 1000 DP each for now; prices will change in the release.
+  Packs will cover the TCG/OCG sets up to Reaper/Victory format, plus attribute/race/Spell/Trap packs once there are
+  enough cards.
+- **Debug mode** (testing builds only, not in the release). You start with 8 copies of every card, and you can't
+  deck out. Decks can be under 40 cards, can hold any number of copies of a card, and ignore banlists. Every format
+  is unlocked.
+
+### Planned
+
+- 8 actual duelists: Yugi Muto, Joey, Kaiba, Pegasus, Marik, Yami Marik, Yami Bakura and Yami Yugi.
+- The OCG formats up to Victory, unlocked after beating Reaper.
+
+## How the new cards are added
+
+- **Card data.** New cards are listed by name in `config/new_cards.txt`. The build fetches each card's stats, text
+  and artwork from [YGOPRODeck](https://ygoprodeck.com/api-guide/) and appends it to the game's card tables
+  (`tools/newcards.py`).
+- **Effects.** Effects are written in C on top of the original duel engine, mostly in `src/added_effects.c`. Each
+  card gets the same handlers the game's own cards use: activation check, cost, targeting, resolution. Small hooks
+  in the engine cover timings it doesn't already have, and each card gets a rule for when the computer should use it.
+- **Engine leftovers.** The engine already contains several cards that never made it into EDS, such as Magic
+  Cylinder, Soul Exchange, Fairy Box and Thousand-Eyes Restrict. Those reuse that existing code instead of being
+  written from scratch.
 
 ## Building
 
-The build runs natively in WSL (or any Linux), the same way as pret's decomps such as pokefirered. Run every
-command below from a WSL shell in the repository.
-
-1. Install the build tools:
-   ```
-   sudo apt install build-essential binutils-arm-none-eabi git python3
-   ```
-2. Build [agbcc](https://github.com/pret/agbcc) next to this repository, so that it sits at `../agbcc`:
-   ```
-   git clone https://github.com/pret/agbcc ../agbcc
-   (cd ../agbcc && ./build.sh)
-   ```
-   The first `make` installs it into `tools/agbcc` (by running `../agbcc/install.sh`); `make agbcc` does only
-   that step. To use a checkout somewhere else, pass `AGBCC_SRC=<path>`.
-3. Copy your dump of the USA release into the `roms/` folder. Either the `.gba` file or the `.zip` it came in
-   works. The build needs the version with SHA-1 `510fbba212aca9bab95ea12f8fd933e62ee34dea`.
-4. Check the ROM and extract its data:
-   ```
-   make setup
-   ```
-   If the file isn't the right one, setup says why. It recognizes the Japanese release, patched or trimmed
-   dumps, and other games.
-5. Build the ROM and compare it with the original:
-   ```
-   make -j$(nproc)                  # builds eds.gba
-   ```
-   This build adds the cards listed in `config/new_cards.txt` to the game (one card name per line; wiki page
-   `added-cards`), so `make compare` no longer matches the original. To change them, edit the list and run
-   `make`: it downloads the stats, text and art of cards it has not seen from the
-   [YGOPRODeck API](https://ygoprodeck.com/api-guide/) into `assets/new_cards/` (needs network and Pillow then).
-   `python3 tools/newcards.py capacity` says how many cards fit.
-
-After setup, the build reads only `assets/` and the source code, so it no longer needs the ROM file.
-
-### The assets folder
-
-`make setup` writes every byte of the game's data into `assets/`. Every asset converts to an editable
-format and builds back byte-identical; the only raw bytes left are the Nintendo logo inside the cartridge
-header, which the BIOS checks.
-
-| What | Format |
-|---|---|
-| Card names and descriptions | `assets/cards/names.json`, `descriptions.json` |
-| Card stats (ATK, DEF, level, type, attribute) | `assets/cards/stats.csv` |
-| Card art, 821 images with their palettes | `assets/cards/art/NNN.png` (indexed, 64 colours) |
-| Card passwords | `assets/cards/passwords.csv` |
-| Dialogue and duelist names | `assets/text/dialogue.json`, `duelists.json` |
-| Fonts (Latin and Japanese) | `assets/fonts/*.png` |
-| Sound | WAV samples plus text-format music and sound-effect tracks in `assets/sound/` |
-| Scene graphics and graphics banks | editable PNGs in `assets/gfx/` |
-| Game tables (deck lists, effect handlers, pointers) | JSON in `assets/tables/` |
-
-Edit a file and run `tools/dr make` to build a ROM with your change. `make compare` reports a mismatch once
-you've changed something, which is expected. There are 83 assets in total; `config/assets.tsv` lists every
-one with its address range, `tools/assets.py` does the conversions, and
-[`wiki/tools/assets.md`](wiki/tools/assets.md) documents each format.
-
-## Progress
+This hack is built on a [matching decompilation](wiki/overview.md) of the game. You need your own copy of the USA ROM;
+it is never included.
 
 ```
-tools/dr make -j8 objdiff-report    # per-function progress report (build/report.json)
+(cd ../agbcc && ./build.sh)    # once: pret/agbcc checked out next to this repository
+make setup                     # once: put your ROM in roms/ and extract the game data
+make -j$(nproc)                # eds.gba: the debug/testing build
+make -j$(nproc) release        # eds_release.gba: the release build
 ```
-The report doesn't need the ROM. CI generates it on every push (`.github/workflows/progress.yml`) in the format
-[decomp.dev](https://decomp.dev) reads.
 
-## Working on it
-
-The code is split into units, listed in link order in `units.txt`. A game unit is `src/<unit>.c`; the start-up
-code (`asm/crt0.s`, `asm/veneer.s`), the ARM sound mixer (`src/sound_mixer_arm.s`) and the BIOS call stubs
-(`src/sdk/libagbsyscall.s`) are authored assembly. No `INCLUDE_ASM` remains. The original disassembly stays in
-`asm/nonmatching/` as the comparison target. Shared types and constants live in `include/` and
-`include/constants/`; `wiki/concepts/shared-headers.md` explains how units use them and which local
-views remain.
-
-- `tools/dr python3 tools/check.py <unit> [--diff FUNC] [--norm]` compares one unit with its original bytes.
-- `tools/dr python3 tools/check_all.py` checks every unit. CI runs the same check.
-- `tools/dr python3 tools/permute.py <unit> <func> --run` runs
-  [decomp-permuter](https://github.com/simonlindholm/decomp-permuter) on a near-miss draft.
-
-The [`wiki/`](wiki/index.md) holds what we know about the game, the ROM and the toolchain. It opens in Obsidian.
-Start with `wiki/overview.md` and `wiki/concepts/decomp-workflow.md`. Contributors, human or agent, follow
-[`CLAUDE.md`](CLAUDE.md).
-
-Game code is built with `old_agbcc -O2`. The sound driver uses `agbcc -O2 -fprologue-bugfix` and the SDK save
-code `agbcc -O1`. All three come from [pret/agbcc](https://github.com/pret/agbcc).
-
-### Without the ROM
-
-You can decompile code without the game. The original machine code of every function is in the repository as
-assembly (`asm/nonmatching/<unit>/<func>.s`), and the tools compare compiled C against it.
-
-- Without `baserom.gba`, `check.py`, `check_all.py` and `permute.py` assemble the unit's original assembly at its
-  ROM address and compare against that (`tools/target.py`). The bytes are the same: all 112 code units
-  reassemble to the ROM exactly, which `tools/dr python3 tools/target.py --verify` confirms when a ROM is present.
-- Symbols whose address can't be read from their name are listed in `config/symbols.txt`. Every full build
-  regenerates it.
-- The analysis tools (capstone, pyelftools, decomp-permuter, m2c, objdiff-cli) are optional extras that
-  `tools/setup_native.sh` installs into `~/.eds-tools`. `tools/dr <cmd>` runs a command from the repository
-  root with them on the path.
-
-The full-ROM check (`make compare`) and any work that reads game data, such as graphics, text or tables,
-still need the ROM, so they happen locally.
-
-## AI assistance
-
-Most of the decompilation and the wiki were written with AI coding agents (Claude Code, Codex and others)
-directed by the maintainer. A function counts as decompiled only when its compiled code is byte-identical to
-the original, and CI checks that on every change.
-
-## License
-
-The code and documentation in this repository are released under the [MIT License](LICENSE). That covers our
-own work only. *Yu-Gi-Oh! The Eternal Duelist Soul* and all of its data belong to their respective rights
-holders, and none of it is included here.
+You need `make`, `cpp`, `python3` and `binutils-arm-none-eabi`, plus network access the first time new cards are
+fetched. See `CLAUDE.md` and the `wiki/` for details on the decompilation and the hack.
