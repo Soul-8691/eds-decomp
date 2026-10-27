@@ -782,6 +782,10 @@ int CanReviveGraveyardCard(int player, int graveIdx)
     u32 cardId = (*(u32 *)(graveIdx * 4 + sideOffset + base) << 20) >> 20;
     int kind = GetCardKind(cardId);
 
+#ifdef HAS_CARD_DARK_RULER_HA_DES
+    if (gCardIdToNumber[cardId & CARD_ID_MASK] == CARD_DARK_RULER_HA_DES)    /* added: not from the Graveyard */
+        return 0;
+#endif
     switch (kind) {
     case CARD_KIND_NORMAL:
         goto yes;

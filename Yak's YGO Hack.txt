@@ -19,3 +19,5 @@ Multiple banlists
 Get rid of original banlist
 Up to 50 deck recipes
 Yak's YGO Hack title screen (Squealer by Typodermic Fonts)
+Fix DEF position AI
+Fix bugs with cards

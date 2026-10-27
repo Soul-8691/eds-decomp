@@ -133,6 +133,9 @@ int CountActiveKycooOnField(int player);
 int IsBladeKnightCard(u16 cardId);
 /* Blade Knight alone: battle-flip effect of a Flip monster it destroys (src/added_effects.c). */
 int BladeKnightNegatesBattleFlipEffect(void);
+/* Dark Ruler Ha Des (src/added_effects.c): the effects of monsters its controller's Fiends destroy in battle. */
+int HaDesNegatesBattleDestroyed(int player);
+int HaDesNegatesBattleFlipEffect(void);
 /* Dark Ruler Ha Des: 1 while Flip Effects cannot be activated for the rest of the turn (src/added_effects.c). */
 int FlipEffectsLockedForTurn(void);
 void LockFlipEffectsForTurn(void);

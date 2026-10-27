@@ -1502,3 +1502,9 @@ updated: 2026-09-29
   flag only with the Rare Hunter's own deck. Uncoded effects in them: Fiber Jar, Yata-Garasu, Ryu Senshi, Super
   Robolady, Super Roboyarou, Dark Balter the Terrible, Fiend Skull Dragon, The Last Warrior from Another Planet.
 - Pages: [[deck-recipes]], [[yugi-kaiba-opponent]].
+
+## [2026-10-26] progress | Dark Ruler Ha Des fixed
+- Its real text: not revivable from the Graveyard (CanReviveGraveyardCard), and monsters its controller's Fiends
+  destroy in battle lose their battle-destroyed triggers and Flip effects. The mistaken Tribute Summon flip lock is
+  removed.
+- Pages: [[added-cards]].

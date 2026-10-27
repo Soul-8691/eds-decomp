@@ -663,6 +663,10 @@ int BattleStage_DamageCalc(int player)
         if (BATTLE_BYTES.flipEffectPending && BladeKnightNegatesBattleFlipEffect())
             BATTLE_BYTES.flipEffectPending = 0;
 #endif
+#ifdef HAS_CARD_DARK_RULER_HA_DES
+        if (BATTLE_BYTES.flipEffectPending && HaDesNegatesBattleFlipEffect())  /* added card */
+            BATTLE_BYTES.flipEffectPending = 0;
+#endif
         if (!BATTLE_BYTES.direct) {
             opponent = 1 - player;
             if (DefenderFlags(opponent) & 2) {

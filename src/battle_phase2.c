@@ -338,6 +338,10 @@ int BattleStage_TriggerFlipEffect(int player)
         else
 #endif
             canActivate = (u16)CanActivateEffectOfCard(opponent, gBattle.flipCardId, 0);
+#ifdef HAS_CARD_DARK_RULER_HA_DES
+        if (HaDesNegatesBattleFlipEffect())     /* added card */
+            canActivate = 0;
+#endif
         if (CARD_NUMBER_OF(gBattle.flipCardId) == CARD_PARASITE_PARACIDE) {
             if (gBattle.side[opponent].destroyed)
                 canActivate = 0;

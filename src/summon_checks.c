@@ -658,11 +658,6 @@ int ExecuteSummonAction(void)
             DestroyFieldCard(gSummonAction.player, gSummonAction.zone, 1);
             break;
         }
-#ifdef HAS_CARD_DARK_RULER_HA_DES
-        if (CARD_NUMBER_C(gSummonAction.cardId) == CARD_DARK_RULER_HA_DES
-            && (gSummonAction.hasTribute1 || gSummonAction.hasTribute2))
-            LockFlipEffectsForTurn();
-#endif
         gSummonAction.step++;
         return 0;
     }
@@ -799,11 +794,6 @@ int ExecuteSummonActionAskPosition(void)
             DestroyFieldCard(gSummonAction.player, gSummonAction.zone, 1);
             break;
         }
-#ifdef HAS_CARD_DARK_RULER_HA_DES
-        if (ActionBNumber(gSummonAction.cardId) == CARD_DARK_RULER_HA_DES
-            && (gSummonAction.hasTribute1 || gSummonAction.hasTribute2))
-            LockFlipEffectsForTurn();
-#endif
     next_step:
         gSummonAction.step++;
         return 0;

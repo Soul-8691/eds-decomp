@@ -3266,8 +3266,49 @@ int BladeKnightNegatesBattleFlipEffect(void)
 }
 #endif /* HAS_CARD_BLADE_KNIGHT */
 
+#ifdef HAS_CARD_DARK_RULER_HA_DES
 /* ---- Dark Ruler Ha Des ---------------------------------------------------------------------------------------
- * "When this card is Tribute Summoned: Flip Effects cannot be activated for the rest of this turn." */
+ * "Cannot be Special Summoned from the GY. Negate the effects of monsters destroyed by battle with Fiend monsters
+ * you control."
+ *   CanReviveGraveyardCard (duel_ritual.c) refuses it: the revival cards cannot pick it.
+ *   A monster destroyed in battle by a Fiend whose controller has a face-up Ha Des (HaDesNegatesBattleDestroyed):
+ *   SendBattleDestroyedCardToGraveyard (duel_field_moves.c) queues none of its "destroyed in battle" effects
+ *   (Sangan, Witch of the Black Forest, Mystic Tomato, ...), and a face-down one's Flip effect is not activated
+ *   (HaDesNegatesBattleFlipEffect, beside Blade Knight's in battle_phase1.c / battle_phase2.c). */
+
+/* 1 if the monster of `player` destroyed in this battle was destroyed by a Fiend of the other player, who
+ * controls a face-up Dark Ruler Ha Des. */
+int HaDesNegatesBattleDestroyed(int player)
+{
+    int other = 1 - (player & 1);
+    u16 killer = gBattle.side[other].cardId & CARD_ID_MASK;
+
+    if (gBattle.direct || killer == 0)
+        return 0;
+    if (CARD_STATS_TYPE(gCardStats[killer]) != CARD_TYPE_FIEND)
+        return 0;
+    return CountFaceUpMonstersByNumber(other, CARD_DARK_RULER_HA_DES) > 0;
+}
+
+/* 1 if the battle's Flip monster (the target, flipped face up) is destroyed by a Fiend of the attacker, who controls
+ * a face-up Dark Ruler Ha Des. */
+int HaDesNegatesBattleFlipEffect(void)
+{
+    int attackerPlayer = gDuel.turnPlayer & 1;
+    int defenderPlayer = 1 - attackerPlayer;
+
+    if (gBattle.direct || gBattle.flipCardId == 0)
+        return 0;
+    if ((gBattle.flipCardId & CARD_ID_MASK) != (gBattle.side[defenderPlayer].cardId & CARD_ID_MASK))
+        return 0;
+    if (gBattle.side[attackerPlayer].battleValue <= gBattle.side[defenderPlayer].battleValue)
+        return 0;       /* the Flip monster survives */
+    return HaDesNegatesBattleDestroyed(defenderPlayer);
+}
+#endif /* HAS_CARD_DARK_RULER_HA_DES */
+
+/* ---- Flip effects locked for the rest of a turn (gModDuel.flipEffectsLocked; nothing sets it at present: it was
+ * a mistaken Dark Ruler Ha Des effect) ---- */
 
 
 int FlipEffectsLockedForTurn(void)

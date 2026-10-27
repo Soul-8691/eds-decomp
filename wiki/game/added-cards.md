@@ -368,6 +368,23 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
   human gets, and it has more than 3000 LP.
 - Checked in the source and the build; not tested in an emulator.
 
+### Dark Ruler Ha Des (fixed 2026-10-26)
+- Effect Monster: "Cannot be Special Summoned from the GY. Negate the effects of monsters destroyed by battle with
+  Fiend monsters you control."
+- **Before.** The earlier code gave it a different effect: Flip effects locked for the turn after its Tribute
+  Summon (summon_checks.c, `LockFlipEffectsForTurn`). That is removed; the lock's machinery is still there, unused.
+- **Not from the Graveyard.** `CanReviveGraveyardCard` (duel_ritual.c) refuses it, so Monster Reborn, Premature
+  Burial, Call of the Haunted and the others cannot pick it.
+- **Negating battle-destroyed monsters.** `HaDesNegatesBattleDestroyed(player)`: the monster of `player` was
+  destroyed in battle by a Fiend (`gBattle.side[other].cardId`) whose controller has a face-up Ha Des.
+  - `SendBattleDestroyedCardToGraveyard` (duel_field_moves.c) then skips its "destroyed in battle" switch: no
+    Sangan, Witch, Mystic Tomato, Giant Rat, Pyramid Turtle, Spear Cretin... The card still goes to the Graveyard.
+  - `HaDesNegatesBattleFlipEffect` stops the Flip effect of a face-down target that the attacking Fiend destroys,
+    next to Blade Knight's checks (battle_phase1.c / battle_phase2.c).
+- **Caveat.** In a mutual destruction where Ha Des itself is the attacker, it may leave the field before the target
+  is checked.
+- Checked in the source and the build; not tested in an emulator.
+
 ### Skull Lair (2026-10-26)
 - Continuous Trap: "Remove from play any number of Monster Cards in your Graveyard to destroy 1 face-up monster on the
   field whose Level is equal to the number of the cards you removed from play."

@@ -179,6 +179,9 @@ void SendBattleDestroyedCardToGraveyard(int defender, int player, int zone, u16 
         gDuelPlayers[player & 1].monsterSentToGraveThisTurn = 1;
     word = CARD_WORD(card);
     dispatchId = CARD_ID(word);
+#ifdef HAS_CARD_DARK_RULER_HA_DES
+    if (!HaDesNegatesBattleDestroyed(player))   /* added: Dark Ruler Ha Des negates them (src/added_effects.c) */
+#endif
     switch (CARD_NUMBER(dispatchId)) {
     /* "When destroyed in battle" triggers. The second word holds the location of the destroyed monster
      * (the attacker belongs to the turn player, the target to the other one): low half the attacker's
