@@ -1573,3 +1573,7 @@ updated: 2026-09-29
   with the sheet's per-row highlight fill and a colour-1 outline) into OBJ tiles 0-63, palette 1, and drawn as four
   2x affine 32x16 sprites (208 px wide, y 40) from Title_DrawMenu.
 - Pages: (none).
+
+## [2026-10-27] progress | Title background stays still
+- title_screen.c Title_VBlank: the BG3 grid's offsets kept at 0 (it drifted diagonally); README "Still backgrounds".
+- Pages: (none; README.md).

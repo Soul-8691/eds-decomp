@@ -49,7 +49,8 @@ next one.
 - **Booster Packs** (main menu). Open any unlocked pack for 1000 DP each for now; prices will change in the release.
   Packs will cover the TCG/OCG sets up to Reaper/Victory format, plus attribute/race/Spell/Trap packs once there are
   enough cards.
-- **Still duel background.** The field background no longer scrolls during duels.
+- **Still backgrounds.** The field background no longer scrolls during duels, and the title screen's background
+  no longer scrolls either.
 - **Smarter CPU.**
   - It switches a monster that can't beat any of yours to Defense Position when you have a face-up monster with
     higher ATK, instead of leaving it to be run over.

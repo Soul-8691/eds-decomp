@@ -512,13 +512,12 @@ u16 CB_License(void)
 
 /* ---- Title screen ---- */
 
-/* Title VBlank callback: scrolls the BG3 grid diagonally (HOFS = bgScroll, VOFS = bgScroll / 4; bgScroll goes
- * down by one per frame). */
+/* Title VBlank callback. The original scrolls the BG3 grid diagonally (HOFS = bgScroll, VOFS = bgScroll / 4;
+ * bgScroll goes down by one per frame); changed: the grid stays still. */
 void Title_VBlank(void)
 {
-    gTitleState.bgScroll--;
-    REG_BG3VOFS = gTitleState.bgScroll >> 2;
-    REG_BG3HOFS = gTitleState.bgScroll;
+    REG_BG3VOFS = 0;
+    REG_BG3HOFS = 0;
 }
 
 /*
