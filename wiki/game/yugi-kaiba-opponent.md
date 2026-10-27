@@ -21,7 +21,7 @@ next to the one before it.
 
 | Page | Top left | Top right | Right | Bottom | Left |
 |---|---|---|---|---|---|
-| 0 | Yugi-Kaiba (Tristan) | Critter (Rex) | Imperial (Mako) | Treasure (Espa Roba) | Android (Mai) |
+| 0 | Yugi-Kaiba (Tristan) | Critter (Rex) | Treasure (Espa Roba) | Imperial (Mako) | Android (Mai) |
 | 1 | Joey-Pegasus (Weevil) | Fiber (Rare Hunter) | Yata (Arkana) | Scientist (Umbra & Lumis) | Vampire (Marik) |
 | 2 | Chaos (Strings) | Warrior (Kaiba) | Goat (Ishizu) | Cyber (Yami Bakura) | Reaper (Yami Yugi) |
 | 3 | LR-Chaos Turbo (Simon) | sdlkilla-Warrior (Pegasus) | geistD-Goat Control (Grandpa) | (empty) | (empty) |

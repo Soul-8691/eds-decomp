@@ -13,8 +13,8 @@ next one.
 |---|---|---|
 | 1 | Yugi-Kaiba | May 2002 |
 | 2 | Critter | July 2002 |
-| 3 | Imperial | December 2002 |
-| 4 | Treasure | October 2002 |
+| 3 | Treasure | October 2002 |
+| 4 | Imperial | December 2002 |
 | 5 | Android | April 2003 |
 | 6 | Joey-Pegasus | May 2003 |
 | 7 | Fiber | July 2003 |
@@ -28,7 +28,7 @@ next one.
 | 15 | Reaper | October 2005 |
 
 - **Decks.** Each format duelist picks one of 2-3 (sometimes more) strong decks from its format, at weighted
-  random. The first 7 duelists are fully coded.
+  random. The first 7 duelists are fully coded. [DECKS.md](DECKS.md) lists every deck and its chance.
 - **Your deck.** It has to be legal in that format's banlist and card pool to duel them.
 - **Portraits.** Each duelist's portrait is its format's namesake card (or the Format Library picture when the
   format isn't named after a card).

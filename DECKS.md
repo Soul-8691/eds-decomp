@@ -1,0 +1,957 @@
+# Decks
+
+The starting decks and the opponents' decks of Yak's YGO Hack, as defined in `src/mod_decks.c`. Deck names follow the `.ydk` files they come from (`decks/`, "author-Deck").
+
+- **Deck chances.** A format opponent picks one of its decks at weighted random at the start of every duel.
+- **Banlists.** Opponent decks keep to their format's Forbidden/Limited list: when a deck is loaded, any card over its limit is dropped.
+- **Deck Recipes.** Every deck below (except the vanilla ones) is also a preset in the Deck Recipes menu.
+
+## Starting decks
+
+A new game offers the three Yugi-Kaiba format decks (lists under [Yugi-Kaiba](#1-yugi-kaiba)):
+
+| Starter | Deck | Format |
+|---|---|---|
+| Red | Soul Control (El Duelista DEX-Soul Control) | Yugi-Kaiba |
+| Green | Vanilla Beat (ellietincan-Vanilla Beat) | Yugi-Kaiba |
+| Black | Stall Mill (DK-ZERO-Stall Mill) | Yugi-Kaiba |
+
+## Format opponents
+
+Formats unlock in this order; in the release build each takes 10 wins to open the next.
+
+| # | Format | Banlist | Decks (chance) |
+|---|---|---|---|
+| 1 | Yugi-Kaiba | May 2002 | Soul Control 50%, Vanilla Beat 30%, Stall Mill 20% |
+| 2 | Critter | July 2002 | Masked Control 60%, Muka Muka Turbo 40% |
+| 3 | Treasure | October 2002 | Tomato Control 80%, Recruiter Control 10%, Germ Burn 10% |
+| 4 | Imperial | December 2002 | Tomato Control 80%, Relinquished 20% |
+| 5 | Android | April 2003 | Tomato Control 80%, Vanilla Beat 20% |
+| 6 | Joey-Pegasus | May 2003 | Tomato Control 80%, Vanilla Beat 20% |
+| 7 | Fiber | July 2003 | Tomato Control 80%, Recruiter Control 20% |
+| 8 | Yata | August 2003 | Vanilla (unchanged) |
+| 9 | Scientist | November 2003 | Vanilla (unchanged) |
+| 10 | Vampire | February 2004 | Vanilla (unchanged) |
+| 11 | Chaos | April 2004 | Vanilla (unchanged) |
+| 12 | Warrior | October 2004 | Vanilla (unchanged) |
+| 13 | Goat | April 2005 | Vanilla (unchanged) |
+| 14 | Cyber | April 2005 | Vanilla (unchanged) |
+| 15 | Reaper | October 2005 | Vanilla (unchanged) |
+
+### 1. Yugi-Kaiba
+
+Banlist: May 2002.
+
+<details>
+<summary>Soul Control: 50% (El Duelista DEX-Soul Control) (40 cards)</summary>
+
+**Monsters (20)**
+
+- 3x Man-Eater Bug
+- 1x Trap Master
+- 1x Wall of Illusion
+- 3x Battle Ox
+- 3x Giant Soldier of Stone
+- 3x La Jinn the Mystical Genie of the Lamp
+- 3x Neo the Magic Swordsman
+- 3x Summoned Skull
+
+**Spells (12)**
+
+- 1x Change of Heart
+- 1x Dark Hole
+- 3x Fissure
+- 1x Monster Reborn
+- 1x Pot of Greed
+- 1x Raigeki
+- 2x Soul Exchange
+- 2x Swords of Revealing Light
+
+**Traps (8)**
+
+- 3x Reinforcements
+- 3x Trap Hole
+- 1x Ultimate Offering
+- 1x Waboku
+
+</details>
+
+<details>
+<summary>Vanilla Beat: 30% (ellietincan-Vanilla Beat) (40 cards)</summary>
+
+**Monsters (20)**
+
+- 3x Man-Eater Bug
+- 3x Trap Master
+- 3x Battle Ox
+- 3x Giant Soldier of Stone
+- 3x La Jinn the Mystical Genie of the Lamp
+- 3x Neo the Magic Swordsman
+- 2x Summoned Skull
+
+**Spells (11)**
+
+- 1x Change of Heart
+- 1x Dark Hole
+- 1x De-Spell
+- 3x Fissure
+- 1x Monster Reborn
+- 1x Pot of Greed
+- 1x Raigeki
+- 2x Swords of Revealing Light
+
+**Traps (9)**
+
+- 3x Reinforcements
+- 3x Trap Hole
+- 3x Waboku
+
+</details>
+
+<details>
+<summary>Stall Mill: 20% (DK-ZERO-Stall Mill) (43 cards)</summary>
+
+**Monsters (21)**
+
+- 3x Gyakutenno Megami
+- 3x Giant Soldier of Stone
+- 3x Aqua Madoor
+- 3x Wall of Illusion
+- 3x Mystical Elf
+- 3x Spirit of the Harp
+- 3x Man-Eater Bug
+
+**Spells (13)**
+
+- 1x Raigeki
+- 1x Dark Hole
+- 1x Monster Reborn
+- 1x Change of Heart
+- 1x Pot of Greed
+- 2x Swords of Revealing Light
+- 3x Fissure
+- 1x Card Destruction
+- 2x Soul Exchange
+
+**Traps (9)**
+
+- 3x Ultimate Offering
+- 3x Waboku
+- 3x Trap Hole
+
+</details>
+
+### 2. Critter
+
+Banlist: July 2002.
+
+<details>
+<summary>Masked Control: 60% (Jazz-Masked Control) (40 cards + 15 Fusion Deck)</summary>
+
+**Monsters (18)**
+
+- 1x Cannon Soldier
+- 1x Jirai Gumo
+- 1x Kuriboh
+- 2x Magician of Faith
+- 2x Masked Sorcerer
+- 2x Muka Muka
+- 2x Sangan
+- 1x White Magical Hat
+- 2x Witch of the Black Forest
+- 1x Giant Soldier of Stone
+- 3x La Jinn the Mystical Genie of the Lamp
+
+**Spells (13)**
+
+- 1x Change of Heart
+- 1x Dark Hole
+- 2x Fissure
+- 2x Heavy Storm
+- 2x Last Will
+- 1x Monster Reborn
+- 1x Pot of Greed
+- 1x Raigeki
+- 2x Swords of Revealing Light
+
+**Traps (9)**
+
+- 1x Mirror Force
+- 3x Solemn Judgment
+- 2x Trap Hole
+- 3x Waboku
+
+**Fusion Deck (15)**
+
+- 3x B. Skull Dragon
+- 3x Gaia the Dragon Champion
+- 3x Labyrinth Tank
+- 3x Thousand Dragon
+- 3x Twin-Headed Thunder Dragon
+
+</details>
+
+<details>
+<summary>Muka Muka Turbo: 40% (Gyomberman-Muka Muka Turbo) (40 cards + 15 Fusion Deck)</summary>
+
+**Monsters (20)**
+
+- 1x Cannon Soldier
+- 3x Magician of Faith
+- 1x Masked Sorcerer
+- 3x Muka Muka
+- 2x Sangan
+- 3x Thunder Dragon
+- 2x Witch of the Black Forest
+- 2x Giant Soldier of Stone
+- 3x La Jinn the Mystical Genie of the Lamp
+
+**Spells (15)**
+
+- 1x Change of Heart
+- 1x Dark Hole
+- 3x Fissure
+- 2x Heavy Storm
+- 3x Last Will
+- 1x Monster Reborn
+- 1x Pot of Greed
+- 1x Raigeki
+- 2x Swords of Revealing Light
+
+**Traps (5)**
+
+- 1x Mirror Force
+- 1x Robbin' Goblin
+- 3x Trap Hole
+
+**Fusion Deck (15)**
+
+- 1x Charubin the Fire Knight
+- 1x Cyber Saurus
+- 1x Darkfire Dragon
+- 1x Deepsea Shark
+- 1x Dragoness the Wicked Knight
+- 1x Empress Judge
+- 1x Flame Ghost
+- 1x Fusionist
+- 1x Gaia the Dragon Champion
+- 1x Giltia the D. Knight
+- 1x Karbonala Warrior
+- 1x Metal Dragon
+- 1x Musician King
+- 1x Punished Eagle
+- 1x Roaring Ocean Snake
+
+</details>
+
+### 3. Treasure
+
+Banlist: October 2002.
+
+<details>
+<summary>Tomato Control: 80% (dump truck-Tomato Control) (40 cards + 15 Fusion Deck)</summary>
+
+**Monsters (18)**
+
+- 1x Cannon Soldier
+- 3x Magician of Faith
+- 3x Man-Eater Bug
+- 3x Mystic Tomato
+- 2x Sangan
+- 2x Witch of the Black Forest
+- 1x Giant Soldier of Stone
+- 3x Mechanicalchaser
+
+**Spells (17)**
+
+- 1x Change of Heart
+- 1x Confiscation
+- 1x Dark Hole
+- 1x Delinquent Duo
+- 3x Fissure
+- 1x Heavy Storm
+- 1x Monster Reborn
+- 3x Mystical Space Typhoon
+- 1x Painful Choice
+- 1x Pot of Greed
+- 1x Raigeki
+- 1x Snatch Steal
+- 1x The Forceful Sentry
+
+**Traps (5)**
+
+- 1x Mirror Force
+- 1x Seven Tools of the Bandit
+- 3x Trap Hole
+
+**Fusion Deck (15)**
+
+- 3x Charubin the Fire Knight
+- 3x Darkfire Dragon
+- 3x Dragoness the Wicked Knight
+- 3x Flame Ghost
+- 3x Flame Swordsman
+
+</details>
+
+<details>
+<summary>Recruiter Control: 10% (SolEmerald69-Recruiter Control) (40 cards + 15 Fusion Deck)</summary>
+
+**Monsters (17)**
+
+- 3x Mystic Tomato
+- 2x Sangan
+- 2x Witch of the Black Forest
+- 1x Cannon Soldier
+- 3x Mother Grizzly
+- 1x Catapult Turtle
+- 2x Mechanicalchaser
+- 2x Magician of Faith
+- 1x Cyber Jar
+
+**Spells (18)**
+
+- 1x Painful Choice
+- 1x Pot of Greed
+- 2x Last Will
+- 1x Monster Reborn
+- 1x Raigeki
+- 1x Dark Hole
+- 1x Change of Heart
+- 1x Snatch Steal
+- 1x Delinquent Duo
+- 1x Confiscation
+- 1x The Forceful Sentry
+- 3x Mystical Space Typhoon
+- 1x Heavy Storm
+- 2x Rush Recklessly
+
+**Traps (5)**
+
+- 1x Mirror Force
+- 2x Trap Hole
+- 2x Waboku
+
+**Fusion Deck (15)**
+
+- 3x B. Skull Dragon
+- 3x Twin-Headed Thunder Dragon
+- 3x Labyrinth Tank
+- 2x Thousand Dragon
+- 2x Bickuribox
+- 2x Musician King
+
+</details>
+
+<details>
+<summary>Germ Burn: 10% (bsocks-Germ Burn) (40 cards)</summary>
+
+**Monsters (18)**
+
+- 1x Cannon Soldier
+- 1x Cyber Jar
+- 3x Giant Germ
+- 3x Mystic Tomato
+- 3x Nimble Momonga
+- 2x Sangan
+- 3x Spear Cretin
+- 2x Witch of the Black Forest
+
+**Spells (15)**
+
+- 3x Chain Energy
+- 1x Change of Heart
+- 1x Confiscation
+- 1x Dark Hole
+- 1x Delinquent Duo
+- 3x Giant Trunade
+- 1x Monster Reborn
+- 1x Pot of Greed
+- 1x Raigeki
+- 1x The Forceful Sentry
+- 1x Toll
+
+**Traps (7)**
+
+- 3x Just Desserts
+- 3x Magic Jammer
+- 1x Mirror Force
+
+</details>
+
+### 4. Imperial
+
+Banlist: December 2002.
+
+<details>
+<summary>Tomato Control: 80% (Aretos-Tomato Control) (40 cards + 15 Fusion Deck)</summary>
+
+**Monsters (17)**
+
+- 3x Mechanicalchaser
+- 1x Giant Soldier of Stone
+- 1x Jinzo
+- 2x Magician of Faith
+- 2x Man-Eater Bug
+- 1x Morphing Jar
+- 3x Mystic Tomato
+- 2x Sangan
+- 1x Witch of the Black Forest
+- 1x Cannon Soldier
+
+**Spells (18)**
+
+- 3x Mystical Space Typhoon
+- 2x Nobleman of Crossout
+- 1x Fissure
+- 1x Raigeki
+- 1x Dark Hole
+- 1x Change of Heart
+- 1x Snatch Steal
+- 1x Delinquent Duo
+- 1x Confiscation
+- 1x The Forceful Sentry
+- 1x Heavy Storm
+- 1x Painful Choice
+- 1x Pot of Greed
+- 1x Monster Reborn
+- 1x Premature Burial
+
+**Traps (5)**
+
+- 1x Call Of The Haunted
+- 1x Imperial Order
+- 1x Mirror Force
+- 1x Trap Hole
+- 1x Dust Tornado
+
+**Fusion Deck (15)**
+
+- 1x B. Skull Dragon
+- 1x Twin-Headed Thunder Dragon
+- 1x Labyrinth Tank
+- 1x Thousand Dragon
+- 1x Roaring Ocean Snake
+- 1x Punished Eagle
+- 1x Kwagar Hercules
+- 1x Warrior of Tradition
+- 1x Deepsea Shark
+- 1x Musician King
+- 1x Darkfire Dragon
+- 1x Dragoness the Wicked Knight
+- 3x Thousand-Eyes Restrict
+
+</details>
+
+<details>
+<summary>Relinquished: 20% (bsocks-Relinquished) (40 cards + 15 Fusion Deck)</summary>
+
+**Monsters (19)**
+
+- 1x Jinzo
+- 3x Magician of Faith
+- 3x Mystic Tomato
+- 2x Sangan
+- 2x Senju of the Thousand Hands
+- 2x Sonic Bird
+- 1x Witch of the Black Forest
+- 3x Mechanicalchaser
+- 2x Relinquished
+
+**Spells (15)**
+
+- 2x Black Illusion Ritual
+- 1x Change of Heart
+- 1x Confiscation
+- 1x Dark Hole
+- 1x Delinquent Duo
+- 1x Monster Reborn
+- 3x Mystical Space Typhoon
+- 1x Pot of Greed
+- 1x Premature Burial
+- 1x Raigeki
+- 1x Snatch Steal
+- 1x The Forceful Sentry
+
+**Traps (6)**
+
+- 1x Call Of The Haunted
+- 1x Imperial Order
+- 1x Mirror Force
+- 3x Solemn Judgment
+
+**Fusion Deck (15)**
+
+- 3x B. Skull Dragon
+- 3x Labyrinth Tank
+- 3x Metal Dragon
+- 3x Thousand-Eyes Restrict
+- 3x Twin-Headed Thunder Dragon
+
+</details>
+
+### 5. Android
+
+Banlist: April 2003.
+
+<details>
+<summary>Tomato Control: 80% (Jazz-Tomato Control) (40 cards + 15 Fusion Deck)</summary>
+
+**Monsters (14)**
+
+- 2x Bazoo the Soul-Eater
+- 1x Cannon Soldier
+- 1x Jinzo
+- 2x Kycoo the Ghost Destroyer
+- 1x Masked Sorcerer
+- 3x Mystic Tomato
+- 1x Sangan
+- 1x Witch of the Black Forest
+- 2x Gemini Elf
+
+**Spells (14)**
+
+- 1x Change of Heart
+- 1x Confiscation
+- 1x Dark Hole
+- 1x Delinquent Duo
+- 1x Monster Reborn
+- 3x Mystical Space Typhoon
+- 1x Painful Choice
+- 1x Pot of Greed
+- 1x Raigeki
+- 1x Snatch Steal
+- 1x Swords of Revealing Light
+- 1x The Forceful Sentry
+
+**Traps (12)**
+
+- 1x Call Of The Haunted
+- 1x Fairy Box
+- 1x Imperial Order
+- 3x Jar of Greed
+- 1x Magic Cylinder
+- 1x Mirror Force
+- 1x Skull Lair
+- 1x Time Seal
+- 2x Torrential Tribute
+
+**Fusion Deck (15)**
+
+- 3x Darkfire Dragon
+- 3x Dragoness the Wicked Knight
+- 3x The Last Warrior from Another Planet
+- 3x Thousand-Eyes Restrict
+- 3x Warrior of Tradition
+
+</details>
+
+<details>
+<summary>Vanilla Beat: 20% (paoloNS-Vanilla Beat) (40 cards + 15 Fusion Deck)</summary>
+
+**Monsters (15)**
+
+- 3x Bazoo the Soul-Eater
+- 1x Cyber Jar
+- 1x Jinzo
+- 3x Kycoo the Ghost Destroyer
+- 1x Magician of Faith
+- 1x Morphing Jar
+- 1x Sangan
+- 1x Witch of the Black Forest
+- 3x Gemini Elf
+
+**Spells (15)**
+
+- 1x Change of Heart
+- 1x Confiscation
+- 1x Dark Hole
+- 1x Delinquent Duo
+- 2x Heavy Storm
+- 1x Monster Reborn
+- 3x Mystical Space Typhoon
+- 1x Painful Choice
+- 1x Pot of Greed
+- 1x Raigeki
+- 1x Snatch Steal
+- 1x The Forceful Sentry
+
+**Traps (10)**
+
+- 1x Call Of The Haunted
+- 1x Imperial Order
+- 1x Jar of Greed
+- 1x Mirror Force
+- 1x Skull Lair
+- 3x Solemn Judgment
+- 2x Torrential Tribute
+
+**Fusion Deck (15)**
+
+- 3x Bickuribox
+- 3x B. Skull Dragon
+- 3x Charubin the Fire Knight
+- 3x Cyber Saurus
+- 3x Twin-Headed Thunder Dragon
+
+</details>
+
+### 6. Joey-Pegasus
+
+Banlist: May 2003.
+
+<details>
+<summary>Tomato Control: 80% (AJTBLS-Tomato Control) (40 cards + 15 Fusion Deck)</summary>
+
+**Monsters (16)**
+
+- 2x Bazoo the Soul-Eater
+- 1x Jinzo
+- 2x Kycoo the Ghost Destroyer
+- 2x Magician of Faith
+- 3x Mystic Tomato
+- 1x Sangan
+- 1x Sinister Serpent
+- 3x Thunder Dragon
+- 1x Witch of the Black Forest
+
+**Spells (17)**
+
+- 1x Change of Heart
+- 1x Confiscation
+- 1x Dark Hole
+- 1x Delinquent Duo
+- 2x Graceful Charity
+- 1x Harpie's Feather Duster
+- 1x Heavy Storm
+- 1x Monster Reborn
+- 2x Mystical Space Typhoon
+- 1x Nobleman of Crossout
+- 1x Painful Choice
+- 1x Pot of Greed
+- 1x Raigeki
+- 1x Snatch Steal
+- 1x The Forceful Sentry
+
+**Traps (7)**
+
+- 1x Call Of The Haunted
+- 1x Imperial Order
+- 1x Mirror Force
+- 1x Time Seal
+- 3x Torrential Tribute
+
+**Fusion Deck (15)**
+
+- 3x Dark Balter the Terrible
+- 3x Fiend Skull Dragon
+- 3x Giltia the D. Knight
+- 3x Ryu Senshi
+- 3x Thousand-Eyes Restrict
+
+</details>
+
+<details>
+<summary>Vanilla Beat: 20% (ellietincan-Vanilla Beat (JP)) (40 cards + 15 Fusion Deck)</summary>
+
+**Monsters (13)**
+
+- 2x Bazoo the Soul-Eater
+- 1x Jinzo
+- 3x Kycoo the Ghost Destroyer
+- 1x Magician of Faith
+- 1x Sangan
+- 1x Sinister Serpent
+- 1x Witch of the Black Forest
+- 3x Gemini Elf
+
+**Spells (18)**
+
+- 1x Change of Heart
+- 1x Confiscation
+- 1x Dark Hole
+- 1x Delinquent Duo
+- 1x Fissure
+- 2x Graceful Charity
+- 1x Harpie's Feather Duster
+- 1x Heavy Storm
+- 1x Monster Reborn
+- 3x Mystical Space Typhoon
+- 1x Painful Choice
+- 1x Pot of Greed
+- 1x Raigeki
+- 1x Snatch Steal
+- 1x The Forceful Sentry
+
+**Traps (9)**
+
+- 1x Call Of The Haunted
+- 1x Imperial Order
+- 3x Jar of Greed
+- 1x Mirror Force
+- 1x Skull Lair
+- 2x Torrential Tribute
+
+**Fusion Deck (15)**
+
+- 3x B. Skull Dragon
+- 3x Flame Swordsman
+- 3x Gaia the Dragon Champion
+- 3x St. Joan
+- 3x The Last Warrior from Another Planet
+
+</details>
+
+### 7. Fiber
+
+Banlist: July 2003.
+
+<details>
+<summary>Tomato Control: 80% (Aretos-Tomato Control (Fiber)) (40 cards + 15 Fusion Deck)</summary>
+
+**Monsters (15)**
+
+- 3x Gemini Elf
+- 1x Bazoo the Soul-Eater
+- 1x Kycoo the Ghost Destroyer
+- 1x Witch of the Black Forest
+- 1x Sangan
+- 3x Mystic Tomato
+- 1x Sinister Serpent
+- 1x Injection Fairy Lily
+- 1x Exiled Force
+- 1x Fiber Jar
+- 1x Magician of Faith
+
+**Spells (16)**
+
+- 1x Snatch Steal
+- 1x Change of Heart
+- 1x Delinquent Duo
+- 1x Confiscation
+- 1x The Forceful Sentry
+- 3x Mystical Space Typhoon
+- 1x Raigeki
+- 1x Dark Hole
+- 1x Nobleman of Crossout
+- 1x Painful Choice
+- 1x Pot of Greed
+- 2x Graceful Charity
+- 1x Monster Reborn
+
+**Traps (9)**
+
+- 1x Call Of The Haunted
+- 1x Imperial Order
+- 1x Mirror Force
+- 1x Torrential Tribute
+- 1x Trap Hole
+- 1x Time Seal
+- 3x Jar of Greed
+
+**Fusion Deck (15)**
+
+- 1x B. Skull Dragon
+- 1x Twin-Headed Thunder Dragon
+- 1x Labyrinth Tank
+- 1x The Last Warrior from Another Planet
+- 1x Roaring Ocean Snake
+- 1x Ryu Senshi
+- 1x Super Robolady
+- 1x Super Roboyarou
+- 1x Dark Balter the Terrible
+- 1x Fiend Skull Dragon
+- 1x Musician King
+- 1x Darkfire Dragon
+- 1x Dragoness the Wicked Knight
+- 2x Thousand-Eyes Restrict
+
+</details>
+
+<details>
+<summary>Recruiter Control: 20% (GBO-Recruiter Control) (40 cards)</summary>
+
+**Monsters (13)**
+
+- 1x Dark Ruler Ha Des
+- 1x Exiled Force
+- 3x Giant Rat
+- 1x Injection Fairy Lily
+- 1x Jinzo
+- 3x Mystic Tomato
+- 1x Sangan
+- 1x Witch of the Black Forest
+- 1x Yata-Garasu
+
+**Spells (22)**
+
+- 1x Change of Heart
+- 1x Confiscation
+- 2x Creature Swap
+- 1x Dark Hole
+- 1x Delinquent Duo
+- 2x Graceful Charity
+- 1x Harpie's Feather Duster
+- 1x Heavy Storm
+- 1x Monster Reborn
+- 3x Mystical Space Typhoon
+- 2x Nobleman of Crossout
+- 1x Painful Choice
+- 1x Pot of Greed
+- 1x Premature Burial
+- 1x Raigeki
+- 1x Snatch Steal
+- 1x The Forceful Sentry
+
+**Traps (5)**
+
+- 1x Call Of The Haunted
+- 1x Imperial Order
+- 1x Magic Cylinder
+- 1x Mirror Force
+- 1x Torrential Tribute
+
+</details>
+
+### 8-15. Yata to Reaper
+
+Vanilla (unchanged): these opponents still use the original game's decks.
+
+## Deck opponents (debug build only)
+
+A testing page after the formats, left out of `make release`. Each opponent always uses its one deck, all Goat format (April 2005).
+
+| Opponent | Deck | Portrait |
+|---|---|---|
+| Chaos Turbo | LR-Chaos Turbo | Black Luster Soldier - Envoy of the Beginning |
+| Warrior | sdlkilla-Warrior | D.D. Warrior Lady |
+| Goat Control | geistD-Goat Control | Thousand-Eyes Restrict |
+
+<details>
+<summary>Chaos Turbo (LR-Chaos Turbo) (40 cards)</summary>
+
+**Monsters (20)**
+
+- 1x Black Luster Soldier - Envoy of Beginning
+- 1x Breaker the Magical Warrior
+- 2x Chaos Sorcerer
+- 2x Dekoichi the Battlechanted Locomotive
+- 3x Gravekeeper's Spy
+- 2x Magician of Faith
+- 2x Night Assailant
+- 1x Sangan
+- 1x Sinister Serpent
+- 3x Thunder Dragon
+- 1x Tribe-Infecting Virus
+- 1x Tsukuyomi
+
+**Spells (13)**
+
+- 1x Book of Moon
+- 1x Card Destruction
+- 1x Delinquent Duo
+- 1x Graceful Charity
+- 1x Heavy Storm
+- 1x Mind Control
+- 1x Mystical Space Typhoon
+- 2x Nobleman of Crossout
+- 1x Pot of Greed
+- 1x Snatch Steal
+- 2x Upstart Goblin
+
+**Traps (7)**
+
+- 1x Jar of Greed
+- 1x Mirror Force
+- 2x Phoenix Wing Wind Blast
+- 1x Bell of Destruction
+- 1x Torrential Tribute
+- 1x Trap Dustshoot
+
+</details>
+
+<details>
+<summary>Warrior (sdlkilla-Warrior) (40 cards)</summary>
+
+**Monsters (13)**
+
+- 1x Black Luster Soldier - Envoy of Beginning
+- 3x Blade Knight
+- 1x Breaker the Magical Warrior
+- 1x D.D. Warrior Lady
+- 1x Don Zaloog
+- 1x Exiled Force
+- 2x Kycoo the Ghost Destroyer
+- 1x Mystic Swordsman LV2
+- 1x Ninja Grandmaster Sasuke
+- 1x Tribe-Infecting Virus
+
+**Spells (11)**
+
+- 1x Delinquent Duo
+- 1x Graceful Charity
+- 1x Heavy Storm
+- 1x Mystical Space Typhoon
+- 2x Nobleman of Crossout
+- 1x Pot of Greed
+- 1x Premature Burial
+- 2x Reinforcement of the Army
+- 1x Snatch Steal
+
+**Traps (16)**
+
+- 2x Jar of Greed
+- 1x Mirror Force
+- 1x Bell of Destruction
+- 3x Sakuretsu Armor
+- 3x Solemn Judgment
+- 1x Torrential Tribute
+- 2x Trap Dustshoot
+- 2x Dust Tornado
+- 1x Call Of The Haunted
+
+</details>
+
+<details>
+<summary>Goat Control (geistD-Goat Control) (43 cards)</summary>
+
+**Monsters (15)**
+
+- 1x Abyss Soldier
+- 1x Black Luster Soldier - Envoy of Beginning
+- 1x Breaker the Magical Warrior
+- 1x Cyber Jar
+- 1x D.D. Warrior Lady
+- 1x Dark Magician of Chaos
+- 2x Magical Merchant
+- 2x Magician of Faith
+- 1x Morphing Jar
+- 1x Sangan
+- 1x Sinister Serpent
+- 1x Tribe-Infecting Virus
+- 1x Tsukuyomi
+
+**Spells (14)**
+
+- 1x Creature Swap
+- 1x Delinquent Duo
+- 1x Graceful Charity
+- 1x Heavy Storm
+- 3x Metamorphosis
+- 2x Nobleman of Crossout
+- 1x Pot of Greed
+- 1x Premature Burial
+- 2x Scapegoat
+- 1x Snatch Steal
+
+**Traps (11)**
+
+- 3x Jar of Greed
+- 1x Mirror Force
+- 1x Bell of Destruction
+- 3x Solemn Judgment
+- 1x Torrential Tribute
+- 2x Trap Dustshoot
+- 3x Thousand-Eyes Restrict
+
+</details>

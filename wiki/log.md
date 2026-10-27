@@ -1598,3 +1598,9 @@ updated: 2026-09-29
 ## [2026-10-27] progress | Drop the added Black Skull Dragon
 - config/new_cards.txt: removed "Black Skull Dragon"; EDS already has it as B. Skull Dragon (216). Later added cards shift down one id.
 - src/mod_decks.c: the format decks use CARD_B_SKULL_DRAGON; the HAS_CARD_BLACK_SKULL_DRAGON guards are gone. tools/banlist.py keeps the alias, so pools, limits and prices map to card 216.
+
+## [2026-10-27] query | DECKS.md
+- DECKS.md (repo root): the starter decks, the format opponents' decks with their chances and formats, and the debug deck page, with full lists from src/mod_decks.c. Yata to Reaper are marked vanilla. README.md links it.
+
+## [2026-10-27] progress | Treasure unlocks before Imperial
+- src/mod_opponents.c: Treasure (Espa Roba) is format 3 and Imperial (Mako) format 4, in banlist date order; page 0 places Treasure after Critter on the cursor ring. README.md, DECKS.md and [[yugi-kaiba-opponent]] reordered.

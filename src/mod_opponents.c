@@ -157,8 +157,8 @@ static const struct ModOpponent sOpponents[] = {
     [DUELIST_TRISTAN] = FORMAT(0, BANLIST_YUGI_KAIBA, sNameYugiKaiba, CARD_LA_JINN_THE_MYSTICAL_GENIE_OF_THE_LAMP),
     [DUELIST_BAKURA] = HIDDEN,
     [DUELIST_REX] = FORMAT(1, BANLIST_CRITTER, sNameCritter, CARD_SANGAN),
-    [DUELIST_MAKO] = FORMAT(2, BANLIST_IMPERIAL, sNameImperial, CARD_IMPERIAL_ORDER),
-    [DUELIST_ESPA_ROBA] = FORMAT(3, BANLIST_TREASURE, sNameTreasure, CARD_CONFISCATION),
+    [DUELIST_MAKO] = FORMAT(3, BANLIST_IMPERIAL, sNameImperial, CARD_IMPERIAL_ORDER),
+    [DUELIST_ESPA_ROBA] = FORMAT(2, BANLIST_TREASURE, sNameTreasure, CARD_CONFISCATION),
     [DUELIST_MAI] = FORMAT(4, BANLIST_ANDROID, sNameAndroid, CARD_JINZO),
     [DUELIST_WEEVIL] = FORMAT(5, BANLIST_JOEY_PEGASUS, sNameJoeyPegasus, CARD_GRACEFUL_CHARITY),
     [DUELIST_RARE_HUNTER] = FORMAT(6, BANLIST_FIBER, sNameFiber, ART_FIBER_JAR),
@@ -180,9 +180,9 @@ static const struct ModOpponent sOpponents[] = {
 /* Wins against format k (in unlock order) that open format k + 1 (make release; with make every format is open). */
 static const u8 sWinsToUnlockNext[FORMAT_COUNT - 1] = {
     10,     /* Yugi-Kaiba   -> Critter */
-    10,     /* Critter      -> Imperial */
-    10,     /* Imperial     -> Treasure */
-    10,     /* Treasure     -> Android */
+    10,     /* Critter      -> Treasure */
+    10,     /* Treasure     -> Imperial */
+    10,     /* Imperial     -> Android */
     10,     /* Android      -> Joey-Pegasus */
     10,     /* Joey-Pegasus -> Fiber */
     10,     /* Fiber        -> Yata */
@@ -203,7 +203,7 @@ static const u8 sWinsToUnlockNext[FORMAT_COUNT - 1] = {
 #endif
 static const u8 sPageDuelists[5][5] = {
     /*  bottom                left                top left               top right              right */
-    { DUELIST_ESPA_ROBA,    DUELIST_MAI,        DUELIST_TRISTAN,       DUELIST_REX,           DUELIST_MAKO },
+    { DUELIST_MAKO,         DUELIST_MAI,        DUELIST_TRISTAN,       DUELIST_REX,           DUELIST_ESPA_ROBA },
     { DUELIST_UMBRA_LUMIS,  DUELIST_MARIK,      DUELIST_WEEVIL,        DUELIST_RARE_HUNTER,   DUELIST_ARKANA },
     { DUELIST_YAMI_BAKURA,  DUELIST_YAMI_YUGI,  DUELIST_STRINGS,       DUELIST_KAIBA,         DUELIST_ISHIZU },
     { 0,                    0,                  DUELIST_SIMON,         DUELIST_PEGASUS,       DUELIST_GRANDPA },
