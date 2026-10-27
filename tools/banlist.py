@@ -86,9 +86,17 @@ def card_lookup():
         exact.setdefault(name, set()).add(number)
         folded.setdefault(norm(name), set()).add(number)
 
-    def lookup(name):
-        name = aliases.get(name, name)
+    def find(name):
         return exact.get(name, folded.get(norm(name)))
+
+    def lookup(name):
+        # The name's own card and its alias's: both count, should a TCG name match an added card as well as its
+        # EDS stand-in.
+        numbers = set()
+        for n in (name, aliases.get(name)):
+            if n is not None and find(n):
+                numbers |= find(n)
+        return numbers or None
     return lookup
 
 

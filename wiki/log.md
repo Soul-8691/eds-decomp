@@ -1588,3 +1588,13 @@ updated: 2026-09-29
   player's collection cannot make a 40-card Main Deck.
 - Pages: [[banlists-menu]].
 - The 40-card check runs only in make release (MOD_RELEASE).
+
+## [2026-10-27] progress | Black Skull Dragon counts in the banlists again
+- tools/banlist.py: a name matches its own card and its alias's (before, the alias "Black Skull Dragon" -> "B. Skull
+  Dragon" replaced the name, so the added Black Skull Dragon was in no card pool: limit 0, refused by the decks).
+  Also fixes the same for card prices (tools/cardprices.py uses the lookup).
+- Pages: [[banlists-menu]].
+
+## [2026-10-27] progress | Drop the added Black Skull Dragon
+- config/new_cards.txt: removed "Black Skull Dragon"; EDS already has it as B. Skull Dragon (216). Later added cards shift down one id.
+- src/mod_decks.c: the format decks use CARD_B_SKULL_DRAGON; the HAS_CARD_BLACK_SKULL_DRAGON guards are gone. tools/banlist.py keeps the alias, so pools, limits and prices map to card 216.

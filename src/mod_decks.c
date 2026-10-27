@@ -360,7 +360,6 @@ static const struct DeckList *TristanDeck(void)
  * Masked Control 60%, Muka Muka Turbo 40% (decks/Jazz-Masked Control.ydk, decks/Gyomberman-Muka Muka Turbo.ydk; main
  * and extra decks: LoadOpponentDeck puts the Fusion Monsters in the Fusion Deck). Thousand Dragon is the .ydk's
  * 41462083. */
-#if defined(HAS_CARD_BLACK_SKULL_DRAGON)
 #define MOD_CRITTER_MASKED_CONTROL 1
 static const u16 sCritterMaskedControl[] = {
     /* Monsters (18) */
@@ -391,7 +390,7 @@ static const u16 sCritterMaskedControl[] = {
     X2(CARD_TRAP_HOLE),
     X3(CARD_WABOKU),
     /* Fusion Deck (15) */
-    X3(CARD_BLACK_SKULL_DRAGON),
+    X3(CARD_B_SKULL_DRAGON),
     X3(CARD_GAIA_THE_DRAGON_CHAMPION),
     X3(CARD_LABYRINTH_TANK),
     X3(CARD_THOUSAND_DRAGON),
@@ -399,7 +398,6 @@ static const u16 sCritterMaskedControl[] = {
 };
 STATIC_ASSERT(ARRAY_COUNT(sCritterMaskedControl) == 40 + 15, CritterMaskedControlSize);
 static const struct DeckList sCritterMaskedControlList = { sCritterMaskedControl, ARRAY_COUNT(sCritterMaskedControl), 0 };
-#endif
 
 #define MOD_CRITTER_MUKA_MUKA_TURBO 1
 static const u16 sCritterMukaMukaTurbo[] = {
@@ -497,7 +495,6 @@ static const u16 sTreasureTomatoControl[] = {
 STATIC_ASSERT(ARRAY_COUNT(sTreasureTomatoControl) == 40 + 15, TreasureTomatoControlSize);
 static const struct DeckList sTreasureTomatoControlList = { sTreasureTomatoControl, ARRAY_COUNT(sTreasureTomatoControl), 0 };
 
-#if defined(HAS_CARD_BLACK_SKULL_DRAGON)
 #define MOD_TREASURE_RECRUITER_CONTROL 1
 static const u16 sTreasureRecruiterControl[] = {
     /* Monsters (17) */
@@ -530,7 +527,7 @@ static const u16 sTreasureRecruiterControl[] = {
     X2(CARD_TRAP_HOLE),
     X2(CARD_WABOKU),
     /* Fusion Deck (15) */
-    X3(CARD_BLACK_SKULL_DRAGON),
+    X3(CARD_B_SKULL_DRAGON),
     X3(CARD_TWIN_HEADED_THUNDER_DRAGON),
     X3(CARD_LABYRINTH_TANK),
     X2(CARD_THOUSAND_DRAGON),
@@ -540,7 +537,6 @@ static const u16 sTreasureRecruiterControl[] = {
 STATIC_ASSERT(ARRAY_COUNT(sTreasureRecruiterControl) == 40 + 15, TreasureRecruiterControlSize);
 static const struct DeckList sTreasureRecruiterControlList = { sTreasureRecruiterControl,
                                                                ARRAY_COUNT(sTreasureRecruiterControl), 0 };
-#endif
 
 static const u16 sTreasureGermBurn[] = {
     /* Monsters (18) */
@@ -589,9 +585,9 @@ static const struct DeckList *TreasureDeck(void)
 
 /* The Imperial format opponent (Mako Tsunami's slot, src/mod_opponents.c): one of two decks per duel (ImperialDeck):
  * Tomato Control 80%, Relinquished 20% (decks/Aretos-Tomato Control.ydk, decks/bsocks-Relinquished.ydk; main and
- * extra decks). Thousand Dragon is the .ydk's 41462083. Both run the added Black Skull Dragon and Thousand-Eyes
+ * extra decks). Thousand Dragon is the .ydk's 41462083. Both run B. Skull Dragon and Thousand-Eyes
  * Restrict. */
-#if defined(HAS_CARD_BLACK_SKULL_DRAGON) && defined(HAS_CARD_THOUSAND_EYES_RESTRICT)
+#if defined(HAS_CARD_THOUSAND_EYES_RESTRICT)
 #define MOD_IMPERIAL_DECKS 1
 static const u16 sImperialTomatoControl[] = {
     /* Monsters (17) */
@@ -628,7 +624,7 @@ static const u16 sImperialTomatoControl[] = {
     CARD_TRAP_HOLE,
     CARD_DUST_TORNADO,
     /* Fusion Deck (15) */
-    CARD_BLACK_SKULL_DRAGON,
+    CARD_B_SKULL_DRAGON,
     CARD_TWIN_HEADED_THUNDER_DRAGON,
     CARD_LABYRINTH_TANK,
     CARD_THOUSAND_DRAGON,
@@ -676,7 +672,7 @@ static const u16 sImperialRelinquished[] = {
     CARD_MIRROR_FORCE,
     X3(CARD_SOLEMN_JUDGMENT),
     /* Fusion Deck (15) */
-    X3(CARD_BLACK_SKULL_DRAGON),
+    X3(CARD_B_SKULL_DRAGON),
     X3(CARD_LABYRINTH_TANK),
     X3(CARD_METAL_DRAGON),
     X3(CARD_THOUSAND_EYES_RESTRICT),
@@ -746,8 +742,7 @@ static const struct DeckList sAndroidTomatoControlList = { sAndroidTomatoControl
 #endif
 
 #if defined(HAS_CARD_BAZOO_THE_SOUL_EATER) && defined(HAS_CARD_KYCOO_THE_GHOST_DESTROYER) \
-    && defined(HAS_CARD_JAR_OF_GREED) && defined(HAS_CARD_SKULL_LAIR) && defined(HAS_CARD_TORRENTIAL_TRIBUTE) \
-    && defined(HAS_CARD_BLACK_SKULL_DRAGON)
+    && defined(HAS_CARD_JAR_OF_GREED) && defined(HAS_CARD_SKULL_LAIR) && defined(HAS_CARD_TORRENTIAL_TRIBUTE)
 #define MOD_ANDROID_VANILLA_BEAT 1
 static const u16 sAndroidVanillaBeat[] = {
     /* Monsters (15) */
@@ -783,7 +778,7 @@ static const u16 sAndroidVanillaBeat[] = {
     X2(CARD_TORRENTIAL_TRIBUTE),
     /* Fusion Deck (15) */
     X3(CARD_BICKURIBOX),
-    X3(CARD_BLACK_SKULL_DRAGON),
+    X3(CARD_B_SKULL_DRAGON),
     X3(CARD_CHARUBIN_THE_FIRE_KNIGHT),
     X3(CARD_CYBER_SAURUS),
     X3(CARD_TWIN_HEADED_THUNDER_DRAGON),
@@ -857,7 +852,7 @@ static const struct DeckList sJoeyPegasusTomatoControlList = { sJoeyPegasusTomat
 
 #if defined(HAS_CARD_BAZOO_THE_SOUL_EATER) && defined(HAS_CARD_KYCOO_THE_GHOST_DESTROYER) \
     && defined(HAS_CARD_JAR_OF_GREED) && defined(HAS_CARD_SKULL_LAIR) && defined(HAS_CARD_TORRENTIAL_TRIBUTE) \
-    && defined(HAS_CARD_BLACK_SKULL_DRAGON) && defined(HAS_CARD_ST_JOAN) \
+    && defined(HAS_CARD_ST_JOAN) \
     && defined(HAS_CARD_THE_LAST_WARRIOR_FROM_ANOTHER_PLANET)
 #define MOD_JOEY_PEGASUS_VANILLA_BEAT 1
 static const u16 sJoeyPegasusVanillaBeat[] = {
@@ -894,7 +889,7 @@ static const u16 sJoeyPegasusVanillaBeat[] = {
     CARD_SKULL_LAIR,
     X2(CARD_TORRENTIAL_TRIBUTE),
     /* Fusion Deck (15) */
-    X3(CARD_BLACK_SKULL_DRAGON),
+    X3(CARD_B_SKULL_DRAGON),
     X3(CARD_FLAME_SWORDSMAN),
     X3(CARD_GAIA_THE_DRAGON_CHAMPION),
     X3(CARD_ST_JOAN),
@@ -920,7 +915,7 @@ static const struct DeckList *JoeyPegasusDeck(void)
  * Control. */
 #if defined(HAS_CARD_BAZOO_THE_SOUL_EATER) && defined(HAS_CARD_KYCOO_THE_GHOST_DESTROYER) \
     && defined(HAS_CARD_INJECTION_FAIRY_LILY) && defined(HAS_CARD_EXILED_FORCE) && defined(HAS_CARD_FIBER_JAR) \
-    && defined(HAS_CARD_JAR_OF_GREED) && defined(HAS_CARD_TORRENTIAL_TRIBUTE) && defined(HAS_CARD_BLACK_SKULL_DRAGON) \
+    && defined(HAS_CARD_JAR_OF_GREED) && defined(HAS_CARD_TORRENTIAL_TRIBUTE) \
     && defined(HAS_CARD_THE_LAST_WARRIOR_FROM_ANOTHER_PLANET) && defined(HAS_CARD_RYU_SENSHI) \
     && defined(HAS_CARD_SUPER_ROBOLADY) && defined(HAS_CARD_SUPER_ROBOYAROU) \
     && defined(HAS_CARD_DARK_BALTER_THE_TERRIBLE) && defined(HAS_CARD_FIEND_SKULL_DRAGON) \
@@ -962,7 +957,7 @@ static const u16 sFiberTomatoControl[] = {
     CARD_TIME_SEAL,
     X3(CARD_JAR_OF_GREED),
     /* Fusion Deck (15) */
-    CARD_BLACK_SKULL_DRAGON,
+    CARD_B_SKULL_DRAGON,
     CARD_TWIN_HEADED_THUNDER_DRAGON,
     CARD_LABYRINTH_TANK,
     CARD_THE_LAST_WARRIOR_FROM_ANOTHER_PLANET,
