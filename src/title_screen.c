@@ -24,6 +24,9 @@
 /* Added: a starter deck of this build (src/mod_decks.c); returns 1 when it built `choice`. */
 int BuildModStarterDeck(int choice);
 void DeckRecipes_OnNewGame(void);
+/* Mod (src/mod_title.c): "Yak's YGO Hack" instead of the logo. */
+void ModTitle_Load(void);
+void ModTitle_Draw(void);
 /* Added: every card x8 in the trunk at the start of a new game (src/mod_decks.c). */
 void GiveStartingTrunk(void);
 #include "calendar.h"
@@ -527,6 +530,7 @@ void Title_DrawMenu(void)
 {
     s32 option;
 
+    ModTitle_Draw();    /* added: the title text (src/mod_title.c) */
     for (option = 0; option <= 1; option++) {
         s32 x = 0x18 + option * 0x70;
         s32 t = option * 0x80 + 0x200;
@@ -578,6 +582,7 @@ void Title_LoadGraphics(void)
     *(s16 *)BG_PLTT = 0; /* black backdrop */
     /* mapOffset 0x400 * n + cell addresses gMain.bgMapBuffer[n]: BG1, BG2 and BG3 */
     LoadBgImage(0x20, 0x10, 0x10, gTitleLogoImage);
+    ModTitle_Load();    /* added: the logo hidden, "Yak's YGO Hack" built (src/mod_title.c) */
     LoadBgImage4bpp(0x409, 0xA0, 0x2B8, gTitleFlameImage);
     LoadBgImage4bpp(0x809, 0xB0, 0x310, gTitleCoinImage);
     LoadBgImage4bpp(0xC00, 0xC0, 0x388, gTitleGridImage);

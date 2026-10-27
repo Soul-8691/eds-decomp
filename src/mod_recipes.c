@@ -1,7 +1,9 @@
 /*
  * mod_recipes: Deck Recipes, the main menu's eighth item. Not part of the original ROM.
  *   BuildMenuLabel          a menu label, plain and highlighted, put together from the letters of the other labels
- *                           in gMainMenuObjGfx (also for mod_packs' "Booster Packs")
+ *                           in gMainMenuObjGfx (also for mod_packs' "Booster Packs"); BuildMenuLabelEx also takes
+ *                           drawn letters the sheet lacks (sDrawnGlyphs) and can leave out the card icons (the
+ *                           title screen's "Yak's YGO Hack", src/mod_title.c)
  *   DeckRecipes_BuildLabel  the "Deck Recipes" label (MainMenu_Init calls it for tiles 0x200-0x23F, the rows after
  *                           the sheet; the scene uses it as its title)
  *   CB_DeckRecipes          the scene (MainMenu_Launch starts it)
@@ -185,11 +187,29 @@ static void PutPixel(u16 *dst, int x, int y, u32 color)
     dst[i] = (dst[i] & ~(15 << shift)) | (color << shift);
 }
 
+/* Letters the sheet's labels do not have, drawn in its style (cap height rows 2-11, 2-pixel strokes): a chunk with
+ * item LABEL_DRAWN | index, x0 0 and x1 its cell width - 1 (the glyph and a 1-pixel gap). Row bits: bit 7 is x 0. */
+#define LABEL_DRAWN     0x80
+static const u8 sDrawnGlyphs[][16] = {
+    /* 0 Y */ { 0, 0, 0xC3, 0xC3, 0x66, 0x3C, 0x18, 0x18, 0x18, 0x18, 0x18, 0x18 },
+    /* 1 G */ { 0, 0, 0x1F, 0x70, 0x60, 0xC0, 0xCF, 0xC3, 0xC3, 0x63, 0x73, 0x1F },
+    /* 2 O */ { 0, 0, 0x3C, 0x66, 0xC3, 0xC3, 0xC3, 0xC3, 0xC3, 0xC3, 0x66, 0x3C },
+    /* 3 H */ { 0, 0, 0xC3, 0xC3, 0xC3, 0xC3, 0xFF, 0xC3, 0xC3, 0xC3, 0xC3, 0xC3 },
+    /* 4 ' */ { 0, 0, 0xC0, 0xC0, 0x40 },
+    /* 5 space: no pixels */ { 0 },
+};
+
+/* The highlighted labels' fill colour of each row (the most common one in the sheet's highlighted letters), for the
+ * drawn letters; the outline is colour 1, as theirs. */
+static const u8 sHighlightRowColor[16] = { 7, 7, 7, 2, 2, 7, 7, 2, 2, 5, 5, 7, 7, 7, 7, 7 };
+
 /* A plain pixel of the chunk's item at (x, y), x within the chunk. */
 static int ChunkPixel(const struct LabelChunk *c, int x, int y)
 {
     if (x < c->x0 || x > c->x1 || y < 0 || y > 15)
         return 0;
+    if (c->item & LABEL_DRAWN)
+        return x < 8 && (sDrawnGlyphs[c->item & ~LABEL_DRAWN][y] >> (7 - x)) & 1;
     return SheetPixel(x, (c->item + 1) * 16 + y) != 0;
 }
 
@@ -198,9 +218,10 @@ static int ChunkPixel(const struct LabelChunk *c, int x, int y)
  * sheet's own labels. The plain letters get Deck Edit's colours (9 above the x-height, 8 below). The highlighted
  * letters keep the sheet's pixels that touch the chunk's plain ones (the fill and its 1-pixel outline); an outline
  * pixel does not cover a pixel already drawn. The card icons sit 4 pixels from the outline on each side. The text
- * is centred as the sheet's labels (on x 63); at most 96 pixels wide, or the icons leave the label.
+ * is centred as the sheet's labels (on x 63); at most 96 pixels wide, or the icons leave the label (without them,
+ * 126). A drawn letter (LABEL_DRAWN) gets sHighlightRowColor's fill and a colour-1 outline.
  */
-void BuildMenuLabel(const struct LabelChunk *chunks, int count, u16 *dst)
+void BuildMenuLabelEx(const struct LabelChunk *chunks, int count, u16 *dst, int icons)
 {
     const struct LabelChunk *c;
     int x, y, i, j, dx, width = 0;
@@ -209,7 +230,7 @@ void BuildMenuLabel(const struct LabelChunk *chunks, int count, u16 *dst)
         width += c->x1 - c->x0 + 1;
     dx = 63 - width / 2;
     MemClear16(dst, 64 * 32);
-    for (y = 0; y < 16; y++) {
+    for (y = 0; icons && y < 16; y++) {
         for (i = 0; i < ICON_WIDTH; i++) {
             PutPixel(dst, dx + 128 - 16 + i, y, SheetPixel(ICON_LEFT_X + i, 3 * 16 + y));
             PutPixel(dst, dx + width - 1 + 128 + 6 + i, y, SheetPixel(ICON_RIGHT_X + i, 3 * 16 + y));
@@ -218,6 +239,27 @@ void BuildMenuLabel(const struct LabelChunk *chunks, int count, u16 *dst)
     for (c = chunks; c < chunks + count; c++) {
         int sy = (c->item + 1) * 16;
 
+        if (c->item & LABEL_DRAWN) {
+            for (y = 0; y < 16; y++) {
+                for (x = c->x0 - 1; x <= c->x1 + 1; x++) {
+                    int near = 0, d = dx + x - c->x0;
+
+                    if (ChunkPixel(c, x, y)) {
+                        PutPixel(dst, d, y, y <= 4 ? 9 : 8);
+                        PutPixel(dst, d + 128, y, sHighlightRowColor[y]);
+                        continue;
+                    }
+                    for (i = -1; i <= 1; i++) {
+                        for (j = -1; j <= 1; j++)
+                            near |= ChunkPixel(c, x + i, y + j);
+                    }
+                    if (near && !GetPixel(dst, d + 128, y))
+                        PutPixel(dst, d + 128, y, 1);
+                }
+            }
+            dx += c->x1 - c->x0 + 1;
+            continue;
+        }
         for (y = 0; y < 16; y++) {
             for (x = c->x0; x <= c->x1; x++) {
                 if (SheetPixel(x, sy + y))
@@ -240,6 +282,11 @@ void BuildMenuLabel(const struct LabelChunk *chunks, int count, u16 *dst)
         }
         dx += c->x1 - c->x0 + 1;
     }
+}
+
+void BuildMenuLabel(const struct LabelChunk *chunks, int count, u16 *dst)
+{
+    BuildMenuLabelEx(chunks, count, dst, 1);
 }
 
 void DeckRecipes_BuildLabel(u16 *dst)

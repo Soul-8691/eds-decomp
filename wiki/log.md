@@ -1566,3 +1566,10 @@ updated: 2026-09-29
 ## [2026-10-27] setup | README: smarter CPU
 - README.md feature list: the CPU's Defense Position retreat and equal-ATK crashes.
 - Pages: (none; README.md).
+
+## [2026-10-27] progress | Title screen: "Yak's YGO Hack"
+- New unit src/mod_title.c: the BG0 logo's map is cleared; "Yak's YGO Hack" is built in the main menu's highlighted
+  font (BuildMenuLabelEx, mod_recipes.c: sheet letters a/c/k/s plus drawn Y, G, O, H, ' in sDrawnGlyphs, coloured
+  with the sheet's per-row highlight fill and a colour-1 outline) into OBJ tiles 0-63, palette 1, and drawn as four
+  2x affine 32x16 sprites (208 px wide, y 40) from Title_DrawMenu.
+- Pages: (none).
