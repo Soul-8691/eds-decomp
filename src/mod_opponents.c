@@ -141,8 +141,12 @@ static const char sNameGoatControl[] = "geistD-Goat Control";
 #endif
 
 #define FORMAT(order, banlist, name, portrait) { KIND_FORMAT, order, banlist, 0, name, portrait }
-#define DECK(name, portrait) { KIND_DECK, 0, 0, 0, name, portrait }
 #define HIDDEN { KIND_HIDDEN, 0, 0, 0, NULL, 0 }
+#if MOD_RELEASE
+#define DECK(name, portrait) HIDDEN     /* make release: the deck opponents are a testing page */
+#else
+#define DECK(name, portrait) { KIND_DECK, 0, 0, 0, name, portrait }
+#endif
 
 /* By enum DuelistId. */
 static const struct ModOpponent sOpponents[] = {
@@ -192,7 +196,11 @@ static const u8 sWinsToUnlockNext[FORMAT_COUNT - 1] = {
 };
 
 /* The duelist of each [page][slot] (slots: 0 bottom, 1 left, 2 top left, 3 top right, 4 right); 0 = empty. */
-#define PAGE_COUNT      4               /* pages that can be visited */
+#if MOD_RELEASE
+#define PAGE_COUNT      3               /* pages that can be visited: the formats (the deck page is make only) */
+#else
+#define PAGE_COUNT      4               /* pages that can be visited: the formats, then the deck opponents */
+#endif
 static const u8 sPageDuelists[5][5] = {
     /*  bottom                left                top left               top right              right */
     { DUELIST_ESPA_ROBA,    DUELIST_MAI,        DUELIST_TRISTAN,       DUELIST_REX,           DUELIST_MAKO },

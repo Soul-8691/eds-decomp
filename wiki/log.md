@@ -1577,3 +1577,8 @@ updated: 2026-09-29
 ## [2026-10-27] progress | Title background stays still
 - title_screen.c Title_VBlank: the BG3 grid's offsets kept at 0 (it drifted diagonally); README "Still backgrounds".
 - Pages: (none; README.md).
+
+## [2026-10-27] setup | Deck opponents only in the testing build
+- mod_opponents.c: with MOD_RELEASE the DECK entries become HIDDEN and PAGE_COUNT is 3, so the Chaos Turbo / Warrior /
+  Goat Control page is only in `make` builds.
+- Pages: [[release-build]].

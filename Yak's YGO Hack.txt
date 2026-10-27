@@ -21,3 +21,8 @@ Up to 50 deck recipes
 Yak's YGO Hack title screen (Start menu font)
 Fix DEF position AI
 Fix bugs with cards
+Fix quirks with new cards
+Detail starting decks in README
+Detail opp decks in README
+Detail card prices in PASSWORD_MACHINE.md
+Don't allow switching banlist if only less than 40 cards are possible in your main deck

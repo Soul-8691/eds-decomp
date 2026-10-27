@@ -30,6 +30,7 @@ updated: 2026-10-26
 | Format opponents (`ModIsOpponentUnlocked`, mod_opponents.c) | all open | Yugi-Kaiba open; each next one after 10 wins (`sWinsToUnlockNext`) |
 | Deck builder banlist (`GetBanlistCopyLimit`, mod_banlists.c) | ignored (no limits, no card pool) | the Banlists menu's list and pool |
 | Format check against opponents (`BanlistBlocksDuel`, mod_banlist.c) | none | the opponent's format |
+| Deck opponents page (Chaos Turbo, Warrior, Goat Control; mod_opponents.c) | page 4 of the opponent select | not there (`DECK` entries hidden, `PAGE_COUNT` 3) |
 
 ## Checked
 Both builds were checked in the preprocessed units:
