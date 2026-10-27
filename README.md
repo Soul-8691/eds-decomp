@@ -68,6 +68,8 @@ next one.
 
 ## How the new cards are added
 
+- **Coded cards.** Every card listed in [`new_cards.txt`](new_cards.txt) (in the repository root) is fully coded,
+  effects included.
 - **Card data.** New cards are listed by name in `config/new_cards.txt`. The build fetches each card's stats, text
   and artwork from [YGOPRODeck](https://ygoprodeck.com/api-guide/) and appends it to the game's card tables
   (`tools/newcards.py`).

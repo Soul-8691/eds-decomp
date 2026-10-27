@@ -1614,3 +1614,6 @@ updated: 2026-09-29
 ## [2026-10-27] progress | README: banlist 40-card check
 - README.md: the Banlists entry notes the switch is refused when your cards cannot make a 40-card Main Deck under the new banlist.
 - README.md: the Debug mode entry notes that switching banlists skips the 40-card check.
+
+## [2026-10-27] progress | README: coded cards list
+- README.md: the new-cards section says every card in the root new_cards.txt is fully coded with its effects.
