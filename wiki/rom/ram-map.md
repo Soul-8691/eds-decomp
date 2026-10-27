@@ -107,7 +107,8 @@ The whole of EWRAM is zeroed at boot. The addresses below are **base literals** 
 | `0x0201F7D0` / `0x0201F7E0` | `gCalendar` (hypothesis) | verified | `0x08001F08`–`0x080036FC` | Calendar scene state |
 | `0x0201F814` | `gRecord` (hypothesis) | verified | `0x08003AF4`–`0x08003F88` | Record scene state |
 | `0x02020310` | (unnamed) | seen | 51 functions, `0x08026194`–`0x08064BA0` | a card-list / detail viewer (it can return to the menu with B: `0x08029DCC`) |
-| `0x02030000`, `0x02031014`, `0x0203A614` | (unnamed) | seen | few | large buffers |
+| `0x02028380`–`0x02030000` | (free, hypothesis) | static check | none | 0x7C80 bytes with no references. `gSceneWork`'s largest view (`PackListWork`, 0x8070) ends at `0x02028380`. No literal in `asm/`, `data/`, `src/`, `include/` or assets points into the range, and no aligned ROM word does outside PCM sample data (128 coincidental hits). Not yet confirmed with an emulator watchpoint. See [[card-capacity]]. |
+| `0x02030000`, `0x02031014`, `0x0203A614` | (unnamed) | seen | few | large buffers: `gScratchBuffer` (LZSS ring, sort stack, Deck Edit stats rows), then the bustup scene-set graphics, decompressed with asset-dependent sizes (at least 0x5A00 and 0x1E00 bytes) |
 
 ## Open questions
 - What is `gSaveData+4` bit 7 (two text paths)? A leftover from a language or font switch?

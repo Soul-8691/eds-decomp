@@ -79,6 +79,7 @@ Start with [[overview]]. The decompilation is 100% matched since 2026-10-02: all
 - [[m2c]]: ARM decompiler for first drafts (`tools/m2c_draft.py`).
 - [[objdiff]]: progress report in the decomp.dev format (`make objdiff-report`, CI workflow) and the object differ.
 - [[xref]]: static cross-reference database from `build/eds.elf` (`tools/xref.py`): function cards, global users, strings, call graphs, units, subsystems, address lookup. *verified (selftest 16/16)*
+- [[card-expand]]: binary patch generator and Unicorn test for raising the card-ID limit (`tools/card_expand/`). *verified (emulation)*
 - [[jpmap]]: USA-to-Japan mapper (`tools/jpmap.py`): every USA function, RAM address and asset range paired with the AY5J ROM, link-order runs, recompile test at JP addresses; outputs in `build/jp/`. *verified (compile test 10/10)*
 - [[emulator]]: headless mGBA 0.10.5 harness (`tools/emu.py`, image `eds-emu`): traces, watchpoints, breakpoints, Lua, GDB, ROM comparison, and a savestate library from title to mid-duel. *verified (selftest)*
 
@@ -90,4 +91,5 @@ Start with [[overview]]. The decompilation is 100% matched since 2026-10-02: all
 
 ## Questions
 - [[open-questions]]: unresolved questions by area.
+- [[card-capacity]]: how many cards fit without moving RAM (2; 8 with a Deck Edit tweak) and what else adding cards needs.
 - [[decomp-pace-comparison]]: how fast other GBA decomps went, and what EDS should change.

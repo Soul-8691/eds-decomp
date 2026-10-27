@@ -865,3 +865,32 @@ updated: 2026-09-29
   `tools/dr python3 tools/check_all.py -j 8` (112/112).
 - Pages: [[toolchain]], [[agbcc]], [[rom-free-workflow]], [[decomp-workflow]], [[decomp-permuter]], [[m2c]],
   [[objdiff]], [[matching-tricks]], [[overview]], [[index]].
+
+## [2026-10-27] query | Card capacity without moving RAM
+- The save trunk already covers 2048 IDs. The limit is `gDeckEdit.lists[row].trunk[821]`: 2 spare in Deck Edit
+  mode, 8 if Deck Edit hides the Tickets and Gods. ROM tables need relocating to add any card.
+- Pages: [[card-capacity]] (new), [[index]].
+
+## [2026-10-27] query | Free EWRAM for a larger Deck Edit list
+- `0x02028380`–`0x02030000` (0x7C80 bytes) has no static references (asm, data, src, assets, every aligned ROM word
+  outside PCM data). Recorded as free (hypothesis) until an emulator watchpoint confirms it.
+- Pages: [[ram-map]], [[card-capacity]].
+
+## [2026-10-27] query | Binary patch map for more card IDs
+- Derived the in-place patches that move the Deck Edit trunk rows to `0x02028380` (2048 IDs per row), the
+  card-count constants, and the 511 per-card table pointers to repoint (stats, passwords, art, palettes; names,
+  descriptions and the ID maps can grow in place). Checked by emulating the list code on both ROMs.
+- Pages: [[card-capacity]].
+
+## [2026-10-27] setup | Card expansion tools moved into the repo
+- `tools/card_expand/`: `card_expand.py` (patch generator), `refs.py` (rebuilds `card_table_refs.csv` from the
+  ELF), `test_relocation.py` (Unicorn test: 200/200 seeds identical; 1018 cards listed for last ID 1020; a
+  deliberately broken patch is caught). Outputs go to `build/card_expand/`.
+- Pages: [[card-expand]] (new), [[card-capacity]], [[index]].
+
+## [2026-10-27] query | Maximum card count and card-number budget
+- Last ID: 2040 at most (loop bounds are `imm8 << n`; IDs are 11-bit). With the name table kept in place:
+  1640 (820 new IDs, 16 MiB ROM). Free card numbers: 943 (405 in 0–1209, 538 in 1210–1899), after the 162
+  reserved non-card numbers in `cards.h`. Documented how alternate art works (base + 2000, ID = base ID + 1,
+  same card for `IsSameCardName`). Replaced the stale "move all eight tables" note.
+- Pages: [[card-capacity]], [[card-expand]].
