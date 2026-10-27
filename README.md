@@ -40,7 +40,8 @@ next one.
   Goat. Loading a recipe takes the cards from your trunk; any you don't have are left out (the game tells you which,
   and why). The deck recipes will eventually include all 15 TCG formats.
 - **Banlists** (main menu). Choose the banlist your deck is built under. Cards your current deck can no longer hold
-  go back to the trunk.
+  go back to the trunk. Before switching, the game checks that your cards can still make a Main Deck of at least
+  40 cards under the new banlist (counting its limits and card pool); if they can't, the switch is refused.
 - **Duelist Points (DP).**
   - You start with 5000 DP and earn more by winning duels.
   - The card password machine now sells cards: it shows the price and asks before buying.
@@ -57,8 +58,8 @@ next one.
   - It crashes into your monsters with equal ATK when it has no better attack, unless another of its monsters can
     beat yours outright.
 - **Debug mode** (testing builds only, not in the release). You start with 8 copies of every card, and you can't
-  deck out. Decks can be under 40 cards, can hold any number of copies of a card, and ignore banlists. Every format
-  is unlocked.
+  deck out. Decks can be under 40 cards, can hold any number of copies of a card, and ignore banlists. Switching
+  banlists skips the 40-card Main Deck check. Every format is unlocked.
 
 ### Planned
 

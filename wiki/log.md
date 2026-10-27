@@ -1610,3 +1610,7 @@ updated: 2026-09-29
 
 ## [2026-10-27] progress | README: patches folder
 - README.md: a Playing section pointing to the IPS patches in patches/ (release and debug, demo up to Fiber).
+
+## [2026-10-27] progress | README: banlist 40-card check
+- README.md: the Banlists entry notes the switch is refused when your cards cannot make a 40-card Main Deck under the new banlist.
+- README.md: the Debug mode entry notes that switching banlists skips the 40-card check.
