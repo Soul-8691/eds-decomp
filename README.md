@@ -50,6 +50,11 @@ next one.
   Packs will cover the TCG/OCG sets up to Reaper/Victory format, plus attribute/race/Spell/Trap packs once there are
   enough cards.
 - **Still duel background.** The field background no longer scrolls during duels.
+- **Smarter CPU.**
+  - It switches a monster that can't beat any of yours to Defense Position when you have a face-up monster with
+    higher ATK, instead of leaving it to be run over.
+  - It crashes into your monsters with equal ATK when it has no better attack, unless another of its monsters can
+    beat yours outright.
 - **Debug mode** (testing builds only, not in the release). You start with 8 copies of every card, and you can't
   deck out. Decks can be under 40 cards, can hold any number of copies of a card, and ignore banlists. Every format
   is unlocked.

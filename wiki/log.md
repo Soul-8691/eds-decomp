@@ -1562,3 +1562,7 @@ updated: 2026-09-29
   also stays in Attack Position (AiShouldRetreatToDefense retreats only from higher ATK).
 - Pages: (none).
 - Refined: no crash into a monster that another CPU monster able to attack can beat outright (AiOtherAttackerBeats).
+
+## [2026-10-27] setup | README: smarter CPU
+- README.md feature list: the CPU's Defense Position retreat and equal-ATK crashes.
+- Pages: (none; README.md).
