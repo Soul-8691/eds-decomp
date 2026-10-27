@@ -54,6 +54,17 @@ Warrior, Goat, Cyber, Reaper. Each has a card pool, `card_pools/<name>.txt`.
   Fusion Deck to the new limits, moving the extra copies to the trunk. It then saves, and the status line says how
   many cards moved.
 
+## Refused switches
+In `make release` builds only, a switch is refused (`SE_ERROR`, "<name>: your cards make only N (40 needed).") when
+`MainDeckCapacity(n)` < 40. That
+is the most Main Deck cards the player's whole collection (trunk + Deck + Side Deck + Fusion Deck) allows under the
+target banlist:
+- **Per card.** Each card number, with its alternate art (`CARD_NUMBER_ALT_ART` + n) counted together, contributes
+  min(owned copies, `DeckLimitIn`): 0 outside the pool, the listed limit, else `CARD_COPY_LIMIT_NONE`.
+- **Skipped.** Fusion Monsters and tokens.
+- **Not counted.** The engine's extra shared-limit pairs (the two Polymerizations, the Dark Magician / Harpie Lady
+  prints) are counted separately.
+
 ## Scene
 Laid out like [[deck-recipes]]:
 - the "Banlists" label (built by `BuildMenuLabel`) as the title;

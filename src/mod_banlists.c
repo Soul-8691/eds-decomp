@@ -7,7 +7,8 @@
  *                         src/mod_save.c asks it (IsBelowCardCopyLimit, AddCardToSaved*, TrimSavedDecksToCopyLimits);
  *                         the CPU's decks keep the game's own list (GetCardCopyLimit, RemoveOverLimitDeckCards).
  *   BanlistsMenu_BuildLabel  the "Banlists" menu label (MainMenu_Init, tiles 0x280-0x2BF; BuildMenuLabel)
- *   CB_Banlists           the scene: the banlists, A puts one in use, B goes back
+ *   CB_Banlists           the scene: the banlists, A puts one in use (refused when the player's cards could not make
+ *                         a 40-card Main Deck under it: MainDeckCapacity), B goes back
  * The banlists come from banlists/<name>_ban.json (tools/banlist.py --all: build/include/banlists.h), in the order
  * of BANLISTS there; the game's original list is not one of them. The one in use is saved in gSaveData.banlist
  * (index + 1; 0, as in a new game or a save from before, is BANLIST_DEFAULT, Yugi-Kaiba). Putting another one in
@@ -155,6 +156,65 @@ const char *BanlistDate(int n)
     return sBanlists[n].date;
 }
 
+/* ---- Can the player still build a deck under banlist n? ---- */
+
+#define BANLIST_MIN_MAIN_DECK   40
+
+/* Copies of card number `number` (base number) a saved deck may hold under banlist n, as GetBanlistCopyLimit does for
+ * the banlist in use (whatever the build: this asks about the banlist itself). */
+static int DeckLimitIn(int n, u16 number)
+{
+    const struct Banlist *b = &sBanlists[n];
+    int lo = 0, hi = b->count - 1;
+
+    if (!InBanlistPool(b, number))
+        return 0;
+    while (lo <= hi) {
+        int mid = (lo + hi) / 2;
+
+        if (b->limits[mid].number == number)
+            return b->limits[mid].limit;
+        if (b->limits[mid].number < number)
+            lo = mid + 1;
+        else
+            hi = mid - 1;
+    }
+    return CARD_COPY_LIMIT_NONE;
+}
+
+/* Copies of card id the player owns: trunk, Deck, Side Deck and Fusion Deck. */
+static int OwnedCopies(u16 id)
+{
+    if (id == 0 || id >= CARD_ID_COUNT)
+        return 0;
+    return gSaveData.trunk[id].count + GetTrunkDeckCopies(id) + GetTrunkSideCopies(id) + GetTrunkFusionCopies(id);
+}
+
+/* The most cards a Main Deck could hold under banlist n from the player's collection: for each card (a base number
+ * and its alternate art, CARD_NUMBER_ALT_ART + n, together) not a Fusion Monster or a token, its owned copies up to
+ * its limit there. */
+static int MainDeckCapacity(int n)
+{
+    int number, total = 0;
+
+    for (number = 0; number < CARD_NUMBER_ALT_ART && total < BANLIST_MIN_MAIN_DECK; number++) {
+        u16 id = gCardNumberToId[number];
+        int copies, limit;
+
+        if (id == 0 || id >= CARD_ID_COUNT || (u16)(number - CARD_NUMBER_TOKEN_FIRST)
+                                                  < CARD_NUMBER_TOKEN_END - CARD_NUMBER_TOKEN_FIRST)
+            continue;
+        if (CARD_STATS_KIND(gCardStats[id]) == CARD_KIND_FUSION && CARD_STATS_TYPE(gCardStats[id]) <= CARD_TYPE_REPTILE)
+            continue;
+        copies = OwnedCopies(id);
+        if (number + CARD_NUMBER_ALT_ART < CARD_NUMBER_COUNT)
+            copies += OwnedCopies(gCardNumberToId[number + CARD_NUMBER_ALT_ART]);
+        limit = DeckLimitIn(n, number);
+        total += copies < limit ? copies : limit;
+    }
+    return total;
+}
+
 /* Put banlist n in use and move the saved decks' copies over its limits back to the trunk; returns the cards moved. */
 static int SetActiveBanlist(int n)
 {
@@ -227,6 +287,8 @@ static const char sStrHelp2[] = "Forbidden / Limited / Semi-Limited cards";
 static const char sStrNowUsing[] = " is now the Deck Edit banlist.";
 static const char sStrAlready[] = " is already in use.";
 static const char sStrMoved[] = " card(s) went back to the trunk.";
+static const char sStrTooFew[] = ": your cards make only ";
+static const char sStrTooFewEnd[] = " (40 needed).";
 
 static char *AppendStr(char *dst, const char *src)
 {
@@ -331,6 +393,10 @@ static int HandleInput(void)
         p = AppendStr(s->status, sBanlists[n].name);
         if (n == GetActiveBanlist()) {
             AppendStr(p, sStrAlready);
+            PlaySE(SE_ERROR);
+        } else if (MOD_RELEASE && (moved = MainDeckCapacity(n)) < BANLIST_MIN_MAIN_DECK) {
+            /* make release: not enough cards for a 40-card Main Deck under it: refused (no check in make) */
+            AppendStr(AppendNum(AppendStr(p, sStrTooFew), moved), sStrTooFewEnd);
             PlaySE(SE_ERROR);
         } else {
             moved = SetActiveBanlist(n);

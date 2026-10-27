@@ -1582,3 +1582,9 @@ updated: 2026-09-29
 - mod_opponents.c: with MOD_RELEASE the DECK entries become HIDDEN and PAGE_COUNT is 3, so the Chaos Turbo / Warrior /
   Goat Control page is only in `make` builds.
 - Pages: [[release-build]].
+
+## [2026-10-27] progress | Banlist switch needs a possible 40-card deck
+- mod_banlists.c: MainDeckCapacity / DeckLimitIn / OwnedCopies; the Banlists scene refuses a banlist under which the
+  player's collection cannot make a 40-card Main Deck.
+- Pages: [[banlists-menu]].
+- The 40-card check runs only in make release (MOD_RELEASE).

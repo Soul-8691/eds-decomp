@@ -25,4 +25,5 @@ Fix quirks with new cards
 Detail starting decks in README
 Detail opp decks in README
 Detail card prices in PASSWORD_MACHINE.md
-Don't allow switching banlist if only less than 40 cards are possible in your main deck
+Don't allow switching banlist if only less than 40 cards are possible in your main deck with that banlist
+Fix BSD not counting FSR
