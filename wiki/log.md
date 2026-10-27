@@ -1484,3 +1484,9 @@ updated: 2026-09-29
 ## [2026-10-26] progress | Purchase question as a centred box
 - PasswordDP_SetConfirm/DrawConfirm: black text on a white bordered box in the centre (OBJ palette 14).
 - Pages: [[duelist-points]].
+
+## [2026-10-26] progress | Joey-Pegasus's decks; recipe presets 13-14
+- mod_decks.c: AJTBLS-Tomato Control and ellietincan-Vanilla Beat (JP) (main + extra); the Joey-Pegasus opponent
+  picks 80/20; presets 13-14 (Chaos Turbo, Warrior, Goat Control now 15-17). Uncoded effects in them: Dark Balter the
+  Terrible, Fiend Skull Dragon, Ryu Senshi, Skull Lair, The Last Warrior from Another Planet.
+- Pages: [[deck-recipes]], [[yugi-kaiba-opponent]].

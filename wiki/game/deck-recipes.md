@@ -26,7 +26,7 @@ An eighth main-menu item added by this build (`src/mod_recipes.c`, a `@farcode`/
   - `MainMenu_Init` writes the label to tiles 0x200-0x23F, the two tile rows after the 0x4000-byte sheet.
 
 ## Preset recipes
-The SRAM area is set up on the first visit (and after a New Game) with recipes 01-15 from `GetRecipePreset` (src/mod_decks.c). These are the
+The SRAM area is set up on the first visit (and after a New Game) with recipes 01-17 from `GetRecipePreset` (src/mod_decks.c). These are the
 mod's deck tables, named after their .ydk files:
 
 | Slot | Name | Deck table |
@@ -43,9 +43,11 @@ mod's deck tables, named after their .ydk files:
 | 10 | bsocks-Relinquished | the Imperial opponent (20%) |
 | 11 | Jazz-Tomato Control | the Android opponent (80%) |
 | 12 | paoloNS-Vanilla Beat | the Android opponent (20%) |
-| 13 | LR-Chaos Turbo | Red starter, Tea, the Chaos Turbo deck opponent |
-| 14 | sdlkilla-Warrior | Green starter, the Warrior deck opponent |
-| 15 | geistD-Goat Control | Black starter, the Goat Control deck opponent |
+| 13 | AJTBLS-Tomato Control | the Joey-Pegasus opponent (80%) |
+| 14 | ellietincan-Vanilla Beat (JP) | the Joey-Pegasus opponent (20%) |
+| 15 | LR-Chaos Turbo | Red starter, Tea, the Chaos Turbo deck opponent |
+| 16 | sdlkilla-Warrior | Green starter, the Warrior deck opponent |
+| 17 | geistD-Goat Control | Black starter, the Goat Control deck opponent |
 
 - Fusion Monsters in a table go to the recipe's Fusion Deck. There are no Side Decks, as with the opponents' decks.
 - A table that this build leaves out (its cards aren't all in the card list) is skipped.

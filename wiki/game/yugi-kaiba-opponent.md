@@ -49,7 +49,11 @@ next to the one before it.
   - Imperial plays Aretos-Tomato Control 80% and bsocks-Relinquished 20% (`ImperialDeck`).
   - Android plays Jazz-Tomato Control 80% and paoloNS-Vanilla Beat 20% (`AndroidDeck`). Fairy Box was added to
     `config/new_cards.txt` for Tomato Control (engine key 1424, see [[added-cards]]).
-  - The other 10 keep their original duelists' decks for now.
+  - Joey-Pegasus plays AJTBLS-Tomato Control 80% and ellietincan-Vanilla Beat (JP) 20% (`JoeyPegasusDeck`).
+  - The other 9 keep their original duelists' decks for now.
+  - Cards in these decks with no coded effect yet: Dark Balter the Terrible, Fiend Skull Dragon, Ryu Senshi (Joey-
+    Pegasus Tomato Control's Fusion Deck), Skull Lair and The Last Warrior from Another Planet (Joey-Pegasus Vanilla
+    Beat and both Android decks).
   - The .ydk files are in `decks/`. Their passcodes resolve through the built password table, which stores each
     passcode as 4 BCD bytes in digit order.
 - **Portraits.** Yugi-Kaiba La Jinn, Critter Sangan, Imperial Imperial Order, Treasure Confiscation, Android Jinzo,

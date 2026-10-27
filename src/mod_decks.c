@@ -801,6 +801,119 @@ static const struct DeckList *AndroidDeck(void)
 }
 #endif
 
+/* The Joey-Pegasus format opponent (Weevil Underwood's slot, src/mod_opponents.c): one of two decks per duel
+ * (JoeyPegasusDeck): Tomato Control 80%, Vanilla Beat 20% (decks/AJTBLS-Tomato Control.ydk,
+ * decks/ellietincan-Vanilla Beat (JP).ydk; main and extra decks). Not coded yet: Dark Balter the Terrible, Fiend Skull
+ * Dragon and Ryu Senshi (Tomato Control's Fusion Deck), Skull Lair and The Last Warrior from Another Planet (Vanilla
+ * Beat). */
+#if defined(HAS_CARD_BAZOO_THE_SOUL_EATER) && defined(HAS_CARD_KYCOO_THE_GHOST_DESTROYER) \
+    && defined(HAS_CARD_TORRENTIAL_TRIBUTE) && defined(HAS_CARD_THOUSAND_EYES_RESTRICT) \
+    && defined(HAS_CARD_DARK_BALTER_THE_TERRIBLE) && defined(HAS_CARD_FIEND_SKULL_DRAGON) && defined(HAS_CARD_RYU_SENSHI)
+#define MOD_JOEY_PEGASUS_TOMATO_CONTROL 1
+static const u16 sJoeyPegasusTomatoControl[] = {
+    /* Monsters (16) */
+    X2(CARD_BAZOO_THE_SOUL_EATER),
+    CARD_JINZO,
+    X2(CARD_KYCOO_THE_GHOST_DESTROYER),
+    X2(CARD_MAGICIAN_OF_FAITH),
+    X3(CARD_MYSTIC_TOMATO),
+    CARD_SANGAN,
+    CARD_SINISTER_SERPENT,
+    X3(CARD_THUNDER_DRAGON),
+    CARD_WITCH_OF_THE_BLACK_FOREST,
+    /* Spells (17) */
+    CARD_CHANGE_OF_HEART,
+    CARD_CONFISCATION,
+    CARD_DARK_HOLE,
+    CARD_DELINQUENT_DUO,
+    X2(CARD_GRACEFUL_CHARITY),
+    CARD_HARPIES_FEATHER_DUSTER,
+    CARD_HEAVY_STORM,
+    CARD_MONSTER_REBORN,
+    X2(CARD_MYSTICAL_SPACE_TYPHOON),
+    CARD_NOBLEMAN_OF_CROSSOUT,
+    CARD_PAINFUL_CHOICE,
+    CARD_POT_OF_GREED,
+    CARD_RAIGEKI,
+    CARD_SNATCH_STEAL,
+    CARD_THE_FORCEFUL_SENTRY,
+    /* Traps (7) */
+    CARD_CALL_OF_THE_HAUNTED,
+    CARD_IMPERIAL_ORDER,
+    CARD_MIRROR_FORCE,
+    CARD_TIME_SEAL,
+    X3(CARD_TORRENTIAL_TRIBUTE),
+    /* Fusion Deck (15) */
+    X3(CARD_DARK_BALTER_THE_TERRIBLE),
+    X3(CARD_FIEND_SKULL_DRAGON),
+    X3(CARD_GILTIA_THE_D_KNIGHT),
+    X3(CARD_RYU_SENSHI),
+    X3(CARD_THOUSAND_EYES_RESTRICT),
+};
+STATIC_ASSERT(ARRAY_COUNT(sJoeyPegasusTomatoControl) == 40 + 15, JoeyPegasusTomatoControlSize);
+static const struct DeckList sJoeyPegasusTomatoControlList = { sJoeyPegasusTomatoControl,
+                                                               ARRAY_COUNT(sJoeyPegasusTomatoControl), 0 };
+#endif
+
+#if defined(HAS_CARD_BAZOO_THE_SOUL_EATER) && defined(HAS_CARD_KYCOO_THE_GHOST_DESTROYER) \
+    && defined(HAS_CARD_JAR_OF_GREED) && defined(HAS_CARD_SKULL_LAIR) && defined(HAS_CARD_TORRENTIAL_TRIBUTE) \
+    && defined(HAS_CARD_BLACK_SKULL_DRAGON) && defined(HAS_CARD_ST_JOAN) \
+    && defined(HAS_CARD_THE_LAST_WARRIOR_FROM_ANOTHER_PLANET)
+#define MOD_JOEY_PEGASUS_VANILLA_BEAT 1
+static const u16 sJoeyPegasusVanillaBeat[] = {
+    /* Monsters (13) */
+    X2(CARD_BAZOO_THE_SOUL_EATER),
+    CARD_JINZO,
+    X3(CARD_KYCOO_THE_GHOST_DESTROYER),
+    CARD_MAGICIAN_OF_FAITH,
+    CARD_SANGAN,
+    CARD_SINISTER_SERPENT,
+    CARD_WITCH_OF_THE_BLACK_FOREST,
+    X3(CARD_GEMINI_ELF),
+    /* Spells (18) */
+    CARD_CHANGE_OF_HEART,
+    CARD_CONFISCATION,
+    CARD_DARK_HOLE,
+    CARD_DELINQUENT_DUO,
+    CARD_FISSURE,
+    X2(CARD_GRACEFUL_CHARITY),
+    CARD_HARPIES_FEATHER_DUSTER,
+    CARD_HEAVY_STORM,
+    CARD_MONSTER_REBORN,
+    X3(CARD_MYSTICAL_SPACE_TYPHOON),
+    CARD_PAINFUL_CHOICE,
+    CARD_POT_OF_GREED,
+    CARD_RAIGEKI,
+    CARD_SNATCH_STEAL,
+    CARD_THE_FORCEFUL_SENTRY,
+    /* Traps (9) */
+    CARD_CALL_OF_THE_HAUNTED,
+    CARD_IMPERIAL_ORDER,
+    X3(CARD_JAR_OF_GREED),
+    CARD_MIRROR_FORCE,
+    CARD_SKULL_LAIR,
+    X2(CARD_TORRENTIAL_TRIBUTE),
+    /* Fusion Deck (15) */
+    X3(CARD_BLACK_SKULL_DRAGON),
+    X3(CARD_FLAME_SWORDSMAN),
+    X3(CARD_GAIA_THE_DRAGON_CHAMPION),
+    X3(CARD_ST_JOAN),
+    X3(CARD_THE_LAST_WARRIOR_FROM_ANOTHER_PLANET),
+};
+STATIC_ASSERT(ARRAY_COUNT(sJoeyPegasusVanillaBeat) == 40 + 15, JoeyPegasusVanillaBeatSize);
+static const struct DeckList sJoeyPegasusVanillaBeatList = { sJoeyPegasusVanillaBeat,
+                                                             ARRAY_COUNT(sJoeyPegasusVanillaBeat), 0 };
+#endif
+
+#if defined(MOD_JOEY_PEGASUS_TOMATO_CONTROL) && defined(MOD_JOEY_PEGASUS_VANILLA_BEAT)
+#define MOD_JOEY_PEGASUS_DECKS 1
+/* The Joey-Pegasus opponent's deck for this duel: Tomato Control 8 in 10, Vanilla Beat 2 in 10. */
+static const struct DeckList *JoeyPegasusDeck(void)
+{
+    return (u32)Random() % 10 < 8 ? &sJoeyPegasusTomatoControlList : &sJoeyPegasusVanillaBeatList;
+}
+#endif
+
 /* The replacement deck of opponent `opponent` (enum DuelistId), or NULL to keep the original. */
 const struct DeckList *GetOpponentDeckOverride(int opponent)
 {
@@ -814,6 +927,10 @@ const struct DeckList *GetOpponentDeckOverride(int opponent)
 #ifdef MOD_TRISTAN_DECKS
     case DUELIST_TRISTAN:
         return TristanDeck();
+#endif
+#ifdef MOD_JOEY_PEGASUS_DECKS
+    case DUELIST_WEEVIL:                /* the Joey-Pegasus format opponent */
+        return JoeyPegasusDeck();
 #endif
 #ifdef MOD_ANDROID_DECKS
     case DUELIST_MAI:                   /* the Android format opponent */
@@ -875,6 +992,8 @@ static const char sNameImperialTomato[] = "Aretos-Tomato Control";
 static const char sNameRelinquished[] = "bsocks-Relinquished";
 static const char sNameAndroidTomato[] = "Jazz-Tomato Control";
 static const char sNameAndroidVanilla[] = "paoloNS-Vanilla Beat";
+static const char sNameJoeyPegasusTomato[] = "AJTBLS-Tomato Control";
+static const char sNameJoeyPegasusVanilla[] = "ellietincan-Vanilla Beat (JP)";
 static const char sNameChaosTurbo[] = "LR-Chaos Turbo";
 static const char sNameWarrior[] = "sdlkilla-Warrior";
 static const char sNameGoatControl[] = "geistD-Goat Control";
@@ -907,6 +1026,12 @@ static const struct RecipePreset sRecipePresets[] = {
 #endif
 #ifdef MOD_ANDROID_VANILLA_BEAT
     { sNameAndroidVanilla, &sAndroidVanillaBeatList },
+#endif
+#ifdef MOD_JOEY_PEGASUS_TOMATO_CONTROL
+    { sNameJoeyPegasusTomato, &sJoeyPegasusTomatoControlList },
+#endif
+#ifdef MOD_JOEY_PEGASUS_VANILLA_BEAT
+    { sNameJoeyPegasusVanilla, &sJoeyPegasusVanillaBeatList },
 #endif
 #ifdef MOD_RED_DECK
     { sNameChaosTurbo, &sRedDeckList },
