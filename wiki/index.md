@@ -88,6 +88,7 @@ Start with [[overview]]. The decompilation is 100% matched since 2026-10-02: all
 - [[xref]]: static cross-reference database from `build/eds.elf` (`tools/xref.py`): function cards, global users, strings, call graphs, units, subsystems, address lookup. *verified (selftest 16/16)*
 - [[jpmap]]: USA-to-Japan mapper (`tools/jpmap.py`): every USA function, RAM address and asset range paired with the AY5J ROM, link-order runs, recompile test at JP addresses; outputs in `build/jp/`. *verified (compile test 10/10)*
 - [[emulator]]: headless mGBA 0.10.5 harness (`tools/emu.py`, image `eds-emu`): traces, watchpoints, breakpoints, Lua, GDB, ROM comparison, and a savestate library from title to mid-duel. *verified (selftest)*
+- [[card-icons]]: `make card-icons` (`tools/cardicons.py`): each card's 32x32 field icon with a 17x17 art miniature in one shared 64-colour palette; the duel's BG2 is 256-colour to show them (`src/mod_field_icons.c`).
 
 ## Sources
 - [[rom-analysis]]: facts checked directly against the baserom.

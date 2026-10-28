@@ -1643,3 +1643,13 @@ updated: 2026-09-29
 
 ## [2026-10-28] progress | Record screen shows every duelist in make
 - src/main_menu.c: Record_DrawPage shows every duelist and Record_HasNextPage opens every page when !MOD_RELEASE; make release unchanged. README.md.
+
+## [2026-10-28] progress | Card icons with art miniatures
+- tools/cardicons.py, Makefile card-icons: 1136 per-card 32x32 icons in build/card_icons/ (17x17 art at x 7-23, y 7-23; shared 64-colour palette, palette.bin for BG palettes 12-15).
+- card_icons/fusion_monster.png from gCardIconFusionGfx pose 0 (effect_monster.png verified equal to its ROM icon).
+- [[card-icons]] (new), [[index]].
+
+## [2026-10-28] progress | Card art in the duel field cells (BG2 256-colour)
+- src/mod_field_icons.c (new), data/mod_field_icons_data.s (new), units.txt, Makefile (build/assets/field_icons.bin from tools/cardicons.py --data).
+- src/duel_info_bar.c: BG2 256-colour; LoadDuelBgGfx calls ModLoadFieldIconGfx instead of loading BG2's 4bpp sheets. src/duel_field_screen.c: face-up cells, Graveyard and banished tops use ModFieldCardTile.
+- [[card-icons]], [[index]], README.md. Built; cells checked offline; not tested in an emulator.

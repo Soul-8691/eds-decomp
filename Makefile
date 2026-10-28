@@ -53,7 +53,7 @@ UNITS    := $(shell sed -e 's/\#.*//' -e '/^[[:space:]]*$$/d' -e '/^@/d' units.t
 unit_obj  = $(if $(and $(wildcard src/$(1).c),$(if $(filter $(1),$(ASM_UNITS)),,y)),build/src/$(1).o,$(if $(wildcard src/$(1).s),build/srcasm/$(1).o,$(if $(wildcard asm/$(1).s),build/asm/$(1).o,build/data/$(1).o)))
 OBJS     := $(foreach u,$(UNITS),$(call unit_obj,$(u)))
 
-.PHONY: all release compare clean tidy objdiff-report setup agbcc FORCE
+.PHONY: all release compare clean tidy objdiff-report setup agbcc card-icons FORCE
 .SECONDARY:
 .DELETE_ON_ERROR:
 
@@ -73,6 +73,11 @@ compare: $(ROM)
 	@echo "$(SHA1)  $(ROM)" | sha1sum -c - || { [ ! -e baserom.gba ] || $(PYTHON) tools/romdiff.py $(ROM) baserom.gba $(MAP); exit 1; }
 
 # Check your ROM and extract the game's data into assets/ (never committed).
+# Field card icons with a 17x17 miniature of each card's art, and their shared 64-colour palette
+# (tools/cardicons.py; card_icons/*.png over build/assets): build/card_icons/. Needs a built tree.
+card-icons: $(ROM)
+	$(PYTHON) tools/cardicons.py build/card_icons
+
 setup:
 	$(PYTHON) tools/setup.py
 	$(PYTHON) tools/newcards.py fetch
@@ -157,6 +162,13 @@ $(PRICES_GEN): tools/cardprices.py tools/banlist.py $(wildcard usage/*.json) $(w
 	@mkdir -p $(@D)
 	$(PYTHON) tools/cardprices.py $@
 build/src/mod_dp.o: $(PRICES_GEN)
+
+# The field card icons' palette, frames and art miniatures (tools/cardicons.py --data), for
+# data/mod_field_icons_data.s.
+FIELD_ICONS := build/assets/field_icons.bin
+$(FIELD_ICONS): $(NEWCARDS_BUILT) tools/cardicons.py tools/assets.py $(wildcard card_icons/*.png)
+	$(PYTHON) tools/cardicons.py --data $@
+build/data/mod_field_icons_data.o: $(FIELD_ICONS)
 
 build/data/%.o: data/%.s $(ASSETS_BUILT) $(NEWCARDS_BUILT)
 	@mkdir -p $(@D)

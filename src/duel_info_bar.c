@@ -820,12 +820,13 @@ void DuelScreen_VBlank(void)
  * Sets the four BG control registers: BG0 field background (priority 3, character block 1, screen block 0),
  * BG1 board (priority 2, screen block 1, 256x512), BG2 card cells, life points and phase letters (priority 1,
  * screen block 3, 256x512), BG3 text box (priority 0, screen block 5).
+ * Changed: BG2 is 256-colour, for the card art in the field cells (src/mod_field_icons.c).
  */
 void DuelScreen_InitBgCnt(void)
 {
     REG_BG0CNT = BGCNT_PRIORITY(3) | BGCNT_CHARBASE(1) | BGCNT_SCREENBASE(0);
     REG_BG1CNT = BGCNT_PRIORITY(2) | BGCNT_CHARBASE(1) | BGCNT_SCREENBASE(1) | BGCNT_TXT256x512;
-    REG_BG2CNT = BGCNT_PRIORITY(1) | BGCNT_CHARBASE(1) | BGCNT_SCREENBASE(3) | BGCNT_TXT256x512;
+    REG_BG2CNT = BGCNT_PRIORITY(1) | BGCNT_CHARBASE(1) | BGCNT_SCREENBASE(3) | BGCNT_TXT256x512 | BGCNT_256COLOR;
     REG_BG3CNT = BGCNT_PRIORITY(0) | BGCNT_CHARBASE(1) | BGCNT_SCREENBASE(5);
 }
 
@@ -903,7 +904,11 @@ void LoadDuelUiGfx(void)
  * Loads the duel's BG graphics: the system font, five BG palettes (1-4 and 8) and the tile sheets of
  * character block 1 from BG tile 0x70 up: card back, the mini-card icons, the thick pile and held-zone
  * marks, the LP digits, the 'LP' label, the phase letters and the text box frame.
+ * Changed: BG2 is 256-colour, so its sheets (card back to phase letters) are loaded in 8bpp by
+ * ModLoadFieldIconGfx (src/mod_field_icons.c), with the card art palette; only the text box frame stays 4bpp.
  */
+void ModLoadFieldIconGfx(void);
+
 void LoadDuelBgGfx(void)
 {
     LoadSystemGfx();
@@ -912,18 +917,7 @@ void LoadDuelBgGfx(void)
     CopyDoubleWords((void *)BG_PLTT_ADDR(3), gDuelDigitsPal, PALETTE_SIZE);
     CopyDoubleWords((void *)BG_PLTT_ADDR(4), gPhaseIndicatorPal, PALETTE_SIZE);
     CopyDoubleWords((void *)BG_PLTT_ADDR(8), gTextBoxPal, PALETTE_SIZE);
-    CopyDoubleWords((void *)BG_TILE_ADDR(BG_TILE_CARD_BACK), gCardIconBackGfx, TILES(64));
-    CopyDoubleWords((void *)BG_TILE_ADDR(BG_TILE_CARD_ICON_NORMAL + 0x00), gCardIconNormalGfx, TILES(64));
-    CopyDoubleWords((void *)BG_TILE_ADDR(BG_TILE_CARD_ICON_NORMAL + 0x40), gCardIconEffectGfx, TILES(64));
-    CopyDoubleWords((void *)BG_TILE_ADDR(BG_TILE_CARD_ICON_NORMAL + 0x80), gCardIconFusionGfx, TILES(64));
-    CopyDoubleWords((void *)BG_TILE_ADDR(BG_TILE_CARD_ICON_NORMAL + 0xC0), gCardIconRitualGfx, TILES(64));
-    CopyDoubleWords((void *)BG_TILE_ADDR(BG_TILE_CARD_ICON_NORMAL + 0x100), gCardIconMagicGfx, TILES(64));
-    CopyDoubleWords((void *)BG_TILE_ADDR(BG_TILE_CARD_ICON_NORMAL + 0x140), gCardIconTrapGfx, TILES(64));
-    CopyDoubleWords((void *)BG_TILE_ADDR(BG_TILE_THICK_PILE), gThickPileGfx, TILES(16));
-    CopyDoubleWords((void *)BG_TILE_ADDR(BG_TILE_HELD_ZONE_MARK), gHeldZoneMarkGfx, TILES(16));
-    CopyDoubleWords((void *)BG_TILE_ADDR(BG_TILE_DIGITS), gDuelDigitsGfx, TILES(60));
-    CopyDoubleWords((void *)BG_TILE_ADDR(BG_TILE_LP_LABEL), gLpLabelGfx, TILES(2));
-    CopyDoubleWords((void *)BG_TILE_ADDR(BG_TILE_PHASE_LETTERS), gPhaseIndicatorGfx, TILES(12));
+    ModLoadFieldIconGfx();      /* changed: BG2's sheets in 8bpp (the 4bpp loads of BG2's sheets are gone) */
     CopyDoubleWords((void *)BG_TILE_ADDR(BG_TILE_TEXT_FRAME), gTextBoxFrameGfx, TILES(9));
 }
 

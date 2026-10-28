@@ -268,6 +268,11 @@ void FillTileBlock4x4(u32 x, u32 y, u16 t)
     p[0x62] = t++;
     p[0x63] = t;
 }
+/* Mod (src/mod_field_icons.c): a face-up card's cell with its art, in the place's own tiles; returns the first. */
+u16 ModFieldCardTile(u32 player, u32 place, u16 id, u32 sideways);
+#define MOD_PLACE_GRAVEYARD     11
+#define MOD_PLACE_BANISHED      12
+
 /* Redraw the board tile block of zone (player, zone): an empty zone clears it (and draws the 2x2 empty marker for monster zones), otherwise a card back/face tile block. */
 void DrawZoneTiles(u32 player, u32 zone)
 {
@@ -292,10 +297,11 @@ void DrawZoneTiles(u32 player, u32 zone)
             map[0x20] = FIELD_TILE_HELD_ZONE_MARK + 2;
             map[0x21] = FIELD_TILE_HELD_ZONE_MARK + 3;
         }
+    } else if (zonePtr->isFaceUp) {
+        /* changed: the card's own cell with its art (was GetCardIconBgTile(id) + FIELD_TILE_ICON_PAL) */
+        FillTileBlock4x4Int(x, y, ModFieldCardTile(player, zone, id, zonePtr->isDefense));
     } else {
         baseTile = FIELD_TILE_CARD_BACK;
-        if (zonePtr->isFaceUp)
-            baseTile = GetCardIconBgTile(id) + FIELD_TILE_ICON_PAL;
         if (zonePtr->isDefense)
             baseTile += FIELD_TILE_POSE_SIDEWAYS;
         FillTileBlock4x4Int(x, y, baseTile);
@@ -370,7 +376,8 @@ void DrawAreaTiles(u32 player, u32 area, u32 index)
             list = (u32 *)gDuelPlayers[1 & player].graveyard;
             offset = gDuelPlayers[1 & player].graveCount * 4 - 4;
             list = (u32 *)((u8 *)list + offset);
-            FillTileBlock4x4Int(x, y, (u16)(GetCardIconBgTileInt((*list << 20) >> 20) + FIELD_TILE_ICON_PAL));
+            /* changed: the top card's own cell with its art */
+            FillTileBlock4x4Int(x, y, ModFieldCardTile(player, MOD_PLACE_GRAVEYARD, (*list << 20) >> 20, 0));
         } else {
             ClearTileBlock4x4Int(x, y);
         }
@@ -384,11 +391,13 @@ void DrawAreaTiles(u32 player, u32 area, u32 index)
             list = gPS1004_020192E4[1 & player].listB84;
             offset = gPS1004_020192E4[1 & player].countB84 * 4 - 4;
             list = (u32 *)((u8 *)list + offset);
-            baseTile = GetCardIconBgTileInt((*list << 20) >> 20) + FIELD_TILE_ICON_PAL;
-            if (gPS1004_020192E4[1 & player].arrCC4[(gPS1004_020192E4[1 & player].countB84 - 1) * 2] == 2)
+            if (gPS1004_020192E4[1 & player].arrCC4[(gPS1004_020192E4[1 & player].countB84 - 1) * 2] == 2) {
                 FillTileBlock4x4Int(x, y, FIELD_TILE_CARD_BACK);
-            else
+            } else {
+                /* changed: the top card's own cell with its art */
+                baseTile = ModFieldCardTile(player, MOD_PLACE_BANISHED, (*list << 20) >> 20, 0);
                 FillTileBlock4x4Int(x, y, baseTile);
+            }
         } else {
             ClearTileBlock4x4Int(x, y);
         }
