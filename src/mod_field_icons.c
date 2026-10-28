@@ -9,6 +9,8 @@
  *   ModAddCardSprite, ModAddAffineCardSprite  a face-up card's 32x32 sprite with its art: the hand
  *                         (DrawHandCards), the card menu's card (campaign.c), the deck reorder row (duel_cursor.c) and
  *                         the change-position, flip and move animations (duel_card_anim.c)
+ *   ModChainIconsClear, ModChainIconBuild, ModChainIconTile  the chain list's card icons with their art
+ *                         (ChainListScreen_Run, ChainListScreen_DrawRows)
  * BG2 (the card cells, life points and phase letters) is a 256-colour layer (DuelScreen_InitBgCnt). Its tiles keep
  * the numbers they had in 4bpp, now 64-byte tiles from character block 1, so the map writers did not change: the
  * card back 0x70 (pose 0) and 0xA0 (pose 3, sideways), the thick pile 0x230, the held-zone mark 0x240, the digits
@@ -285,4 +287,64 @@ void ModAddAffineCardSprite(u32 yx, u16 shape, u16 id, u32 pose, u16 attr2, u32 
     /* AddAffineSprite switches on the exact shape, so the 256-colour bit goes into the entry it added */
     if (is8bpp && gMain.oamCount != count)
         gMain.oamBuffer[count].attr0 |= ATTR0_256COLOR;
+}
+
+/* ---- The chain list ---- */
+
+/* The chain-list overlay (ChainListScreen_Run, duel_card_actions.c) clears the OBJ tiles and uses 2D mapping (32
+ * tiles a row): the header in tile rows 0-1, the four links' 32x4-tile blocks in rows 2-17. The links' cards get
+ * 256-colour 32x32 icons with their art in tile rows 18-21, card k at columns 8k-8k+7 (an 8bpp tile is two tile
+ * columns), drawn instead of the 4bpp icon it copied into each block. The art palette is OBJ palettes 8-11 (from
+ * LoadDuelUiGfx; loaded again here), the frame's colours OBJ palette 1 (the overlay loads gCardIconPal there). */
+#define CHAIN_ICON_TILE         (18 * 32)       /* + 8 * row */
+#define CHAIN_ICON_BLOCK_SIZE   (4 * 32 * 32)   /* tile rows 18-21 */
+
+/* The attr2 tile of chain row `row`'s card icon. */
+u16 ModChainIconTile(u32 row)
+{
+    return CHAIN_ICON_TILE + row * 8;
+}
+
+/* Empty the four icons (rows without a link stay blank) and load the art palette. */
+void ModChainIconsClear(void)
+{
+    CopyDoubleWords((void *)(OBJ_PLTT + OBJ_ART_PALETTE_ENTRY * 2), gModFieldIconData + DATA_PALETTE, 64 * 2);
+    MemClear16((void *)OBJ_TILE8_ADDR(CHAIN_ICON_TILE), CHAIN_ICON_BLOCK_SIZE);
+}
+
+/* Pixel (x, y) of a 2D-mapped 32x32 8bpp sprite from OBJ tile `tile` becomes entry `color`. */
+static void PutSprite2dPixel(u32 tile, u32 x, u32 y, u32 color)
+{
+    u32 offset = (tile + (y >> 3) * 32 + (x >> 3) * 2) * 32 + (y & 7) * 8 + (x & 7);
+    vu16 *p = (vu16 *)(OBJ_VRAM0 + (offset & ~1));
+
+    if (offset & 1)
+        *p = (*p & 0x00FF) | color << 8;
+    else
+        *p = (*p & 0xFF00) | color;
+}
+
+/* Build chain row `row`'s icon for card `id`: its type's sprite frame (pose 0) and its art. */
+void ModChainIconBuild(u32 row, u16 id)
+{
+    u32 tile = ModChainIconTile(row);
+    u32 type = (GetCardIconObjTile(id) - 0x80) / 0x40;
+    const u8 *frame = gModFieldIconData + DATA_OBJ_FRAMES + type * SPRITE_POSES * FRAME_SIZE;
+    const u8 *mini;
+    u32 r, i, j;
+
+    for (r = 0; r < 4; r++)     /* a tile row of the frame: 4 tiles of 64 bytes */
+        CopyDoubleWords((void *)OBJ_TILE8_ADDR(tile + r * 32), frame + r * 4 * TILE8_SIZE, 4 * TILE8_SIZE);
+    id &= CARD_ID_MASK;
+    if (id == 0 || id >= CARD_ID_COUNT)
+        return;
+    mini = gModFieldIconData + DATA_MINIS + id * (MINI * MINI);
+    for (j = 0; j < MINI; j++) {
+        for (i = 0; i < MINI; i++) {
+            u32 color = mini[j * MINI + i];
+
+            if (color != 0)
+                PutSprite2dPixel(tile, MINI_X + i, MINI_Y + j, color - OBJ_ART_SHIFT);
+        }
+    }
 }

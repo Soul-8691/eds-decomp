@@ -64,6 +64,13 @@ art. `make` builds the game's data with it (`--data`, below); `make card-icons` 
     256-colour bit is set in the entry it added.
   - **Data.** `field_icons.bin` grew to 359,697 bytes: sprite frames (6 types x 3 poses) at +0x3080, pose maps at
     +0x7880, miniatures at +0x7980. Checked offline by rebuilding sprites from it.
+- **Chain list.** `ChainListScreen_Run` clears the OBJ tiles (`UnloadDuelUiGfx`: 2D mapping, 32 tiles a row) and
+  fills the header (tile rows 0-1) and the four links' 32x4-tile blocks (rows 2-17). Each link's card now gets a
+  256-colour 32x32 icon with its art in tile rows 18-21 (card k at columns 8k-8k+7: `ModChainIconBuild`, frame
+  pose 0 plus the 17x17 art at (7, 7)), and `ChainListScreen_DrawRows` draws it (attr0 256-colour, tile
+  `ModChainIconTile`) instead of the 4bpp icon it copied into the block's first four columns (`GetCardIconGfx`).
+  `ModChainIconsClear` blanks the four icons and reloads the art palette (OBJ palettes 8-11; the overlay loads
+  only palettes 0 and 1). `LoadDuelUiGfx` at the end restores the duel's tiles as before.
 - Built, not tested in an emulator.
 
 Related: [[added-cards]].

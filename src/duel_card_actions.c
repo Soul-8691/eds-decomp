@@ -506,6 +506,11 @@ void ChainListScreen_DrawHeader(void)
  * 32x32 card icon (attr2 palette 1, priority 1) and seven 32x32 text sprites (priority 1). With `scaled`,
  * each row's y is multiplied by scale / 16 (the open/close animation). The third argument is unused
  * (callers pass -1). */
+/* Mod (src/mod_field_icons.c): the chain rows' card icons with their art, 256-colour. */
+u16 ModChainIconTile(u32 row);
+void ModChainIconsClear(void);
+void ModChainIconBuild(u32 row, u16 id);
+
 void ChainListScreen_DrawRows(int scale, u16 scaled, int unused)
 {
     int i, j;
@@ -517,7 +522,8 @@ void ChainListScreen_DrawRows(int scale, u16 scaled, int unused)
             y *= scale;
             y /= 16;
         }
-        AddSprite(y << 16, SPRITE_SHAPE_32x32, tile + 0x1400);
+        /* changed: the 256-colour icon with the card's art (was the 4bpp icon at `tile`, palette 1) */
+        AddSprite(y << 16, SPRITE_SHAPE_32x32 | 0x2000, ModChainIconTile(i) + 0x400);
         for (j = 1; j < 8; j++)
             AddSprite((j << 5) | (y << 16), SPRITE_SHAPE_32x32, tile + j * 4 + 0x400);
     }
@@ -608,6 +614,7 @@ int ChainListScreen_Run(void)
         TextCanvasToTiles((u16 *)OBJ_VRAM0, *(u16 *)&CHAIN_LIST_HEADER(gChainListScreen.resolving, bgColor));
         /* The last four links, one row each: the text canvas into the row's tile block (OBJ tile row * 128 +
          * 64, 2D mapping), then the card icon over its first four tile columns. */
+        ModChainIconsClear();   /* added: the icons with art (rows without a link stay blank) */
         i = 0;
         if (gChainListScreen.chain->count > 4)
             i = gChainListScreen.chain->count - 4;
@@ -649,11 +656,9 @@ int ChainListScreen_Run(void)
             TextDrawString(0x23, 0x12, TEXT_SIZE_COLOR(10, 1), gCardNames + e->card * CARD_NAME_SIZE);
             TextDrawString(0x22, 0x11, TEXT_SIZE_COLOR(10, 7), gCardNames + e->card * CARD_NAME_SIZE);
             TextCanvasToTiles((u16 *)(OBJ_VRAM0 + ((row * 128 + 64) << 5)), 0);
-            /* Matching: the tile-index form keeps VRAM + offset out of GCSE, so loop.c rebuilds it for the
-             * induction variable. */
-            for (j = 0; j <= 3; j++)
-                CopyDoubleWords((void *)(OBJ_VRAM0 + ((row * 128 + 64 + j * 32) << 5)),
-                                GetCardIconGfx(e->card) + j * 128, 0x80);
+            /* changed: the card's icon with its art, 256-colour, outside the row's block (it was the 4bpp icon,
+             * GetCardIconGfx, copied over the block's first four tile columns) */
+            ModChainIconBuild(row, e->card);
         }
         gChainListScreen.timer = 0;
         gChainListScreen.state++;

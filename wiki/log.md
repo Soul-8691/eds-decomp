@@ -1658,3 +1658,7 @@ updated: 2026-09-29
 - src/mod_field_icons.c: ModLoadCardSpriteGfx (LoadDuelUiGfx), ModAddCardSprite / ModAddAffineCardSprite with a 9-slot 256-colour cache (gModCardSprites, symbols.ld 0x0202F300) and plain-icon fallback.
 - Callers: duel_field_screen.c DrawHandCards, campaign.c CardMenu_DrawCardPreview, duel_cursor.c reorder row, duel_card_anim.c change-position/flip/move, duel_prompts.c (unused).
 - tools/cardicons.py --data: sprite frames (poses 0-2) and pose maps. [[card-icons]], README.md. Built; sprites checked offline; not tested in an emulator.
+
+## [2026-10-28] progress | Card art in the chain list
+- src/mod_field_icons.c: ModChainIconsClear / ModChainIconBuild / ModChainIconTile (256-colour icons in OBJ tile rows 18-21, 2D mapping). src/duel_card_actions.c: ChainListScreen_Run builds them, ChainListScreen_DrawRows draws them instead of the 4bpp icon.
+- [[card-icons]], README.md. Built; not tested in an emulator.
