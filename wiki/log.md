@@ -1674,3 +1674,6 @@ updated: 2026-09-29
 
 ## [2026-10-28] progress | Fix: Deck Edit row name blotted after Card View (vanilla bug)
 - src/deck_edit_panel.c: list-row name buffers start at tile 0x30D (were 0x30C, which LoadDigitTiles also writes). [[deck-edit-card-art]], README.md. Built; not tested in an emulator.
+
+## [2026-10-28] progress | Duel art miniatures 15x16 over the black window
+- tools/cardicons.py: miniatures 15x16 from the art's centre 72x76, at (8, 7) (were 17x17 at (7, 7)); pose maps fill the black window. src/mod_field_icons.c: MINI_W/MINI_H. field_icons.bin 558,672 bytes. [[card-icons]]. Built; checked offline.

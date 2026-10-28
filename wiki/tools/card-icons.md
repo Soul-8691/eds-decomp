@@ -9,7 +9,7 @@ updated: 2026-10-28
 
 # Card icons with art
 
-`tools/cardicons.py` builds the duel field's per-card 32x32 card icons, with a 17x17 miniature of the card's
+`tools/cardicons.py` builds the duel field's per-card 32x32 card icons, with a 15x16 miniature of the card's
 art. `make` builds the game's data with it (`--data`, below); `make card-icons` writes PNG previews.
 
 - **Icons.** `card_icons/<type>.png` (normal, effect, fusion, ritual monster, spell, trap): pose 0 of the game's
@@ -17,8 +17,8 @@ art. `make` builds the game's data with it (`--data`, below); `make card-icons` 
   `gCardIconEffectGfx` pose 0 (4x4 tiles of 8x8, 4bpp) and its palette equals `gCardIconPal`.
   `fusion_monster.png` was written from `gCardIconFusionGfx` the same way.
 - **Type.** As `GetCardIconGfx`: Magic, Trap, else by frame kind (stats bits 18-19).
-- **Miniature.** The centre 72x72 of the 72x80 art (rows 4-75), area-averaged in linear light to 17x17, drawn at
-  x 7-23, y 7-23: one pixel left of the black square (x 8-22, y 7-22), top aligned with it.
+- **Miniature.** The centre 72x76 of the 72x80 art (rows 2-77, the window's 15:16), area-averaged in linear light
+  to 15x16, drawn over the black window: x 8-22, y 7-22. (Until 2026-10-28 it was 17x17 at x 7-23, y 7-23.)
 - **Palette.** One shared 64-colour palette for every miniature (median cut, then k-means over all miniature
   pixels; colours on the 15-bit grid), meant for BG palettes 12-15, which the duel leaves unused.
 - **Output** (`build/card_icons/`, never committed: the art is the ROM's): `NNNN.png` per card ID (palette 0-15
@@ -38,12 +38,12 @@ art. `make` builds the game's data with it (`--data`, below); `make card-icons` 
   8bpp tile 0 is the font's blank tiles 0-1 (checked: all zero), so cleared map cells stay empty.
 - **Cells.** `ModFieldCardTile(player, place, id, sideways)` copies the type's frame (`GetCardIconBgTile` order;
   upright or rotated clockwise, which equals the game's pose 3: checked) into the place's 16 tiles and writes the
-  miniature (rotated: upright (x, y) -> (31 - y, x)) with halfword read-modify-writes. 26 places (per player 5
+  miniature (rotated: upright (x, y) -> (31 - y, x), so x 9-24, y 8-22 sideways) with halfword read-modify-writes. 26 places (per player 5
   monster, 5 Spell/Trap, the field, the Graveyard top, the banished top), `sCellTiles`: 0x38-0x6F, 0x80-0x9F, 0xB0-0x146,
   0x1D8-0x22F, 0x28E-0x2FF. Called from `DrawZoneTiles` (face up) and `DrawAreaTiles` (Graveyard, banished).
 - **Redraws.** The battle scene clears char blocks 1-2 and BG palettes 4-15; every way back (`DuelScreen_Init`,
   from the battle scene, card detail and card list) reloads and redraws.
-- **Data.** `build/assets/field_icons.bin` (341,009 bytes: palette, 12 frames, 17x17 per card ID) through
+- **Data.** `build/assets/field_icons.bin` (341,009 bytes: palette, 12 frames, 15x16 per card ID) through
   `data/mod_field_icons_data.s` (`gModFieldIconData`, @rodata). Checked offline by rebuilding cells from it.
 - **Sprites.** The OBJ card icons get the art too (`ModAddCardSprite`, `ModAddAffineCardSprite`): the hand
   (`DrawHandCards`), the card menu's card (`CardMenu_DrawCardPreview`, including the turn-over frames), the deck
@@ -58,7 +58,7 @@ art. `make` builds the game's data with it (`--data`, below); `make card-icons` 
     `LoadDuelUiGfx` (which every overlay that reuses the OBJ tiles calls on its way out) empties it.
   - **Poses.** The flip uses face poses 0-2 (`gCardFlipTiles` entries 0x1000 / 0x1010 / 0x1020); poses 1-2 are
     narrower perspective frames, so the art is squeezed into their window (per-pose column and row maps from the
-    black window's box: x 10-20 / 13-18, y 8-22). Defense is the hardware's affine turn, so no rotated art.
+    black window: x 11-19 / 14-17, y 8-21). Defense is the hardware's affine turn, so no rotated art.
   - **Colours.** OBJ palette 1 (`gCardIconPal`) as entries 16-31 for the frames; the art palette in OBJ palettes
     8-11 (entries 128-191: the duel uses 0-6 and 15). `AddAffineSprite` switches on the exact shape, so the
     256-colour bit is set in the entry it added.
@@ -67,7 +67,7 @@ art. `make` builds the game's data with it (`--data`, below); `make card-icons` 
 - **Chain list.** `ChainListScreen_Run` clears the OBJ tiles (`UnloadDuelUiGfx`: 2D mapping, 32 tiles a row) and
   fills the header (tile rows 0-1) and the four links' 32x4-tile blocks (rows 2-17). Each link's card now gets a
   256-colour 32x32 icon with its art in tile rows 18-21 (card k at columns 8k-8k+7: `ModChainIconBuild`, frame
-  pose 0 plus the 17x17 art at (7, 7)), and `ChainListScreen_DrawRows` draws it (attr0 256-colour, tile
+  pose 0 plus the 15x16 art at (8, 7)), and `ChainListScreen_DrawRows` draws it (attr0 256-colour, tile
   `ModChainIconTile`) instead of the 4bpp icon it copied into the block's first four columns (`GetCardIconGfx`).
   `ModChainIconsClear` blanks the four icons and reloads the art palette (OBJ palettes 8-11; the overlay loads
   only palettes 0 and 1). `LoadDuelUiGfx` at the end restores the duel's tiles as before.

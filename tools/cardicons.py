@@ -7,9 +7,9 @@
 For every card ID (original and added cards, alternate arts and tokens included) it takes the card type's 32x32
 field icon, card_icons/<type>.png (effect_monster, normal_monster, ritual_monster, spell_card, trap_card; a missing
 one, such as fusion_monster, comes from the game's own icon graphics, pose 0 of gCardIcon*Gfx with gCardIconPal),
-and draws a 17x17 miniature of the card's art over it at x 7-23, y 7-23: one pixel left of the black square
-(x 8-22, y 7-22), top aligned with it. The miniature is the centre 72x72 of the 72x80 art (build/assets/
-newcards__art_gfx.bin and __art_palettes.bin, by card ID), area-averaged in linear light.
+and draws a 15x16 miniature of the card's art over its black window (x 8-22, y 7-22). The miniature is the centre
+72x76 (15:16) of the 72x80 art (build/assets/newcards__art_gfx.bin and __art_palettes.bin, by card ID),
+area-averaged in linear light.
 Every miniature uses one shared 64-colour palette (k-means over all the miniatures' pixels, colours on the GBA's
 15-bit grid), meant for the four BG palettes 12-15 the duel leaves unused. Output, in OUT:
   NNNN.png       card ID NNNN: an indexed 32x32 PNG, palette entries 0-15 the icon's (gCardIconPal, 0 transparent)
@@ -31,8 +31,8 @@ data/mod_field_icons_data.s), for BG2 in 256-colour mode:
             entries 16-31 (OBJ palette 1, gCardIconPal)
   +0x7880   the miniature's place in each sprite pose 0-2: 80 bytes each, x0, width, y0, height, then the art
             column for each of the `width` columns (32 bytes) and the art row for each of the `height` rows (32
-            bytes): pose 0 is the 17x17 at (7, 7), poses 1-2 squeeze it into their narrower window
-  +0x7980   the miniatures: 17x17 bytes per card ID (CARD_ID_COUNT of them), row-major, palette entries
+            bytes): pose 0 is the 15x16 at (8, 7), poses 1-2 squeeze it into their narrower window
+  +0x7980   the miniatures: 15x16 bytes per card ID (CARD_ID_COUNT of them), row-major, palette entries
             192-255 (the sprites take them 64 lower: OBJ palettes 8-11); an ID without a card is all 0
   then, from the next multiple of 4: Deck Edit's ring art, 224 bytes per card ID: the card's own 16-colour
             palette (16 BGR555, entry 0 transparent) and six 4bpp tiles (3 rows of 2, row-major) of a 16x24
@@ -56,8 +56,8 @@ NAMES = 'build/assets/newcards__names.bin'
 ID_TO_NUMBER = 'build/assets/newcards__id_to_number.bin'
 
 ICON = 32
-MINI = 17
-MINI_X, MINI_Y = 7, 7           # one pixel left of the black square (x 8-22, y 7-22), top aligned
+MINI_W, MINI_H = 15, 16         # the miniature: the black window's size
+MINI_X, MINI_Y = 8, 7           # the black window (x 8-22, y 7-22)
 COLORS = 64
 ART_PALETTE_BASE = 16           # the art's indices in the output PNGs follow the icon's 16 colours
 KMEANS_PASSES = 12
@@ -151,16 +151,17 @@ def area_weights(src, dst):
     return out
 
 
-WX = area_weights(A.ART_W, MINI)            # 72 -> 17
-WY = area_weights(A.ART_W, MINI)            # the centre 72 rows -> 17
-CROP_Y = (A.ART_H - A.ART_W) // 2           # rows 4-75 of 80
+CROP_H = 76                                 # the centre 72x76 of the art: 15:16, the window's shape
+WX = area_weights(A.ART_W, MINI_W)          # 72 -> 15
+WY = area_weights(CROP_H, MINI_H)           # the centre 76 rows -> 16
+CROP_Y = (A.ART_H - CROP_H) // 2            # rows 2-77 of 80
 
 
 def miniature(px, pal):
-    """The 17x17 RGB miniature (row-major list of (r, g, b)) of a 72x80 indexed art image."""
+    """The 15x16 RGB miniature (row-major list of (r, g, b)) of a 72x80 indexed art image."""
     lin = [(TO_LIN[r], TO_LIN[g], TO_LIN[b]) for r, g, b in pal]
     rows = []
-    for y in range(A.ART_W):                # horizontal pass over the cropped rows
+    for y in range(CROP_H):                 # horizontal pass over the cropped rows
         base = (CROP_Y + y) * A.ART_W
         row = []
         for taps in WX:
@@ -174,7 +175,7 @@ def miniature(px, pal):
         rows.append(row)
     out = []
     for taps in WY:                         # vertical pass
-        for x in range(MINI):
+        for x in range(MINI_W):
             r = g = b = 0.0
             for i, w in taps:
                 c = rows[i][x]
@@ -279,13 +280,12 @@ def black_box(img):
 
 
 def pose_map(img):
-    """Where the 17x17 miniature goes in an icon pose: one pixel wider than the black window on each side and one
-    row taller below it (17x17 at (7, 7) upright), each column and row taking the nearest art column or row."""
+    """Where the 15x16 miniature goes in an icon pose: over its black window (15x16 at (8, 7) upright), each column
+    and row taking the nearest art column or row."""
     x0, y0, x1, y1 = black_box(img)
-    x0, x1, y1 = x0 - 1, x1 + 1, y1 + 1
     w, h = x1 - x0 + 1, y1 - y0 + 1
-    cols = [round(k * (MINI - 1) / (w - 1)) if w > 1 else MINI // 2 for k in range(w)]
-    rows = [round(k * (MINI - 1) / (h - 1)) if h > 1 else MINI // 2 for k in range(h)]
+    cols = [round(k * (MINI_W - 1) / (w - 1)) if w > 1 else MINI_W // 2 for k in range(w)]
+    rows = [round(k * (MINI_H - 1) / (h - 1)) if h > 1 else MINI_H // 2 for k in range(h)]
     out = bytes([x0, w, y0, h]) + bytes(cols).ljust(32, b'\0') + bytes(rows).ljust(32, b'\0')
     return out.ljust(POSE_MAP_SIZE, b'\0')
 
@@ -428,14 +428,14 @@ def main():
             blob += pose_map(img)
         blob += bytes(0x7980 - len(blob))
         assert len(blob) == 0x7980
-        minis = bytearray(count * MINI * MINI)
+        minis = bytearray(count * MINI_W * MINI_H)
         cache = {}
         for cid, _, _, _, mini in cards:
             for k, c in enumerate(mini):
                 g = gba(c)
                 if g not in cache:
                     cache[g] = nearest(g, palette)
-                minis[cid * MINI * MINI + k] = ART_PALETTE_ENTRY + cache[g]
+                minis[cid * MINI_W * MINI_H + k] = ART_PALETTE_ENTRY + cache[g]
         blob += minis
         blob += bytes(-len(blob) % 4)
         for cid in range(count):
@@ -454,9 +454,9 @@ def main():
     index = ['id\tnumber\ticon\tname']
     for k, (cid, number, kind, name, mini) in enumerate(cards):
         img = bytearray(icons[kind])
-        for y in range(MINI):
-            for x in range(MINI):
-                c = gba(mini[y * MINI + x])
+        for y in range(MINI_H):
+            for x in range(MINI_W):
+                c = gba(mini[y * MINI_W + x])
                 if c not in cache:
                     cache[c] = nearest(c, palette)
                 img[(MINI_Y + y) * ICON + MINI_X + x] = ART_PALETTE_BASE + cache[c]

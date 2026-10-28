@@ -23,8 +23,8 @@
  * cells' tiles fill the rest (sCellTiles: 26 cells of 16 tiles, one per face-up place: per player 5 monster, 5
  * Spell/Trap, the field, the Graveyard's and the banished pile's top card). 8bpp tile 0 is the font's blank tiles
  * 0-1, so a cleared cell stays empty.
- * A cell is the frame of the card's type and pose (the card_icons PNGs, entries 32-47: BG palette 2) with the 17x17
- * miniature (entries 192-255: BG palettes 12-15, which the duel leaves free) at x 7-23, y 7-23, or turned clockwise
+ * A cell is the frame of the card's type and pose (the card_icons PNGs, entries 32-47: BG palette 2) with the 15x16
+ * miniature (entries 192-255: BG palettes 12-15, which the duel leaves free) over its black window (x 8-22, y 7-22), or turned clockwise
  * with the frame for a sideways (defense) card. The data is gModFieldIconData (tools/cardicons.py --data,
  * data/mod_field_icons_data.s). The battle scene reuses this VRAM and palette, and DuelScreen_Init redraws all.
  * The sprites: the OBJ icon tiles 0x80-0x1FF (six types x four poses, 4bpp) become the six plain icons in pose 0
@@ -77,13 +77,14 @@ extern const u8 gModFieldIconData[];            /* tools/cardicons.py --data */
 #define DATA_FRAMES             0x0080          /* 6 types x 2 poses x 1 KiB */
 #define DATA_OBJ_FRAMES         0x3080          /* 6 types x 3 poses x 1 KiB */
 #define DATA_POSE_MAPS          0x7880          /* 3 poses x POSE_MAP_SIZE */
-#define DATA_MINIS              0x7980          /* 17x17 bytes per card ID */
+#define DATA_MINIS              0x7980          /* 15x16 bytes per card ID */
 #define POSE_MAP_SIZE           80              /* x0, width, y0, height, the art column of each column (32), the
                                                    art row of each row (32) */
 #define SPRITE_POSES            3
 #define FRAME_SIZE              (CELL_TILES * TILE8_SIZE)
-#define MINI                    17
-#define MINI_X                  7
+#define MINI_W                  15              /* the miniature: the black window, x 8-22, y 7-22 */
+#define MINI_H                  16
+#define MINI_X                  8
 #define MINI_Y                  7
 #define ART_PALETTE_ENTRY       192
 #define ICON_POSE_SIDEWAYS      0x30            /* GetCardIconBgTile's pose offset (FIELD_TILE_POSE_SIDEWAYS) */
@@ -153,10 +154,10 @@ u16 ModFieldCardTile(u32 player, u32 place, u16 id, u32 sideways)
     id &= CARD_ID_MASK;
     if (id == 0 || id >= CARD_ID_COUNT)
         return tile;
-    mini = gModFieldIconData + DATA_MINIS + id * (MINI * MINI);
-    for (j = 0; j < MINI; j++) {
-        for (i = 0; i < MINI; i++) {
-            u32 color = mini[j * MINI + i];
+    mini = gModFieldIconData + DATA_MINIS + id * (MINI_W * MINI_H);
+    for (j = 0; j < MINI_H; j++) {
+        for (i = 0; i < MINI_W; i++) {
+            u32 color = mini[j * MINI_W + i];
 
             if (color == 0)
                 continue;
@@ -218,10 +219,10 @@ static void BuildCardSprite(u32 slot, u16 id, u32 type, u32 pose)
                     FRAME_SIZE);
     if (id >= CARD_ID_COUNT)
         return;
-    mini = gModFieldIconData + DATA_MINIS + id * (MINI * MINI);
+    mini = gModFieldIconData + DATA_MINIS + id * (MINI_W * MINI_H);
     for (r = 0; r < h; r++) {
         for (c = 0; c < w; c++) {
-            u32 color = mini[map[4 + 32 + r] * MINI + map[4 + c]];
+            u32 color = mini[map[4 + 32 + r] * MINI_W + map[4 + c]];
 
             if (color != 0)
                 PutCellPixel(dst, x0 + c, y0 + r, color - OBJ_ART_SHIFT);
@@ -340,10 +341,10 @@ void ModChainIconBuild(u32 row, u16 id)
     id &= CARD_ID_MASK;
     if (id == 0 || id >= CARD_ID_COUNT)
         return;
-    mini = gModFieldIconData + DATA_MINIS + id * (MINI * MINI);
-    for (j = 0; j < MINI; j++) {
-        for (i = 0; i < MINI; i++) {
-            u32 color = mini[j * MINI + i];
+    mini = gModFieldIconData + DATA_MINIS + id * (MINI_W * MINI_H);
+    for (j = 0; j < MINI_H; j++) {
+        for (i = 0; i < MINI_W; i++) {
+            u32 color = mini[j * MINI_W + i];
 
             if (color != 0)
                 PutSprite2dPixel(tile, MINI_X + i, MINI_Y + j, color - OBJ_ART_SHIFT);
@@ -364,7 +365,7 @@ void ModChainIconBuild(u32 row, u16 id)
  * list filter) gets no art: sDeckRingCheck compares a tile of each top sheet first. The cards come from
  * DeckEdit_InitFrameSlot and DeckEdit_ScrollFrameSlots (ModDeckRingSetCard), by ring slot. */
 #define DE_ENTRY_SIZE           (32 + 6 * 32)   /* palette, then 3 rows of 2 4bpp tiles */
-#define DATA_DECK_EDIT          ((DATA_MINIS + CARD_ID_COUNT * MINI * MINI + 3) & ~3)
+#define DATA_DECK_EDIT          ((DATA_MINIS + CARD_ID_COUNT * MINI_W * MINI_H + 3) & ~3)
 #define DE_RING_SLOTS           6
 #define DE_ART_SPRITES          5
 #define DE_PALETTE_FIRST        11
