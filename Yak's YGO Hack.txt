@@ -33,3 +33,4 @@ Events allow use of saved decks
 Side/extra deck for starting decks and formats
 Make sure the duelists are unlocked in the duel score menu in debug mode
 Visible card icons
+Fix general AI shortcomings
