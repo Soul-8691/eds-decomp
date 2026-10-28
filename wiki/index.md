@@ -97,6 +97,6 @@ Start with [[overview]]. The decompilation is 100% matched since 2026-10-02: all
 - [[gbatek]]: GBA memory, sound, DMA, timer and interrupt sections ingested and checked against EDS.
 
 ## Questions
-- [[deck-edit-card-art]]: could Deck Edit show the card art miniatures? Its BG is full; the sprite grid is covered by four sheets (scattered blank tiles), OBJ palettes 11-15 are free.
+- [[deck-edit-card-art]]: card art over Deck Edit's ring of card frames: the ring's sprites, Deck Edit's VRAM and palettes, and the overlay that was built.
 - [[open-questions]]: unresolved questions by area.
 - [[decomp-pace-comparison]]: how fast other GBA decomps went, and what EDS should change.

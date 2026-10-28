@@ -34,6 +34,10 @@ data/mod_field_icons_data.s), for BG2 in 256-colour mode:
             bytes): pose 0 is the 17x17 at (7, 7), poses 1-2 squeeze it into their narrower window
   +0x7980   the miniatures: 17x17 bytes per card ID (CARD_ID_COUNT of them), row-major, palette entries
             192-255 (the sprites take them 64 lower: OBJ palettes 8-11); an ID without a card is all 0
+  then, from the next multiple of 4: Deck Edit's ring art, 224 bytes per card ID: the card's own 16-colour
+            palette (16 BGR555, entry 0 transparent) and six 4bpp tiles (3 rows of 2, row-major) of a 16x24
+            sprite piece holding the 15x16 window art at (0, 7) (the ring frames' window is x 8-22, y 7-22),
+            resampled from the 72x80 art (its centre 72x76) and quantised to 15 colours for that card alone
 """
 import os
 import struct
@@ -286,6 +290,84 @@ def pose_map(img):
     return out.ljust(POSE_MAP_SIZE, b'\0')
 
 
+DE_W, DE_H = 15, 16                # the ring frames' window (x 8-22, y 7-22 of the 32x32 frame)
+DE_Y = 7
+DE_SIZE = 32 + 6 * 32
+DE_COLORS = 15
+WX_DE = area_weights(A.ART_W, DE_W)
+WY_DE = area_weights(76, DE_H)              # the centre 76 rows: 72x76 is the window's 15:16
+
+
+def window_art(px, pal):
+    """The 15x16 RGB window art of a 72x80 indexed art image (linear-light area average of its centre 72x76)."""
+    lin = [(TO_LIN[r], TO_LIN[g], TO_LIN[b]) for r, g, b in pal]
+    rows = []
+    for y in range(76):
+        base = (2 + y) * A.ART_W
+        row = []
+        for taps in WX_DE:
+            acc = [0.0, 0.0, 0.0]
+            for i, w in taps:
+                c = lin[px[base + i]]
+                acc[0] += c[0] * w
+                acc[1] += c[1] * w
+                acc[2] += c[2] * w
+            row.append(acc)
+        rows.append(row)
+    out = []
+    for taps in WY_DE:
+        for x in range(DE_W):
+            acc = [0.0, 0.0, 0.0]
+            for i, w in taps:
+                c = rows[i][x]
+                acc[0] += c[0] * w
+                acc[1] += c[1] * w
+                acc[2] += c[2] * w
+            out.append(gba(tuple(to_srgb(v) for v in acc)))
+    return out
+
+
+def quantise_card(pixels):
+    """A card's own palette of up to 15 colours (median cut, then a few k-means passes) and each pixel's index
+    in it (1-15; entry 0 stays transparent)."""
+    hist = {}
+    for c in pixels:
+        hist[c] = hist.get(c, 0) + 1
+    if len(hist) <= DE_COLORS:
+        palette = list(hist)
+    else:
+        palette = median_cut(hist, DE_COLORS)
+        items = list(hist.items())
+        for _ in range(4):
+            groups = [[] for _ in palette]
+            for c, cnt in items:
+                groups[nearest(c, palette)].append((c, cnt))
+            palette = [mean(g) if g else q for g, q in zip(groups, palette)]
+        palette = [gba(tuple(int(v + 0.5) for v in q)) for q in palette]
+    index = [1 + nearest(c, palette) for c in pixels]
+    return palette, index
+
+
+def deck_edit_entry(px, pal):
+    """A card's Deck Edit ring entry: its 16-colour palette and the six 4bpp tiles of the window art."""
+    palette, index = quantise_card(window_art(px, pal))
+    out = bytearray(struct.pack('<16H', 0, *((c[0] >> 3) | (c[1] >> 3) << 5 | (c[2] >> 3) << 10 for c in palette),
+                                *([0] * (DE_COLORS - len(palette)))))
+    img = bytearray(16 * 24)
+    for y in range(DE_H):
+        for x in range(DE_W):
+            img[(DE_Y + y) * 16 + x] = index[y * DE_W + x]
+    for t in range(6):
+        tx, ty = t % 2, t // 2
+        for y in range(8):
+            for x in range(0, 8, 2):
+                lo = img[(ty * 8 + y) * 16 + tx * 8 + x]
+                hi = img[(ty * 8 + y) * 16 + tx * 8 + x + 1]
+                out.append(lo | hi << 4)
+    assert len(out) == DE_SIZE
+    return bytes(out)
+
+
 def tiles8(img, entry=ICON_PALETTE_ENTRY):
     """A 32x32 image of 4bpp palette indices as 16 8bpp tiles (4x4, row-major), colour c as entry + c."""
     out = bytearray()
@@ -316,6 +398,7 @@ def main():
     count = len(stats) // 4
 
     cards = []                              # (id, number, icon type, name, miniature)
+    deck_edit = {}                          # card ID: its Deck Edit ring entry
     hist = {}
     for cid in range(1, count):
         number = struct.unpack_from('<H', i2n, cid * 2)[0]
@@ -324,6 +407,8 @@ def main():
         px = A._art_pixels(art[cid * A.ART_SIZE:(cid + 1) * A.ART_SIZE])
         pal = [A.bgr555_to_rgb(v & 0x7FFF) for v in struct.unpack_from('<64H', art_pal, cid * 0x80)]
         mini = miniature(px, pal)
+        if data_out:
+            deck_edit[cid] = deck_edit_entry(px, pal)
         for c in mini:
             g = gba(c)
             hist[g] = hist.get(g, 0) + 1
@@ -352,6 +437,9 @@ def main():
                     cache[g] = nearest(g, palette)
                 minis[cid * MINI * MINI + k] = ART_PALETTE_ENTRY + cache[g]
         blob += minis
+        blob += bytes(-len(blob) % 4)
+        for cid in range(count):
+            blob += deck_edit.get(cid, bytes(DE_SIZE))
         os.makedirs(os.path.dirname(data_out) or '.', exist_ok=True)
         open(data_out, 'wb').write(bytes(blob))
         print(f'cardicons: {len(cards)} miniatures, {len(hist)} source colours -> {COLORS}, in {data_out}')

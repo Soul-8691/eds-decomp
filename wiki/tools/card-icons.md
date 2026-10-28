@@ -71,6 +71,9 @@ art. `make` builds the game's data with it (`--data`, below); `make card-icons` 
   `ModChainIconTile`) instead of the 4bpp icon it copied into the block's first four columns (`GetCardIconGfx`).
   `ModChainIconsClear` blanks the four icons and reloads the art palette (OBJ palettes 8-11; the overlay loads
   only palettes 0 and 1). `LoadDuelUiGfx` at the end restores the duel's tiles as before.
+- **Deck Edit.** The ring of card frames left of the list gets the art too: a 16x32 affine sprite per frame with
+  the card's own 15 colours (OBJ palettes 11-15); see [[deck-edit-card-art]]. Data: 224 bytes per card ID after the
+  miniatures (from the next multiple of 4).
 - Built, not tested in an emulator.
 
 Related: [[added-cards]].

@@ -1665,3 +1665,9 @@ updated: 2026-09-29
 
 ## [2026-10-28] query | Deck Edit card art feasibility
 - [[deck-edit-card-art]] (new): Deck Edit VRAM and palette map, blank-tile and palette checks, options. [[index]].
+- [[deck-edit-card-art]]: ring screenshot findings (per-row type frames, sizes, free 2x2 sprite blocks); layer still unsettled.
+
+## [2026-10-28] progress | Card art in Deck Edit's ring
+- src/mod_field_icons.c: ModDeckRingSetCard / ModDeckRingBegin / ModDeckRingArt; src/deck_edit_widgets.c hooks (InitFrameSlot, ScrollFrameSlots, DrawFrameSlots); symbols.ld gModDeckRing 0x0202F360; tools/cardicons.py --data: per-card 15-colour window art.
+- Ring sprites identified from the user's mGBA OAM screenshots; the sheet offsets corrected ([[deck-edit-card-art]] rewritten). [[card-icons]], [[index]], README.md. Built; checked offline; not tested in an emulator.
+- [[deck-edit-card-art]]: noted the vanilla Deck Edit bug (row above the cursor partly covered after Card View).

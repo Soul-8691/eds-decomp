@@ -11,6 +11,8 @@
  *                         the change-position, flip and move animations (duel_card_anim.c)
  *   ModChainIconsClear, ModChainIconBuild, ModChainIconTile  the chain list's card icons with their art
  *                         (ChainListScreen_Run, ChainListScreen_DrawRows)
+ *   ModDeckRingSetCard, ModDeckRingBegin, ModDeckRingArt  the art over Deck Edit's ring of card frames
+ *                         (DeckEdit_InitFrameSlot, DeckEdit_ScrollFrameSlots, DeckEdit_DrawFrameSlots)
  * BG2 (the card cells, life points and phase letters) is a 256-colour layer (DuelScreen_InitBgCnt). Its tiles keep
  * the numbers they had in 4bpp, now 64-byte tiles from character block 1, so the map writers did not change: the
  * card back 0x70 (pose 0) and 0xA0 (pose 3, sideways), the thick pile 0x230, the held-zone mark 0x240, the digits
@@ -347,4 +349,86 @@ void ModChainIconBuild(u32 row, u16 id)
                 PutSprite2dPixel(tile, MINI_X + i, MINI_Y + j, color - OBJ_ART_SHIFT);
         }
     }
+}
+
+/* ---- Deck Edit's ring ---- */
+
+/* The ring left of Deck Edit's list (deck_edit_widgets.c): up to six 32x32 affine frame sprites (OamList layer 5),
+ * one per visible list row, all with the window at x 8-22, y 7-22. Each drawn frame gets a 16x32 affine sprite at
+ * its x + 8 with the same matrix (so the same centre: it scales and moves with the frame), one layer in front, made
+ * of the card's window art (gModFieldIconData's Deck Edit block: 15x16 at (0, 7), 15 colours of its own). The
+ * k-th frame drawn this frame takes OBJ palette 11 + k (11-15 are empty in Deck Edit's palette) and the 2x4-tile
+ * block sDeckRingBlocks[k] of the 2D OBJ map: tiles that are blank in Deck Edit's four sheets, outside every frame
+ * template and the run-time writes (rows 2-3, the name letters at row 11). Both are written again each frame, so a
+ * screen that reloads the sheets or the palette needs nothing more. A screen with other sheets in the top half (the
+ * list filter) gets no art: sDeckRingCheck compares a tile of each top sheet first. The cards come from
+ * DeckEdit_InitFrameSlot and DeckEdit_ScrollFrameSlots (ModDeckRingSetCard), by ring slot. */
+#define DE_ENTRY_SIZE           (32 + 6 * 32)   /* palette, then 3 rows of 2 4bpp tiles */
+#define DATA_DECK_EDIT          ((DATA_MINIS + CARD_ID_COUNT * MINI * MINI + 3) & ~3)
+#define DE_RING_SLOTS           6
+#define DE_ART_SPRITES          5
+#define DE_PALETTE_FIRST        11
+#define DE_ART_LAYER            4               /* in front of the frames' layer 5 */
+#define ATTR0_SHAPE_MASK        0xC000
+#define ATTR0_SHAPE_TALL        0x8000          /* with the frame's size bits (2): 16x32 */
+#define OBJ_TILE_2D(col, row)   ((row) * 32 + (col))
+
+extern const u8 gDeckEditObjTiles[], gDeckEditCardStackObjTiles[];
+struct OamListEntry *OamListAlloc(u8 layer, struct OamList *list);
+
+struct ModDeckRing {
+    u16 card[DE_RING_SLOTS];        /* the card of each ring slot (0: none) */
+    u8 drawn;                       /* art sprites added this frame; DE_ART_SPRITES: none allowed */
+    u8 pad;
+};
+extern struct ModDeckRing gModDeckRing;     /* EWRAM 0x0202F360, symbols.ld */
+
+static const u16 sDeckRingBlocks[DE_ART_SPRITES] = {
+    OBJ_TILE_2D(8, 9), OBJ_TILE_2D(28, 10), OBJ_TILE_2D(22, 12), OBJ_TILE_2D(8, 20), OBJ_TILE_2D(10, 23),
+};
+
+void ModDeckRingSetCard(u32 slot, u16 id)
+{
+    if (slot < DE_RING_SLOTS)
+        gModDeckRing.card[slot] = id;
+}
+
+/* DeckEdit_DrawFrameSlots, first: the art only over Deck Edit's own sheets (a tile of each top-half sheet as
+ * loaded by DeckEdit_InitListView: gDeckEditObjTiles at column 0, gDeckEditCardStackObjTiles at column 16). */
+void ModDeckRingBegin(void)
+{
+    const u32 *a = (const u32 *)OBJ_VRAM0, *b = (const u32 *)(OBJ_VRAM0 + 16 * 32);
+    const u32 *sa = (const u32 *)gDeckEditObjTiles, *sb = (const u32 *)gDeckEditCardStackObjTiles;
+    u32 i;
+
+    gModDeckRing.drawn = 0;
+    for (i = 0; i < 8; i++) {
+        if (a[i] != sa[i] || b[i] != sb[i]) {
+            gModDeckRing.drawn = DE_ART_SPRITES;
+            return;
+        }
+    }
+}
+
+/* After ring slot `slot`'s frame sprite `frame` (its OamList entry) was added: its art sprite. */
+void ModDeckRingArt(u32 slot, u16 *frame, void *list)
+{
+    u16 id = gModDeckRing.card[slot < DE_RING_SLOTS ? slot : 0] & CARD_ID_MASK;
+    u32 k = gModDeckRing.drawn, block, r;
+    const u8 *entry;
+    u16 *e;
+
+    if (slot >= DE_RING_SLOTS || k >= DE_ART_SPRITES || id == 0 || id >= CARD_ID_COUNT)
+        return;
+    gModDeckRing.drawn = k + 1;
+    block = sDeckRingBlocks[k];
+    entry = gModFieldIconData + DATA_DECK_EDIT + id * DE_ENTRY_SIZE;
+    CopyDoubleWords((void *)(OBJ_PLTT + (DE_PALETTE_FIRST + k) * 32), entry, 32);
+    for (r = 0; r < 3; r++)
+        CopyDoubleWords((void *)OBJ_TILE8_ADDR(block + r * 32), entry + 32 + r * 2 * TILE4_SIZE, 2 * TILE4_SIZE);
+    MemClear16((void *)OBJ_TILE8_ADDR(block + 3 * 32), 2 * TILE4_SIZE);
+    e = (u16 *)OamListAlloc(DE_ART_LAYER, list);
+    e[0] = (frame[0] & ~ATTR0_SHAPE_MASK) | ATTR0_SHAPE_TALL;
+    e[1] = (frame[1] & 0xFE00) | ((frame[1] + 8) & 0x1FF);
+    e[2] = block | (frame[2] & 0x0C00) | (DE_PALETTE_FIRST + k) << 12;
 }

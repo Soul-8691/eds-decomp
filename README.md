@@ -55,7 +55,8 @@ next one.
   enough cards.
 - **Card art in duels.** Face-up cards show a small picture of their artwork inside their icon: on the field
   (monsters, Spells/Traps, the Field zone, the top card of each Graveyard and banished pile), in your hand, in the
-  card menu, in the chain list, when reordering cards, and while cards move, flip or change position.
+  card menu, in the chain list, when reordering cards, and while cards move, flip or change position. Deck Edit's
+  column of cards beside the list shows each card's art too.
 - **Still backgrounds.** The field background no longer scrolls during duels, and the title screen's background
   no longer scrolls either.
 - **Smarter CPU.**

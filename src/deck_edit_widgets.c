@@ -354,6 +354,11 @@ u8 GetCardFrameIndex(u16 id)
  * ring offsets (slot base = ring + 4 + i * 16): +4 pos, +5 frame, +6 y, +8 startY, +0xA deltaY,
  * +0xC active, +0xE affineIdx, +0x10 scaleStep, +0x12 next index. The two loops keep separate
  * slot pointers: one shared pointer would change the register allocation. */
+/* Mod (src/mod_field_icons.c): the card art over the ring's frames. */
+void ModDeckRingSetCard(u32 slot, u16 id);
+void ModDeckRingBegin(void);
+void ModDeckRingArt(u32 slot, u16 *frame, void *list);
+
 void DeckEdit_ScrollFrameSlots(u8 dir, u16 newCardId, u8 unusedCount, u8 *ring, u8 *affines)
 {
     u8 head = ring[0];
@@ -367,6 +372,7 @@ void DeckEdit_ScrollFrameSlots(u8 dir, u16 newCardId, u8 unusedCount, u8 *ring, 
     {
         if (newCardId != 0xFFFF) {
             u8 *in = (u8 *)&((struct FrameSlotEntry *)ring)[head];
+            ModDeckRingSetCard(head, newCardId);    /* added */
             in[4] = 0;
             in[0xC] = 1;
             *(u16 *)(in + 6) = gFrameSlotY[0];
@@ -398,6 +404,7 @@ void DeckEdit_ScrollFrameSlots(u8 dir, u16 newCardId, u8 unusedCount, u8 *ring, 
     {
         if (newCardId != 0xFFFF) {
             u8 *in = (u8 *)&((struct FrameSlotEntry *)ring)[head];
+            ModDeckRingSetCard(head, newCardId);    /* added */
             in[4] = 6;
             in[0xC] = 1;
             *(u16 *)(in + 6) = gFrameSlotY[6];
@@ -429,12 +436,14 @@ void DeckEdit_ScrollFrameSlots(u8 dir, u16 newCardId, u8 unusedCount, u8 *ring, 
 void DeckEdit_DrawFrameSlots(u8 *slots, int oamList)
 {
     u8 i;
+    ModDeckRingBegin();     /* added */
     for (i = 0; i <= 5; i++) {
         u8 *slot = (u8 *)(i * 16 + (u32)slots);
         if (slot[8] != 0) {
             u16 *o = OamListAddSpriteGroupWide(gCardFrameSprites[slot[1]], 5, 1, -3, *(s16 *)(slot + 2), 4, 0, 0, 0, 0, 0, oamList);
             o[0] |= 0x100;
             o[1] |= slot[0xE] << 9;
+            ModDeckRingArt(i, o, (void *)oamList);  /* added: the card's art over the frame */
         }
     }
 }
@@ -446,6 +455,7 @@ void DeckEdit_InitFrameSlot(u8 slot, u16 cardId, u8 pos, u8 *ring, u8 *affines)
     int n;
     u8 *cell;
     u8 frame = GetCardFrameIndex(cardId);
+    ModDeckRingSetCard(slot, cardId);   /* added */
     entry = ring + slot * 16;
     entry[5] = frame;
     entry[0xC] = 1;
