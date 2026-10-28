@@ -1631,3 +1631,12 @@ updated: 2026-09-29
 - src/mod_recipes.c CB_ChallengerRecipes switches the Deck Edit banlist (SwitchToBanlist), SELECT opens Deck Edit (campaign_steps.c sub-step 4), B refused in release while the deck is illegal; the GetActiveBanlist override is gone.
 - src/mod_opponents.c ModEventChallenger: release picks only formats with a possible 40-card Main Deck (BanlistMainDeckCapacity, src/mod_banlists.c).
 - [[yugi-kaiba-opponent]], README.md.
+
+## [2026-10-28] progress | Side and Extra Decks from the .ydk files
+- src/mod_decks.c: the three Yugi-Kaiba decks get their .ydk Extra Decks (Fusion Deck); the 16 format decks get s<Deck>Side arrays from their .ydk Side Decks; BuildModStarterDeck and GetRecipePreset pass them on (src/mod_recipes.c PresetToBuf).
+- Verified against decks/*.ydk: identical except cards EDS lacks (4-Starred Ladybug of Doom, Gradius' Option).
+- [[deck-recipes]], README.md, DECKS.md regenerated.
+
+## [2026-10-28] progress | 4-Starred Ladybug of Doom added
+- config/new_cards.txt: 4-Starred Ladybug of Doom appended (ID 1136, data only, no effect yet); in sAndroidVanillaBeatSide (15). Gradius' Option was added and removed again (no use without Gradius); sFiberRecruiterControlSide stays at 14.
+- [[added-cards]], [[deck-recipes]], DECKS.md and CARD_PRICES.md regenerated.

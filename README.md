@@ -40,7 +40,8 @@ next one.
   isn't legal in the format (or is under 40 cards) can't duel until you fix it.
 - **Deck Recipes.** Up to 50 saved decks, about 20 of them preset to staple decks of the first seven formats and
   Goat. Loading a recipe takes the cards from your trunk; any you don't have are left out (the game tells you which,
-  and why). The deck recipes will eventually include all 15 TCG formats.
+  and why). The starting decks and the format presets come with the Side and Extra Decks of their .ydk files. The
+  deck recipes will eventually include all 15 TCG formats.
 - **Banlists** (main menu). Choose the banlist your deck is built under. Cards your current deck can no longer hold
   go back to the trunk. Before switching, the game checks that your cards can still make a Main Deck of at least
   40 cards under the new banlist (counting its limits and card pool); if they can't, the switch is refused.

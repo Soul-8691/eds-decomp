@@ -243,7 +243,7 @@ static const struct DeckList sRedDeckList = { sRedStarterDeck, ARRAY_COUNT(sRedS
 
 /* Tristan Taylor: one of three decks at weighted random, per duel (GetOpponentDeckOverride): Soul Control 50%,
  * Vanilla Beat 30%, Stall Mill 20% (El Duelista DEX-Soul Control.ydk, ellietincan-Vanilla Beat.ydk,
- * DK-ZERO-Stall Mill.ydk; main decks only). */
+ * DK-ZERO-Stall Mill.ydk; main and extra decks, the side decks after each). */
 #if defined(HAS_CARD_SOUL_EXCHANGE)
 #define MOD_TRISTAN_SOUL_CONTROL 1
 static const u16 sTristanSoulControl[] = {
@@ -270,11 +270,34 @@ static const u16 sTristanSoulControl[] = {
     X3(CARD_TRAP_HOLE),
     CARD_ULTIMATE_OFFERING,
     CARD_WABOKU,
+    /* Fusion Deck (15) */
+    X2(CARD_DARKFIRE_DRAGON),
+    CARD_DRAGONESS_THE_WICKED_KNIGHT,
+    X2(CARD_FLAME_GHOST),
+    X2(CARD_FLAME_SWORDSMAN),
+    X2(CARD_FLOWER_WOLF),
+    X2(CARD_FUSIONIST),
+    CARD_KARBONALA_WARRIOR,
+    X3(CARD_METAL_DRAGON),
 };
-STATIC_ASSERT(ARRAY_COUNT(sTristanSoulControl) == 40, TristanSoulControlSize);
+STATIC_ASSERT(ARRAY_COUNT(sTristanSoulControl) == 40 + 15, TristanSoulControlSize);
 #endif
 #ifdef MOD_TRISTAN_SOUL_CONTROL
 static const struct DeckList sTristanSoulControlList = { sTristanSoulControl, ARRAY_COUNT(sTristanSoulControl), 0 };
+/* El Duelista DEX-Soul Control.ydk's Side Deck (15). */
+static const u16 sTristanSoulControlSide[] = {
+    X2(CARD_HANE_HANE),
+    CARD_TRAP_MASTER,
+    CARD_WALL_OF_ILLUSION,
+    X2(CARD_JUDGE_MAN),
+    X2(CARD_CARD_DESTRUCTION),
+    X2(CARD_OOKAZI),
+    CARD_DE_SPELL,
+    CARD_REMOVE_TRAP,
+    CARD_ULTIMATE_OFFERING,
+    X2(CARD_WABOKU),
+};
+STATIC_ASSERT(ARRAY_COUNT(sTristanSoulControlSide) == 15, TristanSoulControlSideSize);
 #endif
 #if 1
 #define MOD_TRISTAN_VANILLA_BEAT 1
@@ -300,11 +323,28 @@ static const u16 sTristanVanillaBeat[] = {
     X3(CARD_REINFORCEMENTS),
     X3(CARD_TRAP_HOLE),
     X3(CARD_WABOKU),
+    /* Fusion Deck (15) */
+    X3(CARD_DRAGONESS_THE_WICKED_KNIGHT),
+    X3(CARD_FLAME_SWORDSMAN),
+    X3(CARD_GAIA_THE_DRAGON_CHAMPION),
+    X3(CARD_KARBONALA_WARRIOR),
+    X3(CARD_METAL_DRAGON),
 };
-STATIC_ASSERT(ARRAY_COUNT(sTristanVanillaBeat) == 40, TristanVanillaBeatSize);
+STATIC_ASSERT(ARRAY_COUNT(sTristanVanillaBeat) == 40 + 15, TristanVanillaBeatSize);
 #endif
 #ifdef MOD_TRISTAN_VANILLA_BEAT
 static const struct DeckList sTristanVanillaBeatList = { sTristanVanillaBeat, ARRAY_COUNT(sTristanVanillaBeat), 0 };
+/* ellietincan-Vanilla Beat.ydk's Side Deck (15). */
+static const u16 sTristanVanillaBeatSide[] = {
+    X3(CARD_WALL_OF_ILLUSION),
+    X3(CARD_AQUA_MADOOR),
+    CARD_JUDGE_MAN,
+    CARD_SUMMONED_SKULL,
+    X2(CARD_CARD_DESTRUCTION),
+    X2(CARD_DE_SPELL),
+    X3(CARD_SOUL_EXCHANGE),
+};
+STATIC_ASSERT(ARRAY_COUNT(sTristanVanillaBeatSide) == 15, TristanVanillaBeatSideSize);
 #endif
 #if defined(HAS_CARD_CARD_DESTRUCTION) \
     && defined(HAS_CARD_SOUL_EXCHANGE)
@@ -332,11 +372,27 @@ static const u16 sTristanStallMill[] = {
     X3(CARD_ULTIMATE_OFFERING),
     X3(CARD_WABOKU),
     X3(CARD_TRAP_HOLE),
+    /* Fusion Deck (15) */
+    X3(CARD_GAIA_THE_DRAGON_CHAMPION),
+    X3(CARD_METAL_DRAGON),
+    X3(CARD_FLAME_SWORDSMAN),
+    X3(CARD_FLOWER_WOLF),
+    X3(CARD_FLAME_GHOST),
 };
-STATIC_ASSERT(ARRAY_COUNT(sTristanStallMill) == 43, TristanStallMillSize);
+STATIC_ASSERT(ARRAY_COUNT(sTristanStallMill) == 43 + 15, TristanStallMillSize);
 #endif
 #ifdef MOD_TRISTAN_STALL_MILL
 static const struct DeckList sTristanStallMillList = { sTristanStallMill, ARRAY_COUNT(sTristanStallMill), 0 };
+/* DK-ZERO-Stall Mill.ydk's Side Deck (15). */
+static const u16 sTristanStallMillSide[] = {
+    X3(CARD_LA_JINN_THE_MYSTICAL_GENIE_OF_THE_LAMP),
+    X3(CARD_BATTLE_OX),
+    X3(CARD_NEO_THE_MAGIC_SWORDSMAN),
+    X3(CARD_REINFORCEMENTS),
+    X2(CARD_THE_WICKED_WORM_BEAST),
+    CARD_CARD_DESTRUCTION,
+};
+STATIC_ASSERT(ARRAY_COUNT(sTristanStallMillSide) == 15, TristanStallMillSideSize);
 #endif
 
 #if defined(MOD_TRISTAN_SOUL_CONTROL) && defined(MOD_TRISTAN_VANILLA_BEAT) && defined(MOD_TRISTAN_STALL_MILL)
@@ -398,6 +454,19 @@ static const u16 sCritterMaskedControl[] = {
 };
 STATIC_ASSERT(ARRAY_COUNT(sCritterMaskedControl) == 40 + 15, CritterMaskedControlSize);
 static const struct DeckList sCritterMaskedControlList = { sCritterMaskedControl, ARRAY_COUNT(sCritterMaskedControl), 0 };
+/* Jazz-Masked Control.ydk's Side Deck (15). */
+static const u16 sCritterMaskedControlSide[] = {
+    CARD_KURIBOH,
+    CARD_MUKA_MUKA,
+    X3(CARD_THUNDER_DRAGON),
+    X2(CARD_GIANT_SOLDIER_OF_STONE),
+    X2(CARD_CARD_DESTRUCTION),
+    CARD_FISSURE,
+    X2(CARD_FAKE_TRAP),
+    X2(CARD_ROBBIN_GOBLIN),
+    CARD_TRAP_HOLE,
+};
+STATIC_ASSERT(ARRAY_COUNT(sCritterMaskedControlSide) == 15, CritterMaskedControlSideSize);
 
 #define MOD_CRITTER_MUKA_MUKA_TURBO 1
 static const u16 sCritterMukaMukaTurbo[] = {
@@ -444,6 +513,17 @@ static const u16 sCritterMukaMukaTurbo[] = {
 };
 STATIC_ASSERT(ARRAY_COUNT(sCritterMukaMukaTurbo) == 40 + 15, CritterMukaMukaTurboSize);
 static const struct DeckList sCritterMukaMukaTurboList = { sCritterMukaMukaTurbo, ARRAY_COUNT(sCritterMukaMukaTurbo), 0 };
+/* Gyomberman-Muka Muka Turbo.ydk's Side Deck (15). */
+static const u16 sCritterMukaMukaTurboSide[] = {
+    X2(CARD_MAN_EATER_BUG),
+    X3(CARD_WALL_OF_ILLUSION),
+    X2(CARD_CARD_DESTRUCTION),
+    X2(CARD_SEVEN_TOOLS_OF_THE_BANDIT),
+    X3(CARD_SOLEMN_JUDGMENT),
+    X2(CARD_WABOKU),
+    CARD_ROBBIN_GOBLIN,
+};
+STATIC_ASSERT(ARRAY_COUNT(sCritterMukaMukaTurboSide) == 15, CritterMukaMukaTurboSideSize);
 
 #ifdef MOD_CRITTER_MASKED_CONTROL
 /* The Critter opponent's deck for this duel: Masked Control 6 in 10, Muka Muka Turbo 4 in 10. */
@@ -494,6 +574,19 @@ static const u16 sTreasureTomatoControl[] = {
 };
 STATIC_ASSERT(ARRAY_COUNT(sTreasureTomatoControl) == 40 + 15, TreasureTomatoControlSize);
 static const struct DeckList sTreasureTomatoControlList = { sTreasureTomatoControl, ARRAY_COUNT(sTreasureTomatoControl), 0 };
+/* dump truck-Tomato Control.ydk's Side Deck (15). */
+static const u16 sTreasureTomatoControlSide[] = {
+    X2(CARD_BANISHER_OF_THE_LIGHT),
+    CARD_JIRAI_GUMO,
+    X2(CARD_MASKED_SORCERER),
+    CARD_GIANT_TRUNADE,
+    CARD_HEAVY_STORM,
+    X2(CARD_TRIBUTE_TO_THE_DOOMED),
+    X2(CARD_SEVEN_TOOLS_OF_THE_BANDIT),
+    CARD_SOLEMN_JUDGMENT,
+    X3(CARD_WABOKU),
+};
+STATIC_ASSERT(ARRAY_COUNT(sTreasureTomatoControlSide) == 15, TreasureTomatoControlSideSize);
 
 #define MOD_TREASURE_RECRUITER_CONTROL 1
 static const u16 sTreasureRecruiterControl[] = {
@@ -537,6 +630,19 @@ static const u16 sTreasureRecruiterControl[] = {
 STATIC_ASSERT(ARRAY_COUNT(sTreasureRecruiterControl) == 40 + 15, TreasureRecruiterControlSize);
 static const struct DeckList sTreasureRecruiterControlList = { sTreasureRecruiterControl,
                                                                ARRAY_COUNT(sTreasureRecruiterControl), 0 };
+/* SolEmerald69-Recruiter Control.ydk's Side Deck (15). */
+static const u16 sTreasureRecruiterControlSide[] = {
+    CARD_MAN_EATER_BUG,
+    CARD_WALL_OF_ILLUSION,
+    X2(CARD_JIRAI_GUMO),
+    X2(CARD_TRIBUTE_TO_THE_DOOMED),
+    X2(CARD_FISSURE),
+    CARD_HEAVY_STORM,
+    X2(CARD_SOLEMN_JUDGMENT),
+    X2(CARD_MAGIC_JAMMER),
+    X2(CARD_SEVEN_TOOLS_OF_THE_BANDIT),
+};
+STATIC_ASSERT(ARRAY_COUNT(sTreasureRecruiterControlSide) == 15, TreasureRecruiterControlSideSize);
 
 static const u16 sTreasureGermBurn[] = {
     /* Monsters (18) */
@@ -567,6 +673,15 @@ static const u16 sTreasureGermBurn[] = {
 };
 STATIC_ASSERT(ARRAY_COUNT(sTreasureGermBurn) == 40, TreasureGermBurnSize);
 static const struct DeckList sTreasureGermBurnList = { sTreasureGermBurn, ARRAY_COUNT(sTreasureGermBurn), 0 };
+/* bsocks-Germ Burn.ydk's Side Deck (15). */
+static const u16 sTreasureGermBurnSide[] = {
+    X3(CARD_MINAR),
+    X3(CARD_PRINCESS_OF_TSURUGI),
+    X3(CARD_SEVEN_TOOLS_OF_THE_BANDIT),
+    X3(CARD_SOLEMN_JUDGMENT),
+    X3(CARD_WABOKU),
+};
+STATIC_ASSERT(ARRAY_COUNT(sTreasureGermBurnSide) == 15, TreasureGermBurnSideSize);
 
 /* The Treasure opponent's deck for this duel: Tomato Control 8 in 10, Recruiter Control 1 in 10, Germ Burn 1 in 10
  * (Recruiter Control's share goes to Tomato Control when it is not in the build). */
@@ -641,6 +756,22 @@ static const u16 sImperialTomatoControl[] = {
 STATIC_ASSERT(ARRAY_COUNT(sImperialTomatoControl) == 40 + 15, ImperialTomatoControlSize);
 static const struct DeckList sImperialTomatoControlList = { sImperialTomatoControl,
                                                             ARRAY_COUNT(sImperialTomatoControl), 0 };
+/* Aretos-Tomato Control.ydk's Side Deck (15). */
+static const u16 sImperialTomatoControlSide[] = {
+    CARD_WHITE_MAGICAL_HAT,
+    CARD_MASKED_SORCERER,
+    CARD_MAN_EATER_BUG,
+    CARD_GIANT_SOLDIER_OF_STONE,
+    X3(CARD_EXCHANGE),
+    CARD_RUSH_RECKLESSLY,
+    CARD_HEAVY_STORM,
+    X2(CARD_SOLEMN_WISHES),
+    CARD_TRAP_HOLE,
+    CARD_ACID_TRAP_HOLE,
+    CARD_DUST_TORNADO,
+    CARD_CEASEFIRE,
+};
+STATIC_ASSERT(ARRAY_COUNT(sImperialTomatoControlSide) == 15, ImperialTomatoControlSideSize);
 
 static const u16 sImperialRelinquished[] = {
     /* Monsters (19) */
@@ -680,6 +811,17 @@ static const u16 sImperialRelinquished[] = {
 };
 STATIC_ASSERT(ARRAY_COUNT(sImperialRelinquished) == 40 + 15, ImperialRelinquishedSize);
 static const struct DeckList sImperialRelinquishedList = { sImperialRelinquished, ARRAY_COUNT(sImperialRelinquished), 0 };
+/* bsocks-Relinquished.ydk's Side Deck (15). */
+static const u16 sImperialRelinquishedSide[] = {
+    CARD_CANNON_SOLDIER,
+    X3(CARD_MAN_EATER_BUG),
+    X2(CARD_NOBLEMAN_OF_CROSSOUT),
+    CARD_CEASEFIRE,
+    X3(CARD_DUST_TORNADO),
+    X3(CARD_SOLEMN_WISHES),
+    X2(CARD_WABOKU),
+};
+STATIC_ASSERT(ARRAY_COUNT(sImperialRelinquishedSide) == 15, ImperialRelinquishedSideSize);
 
 /* The Imperial opponent's deck for this duel: Tomato Control 8 in 10, Relinquished 2 in 10. */
 static const struct DeckList *ImperialDeck(void)
@@ -739,6 +881,18 @@ static const u16 sAndroidTomatoControl[] = {
 };
 STATIC_ASSERT(ARRAY_COUNT(sAndroidTomatoControl) == 40 + 15, AndroidTomatoControlSize);
 static const struct DeckList sAndroidTomatoControlList = { sAndroidTomatoControl, ARRAY_COUNT(sAndroidTomatoControl), 0 };
+/* Jazz-Tomato Control.ydk's Side Deck (15). */
+static const u16 sAndroidTomatoControlSide[] = {
+    CARD_MORPHING_JAR,
+    X2(CARD_PENGUIN_KNIGHT),
+    X2(CARD_FISSURE),
+    X2(CARD_HEAVY_STORM),
+    X2(CARD_NOBLEMAN_OF_CROSSOUT),
+    CARD_FAKE_TRAP,
+    X3(CARD_SOLEMN_JUDGMENT),
+    X2(CARD_TRAP_HOLE),
+};
+STATIC_ASSERT(ARRAY_COUNT(sAndroidTomatoControlSide) == 15, AndroidTomatoControlSideSize);
 #endif
 
 #if defined(HAS_CARD_BAZOO_THE_SOUL_EATER) && defined(HAS_CARD_KYCOO_THE_GHOST_DESTROYER) \
@@ -785,6 +939,21 @@ static const u16 sAndroidVanillaBeat[] = {
 };
 STATIC_ASSERT(ARRAY_COUNT(sAndroidVanillaBeat) == 40 + 15, AndroidVanillaBeatSize);
 static const struct DeckList sAndroidVanillaBeatList = { sAndroidVanillaBeat, ARRAY_COUNT(sAndroidVanillaBeat), 0 };
+/* paoloNS-Vanilla Beat.ydk's Side Deck (15). */
+static const u16 sAndroidVanillaBeatSide[] = {
+    CARD_4_STARRED_LADYBUG_OF_DOOM,
+    X2(CARD_KURIBOH),
+    X2(CARD_NOBLEMAN_OF_CROSSOUT),
+    CARD_PREMATURE_BURIAL,
+    CARD_SWORDS_OF_REVEALING_LIGHT,
+    CARD_CEASEFIRE,
+    X3(CARD_DUST_TORNADO),
+    CARD_FAIRY_BOX,
+    CARD_SKULL_LAIR,
+    CARD_TIME_SEAL,
+    CARD_TORRENTIAL_TRIBUTE,
+};
+STATIC_ASSERT(ARRAY_COUNT(sAndroidVanillaBeatSide) == 15, AndroidVanillaBeatSideSize);
 #endif
 
 #if defined(MOD_ANDROID_TOMATO_CONTROL) && defined(MOD_ANDROID_VANILLA_BEAT)
@@ -848,6 +1017,22 @@ static const u16 sJoeyPegasusTomatoControl[] = {
 STATIC_ASSERT(ARRAY_COUNT(sJoeyPegasusTomatoControl) == 40 + 15, JoeyPegasusTomatoControlSize);
 static const struct DeckList sJoeyPegasusTomatoControlList = { sJoeyPegasusTomatoControl,
                                                                ARRAY_COUNT(sJoeyPegasusTomatoControl), 0 };
+/* AJTBLS-Tomato Control.ydk's Side Deck (15). */
+static const u16 sJoeyPegasusTomatoControlSide[] = {
+    CARD_GUARDIAN_SPHINX,
+    CARD_KYCOO_THE_GHOST_DESTROYER,
+    X2(CARD_MASKED_SORCERER),
+    CARD_GEMINI_ELF,
+    CARD_LAST_WILL,
+    CARD_MAGE_POWER,
+    CARD_PREMATURE_BURIAL,
+    CARD_REINFORCEMENT_OF_THE_ARMY,
+    CARD_CEASEFIRE,
+    CARD_MAGIC_CYLINDER,
+    X3(CARD_SOLEMN_JUDGMENT),
+    CARD_TIME_SEAL,
+};
+STATIC_ASSERT(ARRAY_COUNT(sJoeyPegasusTomatoControlSide) == 15, JoeyPegasusTomatoControlSideSize);
 #endif
 
 #if defined(HAS_CARD_BAZOO_THE_SOUL_EATER) && defined(HAS_CARD_KYCOO_THE_GHOST_DESTROYER) \
@@ -898,6 +1083,20 @@ static const u16 sJoeyPegasusVanillaBeat[] = {
 STATIC_ASSERT(ARRAY_COUNT(sJoeyPegasusVanillaBeat) == 40 + 15, JoeyPegasusVanillaBeatSize);
 static const struct DeckList sJoeyPegasusVanillaBeatList = { sJoeyPegasusVanillaBeat,
                                                              ARRAY_COUNT(sJoeyPegasusVanillaBeat), 0 };
+/* ellietincan-Vanilla Beat (JP).ydk's Side Deck (15). */
+static const u16 sJoeyPegasusVanillaBeatSide[] = {
+    CARD_BAZOO_THE_SOUL_EATER,
+    CARD_CANNON_SOLDIER,
+    X2(CARD_MAGICIAN_OF_FAITH),
+    X3(CARD_MYSTIC_TOMATO),
+    CARD_FISSURE,
+    CARD_NOBLEMAN_OF_CROSSOUT,
+    CARD_PREMATURE_BURIAL,
+    CARD_DUST_TORNADO,
+    CARD_TORRENTIAL_TRIBUTE,
+    X3(CARD_WABOKU),
+};
+STATIC_ASSERT(ARRAY_COUNT(sJoeyPegasusVanillaBeatSide) == 15, JoeyPegasusVanillaBeatSideSize);
 #endif
 
 #if defined(MOD_JOEY_PEGASUS_TOMATO_CONTROL) && defined(MOD_JOEY_PEGASUS_VANILLA_BEAT)
@@ -974,6 +1173,23 @@ static const u16 sFiberTomatoControl[] = {
 };
 STATIC_ASSERT(ARRAY_COUNT(sFiberTomatoControl) == 40 + 15, FiberTomatoControlSize);
 static const struct DeckList sFiberTomatoControlList = { sFiberTomatoControl, ARRAY_COUNT(sFiberTomatoControl), 0 };
+/* Aretos-Tomato Control (Fiber).ydk's Side Deck (15). */
+static const u16 sFiberTomatoControlSide[] = {
+    CARD_JINZO,
+    CARD_KYCOO_THE_GHOST_DESTROYER,
+    CARD_ASURA_PRIEST,
+    CARD_YATA_GARASU,
+    X2(CARD_CREATURE_SWAP),
+    CARD_SCAPEGOAT,
+    CARD_HARPIES_FEATHER_DUSTER,
+    CARD_NOBLEMAN_OF_CROSSOUT,
+    CARD_FISSURE,
+    CARD_TORRENTIAL_TRIBUTE,
+    CARD_TRAP_HOLE,
+    CARD_SKULL_LAIR,
+    X2(CARD_DUST_TORNADO),
+};
+STATIC_ASSERT(ARRAY_COUNT(sFiberTomatoControlSide) == 15, FiberTomatoControlSideSize);
 #endif
 
 #if defined(HAS_CARD_DARK_RULER_HA_DES) && defined(HAS_CARD_EXILED_FORCE) && defined(HAS_CARD_INJECTION_FAIRY_LILY) \
@@ -1019,6 +1235,17 @@ static const u16 sFiberRecruiterControl[] = {
 STATIC_ASSERT(ARRAY_COUNT(sFiberRecruiterControl) == 40, FiberRecruiterControlSize);
 static const struct DeckList sFiberRecruiterControlList = { sFiberRecruiterControl,
                                                             ARRAY_COUNT(sFiberRecruiterControl), 0 };
+/* GBO-Recruiter Control.ydk's Side Deck (14). Left out: Gradius' Option (no use without Gradius). */
+static const u16 sFiberRecruiterControlSide[] = {
+    X2(CARD_GEARFRIED_THE_IRON_KNIGHT),
+    CARD_GOBLIN_ATTACK_FORCE,
+    X2(CARD_FISSURE),
+    X2(CARD_REINFORCEMENT_OF_THE_ARMY),
+    X2(CARD_BLAST_WITH_CHAIN),
+    X3(CARD_DUST_TORNADO),
+    X2(CARD_TORRENTIAL_TRIBUTE),
+};
+STATIC_ASSERT(ARRAY_COUNT(sFiberRecruiterControlSide) == 14, FiberRecruiterControlSideSize);
 #endif
 
 #if defined(MOD_FIBER_TOMATO_CONTROL) && defined(MOD_FIBER_RECRUITER_CONTROL)
@@ -1097,7 +1324,9 @@ const struct DeckList *GetOpponentDeckOverride(int opponent)
  * (its cards are not all listed) is skipped. */
 struct RecipePreset {
     const char *name;
-    const struct DeckList *list;
+    const struct DeckList *list;   /* the Main Deck and the Fusion Deck (its Fusion Monsters) */
+    const u16 *side;               /* the Side Deck (card numbers), NULL for none */
+    u32 sideCount;
 };
 
 static const char sNameSoulControl[] = "El Duelista DEX-Soul Control";
@@ -1122,65 +1351,67 @@ static const char sNameGoatControl[] = "geistD-Goat Control";
 
 static const struct RecipePreset sRecipePresets[] = {
 #ifdef MOD_TRISTAN_SOUL_CONTROL
-    { sNameSoulControl, &sTristanSoulControlList },
+    { sNameSoulControl, &sTristanSoulControlList, sTristanSoulControlSide, ARRAY_COUNT(sTristanSoulControlSide) },
 #endif
 #ifdef MOD_TRISTAN_VANILLA_BEAT
-    { sNameVanillaBeat, &sTristanVanillaBeatList },
+    { sNameVanillaBeat, &sTristanVanillaBeatList, sTristanVanillaBeatSide, ARRAY_COUNT(sTristanVanillaBeatSide) },
 #endif
 #ifdef MOD_TRISTAN_STALL_MILL
-    { sNameStallMill, &sTristanStallMillList },
+    { sNameStallMill, &sTristanStallMillList, sTristanStallMillSide, ARRAY_COUNT(sTristanStallMillSide) },
 #endif
 #ifdef MOD_CRITTER_MASKED_CONTROL
-    { sNameMaskedControl, &sCritterMaskedControlList },
+    { sNameMaskedControl, &sCritterMaskedControlList, sCritterMaskedControlSide, ARRAY_COUNT(sCritterMaskedControlSide) },
 #endif
-    { sNameMukaMukaTurbo, &sCritterMukaMukaTurboList },
-    { sNameTomatoControl, &sTreasureTomatoControlList },
+    { sNameMukaMukaTurbo, &sCritterMukaMukaTurboList, sCritterMukaMukaTurboSide, ARRAY_COUNT(sCritterMukaMukaTurboSide) },
+    { sNameTomatoControl, &sTreasureTomatoControlList, sTreasureTomatoControlSide, ARRAY_COUNT(sTreasureTomatoControlSide) },
 #ifdef MOD_TREASURE_RECRUITER_CONTROL
-    { sNameRecruiterControl, &sTreasureRecruiterControlList },
+    { sNameRecruiterControl, &sTreasureRecruiterControlList, sTreasureRecruiterControlSide, ARRAY_COUNT(sTreasureRecruiterControlSide) },
 #endif
-    { sNameGermBurn, &sTreasureGermBurnList },
+    { sNameGermBurn, &sTreasureGermBurnList, sTreasureGermBurnSide, ARRAY_COUNT(sTreasureGermBurnSide) },
 #ifdef MOD_IMPERIAL_DECKS
-    { sNameImperialTomato, &sImperialTomatoControlList },
-    { sNameRelinquished, &sImperialRelinquishedList },
+    { sNameImperialTomato, &sImperialTomatoControlList, sImperialTomatoControlSide, ARRAY_COUNT(sImperialTomatoControlSide) },
+    { sNameRelinquished, &sImperialRelinquishedList, sImperialRelinquishedSide, ARRAY_COUNT(sImperialRelinquishedSide) },
 #endif
 #ifdef MOD_ANDROID_TOMATO_CONTROL
-    { sNameAndroidTomato, &sAndroidTomatoControlList },
+    { sNameAndroidTomato, &sAndroidTomatoControlList, sAndroidTomatoControlSide, ARRAY_COUNT(sAndroidTomatoControlSide) },
 #endif
 #ifdef MOD_ANDROID_VANILLA_BEAT
-    { sNameAndroidVanilla, &sAndroidVanillaBeatList },
+    { sNameAndroidVanilla, &sAndroidVanillaBeatList, sAndroidVanillaBeatSide, ARRAY_COUNT(sAndroidVanillaBeatSide) },
 #endif
 #ifdef MOD_JOEY_PEGASUS_TOMATO_CONTROL
-    { sNameJoeyPegasusTomato, &sJoeyPegasusTomatoControlList },
+    { sNameJoeyPegasusTomato, &sJoeyPegasusTomatoControlList, sJoeyPegasusTomatoControlSide, ARRAY_COUNT(sJoeyPegasusTomatoControlSide) },
 #endif
 #ifdef MOD_JOEY_PEGASUS_VANILLA_BEAT
-    { sNameJoeyPegasusVanilla, &sJoeyPegasusVanillaBeatList },
+    { sNameJoeyPegasusVanilla, &sJoeyPegasusVanillaBeatList, sJoeyPegasusVanillaBeatSide, ARRAY_COUNT(sJoeyPegasusVanillaBeatSide) },
 #endif
 #ifdef MOD_FIBER_TOMATO_CONTROL
-    { sNameFiberTomato, &sFiberTomatoControlList },
+    { sNameFiberTomato, &sFiberTomatoControlList, sFiberTomatoControlSide, ARRAY_COUNT(sFiberTomatoControlSide) },
 #endif
 #ifdef MOD_FIBER_RECRUITER_CONTROL
-    { sNameFiberRecruiter, &sFiberRecruiterControlList },
+    { sNameFiberRecruiter, &sFiberRecruiterControlList, sFiberRecruiterControlSide, ARRAY_COUNT(sFiberRecruiterControlSide) },
 #endif
 #ifdef MOD_RED_DECK
-    { sNameChaosTurbo, &sRedDeckList },
+    { sNameChaosTurbo, &sRedDeckList, NULL, 0 },
 #endif
 #ifdef MOD_JOEY_DECK
-    { sNameWarrior, &sJoeyDeckList },
+    { sNameWarrior, &sJoeyDeckList, NULL, 0 },
 #endif
 #ifdef MOD_BAKURA_DECK
-    { sNameGoatControl, &sBakuraDeckList },
+    { sNameGoatControl, &sBakuraDeckList, NULL, 0 },
 #endif
-    { NULL, NULL },
+    { NULL, NULL, NULL, 0 },
 };
 
-/* Preset recipe n: its name, and its cards (card numbers) and count; 0 past the last one. */
-int GetRecipePreset(int n, const char **name, const u16 **cards, u32 *count)
+/* Preset recipe n: its name, its cards (card numbers) and count, and its Side Deck's; 0 past the last one. */
+int GetRecipePreset(int n, const char **name, const u16 **cards, u32 *count, const u16 **side, u32 *sideCount)
 {
     if (n < 0 || n >= (int)ARRAY_COUNT(sRecipePresets) - 1)
         return 0;
     *name = sRecipePresets[n].name;
     *cards = sRecipePresets[n].list->cards;
     *count = sRecipePresets[n].list->count;
+    *side = sRecipePresets[n].side;
+    *sideCount = sRecipePresets[n].sideCount;
     return 1;
 }
 
@@ -1205,26 +1436,33 @@ void GiveStartingTrunk(void)
 
 /* Build the saved Deck (and Fusion Deck) of starter deck `choice` (enum StarterDeck) when this build replaces it:
  * the three Yugi-Kaiba decks (Tristan's): Red is El Duelista DEX-Soul Control, Green ellietincan-Vanilla Beat, Black
- * DK-ZERO-Stall Mill. A Fusion Monster goes to the saved Fusion Deck. Returns 1 then, 0 to let BuildStarterDeck build the original. */
+ * DK-ZERO-Stall Mill. A Fusion Monster goes to the saved Fusion Deck, and the .ydk's Side Deck to the saved one. Returns 1 then, 0 to let BuildStarterDeck build the original. */
 int BuildModStarterDeck(int choice)
 {
     const struct DeckList *list = NULL;
-    u32 i;
+    const u16 *side = NULL;
+    u32 sideCount = 0, i;
 
     switch (choice) {
 #ifdef MOD_TRISTAN_SOUL_CONTROL
     case STARTER_DECK_RED:
         list = &sTristanSoulControlList;
+        side = sTristanSoulControlSide;
+        sideCount = ARRAY_COUNT(sTristanSoulControlSide);
         break;
 #endif
 #ifdef MOD_TRISTAN_VANILLA_BEAT
     case STARTER_DECK_GREEN:
         list = &sTristanVanillaBeatList;
+        side = sTristanVanillaBeatSide;
+        sideCount = ARRAY_COUNT(sTristanVanillaBeatSide);
         break;
 #endif
 #ifdef MOD_TRISTAN_STALL_MILL
     case STARTER_DECK_BLACK:
         list = &sTristanStallMillList;
+        side = sTristanStallMillSide;
+        sideCount = ARRAY_COUNT(sTristanStallMillSide);
         break;
 #endif
     }
@@ -1239,5 +1477,7 @@ int BuildModStarterDeck(int choice)
         else
             AddCardToSavedDeck(id);
     }
+    for (i = 0; i < sideCount; i++)
+        AddCardToSavedSideDeck(gCardNumberToId[side[i] & CARD_ID_MASK]);
     return 1;
 }

@@ -11,14 +11,14 @@ The DP the card password machine charges, per format, from the format's deck usa
 | [Yugi-Kaiba](#yugi-kaiba) | 75 |
 | [Critter](#critter) | 88 |
 | [Treasure](#treasure) | 84 |
-| [Imperial](#imperial) | 104 |
-| [Android](#android) | 104 |
+| [Imperial](#imperial) | 105 |
+| [Android](#android) | 105 |
 | [Joey-Pegasus](#joey-pegasus) | 108 |
-| [Fiber](#fiber) | 146 |
-| [Yata](#yata) | 146 |
+| [Fiber](#fiber) | 147 |
+| [Yata](#yata) | 147 |
 | [Scientist](#scientist) | 92 |
 | [Vampire](#vampire) | 122 |
-| [Chaos](#chaos) | 157 |
+| [Chaos](#chaos) | 158 |
 | [Warrior](#warrior) | 229 |
 | [Goat](#goat) | 431 |
 | [Cyber](#cyber) | 153 |
@@ -332,6 +332,7 @@ The DP the card password machine charges, per format, from the format's deck usa
 | Giant Soldier of Stone | 214 |  |
 | Limiter Removal | 214 | Limited |
 | Waboku | 190 |  |
+| 4-Starred Ladybug of Doom | 167 |  |
 | Upstart Goblin | 143 | Limited |
 | Black Illusion Ritual | 95 |  |
 | Masked Sorcerer | 95 |  |
@@ -438,6 +439,7 @@ The DP the card password machine charges, per format, from the format's deck usa
 | Solemn Judgment | 447 |  |
 | Card Destruction | 395 | Limited |
 | Time Seal | 368 |  |
+| 4-Starred Ladybug of Doom | 316 |  |
 | Masked Sorcerer | 289 |  |
 | Penguin Knight | 289 |  |
 | United We Stand | 237 | Limited |
@@ -676,6 +678,7 @@ The DP the card password machine charges, per format, from the format's deck usa
 | Limiter Removal | 161 | Limited |
 | Dark Ruler Ha Des | 156 |  |
 | Airknight Parshath | 145 |  |
+| 4-Starred Ladybug of Doom | 113 |  |
 | Solemn Judgment | 113 |  |
 | Twin-Headed Behemoth | 113 | Limited |
 | Goblin Attack Force | 91 |  |
@@ -831,6 +834,7 @@ The DP the card password machine charges, per format, from the format's deck usa
 | Upstart Goblin | 154 | Limited |
 | Cannon Soldier | 141 |  |
 | Trap Hole | 141 |  |
+| 4-Starred Ladybug of Doom | 128 |  |
 | Solemn Wishes | 128 |  |
 | Raigeki Break | 115 |  |
 | Solemn Judgment | 115 |  |
@@ -1232,6 +1236,7 @@ The DP the card password machine charges, per format, from the format's deck usa
 | Berserk Gorilla | 69 |  |
 | Cipher Soldier | 69 |  |
 | Skilled Dark Magician | 69 |  |
+| 4-Starred Ladybug of Doom | 57 |  |
 | Dimension Fusion | 57 |  |
 | Mystic Tomato | 57 |  |
 | Barrel Behind the Door | 46 |  |

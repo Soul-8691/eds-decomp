@@ -50,7 +50,7 @@
 #include "constants/sound.h"
 
 /* src/mod_decks.c */
-int GetRecipePreset(int n, const char **name, const u16 **cards, u32 *count);
+int GetRecipePreset(int n, const char **name, const u16 **cards, u32 *count, const u16 **side, u32 *sideCount);
 /* src/mod_banlists.c: the Deck Edit banlist in use */
 int GetActiveBanlist(void);
 s32 GetBanlistCopyLimit(u32 id);
@@ -503,16 +503,17 @@ static int SwitchTo(int n)
     return missing;
 }
 
-/* Preset n into buf (0 past the last one): Fusion Monsters to the Fusion Deck, the rest to the Deck. */
+/* Preset n into buf (0 past the last one): Fusion Monsters to the Fusion Deck, the rest to the Deck, and the
+ * .ydk's Side Deck to the Side Deck. */
 static int PresetToBuf(int n)
 {
     struct RecipeSlot *b = &gDeckRecipes.buf;
     const char *name;
-    const u16 *cards;
-    u32 count, i;
+    const u16 *cards, *side;
+    u32 count, sideCount, i;
 
     MemClear16(b, sizeof(*b));
-    if (!GetRecipePreset(n, &name, &cards, &count))
+    if (!GetRecipePreset(n, &name, &cards, &count, &side, &sideCount))
         return 0;
     b->used = 1;
     for (i = 0; i < RECIPE_NAME_SIZE - 1 && name[i]; i++)
@@ -528,6 +529,8 @@ static int PresetToBuf(int n)
             b->deck[b->deckSize++] = id;
         }
     }
+    for (i = 0; i < sideCount && b->sideSize < SIDE_DECK_MAX_CARDS; i++)
+        b->side[b->sideSize++] = gCardNumberToId[side[i] & CARD_ID_MASK];
     return 1;
 }
 

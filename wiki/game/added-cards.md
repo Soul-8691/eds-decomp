@@ -4,7 +4,7 @@ type: game
 status: draft
 confidence: high
 sources: [rom-analysis, web-card-references]
-updated: 2026-10-25
+updated: 2026-10-28
 ---
 # Added cards
 
@@ -433,6 +433,14 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
   - CPU: banishes its weakest.
 - **CPU policy.** Activates it on a human monster of 1000+ ATK.
 - Checked in the source and the build; not tested in an emulator.
+
+### 4-Starred Ladybug of Doom (2026-10-28)
+- Flip Effect Monster: "FLIP: Destroy all Level 4 monsters your opponent controls."
+- **Data only.** Added (ID 1136, the last line of config/new_cards.txt) for paoloNS-Vanilla Beat's Side Deck
+  (`sAndroidVanillaBeatSide`). The engine has no effect key for it, so its FLIP effect is **not coded yet**: it
+  plays as a vanilla Level 3 monster (800 ATK, 1200 DEF).
+- Gradius' Option (GBO-Recruiter Control's Side Deck) was added at the same time and removed again: it needs
+  Gradius, so that side deck stays at 14.
 
 ### Fairy Box (2026-10-26)
 - Continuous Trap: "When your opponent's monster declares an attack: Toss a coin and call it. If you call it right,

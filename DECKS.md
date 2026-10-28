@@ -43,7 +43,7 @@ Formats unlock in this order; in the release build each takes 10 wins to open th
 Banlist: May 2002.
 
 <details>
-<summary>Soul Control: 50% (El Duelista DEX-Soul Control) (40 cards)</summary>
+<summary>Soul Control: 50% (El Duelista DEX-Soul Control) (40 cards + 15 Fusion Deck + 15 Side Deck)</summary>
 
 **Monsters (20)**
 
@@ -74,10 +74,34 @@ Banlist: May 2002.
 - 1x Ultimate Offering
 - 1x Waboku
 
+**Fusion Deck (15)**
+
+- 2x Darkfire Dragon
+- 1x Dragoness the Wicked Knight
+- 2x Flame Ghost
+- 2x Flame Swordsman
+- 2x Flower Wolf
+- 2x Fusionist
+- 1x Karbonala Warrior
+- 3x Metal Dragon
+
+**Side Deck (15)**
+
+- 2x Hane-Hane
+- 1x Trap Master
+- 1x Wall of Illusion
+- 2x Judge Man
+- 2x Card Destruction
+- 2x Ookazi
+- 1x De-Spell
+- 1x Remove Trap
+- 1x Ultimate Offering
+- 2x Waboku
+
 </details>
 
 <details>
-<summary>Vanilla Beat: 30% (ellietincan-Vanilla Beat) (40 cards)</summary>
+<summary>Vanilla Beat: 30% (ellietincan-Vanilla Beat) (40 cards + 15 Fusion Deck + 15 Side Deck)</summary>
 
 **Monsters (20)**
 
@@ -106,10 +130,28 @@ Banlist: May 2002.
 - 3x Trap Hole
 - 3x Waboku
 
+**Fusion Deck (15)**
+
+- 3x Dragoness the Wicked Knight
+- 3x Flame Swordsman
+- 3x Gaia the Dragon Champion
+- 3x Karbonala Warrior
+- 3x Metal Dragon
+
+**Side Deck (15)**
+
+- 3x Wall of Illusion
+- 3x Aqua Madoor
+- 1x Judge Man
+- 1x Summoned Skull
+- 2x Card Destruction
+- 2x De-Spell
+- 3x Soul Exchange
+
 </details>
 
 <details>
-<summary>Stall Mill: 20% (DK-ZERO-Stall Mill) (43 cards)</summary>
+<summary>Stall Mill: 20% (DK-ZERO-Stall Mill) (43 cards + 15 Fusion Deck + 15 Side Deck)</summary>
 
 **Monsters (21)**
 
@@ -139,6 +181,23 @@ Banlist: May 2002.
 - 3x Waboku
 - 3x Trap Hole
 
+**Fusion Deck (15)**
+
+- 3x Gaia the Dragon Champion
+- 3x Metal Dragon
+- 3x Flame Swordsman
+- 3x Flower Wolf
+- 3x Flame Ghost
+
+**Side Deck (15)**
+
+- 3x La Jinn the Mystical Genie of the Lamp
+- 3x Battle Ox
+- 3x Neo the Magic Swordsman
+- 3x Reinforcements
+- 2x The Wicked Worm Beast
+- 1x Card Destruction
+
 </details>
 
 ### 2. Critter
@@ -146,7 +205,7 @@ Banlist: May 2002.
 Banlist: July 2002.
 
 <details>
-<summary>Masked Control: 60% (Jazz-Masked Control) (40 cards + 15 Fusion Deck)</summary>
+<summary>Masked Control: 60% (Jazz-Masked Control) (40 cards + 15 Fusion Deck + 15 Side Deck)</summary>
 
 **Monsters (18)**
 
@@ -189,10 +248,22 @@ Banlist: July 2002.
 - 3x Thousand Dragon
 - 3x Twin-Headed Thunder Dragon
 
+**Side Deck (15)**
+
+- 1x Kuriboh
+- 1x Muka Muka
+- 3x Thunder Dragon
+- 2x Giant Soldier of Stone
+- 2x Card Destruction
+- 1x Fissure
+- 2x Fake Trap
+- 2x Robbin' Goblin
+- 1x Trap Hole
+
 </details>
 
 <details>
-<summary>Muka Muka Turbo: 40% (Gyomberman-Muka Muka Turbo) (40 cards + 15 Fusion Deck)</summary>
+<summary>Muka Muka Turbo: 40% (Gyomberman-Muka Muka Turbo) (40 cards + 15 Fusion Deck + 15 Side Deck)</summary>
 
 **Monsters (20)**
 
@@ -242,6 +313,16 @@ Banlist: July 2002.
 - 1x Punished Eagle
 - 1x Roaring Ocean Snake
 
+**Side Deck (15)**
+
+- 2x Man-Eater Bug
+- 3x Wall of Illusion
+- 2x Card Destruction
+- 2x Seven Tools of the Bandit
+- 3x Solemn Judgment
+- 2x Waboku
+- 1x Robbin' Goblin
+
 </details>
 
 ### 3. Treasure
@@ -249,7 +330,7 @@ Banlist: July 2002.
 Banlist: October 2002.
 
 <details>
-<summary>Tomato Control: 80% (dump truck-Tomato Control) (40 cards + 15 Fusion Deck)</summary>
+<summary>Tomato Control: 80% (dump truck-Tomato Control) (40 cards + 15 Fusion Deck + 15 Side Deck)</summary>
 
 **Monsters (18)**
 
@@ -292,10 +373,22 @@ Banlist: October 2002.
 - 3x Flame Ghost
 - 3x Flame Swordsman
 
+**Side Deck (15)**
+
+- 2x Banisher of the Light
+- 1x Jirai Gumo
+- 2x Masked Sorcerer
+- 1x Giant Trunade
+- 1x Heavy Storm
+- 2x Tribute to The Doomed
+- 2x Seven Tools of the Bandit
+- 1x Solemn Judgment
+- 3x Waboku
+
 </details>
 
 <details>
-<summary>Recruiter Control: 10% (SolEmerald69-Recruiter Control) (40 cards + 15 Fusion Deck)</summary>
+<summary>Recruiter Control: 10% (SolEmerald69-Recruiter Control) (40 cards + 15 Fusion Deck + 15 Side Deck)</summary>
 
 **Monsters (17)**
 
@@ -341,10 +434,22 @@ Banlist: October 2002.
 - 2x Bickuribox
 - 2x Musician King
 
+**Side Deck (15)**
+
+- 1x Man-Eater Bug
+- 1x Wall of Illusion
+- 2x Jirai Gumo
+- 2x Tribute to The Doomed
+- 2x Fissure
+- 1x Heavy Storm
+- 2x Solemn Judgment
+- 2x Magic Jammer
+- 2x Seven Tools of the Bandit
+
 </details>
 
 <details>
-<summary>Germ Burn: 10% (bsocks-Germ Burn) (40 cards)</summary>
+<summary>Germ Burn: 10% (bsocks-Germ Burn) (40 cards + 15 Side Deck)</summary>
 
 **Monsters (18)**
 
@@ -377,6 +482,14 @@ Banlist: October 2002.
 - 3x Magic Jammer
 - 1x Mirror Force
 
+**Side Deck (15)**
+
+- 3x Minar
+- 3x Princess of Tsurugi
+- 3x Seven Tools of the Bandit
+- 3x Solemn Judgment
+- 3x Waboku
+
 </details>
 
 ### 4. Imperial
@@ -384,7 +497,7 @@ Banlist: October 2002.
 Banlist: December 2002.
 
 <details>
-<summary>Tomato Control: 80% (Aretos-Tomato Control) (40 cards + 15 Fusion Deck)</summary>
+<summary>Tomato Control: 80% (Aretos-Tomato Control) (40 cards + 15 Fusion Deck + 15 Side Deck)</summary>
 
 **Monsters (17)**
 
@@ -441,10 +554,25 @@ Banlist: December 2002.
 - 1x Dragoness the Wicked Knight
 - 3x Thousand-Eyes Restrict
 
+**Side Deck (15)**
+
+- 1x White Magical Hat
+- 1x Masked Sorcerer
+- 1x Man-Eater Bug
+- 1x Giant Soldier of Stone
+- 3x Exchange
+- 1x Rush Recklessly
+- 1x Heavy Storm
+- 2x Solemn Wishes
+- 1x Trap Hole
+- 1x Acid Trap Hole
+- 1x Dust Tornado
+- 1x Ceasefire
+
 </details>
 
 <details>
-<summary>Relinquished: 20% (bsocks-Relinquished) (40 cards + 15 Fusion Deck)</summary>
+<summary>Relinquished: 20% (bsocks-Relinquished) (40 cards + 15 Fusion Deck + 15 Side Deck)</summary>
 
 **Monsters (19)**
 
@@ -488,6 +616,16 @@ Banlist: December 2002.
 - 3x Thousand-Eyes Restrict
 - 3x Twin-Headed Thunder Dragon
 
+**Side Deck (15)**
+
+- 1x Cannon Soldier
+- 3x Man-Eater Bug
+- 2x Nobleman of Crossout
+- 1x Ceasefire
+- 3x Dust Tornado
+- 3x Solemn Wishes
+- 2x Waboku
+
 </details>
 
 ### 5. Android
@@ -495,7 +633,7 @@ Banlist: December 2002.
 Banlist: April 2003.
 
 <details>
-<summary>Tomato Control: 80% (Jazz-Tomato Control) (40 cards + 15 Fusion Deck)</summary>
+<summary>Tomato Control: 80% (Jazz-Tomato Control) (40 cards + 15 Fusion Deck + 15 Side Deck)</summary>
 
 **Monsters (14)**
 
@@ -544,10 +682,21 @@ Banlist: April 2003.
 - 3x Thousand-Eyes Restrict
 - 3x Warrior of Tradition
 
+**Side Deck (15)**
+
+- 1x Morphing Jar
+- 2x Penguin Knight
+- 2x Fissure
+- 2x Heavy Storm
+- 2x Nobleman of Crossout
+- 1x Fake Trap
+- 3x Solemn Judgment
+- 2x Trap Hole
+
 </details>
 
 <details>
-<summary>Vanilla Beat: 20% (paoloNS-Vanilla Beat) (40 cards + 15 Fusion Deck)</summary>
+<summary>Vanilla Beat: 20% (paoloNS-Vanilla Beat) (40 cards + 15 Fusion Deck + 15 Side Deck)</summary>
 
 **Monsters (15)**
 
@@ -594,6 +743,20 @@ Banlist: April 2003.
 - 3x Cyber Saurus
 - 3x Twin-Headed Thunder Dragon
 
+**Side Deck (15)**
+
+- 1x 4-Starred Ladybug of Doom
+- 2x Kuriboh
+- 2x Nobleman of Crossout
+- 1x Premature Burial
+- 1x Swords of Revealing Light
+- 1x Ceasefire
+- 3x Dust Tornado
+- 1x Fairy Box
+- 1x Skull Lair
+- 1x Time Seal
+- 1x Torrential Tribute
+
 </details>
 
 ### 6. Joey-Pegasus
@@ -601,7 +764,7 @@ Banlist: April 2003.
 Banlist: May 2003.
 
 <details>
-<summary>Tomato Control: 80% (AJTBLS-Tomato Control) (40 cards + 15 Fusion Deck)</summary>
+<summary>Tomato Control: 80% (AJTBLS-Tomato Control) (40 cards + 15 Fusion Deck + 15 Side Deck)</summary>
 
 **Monsters (16)**
 
@@ -649,10 +812,25 @@ Banlist: May 2003.
 - 3x Ryu Senshi
 - 3x Thousand-Eyes Restrict
 
+**Side Deck (15)**
+
+- 1x Guardian Sphinx
+- 1x Kycoo the Ghost Destroyer
+- 2x Masked Sorcerer
+- 1x Gemini Elf
+- 1x Last Will
+- 1x Mage Power
+- 1x Premature Burial
+- 1x Reinforcement of the Army
+- 1x Ceasefire
+- 1x Magic Cylinder
+- 3x Solemn Judgment
+- 1x Time Seal
+
 </details>
 
 <details>
-<summary>Vanilla Beat: 20% (ellietincan-Vanilla Beat (JP)) (40 cards + 15 Fusion Deck)</summary>
+<summary>Vanilla Beat: 20% (ellietincan-Vanilla Beat (JP)) (40 cards + 15 Fusion Deck + 15 Side Deck)</summary>
 
 **Monsters (13)**
 
@@ -700,6 +878,19 @@ Banlist: May 2003.
 - 3x St. Joan
 - 3x The Last Warrior from Another Planet
 
+**Side Deck (15)**
+
+- 1x Bazoo the Soul-Eater
+- 1x Cannon Soldier
+- 2x Magician of Faith
+- 3x Mystic Tomato
+- 1x Fissure
+- 1x Nobleman of Crossout
+- 1x Premature Burial
+- 1x Dust Tornado
+- 1x Torrential Tribute
+- 3x Waboku
+
 </details>
 
 ### 7. Fiber
@@ -707,7 +898,7 @@ Banlist: May 2003.
 Banlist: July 2003.
 
 <details>
-<summary>Tomato Control: 80% (Aretos-Tomato Control (Fiber)) (40 cards + 15 Fusion Deck)</summary>
+<summary>Tomato Control: 80% (Aretos-Tomato Control (Fiber)) (40 cards + 15 Fusion Deck + 15 Side Deck)</summary>
 
 **Monsters (15)**
 
@@ -766,10 +957,26 @@ Banlist: July 2003.
 - 1x Dragoness the Wicked Knight
 - 2x Thousand-Eyes Restrict
 
+**Side Deck (15)**
+
+- 1x Jinzo
+- 1x Kycoo the Ghost Destroyer
+- 1x Asura Priest
+- 1x Yata-Garasu
+- 2x Creature Swap
+- 1x Scapegoat
+- 1x Harpie's Feather Duster
+- 1x Nobleman of Crossout
+- 1x Fissure
+- 1x Torrential Tribute
+- 1x Trap Hole
+- 1x Skull Lair
+- 2x Dust Tornado
+
 </details>
 
 <details>
-<summary>Recruiter Control: 20% (GBO-Recruiter Control) (40 cards)</summary>
+<summary>Recruiter Control: 20% (GBO-Recruiter Control) (40 cards + 14 Side Deck)</summary>
 
 **Monsters (13)**
 
@@ -810,6 +1017,16 @@ Banlist: July 2003.
 - 1x Magic Cylinder
 - 1x Mirror Force
 - 1x Torrential Tribute
+
+**Side Deck (14)**
+
+- 2x Gearfried the Iron Knight
+- 1x Goblin Attack Force
+- 2x Fissure
+- 2x Reinforcement of the Army
+- 2x Blast with Chain
+- 3x Dust Tornado
+- 2x Torrential Tribute
 
 </details>
 

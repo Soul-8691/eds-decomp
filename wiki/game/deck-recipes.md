@@ -4,7 +4,7 @@ type: game
 status: draft
 confidence: medium
 sources: [rom-analysis]
-updated: 2026-10-26
+updated: 2026-10-28
 ---
 # Deck Recipes (mod)
 
@@ -27,7 +27,12 @@ An eighth main-menu item added by this build (`src/mod_recipes.c`, a `@farcode`/
 
 ## Preset recipes
 The SRAM area is set up on the first visit (and after a New Game) with recipes 01-19 from `GetRecipePreset` (src/mod_decks.c). These are the
-mod's deck tables, named after their .ydk files:
+mod's deck tables, named after their .ydk files. The 16 format presets (01-16) carry the .ydk's Side Deck too
+(`s<Deck>Side`, passed by `GetRecipePreset` and put in the recipe's side list by `PresetToBuf`), and every one
+has its .ydk's Extra Deck as its Fusion Deck. Checked against the .ydk files (passcodes mapped through
+assets/cards/passwords.csv and build/new_cards.tsv): identical, except Gradius' Option, left out of GBO-Recruiter
+Control's Side Deck (4-Starred Ladybug of Doom is an added card now, [[added-cards]]). The three starter decks
+(`BuildModStarterDeck`) get the same Side and Fusion Decks.
 
 | Slot | Name | Deck table |
 |---|---|---|
