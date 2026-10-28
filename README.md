@@ -21,13 +21,14 @@
 <p align="center">
   <img src="eds-20.png" width="24%" alt="Screenshot 13">
   <img src="eds-21.png" width="24%" alt="Screenshot 14">
-  <img src="eds-22.png" width="24%" alt="Screenshot 15">
-  <img src="eds-23.png" width="24%" alt="Screenshot 16">
+  <img src="eds-27.png" width="24%" alt="Screenshot 15">
+  <img src="eds-22.png" width="24%" alt="Screenshot 16">
 </p>
 <p align="center">
-  <img src="eds-24.png" width="24%" alt="Screenshot 17">
-  <img src="eds-25.png" width="24%" alt="Screenshot 18">
-  <img src="eds-26.png" width="24%" alt="Screenshot 19">
+  <img src="eds-23.png" width="24%" alt="Screenshot 17">
+  <img src="eds-24.png" width="24%" alt="Screenshot 18">
+  <img src="eds-25.png" width="24%" alt="Screenshot 19">
+  <img src="eds-26.png" width="24%" alt="Screenshot 20">
 </p>
 
 A hack of *Yu-Gi-Oh! The Eternal Duelist Soul* (GBA) that follows the
