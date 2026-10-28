@@ -523,6 +523,9 @@ u16 Record_HasPrevPage(void)
  * opponent-select pages. The last page (4) has no next page. */
 u16 Record_HasNextPage(void)
 {
+#if !MOD_RELEASE
+    return gRecordScreen.page < 4;      /* mod: make (testing): every page */
+#endif
     switch (gRecordScreen.page) {
     case 0:
         return IsCampaignLevel2Unlocked();
@@ -623,7 +626,7 @@ void Record_DrawPage(s32 page, s32 half)
         u16 index = page * 5 + row;     /* duelistId - 1 */
 
         /* name on map row row * 3 + 3, portrait from cell (4, row * 3 + 4), numbers on map row row * 3 + 5 */
-        if (IsOpponentUnlockedInt(index + 1)) {
+        if (!MOD_RELEASE || IsOpponentUnlockedInt(index + 1)) {    /* mod: make (testing) shows every duelist */
             LoadBgImage4bppToMapWide(half + 1, (u16)(row * 3 + 4) * 32 + 4, (row + 5 + half * 5) * 16,
                                      tileBase + 0xE0 + row * 12, gRecordPortraitImages[index]);
             Record_DrawNumber(half + 1, 0xD, row * 3 + 5, gSaveData.duelRecords[index + 1].wins);

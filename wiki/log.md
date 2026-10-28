@@ -1640,3 +1640,6 @@ updated: 2026-09-29
 ## [2026-10-28] progress | 4-Starred Ladybug of Doom added
 - config/new_cards.txt: 4-Starred Ladybug of Doom appended (ID 1136, data only, no effect yet); in sAndroidVanillaBeatSide (15). Gradius' Option was added and removed again (no use without Gradius); sFiberRecruiterControlSide stays at 14.
 - [[added-cards]], [[deck-recipes]], DECKS.md and CARD_PRICES.md regenerated.
+
+## [2026-10-28] progress | Record screen shows every duelist in make
+- src/main_menu.c: Record_DrawPage shows every duelist and Record_HasNextPage opens every page when !MOD_RELEASE; make release unchanged. README.md.

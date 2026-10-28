@@ -63,7 +63,8 @@ next one.
     beat yours outright.
 - **Debug mode** (testing builds only, not in the release). You start with 8 copies of every card, and you can't
   deck out. Decks can be under 40 cards, can hold any number of copies of a card, and ignore banlists. Switching
-  banlists skips the 40-card Main Deck check. Every format is unlocked.
+  banlists skips the 40-card Main Deck check. Every format is unlocked, and the Record (Duel Score) screen
+  shows every duelist on every page.
 
 ### Planned
 
