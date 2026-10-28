@@ -870,6 +870,8 @@ void DuelScreen_LoadFieldBackground(u16 background)
  * palettes 0-6 and the tile sheets to OBJ VRAM from tile 0 up to tile 0x364 (VRAM 0x06016C80), then sets
  * DuelScreen.uiGfxLoaded. The palette numbers are the ones the sprites' attr2 values select.
  */
+void ModLoadCardSpriteGfx(void);
+
 void LoadDuelUiGfx(void)
 {
     REG_DISPCNT |= DISPCNT_OBJ_1D_MAP;
@@ -882,12 +884,7 @@ void LoadDuelUiGfx(void)
     CopyDoubleWords((void *)OBJ_PLTT_ADDR(6), gLinkWaitIndicatorPal, PALETTE_SIZE);
     CopyDoubleWords((void *)OBJ_TILE_ADDR(OBJ_TILE_HAND_CURSOR), gHandCursorGfx, TILES(64));
     CopyDoubleWords((void *)OBJ_TILE_ADDR(OBJ_TILE_CARD_BACK), gCardIconBackGfx, TILES(64));
-    CopyDoubleWords((void *)OBJ_TILE_ADDR(OBJ_TILE_CARD_ICON_NORMAL + 0x00), gCardIconNormalGfx, TILES(64));
-    CopyDoubleWords((void *)OBJ_TILE_ADDR(OBJ_TILE_CARD_ICON_NORMAL + 0x40), gCardIconEffectGfx, TILES(64));
-    CopyDoubleWords((void *)OBJ_TILE_ADDR(OBJ_TILE_CARD_ICON_NORMAL + 0x80), gCardIconFusionGfx, TILES(64));
-    CopyDoubleWords((void *)OBJ_TILE_ADDR(OBJ_TILE_CARD_ICON_NORMAL + 0xC0), gCardIconRitualGfx, TILES(64));
-    CopyDoubleWords((void *)OBJ_TILE_ADDR(OBJ_TILE_CARD_ICON_NORMAL + 0x100), gCardIconMagicGfx, TILES(64));
-    CopyDoubleWords((void *)OBJ_TILE_ADDR(OBJ_TILE_CARD_ICON_NORMAL + 0x140), gCardIconTrapGfx, TILES(64));
+    ModLoadCardSpriteGfx();     /* changed: the card icon tiles hold the art sprites (src/mod_field_icons.c) */
     CopyDoubleWords((void *)OBJ_TILE_ADDR(MARKER_TILE_CAN_ATTACK), gZoneMarkerCanAttackGfx, TILES(12));
     CopyDoubleWords((void *)OBJ_TILE_ADDR(MARKER_TILE_LINK_EQUIP), gZoneMarkerLinkEquipGfx, TILES(12));
     CopyDoubleWords((void *)OBJ_TILE_ADDR(MARKER_TILE_LINK_OTHER), gZoneMarkerLinkOtherGfx, TILES(12));

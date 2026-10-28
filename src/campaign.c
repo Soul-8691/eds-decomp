@@ -499,8 +499,13 @@ void CardMenu_DrawLabel(void)
  * face up during slides 0-4. At slide 1 and 7 the card's zone tiles are cleared. With the menu
  * open (slide 8) it stays at (104, 32) at twice the size. Nothing for the Fusion Deck and the Deck.
  */
+/* Mod (src/mod_field_icons.c): a face-up card's sprite with its art (pose 0 upright, 1-2 the flip's frames). */
+void ModAddCardSprite(u32 yx, u16 shape, u16 id, u16 attr2);
+void ModAddAffineCardSprite(u32 yx, u16 shape, u16 id, u32 pose, u16 attr2, u32 scaleAngle);
+
 void CardMenu_DrawCardPreview(void)
 {
+    s32 pose = 0;       /* added: the card face's pose (0 upright, 1-2 the turn's frames), -1 for the card back */
     u16 attr2;
     int x0, y0;
     int x, y;
@@ -546,19 +551,27 @@ void CardMenu_DrawCardPreview(void)
                 case 1:
                 case 2:
                     attr2 = MENU.slide * 16 + 0x440;
+                    pose = -1;
                     break;
                 case 3:
                 case 4:
                     attr2 += (5 - MENU.slide) * 16;
+                    pose = 5 - MENU.slide;
                     break;
                 }
             }
             break;
         }
-        if (y >= 0 && y < 160)    /* on screen */
-            AddAffineSprite(x | (y << 16), SPRITE_SHAPE_32x32, attr2, gShrinkScaleSteps[MENU.slide] << 16);
+        if (y >= 0 && y < 160) {    /* on screen */
+            if (pose >= 0)          /* changed: the card face with its art */
+                ModAddAffineCardSprite(x | (y << 16), SPRITE_SHAPE_32x32, DuelCursor_GetCardId(), pose,
+                                       OAM_ATTR2_PRIORITY(1), gShrinkScaleSteps[MENU.slide] << 16);
+            else
+                AddAffineSprite(x | (y << 16), SPRITE_SHAPE_32x32, attr2, gShrinkScaleSteps[MENU.slide] << 16);
+        }
     } else {
-        AddAffineSprite((32 << 16) | 104, SPRITE_SHAPE_32x32, attr2, 0x80 << 16);
+        ModAddAffineCardSprite((32 << 16) | 104, SPRITE_SHAPE_32x32, DuelCursor_GetCardId(), 0,
+                               OAM_ATTR2_PRIORITY(1), 0x80 << 16);     /* changed: with its art */
     }
 }
 

@@ -26,8 +26,14 @@ data/mod_field_icons_data.s), for BG2 in 256-colour mode:
   +0x0080   the frames: 8bpp 4x4-tile icons, 1 KiB each, by type (normal, effect, fusion and ritual monster,
             spell, trap: the order of GetCardIconBgTile) then pose (upright, sideways: rotated clockwise, as
             the game's pose 3); the icon's colours are entries 32-47 (BG palette 2, gCardIconPal), 0 transparent
-  +0x3080   the miniatures: 17x17 bytes per card ID (CARD_ID_COUNT of them), row-major, palette entries
-            192-255; an ID without a card is all 0
+  +0x3080   the sprite frames: as above for the OBJ card icons in pose 0 (upright, the card_icons PNG) and
+            the game's poses 1-2 (the flip's narrower frames), by type then pose; the icon's colours are
+            entries 16-31 (OBJ palette 1, gCardIconPal)
+  +0x7880   the miniature's place in each sprite pose 0-2: 80 bytes each, x0, width, y0, height, then the art
+            column for each of the `width` columns (32 bytes) and the art row for each of the `height` rows (32
+            bytes): pose 0 is the 17x17 at (7, 7), poses 1-2 squeeze it into their narrower window
+  +0x7980   the miniatures: 17x17 bytes per card ID (CARD_ID_COUNT of them), row-major, palette entries
+            192-255 (the sprites take them 64 lower: OBJ palettes 8-11); an ID without a card is all 0
 """
 import os
 import struct
@@ -86,9 +92,10 @@ def icon_type(stats):
     return KIND_ICON[(stats >> 18) & 3]
 
 
-def rom_icon(bank, name):
-    """Pose 0 of the game's icon `name` as 32x32 indices (4x4 tiles of 8x8, 4bpp)."""
-    g = bank[ICON_GFX_OFFSET[name]:ICON_GFX_OFFSET[name] + 0x200]
+def rom_icon(bank, name, pose=0):
+    """Pose `pose` (0 upright, 1-2 the flip's narrower frames, 3 sideways) of the game's icon `name` as 32x32
+    indices (4x4 tiles of 8x8, 4bpp)."""
+    g = bank[ICON_GFX_OFFSET[name] + pose * 0x200:ICON_GFX_OFFSET[name] + pose * 0x200 + 0x200]
     img = bytearray(ICON * ICON)
     for t in range(16):
         tx, ty = t % 4, t // 4
@@ -245,6 +252,9 @@ def kmeans(hist, palette):
 
 FRAME_TYPES = ['normal_monster', 'effect_monster', 'fusion_monster', 'ritual_monster', 'spell_card', 'trap_card']
 ICON_PALETTE_ENTRY = 32         # BG palette 2 (gCardIconPal) as 8bpp entries 32-47
+OBJ_ICON_PALETTE_ENTRY = 16     # OBJ palette 1 (gCardIconPal) as 8bpp entries 16-31
+SPRITE_POSES = 3                # the sprites' face poses: upright and the flip's two narrower frames
+POSE_MAP_SIZE = 80
 ART_PALETTE_ENTRY = 192         # BG palettes 12-15
 
 
@@ -257,15 +267,34 @@ def rotate_cw(img):
     return bytes(out)
 
 
-def tiles8(img):
-    """A 32x32 image of 4bpp palette indices as 16 8bpp tiles (4x4, row-major) in BG palette 2's entries."""
+def black_box(img):
+    """The bounding box (x0, y0, x1, y1) of an icon's black window (colour 1)."""
+    xs = [i % ICON for i, v in enumerate(img) if v == 1]
+    ys = [i // ICON for i, v in enumerate(img) if v == 1]
+    return min(xs), min(ys), max(xs), max(ys)
+
+
+def pose_map(img):
+    """Where the 17x17 miniature goes in an icon pose: one pixel wider than the black window on each side and one
+    row taller below it (17x17 at (7, 7) upright), each column and row taking the nearest art column or row."""
+    x0, y0, x1, y1 = black_box(img)
+    x0, x1, y1 = x0 - 1, x1 + 1, y1 + 1
+    w, h = x1 - x0 + 1, y1 - y0 + 1
+    cols = [round(k * (MINI - 1) / (w - 1)) if w > 1 else MINI // 2 for k in range(w)]
+    rows = [round(k * (MINI - 1) / (h - 1)) if h > 1 else MINI // 2 for k in range(h)]
+    out = bytes([x0, w, y0, h]) + bytes(cols).ljust(32, b'\0') + bytes(rows).ljust(32, b'\0')
+    return out.ljust(POSE_MAP_SIZE, b'\0')
+
+
+def tiles8(img, entry=ICON_PALETTE_ENTRY):
+    """A 32x32 image of 4bpp palette indices as 16 8bpp tiles (4x4, row-major), colour c as entry + c."""
     out = bytearray()
     for t in range(16):
         tx, ty = t % 4, t // 4
         for y in range(8):
             for x in range(8):
                 v = img[(ty * 8 + y) * ICON + tx * 8 + x]
-                out.append(ICON_PALETTE_ENTRY + v if v else 0)
+                out.append(entry + v if v else 0)
     return bytes(out)
 
 
@@ -306,6 +335,14 @@ def main():
         blob = bytearray(struct.pack('<64H', *((c[0] >> 3) | (c[1] >> 3) << 5 | (c[2] >> 3) << 10 for c in palette)))
         for kind in FRAME_TYPES:
             blob += tiles8(icons[kind]) + tiles8(rotate_cw(icons[kind]))
+        poses = {kind: [icons[kind]] + [rom_icon(bank, kind, p) for p in range(1, SPRITE_POSES)] for kind in FRAME_TYPES}
+        for kind in FRAME_TYPES:
+            for img in poses[kind]:
+                blob += tiles8(img, OBJ_ICON_PALETTE_ENTRY)
+        for img in poses['effect_monster']:     # every type's frame has the same window in each pose
+            blob += pose_map(img)
+        blob += bytes(0x7980 - len(blob))
+        assert len(blob) == 0x7980
         minis = bytearray(count * MINI * MINI)
         cache = {}
         for cid, _, _, _, mini in cards:

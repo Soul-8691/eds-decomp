@@ -53,9 +53,9 @@ next one.
 - **Booster Packs** (main menu). Open any unlocked pack for 1000 DP each for now; prices will change in the release.
   Packs will cover the TCG/OCG sets up to Reaper/Victory format, plus attribute/race/Spell/Trap packs once there are
   enough cards.
-- **Card art on the field.** Face-up cards on the duel field (monsters, Spells/Traps, the Field zone, and the top
-  card of each Graveyard and banished pile) show a small picture of their artwork inside their icon, turned with
-  the card in Defense Position.
+- **Card art in duels.** Face-up cards show a small picture of their artwork inside their icon: on the field
+  (monsters, Spells/Traps, the Field zone, the top card of each Graveyard and banished pile), in your hand, in the
+  card menu, when reordering cards, and while cards move, flip or change position.
 - **Still backgrounds.** The field background no longer scrolls during duels, and the title screen's background
   no longer scrolls either.
 - **Smarter CPU.**

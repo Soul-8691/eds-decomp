@@ -23,6 +23,8 @@ gModDP = 0x0202F100;
 /* Mod: the Banlists scene of src/mod_banlists.c, and the main menu's scroll (main_menu.c). */
 gBanlistsMenu = 0x0202F200;
 gMainMenuScroll = 0x0202F260;
+/* Mod: the card sprite slot cache of src/mod_field_icons.c (free RAM, 0x0202D000-0x0202FFFF). */
+gModCardSprites = 0x0202F300;
 gTextCanvas = 0x02000000;
 gSaveData = 0x02011C20;
 gSaveDataSignature = 0x02013D86;

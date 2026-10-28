@@ -1653,3 +1653,8 @@ updated: 2026-09-29
 - src/mod_field_icons.c (new), data/mod_field_icons_data.s (new), units.txt, Makefile (build/assets/field_icons.bin from tools/cardicons.py --data).
 - src/duel_info_bar.c: BG2 256-colour; LoadDuelBgGfx calls ModLoadFieldIconGfx instead of loading BG2's 4bpp sheets. src/duel_field_screen.c: face-up cells, Graveyard and banished tops use ModFieldCardTile.
 - [[card-icons]], [[index]], README.md. Built; cells checked offline; not tested in an emulator.
+
+## [2026-10-28] progress | Card art on the duel sprites (hand, menu, reorder, animations)
+- src/mod_field_icons.c: ModLoadCardSpriteGfx (LoadDuelUiGfx), ModAddCardSprite / ModAddAffineCardSprite with a 9-slot 256-colour cache (gModCardSprites, symbols.ld 0x0202F300) and plain-icon fallback.
+- Callers: duel_field_screen.c DrawHandCards, campaign.c CardMenu_DrawCardPreview, duel_cursor.c reorder row, duel_card_anim.c change-position/flip/move, duel_prompts.c (unused).
+- tools/cardicons.py --data: sprite frames (poses 0-2) and pose maps. [[card-icons]], README.md. Built; sprites checked offline; not tested in an emulator.

@@ -45,7 +45,25 @@ art. `make` builds the game's data with it (`--data`, below); `make card-icons` 
   from the battle scene, card detail and card list) reloads and redraws.
 - **Data.** `build/assets/field_icons.bin` (341,009 bytes: palette, 12 frames, 17x17 per card ID) through
   `data/mod_field_icons_data.s` (`gModFieldIconData`, @rodata). Checked offline by rebuilding cells from it.
-- **Not changed.** The OBJ card icons (hand cards, card movement animations) keep the plain type icon.
+- **Sprites.** The OBJ card icons get the art too (`ModAddCardSprite`, `ModAddAffineCardSprite`): the hand
+  (`DrawHandCards`), the card menu's card (`CardMenu_DrawCardPreview`, including the turn-over frames), the deck
+  reorder row (`DeckReorder_DrawCards` / `DrawSwap`), the change-position, flip and move animations, and the
+  unused `DuelPrompt_DrawPositionChoice`.
+  - **VRAM.** The OBJ icon tiles 0x80-0x1FF (6 types x 4 poses, 4bpp; the duel's banners fill 0x364 on) now hold
+    the six plain icons in pose 0 (4bpp, 0x80 + 16 * type: the fallback) and 9 256-colour 32x32 slots at
+    0xE0 + 32 * slot.
+  - **Cache.** `gModCardSprites` (EWRAM 0x0202F300; 0x0202D000-0x0202FFFF is unused by the game) keys each slot by
+    card and pose and stamps it with `gMain.frameCounter`. A miss takes an empty slot, else the one drawn longest
+    ago that was not drawn this frame; with all 9 drawn this frame the sprite falls back to the plain icon.
+    `LoadDuelUiGfx` (which every overlay that reuses the OBJ tiles calls on its way out) empties it.
+  - **Poses.** The flip uses face poses 0-2 (`gCardFlipTiles` entries 0x1000 / 0x1010 / 0x1020); poses 1-2 are
+    narrower perspective frames, so the art is squeezed into their window (per-pose column and row maps from the
+    black window's box: x 10-20 / 13-18, y 8-22). Defense is the hardware's affine turn, so no rotated art.
+  - **Colours.** OBJ palette 1 (`gCardIconPal`) as entries 16-31 for the frames; the art palette in OBJ palettes
+    8-11 (entries 128-191: the duel uses 0-6 and 15). `AddAffineSprite` switches on the exact shape, so the
+    256-colour bit is set in the entry it added.
+  - **Data.** `field_icons.bin` grew to 359,697 bytes: sprite frames (6 types x 3 poses) at +0x3080, pose maps at
+    +0x7880, miniatures at +0x7980. Checked offline by rebuilding sprites from it.
 - Built, not tested in an emulator.
 
 Related: [[added-cards]].

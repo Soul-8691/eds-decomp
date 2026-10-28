@@ -793,6 +793,9 @@ int DuelCursor_PickAny(void)
  * normal row (the CPU's reorder hides the cards: card backs, OBJ tile 0x40). The card under the cursor pulses
  * with gPulseScaleCurve; the others keep scale 0x100.
  */
+/* Mod (src/mod_field_icons.c): a face-up card's sprite with its art (pose 0 upright, 1-2 the flip's frames). */
+void ModAddCardSprite(u32 yx, u16 shape, u16 id, u16 attr2);
+void ModAddAffineCardSprite(u32 yx, u16 shape, u16 id, u32 pose, u16 attr2, u32 scaleAngle);
 void DeckReorder_DrawCards(int hidden)
 {
     int i = 0;
@@ -819,7 +822,10 @@ void DeckReorder_DrawCards(int hidden)
             flags = *(const u16 *)((u32)pulseCurve + (*frame & 0x1E)) << 16;
         else
             flags = AFFINE_SCALE_NONE;
-        AddAffineSprite(position, SPRITE_SHAPE_32x32, tile, flags);
+        if (hidden != 0)
+            AddAffineSprite(position, SPRITE_SHAPE_32x32, tile, flags);
+        else    /* changed: the card with its art */
+            ModAddAffineCardSprite(position, SPRITE_SHAPE_32x32, CARD_WORD_ID(*cards), 0, 0, flags);
         x += REORDER_CARD_SPACING;
         cards++;
     }
@@ -870,7 +876,10 @@ void DeckReorder_DrawSwap(int hidden, int from, int to)
             flags = gPulseScaleCurve[(gMain.frameCounter & 0x1E) / 2] << 16;
         else
             flags = AFFINE_SCALE_NONE;
-        AddAffineSprite(position, SPRITE_SHAPE_32x32, tile, flags);
+        if (hidden != 0)
+            AddAffineSprite(position, SPRITE_SHAPE_32x32, tile, flags);
+        else    /* changed: the card with its art */
+            ModAddAffineCardSprite(position, SPRITE_SHAPE_32x32, id, 0, 0, flags);
     }
 }
 

@@ -587,6 +587,10 @@ void DrawFieldOverlay(void)
     }
 }
 /* Draw the small card sprites of each player's hand strip (area DUEL_AREA_HAND), skipping the one under the cursor. */
+/* Mod (src/mod_field_icons.c): a face-up card's sprite with its art (pose 0 upright, 1-2 the flip's frames). */
+void ModAddCardSprite(u32 yx, u16 shape, u16 id, u16 attr2);
+void ModAddAffineCardSprite(u32 yx, u16 shape, u16 id, u32 pose, u16 attr2, u32 scaleAngle);
+
 void DrawHandCards(void)
 {
     s32 player;
@@ -617,8 +621,12 @@ void DrawHandCards(void)
                         /* Through the cast view the flag stays gDuel + 0x1B2C (two literals);
                            a plain gDuel.cardMenu.open folds into one 0x0201AE0C literal. */
                         if (!(DUEL_VIEW->cardMenuOpen && gDuelScreen.selPlayer == player && gDuelScreen.selArea == DUEL_AREA_HAND
-                              && gDuelScreen.selIndex == cardIdx))
-                            AddSprite((y << 16) | x, 0x80, tile + 0x400);
+                              && gDuelScreen.selIndex == cardIdx)) {
+                            if (revealed)       /* changed: the card with its art */
+                                ModAddCardSprite((y << 16) | x, 0x80, cardId, 0x400);
+                            else
+                                AddSprite((y << 16) | x, 0x80, tile + 0x400);
+                        }
                     }
                 }
             }

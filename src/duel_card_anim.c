@@ -135,6 +135,10 @@ extern const u16 gBattleSceneOpenBgPA[16][160];     /* 0x081A2D94 */
  * one affine sprite per frame, rotated by gCardRotateAngles[isDefense][frame] and using the tile
  * gCardFlipTiles[isFaceUp][0] (the card as it is) or, when `extra` is set, the matching frame of the flip.
  */
+/* Mod (src/mod_field_icons.c): a face-up card's sprite with its art (pose 0 upright, 1-2 the flip's frames). */
+void ModAddCardSprite(u32 yx, u16 shape, u16 id, u16 attr2);
+void ModAddAffineCardSprite(u32 yx, u16 shape, u16 id, u32 pose, u16 attr2, u32 scaleAngle);
+
 void DuelAnim_UpdateChangePosition(void)
 {
     struct DuelScreen *screen = &gDuelScreen;
@@ -176,17 +180,13 @@ void DuelAnim_UpdateChangePosition(void)
             if (alsoFlip != 0)
                 /* Spread the 24 flip frames over the 10 rotation frames. */
                 attr2 = gCardFlipTiles[isFaceUp][(gDuelScreen.animTimer * 24) / 10];
-            if (attr2 & FLIP_TILE_CARD_FACE) {
-                attr2 &= (u16)~FLIP_TILE_CARD_FACE;
-                {
-                    /* An int temporary keeps the (s16) sign extension and the call + 0x1000 order. */
-                    int faceTile = GetCardIconObjTileInt(cardId) + CARD_ICON_PALETTE_ATTR2;
-                    int sum = (s16)attr2 + faceTile;
-                    attr2 = sum;
-                }
-            }
-            AddAffineSprite((y << 16) | x, SPRITE_SHAPE_32x32, attr2 | OAM_ATTR2_PRIORITY(1),
-                            OBJ_SCALE_ANGLE(0x100, gCardRotateAngles[isDefense][gDuelScreen.animTimer]));
+            if (attr2 & FLIP_TILE_CARD_FACE)    /* changed: the card face with its art, in the frame's pose */
+                ModAddAffineCardSprite((y << 16) | x, SPRITE_SHAPE_32x32, cardId, (attr2 & 0xFF) >> 4,
+                                       OAM_ATTR2_PRIORITY(1),
+                                       OBJ_SCALE_ANGLE(0x100, gCardRotateAngles[isDefense][gDuelScreen.animTimer]));
+            else
+                AddAffineSprite((y << 16) | x, SPRITE_SHAPE_32x32, attr2 | OAM_ATTR2_PRIORITY(1),
+                                OBJ_SCALE_ANGLE(0x100, gCardRotateAngles[isDefense][gDuelScreen.animTimer]));
             gDuelScreen.animTimer++;
             if (gDuelScreen.animTimer <= ROTATE_LAST_FRAME)
                 return;
@@ -233,17 +233,13 @@ void DuelAnim_UpdateFlip(void)
             /* FAKEMATCH: `player = faceRow` (faceRow <= 0xFF) reuses player as the row index; it keeps player live
                past the second call, which puts player in r7 and slot in r6 as in the ROM. */
             u16 attr2 = gCardFlipTiles[player = faceRow][gDuelScreen.animTimer];
-            if (attr2 & FLIP_TILE_CARD_FACE) {
-                attr2 &= (u16)~FLIP_TILE_CARD_FACE;
-                {
-                    /* An int temporary keeps the (s16) sign extension and the call + 0x1000 order. */
-                    int faceTile = GetCardIconObjTileInt(cardId) + CARD_ICON_PALETTE_ATTR2;
-                    int sum = (s16)attr2 + faceTile;
-                    attr2 = sum;
-                }
-            }
-            AddAffineSprite((y << 16) | x, SPRITE_SHAPE_32x32, attr2 | OAM_ATTR2_PRIORITY(1),
-                            isDefense ? OBJ_SCALE_ANGLE(0x100, OBJ_ANGLE_QUARTER_TURN) : OBJ_SCALE_ANGLE(0x100, 0));
+            if (attr2 & FLIP_TILE_CARD_FACE)    /* changed: the card face with its art, in the frame's pose */
+                ModAddAffineCardSprite((y << 16) | x, SPRITE_SHAPE_32x32, cardId, (attr2 & 0xFF) >> 4,
+                                       OAM_ATTR2_PRIORITY(1),
+                                       isDefense ? OBJ_SCALE_ANGLE(0x100, OBJ_ANGLE_QUARTER_TURN) : OBJ_SCALE_ANGLE(0x100, 0));
+            else
+                AddAffineSprite((y << 16) | x, SPRITE_SHAPE_32x32, attr2 | OAM_ATTR2_PRIORITY(1),
+                                isDefense ? OBJ_SCALE_ANGLE(0x100, OBJ_ANGLE_QUARTER_TURN) : OBJ_SCALE_ANGLE(0x100, 0));
             gDuelScreen.animTimer++;
             if (gDuelScreen.animTimer <= FLIP_LAST_FRAME)
                 return;
@@ -300,8 +296,12 @@ void DuelAnim_UpdateMoveCard(void)
         } else {
             angle = OBJ_ANGLE_QUARTER_TURN - gDuelScreen.animStep * 2;  /* turning to attack: 0x20 -> 0 */
         }
-        AddAffineSprite((fromX + dx) | ((fromY + dy) << 16), SPRITE_SHAPE_32x32, tile + OAM_ATTR2_PRIORITY(1),
-                        ((u32)gBounceScaleCurve[gDuelScreen.animStep] << 16) | angle);
+        if (((u8 *)to)[1] & LOC_FACE_UP_BIT)   /* changed: the card face with its art */
+            ModAddAffineCardSprite((fromX + dx) | ((fromY + dy) << 16), SPRITE_SHAPE_32x32, gDuelScreen.animArg, 0,
+                                   OAM_ATTR2_PRIORITY(1), ((u32)gBounceScaleCurve[gDuelScreen.animStep] << 16) | angle);
+        else
+            AddAffineSprite((fromX + dx) | ((fromY + dy) << 16), SPRITE_SHAPE_32x32, tile + OAM_ATTR2_PRIORITY(1),
+                            ((u32)gBounceScaleCurve[gDuelScreen.animStep] << 16) | angle);
         oldStep = gDuelScreen.animStep;
         gDuelScreen.animStep = oldStep + 1;
         if ((gMain.heldKeys & B_BUTTON) || DUEL_SCREEN_FAST(&gDuelScreen)) {

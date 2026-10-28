@@ -136,19 +136,21 @@ void Duel_ClearUnk1B43(void)
  * selected one (0 = left) pulses with gPulseScaleCurve (one step every 2 frames); the other keeps scale
  * 0x100. The last AddAffineSprite argument is scale << 16 | angle.
  */
+/* Mod (src/mod_field_icons.c): a face-up card's sprite with its art (the OBJ icon tiles hold the art sprites). */
+void ModAddAffineCardSprite(u32 yx, u16 shape, u16 id, u32 pose, u16 attr2, u32 scaleAngle);
+
 void DuelPrompt_DrawPositionChoice(u16 cardId, u16 showSecond, u16 selected)
 {
-    u16 tile;
-
-    tile = GetCardIconObjTile(cardId) | OAM_ATTR2_PALETTE(1);
-    AddAffineSprite(0x00400050, SPRITE_SHAPE_32x32, tile,
-                    selected == 0 ? gPulseScaleCurve[(gMain.frameCounter & 0x1E) >> 1] << 16 : 0x01000000);
+    /* changed: both faces with their art */
+    ModAddAffineCardSprite(0x00400050, SPRITE_SHAPE_32x32, cardId, 0, 0,
+                           selected == 0 ? gPulseScaleCurve[(gMain.frameCounter & 0x1E) >> 1] << 16 : 0x01000000);
     if (showSecond)
-        tile = GetCardIconObjTile(cardId) | OAM_ATTR2_PALETTE(1);
+        ModAddAffineCardSprite(0x004000A0, SPRITE_SHAPE_32x32, cardId, 0, 0,
+                               selected ? (gPulseScaleCurve[(gMain.frameCounter & 0x1E) >> 1] << 16) | 0x20
+                                        : 0x01000020);
     else
-        tile = 0x40;
-    AddAffineSprite(0x004000A0, SPRITE_SHAPE_32x32, tile,
-                    selected ? (gPulseScaleCurve[(gMain.frameCounter & 0x1E) >> 1] << 16) | 0x20 : 0x01000020);
+        AddAffineSprite(0x004000A0, SPRITE_SHAPE_32x32, 0x40,
+                        selected ? (gPulseScaleCurve[(gMain.frameCounter & 0x1E) >> 1] << 16) | 0x20 : 0x01000020);
 }
 
 /*
