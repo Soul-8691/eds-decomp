@@ -1662,3 +1662,6 @@ updated: 2026-09-29
 ## [2026-10-28] progress | Card art in the chain list
 - src/mod_field_icons.c: ModChainIconsClear / ModChainIconBuild / ModChainIconTile (256-colour icons in OBJ tile rows 18-21, 2D mapping). src/duel_card_actions.c: ChainListScreen_Run builds them, ChainListScreen_DrawRows draws them instead of the 4bpp icon.
 - [[card-icons]], README.md. Built; not tested in an emulator.
+
+## [2026-10-28] query | Deck Edit card art feasibility
+- [[deck-edit-card-art]] (new): Deck Edit VRAM and palette map, blank-tile and palette checks, options. [[index]].
