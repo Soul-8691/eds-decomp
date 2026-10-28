@@ -59,6 +59,8 @@ next one.
   column of cards beside the list shows each card's art too.
 - **Still backgrounds.** The field background no longer scrolls during duels, and the title screen's background
   no longer scrolls either.
+- **Fixes.** Deck Edit no longer blots out the first letters of the row above the cursor after Card View (a
+  bug in the original game).
 - **Smarter CPU.**
   - It switches a monster that can't beat any of yours to Defense Position when you have a face-up monster with
     higher ATK, instead of leaving it to be run over. A monster with 1700 ATK or more stays in Attack Position

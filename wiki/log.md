@@ -1671,3 +1671,6 @@ updated: 2026-09-29
 - src/mod_field_icons.c: ModDeckRingSetCard / ModDeckRingBegin / ModDeckRingArt; src/deck_edit_widgets.c hooks (InitFrameSlot, ScrollFrameSlots, DrawFrameSlots); symbols.ld gModDeckRing 0x0202F360; tools/cardicons.py --data: per-card 15-colour window art.
 - Ring sprites identified from the user's mGBA OAM screenshots; the sheet offsets corrected ([[deck-edit-card-art]] rewritten). [[card-icons]], [[index]], README.md. Built; checked offline; not tested in an emulator.
 - [[deck-edit-card-art]]: noted the vanilla Deck Edit bug (row above the cursor partly covered after Card View).
+
+## [2026-10-28] progress | Fix: Deck Edit row name blotted after Card View (vanilla bug)
+- src/deck_edit_panel.c: list-row name buffers start at tile 0x30D (were 0x30C, which LoadDigitTiles also writes). [[deck-edit-card-art]], README.md. Built; not tested in an emulator.

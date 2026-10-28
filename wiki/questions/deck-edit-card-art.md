@@ -46,9 +46,16 @@ Answered: yes, over the ring of card frames left of the list. Built in `src/mod_
 - **Other screens:** the list filter loads other sheets into the top half, so `ModDeckRingBegin` first compares a tile
   of each top sheet with Deck Edit's and draws no art otherwise.
 
-## Vanilla bug seen while testing (2026-10-28)
+## Vanilla bug seen while testing (2026-10-28): fixed
 After Card View and back, the start of the list row above the cursor is covered by a dark block of about two tiles
 (screenshot eds-6.png). The user confirmed it happens in the original game too, so it is not the mod's. It is on the
-backgrounds, not a sprite (OAM checked); likely a stale cursor-row (BG0) map entry left from before Card View
-(hypothesis). Not fixed.
+backgrounds, not a sprite (OAM checked).
+- **Cause (found in the code):** `LoadDigitTiles` clears and draws 13 tiles from BG tile 0x300 (0x300-0x30C), and the
+  seven list-row name buffers started at tile 0x30C (`DeckEdit_GetListRowVram` / `GetListRowTile`: VRAM + 0x6180,
+  21 tiles each). `DeckEdit_InitListView` loads the digits last, after drawing the rows, so the name in buffer 0
+  lost its first tile. Card View's return runs `DeckEdit_ResetListView` (listRowRing = 0), which puts the row above
+  the cursor in buffer 0. Conversely, a later name drawn into buffer 0 overwrote the 13th digit glyph.
+- **Fix (deck_edit_panel.c):** the buffers start one tile later, at tile 0x30D (VRAM + 0x61A0), and end at 0x39F;
+  only those two functions address them, and no Deck Edit map uses tiles past 0x30C otherwise (frame map: tiles up
+  to 0xFF). Built; not tested in an emulator.
 

@@ -263,11 +263,18 @@ void RenderOutlinedFontTiles(u32 dst, u8 color, u8 outlineColor, struct TextFlag
     } while (i <= 0xFF);
 }
 /* The seven list-row name buffers sit at VRAM + 0x6180, 0x2A0 bytes apart, addressed by
- * (gDeckEdit.listRowRing + slot) % 7; the cursor row names use two pages of 0x32 tiles. */
+ * (gDeckEdit.listRowRing + slot) % 7; the cursor row names use two pages of 0x32 tiles.
+ * Fix (vanilla bug): they start one tile later, at tile 0x30D (VRAM + 0x61A0; the last ends at tile 0x39F, which
+ * nothing else uses). LoadDigitTiles writes 13 tiles from tile 0x300 (0x300-0x30C), so the first tile of buffer 0
+ * was shared: the digits, loaded last by DeckEdit_InitListView, blotted out the start of that row's name (the row
+ * above the cursor after Card View, which resets listRowRing), and a later name in buffer 0 broke the 13th digit
+ * glyph. */
+#define LIST_ROW_FIRST_TILE     0x30D
+
 u32 DeckEdit_GetListRowVram(u8 slot)
 {
     s32 n = __modsi3(gDeckEdit.listRowRing + slot, 7);
-    return VRAM + 0x6180 + n * 0x2A0;
+    return VRAM + LIST_ROW_FIRST_TILE * 32 + n * 0x2A0;
 }
 u32 DeckEdit_GetCursorRowVram(void)
 {
@@ -276,7 +283,7 @@ u32 DeckEdit_GetCursorRowVram(void)
 u16 DeckEdit_GetListRowTile(u8 slot)
 {
     s32 n = __modsi3(gDeckEdit.listRowRing + slot, 7);
-    return n * 21 + 0x30C;
+    return n * 21 + LIST_ROW_FIRST_TILE;
 }
 u32 DeckEdit_GetCursorRowTile(void)
 {
