@@ -70,6 +70,29 @@ extern const u16 gCardNumberToId_GloryOfTheKingsHand;   /* gCardNumberToId[CARD_
  */
 /* Mod (src/mod_opponents.c): this build's opponents have no dialogue before or after a duel. */
 int ModSkipsDuelDialogue(u16 duelist);
+int ModOpponentFormat(u16 duelist);
+/* Mod (src/mod_recipes.c): Deck Recipes for the challenger's format; 1 when the player goes on to the duel. */
+u16 CB_ChallengerRecipes(int format);
+
+/* Mod: a calendar event's challenger (Campaign_StartDay fixed a format opponent, ModEventChallenger). */
+static int IsEventChallenger(void)
+{
+    return gMain.opponentFixed && gMain.matchDuelCount == 0 && ModOpponentFormat(gMain.opponent) >= 0;
+}
+
+/* Mod: 1 if the challenger has a text for the event (Campaign_StartPreDuelDialogue): every opponent on match days
+ * (Championship, Duel Ceremony, Grandpa Cup); only the five Ghouls (duelists 11-15) on a Rare Hunter day. */
+static int HasEventDialogue(void)
+{
+    if (gMain.events == CAL_RARE_HUNTER)
+        return gMain.opponent >= DUELIST_RARE_HUNTER && gMain.opponent <= DUELIST_MARIK;
+    return gMain.duelFormat == DUEL_FORMAT_MATCH;
+}
+
+/* Sub-steps 3 and 4 (added): a calendar event's challenger, after its dialogue: the player picks a deck recipe
+ * (its format is now the Deck Edit banlist), or opens Deck Edit and comes back to the recipes. */
+#define SELECT_STEP_CHALLENGER_RECIPES 3
+#define SELECT_STEP_CHALLENGER_DECK_EDIT 4
 
 u16 Campaign_SelectOpponent(void)
 {
@@ -85,14 +108,41 @@ u16 Campaign_SelectOpponent(void)
         gMain.subStep++;
         /* fall through */
     case 1:
-        if (ModSkipsDuelDialogue(gMain.opponent))   /* added */
-            return 1;
+        /* added: no dialogue, except a calendar event challenger's */
+        if (ModSkipsDuelDialogue(gMain.opponent) && !(IsEventChallenger() && HasEventDialogue())) {
+            if (!IsEventChallenger())
+                return 1;
+            gMain.subStep = SELECT_STEP_CHALLENGER_RECIPES;
+            RESET_SEQ_STATE();
+            return 0;
+        }
         Campaign_StartPreDuelDialogue();
         gMain.subStep++;
         /* fall through */
     case 2:
         if (CB_BustupU32()) {
             gMain.subStep++;
+            RESET_SEQ_STATE();
+        }
+        return 0;
+    case SELECT_STEP_CHALLENGER_RECIPES:    /* added */
+        if (!IsEventChallenger())
+            return 1;
+        switch (CB_ChallengerRecipes(ModOpponentFormat(gMain.opponent))) {
+        case 1:
+            gMain.subStep = SELECT_STEP_CHALLENGER_DECK_EDIT + 1;
+            RESET_SEQ_STATE();
+            return 1;
+        case 2:
+            gMain.subStep = SELECT_STEP_CHALLENGER_DECK_EDIT;
+            RESET_SEQ_STATE();
+            return 0;
+        }
+        return 0;
+    case SELECT_STEP_CHALLENGER_DECK_EDIT:  /* added */
+        if (CB_DeckEdit()) {
+            SaveGame();
+            gMain.subStep = SELECT_STEP_CHALLENGER_RECIPES;
             RESET_SEQ_STATE();
         }
         return 0;

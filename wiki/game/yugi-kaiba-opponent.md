@@ -4,7 +4,7 @@ type: game
 status: draft
 confidence: medium
 sources: [rom-analysis]
-updated: 2026-10-26
+updated: 2026-10-28
 ---
 # Campaign opponents (mod)
 
@@ -108,8 +108,21 @@ whose name plates and portraits are BG images (`Record_DrawPage`).
 - **Stale reward pack.** The "new packs" step now clears `gMain.rewardPack` in both branches. The original
   cleared it only without a notice, so a magazine day's pack left there opened at once and skipped the list.
 
-## Unchanged
-Calendar events (Rare Hunter days, tournaments, magazine days) still work by ID, so an event can fix the opponent
-to one of these slots.
+## Calendar event challengers
+- **Who.** `Campaign_StartDay` (link_battle.c) draws every event challenger (Championship rounds, Duel Ceremony,
+  Grandpa Cup qualifier and final, Rare Hunter day) with `ModEventChallenger`: a random unlocked format, in place of
+  the event's own table (`gTournamentOpponents`, `gGrandpaCup*Opponents`, `gRareHunterOpponents`). In make release
+  only formats whose banlist lets the collection make a 40-card Main Deck (`BanlistMainDeckCapacity`, the Banlists
+  menu's check); if none can, any unlocked one.
+- **Dialogue.** The event intro plays as before, and `Campaign_SelectOpponent` keeps the challenger's pre-duel text
+  (its original bustup portrait). On a Rare Hunter day only duelists 11-15 have a text; another challenger skips it.
+- **Banlist and deck.** Sub-step 3 runs `CB_ChallengerRecipes(format)` (mod_recipes.c), the Deck Recipes scene with
+  "Challenger's format: X" under the list. On entry it puts the format in use as the Deck Edit banlist
+  (`SwitchToBanlist`, as the Banlists menu: over-limit copies go back to the trunk). SELECT opens Deck Edit
+  (sub-step 4 runs `CB_DeckEdit`, saves, and comes back to the recipes). B starts the duel; in make release it is
+  refused while the deck has under 40 cards or a card the format does not allow (`CountIllegalCards`, mod_banlist.c),
+  unless the collection cannot make a legal deck at all: then a second B duels anyway. The event's BGM keeps
+  playing.
+- **Rewards** are still those of the format opponents (see Rewards above).
 
 Related: [[banlists-menu]], [[campaign-select-c]], [[campaign-steps-c]].

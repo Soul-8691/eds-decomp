@@ -7,6 +7,14 @@
  *   DeckRecipes_BuildLabel  the "Deck Recipes" label (MainMenu_Init calls it for tiles 0x200-0x23F, the rows after
  *                           the sheet; the scene uses it as its title)
  *   CB_DeckRecipes          the scene (MainMenu_Launch starts it)
+ *   CB_ChallengerRecipes    the same scene before a calendar event's duel (Campaign_SelectOpponent, after the
+ *                           challenger's dialogue): it puts the challenger's format in use as the Deck Edit banlist
+ *                           (SwitchToBanlist, as the Banlists menu does: over-limit copies go back to the trunk) and
+ *                           names it; B starts the duel and SELECT opens Deck Edit (the Campaign runs it, then comes
+ *                           back here). In make release B is refused while the deck is not legal there (under 40
+ *                           cards, or a card the format does not allow), unless the collection cannot make a legal
+ *                           deck at all (ModEventChallenger avoids that): then a second B duels anyway, so an event
+ *                           never gets stuck. The event's BGM keeps playing.
  *   DeckRecipes_OnNewGame   BuildStarterDeck (title_screen.c): a New Game clears the recipes back to the presets
  * Up to RECIPE_COUNT recipes, each a name and a saved Deck, Side Deck and Fusion Deck list, live in SRAM after the
  * save image (RECIPE_SRAM; the game's save is 0x2170 bytes of the 32 KiB). The first ones start as the decks of
@@ -48,6 +56,11 @@ int GetActiveBanlist(void);
 s32 GetBanlistCopyLimit(u32 id);
 int IsInActiveBanlistPool(u32 id);
 const char *BanlistName(int banlist);
+/* src/mod_banlist.c: the cards of the player's decks the format does not allow (0 in make) */
+int CountIllegalCards(int format);
+/* src/mod_banlists.c */
+int BanlistMainDeckCapacity(int banlist);
+int SwitchToBanlist(int banlist);
 
 extern const u8 gMainMenuObjPal[], gMainMenuObjGfx[];
 extern const u16 gMainMenuSkyImage[];
@@ -130,17 +143,21 @@ struct DeckRecipes {
     u8 keyRow;                      /* MODE_NAME: the key under the cursor */
     u8 keyCol;
     u8 nameLen;
-    u8 pad[2];
+    u8 challenger;                  /* 1: CB_ChallengerRecipes (format below); 0: Deck Recipes */
+    u8 format;                      /* the challenger's format (banlist index) */
     char name[RECIPE_NAME_SIZE];    /* MODE_NAME: the name being entered */
     u8 sizes[RECIPE_COUNT][RECIPE_SUMMARY_SIZE];  /* deckSize, sideSize, fusionSize, used, name of every slot */
     char status[64];
     u8 leftOutCount;                /* MODE_LEFT_OUT: entries */
     u8 leftOutScroll;
-    u8 pad2[2];
+    u8 startConfirm;                /* the challenger: 1 after a B the deck check warned about */
+    u8 deckEdit;                    /* the challenger: 1 when the player left with SELECT, for Deck Edit */
     struct LeftOut leftOut[LEFT_OUT_MAX];
     struct RecipeSlot buf;
 };
 extern struct DeckRecipes gDeckRecipes;
+
+#define CHALLENGER_MIN_MAIN_DECK    40      /* as BANLIST_MIN_MAIN_DECK (src/mod_banlists.c) */
 
 /* ---- The menu label ---- */
 
@@ -600,6 +617,14 @@ static const char sStrIsEmpty[] = " is empty.";
 static const char sStrLeftOutHead[] = " card(s) left out (banlist: ";
 static const char sStrLeftOutHelp1[] = "UP/DOWN: scroll   A/B: close";
 static const char sStrLeftOutHelp2[] = "Deck Edit's banlist is set in Banlists.";
+static const char sStrLeftOutChallenger[] = "The banlist is now the challenger's format.";
+static const char sStrChallengerHelp[] = "A: options  B: duel  SELECT: Deck Edit";
+static const char sStrChallengerFormat[] = "Challenger's format: ";
+static const char sStrChallengerBanlist[] = "Now using the ";
+static const char sStrChallengerBanlistEnd[] = " banlist.";
+static const char sStrTooSmall[] = " cards: 40 needed. SELECT: Deck Edit.";
+static const char sStrIllegal[] = " card(s) not legal. SELECT: Deck Edit.";
+static const char sStrNoLegalDeck[] = "No legal deck possible. B again: duel.";
 static const char sStrReasonForbidden[] = "forbidden";
 static const char sStrReasonLimited[] = "limited to ";
 static const char sStrReasonPool[] = "not in pool";
@@ -725,6 +750,10 @@ static void RenderList(void)
             x += gTextCanvas.right - x + 14;
         }
         DrawLine(ROWS_VISIBLE * ROW_HEIGHT + 10, COLOR_HELP, sStrMenuHelp);
+    } else if (s->challenger) {
+        DrawLine(ROWS_VISIBLE * ROW_HEIGHT, COLOR_HELP, sStrChallengerHelp);
+        AppendStr(AppendStr(line, sStrChallengerFormat), BanlistName(s->format));
+        DrawLine(ROWS_VISIBLE * ROW_HEIGHT + 10, COLOR_CURSOR, line);
     } else {
         DrawLine(ROWS_VISIBLE * ROW_HEIGHT, COLOR_HELP, sStrHelp1);     /* right under the list */
         DrawLine(ROWS_VISIBLE * ROW_HEIGHT + 10, COLOR_HELP, sStrHelp2);
@@ -810,7 +839,8 @@ static void RenderLeftOut(void)
         DrawText(LEFT_OUT_REASON_X, (i + 1) * ROW_HEIGHT, COLOR_CURSOR, line);
     }
     DrawLine(ROWS_VISIBLE * ROW_HEIGHT, COLOR_HELP, sStrLeftOutHelp1);
-    DrawLine(ROWS_VISIBLE * ROW_HEIGHT + 10, COLOR_HELP, sStrLeftOutHelp2);
+    DrawLine(ROWS_VISIBLE * ROW_HEIGHT + 10, COLOR_HELP,
+             s->challenger ? sStrLeftOutChallenger : sStrLeftOutHelp2);
     DrawLine(ROWS_VISIBLE * ROW_HEIGHT + 23, COLOR_STATUS, s->status);
 }
 
@@ -1052,6 +1082,36 @@ static void HandleMenu(void)
     Render();
 }
 
+/* B before a challenger's duel: 1 to start it. In make release a deck under 40 cards, or with cards the format does
+ * not allow, is refused (the status line names the problem and points to Deck Edit), unless no legal deck can be
+ * made from the collection: then a second B starts the duel anyway. */
+static int ChallengerMayStart(void)
+{
+    struct DeckRecipes *s = &gDeckRecipes;
+#if MOD_RELEASE
+    int illegal = CountIllegalCards(s->format);
+
+    if (gSaveData.deckSize >= DECK_MIN_CARDS && illegal == 0)
+        return 1;
+    if (BanlistMainDeckCapacity(s->format) < CHALLENGER_MIN_MAIN_DECK) {
+        if (s->startConfirm)
+            return 1;
+        AppendStr(s->status, sStrNoLegalDeck);
+        s->startConfirm = 1;
+    } else if (illegal != 0) {
+        AppendStr(AppendNum(s->status, illegal, 1), sStrIllegal);
+    } else {
+        AppendStr(AppendNum(s->status, gSaveData.deckSize, 1), sStrTooSmall);
+    }
+    PlaySE(SE_ERROR);
+    Render();
+    return 0;
+#else
+    (void)s;
+    return 1;
+#endif
+}
+
 /* Returns 1 when the player leaves. */
 static int HandleInput(void)
 {
@@ -1084,9 +1144,22 @@ static int HandleInput(void)
         return 0;
     }
     if (keys & B_BUTTON) {
+        if (s->challenger) {
+            if (!ChallengerMayStart())
+                return 0;
+            PlaySE(SE_CONFIRM);
+            return 1;
+        }
         PlaySE(SE_CANCEL);
         return 1;
     }
+    if ((keys & SELECT_BUTTON) && s->challenger) {
+        s->deckEdit = 1;
+        PlaySE(SE_CONFIRM);
+        return 1;
+    }
+    if (keys)
+        s->startConfirm = 0;
     if (keys & DPAD_UP) {
         MoveCursor((n + RECIPE_COUNT - 1) % RECIPE_COUNT);
     } else if (keys & DPAD_DOWN) {
@@ -1109,13 +1182,17 @@ static int HandleInput(void)
 }
 
 /*
- * The scene callback. gMain.seqIndex1 is the step (cleared by SetMainCallback) and gMain.seqState1 the sub-state:
+ * The scene. gMain.seqIndex1 is the step (cleared by SetMainCallback, or by the Campaign's RESET_SEQ_STATE) and
+ * gMain.seqState1 the sub-state:
  *   0  set up the screen as MainMenu_Init does, the title and the recipes
  *   1  fade in
  *   2  input until B
- *   3  fade out; returns 1 when done (MainLoop goes back to the main menu, which saves the game)
+ *   3  fade out; returns 1 when done (MainLoop goes back to the main menu, which saves the game; the Campaign goes
+ *      on to the duel)
+ * A challenger's scene (format >= 0) puts the format's banlist in use and keeps the event's BGM. It returns 2 instead
+ * of 1 when the player left for Deck Edit.
  */
-u16 CB_DeckRecipes(void)
+static u16 RunScene(int format)
 {
     struct DeckRecipes *s = &gDeckRecipes;
 
@@ -1131,13 +1208,22 @@ u16 CB_DeckRecipes(void)
             ResetBgScroll();
             REG_BG1CNT = BGCNT_256COLOR | BGCNT_CHARBASE(1);
             gMain.vblankFlags = VBLANK_COPY_OAM | VBLANK_COPY_BG_MAPS;
-            PlayBGMNoTrack(SONG_MAIN_MENU);
+            if (format < 0)
+                PlayBGMNoTrack(SONG_MAIN_MENU);
             break;
         default:
             CopyDoubleWords((void *)OBJ_PLTT, gMainMenuObjPal, 0x20);
             LoadBgImage(0, 0, 0x20, gMainMenuSkyImage);
             DeckRecipes_BuildLabel((u16 *)OBJ_TILE(TITLE_TILE));
             MemClear16(s, sizeof(*s) - sizeof(s->buf));
+            if (format >= 0) {
+                s->challenger = 1;
+                s->format = format;
+                if (GetActiveBanlist() != format)
+                    SwitchToBanlist(format);
+                AppendStr(AppendStr(AppendStr(s->status, sStrChallengerBanlist), BanlistName(format)),
+                          sStrChallengerBanlistEnd);
+            }
             LoadRecipes();
             s->cursor = s->active < RECIPE_COUNT ? s->active : 0;
             s->scroll = s->cursor >= ROWS_VISIBLE ? s->cursor - ROWS_VISIBLE / 2 : 0;
@@ -1158,12 +1244,27 @@ u16 CB_DeckRecipes(void)
     case 2:
         DrawSprites();
         if (HandleInput()) {
-            FadeOutBGM();
+            if (format < 0)
+                FadeOutBGM();
             gMain.seqIndex1++;
         }
         return 0;
     default:
         DrawSprites();
-        return FadeToBlack(2) != 0;
+        if (!FadeToBlack(2))
+            return 0;
+        return s->challenger && s->deckEdit ? 2 : 1;
     }
+}
+
+u16 CB_DeckRecipes(void)
+{
+    return RunScene(-1);
+}
+
+/* Before a calendar event's duel with a format opponent: Deck Recipes for banlist `format` (see RunScene): 1 to go
+ * on to the duel, 2 to open Deck Edit first. */
+u16 CB_ChallengerRecipes(int format)
+{
+    return RunScene(format);
 }

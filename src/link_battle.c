@@ -623,6 +623,9 @@ enum {
  * rare cards meets a Rare Hunter in a single duel. Otherwise the "new Duelists" notice may be shown, and
  * today's events are kept in gMain.events for the pre-duel dialogue. Returns 1 when done.
  */
+/* Mod (src/mod_opponents.c): an event's challenger is one of the unlocked formats. */
+u16 ModEventChallenger(void);
+
 int Campaign_StartDay(void)
 {
     struct Date date;
@@ -651,28 +654,28 @@ int Campaign_StartDay(void)
         gMain.matchScore = 0;
         if (events & CAL_TOURNAMENT_ROUND1) {
             /* Championship rounds 1 to 3 and the final: an opponent of tier 1-4 (texts 201/203/205/207). */
-            gMain.opponent = gTournamentOpponents[Random() % 5];
+            gMain.opponent = ModEventChallenger();     /* mod: was gTournamentOpponents[Random() % 5] */
             StartDialogue(201);
             PlayBGM(SONG_CHAMPIONSHIP);
             gMain.events = CAL_TOURNAMENT_ROUND1;
             gMain.subStep = START_DAY_STEP_EVENT_INTRO;
             return 0;
         } else if (events & CAL_TOURNAMENT_ROUND2) {
-            gMain.opponent = gTournamentOpponents[Random() % 5 + 5];
+            gMain.opponent = ModEventChallenger();     /* mod: was gTournamentOpponents[Random() % 5 + 5] */
             StartDialogue(203);
             PlayBGM(SONG_CHAMPIONSHIP);
             gMain.events = CAL_TOURNAMENT_ROUND2;
             gMain.subStep = START_DAY_STEP_EVENT_INTRO;
             return 0;
         } else if (events & CAL_TOURNAMENT_SEMIFINAL) {
-            gMain.opponent = gTournamentOpponents[Random() % 5 + 10];
+            gMain.opponent = ModEventChallenger();     /* mod: was gTournamentOpponents[Random() % 5 + 10] */
             StartDialogue(205);
             PlayBGM(SONG_CHAMPIONSHIP);
             gMain.events = CAL_TOURNAMENT_SEMIFINAL;
             gMain.subStep = START_DAY_STEP_EVENT_INTRO;
             return 0;
         } else if (events & CAL_TOURNAMENT_FINAL) {
-            gMain.opponent = gTournamentOpponents[Random() % 5 + 15];
+            gMain.opponent = ModEventChallenger();     /* mod: was gTournamentOpponents[Random() % 5 + 15] */
             gMain.events = CAL_TOURNAMENT_FINAL;
             StartDialogue(207);
             gMain.subStep = START_DAY_STEP_EVENT_INTRO;
@@ -680,7 +683,7 @@ int Campaign_StartDay(void)
             return 0;
         } else if (events & CAL_SUGOROKU_PRELIM) {
             /* Grandpa Cup qualifier and final (texts 701/702). */
-            gMain.opponent = gGrandpaCupQualifierOpponents[Random() & 3];
+            gMain.opponent = ModEventChallenger();     /* mod: was gGrandpaCupQualifierOpponents[Random() & 3] */
             gMain.events = CAL_SUGOROKU_PRELIM;
             StartDialogue(701);
             gMain.subStep = START_DAY_STEP_EVENT_INTRO;
@@ -688,24 +691,16 @@ int Campaign_StartDay(void)
             PlayBGM(SONG_GRANDPA_CUP);
             return 0;
         } else if (events & CAL_SUGOROKU_MATCH) {
-            gMain.opponent = gGrandpaCupFinalOpponents[Random() % 5u];
+            gMain.opponent = ModEventChallenger();     /* mod: was gGrandpaCupFinalOpponents[Random() % 5u] */
             gMain.events = CAL_SUGOROKU_MATCH;
             StartDialogue(702);
             gMain.subStep = START_DAY_STEP_EVENT_INTRO;
             PlayBGM(SONG_GRANDPA_CUP);
             return 0;
         } else if (events & CAL_DUEL_CEREMONY) {
-            /* Duel Ceremony (text 500): any opponent of the tiers unlocked so far. */
-            int tiers = 1;
-
-            if (IsCampaignLevel2UnlockedInt())
-                tiers = 2;
-            if (IsCampaignLevel3UnlockedInt())
-                tiers++;
-            if (IsCampaignLevel4UnlockedInt())
-                tiers++;
-            tiers *= 5;
-            gMain.opponent = gTournamentOpponents[Random() % tiers];
+            /* Duel Ceremony (text 500). Mod: an unlocked format (ModEventChallenger); the original drew any
+             * opponent of the tiers unlocked so far from gTournamentOpponents. */
+            gMain.opponent = ModEventChallenger();
             StartDialogue(500);
             gMain.events = CAL_DUEL_CEREMONY;
             gMain.subStep = START_DAY_STEP_EVENT_INTRO;
@@ -731,7 +726,7 @@ int Campaign_StartDay(void)
     case START_DAY_STEP_RARE_HUNTER:
         if (!CB_BustupU32())
             return 0;
-        gMain.opponent = gRareHunterOpponents[Random() % 5];
+        gMain.opponent = ModEventChallenger();     /* mod: was gRareHunterOpponents[Random() % 5] */
         PlayBGM(SONG_RARE_HUNTER_CHALLENGE);
         gMain.opponentFixed = 1;
         return 1;

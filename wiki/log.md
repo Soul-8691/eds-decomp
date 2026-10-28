@@ -1620,3 +1620,14 @@ updated: 2026-09-29
 
 ## [2026-10-27] progress | CPU keeps strong monsters in Attack Position
 - src/added_effects.c AiShouldRetreatToDefense: retreats only when the monster has under 1700 ATK (RETREAT_KEEP_ATK) or the strongest face-up human monster has 1000+ more ATK (RETREAT_GAP). README.md updated.
+
+## [2026-10-28] progress | Calendar event challengers from the unlocked formats, with a deck recipe pick
+- src/mod_opponents.c ModEventChallenger; src/link_battle.c Campaign_StartDay uses it for every event challenger.
+- src/campaign_steps.c Campaign_SelectOpponent: the challenger keeps its event dialogue, then sub-step 3 runs CB_ChallengerRecipes.
+- src/mod_recipes.c CB_ChallengerRecipes / DeckRecipes_BanlistOverride; src/mod_banlists.c GetActiveBanlist; src/mod_banlist.c CountIllegalCards.
+- [[yugi-kaiba-opponent]], README.md. make setup re-extracted assets/; make and make release build.
+
+## [2026-10-28] progress | Event challengers: banlist switch, legal deck required
+- src/mod_recipes.c CB_ChallengerRecipes switches the Deck Edit banlist (SwitchToBanlist), SELECT opens Deck Edit (campaign_steps.c sub-step 4), B refused in release while the deck is illegal; the GetActiveBanlist override is gone.
+- src/mod_opponents.c ModEventChallenger: release picks only formats with a possible 40-card Main Deck (BanlistMainDeckCapacity, src/mod_banlists.c).
+- [[yugi-kaiba-opponent]], README.md.

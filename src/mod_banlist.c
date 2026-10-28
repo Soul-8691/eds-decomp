@@ -5,6 +5,7 @@
  *                         Fusion Deck, and if any card is illegal it opens the warning (and the duel does not start)
  *   BanlistView_Run       the warning: called first by OpponentSelect_HandleInput every frame; while it is open it
  *                         draws and handles input instead of the opponent select
+ *   CountIllegalCards     the same check for a calendar event's challenger (src/mod_recipes.c), without the warning
  * A card is illegal when it is not in the format's card pool or when the copies of it (all its card IDs, alternate
  * art included) exceed its limit: the format's Forbidden/Limited list, else 3 (FormatCardLimit, src/mod_banlists.c:
  * banlists/<name>_ban.json and card_pools/<name>.txt).
@@ -198,6 +199,17 @@ static void RenderView(void)
     AppendNum(p, v->count);
     DrawLine(1 + (BANLIST_VISIBLE + 1) * LINE_HEIGHT, line);
     TextCanvasToTiles((u16 *)OBJ_TILE(CANVAS_TILE), 0);
+}
+
+/* For a calendar event's challenger (CB_ChallengerRecipes, src/mod_recipes.c): the cards of the player's decks that
+ * banlist `format` does not allow (0 in make: no format check, as in BanlistBlocksDuel). */
+int CountIllegalCards(int format)
+{
+    gBanlistView.active = 0;
+#if !MOD_RELEASE
+    return 0;
+#endif
+    return CollectIllegalCards(format);
 }
 
 int BanlistBlocksDuel(u16 duelist)

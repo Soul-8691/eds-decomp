@@ -9,6 +9,8 @@
  *   BanlistsMenu_BuildLabel  the "Banlists" menu label (MainMenu_Init, tiles 0x280-0x2BF; BuildMenuLabel)
  *   CB_Banlists           the scene: the banlists, A puts one in use (refused when the player's cards could not make
  *                         a 40-card Main Deck under it: MainDeckCapacity), B goes back
+ *   BanlistMainDeckCapacity, SwitchToBanlist  the same check and switch for a calendar event's challenger
+ *                         (ModEventChallenger, CB_ChallengerRecipes)
  * The banlists come from banlists/<name>_ban.json (tools/banlist.py --all: build/include/banlists.h), in the order
  * of BANLISTS there; the game's original list is not one of them. The one in use is saved in gSaveData.banlist
  * (index + 1; 0, as in a new game or a save from before, is BANLIST_DEFAULT, Yugi-Kaiba). Putting another one in
@@ -235,6 +237,18 @@ static int SetActiveBanlist(int n)
     }
     SaveGame();
     return before - (gSaveData.deckSize + gSaveData.sideDeckSize + gSaveData.fusionDeckSize);
+}
+
+/* For a calendar event's challenger (src/mod_opponents.c, src/mod_recipes.c): the Main Deck the player's collection
+ * could make under banlist n (capped at BANLIST_MIN_MAIN_DECK), and the switch to n as the Banlists menu does it. */
+int BanlistMainDeckCapacity(int n)
+{
+    return MainDeckCapacity(n);
+}
+
+int SwitchToBanlist(int n)
+{
+    return SetActiveBanlist(n);
 }
 
 /* ---- The menu label ---- */

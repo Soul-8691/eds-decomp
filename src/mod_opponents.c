@@ -271,6 +271,42 @@ int ModUnlockedFormatCount(void)
     return k;
 }
 
+int Random(void);   /* util.h */
+int BanlistMainDeckCapacity(int banlist);   /* src/mod_banlists.c */
+
+#define CHALLENGER_MIN_MAIN_DECK    40
+
+/* The format opponent at `order` in the unlock order. */
+static u16 FormatDuelist(int order)
+{
+    u32 d;
+
+    for (d = 0; d < ARRAY_COUNT(sOpponents); d++) {
+        if (sOpponents[d].kind == KIND_FORMAT && sOpponents[d].order == order)
+            return d;
+    }
+    return DUELIST_TRISTAN;
+}
+
+/* A calendar event's challenger (Campaign_StartDay: Championship rounds, Duel Ceremony, Grandpa Cup, Rare Hunter
+ * days): one of the unlocked formats, at random, instead of the event's own table. In make release only a format
+ * whose banlist lets the player's collection make a 40-card Main Deck (BanlistMainDeckCapacity), so a legal deck can
+ * always be built for it; when none can, any unlocked one. */
+u16 ModEventChallenger(void)
+{
+    int count = ModUnlockedFormatCount();
+    u8 eligible[FORMAT_COUNT];
+    int k, n = 0;
+
+    for (k = 0; k < count; k++) {
+        if (!MOD_RELEASE || BanlistMainDeckCapacity(ModFormatBanlist(k)) >= CHALLENGER_MIN_MAIN_DECK)
+            eligible[n++] = k;
+    }
+    if (n == 0)
+        return FormatDuelist((u32)Random() % count);
+    return FormatDuelist(eligible[(u32)Random() % n]);
+}
+
 int ModSlotHidden(int page, int slot)
 {
     return Opponent(ModPageDuelist(page, slot))->kind == KIND_HIDDEN;

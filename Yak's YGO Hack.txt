@@ -28,3 +28,8 @@ Detail card prices in CARD_PRICES.md
 Don't allow switching banlist if only less than 40 cards are possible in your main deck with that banlist
 Fix BSD not counting FSR
 Make AI use new cards properly
+Events use random between unlocked formats
+Events allow use of saved decks
+Side/extra deck for starting decks and formats
+Make sure the duelists are unlocked in the duel score menu in debug mode
+Visible card icons
