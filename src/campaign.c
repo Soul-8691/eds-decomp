@@ -353,7 +353,7 @@ void CalcBattle(int attacker, u16 zeroAtk)
             piercing = 1;
         if (CARD_NUMBER(ATTACKER_SIDE.cardId) == 1341)     /* no EDS card */
             piercing = 1;
-        if (ModHasPiercing(ATTACKER_SIDE.cardId))   /* added cards: Airknight Parshath, Cyber End Dragon */
+        if (ModHasPiercing(ATTACKER_SIDE.cardId))   /* added cards: Airknight Parshath, Cyber End Dragon, Spear Dragon */
             piercing = 1;
         if (CountActiveZoneLinksFromCard(attacker, gBattleView.atkSlot, CARD_1540))
             piercing = 1;

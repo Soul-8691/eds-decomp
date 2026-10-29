@@ -1847,3 +1847,6 @@ updated: 2026-09-29
 ## [2026-10-29] ingest | Blast with Chain Goat Format rulings
 - New source page [[blast-with-chain-goat-rulings]] (Blast_with_Chain.txt in the repository root, a r/Goat_Format reply); [[index]].
 - Applied: src/effect_activation.c Damage Step list; src/duel_send_to_grave.c EquipCard's Gearfried branch calls BlastWithChainEquipDestroyed; src/duel_main.c trapsNegated skips CHAIN_KIND_OFF_FIELD links; src/added_effects.c BlastWithChainEquipDestroyed, AiChainBlastWithChain. [[added-cards]]. Built (make and make release); not tested in an emulator.
+
+## [2026-10-29] progress | Spear Dragon coded
+- src/added_effects.c ModHasPiercing case, ModEndAttack (Injection Fairy Lily's end-of-attack and Spear Dragon's change to Defense Position); src/battle_phase3.c BattleStage_EndAttack calls ModEndAttack. [[added-cards]]. Built (make and make release); not tested in an emulator.

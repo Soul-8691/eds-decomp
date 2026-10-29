@@ -4241,6 +4241,32 @@ int AiPlanForcedAttack(void)
 }
 #endif /* HAS_CARD_BERSERK_GORILLA */
 
+/* ---- The end of each attack ---------------------------------------------------------------------------------------
+ * BattleStage_EndAttack (battle_phase3.c) calls ModEndAttack first, once each attack (and its Damage Step) is over:
+ *   Injection Fairy Lily   its 3000 ATK go (InjectionFairyLilyEndAttack)
+ *   Spear Dragon           "If this card attacks, it is changed to Defense Position at the end of the Damage Step.":
+ *                          the attacker, still face up in Attack Position in its zone, turns to Defense Position
+ *                          (ChangeBattlePosition), as Goblin Attack Force does at the end of the Battle Phase. Its
+ *                          other effect, piercing damage, is ModHasPiercing's. */
+void ModEndAttack(int player)
+{
+#ifdef HAS_CARD_SPEAR_DRAGON
+    struct DuelZone *z = ZoneOf(player, gBattle.atkSlot);
+    u16 id = DUEL_CARD_ID(&z->card);
+#endif
+
+#ifdef HAS_CARD_INJECTION_FAIRY_LILY
+    InjectionFairyLilyEndAttack(player);
+#endif
+#ifdef HAS_CARD_SPEAR_DRAGON
+    if (id != 0 && id == (gBattle.side[player].cardId & CARD_ID_MASK) && z->isFaceUp && !z->isDefense
+        && CardNumberOfId(id) == CARD_SPEAR_DRAGON) {
+        ShowCardEffect(player, id);
+        ChangeBattlePosition(player, gBattle.atkSlot, 0, 0);
+    }
+#endif
+}
+
 /* ---- The added cards' effect-target lists -----------------------------------------------------------------------
  * CollectEffectTargets (effect_target_collect.c) calls ModCollectEffectTargets for a card number it has no case for;
  * its filters (Toon monsters without Toon World, planted cards, Prohibition) then run as for its own lists. The
@@ -4736,7 +4762,7 @@ int ModFindFusionMaterials(int player, u16 fusionNum, u16 *slots)
 }
 
 /* CalcBattle (campaign.c): 1 if the attacking card inflicts piercing battle damage by itself (Airknight Parshath,
- * Cyber End Dragon). */
+ * Cyber End Dragon, Spear Dragon). */
 int ModHasPiercing(u16 cardId)
 {
     switch (CardNumberOfId(cardId)) {
@@ -4745,6 +4771,9 @@ int ModHasPiercing(u16 cardId)
 #endif
 #ifdef HAS_CARD_CYBER_END_DRAGON
     case CARD_CYBER_END_DRAGON:
+#endif
+#ifdef HAS_CARD_SPEAR_DRAGON
+    case CARD_SPEAR_DRAGON:
 #endif
         return 1;
     }

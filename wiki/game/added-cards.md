@@ -909,6 +909,18 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
 - The other added cards keep their IDs; their card numbers after it move down one.
 - Checked in the source and the build; not tested in an emulator.
 
+### Spear Dragon (2026-10-29)
+- Effect Monster (Level 4, WIND Dragon, 1900/0). ID 1014. The fetched text: "During battle between this attacking card
+  and a Defense Position monster whose DEF is lower than the ATK of this card, inflict the difference as Battle Damage
+  to your opponent. If this card attacks, it is changed to Defense Position at the end of the Damage Step."
+- **Piercing.** A case in `ModHasPiercing` (added_effects.c), which `CalcBattle` (campaign.c) asks, beside Airknight
+  Parshath and Cyber End Dragon.
+- **Defense Position.** `BattleStage_EndAttack` (battle_phase3.c) now calls `ModEndAttack` once each attack is over,
+  in place of its `#ifdef` call of `InjectionFairyLilyEndAttack`, which `ModEndAttack` now makes; the original unit
+  doesn't grow. An attacking Spear Dragon still face up in Attack Position in its zone turns to Defense Position
+  (`ChangeBattlePosition`). That covers a direct attack too.
+- Checked in the source and the build; not tested in an emulator.
+
 ### Magic Drain (2026-10-29)
 - Counter Trap. ID 953. The fetched text: "When your opponent activates a Spell Card: They can discard 1 Spell Card to
   negate this card's effect, otherwise negate the activation of their Spell Card, and if you do, destroy it."

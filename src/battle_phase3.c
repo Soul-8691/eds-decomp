@@ -117,15 +117,15 @@ struct ZoneFlagsView {
  * defender zone (1 - player) holds a card linked by key 1243 and the player has a free monster zone, the
  * card moves over (MoveFieldCard). If key 1538 is present on either side it is announced and the stage
  * ends (return 1); otherwise the stage resets for the next attack (return 0). */
+void ModEndAttack(int player);  /* mod: src/added_effects.c */
+
 int BattleStage_EndAttack(int player)
 {
     int found = 0;
     int opponent, opponentSide;
     u8 *e;
     struct ZoneFlagsView *zn;
-#ifdef HAS_CARD_INJECTION_FAIRY_LILY
-    InjectionFairyLilyEndAttack(player);    /* added card: its 3000 ATK end with the battle */
-#endif
+    ModEndAttack(player);   /* added cards: Injection Fairy Lily, Spear Dragon (src/added_effects.c) */
     if (Duel_CheckWinInt() != 0)
         return 1;
     opponent = 1 - player;
