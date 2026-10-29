@@ -40,6 +40,9 @@
 #include "text_box.h"               /* gTextBox, TextBoxOpen, TextBoxSetMenu */
 #include "ai.h"                     /* gAiState */
 
+/* Mod (src/added_effects.c): Treeborn Frog's Standby Phase summon, after Sinister Serpent's step. */
+int TreebornFrogStandbyStep(int player);
+
 /* ---- ROM data used only here ---- */
 
 extern const u8 gStrEndMainPhaseMenu[];         /* "End your Main Phase?" with the 3-choice menu: Enter Battle Phase /
@@ -709,7 +712,15 @@ int DuelPhase_Standby(void)
         gDuel.phaseStep++;
         return 0;
     case STANDBY_STEP_SINISTER_SERPENT:
-        if (SinisterSerpentStandbyStep(player)) {
+        /* changed: then Treeborn Frog's (src/added_effects.c); gDuel.phaseCounter marks Sinister Serpent done */
+        if (gDuel.phaseCounter == 0) {
+            if (SinisterSerpentStandbyStep(player)) {
+                gDuel.phaseSubStep = 0;
+                gDuel.phaseCounter = 1;
+            }
+            return 0;
+        }
+        if (TreebornFrogStandbyStep(player)) {
             gDuel.phaseSubStep = 0;
             gDuel.phaseSubCounter = 0;
             gDuel.phaseCounter = 0;

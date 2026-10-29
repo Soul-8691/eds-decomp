@@ -4126,6 +4126,62 @@ int AiPlanForcedAttack(void)
 }
 #endif /* HAS_CARD_BERSERK_GORILLA */
 
+#ifdef HAS_CARD_TREEBORN_FROG
+/* ---- Treeborn Frog ------------------------------------------------------------------------------------------------
+ * "Once per turn, during your Standby Phase, if this card is in your Graveyard and you do not control "Treeborn
+ * Frog": You can Special Summon this card. You must control no Spell/Trap Cards to activate and to resolve this
+ * effect."
+ * DuelPhase_Standby (duel_phases.c) runs TreebornFrogStandbyStep right after Sinister Serpent's step, in the same way
+ * (on gDuel.phaseSubStep, not a chain link; once per turn, as the Standby Phase runs once):
+ *   step 0  done unless the player has one in the Graveyard, no face-up Treeborn Frog, no Spell/Trap card (the Field
+ *           Spell included), a free monster zone and CanSpecialSummon. The CPU says Yes; the human is asked.
+ *   step 1  on Yes, with still no Spell/Trap card: it leaves the Graveyard (RemoveGraveyardCardByNumber) and is
+ *           Special Summoned face up, the player choosing its position (QueueSpecialSummonChoosePosition). */
+static const u8 sStrTreebornFrogPrompt[] = "Special Summon Treeborn Frog from the Graveyard?";
+
+static int TreebornFrogCanSummon(int player)
+{
+    return CountGraveyardCardsByNumber(player, CARD_TREEBORN_FROG) > 0
+           && CountFaceUpMonstersByNumber(player, CARD_TREEBORN_FROG) == 0
+           && CountSpellTrapsFiltered(player, 0, 0, 1) == 0 && CountFreeMonsterZones(player) > 0
+           && CanSpecialSummon(player);
+}
+
+int TreebornFrogStandbyStep(int player)
+{
+    struct DuelCard card;
+
+    switch (gDuel.phaseSubStep) {
+    case 0:
+        if (!TreebornFrogCanSummon(player))
+            return 1;
+        if (player != 0) {
+            gTextBox.result = 1;            /* the CPU always summons it */
+        } else {
+            TextBoxOpen(TEXTBOX_POS(5, 2), TEXTBOX_SIZE(20, 7), TEXTBOX_FLAGS_DEFAULT, sStrTreebornFrogPrompt);
+            TextBoxSetMenu(TEXTBOX_MENU_YES_NO, NULL, NULL);
+        }
+        break;
+    case 1:
+        if (gTextBox.result != 0 && TreebornFrogCanSummon(player)
+            && RemoveGraveyardCardByNumber(player, CARD_TREEBORN_FROG, (u32 *)&card)) {
+            ShowCardEffect(player, gCardNumberToId[CARD_TREEBORN_FROG]);
+            QueueSpecialSummonChoosePosition(player, &card, 1, ZONE_STATUS_FROM_GRAVEYARD);
+        }
+        break;
+    default:
+        return 1;
+    }
+    gDuel.phaseSubStep++;
+    return 0;
+}
+#else
+int TreebornFrogStandbyStep(int player)
+{
+    return 1;
+}
+#endif /* HAS_CARD_TREEBORN_FROG */
+
 #ifdef HAS_CARD_CYBER_DRAGON
 /* ---- Cyber Dragon -------------------------------------------------------------------------------------------------
  * "If only your opponent controls a monster, you can Special Summon this card (from your hand)."

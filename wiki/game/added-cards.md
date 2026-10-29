@@ -556,6 +556,23 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
   - `AiShouldRetreatToDefense` never picks it.
 - Checked in the source and the build; not tested in an emulator.
 
+### Treeborn Frog (2026-10-29)
+- Effect Monster (Level 1, WATER Aqua, 100/100). Added as ID 1137 (number 1184), the last line of
+  config/new_cards.txt. The fetched text: "Once per turn, during your Standby Phase, if this card is in your
+  Graveyard and you do not control "Treeborn Frog": You can Special Summon this card. You must control no Spell/Trap
+  Cards to activate and to resolve this effect."
+- **Where it runs.** `DuelPhase_Standby`'s `STANDBY_STEP_SINISTER_SERPENT` (duel_phases.c) runs
+  `TreebornFrogStandbyStep` (added_effects.c) after Sinister Serpent's step; `gDuel.phaseCounter` marks Serpent done.
+  Like Serpent it is a step on `gDuel.phaseSubStep`, not a chain link, and it is once per turn because the Standby
+  Phase runs once.
+- **Conditions.** A Treeborn Frog in the Graveyard, no face-up Treeborn Frog, no Spell/Trap card
+  (`CountSpellTrapsFiltered(player, 0, 0, 1)`, the Field Spell included), a free monster zone and
+  `CanSpecialSummon`.
+- **Summon.** The human is asked (Yes/No); the CPU always says Yes. The conditions are checked again on resolve. Then
+  `RemoveGraveyardCardByNumber` and `QueueSpecialSummonChoosePosition` with `ZONE_STATUS_FROM_GRAVEYARD`.
+- **CPU limit.** The CPU doesn't hold back Spell/Trap cards to keep the Frog coming back.
+- Checked in the source and the build; not tested in an emulator.
+
 ### Cyber Dragon (2026-10-29)
 - Effect Monster (Level 5, LIGHT Machine, 2100/1600): "If only your opponent controls a monster, you can Special
   Summon this card (from your hand)."

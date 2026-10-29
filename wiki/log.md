@@ -1781,3 +1781,6 @@ updated: 2026-09-29
 
 ## [2026-10-29] progress | Cyber Dragon coded
 - src/added_effects.c CanCyberDragonSpecialSummon, AiSpecialSummonCyberDragon; src/summon_checks.c, src/card_command_menu.c, src/effect_hooks.c beside key 1350; src/ai_steps.c the CPU summons it first in AI_MAIN_SUMMON. [[added-cards]]. Built (make and make release); not tested in an emulator.
+
+## [2026-10-29] progress | Treeborn Frog coded
+- config/new_cards.txt: Treeborn Frog appended (ID 1137, number 1184). src/added_effects.c TreebornFrogStandbyStep; src/duel_phases.c runs it after Sinister Serpent's Standby step. [[added-cards]]. Built (make and make release); not tested in an emulator.
