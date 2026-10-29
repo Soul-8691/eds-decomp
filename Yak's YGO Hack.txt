@@ -1,10 +1,8 @@
 Historical YGO formats (up to Reaper)
-Goat format
 Banlists per format
 Multiple decks per format
 Yugi Muto/Joey/Kaiba/Pegasus/Marik/Yami Marik/Yami Bakura/Yami Yugi
 Up until Victory OCG format (05-09)
-Custom EDOPRO cards from historical formats
 Make sure all cards are early version effects in the ROM
 Duelist Point (DP) system
 Start out with 5000 DP
