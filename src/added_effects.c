@@ -3649,6 +3649,107 @@ static inline u16 CardNumberOfId(u16 id)
     return ((const u16 *)CARD_ID_TO_NUMBER_ADDR)[id & CARD_ID_MASK];
 }
 
+#ifdef HAS_CARD_BERSERK_GORILLA
+/* ---- Berserk Gorilla ----------------------------------------------------------------------------------------------
+ * "If this card is in Defense Position: Destroy it. This card must attack, if able."
+ *   Defense Position  ModDuelStateCheck (DuelMainStep, while nothing else is busy) destroys a face-up one in Defense
+ *                     Position (a face-down one's effect does not apply), except during an attack (battle stages
+ *                     2-11: a Set one flipped by the attack is destroyed once the attack is over).
+ *   Must attack       the human cannot end the Battle Phase (B in the attacker selection, card_menu_input.c) while
+ *                     one may still attack (BerserkGorillaBlocksBattleEnd), nor pick "Complete turn" in the Main
+ *                     Phase menu instead of entering it (BerserkGorillaBlocksTurnEnd, duel_phases.c); the CPU attacks with it when it has no
+ *                     better attack (AiPlanForcedAttack). AiShouldRetreatToDefense never turns it to Defense. */
+static const u8 sStrBerserkGorillaMustAttack[] = "Berserk Gorilla must attack.";
+
+/* The zone of a face-up Attack Position Berserk Gorilla of `player` that may still attack this Battle Phase (the
+ * attacker selection's attackableMask, not in attackedMask), else -1. */
+static int BerserkGorillaMustAttackZone(int player)
+{
+    struct DuelPlayer *p = &gDuelPlayers[player & 1];
+    int zone;
+
+    for (zone = ZONE_MONSTER_0; zone <= ZONE_MONSTER_4; zone++) {
+        struct DuelZone *z = ZoneOf(player, zone);
+        u16 id = DUEL_CARD_ID(&z->card);
+
+        if (id != 0 && z->isFaceUp && !z->isDefense && CardNumberOfId(id) == CARD_BERSERK_GORILLA
+            && (p->attackableMask >> zone & 1) && !(p->attackedMask >> zone & 1))
+            return zone;
+    }
+    return -1;
+}
+
+/* The human pressed B to end the Battle Phase: refused (1) while a Berserk Gorilla may still attack. */
+int BerserkGorillaBlocksBattleEnd(int player)
+{
+    if (BerserkGorillaMustAttackZone(player) < 0)
+        return 0;
+    PlaySE(SE_ERROR);
+    TextBoxOpen(TEXTBOX_POS(6, 2), TEXTBOX_SIZE(18, 5), TEXTBOX_FLAGS_DEFAULT, sStrBerserkGorillaMustAttack);
+    return 1;
+}
+
+/* The human chose "Complete turn" in the Main Phase menu (DuelPhase_Main) while the Battle Phase can be entered:
+ * refused (1) when a Berserk Gorilla could attack in it (the attackable mask is built as the Battle Phase builds it). */
+int BerserkGorillaBlocksTurnEnd(int player)
+{
+    BuildAttackableMask((void *)gDuelPlayers, player, 0, 0);
+    return BerserkGorillaBlocksBattleEnd(player);
+}
+
+/* The CPU has no attack it wants (AiPlanAttack): with a Berserk Gorilla that may still attack, plan its attack in
+ * gAiWork.bestAttack (a winning one if AiFindAttackTarget finds it, else on the human's weakest monster, or direct
+ * when the human has none) and return 1. */
+int AiPlanForcedAttack(void)
+{
+    struct AttackPlan plan;
+    int zone = BerserkGorillaMustAttackZone(AI_PLAYER), target;
+
+    if (zone < 0)
+        return 0;
+    MemClear16(&plan, sizeof(plan));
+    if (!AiFindAttackTarget(zone, &plan)) {
+        MemClear16(&plan, sizeof(plan));
+        target = CountMonsters(AI_HUMAN) > 0 ? AiFindWeakestMonster(AI_HUMAN, -1, 1, 1) : -1;
+        if (target < 0)
+            plan.isDirect = 1;
+        else
+            plan.targetZone = target;
+    }
+    plan.attackerZone = zone;
+    plan.isValid = 1;
+    MemCopy16(&gAiWork.bestAttack, &plan, sizeof(plan));
+    return 1;
+}
+#endif /* HAS_CARD_BERSERK_GORILLA */
+
+/* Checks of the added cards' continuous rules, once per idle frame of the duel (DuelMainStep). 1 if one queued
+ * something (the duel step waits for it). */
+int ModDuelStateCheck(void)
+{
+#ifdef HAS_CARD_BERSERK_GORILLA
+    int player, zone;
+
+    if (gDuel.phase == PHASE_BATTLE && gDuel.battleStage >= BATTLE_STAGE_SELECT_TARGET
+        && gDuel.battleStage <= BATTLE_STAGE_END_ATTACK)
+        return 0;
+    for (player = 0; player <= 1; player++) {
+        for (zone = ZONE_MONSTER_0; zone <= ZONE_MONSTER_4; zone++) {
+            struct DuelZone *z = ZoneOf(player, zone);
+            u16 id = DUEL_CARD_ID(&z->card);
+
+            if (id != 0 && z->isFaceUp && z->isDefense && CardNumberOfId(id) == CARD_BERSERK_GORILLA) {
+                ShowCardEffect(player, id);
+                DestroyFieldCard(player, zone, 1);
+                return 1;
+            }
+        }
+    }
+#endif
+    return 0;
+}
+
+
 static int CountFaceUpMonsters(int player)
 {
     int zone, n = 0;
@@ -3926,6 +4027,10 @@ int AiShouldRetreatToDefense(int zone)
 
     if (DUEL_CARD_ID(&z->card) == 0 || !z->isFaceUp || z->isDefense)
         return 0;
+#ifdef HAS_CARD_BERSERK_GORILLA
+    if (CardNumberOfId(DUEL_CARD_ID(&z->card)) == CARD_BERSERK_GORILLA)
+        return 0;       /* in Defense Position it would destroy itself */
+#endif
     atk = GetZoneCardAtk(1, zone);
     for (i = ZONE_MONSTER_0; i <= ZONE_MONSTER_4; i++) {
         struct DuelZone *h = ZoneOf(0, i);

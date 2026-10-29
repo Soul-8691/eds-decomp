@@ -434,6 +434,27 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
 - **CPU policy.** Activates it on a human monster of 1000+ ATK.
 - Checked in the source and the build; not tested in an emulator.
 
+### Berserk Gorilla (2026-10-28)
+- Effect Monster (Level 4, EARTH Beast, 2000/1000): "If this card is in Defense Position: Destroy it. This card must
+  attack, if able."
+- **Defense Position.** `ModDuelStateCheck` (added_effects.c), new hook in `DuelMainStep` (duel_main.c) right after
+  `UpdateSpellTrapNegation` while nothing else is busy: a face-up Berserk Gorilla in Defense Position is destroyed
+  (`ShowCardEffect`, `DestroyFieldCard`). A face-down one is left alone (its effect does not apply). Not during an
+  attack (Battle Phase stages `BATTLE_STAGE_SELECT_TARGET`-`BATTLE_STAGE_END_ATTACK`): a Set one flipped by an attack
+  goes once that attack is over.
+- **Must attack.** In the attacker selection (card_menu_input.c, battle step 1):
+  - human: B (the End Battle Phase / end turn menu) is refused with "Berserk Gorilla must attack." while a face-up
+    Attack Position one has its `attackableMask` bit and not its `attackedMask` bit
+    (`BerserkGorillaBlocksBattleEnd`). "Complete turn" in the Main Phase menu (shown when the Battle Phase can be
+    entered) is refused the same way (`BerserkGorillaBlocksTurnEnd`, duel_phases.c `DuelPhase_Main`; it builds the
+    attackable mask first, as the Battle Phase does): the player has to enter the Battle Phase. The plain "End your
+    turn?" (no Battle Phase possible, e.g. after it) still ends the turn.
+  - CPU: when `AiPlanAttack` finds no attack, `AiPlanForcedAttack` plans the Gorilla's: a winning one
+    (`AiFindAttackTarget`), else the human's weakest monster (`AiFindWeakestMonster`), else direct. The plan view
+    (`gAiWork` +0xC bits 4-6) is the one the battle step reads.
+  - `AiShouldRetreatToDefense` never picks it.
+- Checked in the source and the build; not tested in an emulator.
+
 ### Goblin Attack Force (2026-10-28)
 - Effect Monster (Level 4, EARTH Warrior, 2300/0): "If this card attacks, it is changed to Defense Position at the end
   of the Battle Phase, and its battle position cannot be changed until the end of your next turn."

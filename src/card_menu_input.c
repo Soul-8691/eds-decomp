@@ -192,6 +192,9 @@ void DuelCursor_Select(int player, int a, int b);
 void TextBoxOpen(u32 a, u32 b, u32 c, const void *d);
 void TextBoxSetMenu(u32 a, u32 b, u32 c);
 int AiPlanAttack(int a);
+/* Mod (src/added_effects.c): Berserk Gorilla must attack, if able. */
+int BerserkGorillaBlocksBattleEnd(int player);
+int AiPlanForcedAttack(void);
 void PhaseMenu_DrawCursor(void);
 void PhaseMenu_HandleInput(void);
 extern const u8 gStrEndBattlePhaseMenuExtra[]; /* 0x08085878 */
@@ -631,6 +634,10 @@ int BattleStage_SelectAttacker(int player)
             if (DuelScreen_HandleInput() != 0)
                 return 0;
             if (gMain.newKeys & B_BUTTON) {
+#ifdef HAS_CARD_BERSERK_GORILLA
+                if (BerserkGorillaBlocksBattleEnd(player))  /* added: it must attack first */
+                    return 0;
+#endif
                 if ((e->unk0C << 25) < 0)
                     TextBoxOpen(0x204, 0x616, 0xB, gStrEndBattlePhaseMenuExtra);
                 else
@@ -643,7 +650,11 @@ int BattleStage_SelectAttacker(int player)
             }
             return 0;
         }
-        if (AiPlanAttack(0)) {
+        if (AiPlanAttack(0)
+#ifdef HAS_CARD_BERSERK_GORILLA
+            || AiPlanForcedAttack()     /* added: Berserk Gorilla must attack, if able */
+#endif
+            ) {
             bh = &BTH;
             bh->atkSlot = gAiWork.attackerZone;
             DuelCmd_Push(DUEL_CMD_PLAYER | DUEL_CMD_POINT_AT_CARD, gDuelScreen.selPlayer, bh->atkSlot << 8, 0);

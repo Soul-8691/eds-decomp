@@ -575,6 +575,8 @@ u32 DuelPhase_ShowResult(void)
  * (gDuelPhaseTable[gDuelCtrl.phase]) runs; Duel_CheckWin forces DUEL_STEP_RESULT, and a handler that returns
  * 1 moves to the next step. Returns 1 when the duel is over (after the result was saved), else 0.
  */
+int ModDuelStateCheck(void);    /* mod: the added cards' continuous rules (src/added_effects.c) */
+
 u32 DuelMainStep(void)
 {
     u16 busy;
@@ -601,6 +603,8 @@ u32 DuelMainStep(void)
         }
         if (busy == 0 && !TextBoxUpdate16() && !DuelPrompt_Run16() && !SummonAction_Update() && !Chain_Update()) {
             UpdateSpellTrapNegation1(1);
+            if (ModDuelStateCheck())    /* added: e.g. Berserk Gorilla in Defense Position is destroyed */
+                goto end;
             if (!EventResponse_Update16()) {
                 switch (gDuelCtrl.phase) {
                 case DUEL_STEP_DRAW_PHASE:

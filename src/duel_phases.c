@@ -344,6 +344,10 @@ int PhaseMenu_HandleInput(void)
  * the turn was completed in the Battle Phase menu), ends the turn (return 1), or goes back to the field.
  * Returns 1 when the turn is over.
  */
+/* Mod (src/added_effects.c): with a Berserk Gorilla that could attack, the turn cannot be completed before the
+ * Battle Phase. */
+int BerserkGorillaBlocksTurnEnd(int player);
+
 int DuelPhase_Main(void)
 {
     switch (gDuel.phaseStep) {
@@ -372,8 +376,15 @@ int DuelPhase_Main(void)
         return 0;
     case MAIN_STEP_MENU_ANSWER:
         if (gTextBox.result != PHASE_MENU_NEXT_PHASE) {
-            if (gTextBox.result == PHASE_MENU_END_TURN)
+            if (gTextBox.result == PHASE_MENU_END_TURN) {
+#ifdef HAS_CARD_BERSERK_GORILLA
+                if (BerserkGorillaBlocksTurnEnd(0)) {     /* added: it must attack first */
+                    gDuel.phaseStep = MAIN_STEP_FIELD;
+                    return 0;
+                }
+#endif
                 return 1;
+            }
             gDuel.phaseStep = MAIN_STEP_FIELD;
         } else {
             /* Enter the Battle Phase: BattlePhase_Run starts at BATTLE_STAGE_START. */

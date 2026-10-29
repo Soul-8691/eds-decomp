@@ -1692,3 +1692,7 @@ updated: 2026-09-29
 
 ## [2026-10-28] progress | Goblin Attack Force coded (engine key 1344)
 - tools/newcards.py ENGINE_NUMBERS: Goblin Attack Force = 1344 (attack, end-of-Battle-Phase Defense Position and next-turn position lock in the engine). [[added-cards]]. Built; not tested in an emulator.
+
+## [2026-10-28] progress | Berserk Gorilla coded
+- src/added_effects.c ModDuelStateCheck (new DuelMainStep hook), BerserkGorillaBlocksBattleEnd, AiPlanForcedAttack, AiShouldRetreatToDefense guard; src/duel_main.c, src/card_menu_input.c hooks. [[added-cards]]. Built; not tested in an emulator.
+- Berserk Gorilla: "Complete turn" in the Main Phase menu is refused while it could attack (src/duel_phases.c DuelPhase_Main, BerserkGorillaBlocksTurnEnd).
