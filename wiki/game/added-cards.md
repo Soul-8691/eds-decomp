@@ -556,6 +556,20 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
   - `AiShouldRetreatToDefense` never picks it.
 - Checked in the source and the build; not tested in an emulator.
 
+### Book of Life (2026-10-29)
+- Normal Spell: "Target 1 Zombie monster in your GY and 1 monster in your opponent's GY; Special Summon the first
+  target, also banish the second target."
+- **Activation.** The prepare needs a free monster zone and both lists. A `CollectEffectTargets` case gives two
+  lists: `param` 0 for the player's Graveyard Zombies, 1 for the opponent's Graveyard monsters.
+- **Resolve.** The cards are picked when it resolves, because a chain link's targets hold one card word, not two. The
+  human picks each in the card list; the CPU takes the highest ATK of each.
+  1. The Zombie leaves the Graveyard (`DUEL_CMD_REMOVE_CARD_FROM_GRAVEYARD`) and is kept in `gChain.effectCard`.
+  2. The opponent's monster is banished (`BanishGraveyardCard`).
+  3. The Zombie is Special Summoned (`QueueSpecialSummonChoosePosition`).
+  The two parts are independent ("also"), so a list that is empty by then is skipped.
+- **CPU.** It plays the card through `AiPlayAddedCards` whenever the prepare allows it (`AiWantsSpell` default).
+- Checked in the source and the build; not tested in an emulator.
+
 ### Mage Power (2026-10-29)
 - Equip Spell: "The equipped monster gains 500 ATK/DEF for each Spell/Trap you control."
 - **The engine already has it** as effect key 1450 (no EDS card): `ENGINE_NUMBERS` gives the card that number (ID 929

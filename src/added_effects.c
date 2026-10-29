@@ -3649,6 +3649,99 @@ int EffectGolemSentryResolve(struct ChainEntry *link, struct ChainEntry *chained
 }
 #endif /* HAS_CARD_GOLEM_SENTRY */
 
+#ifdef HAS_CARD_BOOK_OF_LIFE
+/* ---- Book of Life -------------------------------------------------------------------------------------------------
+ * "Target 1 Zombie monster in your GY and 1 monster in your opponent's GY; Special Summon the first target, also
+ * banish the second target." (Normal Spell)
+ * The prepare needs a free monster zone and both lists (CollectEffectTargets: param 0 the player's Graveyard Zombies,
+ * param 1 the opponent's Graveyard monsters). The cards are chosen when it resolves (a link holds one card word, not
+ * two): the human picks each in the card list, the CPU takes the highest ATK of each. The Zombie leaves the Graveyard
+ * (kept in gChain.effectCard), the opponent's monster is banished, then the Zombie is Special Summoned. The two parts
+ * are independent ("also"): a list that is empty by then is skipped. */
+static const u8 sStrBookOfLifeZombie[] = "Select a Zombie monster to Special Summon.";
+static const u8 sStrBookOfLifeBanish[] = "Select a monster in your opponent's Graveyard to banish.";
+
+int CollectEffectTargetsInt(int player, int cardNumber, int param) asm("CollectEffectTargets");
+
+/* The list entry with the highest ATK (the CPU's pick). */
+static int BookOfLifeBestEntry(int count)
+{
+    int i, best = 0;
+    u32 bestAtk = 0;
+
+    for (i = 0; i < count; i++) {
+        u32 atk = CARD_STATS_ATK(gCardStats[gCardListView.cards[i] & CARD_ID_MASK]);
+
+        if (i == 0 || atk > bestAtk) {
+            best = i;
+            bestAtk = atk;
+        }
+    }
+    return best;
+}
+
+int EffectBookOfLifePrepare(struct ChainEntry *card, struct ChainEntry *chainLink, u16 fromHand)
+{
+    return CountFreeMonsterZones(card->player) > 0 && CollectEffectTargetsInt(card->player, CARD_BOOK_OF_LIFE, 0) > 0
+           && CollectEffectTargetsInt(card->player, CARD_BOOK_OF_LIFE, 1) > 0;
+}
+
+int EffectBookOfLifeResolve(struct ChainEntry *link, struct ChainEntry *chainedTo)
+{
+    int count;
+    u16 *picked;
+
+    if (link->negated)
+        return EFFECT_STEP_DONE;
+    switch (gChain.effectStep) {
+    case EFFECT_STEP_START:
+        gChain.effectCard.id = 0;
+        count = CollectEffectTargetsInt(link->player, CARD_BOOK_OF_LIFE, 0);
+        if (count == 0 || CountFreeMonsterZones(link->player) == 0)
+            return EFFECT_STEP_4;                   /* no Zombie to summon: only the banish */
+        if (link->player) {
+            gCardListView.cursorRow = 0;
+            gCardListView.top = BookOfLifeBestEntry(count);
+            return EFFECT_STEP_3;
+        }
+        TextBoxOpen(TEXTBOX_POS(5, 2), TEXTBOX_SIZE(20, 5), TEXTBOX_FLAGS_DEFAULT, sStrBookOfLifeZombie);
+        return EFFECT_STEP_2;
+    case EFFECT_STEP_2:
+        CardListView_Open(link->player, CARDLIST_AREA_EFFECT_TARGETS, CARD_BOOK_OF_LIFE, 0);
+        return EFFECT_STEP_3;
+    case EFFECT_STEP_3:
+        /* the Zombie leaves the Graveyard; it is summoned once the banish is done */
+        picked = (u16 *)&gCardListView.cards[gCardListView.cursorRow + gCardListView.top];
+        CopyDuelCard(&gChain.effectCard, (struct DuelCard *)picked);
+        DuelCmd_Push(link->player ? DUEL_CMD_PLAYER | DUEL_CMD_REMOVE_CARD_FROM_GRAVEYARD
+                                  : DUEL_CMD_REMOVE_CARD_FROM_GRAVEYARD, picked[0], picked[1], 0);
+        return EFFECT_STEP_4;
+    case EFFECT_STEP_4:
+        count = CollectEffectTargetsInt(link->player, CARD_BOOK_OF_LIFE, 1);
+        if (count == 0)
+            return EFFECT_STEP_7;
+        if (link->player) {
+            gCardListView.cursorRow = 0;
+            gCardListView.top = BookOfLifeBestEntry(count);
+            return EFFECT_STEP_6;
+        }
+        TextBoxOpen(TEXTBOX_POS(5, 2), TEXTBOX_SIZE(20, 5), TEXTBOX_FLAGS_DEFAULT, sStrBookOfLifeBanish);
+        return EFFECT_STEP_5;
+    case EFFECT_STEP_5:
+        CardListView_Open(link->player, CARDLIST_AREA_EFFECT_TARGETS, CARD_BOOK_OF_LIFE, 1);
+        return EFFECT_STEP_6;
+    case EFFECT_STEP_6:
+        BanishGraveyardCard(1 - link->player, (u16 *)&gCardListView.cards[gCardListView.cursorRow + gCardListView.top]);
+        return EFFECT_STEP_7;
+    case EFFECT_STEP_7:
+        if (gChain.effectCard.id != 0)
+            QueueSpecialSummonChoosePosition(link->player, &gChain.effectCard, 1, 0);
+        return EFFECT_STEP_END;
+    }
+    return EFFECT_STEP_DONE;
+}
+#endif /* HAS_CARD_BOOK_OF_LIFE */
+
 /* ---- Kycoo the Ghost Destroyer -------------------------------------------------------------------------------
  * Reuses effect key 1511's handlers (EffectBanishOpponentGraveMonstersResolve, battle damage triggers in
  * battle_phase2.c). While face up, it blocks graveyard banish effects the same way CARD_1511 does. */
@@ -4964,6 +5057,16 @@ const struct CardEffect gAddedCardEffects[] = {
         NULL,
         EffectSkilledDarkMagicianPrepare,
         EffectSkilledDarkMagicianChainA,
+        NULL,
+    },
+#endif
+#ifdef HAS_CARD_BOOK_OF_LIFE
+    {
+        CARD_BOOK_OF_LIFE, 0,
+        EffectBookOfLifeResolve,
+        NULL,
+        EffectBookOfLifePrepare,
+        NULL,
         NULL,
     },
 #endif

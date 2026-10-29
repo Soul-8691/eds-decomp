@@ -1727,3 +1727,6 @@ updated: 2026-09-29
 
 ## [2026-10-29] progress | Mage Power mapped to effect key 1450
 - tools/newcards.py ENGINE_NUMBERS Mage Power: 1450; src/card_stats.c key 1450 counts the Field Spell too; include/constants/cards.h regenerated. [[added-cards]]. Built (make and make release); not tested in an emulator.
+
+## [2026-10-29] progress | Book of Life coded
+- src/added_effects.c EffectBookOfLifePrepare / Resolve and its row; src/effect_target_collect.c two-list case (param 0 own Zombies, 1 opponent monsters). [[added-cards]]. Built (make and make release); not tested in an emulator.

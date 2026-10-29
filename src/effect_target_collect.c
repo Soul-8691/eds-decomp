@@ -768,6 +768,21 @@ u16 CollectEffectTargets(int player, u16 cardNumber, int param)
         }
         break;
 #endif
+#ifdef HAS_CARD_BOOK_OF_LIFE
+    case CARD_BOOK_OF_LIFE:
+    {
+        /* Added card: param 0 the player's Graveyard Zombies, param 1 the opponent's Graveyard monsters. */
+        u32 *word;
+        int side = param ? 1 - player : player;
+
+        for (i = 0; i < PLAYER(side).graveCount; i++) {
+            word = PILE_WORD(PLAYERS_GRAVEYARD, i, side);
+            if (param ? CardType(CARD_ID(*word)) <= CARD_TYPE_REPTILE : CardType(CARD_ID(*word)) == CARD_TYPE_ZOMBIE)
+                ADD_TARGET(*word, CARDLIST_SRC_GRAVEYARD);
+        }
+        break;
+    }
+#endif
 #ifdef HAS_CARD_SKILLED_DARK_MAGICIAN
     case CARD_SKILLED_DARK_MAGICIAN:
     {
