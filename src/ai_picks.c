@@ -263,6 +263,38 @@ no_pick:
     return -1;
 }
 
+/* Added: the CPU does not know the ATK or DEF of the human's face-down monsters. It assumes AI_FACE_DOWN_ATK_GUESS
+ * and AI_FACE_DOWN_DEF_GUESS for them: in AiEvalAttack, AiCanBeatMonster, AiFindAttackTarget's tie-break, the
+ * strongest/weakest-monster scores, AiIsOpponentThreatening (ai_deck.c) and the set-monster pick (ai_turn_steps.c).
+ * The ROM read the real stats (the DEF scaled by (opponent + 5) / 16 for duelists 1-10). */
+#define AI_FACE_DOWN_ATK_GUESS 1400
+#define AI_FACE_DOWN_DEF_GUESS 1400
+
+/* 1 if (player, zone) holds a face-down monster of the human's. */
+static int IsHiddenHumanMonster(int player, int zone)
+{
+    struct DuelZone *z;
+
+    if ((player & 1) != 0 || zone < 0 || zone >= MONSTER_ZONE_COUNT)
+        return 0;
+    z = ZONE_AT(0, zone);
+    return !CARD_EMPTY(z->card) && !z->isFaceUp;
+}
+
+int AiVisibleDef(int player, int zone)
+{
+    if (IsHiddenHumanMonster(player, zone))
+        return AI_FACE_DOWN_DEF_GUESS;
+    return (int)GetZoneCardDef(player, zone);
+}
+
+int AiVisibleAtk(int player, int zone)
+{
+    if (IsHiddenHumanMonster(player, zone))
+        return AI_FACE_DOWN_ATK_GUESS;
+    return (int)GetZoneCardAtk(player, zone);
+}
+
 /* Best (largest) score among the occupied monster zones of `player` other than `skipZone`; -1 if none.
  * score = ATK (useAtk) + DEF (useDef) from GetZoneCardStats. A face-down monster is evaluated with isFaceUp
  * set for the call, so the CPU reads its real stats (it looks through face-down cards). */
@@ -288,6 +320,11 @@ int AiGetStrongestMonsterScore(int player, int skipZone, u16 useAtk, u16 useDef)
             zone->isFaceUp = 1;
             GetZoneCardStats(player, i, &stats);
             zone->isFaceUp = 0;
+            if ((player & 1) == 0) {
+                /* changed: the CPU does not see them */
+                stats.atk = AI_FACE_DOWN_ATK_GUESS;
+                stats.def = AI_FACE_DOWN_DEF_GUESS;
+            }
         }
         if (useAtk)
             score += stats.atk;
@@ -329,6 +366,11 @@ int AiFindStrongestMonster(int player, int skipZone, u16 useAtk, u16 useDef)
             zone->isFaceUp = 1;
             GetZoneCardStats(player, i, &stats);
             zone->isFaceUp = 0;
+            if ((player & 1) == 0) {
+                /* changed: the CPU does not see them */
+                stats.atk = AI_FACE_DOWN_ATK_GUESS;
+                stats.def = AI_FACE_DOWN_DEF_GUESS;
+            }
         }
         if (useAtk)
             score += stats.atk;
@@ -369,6 +411,11 @@ int AiFindWeakestMonster(int player, int skipZone, u16 useAtk, u16 useDef)
             zone->isFaceUp = 1;
             GetZoneCardStats(player, i, &stats);
             zone->isFaceUp = 0;
+            if ((player & 1) == 0) {
+                /* changed: the CPU does not see them */
+                stats.atk = AI_FACE_DOWN_ATK_GUESS;
+                stats.def = AI_FACE_DOWN_DEF_GUESS;
+            }
         }
         if (useAtk)
             score += stats.atk;
@@ -609,13 +656,7 @@ void AiEvalAttack(int attackerZone, int targetZone, struct AttackPlan *plan)
     plan->damage = 0;
     target = ZONE_AT(0, targetZone);
     if (target->isDefense) {
-        targetValue = GetZoneCardDef(0, targetZone);
-        if (!target->isFaceUp) {
-            if (gMain.opponent <= DUELIST_MAI) {
-                targetValue *= gMain.opponent + 5;
-                targetValue /= 16;
-            }
-        }
+        targetValue = AiVisibleDef(0, targetZone);     /* changed: a guess when face down */
         if (targetValue < attackerAtk) {
             plan->wins = 1;
             plan->targetDestroyed = 1;
@@ -698,7 +739,7 @@ u16 AiFindAttackTarget(int attackerZone, struct AttackPlan *plan)
             MemCopy16(plan, &candidate, sizeof(struct AttackPlan));
         } else if (candidate.damage > plan->damage) {
             MemCopy16(plan, &candidate, sizeof(struct AttackPlan));
-        } else if ((int)GetZoneCardDef(0, candidate.targetZone) > (int)GetZoneCardDef(0, plan->targetZone)) {
+        } else if (AiVisibleDef(0, candidate.targetZone) > AiVisibleDef(0, plan->targetZone)) {
             MemCopy16(plan, &candidate, sizeof(struct AttackPlan));
         }
     }
@@ -721,13 +762,7 @@ u16 AiCanBeatMonster(int atk, int zone)
     int value;
 
     if (target->isDefense) {
-        value = GetZoneCardDef(0, zone);
-        if (!(target->isFaceUp)) {
-            if (gMain.opponent <= DUELIST_MAI) {
-                value *= gMain.opponent + 5;
-                value /= 16;
-            }
-        }
+        value = AiVisibleDef(0, zone);     /* changed: a guess when face down */
     } else {
         value = GetZoneCardAtk(0, zone);
     }

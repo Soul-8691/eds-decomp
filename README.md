@@ -113,6 +113,8 @@ next one.
     unless that monster has an effect that triggers on its summon (Zaborg, Mobius, Breaker, ...).
   - When it chooses Attack or Defense Position, it counts the ATK a monster will gain from an Equip Spell in its
     hand, Breaker's Spell Counter, and Blade Knight's bonus once its hand shrinks.
+  - It no longer knows the ATK or DEF of your face-down monsters: it assumes 1400 for both when deciding
+    whether to attack one, judging how threatening your field is, and choosing targets for its effects.
   - It uses Solemn Judgment (the original CPU never did) while it has 4000 LP or less. It negates your Normal and
     Special Summons, your Flip Summons of flip-effect monsters, and your Spells and Traps when it has no cheaper
     answer.

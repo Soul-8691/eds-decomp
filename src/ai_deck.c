@@ -492,6 +492,8 @@ int AiRiskSetCounter(u16 counterNo)
  * ROM bug kept: the "== -1" tests read the uninitialised locals a and b instead of the zone indexes x and y, so an
  * empty field passes zone -1 on to GetZoneCardAtk.
  */
+int AiVisibleAtk(int player, int zone);    /* mod: ai_picks.c */
+
 int AiIsOpponentThreatening(void)
 {
     int humanAtk;
@@ -500,12 +502,12 @@ int AiIsOpponentThreatening(void)
     int humanBest = AiFindStrongestMonster(0, -1, 1, 0);
     int cpuBest = AiFindStrongestMonster(1, -1, 1, 0);
 
-    humanAtk = humanAtk == -1 ? 0 : GetZoneCardAtk(0, humanBest);
+    humanAtk = humanAtk == -1 ? 0 : AiVisibleAtk(0, humanBest);     /* changed: a guess when face down */
     cpuAtk = cpuAtk == -1 ? 0 : GetZoneCardAtk(1, cpuBest);
     if (humanAtk < gDuelPlayers[1].lifePoints && humanAtk - cpuAtk < gDuelPlayers[1].lifePoints && humanAtk <= cpuAtk) {
         humanAtk = 0;
         for (zone = 0; zone <= 4; zone++)
-            humanAtk += GetZoneCardAtk(0, zone);
+            humanAtk += AiVisibleAtk(0, zone);
         if (humanAtk <= gDuelPlayers[1].lifePoints)
             return 0;
     }

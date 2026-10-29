@@ -1766,3 +1766,9 @@ updated: 2026-09-29
 
 ## [2026-10-29] progress | The CPU counts its coming ATK boosts for positions
 - src/added_effects.c AiBestAtkWithHandEquip, AiSimSummonBoosts, AiProjectedAtk (hand Equips tried in the sandbox, Breaker's counter, the hand size for Blade Knight / Muka Muka / Flash Assailant); src/ai_summon.c AiSimSummon calls it; src/ai_steps.c the position step and AiShouldRetreatToDefense use AiProjectedAtk. README.md. [[added-cards]]. Built (make and make release); not tested in an emulator.
+
+## [2026-10-29] progress | The CPU does not see face-down DEF
+- src/ai_picks.c AiVisibleDef (AI_FACE_DOWN_DEF_GUESS 1500) in AiEvalAttack, AiCanBeatMonster, the AiFindAttackTarget tie-break, and the three strongest/weakest score helpers. README.md. [[added-cards]]. Built (make and make release); not tested in an emulator.
+
+## [2026-10-29] progress | The CPU does not see face-down ATK either; guesses 1400
+- src/ai_picks.c AiVisibleAtk, AI_FACE_DOWN_ATK_GUESS / AI_FACE_DOWN_DEF_GUESS 1400, the score helpers hide ATK too; src/ai_deck.c AiIsOpponentThreatening and src/ai_turn_steps.c AiPickMonsterToSet use AiVisibleAtk. README.md. [[added-cards]]. Built (make and make release); not tested in an emulator.

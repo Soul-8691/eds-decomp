@@ -131,6 +131,8 @@ static inline u8 AiCardLevel(u16 id)
  *  4. the first monster of level 4 or less that passes them.
  * Some checks test idx > -1 and others idx >= 0, as the ROM does.
  */
+int AiVisibleAtk(int player, int zone);    /* mod: ai_picks.c */
+
 int AiPickMonsterToSet(void)
 {
     int idx;
@@ -282,7 +284,7 @@ int AiPickMonsterToSet(void)
     /* The human's strongest ATK, then the hand monster with the highest DEF that holds against it. */
     maxAtk = 0;
     for (i = 0; i <= 4; i++) {
-        int atk = GetZoneCardAtk(0, i);
+        int atk = AiVisibleAtk(0, i);  /* changed: a guess when face down (ai_picks.c) */
         if (maxAtk < atk)
             maxAtk = atk;
     }

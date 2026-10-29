@@ -556,6 +556,22 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
   - `AiShouldRetreatToDefense` never picks it.
 - Checked in the source and the build; not tested in an emulator.
 
+### The CPU doesn't see face-down ATK or DEF (2026-10-29)
+- **Before.** The CPU read the real stats of the human's face-down monsters (ai_picks.c unless noted):
+  - `AiEvalAttack` (the attack plan and `AiSimBattlePhase`) and `AiCanBeatMonster` scaled it by
+    (opponent + 5) / 16 for duelists 1-10, so later duelists saw it exactly;
+  - `AiFindAttackTarget`'s tie-break used it as is;
+  - `AiGetStrongestMonsterScore`, `AiFindStrongestMonster` and `AiFindWeakestMonster` flip a face-down monster up to
+    read its stats; they pick effect targets;
+  - `AiIsOpponentThreatening` (ai_deck.c) read the ATK of the human's strongest monster and the ATK total of all of
+    them;
+  - `AiPickMonsterToSet` (ai_turn_steps.c) read the human's strongest ATK.
+- **Now.** `AiVisibleAtk` and `AiVisibleDef` (ai_picks.c) give `AI_FACE_DOWN_ATK_GUESS` and
+  `AI_FACE_DOWN_DEF_GUESS` (both 1400) for a face-down human monster, in place of the DEF scaling. The three score
+  helpers replace `stats.atk` and `stats.def` with the guesses for player 0. The Skull Lair, Brain Control and
+  flip-target picks consider only face-up monsters, so they needed no change.
+- Checked in the source and the build; not tested in an emulator.
+
 ### The CPU counts its coming ATK boosts for positions (2026-10-29)
 - **Before.** The CPU's position choices (the summon simulations of `AiChooseSummonNoTribute` /
   `AiChooseSummonWithTribute`, the position-change step of ai_steps.c, `AiShouldRetreatToDefense`) used the monster's
