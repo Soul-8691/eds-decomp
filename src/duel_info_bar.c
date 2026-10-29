@@ -250,7 +250,7 @@ void DuelScreen_DrawCursorInfo(void)
     TextCellsClear();
     switch (area) {
     case DUEL_AREA_MONSTER:
-        if (player != 0)
+        if (player != 0 && MOD_RELEASE)     /* changed: make (testing) shows the opponent's face-down cards */
             isVisible = DUEL_ZONE(player & 1, index)->isFaceUp;
         else
             isVisible = 1;
@@ -259,7 +259,7 @@ void DuelScreen_DrawCursorInfo(void)
         break;
     case DUEL_AREA_SPELL_TRAP:
         /* selIndex counts within the spell/trap row (zone 5 + selIndex) */
-        if (player != 0)
+        if (player != 0 && MOD_RELEASE)     /* changed: as above */
             isVisible = SPELL_TRAP_ZONE(player & 1, index)->isFaceUp;
         else
             isVisible = 1;
@@ -267,7 +267,7 @@ void DuelScreen_DrawCursorInfo(void)
             DuelInfo_DrawSpellZone(cardId, 1, player, area + index);
         break;
     case DUEL_AREA_FIELD:
-        if (player != 0)
+        if (player != 0 && MOD_RELEASE)     /* changed: as above */
             isVisible = FIELD_ZONE(player & 1)->isFaceUp;
         else
             isVisible = 1;

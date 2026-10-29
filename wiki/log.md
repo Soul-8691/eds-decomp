@@ -1705,3 +1705,7 @@ updated: 2026-09-29
 
 ## [2026-10-28] progress | CPU chains summon traps to summon triggers
 - src/added_effects.c AiChainSummonTriggerResponse; src/ai_summon.c AiTryChainResponse asks it first. Trap Hole etc. now answer Mobius's (and other) summon triggers. [[added-cards]]. Built; not tested in an emulator.
+
+## [2026-10-28] progress | Debug build shows the opponent's hand
+- src/duel_field_screen.c DrawHandCards: revealed for both hands when !MOD_RELEASE. README.md.
+- Debug build: IsHandRevealed returns 1 (src/duel_piles.c; hand drawn face up, info bar, Card View); the info bar (src/duel_info_bar.c) and the card menu (src/card_menu_input.c) also cover the opponent's face-down field cards. README.md.
