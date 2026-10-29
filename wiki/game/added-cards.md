@@ -896,6 +896,30 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
 - The other added cards keep their IDs; their card numbers after it move down one.
 - Checked in the source and the build; not tested in an emulator.
 
+### Cyber Twin Dragon (2026-10-29)
+- Fusion Monster (Level 8, LIGHT Machine, 2800/2100). ID 1157 (number 1601). The fetched text: "Cyber Dragon" +
+  "Cyber Dragon". "A Fusion Summon of this card can only be done with the above Fusion Materials. This card can make
+  a second attack during each Battle Phase."
+- **The recipe.** The ROM's recipe tables (`gFusionRecipes2` / `gFusionRecipes3`) are fixed, so the added cards'
+  2-material recipes are `sModFusionRecipes2` in added_effects.c, which take no Fusion substitute. effect_fusion.c
+  asks for them after the ROM's tables:
+  - `FindFusionMaterials` ends in `ModFindFusionMaterials`;
+  - `IsMaterialOfFusion` asks `ModIsMaterialOfFusion` for an added result (`IsModFusionResult`) before the
+    substitute fallback;
+  - the Polymerization resolve gives an added result a material count of 2;
+  - the human's material picks refuse a substitute for an added result.
+  The CPU's Polymerization list (`CollectEffectTargets`, `FindFusionMaterials`) includes it.
+- **The second attack.** It works as key 1336's, a case beside `CARD_1336` in three places:
+  - `BattleStage_DamageCalc` (battle_phase1.c): the first attack uses up `effectUnused` instead of marking the
+    monster as having attacked;
+  - `Battle_CheckReplay` (card_menu_input.c): an attack that can't go on uses up the extra attack first;
+  - `DuelCmd_PrepareBattlePhase` (duel_stat_queries.c): `effectUnused` is set again each Battle Phase.
+- > [!warning] Code space. The game's original units must keep their `.text` below `.rodata` at 0x08080A20. The
+  > first try, with the recipe loops in effect_fusion.c, overflowed it by 0x40 bytes in the release build, so the
+  > loops moved to added_effects.c (`@farcode`). After that the release `.text` ends at 0x080809E0: 0x40 bytes
+  > left. New hooks in the original units should call into added_effects.c and stay small.
+- Checked in the source and the build; not tested in an emulator.
+
 ### Masked Dragon (2026-10-29)
 - Effect Monster (Level 3, FIRE Dragon, 1400/1100). ID 1147 (number 1195). The fetched text: "When this card is
   destroyed by battle and sent to the Graveyard: You can Special Summon 1 Dragon-Type monster with 1500 or less ATK

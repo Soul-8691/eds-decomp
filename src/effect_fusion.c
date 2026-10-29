@@ -110,6 +110,13 @@ extern const struct FusionRecipe gFusionRecipes3[];     /* 0x0819A970: 3 recipes
 #define FUSION_END              0x3E7       /* result and materials of a table's terminator recipe */
 #define FUSION_END_WORD         0x03E703E7  /* result and materials[0] of the terminator, read as one word */
 
+/* Mod (src/added_effects.c): the added cards' 2-material recipes, after gFusionRecipes2. A Fusion substitute cannot
+ * stand in for their materials ("A Fusion Summon of this card can only be done with the above Fusion Materials").
+ * The loops live there: this unit's code must stay inside the original .text. */
+int IsModFusionResult(u16 fusionNum);
+int ModIsMaterialOfFusion(u16 fusionNum, u16 materialNum);
+int ModFindFusionMaterials(int player, u16 fusionNum, u16 *slots);
+
 /* Prompts of this unit (ROM; the @n colour codes are left out here). */
 extern const u8 gStrSummonFusionMaterialsQuestion[];        /* 0x08083AD0 "Do you wish to Special Summon a Fusion
                                                              * material monster to the Field?" */
@@ -451,6 +458,8 @@ int IsMaterialOfFusion(int fusionId, int materialId)
                 || recipe->materials[2] == materialNum))
             return 1;
     }
+    if (IsModFusionResult(fusionNum))   /* added: the added cards' recipes, which take no substitute */
+        return ModIsMaterialOfFusion(fusionNum, materialNum);
     if (IsFusionSubstitute(materialNum) != 0)
         return 1;
     return 0;
@@ -646,7 +655,7 @@ int FindFusionMaterials(int player, u16 fusionId, u16 *slots)
             return 1;
         }
     }
-    return 0;
+    return ModFindFusionMaterials(player, fusionNum, slots);    /* added: the added cards' recipes */
 }
 #undef SLOT_IS_SUBSTITUTE
 
@@ -789,6 +798,10 @@ int EffectPolymerizationResolve(struct ChainEntry *link, int chainedTo)
         case CARD_FLAME_SWORDSMAN_ALT: case CARD_THOUSAND_DRAGON_ALT:
             gChain.fusionMaterialCount = 2;
             break;
+        default:
+            if (IsModFusionResult(CARD_NUMBER(gChain.fusionResult)))   /* added: the added cards' recipes */
+                gChain.fusionMaterialCount = 2;
+            break;
         case CARD_BLUE_EYES_ULTIMATE_DRAGON: case CARD_AQUA_DRAGON: case CARD_MAN_EATING_BLACK_SHARK:
             gChain.fusionMaterialCount = 3;
             break;
@@ -853,6 +866,8 @@ int EffectPolymerizationResolve(struct ChainEntry *link, int chainedTo)
                 valid = 0;
                 if (substitutesUsed == 0)
                     valid = 1;
+                if (IsModFusionResult(CARD_NUMBER(gChain.fusionResult)))
+                    valid = (u16)IsPendingFusionMaterial(pickedId) != 0;     /* added: no substitute */
             }
         }
         if (valid == 0 || confirmed == 0)

@@ -1814,3 +1814,6 @@ updated: 2026-09-29
 
 ## [2026-10-29] progress | The cheapest card costs 20 DP
 - tools/cardprices.py MIN_PRICE 20 (was 1) for the usage-stat prices; src/mod_dp.c POOL_CARD_COST 20 (was 5); CARD_PRICES.md regenerated. [[duelist-points]]. Built (make and make release).
+
+## [2026-10-29] progress | Cyber Twin Dragon coded
+- src/added_effects.c sModFusionRecipes2 (Cyber Dragon + Cyber Dragon, no substitute), ModFindFusionMaterials, ModIsMaterialOfFusion, IsModFusionResult; src/effect_fusion.c calls them (and the material count, the human's picks); src/battle_phase1.c, src/card_menu_input.c, src/duel_stat_queries.c: the second attack as key 1336. Release .text overflowed .rodata (0x08080A20) by 0x40 until the recipe loops moved to added_effects.c; 0x40 bytes left now. [[added-cards]]. Built (make and make release); not tested in an emulator.

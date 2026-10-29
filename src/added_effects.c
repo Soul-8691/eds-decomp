@@ -4236,6 +4236,68 @@ int AiPlanForcedAttack(void)
 }
 #endif /* HAS_CARD_BERSERK_GORILLA */
 
+/* ---- Added Fusion recipes -----------------------------------------------------------------------------------------
+ * The added cards' 2-material recipes (effect_fusion.c scans them after the ROM's gFusionRecipes2: FindFusionMaterials,
+ * IsMaterialOfFusion, and the Polymerization material count). They take no Fusion substitute. */
+static const struct FusionRecipe sModFusionRecipes2[] = {
+#if defined(HAS_CARD_CYBER_TWIN_DRAGON) && defined(HAS_CARD_CYBER_DRAGON)
+    { CARD_CYBER_TWIN_DRAGON, { CARD_CYBER_DRAGON, CARD_CYBER_DRAGON, 0 } },  /* Cyber Twin Dragon */
+#endif
+    { 0, { 0, 0, 0 } },
+};
+
+/* The added recipe whose result is Fusion monster number `fusionNum`, or NULL. */
+static const struct FusionRecipe *ModFusionRecipeOf(u16 fusionNum)
+{
+    u32 i;
+
+    for (i = 0; i + 1 < ARRAY_COUNT(sModFusionRecipes2); i++) {
+        if (sModFusionRecipes2[i].result == fusionNum)
+            return &sModFusionRecipes2[i];
+    }
+    return NULL;
+}
+
+/* IsMaterialOfFusion for an added recipe: 1 if `materialNum` is one of its materials (no substitute). */
+int ModIsMaterialOfFusion(u16 fusionNum, u16 materialNum)
+{
+    const struct FusionRecipe *recipe = ModFusionRecipeOf(fusionNum);
+
+    return recipe != NULL && (recipe->materials[0] == materialNum || recipe->materials[1] == materialNum);
+}
+
+/* FindFusionMaterials for an added recipe, after the ROM's tables: the player's two materials (field, then hand,
+ * as FindFusionMaterialSlot looks), neither a substitute, and room for the Fusion monster. 1 if found. */
+int ModFindFusionMaterials(int player, u16 fusionNum, u16 *slots)
+{
+    const struct FusionRecipe *recipe = ModFusionRecipeOf(fusionNum);
+
+    if (recipe == NULL)
+        return 0;
+    slots[1] = FindFusionMaterialSlot(player, recipe->materials[0], FUSION_SLOT_NONE, FUSION_SLOT_NONE);
+    slots[0] = FindFusionMaterialSlot(player, recipe->materials[1], slots[1], FUSION_SLOT_NONE);
+    if (slots[0] == FUSION_SLOT_NONE || slots[1] == FUSION_SLOT_NONE)
+        return 0;
+    if (IsFusionSubstitute(CardNumberOfId(GetFusionSlotCardId(player, slots[0])))
+        || IsFusionSubstitute(CardNumberOfId(GetFusionSlotCardId(player, slots[1]))))
+        return 0;
+    if ((slots[0] & FUSION_SLOT_HAND) && (slots[1] & FUSION_SLOT_HAND) && CountMonsters(player) == 5)
+        return 0;
+    return 1;
+}
+
+/* 1 if Fusion monster number `fusionNum` has an added recipe. */
+int IsModFusionResult(u16 fusionNum)
+{
+    u32 i;
+
+    for (i = 0; i + 1 < ARRAY_COUNT(sModFusionRecipes2); i++) {
+        if (sModFusionRecipes2[i].result == fusionNum)
+            return 1;
+    }
+    return 0;
+}
+
 /* ---- The CPU's recruiters summon another copy ---------------------------------------------------------------------
  * EffectSpecialSummonFromDeckResolve (effect_resolve6.c: Mystic Tomato, Giant Rat, UFO Turtle, Shining Fairy, Mother
  * Grizzly, Flying Kamakiri #1, and the added Pyramid Turtle, Apprentice Magician, Hydrogeddon) asks this before

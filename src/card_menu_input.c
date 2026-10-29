@@ -565,7 +565,13 @@ int Battle_CheckReplay(int player)
     if (CanMonsterAttack(player, BTH.atkSlot, 0) == 0) {
         int done = 0;
         int pl = player & 1;
-        if (((const u16 *)CARD_ID_TO_NUMBER_ADDR)[(ZONE_SNAP(pl, BTH.atkSlot).card << 21) >> 21] == CARD_1336) {
+        u16 number = ((const u16 *)CARD_ID_TO_NUMBER_ADDR)[(ZONE_SNAP(pl, BTH.atkSlot).card << 21) >> 21];
+
+        if (number == CARD_1336
+#ifdef HAS_CARD_CYBER_TWIN_DRAGON
+            || number == CARD_CYBER_TWIN_DRAGON     /* added card: its second attack, as key 1336 */
+#endif
+            ) {
             if (ZONE_SNAP(pl, BTH.atkSlot).flag7_5) {
                 ZONE_SNAP(pl, BTH.atkSlot).flag7_5 = 0;
                 done = 1;

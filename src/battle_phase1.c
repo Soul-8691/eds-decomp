@@ -620,6 +620,9 @@ int BattleStage_DamageCalc(int player)
         int opponent;
 
         switch (CardNumberWide(DUEL_CARD_ID(AttackerZone(player)))) {
+#ifdef HAS_CARD_CYBER_TWIN_DRAGON
+        case CARD_CYBER_TWIN_DRAGON:    /* added card: a second attack, as key 1336 */
+#endif
         case CARD_1336:
             /* Its extra attack: while it is unused, attacking uses it up instead of marking the monster. */
             if (ATTACKER_FLAGS7(player) & 0x20) {

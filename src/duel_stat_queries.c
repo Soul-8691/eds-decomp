@@ -522,6 +522,9 @@ void DuelCmd_PrepareBattlePhase(void)
         sameZone = (struct DuelZone *)(zoneOffset + playerOffset + (u32)zones);
         /* A one-case switch keeps the 1336 constant inside the loop (an == compare gets hoisted). */
         switch (CARD_NUMBER(ZONE_CARD_ID(sameZone))) {
+#ifdef HAS_CARD_CYBER_TWIN_DRAGON
+        case CARD_CYBER_TWIN_DRAGON:    /* added card: its second attack, as key 1336 */
+#endif
         case CARD_1336:
             sameZone->effectUnused = 1;
         }
