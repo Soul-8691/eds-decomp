@@ -1125,6 +1125,9 @@ void CardMenu_SummonMonster(u16 faceUp, u16 special)
             CM.step = SUMMON_STEP_BLS_PROMPT;
             break;
 #endif
+#ifdef HAS_CARD_CYBER_DRAGON
+        case CARD_CYBER_DRAGON:     /* added card: the Special Summon commands as key 1350's */
+#endif
         case CARD_1350:
             switch (CM.command) {
             case CARDMENU_CMD_SP_SUMMON:

@@ -34,6 +34,9 @@
 #include "effect_handlers.h"        /* EffectPolymerizationResolve */
 #include "summon.h"                 /* QueueFlipSummon, CanNormalSummon, CanSpecialSummon, CanSummonFromHand */
 
+/* Mod (src/added_effects.c): Cyber Dragon's Special Summon condition. */
+int CanCyberDragonSpecialSummon(int player);
+
 /* ROM data used only here. */
 /* Matching: card IDs read through their alias symbols (= &gCardNumberToId[number], see card_data.h). */
 extern const u16 gCardNumberToId_Graverobber;                 /* CARD_GRAVEROBBER: Graverobber's card ID */
@@ -360,6 +363,14 @@ int CardMenu_GetHandCardCommands(u16 id, int player)
                     case CARD_1520:
                         flags = (u16)(flags | CARDMENU_MASK_SP_SUMMON | CARDMENU_MASK_SP_SUMMON_SET);
                         break;
+#ifdef HAS_CARD_CYBER_DRAGON
+                    case CARD_CYBER_DRAGON:     /* added card: only the opponent controls a monster */
+                        if (CanCyberDragonSpecialSummon(player))
+                            flags = (u16)(flags | CARDMENU_MASK_SP_SUMMON | CARDMENU_MASK_SP_SUMMON_SET);
+                        if (CountTributableMonsters(player, -1) == 0)
+                            flags &= (u16)~(CARDMENU_MASK_SET | CARDMENU_MASK_SUMMON);
+                        break;
+#endif
                     case CARD_1350:
                         if (CountMonsters(0) + 1 < CountMonsters(1) && CountFreeMonsterZones(0) > 0)
                             flags = (u16)(flags | CARDMENU_MASK_SP_SUMMON | CARDMENU_MASK_SP_SUMMON_SET);

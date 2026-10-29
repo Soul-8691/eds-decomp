@@ -387,6 +387,8 @@ int CanPayBanishSummonCost(int player, u16 cardId)
  *   any other monster by level: 1-4 needs a free monster zone, 5-6 a tributable monster, 7 and up two.
  * The result is a zero-extended halfword as the ROM callers consume it.
  */
+int CanCyberDragonSpecialSummon(int player);   /* mod: src/added_effects.c */
+
 int CanSummonFromHand(int player, u16 cardId)
 {
     u16 number;
@@ -449,6 +451,15 @@ int CanSummonFromHand(int player, u16 cardId)
         if (CountTributableMonsters(player, -1) > 1)
             return 1;
         return 0;
+#ifdef HAS_CARD_CYBER_DRAGON
+    case CARD_CYBER_DRAGON:
+        /* added card: Special Summoned from the hand while only the opponent controls a monster (src/added_effects.c) */
+        if (CanCyberDragonSpecialSummon(player))
+            return 1;
+        if (CountTributableMonsters(player, -1) > 0)
+            return 1;
+        return 0;
+#endif
     case CARD_1350:
         if (CountMonsters(player) + 1 < CountMonsters(1 - player) && CountFreeMonsterZones(player) > 0)
             return 1;

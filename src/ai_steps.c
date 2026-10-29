@@ -161,6 +161,7 @@ static inline u32 CardCost(u32 id)
  * The phase-10 tails assign the same state pointer after each call so the compiler shares the
  * original call/store tail without changing its reads. */
 int AiUseThunderDragon(void);   /* mod: src/added_effects.c */
+int AiSpecialSummonCyberDragon(void);
 int AiPickTributeFor(u16 id, int excludeZone);     /* mod: src/added_effects.c */
 
 int AiStepMainPhase(void)
@@ -181,6 +182,8 @@ int AiStepMainPhase(void)
     switch (gAiState.phase) {
     case AI_MAIN_SUMMON:
         if (AiUseThunderDragon())   /* added: discard Thunder Dragon to search one (src/added_effects.c) */
+            return 0;
+        if (AiSpecialSummonCyberDragon())   /* added: before a Normal Summon gives the CPU a monster */
             return 0;
         if ((gDuelPlayers.flags1_8 & 0x10) != 0 || CanNormalSummon(1) == 0) {
             if (gAiState.step <= 3) {

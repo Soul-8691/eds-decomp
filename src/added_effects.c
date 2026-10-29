@@ -4126,6 +4126,42 @@ int AiPlanForcedAttack(void)
 }
 #endif /* HAS_CARD_BERSERK_GORILLA */
 
+#ifdef HAS_CARD_CYBER_DRAGON
+/* ---- Cyber Dragon -------------------------------------------------------------------------------------------------
+ * "If only your opponent controls a monster, you can Special Summon this card (from your hand)."
+ * Like key 1350 (the original's Fiend Megacyber rule): CanSummonFromHand (summon_checks.c) allows it, the hand card
+ * menu (card_command_menu.c) adds the Special Summon commands, and the summon steps (effect_hooks.c) queue
+ * QueueSpecialSummonFromHand for them (no Tribute). It is still a Level 5 Normal Summon with one Tribute. The CPU
+ * Special Summons it first thing in its Main Phase (AiStepMainPhase calls AiSpecialSummonCyberDragon before it picks
+ * a Normal Summon), in Attack Position. */
+int CanCyberDragonSpecialSummon(int player)
+{
+    return CountMonsters(player) == 0 && CountMonsters(1 - player) > 0 && CountFreeMonsterZones(player) > 0
+           && CanSpecialSummon(player);
+}
+
+int AiSpecialSummonCyberDragon(void)
+{
+    struct DuelPlayer *p = &gDuelPlayers[AI_PLAYER];
+    int i;
+
+    if (!CanCyberDragonSpecialSummon(AI_PLAYER))
+        return 0;
+    for (i = 0; i < p->handCount; i++) {
+        if (CardNumberOfId(DUEL_CARD_ID(&p->hand[i])) == CARD_CYBER_DRAGON) {
+            QueueSpecialSummonFromHand(AI_PLAYER, i, FindFreeMonsterZone(AI_PLAYER), 0, 1);
+            return 1;
+        }
+    }
+    return 0;
+}
+#else
+int AiSpecialSummonCyberDragon(void)
+{
+    return 0;
+}
+#endif /* HAS_CARD_CYBER_DRAGON */
+
 /* ---- The CPU counts the ATK boosts it will get when it judges positions -------------------------------------------
  * When the CPU chooses Attack or Defense (the summon simulations, the position-change step and AiShouldRetreatToDefense)
  * it judges a monster by the ATK it will have once the boosts it plays are on it:

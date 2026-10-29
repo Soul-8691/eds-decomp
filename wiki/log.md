@@ -1778,3 +1778,6 @@ updated: 2026-09-29
 
 ## [2026-10-29] progress | Every Campaign duel a best-of-3 match
 - src/campaign_steps.c Campaign_ShowDuelResult promotes every duel to DUEL_FORMAT_MATCH, Campaign_SetupDuel saves the Deck and Side Deck on the first duel, the decided match restores them; src/mod_decks.c PickOpponentDeckOverride / GetOpponentDeckOverride keeps the CPU's deck for the match, ModMatchSavePlayerDeck / ModMatchRestorePlayerDeck; symbols.ld gModMatch 0x0202D400. New page [[best-of-3-matches]]; [[index]]; README.md. Built (make and make release); not tested in an emulator.
+
+## [2026-10-29] progress | Cyber Dragon coded
+- src/added_effects.c CanCyberDragonSpecialSummon, AiSpecialSummonCyberDragon; src/summon_checks.c, src/card_command_menu.c, src/effect_hooks.c beside key 1350; src/ai_steps.c the CPU summons it first in AI_MAIN_SUMMON. [[added-cards]]. Built (make and make release); not tested in an emulator.

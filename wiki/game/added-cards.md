@@ -556,6 +556,22 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
   - `AiShouldRetreatToDefense` never picks it.
 - Checked in the source and the build; not tested in an emulator.
 
+### Cyber Dragon (2026-10-29)
+- Effect Monster (Level 5, LIGHT Machine, 2100/1600): "If only your opponent controls a monster, you can Special
+  Summon this card (from your hand)."
+- **Like key 1350.** It works like key 1350, the original's Fiend Megacyber-style rule (no EDS card), in three
+  places:
+  - `CanSummonFromHand` (summon_checks.c) allows it when `CanCyberDragonSpecialSummon` holds (the player controls no
+    monster, the opponent does, a free zone, `CanSpecialSummon`), or when a Tribute is available;
+  - the hand card menu (card_command_menu.c) adds the Special Summon commands, and drops Summon / Set when there's
+    nothing to Tribute;
+  - the summon steps (effect_hooks.c) queue `QueueSpecialSummonFromHand` for the Special Summon commands, with no
+    Tribute.
+  It can still be Normal Summoned with one Tribute (Level 5).
+- **CPU.** `AiStepMainPhase` calls `AiSpecialSummonCyberDragon` at the start of `AI_MAIN_SUMMON`, before it picks a
+  Normal Summon (once it controls a monster the condition fails), and summons it in Attack Position.
+- Checked in the source and the build; not tested in an emulator.
+
 ### The CPU doesn't see face-down ATK or DEF (2026-10-29)
 - **Before.** The CPU read the real stats of the human's face-down monsters (ai_picks.c unless noted):
   - `AiEvalAttack` (the attack plan and `AiSimBattlePhase`) and `AiCanBeatMonster` scaled it by
