@@ -165,6 +165,13 @@ int AiSpecialSummonCyberDragon(void);
 int AiSummonFaceUpOnOpenField(u16 id);
 int AiPickTributeFor(u16 id, int excludeZone);     /* mod: src/added_effects.c */
 
+/* Changed: after its Normal Summon (or when it has none to make) the CPU goes on to its Main Phase's monster effects,
+ * spells and Set (AI_MAIN_RESET) instead of ending the step (return 1). The original ended Main Phase 1 there when it
+ * planned an attack (always with the human's field empty) or Tribute Summoned, and Main Phase 2 (step 5) once its
+ * Normal Summon was used, so it played no spells in those turns. AI_MAIN_SET_MONSTER ends the step: with the Normal
+ * Summon used it returns 1. */
+#define AI_MAIN_GO_TO_SPELLS() do { gAiState.phase = AI_MAIN_RESET; return 0; } while (0)
+
 int AiStepMainPhase(void)
 {
     int damage;
@@ -187,11 +194,10 @@ int AiStepMainPhase(void)
         if (AiSpecialSummonCyberDragon())   /* added: before a Normal Summon gives the CPU a monster */
             return 0;
         if ((gDuelPlayers.flags1_8 & 0x10) != 0 || CanNormalSummon(1) == 0) {
-            if (gAiState.step <= 3) {
-                if (gDuelPlayers.unk1B0C != 0) {
-                    gAiState.phase = AI_MAIN_RESET;
-                    return 0;
-                }
+            /* changed: also in Main Phase 2 (the original tested gAiState.step <= 3) */
+            if (gDuelPlayers.unk1B0C != 0) {
+                gAiState.phase = AI_MAIN_RESET;
+                return 0;
             }
             return 1;
         }
@@ -205,10 +211,10 @@ int AiStepMainPhase(void)
         }
         if (AiPlanAttack(1) != 0) {
             if (CanNormalSummon(1) == 0)
-                return 1;
+                AI_MAIN_GO_TO_SPELLS();     /* changed: was return 1 */
             handIdx = AiChooseSummonNoTribute();
             if (handIdx <= -1)
-                return 1;
+                AI_MAIN_GO_TO_SPELLS();     /* changed: was return 1 */
             word = gDuelPlayers.hand1[handIdx];
             word <<= 21;
             word >>= 20;
@@ -218,7 +224,7 @@ int AiStepMainPhase(void)
             if (HasFlipEffect(*numPtr, 0) != 0)
                 hasFlip = 1;
             QueueNormalSummon(1, handIdx, FindFreeMonsterZone(1), 0, hasFlip == 0);
-            return 1;
+            AI_MAIN_GO_TO_SPELLS();         /* changed: was return 1 */
         }
         if (CanNormalSummon(1) == 0)
             return 1;
@@ -286,7 +292,7 @@ int AiStepMainPhase(void)
                         /* FAKEMATCH: retain the index to keep this return tail separate. */
                         asm("" : : "r"(handIdx));
                     }
-                    return 1;
+                    AI_MAIN_GO_TO_SPELLS();     /* changed: was return 1 */
                 case 5:
                 case 6:
                     tribute1 = AiPickTributeFor(id, -1);   /* changed: no copy of it (src/added_effects.c) */
@@ -296,7 +302,7 @@ int AiStepMainPhase(void)
                     tributeMask = 0x90 | tribute1;
                 queueWithTribute:
                     QueueNormalSummon(1, handIdx, tribute1, tributeMask, hasFlip2 == 0);
-                    return 1;
+                    AI_MAIN_GO_TO_SPELLS();     /* changed: was return 1 */
                 default:
                     tribute1 = AiPickTributeFor(id, -1);
                     tribute2 = AiPickTributeFor(id, tribute1);

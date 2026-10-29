@@ -643,6 +643,30 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
 - **CPU limit.** The CPU doesn't hold back Spell/Trap cards to keep the Frog coming back.
 - Checked in the source and the build; not tested in an emulator.
 
+### The CPU plays its Spells after summoning (2026-10-29)
+- **Steps.** The CPU's turn runs `gAiSteps` (0x0819DD6C, checked in the ROM):
+  1. the start of the Main Phase;
+  2. simple Spells;
+  3. `AiStepMainPhase` (Main Phase 1);
+  4. the positions;
+  5. `AiStepBattle`;
+  6. `AiStepMainPhase` again (Main Phase 2);
+  7. `AiStepSetSpellTraps`;
+  8. the end.
+  Inside `AiStepMainPhase` (ai_steps.c) the phases go summon, reset, monster effects, Exodia Traps, Spells
+  (`AiPlaySpells`), then Set.
+- **Before.** The summon phase ended the step (`return 1`) without reaching the Spells:
+  - after the Normal Summon of the `AiPlanAttack` branch, which is always taken with the human's field empty;
+  - when that branch had nothing to summon;
+  - after a Normal or Tribute Summon of the Tribute branch;
+  - in Main Phase 2 once the Normal Summon was used (only `gAiState.step <= 3` went on to the reset phase).
+  So the CPU played no Spells (other than step 2's simple ones) in those turns.
+- **Now.** Each of those goes to `AI_MAIN_RESET` (`AI_MAIN_GO_TO_SPELLS`), and the step test is gone. The Set phase
+  ends the step, since with the Normal Summon used it returns 1.
+- **Traps.** `AiStepSetSpellTraps` already Sets every Trap by default, after battles too, so it is unchanged.
+- Release `.text` 0x08080538.
+- Checked in the source and the build; not tested in an emulator.
+
 ### The CPU's Tribute Summon upgrades (2026-10-29)
 - **Before.** `AiChooseSummonWithTribute` (ai_summon.c) took a Tribute Summon only when its battle simulation
   (`AiSimSummon` / `AiSimBattlePhase`) dealt more damage, or as much while destroying more. A wall swapped for a

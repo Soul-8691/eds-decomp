@@ -123,6 +123,8 @@ next one.
     - It never Tributes a copy of the monster it is summoning, for a Tribute Summon or a Toon's Special Summon,
       unless that monster has an effect that triggers on its summon (Zaborg, Mobius, Breaker, ...).
   - **Card use.**
+    - It plays its Spells after its Normal Summon, in both Main Phases. The original CPU skipped its Spells on
+      any turn it summoned to attack (always, with your field empty), after a Tribute Summon, and in Main Phase 2.
     - It uses Thunder Dragon at the start of its Main Phase. It discards one to add a single copy, then discards
       the new copy for the last one, then discards that one too, finding nothing. All three end up in its
       Graveyard. A lone copy, with none left in its Deck and not just added, stays in its hand.

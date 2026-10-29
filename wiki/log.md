@@ -1856,3 +1856,6 @@ updated: 2026-09-29
 
 ## [2026-10-29] progress | Dice Jar removed
 - The user removed Dice Jar from config/new_cards.txt (the last line: no ID changes). src/mod_decks.c: HAS_CARD_DICE_JAR out of the Warrior Tomato Control guard (the deck stays), its copy out of sYataWarriorTomatoControlSide (14, also the Deck Recipe preset); DECKS.md. [[added-cards]], [[yugi-kaiba-opponent]]. Built (make and make release).
+
+## [2026-10-29] progress | The CPU plays its Spells after summoning
+- src/ai_steps.c AiStepMainPhase: the summon branches go to AI_MAIN_RESET (monster effects, Spells, Set) instead of ending the step, and Main Phase 2 does too (no step <= 3 test). gAiSteps checked in the ROM; AiStepSetSpellTraps already Sets Traps. README.md. [[added-cards]]. Built (make and make release); not tested in an emulator.
