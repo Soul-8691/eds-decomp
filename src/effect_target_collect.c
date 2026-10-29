@@ -354,6 +354,10 @@ static inline u32 CardSpellSubtypeNv(u16 id)
  * IsMaterialOfFusion (key 1546), the player that Spear Cretin compares against (1116). The cardNumber is the
  * effect key: a card number, or a number with no EDS card (see enum CardNumber).
  */
+/* Mod (src/added_effects.c): the lists of the added cards with no case here (the filters below still run). This
+ * unit's code must stay inside the original .text, so new added cards' lists go there. */
+void ModCollectEffectTargets(int player, u16 cardNumber, int param);
+
 u16 CollectEffectTargets(int player, u16 cardNumber, int param)
 {
     u16 materials[4];           /* scratch for FindFusionMaterials; only its result is used */
@@ -767,91 +771,6 @@ u16 CollectEffectTargets(int player, u16 cardNumber, int param)
                 ADD_TARGET_DOWHILE(PLAYER(player).graveyard[i], CARDLIST_SRC_GRAVEYARD);
         }
         break;
-#endif
-#ifdef HAS_CARD_MASKED_DRAGON
-    case CARD_MASKED_DRAGON:
-    {
-        /* Added card: Deck Dragons with 1500 or less ATK. */
-        u32 *word;
-
-        for (i = 0; i < PLAYER(player).deckCount; i++) {
-            word = PILE_WORD(gDuelDecks, i, player);
-            if (CardType(CARD_ID(*word)) == CARD_TYPE_DRAGON && CardAttack16(CARD_ID(*word)) <= STAT_LIMIT)
-                ADD_TARGET(*word, CARDLIST_SRC_DECK);
-        }
-        break;
-    }
-#endif
-#ifdef HAS_CARD_HYDROGEDDON
-    case CARD_HYDROGEDDON:
-    {
-        /* Added card: Hydrogeddons in the Deck. */
-        u32 *word;
-
-        for (i = 0; i < PLAYER(player).deckCount; i++) {
-            word = PILE_WORD(gDuelDecks, i, player);
-            if (CARD_NUMBER(CARD_ID(*word)) == CARD_HYDROGEDDON)
-                ADD_TARGET(*word, CARDLIST_SRC_DECK);
-        }
-        break;
-    }
-#endif
-#ifdef HAS_CARD_POT_OF_AVARICE
-    case CARD_POT_OF_AVARICE:
-    {
-        /* Added card: the player's Graveyard monsters. */
-        u32 *word;
-
-        for (i = 0; i < PLAYER(player).graveCount; i++) {
-            word = PILE_WORD(PLAYERS_GRAVEYARD, i, player);
-            if (CardType(CARD_ID(*word)) <= CARD_TYPE_REPTILE)
-                ADD_TARGET(*word, CARDLIST_SRC_GRAVEYARD);
-        }
-        break;
-    }
-#endif
-#ifdef HAS_CARD_BOOK_OF_LIFE
-    case CARD_BOOK_OF_LIFE:
-    {
-        /* Added card: param 0 the player's Graveyard Zombies, param 1 the opponent's Graveyard monsters. */
-        u32 *word;
-        int side = param ? 1 - player : player;
-
-        for (i = 0; i < PLAYER(side).graveCount; i++) {
-            word = PILE_WORD(PLAYERS_GRAVEYARD, i, side);
-            if (param ? CardType(CARD_ID(*word)) <= CARD_TYPE_REPTILE : CardType(CARD_ID(*word)) == CARD_TYPE_ZOMBIE)
-                ADD_TARGET(*word, CARDLIST_SRC_GRAVEYARD);
-        }
-        break;
-    }
-#endif
-#ifdef HAS_CARD_SKILLED_DARK_MAGICIAN
-    case CARD_SKILLED_DARK_MAGICIAN:
-    {
-        /* Added card: Dark Magician in the hand, then the Deck, then the Graveyard. */
-        u32 *word;
-        u16 number;
-
-        for (i = 0; i < PLAYER(player).handCount; i++) {
-            word = PILE_WORD(PLAYERS_HAND, i, player);
-            number = CARD_NUMBER(CARD_ID(*word));
-            if (number == CARD_DARK_MAGICIAN || number == CARD_DARK_MAGICIAN_ALT)
-                ADD_TARGET(*word, CARDLIST_SRC_HAND);
-        }
-        for (i = 0; i < PLAYER(player).deckCount; i++) {
-            word = PILE_WORD(gDuelDecks, i, player);
-            number = CARD_NUMBER(CARD_ID(*word));
-            if (number == CARD_DARK_MAGICIAN || number == CARD_DARK_MAGICIAN_ALT)
-                ADD_TARGET(*word, CARDLIST_SRC_DECK);
-        }
-        for (i = 0; i < PLAYER(player).graveCount; i++) {
-            word = PILE_WORD(PLAYERS_GRAVEYARD, i, player);
-            number = CARD_NUMBER(CARD_ID(*word));
-            if (number == CARD_DARK_MAGICIAN || number == CARD_DARK_MAGICIAN_ALT)
-                ADD_TARGET(*word, CARDLIST_SRC_GRAVEYARD);
-        }
-        break;
-    }
 #endif
 #ifdef HAS_CARD_APPRENTICE_MAGICIAN
     case CARD_APPRENTICE_MAGICIAN:
@@ -1274,6 +1193,9 @@ u16 CollectEffectTargets(int player, u16 cardNumber, int param)
         }
         break;
     }
+    default:
+        ModCollectEffectTargets(player, cardNumber, param);    /* added cards (src/added_effects.c) */
+        break;
     }
     if (gCardListView.count == 0)
         return 0;

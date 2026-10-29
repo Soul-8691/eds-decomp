@@ -1840,3 +1840,6 @@ updated: 2026-09-29
 
 ## [2026-10-29] progress | Blast with Chain coded
 - tools/newcards.py SUBTYPE_OVERRIDES (Blast with Chain: an Equip Trap, as Kunai with Chain); src/added_effects.c EffectBlastWithChain* and its row, BlastWithChainDestroyed, the CPU's activation; src/effect_hooks.c OnCardDestroyedByEffect calls it; src/card_stats.c +500 beside Kunai. Release .text 0x809C0. [[added-cards]]. Built (make and make release); not tested in an emulator.
+
+## [2026-10-29] progress | Magic Drain coded; added target lists moved out of effect_target_collect.c
+- src/added_effects.c EffectMagicDrainPrepare / Resolve and its row; AiChainSolemnJudgment chains Magic Drain first. Release .text overflowed (0x08080A73) with its list in CollectEffectTargets, so ModCollectEffectTargets (added_effects.c) now takes the cases of Skilled Dark Magician, Book of Life, Pot of Avarice, Hydrogeddon, Masked Dragon and Magic Drain (src/effect_target_collect.c: a default case calls it). Release .text 0x80534. [[added-cards]]. Built (make and make release); not tested in an emulator.

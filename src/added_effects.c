@@ -4241,6 +4241,172 @@ int AiPlanForcedAttack(void)
 }
 #endif /* HAS_CARD_BERSERK_GORILLA */
 
+/* ---- The added cards' effect-target lists -----------------------------------------------------------------------
+ * CollectEffectTargets (effect_target_collect.c) calls ModCollectEffectTargets for a card number it has no case for;
+ * its filters (Toon monsters without Toon World, planted cards, Prohibition) then run as for its own lists. The
+ * lists fill gCardListView (cards, sources, count). */
+static void ModAddTarget(u32 word, u16 source)
+{
+    gCardListView.cards[gCardListView.count] = word;
+    gCardListView.sources[gCardListView.count] = source;
+    gCardListView.count++;
+}
+
+/* Add `player`'s cards of a pile (`count` card words) that `accept` takes. */
+static void ModAddPileTargets(const struct DuelCard *pile, int count, u16 source, int (*accept)(u16 id, int param),
+                              int param)
+{
+    int i;
+
+    for (i = 0; i < count; i++) {
+        u16 id = DUEL_CARD_ID(&pile[i]);
+
+        if (accept(id, param))
+            ModAddTarget(*(const u32 *)&pile[i], source);
+    }
+}
+
+static int IsMonsterId(u16 id, int param)
+{
+    return CARD_STATS_TYPE(gCardStats[id & CARD_ID_MASK]) <= CARD_TYPE_REPTILE;
+}
+
+static int IsNumberId(u16 id, int number)
+{
+    u16 n = CardNumberOfId(id);
+
+    return n == number || (number == CARD_DARK_MAGICIAN && n == CARD_DARK_MAGICIAN_ALT);
+}
+
+static int IsTypeId(u16 id, int type)
+{
+    return (int)CARD_STATS_TYPE(gCardStats[id & CARD_ID_MASK]) == type;
+}
+
+static int IsWeakDragonId(u16 id, int param)
+{
+    u32 stats = gCardStats[id & CARD_ID_MASK];
+
+    return CARD_STATS_TYPE(stats) == CARD_TYPE_DRAGON && CARD_STATS_ATK(stats) * CARD_STATS_POINTS_SCALE <= 1500;
+}
+
+void ModCollectEffectTargets(int player, u16 cardNumber, int param)
+{
+    struct DuelPlayer *p = &gDuelPlayers[player & 1];
+    struct DuelPlayer *o = &gDuelPlayers[(1 - player) & 1];
+
+    switch (cardNumber) {
+#ifdef HAS_CARD_SKILLED_DARK_MAGICIAN
+    case CARD_SKILLED_DARK_MAGICIAN:        /* Dark Magician in the hand, then the Deck, then the Graveyard */
+        ModAddPileTargets(p->hand, p->handCount, CARDLIST_SRC_HAND, IsNumberId, CARD_DARK_MAGICIAN);
+        ModAddPileTargets(p->deck, p->deckCount, CARDLIST_SRC_DECK, IsNumberId, CARD_DARK_MAGICIAN);
+        ModAddPileTargets(p->graveyard, p->graveCount, CARDLIST_SRC_GRAVEYARD, IsNumberId, CARD_DARK_MAGICIAN);
+        break;
+#endif
+#ifdef HAS_CARD_BOOK_OF_LIFE
+    case CARD_BOOK_OF_LIFE:                 /* param 0: the player's Graveyard Zombies; 1: the opponent's monsters */
+        if (param)
+            ModAddPileTargets(o->graveyard, o->graveCount, CARDLIST_SRC_GRAVEYARD, IsMonsterId, 0);
+        else
+            ModAddPileTargets(p->graveyard, p->graveCount, CARDLIST_SRC_GRAVEYARD, IsTypeId, CARD_TYPE_ZOMBIE);
+        break;
+#endif
+#ifdef HAS_CARD_POT_OF_AVARICE
+    case CARD_POT_OF_AVARICE:               /* the player's Graveyard monsters */
+        ModAddPileTargets(p->graveyard, p->graveCount, CARDLIST_SRC_GRAVEYARD, IsMonsterId, 0);
+        break;
+#endif
+#ifdef HAS_CARD_HYDROGEDDON
+    case CARD_HYDROGEDDON:                  /* Hydrogeddons in the Deck */
+        ModAddPileTargets(p->deck, p->deckCount, CARDLIST_SRC_DECK, IsNumberId, CARD_HYDROGEDDON);
+        break;
+#endif
+#ifdef HAS_CARD_MASKED_DRAGON
+    case CARD_MASKED_DRAGON:                /* Deck Dragons with 1500 or less ATK */
+        ModAddPileTargets(p->deck, p->deckCount, CARDLIST_SRC_DECK, IsWeakDragonId, 0);
+        break;
+#endif
+#ifdef HAS_CARD_MAGIC_DRAIN
+    case CARD_MAGIC_DRAIN:                  /* the player's hand Spell Cards (to discard against Magic Drain) */
+        ModAddPileTargets(p->hand, p->handCount, CARDLIST_SRC_HAND, IsTypeId, CARD_TYPE_MAGIC);
+        break;
+#endif
+    }
+}
+
+#ifdef HAS_CARD_MAGIC_DRAIN
+/* ---- Magic Drain --------------------------------------------------------------------------------------------------
+ * "When your opponent activates a Spell Card: They can discard 1 Spell Card to negate this card's effect, otherwise
+ * negate the activation of their Spell Card, and if you do, destroy it." (Counter Trap)
+ * The prepare wants the opponent's Spell as the link it answers (as Magic Jammer's, without the discard cost). The
+ * resolve: the Spell's player, if they hold a Spell Card (CollectEffectTargets: the hand's Magic cards), may discard
+ * one to stop it. The human is asked (Yes/No) and picks it in the card list; the CPU always discards its first one.
+ * Otherwise the Spell is negated and destroyed as by the original's Counter Traps (DUEL_CMD_NEGATE_ACTIVATION, then
+ * DUEL_CMD_SET_SPELL_TRAP_DISABLED on its zone: EffectNegateChainedCardResolve). The CPU chains it to the human's
+ * Spells (AiChainSolemnJudgment, before Solemn Judgment). */
+static const u8 sStrMagicDrainPrompt[] = "Discard 1 Spell Card to negate Magic Drain?";
+
+int CollectEffectTargetsInt(int player, int cardNumber, int param) asm("CollectEffectTargets");
+
+int EffectMagicDrainPrepare(struct ChainEntry *card, struct ChainEntry *chainLink, u16 fromHand)
+{
+    u16 id;
+
+    if (fromHand || chainLink == NULL || chainLink->player == card->player)
+        return 0;
+    id = chainLink->card & CARD_ID_MASK;
+    return CARD_STATS_TYPE(gCardStats[id]) == CARD_TYPE_MAGIC && CardNumberOfId(id) != CARD_1539;
+}
+
+#define MAGIC_DRAIN_STEP_DISCARD EFFECT_STEP_3
+#define MAGIC_DRAIN_STEP_NEGATE EFFECT_STEP_4
+
+int EffectMagicDrainResolve(struct ChainEntry *link, struct ChainEntry *chainedTo)
+{
+    int opponent, i;
+    u32 word;
+
+    if (link->negated || chainedTo == NULL || CARD_STATS_TYPE(gCardStats[chainedTo->card & CARD_ID_MASK])
+                                                  != CARD_TYPE_MAGIC)
+        return EFFECT_STEP_DONE;
+    opponent = chainedTo->player;
+    switch (gChain.effectStep) {
+    case EFFECT_STEP_START:
+        if (CollectEffectTargetsInt(opponent, CARD_MAGIC_DRAIN, 0) == 0)
+            return MAGIC_DRAIN_STEP_NEGATE;
+        if (opponent != 0) {
+            gCardListView.cursorRow = 0;    /* the CPU discards its first Spell */
+            gCardListView.top = 0;
+            return MAGIC_DRAIN_STEP_DISCARD;
+        }
+        TextBoxOpen(TEXTBOX_POS(5, 2), TEXTBOX_SIZE(20, 7), TEXTBOX_FLAGS_DEFAULT, sStrMagicDrainPrompt);
+        TextBoxSetMenu(TEXTBOX_MENU_YES_NO, NULL, NULL);
+        return EFFECT_STEP_2;
+    case EFFECT_STEP_2:
+        if (!gTextBox.result)
+            return MAGIC_DRAIN_STEP_NEGATE;
+        CardListView_Open(opponent, CARDLIST_AREA_EFFECT_TARGETS, CARD_MAGIC_DRAIN, 0);
+        return MAGIC_DRAIN_STEP_DISCARD;
+    case MAGIC_DRAIN_STEP_DISCARD:
+        /* the picked Spell's hand index: its card word */
+        word = gCardListView.cards[gCardListView.cursorRow + gCardListView.top];
+        for (i = 0; i < gDuelPlayers[opponent & 1].handCount; i++) {
+            if (*(u32 *)&gDuelPlayers[opponent & 1].hand[i] == word) {
+                DiscardHandCard(opponent, i, 0, 1);
+                return EFFECT_STEP_DONE;    /* Magic Drain's effect is negated */
+            }
+        }
+        /* fall through: not found, the Spell is negated */
+    case MAGIC_DRAIN_STEP_NEGATE:
+        DuelCmd_Push(link->player ? DUEL_CMD_PLAYER | DUEL_CMD_NEGATE_ACTIVATION : DUEL_CMD_NEGATE_ACTIVATION, 1, 0, 0);
+        DuelCmd_Push(chainedTo->player ? DUEL_CMD_PLAYER | DUEL_CMD_SET_SPELL_TRAP_DISABLED
+                                       : DUEL_CMD_SET_SPELL_TRAP_DISABLED, chainedTo->zone, 1, 0);
+        return EFFECT_STEP_DONE;
+    }
+    return EFFECT_STEP_DONE;
+}
+#endif /* HAS_CARD_MAGIC_DRAIN */
+
 #ifdef HAS_CARD_BLAST_WITH_CHAIN
 /* ---- Blast with Chain ---------------------------------------------------------------------------------------------
  * "Target 1 face-up monster you control; equip this card to that target. It gains 500 ATK. If this card is destroyed
@@ -5829,8 +5995,14 @@ int AiChainSolemnJudgment(struct ChainEntry *entry)
 {
     u32 type = CARD_STATS_TYPE(gCardStats[entry->card & CARD_ID_MASK]);
 
-    if (entry->player != AI_HUMAN || (type != CARD_TYPE_MAGIC && type != CARD_TYPE_TRAP)
-        || gDuelPlayers[AI_PLAYER].lifePoints > AI_SOLEMN_MAX_LP)
+    if (entry->player != AI_HUMAN || (type != CARD_TYPE_MAGIC && type != CARD_TYPE_TRAP))
+        return 0;
+#ifdef HAS_CARD_MAGIC_DRAIN
+    /* Magic Drain first: it costs nothing */
+    if (type == CARD_TYPE_MAGIC && AiChainSetCard(entry, CARD_MAGIC_DRAIN))
+        return 1;
+#endif
+    if (gDuelPlayers[AI_PLAYER].lifePoints > AI_SOLEMN_MAX_LP)
         return 0;
     return AiChainSetCard(entry, CARD_SOLEMN_JUDGMENT) != 0;
 }
@@ -6344,6 +6516,16 @@ const struct CardEffect gAddedCardEffects[] = {
         NULL,
         NULL,
         EffectNewdoriaChainB,
+    },
+#endif
+#ifdef HAS_CARD_MAGIC_DRAIN
+    {
+        CARD_MAGIC_DRAIN, 0,
+        EffectMagicDrainResolve,
+        NULL,
+        EffectMagicDrainPrepare,
+        NULL,
+        NULL,
     },
 #endif
 #ifdef HAS_CARD_BLAST_WITH_CHAIN

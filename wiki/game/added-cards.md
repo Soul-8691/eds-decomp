@@ -909,6 +909,31 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
 - The other added cards keep their IDs; their card numbers after it move down one.
 - Checked in the source and the build; not tested in an emulator.
 
+### Magic Drain (2026-10-29)
+- Counter Trap. ID 953. The fetched text: "When your opponent activates a Spell Card: They can discard 1 Spell Card to
+  negate this card's effect, otherwise negate the activation of their Spell Card, and if you do, destroy it."
+- **Activation.** The prepare wants the opponent's Spell (not key 1539) as the link it answers, as Magic Jammer's does,
+  without the discard cost.
+- **Resolve.**
+  - The Spell's player, if they hold a Spell Card (a `ModCollectEffectTargets` list), may discard one to stop it. The
+    human is asked (Yes/No) and picks it in the card list; the CPU always discards its first.
+  - Otherwise the Spell is negated and destroyed, as by the original's Counter Traps (`EffectNegateChainedCardResolve`):
+    `DUEL_CMD_NEGATE_ACTIVATION`, then `DUEL_CMD_SET_SPELL_TRAP_DISABLED` on its zone.
+- **CPU.** It chains it to the human's Spells from `AiChainSolemnJudgment`, before Solemn Judgment, since it costs
+  nothing.
+- Checked in the source and the build; not tested in an emulator.
+
+### The added cards' target lists moved out of effect_target_collect.c (2026-10-29)
+- **Why.** Magic Drain's list as a case in `CollectEffectTargets` pushed the release `.text` past `.rodata` at
+  0x08080A20 (to 0x08080A73).
+- **How.** `CollectEffectTargets` now ends its switch with `default: ModCollectEffectTargets(...)` (added_effects.c),
+  and the cases of Skilled Dark Magician, Book of Life, Pot of Avarice, Hydrogeddon, Masked Dragon and Magic Drain
+  moved there, rewritten over the piles with `ModAddPileTargets`. The unit's filters still run after them.
+- **Result.** Release `.text` now ends at 0x08080534 (0x4EC bytes left).
+- **Rule.** New added cards' lists go to `ModCollectEffectTargets`. The older added cases (Apprentice Magician,
+  Pyramid Turtle, Night Assailant, ...) are still in the original unit and could move the same way if more room is
+  needed.
+
 ### Blast with Chain (2026-10-29)
 - Trap. ID 961. The fetched text: "Target 1 face-up monster you control; equip this card to that target. It gains 500
   ATK. If this card is destroyed by a card effect while equipped: Target 1 card on the field; destroy that target."
