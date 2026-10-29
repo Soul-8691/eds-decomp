@@ -1775,3 +1775,6 @@ updated: 2026-09-29
 
 ## [2026-10-29] setup | README: the CPU changes grouped
 - README.md: the Smarter CPU list grouped (battle and positions, card use, what it can see); added the summon-trap chain (Trap Hole on Mobius), which was missing.
+
+## [2026-10-29] progress | Every Campaign duel a best-of-3 match
+- src/campaign_steps.c Campaign_ShowDuelResult promotes every duel to DUEL_FORMAT_MATCH, Campaign_SetupDuel saves the Deck and Side Deck on the first duel, the decided match restores them; src/mod_decks.c PickOpponentDeckOverride / GetOpponentDeckOverride keeps the CPU's deck for the match, ModMatchSavePlayerDeck / ModMatchRestorePlayerDeck; symbols.ld gModMatch 0x0202D400. New page [[best-of-3-matches]]; [[index]]; README.md. Built (make and make release); not tested in an emulator.

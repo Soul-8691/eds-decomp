@@ -167,10 +167,15 @@ u16 Campaign_DecideTurnOrder(void)
 
 /* Campaign step 3: clear the duel state, then load and shuffle the player's and the opponent's decks.
  * Returns 1. */
+void ModMatchSavePlayerDeck(void);      /* mod: src/mod_decks.c */
+void ModMatchRestorePlayerDeck(void);
+
 u16 Campaign_SetupDuel(void)
 {
     Duel_Setup();
     gDuelCtrl.isLinkDuel = 0;
+    if (gMain.matchDuelCount == 0)
+        ModMatchSavePlayerDeck();   /* added: the side-deck swaps are undone when the match ends */
     LoadPlayerDeckFromSave();
     ShuffleDeck(0, 8);
     LoadOpponentDeck(0);
@@ -517,6 +522,10 @@ u16 Campaign_ShowDuelResult(void)
     switch (gMain.subStep) {
     case RESULT_STEP_START:
         matchDecided = 0;
+        /* changed: every duel is a best-of-3 match. The day keeps DUEL_FORMAT_SINGLE until here, so the pre-duel
+         * dialogue (first meeting, rematch, Simon's cards) is the single duel's; the later duels go back to
+         * CAMPAIGN_STEP_TURN_ORDER and do not run it again. */
+        gMain.duelFormat = DUEL_FORMAT_MATCH;
         if (gMain.duelFormat == DUEL_FORMAT_SINGLE) {
             matchDecided = 1;
         } else {
@@ -556,6 +565,8 @@ u16 Campaign_ShowDuelResult(void)
                 break;
             }
         }
+        if (matchDecided)
+            ModMatchRestorePlayerDeck();    /* added: the match's Deck and Side Deck as they were before it */
         if (!matchDecided && ModSkipsDuelDialogue(opp)) {
             /* added: no between-duels text; straight to the side-deck swap */
             RESET_SEQ_STATE();

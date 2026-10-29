@@ -16,6 +16,9 @@
 #include "constants/cards.h"
 #include "constants/game.h"
 #include "booster.h"
+#include "main.h"               /* gMain.duelFormat, matchDuelCount */
+#include "constants/duel.h"     /* DUEL_FORMAT_MATCH */
+#include "util.h"               /* MemCopy16 */
 
 int Random(void);   /* util.h */
 
@@ -1257,8 +1260,9 @@ static const struct DeckList *FiberDeck(void)
 }
 #endif
 
-/* The replacement deck of opponent `opponent` (enum DuelistId), or NULL to keep the original. */
-const struct DeckList *GetOpponentDeckOverride(int opponent)
+/* The replacement deck of opponent `opponent` (enum DuelistId), or NULL to keep the original: a new pick (the
+ * weighted random ones roll again); GetOpponentDeckOverride keeps it for the match. */
+static const struct DeckList *PickOpponentDeckOverride(int opponent)
 {
     switch (opponent) {
     case DUELIST_YUGI:
@@ -1480,4 +1484,93 @@ int BuildModStarterDeck(int choice)
     for (i = 0; i < sideCount; i++)
         AddCardToSavedSideDeck(gCardNumberToId[side[i] & CARD_ID_MASK]);
     return 1;
+}
+
+/* ---- Best-of-3 matches (Campaign) -----------------------------------------------------------------------------------
+ * Every Campaign duel is a best-of-3 match (Campaign_ShowDuelResult, campaign_steps.c). gModMatch (EWRAM 0x0202D400,
+ * symbols.ld) keeps what the match needs between its duels:
+ *   the CPU's deck    GetOpponentDeckOverride picks it on the match's first duel (a weighted random pick for the
+ *                     opponents with several decks) and returns the same one for the later duels
+ *   the player's deck the saved Deck and Side Deck when the match starts (ModMatchSavePlayerDeck, from
+ *                     Campaign_SetupDuel); the side-deck swap between the duels changes them, and
+ *                     ModMatchRestorePlayerDeck puts them back when the match is decided
+ * `valid` holds MOD_MATCH_VALID while the fields are set (the RAM is not cleared at power-on). */
+#define MOD_MATCH_VALID 0xA5C3
+
+struct ModMatch {
+    const struct DeckList *opponentDeck;    /* the CPU's deck for this match (NULL: the original deck) */
+    u16 opponent;                           /* whose deck it is */
+    u16 deckValid;                          /* MOD_MATCH_VALID: opponentDeck is set */
+    u16 playerValid;                        /* MOD_MATCH_VALID: the player's decks below are saved */
+    u16 deckSize;
+    u16 sideDeckSize;
+    u16 deck[DECK_MAX_CARDS];
+    u16 sideDeck[SIDE_DECK_MAX_CARDS];
+};
+extern struct ModMatch gModMatch;
+
+/* 1 on the later duels of a match against `opponent`. */
+static int IsLaterMatchDuel(int opponent)
+{
+    return gMain.duelFormat == DUEL_FORMAT_MATCH && gMain.matchDuelCount > 0 && gModMatch.deckValid == MOD_MATCH_VALID
+           && gModMatch.opponent == opponent;
+}
+
+/* The replacement deck of opponent `opponent` (enum DuelistId), or NULL to keep the original: the same one for
+ * every duel of a match (see above). */
+const struct DeckList *GetOpponentDeckOverride(int opponent)
+{
+    if (IsLaterMatchDuel(opponent))
+        return gModMatch.opponentDeck;
+    gModMatch.opponentDeck = PickOpponentDeckOverride(opponent);
+    gModMatch.opponent = opponent;
+    gModMatch.deckValid = MOD_MATCH_VALID;
+    return gModMatch.opponentDeck;
+}
+
+/* Add `delta` copies of each card of `cards` to the saved Deck (side 0) or Side Deck (side 1) counters of the
+ * trunk. */
+static void AdjustSavedCopies(const u16 *cards, int count, int side, int delta)
+{
+    int i;
+
+    for (i = 0; i < count; i++) {
+        u16 id = cards[i];
+        int copies = side ? GetTrunkSideCopies(id) : GetTrunkDeckCopies(id);
+
+        copies += delta;
+        if (copies < 0)
+            copies = 0;
+        if (side)
+            SetTrunkSideCopies(id, copies);
+        else
+            SetTrunkDeckCopies(id, copies);
+    }
+}
+
+/* Campaign_SetupDuel, on a match's first duel: remember the saved Deck and Side Deck. */
+void ModMatchSavePlayerDeck(void)
+{
+    MemCopy16(gModMatch.deck, gSaveData.deck, sizeof(gModMatch.deck));
+    MemCopy16(gModMatch.sideDeck, gSaveData.sideDeck, sizeof(gModMatch.sideDeck));
+    gModMatch.deckSize = gSaveData.deckSize;
+    gModMatch.sideDeckSize = gSaveData.sideDeckSize;
+    gModMatch.playerValid = MOD_MATCH_VALID;
+}
+
+/* Campaign_ShowDuelResult, once the match is decided: undo the side-deck swaps (the lists and the trunk's
+ * per-card Deck / Side Deck counters). */
+void ModMatchRestorePlayerDeck(void)
+{
+    if (gModMatch.playerValid != MOD_MATCH_VALID)
+        return;
+    gModMatch.playerValid = 0;
+    AdjustSavedCopies(gSaveData.deck, gSaveData.deckSize, 0, -1);
+    AdjustSavedCopies(gSaveData.sideDeck, gSaveData.sideDeckSize, 1, -1);
+    MemCopy16(gSaveData.deck, gModMatch.deck, sizeof(gModMatch.deck));
+    MemCopy16(gSaveData.sideDeck, gModMatch.sideDeck, sizeof(gModMatch.sideDeck));
+    gSaveData.deckSize = gModMatch.deckSize;
+    gSaveData.sideDeckSize = gModMatch.sideDeckSize;
+    AdjustSavedCopies(gSaveData.deck, gSaveData.deckSize, 0, 1);
+    AdjustSavedCopies(gSaveData.sideDeck, gSaveData.sideDeckSize, 1, 1);
 }

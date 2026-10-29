@@ -27,6 +27,7 @@ Start with [[overview]]. The decompilation is 100% matched since 2026-10-02: all
 - [[banlists-menu]]: the added Banlists main-menu item: 15 selectable Forbidden/Limited lists and card pools for Deck Edit (Yugi-Kaiba by default); the menu now scrolls.
 - [[duelist-points]]: the added DP currency (5000 at the start, earned per Campaign win, spent on packs and password cards; stored in free save bytes).
 - [[pack-shop]]: the added Booster Packs main-menu item (the unlocked packs on the usual pack-opening screens; DP hooks for later).
+- [[best-of-3-matches]]: every Campaign duel is a best-of-3 match; the CPU keeps its deck for the match, and the side-deck swaps are undone afterwards.
 - [[deck-recipes]]: the added main-menu item that stores 50 deck recipes in SRAM and switches between them through the trunk.
 - [[added-cards]]: cards added beyond the original 820 from the text list `config/new_cards.txt`: workflow, capacity, YGOPRODeck data, moved tables, RAM and pointer fix-ups.
 - [[cards]]: card model (1-based alphabetical IDs vs. classic "card numbers", kinds, types).

@@ -27,6 +27,9 @@ gMainMenuScroll = 0x0202F260;
 gModCardSprites = 0x0202F300;
 /* Mod: the cards of Deck Edit's ring (src/mod_field_icons.c). */
 gModDeckRing = 0x0202F360;
+/* Mod: the best-of-3 match state of src/mod_decks.c (the CPU's deck, the player's Deck and Side Deck; 0xA6 bytes),
+ * in the free RAM after the Deck Edit lists. */
+gModMatch = 0x0202D400;
 gTextCanvas = 0x02000000;
 gSaveData = 0x02011C20;
 gSaveDataSignature = 0x02013D86;
