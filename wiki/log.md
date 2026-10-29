@@ -1790,3 +1790,6 @@ updated: 2026-09-29
 
 ## [2026-10-29] progress | Hydrogeddon coded
 - config/new_cards.txt: 18 cards appended by the user (Hydrogeddon .. Nightmare's Steelcage, IDs 1139-1156), fetched by the build. src/added_effects.c HydrogeddonAfterBattle and its row; src/battle_phase2.c calls it; src/effect_resolve6.c choose-position list; src/effect_target_collect.c Deck list. [[added-cards]]. Built (make and make release); not tested in an emulator.
+
+## [2026-10-29] progress | Drillroid coded
+- src/added_effects.c DrillroidBeforeDamageCalc; src/battle_phase1.c BattleStage_DamageCalc calls it before CalcBattle, then the battle goes on at BATTLE_STAGE_FLIP_EFFECT. [[added-cards]]. Built (make and make release); not tested in an emulator.

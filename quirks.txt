@@ -11,3 +11,4 @@ Scapegoat: AI doesn't play
 Spirit Reaper: Might not self-destruct when targeted
 Zombyra the Dark: Keeps ATK loss on flip face-down
 Fairy Box: ATK is 0 for only one battle, not entire Battle Phase
+Hydrogeddon: Should still go off after Man-Eater Bug destruction

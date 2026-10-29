@@ -603,6 +603,8 @@ struct LinkCardPromptByte {
  *   30-35   key 1243: ask, DuelPrompt_Post(PROMPT_SELECT_OPPONENT_REPLACEMENT_TARGET), move the picked monster of
  *           the attacker into a free zone of the defender, make it the target, flip it, CalcBattle
  */
+int DrillroidBeforeDamageCalc(int player);  /* mod: src/added_effects.c */
+
 int BattleStage_DamageCalc(int player)
 {
     char askText[256];
@@ -656,6 +658,10 @@ int BattleStage_DamageCalc(int player)
 
 #ifdef HAS_CARD_INJECTION_FAIRY_LILY
         if (InjectionFairyLilyDamageStep(player))   /* added card: its prompt or payment first */
+            return 0;
+#endif
+#ifdef HAS_CARD_DRILLROID
+        if (DrillroidBeforeDamageCalc(player))      /* added card: it destroys a Defense Position target */
             return 0;
 #endif
         CalcBattle(player, 0);

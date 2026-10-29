@@ -556,6 +556,21 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
   - `AiShouldRetreatToDefense` never picks it.
 - Checked in the source and the build; not tested in an emulator.
 
+### Drillroid (2026-10-29)
+- Effect Monster (Level 4, EARTH Machine, 1600/1600). ID 1141 (number 1188). The fetched text: "Before damage
+  calculation, if this card attacks a Defense Position monster: Destroy that monster."
+- **Where it runs.** `BattleStage_DamageCalc` (battle_phase1.c) calls `DrillroidBeforeDamageCalc` (added_effects.c)
+  at `DAMAGE_STEP_CALC`, after the attack is marked and before `CalcBattle`. By then
+  `BattleStage_RevealDefender` has flipped a face-down target and noted its flip effect. Ninja Grandmaster Sasuke and
+  Mystic Swordsman LV2 differ: they destroy the target before it is flipped (`DestroyTargetBeforeDamageStep`).
+- **Effect.** A face-up Drillroid attacking a Defense Position monster destroys it by effect: the
+  destroyed-by-opponent flag, `DestroyFieldCard` with its Graveyard triggers, then `OnCardDestroyedByEffect`.
+- **The rest of the battle.** As for a flipped Blast Sphere, `CalcBattle` fills the battle record and its destroyed
+  flags and damage are cleared. The battle goes on at `BATTLE_STAGE_FLIP_EFFECT`: no battle scene, no damage, and no
+  "destroyed by battle" effects, but a flipped target's flip effect (Man-Eater Bug, ...) still activates.
+  `BattleStage_DestroyMonsters` resets `destroyedLoc` itself.
+- Checked in the source and the build; not tested in an emulator.
+
 ### Hydrogeddon (2026-10-29)
 - Effect Monster (Level 4, WATER Dinosaur, 1600/1000). ID 1139 (number 1186), the first of the 18 cards appended to
   config/new_cards.txt on 2026-10-29. The fetched text: "When this card destroys an opponent's monster by battle and

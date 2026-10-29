@@ -4676,6 +4676,44 @@ void RyuKokkiAfterBattle(int player)
 }
 #endif /* HAS_CARD_RYU_KOKKI */
 
+#ifdef HAS_CARD_DRILLROID
+/* ---- Drillroid ----------------------------------------------------------------------------------------------------
+ * "Before damage calculation, if this card attacks a Defense Position monster: Destroy that monster."
+ * BattleStage_DamageCalc (battle_phase1.c) calls DrillroidBeforeDamageCalc at DAMAGE_STEP_CALC, after the attack is
+ * marked and before CalcBattle: the target has been revealed (a face-down one flipped, its flip effect noted by
+ * BattleStage_RevealDefender). A face-up Drillroid attacking a Defense Position monster destroys it by its effect
+ * (the destroyed-by-opponent flag, DestroyFieldCard with its Graveyard triggers, OnCardDestroyedByEffect). As for a
+ * flipped Blast Sphere, CalcBattle fills the battle record and its destroyed flags and damage are cleared; the
+ * battle then goes on at BATTLE_STAGE_FLIP_EFFECT: no damage calculation and no battle damage, but a flipped
+ * target's flip effect still activates. */
+int DrillroidBeforeDamageCalc(int player)
+{
+    struct DuelZone *attacker = ZoneOf(player, gBattle.atkSlot);
+    struct DuelZone *target;
+    int opponent = 1 - player;
+    u16 id = DUEL_CARD_ID(&attacker->card);
+
+    if (gBattle.direct || id == 0 || !attacker->isFaceUp || CardNumberOfId(id) != CARD_DRILLROID)
+        return 0;
+    target = ZoneOf(opponent, gBattle.defSlot);
+    if (DUEL_CARD_ID(&target->card) == 0 || !target->isDefense)
+        return 0;
+    CalcBattle(player, 0);
+    gBattle.side[0].destroyed = 0;
+    gBattle.side[1].destroyed = 0;
+    gBattle.side[0].damage = 0;
+    gBattle.side[1].damage = 0;
+    ShowCardEffect(player, id);
+    DuelCmd_Push(opponent ? DUEL_CMD_PLAYER | DUEL_CMD_SET_DESTROYED_BY_OPPONENT_FLAG
+                          : DUEL_CMD_SET_DESTROYED_BY_OPPONENT_FLAG, gBattle.defSlot, 1, 0);
+    DestroyFieldCard(opponent, gBattle.defSlot, 1);
+    OnCardDestroyedByEffect(player, opponent, gBattle.defSlot);
+    gDuel.battleStage = BATTLE_STAGE_FLIP_EFFECT;
+    gDuel.battleStep = 0;
+    return 1;
+}
+#endif /* HAS_CARD_DRILLROID */
+
 #ifdef HAS_CARD_HYDROGEDDON
 /* ---- Hydrogeddon --------------------------------------------------------------------------------------------------
  * "When this card destroys an opponent's monster by battle and sends it to the GY: You can Special Summon 1
