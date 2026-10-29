@@ -434,6 +434,23 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
 - **CPU policy.** Activates it on a human monster of 1000+ ATK.
 - Checked in the source and the build; not tested in an emulator.
 
+### Apprentice Magician (2026-10-28)
+- Effect Monster (Level 2, DARK Spellcaster, 400/800). The fetched text: "If this card is Summoned: Target 1 face-up
+  card on the field that you can place a Spell Counter on; place 1 Spell Counter on that target. If this card is
+  destroyed by battle: You can Special Summon 1 Level 2 or lower Spellcaster monster from your Deck in face-down Defense
+  Position."
+- **Counter.** `AddedCardsSummoned` (summon_action.c, every summon kind) calls `ApprenticeMagicianPlaceCounter` when it
+  is summoned face up. Of the added cards only Breaker the Magical Warrior holds Spell Counters (max. 1: a
+  `ZONE_LINK_ATK_300_PER_VALUE` link from Breaker's own card ID, so Breaker's cost removes it as its own), so the
+  counter goes on a face-up Breaker without one: the summoner's first, else the opponent's (mandatory); with none,
+  nothing. Applied at once, not as a chain link. Summons that bypass the summon action (from the Deck, tokens) do not
+  trigger it.
+- **Battle.** A floater like Pyramid Turtle: the `SendBattleDestroyedCardToGraveyard` trigger list, a
+  `CollectEffectTargets` case (Deck Spellcasters of Level 2 or lower) and `EffectSpecialSummonFromDeckResolve`, which
+  for it queues `QueueSpecialSummon(..., faceUp 0, isDefense 1)`: face-down Defense Position. The human is asked
+  first; the CPU takes `AiPickCardListEntry`'s pick.
+- Checked in the source and the build; not tested in an emulator.
+
 ### The CPU chains summon traps to summon triggers (2026-10-28)
 - **Problem.** A monster's own summon trigger (Mobius, Zaborg, Breaker, Sonic Bird, ...) goes on the chain as soon as
   the summon finishes; the summon's own response window (`EventResponse_Request`, where the CPU uses Trap Hole via

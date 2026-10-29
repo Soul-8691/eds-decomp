@@ -615,6 +615,15 @@ int EffectSpecialSummonFromDeckResolve(struct ChainEntry *link)
                 return EFFECT_STEP_6;
             }
 #endif
+#ifdef HAS_CARD_APPRENTICE_MAGICIAN
+            /* Added: Apprentice Magician summons it face-down in Defense Position. */
+            if (CARD_NUMBER(link->card) == CARD_APPRENTICE_MAGICIAN) {
+                QueueSpecialSummon(link->player,
+                                   (struct DuelCard *)&gCardListView.cards[gCardListView.cursorRow + gCardListView.top],
+                                   0, 1, 0);
+                return EFFECT_STEP_6;
+            }
+#endif
             QueueSpecialSummon(link->player,
                                (struct DuelCard *)&gCardListView.cards[gCardListView.cursorRow + gCardListView.top],
                                1, 0, 0);

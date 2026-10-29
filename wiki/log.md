@@ -1709,3 +1709,6 @@ updated: 2026-09-29
 ## [2026-10-28] progress | Debug build shows the opponent's hand
 - src/duel_field_screen.c DrawHandCards: revealed for both hands when !MOD_RELEASE. README.md.
 - Debug build: IsHandRevealed returns 1 (src/duel_piles.c; hand drawn face up, info bar, Card View); the info bar (src/duel_info_bar.c) and the card menu (src/card_menu_input.c) also cover the opponent's face-down field cards. README.md.
+
+## [2026-10-28] progress | Apprentice Magician coded
+- src/added_effects.c ApprenticeMagicianPlaceCounter (AddedCardsSummoned) and its floater row; src/summon_action.c guard; src/effect_resolve6.c face-down Defense summon; src/effect_target_collect.c Deck list; src/duel_field_moves.c trigger. [[added-cards]]. Built; not tested in an emulator.

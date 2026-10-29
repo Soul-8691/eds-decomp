@@ -768,6 +768,20 @@ u16 CollectEffectTargets(int player, u16 cardNumber, int param)
         }
         break;
 #endif
+#ifdef HAS_CARD_APPRENTICE_MAGICIAN
+    case CARD_APPRENTICE_MAGICIAN:
+    {
+        /* Added card: deck Spellcaster monsters of Level 2 or lower. */
+        u32 id;
+
+        for (i = 0; i < PLAYER(player).deckCount; i++) {
+            id = CARD_ID(*PILE_WORD_FLAT(gDuelDecks, i, player));
+            if (CARD_STATS_TYPE(CARD_STATS(id)) == CARD_TYPE_SPELLCASTER && CardLevel(id) <= 2)
+                ADD_TARGET_DOWHILE(PLAYER(player).deck[i], CARDLIST_SRC_DECK);
+        }
+        break;
+    }
+#endif
 #ifdef HAS_CARD_PYRAMID_TURTLE
     case CARD_PYRAMID_TURTLE:
     {

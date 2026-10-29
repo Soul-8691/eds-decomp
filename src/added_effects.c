@@ -1843,13 +1843,52 @@ int EffectSacredCraneResolve(struct ChainEntry *link, struct ChainEntry *chained
 }
 #endif /* HAS_CARD_SACRED_CRANE */
 
-#if defined(HAS_CARD_DARK_MAGICIAN_OF_CHAOS) || defined(HAS_CARD_SACRED_CRANE)
+#if defined(HAS_CARD_APPRENTICE_MAGICIAN) && defined(HAS_CARD_BREAKER_THE_MAGICAL_WARRIOR)
+/* ---- Apprentice Magician ------------------------------------------------------------------------------------------
+ * "If this card is Summoned: Target 1 face-up card on the field that you can place a Spell Counter on; place 1 Spell
+ * Counter on that target. If this card is destroyed by battle: You can Special Summon 1 Level 2 or lower Spellcaster
+ * monster from your Deck in face-down Defense Position."
+ *   Counter  AddedCardsSummoned (every summon kind, face up): the only card here that holds Spell Counters is Breaker
+ *            the Magical Warrior (max. 1, a ZONE_LINK_ATK_300_PER_VALUE link from its own card ID), so the counter
+ *            goes on a face-up Breaker without one: the summoner's first, else the opponent's (the effect is
+ *            mandatory); with none, nothing. Applied at once (no chain link).
+ *   Battle   a floater: its "destroyed in battle" trigger (SendBattleDestroyedCardToGraveyard), the Deck list of
+ *            Spellcasters of Level 2 or lower (CollectEffectTargets) and EffectSpecialSummonFromDeckResolve, which
+ *            summons it face-down in Defense Position for this card (asked first; the CPU picks its best). */
+static void ApprenticeMagicianPlaceCounter(int player, u16 id)
+{
+    int pass, zone;
+
+    for (pass = 0; pass <= 1; pass++) {
+        int side = pass ? 1 - player : player;
+
+        for (zone = ZONE_MONSTER_0; zone <= ZONE_MONSTER_4; zone++) {
+            struct DuelZone *z = ZoneOf(side, zone);
+            u16 target = DUEL_CARD_ID(&z->card);
+
+            if (target != 0 && z->isFaceUp
+                && ((const u16 *)CARD_ID_TO_NUMBER_ADDR)[target & CARD_ID_MASK] == CARD_BREAKER_THE_MAGICAL_WARRIOR
+                && CountSpellCounters(side, zone) == 0) {
+                ShowCardEffect(player, id);
+                QueueAddZoneLink(side, target, DUEL_LOC(side, zone), ZONE_LINK_KIND(ZONE_LINK_ATK_300_PER_VALUE, 1));
+                return;
+            }
+        }
+    }
+}
+#endif /* HAS_CARD_APPRENTICE_MAGICIAN && HAS_CARD_BREAKER_THE_MAGICAL_WARRIOR */
+
+#if defined(HAS_CARD_DARK_MAGICIAN_OF_CHAOS) || defined(HAS_CARD_SACRED_CRANE) || defined(HAS_CARD_APPRENTICE_MAGICIAN)
 /* SummonAction_Update calls this for every summon once the monster is in (player, zone): `kind` is the
  * enum SummonActionKind, faceUp its position. */
 void AddedCardsSummoned(int player, int zone, u16 id, int kind, int faceUp)
 {
 #ifdef HAS_CARD_DARK_MAGICIAN_OF_CHAOS
     DarkMagicianOfChaosSummoned(player, zone, id, kind, faceUp);
+#endif
+#if defined(HAS_CARD_APPRENTICE_MAGICIAN) && defined(HAS_CARD_BREAKER_THE_MAGICAL_WARRIOR)
+    if (faceUp && ((const u16 *)CARD_ID_TO_NUMBER_ADDR)[id & CARD_ID_MASK] == CARD_APPRENTICE_MAGICIAN)
+        ApprenticeMagicianPlaceCounter(player, id);
 #endif
 #ifdef HAS_CARD_SACRED_CRANE
     if (((const u16 *)CARD_ID_TO_NUMBER_ADDR)[id & CARD_ID_MASK] == CARD_SACRED_CRANE
@@ -4411,6 +4450,17 @@ const struct CardEffect gAddedCardEffects[] = {
         EffectBottomlessTrapHoleResolve,
         NULL,
         EffectBottomlessTrapHolePrepare,
+        NULL,
+        NULL,
+    },
+#endif
+#ifdef HAS_CARD_APPRENTICE_MAGICIAN
+    /* Apprentice Magician's battle effect: a floater (see ApprenticeMagicianPlaceCounter above). */
+    {
+        CARD_APPRENTICE_MAGICIAN, 0,
+        (int (*)(struct ChainEntry *, struct ChainEntry *))EffectSpecialSummonFromDeckResolve,
+        NULL,
+        NULL,
         NULL,
         NULL,
     },
