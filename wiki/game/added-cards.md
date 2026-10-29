@@ -909,6 +909,25 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
 - The other added cards keep their IDs; their card numbers after it move down one.
 - Checked in the source and the build; not tested in an emulator.
 
+### Blast with Chain (2026-10-29)
+- Trap. ID 961. The fetched text: "Target 1 face-up monster you control; equip this card to that target. It gains 500
+  ATK. If this card is destroyed by a card effect while equipped: Target 1 card on the field; destroy that target."
+- **An Equip Trap.** `SUBTYPE_OVERRIDES` (tools/newcards.py, new) gives it subtype Equip, as the original's Kunai with
+  Chain, so it stays on the field after resolving (`Chain_CardGoesToGrave`). Its stats word is 0x21560000, the same as
+  Kunai's (checked in `build/assets/newcards__stats.bin`).
+- **One row, told apart by the event:**
+  - **Activation.** The target is a face-up monster of its controller (`EffectBlastWithChainCheck`). The human picks
+    it with the cursor. The CPU takes the attacked monster when answering an attack on one of its own, else its
+    strongest face-up one. The resolve equips it (`EquipCard`, as Kunai's resolve does), or destroys the card if the
+    target is gone. The +500 ATK is a case beside Kunai's in `CalcZoneCardStats` (card_stats.c).
+  - **Destroyed** (`RESPONSE_TRAP_TO_GRAVE`, from the Graveyard). `OnCardDestroyedByEffect` (effect_hooks.c), which
+    the effect destructions call, calls `BlastWithChainDestroyed` first. A face-up Blast with Chain that equips a
+    monster (`FindMonsterWithLinkTo`) queues the trigger. An Equip lost with its monster isn't destroyed by an effect,
+    so it doesn't go off. The target is any card on the field (the CPU: the human's strongest monster, else a
+    Spell/Trap of the human's), and it is destroyed by effect.
+- **CPU.** It activates the card in answer to an attack while it has a face-up monster (`AiShouldActivateAddedCard`).
+- Checked in the source and the build; not tested in an emulator.
+
 ### Gearfried the Iron Knight (2026-10-29)
 - Effect Monster (Level 4, EARTH Warrior, 1800/1600). The fetched text: "If either player equips an Equip Card(s) to
   this card: Destroy that Equip Card(s)."

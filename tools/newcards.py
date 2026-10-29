@@ -98,6 +98,9 @@ MONSTER_TYPES = {
 CARD_TYPE_TRAP, CARD_TYPE_MAGIC = 21, 22
 ATTRIBUTES = {'LIGHT': 1, 'DARK': 2, 'WATER': 3, 'FIRE': 4, 'EARTH': 5, 'WIND': 6}
 SUBTYPES = {'Normal': 0, 'Counter': 1, 'Field': 2, 'Equip': 3, 'Continuous': 4, 'Quick-Play': 5, 'Ritual': 6}
+# Cards whose EDS subtype is not their YGOPRODeck race: Traps that become Equip Cards are Equip Traps in EDS (as the
+# original's Kunai with Chain), so they stay on the field after resolving (Chain_CardGoesToGrave).
+SUBTYPE_OVERRIDES = {'Blast with Chain': 'Equip'}
 TEXT_FIXES = {'●': '', '’': "'", '‘': "'", '“': '"', '”': '"', '–': '-',
               '—': '-', '•': '', ' ': ' '}
 BLOCK_BEGIN = '    /* ---- Added cards (config/new_cards.txt), written by tools/newcards.py ---- */'
@@ -301,7 +304,7 @@ def stats_word(c):
     if c['type'] in ('Spell Card', 'Trap Card'):
         if c['race'] not in SUBTYPES:
             fail(f'{c["name"]}: {c["race"]} {c["type"]}s do not exist in EDS')
-        sub = SUBTYPES[c['race']]
+        sub = SUBTYPES[SUBTYPE_OVERRIDES.get(c['name'], c['race'])]
         if c['type'] == 'Spell Card':
             return CARD_TYPE_MAGIC << 20 | sub << 17
         return 1 << 29 | CARD_TYPE_TRAP << 20 | sub << 17

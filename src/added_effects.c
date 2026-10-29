@@ -4241,6 +4241,179 @@ int AiPlanForcedAttack(void)
 }
 #endif /* HAS_CARD_BERSERK_GORILLA */
 
+#ifdef HAS_CARD_BLAST_WITH_CHAIN
+/* ---- Blast with Chain ---------------------------------------------------------------------------------------------
+ * "Target 1 face-up monster you control; equip this card to that target. It gains 500 ATK. If this card is destroyed
+ * by a card effect while equipped: Target 1 card on the field; destroy that target."
+ * An Equip Trap, as Kunai with Chain (tools/newcards.py's SUBTYPE_OVERRIDES: subtype Equip, so it stays on the field,
+ * Chain_CardGoesToGrave). One row, told apart by the event:
+ *   activation   the target is a face-up monster of its controller (the human's cursor; the CPU takes the attacked
+ *                monster when it answers an attack on one of its own, else its strongest face-up one); the resolve
+ *                equips it (EquipCard) as Kunai's does, or destroys the card when the target is gone. +500 ATK:
+ *                CalcZoneCardStats' Equip case (card_stats.c), beside Kunai's.
+ *   destroyed    OnCardDestroyedByEffect (effect_hooks.c) calls BlastWithChainDestroyed for every card an effect
+ *                destroys: a face-up Blast with Chain that equips a monster (FindMonsterWithLinkTo) queues its
+ *                trigger from the Graveyard (RESPONSE_TRAP_TO_GRAVE). An Equip lost with its monster is not
+ *                destroyed by an effect, so it does not go off. The target is any card on the field (the CPU: the
+ *                human's strongest monster, else a Spell/Trap of the human's); it is destroyed.
+ * The CPU activates it in answer to an attack while it has a face-up monster (AiShouldActivateAddedCard). */
+static int CountFaceUpMonsters(int player);     /* below */
+
+static const u8 sStrBlastWithChainEquip[] = "Select a face-up monster you control to equip.";
+static const u8 sStrBlastWithChainDestroy[] = "Select a card on the field to destroy.";
+
+static inline int IsBlastWithChainTrigger(struct ChainEntry *link)
+{
+    return link->event == RESPONSE_TRAP_TO_GRAVE;
+}
+
+void BlastWithChainDestroyed(int player, int zone)
+{
+    struct DuelZone *z = ZoneOf(player, zone);
+    u16 id = DUEL_CARD_ID(&z->card);
+
+    if (zone < ZONE_SPELL_0 || zone > ZONE_SPELL_4 || id == 0 || !z->isFaceUp
+        || CardNumberOfId(id) != CARD_BLAST_WITH_CHAIN || FindMonsterWithLinkTo(player, zone) == 0xFFFF)
+        return;
+    Chain_AddPending(TRIGGER_PLAYER(player & 1) | TRIGGER_KIND(CHAIN_KIND_OFF_FIELD)
+                         | TRIGGER_EVENT(RESPONSE_TRAP_TO_GRAVE) | (id & CARD_ID_MASK),
+                     0);
+}
+
+/* A card in (player, zone) of the field. */
+static int IsFieldCard(int player, int zone)
+{
+    return zone <= ZONE_FIELD && DUEL_CARD_ID(&ZoneOf(player, zone)->card) != 0;
+}
+
+int EffectBlastWithChainPrepare(struct ChainEntry *card, struct ChainEntry *chainLink, u16 fromHand)
+{
+    int zone;
+
+    if (IsBlastWithChainTrigger(card)) {
+        for (zone = 0; zone <= ZONE_FIELD; zone++) {
+            if (IsFieldCard(0, zone) || IsFieldCard(1, zone))
+                return 1;
+        }
+        return 0;
+    }
+    if (fromHand)
+        return 0;
+    return CountFaceUpMonsters(card->player) > 0;
+}
+
+u16 EffectBlastWithChainCheck(struct ChainEntry *card, u16 pos)
+{
+    int player = (u8)pos, zone = pos >> 8;
+    struct DuelZone *z;
+
+    if (IsBlastWithChainTrigger(card))
+        return IsFieldCard(player, zone);
+    if (player != card->player || zone > ZONE_MONSTER_4)
+        return 0;
+    z = ZoneOf(player, zone);
+    return DUEL_CARD_ID(&z->card) != 0 && z->isFaceUp;
+}
+
+/* The CPU's picks. */
+static void AiBlastWithChainTarget(struct ChainEntry *link)
+{
+    int zone, best = -1, bestAtk = -1;
+
+    link->numTargets = 0;
+    if (IsBlastWithChainTrigger(link)) {
+        for (zone = ZONE_MONSTER_0; zone <= ZONE_MONSTER_4; zone++) {
+            if (IsFieldCard(AI_HUMAN, zone) && (int)GetZoneCardAtk(AI_HUMAN, zone) > bestAtk) {
+                best = zone;
+                bestAtk = GetZoneCardAtk(AI_HUMAN, zone);
+            }
+        }
+        for (zone = ZONE_SPELL_0; best < 0 && zone <= ZONE_FIELD; zone++) {
+            if (IsFieldCard(AI_HUMAN, zone))
+                best = zone;
+        }
+        if (best >= 0)
+            TryAddEffectTarget(link, AI_HUMAN, best);
+        return;
+    }
+    /* answering an attack on one of its face-up monsters: that one */
+    if (link->event == RESPONSE_ATTACK_DECLARED && (u8)link->loc1 == AI_PLAYER) {
+        zone = link->loc1 >> 8;
+        if (zone <= ZONE_MONSTER_4 && EffectBlastWithChainCheck(link, DUEL_LOC(AI_PLAYER, zone))
+            && TryAddEffectTarget(link, AI_PLAYER, zone))
+            return;
+    }
+    for (zone = ZONE_MONSTER_0; zone <= ZONE_MONSTER_4; zone++) {
+        if (EffectBlastWithChainCheck(link, DUEL_LOC(AI_PLAYER, zone))
+            && (int)GetZoneCardAtk(AI_PLAYER, zone) > bestAtk) {
+            best = zone;
+            bestAtk = GetZoneCardAtk(AI_PLAYER, zone);
+        }
+    }
+    if (best >= 0)
+        TryAddEffectTarget(link, AI_PLAYER, best);
+}
+
+int EffectBlastWithChainChainB(struct ChainEntry *link, struct ChainEntry *prevLink)
+{
+    u32 mask;
+
+    if (link->player) {
+        AiBlastWithChainTarget(link);
+        return 1;
+    }
+    switch (gChain.targetStep) {
+    case 0:
+        link->numTargets = 0;
+        TextBoxOpen(0x206, 0x712, TEXTBOX_FLAGS_DEFAULT,
+                    IsBlastWithChainTrigger(link) ? sStrBlastWithChainDestroy : sStrBlastWithChainEquip);
+        gChain.targetStep++;
+        return 0;
+    default:
+        mask = IsBlastWithChainTrigger(link) ? PICK_BOTH_SIDES(PICK_ANY_MONSTER | PICK_ANY_SPELL_TRAP)
+                                             : PICK_FACE_UP_MONSTER_ANY;
+        if (DuelCursor_PickTarget(mask) != 0) {
+            if (TryAddEffectTarget(link, gDuelScreen.selPlayer, gDuelScreen.selArea + gDuelScreen.selIndex) != 0)
+                return 1;
+            PlaySE(SE_ERROR);
+        }
+        return 0;
+    }
+}
+
+int EffectBlastWithChainResolve(struct ChainEntry *link, struct ChainEntry *chainedTo)
+{
+    int player, zone;
+    struct DuelZone *z;
+
+    if (link->negated || link->numTargets != 1)
+        return EFFECT_STEP_DONE;
+    player = (u8)link->targets[0];
+    zone = link->targets[0] >> 8;
+    z = ZoneOf(player, zone);
+    if (IsBlastWithChainTrigger(link)) {
+        if (DUEL_CARD_ID(&z->card) == 0)
+            return EFFECT_STEP_DONE;
+        if (link->player != player)
+            DuelCmd_Push(player ? DUEL_CMD_PLAYER | DUEL_CMD_SET_DESTROYED_BY_OPPONENT_FLAG
+                                : DUEL_CMD_SET_DESTROYED_BY_OPPONENT_FLAG, zone, 1, 0);
+        DestroyFieldCardByEffect(player, zone);
+        OnCardDestroyedByEffect(link->player, player, zone);
+        return EFFECT_STEP_DONE;
+    }
+    /* the equip, as Kunai with Chain's */
+    if (DUEL_CARD_ID(&z->card) != 0 && z->isFaceUp && link->player == player)
+        EquipCard(link->player, link->player | (link->zone << 8), link->targets[0]);
+    else
+        DestroyFieldCard(link->player, link->zone, 1);
+    return EFFECT_STEP_DONE;
+}
+#else
+void BlastWithChainDestroyed(int player, int zone)
+{
+}
+#endif /* HAS_CARD_BLAST_WITH_CHAIN */
+
 /* ---- The CPU's Tribute Summon upgrades ----------------------------------------------------------------------------
  * AiChooseSummonWithTribute (ai_summon.c) takes a Tribute Summon only when its battle simulation deals more damage
  * (or as much while destroying more). A wall swapped for a stronger wall changes neither, so the CPU kept Aqua Madoor
@@ -5679,6 +5852,10 @@ int AiShouldActivateAddedCard(struct ChainEntry *entry)
     if (!IsAddedCardId(entry->card))
         return 0;
     switch (CardNumberOfId(entry->card)) {
+#ifdef HAS_CARD_BLAST_WITH_CHAIN
+    case CARD_BLAST_WITH_CHAIN:                 /* against an attack, on a face-up monster of its own */
+        return entry->event == RESPONSE_ATTACK_DECLARED && CountFaceUpMonsters(AI_PLAYER) > 0;
+#endif
 #ifdef HAS_CARD_TORRENTIAL_TRIBUTE
     case CARD_TORRENTIAL_TRIBUTE:               /* it destroys the CPU's monsters too */
         return CountMonsters(AI_HUMAN) > CountMonsters(AI_PLAYER);
@@ -6167,6 +6344,16 @@ const struct CardEffect gAddedCardEffects[] = {
         NULL,
         NULL,
         EffectNewdoriaChainB,
+    },
+#endif
+#ifdef HAS_CARD_BLAST_WITH_CHAIN
+    {
+        CARD_BLAST_WITH_CHAIN, 0,
+        EffectBlastWithChainResolve,
+        EffectBlastWithChainCheck,
+        EffectBlastWithChainPrepare,
+        NULL,
+        EffectBlastWithChainChainB,
     },
 #endif
 #ifdef HAS_CARD_MIRAGE_OF_NIGHTMARE

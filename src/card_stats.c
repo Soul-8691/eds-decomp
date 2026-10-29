@@ -501,6 +501,9 @@ void GetZoneCardStats(int player, int zone, struct ZoneCardStats *out)
                         equipDef += 300;
                     }
                     break;
+#ifdef HAS_CARD_BLAST_WITH_CHAIN
+                case CARD_BLAST_WITH_CHAIN:     /* added card: +500 ATK, as Kunai with Chain */
+#endif
                 case CARD_KUNAI_WITH_CHAIN: equipAtk += 500; break;
                 case CARD_SALAMANDRA:
                     if (out->attribute == ATTRIBUTE_FIRE)

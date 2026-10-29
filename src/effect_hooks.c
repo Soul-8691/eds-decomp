@@ -387,6 +387,8 @@ void ResolvePendingGraveyardEquip(int player, int graveIdx, u16 equip)
  * face up on neither field, show it and queue DUEL_CMD_SET_DESTROYED_TRIGGER_PENDING for `player` (the
  * delayed trigger of duel step 6).
  */
+void BlastWithChainDestroyed(int player, int zone);     /* mod: src/added_effects.c */
+
 void OnCardDestroyedByEffect(int srcPlayer, int player, int zone)
 {
     int side = player & 1;
@@ -395,6 +397,7 @@ void OnCardDestroyedByEffect(int srcPlayer, int player, int zone)
     u8 *base = (u8 *)gDuelZones;
     struct DuelZone *zn = (struct DuelZone *)(offset + (int)base);
 
+    BlastWithChainDestroyed(player, zone);  /* added: its trigger when destroyed while equipped */
     if (CARD_NUMBER_OF(CARD_WORD(zn->card)) == CARD_1514 && srcPlayer != player) {
         u32 id = CARD_BANISHER_OF_THE_LIGHT;
 

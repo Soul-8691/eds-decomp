@@ -1837,3 +1837,6 @@ updated: 2026-09-29
 
 ## [2026-10-29] progress | Gearfried the Iron Knight mapped to effect key 1351
 - tools/newcards.py ENGINE_NUMBERS Gearfried the Iron Knight: 1351 (EquipCard destroys an Equip put on it; Snatch Steal refuses it); include/constants/cards.h regenerated. [[added-cards]]. Built (make and make release); not tested in an emulator.
+
+## [2026-10-29] progress | Blast with Chain coded
+- tools/newcards.py SUBTYPE_OVERRIDES (Blast with Chain: an Equip Trap, as Kunai with Chain); src/added_effects.c EffectBlastWithChain* and its row, BlastWithChainDestroyed, the CPU's activation; src/effect_hooks.c OnCardDestroyedByEffect calls it; src/card_stats.c +500 beside Kunai. Release .text 0x809C0. [[added-cards]]. Built (make and make release); not tested in an emulator.
