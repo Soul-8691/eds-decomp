@@ -556,6 +556,26 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
   - `AiShouldRetreatToDefense` never picks it.
 - Checked in the source and the build; not tested in an emulator.
 
+### The CPU never Tributes a copy of what it summons (2026-10-29)
+- **Rule.** The CPU doesn't Tribute a monster with the same card number as the one it summons, unless the summoned
+  card has a summon trigger (`AiHasSummonTrigger`), which makes the swap worth it. It applies to:
+  - Tribute Summons;
+  - Special Summons whose cost sends a field monster to the Graveyard: the Toons' Tributes in `AiStrategyToonWorld`
+    (ai_strategy.c).
+- **Summon triggers.** The summon trigger list of summon_checks.c (Dragon Seeker, Senju of the Thousand Hands, Sonic
+  Bird, keys 1240/1246/1332, Breaker, Zaborg, Mobius), plus Dark Magician of Chaos, Sacred Crane, Apprentice
+  Magician and Tsukuyomi.
+- **How.** The CPU's summon code asks `AiPickTributeFor(cardId, exclude)` (added_effects.c), which sets
+  `gModDuel.aiTributeFor` for the call. `AiPickTributeMonster` (summon_builders.c) skips that card's copies
+  (`AiTributeIsSameCard`) in its Sangan, Witch and weakest-monster passes. The callers are:
+  - `AiChooseSummonWithTribute` (ai_summon.c);
+  - the summon and Set steps of `AiStepMainPhase` (ai_steps.c);
+  - `AiHasTributesFor` (summon_builders.c);
+  - `AiStrategyToonWorld`.
+  The other callers (Panther Warrior / Insect Queen's attack cost, the tribute prompt of effects) are unchanged.
+- **Not affected.** Graveyard banish costs (Black Luster Soldier, Chaos Sorcerer, Gigantes).
+- Checked in the source and the build; not tested in an emulator.
+
 ### The CPU never pays itself to 0 LP (2026-10-29)
 - **Before.** The vanilla prepares don't check their LP costs against the player's LP, so the CPU could pay itself
   out of the duel (Premature Burial at 800 LP, Cyber Stein, ...).

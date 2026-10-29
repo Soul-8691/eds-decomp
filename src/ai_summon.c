@@ -192,6 +192,8 @@ int AiPlanAttack(u16 assumeAttackPos)
  *    and the second as (zone & 7) | 8 in the low nibble. ROM quirk: the first tribute gets no `| 8` marker,
  *    so a first tribute in zone 0 is not removed by AiSimSummon.
  * A card whose tributes cannot be found is skipped. */
+int AiPickTributeFor(u16 id, int excludeZone);     /* mod: src/added_effects.c */
+
 int AiChooseSummonWithTribute(int *outDamage)
 {
     int bestHandIndex = -1;
@@ -230,14 +232,14 @@ int AiChooseSummonWithTribute(int *outDamage)
             break;                          /* no tribute */
         case 5:
         case 6:                             /* one tribute */
-            tribute1 = AiPickTributeMonster(-1, 0);
+            tribute1 = AiPickTributeFor(cardId, -1);   /* changed: no copy of it (src/added_effects.c) */
             if (tribute1 == -1)
                 skip = 1;
             tributeMask = tribute1 | 8;
             break;
         default:                            /* two tributes (level 0, 7+, Divine) */
-            tribute1 = AiPickTributeMonster(-1, 0);
-            tribute2 = AiPickTributeMonster(tribute1, 0);
+            tribute1 = AiPickTributeFor(cardId, -1);
+            tribute2 = AiPickTributeFor(cardId, tribute1);
             if (tribute1 == -1 || tribute2 == -1)
                 skip = 1;
             tributeNibble2 = (tribute2 & 7) | 8;

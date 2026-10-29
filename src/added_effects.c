@@ -64,6 +64,7 @@ struct ModDuelState {
     u16 dimensionReturn;        /* Return from the Different Dimension: bit player * 5 + zone, banish in the End Phase */
     u16 dimensionReturnIds[10]; /* ... and the card ID summoned into that zone */
     u8 aiThunderDragonSearched; /* the CPU's Thunder Dragon added a copy; it is discarded even with none left to find */
+    u16 aiTributeFor;           /* AiPickTributeFor: the card number the CPU's tributes may not copy, 0xFFFF none */
 };
 extern struct ModDuelState gModDuel;
 
@@ -957,6 +958,7 @@ void ModDuelInit(void)
     gModDuel.aiStandbyTurn = 0xFFFF;
     gModDuel.dimensionReturn = 0;
     gModDuel.aiThunderDragonSearched = 0;
+    gModDuel.aiTributeFor = 0xFFFF;
 #ifdef HAS_CARD_INJECTION_FAIRY_LILY
     InjectionFairyLilyResetBattle();
 #endif
@@ -4123,6 +4125,81 @@ int AiPlanForcedAttack(void)
     return 1;
 }
 #endif /* HAS_CARD_BERSERK_GORILLA */
+
+/* ---- The CPU's tributes and costs are not copies of the card it summons -------------------------------------------
+ * The CPU never Tributes a copy of the monster it summons (the same card number), whether for a Tribute Summon or
+ * for a Special Summon that sends its cost from the field to the Graveyard (the Toons' Tributes, ai_strategy.c),
+ * unless the summoned card has a summon trigger (AiHasSummonTrigger), which makes the swap worth it. The CPU's
+ * summon code asks AiPickTributeFor, which tells AiPickTributeMonster (summon_builders.c) the card through
+ * gModDuel.aiTributeFor; AiPickTributeMonster skips that card's copies (AiTributeIsSameCard). The other callers
+ * (Panther Warrior's attack cost, the tribute prompt of effects) keep 0xFFFF: no filter. Graveyard banish costs
+ * (Black Luster Soldier, Chaos Sorcerer, Gigantes) are not affected. */
+
+/* Cards with a trigger when they are summoned: the summon trigger list (summon_checks.c), and the added cards'
+ * summon effects (AddedCardsSummoned, Tsukuyomi). */
+static int AiHasSummonTrigger(u16 number)
+{
+    switch (number) {
+    case CARD_DRAGON_SEEKER:
+    case CARD_SENJU_OF_THE_THOUSAND_HANDS:
+    case CARD_SONIC_BIRD:
+    case CARD_1240:
+    case CARD_1246:
+    case CARD_1332:
+#ifdef HAS_CARD_BREAKER_THE_MAGICAL_WARRIOR
+    case CARD_BREAKER_THE_MAGICAL_WARRIOR:
+#endif
+#ifdef HAS_CARD_ZABORG_THE_THUNDER_MONARCH
+    case CARD_ZABORG_THE_THUNDER_MONARCH:
+#endif
+#ifdef HAS_CARD_MOBIUS_THE_FROST_MONARCH
+    case CARD_MOBIUS_THE_FROST_MONARCH:
+#endif
+#ifdef HAS_CARD_DARK_MAGICIAN_OF_CHAOS
+    case CARD_DARK_MAGICIAN_OF_CHAOS:
+#endif
+#ifdef HAS_CARD_SACRED_CRANE
+    case CARD_SACRED_CRANE:
+#endif
+#ifdef HAS_CARD_APPRENTICE_MAGICIAN
+    case CARD_APPRENTICE_MAGICIAN:
+#endif
+#ifdef HAS_CARD_TSUKUYOMI
+    case CARD_TSUKUYOMI:
+#endif
+        return 1;
+    }
+    return 0;
+}
+
+/* The card number whose copies the CPU may not Tribute for summoning card `id`, or 0xFFFF for none. */
+static u16 AiCostExcludedNumber(u16 id)
+{
+    u16 number = CardNumberOfId(id);
+
+    return AiHasSummonTrigger(number) ? 0xFFFF : number;
+}
+
+int AiPickTributeMonster(int excludeZone, u16 allowFusion);
+
+/* AiPickTributeMonster(excludeZone, 0) for the CPU's summon of card `id`: never a copy of it (see above). */
+int AiPickTributeFor(u16 id, int excludeZone)
+{
+    int zone;
+
+    gModDuel.aiTributeFor = AiCostExcludedNumber(id);
+    zone = AiPickTributeMonster(excludeZone, 0);
+    gModDuel.aiTributeFor = 0xFFFF;
+    return zone;
+}
+
+/* AiPickTributeMonster: 1 if the CPU's monster in `zone` is a copy of the card it is summoning. */
+int AiTributeIsSameCard(int zone)
+{
+    u16 id = DUEL_CARD_ID(&ZoneOf(AI_PLAYER, zone)->card);
+
+    return gModDuel.aiTributeFor != 0xFFFF && id != 0 && CardNumberOfId(id) == gModDuel.aiTributeFor;
+}
 
 /* ---- The CPU never pays itself to 0 LP ------------------------------------------------------------------------------
  * CanActivateEffect (effect_activation.c) refuses the CPU's activation of a card whose own LP cost or self-damage

@@ -1760,3 +1760,6 @@ updated: 2026-09-29
 
 ## [2026-10-29] progress | The CPU never pays itself to 0 LP
 - src/added_effects.c AiSelfLpLoss / AiActivationWouldLoseLp (LP costs, Tremendous Fire, Time Wizard; not in link duels); src/effect_activation.c CanActivateEffect asks it first. README.md. [[added-cards]]. Built (make and make release); not tested in an emulator.
+
+## [2026-10-29] progress | The CPU never Tributes a copy of what it summons
+- src/added_effects.c AiHasSummonTrigger, AiPickTributeFor, AiTributeIsSameCard, gModDuel.aiTributeFor; src/summon_builders.c AiPickTributeMonster skips the copies; src/ai_summon.c, src/ai_steps.c, src/ai_strategy.c (Toons) and AiHasTributesFor ask AiPickTributeFor. README.md. [[added-cards]]. Built (make and make release); not tested in an emulator.

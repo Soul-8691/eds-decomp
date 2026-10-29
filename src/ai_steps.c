@@ -160,6 +160,7 @@ static inline u32 CardCost(u32 id)
  * The phase-10 tails assign the same state pointer after each call so the compiler shares the
  * original call/store tail without changing its reads. */
 int AiUseThunderDragon(void);   /* mod: src/added_effects.c */
+int AiPickTributeFor(u16 id, int excludeZone);     /* mod: src/added_effects.c */
 
 int AiStepMainPhase(void)
 {
@@ -283,7 +284,7 @@ int AiStepMainPhase(void)
                     return 1;
                 case 5:
                 case 6:
-                    tribute1 = AiPickTributeMonster(-1, 0);
+                    tribute1 = AiPickTributeFor(id, -1);   /* changed: no copy of it (src/added_effects.c) */
                     if (tribute1 == -1)
                         break;
                     /* Tribute byte: zone | owner (bit 4) | present (bit 7), see QueueNormalSummon. */
@@ -292,8 +293,8 @@ int AiStepMainPhase(void)
                     QueueNormalSummon(1, handIdx, tribute1, tributeMask, hasFlip2 == 0);
                     return 1;
                 default:
-                    tribute1 = AiPickTributeMonster(-1, 0);
-                    tribute2 = AiPickTributeMonster(tribute1, 0);
+                    tribute1 = AiPickTributeFor(id, -1);
+                    tribute2 = AiPickTributeFor(id, tribute1);
                     if (tribute1 == -1 || tribute2 == -1)
                         break;
                     {
@@ -384,15 +385,15 @@ int AiStepMainPhase(void)
             goto phase_store;
         case 5:
         case 6:
-            tribute1 = AiPickTributeMonster(-1, 0);
+            tribute1 = AiPickTributeFor(id, -1);   /* changed: no copy of it (src/added_effects.c) */
             if (tribute1 == -1)
                 break;
             QueueNormalSummon(1, handIdx, tribute1, 0x90 | tribute1, 0);
             next = &gAiState;
             goto phase_store;
         default:
-            tribute1 = AiPickTributeMonster(-1, 0);
-            tribute2 = AiPickTributeMonster(tribute1, 0);
+            tribute1 = AiPickTributeFor(id, -1);
+            tribute2 = AiPickTributeFor(id, tribute1);
             if (tribute1 == -1 || tribute2 == -1)
                 break;
             {

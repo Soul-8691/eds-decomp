@@ -337,6 +337,9 @@ int AiIsKeyCard(int tier, u16 number)
  * of the Black Forest (both search the deck when sent to the graveyard), else the monster with the lowest
  * ATK * 2 + DEF after modifiers. A Fusion monster is only picked when allowFusion is nonzero.
  */
+int AiTributeIsSameCard(int zone);  /* mod: src/added_effects.c */
+int AiPickTributeFor(u16 id, int excludeZone);
+
 int AiPickTributeMonster(int excludeZone, u16 allowFusion)
 {
     int i;
@@ -345,19 +348,19 @@ int AiPickTributeMonster(int excludeZone, u16 allowFusion)
 
     for (i = 0; i < MONSTER_ZONE_COUNT; i++) {
         u16 id = CARD_ID(ZONE1_WORD(i));
-        if (id != 0 && i != excludeZone && CARD_NUMBER(id) == CARD_SANGAN)
+        if (id != 0 && i != excludeZone && CARD_NUMBER(id) == CARD_SANGAN && !AiTributeIsSameCard(i))
             return i;
     }
     for (i = 0; i < MONSTER_ZONE_COUNT; i++) {
         u16 id = CARD_ID(ZONE1_WORD(i));
-        if (id != 0 && i != excludeZone && CARD_NUMBER(id) == CARD_WITCH_OF_THE_BLACK_FOREST)
+        if (id != 0 && i != excludeZone && CARD_NUMBER(id) == CARD_WITCH_OF_THE_BLACK_FOREST && !AiTributeIsSameCard(i))
             return i;
     }
     best = 32000;       /* above any ATK * 2 + DEF */
     bestZone = -1;
     for (i = 0; i < MONSTER_ZONE_COUNT; i++) {
         u16 id = CARD_ID(ZONE1_WORD(i));
-        if (id != 0 && i != excludeZone) {
+        if (id != 0 && i != excludeZone && !AiTributeIsSameCard(i)) {     /* changed: no copy of the summoned card */
             struct ZoneCardStats stats;
             int allowed = 1;
             int value;
@@ -395,15 +398,15 @@ int AiHasTributesFor(u16 cardId)
         goto needTwo;
     {
         int none = -1;
-        if (AiPickTributeMonster(none, 0) != none)
+        if (AiPickTributeFor(cardId, none) != none)     /* changed: no copy of it (src/added_effects.c) */
             return 1;
         return 0;
     }
 needTwo:
     {
         int none = -1;
-        first = AiPickTributeMonster(none, 0);
-        second = AiPickTributeMonster(first, 0);
+        first = AiPickTributeFor(cardId, none);
+        second = AiPickTributeFor(cardId, first);
         if (first == none)
             return 0;
         if (second == none)

@@ -95,6 +95,7 @@ void DiscardHandCard(int player, int handIdx, u16 a, u16 b);
 void BanishGraveyardCard(int player, u32 *card);
 void QueueNormalSummon(int player, int handIdx, int zone, u16 tributes, u16 faceUp);
 void QueueSpecialSummonFromHand(int player, int handIdx, int zone, int tributes, int faceUp);
+int AiPickTributeFor(u16 id, int excludeZone);     /* mod: src/added_effects.c */
 
 /* The low 12 bits of a card word (struct DuelCard.id, with the owner bit shifted out). */
 #define CARD_ID(w) (((w) << 20) >> 20)
@@ -808,7 +809,7 @@ int AiStrategyToonWorld(void)
                     S.stepState--;
                     return 0;
                 case CARD_TOON_SUMMONED_SKULL:
-                    a = AiPickTributeMonster(-1, 0);
+                    a = AiPickTributeFor(id, -1);  /* changed: no copy of it (src/added_effects.c) */
                     if (a == -1)
                         break;
                     {
@@ -819,8 +820,8 @@ int AiStrategyToonWorld(void)
                     S.stepState--;
                     return 0;
                 case CARD_BLUE_EYES_TOON_DRAGON:
-                    a = AiPickTributeMonster(-1, 0);
-                    b = AiPickTributeMonster(a, 0);
+                    a = AiPickTributeFor(id, -1);
+                    b = AiPickTributeFor(id, a);
                     if (a == -1 || b == -1)
                         break;
                     {
