@@ -7,28 +7,38 @@
   <img src="eds-11.png" width="24%" alt="Screenshot 4">
 </p>
 <p align="center">
-  <img src="eds-12.png" width="24%" alt="Screenshot 5">
-  <img src="eds-15.png" width="24%" alt="Screenshot 6">
-  <img src="eds-13.png" width="24%" alt="Screenshot 7">
-  <img src="eds-14.png" width="24%" alt="Screenshot 8">
+  <img src="eds-29.png" width="24%" alt="Screenshot 5">
+  <img src="eds-30.png" width="24%" alt="Screenshot 6">
+  <img src="eds-12.png" width="24%" alt="Screenshot 7">
+  <img src="eds-15.png" width="24%" alt="Screenshot 8">
 </p>
 <p align="center">
-  <img src="eds-16.png" width="24%" alt="Screenshot 9">
-  <img src="eds-27.png" width="24%" alt="Screenshot 10">
-  <img src="eds-17.png" width="24%" alt="Screenshot 11">
-  <img src="eds-18.png" width="24%" alt="Screenshot 12">
+  <img src="eds-13.png" width="24%" alt="Screenshot 9">
+  <img src="eds-14.png" width="24%" alt="Screenshot 10">
+  <img src="eds-31.png" width="24%" alt="Screenshot 11">
+  <img src="eds-16.png" width="24%" alt="Screenshot 12">
 </p>
 <p align="center">
-  <img src="eds-19.png" width="24%" alt="Screenshot 13">
-  <img src="eds-20.png" width="24%" alt="Screenshot 14">
-  <img src="eds-28.png" width="24%" alt="Screenshot 15">
-  <img src="eds-21.png" width="24%" alt="Screenshot 16">
+  <img src="eds-32.png" width="24%" alt="Screenshot 13">
+  <img src="eds-33.png" width="24%" alt="Screenshot 14">
+  <img src="eds-27.png" width="24%" alt="Screenshot 15">
+  <img src="eds-17.png" width="24%" alt="Screenshot 16">
 </p>
 <p align="center">
-  <img src="eds-22.png" width="24%" alt="Screenshot 17">
-  <img src="eds-23.png" width="24%" alt="Screenshot 18">
-  <img src="eds-24.png" width="24%" alt="Screenshot 19">
-  <img src="eds-25.png" width="24%" alt="Screenshot 20">
+  <img src="eds-18.png" width="24%" alt="Screenshot 17">
+  <img src="eds-19.png" width="24%" alt="Screenshot 18">
+  <img src="eds-20.png" width="24%" alt="Screenshot 19">
+  <img src="eds-28.png" width="24%" alt="Screenshot 20">
+</p>
+<p align="center">
+  <img src="eds-21.png" width="24%" alt="Screenshot 21">
+  <img src="eds-22.png" width="24%" alt="Screenshot 22">
+  <img src="eds-23.png" width="24%" alt="Screenshot 23">
+  <img src="eds-24.png" width="24%" alt="Screenshot 24">
+</p>
+<p align="center">
+  <img src="eds-25.png" width="24%" alt="Screenshot 25">
+  <img src="eds-26.png" width="24%" alt="Screenshot 26">
 </p>
 
 A hack of *Yu-Gi-Oh! The Eternal Duelist Soul* (GBA) that follows the
