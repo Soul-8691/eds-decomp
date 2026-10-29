@@ -93,31 +93,36 @@ next one.
 - **Fixes.** Deck Edit no longer blots out the first letters of the row above the cursor after Card View (a
   bug in the original game).
 - **Smarter CPU.**
-  - It switches a monster that can't beat any of yours to Defense Position when you have a face-up monster with
-    higher ATK, instead of leaving it to be run over. A monster with 1700 ATK or more stays in Attack Position
-    unless your strongest monster has at least 1000 more ATK than it.
-  - It crashes into your monsters with equal ATK when it has no better attack, unless another of its monsters can
-    beat yours outright.
-  - When you attack into its flip monsters that remove or stop a monster (Man-Eater Bug, Hane-Hane, Penguin
-    Soldier, Dark-Eyes Illusionist, Night Assailant, Tsukuyomi), it targets your strongest monster that hasn't
-    attacked yet, so it can't attack this turn.
-  - It uses Thunder Dragon at the start of its Main Phase. It discards one to add a single copy, then discards the
-    new copy for the last one, then discards that one too, finding nothing. All three end up in its Graveyard. A
-    lone copy, with none left in its Deck and not just added, stays in its hand.
-  - It plays Nobleman of Crossout on your face-down monsters (the original CPU never used it).
-  - It plays Dark Hole only when you control more monsters than it does.
-  - Its Mystical Space Typhoon (and Gust, Driving Snow) also targets your face-up Traps, and never its own cards.
-  - It never activates a card whose LP cost or self-damage would drop its own LP to 0 (Premature Burial,
-    Cyber Stein, Tremendous Fire, a lost Time Wizard toss, ...).
-  - It never Tributes a copy of the monster it is summoning, for a Tribute Summon or a Toon's Special Summon,
-    unless that monster has an effect that triggers on its summon (Zaborg, Mobius, Breaker, ...).
-  - When it chooses Attack or Defense Position, it counts the ATK a monster will gain from an Equip Spell in its
-    hand, Breaker's Spell Counter, and Blade Knight's bonus once its hand shrinks.
-  - It no longer knows the ATK or DEF of your face-down monsters: it assumes 1400 for both when deciding
-    whether to attack one, judging how threatening your field is, and choosing targets for its effects.
-  - It uses Solemn Judgment (the original CPU never did) while it has 4000 LP or less. It negates your Normal and
-    Special Summons, your Flip Summons of flip-effect monsters, and your Spells and Traps when it has no cheaper
-    answer.
+  - **Battle and positions.**
+    - It switches a monster that can't beat any of yours to Defense Position when you have a face-up monster with
+      higher ATK, instead of leaving it to be run over. A monster with 1700 ATK or more stays in Attack Position
+      unless your strongest monster has at least 1000 more ATK than it.
+    - When it chooses Attack or Defense Position, it counts the ATK a monster will gain from an Equip Spell in its
+      hand, Breaker's Spell Counter, and Blade Knight's bonus once its hand shrinks.
+    - It crashes into your monsters with equal ATK when it has no better attack, unless another of its monsters
+      can beat yours outright.
+    - It never Tributes a copy of the monster it is summoning, for a Tribute Summon or a Toon's Special Summon,
+      unless that monster has an effect that triggers on its summon (Zaborg, Mobius, Breaker, ...).
+  - **Card use.**
+    - It uses Thunder Dragon at the start of its Main Phase. It discards one to add a single copy, then discards
+      the new copy for the last one, then discards that one too, finding nothing. All three end up in its
+      Graveyard. A lone copy, with none left in its Deck and not just added, stays in its hand.
+    - It plays Nobleman of Crossout on your face-down monsters (the original CPU never used it).
+    - It uses Solemn Judgment (the original CPU never did) while it has 4000 LP or less. It negates your Normal
+      and Special Summons, your Flip Summons of flip-effect monsters, and your Spells and Traps when it has no
+      cheaper answer.
+    - It chains Trap Hole and its other summon Traps to your monster's summon effect (Mobius, Zaborg, ...), so it
+      can destroy the monster before the effect resolves.
+    - It plays Dark Hole only when you control more monsters than it does.
+    - Its Mystical Space Typhoon (and Gust, Driving Snow) also targets your face-up Traps, and never its own cards.
+    - When you attack into its flip monsters that remove or stop a monster (Man-Eater Bug, Hane-Hane, Penguin
+      Soldier, Dark-Eyes Illusionist, Night Assailant, Tsukuyomi), it targets your strongest monster that hasn't
+      attacked yet, so it can't attack this turn.
+    - It never activates a card whose LP cost or self-damage would drop its own LP to 0 (Premature Burial,
+      Cyber Stein, Tremendous Fire, a lost Time Wizard toss, ...).
+  - **What it can see.** It no longer knows the ATK or DEF of your face-down monsters. It assumes 1400 for both
+    when deciding whether to attack one, judging how threatening your field is, and choosing targets for its
+    effects.
 - **Thunder Dragon** can be activated even with no copy left in the Deck; the search then finds nothing.
 - **Debug mode** (testing builds only, not in the release). You start with 8 copies of every card, and you can't
   deck out. Decks can be under 40 cards, can hold any number of copies of a card, and ignore banlists. Switching
