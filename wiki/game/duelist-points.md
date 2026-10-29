@@ -30,12 +30,13 @@ DP live in the save image: `gSaveData.dpLow` (+0x215A) and `dpHigh` (+0x215C), a
   `usage/<format>.json` and the format's banlist, listing only the cards its decks use.
   - **Formula.** The share of decks running the card in main + side (its "total" entry: sum of `copies` /
     `decks_processed`) * 1000, plus its share in the extra deck * 100. Then * 3 if the card is limited, or * 1.5
-    if semi-limited, in that format.
+    if semi-limited, in that format. At least 20 DP (`MIN_PRICE`; changed 2026-10-29, it was 1).
   - **Lookup.** The price comes from the newest unlocked format ([[yugi-kaiba-opponent]], unlock order) whose
     decks use the card. So unlocking a format (e.g. Critter after Yugi-Kaiba) re-prices the cards its decks use,
     and every other card keeps its price.
-  - **Fallbacks.** A card none of the unlocked formats' decks use costs 5 if it is in an unlocked format's card
-    pool (`FormatCardLimit` != 0xFF), else `DEFAULT_CARD_COST` (3000).
+  - **Fallbacks.** A card none of the unlocked formats' decks use costs `POOL_CARD_COST` (20, the same minimum;
+    it was 5 until 2026-10-29) if it is in an unlocked format's card pool (`FormatCardLimit` != 0xFF), else
+    `DEFAULT_CARD_COST` (3000).
   - **Yugi-Kaiba examples.** Pot of Greed 3000, Swords of Revealing Light 1463, Man-Eater Bug 1000.
 - **Duel rewards.** `sDuelistRewards`: by `enum DuelistId`, 1000 each.
   `Campaign_RecordDuelResult` (campaign_steps.c) calls `AwardDuelDP(gMain.opponent)` on a win.

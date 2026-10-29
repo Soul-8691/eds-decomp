@@ -1811,3 +1811,6 @@ updated: 2026-09-29
 
 ## [2026-10-29] progress | Masked Dragon coded
 - src/added_effects.c its row (EffectSpecialSummonFromDeckResolve); src/duel_field_moves.c battle-destroyed trigger; src/effect_target_collect.c Deck Dragons with 1500 or less ATK; src/effect_resolve6.c choose-position list. [[added-cards]]. Built (make and make release); not tested in an emulator.
+
+## [2026-10-29] progress | The cheapest card costs 20 DP
+- tools/cardprices.py MIN_PRICE 20 (was 1) for the usage-stat prices; src/mod_dp.c POOL_CARD_COST 20 (was 5); CARD_PRICES.md regenerated. [[duelist-points]]. Built (make and make release).
