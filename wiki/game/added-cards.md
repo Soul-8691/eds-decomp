@@ -643,6 +643,17 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
 - **CPU limit.** The CPU doesn't hold back Spell/Trap cards to keep the Frog coming back.
 - Checked in the source and the build; not tested in an emulator.
 
+### The CPU's Set step against an empty field (2026-10-29)
+- **Before.** `AiStepMainPhase`'s `AI_MAIN_SET_MONSTER` (ai_steps.c) Set its pick face-down, except Time Wizard and
+  Cannon Soldier; the one-Tribute case always Set it. The CPU reaches that step on the first turn
+  (`gDuelPlayers.unk1B0C == 0` skips the summon simulations, which can't attack then anyway) and whenever no
+  simulated summon does better. So it Set strong monsters even with the human's field empty.
+- **Now.** `AiSummonFaceUpOnOpenField` (added_effects.c): while the human controls no monster, a monster with 1700 or
+  more printed ATK (`CARD_STATS_ATK * CARD_STATS_POINTS_SCALE`) and no flip effect is Normal Summoned face up in
+  Attack Position, with no Tribute or with one. The two-Tribute case already summoned face up.
+- **Not changed.** Which monster the step picks (`AiPickMonsterToSet`) stays the same.
+- Checked in the source and the build; not tested in an emulator.
+
 ### Cyber Dragon (2026-10-29)
 - Effect Monster (Level 5, LIGHT Machine, 2100/1600): "If only your opponent controls a monster, you can Special
   Summon this card (from your hand)."

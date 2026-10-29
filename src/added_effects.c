@@ -4236,6 +4236,25 @@ int AiPlanForcedAttack(void)
 }
 #endif /* HAS_CARD_BERSERK_GORILLA */
 
+/* ---- The CPU's Set step against an empty field -----------------------------------------------------------------------
+ * AiStepMainPhase's AI_MAIN_SET_MONSTER (ai_steps.c) Sets the monster it picks (on the first turn every summon goes
+ * there, and later when no summon simulation is better). Changed: while the human controls no monster, a monster with
+ * 1700 or more printed ATK and no flip effect is Normal Summoned face up in Attack Position instead (with or without
+ * a Tribute), as the CPU's retreat rule keeps such monsters in Attack Position (AiShouldRetreatToDefense). */
+#define AI_OPEN_FIELD_ATTACK_ATK 1700
+
+int AiSummonFaceUpOnOpenField(u16 id)
+{
+    u32 stats = gCardStats[id & CARD_ID_MASK];
+    u16 number = CardNumberOfId(id);
+
+    if (CountMonsters(AI_HUMAN) != 0 || CARD_STATS_TYPE(stats) > CARD_TYPE_REPTILE)
+        return 0;
+    if (HasFlipEffect(number, 0) || HasFlipEffect(number, 1))
+        return 0;
+    return (int)(CARD_STATS_ATK(stats) * CARD_STATS_POINTS_SCALE) >= AI_OPEN_FIELD_ATTACK_ATK;
+}
+
 #ifdef HAS_CARD_SAND_MOTH
 /* ---- Sand Moth ----------------------------------------------------------------------------------------------------
  * "When this face-down Defense Position card is destroyed and sent to the Graveyard, except by battle, switch the

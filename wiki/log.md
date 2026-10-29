@@ -1799,3 +1799,6 @@ updated: 2026-09-29
 
 ## [2026-10-29] progress | Hydrogeddon triggers after leaving the field
 - src/added_effects.c HydrogeddonAfterBattle: no longer needs Hydrogeddon in its zone (a flipped Man-Eater Bug resolves before BATTLE_STAGE_DESTROY); off the field the trigger is CHAIN_KIND_OFF_FIELD. [[added-cards]]. Built (make and make release); not tested in an emulator.
+
+## [2026-10-29] progress | The CPU summons 1700+ ATK face up on an empty field
+- src/added_effects.c AiSummonFaceUpOnOpenField; src/ai_steps.c AI_MAIN_SET_MONSTER uses it for the no-Tribute and one-Tribute summons. README.md. [[added-cards]]. Built (make and make release); not tested in an emulator.

@@ -1323,6 +1323,8 @@ enum CardNumber {
     CARD_MAGE_POWER = 1450,                               /* id 929, added card */
     CARD_BAZOO_THE_SOUL_EATER = 1513,                     /* id 917, added card */
     CARD_NIGHTMARES_STEELCAGE = 1600,                     /* id 1156, added card */
+    CARD_CYBER_TWIN_DRAGON = 1601,                        /* id 1157, added card */
+    CARD_CYBER_END_DRAGON = 1602,                         /* id 1158, added card */
     CARD_SHEEP_TOKEN = 1922,                              /* id 1110, added card */
     /* ---- end of the added cards ---- */
 };

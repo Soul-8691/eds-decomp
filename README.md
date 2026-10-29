@@ -103,6 +103,8 @@ next one.
       unless your strongest monster has at least 1000 more ATK than it.
     - When it chooses Attack or Defense Position, it counts the ATK a monster will gain from an Equip Spell in its
       hand, Breaker's Spell Counter, and Blade Knight's bonus once its hand shrinks.
+    - When you control no monsters, it summons a monster with 1700 or more ATK in Attack Position instead of
+      Setting it (unless the monster has a flip effect), even on the first turn.
     - It crashes into your monsters with equal ATK when it has no better attack, unless another of its monsters
       can beat yours outright.
     - It never Tributes a copy of the monster it is summoning, for a Tribute Summon or a Toon's Special Summon,

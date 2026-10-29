@@ -162,6 +162,7 @@ static inline u32 CardCost(u32 id)
  * original call/store tail without changing its reads. */
 int AiUseThunderDragon(void);   /* mod: src/added_effects.c */
 int AiSpecialSummonCyberDragon(void);
+int AiSummonFaceUpOnOpenField(u16 id);
 int AiPickTributeFor(u16 id, int excludeZone);     /* mod: src/added_effects.c */
 
 int AiStepMainPhase(void)
@@ -384,6 +385,8 @@ int AiStepMainPhase(void)
                 if (number == CARD_TIME_WIZARD || number == CARD_CANNON_SOLDIER)
                     faceUp = 1;
             }
+            if (AiSummonFaceUpOnOpenField(id))  /* added: 1700+ ATK in Attack Position on an empty field */
+                faceUp = 1;
             QueueNormalSummon(1, handIdx, FindFreeMonsterZone(1), 0, faceUp);
             next = &gAiState;
             goto phase_store;
@@ -392,7 +395,7 @@ int AiStepMainPhase(void)
             tribute1 = AiPickTributeFor(id, -1);   /* changed: no copy of it (src/added_effects.c) */
             if (tribute1 == -1)
                 break;
-            QueueNormalSummon(1, handIdx, tribute1, 0x90 | tribute1, 0);
+            QueueNormalSummon(1, handIdx, tribute1, 0x90 | tribute1, AiSummonFaceUpOnOpenField(id) != 0);  /* changed */
             next = &gAiState;
             goto phase_store;
         default:
