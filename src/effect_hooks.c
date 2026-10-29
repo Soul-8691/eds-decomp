@@ -1115,6 +1115,9 @@ void CardMenu_SummonMonster(u16 faceUp, u16 special)
 #ifdef HAS_CARD_CHAOS_SORCERER
         case CARD_CHAOS_SORCERER:
 #endif
+#ifdef HAS_CARD_GIGANTES
+        case CARD_GIGANTES:         /* added card: one EARTH (BanishSummonCount) */
+#endif
 #ifdef HAS_LIGHT_DARK_BANISH_SUMMON
             CM.summonTributes = 0;
             CM.summonSeq = 0;
@@ -1657,7 +1660,7 @@ void CardMenu_SummonMonster(u16 faceUp, u16 special)
         break;
     case SUMMON_STEP_BLS_BANISH:
         BanishGraveyardCard(CM.player, (u16 *)&gCardListView.cards[gCardListView.top + gCardListView.cursorRow]);
-        if (CM.summonSeq == 0) {
+        if (CM.summonSeq == 0 && BanishSummonCount() > 1) {     /* changed: Gigantes banishes one */
             CM.summonSeq = 1;
             CM.step = SUMMON_STEP_BLS_PROMPT;
         } else {

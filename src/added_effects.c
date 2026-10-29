@@ -184,10 +184,30 @@ int CanPayLightDarkBanishCost(int player)
            && HasGraveyardMonsterOfAttribute(player, ATTRIBUTE_DARK);
 }
 
-/* The attribute the summon steps are banishing now: LIGHT first (summonSeq 0), then DARK. */
+/* Gigantes' cost: a free monster zone and an EARTH monster in the Graveyard (CanSummonFromHand). */
+int CanPayEarthBanishCost(int player)
+{
+    return CountFreeMonsterZones(player) > 0 && HasGraveyardMonsterOfAttribute(player, ATTRIBUTE_EARTH);
+}
+
+/* The attribute the summon steps are banishing now: LIGHT first (summonSeq 0), then DARK; EARTH for Gigantes. */
 int LightDarkBanishAttribute(void)
 {
+#ifdef HAS_CARD_GIGANTES
+    if (gCardIdToNumber[gDuel.cardMenuCard & CARD_ID_MASK] == CARD_GIGANTES)
+        return ATTRIBUTE_EARTH;
+#endif
     return gDuel.cardMenu.summonSeq == 0 ? ATTRIBUTE_LIGHT : ATTRIBUTE_DARK;
+}
+
+/* How many monsters the summoning card banishes: 1 for Gigantes, else 2 (a LIGHT and a DARK). */
+int BanishSummonCount(void)
+{
+#ifdef HAS_CARD_GIGANTES
+    if (gCardIdToNumber[gDuel.cardMenuCard & CARD_ID_MASK] == CARD_GIGANTES)
+        return 1;
+#endif
+    return 2;
 }
 
 /* Banish the target (targets[0]); the activating monster cannot attack this turn and its effect is used. */
@@ -3798,17 +3818,34 @@ static int WeakestGraveyardMonsterOf(int attribute, int skip)
 }
 
 /* Special Summon Black Luster Soldier or Chaos Sorcerer from the CPU's hand, banishing the weakest LIGHT and DARK
- * monsters of its Graveyard (the human's summon steps are a card-list UI with no CPU branch). 1 if it did. */
+ * monsters of its Graveyard, or Gigantes, banishing the weakest EARTH one (the human's summon steps are a card-list
+ * UI with no CPU branch). 1 if it did. */
 static int AiLightDarkBanishSummon(void)
 {
     struct DuelPlayer *p = &gDuelPlayers[AI_PLAYER];
     int i, light, dark;
     u16 cards[2][2];
 
-    if (!CanPayLightDarkBanishCost(AI_PLAYER))
+    if (CountFreeMonsterZones(AI_PLAYER) == 0)
         return 0;
     for (i = 0; i < p->handCount; i++) {
         u16 number = CardNumberOfId(DUEL_CARD_ID(&p->hand[i]));
+#ifdef HAS_CARD_GIGANTES
+        if (number == CARD_GIGANTES) {      /* Gigantes: banish the weakest EARTH monster */
+            int earth = WeakestGraveyardMonsterOf(ATTRIBUTE_EARTH, -1);
+
+            if (earth < 0)
+                continue;
+            cards[0][0] = ((u16 *)&p->graveyard[earth])[0];
+            cards[0][1] = ((u16 *)&p->graveyard[earth])[1];
+            ShowCardEffect(AI_PLAYER, DUEL_CARD_ID(&p->hand[i]));
+            BanishGraveyardCard(AI_PLAYER, cards[0]);
+            QueueSpecialSummonFromHand(AI_PLAYER, i, FindFreeMonsterZone(AI_PLAYER), 0, 1);
+            return 1;
+        }
+#endif
+        if (!CanPayLightDarkBanishCost(AI_PLAYER))
+            continue;
         if (
 #ifdef HAS_CARD_BLACK_LUSTER_SOLDIER_ENVOY_OF_THE_BEGINNING
             number != CARD_BLACK_LUSTER_SOLDIER_ENVOY_OF_THE_BEGINNING &&
@@ -4175,6 +4212,19 @@ const struct CardEffect gAddedCardEffects[] = {
         EffectSkullLairPrepare,
         NULL,
         EffectSkullLairChainB,
+    },
+#endif
+#ifdef HAS_CARD_GIGANTES
+    /* Gigantes: "If this card is destroyed by battle: Destroy all Spells and Traps on the field." Its trigger is
+     * queued with Sangan's (SendBattleDestroyedCardToGraveyard, duel_field_moves.c); Heavy Storm's resolve destroys
+     * every Spell/Trap and Field zone card of both sides. The summon is the banish-summon steps above. */
+    {
+        CARD_GIGANTES, 0,
+        (int (*)(struct ChainEntry *, struct ChainEntry *))EffectHeavyStormResolve,
+        NULL,
+        NULL,
+        NULL,
+        NULL,
     },
 #endif
 #ifdef HAS_CARD_4_STARRED_LADYBUG_OF_DOOM

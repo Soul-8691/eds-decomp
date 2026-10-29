@@ -194,6 +194,9 @@ void SendBattleDestroyedCardToGraveyard(int defender, int player, int zone, u16 
 #ifdef HAS_CARD_PYRAMID_TURTLE
     case CARD_PYRAMID_TURTLE:       /* added card: a floater (src/added_effects.c) */
 #endif
+#ifdef HAS_CARD_GIGANTES
+    case CARD_GIGANTES:             /* added card: destroy all Spells and Traps (src/added_effects.c) */
+#endif
     case CARD_1241: case CARD_1242: case CARD_1257: case CARD_1405:
         {
             u32 trigger = TRIGGER_PLAYER(owner);

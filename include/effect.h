@@ -80,6 +80,10 @@ const struct CardEffect *GetCardEffectRow(int row);
  * summon steps banish now. */
 int CanPayLightDarkBanishCost(int player);
 int LightDarkBanishAttribute(void);
+/* The same steps for Gigantes (src/added_effects.c): its cost (a free monster zone and an EARTH monster in the
+ * Graveyard), and how many monsters the summoning card banishes (1 for Gigantes, else 2). */
+int CanPayEarthBanishCost(int player);
+int BanishSummonCount(void);
 /* 1 if card `id` is a monster whose name starts with "Gravekeeper's" (src/added_effects.c). */
 int IsGravekeeperMonster(u16 id);
 /* Before a monster is banished: detach and destroy the Call of the Haunted / Premature Burial that revived it

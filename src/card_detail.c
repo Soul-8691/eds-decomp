@@ -704,6 +704,9 @@ u32 IsSpecialSummonOnly(u16 cardId)
 #ifdef HAS_CARD_CHAOS_SORCERER
     case CARD_CHAOS_SORCERER:                                /* added card */
 #endif
+#ifdef HAS_CARD_GIGANTES
+    case CARD_GIGANTES:                                      /* added card */
+#endif
     case CARD_MANGA_RYU_RAN:
     case CARD_TOON_MERMAID:
     case CARD_TOON_SUMMONED_SKULL:

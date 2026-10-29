@@ -1108,6 +1108,9 @@ u16 CollectEffectTargets(int player, u16 cardNumber, int param)
 #ifdef HAS_CARD_CHAOS_SORCERER
     case CARD_CHAOS_SORCERER:
 #endif
+#ifdef HAS_CARD_GIGANTES
+    case CARD_GIGANTES:
+#endif
 #ifdef HAS_LIGHT_DARK_BANISH_SUMMON
     {
         /* Added cards: the Graveyard monsters of the attribute their summon banishes now (LIGHT, then DARK). */

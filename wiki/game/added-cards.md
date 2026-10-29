@@ -434,6 +434,20 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
 - **CPU policy.** Activates it on a human monster of 1000+ ATK.
 - Checked in the source and the build; not tested in an emulator.
 
+### Gigantes (2026-10-28)
+- Effect Monster (Level 4, EARTH Rock, 1900/1300): "Cannot be Normal Summoned/Set. Must be Special Summoned (from your
+  hand) by banishing 1 EARTH monster from your GY. If this card is destroyed by battle: Destroy all Spells and Traps on
+  the field."
+- **Summon.** The Black Luster Soldier / Chaos Sorcerer banish-summon machinery (`HAS_LIGHT_DARK_BANISH_SUMMON` now
+  also covers it): `IsSpecialSummonOnly` lists it; `CanSummonFromHand` needs `CanPayEarthBanishCost` (a free zone,
+  an EARTH monster in the Graveyard); `SUMMON_STEP_BLS_*` (effect_hooks.c) banish one monster, whose attribute
+  `LightDarkBanishAttribute` gives as EARTH for it (by `gDuel.cardMenuCard`), and `BanishSummonCount` (1) ends the
+  steps after it. The CPU summons it too (`AiLightDarkBanishSummon`: banishes its weakest EARTH monster).
+- **Effect.** `SendBattleDestroyedCardToGraveyard` (duel_field_moves.c) queues its trigger with Sangan's; the row's
+  resolve is Heavy Storm's (`EffectHeavyStormResolve`): every Spell/Trap and Field zone card of both sides, the
+  opponent's first. Banisher of the Light (banished, not destroyed) and Dark Ruler Ha Des stop it, as for Sangan.
+- Checked in the source and the build; not tested in an emulator.
+
 ### Airknight Parshath (2026-10-28)
 - Effect Monster (Level 5, LIGHT Fairy, 1900/1400): "If this card attacks a Defense Position monster, inflict piercing
   battle damage. If this card inflicts battle damage to your opponent: Draw 1 card."

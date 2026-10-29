@@ -1686,3 +1686,6 @@ updated: 2026-09-29
 
 ## [2026-10-28] progress | Airknight Parshath coded
 - src/campaign.c CalcBattle: piercing; src/battle_phase2.c BattleStage_InflictDamage: draw 1 (Masked Sorcerer's case). [[added-cards]]. Built; not tested in an emulator.
+
+## [2026-10-28] progress | Gigantes coded
+- Summon: global.h HAS_LIGHT_DARK_BANISH_SUMMON also for it; added_effects.c CanPayEarthBanishCost, BanishSummonCount, LightDarkBanishAttribute (EARTH), CPU summon; summon_checks.c, effect_hooks.c, effect_target_collect.c, card_detail.c IsSpecialSummonOnly. Effect: duel_field_moves.c trigger, row with EffectHeavyStormResolve. [[added-cards]]. Built; not tested in an emulator.

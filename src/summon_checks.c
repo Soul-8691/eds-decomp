@@ -425,6 +425,12 @@ int CanSummonFromHand(int player, u16 cardId)
             return 0;
         return (u16)CanPayLightDarkBanishCost(player);
 #endif
+#ifdef HAS_CARD_GIGANTES
+    case CARD_GIGANTES:                                      /* added card: banish 1 EARTH */
+        if (CanSpecialSummon(player) == 0)
+            return 0;
+        return (u16)CanPayEarthBanishCost(player);
+#endif
     case CARD_RED_EYES_BLACK_METAL_DRAGON:
     case CARD_HARPIE_LADY_SISTERS:
     case CARD_METALZOA:
