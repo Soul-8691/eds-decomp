@@ -28,3 +28,5 @@ Fix general AI shortcomings
 Fix Flip Effect Monster AI
 Cyber/Reaper cards
 Move hooks out of original units
+The AI isn't using spells
+Gyakutenno Megami isn't summoning over Aqua Madoor

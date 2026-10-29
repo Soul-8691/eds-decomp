@@ -40,8 +40,9 @@
 #include "text_box.h"               /* gTextBox, TextBoxOpen, TextBoxSetMenu */
 #include "ai.h"                     /* gAiState */
 
-/* Mod (src/added_effects.c): Treeborn Frog's Standby Phase summon, after Sinister Serpent's step. */
-int TreebornFrogStandbyStep(int player);
+/* Mod (src/added_effects.c): the added cards' Standby Phase steps (Treeborn Frog, Mirage of Nightmare), after
+ * Sinister Serpent's step. */
+int ModStandbyStep(int player);
 
 /* ---- ROM data used only here ---- */
 
@@ -720,7 +721,7 @@ int DuelPhase_Standby(void)
             }
             return 0;
         }
-        if (TreebornFrogStandbyStep(player)) {
+        if (ModStandbyStep(player)) {
             gDuel.phaseSubStep = 0;
             gDuel.phaseSubCounter = 0;
             gDuel.phaseCounter = 0;

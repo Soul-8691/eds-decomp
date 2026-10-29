@@ -896,6 +896,25 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
 - The other added cards keep their IDs; their card numbers after it move down one.
 - Checked in the source and the build; not tested in an emulator.
 
+### Mirage of Nightmare (2026-10-29)
+- Continuous Spell. ID 1159 (number 1603). The fetched text: "Once per turn, during your opponent's Standby Phase:
+  Draw cards until you have 4 cards in your hand. If you do, during your next Standby Phase after that: Randomly
+  discard the same number of cards you drew (or your entire hand, if you do not have enough cards)."
+- **Activation.** It does nothing on activation (`EffectMirageOfNightmareResolve`); a Continuous Spell stays on the
+  field (`Chain_CardGoesToGrave`).
+- **Standby hook.** `DuelPhase_Standby`'s Sinister Serpent step (duel_phases.c) now calls `ModStandbyStep` instead of
+  `TreebornFrogStandbyStep`: one call, so the original unit doesn't grow. `ModStandbyStep` runs three parts in turn
+  (`gModDuel.standbyPart`, `gDuel.phaseSubStep` restarted for each), with `player` the turn player:
+  1. Treeborn Frog;
+  2. **Mirage's discard.** The turn player's `gModDuel.mirageDrawn` cards are discarded at random
+     (`DiscardHandCard`), one per step so each command runs before the next pick. This happens only while a
+     face-up, enabled Mirage of Nightmare is still on their field, so destroying it in between saves the hand. The
+     count is cleared either way.
+  3. **Mirage's draw.** The other player, with a face-up Mirage and fewer than 4 cards in hand, is asked (the CPU
+     always draws) and draws up to 4. The number drawn is added to `mirageDrawn`.
+- **CPU.** It plays the card through `AiPlayAddedCards` (`AiWantsSpell` default).
+- Checked in the source and the build; not tested in an emulator.
+
 ### Cyber End Dragon (2026-10-29)
 - Fusion Monster (Level 10, LIGHT Machine, 4000/2800). ID 1158 (number 1602). The fetched text: "Cyber Dragon" +
   "Cyber Dragon" + "Cyber Dragon". "A Fusion Summon of this card can only be done with the above Fusion Materials.

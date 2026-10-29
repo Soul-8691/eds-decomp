@@ -1825,3 +1825,6 @@ updated: 2026-09-29
 - src/mod_decks.c: Shigeki Kitamura-Tomato Control, ellietincan-Warrior Tomato Control and AlephYa2-Gearfried (main, extra and side decks from decks/*.ydk); the Yata opponent (DUELIST_ARKANA) picks 50/40/10 (YataDeck); presets 17-19 (Chaos Turbo, Warrior, Goat Control now 20-22).
 - config/new_cards.txt: Mirage of Nightmare and Dice Jar appended (IDs 1159-1160, data only), the only cards of these decks EDS lacked.
 - [[deck-recipes]], [[yugi-kaiba-opponent]], [[added-cards]], DECKS.md. Built (make and make release); not tested in an emulator.
+
+## [2026-10-29] progress | Mirage of Nightmare coded
+- src/added_effects.c EffectMirageOfNightmareResolve and its row, MirageDiscardStep / MirageDrawStep, ModStandbyStep (Treeborn Frog, then Mirage), gModDuel.mirageDrawn / standbyPart; src/duel_phases.c calls ModStandbyStep. Release .text 0x80998. [[added-cards]]. Built (make and make release); not tested in an emulator.

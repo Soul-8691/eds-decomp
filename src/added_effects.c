@@ -66,6 +66,8 @@ struct ModDuelState {
     u8 aiThunderDragonSearched; /* the CPU's Thunder Dragon added a copy; it is discarded even with none left to find */
     u16 aiTributeFor;           /* AiPickTributeFor: the card number the CPU's tributes may not copy, 0xFFFF none */
     u8 sandMothPending;         /* Sand Moth: bit player, its effect's Special Summon is queued (swap its stats) */
+    u8 mirageDrawn[2];          /* Mirage of Nightmare: per player, the cards to discard in their next Standby Phase */
+    u8 standbyPart;             /* ModStandbyStep: Treeborn Frog, Mirage's discard, Mirage's draw */
 };
 extern struct ModDuelState gModDuel;
 
@@ -962,6 +964,9 @@ void ModDuelInit(void)
     gModDuel.aiThunderDragonSearched = 0;
     gModDuel.aiTributeFor = 0xFFFF;
     gModDuel.sandMothPending = 0;
+    gModDuel.mirageDrawn[0] = 0;
+    gModDuel.mirageDrawn[1] = 0;
+    gModDuel.standbyPart = 0;
 #ifdef HAS_CARD_INJECTION_FAIRY_LILY
     InjectionFairyLilyResetBattle();
 #endif
@@ -4483,6 +4488,121 @@ int TreebornFrogStandbyStep(int player)
 }
 #endif /* HAS_CARD_TREEBORN_FROG */
 
+#ifdef HAS_CARD_MIRAGE_OF_NIGHTMARE
+/* ---- Mirage of Nightmare ------------------------------------------------------------------------------------------
+ * "Once per turn, during your opponent's Standby Phase: Draw cards until you have 4 cards in your hand. If you do,
+ * during your next Standby Phase after that: Randomly discard the same number of cards you drew (or your entire hand,
+ * if you do not have enough cards)." (Continuous Spell)
+ * Its activation does nothing (EffectMirageOfNightmareResolve; a Continuous Spell stays on the field). The rest runs
+ * in ModStandbyStep, in every Standby Phase (`player` is the turn player), on gDuel.phaseSubStep:
+ *   discard  the turn player's draws from their last Mirage draw (gModDuel.mirageDrawn) are discarded at random, one
+ *            per step, while a face-up Mirage of Nightmare is still on their field (destroyed in between, there is
+ *            nothing to discard); the count is cleared either way
+ *   draw     the other player, with a face-up Mirage of Nightmare and fewer than 4 cards in hand, is asked (the CPU
+ *            draws) and draws up to 4; the number drawn is kept for their next Standby Phase */
+static const u8 sStrMirageOfNightmarePrompt[] = "Use Mirage of Nightmare to draw until you have 4 cards?";
+
+int EffectMirageOfNightmareResolve(struct ChainEntry *link, struct ChainEntry *chainedTo)
+{
+    return EFFECT_STEP_DONE;
+}
+
+/* The zone of a face-up Mirage of Nightmare of `player`, -1 for none. */
+static int FaceUpMirageZone(int player)
+{
+    int zone;
+
+    for (zone = ZONE_SPELL_0; zone <= ZONE_SPELL_4; zone++) {
+        struct DuelZone *z = ZoneOf(player, zone);
+
+        if (z->isFaceUp && !z->isDisabled && CardNumberOfId(DUEL_CARD_ID(&z->card)) == CARD_MIRAGE_OF_NIGHTMARE)
+            return zone;
+    }
+    return -1;
+}
+
+/* The discard part: 1 when done. */
+static int MirageDiscardStep(int player)
+{
+    struct DuelPlayer *p = &gDuelPlayers[player & 1];
+    int zone = FaceUpMirageZone(player);
+
+    if (gModDuel.mirageDrawn[player & 1] == 0)
+        return 1;
+    if (zone < 0 || p->handCount == 0) {
+        gModDuel.mirageDrawn[player & 1] = 0;
+        return 1;
+    }
+    if (gDuel.phaseSubStep == 0)
+        ShowCardEffect(player, DUEL_CARD_ID(&ZoneOf(player, zone)->card));
+    gDuel.phaseSubStep++;
+    gModDuel.mirageDrawn[player & 1]--;
+    DiscardHandCard(player, (u32)Random() % p->handCount, 0, 1);    /* one per step: the command runs in between */
+    return 0;
+}
+
+/* The draw part (for the turn player's opponent): 1 when done. */
+static int MirageDrawStep(int player)
+{
+    int owner = 1 - player;
+    struct DuelPlayer *p = &gDuelPlayers[owner & 1];
+    int zone = FaceUpMirageZone(owner), count;
+
+    switch (gDuel.phaseSubStep) {
+    case 0:
+        if (zone < 0 || p->handCount >= 4)
+            return 1;
+        if (owner != 0) {
+            gTextBox.result = 1;            /* the CPU always draws */
+        } else {
+            TextBoxOpen(TEXTBOX_POS(5, 2), TEXTBOX_SIZE(20, 7), TEXTBOX_FLAGS_DEFAULT, sStrMirageOfNightmarePrompt);
+            TextBoxSetMenu(TEXTBOX_MENU_YES_NO, NULL, NULL);
+        }
+        gDuel.phaseSubStep++;
+        return 0;
+    case 1:
+        count = 4 - p->handCount;
+        if (gTextBox.result != 0 && zone >= 0 && count > 0) {
+            ShowCardEffect(owner, DUEL_CARD_ID(&ZoneOf(owner, zone)->card));
+            DrawCards(owner, count);
+            gModDuel.mirageDrawn[owner & 1] += count;
+        }
+        return 1;
+    }
+    return 1;
+}
+#endif /* HAS_CARD_MIRAGE_OF_NIGHTMARE */
+
+/* DuelPhase_Standby (duel_phases.c) runs this after Sinister Serpent's step, each frame until it returns 1: Treeborn
+ * Frog's summon, then Mirage of Nightmare's discard and draw (gModDuel.standbyPart; gDuel.phaseSubStep restarts for
+ * each part). */
+int ModStandbyStep(int player)
+{
+    int done;
+
+    switch (gModDuel.standbyPart) {
+    case 0:
+        done = TreebornFrogStandbyStep(player);
+        break;
+#ifdef HAS_CARD_MIRAGE_OF_NIGHTMARE
+    case 1:
+        done = MirageDiscardStep(player);
+        break;
+    case 2:
+        done = MirageDrawStep(player);
+        break;
+#endif
+    default:
+        gModDuel.standbyPart = 0;
+        return 1;
+    }
+    if (done) {
+        gModDuel.standbyPart++;
+        gDuel.phaseSubStep = 0;
+    }
+    return 0;
+}
+
 #ifdef HAS_CARD_CYBER_DRAGON
 /* ---- Cyber Dragon -------------------------------------------------------------------------------------------------
  * "If only your opponent controls a monster, you can Special Summon this card (from your hand)."
@@ -6034,6 +6154,16 @@ const struct CardEffect gAddedCardEffects[] = {
         NULL,
         NULL,
         EffectNewdoriaChainB,
+    },
+#endif
+#ifdef HAS_CARD_MIRAGE_OF_NIGHTMARE
+    {
+        CARD_MIRAGE_OF_NIGHTMARE, 0,
+        EffectMirageOfNightmareResolve,
+        NULL,
+        NULL,
+        NULL,
+        NULL,
     },
 #endif
 #ifdef HAS_CARD_MASKED_DRAGON
