@@ -768,6 +768,20 @@ u16 CollectEffectTargets(int player, u16 cardNumber, int param)
         }
         break;
 #endif
+#ifdef HAS_CARD_HYDROGEDDON
+    case CARD_HYDROGEDDON:
+    {
+        /* Added card: Hydrogeddons in the Deck. */
+        u32 *word;
+
+        for (i = 0; i < PLAYER(player).deckCount; i++) {
+            word = PILE_WORD(gDuelDecks, i, player);
+            if (CARD_NUMBER(CARD_ID(*word)) == CARD_HYDROGEDDON)
+                ADD_TARGET(*word, CARDLIST_SRC_DECK);
+        }
+        break;
+    }
+#endif
 #ifdef HAS_CARD_POT_OF_AVARICE
     case CARD_POT_OF_AVARICE:
     {

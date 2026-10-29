@@ -430,6 +430,7 @@ struct BattleZoneCopies {
  * r5 to 1 - player.
  */
 void RyuKokkiAfterBattle(int player);   /* mod: src/added_effects.c */
+void HydrogeddonAfterBattle(int player);
 
 int BattleStage_DestroyMonsters(int player)
 {
@@ -712,6 +713,9 @@ int BattleStage_DestroyMonsters(int player)
     }
 #ifdef HAS_CARD_RYU_KOKKI
     RyuKokkiAfterBattle(player);    /* added: it destroys a Warrior or Spellcaster it battled (src/added_effects.c) */
+#endif
+#ifdef HAS_CARD_HYDROGEDDON
+    HydrogeddonAfterBattle(player); /* added: a Hydrogeddon from the Deck after a battle win (src/added_effects.c) */
 #endif
 #if defined(HAS_CARD_D_D_WARRIOR_LADY) || defined(HAS_CARD_D_D_ASSAILANT) || defined(HAS_CARD_DARK_MAGICIAN_OF_CHAOS)
     /* Added: D.D. Warrior Lady's Yes (and D.D. Assailant) also banishes the monsters that survived the battle. */

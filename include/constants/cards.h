@@ -1296,6 +1296,23 @@ enum CardNumber {
     CARD_4_STARRED_LADYBUG_OF_DOOM = 1176,                /* id 1136, added card */
     CARD_TREEBORN_FROG = 1184,                            /* id 1137, added card */
     CARD_POT_OF_AVARICE = 1185,                           /* id 1138, added card */
+    CARD_HYDROGEDDON = 1186,                              /* id 1139, added card */
+    CARD_GOLDD_WU_LORD_OF_DARK_WORLD = 1187,              /* id 1140, added card */
+    CARD_DRILLROID = 1188,                                /* id 1141, added card */
+    CARD_SILLVA_WARLORD_OF_DARK_WORLD = 1190,             /* id 1142, added card */
+    CARD_SAND_MOTH = 1191,                                /* id 1143, added card */
+    CARD_SILPHEED = 1192,                                 /* id 1144, added card */
+    CARD_GOBLIN_ELITE_ATTACK_FORCE = 1193,                /* id 1145, added card */
+    CARD_GETSU_FUHMA = 1194,                              /* id 1146, added card */
+    CARD_MASKED_DRAGON = 1195,                            /* id 1147, added card */
+    CARD_LADY_NINJA_YAE = 1197,                           /* id 1148, added card */
+    CARD_KARMA_CUT = 1198,                                /* id 1149, added card */
+    CARD_DRAINING_SHIELD = 1199,                          /* id 1150, added card */
+    CARD_DIMENSION_WALL = 1200,                           /* id 1151, added card */
+    CARD_DARK_WORLD_LIGHTNING = 1206,                     /* id 1152, added card */
+    CARD_DARK_DEAL = 1207,                                /* id 1153, added card */
+    CARD_EXARION_UNIVERSE = 1208,                         /* id 1154, added card */
+    CARD_STEAMROID = 1209,                                /* id 1155, added card */
     CARD_MAGIC_CYLINDER = 1214,                           /* id 866, added card */
     CARD_SOUL_EXCHANGE = 1220,                            /* id 913, added card */
     CARD_THOUSAND_EYES_IDOL = 1333,                       /* id 1128, added card */
@@ -1305,6 +1322,7 @@ enum CardNumber {
     CARD_UNITED_WE_STAND = 1449,                          /* id 875, added card */
     CARD_MAGE_POWER = 1450,                               /* id 929, added card */
     CARD_BAZOO_THE_SOUL_EATER = 1513,                     /* id 917, added card */
+    CARD_NIGHTMARES_STEELCAGE = 1600,                     /* id 1156, added card */
     CARD_SHEEP_TOKEN = 1922,                              /* id 1110, added card */
     /* ---- end of the added cards ---- */
 };

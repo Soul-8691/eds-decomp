@@ -1787,3 +1787,6 @@ updated: 2026-09-29
 
 ## [2026-10-29] progress | Pot of Avarice coded
 - config/new_cards.txt: Pot of Avarice appended (ID 1138, number 1185). src/added_effects.c EffectPotOfAvaricePrepare / Resolve and its row; src/effect_target_collect.c Graveyard monster list. [[added-cards]]. Built (make and make release); not tested in an emulator.
+
+## [2026-10-29] progress | Hydrogeddon coded
+- config/new_cards.txt: 18 cards appended by the user (Hydrogeddon .. Nightmare's Steelcage, IDs 1139-1156), fetched by the build. src/added_effects.c HydrogeddonAfterBattle and its row; src/battle_phase2.c calls it; src/effect_resolve6.c choose-position list; src/effect_target_collect.c Deck list. [[added-cards]]. Built (make and make release); not tested in an emulator.

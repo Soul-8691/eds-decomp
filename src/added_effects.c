@@ -4676,6 +4676,52 @@ void RyuKokkiAfterBattle(int player)
 }
 #endif /* HAS_CARD_RYU_KOKKI */
 
+#ifdef HAS_CARD_HYDROGEDDON
+/* ---- Hydrogeddon --------------------------------------------------------------------------------------------------
+ * "When this card destroys an opponent's monster by battle and sends it to the GY: You can Special Summon 1
+ * "Hydrogeddon" from your Deck."
+ * BattleStage_DestroyMonsters (battle_phase2.c) calls HydrogeddonAfterBattle once the battle's destruction is queued:
+ * a Hydrogeddon in the battle (attacking or attacked) that survived it, whose opponent's monster was destroyed by it
+ * and goes to the Graveyard (not banished by D.D. Warrior Lady's Yes, D.D. Assailant or Dark Magician of Chaos),
+ * queues its trigger (RESPONSE_BATTLE_DESTROYED, its zone, as Black Luster Soldier's) when its Deck has a
+ * Hydrogeddon and it has a free monster zone. The resolve is the recruiters' EffectSpecialSummonFromDeckResolve (the
+ * Deck list is a CollectEffectTargets case): the human is asked, the CPU always summons; the position is chosen
+ * (QueueSpecialSummonChoosePosition, as for Pyramid Turtle). */
+static int DeckHasCardNumber(int player, u16 number)
+{
+    struct DuelPlayer *p = &gDuelPlayers[player & 1];
+    int i;
+
+    for (i = 0; i < p->deckCount; i++) {
+        if (CardNumberOfId(DUEL_CARD_ID(&p->deck[i])) == number)
+            return 1;
+    }
+    return 0;
+}
+
+void HydrogeddonAfterBattle(int player)
+{
+    int side;
+
+    if (gBattle.direct || gBattle.ddWarriorLady == DD_WARRIOR_LADY_YES || gBattle.ddWarriorLady == DD_BANISH_DESTROYED)
+        return;
+    for (side = 0; side <= 1; side++) {
+        int who = side ? 1 - player : player, other = 1 - who;
+        int zone = who == player ? gBattle.atkSlot : gBattle.defSlot;
+        u16 id = gBattle.side[who].cardId & CARD_ID_MASK;
+
+        if (CardNumberOfId(id) != CARD_HYDROGEDDON || gBattle.side[who].destroyed || !gBattle.side[other].destroyed
+            || DUEL_CARD_ID(&ZoneOf(who, zone)->card) != id)
+            continue;
+        if (!DeckHasCardNumber(who, CARD_HYDROGEDDON) || CountFreeMonsterZones(who) == 0)
+            continue;
+        Chain_AddPending(TRIGGER_PLAYER(who & 1) | TRIGGER_ZONE(zone) | TRIGGER_KIND(CHAIN_KIND_MONSTER)
+                             | TRIGGER_EVENT(RESPONSE_BATTLE_DESTROYED) | id,
+                         DUEL_LOC(who, zone));
+    }
+}
+#endif /* HAS_CARD_HYDROGEDDON */
+
 #ifdef HAS_CARD_MOBIUS_THE_FROST_MONARCH
 /* ---- Mobius the Frost Monarch -------------------------------------------------------------------------------------
  * "If this card is Tribute Summoned: You can target up to 2 Spells/Traps on the field; destroy them."
@@ -5744,6 +5790,17 @@ const struct CardEffect gAddedCardEffects[] = {
         NULL,
         NULL,
         EffectNewdoriaChainB,
+    },
+#endif
+#ifdef HAS_CARD_HYDROGEDDON
+    /* Hydrogeddon: Special Summon a Hydrogeddon from the Deck (see HydrogeddonAfterBattle). */
+    {
+        CARD_HYDROGEDDON, 0,
+        (int (*)(struct ChainEntry *, struct ChainEntry *))EffectSpecialSummonFromDeckResolve,
+        NULL,
+        NULL,
+        NULL,
+        NULL,
     },
 #endif
 #ifdef HAS_CARD_POT_OF_AVARICE

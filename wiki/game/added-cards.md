@@ -556,6 +556,25 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
   - `AiShouldRetreatToDefense` never picks it.
 - Checked in the source and the build; not tested in an emulator.
 
+### Hydrogeddon (2026-10-29)
+- Effect Monster (Level 4, WATER Dinosaur, 1600/1000). ID 1139 (number 1186), the first of the 18 cards appended to
+  config/new_cards.txt on 2026-10-29. The fetched text: "When this card destroys an opponent's monster by battle and
+  sends it to the GY: You can Special Summon 1 "Hydrogeddon" from your Deck."
+- **Trigger.** `BattleStage_DestroyMonsters` (battle_phase2.c) calls `HydrogeddonAfterBattle` (added_effects.c) after
+  Ryu Kokki's hook, once the battle's destruction is queued. It queues the trigger (`RESPONSE_BATTLE_DESTROYED`, the
+  card's zone, as Black Luster Soldier's) when all of these hold:
+  - a Hydrogeddon in the battle, attacking or attacked, survived it;
+  - its opponent's monster was destroyed;
+  - that monster goes to the Graveyard, not banished: not D.D. Warrior Lady's Yes, D.D. Assailant, or Dark Magician
+    of Chaos's `DD_BANISH_DESTROYED`;
+  - the Deck has a Hydrogeddon, and there is a free monster zone.
+- **Resolve.** The recruiters' `EffectSpecialSummonFromDeckResolve` (effect_resolve6.c) with a Deck-list
+  `CollectEffectTargets` case. The human is asked; the CPU always summons. Hydrogeddon is in the choose-position list
+  with Pyramid Turtle and Gravekeeper's Spy, since the text gives no position.
+- **Hypothesis:** a Hydrogeddon destroyed in the same battle (a tie) does not use its effect. Not checked against a
+  ruling.
+- Checked in the source and the build; not tested in an emulator.
+
 ### Pot of Avarice (2026-10-29)
 - Normal Spell. Added as ID 1138 (number 1185), appended to config/new_cards.txt. The fetched text: "Target 5
   monsters in your GY; shuffle all 5 into the Deck, then draw 2 cards."
