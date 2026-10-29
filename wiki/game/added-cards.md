@@ -556,6 +556,17 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
   - `AiShouldRetreatToDefense` never picks it.
 - Checked in the source and the build; not tested in an emulator.
 
+### Mage Power (2026-10-29)
+- Equip Spell: "The equipped monster gains 500 ATK/DEF for each Spell/Trap you control."
+- **The engine already has it** as effect key 1450 (no EDS card): `ENGINE_NUMBERS` gives the card that number (ID 929
+  = 1450), as for United We Stand. Its activation is `EffectEquipResolve` and the equip target rules (key 1450 is in
+  the equip lists of effect_prepare1.c, effect_checks.c and card_list_viewer.c). `CalcZoneCardStats` gives +500 ATK and
+  DEF per card in the equip card's controller's Spell/Trap zones (`CountSpellTrapsFiltered`), Mage Power itself included.
+- **Changed:** the ROM passes `includeField` 0, so a Field Spell did not count; card_stats.c now passes 1 (only key
+  1450 is affected).
+- The other added cards keep their IDs; their card numbers after it move down one.
+- Checked in the source and the build; not tested in an emulator.
+
 ### United We Stand (2026-10-29)
 - Equip Spell: "The equipped monster gains 800 ATK/DEF for each face-up monster you control."
 - **The engine already has it** as effect key 1449 (no EDS card): `ENGINE_NUMBERS` in tools/newcards.py gives the card

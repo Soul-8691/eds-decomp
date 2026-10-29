@@ -1724,3 +1724,6 @@ updated: 2026-09-29
 
 ## [2026-10-29] progress | United We Stand mapped to effect key 1449
 - tools/newcards.py ENGINE_NUMBERS United We Stand: 1449 (the engine's +800 ATK/DEF per face-up monster equip); include/constants/cards.h regenerated (later added cards' numbers shift, IDs kept). [[added-cards]]. Built (make and make release); not tested in an emulator.
+
+## [2026-10-29] progress | Mage Power mapped to effect key 1450
+- tools/newcards.py ENGINE_NUMBERS Mage Power: 1450; src/card_stats.c key 1450 counts the Field Spell too; include/constants/cards.h regenerated. [[added-cards]]. Built (make and make release); not tested in an emulator.

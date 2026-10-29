@@ -578,9 +578,11 @@ void GetZoneCardStats(int player, int zone, struct ZoneCardStats *out)
                     equipDef += CountMonstersFiltered(sourcePlayer, 1, 0) * 800;
                     break;
                 case CARD_1450:
-                    /* +500 ATK/DEF per spell/trap card of the equipping player */
-                    equipAtk += CountSpellTrapsFiltered(sourcePlayer, 0, 0, 0) * 500;
-                    equipDef += CountSpellTrapsFiltered(sourcePlayer, 0, 0, 0) * 500;
+                    /* +500 ATK/DEF per spell/trap card of the equipping player.
+                     * Changed: the Field Spell counts too (key 1450 is Mage Power's, tools/newcards.py; the ROM
+                     * passes includeField 0). */
+                    equipAtk += CountSpellTrapsFiltered(sourcePlayer, 0, 0, 1) * 500;
+                    equipDef += CountSpellTrapsFiltered(sourcePlayer, 0, 0, 1) * 500;
                     break;
                 case CARD_1540:
                     if (GetCardNumberSym(out->id) == CARD_1339)

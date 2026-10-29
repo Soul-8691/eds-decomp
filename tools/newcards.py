@@ -83,6 +83,8 @@ ENGINE_NUMBERS = {
                                     # position for that turn and re-arms it (DuelCmd_TurnStart)
     'United We Stand': 1449,        # key 1449: an Equip (EffectEquipResolve and the equip target rules), +800 ATK/DEF
                                     # per face-up monster of the equip card's controller (CalcZoneCardStats)
+    'Mage Power': 1450,             # key 1450: an Equip, +500 ATK/DEF per Spell/Trap of the equip card's controller,
+                                    # itself included (CalcZoneCardStats; changed to count the Field Spell too)
 }
 
 # YGOPRODeck race -> EDS monster type (gCardTypeNames), attribute -> EDS attribute, Spell/Trap race -> subtype.
