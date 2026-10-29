@@ -4725,8 +4725,41 @@ int AiShouldRetreatToDefense(int zone)
     return atk < RETREAT_KEEP_ATK || best - atk >= RETREAT_GAP;
 }
 
+/* ---- Solemn Judgment (the CPU) -----------------------------------------------------------------------------------
+ * The vanilla CPU never activates Solemn Judgment: AiShouldActivateSetCard has no case for it (so summons are never
+ * answered) and AiTryChainResponse never chains it. Now the CPU uses it while its LP are 4000 or less (it pays half):
+ *   summons     AiShouldActivateAddedCard (the end of AiShouldActivateSetCard): the human's Normal or Special Summon,
+ *               and a Flip Summon only of a flip-effect monster (HasFlipEffect); the activation window's loc0 is the
+ *               human's monster
+ *   Spell/Trap  AiTryChainResponse calls AiChainSolemnJudgment for the human's Magic or Trap card, after its
+ *               cheaper answers (Imperial Order, Magic Jammer, Royal Decree, Seven Tools of the Bandit), also against
+ *               Harpie's Feather Duster */
+#define AI_SOLEMN_MAX_LP 4000
+
+int AiChainSolemnJudgment(struct ChainEntry *entry)
+{
+    u32 type = CARD_STATS_TYPE(gCardStats[entry->card & CARD_ID_MASK]);
+
+    if (entry->player != AI_HUMAN || (type != CARD_TYPE_MAGIC && type != CARD_TYPE_TRAP)
+        || gDuelPlayers[AI_PLAYER].lifePoints > AI_SOLEMN_MAX_LP)
+        return 0;
+    return AiChainSetCard(entry, CARD_SOLEMN_JUDGMENT) != 0;
+}
+
 int AiShouldActivateAddedCard(struct ChainEntry *entry)
 {
+    if (CardNumberOfId(entry->card) == CARD_SOLEMN_JUDGMENT) {  /* see AiChainSolemnJudgment */
+        int player = DUEL_LOC_PLAYER(entry->loc0), zone = DUEL_LOC_ZONE(entry->loc0);
+        u16 number;
+
+        if (player != AI_HUMAN || zone > ZONE_MONSTER_4 || gDuelPlayers[AI_PLAYER].lifePoints > AI_SOLEMN_MAX_LP)
+            return 0;
+        if (entry->event != RESPONSE_FLIP_SUMMONED)
+            return 1;               /* a Normal or Special Summon */
+        /* a Flip Summon only of a flip-effect monster */
+        number = CardNumberOfId(DUEL_CARD_ID(&ZoneOf(player, zone)->card));
+        return HasFlipEffect(number, 0) || HasFlipEffect(number, 1);
+    }
     if (!IsAddedCardId(entry->card))
         return 0;
     switch (CardNumberOfId(entry->card)) {

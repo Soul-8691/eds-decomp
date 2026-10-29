@@ -563,6 +563,8 @@ u16 AiChainSetCard(struct ChainEntry *entry, int number)
  * may be answered with key 1447. */
 /* Mod (src/added_effects.c): a summon trap chained to the human's summon trigger (Trap Hole on Mobius). */
 int AiChainSummonTriggerResponse(struct ChainEntry *entry);
+/* Mod (src/added_effects.c): Solemn Judgment against the human's Magic or Trap card at 4000 LP or less. */
+int AiChainSolemnJudgment(struct ChainEntry *entry);
 
 int AiTryChainResponse(struct ChainEntry *entry)
 {
@@ -670,6 +672,8 @@ int AiTryChainResponse(struct ChainEntry *entry)
                 break;
             }
         }
+        if (AiChainSolemnJudgment(entry))  /* added: see below */
+            return 1;
         return 0;
     case CARD_DE_SPELL:
     case CARD_MYSTICAL_SPACE_TYPHOON: {
@@ -762,6 +766,8 @@ int AiTryChainResponse(struct ChainEntry *entry)
         }
         break;
     }
+    if (AiChainSolemnJudgment(entry))  /* added: the human's Magic or Trap, at 4000 LP or less */
+        return 1;
     if (AiChainSetCard(entry, CARD_1447))
         return 1;
     return 0;

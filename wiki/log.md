@@ -1745,3 +1745,9 @@ updated: 2026-09-29
 
 ## [2026-10-29] progress | The CPU uses Nobleman of Crossout
 - Checked: Nobleman of Crossout (1157) is in neither CPU spell list in the ROM (0x08086394, 0x08086400) and its ChainB had no CPU branch. src/added_effects.c AiNoblemanOfCrossoutTarget, AiPlayAddedCards plays it on the human's face-down monsters; src/effect_targets3.c CPU branch. README.md. [[added-cards]]. Built (make and make release); not tested in an emulator.
+
+## [2026-10-29] progress | The CPU uses Solemn Judgment
+- Checked: no CPU path activated Solemn Judgment (AiShouldActivateSetCard, AiTryChainResponse). src/added_effects.c AiChainSolemnJudgment and the summon-window case in AiShouldActivateAddedCard (CPU at 4000 LP or less); src/ai_summon.c calls it. README.md. [[added-cards]]. Built (make and make release); not tested in an emulator.
+
+## [2026-10-29] progress | CPU Solemn Judgment: Flip Summons only of flip-effect monsters
+- src/added_effects.c AiShouldActivateAddedCard: Normal and Special Summons always, Flip Summons only with HasFlipEffect. README.md. [[added-cards]]. Built (make and make release); not tested in an emulator.

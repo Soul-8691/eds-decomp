@@ -556,6 +556,21 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
   - `AiShouldRetreatToDefense` never picks it.
 - Checked in the source and the build; not tested in an emulator.
 
+### The CPU uses Solemn Judgment (2026-10-29)
+- **Before.** The vanilla CPU never activated Solemn Judgment (number 1028). `AiShouldActivateSetCard` (ai_summon.c)
+  has no case for it, so it never answered a summon, and `AiTryChainResponse` never chains it.
+- **Now.** The CPU uses it while its LP are 4000 or less (`AI_SOLEMN_MAX_LP`; it pays half):
+  - **Summons.** `AiShouldActivateAddedCard` (the end of `AiShouldActivateSetCard`) answers the human's summon
+    window: the window's `loc0` is the human's monster. Every Normal and Special Summon gets yes. A Flip Summon gets
+    yes only for a monster with a flip effect (`HasFlipEffect`, either kind), since a plain monster's Flip Summon
+    isn't worth half the LP.
+  - **Spells and Traps.** `AiTryChainResponse` calls `AiChainSolemnJudgment` for the human's Magic or Trap card. It
+    comes after the vanilla answers (Imperial Order, Magic Jammer, Royal Decree, Seven Tools of the Bandit), so it is
+    used only when none of those applies. It is also called in the Harpie's Feather Duster case, which otherwise
+    returns early. The cases that return 0 before the type switch (Field Magic, LP recovery, the lethal-only burn
+    cards, De-Spell / Mystical Space Typhoon aimed at Black Pendant or Magic Jammer) still get no answer.
+- Checked in the source and the build; not tested in an emulator.
+
 ### The CPU uses Nobleman of Crossout (2026-10-29)
 - **Before.** The vanilla CPU never played Nobleman of Crossout (number 1157):
   - it is in neither of `AiPlaySpells`' lists (`gAiGenericSpells` at 0x08086394, `gAiEquipSpells` at 0x08086400),
