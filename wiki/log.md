@@ -1757,3 +1757,6 @@ updated: 2026-09-29
 
 ## [2026-10-29] progress | The CPU's Mystical Space Typhoon targets face-up Traps
 - Checked: the CPU plays MST (ai_turn_steps.c) but its ChainB never picked a face-up Trap and could hit its own cards. src/added_effects.c AiPickSpellTrapToDestroy; src/effect_targets3.c EffectSpellTrapTargetChainB calls it for the CPU. README.md. [[added-cards]]. Built (make and make release); not tested in an emulator.
+
+## [2026-10-29] progress | The CPU never pays itself to 0 LP
+- src/added_effects.c AiSelfLpLoss / AiActivationWouldLoseLp (LP costs, Tremendous Fire, Time Wizard; not in link duels); src/effect_activation.c CanActivateEffect asks it first. README.md. [[added-cards]]. Built (make and make release); not tested in an emulator.

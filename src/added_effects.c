@@ -39,6 +39,7 @@
 #include "battle.h"
 #include "main.h"                   /* gMain.newKeys */
 #include "duel_screen.h"            /* DuelCursor_PickTarget, gDuelScreen */
+#include "duel_flow.h"              /* gDuelCtrl.isLinkDuel */
 
 /* ---- Spell Counters ----------------------------------------------------------------------------------------
  * A Spell Counter on a monster is a ZONE_LINK_ATK_300_PER_VALUE link from the monster's own card ID: the link's
@@ -4122,6 +4123,65 @@ int AiPlanForcedAttack(void)
     return 1;
 }
 #endif /* HAS_CARD_BERSERK_GORILLA */
+
+/* ---- The CPU never pays itself to 0 LP ------------------------------------------------------------------------------
+ * CanActivateEffect (effect_activation.c) refuses the CPU's activation of a card whose own LP cost or self-damage
+ * would bring its LP to 0 (not in link duels, where player 1 is a human). AiSelfLpLoss gives the most the card can cost
+ * its controller:
+ *   costs        EffectPayLifePointsChainA's (effect_checks.c): Ultimate Offering 500, Premature Burial 800, Monster
+ *                Eye, Seven Tools of the Bandit, Confiscation, Delinquent Duo, Seal of the Ancients 1000, Gale Dogra
+ *                3000, Cyber Stein 5000 (Solemn Judgment's half never reaches 0); the added Brain Control 800 and
+ *                Dimension Fusion 2000
+ *   self-damage  Tremendous Fire 500; Time Wizard's lost coin toss, half the total ATK of its controller's monsters
+ * The maintenance costs are paid only above the cost + 1000 (DuelPhase_Standby), and Bell of Destruction's CPU check
+ * already refuses an ATK that reaches its LP (AiShouldActivateSetCard). */
+static int AiSelfLpLoss(struct ChainEntry *card)
+{
+    int zone, atk = 0;
+
+    switch (CardNumberOfId(card->card)) {
+    case CARD_ULTIMATE_OFFERING:
+    case CARD_TREMENDOUS_FIRE:
+        return 500;
+    case CARD_PREMATURE_BURIAL:
+#ifdef HAS_CARD_BRAIN_CONTROL
+    case CARD_BRAIN_CONTROL:
+#endif
+        return 800;
+    case CARD_MONSTER_EYE:
+    case CARD_SEVEN_TOOLS_OF_THE_BANDIT:
+    case CARD_CONFISCATION:
+    case CARD_DELINQUENT_DUO:
+    case CARD_SEAL_OF_THE_ANCIENTS:
+        return 1000;
+#ifdef HAS_CARD_DIMENSION_FUSION
+    case CARD_DIMENSION_FUSION:
+        return 2000;
+#endif
+    case CARD_GALE_DOGRA:
+        return 3000;
+    case CARD_CYBER_STEIN:
+        return 5000;
+    case CARD_TIME_WIZARD:
+        for (zone = ZONE_MONSTER_0; zone <= ZONE_MONSTER_4; zone++) {
+            if (DUEL_CARD_ID(&ZoneOf(card->player, zone)->card) != 0)
+                atk += GetZoneCardAtk(card->player, zone);
+        }
+        return atk / 2;
+    }
+    return 0;
+}
+
+/* 1 if the CPU may not activate `card` because it would bring its own LP to 0. */
+int AiActivationWouldLoseLp(struct ChainEntry *card)
+{
+    int loss;
+
+    if ((card->player & 1) != AI_PLAYER || gDuelCtrl.isLinkDuel)
+        return 0;
+    loss = AiSelfLpLoss(card);
+    return loss > 0 && loss >= (int)gDuelPlayers[AI_PLAYER].lifePoints;
+}
 
 /* ---- Thunder Dragon (the CPU) -------------------------------------------------------------------------------------
  * The vanilla CPU never uses Thunder Dragon's "discard this card; add up to 2 Thunder Dragon from your Deck to your

@@ -556,6 +556,24 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
   - `AiShouldRetreatToDefense` never picks it.
 - Checked in the source and the build; not tested in an emulator.
 
+### The CPU never pays itself to 0 LP (2026-10-29)
+- **Before.** The vanilla prepares don't check their LP costs against the player's LP, so the CPU could pay itself
+  out of the duel (Premature Burial at 800 LP, Cyber Stein, ...).
+- **Now.** `CanActivateEffect` (effect_activation.c) asks `AiActivationWouldLoseLp` (added_effects.c) first. The CPU's
+  activation is refused when `AiSelfLpLoss` reaches its LP; this does not apply in link duels, where player 1 is a
+  human. `AiSelfLpLoss` counts:
+  - **Costs:** `EffectPayLifePointsChainA`'s list (Ultimate Offering 500; Premature Burial 800; Monster Eye, Seven
+    Tools of the Bandit, Confiscation, Delinquent Duo, Seal of the Ancients 1000; Gale Dogra 3000; Cyber Stein 5000),
+    plus the added Brain Control (800) and Dimension Fusion (2000; its prepare allows exactly 2000).
+  - **Self-damage:** Tremendous Fire's 500, and Time Wizard's lost toss: half the total ATK of its controller's
+    monsters (`EffectTimeWizardResolve`).
+- **Already safe:**
+  - Solemn Judgment's and Return from the Different Dimension's half;
+  - maintenance costs (the CPU pays only above the cost + 1000);
+  - Bell of Destruction (its CPU check refuses an ATK that reaches its LP);
+  - Brain Control and Injection Fairy Lily (their own LP checks).
+- Checked in the source and the build; not tested in an emulator.
+
 ### The CPU's Mystical Space Typhoon target (2026-10-29)
 - **Already there.** The CPU plays Mystical Space Typhoon in its own turn: `AiStepPlaySimpleSpells` and the step after
   it (ai_turn_steps.c) play it while the human has a Spell/Trap (`CountSpellTraps(0) > 0`).

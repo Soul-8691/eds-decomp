@@ -300,6 +300,8 @@ int GetCardSpellSpeed(u16 cardId)
  *     accepts at least one position (player 0-1, zone 0-10). A row with neither handler always passes.
  * The result is a full-word 0 or 1 (the CPU callers use it as int).
  */
+int AiActivationWouldLoseLp(struct ChainEntry *card);  /* mod: src/added_effects.c */
+
 int CanActivateEffect(struct ChainEntry *card, struct ChainEntry *chainLink, u16 fromHand)
 {
     int idx = FindCardEffect(card->card);
@@ -311,6 +313,8 @@ int CanActivateEffect(struct ChainEntry *card, struct ChainEntry *chainLink, u16
     int zone;
 
     if (IsCardProhibited(card->card))
+        return FALSE;
+    if (AiActivationWouldLoseLp(card))     /* added: the CPU never pays itself to 0 LP (src/added_effects.c) */
         return FALSE;
 #ifdef HAS_CARD_XING_ZHEN_HU
     if (!fromHand && IsLockedByXingZhenHu(card))   /* added card: a Set card locked by Xing Zhen Hu */
