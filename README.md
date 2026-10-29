@@ -105,6 +105,7 @@ next one.
     new copy for the last one, then discards that one too, finding nothing. All three end up in its Graveyard. A
     lone copy, with none left in its Deck and not just added, stays in its hand.
   - It plays Nobleman of Crossout on your face-down monsters (the original CPU never used it).
+  - It plays Dark Hole only when you control more monsters than it does.
   - It uses Solemn Judgment (the original CPU never did) while it has 4000 LP or less. It negates your Normal and
     Special Summons, your Flip Summons of flip-effect monsters, and your Spells and Traps when it has no cheaper
     answer.

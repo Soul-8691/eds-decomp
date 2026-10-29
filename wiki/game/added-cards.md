@@ -556,6 +556,18 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
   - `AiShouldRetreatToDefense` never picks it.
 - Checked in the source and the build; not tested in an emulator.
 
+### The CPU's Dark Hole (2026-10-29)
+- **Before.** `AiPlaySpells` (ai_deck.c) played Dark Hole in five cases:
+  - the human has monsters and the CPU none;
+  - `AiIsOpponentThreatening`;
+  - the CPU has Sangan or Witch of the Black Forest (also in the Exodia step);
+  - a risky White Hole.
+  Several of those clear the CPU's own larger board.
+- **Now.** `AiTryPlaySpellTrap`, which every case goes through, refuses Dark Hole unless the human controls more
+  monsters than the CPU (`CountMonsters(0) > CountMonsters(1)`). The other Dark Hole references (Graceful Charity's
+  deck check, Needle Worm, the White Hole set choice in ai_turn_steps.c) don't play it.
+- Checked in the source and the build; not tested in an emulator.
+
 ### The CPU uses Solemn Judgment (2026-10-29)
 - **Before.** The vanilla CPU never activated Solemn Judgment (number 1028). `AiShouldActivateSetCard` (ai_summon.c)
   has no case for it, so it never answered a summon, and `AiTryChainResponse` never chains it.

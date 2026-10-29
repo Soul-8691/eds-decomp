@@ -254,6 +254,9 @@ int AiTryPlaySpellTrap(u16 number)
                 return 0;
         }
     }
+    /* added: Dark Hole only while the human has more monsters than the CPU (every AiPlaySpells case asks here) */
+    if (number == CARD_DARK_HOLE && CountMonsters(0) <= CountMonsters(1))
+        return 0;
     cardId = CardNumberToId(number);
     if (GetSpellSubtype(CARD_STATS(cardId)) == SPELL_FIELD && GetFaceUpFieldMagicNumber() == number)
         return 0;
