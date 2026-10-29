@@ -1828,3 +1828,6 @@ updated: 2026-09-29
 
 ## [2026-10-29] progress | Mirage of Nightmare coded
 - src/added_effects.c EffectMirageOfNightmareResolve and its row, MirageDiscardStep / MirageDrawStep, ModStandbyStep (Treeborn Frog, then Mirage), gModDuel.mirageDrawn / standbyPart; src/duel_phases.c calls ModStandbyStep. Release .text 0x80998. [[added-cards]]. Built (make and make release); not tested in an emulator.
+
+## [2026-10-29] progress | The CPU Tribute Summons upgrades (Gyakutenno Megami over Aqua Madoor)
+- src/added_effects.c AiTributeIsUpgrade; src/ai_summon.c AiChooseSummonWithTribute counts an upgrade with no worse simulated damage as better. Release .text 0x809B8. README.md. [[added-cards]]. Built (make and make release); not tested in an emulator.

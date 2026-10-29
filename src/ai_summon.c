@@ -196,6 +196,7 @@ int AiPlanAttack(u16 assumeAttackPos)
  *    so a first tribute in zone 0 is not removed by AiSimSummon.
  * A card whose tributes cannot be found is skipped. */
 int AiPickTributeFor(u16 id, int excludeZone);     /* mod: src/added_effects.c */
+int AiTributeIsUpgrade(u16 cardId, u16 tributeMask);
 
 int AiChooseSummonWithTribute(int *outDamage)
 {
@@ -262,6 +263,8 @@ int AiChooseSummonWithTribute(int *outDamage)
             better = 1;
         if (damage == baseDamage && bestKills < gAiWork.simTargetsDestroyed && gAiWork.simOwnMonsters != 0)
             better = 1;
+        if (!better && damage >= baseDamage && AiTributeIsUpgrade(cardId, tributeMask))
+            better = 1;     /* added: a stronger monster for weaker ones (src/added_effects.c) */
         if (gDuelCtrl.aiFlags & AI_FLAG_EXODIA) {
             /* Exodia strategy: a card that digs for pieces, if the CPU survives the battle with more than
              * 1000 life points and no piece is out of the deck yet. */

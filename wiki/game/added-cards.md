@@ -643,6 +643,19 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
 - **CPU limit.** The CPU doesn't hold back Spell/Trap cards to keep the Frog coming back.
 - Checked in the source and the build; not tested in an emulator.
 
+### The CPU's Tribute Summon upgrades (2026-10-29)
+- **Before.** `AiChooseSummonWithTribute` (ai_summon.c) took a Tribute Summon only when its battle simulation
+  (`AiSimSummon` / `AiSimBattlePhase`) dealt more damage, or as much while destroying more. A wall swapped for a
+  stronger wall changes neither, so the CPU kept Aqua Madoor (1200/2000) instead of Tributing it for Gyakutenno Megami
+  (1800/2000).
+- **Now.** `AiTributeIsUpgrade` (added_effects.c) also makes the summon "better" when two things hold:
+  - its simulated damage is no worse;
+  - every monster it Tributes (the zones in `AiSimSummon`'s `tributeMask` nibbles), by its current
+    `GetZoneCardStats` stats, has less ATK and no more DEF than the summoned monster's printed stats. An equipped or
+    boosted Tribute counts with its boosts.
+  The call is one line in ai_summon.c, 0x20 bytes of original-unit code; release `.text` ends at 0x080809B8.
+- Checked in the source and the build; not tested in an emulator.
+
 ### The CPU's recruiters take a copy of themselves (2026-10-29)
 - **Before.** `EffectSpecialSummonFromDeckResolve` (effect_resolve6.c) is the shared recruiter resolve: Mystic Tomato,
   Giant Rat, UFO Turtle, Shining Fairy, Mother Grizzly, Flying Kamakiri #1, and the added Pyramid Turtle, Apprentice

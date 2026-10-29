@@ -117,6 +117,9 @@ next one.
       Setting it (unless the monster has a flip effect), even on the first turn.
     - It crashes into your monsters with equal ATK when it has no better attack, unless another of its monsters
       can beat yours outright.
+    - It Tribute Summons a stronger monster over weaker ones even when the swap doesn't change its attacks, such
+      as Gyakutenno Megami (1800/2000) over Aqua Madoor (1200/2000), as long as the summon has more ATK and at
+      least as much DEF as each monster it Tributes.
     - It never Tributes a copy of the monster it is summoning, for a Tribute Summon or a Toon's Special Summon,
       unless that monster has an effect that triggers on its summon (Zaborg, Mobius, Breaker, ...).
   - **Card use.**

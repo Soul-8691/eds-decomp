@@ -4241,6 +4241,35 @@ int AiPlanForcedAttack(void)
 }
 #endif /* HAS_CARD_BERSERK_GORILLA */
 
+/* ---- The CPU's Tribute Summon upgrades ----------------------------------------------------------------------------
+ * AiChooseSummonWithTribute (ai_summon.c) takes a Tribute Summon only when its battle simulation deals more damage
+ * (or as much while destroying more). A wall swapped for a stronger wall changes neither, so the CPU kept Aqua Madoor
+ * (1200/2000) rather than Tribute it for Gyakutenno Megami (1800/2000). Added: the summon is also better, when its
+ * simulated damage is no worse, if it is an upgrade: every monster it Tributes (its current ATK / DEF) has less ATK and
+ * no more DEF than the summoned monster's printed ones. tributeMask is AiSimSummon's: each nonzero nibble names a
+ * tribute's monster zone in bits 0-2. */
+int AiTributeIsUpgrade(u16 cardId, u16 tributeMask)
+{
+    u32 stats = gCardStats[cardId & CARD_ID_MASK];
+    int atk = CARD_STATS_ATK(stats) * CARD_STATS_POINTS_SCALE, def = CARD_STATS_DEF(stats) * CARD_STATS_POINTS_SCALE;
+    int any = 0, i;
+
+    for (i = 0; i < 4; i++, tributeMask >>= 4) {
+        struct ZoneCardStats tribute;
+        int zone = tributeMask & 7;
+
+        if ((tributeMask & 0xF) == 0)
+            continue;
+        if (DUEL_CARD_ID(&ZoneOf(AI_PLAYER, zone)->card) == 0)
+            return 0;
+        GetZoneCardStats(AI_PLAYER, zone, &tribute);
+        if ((int)tribute.atk >= atk || (int)tribute.def > def)
+            return 0;
+        any = 1;
+    }
+    return any;
+}
+
 /* ---- Added Fusion recipes -----------------------------------------------------------------------------------------
  * The added cards' recipes of 2 or 3 materials (materials[2] 0 for 2). effect_fusion.c asks for them after the ROM's
  * gFusionRecipes2 / gFusionRecipes3: FindFusionMaterials, IsMaterialOfFusion, and the Polymerization material count
