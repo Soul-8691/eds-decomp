@@ -909,6 +909,18 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
 - The other added cards keep their IDs; their card numbers after it move down one.
 - Checked in the source and the build; not tested in an emulator.
 
+### Gearfried the Iron Knight (2026-10-29)
+- Effect Monster (Level 4, EARTH Warrior, 1800/1600). The fetched text: "If either player equips an Equip Card(s) to
+  this card: Destroy that Equip Card(s)."
+- **The engine already has it** as effect key 1351 (no EDS card): `ENGINE_NUMBERS` gives the card that number (ID 949
+  = 1351), as for Goblin Attack Force. What key 1351 does, all in matched code:
+  - `EquipCard` (duel_send_to_grave.c) shows the effect and destroys the Equip Card put on it. With Premature Burial
+    it destroys the monster too, as the ruling has it.
+  - Snatch Steal cannot take it: `EffectSnatchStealCheck` (effect_checks.c) and the human's pick in
+    effect_targets2.c refuse it.
+- The other added cards keep their IDs; their card numbers after it move down one.
+- Checked in the source and the build; not tested in an emulator.
+
 ### Mirage of Nightmare (2026-10-29)
 - Continuous Spell. ID 1159 (number 1603). The fetched text: "Once per turn, during your opponent's Standby Phase:
   Draw cards until you have 4 cards in your hand. If you do, during your next Standby Phase after that: Randomly

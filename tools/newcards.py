@@ -85,6 +85,8 @@ ENGINE_NUMBERS = {
                                     # per face-up monster of the equip card's controller (CalcZoneCardStats)
     'Mage Power': 1450,             # key 1450: an Equip, +500 ATK/DEF per Spell/Trap of the equip card's controller,
                                     # itself included (CalcZoneCardStats; changed to count the Field Spell too)
+    'Gearfried the Iron Knight': 1351,  # key 1351: EquipCard destroys an Equip put on it (and the monster too for
+                                    # Premature Burial); Snatch Steal cannot target it
 }
 
 # YGOPRODeck race -> EDS monster type (gCardTypeNames), attribute -> EDS attribute, Spell/Trap race -> subtype.
