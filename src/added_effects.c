@@ -4236,6 +4236,26 @@ int AiPlanForcedAttack(void)
 }
 #endif /* HAS_CARD_BERSERK_GORILLA */
 
+/* ---- The CPU's recruiters summon another copy ---------------------------------------------------------------------
+ * EffectSpecialSummonFromDeckResolve (effect_resolve6.c: Mystic Tomato, Giant Rat, UFO Turtle, Shining Fairy, Mother
+ * Grizzly, Flying Kamakiri #1, and the added Pyramid Turtle, Apprentice Magician, Hydrogeddon) asks this before
+ * AiPickCardListEntry for the CPU: a copy of the recruiter itself in the Deck list, so the next one can recruit again.
+ * -1 for none, and always with the Exodia strategy (AI_FLAG_EXODIA: Mystic Tomato digs for Sangan / the Witch). */
+int AiRecruiterCopyEntry(u16 cardId)
+{
+    u16 number = CardNumberOfId(cardId);
+    int count, i;
+
+    if (gDuelCtrl.aiFlags & AI_FLAG_EXODIA)
+        return -1;
+    count = CollectEffectTargetsInt(AI_PLAYER, number, 0);
+    for (i = 0; i < count; i++) {
+        if (CardNumberOfId(gCardListView.cards[i] & CARD_ID_MASK) == number)
+            return i;
+    }
+    return -1;
+}
+
 /* ---- The CPU's Set step against an empty field -----------------------------------------------------------------------
  * AiStepMainPhase's AI_MAIN_SET_MONSTER (ai_steps.c) Sets the monster it picks (on the first turn every summon goes
  * there, and later when no summon simulation is better). Changed: while the human controls no monster, a monster with

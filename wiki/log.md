@@ -1802,3 +1802,6 @@ updated: 2026-09-29
 
 ## [2026-10-29] progress | The CPU summons 1700+ ATK face up on an empty field
 - src/added_effects.c AiSummonFaceUpOnOpenField; src/ai_steps.c AI_MAIN_SET_MONSTER uses it for the no-Tribute and one-Tribute summons. README.md. [[added-cards]]. Built (make and make release); not tested in an emulator.
+
+## [2026-10-29] progress | The CPU's recruiters take a copy of themselves
+- src/added_effects.c AiRecruiterCopyEntry (not with AI_FLAG_EXODIA); src/effect_resolve6.c EffectSpecialSummonFromDeckResolve asks it before AiPickCardListEntry for the CPU. README.md. [[added-cards]]. Built (make and make release); not tested in an emulator.

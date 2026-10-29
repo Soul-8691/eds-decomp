@@ -29,4 +29,3 @@ Make AI use new cards properly
 Fix general AI shortcomings
 Fix Flip Effect Monster AI
 Cyber/Reaper cards
-Mystic Tomato should summon another copy

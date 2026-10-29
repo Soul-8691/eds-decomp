@@ -643,6 +643,16 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
 - **CPU limit.** The CPU doesn't hold back Spell/Trap cards to keep the Frog coming back.
 - Checked in the source and the build; not tested in an emulator.
 
+### The CPU's recruiters take a copy of themselves (2026-10-29)
+- **Before.** `EffectSpecialSummonFromDeckResolve` (effect_resolve6.c) is the shared recruiter resolve: Mystic Tomato,
+  Giant Rat, UFO Turtle, Shining Fairy, Mother Grizzly, Flying Kamakiri #1, and the added Pyramid Turtle, Apprentice
+  Magician and Hydrogeddon. For the CPU it took `AiPickCardListEntry`'s pick: the best ATK + DEF that holds against
+  the human's strongest monster.
+- **Now.** It first asks `AiRecruiterCopyEntry` (added_effects.c), which returns a copy of the recruiter itself in the
+  Deck list, so the next one can recruit again. With none, the original pick applies. With the Exodia strategy
+  (`AI_FLAG_EXODIA`) it is skipped, so Mystic Tomato still digs for Sangan or Witch of the Black Forest.
+- Checked in the source and the build; not tested in an emulator.
+
 ### The CPU's Set step against an empty field (2026-10-29)
 - **Before.** `AiStepMainPhase`'s `AI_MAIN_SET_MONSTER` (ai_steps.c) Set its pick face-down, except Time Wizard and
   Cannon Soldier; the one-Tribute case always Set it. The CPU reaches that step on the first turn

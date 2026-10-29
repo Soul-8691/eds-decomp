@@ -560,6 +560,8 @@ int EffectCyberJarResolve(struct ChainEntry *link)
  * then shuffle. The human is asked first and picks in the card-list viewer; the CPU skips to the summon
  * with the entry AiPickCardListEntry chose.
  */
+int AiRecruiterCopyEntry(u16 cardId);  /* mod: src/added_effects.c */
+
 int EffectSpecialSummonFromDeckResolve(struct ChainEntry *link)
 {
     u32 *card = &gCardListView.cards[gCardListView.cursorRow + gCardListView.top];
@@ -576,7 +578,11 @@ int EffectSpecialSummonFromDeckResolve(struct ChainEntry *link)
                 return EFFECT_STEP_END;
             }
             if (link->player) {   /* the CPU: its pick becomes the selected list entry */
-                if (AiPickCardListEntry(link->card) < 0)
+                int copy = AiRecruiterCopyEntry(link->card);    /* added: another copy first (src/added_effects.c) */
+
+                if (copy >= 0)
+                    gAiWork.listPick = copy;
+                else if (AiPickCardListEntry(link->card) < 0)
                     return EFFECT_STEP_DONE;
                 gCardListView.cursorRow = 0;
                 gCardListView.top = gAiWork.listPick;

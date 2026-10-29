@@ -120,6 +120,9 @@ next one.
     - It chains Trap Hole and its other summon Traps to your monster's summon effect (Mobius, Zaborg, ...), so it
       can destroy the monster before the effect resolves.
     - It plays Dark Hole only when you control more monsters than it does.
+    - Its recruiters (Mystic Tomato, Giant Rat, UFO Turtle, Shining Fairy, Mother Grizzly, Flying Kamakiri #1,
+      Pyramid Turtle, Apprentice Magician) summon another copy of themselves from the Deck when they can, so
+      the next one can recruit again.
     - Its Mystical Space Typhoon (and Gust, Driving Snow) also targets your face-up Traps, and never its own cards.
     - When you attack into its flip monsters that remove or stop a monster (Man-Eater Bug, Hane-Hane, Penguin
       Soldier, Dark-Eyes Illusionist, Night Assailant, Tsukuyomi), it targets your strongest monster that hasn't
