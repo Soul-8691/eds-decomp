@@ -65,6 +65,7 @@ struct ModDuelState {
     u16 dimensionReturnIds[10]; /* ... and the card ID summoned into that zone */
     u8 aiThunderDragonSearched; /* the CPU's Thunder Dragon added a copy; it is discarded even with none left to find */
     u16 aiTributeFor;           /* AiPickTributeFor: the card number the CPU's tributes may not copy, 0xFFFF none */
+    u8 sandMothPending;         /* Sand Moth: bit player, its effect's Special Summon is queued (swap its stats) */
 };
 extern struct ModDuelState gModDuel;
 
@@ -739,6 +740,7 @@ void OnMonsterTurnedFaceDown(int player, int zone)
 {
     RemoveZoneLink(DUEL_LOC(player, zone), 0, ZONE_LINK_ATK_300_PER_VALUE);
     RemoveZoneLink(DUEL_LOC(player, zone), DUEL_CARD_ID(&ZoneOf(player, zone)->card), ZONE_LINK_SPELL_COUNTER);
+    RemoveZoneLink(DUEL_LOC(player, zone), DUEL_CARD_ID(&ZoneOf(player, zone)->card), ZONE_LINK_SWAP_STATS);
 }
 
 #if defined(HAS_CARD_BOOK_OF_MOON) || defined(HAS_CARD_TSUKUYOMI) || defined(HAS_CARD_GOLEM_SENTRY)
@@ -959,6 +961,7 @@ void ModDuelInit(void)
     gModDuel.dimensionReturn = 0;
     gModDuel.aiThunderDragonSearched = 0;
     gModDuel.aiTributeFor = 0xFFFF;
+    gModDuel.sandMothPending = 0;
 #ifdef HAS_CARD_INJECTION_FAIRY_LILY
     InjectionFairyLilyResetBattle();
 #endif
@@ -2054,9 +2057,12 @@ static void ApprenticeMagicianPlaceCounter(int player, u16 id)
 #endif /* HAS_CARD_APPRENTICE_MAGICIAN && (Breaker || Skilled Dark Magician) */
 
 #if defined(HAS_CARD_DARK_MAGICIAN_OF_CHAOS) || defined(HAS_CARD_SACRED_CRANE) || defined(HAS_CARD_APPRENTICE_MAGICIAN) \
-    || defined(HAS_CARD_GOLEM_SENTRY)
+    || defined(HAS_CARD_GOLEM_SENTRY) || defined(HAS_CARD_SAND_MOTH)
 /* SummonAction_Update calls this for every summon once the monster is in (player, zone): `kind` is the
  * enum SummonActionKind, faceUp its position. */
+#ifdef HAS_CARD_SAND_MOTH
+void SandMothSummoned(int player, int zone, u16 id);     /* below */
+#endif
 void AddedCardsSummoned(int player, int zone, u16 id, int kind, int faceUp)
 {
 #ifdef HAS_CARD_DARK_MAGICIAN_OF_CHAOS
@@ -2066,6 +2072,9 @@ void AddedCardsSummoned(int player, int zone, u16 id, int kind, int faceUp)
     && (defined(HAS_CARD_BREAKER_THE_MAGICAL_WARRIOR) || defined(HAS_CARD_SKILLED_DARK_MAGICIAN))
     if (faceUp && ((const u16 *)CARD_ID_TO_NUMBER_ADDR)[id & CARD_ID_MASK] == CARD_APPRENTICE_MAGICIAN)
         ApprenticeMagicianPlaceCounter(player, id);
+#endif
+#ifdef HAS_CARD_SAND_MOTH
+    SandMothSummoned(player, zone, id);
 #endif
 #ifdef HAS_CARD_GOLEM_SENTRY
     if (((const u16 *)CARD_ID_TO_NUMBER_ADDR)[id & CARD_ID_MASK] == CARD_GOLEM_SENTRY && kind == SUMMON_ACTION_FLIP)
@@ -4227,6 +4236,63 @@ int AiPlanForcedAttack(void)
 }
 #endif /* HAS_CARD_BERSERK_GORILLA */
 
+#ifdef HAS_CARD_SAND_MOTH
+/* ---- Sand Moth ----------------------------------------------------------------------------------------------------
+ * "When this face-down Defense Position card is destroyed and sent to the Graveyard, except by battle, switch the
+ * original ATK and DEF of this card and Special Summon it."
+ *   trigger  SendFieldCardToGrave (duel_send_to_grave.c; battle uses SendBattleDestroyedCardToGraveyard) calls
+ *            SandMothDestroyed for a destroyed (not Tributed or sent) face-down Defense Position Sand Moth that goes
+ *            to the Graveyard (not banished): a trigger from the Graveyard (CHAIN_KIND_OFF_FIELD), mandatory.
+ *   resolve  it leaves the Graveyard and is Special Summoned, the player choosing its face-up position;
+ *            gModDuel.sandMothPending marks the summon, and AddedCardsSummoned gives the summoned Sand Moth a
+ *            ZONE_LINK_SWAP_STATS link from its own ID.
+ *   stats    CalcZoneCardStats (card_stats.c) swaps the printed ATK and DEF of a face-up monster with that link
+ *            (ModHasSwappedStats) before its modifiers: 2000/1000. Turned face down, it loses the link
+ *            (OnMonsterTurnedFaceDown). */
+void SandMothDestroyed(int player, u16 id)
+{
+    Chain_AddPending(TRIGGER_PLAYER(player & 1) | TRIGGER_KIND(CHAIN_KIND_OFF_FIELD)
+                         | TRIGGER_EVENT(RESPONSE_MONSTER_TO_GRAVE) | (id & CARD_ID_MASK),
+                     0);
+}
+
+int EffectSandMothResolve(struct ChainEntry *link, struct ChainEntry *chainedTo)
+{
+    if (link->negated || CountFreeMonsterZones(link->player) == 0 || !CanSpecialSummon(link->player))
+        return EFFECT_STEP_DONE;
+    if (!RemoveGraveyardCardByNumber(link->player, CARD_SAND_MOTH, (u32 *)&gChain.effectCard))
+        return EFFECT_STEP_DONE;
+    ShowCardEffect(link->player, link->card & CARD_ID_MASK);
+    gModDuel.sandMothPending |= 1 << (link->player & 1);
+    QueueSpecialSummonChoosePosition(link->player, &gChain.effectCard, 1, ZONE_STATUS_FROM_GRAVEYARD);
+    return EFFECT_STEP_DONE;
+}
+
+/* AddedCardsSummoned: the Sand Moth its own effect summons gets its swapped stats. */
+void SandMothSummoned(int player, int zone, u16 id)
+{
+    if (CardNumberOfId(id) != CARD_SAND_MOTH || !(gModDuel.sandMothPending & (1 << (player & 1))))
+        return;
+    gModDuel.sandMothPending &= ~(1 << (player & 1));
+    QueueAddZoneLink(player, id & CARD_ID_MASK, DUEL_LOC(player, zone), ZONE_LINK_KIND(ZONE_LINK_SWAP_STATS, 1));
+}
+#endif /* HAS_CARD_SAND_MOTH */
+
+/* CalcZoneCardStats (card_stats.c): 1 if the monster in (player, zone) has a ZONE_LINK_SWAP_STATS link from its own
+ * card ID (Sand Moth): its printed ATK and DEF are swapped. */
+int ModHasSwappedStats(int player, int zone)
+{
+    struct DuelZone *z = ZoneOf(player, zone);
+    u16 id = DUEL_CARD_ID(&z->card);
+    int i;
+
+    for (i = 0; i < z->numLinks; i++) {
+        if ((u8)z->linkKinds[i] == ZONE_LINK_SWAP_STATS && (z->links[i] & CARD_ID_MASK) == id)
+            return 1;
+    }
+    return 0;
+}
+
 #ifdef HAS_CARD_TREEBORN_FROG
 /* ---- Treeborn Frog ------------------------------------------------------------------------------------------------
  * "Once per turn, during your Standby Phase, if this card is in your Graveyard and you do not control "Treeborn
@@ -5828,6 +5894,16 @@ const struct CardEffect gAddedCardEffects[] = {
         NULL,
         NULL,
         EffectNewdoriaChainB,
+    },
+#endif
+#ifdef HAS_CARD_SAND_MOTH
+    {
+        CARD_SAND_MOTH, 0,
+        EffectSandMothResolve,
+        NULL,
+        NULL,
+        NULL,
+        NULL,
     },
 #endif
 #ifdef HAS_CARD_HYDROGEDDON

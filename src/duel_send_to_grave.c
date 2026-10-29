@@ -147,6 +147,8 @@ void UpdateMonsterControl(int player, int zone, u16 removedLink)
  *    graveyard effect, The Immortal of Thunder, Toon World, Spear Cretin, Prohibition).
  *  - DestroyLinkedCards.
  */
+void SandMothDestroyed(int player, u16 id);     /* mod: src/added_effects.c */
+
 void SendFieldCardToGrave(int player, int zone, u16 destroyed, u16 runTriggers)
 {
     int side = player & 1;
@@ -198,6 +200,11 @@ void SendFieldCardToGrave(int player, int zone, u16 destroyed, u16 runTriggers)
         return;
     }
     DuelCmd_Push(PLAYER_CMD(player, DUEL_CMD_SEND_TO_GRAVEYARD), zone, destroyed, 0);
+#ifdef HAS_CARD_SAND_MOTH
+    /* added: a destroyed face-down Defense Position Sand Moth comes back (src/added_effects.c) */
+    if (destroyed && zone <= ZONE_MONSTER_4 && !z->isFaceUp && z->isDefense && CARD_NUMBER(id) == CARD_SAND_MOTH)
+        SandMothDestroyed(ZONE_CARD(z)->owner, id);     /* its owner's Graveyard, as Sangan's trigger */
+#endif
     switch (CARD_TYPE(id)) {
     case CARD_TYPE_MAGIC:
         EventResponse_Request(1 - player, RESPONSE_MAGIC_TO_GRAVE, (u16)LOC_U8(player, zone));

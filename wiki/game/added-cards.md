@@ -556,6 +556,24 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
   - `AiShouldRetreatToDefense` never picks it.
 - Checked in the source and the build; not tested in an emulator.
 
+### Sand Moth (2026-10-29)
+- Effect Monster (Level 4, EARTH Rock, 1000/2000). ID 1143 (number 1191). The fetched text: "When this face-down
+  Defense Position card is destroyed and sent to the Graveyard, except by battle, switch the original ATK and DEF of
+  this card and Special Summon it."
+- **Trigger.** `SendFieldCardToGrave` (duel_send_to_grave.c) calls `SandMothDestroyed` (added_effects.c) for a
+  `destroyed` face-down Defense Position Sand Moth that goes to the Graveyard. That path is never battle (which uses
+  `SendBattleDestroyedCardToGraveyard`) and never a Tribute (`TributeMonster` has its own); a banish (Banisher of the
+  Light, ...) returns before it. The trigger is mandatory, from the owner's Graveyard (`CHAIN_KIND_OFF_FIELD`, the
+  owner as for Sangan's trigger).
+- **Resolve.** `EffectSandMothResolve` takes it out of the Graveyard (`RemoveGraveyardCardByNumber`) and Special
+  Summons it face up, the player choosing the position. It sets `gModDuel.sandMothPending`, so `AddedCardsSummoned`
+  (`SandMothSummoned`) gives it a `ZONE_LINK_SWAP_STATS` link (21, include/constants/duel.h) from its own ID.
+- **Stats.** `CalcZoneCardStats` (card_stats.c) swaps the printed ATK and DEF of a face-up monster with that link
+  (`ModHasSwappedStats`) before every modifier, so it is 2000/1000. Turned face down, it loses the link
+  (`OnMonsterTurnedFaceDown`). The effects that read the printed ATK themselves (Megamorph's `BaseAttack`) still
+  see 1000.
+- Checked in the source and the build; not tested in an emulator.
+
 ### Drillroid (2026-10-29)
 - Effect Monster (Level 4, EARTH Machine, 1600/1600). ID 1141 (number 1188). The fetched text: "Before damage
   calculation, if this card attacks a Defense Position monster: Destroy that monster."

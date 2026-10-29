@@ -140,6 +140,8 @@ enum ZoneLinkKind {
                                          * Goddess of Whim, Patrol Robo, ...; meaning there not checked) */
     ZONE_LINK_ATK_DOWN_200 = 12,
     ZONE_LINK_STATS_UP_100 = 13,
+    ZONE_LINK_SWAP_STATS = 21,          /* mod: the monster's printed ATK and DEF are swapped (Sand Moth), from its
+                                         * own card ID (src/added_effects.c, card_stats.c) */
     ZONE_LINK_SPELL_COUNTER = 20,       /* mod: Spell Counters with no stat effect (Skilled Dark Magician), from the
                                          * card's own ID; the high byte is the count (src/added_effects.c) */
 };

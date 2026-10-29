@@ -7,6 +7,8 @@
 #include "constants/duel.h"         /* enum ZoneLinkKind, DuelPhase, DuelZoneIndex */
 #include "util.h"                   /* HalveRoundUp */
 
+int ModHasSwappedStats(int player, int zone);   /* mod: Sand Moth's swapped ATK/DEF (src/added_effects.c) */
+
 /*
  * Effective card stats (wiki/functions/card-stats-c.md).
  *
@@ -219,6 +221,13 @@ void GetZoneCardStats(int player, int zone, struct ZoneCardStats *out)
     asm("" : "+m"(out->id));
     if (zone > ZONE_MONSTER_4 || !ZONE_AT(player & 1, zone)->isFaceUp)
         return;
+    if (ModHasSwappedStats(player, zone)) {
+        /* added: Sand Moth's swapped original ATK and DEF (src/added_effects.c) */
+        int printedAtk = out->atk;
+
+        out->atk = out->def;
+        out->def = printedAtk;
+    }
 
     /* 1. Karate Man's doubled ATK (and CARD_1254's +500 ATK/DEF) while effectUnused is clear, i.e. after its
      *    effect was used, and the Magic immunity of CARD_1326/CARD_1329 under Umi. */

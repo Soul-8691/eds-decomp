@@ -1793,3 +1793,6 @@ updated: 2026-09-29
 
 ## [2026-10-29] progress | Drillroid coded
 - src/added_effects.c DrillroidBeforeDamageCalc; src/battle_phase1.c BattleStage_DamageCalc calls it before CalcBattle, then the battle goes on at BATTLE_STAGE_FLIP_EFFECT. [[added-cards]]. Built (make and make release); not tested in an emulator.
+
+## [2026-10-29] progress | Sand Moth coded
+- include/constants/duel.h ZONE_LINK_SWAP_STATS; src/added_effects.c SandMothDestroyed, EffectSandMothResolve and its row, SandMothSummoned, ModHasSwappedStats, gModDuel.sandMothPending; src/duel_send_to_grave.c trigger; src/card_stats.c the swap; src/summon_action.c guard. [[added-cards]]. Built (make and make release); not tested in an emulator.

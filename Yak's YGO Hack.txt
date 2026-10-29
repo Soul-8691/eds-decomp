@@ -29,5 +29,5 @@ Make AI use new cards properly
 Fix general AI shortcomings
 Fix Flip Effect Monster AI
 Cyber/Reaper cards
-Fix AI summoning Battle Ox in defense position when I have no monsters
+Fix AI summoning cards with 1700+ in defense position when I have no monsters
 Mystic Tomato should summon another copy
