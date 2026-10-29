@@ -1874,3 +1874,6 @@ updated: 2026-09-29
 
 ## [2026-10-29] progress | The CPU flips Threatening Roar before the human's Battle Phase
 - src/added_effects.c ModBattlePhaseStart (a face-up 2000+ ATK monster of the human's: the CPU flips and queues its Set Threatening Roar); src/card_menu_input.c BattleStage_Start step 0 calls it. Release .text 0x80564. [[added-cards]]. Built (make and make release); not tested in an emulator.
+
+## [2026-10-29] progress | Deck Edit ring art moved off the Side Deck panel's tiles
+- src/mod_field_icons.c: the art is a 16x16 sprite at the frame's (x + 8, y + 7) in 2x2-tile blocks (22, 12), (22, 14), (8, 20), (8, 22), (16, 13); block (8, 9) was shown by the Side Deck panel's animation (eds-34.png, Screenshot_5.png: OAM 11 at (166, 112)), and (28, 10) / (10, 23) by scripts [10], [11], [16]. tools/cardicons.py: Deck Edit entries are 160 bytes (2x2 tiles). [[deck-edit-card-art]], [[card-icons]]. Release .text 0x80564. Built (make and make release); not tested in an emulator.

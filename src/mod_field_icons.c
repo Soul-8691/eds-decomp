@@ -430,23 +430,28 @@ void ModChainIconBuild(u32 row, u16 id)
 /* ---- Deck Edit's ring ---- */
 
 /* The ring left of Deck Edit's list (deck_edit_widgets.c): up to six 32x32 affine frame sprites (OamList layer 5),
- * one per visible list row, all with the window at x 8-22, y 7-22. Each drawn frame gets a 16x32 affine sprite at
- * its x + 8 with the same matrix (so the same centre: it scales and moves with the frame), one layer in front, made
- * of the card's window art (gModFieldIconData's Deck Edit block: 15x16 at (0, 7), 15 colours of its own). The
- * k-th frame drawn this frame takes OBJ palette 11 + k (11-15 are empty in Deck Edit's palette) and the 2x4-tile
- * block sDeckRingBlocks[k] of the 2D OBJ map: tiles that are blank in Deck Edit's four sheets, outside every frame
- * template and the run-time writes (rows 2-3, the name letters at row 11). Both are written again each frame, so a
+ * one per visible list row, all with the window at x 8-22, y 7-22. Each drawn frame gets a 16x16 affine sprite at
+ * its (x + 8, y + 7) with the same matrix, one layer in front, made of the card's window art (gModFieldIconData's
+ * Deck Edit block: 15x16, 15 colours of its own). Its centre is the frame's (x + 16, y + 15) against (x + 16,
+ * y + 16): exact at full size, within a pixel when the ring shrinks it. The k-th frame drawn this frame takes OBJ
+ * palette 11 + k (11-15 are empty in Deck Edit's palette) and the 2x2-tile block sDeckRingBlocks[k] of the 2D OBJ
+ * map: tiles that are blank in Deck Edit's four sheets and outside every sprite Deck Edit draws (the templates of
+ * gDeckEditAnimScripts, gDeckEditArtFrameSprites, gCardFrameSprites, the command menu, digits, name index and scroll
+ * bar) and the run-time writes (rows 2-3, the name letters at row 11). A blank tile inside a sprite is not free: the
+ * Side Deck panel's animation shows (8-9, 10-11), so art there appeared beside "SideDeck" (wiki
+ * questions/deck-edit-card-art). Both are written again each frame, so a
  * screen that reloads the sheets or the palette needs nothing more. A screen with other sheets in the top half (the
  * list filter) gets no art: sDeckRingCheck compares a tile of each top sheet first. The cards come from
  * DeckEdit_InitFrameSlot and DeckEdit_ScrollFrameSlots (ModDeckRingSetCard), by ring slot. */
-#define DE_ENTRY_SIZE           (32 + 6 * 32)   /* palette, then 3 rows of 2 4bpp tiles */
+#define DE_ENTRY_SIZE           (32 + 4 * 32)   /* palette, then 2 rows of 2 4bpp tiles */
 #define DATA_DECK_EDIT          ((DATA_MINIS + CARD_ID_COUNT * MINI_W * MINI_H + 3) & ~3)
 #define DE_RING_SLOTS           6
 #define DE_ART_SPRITES          5
 #define DE_PALETTE_FIRST        11
 #define DE_ART_LAYER            4               /* in front of the frames' layer 5 */
 #define ATTR0_SHAPE_MASK        0xC000
-#define ATTR0_SHAPE_TALL        0x8000          /* with the frame's size bits (2): 16x32 */
+#define ATTR1_SIZE_MASK         0xC000
+#define ATTR1_SIZE_16           0x4000          /* square: 16x16 */
 #define OBJ_TILE_2D(col, row)   ((row) * 32 + (col))
 
 extern const u8 gDeckEditObjTiles[], gDeckEditCardStackObjTiles[];
@@ -460,7 +465,7 @@ struct ModDeckRing {
 extern struct ModDeckRing gModDeckRing;     /* EWRAM 0x0202F360, symbols.ld */
 
 static const u16 sDeckRingBlocks[DE_ART_SPRITES] = {
-    OBJ_TILE_2D(8, 9), OBJ_TILE_2D(28, 10), OBJ_TILE_2D(22, 12), OBJ_TILE_2D(8, 20), OBJ_TILE_2D(10, 23),
+    OBJ_TILE_2D(22, 12), OBJ_TILE_2D(22, 14), OBJ_TILE_2D(8, 20), OBJ_TILE_2D(8, 22), OBJ_TILE_2D(16, 13),
 };
 
 void ModDeckRingSetCard(u32 slot, u16 id)
@@ -500,11 +505,10 @@ void ModDeckRingArt(u32 slot, u16 *frame, void *list)
     block = sDeckRingBlocks[k];
     entry = gModFieldIconData + DATA_DECK_EDIT + id * DE_ENTRY_SIZE;
     CopyDoubleWords((void *)(OBJ_PLTT + (DE_PALETTE_FIRST + k) * 32), entry, 32);
-    for (r = 0; r < 3; r++)
+    for (r = 0; r < 2; r++)
         CopyDoubleWords((void *)OBJ_TILE8_ADDR(block + r * 32), entry + 32 + r * 2 * TILE4_SIZE, 2 * TILE4_SIZE);
-    MemClear16((void *)OBJ_TILE8_ADDR(block + 3 * 32), 2 * TILE4_SIZE);
     e = (u16 *)OamListAlloc(DE_ART_LAYER, list);
-    e[0] = (frame[0] & ~ATTR0_SHAPE_MASK) | ATTR0_SHAPE_TALL;
-    e[1] = (frame[1] & 0xFE00) | ((frame[1] + 8) & 0x1FF);
+    e[0] = (frame[0] & ~(ATTR0_SHAPE_MASK | 0xFF)) | ((frame[0] + 7) & 0xFF);     /* square */
+    e[1] = (frame[1] & ~(ATTR1_SIZE_MASK | 0x1FF)) | ATTR1_SIZE_16 | ((frame[1] + 8) & 0x1FF);
     e[2] = block | (frame[2] & 0x0C00) | (DE_PALETTE_FIRST + k) << 12;
 }

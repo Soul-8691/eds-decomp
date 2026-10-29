@@ -34,9 +34,9 @@ data/mod_field_icons_data.s), for BG2 in 256-colour mode:
             bytes): pose 0 is the 15x16 at (8, 7), poses 1-2 squeeze it into their narrower window
   +0x7980   the miniatures: 15x16 bytes per card ID (CARD_ID_COUNT of them), row-major, palette entries
             192-255 (the sprites take them 64 lower: OBJ palettes 8-11); an ID without a card is all 0
-  then, from the next multiple of 4: Deck Edit's ring art, 224 bytes per card ID: the card's own 16-colour
-            palette (16 BGR555, entry 0 transparent) and six 4bpp tiles (3 rows of 2, row-major) of a 16x24
-            sprite piece holding the 15x16 window art at (0, 7) (the ring frames' window is x 8-22, y 7-22),
+  then, from the next multiple of 4: Deck Edit's ring art, 160 bytes per card ID: the card's own 16-colour
+            palette (16 BGR555, entry 0 transparent) and four 4bpp tiles (2 rows of 2, row-major) of a 16x16
+            sprite holding the 15x16 window art at (0, 0) (the ring frames' window is x 8-22, y 7-22),
             resampled from the 72x80 art (its centre 72x76) and quantised to 15 colours for that card alone
 """
 import os
@@ -291,8 +291,7 @@ def pose_map(img):
 
 
 DE_W, DE_H = 15, 16                # the ring frames' window (x 8-22, y 7-22 of the 32x32 frame)
-DE_Y = 7
-DE_SIZE = 32 + 6 * 32
+DE_SIZE = 32 + 4 * 32
 DE_COLORS = 15
 WX_DE = area_weights(A.ART_W, DE_W)
 WY_DE = area_weights(76, DE_H)              # the centre 76 rows: 72x76 is the window's 15:16
@@ -349,15 +348,15 @@ def quantise_card(pixels):
 
 
 def deck_edit_entry(px, pal):
-    """A card's Deck Edit ring entry: its 16-colour palette and the six 4bpp tiles of the window art."""
+    """A card's Deck Edit ring entry: its 16-colour palette and the four 4bpp tiles of the window art."""
     palette, index = quantise_card(window_art(px, pal))
     out = bytearray(struct.pack('<16H', 0, *((c[0] >> 3) | (c[1] >> 3) << 5 | (c[2] >> 3) << 10 for c in palette),
                                 *([0] * (DE_COLORS - len(palette)))))
-    img = bytearray(16 * 24)
+    img = bytearray(16 * 16)
     for y in range(DE_H):
         for x in range(DE_W):
-            img[(DE_Y + y) * 16 + x] = index[y * DE_W + x]
-    for t in range(6):
+            img[y * 16 + x] = index[y * DE_W + x]
+    for t in range(4):
         tx, ty = t % 2, t // 2
         for y in range(8):
             for x in range(0, 8, 2):

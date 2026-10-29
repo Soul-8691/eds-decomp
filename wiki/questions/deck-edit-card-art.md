@@ -4,7 +4,7 @@ type: question
 status: draft
 confidence: high
 sources: [rom-analysis]
-updated: 2026-10-28
+updated: 2026-10-29
 ---
 
 # Card art miniatures in Deck Edit
@@ -35,12 +35,41 @@ Answered: yes, over the ring of card frames left of the list. Built in `src/mod_
 > the right offsets (`gDeckEditObjTiles` = gfx bank A + 0xAEDA8, then + 0x2000 each).
 
 ## The solution
-- **Art piece:** a 16x32 affine sprite at the frame's x + 8 with the frame's attributes and matrix: the same centre,
-  so it scales and moves with the frame. Layer 4 (in front of the frames).
+- **Art piece:** a 16x16 affine sprite at the frame's (x + 8, y + 7) with the frame's attributes and matrix. Its
+  centre (x + 16, y + 15) is a pixel above the frame's (x + 16, y + 16), so it is exact at full size and within a
+  pixel when the ring shrinks it. Layer 4 (in front of the frames). (Until 2026-10-29 it was a 16x32 sprite at x + 8
+  holding the art at rows 7-22, which needed 2x4-tile blocks.)
 - **Colours:** each card's own 15 colours (`tools/cardicons.py --data`, quantised from the art's centre 72x76 area
   averaged to the 15x16 window), the k-th drawn frame in OBJ palette 11 + k.
-- **Tiles:** five 2x4-tile blocks blank in all four sheets and outside every frame template and run-time write:
-  (8, 9), (28, 10), (22, 12), (8, 20), (10, 23). Rewritten every frame with the palette, so reloads need nothing.
+- **Tiles:** five 2x2-tile blocks, blank in all four sheets and outside every sprite Deck Edit draws and every
+  run-time write: (22, 12), (22, 14), (8, 20), (8, 22), (16, 13). Rewritten every frame with the palette, so
+  reloads need nothing. Each card's entry in the data (`tools/cardicons.py`) is 160 bytes: palette, then 2x2 tiles
+  with the 15x16 art at (0, 0).
+
+## Bug: art beside "SideDeck" (2026-10-29): fixed
+The user saw a garbled 16x16 sprite right of the dim "SideDeck" label (eds-34.png). mGBA's sprite viewer
+(Screenshot_5.png): OAM 11, 16x16 at (166, 112), palette 0, the card art's pixels in Deck Edit's colours.
+- **Cause:** the first art block (8, 9) was blank in the sheets, but blank is not enough: a sprite can show blank
+  tiles. The Side Deck panel's animations (`gDeckEditAnimScripts` [6] and [7]) have a frame of 16x16 at (166, 112),
+  tile 0xA8 = sheet A (8, 10), so it showed the art's top rows. Blocks (28, 10) and (10, 23) had the same flaw:
+  scripts [10], [11] and [16] use (28, 10-12), (11, 23-24) and (10-11, 24-26).
+- **How the blocks were chosen** (a scratch script over the original ROM's tables): every template's tiles, decoded
+  as its drawer reads them, were marked as used:
+  - quadrant mode (`AnimBlockDraw` mode 3 and modes 3/4 of `OamListAddSpriteGroup`): attr2 bits 8-9 pick the
+    sheet; this covers the 17 scripts of `gDeckEditAnimScripts`, `gDeckEditArtFrameSprites` (12),
+    `gCardFrameSprites`, `gCardMoveSprite`, `gNameIndexTabSprite` and `gNameIndexLettersSprite`;
+  - format 0: `gDeckEditCommandLabelSprites` (7 x 5), `gDeckEditCommandTabSprite` (+16 columns),
+    `gDeckEditPanelCornerSprite` (+16, +16) and the 10 digits of `gDeckEditDigitSprites`;
+  - the scroll bar (column 9, rows 4-7; column 15, rows 0-1).
+
+  Free 2x4 blocks: only (22, 12) and (8, 20) are blank and unused. Three more blocks are unused but hold graphics:
+  (20, 12), (29, 8) and (28, 28). Each sits inside a larger picture whose other part is used, so a sprite this list
+  misses may show them, and they were rejected. Hence the 16x16 piece.
+
+> [!question] Not checked
+> Code-built sprites outside these tables (other than the scroll bar) were not enumerated, and the sprites of the
+> Side Deck swap, Trade and Prohibition screens are assumed to be the same tables. Built; not tested in an
+> emulator.
 - **Cards:** `DeckEdit_InitFrameSlot` and `DeckEdit_ScrollFrameSlots` record each ring slot's card
   (`gModDeckRing`, EWRAM 0x0202F360).
 - **Other screens:** the list filter loads other sheets into the top half, so `ModDeckRingBegin` first compares a tile
