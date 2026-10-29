@@ -3,8 +3,8 @@
 <p align="center">
   <img src="eds-8.png" width="24%" alt="Screenshot 1">
   <img src="eds-9.png" width="24%" alt="Screenshot 2">
-  <img src="eds-10.png" width="24%" alt="Screenshot 3">
-  <img src="eds-11.png" width="24%" alt="Screenshot 4">
+  <img src="eds-11.png" width="24%" alt="Screenshot 3">
+  <img src="eds-10.png" width="24%" alt="Screenshot 4">
 </p>
 <p align="center">
   <img src="eds-29.png" width="24%" alt="Screenshot 5">
