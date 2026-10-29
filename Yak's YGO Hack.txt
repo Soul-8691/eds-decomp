@@ -26,7 +26,5 @@ Detail card prices in CARD_PRICES.md
 Make AI use new cards properly
 Fix general AI shortcomings
 Fix Flip Effect Monster AI
-Cyber/Reaper cards
 Move hooks out of original units
 Move added card lists out of effect_target_collect.c
-Side deck visual bug
