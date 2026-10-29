@@ -41,3 +41,5 @@ Fix Flip Effect Monster AI
 Fix Tribute Summon AI
 Fix Special Summon sacrifice AI
 Fix cheating (face-down) AI
+Make AI use Thunder Dragon's effect
+AI should use Nobleman of Crossout

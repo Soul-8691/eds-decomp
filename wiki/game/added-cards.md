@@ -556,6 +556,17 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
   - `AiShouldRetreatToDefense` never picks it.
 - Checked in the source and the build; not tested in an emulator.
 
+### Newdoria (2026-10-29)
+- Effect Monster (Level 4, DARK Fiend, 1200/800): "If this card is destroyed by battle and sent to the GY: Target 1
+  monster on the field; destroy that target."
+- **Trigger.** A case in `SendBattleDestroyedCardToGraveyard` (duel_field_moves.c) queues it, as for Sangan and
+  Gigantes. It fires only when the card goes to the Graveyard; a banish, such as Dark Magician of Chaos's or D.D.
+  Warrior Lady's, skips it.
+- **Effect.** The target is any monster on the field (Man-Eater Bug's `EffectTargetableMonsterCheck` /
+  `EffectTargetableMonsterChainB`; the CPU picks the human's strongest), destroyed by `EffectDestroyTargetResolve`.
+- **Root list.** Added to the root new_cards.txt (the fully coded cards).
+- Checked in the source and the build; not tested in an emulator.
+
 ### Ryu Kokki (2026-10-29)
 - Effect Monster (Level 6, DARK Zombie, 2400/2000): "At the end of the Damage Step, if this card battled a Warrior or
   Spellcaster-Type monster: Destroy that monster."

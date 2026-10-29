@@ -200,6 +200,9 @@ void SendBattleDestroyedCardToGraveyard(int defender, int player, int zone, u16 
 #ifdef HAS_CARD_APPRENTICE_MAGICIAN
     case CARD_APPRENTICE_MAGICIAN:  /* added card: a Level 2 or lower Spellcaster from the Deck (src/added_effects.c) */
 #endif
+#ifdef HAS_CARD_NEWDORIA
+    case CARD_NEWDORIA:             /* added card: destroy 1 monster on the field (src/added_effects.c) */
+#endif
     case CARD_1241: case CARD_1242: case CARD_1257: case CARD_1405:
         {
             u32 trigger = TRIGGER_PLAYER(owner);

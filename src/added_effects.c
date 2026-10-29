@@ -3649,6 +3649,29 @@ int EffectGolemSentryResolve(struct ChainEntry *link, struct ChainEntry *chained
 }
 #endif /* HAS_CARD_GOLEM_SENTRY */
 
+#ifdef HAS_CARD_NEWDORIA
+/* ---- Newdoria -----------------------------------------------------------------------------------------------------
+ * "If this card is destroyed by battle and sent to the GY: Target 1 monster on the field; destroy that target."
+ * Queued with Sangan's and Gigantes' triggers (SendBattleDestroyedCardToGraveyard, duel_field_moves.c: destroyed by
+ * battle and sent to the Graveyard, not banished). The target is any monster on the field (Man-Eater Bug's
+ * EffectTargetableMonsterCheck / ChainB; the CPU picks the human's strongest), destroyed by
+ * EffectDestroyTargetResolve. */
+u16 EffectNewdoriaCheck(struct ChainEntry *card, u16 pos)
+{
+    return EffectTargetableMonsterCheck(card, pos);
+}
+
+int EffectNewdoriaChainB(struct ChainEntry *link, struct ChainEntry *prevLink)
+{
+    return EffectTargetableMonsterChainB(link, (int)prevLink);
+}
+
+int EffectNewdoriaResolve(struct ChainEntry *link, struct ChainEntry *chainedTo)
+{
+    return EffectDestroyTargetResolve(link);
+}
+#endif /* HAS_CARD_NEWDORIA */
+
 #ifdef HAS_CARD_BOOK_OF_LIFE
 /* ---- Book of Life -------------------------------------------------------------------------------------------------
  * "Target 1 Zombie monster in your GY and 1 monster in your opponent's GY; Special Summon the first target, also
@@ -5109,6 +5132,16 @@ const struct CardEffect gAddedCardEffects[] = {
         EffectBookOfLifePrepare,
         NULL,
         NULL,
+    },
+#endif
+#ifdef HAS_CARD_NEWDORIA
+    {
+        CARD_NEWDORIA, 0,
+        EffectNewdoriaResolve,
+        EffectNewdoriaCheck,
+        NULL,
+        NULL,
+        EffectNewdoriaChainB,
     },
 #endif
 #ifdef HAS_CARD_GOLEM_SENTRY

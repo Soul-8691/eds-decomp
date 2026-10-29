@@ -1733,3 +1733,6 @@ updated: 2026-09-29
 
 ## [2026-10-29] progress | Ryu Kokki coded
 - src/added_effects.c RyuKokkiAfterBattle; src/battle_phase2.c BattleStage_DestroyMonsters calls it. [[added-cards]]. Built (make and make release); not tested in an emulator.
+
+## [2026-10-29] progress | Newdoria coded
+- src/added_effects.c EffectNewdoria* and its row; src/duel_field_moves.c battle-destroyed trigger case; root new_cards.txt. [[added-cards]]. Built (make and make release); not tested in an emulator.
