@@ -17,7 +17,7 @@ unplayable Ticket and God cards (a one-constant code change). The limit is one f
 |---|---|---|---|---|
 | Card-ID encoding (`& 0x7FF` everywhere, 11–12-bit zone words) | 2047 IDs | 820 | 1227 | [[card-table]], [[card-id-map]] |
 | Save trunk `gSaveData.trunk[0x800]` (+0x8..+0x2008) | 2047 IDs | 820 | 1227 | `include/save.h` (size asserts); the save already reserves every ID |
-| Card numbers (`gCardNumberToId[2048]`) | 0..1999 | 811 + 162 reserved | 943 usable (see below) | [[card-id-map]] |
+| Card numbers (`gCardNumberToId[2048]`) | 0..1999 | 811 + 166 reserved | 939 usable (see below) | [[card-id-map]] |
 | Deck Edit list `gDeckEdit.lists[row].trunk[821]` | 821 entries | **819** (Deck Edit mode) | **2** | `include/deck_edit.h` `struct DeckEditListRow` |
 | same list, Prohibition picker (mode 2) | 821 | 813 | 8 | `DeckEdit_BuildCardLists`, `src/deck_edit_cards.c` |
 
@@ -90,16 +90,23 @@ effect-table keys (`0x0819A9D4`) and every `CARD_*` constant in `include/constan
 names 162 numbers with no EDS card that code still reacts to: 136 effect keys, battle and summon checks, and
 the same-name pairs 1034 (Polymerization), 1210 (Dark Magician) and 1249 (Harpie Lady).
 
+> [!warning] Correction (2026-10-29)
+> The first count (943) missed four numbers that only the recipe tables use, which have no constant in
+> `cards.h`: 1333, 1402 and 1403 (Fusion materials at `0x0819A7C8`) and 1411 (the ritual monster of 1416 at
+> `0x0819A990`). A new card with one of those numbers would become that material or ritual monster. The
+> corrected budget is 939. `write_tables.py` now reserves them too. See `LEFTOVER_EFFECTS.md` for every
+> non-EDS number.
+
 | Numbers | Free | Use |
 |---|---|---|
 | 0–1209 | **405** | Ordinary cards. |
-| 1210–1899 | **538** | Ordinary, except that Card Trading (link) hides this range (`DeckEdit_BuildCardLists` mode 1). |
+| 1210–1899 | **534** | Ordinary, except that Card Trading (link) hides this range (`DeckEdit_BuildCardLists` mode 1). |
 | 1900–1919 | 14 | Avoid: Tickets (1901–1903) and Gods (1910–1912) live here, and the Prohibition picker hides the range. |
 | 1920–1999 | 79 | Hidden from every list and pack: padding IDs only. |
 | base + 2000 | one per card | Alternate art (below). |
 
-So there are **943 numbers for distinct new cards**, which covers the 820 new IDs available at last ID 1640.
-Only past about 1763 (820 + 943) would the extra IDs have to be alternate-art copies.
+So there are **939 numbers for distinct new cards**, which covers the 820 new IDs available at last ID 1640.
+Only past about 1759 (820 + 939) would the extra IDs have to be alternate-art copies.
 
 ### Alternate art
 - `CardNumberToId` maps a number of 2000 or more to `gCardNumberToId[number − 2000] + 1`. The 2048-entry

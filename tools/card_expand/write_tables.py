@@ -49,6 +49,10 @@ NAMES, DESCS, ID2N, N2ID = 0x0822C720, 0x082461A0, 0x08622AB4, 0x08623DF4
 NAME_SIZE, DESC_SIZE, ART_SIZE, PAL_SIZE = 0x40, 0x1E0, 0x10E0, 0x80
 OLD = {'art': 0x082A6500, 'pal': 0x08608360, 'stats': 0x08621DE0, 'pw': 0x08623120}
 PLACEHOLDER_NUMBER = 1999
+# Non-EDS numbers that only the Fusion (0x0819A7C8) and ritual (0x0819A990) recipe tables use; cards.h has no
+# constant for them, so they are added to the reserved numbers by hand (LEFTOVER_EFFECTS.md).
+RECIPE_ONLY_NUMBERS = {1333: 'Fusion material of 1334', 1402: 'Fusion material of 1404',
+                       1403: 'Fusion material of 1404', 1411: 'ritual monster of 1416'}
 NAME_SHOWN = 41                                     # longest name a Deck Edit list row shows
 SCRATCH_LIMIT = 310                                 # List Filter non-monster buffer before --move-scratch
 
@@ -277,8 +281,8 @@ def fit_text(s, size):
 def free_numbers(id2n):
     """Card numbers no existing card has and no game code tests, in the order they are handed out."""
     hdr = open(os.path.join(REPO, 'include/constants/cards.h')).read()
-    reserved = {int(m.group(1)) for m in re.finditer(r'=\s*(\d+),\s*/\*\s*no EDS card', hdr)}
-    used = {no if no < 2000 else no - 2000 for no in id2n if no != 0xFFFF}
+    reserved = {int(m.group(1)) for m in re.finditer(r'=\s*(\d+),\s*/\*\s*no EDS card', hdr)} | set(RECIPE_ONLY_NUMBERS)
+    used ={no if no < 2000 else no - 2000 for no in id2n if no != 0xFFFF}
     return [no for no in range(1900) if no not in used and no not in reserved]
 
 
@@ -397,6 +401,7 @@ def check_numbers(id2n, n2id, real, pws):
     warn = []
     hdr = open(os.path.join(REPO, 'include/constants/cards.h')).read()
     reserved = {int(m.group(1)): m.group(0) for m in re.finditer(r'=\s*(\d+),\s*/\*\s*no EDS card[^\n]*', hdr)}
+    reserved.update({no: f'= {no}, /* {what} */' for no, what in RECIPE_ONLY_NUMBERS.items()})
     seen = {}
     for i in range(1, real):
         no = id2n[i]

@@ -909,3 +909,12 @@ updated: 2026-09-29
 - 314 cards (Anti-Spell Fragrance removed: it is EDS's Anti-Magic Fragrance) -> last ID 1136, 16 MiB;
   existing tables byte-identical, `test_tables.py` PASS, new IDs checked in Unicorn.
 - Pages: [[card-expand]].
+## [2026-10-29] query | Leftover effects of non-EDS card numbers
+- New `LEFTOVER_EFFECTS.md` (repo root): all 157 card numbers with duel code but no EDS card. 96 full,
+  44 full but passive (continuous rules), 4 human-only, 2 buggy (1220, 1318), 1 partial (1421: its graveyard
+  mark, flag bit 23, has no reader), 10 with no effect code (materials, references, an AI hint).
+  Destiny Board (1528) and its Spirit Message letters are fully coded but unreachable.
+- Found 4 non-EDS numbers used only by the recipe tables (1333, 1402, 1403, 1411): the free-number budget
+  is 939, not 943. `write_tables.py` now reserves them.
+- Verified: the Gods, Tickets and Insect Monster Token have copy limit 0 (unplayable).
+- Pages: [[cards]], [[card-capacity]], [[card-expand]], [[open-questions]].

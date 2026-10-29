@@ -53,7 +53,7 @@ Add a question when it comes up. When one is answered, strike it through, then l
 - [ ] Which on-screen rarity is each pack slot? What are packs 801/802/901–903? What are the shop names of the random packs `0x66`/`0x67`/`0x6E`? See [[booster-packs]].
 - [ ] When are the alternate decks for duelists 1–5 used? See [[deck-lists]].
 - [ ] Are the 13- and 26-card lists really AI priority lists? What is the 60-card list for? See [[special-card-lists]].
-- [ ] What do the attribute bits hold for non-monsters? Are the Gods and Tickets unplayable story items?
+- [ ] What do the attribute bits hold for non-monsters? (The second half is answered: the Gods and Tickets are unplayable, with copy limit 0 on the Forbidden/Limited list; see [[cards]].)
 - [ ] What do the text codes `$c`, `$p`, `$h` and `$k` do, and which colours are `@2`/`@3`? See [[text-system]].
 - [ ] Is special booster-pack type 21 Trap and 22 Magic ([[booster-packs]]), or the reverse ([[card-detail-c]])? The pages may use different encodings; compare the pack code with the stat-word `type` field ([[card-table]]: 21 Trap, 22 Magic).
 

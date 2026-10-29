@@ -38,7 +38,8 @@ Card effects are code, dispatched by card number:
 - 148 Magic cards: 66 normal, 41 equip, 15 ritual, 13 field, 7 continuous, 6 quick-play.
 - 72 Traps: 45 normal, 20 continuous, 5 counter, 2 equip.
 - 3 Ticket cards (type 23): The Monarchy, Set Sail for the Kingdom, and Glory of the King's Hand. They have no text or password; possibly story/key items (hypothesis).
-- 3 Divine cards (type 24): Obelisk, Slifer, and Ra. They have 0 ATK/DEF, no password, and are probably unplayable (hypothesis).
+- 3 Divine cards (type 24): Obelisk, Slifer, and Ra. They have 0 ATK/DEF and no password. They are unplayable: the Forbidden/Limited list (`0x081A78B4`) gives them, the 3 Tickets and the Insect Monster Token a copy limit of 0, so no deck may hold them (verified 2026-10-29). The Tickets are the November tournament prizes.
+- 157 card numbers with no EDS card still have duel code (136 effect-table rows, the rest in battle, stat, summon and phase code or the recipe tables). Each one's effect and how complete its code is are listed in `LEFTOVER_EFFECTS.md` at the repository root.
 - 20 monster types plus Trap, Magic, Ticket, and Divine; 6 attributes. Enums are on [[card-table]].
 
 ## Getting cards

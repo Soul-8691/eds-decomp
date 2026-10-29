@@ -75,7 +75,7 @@ Checked 2026-10-27:
 - **Doesn't:** write the grown tables or pad the ROM past 8 MiB, add effect-table rows, or assign card numbers.
 - `LAST_ID` must be `imm8 << n`; otherwise pad with dummy IDs numbered 1920–1999. Because names grow in place,
   the largest value accepted is **1640** (820 new IDs, 16 MiB ROM). See [[card-capacity]] for the limits and the
-  943 free card numbers.
+  939 free card numbers.
 - Sites are hard-coded addresses in the USA ROM. If a code unit changes size, re-derive them; `refs.py` covers the
   table pointers, but the list and count sites in `card_expand.py` are hand-derived.
 
