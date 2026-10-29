@@ -434,6 +434,16 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
 - **CPU policy.** Activates it on a human monster of 1000+ ATK.
 - Checked in the source and the build; not tested in an emulator.
 
+### Airknight Parshath (2026-10-28)
+- Effect Monster (Level 5, LIGHT Fairy, 1900/1400): "If this card attacks a Defense Position monster, inflict piercing
+  battle damage. If this card inflicts battle damage to your opponent: Draw 1 card."
+- **Piercing.** `CalcBattle` (campaign.c) already had a piercing switch (Attack Position, the key-1313 and key-1540
+  links, card 1341); Parshath as the attacker joins it, so the defender's player takes ATK minus DEF.
+- **Draw.** `BattleStage_InflictDamage` (battle_phase2.c) gives it Masked Sorcerer's case in both steps: when its damage
+  is dealt (attacking, or defending in Attack Position), its controller draws 1. No damage dealt (Kuriboh,
+  battle protection, card 1423), no draw.
+- Checked in the source and the build; not tested in an emulator.
+
 ### CPU flip targets in the Battle Phase (2026-10-28)
 - **Rule.** The CPU's flip monsters that remove or stop one of the human's monsters (Man-Eater Bug, Hane-Hane, Penguin
   Soldier, Dark-Eyes Illusionist, Night Assailant, Tsukuyomi) normally pick the human's strongest monster. In the

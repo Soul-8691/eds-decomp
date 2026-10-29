@@ -1683,3 +1683,6 @@ updated: 2026-09-29
 
 ## [2026-10-28] progress | CPU flip targets prefer monsters that have not attacked
 - src/added_effects.c AiFlipEffectPreferredTarget / AiFlipEffectTarget; effect_targets1.c (EffectTargetableMonsterChainB, EffectOpponentMonsterChainB), effect_targets2.c (EffectPenguinSoldierChainB, EffectTargetableFaceUpMonsterChainB). [[added-cards]], README.md. Built; not tested in an emulator.
+
+## [2026-10-28] progress | Airknight Parshath coded
+- src/campaign.c CalcBattle: piercing; src/battle_phase2.c BattleStage_InflictDamage: draw 1 (Masked Sorcerer's case). [[added-cards]]. Built; not tested in an emulator.

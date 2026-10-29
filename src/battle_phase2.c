@@ -133,6 +133,9 @@ int BattleStage_InflictDamage(int player)
                 DuelPrompt_PostRandomDiscard(player, 1, 1);
                 break;
             case CARD_MASKED_SORCERER:
+#ifdef HAS_CARD_AIRKNIGHT_PARSHATH
+            case CARD_AIRKNIGHT_PARSHATH:   /* added card: "If this card inflicts battle damage to your opponent: Draw 1 card." */
+#endif
                 ShowCardEffect(1 - player, gBattle.side[1 - player].cardId);
                 DrawCards(1 - player, 1);
                 break;
@@ -211,6 +214,9 @@ int BattleStage_InflictDamage(int player)
                 DuelPrompt_PostRandomDiscard(1 - player, 1, 1);
                 break;
             case CARD_MASKED_SORCERER:
+#ifdef HAS_CARD_AIRKNIGHT_PARSHATH
+            case CARD_AIRKNIGHT_PARSHATH:   /* added card: "If this card inflicts battle damage to your opponent: Draw 1 card." */
+#endif
                 ShowCardEffect(player, gBattle.side[player].cardId);
                 DrawCards(player, 1);
                 break;
