@@ -628,6 +628,9 @@ int BattleStage_DamageCalc(int player)
                 handled = 1;
             }
             break;
+#ifdef HAS_CARD_GOBLIN_ELITE_ATTACK_FORCE
+        case CARD_GOBLIN_ELITE_ATTACK_FORCE:    /* added card: key 1344's text (Goblin Attack Force) */
+#endif
         case CARD_1344:
             DuelCmd_Push(player ? DUEL_CMD_PLAYER | DUEL_CMD_SET_EFFECT_UNUSED : DUEL_CMD_SET_EFFECT_UNUSED,
                          gBattle.atkSlot, 0, 0);

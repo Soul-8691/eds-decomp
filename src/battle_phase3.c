@@ -213,7 +213,11 @@ int BattleStage_EndBattlePhase(int player)
         for (i = 0; i <= 4; i++) {
             struct BattleEndZone *z = (struct BattleEndZone *)(i * 0x94 + (player & 1) * 0xD64 + BATTLE_END_ZONES);
             u16 id = ZONE_ID(z);
-            if (id != 0 && (card = n = CARD_NUMBER_OF((u16)id), n == CARD_1344) && (z->flags6 & 0x2003) == 2) {
+            if (id != 0 && (card = n = CARD_NUMBER_OF((u16)id), n == CARD_1344
+#ifdef HAS_CARD_GOBLIN_ELITE_ATTACK_FORCE
+                            || n == CARD_GOBLIN_ELITE_ATTACK_FORCE   /* added card: key 1344's text */
+#endif
+                            ) && (z->flags6 & 0x2003) == 2) {
                 ShowCardEffect(player, id);
                 ChangeBattlePosition(player, i, 0, 0);
             }

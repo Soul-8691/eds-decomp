@@ -172,6 +172,9 @@ void DuelCmd_TurnStart(void)
                     QueueRemoveZoneLink(player, monsterId, DUEL_LOC(player, (u8)zone),
                                         ZONE_LINK_ATK_300_PER_VALUE);
                     break;
+#ifdef HAS_CARD_GOBLIN_ELITE_ATTACK_FORCE
+                case CARD_GOBLIN_ELITE_ATTACK_FORCE:    /* added card: key 1344's text (Goblin Attack Force) */
+#endif
                 case CARD_1344:
                     if (!monster->effectUnused) {
                         monster->positionLocked = 1;

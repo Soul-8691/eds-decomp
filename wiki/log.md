@@ -1805,3 +1805,6 @@ updated: 2026-09-29
 
 ## [2026-10-29] progress | The CPU's recruiters take a copy of themselves
 - src/added_effects.c AiRecruiterCopyEntry (not with AI_FLAG_EXODIA); src/effect_resolve6.c EffectSpecialSummonFromDeckResolve asks it before AiPickCardListEntry for the CPU. README.md. [[added-cards]]. Built (make and make release); not tested in an emulator.
+
+## [2026-10-29] progress | Goblin Elite Attack Force coded
+- src/battle_phase1.c, src/battle_phase3.c, src/duel_cmd_turn.c: its case beside key 1344's (Goblin Attack Force's text). [[added-cards]]. Built (make and make release); not tested in an emulator.

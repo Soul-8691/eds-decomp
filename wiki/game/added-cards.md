@@ -896,6 +896,18 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
 - The other added cards keep their IDs; their card numbers after it move down one.
 - Checked in the source and the build; not tested in an emulator.
 
+### Goblin Elite Attack Force (2026-10-29)
+- Effect Monster (Level 4, EARTH Fiend, 2200/1500). ID 1145 (number 1193). The fetched text is Goblin Attack
+  Force's: "If this card attacks, it is changed to Defense Position at the end of the Battle Phase, and its battle
+  position cannot be changed until the end of your next turn."
+- **Own number.** Goblin Attack Force holds key 1344's number (`ENGINE_NUMBERS`), and a number maps to one card ID,
+  so this card has its own number. Its case sits beside `CARD_1344` in the three places that run key 1344:
+  - `BattleStage_DamageCalc` (battle_phase1.c): attacking clears `effectUnused`;
+  - `BattleStage_EndBattlePhase` (battle_phase3.c): turned to Defense Position;
+  - `DuelCmd_TurnStart` (duel_cmd_turn.c): the position lock for its controller's next turn, then re-armed.
+- **Not covered.** Giant Orc (ID 945) has the same text and could take the same three cases.
+- Checked in the source and the build; not tested in an emulator.
+
 ### Goblin Attack Force (2026-10-28)
 - Effect Monster (Level 4, EARTH Warrior, 2300/0): "If this card attacks, it is changed to Defense Position at the end
   of the Battle Phase, and its battle position cannot be changed until the end of your next turn."
