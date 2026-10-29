@@ -561,6 +561,9 @@ u16 AiChainSetCard(struct ChainEntry *entry, int number)
  * Then by type, for the human's cards: Magic -> Imperial Order, then Magic Jammer (if the CPU has a hand card);
  * Trap -> Royal Decree, then Seven Tools of the Bandit (if the CPU's life points exceed 1000). Last, any link
  * may be answered with key 1447. */
+/* Mod (src/added_effects.c): a summon trap chained to the human's summon trigger (Trap Hole on Mobius). */
+int AiChainSummonTriggerResponse(struct ChainEntry *entry);
+
 int AiTryChainResponse(struct ChainEntry *entry)
 {
     int a;
@@ -572,6 +575,8 @@ int AiTryChainResponse(struct ChainEntry *entry)
 
     /* FAKEMATCH: the 0x7FF mask lives in a variable that the Magic Thorn case reuses for its whole index
      * chain, so the mask, switch value and table base get r1/r2/r3 as in the ROM. */
+    if (AiChainSummonTriggerResponse(entry))    /* added */
+        return 1;
     m = CARD_ID_MASK;
     number = ((const u16 *)CARD_ID_TO_NUMBER_ADDR)[entry->card & m];
     switch (number) {

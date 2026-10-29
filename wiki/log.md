@@ -1699,3 +1699,9 @@ updated: 2026-09-29
 
 ## [2026-10-28] progress | King Tiger Wanghu coded
 - src/added_effects.c KingTigerWanghuOnSummon; hooks in src/summon_action.c (ExecuteSummonAction), src/duel_cmd_deck.c (DuelCmd_SummonFromDeck), src/duel_cmd_status.c (DuelCmd_SummonToken). [[added-cards]]. Built; not tested in an emulator.
+
+## [2026-10-28] progress | Mobius the Frost Monarch coded
+- src/added_effects.c EffectMobiusChainB / EffectMobiusResolve and its row; src/summon_checks.c trigger (Zaborg's case). [[added-cards]]. Built; not tested in an emulator.
+
+## [2026-10-28] progress | CPU chains summon traps to summon triggers
+- src/added_effects.c AiChainSummonTriggerResponse; src/ai_summon.c AiTryChainResponse asks it first. Trap Hole etc. now answer Mobius's (and other) summon triggers. [[added-cards]]. Built; not tested in an emulator.

@@ -652,6 +652,9 @@ int ExecuteSummonAction(void)
 #ifdef HAS_CARD_ZABORG_THE_THUNDER_MONARCH
         case CARD_ZABORG_THE_THUNDER_MONARCH:   /* added card: Level 5, so this summon is a Tribute Summon */
 #endif
+#ifdef HAS_CARD_MOBIUS_THE_FROST_MONARCH
+        case CARD_MOBIUS_THE_FROST_MONARCH:     /* added card: Level 6, so this summon is a Tribute Summon */
+#endif
             a = gSummonAction.player << 31;
             t = (gSummonAction.zone << 16) | SUMMONED_TRIGGER_BITS;
             Chain_AddPending(a | t | gSummonAction.cardId, gSummonAction.player | (gSummonAction.zone << 8));
@@ -787,6 +790,9 @@ int ExecuteSummonActionAskPosition(void)
 #endif
 #ifdef HAS_CARD_ZABORG_THE_THUNDER_MONARCH
         case CARD_ZABORG_THE_THUNDER_MONARCH:   /* added card: Level 5, so this summon is a Tribute Summon */
+#endif
+#ifdef HAS_CARD_MOBIUS_THE_FROST_MONARCH
+        case CARD_MOBIUS_THE_FROST_MONARCH:     /* added card: Level 6, so this summon is a Tribute Summon */
 #endif
             a = gSummonAction.player << 31;
             t = (gSummonAction.zone << 16) | SUMMONED_TRIGGER_BITS;

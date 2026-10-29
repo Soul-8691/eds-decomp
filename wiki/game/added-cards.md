@@ -434,6 +434,33 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
 - **CPU policy.** Activates it on a human monster of 1000+ ATK.
 - Checked in the source and the build; not tested in an emulator.
 
+### The CPU chains summon traps to summon triggers (2026-10-28)
+- **Problem.** A monster's own summon trigger (Mobius, Zaborg, Breaker, Sonic Bird, ...) goes on the chain as soon as
+  the summon finishes; the summon's own response window (`EventResponse_Request`, where the CPU uses Trap Hole via
+  `AiShouldActivateSetCard`) only opens after that chain resolved. The human could already chain Trap Hole to the
+  trigger (a response keeps the link's event and locations, `Chain_AskResponse`), but the CPU's chain answers
+  (`AiTryChainResponse`, ai_summon.c) are a list by card number that never offered a summon trap, so Mobius could
+  destroy the CPU's Set Trap Hole before it was ever asked.
+- **Fix.** `AiChainSummonTriggerResponse` (added_effects.c), asked first by `AiTryChainResponse`: for a link of the
+  human's with a summon event, the first Set card of the CPU that the summon window would use (spell speed 2 or
+  more, `CanActivateFieldCard` against a copy of the link, `AiShouldActivateSetCard`) is chained (`AiChainSetCard`).
+  Covers Trap Hole and the other summon traps (Bottomless Trap Hole, Torrential Tribute by its own rule, ...). As in
+  the TCG, the trigger still resolves after the trap destroyed the monster.
+- Checked in the source and the build; not tested in an emulator.
+
+### Mobius the Frost Monarch (2026-10-28)
+- Effect Monster (Level 6, WATER Aqua, 2400/1000): "If this card is Tribute Summoned: You can target up to 2
+  Spells/Traps on the field; destroy them."
+- **Trigger.** Zaborg's case in both Normal Summon paths (summon_checks.c) queues its `RESPONSE_SUMMONED` trigger; Level
+  6, so that summon always has a Tribute. A Set, a Flip Summon or a Special Summon does not trigger it.
+- **Row.** Check `EffectAnySpellTrapCheck` (a Spell/Trap is on the field, as Mystical Space Typhoon); targets
+  `EffectMobiusChainB`; resolve `EffectMobiusResolve` (each target still there: the destroyed-by-opponent flag for an
+  opponent's card, `DestroyFieldCardByEffect`, `OnCardDestroyedByEffect`).
+  - Human: the first card (B: no target, the effect is not used), then a second one (B: only the first; skipped when
+    no other Spell/Trap is on the field), with Greenkappa's "1st/2nd card to destroy" prompts.
+  - CPU: up to 2 of the human's Spells/Traps, face-up ones first, then face-down; never its own.
+- Checked in the source and the build; not tested in an emulator.
+
 ### King Tiger Wanghu (2026-10-28)
 - Effect Monster (Level 4, EARTH Beast, 1700/1000): "When a monster with 1400 or less ATK is Normal or Special
   Summoned: Destroy it."

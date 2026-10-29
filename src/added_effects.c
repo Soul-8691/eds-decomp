@@ -3723,6 +3723,106 @@ int AiPlanForcedAttack(void)
 }
 #endif /* HAS_CARD_BERSERK_GORILLA */
 
+#ifdef HAS_CARD_MOBIUS_THE_FROST_MONARCH
+/* ---- Mobius the Frost Monarch -------------------------------------------------------------------------------------
+ * "If this card is Tribute Summoned: You can target up to 2 Spells/Traps on the field; destroy them."
+ * The two Normal Summon paths (summon_checks.c) queue its RESPONSE_SUMMONED trigger in Zaborg's case; it is Level 6, so
+ * that summon always has a Tribute. Check: a Spell/Trap is on the field (EffectAnySpellTrapCheck, as Mystical Space
+ * Typhoon). Targets (EffectMobiusChainB):
+ *   human  the first card (B: none, the effect is not used), then a second one (B: only the first; skipped when no
+ *          other Spell/Trap is on the field), Greenkappa's prompts
+ *   CPU    up to 2 of the human's Spells/Traps, face-up ones first; never its own
+ * EffectMobiusResolve destroys each target still on the field, as EffectDestroyTargetResolve does one. */
+extern const u8 gStrDesignateSecondCardToDestroy[];     /* Greenkappa */
+
+#define MOBIUS_MAX_TARGETS 2
+
+/* 1 if a Spell/Trap card other than `skip` (a DUEL_LOC, 0xFFFF for none) is on the field. */
+static int MobiusHasOtherSpellTrap(u16 skip)
+{
+    int player, zone;
+
+    for (player = 0; player <= 1; player++) {
+        for (zone = ZONE_SPELL_0; zone <= ZONE_FIELD; zone++) {
+            if (DUEL_CARD_ID(&ZoneOf(player, zone)->card) != 0 && DUEL_LOC(player, zone) != skip)
+                return 1;
+        }
+    }
+    return 0;
+}
+
+int EffectMobiusChainB(struct ChainEntry *link, struct ChainEntry *prevLink)
+{
+    if (link->player) {
+        int pass, zone;
+
+        link->numTargets = 0;
+        for (pass = 0; pass <= 1 && link->numTargets < MOBIUS_MAX_TARGETS; pass++) {
+            for (zone = ZONE_SPELL_0; zone <= ZONE_FIELD && link->numTargets < MOBIUS_MAX_TARGETS; zone++) {
+                struct DuelZone *z = ZoneOf(AI_HUMAN, zone);
+
+                /* pass 0: the face-up cards (Continuous, Equip, Field), pass 1: the face-down ones */
+                if (DUEL_CARD_ID(&z->card) != 0 && (pass == 0) == (z->isFaceUp != 0))
+                    TryAddEffectTarget(link, AI_HUMAN, zone);
+            }
+        }
+        return 1;
+    }
+    switch (gChain.targetStep) {
+    case 0:
+        link->numTargets = 0;
+        TextBoxOpen(0x206, 0x712, TEXTBOX_FLAGS_DEFAULT, gStrDesignateFirstCardToDestroy);
+        gChain.targetStep++;
+        return 0;
+    case 1:
+        if (gMain.newKeys & B_BUTTON)
+            return 1;                       /* "You can": no target, nothing happens */
+        if (DuelCursor_PickTarget(PICK_BOTH_SIDES(PICK_ANY_SPELL_TRAP)) != 0
+            && TryAddEffectTarget(link, gDuelScreen.selPlayer, gDuelScreen.selArea + gDuelScreen.selIndex) != 0) {
+            if (!MobiusHasOtherSpellTrap(link->targets[0]))
+                return 1;
+            gChain.targetStep++;
+        }
+        return 0;
+    case 2:
+        TextBoxOpen(0x206, 0x712, TEXTBOX_FLAGS_DEFAULT, gStrDesignateSecondCardToDestroy);
+        gChain.targetStep++;
+        return 0;
+    default:
+        if (gMain.newKeys & B_BUTTON)
+            return 1;                       /* only the first one */
+        if (DuelCursor_PickTarget(PICK_BOTH_SIDES(PICK_ANY_SPELL_TRAP)) != 0) {
+            int player = gDuelScreen.selPlayer, zone = gDuelScreen.selArea + gDuelScreen.selIndex;
+
+            if (DUEL_LOC(player, zone) != link->targets[0] && TryAddEffectTarget(link, player, zone) != 0)
+                return 1;
+            PlaySE(SE_ERROR);
+        }
+        return 0;
+    }
+}
+
+int EffectMobiusResolve(struct ChainEntry *link, struct ChainEntry *chainedTo)
+{
+    int i;
+
+    if (link->negated)
+        return EFFECT_STEP_DONE;
+    for (i = 0; i < link->numTargets && i < MOBIUS_MAX_TARGETS; i++) {
+        int player = (u8)link->targets[i], zone = link->targets[i] >> 8;
+
+        if (DUEL_CARD_ID(&ZoneOf(player, zone)->card) == 0)
+            continue;
+        if (link->player != player)
+            DuelCmd_Push(player ? DUEL_CMD_PLAYER | DUEL_CMD_SET_DESTROYED_BY_OPPONENT_FLAG
+                                : DUEL_CMD_SET_DESTROYED_BY_OPPONENT_FLAG, zone, 1, 0);
+        DestroyFieldCardByEffect(player, zone);
+        OnCardDestroyedByEffect(link->player, player, zone);
+    }
+    return EFFECT_STEP_DONE;
+}
+#endif /* HAS_CARD_MOBIUS_THE_FROST_MONARCH */
+
 #ifdef HAS_CARD_KING_TIGER_WANGHU
 /* ---- King Tiger Wanghu --------------------------------------------------------------------------------------------
  * "When a monster with 1400 or less ATK is Normal or Special Summoned: Destroy it." ExecuteSummonAction
@@ -3756,6 +3856,35 @@ int KingTigerWanghuOnSummon(int player, int zone)
     return 0;
 }
 #endif /* HAS_CARD_KING_TIGER_WANGHU */
+
+/* ---- The CPU answers a summon trigger with a summon trap ----------------------------------------------------------
+ * A monster's own summon trigger (Mobius, Zaborg, Breaker, Sonic Bird, ...) is a chain link with the summon's event
+ * (RESPONSE_SUMMONED and the like) and the monster at loc0, and a response keeps that event and those locations
+ * (Chain_AskResponse), so Trap Hole and the other summon traps may be chained to it. The human can; the CPU's chain
+ * answers (AiTryChainResponse) only knew a list of cards, so it waited for the summon's own response window, which
+ * comes after the trigger resolved (Mobius could destroy the trap first). AiTryChainResponse now asks this first:
+ * for a summon of the human's, the first Set card that the summon window would use (spell speed 2 or more,
+ * CanActivateFieldCard against the link's event and locations, AiShouldActivateSetCard) is chained. */
+int AiChainSummonTriggerResponse(struct ChainEntry *entry)
+{
+    struct ChainEntry ref;
+    int zone;
+
+    if (entry->player != AI_HUMAN || (entry->event != RESPONSE_SUMMONED && entry->event != RESPONSE_FLIP_SUMMONED
+                                      && entry->event != RESPONSE_SPECIAL_SUMMONED))
+        return 0;
+    for (zone = ZONE_SPELL_0; zone <= ZONE_SPELL_4; zone++) {
+        struct DuelZone *z = ZoneOf(AI_PLAYER, zone);
+        u16 id = DUEL_CARD_ID(&z->card);
+
+        if (id == 0 || z->isFaceUp || GetCardSpellSpeed(id) <= SPELL_SPEED_1)
+            continue;
+        MemCopy16(&ref, entry, sizeof(ref));    /* the summon's event and locations; the card is filled in */
+        if (CanActivateFieldCard(&ref, AI_PLAYER, zone) && AiShouldActivateSetCard(&ref))
+            return AiChainSetCard(entry, CardNumberOfId(id));
+    }
+    return 0;
+}
 
 /* Checks of the added cards' continuous rules, once per idle frame of the duel (DuelMainStep). 1 if one queued
  * something (the duel step waits for it). */
@@ -4166,6 +4295,16 @@ const struct CardEffect gAddedCardEffects[] = {
         NULL,
         NULL,
         NULL,
+    },
+#endif
+#ifdef HAS_CARD_MOBIUS_THE_FROST_MONARCH
+    {
+        CARD_MOBIUS_THE_FROST_MONARCH, 0,
+        EffectMobiusResolve,
+        (u16 (*)(struct ChainEntry *, u16))EffectAnySpellTrapCheck,
+        NULL,
+        NULL,
+        EffectMobiusChainB,
     },
 #endif
 #ifdef HAS_CARD_ZABORG_THE_THUNDER_MONARCH
