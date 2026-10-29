@@ -596,7 +596,11 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
 - **Trigger.** `BattleStage_DestroyMonsters` (battle_phase2.c) calls `HydrogeddonAfterBattle` (added_effects.c) after
   Ryu Kokki's hook, once the battle's destruction is queued. It queues the trigger (`RESPONSE_BATTLE_DESTROYED`, the
   card's zone, as Black Luster Soldier's) when all of these hold:
-  - a Hydrogeddon in the battle, attacking or attacked, survived it;
+  - a Hydrogeddon in the battle, attacking or attacked, was not destroyed by it. It need not still be on the field
+    (changed 2026-10-29): the destroyed monster's flip effect resolves first. `BattlePhase_Run` runs one stage per
+    frame and `DuelMainStep` resolves the pending chain between them, so a flipped Man-Eater Bug may have destroyed
+    it. The trigger then comes from off the field (`CHAIN_KIND_OFF_FIELD`, as Sangan's); `EffectSpecialSummonFromDeckResolve`
+    doesn't need the card;
   - its opponent's monster was destroyed;
   - that monster goes to the Graveyard, not banished: not D.D. Warrior Lady's Yes, D.D. Assailant, or Dark Magician
     of Chaos's `DD_BANISH_DESTROYED`;

@@ -4785,10 +4785,12 @@ int DrillroidBeforeDamageCalc(int player)
  * "When this card destroys an opponent's monster by battle and sends it to the GY: You can Special Summon 1
  * "Hydrogeddon" from your Deck."
  * BattleStage_DestroyMonsters (battle_phase2.c) calls HydrogeddonAfterBattle once the battle's destruction is queued:
- * a Hydrogeddon in the battle (attacking or attacked) that survived it, whose opponent's monster was destroyed by it
- * and goes to the Graveyard (not banished by D.D. Warrior Lady's Yes, D.D. Assailant or Dark Magician of Chaos),
+ * a Hydrogeddon in the battle (attacking or attacked) that was not destroyed by it, whose opponent's monster was
+ * destroyed by it and goes to the Graveyard (not banished by D.D. Warrior Lady's Yes, D.D. Assailant or Dark Magician of Chaos),
  * queues its trigger (RESPONSE_BATTLE_DESTROYED, its zone, as Black Luster Soldier's) when its Deck has a
- * Hydrogeddon and it has a free monster zone. The resolve is the recruiters' EffectSpecialSummonFromDeckResolve (the
+ * Hydrogeddon and it has a free monster zone. It need not be on the field any more: the flip effect of the monster
+ * it destroyed resolves before this stage (BATTLE_STAGE_FLIP_EFFECT), so a Man-Eater Bug may have destroyed it; the
+ * trigger is then one from off the field (CHAIN_KIND_OFF_FIELD, as Sangan's). The resolve is the recruiters' EffectSpecialSummonFromDeckResolve (the
  * Deck list is a CollectEffectTargets case): the human is asked, the CPU always summons; the position is chosen
  * (QueueSpecialSummonChoosePosition, as for Pyramid Turtle). */
 static int DeckHasCardNumber(int player, u16 number)
@@ -4814,14 +4816,18 @@ void HydrogeddonAfterBattle(int player)
         int zone = who == player ? gBattle.atkSlot : gBattle.defSlot;
         u16 id = gBattle.side[who].cardId & CARD_ID_MASK;
 
-        if (CardNumberOfId(id) != CARD_HYDROGEDDON || gBattle.side[who].destroyed || !gBattle.side[other].destroyed
-            || DUEL_CARD_ID(&ZoneOf(who, zone)->card) != id)
+        if (CardNumberOfId(id) != CARD_HYDROGEDDON || gBattle.side[who].destroyed || !gBattle.side[other].destroyed)
             continue;
         if (!DeckHasCardNumber(who, CARD_HYDROGEDDON) || CountFreeMonsterZones(who) == 0)
             continue;
-        Chain_AddPending(TRIGGER_PLAYER(who & 1) | TRIGGER_ZONE(zone) | TRIGGER_KIND(CHAIN_KIND_MONSTER)
-                             | TRIGGER_EVENT(RESPONSE_BATTLE_DESTROYED) | id,
-                         DUEL_LOC(who, zone));
+        if (DUEL_CARD_ID(&ZoneOf(who, zone)->card) == id)
+            Chain_AddPending(TRIGGER_PLAYER(who & 1) | TRIGGER_ZONE(zone) | TRIGGER_KIND(CHAIN_KIND_MONSTER)
+                                 | TRIGGER_EVENT(RESPONSE_BATTLE_DESTROYED) | id,
+                             DUEL_LOC(who, zone));
+        else    /* it left the field since (a flipped Man-Eater Bug destroyed it): it still activates */
+            Chain_AddPending(TRIGGER_PLAYER(who & 1) | TRIGGER_KIND(CHAIN_KIND_OFF_FIELD)
+                                 | TRIGGER_EVENT(RESPONSE_BATTLE_DESTROYED) | id,
+                             0);
     }
 }
 #endif /* HAS_CARD_HYDROGEDDON */

@@ -1796,3 +1796,6 @@ updated: 2026-09-29
 
 ## [2026-10-29] progress | Sand Moth coded
 - include/constants/duel.h ZONE_LINK_SWAP_STATS; src/added_effects.c SandMothDestroyed, EffectSandMothResolve and its row, SandMothSummoned, ModHasSwappedStats, gModDuel.sandMothPending; src/duel_send_to_grave.c trigger; src/card_stats.c the swap; src/summon_action.c guard. [[added-cards]]. Built (make and make release); not tested in an emulator.
+
+## [2026-10-29] progress | Hydrogeddon triggers after leaving the field
+- src/added_effects.c HydrogeddonAfterBattle: no longer needs Hydrogeddon in its zone (a flipped Man-Eater Bug resolves before BATTLE_STAGE_DESTROY); off the field the trigger is CHAIN_KIND_OFF_FIELD. [[added-cards]]. Built (make and make release); not tested in an emulator.
