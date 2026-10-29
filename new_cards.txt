@@ -87,10 +87,9 @@ Gearfried the Iron Knight
 Blast with Chain
 Magic Drain
 Spear Dragon
-------
 Guardian Sphinx
+------
 Marauding Captain
-Dice Jar
 Getsu Fuhma
 Karma Cut
 Draining Shield
@@ -114,7 +113,11 @@ D.D. Designator
 Divine Wrath
 Des Lacooda
 Old Vindictive Magician
+Thestalos the Firestorm Monarch
 Threatening Roar
+Reflect Bounder
+Swarm of Locusts
+Granmarg the Rock Monarch
 Secret Barrel
 Level Limit - Area B
 Ojama Trio
@@ -127,6 +130,7 @@ Poison of the Old Man
 Nightmare's Steelcage
 Lava Golem
 Des Wombat
+Hallowed Life Barrier
 Barrel Behind the Door
 Skill Drain
 Fusilier Dragon, the Dual-Mode Beast

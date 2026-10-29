@@ -1850,3 +1850,6 @@ updated: 2026-09-29
 
 ## [2026-10-29] progress | Spear Dragon coded
 - src/added_effects.c ModHasPiercing case, ModEndAttack (Injection Fairy Lily's end-of-attack and Spear Dragon's change to Defense Position); src/battle_phase3.c BattleStage_EndAttack calls ModEndAttack. [[added-cards]]. Built (make and make release); not tested in an emulator.
+
+## [2026-10-29] progress | Guardian Sphinx coded
+- src/added_effects.c Golem Sentry's block serves both (IsGuardianSphinx: no target, every opponent monster back to the hand), its row, the Flip Summon trigger, AiWantsMonsterEffect; src/card_command_menu.c case; src/summon_action.c guard. Release .text 0x80560. [[added-cards]]. Built (make and make release); not tested in an emulator.

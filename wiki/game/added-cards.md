@@ -909,6 +909,21 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
 - The other added cards keep their IDs; their card numbers after it move down one.
 - Checked in the source and the build; not tested in an emulator.
 
+### Guardian Sphinx (2026-10-29)
+- Effect Monster (Level 5, EARTH Rock, 1700/2400). ID 1070. The fetched text: "Once per turn: You can change this card
+  to face-down Defense Position. When this card is Flip Summoned: Return all monsters your opponent controls to the
+  hand."
+- **Golem Sentry's row handlers.** Their block (`EffectGolemSentry*`, added_effects.c) now serves both cards:
+  - **Face down.** The once-per-turn face-down change is the same: the card menu's ACTIVATE, then Book of Moon's
+    resolve.
+  - **Flip Summon.** The trigger is queued by `AddedCardsSummoned` for either card. For the Sphinx (`IsGuardianSphinx`)
+    it takes no target, and the resolve returns every monster of the opponent's to its owner's hand
+    (`ReturnFieldCardToHand`).
+- **Other hooks.** A case in `CanActivateMonsterEffect` (card_command_menu.c) and in `AiWantsMonsterEffect`: the CPU
+  turns it face down while the human controls a monster, so its next Flip Summon bounces them.
+- Release `.text` 0x08080560.
+- Checked in the source and the build; not tested in an emulator.
+
 ### Spear Dragon (2026-10-29)
 - Effect Monster (Level 4, WIND Dragon, 1900/0). ID 1014. The fetched text: "During battle between this attacking card
   and a Defense Position monster whose DEF is lower than the ATK of this card, inflict the difference as Battle Damage
