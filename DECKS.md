@@ -1158,11 +1158,10 @@ Banlist: August 2003.
 - 3x Ryu Senshi
 - 3x St. Joan
 
-**Side Deck (15)**
+**Side Deck (14)**
 
 - 1x Bazoo the Soul-Eater
 - 1x Cyber Jar
-- 1x Dice Jar
 - 2x Marauding Captain
 - 1x Morphing Jar
 - 2x Morphing Jar #2

@@ -1044,12 +1044,15 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
 - Release `.text` after it ends at 0x080809E8, 0x38 bytes below `.rodata` at 0x08080A20.
 - Checked in the source and the build; not tested in an emulator.
 
-### Mirage of Nightmare, Dice Jar (2026-10-29, data only)
+### Mirage of Nightmare, Dice Jar (2026-10-29, data)
 - Appended to `config/new_cards.txt` for the Yata opponent's decks ([[yugi-kaiba-opponent]]): Mirage of Nightmare
   (passcode 41482598) is in all three Main Decks, Dice Jar (3549275) in ellietincan-Warrior Tomato Control's Side
-  Deck. IDs 1159 and 1160, card numbers 1603 and 1604 (`build/new_cards.tsv`).
-- Their effects are not coded yet. The decks in `src/mod_decks.c` are guarded by `HAS_CARD_MIRAGE_OF_NIGHTMARE` and
-  `HAS_CARD_DICE_JAR`.
+  Deck. IDs 1159 and 1160 at first.
+- Mirage of Nightmare's effect was coded later the same day (see its entry above).
+- Dice Jar was removed again (the user's choice): taken out of `config/new_cards.txt`, its `HAS_CARD_DICE_JAR` dropped
+  from the Warrior Tomato Control guard (it would have taken the whole deck out), and its copy dropped from that
+  Side Deck (`sYataWarriorTomatoControlSide`, now 14; also the Deck Recipe preset's), DECKS.md updated. It was the
+  last line, so no other card's ID changed.
 - Passcodes looked up on YGOPRODeck; built with make and make release.
 
 ### Cyber Twin Dragon (2026-10-29)

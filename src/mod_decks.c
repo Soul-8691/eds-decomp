@@ -1263,8 +1263,8 @@ static const struct DeckList *FiberDeck(void)
 /* The Yata format opponent (Arkana's slot, src/mod_opponents.c): one of three decks per duel (YataDeck): Tomato
  * Control 50%, Warrior Tomato Control 40%, Gearfried 10% (decks/Shigeki Kitamura-Tomato Control.ydk,
  * decks/ellietincan-Warrior Tomato Control.ydk, decks/AlephYa2-Gearfried.ydk; main and extra decks). Mirage of
- * Nightmare (41482598, in all three) and Dice Jar (3549275, Warrior Tomato Control's Side Deck) were added to
- * config/new_cards.txt for them. */
+ * Nightmare (41482598, in all three) was added to config/new_cards.txt for them. Dice Jar (3549275, in Warrior Tomato
+ * Control's Side Deck) was added and removed again (2026-10-29): that Side Deck has 14 cards. */
 #if defined(HAS_CARD_BAZOO_THE_SOUL_EATER) && defined(HAS_CARD_EXILED_FORCE) && defined(HAS_CARD_FIBER_JAR) \
     && defined(HAS_CARD_SPIRIT_REAPER) && defined(HAS_CARD_YATA_GARASU) && defined(HAS_CARD_ZOMBYRA_THE_DARK) \
     && defined(HAS_CARD_MIRAGE_OF_NIGHTMARE) && defined(HAS_CARD_SCAPEGOAT) && defined(HAS_CARD_TORRENTIAL_TRIBUTE) \
@@ -1345,7 +1345,7 @@ STATIC_ASSERT(ARRAY_COUNT(sYataTomatoControlSide) == 15, YataTomatoControlSideSi
     && defined(HAS_CARD_INJECTION_FAIRY_LILY) && defined(HAS_CARD_SPIRIT_REAPER) && defined(HAS_CARD_YATA_GARASU) \
     && defined(HAS_CARD_MIRAGE_OF_NIGHTMARE) && defined(HAS_CARD_REINFORCEMENT_OF_THE_ARMY) \
     && defined(HAS_CARD_TORRENTIAL_TRIBUTE) && defined(HAS_CARD_RYU_SENSHI) && defined(HAS_CARD_ST_JOAN) \
-    && defined(HAS_CARD_BAZOO_THE_SOUL_EATER) && defined(HAS_CARD_DICE_JAR) && defined(HAS_CARD_MARAUDING_CAPTAIN) \
+    && defined(HAS_CARD_BAZOO_THE_SOUL_EATER) && defined(HAS_CARD_MARAUDING_CAPTAIN) \
     && defined(HAS_CARD_TRAP_DUSTSHOOT)
 #define MOD_YATA_WARRIOR_TOMATO_CONTROL 1
 static const u16 sYataWarriorTomatoControl[] = {
@@ -1393,11 +1393,10 @@ static const u16 sYataWarriorTomatoControl[] = {
 STATIC_ASSERT(ARRAY_COUNT(sYataWarriorTomatoControl) == 40 + 15, YataWarriorTomatoControlSize);
 static const struct DeckList sYataWarriorTomatoControlList = { sYataWarriorTomatoControl,
                                                                ARRAY_COUNT(sYataWarriorTomatoControl), 0 };
-/* ellietincan-Warrior Tomato Control.ydk's Side Deck (15). */
+/* ellietincan-Warrior Tomato Control.ydk's Side Deck (15), without its Dice Jar (14). */
 static const u16 sYataWarriorTomatoControlSide[] = {
     CARD_BAZOO_THE_SOUL_EATER,
     CARD_CYBER_JAR,
-    CARD_DICE_JAR,
     X2(CARD_MARAUDING_CAPTAIN),
     CARD_MORPHING_JAR,
     X2(CARD_MORPHING_JAR_2),
@@ -1408,7 +1407,7 @@ static const u16 sYataWarriorTomatoControlSide[] = {
     CARD_SNATCH_STEAL,
     CARD_TRAP_DUSTSHOOT,
 };
-STATIC_ASSERT(ARRAY_COUNT(sYataWarriorTomatoControlSide) == 15, YataWarriorTomatoControlSideSize);
+STATIC_ASSERT(ARRAY_COUNT(sYataWarriorTomatoControlSide) == 14, YataWarriorTomatoControlSideSize);
 #endif
 
 #if defined(HAS_CARD_DON_ZALOOG) && defined(HAS_CARD_EXILED_FORCE) && defined(HAS_CARD_GEARFRIED_THE_IRON_KNIGHT) \

@@ -1853,3 +1853,6 @@ updated: 2026-09-29
 
 ## [2026-10-29] progress | Guardian Sphinx coded
 - src/added_effects.c Golem Sentry's block serves both (IsGuardianSphinx: no target, every opponent monster back to the hand), its row, the Flip Summon trigger, AiWantsMonsterEffect; src/card_command_menu.c case; src/summon_action.c guard. Release .text 0x80560. [[added-cards]]. Built (make and make release); not tested in an emulator.
+
+## [2026-10-29] progress | Dice Jar removed
+- The user removed Dice Jar from config/new_cards.txt (the last line: no ID changes). src/mod_decks.c: HAS_CARD_DICE_JAR out of the Warrior Tomato Control guard (the deck stays), its copy out of sYataWarriorTomatoControlSide (14, also the Deck Recipe preset); DECKS.md. [[added-cards]], [[yugi-kaiba-opponent]]. Built (make and make release).
