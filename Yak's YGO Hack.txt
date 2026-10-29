@@ -37,3 +37,7 @@ Fix general AI shortcomings
 Show opp hand in debug mode
 Fix MST AI bug
 Fix lowering LP to 0 AI bug
+Fix Flip Effect Monster AI
+Fix Tribute Summon AI
+Fix Special Summon sacrifice AI
+Fix cheating (face-down) AI

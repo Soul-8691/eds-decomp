@@ -1721,3 +1721,6 @@ updated: 2026-09-29
 
 ## [2026-10-28] progress | Golem Sentry coded
 - src/added_effects.c EffectGolemSentry* and its row, the Flip Summon trigger in AddedCardsSummoned, AiWantsMonsterEffect case, Book of Moon resolve guard; src/summon_action.c guard; src/card_command_menu.c. [[added-cards]]. Built (make and make release); not tested in an emulator.
+
+## [2026-10-29] progress | United We Stand mapped to effect key 1449
+- tools/newcards.py ENGINE_NUMBERS United We Stand: 1449 (the engine's +800 ATK/DEF per face-up monster equip); include/constants/cards.h regenerated (later added cards' numbers shift, IDs kept). [[added-cards]]. Built (make and make release); not tested in an emulator.

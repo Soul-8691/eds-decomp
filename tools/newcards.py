@@ -81,6 +81,8 @@ ENGINE_NUMBERS = {
                                     # the Battle Phase a face-up Attack Position one turns to Defense Position
                                     # (BattleStage_EndBattlePhase), and its controller's next turn start locks its
                                     # position for that turn and re-arms it (DuelCmd_TurnStart)
+    'United We Stand': 1449,        # key 1449: an Equip (EffectEquipResolve and the equip target rules), +800 ATK/DEF
+                                    # per face-up monster of the equip card's controller (CalcZoneCardStats)
 }
 
 # YGOPRODeck race -> EDS monster type (gCardTypeNames), attribute -> EDS attribute, Spell/Trap race -> subtype.

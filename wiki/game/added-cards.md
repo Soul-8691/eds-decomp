@@ -556,6 +556,17 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
   - `AiShouldRetreatToDefense` never picks it.
 - Checked in the source and the build; not tested in an emulator.
 
+### United We Stand (2026-10-29)
+- Equip Spell: "The equipped monster gains 800 ATK/DEF for each face-up monster you control."
+- **The engine already has it** as effect key 1449 (no EDS card): `ENGINE_NUMBERS` in tools/newcards.py gives the card
+  that number (ID 875 = 1449), as for Goblin Attack Force. What key 1449 does, all in matched code:
+  - **Activation:** `EffectEquipResolve` and the equip target rules. Key 1449 is in the equip lists of
+    effect_prepare1.c and card_list_viewer.c.
+  - **Stats:** `CalcZoneCardStats` (card_stats.c) gives +800 ATK and DEF per face-up monster of the equip card's
+    controller (`CountMonstersFiltered(sourcePlayer, 1, 0)`), counting the equipped monster too.
+- The other added cards keep their IDs; their card numbers after it move down one.
+- Checked in the source and the build; not tested in an emulator.
+
 ### Goblin Attack Force (2026-10-28)
 - Effect Monster (Level 4, EARTH Warrior, 2300/0): "If this card attacks, it is changed to Defense Position at the end
   of the Battle Phase, and its battle position cannot be changed until the end of your next turn."
