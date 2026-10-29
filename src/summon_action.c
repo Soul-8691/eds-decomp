@@ -30,6 +30,8 @@
 #include "effect.h"                 /* CanActivateEffectOfCard, PayChainEnergyCost, the passive card hooks */
 #include "summon.h"                 /* struct SummonAction, gSummonAction, the summon functions */
 #include "text_box.h"               /* gTextBox, TextBoxOpen, TextBoxSetMenu */
+/* Mod (src/added_effects.c): King Tiger Wanghu destroys a summoned monster with 1400 or less ATK. */
+int KingTigerWanghuOnSummon(int player, int zone);
 
 /* Matching: the unit calls DuelCmd_Push with four int parameters. With the header's u16 cmd and arg2 the
  * register allocation of the Special step machines (kinds 4-6) differs. Same function, other view. */
@@ -564,6 +566,12 @@ u16 SummonAction_Update(void)
                     case SUMMON_ACTION_FLIP: event = RESPONSE_FLIP_SUMMONED; break;
                     default: event = RESPONSE_SPECIAL_SUMMONED; break;
                     }
+#ifdef HAS_CARD_KING_TIGER_WANGHU
+                    /* added: King Tiger Wanghu destroys a summoned monster with 1400 or less ATK; no response window
+                     * is opened for it then */
+                    if (!((event == RESPONSE_SUMMONED || event == RESPONSE_SPECIAL_SUMMONED)
+                          && KingTigerWanghuOnSummon(gSummonAction.player, gSummonAction.zone)))
+#endif
                     EventResponse_RequestInt(1 - gSummonAction.player, event,
                                  LOC(gSummonAction.player, gSummonAction.zone));
                 }

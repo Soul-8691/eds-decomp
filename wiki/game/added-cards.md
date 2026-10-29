@@ -434,6 +434,22 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
 - **CPU policy.** Activates it on a human monster of 1000+ ATK.
 - Checked in the source and the build; not tested in an emulator.
 
+### King Tiger Wanghu (2026-10-28)
+- Effect Monster (Level 4, EARTH Beast, 1700/1000): "When a monster with 1400 or less ATK is Normal or Special
+  Summoned: Destroy it."
+- **Rule.** `KingTigerWanghuOnSummon(player, zone)` (added_effects.c): the summoned monster, face-up with 1400 or less ATK
+  (`GetZoneCardAtk`), is destroyed (`ShowCardEffect` of the Wanghu, `DestroyFieldCard`, `OnCardDestroyedByEffect`) while
+  a face-up, non-negated (`isDisabled`) King Tiger Wanghu is on either side. Face-down summons (Sets) show no ATK and
+  stay; Flip Summons do not count.
+- **Hooks.**
+  - `ExecuteSummonAction` (summon_action.c): Normal Summons and the summon-action Special Summons (from the hand, and
+    the effects that use `QueueSpecialSummon*`: Monster Reborn and the like), before the opponent's response window,
+    which is not opened for a monster it destroys.
+  - `DuelCmd_SummonFromDeck` (duel_cmd_deck.c): Special Summons from the Deck (Mystic Tomato, Giant Rat, ...).
+  - `DuelCmd_SummonToken` (duel_cmd_status.c): tokens (Scapegoat's Sheep Tokens and the others).
+- **Not modelled.** It is applied at once rather than as a chain link; the CPU does not avoid summoning into it.
+- Checked in the source and the build; not tested in an emulator.
+
 ### Berserk Gorilla (2026-10-28)
 - Effect Monster (Level 4, EARTH Beast, 2000/1000): "If this card is in Defense Position: Destroy it. This card must
   attack, if able."

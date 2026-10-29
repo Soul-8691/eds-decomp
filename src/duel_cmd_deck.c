@@ -483,6 +483,9 @@ void DuelCmd_RemoveCardFromDeck(void)
 
 /* 0x66 DUEL_CMD_SUMMON_FROM_DECK: Special Summon the card word arg2 | arg4 << 16 from the acting player's
  * deck to monster zone arg6, face-up attack position. */
+/* Mod (src/added_effects.c): King Tiger Wanghu destroys a summoned monster with 1400 or less ATK. */
+int KingTigerWanghuOnSummon(int player, int zone);
+
 void DuelCmd_SummonFromDeck(void)
 {
     struct DuelLoc from, to;
@@ -509,6 +512,9 @@ void DuelCmd_SummonFromDeck(void)
         break;
     default:    /* place it in attack position, face up */
         PlaceMonsterCard(player, zone, &gDuelCmd.card, FALSE, TRUE);
+#ifdef HAS_CARD_KING_TIGER_WANGHU
+        KingTigerWanghuOnSummon(player, zone);  /* added: a Special Summon from the Deck */
+#endif
         DuelCursor_Select(player, DUEL_AREA_MONSTER, zone);
         DrawAllAreaTiles();
         gDuelCmd.running = 0;

@@ -3723,6 +3723,40 @@ int AiPlanForcedAttack(void)
 }
 #endif /* HAS_CARD_BERSERK_GORILLA */
 
+#ifdef HAS_CARD_KING_TIGER_WANGHU
+/* ---- King Tiger Wanghu --------------------------------------------------------------------------------------------
+ * "When a monster with 1400 or less ATK is Normal or Special Summoned: Destroy it." ExecuteSummonAction
+ * (summon_action.c) asks KingTigerWanghuOnSummon after a Normal Summon or a Special Summon, before the opponent's
+ * response window: a face-up summoned monster (a Set or face-down one shows no ATK) with 1400 or less ATK is destroyed
+ * while a face-up, non-negated King Tiger Wanghu is on either side of the field. Flip Summons do not count. */
+#define WANGHU_MAX_ATK 1400
+
+/* 1 if the monster just summoned at (player, zone) was destroyed (then no response window is opened for it). */
+int KingTigerWanghuOnSummon(int player, int zone)
+{
+    struct DuelZone *s = ZoneOf(player, zone);
+    int p, z;
+
+    if (DUEL_CARD_ID(&s->card) == 0 || !s->isFaceUp || (int)GetZoneCardAtk(player, zone) > WANGHU_MAX_ATK)
+        return 0;
+    for (p = 0; p <= 1; p++) {
+        for (z = ZONE_MONSTER_0; z <= ZONE_MONSTER_4; z++) {
+            struct DuelZone *w = ZoneOf(p, z);
+            u16 id = DUEL_CARD_ID(&w->card);
+
+            if (id != 0 && w->isFaceUp && !w->isDisabled && CardNumberOfId(id) == CARD_KING_TIGER_WANGHU
+                && !(p == player && z == zone)) {
+                ShowCardEffect(p, id);
+                DestroyFieldCard(player, zone, 1);
+                OnCardDestroyedByEffect(p, player, zone);
+                return 1;
+            }
+        }
+    }
+    return 0;
+}
+#endif /* HAS_CARD_KING_TIGER_WANGHU */
+
 /* Checks of the added cards' continuous rules, once per idle frame of the duel (DuelMainStep). 1 if one queued
  * something (the duel step waits for it). */
 int ModDuelStateCheck(void)

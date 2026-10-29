@@ -1696,3 +1696,6 @@ updated: 2026-09-29
 ## [2026-10-28] progress | Berserk Gorilla coded
 - src/added_effects.c ModDuelStateCheck (new DuelMainStep hook), BerserkGorillaBlocksBattleEnd, AiPlanForcedAttack, AiShouldRetreatToDefense guard; src/duel_main.c, src/card_menu_input.c hooks. [[added-cards]]. Built; not tested in an emulator.
 - Berserk Gorilla: "Complete turn" in the Main Phase menu is refused while it could attack (src/duel_phases.c DuelPhase_Main, BerserkGorillaBlocksTurnEnd).
+
+## [2026-10-28] progress | King Tiger Wanghu coded
+- src/added_effects.c KingTigerWanghuOnSummon; hooks in src/summon_action.c (ExecuteSummonAction), src/duel_cmd_deck.c (DuelCmd_SummonFromDeck), src/duel_cmd_status.c (DuelCmd_SummonToken). [[added-cards]]. Built; not tested in an emulator.

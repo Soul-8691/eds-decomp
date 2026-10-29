@@ -563,6 +563,9 @@ void DuelCmd_UnusedNop2(void)
  *   step 0: scroll the field to player 0's monster row;
  *   step 1: place the token, redraw, finish.
  */
+/* Mod (src/added_effects.c): King Tiger Wanghu destroys a summoned monster with 1400 or less ATK. */
+int KingTigerWanghuOnSummon(int player, int zone);
+
 void DuelCmd_SummonToken(void)
 {
     struct DuelCard card;   /* bits 19-31 are not set */
@@ -604,6 +607,9 @@ void DuelCmd_SummonToken(void)
     card.graverobbed = 0;
     PlaceMonsterCard(player, zoneIdx, &card, defense, 1);
     ZoneAt(player & 1, zoneIdx)->positionLocked = 1;
+#ifdef HAS_CARD_KING_TIGER_WANGHU
+    KingTigerWanghuOnSummon(player, zoneIdx);   /* added: a token is Special Summoned */
+#endif
     DrawAllAreaTiles();
     gDuelCmd.running = 0;
 }
