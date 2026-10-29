@@ -434,6 +434,19 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
 - **CPU policy.** Activates it on a human monster of 1000+ ATK.
 - Checked in the source and the build; not tested in an emulator.
 
+### CPU flip targets in the Battle Phase (2026-10-28)
+- **Rule.** The CPU's flip monsters that remove or stop one of the human's monsters (Man-Eater Bug, Hane-Hane, Penguin
+  Soldier, Dark-Eyes Illusionist, Night Assailant, Tsukuyomi) normally pick the human's strongest monster. In the
+  human's Battle Phase (`gDuel.phase == PHASE_BATTLE`, `gDuel.turnPlayer == 0`) they now prefer the strongest (ATK) of
+  the human's Attack Position monsters whose bit in `gDuelPlayers[0].attackedMask` is clear: those can still attack.
+  With none, the usual pick.
+- **Code.** `AiFlipEffectPreferredTarget` / `AiFlipEffectTarget` (added_effects.c), called by the CPU branches of
+  `EffectTargetableMonsterChainB` (Man-Eater Bug, Hane-Hane), `EffectOpponentMonsterChainB` (Dark-Eyes Illusionist,
+  Night Assailant), `EffectPenguinSoldierChainB` (both picks; the second skips the first's zone) and
+  `EffectTargetableFaceUpMonsterChainB` (Tsukuyomi). The other flips that hit a monster have no choice (Cyber Jar,
+  4-Starred Ladybug of Doom) or hit Spells/Traps.
+- Checked in the source and the build; not tested in an emulator.
+
 ### 4-Starred Ladybug of Doom (2026-10-28)
 - Flip Effect Monster (Level 3, 800/1200): "FLIP: Destroy all Level 4 monsters your opponent controls."
 - Added as ID 1136 (the last line of config/new_cards.txt) for paoloNS-Vanilla Beat's Side Deck

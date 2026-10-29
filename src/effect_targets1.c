@@ -310,6 +310,11 @@ int EffectTributeTargetChainB(struct ChainEntry *link)
  *   Step 0: no target if the opponent has no monster, else the card's prompt.
  *   Then: a pick among the opponent's monsters; a refused pick plays SE_ERROR.
  */
+/* Mod (src/added_effects.c): in the human's Battle Phase the CPU's removal flips prefer a monster that can still
+ * attack. */
+int AiFlipEffectTarget(struct ChainEntry *link, int skipZone);
+int AiFlipEffectPreferredTarget(struct ChainEntry *link, int skipZone);
+
 int EffectOpponentMonsterChainB(struct ChainEntry *link)
 {
     u8 *chain;
@@ -321,7 +326,7 @@ int EffectOpponentMonsterChainB(struct ChainEntry *link)
         if (CountMonsters(0) > 0) {
             int zone;
             noZone = -1;    /* Matching: the sentinel in a variable, as in EffectTributeTargetChainB */
-            zone = AiFindStrongestMonster(0, noZone, 1, 1);
+            zone = AiFlipEffectTarget(link, noZone);   /* changed: was AiFindStrongestMonster(0, noZone, 1, 1) */
             if (zone > noZone) {
                 if (TryAddEffectTarget(link, 0, zone) != 0)
                     return 1;
@@ -759,7 +764,7 @@ int EffectTargetableMonsterChainB(struct ChainEntry *link, int prevLink)
                 if (player != 0)
                     zone = AiFindWeakestMonster(player, -1, 1, 1);
                 else
-                    zone = AiFindStrongestMonster(0, -1, 1, 1);
+                    zone = AiFlipEffectTarget(link, -1);    /* changed: was AiFindStrongestMonster(0, -1, 1, 1) */
                 if (zone >= 0) {
                     if (TryAddEffectTarget(link, player, zone) != 0)
                         return 1;

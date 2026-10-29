@@ -2456,6 +2456,62 @@ int EffectFiberJarResolve(struct ChainEntry *link, struct ChainEntry *chainedTo)
 }
 #endif /* HAS_CARD_FIBER_JAR */
 
+/* ---- The CPU's flip-effect targets in the Battle Phase -------------------------------------------------------------
+ * The CPU's flip monsters that remove or stop one of the human's monsters (Man-Eater Bug, Hane-Hane, Penguin Soldier,
+ * Dark-Eyes Illusionist, and the added Night Assailant and Tsukuyomi) usually pick the human's strongest monster. In
+ * the human's Battle Phase (flipped by an attack) they prefer the strongest (ATK) of the human's Attack Position
+ * monsters that have not attacked yet (gDuelPlayers[0].attackedMask): those can still attack this turn. The target
+ * pickers (EffectTargetableMonsterChainB, EffectOpponentMonsterChainB, EffectPenguinSoldierChainB,
+ * EffectTargetableFaceUpMonsterChainB) ask AiFlipEffectPreferredTarget / AiFlipEffectTarget. */
+static int IsBattleFlipRemoval(const struct ChainEntry *link)
+{
+    if (gDuel.phase != PHASE_BATTLE || (gDuel.turnPlayer & 1) != 0)
+        return 0;
+    switch (CARD_NUMBER(link->card)) {
+    case CARD_MAN_EATER_BUG:
+    case CARD_HANE_HANE:
+    case CARD_PENGUIN_SOLDIER:
+    case CARD_DARK_EYES_ILLUSIONIST:
+#ifdef HAS_CARD_NIGHT_ASSAILANT
+    case CARD_NIGHT_ASSAILANT:
+#endif
+#ifdef HAS_CARD_TSUKUYOMI
+    case CARD_TSUKUYOMI:
+#endif
+        return 1;
+    }
+    return 0;
+}
+
+/* The human's monster zone to prefer (see above), or -1 (not such a flip, or no monster that can still attack). */
+int AiFlipEffectPreferredTarget(struct ChainEntry *link, int skipZone)
+{
+    int zone, best = -1, bestAtk = -1;
+
+    if (!IsBattleFlipRemoval(link))
+        return -1;
+    for (zone = ZONE_MONSTER_0; zone <= ZONE_MONSTER_4; zone++) {
+        struct DuelZone *z = ZoneOf(0, zone);
+
+        if (zone == skipZone || DUEL_CARD_ID(&z->card) == 0 || !z->isFaceUp || z->isDefense
+            || (gDuelPlayers[0].attackedMask >> zone & 1))
+            continue;
+        if ((int)GetZoneCardAtk(0, zone) > bestAtk) {
+            bestAtk = GetZoneCardAtk(0, zone);
+            best = zone;
+        }
+    }
+    return best;
+}
+
+/* The CPU's pick among the human's monsters: the preferred one, else the strongest (AiFindStrongestMonster). */
+int AiFlipEffectTarget(struct ChainEntry *link, int skipZone)
+{
+    int zone = AiFlipEffectPreferredTarget(link, skipZone);
+
+    return zone >= 0 ? zone : AiFindStrongestMonster(0, skipZone, 1, 1);
+}
+
 #ifdef HAS_CARD_4_STARRED_LADYBUG_OF_DOOM
 /* ---- 4-Starred Ladybug of Doom ------------------------------------------------------------------------------------
  * FLIP: "Destroy all Level 4 monsters your opponent controls." A resolve-only row, as Fiber Jar (card_detail.c

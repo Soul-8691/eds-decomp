@@ -98,6 +98,9 @@ next one.
     unless your strongest monster has at least 1000 more ATK than it.
   - It crashes into your monsters with equal ATK when it has no better attack, unless another of its monsters can
     beat yours outright.
+  - When you attack into its flip monsters that remove or stop a monster (Man-Eater Bug, Hane-Hane, Penguin
+    Soldier, Dark-Eyes Illusionist, Night Assailant, Tsukuyomi), it targets your strongest monster that hasn't
+    attacked yet, so it can't attack this turn.
 - **Debug mode** (testing builds only, not in the release). You start with 8 copies of every card, and you can't
   deck out. Decks can be under 40 cards, can hold any number of copies of a card, and ignore banlists. Switching
   banlists skips the 40-card Main Deck check. Every format is unlocked, and the Record (Duel Score) screen

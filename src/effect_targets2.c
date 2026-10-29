@@ -251,6 +251,11 @@ enum PenguinSoldierStep {
  *   Human, 6 steps (see enum PenguinSoldierStep): Yes/No, pick, Yes/No, pick.
  * link is the chain entry being built; returns 1 when its targets are complete, else 0 (called again next frame).
  */
+/* Mod (src/added_effects.c): in the human's Battle Phase the CPU's removal flips prefer a monster that can still
+ * attack. */
+int AiFlipEffectTarget(struct ChainEntry *link, int skipZone);
+int AiFlipEffectPreferredTarget(struct ChainEntry *link, int skipZone);
+
 int EffectPenguinSoldierChainB(struct ChainEntry *link, int prevLink)
 {
     if (link->player) {
@@ -288,7 +293,12 @@ int EffectPenguinSoldierChainB(struct ChainEntry *link, int prevLink)
                 int found;
                 if (pass > 0)
                     skipZone = 0;
-                found = AiFindStrongestMonster(0, skipZone, 1, 1);
+                /* changed: was AiFindStrongestMonster(0, skipZone, 1, 1); the second pick skips the first one's zone */
+                found = AiFlipEffectPreferredTarget(link, pass > 0 && link->numTargets != 0
+                                                          && (link->targets[0] & 0xFF) == 0
+                                                          ? link->targets[0] >> 8 : -1);
+                if (found < 0)
+                    found = AiFindStrongestMonster(0, skipZone, 1, 1);
                 if (found >= 0)
                     candidate = DUEL_LOC(0, (u8)found);
             }
@@ -599,6 +609,8 @@ int EffectTargetableFaceUpMonsterChainB(struct ChainEntry *link)
                     }
                 }
             }
+            if (player == 0 && AiFlipEffectPreferredTarget(link, -1) >= 0)     /* added (Tsukuyomi) */
+                bestZone = AiFlipEffectPreferredTarget(link, -1);
             if (bestZone >= 0) {
                 if (TryAddEffectTarget(link, player, bestZone) != 0)
                     return 1;

@@ -1680,3 +1680,6 @@ updated: 2026-09-29
 
 ## [2026-10-28] progress | 4-Starred Ladybug of Doom coded
 - src/added_effects.c EffectLadybugOfDoomResolve (resolve-only row); src/card_detail.c HasFlipEffect. Root new_cards.txt lists it. [[added-cards]]. Built; not tested in an emulator.
+
+## [2026-10-28] progress | CPU flip targets prefer monsters that have not attacked
+- src/added_effects.c AiFlipEffectPreferredTarget / AiFlipEffectTarget; effect_targets1.c (EffectTargetableMonsterChainB, EffectOpponentMonsterChainB), effect_targets2.c (EffectPenguinSoldierChainB, EffectTargetableFaceUpMonsterChainB). [[added-cards]], README.md. Built; not tested in an emulator.
