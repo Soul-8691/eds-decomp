@@ -923,8 +923,9 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
      (`DiscardHandCard`), one per step so each command runs before the next pick. This happens only while a
      face-up, enabled Mirage of Nightmare is still on their field, so destroying it in between saves the hand. The
      count is cleared either way.
-  3. **Mirage's draw.** The other player, with a face-up Mirage and fewer than 4 cards in hand, is asked (the CPU
-     always draws) and draws up to 4. The number drawn is added to `mirageDrawn`.
+  3. **Mirage's draw.** The other player, with a face-up Mirage and fewer than 4 cards in hand, draws up to 4. The
+     draw is mandatory, so nobody is asked (changed 2026-10-29; it asked the human first). The number drawn is added
+     to `mirageDrawn`.
 - **CPU.** It plays the card through `AiPlayAddedCards` (`AiWantsSpell` default).
 - Checked in the source and the build; not tested in an emulator.
 

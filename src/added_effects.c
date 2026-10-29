@@ -4527,9 +4527,8 @@ int TreebornFrogStandbyStep(int player)
  *   discard  the turn player's draws from their last Mirage draw (gModDuel.mirageDrawn) are discarded at random, one
  *            per step, while a face-up Mirage of Nightmare is still on their field (destroyed in between, there is
  *            nothing to discard); the count is cleared either way
- *   draw     the other player, with a face-up Mirage of Nightmare and fewer than 4 cards in hand, is asked (the CPU
- *            draws) and draws up to 4; the number drawn is kept for their next Standby Phase */
-static const u8 sStrMirageOfNightmarePrompt[] = "Use Mirage of Nightmare to draw until you have 4 cards?";
+ *   draw     the other player, with a face-up Mirage of Nightmare and fewer than 4 cards in hand, draws up to 4
+ *            (mandatory, nobody is asked); the number drawn is kept for their next Standby Phase */
 
 int EffectMirageOfNightmareResolve(struct ChainEntry *link, struct ChainEntry *chainedTo)
 {
@@ -4575,29 +4574,14 @@ static int MirageDrawStep(int player)
 {
     int owner = 1 - player;
     struct DuelPlayer *p = &gDuelPlayers[owner & 1];
-    int zone = FaceUpMirageZone(owner), count;
+    int zone = FaceUpMirageZone(owner), count = 4 - p->handCount;
 
-    switch (gDuel.phaseSubStep) {
-    case 0:
-        if (zone < 0 || p->handCount >= 4)
-            return 1;
-        if (owner != 0) {
-            gTextBox.result = 1;            /* the CPU always draws */
-        } else {
-            TextBoxOpen(TEXTBOX_POS(5, 2), TEXTBOX_SIZE(20, 7), TEXTBOX_FLAGS_DEFAULT, sStrMirageOfNightmarePrompt);
-            TextBoxSetMenu(TEXTBOX_MENU_YES_NO, NULL, NULL);
-        }
-        gDuel.phaseSubStep++;
-        return 0;
-    case 1:
-        count = 4 - p->handCount;
-        if (gTextBox.result != 0 && zone >= 0 && count > 0) {
-            ShowCardEffect(owner, DUEL_CARD_ID(&ZoneOf(owner, zone)->card));
-            DrawCards(owner, count);
-            gModDuel.mirageDrawn[owner & 1] += count;
-        }
+    /* mandatory: no question */
+    if (zone < 0 || count <= 0)
         return 1;
-    }
+    ShowCardEffect(owner, DUEL_CARD_ID(&ZoneOf(owner, zone)->card));
+    DrawCards(owner, count);
+    gModDuel.mirageDrawn[owner & 1] += count;
     return 1;
 }
 #endif /* HAS_CARD_MIRAGE_OF_NIGHTMARE */
