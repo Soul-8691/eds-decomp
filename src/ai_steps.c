@@ -109,6 +109,7 @@ int CountMonsters(int player);
 void ChangeBattlePosition(int player, int zone, u16 arg2, u16 arg3);
 /* Added (src/added_effects.c): a face-up Attack Position monster the human can run over. */
 int AiShouldRetreatToDefense(int zone);
+u32 AiProjectedAtk(int zone);       /* mod: src/added_effects.c */
 u32 HasFlipEffect(u16 cardNo, int flags);
 int CountFreeMonsterZones(int player);
 int CountFaceUpMonstersByNumber(int player, u16 cardNo);
@@ -591,6 +592,8 @@ int AiStepChangePositions(void)
                             }
                         }
                     }
+                    /* added: with the best Equip in the CPU's hand (src/added_effects.c) */
+                    attack = AiProjectedAtk(AI->subState);
                     if (AiCanBeatAnyMonster(attack) != 0 && attack > 0) {
                         struct AiState *cur = AI;
                         u32 stride = 0x94;

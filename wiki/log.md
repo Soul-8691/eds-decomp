@@ -1763,3 +1763,6 @@ updated: 2026-09-29
 
 ## [2026-10-29] progress | The CPU never Tributes a copy of what it summons
 - src/added_effects.c AiHasSummonTrigger, AiPickTributeFor, AiTributeIsSameCard, gModDuel.aiTributeFor; src/summon_builders.c AiPickTributeMonster skips the copies; src/ai_summon.c, src/ai_steps.c, src/ai_strategy.c (Toons) and AiHasTributesFor ask AiPickTributeFor. README.md. [[added-cards]]. Built (make and make release); not tested in an emulator.
+
+## [2026-10-29] progress | The CPU counts its coming ATK boosts for positions
+- src/added_effects.c AiBestAtkWithHandEquip, AiSimSummonBoosts, AiProjectedAtk (hand Equips tried in the sandbox, Breaker's counter, the hand size for Blade Knight / Muka Muka / Flash Assailant); src/ai_summon.c AiSimSummon calls it; src/ai_steps.c the position step and AiShouldRetreatToDefense use AiProjectedAtk. README.md. [[added-cards]]. Built (make and make release); not tested in an emulator.

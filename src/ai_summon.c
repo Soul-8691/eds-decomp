@@ -88,6 +88,8 @@ static inline u32 CardLevel(u16 id)
  * that zone's card ID is cleared. The hand itself is not changed. ROM quirks: only the card ID is written into the new zone, and a -1
  * from FindFreeMonsterZone is not checked, so call it only inside the backup/restore sandbox, which also
  * covers a stray write to zones[-1]. */
+void AiSimSummonBoosts(int zone);  /* mod: src/added_effects.c */
+
 void AiSimSummon(int handIndex, u16 tributeMask)
 {
     struct DuelZone *zone;
@@ -109,6 +111,7 @@ void AiSimSummon(int handIndex, u16 tributeMask)
     zone->card.id = CARD_ID(HAND_FROM_ZONE0(ZONE_AT(1, 0))[handIndex]);
     zone->isFaceUp = 1;
     zone->isDefense = 0;
+    AiSimSummonBoosts(freeZone);    /* added: Breaker's counter, the best hand Equip (src/added_effects.c) */
 }
 
 /* Simulation: play out the CPU's whole Battle Phase on the live duel state and return the total predicted

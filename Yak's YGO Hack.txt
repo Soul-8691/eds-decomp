@@ -25,24 +25,7 @@ Fix quirks with new cards
 Detail starting decks in DECKS.md
 Detail opp decks in DECKS.md
 Detail card prices in CARD_PRICES.md
-Don't allow switching banlist if only less than 40 cards are possible in your main deck with that banlist
-Fix BSD not counting FSR
 Make AI use new cards properly
-Events use random between unlocked formats
-Events allow use of saved decks
-Side/extra deck for starting decks and formats
-Make sure the duelists are unlocked in the duel score menu in debug mode
-Visible card icons
 Fix general AI shortcomings
-Show opp hand in debug mode
-Fix MST AI bug
-Fix lowering LP to 0 AI bug
 Fix Flip Effect Monster AI
-Fix Tribute Summon AI
-Fix Special Summon sacrifice AI
 Fix cheating (face-down) AI
-Make AI use Thunder Dragon's effect
-AI should use Nobleman of Crossout
-AI should use Solemn Judgement when at 4000 LP or less
-AI should only Dark Hole if you have more monsters
-AI can fail to find Thunder Dragon

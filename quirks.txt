@@ -1,4 +1,3 @@
-Breaker the Magical Warrior - AI treats it as 1600 ATK instead of 1900
 Black Luster Soldier - Envoy of the Beginning: AI doesn't special summon
 D.D. Warrior Lady:
 - AI always activates effect

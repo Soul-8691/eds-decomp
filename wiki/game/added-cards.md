@@ -556,6 +556,31 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
   - `AiShouldRetreatToDefense` never picks it.
 - Checked in the source and the build; not tested in an emulator.
 
+### The CPU counts its coming ATK boosts for positions (2026-10-29)
+- **Before.** The CPU's position choices (the summon simulations of `AiChooseSummonNoTribute` /
+  `AiChooseSummonWithTribute`, the position-change step of ai_steps.c, `AiShouldRetreatToDefense`) used the monster's
+  ATK on the field as it is.
+- **Now.** It judges a monster by the ATK it will have once its boosts are played (added_effects.c):
+  - **Hand Equips.** `AiBestAtkWithHandEquip` tries each Equip Spell in the CPU's hand that it plays (in
+    `gAiEquipSpells`, 0x08086400, or an added card) and whose effect row's target check accepts the monster. It
+    places the card in a free Spell/Trap zone, adds a `ZONE_LINK_EQUIP` link, and reads `GetZoneCardAtk`, so
+    card_stats.c applies the Equip exactly; then both zones are copied back.
+  - **On summon.** Breaker the Magical Warrior's Spell Counter (+300).
+  - **Hand size.** The cards that leave the hand (the summoned monster, the Equip being tried) come off
+    `handCount` while the ATK is read. So Blade Knight's +400 (1 or fewer cards in hand), Muka Muka and Flash
+    Assailant are judged with the hand they will have.
+- **Where.**
+  - `AiSimSummon` (ai_summon.c) calls `AiSimSummonBoosts` inside the simulation sandbox, which keeps the best Equip,
+    the counter and the smaller hand for the battle simulation.
+  - The position-change step and `AiShouldRetreatToDefense` call `AiProjectedAtk`, which opens its own sandbox
+    (`AiBackupDuelState` / `AiRestoreDuelState`; one backup buffer, so it cannot be nested) and reads the ATK face
+    up.
+- **Limits.**
+  - One Equip is counted per monster, and each monster is judged as if it gets the Equip, though the CPU plays each
+    Equip only once.
+  - Quick-Play boosts such as Rush Recklessly are not counted.
+- Checked in the source and the build; not tested in an emulator.
+
 ### The CPU never Tributes a copy of what it summons (2026-10-29)
 - **Rule.** The CPU doesn't Tribute a monster with the same card number as the one it summons, unless the summoned
   card has a summon trigger (`AiHasSummonTrigger`), which makes the swap worth it. It applies to:

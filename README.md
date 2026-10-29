@@ -111,6 +111,8 @@ next one.
     Cyber Stein, Tremendous Fire, a lost Time Wizard toss, ...).
   - It never Tributes a copy of the monster it is summoning, for a Tribute Summon or a Toon's Special Summon,
     unless that monster has an effect that triggers on its summon (Zaborg, Mobius, Breaker, ...).
+  - When it chooses Attack or Defense Position, it counts the ATK a monster will gain from an Equip Spell in its
+    hand, Breaker's Spell Counter, and Blade Knight's bonus once its hand shrinks.
   - It uses Solemn Judgment (the original CPU never did) while it has 4000 LP or less. It negates your Normal and
     Special Summons, your Flip Summons of flip-effect monsters, and your Spells and Traps when it has no cheaper
     answer.

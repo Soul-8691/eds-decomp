@@ -4126,6 +4126,148 @@ int AiPlanForcedAttack(void)
 }
 #endif /* HAS_CARD_BERSERK_GORILLA */
 
+/* ---- The CPU counts the ATK boosts it will get when it judges positions -------------------------------------------
+ * When the CPU chooses Attack or Defense (the summon simulations, the position-change step and AiShouldRetreatToDefense)
+ * it judges a monster by the ATK it will have once the boosts it plays are on it:
+ *   hand Equips  the best ATK it would get from one Equip Spell in the CPU's hand that the CPU plays (gAiEquipSpells,
+ *                or an added card: AiPlayAddedCards) and whose target check accepts the monster. Each is tried for
+ *                real: the card goes into a free Spell/Trap zone, linked to the monster (ZONE_LINK_EQUIP), and
+ *                GetZoneCardAtk reads the result (card_stats.c applies it exactly), then both zones are put back.
+ *   on summon    Breaker the Magical Warrior's Spell Counter (+300), in the summon simulation.
+ *   hand size    the cards that leave the hand are taken off its count while the ATK is read (the summoned monster,
+ *                and the Equip being tried), so Blade Knight's +400 (1 or fewer cards in hand), Muka Muka and Flash
+ *                Assailant are judged with the hand they will have.
+ * AiSimSummon (ai_summon.c) calls AiSimSummonBoosts inside the simulation sandbox, which keeps the best Equip on the
+ * simulated monster; the others use AiProjectedAtk, which opens its own sandbox (AiBackupDuelState, which cannot be
+ * nested). */
+extern const u16 gAiEquipSpells[];      /* 0x08086400: the Equip Magic AiPlaySpells plays */
+#define AI_EQUIP_SPELL_COUNT 35
+
+void AiBackupDuelState(void);
+void AiRestoreDuelState(void);
+
+/* 1 if the CPU plays the Equip Spell `id` from its hand. */
+static int AiPlaysEquip(u16 id)
+{
+    u32 stats = gCardStats[id & CARD_ID_MASK];
+    u16 number = CardNumberOfId(id);
+    int i;
+
+    if (CARD_STATS_TYPE(stats) != CARD_TYPE_MAGIC || CARD_STATS_SUBTYPE(stats) != SPELL_EQUIP)
+        return 0;
+    if (IsAddedCardId(id))
+        return 1;
+    for (i = 0; i < AI_EQUIP_SPELL_COUNT; i++) {
+        if (gAiEquipSpells[i] == number)
+            return 1;
+    }
+    return 0;
+}
+
+/* The CPU's monster in `zone` with hand Equip `handIndex` (or -1: none) in Spell/Trap zone `st`, its hand
+ * `handCount` cards (less the Equip); returns its ATK. Inside a sandbox: the Equip and the count stay. */
+static u32 AiApplyHandEquip(int zone, int st, int handIndex, int handCount)
+{
+    struct DuelZone *s = ZoneOf(AI_PLAYER, st);
+
+    gDuelPlayers[AI_PLAYER].handCount = handIndex >= 0 ? handCount - 1 : handCount;
+    if (handIndex >= 0) {
+        s->card = gDuelPlayers[AI_PLAYER].hand[handIndex];
+        s->isFaceUp = 1;
+        s->isDisabled = 0;
+        AddZoneLink(DUEL_LOC(AI_PLAYER, zone), DUEL_LOC(AI_PLAYER, st), ZONE_LINK_EQUIP);
+    }
+    return GetZoneCardAtk(AI_PLAYER, zone);
+}
+
+/* Inside a sandbox: the best ATK of the CPU's monster in `zone` with one of its hand Equips, or without, with
+ * `played` cards (the summoned monster) already out of the hand; `keep` leaves the best Equip on it and the hand
+ * count reduced. */
+static u32 AiBestAtkWithHandEquip(int zone, int keep, int played)
+{
+    struct DuelPlayer *p = &gDuelPlayers[AI_PLAYER];
+    struct DuelZone savedSpell, savedMonster;
+    int handCount = p->handCount, left = handCount - played;
+    u32 best, atk;
+    int st, i, bestIndex = -1;
+
+    if (left < 0)
+        left = 0;
+    p->handCount = left;
+    best = GetZoneCardAtk(AI_PLAYER, zone);
+    p->handCount = handCount;
+    for (st = ZONE_SPELL_0; st <= ZONE_SPELL_4; st++) {
+        if (DUEL_CARD_ID(&ZoneOf(AI_PLAYER, st)->card) == 0)
+            break;
+    }
+    if (st > ZONE_SPELL_4) {
+        if (keep)
+            p->handCount = left;
+        return best;                    /* no room to play an Equip */
+    }
+    MemCopy16(&savedSpell, ZoneOf(AI_PLAYER, st), sizeof(struct DuelZone));
+    MemCopy16(&savedMonster, ZoneOf(AI_PLAYER, zone), sizeof(struct DuelZone));
+    for (i = 0; i < handCount; i++) {
+        u16 id = DUEL_CARD_ID(&p->hand[i]);
+        struct ChainEntry entry;
+        int row;
+
+        if (!AiPlaysEquip(id) || !CanActivateEffectOfCard(AI_PLAYER, id, 1))
+            continue;
+        row = FindCardEffect(id);
+        if (row < 0 || CARD_EFFECT_ROW(row).check == NULL)
+            continue;
+        MemClear16(&entry, sizeof(entry));
+        entry.card = id;
+        entry.player = AI_PLAYER;
+        entry.zone = st;
+        if (!CARD_EFFECT_ROW(row).check(&entry, DUEL_LOC(AI_PLAYER, zone)))
+            continue;
+        atk = AiApplyHandEquip(zone, st, i, left);
+        p->handCount = handCount;
+        MemCopy16(ZoneOf(AI_PLAYER, st), &savedSpell, sizeof(struct DuelZone));
+        MemCopy16(ZoneOf(AI_PLAYER, zone), &savedMonster, sizeof(struct DuelZone));
+        if (atk > best) {
+            best = atk;
+            bestIndex = i;
+        }
+    }
+    if (keep)
+        AiApplyHandEquip(zone, st, bestIndex, left);
+    return best;
+}
+
+/* AiSimSummon: the simulated monster in `zone` gets its summon boosts (Breaker's counter) and the best hand Equip.
+ * Inside the simulation sandbox. */
+void AiSimSummonBoosts(int zone)
+{
+    struct DuelZone *z = ZoneOf(AI_PLAYER, zone);
+    u16 id = DUEL_CARD_ID(&z->card);
+
+    if (id == 0)
+        return;
+#ifdef HAS_CARD_BREAKER_THE_MAGICAL_WARRIOR
+    if (CardNumberOfId(id) == CARD_BREAKER_THE_MAGICAL_WARRIOR && CountSpellCounters(AI_PLAYER, zone) == 0)
+        AddZoneLink(DUEL_LOC(AI_PLAYER, zone), id, ZONE_LINK_KIND(ZONE_LINK_ATK_300_PER_VALUE, 1));
+#endif
+    AiBestAtkWithHandEquip(zone, 1, 1);    /* the summoned monster has left the hand */
+}
+
+/* The ATK the CPU's monster in `zone` will have face up with the best Equip from its hand (its own sandbox; not
+ * inside another one). */
+u32 AiProjectedAtk(int zone)
+{
+    u32 atk;
+
+    if (DUEL_CARD_ID(&ZoneOf(AI_PLAYER, zone)->card) == 0)
+        return 0;
+    AiBackupDuelState();
+    ZoneOf(AI_PLAYER, zone)->isFaceUp = 1;
+    atk = AiBestAtkWithHandEquip(zone, 0, 0);
+    AiRestoreDuelState();
+    return atk;
+}
+
 /* ---- The CPU's tributes and costs are not copies of the card it summons -------------------------------------------
  * The CPU never Tributes a copy of the monster it summons (the same card number), whether for a Tribute Summon or
  * for a Special Summon that sends its cost from the field to the Graveyard (the Toons' Tributes, ai_strategy.c),
@@ -4871,7 +5013,7 @@ int AiShouldRetreatToDefense(int zone)
     if (CardNumberOfId(DUEL_CARD_ID(&z->card)) == CARD_BERSERK_GORILLA)
         return 0;       /* in Defense Position it would destroy itself */
 #endif
-    atk = GetZoneCardAtk(1, zone);
+    atk = AiProjectedAtk(zone);     /* with the best Equip in its hand (see AiProjectedAtk) */
     for (i = ZONE_MONSTER_0; i <= ZONE_MONSTER_4; i++) {
         struct DuelZone *h = ZoneOf(0, i);
 
