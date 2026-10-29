@@ -461,7 +461,12 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
   it. `Chain_Resolve` (duel_main.c) calls `ModChainLinkResolved` on entering `RESOLVE_STAGE_NEXT_LINK`, when the
   link is done and its commands have run (`DuelMainStep` drains the command queue before `Chain_Update`): a Magic
   card's link that was not negated gives each face-up Skilled Dark Magician on either side with fewer than 3 a
-  counter (with `ShowCardEffect`). Apprentice Magician can place one too. The count is not shown on screen.
+  counter (with `ShowCardEffect`). Apprentice Magician can place one too.
+- **Counter badge.** `ModDrawCounterBadges` (src/mod_field_icons.c, called by `DrawFieldOverlay` each frame) draws an
+  8x8 sprite with the count (purple, white digit, black border) at the top-right corner of each face-up Breaker or
+  Skilled Dark Magician with counters (`ModZoneSpellCounters`, added_effects.c; other cards' kind-11 links are not
+  counters). Its tiles are OBJ tiles 0x3F1-0x3F9 (above the duel banners' 0x364-0x3C3) and its colours OBJ palette
+  12; both are written while drawing, because the chain list and battle screens reuse OBJ VRAM.
 - **Effect.** The card menu's ACTIVATE in the Main Phase (`CanActivateMonsterEffect` in card_command_menu.c): the
   prepare needs it face up with 3 counters and a Dark Magician (either art) in the hand, Deck or Graveyard (a
   `CollectEffectTargets` case). The cost (chainA) Tributes it. The resolve, in Elegant Egotist's style: the human

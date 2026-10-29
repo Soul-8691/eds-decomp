@@ -541,6 +541,8 @@ struct PlayerZoneMaskView {
 };
 /* Per-frame board overlay: act on the cursor zone (row 0 occupied / row 5) via DrawZoneLinkMarkers, draw an animated cursor
    sprite on each monster zone not flagged in the player's +0x26 mask, then run the optional callback at +0x85C. */
+void ModDrawCounterBadges(void);    /* mod: src/mod_field_icons.c */
+
 void DrawFieldOverlay(void)
 {
     u32 cursorPlayer;
@@ -582,6 +584,7 @@ void DrawFieldOverlay(void)
                 }
             }
         }
+        ModDrawCounterBadges();     /* added: Spell Counter badges (src/mod_field_icons.c) */
         if (gDuelScreen.overlayCallback != NULL)
             gDuelScreen.overlayCallback();
     }

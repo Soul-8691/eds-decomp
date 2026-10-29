@@ -44,6 +44,7 @@
 #include "card_data.h"
 #include "sprite.h"
 #include "util.h"
+#include "constants/duel.h"
 
 int GetCardIconBgTile(u16 id);                  /* card_canvas.c */
 int GetCardIconObjTile(u16 id);                 /* card_canvas.c: 0x80 + 0x40 * type */
@@ -290,6 +291,80 @@ void ModAddAffineCardSprite(u32 yx, u16 shape, u16 id, u32 pose, u16 attr2, u32 
     /* AddAffineSprite switches on the exact shape, so the 256-colour bit goes into the entry it added */
     if (is8bpp && gMain.oamCount != count)
         gMain.oamBuffer[count].attr0 |= ATTR0_256COLOR;
+}
+
+/* ---- Spell Counter badges ----
+ * DrawFieldOverlay (duel_field_screen.c) calls ModDrawCounterBadges each frame: a face-up monster with Spell Counters
+ * (ModZoneSpellCounters, src/added_effects.c) gets an 8x8 badge with the count at the top-right corner of its zone.
+ * The badge tiles are OBJ tiles 0x3F0 + count, above the duel banners' 0x364-0x3C3; OBJ palette 12 (unused in duels)
+ * holds its colours. Both are written while drawing, since other screens (the chain list, battles) reuse OBJ VRAM. */
+#define BADGE_TILE              0x3F0           /* + count (1-9) */
+#define BADGE_PALETTE           12
+#define BADGE_FILL              1
+#define BADGE_DIGIT             2
+#define BADGE_BORDER            3
+#define BADGE_SIZE              7               /* the badge is 7x7 pixels of the 8x8 tile */
+
+int ModZoneSpellCounters(int player, int zone);
+s32 GetAreaX(int player, int area, int index);
+s32 GetAreaY(u32 player, int area, int index);
+
+/* 3x5 digits, rows top to bottom, 3 bits each (bit 2 the left column). */
+static const u16 sBadgeDigits[10] = {
+    075557, 026227, 071747, 071717, 055711, 074717, 074757, 071222, 075757, 075717,
+};
+
+/* Write the badge for `count` into its OBJ tile. */
+static void BuildCounterBadge(u32 count)
+{
+    vu32 *dst = (vu32 *)(OBJ_VRAM0 + (BADGE_TILE + count) * 32);
+    u32 y, x;
+
+    for (y = 0; y < 8; y++) {
+        u32 row = 0;
+
+        for (x = 0; x < 8; x++) {
+            u32 color = 0;
+            int edgeX = x == 0 || x == BADGE_SIZE - 1, edgeY = y == 0 || y == BADGE_SIZE - 1;
+
+            if (x >= BADGE_SIZE || y >= BADGE_SIZE || (edgeX && edgeY))
+                color = 0;                          /* outside, and the rounded corners */
+            else if (edgeX || edgeY)
+                color = BADGE_BORDER;
+            else if (x >= 2 && x <= 4 && y >= 1 && y <= 5
+                     && (sBadgeDigits[count] >> ((5 - y) * 3 + (4 - x)) & 1))
+                color = BADGE_DIGIT;
+            else
+                color = BADGE_FILL;
+            row |= color << (x * 4);
+        }
+        dst[y] = row;
+    }
+}
+
+void ModDrawCounterBadges(void)
+{
+    vu16 *pal = (vu16 *)(OBJ_PLTT + BADGE_PALETTE * 32);
+    int player, zone;
+
+    pal[BADGE_FILL] = 0x508C;                       /* purple */
+    pal[BADGE_DIGIT] = 0x7FFF;                      /* white */
+    pal[BADGE_BORDER] = 0x0000;                     /* black */
+    for (player = 0; player <= 1; player++) {
+        for (zone = 0; zone <= 4; zone++) {
+            int count = ModZoneSpellCounters(player, zone);
+            u32 x, y;
+
+            if (count <= 0)
+                continue;
+            if (count > 9)
+                count = 9;
+            BuildCounterBadge(count);
+            x = GetAreaX(player, DUEL_AREA_MONSTER, zone) + 24;
+            y = GetAreaY(player, DUEL_AREA_MONSTER, zone);
+            AddSprite((y << 16) | x, SPRITE_SHAPE_8x8, BADGE_PALETTE << 12 | 1 << 10 | (BADGE_TILE + count));
+        }
+    }
 }
 
 /* ---- The chain list ---- */

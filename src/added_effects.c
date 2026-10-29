@@ -711,6 +711,27 @@ int EffectDekoichiResolve(struct ChainEntry *link, struct ChainEntry *chainedTo)
  * DuelCmd_FlipCard (duel_cmd_field.c) calls this when it turns the monster in (player, zone) face down: a face-down
  * monster loses its counters, so the Spell Counter link (ZONE_LINK_ATK_300_PER_VALUE, one per zone; Breaker the
  * Magical Warrior) goes. It runs inside the command, so the link is removed at once. */
+/* The Spell Counters to show on the monster in (player, zone) (ModDrawCounterBadges, src/mod_field_icons.c): a face-up
+ * Breaker the Magical Warrior's or Skilled Dark Magician's, else 0 (other cards' kind-11 links are not counters). */
+int ModZoneSpellCounters(int player, int zone)
+{
+    struct DuelZone *z = ZoneOf(player, zone);
+    u16 id = DUEL_CARD_ID(&z->card);
+
+    if (id == 0 || !z->isFaceUp)
+        return 0;
+    switch (((const u16 *)CARD_ID_TO_NUMBER_ADDR)[id & CARD_ID_MASK]) {
+#ifdef HAS_CARD_BREAKER_THE_MAGICAL_WARRIOR
+    case CARD_BREAKER_THE_MAGICAL_WARRIOR:
+#endif
+#ifdef HAS_CARD_SKILLED_DARK_MAGICIAN
+    case CARD_SKILLED_DARK_MAGICIAN:
+#endif
+        return CountSpellCounters(player, zone);
+    }
+    return 0;
+}
+
 void OnMonsterTurnedFaceDown(int player, int zone)
 {
     RemoveZoneLink(DUEL_LOC(player, zone), 0, ZONE_LINK_ATK_300_PER_VALUE);
