@@ -951,6 +951,22 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
     so it doesn't go off. The target is any card on the field (the CPU: the human's strongest monster, else a
     Spell/Trap of the human's), and it is destroyed by effect.
 - **CPU.** It activates the card in answer to an attack while it has a face-up monster (`AiShouldActivateAddedCard`).
+- **Goat Format rulings** ([[blast-with-chain-goat-rulings]], added the same day):
+  - **Damage Step.** It can be activated in the Damage Step: a case beside Kunai with Chain in `CanActivateEffect`'s
+    `RESPONSE_DAMAGE_STEP` list (effect_activation.c).
+  - **Gearfried.** Gearfried the Iron Knight (key 1351) destroys it as soon as `EquipCard` equips it (continuous in
+    Goat). `EquipCard`'s 1351 branch (duel_send_to_grave.c) then calls `BlastWithChainEquipDestroyed`, which queues
+    the pop: it was equipped and destroyed by a card effect. That gives the BEWD-attacks-Gearfried and
+    Blast-chained-to-Ring-of-Destruction plays.
+  - **Royal Decree.** It no longer negates a Trap's effect from the Graveyard: `Chain_Resolve`'s `trapsNegated` test
+    (duel_main.c) skips `CHAIN_KIND_OFF_FIELD` links, which applies to Jinzo too. So with Royal Decree as chain link
+    1 and Blast on Gearfried as link 2, it still pops.
+  - **Already right.** The pop is mandatory and comes in the next chain (`Chain_AddPending`). A Blast lost with its
+    battle-destroyed monster, a fizzled Blast (its target gone: `DestroyFieldCard`, not an effect destruction), and a
+    negated one (Solemn Judgment, Royal Decree) never pop.
+  - **CPU.** `AiChainSolemnJudgment` first asks `AiChainBlastWithChain`. When the human's Spell/Trap would destroy a Set
+    Blast with Chain of the CPU's (it targets one, or it is Heavy Storm / Harpie's Feather Duster), the CPU chains it
+    onto a face-up monster, so the destruction pops it. Monster effects (Breaker, Mobius) don't get this answer.
 - Checked in the source and the build; not tested in an emulator.
 
 ### Gearfried the Iron Knight (2026-10-29)

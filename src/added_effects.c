@@ -4433,6 +4433,15 @@ static inline int IsBlastWithChainTrigger(struct ChainEntry *link)
     return link->event == RESPONSE_TRAP_TO_GRAVE;
 }
 
+/* Queue the "destroyed while equipped" trigger of the Blast with Chain in (player, zone) (mandatory, from the
+ * Graveyard, in the next chain). */
+static void QueueBlastWithChainTrigger(int player, u16 id)
+{
+    Chain_AddPending(TRIGGER_PLAYER(player & 1) | TRIGGER_KIND(CHAIN_KIND_OFF_FIELD)
+                         | TRIGGER_EVENT(RESPONSE_TRAP_TO_GRAVE) | (id & CARD_ID_MASK),
+                     0);
+}
+
 void BlastWithChainDestroyed(int player, int zone)
 {
     struct DuelZone *z = ZoneOf(player, zone);
@@ -4441,9 +4450,43 @@ void BlastWithChainDestroyed(int player, int zone)
     if (zone < ZONE_SPELL_0 || zone > ZONE_SPELL_4 || id == 0 || !z->isFaceUp
         || CardNumberOfId(id) != CARD_BLAST_WITH_CHAIN || FindMonsterWithLinkTo(player, zone) == 0xFFFF)
         return;
-    Chain_AddPending(TRIGGER_PLAYER(player & 1) | TRIGGER_KIND(CHAIN_KIND_OFF_FIELD)
-                         | TRIGGER_EVENT(RESPONSE_TRAP_TO_GRAVE) | (id & CARD_ID_MASK),
-                     0);
+    QueueBlastWithChainTrigger(player, id);
+}
+
+/* EquipCard (duel_send_to_grave.c): Gearfried the Iron Knight (key 1351) destroyed the Equip in (player, zone) as soon
+ * as it was equipped (in Goat Format its effect is continuous). A Blast with Chain was equipped and is destroyed by a
+ * card effect, so it pops; its equip link command has not run yet, so FindMonsterWithLinkTo is not asked. */
+void BlastWithChainEquipDestroyed(int player, int zone)
+{
+    u16 id = DUEL_CARD_ID(&ZoneOf(player, zone)->card);
+
+    if (CardNumberOfId(id) == CARD_BLAST_WITH_CHAIN)
+        QueueBlastWithChainTrigger(player, id);
+}
+
+/* AiChainSolemnJudgment: the human's Spell/Trap `entry` would destroy a Set Blast with Chain of the CPU's (it targets
+ * one, or it is Heavy Storm / Harpie's Feather Duster): the CPU chains it onto a face-up monster of its own, so the
+ * destruction pops it. 1 if it chained it. */
+static int AiChainBlastWithChain(struct ChainEntry *entry)
+{
+    int zone, hit = 0;
+
+    if (CountFaceUpMonsters(AI_PLAYER) == 0)
+        return 0;
+    switch (CardNumberOfId(entry->card)) {
+    case CARD_HEAVY_STORM:
+    case CARD_HARPIES_FEATHER_DUSTER:
+        hit = 1;
+        break;
+    default:
+        if (entry->numTargets >= 1 && (u8)entry->targets[0] == AI_PLAYER) {
+            zone = entry->targets[0] >> 8;
+            hit = zone >= ZONE_SPELL_0 && zone <= ZONE_SPELL_4
+                  && CardNumberOfId(DUEL_CARD_ID(&ZoneOf(AI_PLAYER, zone)->card)) == CARD_BLAST_WITH_CHAIN;
+        }
+        break;
+    }
+    return hit && AiChainSetCard(entry, CARD_BLAST_WITH_CHAIN) != 0;
 }
 
 /* A card in (player, zone) of the field. */
@@ -4576,6 +4619,10 @@ int EffectBlastWithChainResolve(struct ChainEntry *link, struct ChainEntry *chai
 }
 #else
 void BlastWithChainDestroyed(int player, int zone)
+{
+}
+
+void BlastWithChainEquipDestroyed(int player, int zone)
 {
 }
 #endif /* HAS_CARD_BLAST_WITH_CHAIN */
@@ -5997,6 +6044,10 @@ int AiChainSolemnJudgment(struct ChainEntry *entry)
 
     if (entry->player != AI_HUMAN || (type != CARD_TYPE_MAGIC && type != CARD_TYPE_TRAP))
         return 0;
+#ifdef HAS_CARD_BLAST_WITH_CHAIN
+    if (AiChainBlastWithChain(entry))   /* its own destruction pops it */
+        return 1;
+#endif
 #ifdef HAS_CARD_MAGIC_DRAIN
     /* Magic Drain first: it costs nothing */
     if (type == CARD_TYPE_MAGIC && AiChainSetCard(entry, CARD_MAGIC_DRAIN))

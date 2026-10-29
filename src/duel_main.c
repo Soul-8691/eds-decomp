@@ -234,7 +234,8 @@ u32 Chain_Resolve(void)
             stats = CARD_STATS_C(LAST_LINK.card);
             switch (CARD_STATS_TYPE(stats)) {
             case CARD_TYPE_TRAP:
-                if (gDuel.trapsNegated)
+                /* changed: a Trap's effect from the Graveyard (Blast with Chain's) is not negated by them */
+                if (gDuel.trapsNegated && LAST_LINK.kind != CHAIN_KIND_OFF_FIELD)
                     disabled = 1;
                 if (CARD_STATS_SUBTYPE(stats) == SPELL_CONTINUOUS && gDuel.contTrapNegatedThisTurn)
                     disabled = 1;

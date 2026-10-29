@@ -343,6 +343,9 @@ int CanActivateEffect(struct ChainEntry *card, struct ChainEntry *chainLink, u16
     }
     if (card->event == RESPONSE_DAMAGE_STEP) {
         switch (CARD_NUMBER(card->card)) {
+#ifdef HAS_CARD_BLAST_WITH_CHAIN
+        case CARD_BLAST_WITH_CHAIN:     /* added card: it changes ATK, as Kunai with Chain */
+#endif
         case CARD_KUNAI_WITH_CHAIN:
         case CARD_METALMORPH:
         case CARD_REVERSE_TRAP:

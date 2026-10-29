@@ -1843,3 +1843,7 @@ updated: 2026-09-29
 
 ## [2026-10-29] progress | Magic Drain coded; added target lists moved out of effect_target_collect.c
 - src/added_effects.c EffectMagicDrainPrepare / Resolve and its row; AiChainSolemnJudgment chains Magic Drain first. Release .text overflowed (0x08080A73) with its list in CollectEffectTargets, so ModCollectEffectTargets (added_effects.c) now takes the cases of Skilled Dark Magician, Book of Life, Pot of Avarice, Hydrogeddon, Masked Dragon and Magic Drain (src/effect_target_collect.c: a default case calls it). Release .text 0x80534. [[added-cards]]. Built (make and make release); not tested in an emulator.
+
+## [2026-10-29] ingest | Blast with Chain Goat Format rulings
+- New source page [[blast-with-chain-goat-rulings]] (Blast_with_Chain.txt in the repository root, a r/Goat_Format reply); [[index]].
+- Applied: src/effect_activation.c Damage Step list; src/duel_send_to_grave.c EquipCard's Gearfried branch calls BlastWithChainEquipDestroyed; src/duel_main.c trapsNegated skips CHAIN_KIND_OFF_FIELD links; src/added_effects.c BlastWithChainEquipDestroyed, AiChainBlastWithChain. [[added-cards]]. Built (make and make release); not tested in an emulator.

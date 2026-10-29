@@ -148,6 +148,7 @@ void UpdateMonsterControl(int player, int zone, u16 removedLink)
  *  - DestroyLinkedCards.
  */
 void SandMothDestroyed(int player, u16 id);     /* mod: src/added_effects.c */
+void BlastWithChainEquipDestroyed(int player, int zone);
 
 void SendFieldCardToGrave(int player, int zone, u16 destroyed, u16 runTriggers)
 {
@@ -344,6 +345,7 @@ void EquipCard(int player, u16 equipLoc, u16 targetLoc)
     if (CARD_NUMBER(targetId) == CARD_1351) {   /* no EDS card */
         DuelCmd_Push(PLAYER_CMD(targetPlayer, DUEL_CMD_SHOW_CARD_EFFECT), targetId, 1, 0);
         DestroyFieldCard(equipPlayer, equipZone, 1);
+        BlastWithChainEquipDestroyed(equipPlayer, equipZone);   /* added: Blast with Chain destroyed equipped */
         if (CARD_NUMBER(ZONE_CARD(ZONE(equipPlayer, equipZone))->id) == CARD_PREMATURE_BURIAL)
             DestroyFieldCard(targetPlayer, targetZone, 1);
     } else {

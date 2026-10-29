@@ -1,0 +1,65 @@
+https://www.reddit.com/r/Goat_Format/comments/zgjcvl/blast_with_chain/
+
+If my opponent destroys my face down Blast with Chain and i Chain it and equip one of my monsters with it, can i Pop one or does it miss the Timing?
+
+What If ich equip gearfried with Blast with Chain in the Same Position?
+
+------
+
+It will not miss timing - in fact, Blast with Chain's destruction effect is a mandatory effect. When it's destroyed by Mystical Space Typhoon/Heavy Storm/Breaker the Magical Warrior/Mobius the Frost Monarch/Dust Tornado/etc. if you have a face-up monster you can chain the Blast with Chain and get the effect (in the next available chain; it activates in the graveyard).
+
+Now, your example is not very complicated, and it turns out that it doesn't matter whether the monster is Gearfried the Iron Knight or not, but it turns out that Gearfried the Iron Knight and Blast with Chain do have a particularly interesting interaction when it comes to Goat Format (compared to modern). Let's walk through a few other examples:
+
+Your opponent's Blue-Eyes White Dragon attacks something that isn't a Gearfried that would generally die to BEWD (I dunno, Shapesnatch): you can activate Blast with Chain(even in the Damage Step, because it modulates battle stats) but because the monster it is equipped to is destroyed by battle, Blast with Chain is being destroyed by game mechanics and will NOT activate.
+
+Your opponent's BEWD attacks a Gearfried the Iron Knight. Now, it turns out that if you activate Blast with Chain, Blast with Chain will be destroyed immediately by Gearfried's effect, and you can use the effect of Blast with Chain in the next chain to destroy the BEWD (and keep your Gearfried alive!)
+
+If instead you have Gearfried attacking a BEWD, you probably should not wait until the damage step to activate the Blast because a replay only occurs when the number of your opponent's monsters changes in the Battle Step; if you wait until the Damage Step, Gearfried is considered to have attacked and won't get another chance to attack something else.
+
+Incidentally, it turns out that if you control 2 monsters, one Gearfried and one other one, it's good to know that replays work differently in Goat Format. In modern, the replay rewinds to the point at which Gearfried is declaring an attack, and you can choose to attack something else (or not attack) with Gearfried specifically, but you have to decide then-and-there. However, in Goat Format, it rewinds to the beginning of the Battle Step, and you can declare an attack with your other monster, then attack later in the same Battle Phase with that Gearfried.
+
+Your opponent activates Ring of Destruction targeting your Gearfried the Iron Knight. It turns out, in Goat Format, Gearfried's effect is a continuous effect, which means that if you immediately chain Blast with Chain targeting Gearfried, Blast with Chain will be destroyed as soon as Blast with Chain resolves and you can pop something.
+
+Contrast, again, with modern YGO, where Gearfried is a Trigger Effect - it will die from Ring when Ring resolves, and take the Blast with it by game mechanic, before it can trigger - and you would not get to pop. You also would be at Table 500 for bringing Gearfried and Blast to a modern tournament anyways, but that's missing the point.
+
+Reversal of the above: Chain Link 1 Blast with Chain targeting Gearfried, Chain Link 2 Ring of Destruction targeting Gearfried - Gearfried is destroyed (by Ring) upon resolution of the Ring. Gearfried is destroyed before Blast is equipped, but the target no longer exists, so it is considered to be "sent to the graveyard" by game mechanic (resolution of a non-continuous Trap card) and not "destroyed" by Gearfried's card effect (the effect of Blast with Chain in Chain Link 1 that equips and increases ATK is said to "resolve without effect", colloquially: "fizzles"). So no pop effect.
+
+Other scenarios, to really hammer it home:
+
+Chain Link 1 Blast with Chain targeting anything including Gearfried, Chain Link 2 Solemn Judgment - Solemn negates the activation of Blast with Chain and so when the Blast with Chain is destroyed by Solemn, it will not activate because it never had a chance to equip.
+
+CL1 Blast on Gearfried, CL2 Royal Decree; similarly, Decree negates the effect of Blast that equips, and it goes to graveyard; you will not get to pop.
+
+Royal Decree already face-up; Blast on Gearfried (e.g. as CL1). Blast is never considered to be equipped, it goes to GY as a noncontinuous trap that is done resolving, and does not activate, no pop.
+
+CL1 Royal Decree, CL2 Blast on Gearfried. Blast gets equipped, then dies (again, Gearfried's continuous in Goat!), and because it activates the pop effect in the graveyard, while Decree only negates the effects of Traps on the field, you will get to pop.
+
+And because you asked about missing the timing, let's just review those rules here:
+
+"If A: B" → mandatory
+
+Older cards (including Blast with Chain's LOD printing) that precede Problem-Solving Card Text (PSCT) may use "when" instead of "if", but the point is mandatory effects do not miss timing as they are mandatory. They are sequenced according to the rules for Simultaneous Effects Go[ing] On Chain (SEGOC)
+
+that is:
+
+Turn player's mandatory effects.
+
+Non-turn player's mandatory effects.
+
+Turn player's optional effects.
+
+Non-turn player's optional effects.
+
+(if there are multiple effects within each order, the player may choose which effect to activate first.)
+
+Note also that Goat Format has an additional caveat related to multiple effects going on the chain, the nuances of which aren't relevant here and that you can also read about at goatformat.com if you are interested.
+
+"If A: You can B" → does not miss timing, but the effect is optional.
+
+I don't think there are any cards in Goat Format that activate at times where "when" is even a possibility and have this templating (compared to later on, like, Kelbek the Ancient Vanguard or Goldd, Wu-Lord of Dark World); you'll get this kind of templating on cards that pretty obviously won't miss timing like Injection Fairy Lily or Gravekeeper's Assailant or The Fiend Megacyber whose If conditions generally aren't "interruptible", or won't happen in the middle of a chain. Special shoutouts to Last Will which behaves very strangely (but saliently like its TP7 printing which is an "If...You can").
+
+"When A: You can B" → optional, but can miss timing; A has to be the last thing to happen.
+
+If one player activates a card (I dunno, Ring of Destruction) and another player activates as Chain Link 2 Call of the Haunted and brings back Dark Magician of Chaos, DMoC will not recur a spell card because it is a "when(...)you can" and the last thing to resolve will be the Chain Link 1 card (in this example, Ring). Compare this to the same situation but using CotH on a Sacred Crane; since Sacred Crane is mandatory, the Crane-Calling player will draw a card in a new chain after the first chain completely resolves.
+
+Remember, Yu-Gi-Oh! is supposed to be a children's card game. LOL.

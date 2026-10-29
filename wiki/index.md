@@ -96,6 +96,7 @@ Start with [[overview]]. The decompilation is 100% matched since 2026-10-02: all
 - [[web-card-references]]: public card lists and passwords used to cross-check the card data.
 - [[general-knowledge]]: background knowledge from Claude; medium confidence.
 - [[gbatek]]: GBA memory, sound, DMA, timer and interrupt sections ingested and checked against EDS.
+- [[blast-with-chain-goat-rulings]]: a r/Goat_Format reply on Blast with Chain's timing, its Gearfried interaction and Royal Decree.
 
 ## Questions
 - [[deck-edit-card-art]]: card art over Deck Edit's ring of card frames: the ring's sprites, Deck Edit's VRAM and palettes, and the overlay that was built.
