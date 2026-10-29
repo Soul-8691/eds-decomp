@@ -768,6 +768,20 @@ u16 CollectEffectTargets(int player, u16 cardNumber, int param)
         }
         break;
 #endif
+#ifdef HAS_CARD_MASKED_DRAGON
+    case CARD_MASKED_DRAGON:
+    {
+        /* Added card: Deck Dragons with 1500 or less ATK. */
+        u32 *word;
+
+        for (i = 0; i < PLAYER(player).deckCount; i++) {
+            word = PILE_WORD(gDuelDecks, i, player);
+            if (CardType(CARD_ID(*word)) == CARD_TYPE_DRAGON && CardAttack16(CARD_ID(*word)) <= STAT_LIMIT)
+                ADD_TARGET(*word, CARDLIST_SRC_DECK);
+        }
+        break;
+    }
+#endif
 #ifdef HAS_CARD_HYDROGEDDON
     case CARD_HYDROGEDDON:
     {

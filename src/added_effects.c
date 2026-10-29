@@ -5941,6 +5941,18 @@ const struct CardEffect gAddedCardEffects[] = {
         EffectNewdoriaChainB,
     },
 #endif
+#ifdef HAS_CARD_MASKED_DRAGON
+    /* Masked Dragon: a floater (the battle-destroyed trigger list of SendBattleDestroyedCardToGraveyard, a
+     * CollectEffectTargets case: Deck Dragons with 1500 or less ATK); the position is chosen. */
+    {
+        CARD_MASKED_DRAGON, 0,
+        (int (*)(struct ChainEntry *, struct ChainEntry *))EffectSpecialSummonFromDeckResolve,
+        NULL,
+        NULL,
+        NULL,
+        NULL,
+    },
+#endif
 #ifdef HAS_CARD_SAND_MOTH
     {
         CARD_SAND_MOTH, 0,

@@ -604,7 +604,8 @@ int EffectSpecialSummonFromDeckResolve(struct ChainEntry *link)
                          ((u16 *)card)[1], 0);
             return EFFECT_STEP_5;
         case EFFECT_STEP_5:         /* Special Summon it face up in Attack Position */
-#if defined(HAS_CARD_GRAVEKEEPERS_SPY) || defined(HAS_CARD_PYRAMID_TURTLE) || defined(HAS_CARD_HYDROGEDDON)
+#if defined(HAS_CARD_GRAVEKEEPERS_SPY) || defined(HAS_CARD_PYRAMID_TURTLE) || defined(HAS_CARD_HYDROGEDDON) \
+    || defined(HAS_CARD_MASKED_DRAGON)
             /* Added: Gravekeeper's Spy and Pyramid Turtle summon in either face-up position: the human picks it in
              * the position menu, the CPU through AiShouldSetMonster (SummonStep_SpecialChoosePosition). The other
              * floaters keep Attack Position, as their texts say. */
@@ -617,6 +618,9 @@ int EffectSpecialSummonFromDeckResolve(struct ChainEntry *link)
 #endif
 #ifdef HAS_CARD_HYDROGEDDON
                 || CARD_NUMBER(link->card) == CARD_HYDROGEDDON
+#endif
+#ifdef HAS_CARD_MASKED_DRAGON
+                || CARD_NUMBER(link->card) == CARD_MASKED_DRAGON
 #endif
                 ) {
                 QueueSpecialSummonChoosePosition(link->player,

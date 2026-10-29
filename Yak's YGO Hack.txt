@@ -16,9 +16,7 @@ Price cards
 Price packs
 Unlock one format at a time
 Multiple banlists
-Get rid of original banlist
 Up to 50 deck recipes
-Yak's YGO Hack title screen (Start menu font)
 Fix DEF position AI
 Fix bugs with cards
 Fix quirks with new cards
@@ -29,3 +27,4 @@ Make AI use new cards properly
 Fix general AI shortcomings
 Fix Flip Effect Monster AI
 Cyber/Reaper cards
+Make the minimum a card can cost 20 DP

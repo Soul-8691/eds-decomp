@@ -896,6 +896,19 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
 - The other added cards keep their IDs; their card numbers after it move down one.
 - Checked in the source and the build; not tested in an emulator.
 
+### Masked Dragon (2026-10-29)
+- Effect Monster (Level 3, FIRE Dragon, 1400/1100). ID 1147 (number 1195). The fetched text: "When this card is
+  destroyed by battle and sent to the Graveyard: You can Special Summon 1 Dragon-Type monster with 1500 or less ATK
+  from your Deck."
+- **Like Pyramid Turtle.** A floater built from three pieces:
+  - the battle-destroyed trigger list of `SendBattleDestroyedCardToGraveyard` (duel_field_moves.c), which fires only
+    when it goes to the Graveyard, not when it is banished;
+  - a `CollectEffectTargets` case: Deck Dragons with 1500 or less ATK;
+  - the recruiters' `EffectSpecialSummonFromDeckResolve`.
+- **Position.** It is in that resolve's choose-position list, since the text gives no position.
+- **CPU.** It takes another Masked Dragon first (`AiRecruiterCopyEntry`), else `AiPickCardListEntry`'s pick.
+- Checked in the source and the build; not tested in an emulator.
+
 ### Goblin Elite Attack Force (2026-10-29)
 - Effect Monster (Level 4, EARTH Fiend, 2200/1500). ID 1145 (number 1193). The fetched text is Goblin Attack
   Force's: "If this card attacks, it is changed to Defense Position at the end of the Battle Phase, and its battle

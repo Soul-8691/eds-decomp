@@ -203,6 +203,9 @@ void SendBattleDestroyedCardToGraveyard(int defender, int player, int zone, u16 
 #ifdef HAS_CARD_NEWDORIA
     case CARD_NEWDORIA:             /* added card: destroy 1 monster on the field (src/added_effects.c) */
 #endif
+#ifdef HAS_CARD_MASKED_DRAGON
+    case CARD_MASKED_DRAGON:        /* added card: a Dragon with 1500 or less ATK from the Deck (src/added_effects.c) */
+#endif
     case CARD_1241: case CARD_1242: case CARD_1257: case CARD_1405:
         {
             u32 trigger = TRIGGER_PLAYER(owner);
