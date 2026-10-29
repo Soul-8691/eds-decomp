@@ -1736,3 +1736,9 @@ updated: 2026-09-29
 
 ## [2026-10-29] progress | Newdoria coded
 - src/added_effects.c EffectNewdoria* and its row; src/duel_field_moves.c battle-destroyed trigger case; root new_cards.txt. [[added-cards]]. Built (make and make release); not tested in an emulator.
+
+## [2026-10-29] progress | The CPU uses Thunder Dragon
+- src/added_effects.c AiUseThunderDragon; src/ai_steps.c AI_MAIN_SUMMON calls it first; src/effect_resolve1.c the CPU adds one copy per search. All three copies end in the Graveyard. README.md. [[added-cards]]. Built (make and make release); not tested in an emulator.
+
+## [2026-10-29] progress | Thunder Dragon may fail to find; the CPU keeps a lone copy
+- src/effect_activation.c EffectThunderDragonPrepare: no Deck copy needed; src/added_effects.c gModDuel.aiThunderDragonSearched, ModThunderDragonSearched, AiUseThunderDragon keeps a lone copy; src/effect_resolve1.c sets the flag. README.md. [[added-cards]]. Built (make and make release); not tested in an emulator.

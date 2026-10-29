@@ -556,6 +556,25 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
   - `AiShouldRetreatToDefense` never picks it.
 - Checked in the source and the build; not tested in an emulator.
 
+### The CPU uses Thunder Dragon (2026-10-29)
+- **Before.** The vanilla CPU never activated Thunder Dragon ("discard this card; add up to 2 Thunder Dragon from your
+  Deck to your hand"); only the human's card menu offers it.
+- **Activation.** `AiStepMainPhase` (ai_steps.c) calls `AiUseThunderDragon` (added_effects.c) first in
+  `AI_MAIN_SUMMON`, before it chooses a summon. Any Thunder Dragon in the CPU's hand is discarded and its effect
+  queued, as the card menu does.
+- **Resolve.** `EffectThunderDragonResolve` (effect_resolve1.c) adds just one copy for the CPU, without the Yes/No
+  prompts. The step runs again after each chain, so the CPU discards a copy, searches one, discards that, searches the
+  last, and discards the last too, a search that finds nothing (the resolve only shuffles). With three copies all three
+  end in the Graveyard.
+- **Lone copy.** The CPU discards a copy only while one is left in its Deck, or when that copy was just added by its
+  own search. The resolve calls `ModThunderDragonSearched`, which sets `gModDuel.aiThunderDragonSearched`; the next
+  discard clears it, and `ModDuelInit` resets it. A lone copy, with none left to find and not just added, stays in
+  the hand.
+- **Prepare (changed, for both players).** `EffectThunderDragonPrepare` (effect_activation.c) no longer needs a copy in
+  the Deck (the ROM's `CollectEffectTargets` test), so Thunder Dragon may be activated to find nothing; the resolve
+  then only shuffles. The CPU asks `CanActivateEffectOfCard`, as the card menu does.
+- Checked in the source and the build; not tested in an emulator.
+
 ### Newdoria (2026-10-29)
 - Effect Monster (Level 4, DARK Fiend, 1200/800): "If this card is destroyed by battle and sent to the GY: Target 1
   monster on the field; destroy that target."

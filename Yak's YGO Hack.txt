@@ -43,3 +43,6 @@ Fix Special Summon sacrifice AI
 Fix cheating (face-down) AI
 Make AI use Thunder Dragon's effect
 AI should use Nobleman of Crossout
+AI should use Solemn Judgement when at 4000 LP or less
+AI should only Dark Hole if you have more monsters
+AI can fail to find Thunder Dragon

@@ -62,6 +62,7 @@ struct ModDuelState {
     u16 aiStandbyTurn;          /* AiStandbyActivations: the turn (gDuel.turnCount) it last ran */
     u16 dimensionReturn;        /* Return from the Different Dimension: bit player * 5 + zone, banish in the End Phase */
     u16 dimensionReturnIds[10]; /* ... and the card ID summoned into that zone */
+    u8 aiThunderDragonSearched; /* the CPU's Thunder Dragon added a copy; it is discarded even with none left to find */
 };
 extern struct ModDuelState gModDuel;
 
@@ -954,6 +955,7 @@ void ModDuelInit(void)
     gModDuel.flipEffectsLocked = 0;
     gModDuel.aiStandbyTurn = 0xFFFF;
     gModDuel.dimensionReturn = 0;
+    gModDuel.aiThunderDragonSearched = 0;
 #ifdef HAS_CARD_INJECTION_FAIRY_LILY
     InjectionFairyLilyResetBattle();
 #endif
@@ -4120,6 +4122,46 @@ int AiPlanForcedAttack(void)
     return 1;
 }
 #endif /* HAS_CARD_BERSERK_GORILLA */
+
+/* ---- Thunder Dragon (the CPU) -------------------------------------------------------------------------------------
+ * The vanilla CPU never uses Thunder Dragon's "discard this card; add up to 2 Thunder Dragon from your Deck to your
+ * hand". AiStepMainPhase (ai_steps.c) calls AiUseThunderDragon first in AI_MAIN_SUMMON, before it picks a summon:
+ * a Thunder Dragon in the CPU's hand is discarded and its effect queued as the card menu does for the human
+ * (card_command_menu.c). EffectThunderDragonResolve (effect_resolve1.c) adds only 1 for the CPU and calls
+ * ModThunderDragonSearched, and the step runs again after the chain, so each new copy is discarded in turn: the
+ * second search takes the last copy, and the third activation finds none (the resolve only shuffles). With three
+ * copies all three end in the Graveyard. A copy is discarded only while one is left in the Deck, or when it was just
+ * added by a search (aiThunderDragonSearched): a lone copy (none left to find, not just searched) is kept.
+ * EffectThunderDragonPrepare (effect_activation.c) no longer wants a copy in the Deck (anyone may activate it to find
+ * none), so the CPU asks CanActivateEffectOfCard like the card menu. */
+void ModThunderDragonSearched(void)
+{
+    gModDuel.aiThunderDragonSearched = 1;
+}
+
+int AiUseThunderDragon(void)
+{
+    struct DuelPlayer *p = &gDuelPlayers[AI_PLAYER];
+    int i, inDeck = 0;
+
+    for (i = 0; i < p->deckCount; i++) {
+        if (CardNumberOfId(DUEL_CARD_ID(&p->deck[i])) == CARD_THUNDER_DRAGON)
+            inDeck = 1;
+    }
+    if (!inDeck && !gModDuel.aiThunderDragonSearched)
+        return 0;                       /* a lone copy: kept */
+    for (i = 0; i < p->handCount; i++) {
+        u16 id = DUEL_CARD_ID(&p->hand[i]);
+
+        if (CardNumberOfId(id) == CARD_THUNDER_DRAGON && CanActivateEffectOfCard(AI_PLAYER, id, 1)) {
+            gModDuel.aiThunderDragonSearched = 0;
+            DiscardHandCard(AI_PLAYER, i, 0, 1);
+            Chain_AddPending(((u32)AI_PLAYER << 31) | CHAIN_KIND_OFF_FIELD << 21 | id, 0);
+            return 1;
+        }
+    }
+    return 0;
+}
 
 #ifdef HAS_CARD_RYU_KOKKI
 /* ---- Ryu Kokki ----------------------------------------------------------------------------------------------------

@@ -721,12 +721,14 @@ int EffectCyberSteinPrepare(struct ChainEntry *card)
     return TRUE;
 }
 
-/* 424 Thunder Dragon: from the hand (it discards itself), and CollectEffectTargets finds a candidate. */
+/* 424 Thunder Dragon: from the hand (it discards itself).
+ * Changed: the ROM also wants a Thunder Dragon in the Deck (CollectEffectTargets); it may now be activated to find
+ * none (EffectThunderDragonResolve then only shuffles the Deck). */
 int EffectThunderDragonPrepare(struct ChainEntry *card, int unused, u16 fromHand)
 {
     if (fromHand == 0)
         return FALSE;
-    return CollectEffectTargetsInt(card->player, CARD_NUMBER(card->card), 0) > 0;
+    return TRUE;
 }
 
 /* 579 Patrol Robo: on the field with its once-per-turn effect unused. */

@@ -597,6 +597,8 @@ int EffectCyberSteinResolve(struct ChainEntry *link)
  *   START/2 look for a Thunder Dragon in the deck and ask; with none left, shuffle the deck and end.
  *   3       on Yes, add it to the hand and ask again while the count allows; then shuffle and end.
  */
+void ModThunderDragonSearched(void);    /* mod: src/added_effects.c */
+
 int EffectThunderDragonResolve(struct ChainEntry *link)
 {
     char text[0x100];
@@ -618,6 +620,14 @@ int EffectThunderDragonResolve(struct ChainEntry *link)
                 u16 number = ID_TO_NUMBER[CARD_ID(word) & idMask];
 
                 if (number == CARD_THUNDER_DRAGON) {
+                    if (link->player) {
+                        /* changed: the CPU adds one and keeps the other for its new copy (AiUseThunderDragon,
+                         * src/added_effects.c) */
+                        if (AddDeckCardToHand(link->player, CARD_THUNDER_DRAGON) != 0)
+                            ModThunderDragonSearched();
+                        DuelCmd_Push(CMD_FOR(link->player, DUEL_CMD_SHUFFLE_DECK), 0, 0, 0);
+                        return EFFECT_STEP_END;
+                    }
                     FormatStr(text, (const char *)gStrThunderDragonAddPromptFmt,
                               (const char *)(gCardNames + NUMBER_TO_ID[number] * CARD_NAME_SIZE));
                     TextBoxOpen(EFFECT_TEXT_POS, EFFECT_TEXT_SIZE, TEXTBOX_FLAGS_DEFAULT, (const u8 *)text);
