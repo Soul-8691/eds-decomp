@@ -1865,3 +1865,6 @@ updated: 2026-09-29
 
 ## [2026-10-29] progress | The Fiend Megacyber mapped to effect key 1350
 - tools/newcards.py ENGINE_NUMBERS The Fiend Megacyber: 1350; src/added_effects.c AiSpecialSummonCyberDragon also Special Summons Megacyber for the CPU; include/constants/cards.h regenerated. [[added-cards]]. Built (make and make release); not tested in an emulator.
+
+## [2026-10-29] progress | Thestalos the Firestorm Monarch coded
+- src/added_effects.c EffectThestalosResolve and its row; src/summon_checks.c its case beside Zaborg / Mobius in both Normal Summon trigger lists. [[added-cards]]. Built (make and make release); not tested in an emulator.

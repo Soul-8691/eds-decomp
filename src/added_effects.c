@@ -4284,6 +4284,32 @@ int AiPlanForcedAttack(void)
 }
 #endif /* HAS_CARD_BERSERK_GORILLA */
 
+#ifdef HAS_CARD_THESTALOS_THE_FIRESTORM_MONARCH
+/* ---- Thestalos the Firestorm Monarch ------------------------------------------------------------------------------
+ * "If this card is Tribute Summoned: Discard 1 random card from your opponent's hand, then, if it was a Monster Card,
+ * inflict damage to your opponent equal to its original Level x 100."
+ * The two Normal Summon paths (summon_checks.c) queue its RESPONSE_SUMMONED trigger in Zaborg's case; it is Level 6,
+ * so that summon always has a Tribute. Mandatory, no target. The resolve discards a random card of the opponent's
+ * hand (DiscardHandCard, by the opponent's effect) and, for a monster, takes its printed Level x 100 from the
+ * opponent's LP (LoseLifePoints). */
+int EffectThestalosResolve(struct ChainEntry *link, struct ChainEntry *chainedTo)
+{
+    int opponent = 1 - link->player;
+    struct DuelPlayer *p = &gDuelPlayers[opponent & 1];
+    int i;
+    u32 stats;
+
+    if (link->negated || p->handCount == 0)
+        return EFFECT_STEP_DONE;
+    i = (u32)Random() % p->handCount;
+    stats = gCardStats[DUEL_CARD_ID(&p->hand[i]) & CARD_ID_MASK];
+    DiscardHandCard(opponent, i, 1, 1);
+    if (CARD_STATS_TYPE(stats) <= CARD_TYPE_REPTILE && CARD_STATS_LEVEL(stats) > 0)
+        LoseLifePoints(opponent, CARD_STATS_LEVEL(stats) * 100);
+    return EFFECT_STEP_DONE;
+}
+#endif /* HAS_CARD_THESTALOS_THE_FIRESTORM_MONARCH */
+
 /* ---- Marauding Captain --------------------------------------------------------------------------------------------
  * "Your opponent cannot target Warrior monsters for attacks, except this one. When this card is Normal Summoned: You
  * can Special Summon 1 Level 4 or lower monster from your hand."
@@ -6373,6 +6399,16 @@ const struct CardEffect gAddedCardEffects[] = {
         NULL,
         NULL,
         EffectMobiusChainB,
+    },
+#endif
+#ifdef HAS_CARD_THESTALOS_THE_FIRESTORM_MONARCH
+    {
+        CARD_THESTALOS_THE_FIRESTORM_MONARCH, 0,
+        EffectThestalosResolve,
+        NULL,
+        NULL,
+        NULL,
+        NULL,
     },
 #endif
 #ifdef HAS_CARD_ZABORG_THE_THUNDER_MONARCH

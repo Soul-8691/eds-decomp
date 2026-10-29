@@ -933,6 +933,18 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
 - The other added cards keep their IDs; their card numbers after it move down one.
 - Checked in the source and the build; not tested in an emulator.
 
+### Thestalos the Firestorm Monarch (2026-10-29)
+- Effect Monster (Level 6, FIRE Pyro, 2400/1000). ID 957. The fetched text: "If this card is Tribute Summoned: Discard
+  1 random card from your opponent's hand, then, if it was a Monster Card, inflict damage to your opponent equal to
+  its original Level x 100."
+- **Trigger.** As Mobius's: a case in the two Normal Summon trigger lists of summon_checks.c (Zaborg's), which queue
+  `RESPONSE_SUMMONED`. It is Level 6, so that summon always has a Tribute. Mandatory, no target. The case labels
+  didn't grow the original unit (release `.text` still 0x08080548).
+- **Resolve.** `EffectThestalosResolve` discards a random card of the opponent's hand (`DiscardHandCard`, by the
+  opponent's effect). For a monster, it takes its printed Level x 100 from the opponent's LP (`LoseLifePoints`). With
+  an empty hand nothing happens.
+- Checked in the source and the build; not tested in an emulator.
+
 ### The Fiend Megacyber (2026-10-29)
 - Effect Monster (Level 6, DARK Warrior, 2200/1200). The fetched text: "If your opponent controls at least 2 more
   monsters than you do, you can Special Summon this card (from your hand)."
