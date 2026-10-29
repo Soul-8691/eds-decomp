@@ -3,18 +3,18 @@
 <p align="center">
   <img src="eds-8.png" width="24%" alt="Screenshot 1">
   <img src="eds-9.png" width="24%" alt="Screenshot 2">
-  <img src="eds-27.png" width="24%" alt="Screenshot 3">
-  <img src="eds-10.png" width="24%" alt="Screenshot 4">
+  <img src="eds-10.png" width="24%" alt="Screenshot 3">
+  <img src="eds-11.png" width="24%" alt="Screenshot 4">
 </p>
 <p align="center">
-  <img src="eds-11.png" width="24%" alt="Screenshot 5">
-  <img src="eds-12.png" width="24%" alt="Screenshot 6">
-  <img src="eds-15.png" width="24%" alt="Screenshot 7">
-  <img src="eds-13.png" width="24%" alt="Screenshot 8">
+  <img src="eds-12.png" width="24%" alt="Screenshot 5">
+  <img src="eds-15.png" width="24%" alt="Screenshot 6">
+  <img src="eds-13.png" width="24%" alt="Screenshot 7">
+  <img src="eds-14.png" width="24%" alt="Screenshot 8">
 </p>
 <p align="center">
-  <img src="eds-14.png" width="24%" alt="Screenshot 9">
-  <img src="eds-16.png" width="24%" alt="Screenshot 10">
+  <img src="eds-16.png" width="24%" alt="Screenshot 9">
+  <img src="eds-27.png" width="24%" alt="Screenshot 10">
   <img src="eds-17.png" width="24%" alt="Screenshot 11">
   <img src="eds-18.png" width="24%" alt="Screenshot 12">
 </p>
