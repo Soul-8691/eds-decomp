@@ -768,6 +768,20 @@ u16 CollectEffectTargets(int player, u16 cardNumber, int param)
         }
         break;
 #endif
+#ifdef HAS_CARD_POT_OF_AVARICE
+    case CARD_POT_OF_AVARICE:
+    {
+        /* Added card: the player's Graveyard monsters. */
+        u32 *word;
+
+        for (i = 0; i < PLAYER(player).graveCount; i++) {
+            word = PILE_WORD(PLAYERS_GRAVEYARD, i, player);
+            if (CardType(CARD_ID(*word)) <= CARD_TYPE_REPTILE)
+                ADD_TARGET(*word, CARDLIST_SRC_GRAVEYARD);
+        }
+        break;
+    }
+#endif
 #ifdef HAS_CARD_BOOK_OF_LIFE
     case CARD_BOOK_OF_LIFE:
     {

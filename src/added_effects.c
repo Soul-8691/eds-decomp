@@ -3654,6 +3654,107 @@ int EffectGolemSentryResolve(struct ChainEntry *link, struct ChainEntry *chained
 }
 #endif /* HAS_CARD_GOLEM_SENTRY */
 
+#ifdef HAS_CARD_POT_OF_AVARICE
+/* ---- Pot of Avarice -----------------------------------------------------------------------------------------------
+ * "Target 5 monsters in your GY; shuffle all 5 into the Deck, then draw 2 cards." (Normal Spell)
+ * The prepare needs 5 monsters in the Graveyard (CollectEffectTargets). The 5 are picked when it resolves, as
+ * Painful Choice picks its 5 (a link holds one card word): the human picks one at a time in the card list, each
+ * leaving the Graveyard at once (DUEL_CMD_REMOVE_CARD_FROM_GRAVEYARD) and kept in gChain.scratch.effect.effectCards;
+ * the CPU takes its 5 lowest-ATK monsters. Then each goes back: a Main Deck monster to the Deck
+ * (DUEL_CMD_ADD_CARD_TO_DECK_TOP), a Fusion Monster to the Fusion Deck (AddCardToFusionDeck), the Deck is shuffled
+ * and the player draws 2. With fewer than 5 monsters left when it resolves, nothing happens. */
+#define AVARICE_COUNT 5
+
+static const u8 sStrAvariceSelect[] = "Select 5 monsters in your Graveyard to return to the Deck.";
+static const u8 sStrAvariceMore[] = "Select %d more.";
+
+int CollectEffectTargetsInt(int player, int cardNumber, int param) asm("CollectEffectTargets");
+
+int EffectPotOfAvaricePrepare(struct ChainEntry *card, struct ChainEntry *chainLink, u16 fromHand)
+{
+    return CollectEffectTargetsInt(card->player, CARD_POT_OF_AVARICE, 0) >= AVARICE_COUNT;
+}
+
+/* Take list entry `i` (a Graveyard monster) out of the Graveyard and keep it as pick `slot`. */
+static void AvariceTake(struct ChainEntry *link, int i, int slot)
+{
+    u16 *picked = (u16 *)&gCardListView.cards[i];
+
+    CopyDuelCard(&gChain.scratch.effect.effectCards[slot], (struct DuelCard *)picked);
+    DuelCmd_Push(link->player ? DUEL_CMD_PLAYER | DUEL_CMD_REMOVE_CARD_FROM_GRAVEYARD
+                              : DUEL_CMD_REMOVE_CARD_FROM_GRAVEYARD, picked[0], picked[1], 0);
+}
+
+int EffectPotOfAvariceResolve(struct ChainEntry *link, struct ChainEntry *chainedTo)
+{
+    u8 text[0x40];
+    int count, i, k;
+
+    if (link->negated)
+        return EFFECT_STEP_DONE;
+    switch (gChain.effectStep) {
+    case EFFECT_STEP_START:
+        count = CollectEffectTargetsInt(link->player, CARD_POT_OF_AVARICE, 0);
+        if (count < AVARICE_COUNT)
+            return EFFECT_STEP_DONE;
+        if (link->player) {
+            /* the CPU: its 5 lowest-ATK monsters */
+            u8 used[32];
+
+            MemClear16(used, sizeof(used));
+            for (k = 0; k < AVARICE_COUNT; k++) {
+                int best = -1;
+                u32 bestAtk = 0;
+
+                for (i = 0; i < count && i < (int)sizeof(used); i++) {
+                    u32 atk = CARD_STATS_ATK(gCardStats[gCardListView.cards[i] & CARD_ID_MASK]);
+
+                    if (!used[i] && (best < 0 || atk < bestAtk)) {
+                        best = i;
+                        bestAtk = atk;
+                    }
+                }
+                used[best] = 1;
+                AvariceTake(link, best, k);
+            }
+            return EFFECT_STEP_4;
+        }
+        TextBoxOpen(TEXTBOX_POS(5, 2), TEXTBOX_SIZE(20, 7), TEXTBOX_FLAGS_DEFAULT, sStrAvariceSelect);
+        gChain.effectSubStep = AVARICE_COUNT;
+        return EFFECT_STEP_2;
+    case EFFECT_STEP_2:         /* open the Graveyard list (re-collected: the earlier picks are out) */
+        CardListView_Open(link->player, CARDLIST_AREA_EFFECT_TARGETS, CARD_POT_OF_AVARICE, 0);
+        return EFFECT_STEP_3;
+    case EFFECT_STEP_3:
+        gChain.effectSubStep--;
+        AvariceTake(link, gCardListView.cursorRow + gCardListView.top, gChain.effectSubStep);
+        if (gChain.effectSubStep != 0) {
+            FormatInt((char *)text, (const char *)sStrAvariceMore, gChain.effectSubStep);
+            TextBoxOpen(TEXTBOX_POS(5, 2), TEXTBOX_SIZE(20, 5), TEXTBOX_FLAGS_DEFAULT, text);
+            return EFFECT_STEP_2;
+        }
+        return EFFECT_STEP_4;
+    case EFFECT_STEP_4:         /* the removals have run: back to the Deck / Fusion Deck */
+        for (k = 0; k < AVARICE_COUNT; k++) {
+            struct DuelCard *card = &gChain.scratch.effect.effectCards[k];
+            u16 *halves = (u16 *)card;
+
+            if (CARD_STATS_KIND(gCardStats[DUEL_CARD_ID(card) & CARD_ID_MASK]) == CARD_KIND_FUSION)
+                AddCardToFusionDeck(link->player, card);
+            else
+                DuelCmd_Push(link->player ? DUEL_CMD_PLAYER | DUEL_CMD_ADD_CARD_TO_DECK_TOP
+                                          : DUEL_CMD_ADD_CARD_TO_DECK_TOP, halves[0], halves[1], 0);
+        }
+        DuelCmd_Push(link->player ? DUEL_CMD_PLAYER | DUEL_CMD_SHUFFLE_DECK : DUEL_CMD_SHUFFLE_DECK, 1, 0, 0);
+        return EFFECT_STEP_5;
+    case EFFECT_STEP_5:
+        DrawCards(link->player, 2);
+        return EFFECT_STEP_END;
+    }
+    return EFFECT_STEP_DONE;
+}
+#endif /* HAS_CARD_POT_OF_AVARICE */
+
 #ifdef HAS_CARD_NEWDORIA
 /* ---- Newdoria -----------------------------------------------------------------------------------------------------
  * "If this card is destroyed by battle and sent to the GY: Target 1 monster on the field; destroy that target."
@@ -5643,6 +5744,16 @@ const struct CardEffect gAddedCardEffects[] = {
         NULL,
         NULL,
         EffectNewdoriaChainB,
+    },
+#endif
+#ifdef HAS_CARD_POT_OF_AVARICE
+    {
+        CARD_POT_OF_AVARICE, 0,
+        EffectPotOfAvariceResolve,
+        NULL,
+        EffectPotOfAvaricePrepare,
+        NULL,
+        NULL,
     },
 #endif
 #ifdef HAS_CARD_GOLEM_SENTRY

@@ -1784,3 +1784,6 @@ updated: 2026-09-29
 
 ## [2026-10-29] progress | Treeborn Frog coded
 - config/new_cards.txt: Treeborn Frog appended (ID 1137, number 1184). src/added_effects.c TreebornFrogStandbyStep; src/duel_phases.c runs it after Sinister Serpent's Standby step. [[added-cards]]. Built (make and make release); not tested in an emulator.
+
+## [2026-10-29] progress | Pot of Avarice coded
+- config/new_cards.txt: Pot of Avarice appended (ID 1138, number 1185). src/added_effects.c EffectPotOfAvaricePrepare / Resolve and its row; src/effect_target_collect.c Graveyard monster list. [[added-cards]]. Built (make and make release); not tested in an emulator.

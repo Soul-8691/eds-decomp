@@ -556,6 +556,20 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
   - `AiShouldRetreatToDefense` never picks it.
 - Checked in the source and the build; not tested in an emulator.
 
+### Pot of Avarice (2026-10-29)
+- Normal Spell. Added as ID 1138 (number 1185), appended to config/new_cards.txt. The fetched text: "Target 5
+  monsters in your GY; shuffle all 5 into the Deck, then draw 2 cards."
+- **Activation.** The prepare needs 5 monsters in the Graveyard (a `CollectEffectTargets` case).
+- **Picking.** The 5 are picked when it resolves, as Painful Choice picks its 5, because a link holds one card word.
+  The human picks one at a time in the card list; each leaves the Graveyard at once
+  (`DUEL_CMD_REMOVE_CARD_FROM_GRAVEYARD`) and is kept in `gChain.scratch.effect.effectCards`, so the list
+  re-collected for the next pick no longer shows it. The CPU takes its 5 lowest-ATK monsters.
+- **Return.** A Main Deck monster goes to the Deck (`DUEL_CMD_ADD_CARD_TO_DECK_TOP`), a Fusion Monster to the Fusion
+  Deck (`AddCardToFusionDeck`; no command exists for that). Then the Deck is shuffled and the player draws 2.
+- **Simplification.** With fewer than 5 monsters left when it resolves, nothing happens.
+- **CPU.** It plays it through `AiPlayAddedCards` whenever the prepare allows.
+- Checked in the source and the build; not tested in an emulator.
+
 ### Treeborn Frog (2026-10-29)
 - Effect Monster (Level 1, WATER Aqua, 100/100). Added as ID 1137 (number 1184), the last line of
   config/new_cards.txt. The fetched text: "Once per turn, during your Standby Phase, if this card is in your
