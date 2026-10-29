@@ -1718,3 +1718,6 @@ updated: 2026-09-29
 
 ## [2026-10-28] progress | Spell Counter badges on the field
 - src/mod_field_icons.c ModDrawCounterBadges (OBJ tiles 0x3F1-0x3F9, OBJ palette 12); src/duel_field_screen.c DrawFieldOverlay calls it; src/added_effects.c ModZoneSpellCounters (Breaker, Skilled Dark Magician). [[added-cards]]. Built (make and make release); not tested in an emulator.
+
+## [2026-10-28] progress | Golem Sentry coded
+- src/added_effects.c EffectGolemSentry* and its row, the Flip Summon trigger in AddedCardsSummoned, AiWantsMonsterEffect case, Book of Moon resolve guard; src/summon_action.c guard; src/card_command_menu.c. [[added-cards]]. Built (make and make release); not tested in an emulator.

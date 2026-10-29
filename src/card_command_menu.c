@@ -503,6 +503,9 @@ int CanActivateMonsterEffect(u16 id, int player, int zone)
 #ifdef HAS_CARD_SKILLED_DARK_MAGICIAN
     case CARD_SKILLED_DARK_MAGICIAN:                        /* added card (src/added_effects.c) */
 #endif
+#ifdef HAS_CARD_GOLEM_SENTRY
+    case CARD_GOLEM_SENTRY:                                 /* added card (src/added_effects.c) */
+#endif
     case CARD_1430:
     case CARD_1432:
     case CARD_1433:

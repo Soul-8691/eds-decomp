@@ -738,7 +738,7 @@ void OnMonsterTurnedFaceDown(int player, int zone)
     RemoveZoneLink(DUEL_LOC(player, zone), DUEL_CARD_ID(&ZoneOf(player, zone)->card), ZONE_LINK_SPELL_COUNTER);
 }
 
-#if defined(HAS_CARD_BOOK_OF_MOON) || defined(HAS_CARD_TSUKUYOMI)
+#if defined(HAS_CARD_BOOK_OF_MOON) || defined(HAS_CARD_TSUKUYOMI) || defined(HAS_CARD_GOLEM_SENTRY)
 /* ---- Book of Moon / Tsukuyomi ------------------------------------------------------------------------------------
  * Book of Moon (Quick-Play Spell) and Tsukuyomi (FLIP) share the same effect: target 1 face-up monster on the
  * field; change it to face-down Defense Position. Targeting uses EffectTargetableFaceUpMonsterCheck / ChainB
@@ -777,7 +777,7 @@ int EffectBookOfMoonResolve(struct ChainEntry *link, struct ChainEntry *chainedT
     DuelCmd_Push(cmd, zone, 0, 0);
     return EFFECT_STEP_DONE;
 }
-#endif /* HAS_CARD_BOOK_OF_MOON || HAS_CARD_TSUKUYOMI */
+#endif /* HAS_CARD_BOOK_OF_MOON || HAS_CARD_TSUKUYOMI || HAS_CARD_GOLEM_SENTRY */
 
 #ifdef HAS_CARD_TSUKUYOMI
 #ifndef CARD_NUMBER
@@ -2048,7 +2048,8 @@ static void ApprenticeMagicianPlaceCounter(int player, u16 id)
 }
 #endif /* HAS_CARD_APPRENTICE_MAGICIAN && (Breaker || Skilled Dark Magician) */
 
-#if defined(HAS_CARD_DARK_MAGICIAN_OF_CHAOS) || defined(HAS_CARD_SACRED_CRANE) || defined(HAS_CARD_APPRENTICE_MAGICIAN)
+#if defined(HAS_CARD_DARK_MAGICIAN_OF_CHAOS) || defined(HAS_CARD_SACRED_CRANE) || defined(HAS_CARD_APPRENTICE_MAGICIAN) \
+    || defined(HAS_CARD_GOLEM_SENTRY)
 /* SummonAction_Update calls this for every summon once the monster is in (player, zone): `kind` is the
  * enum SummonActionKind, faceUp its position. */
 void AddedCardsSummoned(int player, int zone, u16 id, int kind, int faceUp)
@@ -2060,6 +2061,12 @@ void AddedCardsSummoned(int player, int zone, u16 id, int kind, int faceUp)
     && (defined(HAS_CARD_BREAKER_THE_MAGICAL_WARRIOR) || defined(HAS_CARD_SKILLED_DARK_MAGICIAN))
     if (faceUp && ((const u16 *)CARD_ID_TO_NUMBER_ADDR)[id & CARD_ID_MASK] == CARD_APPRENTICE_MAGICIAN)
         ApprenticeMagicianPlaceCounter(player, id);
+#endif
+#ifdef HAS_CARD_GOLEM_SENTRY
+    if (((const u16 *)CARD_ID_TO_NUMBER_ADDR)[id & CARD_ID_MASK] == CARD_GOLEM_SENTRY && kind == SUMMON_ACTION_FLIP)
+        Chain_AddPending(TRIGGER_PLAYER(player & 1) | TRIGGER_ZONE(zone) | TRIGGER_KIND(CHAIN_KIND_MONSTER)
+                             | TRIGGER_EVENT(RESPONSE_FLIP_SUMMONED) | (id & CARD_ID_MASK),
+                         DUEL_LOC(player, zone));
 #endif
 #ifdef HAS_CARD_SACRED_CRANE
     if (((const u16 *)CARD_ID_TO_NUMBER_ADDR)[id & CARD_ID_MASK] == CARD_SACRED_CRANE
@@ -3577,6 +3584,71 @@ int EffectExiledForceResolve(struct ChainEntry *link, struct ChainEntry *chained
 }
 #endif /* HAS_CARD_EXILED_FORCE */
 
+#ifdef HAS_CARD_GOLEM_SENTRY
+/* ---- Golem Sentry -------------------------------------------------------------------------------------------------
+ * "Once per turn: You can change this card to face-down Defense Position. When this card is Flip Summoned: Target 1
+ * monster your opponent controls; return that target to the hand."
+ * One row, told apart by the link's event:
+ *   RESPONSE_FLIP_SUMMONED  queued by AddedCardsSummoned for a Flip Summon (as Sacred Crane's trigger; the vanilla
+ *                           Flip Summon list in summon_action.c gates on CanActivateEffectOfCard, which passes no
+ *                           zone or event): an opponent's monster (Crass Clown's EffectOpponentMonsterCheck / ChainB; the CPU picks
+ *                           the human's strongest), returned to its owner's hand (EffectReturnTargetToHandResolve)
+ *   RESPONSE_NONE           the card menu's ACTIVATE in the Main Phase (CanActivateMonsterEffect), once per turn
+ *                           (effectUnused, set again by DuelCmd_TurnStart): the target is the card itself, turned
+ *                           face-down Defense Position by Book of Moon's EffectBookOfMoonResolve (its Equip Cards are
+ *                           destroyed, its counters removed). The CPU uses it while the human controls a monster, so
+ *                           its next Flip Summon has a target. */
+static inline int IsGolemSentryFlipTrigger(struct ChainEntry *link)
+{
+    return link->event == RESPONSE_FLIP_SUMMONED && link->loc0 == DUEL_LOC(link->player, link->zone);
+}
+
+int EffectGolemSentryPrepare(struct ChainEntry *card, struct ChainEntry *chainLink, u16 fromHand)
+{
+    struct DuelZone *z;
+
+    if (fromHand)
+        return 0;
+    z = ZoneOf(card->player, card->zone);
+    if (!z->isFaceUp || DUEL_CARD_ID(&z->card) != (card->card & CARD_ID_MASK))
+        return 0;
+    if (card->event == RESPONSE_FLIP_SUMMONED)
+        return IsGolemSentryFlipTrigger(card);
+    return card->event == RESPONSE_NONE && z->effectUnused;
+}
+
+u16 EffectGolemSentryCheck(struct ChainEntry *card, u16 pos)
+{
+    if (card->event == RESPONSE_FLIP_SUMMONED)
+        return EffectOpponentMonsterCheck(card, pos);
+    return pos == DUEL_LOC(card->player, card->zone);
+}
+
+int EffectGolemSentryChainB(struct ChainEntry *link, struct ChainEntry *prevLink)
+{
+    u16 cmd;
+
+    if (link->event == RESPONSE_FLIP_SUMMONED)
+        return EffectOpponentMonsterChainB(link);
+    /* the face-down change: itself, and the effect is used for this turn */
+    link->numTargets = 1;
+    link->targets[0] = DUEL_LOC(link->player, link->zone);
+    cmd = link->player ? DUEL_CMD_PLAYER | DUEL_CMD_SET_EFFECT_UNUSED : DUEL_CMD_SET_EFFECT_UNUSED;
+    DuelCmd_Push(cmd, link->zone, 0, 0);
+    return 1;
+}
+
+int EffectGolemSentryResolve(struct ChainEntry *link, struct ChainEntry *chainedTo)
+{
+    if (link->event == RESPONSE_FLIP_SUMMONED) {
+        if (link->negated)
+            return EFFECT_STEP_DONE;
+        return EffectReturnTargetToHandResolve(link);
+    }
+    return EffectBookOfMoonResolve(link, chainedTo);
+}
+#endif /* HAS_CARD_GOLEM_SENTRY */
+
 /* ---- Kycoo the Ghost Destroyer -------------------------------------------------------------------------------
  * Reuses effect key 1511's handlers (EffectBanishOpponentGraveMonstersResolve, battle damage triggers in
  * battle_phase2.c). While face up, it blocks graveyard banish effects the same way CARD_1511 does. */
@@ -4236,6 +4308,10 @@ static int AiWantsMonsterEffect(u16 number, int zone)
     case CARD_THOUSAND_EYES_RESTRICT:
         return CountMonsters(AI_HUMAN) > 0;
 #endif
+#ifdef HAS_CARD_GOLEM_SENTRY
+    case CARD_GOLEM_SENTRY:                     /* face down, so its next Flip Summon can bounce a monster */
+        return CountMonsters(AI_HUMAN) > 0;
+#endif
     }
     return 1;
 }
@@ -4889,6 +4965,16 @@ const struct CardEffect gAddedCardEffects[] = {
         EffectSkilledDarkMagicianPrepare,
         EffectSkilledDarkMagicianChainA,
         NULL,
+    },
+#endif
+#ifdef HAS_CARD_GOLEM_SENTRY
+    {
+        CARD_GOLEM_SENTRY, 0,
+        EffectGolemSentryResolve,
+        EffectGolemSentryCheck,
+        EffectGolemSentryPrepare,
+        NULL,
+        EffectGolemSentryChainB,
     },
 #endif
 #ifdef HAS_CARD_EXILED_FORCE

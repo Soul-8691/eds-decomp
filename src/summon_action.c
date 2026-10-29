@@ -499,7 +499,8 @@ u16 SummonAction_Update(void)
                         TsukuyomiMarkForEndReturn(action->player, action->zone);
                 }
 #endif
-#if defined(HAS_CARD_DARK_MAGICIAN_OF_CHAOS) || defined(HAS_CARD_SACRED_CRANE) || defined(HAS_CARD_APPRENTICE_MAGICIAN)
+#if defined(HAS_CARD_DARK_MAGICIAN_OF_CHAOS) || defined(HAS_CARD_SACRED_CRANE) || defined(HAS_CARD_APPRENTICE_MAGICIAN) \
+    || defined(HAS_CARD_GOLEM_SENTRY)
                 /* added cards: their summon effects (src/added_effects.c) */
                 AddedCardsSummoned(action->player, action->zone, id, (int)SUMMON_FLAGS_KIND(flags), wasFaceUp);
 #endif

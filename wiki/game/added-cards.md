@@ -475,6 +475,23 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
   Deck is shuffled if it came from there. The CPU uses it through `AiPlayAddedCards` whenever it can.
 - Checked in the source and the build; not tested in an emulator.
 
+### Golem Sentry (2026-10-28)
+- Effect Monster (Level 4, EARTH Rock, 800/1800). The fetched text: "Once per turn: You can change this card to
+  face-down Defense Position. When this card is Flip Summoned: Target 1 monster your opponent controls; return that
+  target to the hand."
+- One row, told apart by the link's event:
+  - **Flip Summon** (`RESPONSE_FLIP_SUMMONED`): `AddedCardsSummoned` queues the trigger for `SUMMON_ACTION_FLIP`, as
+    for Sacred Crane. It isn't added to the vanilla Flip Summon list in summon_action.c (Sonic Bird's), because that
+    list gates on `CanActivateEffectOfCard`, which leaves the entry's zone and event unset. The target is an
+    opponent's monster (Crass Clown's `EffectOpponentMonsterCheck` / `EffectOpponentMonsterChainB`; the CPU takes
+    the human's strongest), returned to its owner's hand by `EffectReturnTargetToHandResolve`.
+  - **Face down** (`RESPONSE_NONE`): the card menu's ACTIVATE in the Main Phase (`CanActivateMonsterEffect`), once
+    per turn through `effectUnused`, which chainB clears and `DuelCmd_TurnStart` sets again. The target is the card
+    itself; Book of Moon's `EffectBookOfMoonResolve` turns it to face-down Defense Position (its Equip Cards are
+    destroyed, its counters removed). The CPU uses it while the human controls a monster (`AiWantsMonsterEffect`),
+    so its next Flip Summon has a target.
+- Checked in the source and the build; not tested in an emulator.
+
 ### The CPU chains summon traps to summon triggers (2026-10-28)
 - **Problem.** A monster's own summon trigger (Mobius, Zaborg, Breaker, Sonic Bird, ...) goes on the chain as soon as
   the summon finishes; the summon's own response window (`EventResponse_Request`, where the CPU uses Trap Hole via
