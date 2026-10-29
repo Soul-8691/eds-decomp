@@ -429,6 +429,8 @@ struct BattleZoneCopies {
  * 1 - player in global allocation (ROM: z in r5, 1 - player in r6 in the second block); a block-local z loses
  * r5 to 1 - player.
  */
+void RyuKokkiAfterBattle(int player);   /* mod: src/added_effects.c */
+
 int BattleStage_DestroyMonsters(int player)
 {
     int number;
@@ -708,6 +710,9 @@ int BattleStage_DestroyMonsters(int player)
         } else if (!done)
             BanishBattleDestroyedCard(1 - player, gBattle.defSlot, (u16 *)&gBattle.zones[1 - player]);
     }
+#ifdef HAS_CARD_RYU_KOKKI
+    RyuKokkiAfterBattle(player);    /* added: it destroys a Warrior or Spellcaster it battled (src/added_effects.c) */
+#endif
 #if defined(HAS_CARD_D_D_WARRIOR_LADY) || defined(HAS_CARD_D_D_ASSAILANT) || defined(HAS_CARD_DARK_MAGICIAN_OF_CHAOS)
     /* Added: D.D. Warrior Lady's Yes (and D.D. Assailant) also banishes the monsters that survived the battle. */
     if (gBattle.ddWarriorLady == DD_WARRIOR_LADY_YES) {

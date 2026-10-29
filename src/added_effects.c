@@ -4098,6 +4098,47 @@ int AiPlanForcedAttack(void)
 }
 #endif /* HAS_CARD_BERSERK_GORILLA */
 
+#ifdef HAS_CARD_RYU_KOKKI
+/* ---- Ryu Kokki ----------------------------------------------------------------------------------------------------
+ * "At the end of the Damage Step, if this card battled a Warrior or Spellcaster-Type monster: Destroy that monster."
+ * BattleStage_DestroyMonsters (battle_phase2.c) calls RyuKokkiAfterBattle once the battle's own destruction is queued:
+ * a Ryu Kokki in the battle that survived it (not destroyed, still in its zone, its battle effect not blocked as for
+ * Zone Eater) destroys the other monster by its effect when that one is a Warrior or Spellcaster (its current type,
+ * GetZoneCardStats), was not destroyed by the battle and is still in its zone. Not when D.D. Warrior Lady's Yes
+ * banishes both. Mandatory, so nobody is asked; applied at once, not as a chain link. */
+extern u16 IsBattleEffectBlockedFor(int player) asm("IsBattleEffectBlocked");
+
+void RyuKokkiAfterBattle(int player)
+{
+    int side;
+
+    if (gBattle.direct || gBattle.ddWarriorLady == DD_WARRIOR_LADY_YES)
+        return;
+    for (side = 0; side <= 1; side++) {
+        int who = side ? 1 - player : player, other = 1 - who;
+        int zone = who == player ? gBattle.atkSlot : gBattle.defSlot;
+        int otherZone = other == player ? gBattle.atkSlot : gBattle.defSlot;
+        struct DuelZone *z = ZoneOf(who, zone), *oz = ZoneOf(other, otherZone);
+        struct ZoneCardStats info;
+
+        if (CardNumberOfId(gBattle.side[who].cardId) != CARD_RYU_KOKKI || gBattle.side[who].destroyed
+            || DUEL_CARD_ID(&z->card) != (gBattle.side[who].cardId & CARD_ID_MASK) || IsBattleEffectBlockedFor(who))
+            continue;
+        if (gBattle.side[other].destroyed || DUEL_CARD_ID(&oz->card) == 0
+            || DUEL_CARD_ID(&oz->card) != (gBattle.side[other].cardId & CARD_ID_MASK))
+            continue;
+        GetZoneCardStats(other, otherZone, &info);
+        if (info.type != CARD_TYPE_WARRIOR && info.type != CARD_TYPE_SPELLCASTER)
+            continue;
+        ShowCardEffect(who, gBattle.side[who].cardId);
+        DuelCmd_Push(other ? DUEL_CMD_PLAYER | DUEL_CMD_SET_DESTROYED_BY_OPPONENT_FLAG
+                           : DUEL_CMD_SET_DESTROYED_BY_OPPONENT_FLAG, otherZone, 1, 0);
+        DestroyFieldCardByEffect(other, otherZone);
+        OnCardDestroyedByEffect(who, other, otherZone);
+    }
+}
+#endif /* HAS_CARD_RYU_KOKKI */
+
 #ifdef HAS_CARD_MOBIUS_THE_FROST_MONARCH
 /* ---- Mobius the Frost Monarch -------------------------------------------------------------------------------------
  * "If this card is Tribute Summoned: You can target up to 2 Spells/Traps on the field; destroy them."

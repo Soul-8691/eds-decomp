@@ -556,6 +556,24 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
   - `AiShouldRetreatToDefense` never picks it.
 - Checked in the source and the build; not tested in an emulator.
 
+### Ryu Kokki (2026-10-29)
+- Effect Monster (Level 6, DARK Zombie, 2400/2000): "At the end of the Damage Step, if this card battled a Warrior or
+  Spellcaster-Type monster: Destroy that monster."
+- **Where it runs.** `BattleStage_DestroyMonsters` (battle_phase2.c) calls `RyuKokkiAfterBattle` (added_effects.c)
+  once the battle's own destruction is queued, before D.D. Warrior Lady's survivor banish.
+- **Conditions.** A Ryu Kokki in the battle that survived it (not destroyed, still in its zone, its battle effect not
+  blocked, as for Zone Eater) destroys the other monster when that monster:
+  - is a Warrior or Spellcaster by its current type (`GetZoneCardStats`, so DNA Surgery counts);
+  - was not destroyed by the battle;
+  - is still in its zone.
+  Either side can be Ryu Kokki's: attacker or attacked.
+- **Destruction.** It is by effect, as Mobius's: the destroyed-by-opponent flag, `DestroyFieldCardByEffect`, then
+  `OnCardDestroyedByEffect`. It is mandatory, applied at once (not a chain link), and skipped when D.D. Warrior Lady's
+  Yes banishes both monsters.
+- **Hypothesis:** a Ryu Kokki destroyed by the same battle does not use its effect (it has left the field by the end
+  of the Damage Step). Not checked against a ruling.
+- Checked in the source and the build; not tested in an emulator.
+
 ### Book of Life (2026-10-29)
 - Normal Spell: "Target 1 Zombie monster in your GY and 1 monster in your opponent's GY; Special Summon the first
   target, also banish the second target."

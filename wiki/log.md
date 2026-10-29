@@ -1730,3 +1730,6 @@ updated: 2026-09-29
 
 ## [2026-10-29] progress | Book of Life coded
 - src/added_effects.c EffectBookOfLifePrepare / Resolve and its row; src/effect_target_collect.c two-list case (param 0 own Zombies, 1 opponent monsters). [[added-cards]]. Built (make and make release); not tested in an emulator.
+
+## [2026-10-29] progress | Ryu Kokki coded
+- src/added_effects.c RyuKokkiAfterBattle; src/battle_phase2.c BattleStage_DestroyMonsters calls it. [[added-cards]]. Built (make and make release); not tested in an emulator.
