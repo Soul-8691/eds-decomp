@@ -53,7 +53,10 @@ next to the one before it.
   - Fiber plays Aretos-Tomato Control (Fiber) 80% and GBO-Recruiter Control 20% (`FiberDeck`). Super Robolady was
     added to `config/new_cards.txt` for Tomato Control. The Rare Hunter's Exodia AI flag (ai_deck.c) is now set only
     with his original deck.
-  - The other 8 keep their original duelists' decks for now.
+  - Yata plays Shigeki Kitamura-Tomato Control 50%, ellietincan-Warrior Tomato Control 40% and AlephYa2-Gearfried
+    10% (`YataDeck`, Arkana's slot). Mirage of Nightmare (all three Main Decks) and Dice Jar (Warrior Tomato
+    Control's Side Deck) were added to `config/new_cards.txt` for them; neither effect is coded yet.
+  - The other 7 keep their original duelists' decks for now.
   - Cards in these decks with no coded effect yet: Dark Balter the Terrible, Fiend Skull Dragon, Ryu Senshi (Joey-
     Pegasus Tomato Control's Fusion Deck), Skull Lair and The Last Warrior from Another Planet (Joey-Pegasus Vanilla
     Beat and both Android decks).

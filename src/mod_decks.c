@@ -1260,6 +1260,233 @@ static const struct DeckList *FiberDeck(void)
 }
 #endif
 
+/* The Yata format opponent (Arkana's slot, src/mod_opponents.c): one of three decks per duel (YataDeck): Tomato
+ * Control 50%, Warrior Tomato Control 40%, Gearfried 10% (decks/Shigeki Kitamura-Tomato Control.ydk,
+ * decks/ellietincan-Warrior Tomato Control.ydk, decks/AlephYa2-Gearfried.ydk; main and extra decks). Mirage of
+ * Nightmare (41482598, in all three) and Dice Jar (3549275, Warrior Tomato Control's Side Deck) were added to
+ * config/new_cards.txt for them. */
+#if defined(HAS_CARD_BAZOO_THE_SOUL_EATER) && defined(HAS_CARD_EXILED_FORCE) && defined(HAS_CARD_FIBER_JAR) \
+    && defined(HAS_CARD_SPIRIT_REAPER) && defined(HAS_CARD_YATA_GARASU) && defined(HAS_CARD_ZOMBYRA_THE_DARK) \
+    && defined(HAS_CARD_MIRAGE_OF_NIGHTMARE) && defined(HAS_CARD_SCAPEGOAT) && defined(HAS_CARD_TORRENTIAL_TRIBUTE) \
+    && defined(HAS_CARD_DARK_BALTER_THE_TERRIBLE) && defined(HAS_CARD_FIEND_SKULL_DRAGON) \
+    && defined(HAS_CARD_RYU_SENSHI) && defined(HAS_CARD_THOUSAND_EYES_RESTRICT) \
+    && defined(HAS_CARD_AIRKNIGHT_PARSHATH) && defined(HAS_CARD_DON_ZALOOG) && defined(HAS_CARD_GOBLIN_ATTACK_FORCE) \
+    && defined(HAS_CARD_GUARDIAN_SPHINX) && defined(HAS_CARD_KYCOO_THE_GHOST_DESTROYER) \
+    && defined(HAS_CARD_SPEAR_DRAGON) && defined(HAS_CARD_CREATURE_SWAP) && defined(HAS_CARD_MAGIC_CYLINDER)
+#define MOD_YATA_TOMATO_CONTROL 1
+static const u16 sYataTomatoControl[] = {
+    /* Monsters (16) */
+    CARD_BAZOO_THE_SOUL_EATER,
+    CARD_EXILED_FORCE,
+    CARD_FIBER_JAR,
+    CARD_JINZO,
+    CARD_MAGICIAN_OF_FAITH,
+    X3(CARD_MYSTIC_TOMATO),
+    CARD_SANGAN,
+    CARD_SINISTER_SERPENT,
+    CARD_SPIRIT_REAPER,
+    CARD_WITCH_OF_THE_BLACK_FOREST,
+    CARD_YATA_GARASU,
+    CARD_ZOMBYRA_THE_DARK,
+    X2(CARD_GEMINI_ELF),
+    /* Spells (18) */
+    CARD_CHANGE_OF_HEART,
+    CARD_CONFISCATION,
+    CARD_DARK_HOLE,
+    CARD_DELINQUENT_DUO,
+    CARD_GRACEFUL_CHARITY,
+    CARD_HARPIES_FEATHER_DUSTER,
+    CARD_HEAVY_STORM,
+    CARD_MIRAGE_OF_NIGHTMARE,
+    CARD_MONSTER_REBORN,
+    X3(CARD_MYSTICAL_SPACE_TYPHOON),
+    CARD_POT_OF_GREED,
+    CARD_PREMATURE_BURIAL,
+    CARD_RAIGEKI,
+    CARD_SCAPEGOAT,
+    CARD_SNATCH_STEAL,
+    CARD_THE_FORCEFUL_SENTRY,
+    /* Traps (6) */
+    CARD_CALL_OF_THE_HAUNTED,
+    CARD_IMPERIAL_ORDER,
+    CARD_MIRROR_FORCE,
+    CARD_BELL_OF_DESTRUCTION,
+    X2(CARD_TORRENTIAL_TRIBUTE),
+    /* Fusion Deck (15) */
+    X3(CARD_DARK_BALTER_THE_TERRIBLE),
+    X3(CARD_FIEND_SKULL_DRAGON),
+    X3(CARD_GILTIA_THE_D_KNIGHT),
+    X3(CARD_RYU_SENSHI),
+    X3(CARD_THOUSAND_EYES_RESTRICT),
+};
+STATIC_ASSERT(ARRAY_COUNT(sYataTomatoControl) == 40 + 15, YataTomatoControlSize);
+static const struct DeckList sYataTomatoControlList = { sYataTomatoControl, ARRAY_COUNT(sYataTomatoControl), 0 };
+/* Shigeki Kitamura-Tomato Control.ydk's Side Deck (15). */
+static const u16 sYataTomatoControlSide[] = {
+    CARD_AIRKNIGHT_PARSHATH,
+    CARD_CANNON_SOLDIER,
+    CARD_DON_ZALOOG,
+    CARD_GOBLIN_ATTACK_FORCE,
+    CARD_GUARDIAN_SPHINX,
+    CARD_KYCOO_THE_GHOST_DESTROYER,
+    CARD_SPEAR_DRAGON,
+    CARD_GEMINI_ELF,
+    CARD_CREATURE_SWAP,
+    X2(CARD_NOBLEMAN_OF_CROSSOUT),
+    CARD_PAINFUL_CHOICE,
+    CARD_SWORDS_OF_REVEALING_LIGHT,
+    CARD_CEASEFIRE,
+    CARD_MAGIC_CYLINDER,
+};
+STATIC_ASSERT(ARRAY_COUNT(sYataTomatoControlSide) == 15, YataTomatoControlSideSize);
+#endif
+
+#if defined(HAS_CARD_DON_ZALOOG) && defined(HAS_CARD_EXILED_FORCE) && defined(HAS_CARD_FIBER_JAR) \
+    && defined(HAS_CARD_INJECTION_FAIRY_LILY) && defined(HAS_CARD_SPIRIT_REAPER) && defined(HAS_CARD_YATA_GARASU) \
+    && defined(HAS_CARD_MIRAGE_OF_NIGHTMARE) && defined(HAS_CARD_REINFORCEMENT_OF_THE_ARMY) \
+    && defined(HAS_CARD_TORRENTIAL_TRIBUTE) && defined(HAS_CARD_RYU_SENSHI) && defined(HAS_CARD_ST_JOAN) \
+    && defined(HAS_CARD_BAZOO_THE_SOUL_EATER) && defined(HAS_CARD_DICE_JAR) && defined(HAS_CARD_MARAUDING_CAPTAIN) \
+    && defined(HAS_CARD_TRAP_DUSTSHOOT)
+#define MOD_YATA_WARRIOR_TOMATO_CONTROL 1
+static const u16 sYataWarriorTomatoControl[] = {
+    /* Monsters (16) */
+    X2(CARD_DON_ZALOOG),
+    CARD_EXILED_FORCE,
+    CARD_FIBER_JAR,
+    CARD_INJECTION_FAIRY_LILY,
+    CARD_JINZO,
+    X2(CARD_MAGICIAN_OF_FAITH),
+    X3(CARD_MYSTIC_TOMATO),
+    CARD_SANGAN,
+    CARD_SINISTER_SERPENT,
+    CARD_SPIRIT_REAPER,
+    CARD_WITCH_OF_THE_BLACK_FOREST,
+    CARD_YATA_GARASU,
+    /* Spells (17) */
+    CARD_CONFISCATION,
+    CARD_DARK_HOLE,
+    CARD_DELINQUENT_DUO,
+    CARD_GRACEFUL_CHARITY,
+    CARD_HARPIES_FEATHER_DUSTER,
+    CARD_MIRAGE_OF_NIGHTMARE,
+    CARD_MONSTER_REBORN,
+    X3(CARD_MYSTICAL_SPACE_TYPHOON),
+    CARD_NOBLEMAN_OF_CROSSOUT,
+    CARD_PAINFUL_CHOICE,
+    CARD_POT_OF_GREED,
+    CARD_RAIGEKI,
+    X2(CARD_REINFORCEMENT_OF_THE_ARMY),
+    CARD_THE_FORCEFUL_SENTRY,
+    /* Traps (7) */
+    CARD_CALL_OF_THE_HAUNTED,
+    CARD_IMPERIAL_ORDER,
+    CARD_MIRROR_FORCE,
+    CARD_BELL_OF_DESTRUCTION,
+    X3(CARD_TORRENTIAL_TRIBUTE),
+    /* Fusion Deck (15) */
+    X3(CARD_B_SKULL_DRAGON),
+    X3(CARD_FLAME_SWORDSMAN),
+    X3(CARD_GAIA_THE_DRAGON_CHAMPION),
+    X3(CARD_RYU_SENSHI),
+    X3(CARD_ST_JOAN),
+};
+STATIC_ASSERT(ARRAY_COUNT(sYataWarriorTomatoControl) == 40 + 15, YataWarriorTomatoControlSize);
+static const struct DeckList sYataWarriorTomatoControlList = { sYataWarriorTomatoControl,
+                                                               ARRAY_COUNT(sYataWarriorTomatoControl), 0 };
+/* ellietincan-Warrior Tomato Control.ydk's Side Deck (15). */
+static const u16 sYataWarriorTomatoControlSide[] = {
+    CARD_BAZOO_THE_SOUL_EATER,
+    CARD_CYBER_JAR,
+    CARD_DICE_JAR,
+    X2(CARD_MARAUDING_CAPTAIN),
+    CARD_MORPHING_JAR,
+    X2(CARD_MORPHING_JAR_2),
+    X2(CARD_GEMINI_ELF),
+    CARD_CHANGE_OF_HEART,
+    CARD_HEAVY_STORM,
+    CARD_PREMATURE_BURIAL,
+    CARD_SNATCH_STEAL,
+    CARD_TRAP_DUSTSHOOT,
+};
+STATIC_ASSERT(ARRAY_COUNT(sYataWarriorTomatoControlSide) == 15, YataWarriorTomatoControlSideSize);
+#endif
+
+#if defined(HAS_CARD_DON_ZALOOG) && defined(HAS_CARD_EXILED_FORCE) && defined(HAS_CARD_GEARFRIED_THE_IRON_KNIGHT) \
+    && defined(HAS_CARD_INJECTION_FAIRY_LILY) && defined(HAS_CARD_ZOMBYRA_THE_DARK) \
+    && defined(HAS_CARD_MIRAGE_OF_NIGHTMARE) && defined(HAS_CARD_REINFORCEMENT_OF_THE_ARMY) \
+    && defined(HAS_CARD_BLAST_WITH_CHAIN) && defined(HAS_CARD_MAGIC_DRAIN) \
+    && defined(HAS_CARD_THOUSAND_EYES_RESTRICT) && defined(HAS_CARD_GRAVEKEEPERS_SPY) \
+    && defined(HAS_CARD_KING_TIGER_WANGHU) && defined(HAS_CARD_BOOK_OF_MOON)
+#define MOD_YATA_GEARFRIED 1
+static const u16 sYataGearfried[] = {
+    /* Monsters (12) */
+    X2(CARD_DON_ZALOOG),
+    CARD_EXILED_FORCE,
+    X3(CARD_GEARFRIED_THE_IRON_KNIGHT),
+    CARD_INJECTION_FAIRY_LILY,
+    CARD_WITCH_OF_THE_BLACK_FOREST,
+    CARD_ZOMBYRA_THE_DARK,
+    X3(CARD_GEMINI_ELF),
+    /* Spells (18) */
+    CARD_CONFISCATION,
+    CARD_DARK_HOLE,
+    CARD_DELINQUENT_DUO,
+    CARD_FISSURE,
+    CARD_GRACEFUL_CHARITY,
+    CARD_HARPIES_FEATHER_DUSTER,
+    CARD_MIRAGE_OF_NIGHTMARE,
+    CARD_MONSTER_REBORN,
+    X3(CARD_MYSTICAL_SPACE_TYPHOON),
+    CARD_NOBLEMAN_OF_CROSSOUT,
+    CARD_POT_OF_GREED,
+    CARD_RAIGEKI,
+    X2(CARD_REINFORCEMENT_OF_THE_ARMY),
+    CARD_SNATCH_STEAL,
+    CARD_THE_FORCEFUL_SENTRY,
+    /* Traps (10) */
+    X3(CARD_BLAST_WITH_CHAIN),
+    CARD_CALL_OF_THE_HAUNTED,
+    CARD_IMPERIAL_ORDER,
+    X2(CARD_MAGIC_DRAIN),
+    CARD_MIRROR_FORCE,
+    CARD_MIRROR_WALL,
+    CARD_BELL_OF_DESTRUCTION,
+    /* Fusion Deck (2) */
+    X2(CARD_THOUSAND_EYES_RESTRICT),
+};
+STATIC_ASSERT(ARRAY_COUNT(sYataGearfried) == 40 + 2, YataGearfriedSize);
+static const struct DeckList sYataGearfriedList = { sYataGearfried, ARRAY_COUNT(sYataGearfried), 0 };
+/* AlephYa2-Gearfried.ydk's Side Deck (15). */
+static const u16 sYataGearfriedSide[] = {
+    X2(CARD_ELECTRIC_SNAKE),
+    X3(CARD_GRAVEKEEPERS_SPY),
+    CARD_JINZO,
+    X3(CARD_KING_TIGER_WANGHU),
+    CARD_BOOK_OF_MOON,
+    CARD_CHANGE_OF_HEART,
+    CARD_FISSURE,
+    CARD_HEAVY_STORM,
+    CARD_NOBLEMAN_OF_CROSSOUT,
+    CARD_DUST_TORNADO,
+};
+STATIC_ASSERT(ARRAY_COUNT(sYataGearfriedSide) == 15, YataGearfriedSideSize);
+#endif
+
+#if defined(MOD_YATA_TOMATO_CONTROL) && defined(MOD_YATA_WARRIOR_TOMATO_CONTROL) && defined(MOD_YATA_GEARFRIED)
+#define MOD_YATA_DECKS 1
+/* The Yata opponent's deck for this duel: Tomato Control 5 in 10, Warrior Tomato Control 4 in 10, Gearfried 1 in 10. */
+static const struct DeckList *YataDeck(void)
+{
+    u32 roll = (u32)Random() % 10;
+
+    if (roll < 5)
+        return &sYataTomatoControlList;
+    if (roll < 9)
+        return &sYataWarriorTomatoControlList;
+    return &sYataGearfriedList;
+}
+#endif
+
 /* The replacement deck of opponent `opponent` (enum DuelistId), or NULL to keep the original: a new pick (the
  * weighted random ones roll again); GetOpponentDeckOverride keeps it for the match. */
 static const struct DeckList *PickOpponentDeckOverride(int opponent)
@@ -1278,6 +1505,10 @@ static const struct DeckList *PickOpponentDeckOverride(int opponent)
 #ifdef MOD_FIBER_DECKS
     case DUELIST_RARE_HUNTER:           /* the Fiber format opponent */
         return FiberDeck();
+#endif
+#ifdef MOD_YATA_DECKS
+    case DUELIST_ARKANA:                /* the Yata format opponent */
+        return YataDeck();
 #endif
 #ifdef MOD_JOEY_PEGASUS_DECKS
     case DUELIST_WEEVIL:                /* the Joey-Pegasus format opponent */
@@ -1349,6 +1580,9 @@ static const char sNameJoeyPegasusTomato[] = "AJTBLS-Tomato Control";
 static const char sNameJoeyPegasusVanilla[] = "ellietincan-Vanilla Beat (JP)";
 static const char sNameFiberTomato[] = "Aretos-Tomato Control (Fiber)";
 static const char sNameFiberRecruiter[] = "GBO-Recruiter Control";
+static const char sNameYataTomato[] = "Shigeki Kitamura-Tomato Control";
+static const char sNameYataWarriorTomato[] = "ellietincan-Warrior Tomato Control";
+static const char sNameYataGearfried[] = "AlephYa2-Gearfried";
 static const char sNameChaosTurbo[] = "LR-Chaos Turbo";
 static const char sNameWarrior[] = "sdlkilla-Warrior";
 static const char sNameGoatControl[] = "geistD-Goat Control";
@@ -1393,6 +1627,15 @@ static const struct RecipePreset sRecipePresets[] = {
 #endif
 #ifdef MOD_FIBER_RECRUITER_CONTROL
     { sNameFiberRecruiter, &sFiberRecruiterControlList, sFiberRecruiterControlSide, ARRAY_COUNT(sFiberRecruiterControlSide) },
+#endif
+#ifdef MOD_YATA_TOMATO_CONTROL
+    { sNameYataTomato, &sYataTomatoControlList, sYataTomatoControlSide, ARRAY_COUNT(sYataTomatoControlSide) },
+#endif
+#ifdef MOD_YATA_WARRIOR_TOMATO_CONTROL
+    { sNameYataWarriorTomato, &sYataWarriorTomatoControlList, sYataWarriorTomatoControlSide, ARRAY_COUNT(sYataWarriorTomatoControlSide) },
+#endif
+#ifdef MOD_YATA_GEARFRIED
+    { sNameYataGearfried, &sYataGearfriedList, sYataGearfriedSide, ARRAY_COUNT(sYataGearfriedSide) },
 #endif
 #ifdef MOD_RED_DECK
     { sNameChaosTurbo, &sRedDeckList, NULL, 0 },

@@ -29,7 +29,7 @@ Formats unlock in this order; in the release build each takes 10 wins to open th
 | 5 | Android | April 2003 | Tomato Control 80%, Vanilla Beat 20% |
 | 6 | Joey-Pegasus | May 2003 | Tomato Control 80%, Vanilla Beat 20% |
 | 7 | Fiber | July 2003 | Tomato Control 80%, Recruiter Control 20% |
-| 8 | Yata | August 2003 | Vanilla (unchanged) |
+| 8 | Yata | August 2003 | Tomato Control 50%, Warrior Tomato Control 40%, Gearfried 10% |
 | 9 | Scientist | November 2003 | Vanilla (unchanged) |
 | 10 | Vampire | February 2004 | Vanilla (unchanged) |
 | 11 | Chaos | April 2004 | Vanilla (unchanged) |
@@ -1030,7 +1030,212 @@ Banlist: July 2003.
 
 </details>
 
-### 8-15. Yata to Reaper
+### 8. Yata
+
+Banlist: August 2003.
+
+<details>
+<summary>Tomato Control: 50% (Shigeki Kitamura-Tomato Control) (40 cards + 15 Fusion Deck + 15 Side Deck)</summary>
+
+**Monsters (16)**
+
+- 1x Bazoo the Soul-Eater
+- 1x Exiled Force
+- 1x Fiber Jar
+- 1x Jinzo
+- 1x Magician of Faith
+- 3x Mystic Tomato
+- 1x Sangan
+- 1x Sinister Serpent
+- 1x Spirit Reaper
+- 1x Witch of the Black Forest
+- 1x Yata-Garasu
+- 1x Zombyra the Dark
+- 2x Gemini Elf
+
+**Spells (18)**
+
+- 1x Change of Heart
+- 1x Confiscation
+- 1x Dark Hole
+- 1x Delinquent Duo
+- 1x Graceful Charity
+- 1x Harpie's Feather Duster
+- 1x Heavy Storm
+- 1x Mirage of Nightmare
+- 1x Monster Reborn
+- 3x Mystical Space Typhoon
+- 1x Pot of Greed
+- 1x Premature Burial
+- 1x Raigeki
+- 1x Scapegoat
+- 1x Snatch Steal
+- 1x The Forceful Sentry
+
+**Traps (6)**
+
+- 1x Call Of The Haunted
+- 1x Imperial Order
+- 1x Mirror Force
+- 1x Bell of Destruction
+- 2x Torrential Tribute
+
+**Fusion Deck (15)**
+
+- 3x Dark Balter the Terrible
+- 3x Fiend Skull Dragon
+- 3x Giltia the D. Knight
+- 3x Ryu Senshi
+- 3x Thousand-Eyes Restrict
+
+**Side Deck (15)**
+
+- 1x Airknight Parshath
+- 1x Cannon Soldier
+- 1x Don Zaloog
+- 1x Goblin Attack Force
+- 1x Guardian Sphinx
+- 1x Kycoo the Ghost Destroyer
+- 1x Spear Dragon
+- 1x Gemini Elf
+- 1x Creature Swap
+- 2x Nobleman of Crossout
+- 1x Painful Choice
+- 1x Swords of Revealing Light
+- 1x Ceasefire
+- 1x Magic Cylinder
+
+</details>
+
+<details>
+<summary>Warrior Tomato Control: 40% (ellietincan-Warrior Tomato Control) (40 cards + 15 Fusion Deck + 15 Side Deck)</summary>
+
+**Monsters (16)**
+
+- 2x Don Zaloog
+- 1x Exiled Force
+- 1x Fiber Jar
+- 1x Injection Fairy Lily
+- 1x Jinzo
+- 2x Magician of Faith
+- 3x Mystic Tomato
+- 1x Sangan
+- 1x Sinister Serpent
+- 1x Spirit Reaper
+- 1x Witch of the Black Forest
+- 1x Yata-Garasu
+
+**Spells (17)**
+
+- 1x Confiscation
+- 1x Dark Hole
+- 1x Delinquent Duo
+- 1x Graceful Charity
+- 1x Harpie's Feather Duster
+- 1x Mirage of Nightmare
+- 1x Monster Reborn
+- 3x Mystical Space Typhoon
+- 1x Nobleman of Crossout
+- 1x Painful Choice
+- 1x Pot of Greed
+- 1x Raigeki
+- 2x Reinforcement of the Army
+- 1x The Forceful Sentry
+
+**Traps (7)**
+
+- 1x Call Of The Haunted
+- 1x Imperial Order
+- 1x Mirror Force
+- 1x Bell of Destruction
+- 3x Torrential Tribute
+
+**Fusion Deck (15)**
+
+- 3x B. Skull Dragon
+- 3x Flame Swordsman
+- 3x Gaia the Dragon Champion
+- 3x Ryu Senshi
+- 3x St. Joan
+
+**Side Deck (15)**
+
+- 1x Bazoo the Soul-Eater
+- 1x Cyber Jar
+- 1x Dice Jar
+- 2x Marauding Captain
+- 1x Morphing Jar
+- 2x Morphing Jar #2
+- 2x Gemini Elf
+- 1x Change of Heart
+- 1x Heavy Storm
+- 1x Premature Burial
+- 1x Snatch Steal
+- 1x Trap Dustshoot
+
+</details>
+
+<details>
+<summary>Gearfried: 10% (AlephYa2-Gearfried) (40 cards + 2 Fusion Deck + 15 Side Deck)</summary>
+
+**Monsters (12)**
+
+- 2x Don Zaloog
+- 1x Exiled Force
+- 3x Gearfried the Iron Knight
+- 1x Injection Fairy Lily
+- 1x Witch of the Black Forest
+- 1x Zombyra the Dark
+- 3x Gemini Elf
+
+**Spells (18)**
+
+- 1x Confiscation
+- 1x Dark Hole
+- 1x Delinquent Duo
+- 1x Fissure
+- 1x Graceful Charity
+- 1x Harpie's Feather Duster
+- 1x Mirage of Nightmare
+- 1x Monster Reborn
+- 3x Mystical Space Typhoon
+- 1x Nobleman of Crossout
+- 1x Pot of Greed
+- 1x Raigeki
+- 2x Reinforcement of the Army
+- 1x Snatch Steal
+- 1x The Forceful Sentry
+
+**Traps (10)**
+
+- 3x Blast with Chain
+- 1x Call Of The Haunted
+- 1x Imperial Order
+- 2x Magic Drain
+- 1x Mirror Force
+- 1x Mirror Wall
+- 1x Bell of Destruction
+
+**Fusion Deck (2)**
+
+- 2x Thousand-Eyes Restrict
+
+**Side Deck (15)**
+
+- 2x Electric Snake
+- 3x Gravekeeper's Spy
+- 1x Jinzo
+- 3x King Tiger Wanghu
+- 1x Book of Moon
+- 1x Change of Heart
+- 1x Fissure
+- 1x Heavy Storm
+- 1x Nobleman of Crossout
+- 1x Dust Tornado
+
+</details>
+
+### 9-15. Scientist to Reaper
 
 Vanilla (unchanged): these opponents still use the original game's decks.
 

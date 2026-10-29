@@ -1325,6 +1325,8 @@ enum CardNumber {
     CARD_NIGHTMARES_STEELCAGE = 1600,                     /* id 1156, added card */
     CARD_CYBER_TWIN_DRAGON = 1601,                        /* id 1157, added card */
     CARD_CYBER_END_DRAGON = 1602,                         /* id 1158, added card */
+    CARD_MIRAGE_OF_NIGHTMARE = 1603,                      /* id 1159, added card */
+    CARD_DICE_JAR = 1604,                                 /* id 1160, added card */
     CARD_SHEEP_TOKEN = 1922,                              /* id 1110, added card */
     /* ---- end of the added cards ---- */
 };

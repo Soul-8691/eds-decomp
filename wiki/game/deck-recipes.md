@@ -4,7 +4,7 @@ type: game
 status: draft
 confidence: medium
 sources: [rom-analysis]
-updated: 2026-10-28
+updated: 2026-10-29
 ---
 # Deck Recipes (mod)
 
@@ -26,8 +26,8 @@ An eighth main-menu item added by this build (`src/mod_recipes.c`, a `@farcode`/
   - `MainMenu_Init` writes the label to tiles 0x200-0x23F, the two tile rows after the 0x4000-byte sheet.
 
 ## Preset recipes
-The SRAM area is set up on the first visit (and after a New Game) with recipes 01-19 from `GetRecipePreset` (src/mod_decks.c). These are the
-mod's deck tables, named after their .ydk files. The 16 format presets (01-16) carry the .ydk's Side Deck too
+The SRAM area is set up on the first visit (and after a New Game) with recipes 01-22 from `GetRecipePreset` (src/mod_decks.c). These are the
+mod's deck tables, named after their .ydk files. The 19 format presets (01-19) carry the .ydk's Side Deck too
 (`s<Deck>Side`, passed by `GetRecipePreset` and put in the recipe's side list by `PresetToBuf`), and every one
 has its .ydk's Extra Deck as its Fusion Deck. Checked against the .ydk files (passcodes mapped through
 assets/cards/passwords.csv and build/new_cards.tsv): identical, except Gradius' Option, left out of GBO-Recruiter
@@ -52,9 +52,15 @@ Control's Side Deck (4-Starred Ladybug of Doom is an added card now, [[added-car
 | 14 | ellietincan-Vanilla Beat (JP) | the Joey-Pegasus opponent (20%) |
 | 15 | Aretos-Tomato Control (Fiber) | the Fiber opponent (80%) |
 | 16 | GBO-Recruiter Control | the Fiber opponent (20%) |
-| 17 | LR-Chaos Turbo | Tea, the Chaos Turbo deck opponent |
-| 18 | sdlkilla-Warrior | the Warrior deck opponent |
-| 19 | geistD-Goat Control | the Goat Control deck opponent |
+| 17 | Shigeki Kitamura-Tomato Control | the Yata opponent (50%) |
+| 18 | ellietincan-Warrior Tomato Control | the Yata opponent (40%) |
+| 19 | AlephYa2-Gearfried | the Yata opponent (10%) |
+| 20 | LR-Chaos Turbo | Tea, the Chaos Turbo deck opponent |
+| 21 | sdlkilla-Warrior | the Warrior deck opponent |
+| 22 | geistD-Goat Control | the Goat Control deck opponent |
+
+"ellietincan-Warrior Tomato Control" is 34 characters, so the slot stores the first 31 (`RECIPE_NAME_SIZE` 32), and
+the list row shows 26 and "..".
 
 - Fusion Monsters in a table go to the recipe's Fusion Deck. There are no Side Decks, as with the opponents' decks.
 - A table that this build leaves out (its cards aren't all in the card list) is skipped.
