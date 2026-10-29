@@ -87,6 +87,8 @@ ENGINE_NUMBERS = {
                                     # itself included (CalcZoneCardStats; changed to count the Field Spell too)
     'Gearfried the Iron Knight': 1351,  # key 1351: EquipCard destroys an Equip put on it (and the monster too for
                                     # Premature Burial); Snatch Steal cannot target it
+    'The Fiend Megacyber': 1350,    # key 1350: Special Summoned from the hand while the opponent has 2 or more monsters
+                                    # more (CanSummonFromHand, the hand menu, the summon steps)
 }
 
 # YGOPRODeck race -> EDS monster type (gCardTypeNames), attribute -> EDS attribute, Spell/Trap race -> subtype.

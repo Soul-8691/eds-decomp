@@ -1862,3 +1862,6 @@ updated: 2026-09-29
 
 ## [2026-10-29] progress | Marauding Captain coded
 - src/added_effects.c ModAttackTargetLocked, EffectMaraudingCaptainPrepare / Resolve and its row, the Normal Summon trigger, the hand list; src/card_menu_input.c (the human's target pick) and src/ai_picks.c (AiFindAttackTarget) ask ModAttackTargetLocked; src/summon_action.c guard. Release .text 0x80548. [[added-cards]]. Built (make and make release); not tested in an emulator.
+
+## [2026-10-29] progress | The Fiend Megacyber mapped to effect key 1350
+- tools/newcards.py ENGINE_NUMBERS The Fiend Megacyber: 1350; src/added_effects.c AiSpecialSummonCyberDragon also Special Summons Megacyber for the CPU; include/constants/cards.h regenerated. [[added-cards]]. Built (make and make release); not tested in an emulator.

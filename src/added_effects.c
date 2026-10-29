@@ -5200,27 +5200,39 @@ int CanCyberDragonSpecialSummon(int player)
            && CanSpecialSummon(player);
 }
 
+#endif /* HAS_CARD_CYBER_DRAGON */
+
+/* The CPU's Special Summons from the hand by their own rules, first thing in its Main Phase (AiStepMainPhase, before
+ * it picks a Normal Summon, which would change the monster counts): Cyber Dragon (only the human controls a monster)
+ * and The Fiend Megacyber (key 1350: the human controls 2 or more monsters more), in Attack Position. 1 if it queued
+ * one. */
 int AiSpecialSummonCyberDragon(void)
 {
     struct DuelPlayer *p = &gDuelPlayers[AI_PLAYER];
     int i;
 
-    if (!CanCyberDragonSpecialSummon(AI_PLAYER))
+    if (CountFreeMonsterZones(AI_PLAYER) == 0 || !CanSpecialSummon(AI_PLAYER))
         return 0;
     for (i = 0; i < p->handCount; i++) {
-        if (CardNumberOfId(DUEL_CARD_ID(&p->hand[i])) == CARD_CYBER_DRAGON) {
+        u16 number = CardNumberOfId(DUEL_CARD_ID(&p->hand[i]));
+        int ok = 0;
+
+#ifdef HAS_CARD_CYBER_DRAGON
+        if (number == CARD_CYBER_DRAGON)
+            ok = CanCyberDragonSpecialSummon(AI_PLAYER);
+#endif
+#ifdef HAS_CARD_THE_FIEND_MEGACYBER
+        if (number == CARD_THE_FIEND_MEGACYBER)
+            ok = CountMonsters(AI_PLAYER) + 1 < CountMonsters(AI_HUMAN);
+#endif
+        if (ok) {
             QueueSpecialSummonFromHand(AI_PLAYER, i, FindFreeMonsterZone(AI_PLAYER), 0, 1);
             return 1;
         }
     }
     return 0;
 }
-#else
-int AiSpecialSummonCyberDragon(void)
-{
-    return 0;
-}
-#endif /* HAS_CARD_CYBER_DRAGON */
+
 
 /* ---- The CPU counts the ATK boosts it will get when it judges positions -------------------------------------------
  * When the CPU chooses Attack or Defense (the summon simulations, the position-change step and AiShouldRetreatToDefense)

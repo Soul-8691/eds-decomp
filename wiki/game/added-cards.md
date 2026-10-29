@@ -933,6 +933,22 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
 - The other added cards keep their IDs; their card numbers after it move down one.
 - Checked in the source and the build; not tested in an emulator.
 
+### The Fiend Megacyber (2026-10-29)
+- Effect Monster (Level 6, DARK Warrior, 2200/1200). The fetched text: "If your opponent controls at least 2 more
+  monsters than you do, you can Special Summon this card (from your hand)."
+- **The engine already has it** as effect key 1350 (no EDS card): `ENGINE_NUMBERS` gives the card that number (ID 1055
+  = 1350), as for Gearfried the Iron Knight. What key 1350 does, all in matched code:
+  - `CanSummonFromHand` (summon_checks.c) allows it when `CountMonsters(player) + 1 < CountMonsters(opponent)` with a
+    free zone, or with a Tribute;
+  - the hand menu (card_command_menu.c) adds the Special Summon commands, and drops Summon / Set without a Tribute;
+  - the summon steps (effect_hooks.c) queue `QueueSpecialSummonFromHand`.
+  Cyber Dragon's hooks were modelled on these.
+- **CPU.** The vanilla CPU never used key 1350's summon. `AiSpecialSummonCyberDragon` (added_effects.c), at the start
+  of its Main Phase, now covers both cards: it Special Summons Megacyber in Attack Position while the human controls 2
+  or more monsters more.
+- The other added cards keep their IDs; their card numbers after it move down one.
+- Checked in the source and the build; not tested in an emulator.
+
 ### Marauding Captain (2026-10-29)
 - Effect Monster (Level 3, EARTH Warrior, 1200/400). ID 1008. The fetched text: "Your opponent cannot target Warrior
   monsters for attacks, except this one. When this card is Normal Summoned: You can Special Summon 1 Level 4 or lower
