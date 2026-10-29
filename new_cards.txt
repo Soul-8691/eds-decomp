@@ -88,8 +88,11 @@ Blast with Chain
 Magic Drain
 Spear Dragon
 Guardian Sphinx
-------
 Marauding Captain
+------
+Thestalos the Firestorm Monarch
+Threatening Roar
+Mask of Restrict
 Getsu Fuhma
 Karma Cut
 Draining Shield
@@ -113,11 +116,11 @@ D.D. Designator
 Divine Wrath
 Des Lacooda
 Old Vindictive Magician
-Thestalos the Firestorm Monarch
-Threatening Roar
 Reflect Bounder
 Swarm of Locusts
 Granmarg the Rock Monarch
+The Fiend Megacyber
+Yomi Ship
 Secret Barrel
 Level Limit - Area B
 Ojama Trio

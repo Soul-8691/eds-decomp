@@ -2063,7 +2063,8 @@ static void ApprenticeMagicianPlaceCounter(int player, u16 id)
 #endif /* HAS_CARD_APPRENTICE_MAGICIAN && (Breaker || Skilled Dark Magician) */
 
 #if defined(HAS_CARD_DARK_MAGICIAN_OF_CHAOS) || defined(HAS_CARD_SACRED_CRANE) || defined(HAS_CARD_APPRENTICE_MAGICIAN) \
-    || defined(HAS_CARD_GOLEM_SENTRY) || defined(HAS_CARD_SAND_MOTH) || defined(HAS_CARD_GUARDIAN_SPHINX)
+    || defined(HAS_CARD_GOLEM_SENTRY) || defined(HAS_CARD_SAND_MOTH) || defined(HAS_CARD_GUARDIAN_SPHINX) \
+    || defined(HAS_CARD_MARAUDING_CAPTAIN)
 /* SummonAction_Update calls this for every summon once the monster is in (player, zone): `kind` is the
  * enum SummonActionKind, faceUp its position. */
 #ifdef HAS_CARD_SAND_MOTH
@@ -2081,6 +2082,13 @@ void AddedCardsSummoned(int player, int zone, u16 id, int kind, int faceUp)
 #endif
 #ifdef HAS_CARD_SAND_MOTH
     SandMothSummoned(player, zone, id);
+#endif
+#ifdef HAS_CARD_MARAUDING_CAPTAIN
+    if (((const u16 *)CARD_ID_TO_NUMBER_ADDR)[id & CARD_ID_MASK] == CARD_MARAUDING_CAPTAIN && faceUp
+        && (kind == SUMMON_ACTION_NORMAL || kind == SUMMON_ACTION_NORMAL_CHOOSE_POSITION))
+        Chain_AddPending(TRIGGER_PLAYER(player & 1) | TRIGGER_ZONE(zone) | TRIGGER_KIND(CHAIN_KIND_MONSTER)
+                             | TRIGGER_EVENT(RESPONSE_SUMMONED) | (id & CARD_ID_MASK),
+                         DUEL_LOC(player, zone));
 #endif
 #if defined(HAS_CARD_GOLEM_SENTRY) || defined(HAS_CARD_GUARDIAN_SPHINX)
     if ((0
@@ -4276,6 +4284,103 @@ int AiPlanForcedAttack(void)
 }
 #endif /* HAS_CARD_BERSERK_GORILLA */
 
+/* ---- Marauding Captain --------------------------------------------------------------------------------------------
+ * "Your opponent cannot target Warrior monsters for attacks, except this one. When this card is Normal Summoned: You
+ * can Special Summon 1 Level 4 or lower monster from your hand."
+ *   attacks   ModAttackTargetLocked: a face-up Warrior of `player` that is not Marauding Captain cannot be attacked
+ *             while `player` has a face-up Marauding Captain in another zone (two of them lock each other). The
+ *             human's target pick (BattleStage_SelectTarget, card_menu_input.c) refuses it; the CPU's attack plans
+ *             (AiFindAttackTarget, ai_picks.c) skip it.
+ *   summon    AddedCardsSummoned queues its trigger (RESPONSE_SUMMONED, its zone) for a face-up Normal Summon. The
+ *             human is asked, then picks a Level 4 or lower monster of the hand (ModCollectEffectTargets); the CPU
+ *             always takes its highest ATK one. It leaves the hand and is Special Summoned, its position chosen. */
+int ModAttackTargetLocked(int player, int zone)
+{
+#ifdef HAS_CARD_MARAUDING_CAPTAIN
+    struct DuelZone *z = ZoneOf(player, zone);
+    u16 id = DUEL_CARD_ID(&z->card);
+    int i;
+
+    if (id == 0 || !z->isFaceUp || CardNumberOfId(id) == CARD_MARAUDING_CAPTAIN
+        || CARD_STATS_TYPE(gCardStats[id & CARD_ID_MASK]) != CARD_TYPE_WARRIOR)
+        return 0;
+    for (i = ZONE_MONSTER_0; i <= ZONE_MONSTER_4; i++) {
+        struct DuelZone *c = ZoneOf(player, i);
+
+        if (i != zone && c->isFaceUp && CardNumberOfId(DUEL_CARD_ID(&c->card)) == CARD_MARAUDING_CAPTAIN)
+            return 1;
+    }
+#endif
+    return 0;
+}
+
+#ifdef HAS_CARD_MARAUDING_CAPTAIN
+static const u8 sStrMaraudingCaptainPrompt[] = "Special Summon a Level 4 or lower monster from your hand?";
+
+int CollectEffectTargetsInt(int player, int cardNumber, int param) asm("CollectEffectTargets");
+
+static inline int IsMaraudingCaptainTrigger(struct ChainEntry *link)
+{
+    return link->event == RESPONSE_SUMMONED && link->loc0 == DUEL_LOC(link->player, link->zone);
+}
+
+int EffectMaraudingCaptainPrepare(struct ChainEntry *card, struct ChainEntry *chainLink, u16 fromHand)
+{
+    return !fromHand && IsMaraudingCaptainTrigger(card) && CountFreeMonsterZones(card->player) > 0
+           && CanSpecialSummon(card->player);
+}
+
+int EffectMaraudingCaptainResolve(struct ChainEntry *link, struct ChainEntry *chainedTo)
+{
+    int count, i, best;
+    u32 bestAtk;
+    u16 *picked;
+
+    if (link->negated)
+        return EFFECT_STEP_DONE;
+    switch (gChain.effectStep) {
+    case EFFECT_STEP_START:
+        count = CollectEffectTargetsInt(link->player, CARD_MARAUDING_CAPTAIN, 0);
+        if (count == 0 || CountFreeMonsterZones(link->player) == 0)
+            return EFFECT_STEP_DONE;
+        if (link->player) {
+            best = 0;
+            bestAtk = 0;
+            for (i = 0; i < count; i++) {
+                u32 atk = CARD_STATS_ATK(gCardStats[gCardListView.cards[i] & CARD_ID_MASK]);
+
+                if (i == 0 || atk > bestAtk) {
+                    best = i;
+                    bestAtk = atk;
+                }
+            }
+            gCardListView.cursorRow = 0;
+            gCardListView.top = best;
+            return EFFECT_STEP_3;
+        }
+        TextBoxOpen(TEXTBOX_POS(5, 2), TEXTBOX_SIZE(20, 7), TEXTBOX_FLAGS_DEFAULT, sStrMaraudingCaptainPrompt);
+        TextBoxSetMenu(TEXTBOX_MENU_YES_NO, NULL, NULL);
+        return EFFECT_STEP_2;
+    case EFFECT_STEP_2:
+        if (!gTextBox.result)
+            return EFFECT_STEP_DONE;
+        CardListView_Open(link->player, CARDLIST_AREA_EFFECT_TARGETS, CARD_MARAUDING_CAPTAIN, 0);
+        return EFFECT_STEP_3;
+    case EFFECT_STEP_3:
+        picked = (u16 *)&gCardListView.cards[gCardListView.cursorRow + gCardListView.top];
+        CopyDuelCard(&gChain.effectCard, (struct DuelCard *)picked);
+        DuelCmd_Push(link->player ? DUEL_CMD_PLAYER | DUEL_CMD_REMOVE_CARD_FROM_HAND : DUEL_CMD_REMOVE_CARD_FROM_HAND,
+                     picked[0], picked[1], 0);
+        DuelCmd_Push(link->player ? DUEL_CMD_PLAYER | DUEL_CMD_COMPACT_HAND : DUEL_CMD_COMPACT_HAND, 0, 0, 0);
+        return EFFECT_STEP_4;
+    case EFFECT_STEP_4:
+        QueueSpecialSummonChoosePosition(link->player, &gChain.effectCard, 1, 0);
+        return EFFECT_STEP_END;
+    }
+    return EFFECT_STEP_DONE;
+}
+#endif /* HAS_CARD_MARAUDING_CAPTAIN */
+
 /* ---- The end of each attack ---------------------------------------------------------------------------------------
  * BattleStage_EndAttack (battle_phase3.c) calls ModEndAttack first, once each attack (and its Damage Step) is over:
  *   Injection Fairy Lily   its 3000 ATK go (InjectionFairyLilyEndAttack)
@@ -4351,6 +4456,16 @@ static int IsWeakDragonId(u16 id, int param)
     return CARD_STATS_TYPE(stats) == CARD_TYPE_DRAGON && CARD_STATS_ATK(stats) * CARD_STATS_POINTS_SCALE <= 1500;
 }
 
+/* A monster of Level 4 or lower that can be Special Summoned from the hand: not a Fusion or Ritual monster. */
+static int IsLowLevelMainDeckMonsterId(u16 id, int param)
+{
+    u32 stats = gCardStats[id & CARD_ID_MASK];
+
+    return CARD_STATS_TYPE(stats) <= CARD_TYPE_REPTILE && CARD_STATS_LEVEL(stats) <= 4
+           && CARD_STATS_KIND(stats) != CARD_KIND_FUSION && CARD_STATS_KIND(stats) != CARD_KIND_RITUAL
+           && !IsSpecialSummonOnly(id);
+}
+
 void ModCollectEffectTargets(int player, u16 cardNumber, int param)
 {
     struct DuelPlayer *p = &gDuelPlayers[player & 1];
@@ -4385,6 +4500,11 @@ void ModCollectEffectTargets(int player, u16 cardNumber, int param)
 #ifdef HAS_CARD_MASKED_DRAGON
     case CARD_MASKED_DRAGON:                /* Deck Dragons with 1500 or less ATK */
         ModAddPileTargets(p->deck, p->deckCount, CARDLIST_SRC_DECK, IsWeakDragonId, 0);
+        break;
+#endif
+#ifdef HAS_CARD_MARAUDING_CAPTAIN
+    case CARD_MARAUDING_CAPTAIN:            /* the hand's Level 4 or lower monsters (not Fusion or Ritual ones) */
+        ModAddPileTargets(p->hand, p->handCount, CARDLIST_SRC_HAND, IsLowLevelMainDeckMonsterId, 0);
         break;
 #endif
 #ifdef HAS_CARD_MAGIC_DRAIN
@@ -6635,6 +6755,16 @@ const struct CardEffect gAddedCardEffects[] = {
         NULL,
         NULL,
         EffectNewdoriaChainB,
+    },
+#endif
+#ifdef HAS_CARD_MARAUDING_CAPTAIN
+    {
+        CARD_MARAUDING_CAPTAIN, 0,
+        EffectMaraudingCaptainResolve,
+        NULL,
+        EffectMaraudingCaptainPrepare,
+        NULL,
+        NULL,
     },
 #endif
 #ifdef HAS_CARD_MAGIC_DRAIN

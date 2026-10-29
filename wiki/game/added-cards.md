@@ -933,6 +933,25 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
 - The other added cards keep their IDs; their card numbers after it move down one.
 - Checked in the source and the build; not tested in an emulator.
 
+### Marauding Captain (2026-10-29)
+- Effect Monster (Level 3, EARTH Warrior, 1200/400). ID 1008. The fetched text: "Your opponent cannot target Warrior
+  monsters for attacks, except this one. When this card is Normal Summoned: You can Special Summon 1 Level 4 or lower
+  monster from your hand."
+- **Attack lock.** `ModAttackTargetLocked(player, zone)` (added_effects.c): a face-up Warrior of `player` that is not
+  Marauding Captain can't be attacked while `player` has a face-up Marauding Captain in another zone. So two Captains
+  lock each other, and face-down monsters are open.
+  - The human's pick (`BattleStage_SelectTarget` step 3, card_menu_input.c) refuses it with the error sound, as for
+    key 1326 under Umi.
+  - The CPU's `AiFindAttackTarget` (ai_picks.c) skips it.
+- **Summon trigger.** `AddedCardsSummoned` queues the trigger (`RESPONSE_SUMMONED`, its zone) for a face-up Normal
+  Summon (`SUMMON_ACTION_NORMAL` / `_CHOOSE_POSITION`). The list is the hand's Level 4 or lower monsters, without
+  Fusion, Ritual or Special-Summon-only ones (`ModCollectEffectTargets`).
+  - The human is asked (Yes/No) and picks one; the CPU always takes its highest ATK one.
+  - It leaves the hand (`DUEL_CMD_REMOVE_CARD_FROM_HAND`, `DUEL_CMD_COMPACT_HAND`) and is Special Summoned, its
+    position chosen.
+- Release `.text` 0x08080548.
+- Checked in the source and the build; not tested in an emulator.
+
 ### Guardian Sphinx (2026-10-29)
 - Effect Monster (Level 5, EARTH Rock, 1700/2400). ID 1070. The fetched text: "Once per turn: You can change this card
   to face-down Defense Position. When this card is Flip Summoned: Return all monsters your opponent controls to the

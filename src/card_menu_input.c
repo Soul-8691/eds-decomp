@@ -745,6 +745,8 @@ extern const u8 gStrAskDirectAttack[];    /* 0x0808598C */
  * CARD_RING_OF_MAGNETISM on the defender's side redirects the attack (steps 0, 20),
  * then target selection (2, 3, 10, 11, 30) and messages.
  * Returns 1 when the step hands over to a message, else 0. */
+int ModAttackTargetLocked(int player, int zone);    /* mod: src/added_effects.c */
+
 int BattleStage_SelectTarget(int player)
 {
     u32 pl = player & 1;
@@ -845,7 +847,8 @@ int BattleStage_SelectTarget(int player)
         if (DuelCursor_PickTarget(PICK_PLAYER1(PICK_ANY_MONSTER))) {
             struct DuelZoneTargetView *z = ZONE_PTR_P1(gDuelScreen.selIndex);
             int cid;
-            if ((z->flags6 & 2) && (cid = z->card << 20 >> 20) > 0 && ((const u16 *)CARD_ID_TO_NUMBER_ADDR)[cid & CARD_ID_MASK] == CARD_1326 && GetFaceUpFieldMagicNumber() == CARD_UMI) {
+            if (((z->flags6 & 2) && (cid = z->card << 20 >> 20) > 0 && ((const u16 *)CARD_ID_TO_NUMBER_ADDR)[cid & CARD_ID_MASK] == CARD_1326 && GetFaceUpFieldMagicNumber() == CARD_UMI)
+                || ModAttackTargetLocked(1, gDuelScreen.selIndex)) {    /* added: Marauding Captain */
                 PlaySE(SE_ERROR);
                 return 0;
             }

@@ -1859,3 +1859,6 @@ updated: 2026-09-29
 
 ## [2026-10-29] progress | The CPU plays its Spells after summoning
 - src/ai_steps.c AiStepMainPhase: the summon branches go to AI_MAIN_RESET (monster effects, Spells, Set) instead of ending the step, and Main Phase 2 does too (no step <= 3 test). gAiSteps checked in the ROM; AiStepSetSpellTraps already Sets Traps. README.md. [[added-cards]]. Built (make and make release); not tested in an emulator.
+
+## [2026-10-29] progress | Marauding Captain coded
+- src/added_effects.c ModAttackTargetLocked, EffectMaraudingCaptainPrepare / Resolve and its row, the Normal Summon trigger, the hand list; src/card_menu_input.c (the human's target pick) and src/ai_picks.c (AiFindAttackTarget) ask ModAttackTargetLocked; src/summon_action.c guard. Release .text 0x80548. [[added-cards]]. Built (make and make release); not tested in an emulator.

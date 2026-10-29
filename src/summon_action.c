@@ -500,7 +500,8 @@ u16 SummonAction_Update(void)
                 }
 #endif
 #if defined(HAS_CARD_DARK_MAGICIAN_OF_CHAOS) || defined(HAS_CARD_SACRED_CRANE) || defined(HAS_CARD_APPRENTICE_MAGICIAN) \
-    || defined(HAS_CARD_GOLEM_SENTRY) || defined(HAS_CARD_SAND_MOTH) || defined(HAS_CARD_GUARDIAN_SPHINX)
+    || defined(HAS_CARD_GOLEM_SENTRY) || defined(HAS_CARD_SAND_MOTH) || defined(HAS_CARD_GUARDIAN_SPHINX) \
+    || defined(HAS_CARD_MARAUDING_CAPTAIN)
                 /* added cards: their summon effects (src/added_effects.c) */
                 AddedCardsSummoned(action->player, action->zone, id, (int)SUMMON_FLAGS_KIND(flags), wasFaceUp);
 #endif
