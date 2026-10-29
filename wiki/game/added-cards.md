@@ -440,15 +440,34 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
   destroyed by battle: You can Special Summon 1 Level 2 or lower Spellcaster monster from your Deck in face-down Defense
   Position."
 - **Counter.** `AddedCardsSummoned` (summon_action.c, every summon kind) calls `ApprenticeMagicianPlaceCounter` when it
-  is summoned face up. Of the added cards only Breaker the Magical Warrior holds Spell Counters (max. 1: a
-  `ZONE_LINK_ATK_300_PER_VALUE` link from Breaker's own card ID, so Breaker's cost removes it as its own), so the
-  counter goes on a face-up Breaker without one: the summoner's first, else the opponent's (mandatory); with none,
-  nothing. Applied at once, not as a chain link. Summons that bypass the summon action (from the Deck, tokens) do not
+  is summoned face up. Of the added cards Breaker the Magical Warrior (max. 1: a `ZONE_LINK_ATK_300_PER_VALUE` link
+  from Breaker's own card ID, so Breaker's cost removes it as its own) and Skilled Dark Magician (max. 3, see below)
+  hold Spell Counters, so the counter goes on the first face-up one with room: the summoner's first, else the
+  opponent's (mandatory); with none, nothing. Applied at once, not as a chain link. Summons that bypass the summon action (from the Deck, tokens) do not
   trigger it.
 - **Battle.** A floater like Pyramid Turtle: the `SendBattleDestroyedCardToGraveyard` trigger list, a
   `CollectEffectTargets` case (Deck Spellcasters of Level 2 or lower) and `EffectSpecialSummonFromDeckResolve`, which
   for it queues `QueueSpecialSummon(..., faceUp 0, isDefense 1)`: face-down Defense Position. The human is asked
   first; the CPU takes `AiPickCardListEntry`'s pick.
+- Checked in the source and the build; not tested in an emulator.
+
+### Skilled Dark Magician (2026-10-28)
+- Effect Monster (Level 4, DARK Spellcaster, 1900/1700). The fetched text: "Each time a Spell Card is activated, place
+  1 Spell Counter on this card when that Spell resolves (max. 3). You can Tribute this card with 3 Spell Counters on
+  it; Special Summon 1 "Dark Magician" from your hand, Deck, or GY."
+- **Counters.** A new link kind, `ZONE_LINK_SPELL_COUNTER` (20, include/constants/duel.h): a link from the card's own
+  ID whose high byte is the count; `card_stats.c` ignores it, and `AddZoneLink` raises the count of an existing link
+  with the same target. `CountSpellCounters` counts it as well as Breaker's kind; `OnMonsterTurnedFaceDown` removes
+  it. `Chain_Resolve` (duel_main.c) calls `ModChainLinkResolved` on entering `RESOLVE_STAGE_NEXT_LINK`, when the
+  link is done and its commands have run (`DuelMainStep` drains the command queue before `Chain_Update`): a Magic
+  card's link that was not negated gives each face-up Skilled Dark Magician on either side with fewer than 3 a
+  counter (with `ShowCardEffect`). Apprentice Magician can place one too. The count is not shown on screen.
+- **Effect.** The card menu's ACTIVATE in the Main Phase (`CanActivateMonsterEffect` in card_command_menu.c): the
+  prepare needs it face up with 3 counters and a Dark Magician (either art) in the hand, Deck or Graveyard (a
+  `CollectEffectTargets` case). The cost (chainA) Tributes it. The resolve, in Elegant Egotist's style: the human
+  picks in the card list; the CPU takes the Graveyard's first, else the Deck's, else the hand's. The card is
+  removed from its pile (compacting the hand), Special Summoned with `QueueSpecialSummonChoosePosition`, and the
+  Deck is shuffled if it came from there. The CPU uses it through `AiPlayAddedCards` whenever it can.
 - Checked in the source and the build; not tested in an emulator.
 
 ### The CPU chains summon traps to summon triggers (2026-10-28)

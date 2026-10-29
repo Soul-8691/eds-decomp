@@ -78,7 +78,8 @@ static inline int CountSpellCounters(int player, int zone)
     int i;
 
     for (i = 0; i < z->numLinks; i++) {
-        if ((u8)z->linkKinds[i] == ZONE_LINK_ATK_300_PER_VALUE && (z->links[i] & CARD_ID_MASK) == id)
+        if (((u8)z->linkKinds[i] == ZONE_LINK_ATK_300_PER_VALUE || (u8)z->linkKinds[i] == ZONE_LINK_SPELL_COUNTER)
+            && (z->links[i] & CARD_ID_MASK) == id)
             return z->linkKinds[i] >> 8;
     }
     return 0;
@@ -713,6 +714,7 @@ int EffectDekoichiResolve(struct ChainEntry *link, struct ChainEntry *chainedTo)
 void OnMonsterTurnedFaceDown(int player, int zone)
 {
     RemoveZoneLink(DUEL_LOC(player, zone), 0, ZONE_LINK_ATK_300_PER_VALUE);
+    RemoveZoneLink(DUEL_LOC(player, zone), DUEL_CARD_ID(&ZoneOf(player, zone)->card), ZONE_LINK_SPELL_COUNTER);
 }
 
 #if defined(HAS_CARD_BOOK_OF_MOON) || defined(HAS_CARD_TSUKUYOMI)
@@ -1843,15 +1845,154 @@ int EffectSacredCraneResolve(struct ChainEntry *link, struct ChainEntry *chained
 }
 #endif /* HAS_CARD_SACRED_CRANE */
 
-#if defined(HAS_CARD_APPRENTICE_MAGICIAN) && defined(HAS_CARD_BREAKER_THE_MAGICAL_WARRIOR)
+#ifdef HAS_CARD_SKILLED_DARK_MAGICIAN
+/* ---- Skilled Dark Magician ----------------------------------------------------------------------------------------
+ * "Each time a Spell Card is activated, place 1 Spell Counter on this card when that Spell resolves (max. 3). You can
+ * Tribute this card with 3 Spell Counters on it; Special Summon 1 "Dark Magician" from your hand, Deck, or GY."
+ *   Counters  a ZONE_LINK_SPELL_COUNTER link from its own card ID (no stat effect; AddZoneLink raises the count of an
+ *             existing one). Chain_Resolve calls ModChainLinkResolved as each link finishes: a Magic card's link that
+ *             was not negated gives every face-up one on the field with fewer than 3 a counter. Apprentice Magician
+ *             can place one too. Turned face down, it loses them (OnMonsterTurnedFaceDown).
+ *   Effect    the card menu's ACTIVATE in the Main Phase (CanActivateMonsterEffect) with 3 counters and a Dark Magician
+ *             in the hand, Deck or Graveyard (CollectEffectTargets). The cost (chainA) Tributes it; the resolve lets
+ *             the human pick the Dark Magician in the card list (the CPU takes the Graveyard's first, then the
+ *             Deck's), removes it from its pile and Special Summons it (shuffling the Deck if it came from there). */
+#define SDM_MAX_COUNTERS 3
+
+int CollectEffectTargetsInt(int player, int cardNumber, int param) asm("CollectEffectTargets");
+
+static const u8 sStrSelectDarkMagician[] = "Select a Dark Magician to Special Summon.";
+
+static inline int IsSkilledDarkMagicianAt(int player, int zone)
+{
+    struct DuelZone *z = ZoneOf(player, zone);
+    u16 id = DUEL_CARD_ID(&z->card);
+
+    return id != 0 && z->isFaceUp
+           && ((const u16 *)CARD_ID_TO_NUMBER_ADDR)[id & CARD_ID_MASK] == CARD_SKILLED_DARK_MAGICIAN;
+}
+
+/* Place 1 counter on the Skilled Dark Magician in (player, zone) if it has fewer than 3; 1 if placed. */
+static int SkilledDarkMagicianAddCounter(int player, int zone)
+{
+    u16 id = DUEL_CARD_ID(&ZoneOf(player, zone)->card) & CARD_ID_MASK;
+
+    if (!IsSkilledDarkMagicianAt(player, zone) || CountSpellCounters(player, zone) >= SDM_MAX_COUNTERS)
+        return 0;
+    QueueAddZoneLink(player, id, DUEL_LOC(player, zone), ZONE_LINK_KIND(ZONE_LINK_SPELL_COUNTER, 1));
+    return 1;
+}
+
+int EffectSkilledDarkMagicianPrepare(struct ChainEntry *card, struct ChainEntry *chainLink, u16 fromHand)
+{
+    if (fromHand || card->event != RESPONSE_NONE || !IsSkilledDarkMagicianAt(card->player, card->zone)
+        || DUEL_CARD_ID(&ZoneOf(card->player, card->zone)->card) != (card->card & CARD_ID_MASK))
+        return 0;
+    return CountSpellCounters(card->player, card->zone) >= SDM_MAX_COUNTERS
+           && CollectEffectTargetsInt(card->player, CARD_SKILLED_DARK_MAGICIAN, 0) > 0;
+}
+
+/* Cost: Tribute this card (its zone is then free for the Dark Magician). */
+int EffectSkilledDarkMagicianChainA(struct ChainEntry *link, struct ChainEntry *prevLink)
+{
+    TributeMonster(link->player, link->zone);
+    return 1;
+}
+
+int EffectSkilledDarkMagicianResolve(struct ChainEntry *link, struct ChainEntry *chainedTo)
+{
+    int count, i;
+
+    if (link->negated)
+        return EFFECT_STEP_DONE;
+    switch (gChain.effectStep) {
+    case EFFECT_STEP_START:
+        count = CollectEffectTargetsInt(link->player, CARD_SKILLED_DARK_MAGICIAN, 0);
+        if (count == 0 || CountFreeMonsterZones(link->player) == 0)
+            return EFFECT_STEP_DONE;
+        if (link->player) {
+            /* the list is hand, Deck, Graveyard: take the Graveyard's first, else the Deck's, else the hand's */
+            int pick = 0;
+
+            for (i = 0; i < count; i++) {
+                if (gCardListView.sources[i] == CARDLIST_SRC_GRAVEYARD) {
+                    pick = i;
+                    break;
+                }
+                if (gCardListView.sources[i] == CARDLIST_SRC_DECK && gCardListView.sources[pick] == CARDLIST_SRC_HAND)
+                    pick = i;
+            }
+            gCardListView.cursorRow = 0;
+            gCardListView.top = pick;
+            return EFFECT_STEP_3;
+        }
+        TextBoxOpen(TEXTBOX_POS(5, 2), TEXTBOX_SIZE(20, 5), TEXTBOX_FLAGS_DEFAULT, sStrSelectDarkMagician);
+        return EFFECT_STEP_2;
+    case EFFECT_STEP_2:
+        CardListView_Open(link->player, CARDLIST_AREA_EFFECT_TARGETS, CARD_SKILLED_DARK_MAGICIAN, 0);
+        return EFFECT_STEP_3;
+    case EFFECT_STEP_3: {
+        /* the picked card word as its two halves (DuelCmd_Push operands) */
+        u16 *picked = (u16 *)&gCardListView.cards[gCardListView.cursorRow + gCardListView.top];
+        u16 cmd;
+
+        switch (gCardListView.sources[gCardListView.cursorRow + gCardListView.top]) {
+        case CARDLIST_SRC_DECK:
+            cmd = DUEL_CMD_REMOVE_CARD_FROM_DECK;
+            break;
+        case CARDLIST_SRC_HAND:
+            cmd = DUEL_CMD_REMOVE_CARD_FROM_HAND;
+            break;
+        default:
+            cmd = DUEL_CMD_REMOVE_CARD_FROM_GRAVEYARD;
+            break;
+        }
+        DuelCmd_Push(link->player ? DUEL_CMD_PLAYER | cmd : cmd, picked[0], picked[1], 0);
+        if (cmd == DUEL_CMD_REMOVE_CARD_FROM_HAND)
+            DuelCmd_Push(link->player ? DUEL_CMD_PLAYER | DUEL_CMD_COMPACT_HAND : DUEL_CMD_COMPACT_HAND, 0, 0, 0);
+        return EFFECT_STEP_4;
+    }
+    case EFFECT_STEP_4:
+        QueueSpecialSummonChoosePosition(link->player,
+            (struct DuelCard *)&gCardListView.cards[gCardListView.top + gCardListView.cursorRow], 1, 0);
+        return EFFECT_STEP_5;
+    case EFFECT_STEP_5:
+        if (gCardListView.sources[gCardListView.top + gCardListView.cursorRow] == CARDLIST_SRC_DECK)
+            DuelCmd_Push(link->player ? DUEL_CMD_PLAYER | DUEL_CMD_SHUFFLE_DECK : DUEL_CMD_SHUFFLE_DECK, 0, 0, 0);
+        return EFFECT_STEP_END;
+    }
+    return EFFECT_STEP_DONE;
+}
+#endif /* HAS_CARD_SKILLED_DARK_MAGICIAN */
+
+/* Chain_Resolve calls this as each chain link finishes resolving (its effect's commands have run). */
+void ModChainLinkResolved(struct ChainEntry *link)
+{
+#ifdef HAS_CARD_SKILLED_DARK_MAGICIAN
+    int player, zone;
+
+    if (link->negated || CARD_STATS_TYPE(gCardStats[link->card & CARD_ID_MASK]) != CARD_TYPE_MAGIC)
+        return;
+    for (player = 0; player <= 1; player++) {
+        for (zone = ZONE_MONSTER_0; zone <= ZONE_MONSTER_4; zone++) {
+            if (SkilledDarkMagicianAddCounter(player, zone))
+                ShowCardEffect(player, DUEL_CARD_ID(&ZoneOf(player, zone)->card));
+        }
+    }
+#endif
+}
+
+#if defined(HAS_CARD_APPRENTICE_MAGICIAN) \
+    && (defined(HAS_CARD_BREAKER_THE_MAGICAL_WARRIOR) || defined(HAS_CARD_SKILLED_DARK_MAGICIAN))
 /* ---- Apprentice Magician ------------------------------------------------------------------------------------------
  * "If this card is Summoned: Target 1 face-up card on the field that you can place a Spell Counter on; place 1 Spell
  * Counter on that target. If this card is destroyed by battle: You can Special Summon 1 Level 2 or lower Spellcaster
  * monster from your Deck in face-down Defense Position."
- *   Counter  AddedCardsSummoned (every summon kind, face up): the only card here that holds Spell Counters is Breaker
- *            the Magical Warrior (max. 1, a ZONE_LINK_ATK_300_PER_VALUE link from its own card ID), so the counter
- *            goes on a face-up Breaker without one: the summoner's first, else the opponent's (the effect is
- *            mandatory); with none, nothing. Applied at once (no chain link).
+ *   Counter  AddedCardsSummoned (every summon kind, face up): the cards here that hold Spell Counters are Breaker
+ *            the Magical Warrior (max. 1, a ZONE_LINK_ATK_300_PER_VALUE link from its own card ID) and Skilled Dark
+ *            Magician (max. 3, ZONE_LINK_SPELL_COUNTER), so the counter goes on the first face-up one with room: the
+ *            summoner's first, else the opponent's (the effect is mandatory); with none, nothing. Applied at once
+ *            (no chain link).
  *   Battle   a floater: its "destroyed in battle" trigger (SendBattleDestroyedCardToGraveyard), the Deck list of
  *            Spellcasters of Level 2 or lower (CollectEffectTargets) and EffectSpecialSummonFromDeckResolve, which
  *            summons it face-down in Defense Position for this card (asked first; the CPU picks its best). */
@@ -1866,6 +2007,7 @@ static void ApprenticeMagicianPlaceCounter(int player, u16 id)
             struct DuelZone *z = ZoneOf(side, zone);
             u16 target = DUEL_CARD_ID(&z->card);
 
+#ifdef HAS_CARD_BREAKER_THE_MAGICAL_WARRIOR
             if (target != 0 && z->isFaceUp
                 && ((const u16 *)CARD_ID_TO_NUMBER_ADDR)[target & CARD_ID_MASK] == CARD_BREAKER_THE_MAGICAL_WARRIOR
                 && CountSpellCounters(side, zone) == 0) {
@@ -1873,10 +2015,17 @@ static void ApprenticeMagicianPlaceCounter(int player, u16 id)
                 QueueAddZoneLink(side, target, DUEL_LOC(side, zone), ZONE_LINK_KIND(ZONE_LINK_ATK_300_PER_VALUE, 1));
                 return;
             }
+#endif
+#ifdef HAS_CARD_SKILLED_DARK_MAGICIAN
+            if (SkilledDarkMagicianAddCounter(side, zone)) {
+                ShowCardEffect(player, id);
+                return;
+            }
+#endif
         }
     }
 }
-#endif /* HAS_CARD_APPRENTICE_MAGICIAN && HAS_CARD_BREAKER_THE_MAGICAL_WARRIOR */
+#endif /* HAS_CARD_APPRENTICE_MAGICIAN && (Breaker || Skilled Dark Magician) */
 
 #if defined(HAS_CARD_DARK_MAGICIAN_OF_CHAOS) || defined(HAS_CARD_SACRED_CRANE) || defined(HAS_CARD_APPRENTICE_MAGICIAN)
 /* SummonAction_Update calls this for every summon once the monster is in (player, zone): `kind` is the
@@ -1886,7 +2035,8 @@ void AddedCardsSummoned(int player, int zone, u16 id, int kind, int faceUp)
 #ifdef HAS_CARD_DARK_MAGICIAN_OF_CHAOS
     DarkMagicianOfChaosSummoned(player, zone, id, kind, faceUp);
 #endif
-#if defined(HAS_CARD_APPRENTICE_MAGICIAN) && defined(HAS_CARD_BREAKER_THE_MAGICAL_WARRIOR)
+#if defined(HAS_CARD_APPRENTICE_MAGICIAN) \
+    && (defined(HAS_CARD_BREAKER_THE_MAGICAL_WARRIOR) || defined(HAS_CARD_SKILLED_DARK_MAGICIAN))
     if (faceUp && ((const u16 *)CARD_ID_TO_NUMBER_ADDR)[id & CARD_ID_MASK] == CARD_APPRENTICE_MAGICIAN)
         ApprenticeMagicianPlaceCounter(player, id);
 #endif
@@ -4708,6 +4858,16 @@ const struct CardEffect gAddedCardEffects[] = {
         NULL,
         NULL,
         EffectNightAssailantChainB,
+    },
+#endif
+#ifdef HAS_CARD_SKILLED_DARK_MAGICIAN
+    {
+        CARD_SKILLED_DARK_MAGICIAN, 0,
+        EffectSkilledDarkMagicianResolve,
+        NULL,
+        EffectSkilledDarkMagicianPrepare,
+        EffectSkilledDarkMagicianChainA,
+        NULL,
     },
 #endif
 #ifdef HAS_CARD_EXILED_FORCE

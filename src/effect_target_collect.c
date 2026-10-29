@@ -768,6 +768,34 @@ u16 CollectEffectTargets(int player, u16 cardNumber, int param)
         }
         break;
 #endif
+#ifdef HAS_CARD_SKILLED_DARK_MAGICIAN
+    case CARD_SKILLED_DARK_MAGICIAN:
+    {
+        /* Added card: Dark Magician in the hand, then the Deck, then the Graveyard. */
+        u32 *word;
+        u16 number;
+
+        for (i = 0; i < PLAYER(player).handCount; i++) {
+            word = PILE_WORD(PLAYERS_HAND, i, player);
+            number = CARD_NUMBER(CARD_ID(*word));
+            if (number == CARD_DARK_MAGICIAN || number == CARD_DARK_MAGICIAN_ALT)
+                ADD_TARGET(*word, CARDLIST_SRC_HAND);
+        }
+        for (i = 0; i < PLAYER(player).deckCount; i++) {
+            word = PILE_WORD(gDuelDecks, i, player);
+            number = CARD_NUMBER(CARD_ID(*word));
+            if (number == CARD_DARK_MAGICIAN || number == CARD_DARK_MAGICIAN_ALT)
+                ADD_TARGET(*word, CARDLIST_SRC_DECK);
+        }
+        for (i = 0; i < PLAYER(player).graveCount; i++) {
+            word = PILE_WORD(PLAYERS_GRAVEYARD, i, player);
+            number = CARD_NUMBER(CARD_ID(*word));
+            if (number == CARD_DARK_MAGICIAN || number == CARD_DARK_MAGICIAN_ALT)
+                ADD_TARGET(*word, CARDLIST_SRC_GRAVEYARD);
+        }
+        break;
+    }
+#endif
 #ifdef HAS_CARD_APPRENTICE_MAGICIAN
     case CARD_APPRENTICE_MAGICIAN:
     {

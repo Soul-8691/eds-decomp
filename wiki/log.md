@@ -1712,3 +1712,6 @@ updated: 2026-09-29
 
 ## [2026-10-28] progress | Apprentice Magician coded
 - src/added_effects.c ApprenticeMagicianPlaceCounter (AddedCardsSummoned) and its floater row; src/summon_action.c guard; src/effect_resolve6.c face-down Defense summon; src/effect_target_collect.c Deck list; src/duel_field_moves.c trigger. [[added-cards]]. Built; not tested in an emulator.
+
+## [2026-10-28] progress | Skilled Dark Magician coded
+- include/constants/duel.h ZONE_LINK_SPELL_COUNTER; src/added_effects.c (CountSpellCounters, OnMonsterTurnedFaceDown, ModChainLinkResolved, EffectSkilledDarkMagician* and its row, ApprenticeMagicianPlaceCounter targets it); src/duel_main.c Chain_Resolve hook; src/card_command_menu.c; src/effect_target_collect.c Dark Magician list. [[added-cards]]. Built (make and make release); not tested in an emulator.

@@ -140,6 +140,8 @@ enum ZoneLinkKind {
                                          * Goddess of Whim, Patrol Robo, ...; meaning there not checked) */
     ZONE_LINK_ATK_DOWN_200 = 12,
     ZONE_LINK_STATS_UP_100 = 13,
+    ZONE_LINK_SPELL_COUNTER = 20,       /* mod: Spell Counters with no stat effect (Skilled Dark Magician), from the
+                                         * card's own ID; the high byte is the count (src/added_effects.c) */
 };
 
 /* linkKinds[i] value: a kind with its stack count or value in the high byte (key 1523's self link is

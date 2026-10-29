@@ -163,6 +163,8 @@ enum ChainResolveStage {
  * to the graveyard when the effect ends, or at once if the activation was negated and destroyIfNegated is set.
  * Returns 0 right after a negated card was sent away, else 1.
  */
+void ModChainLinkResolved(struct ChainEntry *link);    /* mod: e.g. Skilled Dark Magician's Spell Counters */
+
 u32 Chain_Resolve(void)
 {
     u16 packet[0x80];
@@ -358,6 +360,7 @@ u32 Chain_Resolve(void)
         }
         return 1;
     case RESOLVE_STAGE_NEXT_LINK:
+        ModChainLinkResolved(&LAST_LINK);  /* added: the link is done and its commands have run */
         if (--gChain.linkCount) {
             gChain.resolveStep = RESOLVE_STAGE_SEND_CHAIN;
             return 1;
