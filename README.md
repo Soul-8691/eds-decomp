@@ -106,6 +106,7 @@ next one.
     lone copy, with none left in its Deck and not just added, stays in its hand.
   - It plays Nobleman of Crossout on your face-down monsters (the original CPU never used it).
   - It plays Dark Hole only when you control more monsters than it does.
+  - Its Mystical Space Typhoon (and Gust, Driving Snow) also targets your face-up Traps, and never its own cards.
   - It uses Solemn Judgment (the original CPU never did) while it has 4000 LP or less. It negates your Normal and
     Special Summons, your Flip Summons of flip-effect monsters, and your Spells and Traps when it has no cheaper
     answer.

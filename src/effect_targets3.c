@@ -394,10 +394,14 @@ int EffectTailorOfTheFickleChainB(struct ChainEntry *link)
     }
 }
 
+void AiPickSpellTrapToDestroy(struct ChainEntry *link);    /* mod: src/added_effects.c */
+
 /*
  * ChainB of Mystical Space Typhoon, Gust and Driving Snow: pick a Magic or Trap card to destroy.
- *   CPU: for player 0, then 1, zones 5-10: the first face-up Magic card, else the first face-down card; it
- *        returns 1 also when it found none.
+ *   CPU: changed, AiPickSpellTrapToDestroy (src/added_effects.c). The ROM took, for player 0, then 1, zones 5-10,
+ *        the first face-up Magic card, else the first face-down card: a face-up Trap was never picked, and with
+ *        only one on the human's side it fell through to the CPU's own cards. It returns 1 also when it found
+ *        none.
  *   Human: prompt, then a pick among the Magic and Trap cards of both players; returns 1 after the pick even
  *          if TryAddEffectTarget refused it. B goes back to step 0.
  */
@@ -408,29 +412,7 @@ int EffectSpellTrapTargetChainB(struct ChainEntry *link)
     u8 *step;
 
     if (isCpu) {
-        int player;
-        link->numTargets = 0;
-        for (player = 0; player <= 1; player++) {
-            int zone;
-            for (zone = ZONE_SPELL_0; zone <= ZONE_FIELD; zone++) {
-                struct DuelZone *z = ZONE_AT(1 & player, zone);
-                u16 id = CARD_ID(CARD_WORD(z->card));
-                /* FAKEMATCH: the empty use raises z's allocation priority above id's, so z gets r1 and id r3
-                 * as in the ROM */
-                asm("" : : "r"(z));
-                if (id != 0 && z->isFaceUp && CARD_TYPE(id) == CARD_TYPE_MAGIC) {
-                    TryAddEffectTarget(link, player, zone);
-                    return 1;
-                }
-            }
-            for (zone = ZONE_SPELL_0; zone <= ZONE_FIELD; zone++) {
-                struct DuelZone *z = ZONE_AT_PZ(1 & player, zone);
-                if ((CARD_WORD(z->card) << 20) != 0 && !z->isFaceUp) {
-                    TryAddEffectTarget(link, player, zone);
-                    return 1;
-                }
-            }
-        }
+        AiPickSpellTrapToDestroy(link);
         return 1;
     }
     chain = gChainBytes;

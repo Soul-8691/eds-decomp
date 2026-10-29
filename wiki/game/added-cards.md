@@ -556,6 +556,20 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
   - `AiShouldRetreatToDefense` never picks it.
 - Checked in the source and the build; not tested in an emulator.
 
+### The CPU's Mystical Space Typhoon target (2026-10-29)
+- **Already there.** The CPU plays Mystical Space Typhoon in its own turn: `AiStepPlaySimpleSpells` and the step after
+  it (ai_turn_steps.c) play it while the human has a Spell/Trap (`CountSpellTraps(0) > 0`).
+- **The vanilla target.** `EffectSpellTrapTargetChainB` (effect_targets3.c), shared with Gust and Driving Snow, took
+  for player 0, then 1 (zones 5-10) the first face-up Magic card, else the first face-down card. So:
+  - Set Traps were hit;
+  - face-up Traps (Call of the Haunted, Spellbinding Circle, Royal Decree, ...) never were;
+  - with only face-up Traps on the human's side it fell through to the CPU's own cards and destroyed one.
+- **Now.** The CPU branch calls `AiPickSpellTrapToDestroy` (added_effects.c): the human's cards only, the first
+  face-up Magic or Trap, else the first face-down card.
+- **Not added.** The CPU still doesn't chain MST in answer to a Trap the human activates (`AiTryChainResponse` has no
+  case for it).
+- Checked in the source and the build; not tested in an emulator.
+
 ### The CPU's Dark Hole (2026-10-29)
 - **Before.** `AiPlaySpells` (ai_deck.c) played Dark Hole in five cases:
   - the human has monsters and the CPU none;

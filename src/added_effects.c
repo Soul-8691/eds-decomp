@@ -4623,6 +4623,27 @@ static int AiLightDarkBanishSummon(void)
 }
 #endif
 
+/* ---- Mystical Space Typhoon, Gust, Driving Snow (the CPU's target) -------------------------------------------------
+ * EffectSpellTrapTargetChainB (effect_targets3.c) asks this for the CPU. Only the human's cards, zones 5-10: the
+ * first face-up Magic or Trap (Continuous Traps such as Call of the Haunted or Royal Decree, Equips, the Field Spell),
+ * else the first face-down card. None: no target. */
+void AiPickSpellTrapToDestroy(struct ChainEntry *link)
+{
+    int pass, zone;
+
+    link->numTargets = 0;
+    for (pass = 0; pass <= 1; pass++) {
+        for (zone = ZONE_SPELL_0; zone <= ZONE_FIELD; zone++) {
+            struct DuelZone *z = ZoneOf(AI_HUMAN, zone);
+
+            /* pass 0: face up, pass 1: face down */
+            if (DUEL_CARD_ID(&z->card) != 0 && (pass == 0) == (z->isFaceUp != 0)
+                && TryAddEffectTarget(link, AI_HUMAN, zone) != 0)
+                return;
+        }
+    }
+}
+
 /* ---- Nobleman of Crossout (the CPU) -------------------------------------------------------------------------------
  * The vanilla CPU never plays Nobleman of Crossout: it is in neither of AiPlaySpells' lists (gAiGenericSpells,
  * gAiEquipSpells; checked in the ROM) and its target step (EffectNoblemanOfCrossoutChainB, effect_targets3.c) only
