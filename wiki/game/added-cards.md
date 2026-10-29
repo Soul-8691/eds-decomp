@@ -435,12 +435,17 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
 - Checked in the source and the build; not tested in an emulator.
 
 ### 4-Starred Ladybug of Doom (2026-10-28)
-- Flip Effect Monster: "FLIP: Destroy all Level 4 monsters your opponent controls."
-- **Data only.** Added (ID 1136, the last line of config/new_cards.txt) for paoloNS-Vanilla Beat's Side Deck
-  (`sAndroidVanillaBeatSide`). The engine has no effect key for it, so its FLIP effect is **not coded yet**: it
-  plays as a vanilla Level 3 monster (800 ATK, 1200 DEF).
+- Flip Effect Monster (Level 3, 800/1200): "FLIP: Destroy all Level 4 monsters your opponent controls."
+- Added as ID 1136 (the last line of config/new_cards.txt) for paoloNS-Vanilla Beat's Side Deck
+  (`sAndroidVanillaBeatSide`).
+- **Effect.** `EffectLadybugOfDoomResolve`, a resolve-only row as Fiber Jar's; card_detail.c `HasFlipEffect` lists it,
+  so it resolves when flipped and the CPU treats it as a flip monster (ai_picks.c / ai_steps.c ask `HasFlipEffect`).
+  Every face-up monster of the opponent whose Level (`CARD_STATS_LEVEL`) is 4 is destroyed (`DestroyFieldCard`,
+  `OnCardDestroyedByEffect`, as Tribe-Infecting Virus). A face-down monster has no Level, so it is not destroyed (the
+  TCG ruling).
 - Gradius' Option (GBO-Recruiter Control's Side Deck) was added at the same time and removed again: it needs
   Gradius, so that side deck stays at 14.
+- Checked in the source and the build; not tested in an emulator.
 
 ### Fairy Box (2026-10-26)
 - Continuous Trap: "When your opponent's monster declares an attack: Toss a coin and call it. If you call it right,

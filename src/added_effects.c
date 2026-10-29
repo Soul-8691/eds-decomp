@@ -2456,6 +2456,33 @@ int EffectFiberJarResolve(struct ChainEntry *link, struct ChainEntry *chainedTo)
 }
 #endif /* HAS_CARD_FIBER_JAR */
 
+#ifdef HAS_CARD_4_STARRED_LADYBUG_OF_DOOM
+/* ---- 4-Starred Ladybug of Doom ------------------------------------------------------------------------------------
+ * FLIP: "Destroy all Level 4 monsters your opponent controls." A resolve-only row, as Fiber Jar (card_detail.c
+ * HasFlipEffect lists it). Every face-up monster of the opponent (of Ladybug's controller) whose Level is 4 is
+ * destroyed, as Tribe-Infecting Virus destroys (DestroyFieldCard, OnCardDestroyedByEffect); a face-down monster has
+ * no Level, so it stays. */
+#define LADYBUG_LEVEL 4
+
+int EffectLadybugOfDoomResolve(struct ChainEntry *link, struct ChainEntry *chainedTo)
+{
+    int side = 1 - (link->player & 1), zone;
+
+    if (link->negated)
+        return EFFECT_STEP_DONE;
+    for (zone = ZONE_MONSTER_0; zone <= ZONE_MONSTER_4; zone++) {
+        struct DuelZone *z = ZoneOf(side, zone);
+        u16 id = DUEL_CARD_ID(&z->card);
+
+        if (id != 0 && z->isFaceUp && (int)CARD_STATS_LEVEL(gCardStats[id & CARD_ID_MASK]) == LADYBUG_LEVEL) {
+            DestroyFieldCard(side, zone, 1);
+            OnCardDestroyedByEffect(link->player, side, zone);
+        }
+    }
+    return EFFECT_STEP_DONE;
+}
+#endif /* HAS_CARD_4_STARRED_LADYBUG_OF_DOOM */
+
 #ifdef HAS_CARD_YATA_GARASU
 /* ---- Yata-Garasu ---------------------------------------------------------------------------------------------------
  * "This card cannot be Special Summoned. This card returns to its owner's hand during the End Phase of the turn it is
@@ -4092,6 +4119,16 @@ const struct CardEffect gAddedCardEffects[] = {
         EffectSkullLairPrepare,
         NULL,
         EffectSkullLairChainB,
+    },
+#endif
+#ifdef HAS_CARD_4_STARRED_LADYBUG_OF_DOOM
+    {
+        CARD_4_STARRED_LADYBUG_OF_DOOM, 0,
+        EffectLadybugOfDoomResolve,
+        NULL,
+        NULL,
+        NULL,
+        NULL,
     },
 #endif
 #ifdef HAS_CARD_FIBER_JAR
