@@ -434,6 +434,21 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
 - **CPU policy.** Activates it on a human monster of 1000+ ATK.
 - Checked in the source and the build; not tested in an emulator.
 
+### Goblin Attack Force (2026-10-28)
+- Effect Monster (Level 4, EARTH Warrior, 2300/0): "If this card attacks, it is changed to Defense Position at the end
+  of the Battle Phase, and its battle position cannot be changed until the end of your next turn."
+- **The engine already has it** as effect key 1344 (no EDS card); `ENGINE_NUMBERS` gives the card that number (ID 892
+  = 1344), as for Fairy Box. What key 1344 does, all in matched code:
+  - **Attack:** `BattleStage_DamageCalc` (battle_phase1.c) clears its `effectUnused` when it attacks.
+  - **End of the Battle Phase:** `BattleStage_EndBattlePhase` (battle_phase3.c) turns it to Defense Position
+    (`ChangeBattlePosition`) when it is face-up in Attack Position with `effectUnused` clear.
+  - **Next turn:** `DuelCmd_TurnStart` (duel_cmd_turn.c) gives it `positionLocked` for its controller's next turn and
+    sets `effectUnused` again.
+  - `PlaceMonsterCard` sets `effectUnused` on every summon, so it only turns after attacking.
+- The other added cards keep their IDs; their card numbers after it move down one (numbers are regenerated, saves keep
+  IDs). Giant Orc has the same text but needs its own number, so it is not covered.
+- Checked in the source and the build; not tested in an emulator.
+
 ### Gigantes (2026-10-28)
 - Effect Monster (Level 4, EARTH Rock, 1900/1300): "Cannot be Normal Summoned/Set. Must be Special Summoned (from your
   hand) by banishing 1 EARTH monster from your GY. If this card is destroyed by battle: Destroy all Spells and Traps on

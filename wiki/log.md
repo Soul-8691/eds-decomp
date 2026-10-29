@@ -1689,3 +1689,6 @@ updated: 2026-09-29
 
 ## [2026-10-28] progress | Gigantes coded
 - Summon: global.h HAS_LIGHT_DARK_BANISH_SUMMON also for it; added_effects.c CanPayEarthBanishCost, BanishSummonCount, LightDarkBanishAttribute (EARTH), CPU summon; summon_checks.c, effect_hooks.c, effect_target_collect.c, card_detail.c IsSpecialSummonOnly. Effect: duel_field_moves.c trigger, row with EffectHeavyStormResolve. [[added-cards]]. Built; not tested in an emulator.
+
+## [2026-10-28] progress | Goblin Attack Force coded (engine key 1344)
+- tools/newcards.py ENGINE_NUMBERS: Goblin Attack Force = 1344 (attack, end-of-Battle-Phase Defense Position and next-turn position lock in the engine). [[added-cards]]. Built; not tested in an emulator.

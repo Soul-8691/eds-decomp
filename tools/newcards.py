@@ -77,6 +77,10 @@ ENGINE_NUMBERS = {
                                     # (BattleStage_RespondToAttack), EffectCoinTossZeroAttackerResolve (call a coin;
                                     # right: the attacker's ATK is 0 for the battle), 500 LP each Standby Phase
                                     # (GetMaintenanceLpCost); the CPU's trap logic knows it (ai_summon.c)
+    'Goblin Attack Force': 1344,    # key 1344: attacking uses up effectUnused (BattleStage_DamageCalc), at the end of
+                                    # the Battle Phase a face-up Attack Position one turns to Defense Position
+                                    # (BattleStage_EndBattlePhase), and its controller's next turn start locks its
+                                    # position for that turn and re-arms it (DuelCmd_TurnStart)
 }
 
 # YGOPRODeck race -> EDS monster type (gCardTypeNames), attribute -> EDS attribute, Spell/Trap race -> subtype.
