@@ -212,6 +212,8 @@ extern struct DuelStateView gDuelView asm("gDuel"); /* 0x020192E0 */
 u16 CanMonsterAttack(int player, int zone, u16 flag);
 void BuildAttackableMask(struct DuelPlayerZones *ps, int player, int a, u16 flag);
 int HasFaceUpToonMonster(int player);
+int ModAttacksBlocked(int player);  /* mod: Threatening Roar (src/added_effects.c) */
+void ModBattlePhaseStart(int player);
 /* Local views of duel.h functions under their own names (symbol kept via asm): int arguments where duel.h has u16, u16 result where it has int; matching. */
 int CountMonstersAffectedByCardI(int player, int number) asm("CountMonstersAffectedByCard");
 int FindMonsterAffectedByCardI(int player, int number) asm("FindMonsterAffectedByCard");
@@ -500,6 +502,8 @@ void BuildAttackableMask(struct DuelPlayerZones *ps, int player, int a, u16 flag
     int i, x, zero, lp;
     struct DuelPlayerZones *me = &ps[player & 1];
     me->attackableMask = 0;
+    if (ModAttacksBlocked(player))      /* added: Threatening Roar (src/added_effects.c) */
+        return;
     if (CountActiveCardsOnField(1 - player, CARD_SWORDS_OF_REVEALING_LIGHT) != 0)
         return;
     if (CountActiveCardsOnField(0, CARD_1230) != 0)
@@ -614,6 +618,7 @@ int BattleStage_Start(int player)
     u32 c = e->battleStep;
     if (c == 0) {
         DuelCmd_Push((player ? DUEL_CMD_PLAYER : 0) | DUEL_CMD_PREPARE_BATTLE_PHASE, 1, 0, 0);
+        ModBattlePhaseStart(player);    /* added: the CPU's Threatening Roar before the human's attacks */
         e->battleStep++;
         return 0;
     }
@@ -657,11 +662,12 @@ int BattleStage_SelectAttacker(int player)
             }
             return 0;
         }
-        if (AiPlanAttack(0)
+        if (!ModAttacksBlocked(player)      /* added: Threatening Roar */
+            && (AiPlanAttack(0)
 #ifdef HAS_CARD_BERSERK_GORILLA
-            || AiPlanForcedAttack()     /* added: Berserk Gorilla must attack, if able */
+                || AiPlanForcedAttack()     /* added: Berserk Gorilla must attack, if able */
 #endif
-            ) {
+                )) {
             bh = &BTH;
             bh->atkSlot = gAiWork.attackerZone;
             DuelCmd_Push(DUEL_CMD_PLAYER | DUEL_CMD_POINT_AT_CARD, gDuelScreen.selPlayer, bh->atkSlot << 8, 0);

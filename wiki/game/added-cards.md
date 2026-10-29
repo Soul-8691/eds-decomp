@@ -933,6 +933,27 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
 - The other added cards keep their IDs; their card numbers after it move down one.
 - Checked in the source and the build; not tested in an emulator.
 
+### Threatening Roar (2026-10-29)
+- Normal Trap. ID 868. The fetched text: "Your opponent cannot declare an attack this turn."
+- **Flag.** The resolve stores, for the activating player's opponent, `gModDuel.roarTurn` = `gDuel.turnCount` + 1 (0
+  none). `ModAttacksBlocked(player)` holds for the rest of that turn.
+- **Hooks** (card_menu_input.c):
+  - `BuildAttackableMask` leaves the mask empty, as Swords of Revealing Light does. So there is no Battle Phase
+    (`CanEnterBattlePhase`) and no attacker to pick.
+  - The CPU's attacker choice in `BattleStage_SelectAttacker` is skipped.
+- **Declared attacks go on.** `Battle_CheckReplay` asks `CanMonsterAttack`, which is unchanged, so an attack that was
+  already declared isn't cancelled, as the rules have it.
+- **CPU.**
+  - **Before the human's Battle Phase** (added the same day). `BattleStage_Start` (card_menu_input.c) calls
+    `ModBattlePhaseStart` at step 0, as the human's Battle Phase begins. While the human has a face-up monster with
+    `AI_ROAR_MIN_ATK` (2000) or more ATK, the CPU flips its Set Threatening Roar if `CanActivateFieldCard` allows it,
+    and queues it with `Chain_AddPending`, as its Standby activations do. The chain resolves before step 1 builds the
+    attackable mask, so the human gets no attack; the human can still respond to it. Not in link duels.
+  - **Against an attack**, as before: while the human has 2 or more monsters, so the others cannot attack after
+    (`AiShouldActivateAddedCard`).
+- Release `.text` 0x08080564.
+- Checked in the source and the build; not tested in an emulator.
+
 ### Thestalos the Firestorm Monarch (2026-10-29)
 - Effect Monster (Level 6, FIRE Pyro, 2400/1000). ID 957. The fetched text: "If this card is Tribute Summoned: Discard
   1 random card from your opponent's hand, then, if it was a Monster Card, inflict damage to your opponent equal to

@@ -68,6 +68,7 @@ struct ModDuelState {
     u8 sandMothPending;         /* Sand Moth: bit player, its effect's Special Summon is queued (swap its stats) */
     u8 mirageDrawn[2];          /* Mirage of Nightmare: per player, the cards to discard in their next Standby Phase */
     u8 standbyPart;             /* ModStandbyStep: Treeborn Frog, Mirage's discard, Mirage's draw */
+    u16 roarTurn[2];            /* Threatening Roar: per player, gDuel.turnCount + 1 of the turn they cannot attack */
 };
 extern struct ModDuelState gModDuel;
 
@@ -968,6 +969,8 @@ void ModDuelInit(void)
     gModDuel.mirageDrawn[0] = 0;
     gModDuel.mirageDrawn[1] = 0;
     gModDuel.standbyPart = 0;
+    gModDuel.roarTurn[0] = 0;
+    gModDuel.roarTurn[1] = 0;
 #ifdef HAS_CARD_INJECTION_FAIRY_LILY
     InjectionFairyLilyResetBattle();
 #endif
@@ -4284,6 +4287,77 @@ int AiPlanForcedAttack(void)
 }
 #endif /* HAS_CARD_BERSERK_GORILLA */
 
+/* ---- Threatening Roar ---------------------------------------------------------------------------------------------
+ * "Your opponent cannot declare an attack this turn." (Normal Trap)
+ * The resolve stores the turn in gModDuel.roarTurn of the activating player's opponent (gDuel.turnCount + 1, 0 none).
+ * ModAttacksBlocked then holds for that player for the rest of the turn: BuildAttackableMask (card_menu_input.c)
+ * leaves their attackable mask empty, as Swords of Revealing Light does (no Battle Phase, no attacker to pick), and
+ * the CPU's attacker choice (BattleStage_SelectAttacker) is skipped. An attack already declared goes on: the replay
+ * check (Battle_CheckReplay) asks CanMonsterAttack, which is unchanged. The CPU activates it:
+ *   before the human's Battle Phase   ModBattlePhaseStart (BattleStage_Start, card_menu_input.c, as the Battle Phase
+ *                                     begins): while the human has a face-up monster with 2000 or more ATK, it flips its
+ *                                     Set Threatening Roar (CanActivateFieldCard) and queues it, as its Standby
+ *                                     activations do; it resolves before the attackable mask is built
+ *   against an attack                 while the human has another monster that could attack after it
+ *                                     (AiShouldActivateAddedCard) */
+#define AI_ROAR_MIN_ATK 2000
+
+int ModAttacksBlocked(int player)
+{
+    return gModDuel.roarTurn[player & 1] != 0 && gModDuel.roarTurn[player & 1] == (u16)(gDuel.turnCount + 1);
+}
+
+/* BattleStage_Start (card_menu_input.c) calls this as `player`'s Battle Phase begins (before its attackable mask). */
+void ModBattlePhaseStart(int player)
+{
+#ifdef HAS_CARD_THREATENING_ROAR
+    int zone, strong = 0;
+
+    if (player != AI_HUMAN || gDuelCtrl.isLinkDuel || ModAttacksBlocked(AI_HUMAN))
+        return;
+    for (zone = ZONE_MONSTER_0; zone <= ZONE_MONSTER_4; zone++) {
+        struct DuelZone *z = ZoneOf(AI_HUMAN, zone);
+
+        if (DUEL_CARD_ID(&z->card) != 0 && z->isFaceUp && (int)GetZoneCardAtk(AI_HUMAN, zone) >= AI_ROAR_MIN_ATK)
+            strong = 1;
+    }
+    if (!strong)
+        return;
+    for (zone = ZONE_SPELL_0; zone <= ZONE_SPELL_4; zone++) {
+        struct DuelZone *z = ZoneOf(AI_PLAYER, zone);
+        u16 id = DUEL_CARD_ID(&z->card);
+        struct ChainEntry ref;
+
+        if (id == 0 || z->isFaceUp || CardNumberOfId(id) != CARD_THREATENING_ROAR)
+            continue;
+        MemClear16(&ref, sizeof(ref));
+        ref.player = AI_PLAYER;
+        if (!CanActivateFieldCard(&ref, AI_PLAYER, zone))
+            continue;
+        DuelCmd_Push(DUEL_CMD_PLAYER | DUEL_CMD_CHAIN_BANNER, 0, 0, 0);
+        FlipFieldCard(AI_PLAYER, zone, 0);
+        Chain_AddPending(TRIGGER_PLAYER(AI_PLAYER) | TRIGGER_ZONE(zone) | TRIGGER_KIND(CHAIN_KIND_SPELL_TRAP)
+                             | TRIGGER_EVENT(RESPONSE_NONE) | id,
+                         0);
+        return;
+    }
+#endif
+}
+
+#ifdef HAS_CARD_THREATENING_ROAR
+int EffectThreateningRoarPrepare(struct ChainEntry *card, struct ChainEntry *chainLink, u16 fromHand)
+{
+    return !fromHand;
+}
+
+int EffectThreateningRoarResolve(struct ChainEntry *link, struct ChainEntry *chainedTo)
+{
+    if (!link->negated)
+        gModDuel.roarTurn[(1 - link->player) & 1] = gDuel.turnCount + 1;
+    return EFFECT_STEP_DONE;
+}
+#endif /* HAS_CARD_THREATENING_ROAR */
+
 #ifdef HAS_CARD_THESTALOS_THE_FIRESTORM_MONARCH
 /* ---- Thestalos the Firestorm Monarch ------------------------------------------------------------------------------
  * "If this card is Tribute Summoned: Discard 1 random card from your opponent's hand, then, if it was a Monster Card,
@@ -6301,6 +6375,11 @@ int AiShouldActivateAddedCard(struct ChainEntry *entry)
     if (!IsAddedCardId(entry->card))
         return 0;
     switch (CardNumberOfId(entry->card)) {
+#ifdef HAS_CARD_THREATENING_ROAR
+    case CARD_THREATENING_ROAR:                 /* against an attack, when another of the human's could attack after */
+        return entry->event == RESPONSE_ATTACK_DECLARED && gDuel.turnPlayer == AI_HUMAN
+               && CountMonsters(AI_HUMAN) >= 2;
+#endif
 #ifdef HAS_CARD_BLAST_WITH_CHAIN
     case CARD_BLAST_WITH_CHAIN:                 /* against an attack, on a face-up monster of its own */
         return entry->event == RESPONSE_ATTACK_DECLARED && CountFaceUpMonsters(AI_PLAYER) > 0;
@@ -6399,6 +6478,16 @@ const struct CardEffect gAddedCardEffects[] = {
         NULL,
         NULL,
         EffectMobiusChainB,
+    },
+#endif
+#ifdef HAS_CARD_THREATENING_ROAR
+    {
+        CARD_THREATENING_ROAR, 0,
+        EffectThreateningRoarResolve,
+        NULL,
+        EffectThreateningRoarPrepare,
+        NULL,
+        NULL,
     },
 #endif
 #ifdef HAS_CARD_THESTALOS_THE_FIRESTORM_MONARCH

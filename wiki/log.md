@@ -1868,3 +1868,9 @@ updated: 2026-09-29
 
 ## [2026-10-29] progress | Thestalos the Firestorm Monarch coded
 - src/added_effects.c EffectThestalosResolve and its row; src/summon_checks.c its case beside Zaborg / Mobius in both Normal Summon trigger lists. [[added-cards]]. Built (make and make release); not tested in an emulator.
+
+## [2026-10-29] progress | Threatening Roar coded
+- src/added_effects.c ModAttacksBlocked, gModDuel.roarTurn, EffectThreateningRoar* and its row, the CPU's activation; src/card_menu_input.c BuildAttackableMask and the CPU's attacker choice ask ModAttacksBlocked. Release .text 0x80558. [[added-cards]]. Built (make and make release); not tested in an emulator.
+
+## [2026-10-29] progress | The CPU flips Threatening Roar before the human's Battle Phase
+- src/added_effects.c ModBattlePhaseStart (a face-up 2000+ ATK monster of the human's: the CPU flips and queues its Set Threatening Roar); src/card_menu_input.c BattleStage_Start step 0 calls it. Release .text 0x80564. [[added-cards]]. Built (make and make release); not tested in an emulator.

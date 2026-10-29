@@ -91,9 +91,20 @@ Guardian Sphinx
 Marauding Captain
 The Fiend Megacyber
 Thestalos the Firestorm Monarch
-------
 Threatening Roar
+------
 Mask of Restrict
+My Body as a Shield
+Big Bang Shot
+The Rock Spirit
+D.D. Designator
+Divine Wrath
+Des Lacooda
+Old Vindictive Magician
+Reflect Bounder
+Swarm of Locusts
+Granmarg the Rock Monarch
+Yomi Ship
 Getsu Fuhma
 Karma Cut
 Draining Shield
@@ -110,17 +121,6 @@ Necrovalley
 Cold Wave
 Cursed Seal of the Forbidden Spell
 Chiron the Mage
-My Body as a Shield
-Big Bang Shot
-The Rock Spirit
-D.D. Designator
-Divine Wrath
-Des Lacooda
-Old Vindictive Magician
-Reflect Bounder
-Swarm of Locusts
-Granmarg the Rock Monarch
-Yomi Ship
 Secret Barrel
 Level Limit - Area B
 Ojama Trio
