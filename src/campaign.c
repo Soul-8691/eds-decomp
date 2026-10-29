@@ -257,6 +257,8 @@ extern struct BattleView gBattleView asm("gBattle");
  * Card rules (by card number) change the values and the outcome. A battle-protected defending player loses
  * neither the monster nor life points, and card 1423 on a player's field stops damage to that player.
  */
+int ModHasPiercing(u16 cardId);     /* mod: src/added_effects.c */
+
 void CalcBattle(int attacker, u16 zeroAtk)
 {
     int i;
@@ -351,10 +353,8 @@ void CalcBattle(int attacker, u16 zeroAtk)
             piercing = 1;
         if (CARD_NUMBER(ATTACKER_SIDE.cardId) == 1341)     /* no EDS card */
             piercing = 1;
-#ifdef HAS_CARD_AIRKNIGHT_PARSHATH
-        if (CARD_NUMBER(ATTACKER_SIDE.cardId) == CARD_AIRKNIGHT_PARSHATH)     /* added card: piercing damage */
+        if (ModHasPiercing(ATTACKER_SIDE.cardId))   /* added cards: Airknight Parshath, Cyber End Dragon */
             piercing = 1;
-#endif
         if (CountActiveZoneLinksFromCard(attacker, gBattleView.atkSlot, CARD_1540))
             piercing = 1;
         if (piercing)

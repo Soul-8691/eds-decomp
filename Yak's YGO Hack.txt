@@ -27,4 +27,4 @@ Make AI use new cards properly
 Fix general AI shortcomings
 Fix Flip Effect Monster AI
 Cyber/Reaper cards
-Make the minimum a card can cost 20 DP
+Move hooks out of original units

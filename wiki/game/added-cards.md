@@ -896,6 +896,22 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
 - The other added cards keep their IDs; their card numbers after it move down one.
 - Checked in the source and the build; not tested in an emulator.
 
+### Cyber End Dragon (2026-10-29)
+- Fusion Monster (Level 10, LIGHT Machine, 4000/2800). ID 1158 (number 1602). The fetched text: "Cyber Dragon" +
+  "Cyber Dragon" + "Cyber Dragon". "A Fusion Summon of this card can only be done with the above Fusion Materials.
+  If this card attacks a Defense Position monster, inflict piercing battle damage."
+- **The recipe.** The added-recipe table (now `sModFusionRecipes`, see Cyber Twin Dragon) takes 3 materials.
+  `materials[2]` is 0 for a 2-material recipe.
+  - `IsModFusionResult` returns the material count (2 or 3, 0 for none). Polymerization's `default:` case assigns
+    it; that case is reached only once `FindFusionMaterials` found the materials.
+  - `ModFindFusionMaterials` finds each material with the earlier picks excluded, filling `slots[]` last material
+    first, as the ROM's 3-material loop does. No substitute is allowed.
+  - The human picks three Cyber Dragons; `RemovePendingFusionMaterial` clears one pending copy per pick.
+- **Piercing.** `CalcBattle` (campaign.c) asks `ModHasPiercing`, which replaces Airknight Parshath's own number check
+  and covers both cards, so the original unit's code hardly grows.
+- Release `.text` after it ends at 0x080809E8, 0x38 bytes below `.rodata` at 0x08080A20.
+- Checked in the source and the build; not tested in an emulator.
+
 ### Cyber Twin Dragon (2026-10-29)
 - Fusion Monster (Level 8, LIGHT Machine, 2800/2100). ID 1157 (number 1601). The fetched text: "Cyber Dragon" +
   "Cyber Dragon". "A Fusion Summon of this card can only be done with the above Fusion Materials. This card can make

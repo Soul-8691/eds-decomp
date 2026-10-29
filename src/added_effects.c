@@ -4237,11 +4237,16 @@ int AiPlanForcedAttack(void)
 #endif /* HAS_CARD_BERSERK_GORILLA */
 
 /* ---- Added Fusion recipes -----------------------------------------------------------------------------------------
- * The added cards' 2-material recipes (effect_fusion.c scans them after the ROM's gFusionRecipes2: FindFusionMaterials,
- * IsMaterialOfFusion, and the Polymerization material count). They take no Fusion substitute. */
-static const struct FusionRecipe sModFusionRecipes2[] = {
+ * The added cards' recipes of 2 or 3 materials (materials[2] 0 for 2). effect_fusion.c asks for them after the ROM's
+ * gFusionRecipes2 / gFusionRecipes3: FindFusionMaterials, IsMaterialOfFusion, and the Polymerization material count
+ * (IsModFusionResult). They take no Fusion substitute ("A Fusion Summon of this card can only be done with the above
+ * Fusion Materials"). */
+static const struct FusionRecipe sModFusionRecipes[] = {
 #if defined(HAS_CARD_CYBER_TWIN_DRAGON) && defined(HAS_CARD_CYBER_DRAGON)
-    { CARD_CYBER_TWIN_DRAGON, { CARD_CYBER_DRAGON, CARD_CYBER_DRAGON, 0 } },  /* Cyber Twin Dragon */
+    { CARD_CYBER_TWIN_DRAGON, { CARD_CYBER_DRAGON, CARD_CYBER_DRAGON, 0 } },
+#endif
+#if defined(HAS_CARD_CYBER_END_DRAGON) && defined(HAS_CARD_CYBER_DRAGON)
+    { CARD_CYBER_END_DRAGON, { CARD_CYBER_DRAGON, CARD_CYBER_DRAGON, CARD_CYBER_DRAGON } },
 #endif
     { 0, { 0, 0, 0 } },
 };
@@ -4251,49 +4256,77 @@ static const struct FusionRecipe *ModFusionRecipeOf(u16 fusionNum)
 {
     u32 i;
 
-    for (i = 0; i + 1 < ARRAY_COUNT(sModFusionRecipes2); i++) {
-        if (sModFusionRecipes2[i].result == fusionNum)
-            return &sModFusionRecipes2[i];
+    for (i = 0; i + 1 < ARRAY_COUNT(sModFusionRecipes); i++) {
+        if (sModFusionRecipes[i].result == fusionNum)
+            return &sModFusionRecipes[i];
     }
     return NULL;
+}
+
+/* The number of materials of an added recipe: 2 or 3; 0 if Fusion monster number `fusionNum` has none. */
+int IsModFusionResult(u16 fusionNum)
+{
+    const struct FusionRecipe *recipe = ModFusionRecipeOf(fusionNum);
+
+    if (recipe == NULL)
+        return 0;
+    return recipe->materials[2] != 0 ? 3 : 2;
 }
 
 /* IsMaterialOfFusion for an added recipe: 1 if `materialNum` is one of its materials (no substitute). */
 int ModIsMaterialOfFusion(u16 fusionNum, u16 materialNum)
 {
     const struct FusionRecipe *recipe = ModFusionRecipeOf(fusionNum);
+    int i;
 
-    return recipe != NULL && (recipe->materials[0] == materialNum || recipe->materials[1] == materialNum);
+    if (recipe == NULL || materialNum == 0)
+        return 0;
+    for (i = 0; i < 3; i++) {
+        if (recipe->materials[i] == materialNum)
+            return 1;
+    }
+    return 0;
 }
 
-/* FindFusionMaterials for an added recipe, after the ROM's tables: the player's two materials (field, then hand,
- * as FindFusionMaterialSlot looks), neither a substitute, and room for the Fusion monster. 1 if found. */
+/* FindFusionMaterials for an added recipe, after the ROM's tables: the player's materials (each a different card; the
+ * field, then the hand, as FindFusionMaterialSlot looks), none a substitute, and room for the Fusion monster. The
+ * slots go in FindFusionMaterials' order: slots[0] is the recipe's last material. 1 if found. */
 int ModFindFusionMaterials(int player, u16 fusionNum, u16 *slots)
 {
     const struct FusionRecipe *recipe = ModFusionRecipeOf(fusionNum);
+    int count, i, allInHand = 1;
 
     if (recipe == NULL)
         return 0;
-    slots[1] = FindFusionMaterialSlot(player, recipe->materials[0], FUSION_SLOT_NONE, FUSION_SLOT_NONE);
-    slots[0] = FindFusionMaterialSlot(player, recipe->materials[1], slots[1], FUSION_SLOT_NONE);
-    if (slots[0] == FUSION_SLOT_NONE || slots[1] == FUSION_SLOT_NONE)
-        return 0;
-    if (IsFusionSubstitute(CardNumberOfId(GetFusionSlotCardId(player, slots[0])))
-        || IsFusionSubstitute(CardNumberOfId(GetFusionSlotCardId(player, slots[1]))))
-        return 0;
-    if ((slots[0] & FUSION_SLOT_HAND) && (slots[1] & FUSION_SLOT_HAND) && CountMonsters(player) == 5)
+    count = recipe->materials[2] != 0 ? 3 : 2;
+    for (i = 0; i < count; i++) {
+        u16 excludeA = i >= 1 ? slots[count - 1] : FUSION_SLOT_NONE;
+        u16 excludeB = i >= 2 ? slots[count - 2] : FUSION_SLOT_NONE;
+        u16 slot = FindFusionMaterialSlot(player, recipe->materials[i], excludeA, excludeB);
+
+        if (slot == FUSION_SLOT_NONE || IsFusionSubstitute(CardNumberOfId(GetFusionSlotCardId(player, slot))))
+            return 0;
+        slots[count - 1 - i] = slot;
+        if (!(slot & FUSION_SLOT_HAND))
+            allInHand = 0;
+    }
+    if (allInHand && CountMonsters(player) == 5)
         return 0;
     return 1;
 }
 
-/* 1 if Fusion monster number `fusionNum` has an added recipe. */
-int IsModFusionResult(u16 fusionNum)
+/* CalcBattle (campaign.c): 1 if the attacking card inflicts piercing battle damage by itself (Airknight Parshath,
+ * Cyber End Dragon). */
+int ModHasPiercing(u16 cardId)
 {
-    u32 i;
-
-    for (i = 0; i + 1 < ARRAY_COUNT(sModFusionRecipes2); i++) {
-        if (sModFusionRecipes2[i].result == fusionNum)
-            return 1;
+    switch (CardNumberOfId(cardId)) {
+#ifdef HAS_CARD_AIRKNIGHT_PARSHATH
+    case CARD_AIRKNIGHT_PARSHATH:
+#endif
+#ifdef HAS_CARD_CYBER_END_DRAGON
+    case CARD_CYBER_END_DRAGON:
+#endif
+        return 1;
     }
     return 0;
 }

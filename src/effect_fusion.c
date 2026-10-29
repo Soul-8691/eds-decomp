@@ -113,7 +113,7 @@ extern const struct FusionRecipe gFusionRecipes3[];     /* 0x0819A970: 3 recipes
 /* Mod (src/added_effects.c): the added cards' 2-material recipes, after gFusionRecipes2. A Fusion substitute cannot
  * stand in for their materials ("A Fusion Summon of this card can only be done with the above Fusion Materials").
  * The loops live there: this unit's code must stay inside the original .text. */
-int IsModFusionResult(u16 fusionNum);
+int IsModFusionResult(u16 fusionNum);     /* the material count, 0 for none */
 int ModIsMaterialOfFusion(u16 fusionNum, u16 materialNum);
 int ModFindFusionMaterials(int player, u16 fusionNum, u16 *slots);
 
@@ -799,8 +799,8 @@ int EffectPolymerizationResolve(struct ChainEntry *link, int chainedTo)
             gChain.fusionMaterialCount = 2;
             break;
         default:
-            if (IsModFusionResult(CARD_NUMBER(gChain.fusionResult)))   /* added: the added cards' recipes */
-                gChain.fusionMaterialCount = 2;
+            /* added: the added cards' recipes (2 or 3; FindFusionMaterials found the materials, so it has one) */
+            gChain.fusionMaterialCount = IsModFusionResult(CARD_NUMBER(gChain.fusionResult));
             break;
         case CARD_BLUE_EYES_ULTIMATE_DRAGON: case CARD_AQUA_DRAGON: case CARD_MAN_EATING_BLACK_SHARK:
             gChain.fusionMaterialCount = 3;
