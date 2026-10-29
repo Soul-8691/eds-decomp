@@ -535,6 +535,8 @@ int EffectDeclareTypeChainB(struct ChainEntry *link)
 
 /* ChainB of Nobleman of Crossout: prompt, then a pick among the face-down monsters of both players; returns
  * 1 after the pick even if TryAddEffectTarget refused it. B goes back to step 0. */
+void AiNoblemanOfCrossoutTarget(struct ChainEntry *link);  /* mod: src/added_effects.c */
+
 int EffectNoblemanOfCrossoutChainB(struct ChainEntry *link)
 {
     u8 *chain = gChainBytes;
@@ -542,6 +544,11 @@ int EffectNoblemanOfCrossoutChainB(struct ChainEntry *link)
     /* FAKEMATCH: one shared zero for the step-0 return and the B branch (see EffectBlockAttackChainB). */
     int zero = 0;
 
+    if (link->player) {
+        /* added: the CPU targets one of the human's face-down monsters (src/added_effects.c) */
+        AiNoblemanOfCrossoutTarget(link);
+        return 1;
+    }
     if (*step == 0) {
         TextBoxOpen(TARGET_PROMPT_POS, TARGET_PROMPT_SIZE, TEXTBOX_FLAGS_DEFAULT,
                     gStrDesignateFaceDownMonsterToBanish);

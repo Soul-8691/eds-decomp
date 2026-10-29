@@ -4623,6 +4623,37 @@ static int AiLightDarkBanishSummon(void)
 }
 #endif
 
+/* ---- Nobleman of Crossout (the CPU) -------------------------------------------------------------------------------
+ * The vanilla CPU never plays Nobleman of Crossout: it is in neither of AiPlaySpells' lists (gAiGenericSpells,
+ * gAiEquipSpells; checked in the ROM) and its target step (EffectNoblemanOfCrossoutChainB, effect_targets3.c) only
+ * waits for the human's cursor. AiPlayAddedCards plays it while the human controls a face-down monster, and the
+ * target step calls AiNoblemanOfCrossoutTarget for the CPU: the human's first face-down monster it may target. */
+static int HasFaceDownMonster(int player)
+{
+    int zone;
+
+    for (zone = ZONE_MONSTER_0; zone <= ZONE_MONSTER_4; zone++) {
+        struct DuelZone *z = ZoneOf(player, zone);
+
+        if (DUEL_CARD_ID(&z->card) != 0 && !z->isFaceUp)
+            return 1;
+    }
+    return 0;
+}
+
+void AiNoblemanOfCrossoutTarget(struct ChainEntry *link)
+{
+    int zone;
+
+    link->numTargets = 0;
+    for (zone = ZONE_MONSTER_0; zone <= ZONE_MONSTER_4; zone++) {
+        struct DuelZone *z = ZoneOf(AI_HUMAN, zone);
+
+        if (DUEL_CARD_ID(&z->card) != 0 && !z->isFaceUp && TryAddEffectTarget(link, AI_HUMAN, zone) != 0)
+            return;
+    }
+}
+
 int AiPlayAddedCards(void)
 {
     struct DuelPlayer *p = &gDuelPlayers[AI_PLAYER];
@@ -4644,6 +4675,9 @@ int AiPlayAddedCards(void)
         Chain_AddPending(((u32)(zone & 0x1F) << 16) | id | CPU_CHAIN_KIND_MONSTER, 0);
         return 1;
     }
+    /* Nobleman of Crossout on a face-down monster of the human's (see AiNoblemanOfCrossoutTarget) */
+    if (HasFaceDownMonster(AI_HUMAN) && AiTryPlaySpellTrap(CARD_NOBLEMAN_OF_CROSSOUT))
+        return 1;
     /* added Magic cards, in the hand or Set */
     for (i = 0; i < p->handCount; i++) {
         u16 id = DUEL_CARD_ID(&p->hand[i]);

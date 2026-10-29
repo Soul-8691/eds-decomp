@@ -104,6 +104,7 @@ next one.
   - It uses Thunder Dragon at the start of its Main Phase. It discards one to add a single copy, then discards the
     new copy for the last one, then discards that one too, finding nothing. All three end up in its Graveyard. A
     lone copy, with none left in its Deck and not just added, stays in its hand.
+  - It plays Nobleman of Crossout on your face-down monsters (the original CPU never used it).
 - **Thunder Dragon** can be activated even with no copy left in the Deck; the search then finds nothing.
 - **Debug mode** (testing builds only, not in the release). You start with 8 copies of every card, and you can't
   deck out. Decks can be under 40 cards, can hold any number of copies of a card, and ignore banlists. Switching

@@ -1742,3 +1742,6 @@ updated: 2026-09-29
 
 ## [2026-10-29] progress | Thunder Dragon may fail to find; the CPU keeps a lone copy
 - src/effect_activation.c EffectThunderDragonPrepare: no Deck copy needed; src/added_effects.c gModDuel.aiThunderDragonSearched, ModThunderDragonSearched, AiUseThunderDragon keeps a lone copy; src/effect_resolve1.c sets the flag. README.md. [[added-cards]]. Built (make and make release); not tested in an emulator.
+
+## [2026-10-29] progress | The CPU uses Nobleman of Crossout
+- Checked: Nobleman of Crossout (1157) is in neither CPU spell list in the ROM (0x08086394, 0x08086400) and its ChainB had no CPU branch. src/added_effects.c AiNoblemanOfCrossoutTarget, AiPlayAddedCards plays it on the human's face-down monsters; src/effect_targets3.c CPU branch. README.md. [[added-cards]]. Built (make and make release); not tested in an emulator.

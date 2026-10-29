@@ -556,6 +556,18 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
   - `AiShouldRetreatToDefense` never picks it.
 - Checked in the source and the build; not tested in an emulator.
 
+### The CPU uses Nobleman of Crossout (2026-10-29)
+- **Before.** The vanilla CPU never played Nobleman of Crossout (number 1157):
+  - it is in neither of `AiPlaySpells`' lists (`gAiGenericSpells` at 0x08086394, `gAiEquipSpells` at 0x08086400),
+    verified by reading both tables from the ROM with a quick script;
+  - its target step, `EffectNoblemanOfCrossoutChainB` (effect_targets3.c), has no CPU branch and only waits for the
+    human's cursor.
+- **Now.** `AiPlayAddedCards` plays it with `AiTryPlaySpellTrap` while the human controls a face-down monster.
+  `EffectNoblemanOfCrossoutChainB` hands the CPU's link to `AiNoblemanOfCrossoutTarget` (added_effects.c), which picks
+  the human's first face-down monster that `TryAddEffectTarget` accepts. `EffectNoblemanResolve` is unchanged: it
+  banishes the target, and with it the copies in both Decks if it is a flip-effect monster.
+- Checked in the source and the build; not tested in an emulator.
+
 ### The CPU uses Thunder Dragon (2026-10-29)
 - **Before.** The vanilla CPU never activated Thunder Dragon ("discard this card; add up to 2 Thunder Dragon from your
   Deck to your hand"); only the human's card menu offers it.
