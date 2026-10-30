@@ -1,0 +1,4 @@
+python3 tools/card_expand/expand_rom.py --rom EDS_Kertra.gba --out build/card_expand/expanded.gba --list new_cards.txt \
+  --src-names 0x08268AC0 --src-descs 0x087FAA20 --src-art 0x08276300 --src-palettes 0x086067E0 \
+  --src-stats 0x0822CC00 --src-id2n 0x0822C4E0 --src-passwords 0x08623080 --src-n2id 0x08623DF4 \
+  --keep-art
