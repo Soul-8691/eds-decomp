@@ -2510,6 +2510,17 @@ static const struct DeckList *WarriorDeck(void)
 }
 #endif
 
+/* The testing opponent (make only; the Duel Computer's slot, src/mod_opponents.c): the deck of the .ydk in TEST_YDK
+ * (the Makefile), made into build/include/test_deck.h by tools/testdeck.py on every build. LoadOpponentDeck leaves
+ * its copy counts as they are (no RemoveOverLimitDeckCards). */
+#if !MOD_RELEASE
+#define TEST_DECK_WANT_CARDS
+#endif
+#include "test_deck.h"
+#if defined(MOD_TEST_DECK) && !MOD_RELEASE
+static const struct DeckList sTestDeckList = { sTestDeck, ARRAY_COUNT(sTestDeck), 0 };
+#endif
+
 /* The replacement deck of opponent `opponent` (enum DuelistId), or NULL to keep the original: a new pick (the
  * weighted random ones roll again); GetOpponentDeckOverride keeps it for the match. */
 static const struct DeckList *PickOpponentDeckOverride(int opponent)
@@ -2589,6 +2600,10 @@ static const struct DeckList *PickOpponentDeckOverride(int opponent)
 #ifdef MOD_BAKURA_DECK
     case DUELIST_GRANDPA:
         return &sBakuraDeckList;
+#endif
+#if defined(MOD_TEST_DECK) && !MOD_RELEASE
+    case DUELIST_DUEL_COMPUTER:         /* "Test Duel": test.ydk */
+        return &sTestDeckList;
 #endif
     }
     return NULL;

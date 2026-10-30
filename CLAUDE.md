@@ -14,6 +14,7 @@ make -j$(nproc)                             # full build; installs tools/agbcc f
 make -j$(nproc) release                     # eds_release.gba: the player build (wiki/tools/release-build.md)
 make -j$(nproc) compare                     # SHA-1 check: fails now that cards are added (wiki/game/added-cards.md)
 # Added cards: config/new_cards.txt, one card name per line; `make` fetches and builds them (tools/newcards.py).
+# Test Duel (make only): its deck is TEST_YDK (default /mnt/c/ProjectIgnis/deck/test.ydk), read by tools/testdeck.py.
 tools/dr python3 tools/check.py <unit>      # per-unit match check (safe to run concurrently)
 tools/dr python3 tools/check_all.py         # every unit (the CI gate)
 ```

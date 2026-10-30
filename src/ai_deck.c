@@ -135,7 +135,8 @@ void LoadOpponentDeck(u16 useAltDeck)
         for (k = 0; k < list->count; k++)
             AddCardNumberToDeckTop(1, list->cards[k]);
     }
-    RemoveOverLimitDeckCards(1);
+    if (opponent != DUELIST_DUEL_COMPUTER)  /* added: the testing opponent keeps its copies (src/mod_decks.c) */
+        RemoveOverLimitDeckCards(1);
 }
 
 /*

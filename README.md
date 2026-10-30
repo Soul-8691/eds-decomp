@@ -174,7 +174,9 @@ next one.
   deck out. Decks can be under 40 cards, can hold any number of copies of a card, and ignore banlists. Switching
   banlists skips the 40-card Main Deck check. Every format is unlocked, and the Record (Duel Score) screen
   shows every duelist on every page. The opponent's hand is shown face up during
-  duels, and the cursor shows the info of all their cards (face-down ones too), with Card View.
+  duels, and the cursor shows the info of all their cards (face-down ones too), with Card View. The deck
+  opponents' page has a fourth opponent, Test Duel, whose deck is `C:\ProjectIgnis\deck\test.ydk` as it is
+  when the ROM is built.
 
 ### Planned
 

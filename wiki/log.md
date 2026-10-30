@@ -1941,3 +1941,6 @@ updated: 2026-09-29
 
 ## [2026-10-30] progress | The CPU summons 1400+ ATK monsters face up and attacks Set monsters with them
 - src/added_effects.c AiSummonFaceUpOnOpenField: 1400 (AI_SUMMON_ATTACK_ATK), any field, unless the human has a stronger face-up monster; src/ai_picks.c AiEvalAttack / AiCanBeatMonster: a face-down Defense Position monster at the guessed 1400 DEF counts as beaten by a 1400+ attacker; ai_steps.c comment. README CPU list. [[added-cards]]. Release .text 0x806AC. Built (make and make release); not tested in an emulator.
+
+## [2026-10-30] setup | Test Duel: a debug opponent with the deck of test.ydk
+- tools/testdeck.py (new) and a Makefile rule (TEST_YDK, build/include/test_deck.h, read every build); src/mod_opponents.c: DUELIST_DUEL_COMPUTER is "Test Duel" on the deck page (bottom slot), portrait its first card; src/mod_decks.c sTestDeckList for it (make only); src/ai_deck.c LoadOpponentDeck skips RemoveOverLimitDeckCards for it. DECKS.md, README, CLAUDE.md. [[yugi-kaiba-opponent]]. Release .text 0x806B0. Built (make and make release); not tested in an emulator.

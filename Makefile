@@ -156,6 +156,15 @@ $(BANLISTS_GEN): tools/banlist.py $(wildcard banlists/*_ban.json) $(wildcard car
 build/src/mod_banlists.o: $(BANLISTS_GEN)
 build/src/mod_banlist.o: $(BANLISTS_GEN)
 
+# The testing opponent's deck (make only: the Duel Computer's slot on the deck opponents' page), from the .ydk in
+# TEST_YDK; without that file there is no test opponent. Read every build, rewritten only when it changes.
+TEST_YDK ?= /mnt/c/ProjectIgnis/deck/test.ydk
+TESTDECK_GEN := build/include/test_deck.h
+$(TESTDECK_GEN): tools/testdeck.py $(NEWCARDS_BUILT) FORCE
+	@mkdir -p $(@D)
+	@$(PYTHON) tools/testdeck.py "$(TEST_YDK)" $@
+build/src/mod_decks.o build/src/mod_opponents.o: $(TESTDECK_GEN)
+
 # Password-machine card prices from the Yugi-Kaiba usage statistics (src/mod_dp.c).
 PRICES_GEN := build/include/card_prices.h
 $(PRICES_GEN): tools/cardprices.py tools/banlist.py $(wildcard usage/*.json) $(wildcard banlists/*_ban.json) $(NEWCARDS_BUILT)

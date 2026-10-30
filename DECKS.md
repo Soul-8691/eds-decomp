@@ -2023,6 +2023,12 @@ A testing page after the formats, left out of `make release`. Each opponent alwa
 | Chaos Turbo | LR-Chaos Turbo | Black Luster Soldier - Envoy of the Beginning |
 | Warrior | sdlkilla-Warrior | D.D. Warrior Lady |
 | Goat Control | geistD-Goat Control | Thousand-Eyes Restrict |
+| Test Duel | `C:\ProjectIgnis\deck\test.ydk`, read at every build | its first Main Deck card |
+
+Test Duel (the Duel Computer's slot, bottom of the page) plays whatever `test.ydk` holds when the ROM is built
+(`tools/testdeck.py`; `make TEST_YDK=<path>` reads another file). Its copy counts are kept as they are (no limit is
+applied), and Main Deck cards the game does not have are left out with a warning. Without the file the slot stays
+empty.
 
 <details>
 <summary>Chaos Turbo (LR-Chaos Turbo) (40 cards + 15 Fusion Deck + 15 Side Deck)</summary>

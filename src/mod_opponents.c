@@ -8,7 +8,9 @@
  *           make release; a plain make (testing) opens every format.
  *           They fill pages 0-2 in unlock order.
  *   DECK    page 3: an opponent per deck (src/mod_decks.c), always open: the LR-Chaos Turbo, sdlkilla-Warrior and
- *           geistD-Goat Control decks.
+ *           geistD-Goat Control decks, and "Test Duel" in the Duel Computer's slot: the deck of the .ydk in TEST_YDK
+ *           (the Makefile; tools/testdeck.py, build/include/test_deck.h), if there is one, its first card the
+ *           portrait.
  *   HIDDEN  the duelist IDs not placed, and the empty slots (duelist 0: page 3's last two, page 4): no name, the
  *           stone cover over the portrait, the cursor skips them, never open. Page 4 cannot be reached.
  * Within a page the opponents follow the cursor's ring from the top left (slots 2, 3, 4, 0, 1: top left, top right,
@@ -36,6 +38,7 @@
 #include "campaign.h"
 #include "constants/cards.h"
 #include "constants/game.h"
+#include "test_deck.h"          /* MOD_TEST_DECK, TEST_DECK_PORTRAIT (tools/testdeck.py) */
 
 /* The opponent select's page pictures (campaign_select.c). */
 extern struct Mode4Bitmap gOpponentSelectPageBgs[5];
@@ -82,6 +85,7 @@ static const char sNameReaper[] = "Reaper";
 static const char sNameChaosTurbo[] = "LR-Chaos Turbo";
 static const char sNameWarriorDeck[] = "sdlkilla-Warrior";
 static const char sNameGoatControl[] = "geistD-Goat Control";
+static const char sNameTestDuel[] = "Test Duel";
 
 /* Portrait cards that are added cards (config/new_cards.txt): 0 (the page's own portrait) when not in the build. */
 #ifdef HAS_CARD_SCAPEGOAT
@@ -174,7 +178,11 @@ static const struct ModOpponent sOpponents[] = {
     [DUELIST_SIMON] = DECK(sNameChaosTurbo, ART_BLACK_LUSTER_SOLDIER_ENVOY_OF_THE_BEGINNING),
     [DUELIST_PEGASUS] = DECK(sNameWarriorDeck, ART_D_D_WARRIOR_LADY),
     [DUELIST_GRANDPA] = DECK(sNameGoatControl, ART_THOUSAND_EYES_RESTRICT),
+#ifdef MOD_TEST_DECK
+    [DUELIST_DUEL_COMPUTER] = DECK(sNameTestDuel, TEST_DECK_PORTRAIT),
+#else
     [DUELIST_DUEL_COMPUTER] = HIDDEN,
+#endif
 };
 
 /* Wins against format k (in unlock order) that open format k + 1 (make release; with make every format is open). */
@@ -206,7 +214,7 @@ static const u8 sPageDuelists[5][5] = {
     { DUELIST_MAKO,         DUELIST_MAI,        DUELIST_TRISTAN,       DUELIST_REX,           DUELIST_ESPA_ROBA },
     { DUELIST_UMBRA_LUMIS,  DUELIST_MARIK,      DUELIST_WEEVIL,        DUELIST_RARE_HUNTER,   DUELIST_ARKANA },
     { DUELIST_YAMI_BAKURA,  DUELIST_YAMI_YUGI,  DUELIST_STRINGS,       DUELIST_KAIBA,         DUELIST_ISHIZU },
-    { 0,                    0,                  DUELIST_SIMON,         DUELIST_PEGASUS,       DUELIST_GRANDPA },
+    { DUELIST_DUEL_COMPUTER, 0,                 DUELIST_SIMON,         DUELIST_PEGASUS,       DUELIST_GRANDPA },
     { 0,                    0,                  0,                     0,                     0 },
 };
 

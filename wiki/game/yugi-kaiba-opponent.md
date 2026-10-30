@@ -92,6 +92,15 @@ Always open, with no format check:
 - Simon plays the LR-Chaos Turbo deck, Pegasus the sdlkilla-Warrior deck and Grandpa the geistD-Goat Control deck
   (`GetOpponentDeckOverride`).
 - Portraits: Black Luster Soldier - Envoy of the Beginning, D.D. Warrior Lady and Thousand-Eyes Restrict.
+- **Test Duel (2026-10-30).** The Duel Computer's slot (`DUELIST_DUEL_COMPUTER`, page 3 bottom: the fourth in the
+  cursor's ring) is "Test Duel" in `make` builds, hidden in `make release`. Its deck is the .ydk in `TEST_YDK` (the
+  Makefile; default `/mnt/c/ProjectIgnis/deck/test.ydk`), which `tools/testdeck.py` turns into
+  `build/include/test_deck.h` on every build (rewritten only when it changes): `MOD_TEST_DECK`,
+  `TEST_DECK_PORTRAIT` (the first Main Deck card's number, the portrait) and `sTestDeck` (Main then Extra Deck card
+  numbers; passcodes through the built password table, with the B. Skull Dragon / Dark Paladin aliases; unknown ones
+  left out with a warning). `GetOpponentDeckOverride` returns it, and `LoadOpponentDeck` (ai_deck.c) skips
+  `RemoveOverLimitDeckCards` for that duelist, so a test deck keeps any number of copies. Without the file (or with
+  no known Main Deck card) the header defines nothing and the slot stays hidden.
 
 ## Hidden slots
 - **On screen.** No name, and the stone cover (`OpponentSelect_DrawLockedCovers`) over the portrait.
