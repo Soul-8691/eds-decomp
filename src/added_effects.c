@@ -905,12 +905,16 @@ void EndPhase_ReturnTsukuyomi(int player)
 }
 #endif /* HAS_CARD_TSUKUYOMI */
 
-#if defined(HAS_CARD_NINJA_GRANDMASTER_SASUKE) || defined(HAS_CARD_MYSTIC_SWORDSMAN_LV2)
+#if defined(HAS_CARD_NINJA_GRANDMASTER_SASUKE) || defined(HAS_CARD_MYSTIC_SWORDSMAN_LV2) \
+    || defined(HAS_CARD_SASUKE_SAMURAI)
 /* ---- Attackers that destroy the target before the Damage Step ---------------------------------------------------
  * Ninja Grandmaster Sasuke: "If this card attacks a Defense Position monster, destroy that monster immediately with
  * this card's effect without applying damage calculation."
  * Mystic Swordsman LV2: "If this card attacks a face-down Defense Position monster: Destroy the monster immediately
  * with this card's effect without flipping it face-up or applying damage calculation."
+ * Sasuke Samurai (2026-10-30): "At the start of the Damage Step, if this card attacks a face-down Defense Position
+ * monster: Destroy that face-down monster." Destroyed at the start of the Damage Step, it is never flipped and no
+ * damage is calculated, so it is handled as Mystic Swordsman LV2.
  * No effect row: BattleStage_RevealDefender (battle_phase1.c) calls this before it flips the target, so a face-down
  * target is destroyed without being flipped (no flip effect). The attack is marked as made (DUEL_CMD_MARK_ATTACKED,
  * as the Damage Step would), the target is destroyed by the card's effect (DestroyFieldCard with its Graveyard
@@ -937,6 +941,11 @@ int DestroyTargetBeforeDamageStep(int player)
 #endif
 #ifdef HAS_CARD_MYSTIC_SWORDSMAN_LV2
     case CARD_MYSTIC_SWORDSMAN_LV2:
+#endif
+#ifdef HAS_CARD_SASUKE_SAMURAI
+    case CARD_SASUKE_SAMURAI:
+#endif
+#if defined(HAS_CARD_MYSTIC_SWORDSMAN_LV2) || defined(HAS_CARD_SASUKE_SAMURAI)
         destroy = target->isDefense && !target->isFaceUp;
         break;
 #endif
@@ -951,7 +960,35 @@ int DestroyTargetBeforeDamageStep(int player)
     gDuel.battleStep = 0;
     return 1;
 }
-#endif /* HAS_CARD_NINJA_GRANDMASTER_SASUKE || HAS_CARD_MYSTIC_SWORDSMAN_LV2 */
+
+/* AiEvalAttack (ai_picks.c): 1 if the CPU's monster in attackerZone destroys the human's Defense Position monster in
+ * targetZone before the Damage Step (above), so the attack wins whatever that monster's DEF. */
+int AiDestroysBeforeDamage(int attackerZone, int targetZone)
+{
+    struct DuelZone *attacker = ZoneOf(1, attackerZone);
+    struct DuelZone *target = ZoneOf(0, targetZone);
+    u16 id = DUEL_CARD_ID(&attacker->card);
+
+    if (id == 0 || !attacker->isFaceUp || DUEL_CARD_ID(&target->card) == 0 || !target->isDefense)
+        return 0;
+    switch (((const u16 *)CARD_ID_TO_NUMBER_ADDR)[id & CARD_ID_MASK]) {
+#ifdef HAS_CARD_NINJA_GRANDMASTER_SASUKE
+    case CARD_NINJA_GRANDMASTER_SASUKE:
+        return 1;
+#endif
+#ifdef HAS_CARD_MYSTIC_SWORDSMAN_LV2
+    case CARD_MYSTIC_SWORDSMAN_LV2:
+#endif
+#ifdef HAS_CARD_SASUKE_SAMURAI
+    case CARD_SASUKE_SAMURAI:
+#endif
+#if defined(HAS_CARD_MYSTIC_SWORDSMAN_LV2) || defined(HAS_CARD_SASUKE_SAMURAI)
+        return !target->isFaceUp;
+#endif
+    }
+    return 0;
+}
+#endif /* HAS_CARD_NINJA_GRANDMASTER_SASUKE || HAS_CARD_MYSTIC_SWORDSMAN_LV2 || HAS_CARD_SASUKE_SAMURAI */
 
 /* ---- Mod state of a duel -----------------------------------------------------------------------------------------
  * gModDuel (EWRAM 0x0202FF04, symbols.ld) holds what the added cards remember during a duel; DuelPhase_Init

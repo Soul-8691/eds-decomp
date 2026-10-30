@@ -640,6 +640,8 @@ int AiPickOpponentHandCard(void)
  *    Beating it sets wins and targetDestroyed (damage 0); losing to it sets damage = ATK - DEF.
  *  - Attack Position target: compared by ATK. Beating it sets wins, targetDestroyed and damage = difference;
  *    losing sets attackerDestroyed and a negative damage; a tie destroys both and leaves damage 0. */
+int AiDestroysBeforeDamage(int attackerZone, int targetZone);     /* added: src/added_effects.c */
+
 void AiEvalAttack(int attackerZone, int targetZone, struct AttackPlan *plan)
 {
     int attackerAtk = GetZoneCardAtk(1, attackerZone);
@@ -655,6 +657,16 @@ void AiEvalAttack(int attackerZone, int targetZone, struct AttackPlan *plan)
     plan->unk2 = 0;
     plan->damage = 0;
     target = ZONE_AT(0, targetZone);
+#if defined(HAS_CARD_NINJA_GRANDMASTER_SASUKE) || defined(HAS_CARD_MYSTIC_SWORDSMAN_LV2) \
+    || defined(HAS_CARD_SASUKE_SAMURAI)
+    /* added: Ninja Grandmaster Sasuke, Mystic Swordsman LV2 and Sasuke Samurai destroy their target before the
+     * Damage Step (src/added_effects.c), whatever its DEF */
+    if (AiDestroysBeforeDamage(attackerZone, targetZone)) {
+        plan->wins = 1;
+        plan->targetDestroyed = 1;
+        return;
+    }
+#endif
     if (target->isDefense) {
         targetValue = AiVisibleDef(0, targetZone);     /* changed: a guess when face down */
         if (targetValue < attackerAtk) {

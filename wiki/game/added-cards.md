@@ -1202,13 +1202,23 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
 - Release `.text` after it ends at 0x080809E8, 0x38 bytes below `.rodata` at 0x08080A20.
 - Checked in the source and the build; not tested in an emulator.
 
-### Sasuke Samurai (2026-10-30, data)
+### Sasuke Samurai (2026-10-30)
 - Appended to `config/new_cards.txt` for the Vampire opponent's decks ([[yugi-kaiba-opponent]]): it is in
   Woawa-Warrior Control's Side Deck (passcode 16222645, looked up on YGOPRODeck). ID 1160 (the last line, so no other
   card's ID changed), card number 1601.
 - The fetched text: "At the start of the Damage Step, if this card attacks a face-down Defense Position monster:
-  Destroy that face-down monster." Not coded yet: it plays as a 500/800 monster with no effect.
-- Built with make and make release.
+  Destroy that face-down monster."
+- **Coded (2026-10-30)** as Mystic Swordsman LV2: `DestroyTargetBeforeDamageStep` (added_effects.c), which
+  `BattleStage_RevealDefender` (battle_phase1.c) calls before it flips the target, gets a `CARD_SASUKE_SAMURAI` case. A
+  face-down Defense Position target is destroyed by the effect without being flipped (no flip effect), the attack
+  counts as made, and the battle skips to its end: no damage calculation, no battle damage. A face-up target battles
+  normally.
+- **CPU.** `AiEvalAttack` (ai_picks.c) asks the new `AiDestroysBeforeDamage` first: an attack by Sasuke Samurai or
+  Mystic Swordsman LV2 on a face-down Defense Position monster, or by Ninja Grandmaster Sasuke on any Defense Position
+  monster, counts as a win with no damage, whatever the target's DEF (the CPU guesses 1400 for a face-down one). Before,
+  the CPU never sent those weak attackers into a Set monster.
+- Release `.text` 0x08080560.
+- Checked in the source and the build; not tested in an emulator.
 
 ### Mirage of Nightmare, Dice Jar (2026-10-29, data)
 - Appended to `config/new_cards.txt` for the Yata opponent's decks ([[yugi-kaiba-opponent]]): Mirage of Nightmare

@@ -1593,7 +1593,7 @@ Banlist: February 2004.
 
 </details>
 
-Sasuke Samurai (Warrior Control's Side Deck) was added to the game for these decks; its effect is not coded yet.
+Sasuke Samurai (Warrior Control's Side Deck) was added to the game for these decks.
 
 ### 11-15. Chaos to Reaper
 

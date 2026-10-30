@@ -1896,3 +1896,6 @@ updated: 2026-09-29
 
 ## [2026-10-30] progress | Vampire opponent decks and recipes
 - src/mod_decks.c: sVampireWarriorControl (Woawa-Warrior Control), sVampireScientistFtk (ellietincan-Scientist FTK), sVampireWarriorTomatoControl (AJTBLS-Warrior Tomato Control), Main + Fusion + Side Decks, checked against the .ydk files; VampireDeck (80% / 10% / 10%) for DUELIST_MARIK; recipe presets 22-24, before the three debug ones (now 25-27). All legal under February 2004. config/new_cards.txt: Sasuke Samurai appended (ID 1160, effect not coded) for Warrior Control's Side Deck. DECKS.md. [[deck-recipes]], [[yugi-kaiba-opponent]]. Release .text 0x8053C. Built (make and make release); not tested in an emulator.
+
+## [2026-10-30] progress | Sasuke Samurai coded
+- src/added_effects.c: CARD_SASUKE_SAMURAI in DestroyTargetBeforeDamageStep (as Mystic Swordsman LV2) and the new AiDestroysBeforeDamage; src/battle_phase1.c guard; src/ai_picks.c AiEvalAttack counts those attacks as wins. README CPU list. [[added-cards]]. Release .text 0x80560. Built (make and make release); not tested in an emulator.

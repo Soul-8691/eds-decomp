@@ -415,7 +415,8 @@ int BattleStage_RevealDefender(int player)
 
     if (BATTLE_BYTES.direct)
         return 1;
-#if defined(HAS_CARD_NINJA_GRANDMASTER_SASUKE) || defined(HAS_CARD_MYSTIC_SWORDSMAN_LV2)
+#if defined(HAS_CARD_NINJA_GRANDMASTER_SASUKE) || defined(HAS_CARD_MYSTIC_SWORDSMAN_LV2) \
+    || defined(HAS_CARD_SASUKE_SAMURAI)
     /* added cards: they destroy a (face-down) Defense Position target before it is flipped (src/added_effects.c) */
     if (gDuelBattleStep.step == REVEAL_STEP_FLIP && DestroyTargetBeforeDamageStep(player))
         return 0;
