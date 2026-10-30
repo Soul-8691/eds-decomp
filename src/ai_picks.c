@@ -669,7 +669,9 @@ void AiEvalAttack(int attackerZone, int targetZone, struct AttackPlan *plan)
 #endif
     if (target->isDefense) {
         targetValue = AiVisibleDef(0, targetZone);     /* changed: a guess when face down */
-        if (targetValue < attackerAtk) {
+        /* changed: a face-down monster counts as beaten by an attacker with the guessed DEF (1400) or more, so the
+         * CPU attacks it rather than holding back on a tie with its own guess */
+        if (targetValue < attackerAtk || (IsHiddenHumanMonster(0, targetZone) && targetValue <= attackerAtk)) {
             plan->wins = 1;
             plan->targetDestroyed = 1;
         } else if (targetValue > attackerAtk) {
@@ -782,6 +784,8 @@ u16 AiCanBeatMonster(int atk, int zone)
         value = GetZoneCardAtk(0, zone);
     }
     if (value < atk)
+        return 1;
+    if (value == atk && IsHiddenHumanMonster(0, zone))     /* changed: a face-down one at the guessed DEF */
         return 1;
     /* Changed: an Attack Position monster of equal ATK counts as beaten (the CPU crashes into it, see
      * AiFindAttackTarget); the original required the CPU to have more monsters than the human. */

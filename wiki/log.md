@@ -1938,3 +1938,6 @@ updated: 2026-09-29
 
 ## [2026-10-30] progress | Chain Disappearance coded (original text)
 - src/added_effects.c: ChainDisappearanceTarget, EffectChainDisappearance* (Bottomless Trap Hole's window, 1000 or less ATK, 500 LP cost; banish the monster, the same-name hand cards and Deck copies, shuffle) and its row; AiSelfLpLoss 500. DECKS.md. [[added-cards]]. Release .text 0x80690. Built (make and make release); not tested in an emulator.
+
+## [2026-10-30] progress | The CPU summons 1400+ ATK monsters face up and attacks Set monsters with them
+- src/added_effects.c AiSummonFaceUpOnOpenField: 1400 (AI_SUMMON_ATTACK_ATK), any field, unless the human has a stronger face-up monster; src/ai_picks.c AiEvalAttack / AiCanBeatMonster: a face-down Defense Position monster at the guessed 1400 DEF counts as beaten by a 1400+ attacker; ai_steps.c comment. README CPU list. [[added-cards]]. Release .text 0x806AC. Built (make and make release); not tested in an emulator.

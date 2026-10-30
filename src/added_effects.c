@@ -5650,23 +5650,31 @@ int AiRecruiterCopyEntry(u16 cardId)
     return -1;
 }
 
-/* ---- The CPU's Set step against an empty field -----------------------------------------------------------------------
+/* ---- The CPU's Set step: strong monsters go face up ------------------------------------------------------------------
  * AiStepMainPhase's AI_MAIN_SET_MONSTER (ai_steps.c) Sets the monster it picks (on the first turn every summon goes
- * there, and later when no summon simulation is better). Changed: while the human controls no monster, a monster with
- * 1700 or more printed ATK and no flip effect is Normal Summoned face up in Attack Position instead (with or without
- * a Tribute), as the CPU's retreat rule keeps such monsters in Attack Position (AiShouldRetreatToDefense). */
-#define AI_OPEN_FIELD_ATTACK_ATK 1700
+ * there, and later when no summon simulation is better). Changed: a monster with AI_SUMMON_ATTACK_ATK (1400) or more
+ * printed ATK and no flip effect is Normal Summoned face up in Attack Position instead (with or without a Tribute),
+ * unless the human controls a face-up monster with more ATK, which would run it over. (Until 2026-10-30: 1700 or more,
+ * and only while the human controlled no monster.) */
+#define AI_SUMMON_ATTACK_ATK 1400
 
 int AiSummonFaceUpOnOpenField(u16 id)
 {
     u32 stats = gCardStats[id & CARD_ID_MASK];
     u16 number = CardNumberOfId(id);
+    int atk = CARD_STATS_ATK(stats) * CARD_STATS_POINTS_SCALE, zone;
 
-    if (CountMonsters(AI_HUMAN) != 0 || CARD_STATS_TYPE(stats) > CARD_TYPE_REPTILE)
+    if (CARD_STATS_TYPE(stats) > CARD_TYPE_REPTILE || atk < AI_SUMMON_ATTACK_ATK)
         return 0;
     if (HasFlipEffect(number, 0) || HasFlipEffect(number, 1))
         return 0;
-    return (int)(CARD_STATS_ATK(stats) * CARD_STATS_POINTS_SCALE) >= AI_OPEN_FIELD_ATTACK_ATK;
+    for (zone = ZONE_MONSTER_0; zone <= ZONE_MONSTER_4; zone++) {
+        struct DuelZone *z = ZoneOf(AI_HUMAN, zone);
+
+        if (DUEL_CARD_ID(&z->card) != 0 && z->isFaceUp && (int)GetZoneCardAtk(AI_HUMAN, zone) > atk)
+            return 0;
+    }
+    return 1;
 }
 
 #ifdef HAS_CARD_SAND_MOTH

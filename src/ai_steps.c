@@ -396,7 +396,7 @@ int AiStepMainPhase(void)
                 if (number == CARD_TIME_WIZARD || number == CARD_CANNON_SOLDIER)
                     faceUp = 1;
             }
-            if (AiSummonFaceUpOnOpenField(id))  /* added: 1700+ ATK in Attack Position on an empty field */
+            if (AiSummonFaceUpOnOpenField(id))  /* added: 1400+ ATK in Attack Position (src/added_effects.c) */
                 faceUp = 1;
             QueueNormalSummon(1, handIdx, FindFreeMonsterZone(1), 0, faceUp);
             next = &gAiState;

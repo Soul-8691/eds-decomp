@@ -114,8 +114,10 @@ next one.
       unless your strongest monster has at least 1000 more ATK than it.
     - When it chooses Attack or Defense Position, it counts the ATK a monster will gain from an Equip Spell in its
       hand, Breaker's Spell Counter, and Blade Knight's bonus once its hand shrinks.
-    - When you control no monsters, it summons a monster with 1700 or more ATK in Attack Position instead of
-      Setting it (unless the monster has a flip effect), even on the first turn.
+    - It summons a monster with 1400 or more ATK in Attack Position instead of Setting it (unless the monster has
+      a flip effect, or you have a face-up monster with more ATK), even on the first turn.
+    - It attacks your face-down Defense Position monsters with any monster of 1400 ATK or more, even though it
+      can't see their DEF (it guesses 1400).
     - It crashes into your monsters with equal ATK when it has no better attack, unless another of its monsters
       can beat yours outright.
     - It Tribute Summons a stronger monster over weaker ones even when the swap doesn't change its attacks, such

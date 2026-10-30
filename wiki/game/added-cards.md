@@ -715,6 +715,13 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
   Attack Position, with no Tribute or with one. The two-Tribute case already summoned face up.
 - **Not changed.** Which monster the step picks (`AiPickMonsterToSet`) stays the same.
 - Checked in the source and the build; not tested in an emulator.
+- **Changed (2026-10-30, the user's request).** The threshold is now `AI_SUMMON_ATTACK_ATK` (1400), with or without
+  monsters on the human's side: a 1400+ ATK monster with no flip effect is summoned face up in Attack Position unless
+  the human controls a face-up monster with more ATK (it would be run over; then it is still Set).
+- **And the attacks (same day).** The CPU guesses 1400 DEF for a face-down monster (`AiVisibleDef`), and an attacker
+  with exactly that much did not count as winning, so a 1400 attacker held back. `AiEvalAttack` and
+  `AiCanBeatMonster` (ai_picks.c) now count a face-down Defense Position monster as beaten by an attacker with the
+  guessed DEF or more. Release `.text` 0x080806AC.
 
 ### Cyber Dragon (2026-10-29)
 - Effect Monster (Level 5, LIGHT Machine, 2100/1600): "If only your opponent controls a monster, you can Special
