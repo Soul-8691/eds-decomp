@@ -2149,6 +2149,18 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
   copy whenever it may (`AiPlayAddedCards`, `AiShouldActivateAddedCard` default).
 - Checked in the source and the build; not tested in an emulator.
 
+### Final Attack Orders (2026-10-30)
+- Effect text from [YGOPRODeck](https://db.ygoprodeck.com/api/v7/cardinfo.php?name=Final%20Attack%20Orders) (id
+  18710707): "All face-up monsters on the field are changed to Attack Position, and their battle positions cannot be
+  changed." Continuous Trap in the card pool; it stays face-up when activated. `EffectFinalAttackOrdersResolve` and
+  `ApplyFinalAttackOrders` (same pattern as [[Level Limit - Area B]] / Dragon Capture Jar): every face-up Defense
+  Position monster on either side is switched to Attack (`ChangeBattlePosition`). `ApplyFinalAttackOrders` also runs
+  after a face-up summon (`summon_action.c`) and from `ModDuelStateCheck` while the card is active. While it is active,
+  the human cannot change battle positions (`card_command_menu.c` strips Def Pos / Atk Pos / Flip), and the CPU skips
+  its position-change phase (`AiCanChangePosition`). The CPU flips a Set copy in its Main Phase (`AiPlayAddedCards`,
+  `AiTryPlaySpellTrap`; `AiShouldActivateAddedCard` default).
+- Checked in the source and the build; not tested in an emulator.
+
 ### Level Limit - Area B (2026-10-30)
 - Effect text from [YGOPRODeck](https://db.ygoprodeck.com/api/v7/cardinfo.php?name=Level%20Limit%20-%20Area%20B) (id
   3136426): "Change all face-up Level 4 or higher monsters to Defense Position." Continuous Spell in the card pool; it

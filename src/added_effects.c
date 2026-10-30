@@ -5337,6 +5337,57 @@ int EffectLevelLimitAreaBResolve(struct ChainEntry *link, struct ChainEntry *cha
 }
 #endif /* HAS_CARD_LEVEL_LIMIT_AREA_B */
 
+#ifdef HAS_CARD_FINAL_ATTACK_ORDERS
+/* ---- Final Attack Orders (YGOPRODeck id 18710707) ---------------------------------------------------------------
+ * Effect text (YGOPRODeck API): "All face-up monsters on the field are changed to Attack Position, and their battle
+ * positions cannot be changed." Continuous Trap; stays face-up when activated. ApplyFinalAttackOrders switches every
+ * face-up Defense Position monster to Attack (ChangeBattlePosition), on activation and after a face-up summon or from
+ * ModDuelStateCheck while active. The human and CPU cannot change battle positions while it is active
+ * (card_command_menu.c, AiCanChangePosition). CPU: AiPlayAddedCards (AiTryPlaySpellTrap). */
+
+int FinalAttackOrdersActive(void)
+{
+    return CountActiveCardsOnField(0, CARD_FINAL_ATTACK_ORDERS) > 0
+           || CountActiveCardsOnField(1, CARD_FINAL_ATTACK_ORDERS) > 0;
+}
+
+int ApplyFinalAttackOrders(int player)
+{
+    int p, z, found = 0;
+
+    if (!FinalAttackOrdersActive())
+        return 0;
+    for (p = 0; p <= 1; p++) {
+        for (z = ZONE_MONSTER_0; z <= ZONE_MONSTER_4; z++) {
+            struct DuelZone *zn = ZoneOf(p, z);
+
+            if (DUEL_CARD_ID(&zn->card) != 0 && zn->isFaceUp && zn->isDefense)
+                found = 1;
+        }
+    }
+    if (!found)
+        return 0;
+    DuelCmd_Push(player ? DUEL_CMD_PLAYER | DUEL_CMD_SHOW_CARD_EFFECT : DUEL_CMD_SHOW_CARD_EFFECT,
+                 gCardNumberToId[CARD_FINAL_ATTACK_ORDERS], 1, 0);
+    for (p = 0; p <= 1; p++) {
+        for (z = ZONE_MONSTER_0; z <= ZONE_MONSTER_4; z++) {
+            struct DuelZone *zn = ZoneOf(p, z);
+
+            if (DUEL_CARD_ID(&zn->card) != 0 && zn->isFaceUp && zn->isDefense)
+                ChangeBattlePosition(p, z, 0, 0);
+        }
+    }
+    return 1;
+}
+
+int EffectFinalAttackOrdersResolve(struct ChainEntry *link, struct ChainEntry *chainedTo)
+{
+    if (!link->negated)
+        ApplyFinalAttackOrders(link->player);
+    return EFFECT_STEP_DONE;
+}
+#endif /* HAS_CARD_FINAL_ATTACK_ORDERS */
+
 #ifdef HAS_CARD_MYSTIK_WOK
 /* ---- Mystik Wok (YGOPRODeck id 80161395) -------------------------------------------------------------------------
  * Quick-Play Spell: "Tribute 1 monster. Select either its ATK or DEF and gain that many Life Points."
@@ -7597,7 +7648,7 @@ int AiChainSummonTriggerResponse(struct ChainEntry *entry)
 int ModDuelStateCheck(void)
 {
 #if defined(HAS_CARD_BERSERK_GORILLA) || defined(HAS_CARD_THUNDER_NYAN_NYAN) \
-    || defined(HAS_CARD_LEVEL_LIMIT_AREA_B)
+    || defined(HAS_CARD_LEVEL_LIMIT_AREA_B) || defined(HAS_CARD_FINAL_ATTACK_ORDERS)
     int player, zone;
 
     if (gDuel.phase == PHASE_BATTLE && gDuel.battleStage >= BATTLE_STAGE_SELECT_TARGET
@@ -7605,6 +7656,10 @@ int ModDuelStateCheck(void)
         return 0;
 #ifdef HAS_CARD_LEVEL_LIMIT_AREA_B
     if (ApplyLevelLimitAreaB(AI_HUMAN))
+        return 1;
+#endif
+#ifdef HAS_CARD_FINAL_ATTACK_ORDERS
+    if (ApplyFinalAttackOrders(AI_HUMAN))
         return 1;
 #endif
     for (player = 0; player <= 1; player++) {
@@ -8624,6 +8679,10 @@ int AiPlayAddedCards(void)
     if (AiTryPlaySpellTrap(CARD_GRAVITY_BIND))
         return 1;
 #endif
+#ifdef HAS_CARD_FINAL_ATTACK_ORDERS
+    if (AiTryPlaySpellTrap(CARD_FINAL_ATTACK_ORDERS))
+        return 1;
+#endif
 #ifdef HAS_CARD_ROYAL_OPPRESSION
     if (AiTryPlaySpellTrap(CARD_ROYAL_OPPRESSION))
         return 1;
@@ -9117,6 +9176,16 @@ const struct CardEffect gAddedCardEffects[] = {
     {
         CARD_LEVEL_LIMIT_AREA_B, 0,
         EffectLevelLimitAreaBResolve,
+        NULL,
+        NULL,
+        NULL,
+        NULL,
+    },
+#endif
+#ifdef HAS_CARD_FINAL_ATTACK_ORDERS
+    {
+        CARD_FINAL_ATTACK_ORDERS, 0,
+        EffectFinalAttackOrdersResolve,
         NULL,
         NULL,
         NULL,

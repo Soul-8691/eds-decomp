@@ -2028,3 +2028,6 @@ updated: 2026-09-29
 
 ## [2026-10-30] progress | Royal Oppression
 - src/added_effects.c: `EffectRoyalOppression*`, `gAddedCardEffects` row, AI hooks; src/card_command_menu.c, src/effect_activation.c, src/effect_targets4.c: face-up activation. missing-main.txt. [[added-cards]]. Built (`make`); not tested in an emulator.
+
+## [2026-10-30] progress | Final Attack Orders
+- src/added_effects.c: `ApplyFinalAttackOrders`, `EffectFinalAttackOrdersResolve`, `gAddedCardEffects` row, `ModDuelStateCheck`, `AiPlayAddedCards`. src/summon_action.c, src/card_command_menu.c, src/ai_picks.c. missing.txt, missing-main.txt. [[added-cards]]. Built (`make`); not tested in an emulator.

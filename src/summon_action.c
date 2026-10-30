@@ -35,6 +35,9 @@ int KingTigerWanghuOnSummon(int player, int zone);
 #ifdef HAS_CARD_LEVEL_LIMIT_AREA_B
 int ApplyLevelLimitAreaB(int player);
 #endif
+#ifdef HAS_CARD_FINAL_ATTACK_ORDERS
+int ApplyFinalAttackOrders(int player);
+#endif
 
 /* Matching: the unit calls DuelCmd_Push with four int parameters. With the header's u16 cmd and arg2 the
  * register allocation of the Special step machines (kinds 4-6) differs. Same function, other view. */
@@ -559,6 +562,10 @@ u16 SummonAction_Update(void)
 #ifdef HAS_CARD_LEVEL_LIMIT_AREA_B
                 if (wasFaceUp)
                     ApplyLevelLimitAreaB(gSummonAction.player);
+#endif
+#ifdef HAS_CARD_FINAL_ATTACK_ORDERS
+                if (wasFaceUp)
+                    ApplyFinalAttackOrders(gSummonAction.player);
 #endif
                 {
                     /* The opponent may respond to the summon: SUMMONED or SET for a Normal Summon / Set,

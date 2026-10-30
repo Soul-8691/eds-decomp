@@ -28,6 +28,10 @@
 #include "duel_flow.h"              /* gDuelCtrl */
 #include "util.h"                   /* MemCopy16, Random */
 
+#ifdef HAS_CARD_FINAL_ATTACK_ORDERS
+int FinalAttackOrdersActive(void);
+#endif
+
 /* Matching: effect.h declares CollectEffectTargets with a u16 return, which adds a zero-extension at this
  * call; the ROM keeps the count as an int. Same alias as effect_checks / effect_resolve3. */
 extern int CollectEffectTargetsInt(int player, u16 cardNumber, int param) asm("CollectEffectTargets");
@@ -460,6 +464,10 @@ int AiCanChangePosition(int player, int zone)
         if (GetZoneCardType(player, zone) == CARD_TYPE_DRAGON)
             return 0;
     }
+#ifdef HAS_CARD_FINAL_ATTACK_ORDERS
+    if (FinalAttackOrdersActive())
+        return 0;
+#endif
     return 1;
 }
 

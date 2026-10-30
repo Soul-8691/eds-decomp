@@ -39,6 +39,9 @@ int CanCyberDragonSpecialSummon(int player);
 #ifdef HAS_CARD_LEVEL_LIMIT_AREA_B
 int ModLevelLimitAreaBBlocksAtkPosition(int player, int zone);
 #endif
+#ifdef HAS_CARD_FINAL_ATTACK_ORDERS
+int FinalAttackOrdersActive(void);
+#endif
 
 /* ROM data used only here. */
 /* Matching: card IDs read through their alias symbols (= &gCardNumberToId[number], see card_data.h). */
@@ -715,6 +718,10 @@ u16 CardMenu_GetMonsterCommands(u16 id, int player, int zone)
                 if (CARD_NUMBER_AT(ZONE_CARD_ID((struct DuelZone *)(offset + (u32)gDuelZones))) != CARD_1334)
                     flags &= (u16)~(CARDMENU_MASK_DEF_POS | CARDMENU_MASK_ATK_POS | CARDMENU_MASK_FLIP);
             }
+#ifdef HAS_CARD_FINAL_ATTACK_ORDERS
+            if (FinalAttackOrdersActive())
+                flags &= (u16)~(CARDMENU_MASK_DEF_POS | CARDMENU_MASK_ATK_POS | CARDMENU_MASK_FLIP);
+#endif
         }
         {
             int side = player & 1;
