@@ -26,10 +26,10 @@ An eighth main-menu item added by this build (`src/mod_recipes.c`, a `@farcode`/
   - `MainMenu_Init` writes the label to tiles 0x200-0x23F, the two tile rows after the 0x4000-byte sheet.
 
 ## Preset recipes
-The SRAM area is set up on the first visit (and after a New Game) with recipes 01-24 from `GetRecipePreset` (src/mod_decks.c). These are the
+The SRAM area is set up on the first visit (and after a New Game) with recipes 01-27 from `GetRecipePreset` (src/mod_decks.c). These are the
 mod's deck tables, named after their .ydk files. Every preset carries the .ydk's Side Deck too (`s<Deck>Side`,
 passed by `GetRecipePreset` and put in the recipe's side list by `PresetToBuf`) and has its .ydk's Extra Deck as
-its Fusion Deck. Presets 22-24 (Chaos Turbo, Warrior, Goat Control) got theirs on 2026-10-30: until then they held
+its Fusion Deck. Presets 25-27 (Chaos Turbo, Warrior, Goat Control; 22-24 until the Vampire decks came) got theirs on 2026-10-30: until then they held
 the Main Deck only (Goat Control 3 of its 15 Fusion Monsters) and no Side Deck. Checked against the .ydk files (passcodes mapped through
 assets/cards/passwords.csv and build/new_cards.tsv): identical, except Gradius' Option, left out of GBO-Recruiter
 Control's Side Deck (4-Starred Ladybug of Doom is an added card now, [[added-cards]]). The three starter decks
@@ -58,9 +58,12 @@ Control's Side Deck (4-Starred Ladybug of Doom is an added card now, [[added-car
 | 19 | AlephYa2-Gearfried | the Yata opponent (10%) |
 | 20 | Aretos-Tomato Control (Scientist) | the Scientist opponent (60%) |
 | 21 | DK-ZERO-Scientist FTK | the Scientist opponent (40%) |
-| 22 | LR-Chaos Turbo | Tea, the Chaos Turbo deck opponent (debug build) |
-| 23 | sdlkilla-Warrior | the Warrior deck opponent (debug build) |
-| 24 | geistD-Goat Control | the Goat Control deck opponent (debug build) |
+| 22 | Woawa-Warrior Control | the Vampire opponent (80%) |
+| 23 | ellietincan-Scientist FTK | the Vampire opponent (10%) |
+| 24 | AJTBLS-Warrior Tomato Control | the Vampire opponent (10%) |
+| 25 | LR-Chaos Turbo | Tea, the Chaos Turbo deck opponent (debug build) |
+| 26 | sdlkilla-Warrior | the Warrior deck opponent (debug build) |
+| 27 | geistD-Goat Control | the Goat Control deck opponent (debug build) |
 
 "ellietincan-Warrior Tomato Control" is 34 characters, so the slot stores the first 31 (`RECIPE_NAME_SIZE` 32), and
 the list row shows 26 and "..". "Aretos-Tomato Control (Scientist)" (33) is cut the same way.

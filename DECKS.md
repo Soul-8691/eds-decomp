@@ -31,7 +31,7 @@ Formats unlock in this order; in the release build each takes 10 wins to open th
 | 7 | Fiber | July 2003 | Tomato Control 80%, Recruiter Control 20% |
 | 8 | Yata | August 2003 | Tomato Control 50%, Warrior Tomato Control 40%, Gearfried 10% |
 | 9 | Scientist | November 2003 | Tomato Control 60%, Scientist FTK 40% |
-| 10 | Vampire | February 2004 | Vanilla (unchanged) |
+| 10 | Vampire | February 2004 | Warrior Control 80%, Scientist FTK 10%, Warrior Tomato Control 10% |
 | 11 | Chaos | April 2004 | Vanilla (unchanged) |
 | 12 | Warrior | October 2004 | Vanilla (unchanged) |
 | 13 | Goat | April 2005 | Vanilla (unchanged) |
@@ -1381,7 +1381,221 @@ Banlist: November 2003.
 Cards here with no coded effect yet: Super Robolady, Super Roboyarou, Dark Balter the Terrible, Fiend Skull Dragon
 and Ryu Senshi.
 
-### 10-15. Vampire to Reaper
+### 10. Vampire
+
+Banlist: February 2004.
+
+<details>
+<summary>Warrior Control: 80% (Woawa-Warrior Control) (40 cards + 15 Fusion Deck + 15 Side Deck)</summary>
+
+**Monsters (15)**
+
+- 1x Breaker the Magical Warrior
+- 3x D.D. Warrior Lady
+- 1x Exiled Force
+- 1x Fiber Jar
+- 3x Gravekeeper's Spy
+- 1x Injection Fairy Lily
+- 1x Sangan
+- 1x Sinister Serpent
+- 1x Tribe-Infecting Virus
+- 1x Witch of the Black Forest
+- 1x Zombyra the Dark
+
+**Spells (19)**
+
+- 1x Change of Heart
+- 1x Confiscation
+- 1x Dark Hole
+- 1x Delinquent Duo
+- 1x Graceful Charity
+- 1x Harpie's Feather Duster
+- 1x Heavy Storm
+- 1x Mirage of Nightmare
+- 1x Monster Reborn
+- 3x Mystical Space Typhoon
+- 1x Nobleman of Crossout
+- 1x Painful Choice
+- 1x Pot of Greed
+- 1x Raigeki
+- 2x Reinforcement of the Army
+- 1x The Forceful Sentry
+
+**Traps (6)**
+
+- 1x Bell of Destruction
+- 1x Call Of The Haunted
+- 1x Imperial Order
+- 1x Mirror Force
+- 2x Torrential Tribute
+
+**Fusion Deck (15)**
+
+- 3x Dark Balter the Terrible
+- 3x Dark Flare Knight
+- 3x Fiend Skull Dragon
+- 3x Ryu Senshi
+- 3x Thousand-Eyes Restrict
+
+**Side Deck (15)**
+
+- 2x Book of Moon
+- 1x Dust Tornado
+- 1x Jinzo
+- 1x Magical Scientist
+- 1x Nobleman of Crossout
+- 3x Poison of the Old Man
+- 2x Royal Decree
+- 1x Sasuke Samurai
+- 1x Snatch Steal
+- 1x The Little Swordsman of Aile
+- 1x Torrential Tribute
+
+</details>
+
+<details>
+<summary>Scientist FTK: 10% (ellietincan-Scientist FTK) (40 cards + 15 Fusion Deck + 15 Side Deck)</summary>
+
+**Monsters (17)**
+
+- 1x Breaker the Magical Warrior
+- 1x Cannon Soldier
+- 3x Catapult Turtle
+- 1x Cyber Jar
+- 1x Fiber Jar
+- 3x Gravekeeper's Spy
+- 1x Magical Scientist
+- 3x Mystic Tomato
+- 1x Sangan
+- 1x Tribe-Infecting Virus
+- 1x Witch of the Black Forest
+
+**Spells (18)**
+
+- 1x Change of Heart
+- 1x Dark Hole
+- 1x Graceful Charity
+- 1x Harpie's Feather Duster
+- 1x Heavy Storm
+- 3x Last Will
+- 1x Mirage of Nightmare
+- 1x Monster Reborn
+- 3x Mystical Space Typhoon
+- 1x Painful Choice
+- 1x Pot of Greed
+- 1x Premature Burial
+- 1x Raigeki
+- 1x The Forceful Sentry
+
+**Traps (5)**
+
+- 1x Bell of Destruction
+- 1x Call Of The Haunted
+- 1x Ceasefire
+- 1x Imperial Order
+- 1x Mirror Force
+
+**Fusion Deck (15)**
+
+- 2x Dark Balter the Terrible
+- 3x Dark Flare Knight
+- 3x Empress Judge
+- 1x Punished Eagle
+- 3x Roaring Ocean Snake
+- 1x Ryu Senshi
+- 2x Thousand-Eyes Restrict
+
+**Side Deck (15)**
+
+- 1x D.D. Warrior Lady
+- 1x Exiled Force
+- 1x Giant Trunade
+- 1x Jinzo
+- 1x Magic Cylinder
+- 3x Mother Grizzly
+- 3x Royal Decree
+- 1x Sinister Serpent
+- 1x Swords of Revealing Light
+- 2x Torrential Tribute
+
+</details>
+
+<details>
+<summary>Warrior Tomato Control: 10% (AJTBLS-Warrior Tomato Control) (40 cards + 15 Fusion Deck + 15 Side Deck)</summary>
+
+**Monsters (18)**
+
+- 1x Breaker the Magical Warrior
+- 1x Exiled Force
+- 1x Fiber Jar
+- 2x Gemini Elf
+- 1x Injection Fairy Lily
+- 1x Jinzo
+- 1x Magical Scientist
+- 2x Magician of Faith
+- 3x Mystic Tomato
+- 1x Sangan
+- 1x Sinister Serpent
+- 1x Tribe-Infecting Virus
+- 1x Witch of the Black Forest
+- 1x Yata-Garasu
+
+**Spells (18)**
+
+- 1x Change of Heart
+- 1x Confiscation
+- 1x Dark Hole
+- 1x Delinquent Duo
+- 1x Graceful Charity
+- 1x Harpie's Feather Duster
+- 1x Heavy Storm
+- 1x Mirage of Nightmare
+- 1x Monster Reborn
+- 2x Mystical Space Typhoon
+- 1x Nobleman of Crossout
+- 1x Painful Choice
+- 1x Pot of Greed
+- 1x Raigeki
+- 1x Reinforcement of the Army
+- 1x Snatch Steal
+- 1x The Forceful Sentry
+
+**Traps (4)**
+
+- 1x Call Of The Haunted
+- 1x Imperial Order
+- 1x Mirror Force
+- 1x Torrential Tribute
+
+**Fusion Deck (15)**
+
+- 3x Dark Balter the Terrible
+- 3x Fiend Skull Dragon
+- 3x Giltia the D. Knight
+- 3x Ryu Senshi
+- 3x Thousand-Eyes Restrict
+
+**Side Deck (15)**
+
+- 1x Cold Wave
+- 1x Electric Snake
+- 1x Goblin Attack Force
+- 1x Guardian Sphinx
+- 1x Kycoo the Ghost Destroyer
+- 1x Mage Power
+- 1x Magic Cylinder
+- 2x Masked Sorcerer
+- 1x Nobleman of Crossout
+- 1x Premature Burial
+- 1x Scapegoat
+- 2x Time Seal
+- 1x White Magical Hat
+
+</details>
+
+Sasuke Samurai (Warrior Control's Side Deck) was added to the game for these decks; its effect is not coded yet.
+
+### 11-15. Chaos to Reaper
 
 Vanilla (unchanged): these opponents still use the original game's decks.
 

@@ -1893,3 +1893,6 @@ updated: 2026-09-29
 
 ## [2026-10-30] progress | Chaos Turbo, Warrior and Goat Control: Fusion and Side Decks
 - src/mod_decks.c: sRedStarterDeck (Tea, Simon) 40 + 15, sJoeyDeck (Joey, Pegasus) 40 + 1, sBakuraDeck (Bakura, Grandpa) 40 + 15 from their .ydk extra decks; new sRedDeckSide / sJoeyDeckSide / sBakuraDeckSide, passed by recipe presets 22-24. Main and Fusion Decks checked against the .ydk files with a script. DECKS.md's three debug-opponent lists regenerated. [[deck-recipes]], [[added-cards]]. Release .text 0x80534. Built (make and make release); not tested in an emulator.
+
+## [2026-10-30] progress | Vampire opponent decks and recipes
+- src/mod_decks.c: sVampireWarriorControl (Woawa-Warrior Control), sVampireScientistFtk (ellietincan-Scientist FTK), sVampireWarriorTomatoControl (AJTBLS-Warrior Tomato Control), Main + Fusion + Side Decks, checked against the .ydk files; VampireDeck (80% / 10% / 10%) for DUELIST_MARIK; recipe presets 22-24, before the three debug ones (now 25-27). All legal under February 2004. config/new_cards.txt: Sasuke Samurai appended (ID 1160, effect not coded) for Warrior Control's Side Deck. DECKS.md. [[deck-recipes]], [[yugi-kaiba-opponent]]. Release .text 0x8053C. Built (make and make release); not tested in an emulator.

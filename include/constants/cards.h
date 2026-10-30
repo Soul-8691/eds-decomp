@@ -1326,6 +1326,7 @@ enum CardNumber {
     CARD_BAZOO_THE_SOUL_EATER = 1513,                     /* id 917, added card */
     CARD_GILASAURUS = 1520,                               /* id 1047, added card */
     CARD_MIRAGE_OF_NIGHTMARE = 1600,                      /* id 1159, added card */
+    CARD_SASUKE_SAMURAI = 1601,                           /* id 1160, added card */
     CARD_SHEEP_TOKEN = 1922,                              /* id 1110, added card */
     /* ---- end of the added cards ---- */
 };

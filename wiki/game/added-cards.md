@@ -1202,6 +1202,14 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
 - Release `.text` after it ends at 0x080809E8, 0x38 bytes below `.rodata` at 0x08080A20.
 - Checked in the source and the build; not tested in an emulator.
 
+### Sasuke Samurai (2026-10-30, data)
+- Appended to `config/new_cards.txt` for the Vampire opponent's decks ([[yugi-kaiba-opponent]]): it is in
+  Woawa-Warrior Control's Side Deck (passcode 16222645, looked up on YGOPRODeck). ID 1160 (the last line, so no other
+  card's ID changed), card number 1601.
+- The fetched text: "At the start of the Damage Step, if this card attacks a face-down Defense Position monster:
+  Destroy that face-down monster." Not coded yet: it plays as a 500/800 monster with no effect.
+- Built with make and make release.
+
 ### Mirage of Nightmare, Dice Jar (2026-10-29, data)
 - Appended to `config/new_cards.txt` for the Yata opponent's decks ([[yugi-kaiba-opponent]]): Mirage of Nightmare
   (passcode 41482598) is in all three Main Decks, Dice Jar (3549275) in ellietincan-Warrior Tomato Control's Side

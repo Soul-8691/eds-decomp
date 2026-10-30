@@ -1729,6 +1729,244 @@ static const struct DeckList *ScientistDeck(void)
 }
 #endif
 
+/* The Vampire format opponent (Marik's slot, src/mod_opponents.c): one of three decks per duel (VampireDeck): Warrior
+ * Control 80%, Scientist FTK 10%, Warrior Tomato Control 10% (decks/Woawa-Warrior Control.ydk,
+ * decks/ellietincan-Scientist FTK.ydk, decks/AJTBLS-Warrior Tomato Control.ydk; main and extra decks). Sasuke Samurai
+ * (16222645, Warrior Control's Side Deck) was added to config/new_cards.txt for them. */
+#if defined(HAS_CARD_BREAKER_THE_MAGICAL_WARRIOR) && defined(HAS_CARD_D_D_WARRIOR_LADY) && defined(HAS_CARD_EXILED_FORCE) \
+    && defined(HAS_CARD_FIBER_JAR) && defined(HAS_CARD_GRAVEKEEPERS_SPY) && defined(HAS_CARD_INJECTION_FAIRY_LILY) \
+    && defined(HAS_CARD_TRIBE_INFECTING_VIRUS) && defined(HAS_CARD_ZOMBYRA_THE_DARK) \
+    && defined(HAS_CARD_MIRAGE_OF_NIGHTMARE) && defined(HAS_CARD_REINFORCEMENT_OF_THE_ARMY) \
+    && defined(HAS_CARD_TORRENTIAL_TRIBUTE) && defined(HAS_CARD_DARK_BALTER_THE_TERRIBLE) \
+    && defined(HAS_CARD_DARK_FLARE_KNIGHT) && defined(HAS_CARD_FIEND_SKULL_DRAGON) && defined(HAS_CARD_RYU_SENSHI) \
+    && defined(HAS_CARD_THOUSAND_EYES_RESTRICT) && defined(HAS_CARD_MAGICAL_SCIENTIST) \
+    && defined(HAS_CARD_SASUKE_SAMURAI) && defined(HAS_CARD_BOOK_OF_MOON) && defined(HAS_CARD_POISON_OF_THE_OLD_MAN)
+#define MOD_VAMPIRE_WARRIOR_CONTROL 1
+static const u16 sVampireWarriorControl[] = {
+    /* Monsters (15) */
+    CARD_BREAKER_THE_MAGICAL_WARRIOR,
+    X3(CARD_D_D_WARRIOR_LADY),
+    CARD_EXILED_FORCE,
+    CARD_FIBER_JAR,
+    X3(CARD_GRAVEKEEPERS_SPY),
+    CARD_INJECTION_FAIRY_LILY,
+    CARD_SANGAN,
+    CARD_SINISTER_SERPENT,
+    CARD_TRIBE_INFECTING_VIRUS,
+    CARD_WITCH_OF_THE_BLACK_FOREST,
+    CARD_ZOMBYRA_THE_DARK,
+    /* Spells (19) */
+    CARD_CHANGE_OF_HEART,
+    CARD_CONFISCATION,
+    CARD_DARK_HOLE,
+    CARD_DELINQUENT_DUO,
+    CARD_GRACEFUL_CHARITY,
+    CARD_HARPIES_FEATHER_DUSTER,
+    CARD_HEAVY_STORM,
+    CARD_MIRAGE_OF_NIGHTMARE,
+    CARD_MONSTER_REBORN,
+    X3(CARD_MYSTICAL_SPACE_TYPHOON),
+    CARD_NOBLEMAN_OF_CROSSOUT,
+    CARD_PAINFUL_CHOICE,
+    CARD_POT_OF_GREED,
+    CARD_RAIGEKI,
+    X2(CARD_REINFORCEMENT_OF_THE_ARMY),
+    CARD_THE_FORCEFUL_SENTRY,
+    /* Traps (6) */
+    CARD_CALL_OF_THE_HAUNTED,
+    CARD_IMPERIAL_ORDER,
+    CARD_MIRROR_FORCE,
+    CARD_BELL_OF_DESTRUCTION,
+    X2(CARD_TORRENTIAL_TRIBUTE),
+    /* Fusion Deck (15) */
+    X3(CARD_DARK_BALTER_THE_TERRIBLE),
+    X3(CARD_DARK_FLARE_KNIGHT),
+    X3(CARD_FIEND_SKULL_DRAGON),
+    X3(CARD_RYU_SENSHI),
+    X3(CARD_THOUSAND_EYES_RESTRICT),
+};
+STATIC_ASSERT(ARRAY_COUNT(sVampireWarriorControl) == 40 + 15, VampireWarriorControlSize);
+static const struct DeckList sVampireWarriorControlList = { sVampireWarriorControl,
+                                                            ARRAY_COUNT(sVampireWarriorControl), 0 };
+/* Woawa-Warrior Control.ydk's Side Deck (15). */
+static const u16 sVampireWarriorControlSide[] = {
+    CARD_JINZO,
+    CARD_MAGICAL_SCIENTIST,
+    CARD_SASUKE_SAMURAI,
+    CARD_THE_LITTLE_SWORDSMAN_OF_AILE,
+    X2(CARD_BOOK_OF_MOON),
+    CARD_NOBLEMAN_OF_CROSSOUT,
+    X3(CARD_POISON_OF_THE_OLD_MAN),
+    CARD_SNATCH_STEAL,
+    CARD_DUST_TORNADO,
+    X2(CARD_ROYAL_DECREE),
+    CARD_TORRENTIAL_TRIBUTE,
+};
+STATIC_ASSERT(ARRAY_COUNT(sVampireWarriorControlSide) == 15, VampireWarriorControlSideSize);
+#endif
+
+#if defined(HAS_CARD_MAGICAL_SCIENTIST) && defined(HAS_CARD_GRAVEKEEPERS_SPY) \
+    && defined(HAS_CARD_BREAKER_THE_MAGICAL_WARRIOR) && defined(HAS_CARD_TRIBE_INFECTING_VIRUS) \
+    && defined(HAS_CARD_FIBER_JAR) && defined(HAS_CARD_MIRAGE_OF_NIGHTMARE) && defined(HAS_CARD_DARK_FLARE_KNIGHT) \
+    && defined(HAS_CARD_RYU_SENSHI) && defined(HAS_CARD_DARK_BALTER_THE_TERRIBLE) \
+    && defined(HAS_CARD_THOUSAND_EYES_RESTRICT) && defined(HAS_CARD_D_D_WARRIOR_LADY) && defined(HAS_CARD_EXILED_FORCE) \
+    && defined(HAS_CARD_MAGIC_CYLINDER) && defined(HAS_CARD_TORRENTIAL_TRIBUTE)
+#define MOD_VAMPIRE_SCIENTIST_FTK 1
+static const u16 sVampireScientistFtk[] = {
+    /* Monsters (17) */
+    CARD_MAGICAL_SCIENTIST,
+    X3(CARD_CATAPULT_TURTLE),
+    X3(CARD_GRAVEKEEPERS_SPY),
+    X3(CARD_MYSTIC_TOMATO),
+    CARD_SANGAN,
+    CARD_WITCH_OF_THE_BLACK_FOREST,
+    CARD_BREAKER_THE_MAGICAL_WARRIOR,
+    CARD_TRIBE_INFECTING_VIRUS,
+    CARD_CANNON_SOLDIER,
+    CARD_CYBER_JAR,
+    CARD_FIBER_JAR,
+    /* Spells (18) */
+    X3(CARD_LAST_WILL),
+    CARD_PAINFUL_CHOICE,
+    CARD_THE_FORCEFUL_SENTRY,
+    CARD_POT_OF_GREED,
+    CARD_GRACEFUL_CHARITY,
+    CARD_MIRAGE_OF_NIGHTMARE,
+    X3(CARD_MYSTICAL_SPACE_TYPHOON),
+    CARD_HEAVY_STORM,
+    CARD_HARPIES_FEATHER_DUSTER,
+    CARD_DARK_HOLE,
+    CARD_RAIGEKI,
+    CARD_CHANGE_OF_HEART,
+    CARD_PREMATURE_BURIAL,
+    CARD_MONSTER_REBORN,
+    /* Traps (5) */
+    CARD_CALL_OF_THE_HAUNTED,
+    CARD_IMPERIAL_ORDER,
+    CARD_MIRROR_FORCE,
+    CARD_BELL_OF_DESTRUCTION,
+    CARD_CEASEFIRE,
+    /* Fusion Deck (15) */
+    X3(CARD_DARK_FLARE_KNIGHT),
+    X3(CARD_ROARING_OCEAN_SNAKE),
+    CARD_PUNISHED_EAGLE,
+    X3(CARD_EMPRESS_JUDGE),
+    CARD_RYU_SENSHI,
+    X2(CARD_DARK_BALTER_THE_TERRIBLE),
+    X2(CARD_THOUSAND_EYES_RESTRICT),
+};
+STATIC_ASSERT(ARRAY_COUNT(sVampireScientistFtk) == 40 + 15, VampireScientistFtkSize);
+static const struct DeckList sVampireScientistFtkList = { sVampireScientistFtk, ARRAY_COUNT(sVampireScientistFtk), 0 };
+/* ellietincan-Scientist FTK.ydk's Side Deck (15). */
+static const u16 sVampireScientistFtkSide[] = {
+    CARD_JINZO,
+    CARD_D_D_WARRIOR_LADY,
+    CARD_EXILED_FORCE,
+    X3(CARD_MOTHER_GRIZZLY),
+    CARD_SINISTER_SERPENT,
+    CARD_SWORDS_OF_REVEALING_LIGHT,
+    CARD_GIANT_TRUNADE,
+    CARD_MAGIC_CYLINDER,
+    X2(CARD_TORRENTIAL_TRIBUTE),
+    X3(CARD_ROYAL_DECREE),
+};
+STATIC_ASSERT(ARRAY_COUNT(sVampireScientistFtkSide) == 15, VampireScientistFtkSideSize);
+#endif
+
+#if defined(HAS_CARD_BREAKER_THE_MAGICAL_WARRIOR) && defined(HAS_CARD_EXILED_FORCE) && defined(HAS_CARD_FIBER_JAR) \
+    && defined(HAS_CARD_INJECTION_FAIRY_LILY) && defined(HAS_CARD_MAGICAL_SCIENTIST) \
+    && defined(HAS_CARD_TRIBE_INFECTING_VIRUS) && defined(HAS_CARD_YATA_GARASU) && defined(HAS_CARD_MIRAGE_OF_NIGHTMARE) \
+    && defined(HAS_CARD_REINFORCEMENT_OF_THE_ARMY) && defined(HAS_CARD_TORRENTIAL_TRIBUTE) \
+    && defined(HAS_CARD_DARK_BALTER_THE_TERRIBLE) && defined(HAS_CARD_FIEND_SKULL_DRAGON) && defined(HAS_CARD_RYU_SENSHI) \
+    && defined(HAS_CARD_THOUSAND_EYES_RESTRICT) && defined(HAS_CARD_GOBLIN_ATTACK_FORCE) \
+    && defined(HAS_CARD_GUARDIAN_SPHINX) && defined(HAS_CARD_KYCOO_THE_GHOST_DESTROYER) && defined(HAS_CARD_COLD_WAVE) \
+    && defined(HAS_CARD_MAGE_POWER) && defined(HAS_CARD_SCAPEGOAT) && defined(HAS_CARD_MAGIC_CYLINDER)
+#define MOD_VAMPIRE_WARRIOR_TOMATO_CONTROL 1
+static const u16 sVampireWarriorTomatoControl[] = {
+    /* Monsters (18) */
+    CARD_BREAKER_THE_MAGICAL_WARRIOR,
+    CARD_EXILED_FORCE,
+    CARD_FIBER_JAR,
+    CARD_INJECTION_FAIRY_LILY,
+    CARD_JINZO,
+    CARD_MAGICAL_SCIENTIST,
+    X2(CARD_MAGICIAN_OF_FAITH),
+    X3(CARD_MYSTIC_TOMATO),
+    CARD_SANGAN,
+    CARD_SINISTER_SERPENT,
+    CARD_TRIBE_INFECTING_VIRUS,
+    CARD_WITCH_OF_THE_BLACK_FOREST,
+    CARD_YATA_GARASU,
+    X2(CARD_GEMINI_ELF),
+    /* Spells (18) */
+    CARD_CHANGE_OF_HEART,
+    CARD_CONFISCATION,
+    CARD_DARK_HOLE,
+    CARD_DELINQUENT_DUO,
+    CARD_GRACEFUL_CHARITY,
+    CARD_HARPIES_FEATHER_DUSTER,
+    CARD_HEAVY_STORM,
+    CARD_MIRAGE_OF_NIGHTMARE,
+    CARD_MONSTER_REBORN,
+    X2(CARD_MYSTICAL_SPACE_TYPHOON),
+    CARD_NOBLEMAN_OF_CROSSOUT,
+    CARD_PAINFUL_CHOICE,
+    CARD_POT_OF_GREED,
+    CARD_RAIGEKI,
+    CARD_REINFORCEMENT_OF_THE_ARMY,
+    CARD_SNATCH_STEAL,
+    CARD_THE_FORCEFUL_SENTRY,
+    /* Traps (4) */
+    CARD_CALL_OF_THE_HAUNTED,
+    CARD_IMPERIAL_ORDER,
+    CARD_MIRROR_FORCE,
+    CARD_TORRENTIAL_TRIBUTE,
+    /* Fusion Deck (15) */
+    X3(CARD_DARK_BALTER_THE_TERRIBLE),
+    X3(CARD_FIEND_SKULL_DRAGON),
+    X3(CARD_GILTIA_THE_D_KNIGHT),
+    X3(CARD_RYU_SENSHI),
+    X3(CARD_THOUSAND_EYES_RESTRICT),
+};
+STATIC_ASSERT(ARRAY_COUNT(sVampireWarriorTomatoControl) == 40 + 15, VampireWarriorTomatoControlSize);
+static const struct DeckList sVampireWarriorTomatoControlList = { sVampireWarriorTomatoControl,
+                                                                  ARRAY_COUNT(sVampireWarriorTomatoControl), 0 };
+/* AJTBLS-Warrior Tomato Control.ydk's Side Deck (15). */
+static const u16 sVampireWarriorTomatoControlSide[] = {
+    CARD_ELECTRIC_SNAKE,
+    CARD_GOBLIN_ATTACK_FORCE,
+    CARD_GUARDIAN_SPHINX,
+    CARD_KYCOO_THE_GHOST_DESTROYER,
+    X2(CARD_MASKED_SORCERER),
+    CARD_WHITE_MAGICAL_HAT,
+    CARD_COLD_WAVE,
+    CARD_MAGE_POWER,
+    CARD_NOBLEMAN_OF_CROSSOUT,
+    CARD_PREMATURE_BURIAL,
+    CARD_SCAPEGOAT,
+    CARD_MAGIC_CYLINDER,
+    X2(CARD_TIME_SEAL),
+};
+STATIC_ASSERT(ARRAY_COUNT(sVampireWarriorTomatoControlSide) == 15, VampireWarriorTomatoControlSideSize);
+#endif
+
+#if defined(MOD_VAMPIRE_WARRIOR_CONTROL) && defined(MOD_VAMPIRE_SCIENTIST_FTK) \
+    && defined(MOD_VAMPIRE_WARRIOR_TOMATO_CONTROL)
+#define MOD_VAMPIRE_DECKS 1
+/* The Vampire opponent's deck for this duel: Warrior Control 8 in 10, Scientist FTK 1 in 10, Warrior Tomato Control
+ * 1 in 10. */
+static const struct DeckList *VampireDeck(void)
+{
+    u32 roll = (u32)Random() % 10;
+
+    if (roll < 8)
+        return &sVampireWarriorControlList;
+    if (roll < 9)
+        return &sVampireScientistFtkList;
+    return &sVampireWarriorTomatoControlList;
+}
+#endif
+
 /* The replacement deck of opponent `opponent` (enum DuelistId), or NULL to keep the original: a new pick (the
  * weighted random ones roll again); GetOpponentDeckOverride keeps it for the match. */
 static const struct DeckList *PickOpponentDeckOverride(int opponent)
@@ -1755,6 +1993,10 @@ static const struct DeckList *PickOpponentDeckOverride(int opponent)
 #ifdef MOD_SCIENTIST_DECKS
     case DUELIST_UMBRA_LUMIS:           /* the Scientist format opponent */
         return ScientistDeck();
+#endif
+#ifdef MOD_VAMPIRE_DECKS
+    case DUELIST_MARIK:                 /* the Vampire format opponent */
+        return VampireDeck();
 #endif
 #ifdef MOD_JOEY_PEGASUS_DECKS
     case DUELIST_WEEVIL:                /* the Joey-Pegasus format opponent */
@@ -1831,6 +2073,9 @@ static const char sNameYataWarriorTomato[] = "ellietincan-Warrior Tomato Control
 static const char sNameYataGearfried[] = "AlephYa2-Gearfried";
 static const char sNameScientistTomato[] = "Aretos-Tomato Control (Scientist)";
 static const char sNameScientistFtk[] = "DK-ZERO-Scientist FTK";
+static const char sNameVampireWarriorControl[] = "Woawa-Warrior Control";
+static const char sNameVampireScientistFtk[] = "ellietincan-Scientist FTK";
+static const char sNameVampireWarriorTomato[] = "AJTBLS-Warrior Tomato Control";
 static const char sNameChaosTurbo[] = "LR-Chaos Turbo";
 static const char sNameWarrior[] = "sdlkilla-Warrior";
 static const char sNameGoatControl[] = "geistD-Goat Control";
@@ -1890,6 +2135,18 @@ static const struct RecipePreset sRecipePresets[] = {
 #endif
 #ifdef MOD_SCIENTIST_FTK
     { sNameScientistFtk, &sScientistFtkList, sScientistFtkSide, ARRAY_COUNT(sScientistFtkSide) },
+#endif
+#ifdef MOD_VAMPIRE_WARRIOR_CONTROL
+    { sNameVampireWarriorControl, &sVampireWarriorControlList, sVampireWarriorControlSide,
+      ARRAY_COUNT(sVampireWarriorControlSide) },
+#endif
+#ifdef MOD_VAMPIRE_SCIENTIST_FTK
+    { sNameVampireScientistFtk, &sVampireScientistFtkList, sVampireScientistFtkSide,
+      ARRAY_COUNT(sVampireScientistFtkSide) },
+#endif
+#ifdef MOD_VAMPIRE_WARRIOR_TOMATO_CONTROL
+    { sNameVampireWarriorTomato, &sVampireWarriorTomatoControlList, sVampireWarriorTomatoControlSide,
+      ARRAY_COUNT(sVampireWarriorTomatoControlSide) },
 #endif
 #ifdef MOD_RED_DECK
     { sNameChaosTurbo, &sRedDeckList, sRedDeckSide, ARRAY_COUNT(sRedDeckSide) },

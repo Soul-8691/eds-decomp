@@ -61,7 +61,10 @@ next to the one before it.
     Lumis' slot). Every card in both was already in the game. Magical Scientist and Gilasaurus are coded (2026-10-30,
     [[added-cards]]); no coded effect yet: Super Robolady, Super Roboyarou (and Dark Balter, Fiend Skull Dragon, Ryu Senshi
     below).
-  - The other 6 keep their original duelists' decks for now.
+  - Vampire plays Woawa-Warrior Control 80%, ellietincan-Scientist FTK 10% and AJTBLS-Warrior Tomato Control 10%
+    (`VampireDeck`, Marik's slot). Sasuke Samurai (Warrior Control's Side Deck) was added to `config/new_cards.txt`
+    for them (ID 1160); its effect is not coded yet.
+  - The other 5 keep their original duelists' decks for now.
   - Cards in these decks with no coded effect yet: Dark Balter the Terrible, Fiend Skull Dragon, Ryu Senshi (Joey-
     Pegasus Tomato Control's Fusion Deck), Skull Lair and The Last Warrior from Another Planet (Joey-Pegasus Vanilla
     Beat and both Android decks).
