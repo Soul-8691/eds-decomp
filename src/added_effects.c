@@ -3036,6 +3036,26 @@ int EffectLadybugOfDoomResolve(struct ChainEntry *link, struct ChainEntry *chain
 }
 #endif /* HAS_CARD_4_STARRED_LADYBUG_OF_DOOM */
 
+#ifdef HAS_CARD_DES_KOALA
+/* ---- Des Koala (YGOPRODeck id 69579761) ---------------------------------------------------------------------------
+ * Effect text (YGOPRODeck API): "FLIP: Inflict 400 damage to your opponent for each card in their hand."
+ * Resolve-only row (HasFlipEffect, card_detail.c). */
+
+#define DES_KOALA_DAMAGE_PER_HAND_CARD 400
+
+int EffectDesKoalaResolve(struct ChainEntry *link, struct ChainEntry *chainedTo)
+{
+    if (!link->negated) {
+        int opponent = 1 - (link->player & 1);
+        int damage = gDuelPlayers[opponent].handCount * DES_KOALA_DAMAGE_PER_HAND_CARD;
+
+        if (damage > 0)
+            LoseLifePoints(opponent, damage);
+    }
+    return EFFECT_STEP_DONE;
+}
+#endif /* HAS_CARD_DES_KOALA */
+
 #if defined(HAS_CARD_YATA_GARASU) || defined(HAS_CARD_ASURA_PRIEST)
 /* The Spirit monsters that cannot be Special Summoned: Yata-Garasu and Asura Priest (2026-10-30). Each goes back to its
  * owner's hand in the End Phase of the turn it was Normal Summoned or flipped face up; since it always leaves then and
@@ -8555,6 +8575,16 @@ const struct CardEffect gAddedCardEffects[] = {
     {
         CARD_4_STARRED_LADYBUG_OF_DOOM, 0,
         EffectLadybugOfDoomResolve,
+        NULL,
+        NULL,
+        NULL,
+        NULL,
+    },
+#endif
+#ifdef HAS_CARD_DES_KOALA
+    {
+        CARD_DES_KOALA, 0,
+        EffectDesKoalaResolve,
         NULL,
         NULL,
         NULL,

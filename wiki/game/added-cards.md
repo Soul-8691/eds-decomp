@@ -2078,6 +2078,13 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
   `CARD_SCAPEGOAT`, so it does not play Scapegoat on purpose.
 - Checked in the source and the build; not tested in an emulator.
 
+### Des Koala (2026-10-30)
+- Effect text from [YGOPRODeck](https://db.ygoprodeck.com/api/v7/cardinfo.php?name=Des%20Koala) (id 69579761): "FLIP:
+  Inflict 400 damage to your opponent for each card in their hand." `EffectDesKoalaResolve` (`LoseLifePoints` on the
+  opponent for 400 × their hand size). Listed in `HasFlipEffect` (`card_detail.c`); resolve-only `gAddedCardEffects`
+  row. Flip Summon and battle flips use the normal flip-effect chain.
+- Checked in the source and the build; not tested in an emulator.
+
 ### Gravity Bind (2026-10-30)
 - Effect text from [YGOPRODeck](https://db.ygoprodeck.com/api/v7/cardinfo.php?name=Gravity%20Bind) (id 85742772):
   "Level 4 or higher monsters cannot attack." Continuous Trap; it stays on the field when activated.
