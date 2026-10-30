@@ -4,7 +4,7 @@ type: tool
 status: draft
 confidence: high
 sources: [rom-analysis]
-updated: 2026-10-28
+updated: 2026-10-30
 ---
 
 # Card icons with art
@@ -47,8 +47,14 @@ art. `make` builds the game's data with it (`--data`, below); `make card-icons` 
   `data/mod_field_icons_data.s` (`gModFieldIconData`, @rodata). Checked offline by rebuilding cells from it.
 - **Sprites.** The OBJ card icons get the art too (`ModAddCardSprite`, `ModAddAffineCardSprite`): the hand
   (`DrawHandCards`), the card menu's card (`CardMenu_DrawCardPreview`, including the turn-over frames), the deck
-  reorder row (`DeckReorder_DrawCards` / `DrawSwap`), the change-position, flip and move animations, and the
-  unused `DuelPrompt_DrawPositionChoice`.
+  reorder row (`DeckReorder_DrawCards` / `DrawSwap`), the change-position, flip and move animations, the
+  unused `DuelPrompt_DrawPositionChoice`, and (2026-10-30) the summon position menu (`SummonPositionMenu_Draw`) and
+  the five-card pick (`FiveCardMenu_Draw`), both in summon_checks.c.
+  - **Bug fixed (2026-10-30, eds-35.png).** Those two still drew `GetCardIconObjTile(id)` (the original layout,
+    0x80 + 0x40 * type) in palette 1. For any type but Normal that tile is now inside the art slots, so the "Select
+    display position of card." prompt of a Special Summon (Magical Scientist's Fusion Monster) showed garbage. A
+    Normal monster's tile (0x80) is still its plain icon, so Normal monsters looked right there. Every caller of
+    `GetCardIconObjTile` in the duel now goes through the mod or shows the card back (0x40).
   - **VRAM.** The OBJ icon tiles 0x80-0x1FF (6 types x 4 poses, 4bpp; the duel's banners fill 0x364 on) now hold
     the six plain icons in pose 0 (4bpp, 0x80 + 16 * type: the fallback) and 9 256-colour 32x32 slots at
     0xE0 + 32 * slot.

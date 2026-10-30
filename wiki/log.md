@@ -1884,3 +1884,6 @@ updated: 2026-09-29
 
 ## [2026-10-30] progress | Magical Scientist coded
 - src/added_effects.c: EffectMagicalScientist* and its row, IsScientistFusion (ModCollectEffectTargets case), gModDuel.scientistReturn marks, EndPhase_ReturnMagicalScientist, ModCannotAttackDirectly (also Zombyra's), AiUseMagicalScientist / AiPickScientistTribute (the CPU's Catapult Turtle / Cannon Soldier burn), AiSelfLpLoss 1000. Hooks: card_command_menu.c CanActivateMonsterEffect case, card_menu_input.c CanMonsterAttack, battle_phase3.c DuelPhase_End, ai_steps.c AiStepMainPhase, summon_builders.c AiPickEffectTribute. README CPU list. [[added-cards]]. Release .text 0x80554. Built (make and make release); not tested in an emulator.
+
+## [2026-10-30] progress | Summon position menu and five-card pick draw the card art sprites
+- src/summon_checks.c: SummonPositionMenu_Draw and FiveCardMenu_Draw use ModAddAffineCardSprite instead of GetCardIconObjTile's original tile, which now lands in the art slots (garbage in eds-35.png, Magical Scientist's Special Summon). [[card-icons]]. Release .text 0x80530. Built (make and make release); not tested in an emulator.

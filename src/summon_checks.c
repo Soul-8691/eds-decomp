@@ -112,6 +112,9 @@ static inline int GetCardKind(u16 cardId)
  * card ID. These are the bits that do not depend on the card: a monster-kind RESPONSE_SUMMONED trigger. */
 #define SUMMONED_TRIGGER_BITS   ((RESPONSE_SUMMONED << 25) | (CHAIN_KIND_MONSTER << 21))
 
+/* Mod (src/mod_field_icons.c): a face-up card's sprite with its art (the OBJ icon tiles hold the art sprites). */
+void ModAddAffineCardSprite(u32 yx, u16 shape, u16 id, u32 pose, u16 attr2, u32 scaleAngle);
+
 /*
  * Draw callback of the five-card pick: the card IDs gDuel.promptArgs[0..4] as 32x32 affine card sprites at
  * x = 0x28 + 32 * slot, y = (revealRow - height + 2) * 8. The selected card (gTextBox.result) pulses with
@@ -137,12 +140,12 @@ void FiveCardMenu_Draw(void)
         u16 id = *cards;
         u16 pulse = PULSE_SCALE_CURVE[(*frame >> 1) & 0xF];
         u32 yx;
-        u16 tile;
         if (i != gTextBox.result)
             pulse = 0x100;
         yx = ((u32)y << 16) | (u32)x;
-        tile = GetCardIconObjTile(id) + 0x1000;     /* OBJ palette 1 */
-        AddAffineSprite(yx, SPRITE_SHAPE_32x32, tile, (u32)pulse << 16);
+        /* changed: the card's sprite with its art (src/mod_field_icons.c); the original layout's icon tile
+         * (GetCardIconObjTile) now holds the art slots */
+        ModAddAffineCardSprite(yx, SPRITE_SHAPE_32x32, id, 0, 0, (u32)pulse << 16);
         x += 0x20;
         cards++;
     } while (++i <= 4);
@@ -525,26 +528,25 @@ void SummonPositionMenu_Draw(void)
 {
     int y = gTextBox.y * 8 + 0x20;
     u32 yx1, yx2;
-    u16 tile1, tile2;
     u32 scaleAngle1, scaleAngle2;
     y -= (gTextBox.height + gTextBox.y - gTextBox.revealRow + 2) * 8;
     yx1 = (y << 16) | 0x40;
-    tile1 = GetCardIconObjTile(gSummonAction.cardId) | 0x1000;      /* OBJ palette 1 */
     if (gTextBox.result == 0)
         scaleAngle1 = gPulseScaleCurve[(gMain.frameCounter & 0x1E) >> 1] << 16;
     else
         scaleAngle1 = 0x01000000;
-    AddAffineSprite(yx1, SPRITE_SHAPE_32x32, tile1, scaleAngle1);
+    /* changed: the card's sprite with its art (src/mod_field_icons.c), as DuelPrompt_DrawPositionChoice; the
+     * original layout's icon tile (GetCardIconObjTile) now holds the art slots */
+    ModAddAffineCardSprite(yx1, SPRITE_SHAPE_32x32, gSummonAction.cardId, 0, 0, scaleAngle1);
     yx2 = (y << 16) | 0x90;
-    if (gSummonAction.isFaceUp)
-        tile2 = GetCardIconObjTile(gSummonAction.cardId) | 0x1000;
-    else
-        tile2 = 0x40;                                               /* card back */
     if (gTextBox.result != 0)
         scaleAngle2 = (gPulseScaleCurve[(gMain.frameCounter & 0x1E) >> 1] << 16) | 0x20;
     else
         scaleAngle2 = 0x01000020;
-    AddAffineSprite(yx2, SPRITE_SHAPE_32x32, tile2, scaleAngle2);
+    if (gSummonAction.isFaceUp)
+        ModAddAffineCardSprite(yx2, SPRITE_SHAPE_32x32, gSummonAction.cardId, 0, 0, scaleAngle2);
+    else
+        AddAffineSprite(yx2, SPRITE_SHAPE_32x32, 0x40, scaleAngle2);    /* card back */
 }
 
 /*
