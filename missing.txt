@@ -69,7 +69,6 @@ Emergency Provisions
 A Feather of the Phoenix
 Limiter Removal
 Gravekeeper's Assailant
-Blast with Chain
 Gravekeeper's Spear Soldier
 Enraged Battle Ox
 Terraforming
@@ -152,7 +151,6 @@ Mask of Brutality
 Magic Reflector
 Mad Dog of Darkness
 Horus the Black Flame Dragon LV8
-Gilasaurus
 Fear from the Dark
 Element Saurus
 Ectoplasmer

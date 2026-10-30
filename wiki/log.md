@@ -1887,3 +1887,6 @@ updated: 2026-09-29
 
 ## [2026-10-30] progress | Summon position menu and five-card pick draw the card art sprites
 - src/summon_checks.c: SummonPositionMenu_Draw and FiveCardMenu_Draw use ModAddAffineCardSprite instead of GetCardIconObjTile's original tile, which now lands in the art slots (garbage in eds-35.png, Magical Scientist's Special Summon). [[card-icons]]. Release .text 0x80530. Built (make and make release); not tested in an emulator.
+
+## [2026-10-30] progress | Gilasaurus mapped to effect key 1520
+- tools/newcards.py ENGINE_NUMBERS Gilasaurus: 1520 (the engine's hand Special Summon, trigger and EffectOpponentGraveSummonResolve); include/constants/cards.h regenerated (later numbers shift, IDs unchanged). src/duel_prompts.c DuelPrompt_ConfirmGraveyardSummon shows the formatted text (original bug) and answers Yes for the CPU. src/added_effects.c AiWantsGilasaurus / AiGilasaurusSpecialSummon in AiSpecialSummonCyberDragon. README CPU list, DECKS.md. [[added-cards]]. Release .text 0x80534. Built (make and make release); not tested in an emulator.

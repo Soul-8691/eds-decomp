@@ -58,8 +58,8 @@ next to the one before it.
     for them and is coded ([[added-cards]]). Dice Jar, in Warrior Tomato Control's Side Deck, was added and removed
     again, so that Side Deck has 14 cards.
   - Scientist plays Aretos-Tomato Control (Scientist) 60% and DK-ZERO-Scientist FTK 40% (`ScientistDeck`, Umbra &
-    Lumis' slot). Every card in both was already in the game. Magical Scientist is coded (2026-10-30, [[added-cards]]);
-    no coded effect yet: Gilasaurus, Super Robolady, Super Roboyarou (and Dark Balter, Fiend Skull Dragon, Ryu Senshi
+    Lumis' slot). Every card in both was already in the game. Magical Scientist and Gilasaurus are coded (2026-10-30,
+    [[added-cards]]); no coded effect yet: Super Robolady, Super Roboyarou (and Dark Balter, Fiend Skull Dragon, Ryu Senshi
     below).
   - The other 6 keep their original duelists' decks for now.
   - Cards in these decks with no coded effect yet: Dark Balter the Terrible, Fiend Skull Dragon, Ryu Senshi (Joey-

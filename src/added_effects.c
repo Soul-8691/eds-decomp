@@ -5458,10 +5458,76 @@ int CanCyberDragonSpecialSummon(int player)
 
 #endif /* HAS_CARD_CYBER_DRAGON */
 
+#ifdef HAS_CARD_GILASAURUS
+/* ---- Gilasaurus ----------------------------------------------------------------------------------------------------
+ * "You can Special Summon this card (from your hand). If Summoned this way: Activate this effect; your opponent can
+ * Special Summon 1 monster from their GY."
+ * Engine key 1520 (tools/newcards.py ENGINE_NUMBERS): the hand menu adds the Special Summon commands
+ * (card_command_menu.c), and the summon steps (effect_hooks.c) queue QueueSpecialSummonFromHand and, while the
+ * opponent has a monster to revive, a free zone and may Special Summon, a RESPONSE_SPECIAL_SUMMONED trigger. Its
+ * resolve, EffectOpponentGraveSummonResolve (effect_resolve11.c), asks the opponent (PROMPT_CONFIRM_GRAVEYARD_SUMMON;
+ * the CPU says Yes), who picks a monster from the Call of the Haunted list (the CPU: AiPickCardListEntry) and its
+ * position. The CPU's own Special Summon is in AiSpecialSummonCyberDragon below (AiGilasaurusSpecialSummon). */
+int CollectEffectTargetsGila(int player, int cardNumber, int param) asm("CollectEffectTargets");
+
+#define AI_GILASAURUS_SAFE_ATK 1500     /* the human may revive a monster weaker than this */
+
+/* 1 if the opponent of `player` may answer a Gilasaurus Special Summon (the test effect_hooks.c makes for key 1520);
+ * it leaves that opponent's candidates in gCardListView. */
+static int GilasaurusOpponentCanRevive(int player)
+{
+    return CollectEffectTargetsGila(1 - player, CARD_CALL_OF_THE_HAUNTED, 0) != 0
+           && CountFreeMonsterZones(1 - player) > 0 && CanSpecialSummon(1 - player);
+}
+
+/* The CPU Special Summons Gilasaurus when the human's best revival is harmless (no monster, or under
+ * AI_GILASAURUS_SAFE_ATK ATK), or as the Tribute for a Level 5-6 monster in its hand that it could not summon
+ * otherwise. */
+static int AiWantsGilasaurus(void)
+{
+    struct DuelPlayer *p = &gDuelPlayers[AI_PLAYER];
+    int i, best = 0;
+
+    if (!GilasaurusOpponentCanRevive(AI_PLAYER))
+        return 1;
+    for (i = 0; i < gCardListView.count; i++) {
+        int atk = CARD_STATS_ATK(gCardStats[gCardListView.cards[i] & CARD_ID_MASK]) * CARD_STATS_POINTS_SCALE;
+        if (atk > best)
+            best = atk;
+    }
+    if (best < AI_GILASAURUS_SAFE_ATK)
+        return 1;
+    if (p->normalSummonUsed || CountTributableMonsters(AI_PLAYER, -1) > 0)
+        return 0;
+    for (i = 0; i < p->handCount; i++) {
+        u32 stats = gCardStats[DUEL_CARD_ID(&p->hand[i]) & CARD_ID_MASK];
+        if (CARD_STATS_TYPE(stats) <= CARD_TYPE_REPTILE && CARD_STATS_KIND(stats) != CARD_KIND_FUSION
+            && CARD_STATS_KIND(stats) != CARD_KIND_RITUAL && CARD_STATS_LEVEL(stats) >= 5
+            && CARD_STATS_LEVEL(stats) <= 6)
+            return 1;
+    }
+    return 0;
+}
+
+/* Hand card i is Gilasaurus: Special Summon it in Attack Position, with its trigger as effect_hooks.c queues it. */
+static void AiGilasaurusSpecialSummon(int i)
+{
+    struct DuelPlayer *p = &gDuelPlayers[AI_PLAYER];
+    u16 id = DUEL_CARD_ID(&p->hand[i]);
+    int zone = FindFreeMonsterZone(AI_PLAYER);
+
+    QueueSpecialSummonFromHand(AI_PLAYER, i, zone, 0, 1);
+    if (GilasaurusOpponentCanRevive(AI_PLAYER))
+        Chain_AddPending(TRIGGER_PLAYER(AI_PLAYER) | TRIGGER_ZONE(zone) | TRIGGER_KIND(CHAIN_KIND_MONSTER)
+                             | TRIGGER_EVENT(RESPONSE_SPECIAL_SUMMONED) | id,
+                         0);
+}
+#endif /* HAS_CARD_GILASAURUS */
+
 /* The CPU's Special Summons from the hand by their own rules, first thing in its Main Phase (AiStepMainPhase, before
- * it picks a Normal Summon, which would change the monster counts): Cyber Dragon (only the human controls a monster)
- * and The Fiend Megacyber (key 1350: the human controls 2 or more monsters more), in Attack Position. 1 if it queued
- * one. */
+ * it picks a Normal Summon, which would change the monster counts): Cyber Dragon (only the human controls a monster),
+ * The Fiend Megacyber (key 1350: the human controls 2 or more monsters more), in Attack Position, and Gilasaurus
+ * (AiWantsGilasaurus). 1 if it queued one. */
 int AiSpecialSummonCyberDragon(void)
 {
     struct DuelPlayer *p = &gDuelPlayers[AI_PLAYER];
@@ -5480,6 +5546,12 @@ int AiSpecialSummonCyberDragon(void)
 #ifdef HAS_CARD_THE_FIEND_MEGACYBER
         if (number == CARD_THE_FIEND_MEGACYBER)
             ok = CountMonsters(AI_PLAYER) + 1 < CountMonsters(AI_HUMAN);
+#endif
+#ifdef HAS_CARD_GILASAURUS
+        if (number == CARD_GILASAURUS && AiWantsGilasaurus()) {
+            AiGilasaurusSpecialSummon(i);
+            return 1;
+        }
 #endif
         if (ok) {
             QueueSpecialSummonFromHand(AI_PLAYER, i, FindFreeMonsterZone(AI_PLAYER), 0, 1);

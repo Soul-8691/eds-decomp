@@ -89,6 +89,9 @@ ENGINE_NUMBERS = {
                                     # Premature Burial); Snatch Steal cannot target it
     'The Fiend Megacyber': 1350,    # key 1350: Special Summoned from the hand while the opponent has 2 or more monsters
                                     # more (CanSummonFromHand, the hand menu, the summon steps)
+    'Gilasaurus': 1520,             # key 1520: the hand menu's Special Summon commands, then (effect_hooks.c) a
+                                    # RESPONSE_SPECIAL_SUMMONED trigger whose resolve (EffectOpponentGraveSummonResolve)
+                                    # asks the opponent, who may Special Summon 1 monster from their Graveyard
 }
 
 # YGOPRODeck race -> EDS monster type (gCardTypeNames), attribute -> EDS attribute, Spell/Trap race -> subtype.

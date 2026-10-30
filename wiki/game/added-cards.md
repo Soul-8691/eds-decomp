@@ -1000,6 +1000,34 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
   an empty hand nothing happens.
 - Checked in the source and the build; not tested in an emulator.
 
+### Gilasaurus (2026-10-30)
+- Effect Monster (Level 3, EARTH Dinosaur, 1400/400). The fetched text: "You can Special Summon this card (from your
+  hand). If Summoned this way: Activate this effect; your opponent can Special Summon 1 monster from their GY."
+- **The engine already has it** as effect key 1520 (no EDS card): `ENGINE_NUMBERS` gives the card that number (ID 1047
+  = 1520), as for The Fiend Megacyber. What key 1520 does, in the original code:
+  - the hand menu (card_command_menu.c) adds the Special Summon commands (Attack, or face-up Defense) next to Summon /
+    Set, even after the Normal Summon is used;
+  - the summon steps (effect_hooks.c) queue `QueueSpecialSummonFromHand` and then, if the opponent has a monster to
+    revive (the Call of the Haunted list), a free zone and may Special Summon, a monster-kind
+    `RESPONSE_SPECIAL_SUMMONED` trigger from Gilasaurus;
+  - its row's resolve, `EffectOpponentGraveSummonResolve` (effect_resolve11.c), asks the opponent
+    (`PROMPT_CONFIRM_GRAVEYARD_SUMMON`, Yes/No), then lets them pick the monster (`PROMPT_SELECT_GRAVEYARD_MONSTER`,
+    the Call of the Haunted list) and Special Summons it from the Graveyard in the position they choose.
+- **Fixes to key 1520's code** (duel_prompts.c, `DuelPrompt_ConfirmGraveyardSummon`):
+  - the box showed the raw format string (an original bug: the card's name was formatted into a buffer that was never
+    shown); it now shows "Your opponent has Special Summoned Gilasaurus. ...";
+  - the CPU had no answer, so the human would have seen the CPU's question; the CPU now answers Yes at once. Its pick
+    is `AiPickCardListEntry`'s.
+- **CPU** (`AiSpecialSummonCyberDragon`, at the start of its Main Phase). It Special Summons Gilasaurus in Attack
+  Position, with the same trigger the human's summon queues (`AiGilasaurusSpecialSummon`), when:
+  - the human has no monster to revive, or none with `AI_GILASAURUS_SAFE_ATK` (1500) or more ATK; or
+  - it has not Normal Summoned, has no monster to Tribute, and holds a Level 5-6 monster, so Gilasaurus becomes the
+    Tribute.
+  Otherwise it is an ordinary Level 3 monster for the CPU's summon logic.
+- The other added cards keep their IDs; their card numbers after it move down one.
+- Release `.text` 0x08080534.
+- Checked in the source and the build; not tested in an emulator.
+
 ### The Fiend Megacyber (2026-10-29)
 - Effect Monster (Level 6, DARK Warrior, 2200/1200). The fetched text: "If your opponent controls at least 2 more
   monsters than you do, you can Special Summon this card (from your hand)."

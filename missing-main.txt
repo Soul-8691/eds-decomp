@@ -41,7 +41,6 @@ Royal Magical Library
 Deck Devastation Virus
 Dark Mimic LV3
 Convulsion of Nature
-Blast with Chain
 Archfiend's Oath
 Wall of Revealing Light
 The Rock Spirit
@@ -120,7 +119,6 @@ Medusa Worm
 Mask of Brutality
 Legendary Jujitsu Master
 Horus the Black Flame Dragon LV8
-Gilasaurus
 Fear from the Dark
 Element Saurus
 Divine Wrath

@@ -92,9 +92,9 @@ Marauding Captain
 The Fiend Megacyber
 Thestalos the Firestorm Monarch
 Threatening Roar
-------
 Magical Scientist
 Gilasaurus
+------
 Mask of Restrict
 My Body as a Shield
 Big Bang Shot
@@ -139,6 +139,8 @@ Hallowed Life Barrier
 Barrel Behind the Door
 Skill Drain
 Fusilier Dragon, the Dual-Mode Beast
+Enraged Battle Ox
+Gravekeeper's Spear Soldier
 Dark Scorpion - Cliff the Trap Remover
 Mystik Wok
 Asura Priest

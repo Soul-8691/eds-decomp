@@ -144,6 +144,9 @@ next one.
       Monster a turn in Main Phase 1 (with 4000 LP or more) when it could destroy one of your face-up monsters.
       Its Catapult Turtle and Cannon Soldier Tribute a Fusion Monster from Magical Scientist first, since it
       leaves at the End Phase anyway.
+    - It Special Summons Gilasaurus when your best monster to revive has less than 1500 ATK (or you have none), or
+      as a Tribute for a Level 5-6 monster it couldn't summon otherwise. When you Special Summon Gilasaurus, it
+      always revives a monster if it can.
     - When you attack into its flip monsters that remove or stop a monster (Man-Eater Bug, Hane-Hane, Penguin
       Soldier, Dark-Eyes Illusionist, Night Assailant, Tsukuyomi), it targets your strongest monster that hasn't
       attacked yet, so it can't attack this turn.

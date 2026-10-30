@@ -301,10 +301,10 @@ u32 DuelPrompt_ConfirmSpecialSummon(int unusedPlayer, u16 cardId)
 /*
  * PROMPT_CONFIRM_GRAVEYARD_SUMMON: 'Your opponent has Special Summoned <card>. Do you wish to Special-Summon
  * a monster from your Graveyard?' (Yes/No); promptResult = the answer. The card is card number 1520 (no
- * EDS card). Original bug: the name is formatted into buf, but the box shows the raw format string.
- * Returns 1 when finished.
+ * EDS card in the original; the added Gilasaurus here). Original bug, fixed: the name was formatted into buf,
+ * but the box showed the raw format string. Also added: the CPU answers Yes at once. Returns 1 when finished.
  */
-u32 DuelPrompt_ConfirmGraveyardSummon(int unusedPlayer)
+u32 DuelPrompt_ConfirmGraveyardSummon(int player)
 {
     char buf[0x100];
 
@@ -312,11 +312,15 @@ u32 DuelPrompt_ConfirmGraveyardSummon(int unusedPlayer)
         gDuel.promptResult = gTextBox.result;
         return 1;
     }
+    if (player != 0) {          /* added: the CPU always takes its monster (Gilasaurus, key 1520) */
+        gDuel.promptResult = 1;
+        return 1;
+    }
     gDuel.promptResult = 0;
     FormatStr(buf, gStrPromptOpponentSpecialSummonedFmt,
               (const char *)&gCardNames[gCardNumberToId_1520 * CARD_NAME_SIZE]);
     TextBoxOpen(PROMPT_BOX_POS, PROMPT_BOX_SIZE_WIDE, TEXTBOX_FLAGS_DEFAULT,
-                (const u8 *)gStrPromptOpponentSpecialSummonedFmt);   /* the format, not buf */
+                (const u8 *)buf);       /* changed: the formatted text (the original showed the format) */
     TextBoxSetMenu(TEXTBOX_MENU_YES_NO, NULL, NULL);
     gDuel.promptStep++;
     return 0;
