@@ -1935,3 +1935,6 @@ updated: 2026-09-29
 
 ## [2026-10-30] progress | Enemy Controller: the taken monster avoids zones the chain names
 - src/added_effects.c EffectEnemyControllerResolve: moves and links the monster itself (EnemyControllerFreeZone / IsZoneNamedByChain) instead of Change of Heart's resolve, so a Trap Hole on the Tributed monster's summon no longer destroys it. [[added-cards]]. Release .text 0x80690. Built (make and make release); not tested in an emulator.
+
+## [2026-10-30] progress | Chain Disappearance coded (original text)
+- src/added_effects.c: ChainDisappearanceTarget, EffectChainDisappearance* (Bottomless Trap Hole's window, 1000 or less ATK, 500 LP cost; banish the monster, the same-name hand cards and Deck copies, shuffle) and its row; AiSelfLpLoss 500. DECKS.md. [[added-cards]]. Release .text 0x80690. Built (make and make release); not tested in an emulator.

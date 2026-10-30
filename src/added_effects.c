@@ -533,6 +533,85 @@ int EffectBottomlessTrapHoleResolve(struct ChainEntry *link, struct ChainEntry *
 }
 #endif /* HAS_CARD_BOTTOMLESS_TRAP_HOLE */
 
+#ifdef HAS_CARD_CHAIN_DISAPPEARANCE
+/* ---- Chain Disappearance -------------------------------------------------------------------------------------------
+ * Normal Trap, its original TCG text (the fetched one is the later errata, with no cost and either player's summon):
+ * "Activate only when your opponent Normal Summons, Flip Summons or Special Summons a monster with 1000 or less ATK.
+ * Pay 500 Life Points to remove from play the summoned monster and all cards with the same name from your opponent's
+ * hand and Deck."
+ *   window   Bottomless Trap Hole's (RESPONSE_SUMMONED, RESPONSE_FLIP_SUMMONED, RESPONSE_SPECIAL_SUMMONED, the summoned
+ *            monster at loc0): the opponent's, face up, with 1000 or less ATK; checked again at resolution
+ *   chainA   500 LP (DUEL_CMD_LOSE_LP, a cost; AiSelfLpLoss keeps the CPU from paying its last)
+ *   resolve  as Chain Destruction (effect_resolve4.c), banishing: the monster (BanishFieldCard), every card of the
+ *            opponent's hand with its name (IsSameCardName; DUEL_CMD_BANISH_HAND_CARD, the hand compacted after the
+ *            last), every copy in their Deck (BanishDeckCopies), then the Deck is shuffled
+ *   CPU      a Set copy goes off whenever the human's summon qualifies (AiShouldActivateAddedCard's default yes) */
+#define CHAIN_DISAPPEARANCE_MAX_ATK 1000
+#define CHAIN_DISAPPEARANCE_COST 500
+
+void BanishDeckCopies(int player, u16 cardNo);     /* duel_card_actions.c */
+
+static int ChainDisappearanceTarget(struct ChainEntry *card)
+{
+    int player = DUEL_LOC_PLAYER(card->loc0);
+    int zone = DUEL_LOC_ZONE(card->loc0);
+    struct DuelZone *z;
+
+    switch (card->event) {
+    case RESPONSE_SUMMONED:
+    case RESPONSE_FLIP_SUMMONED:
+    case RESPONSE_SPECIAL_SUMMONED:
+        break;
+    default:
+        return 0;
+    }
+    if (player == card->player || zone > ZONE_MONSTER_4)
+        return 0;
+    z = ZoneOf(player, zone);
+    return DUEL_CARD_ID(&z->card) != 0 && z->isFaceUp
+           && (int)GetZoneCardAtk(player, zone) <= CHAIN_DISAPPEARANCE_MAX_ATK;
+}
+
+int EffectChainDisappearancePrepare(struct ChainEntry *card, struct ChainEntry *chainLink, u16 fromHand)
+{
+    return !fromHand && gDuelPlayers[card->player & 1].lifePoints >= CHAIN_DISAPPEARANCE_COST
+           && ChainDisappearanceTarget(card);
+}
+
+int EffectChainDisappearanceChainA(struct ChainEntry *link, struct ChainEntry *prevLink)
+{
+    DuelCmd_Push(link->player ? DUEL_CMD_PLAYER | DUEL_CMD_LOSE_LP : DUEL_CMD_LOSE_LP, CHAIN_DISAPPEARANCE_COST, 1, 0);
+    return 1;
+}
+
+int EffectChainDisappearanceResolve(struct ChainEntry *link, struct ChainEntry *chainedTo)
+{
+    int opponent = DUEL_LOC_PLAYER(link->loc0) & 1;
+    struct DuelPlayer *p = &gDuelPlayers[opponent];
+    u16 id;
+    int i, count, last = -1;
+    u16 cmd = opponent ? DUEL_CMD_PLAYER | DUEL_CMD_BANISH_HAND_CARD : DUEL_CMD_BANISH_HAND_CARD;
+
+    if (link->negated || !ChainDisappearanceTarget(link))
+        return EFFECT_STEP_DONE;
+    id = DUEL_CARD_ID(&ZoneOf(opponent, DUEL_LOC_ZONE(link->loc0))->card);
+    BanishFieldCard(opponent, DUEL_LOC_ZONE(link->loc0), 0);
+    /* the hand keeps its holes until the last banished card, which compacts it, so the indices stay valid */
+    count = p->handCount;
+    for (i = 0; i < count; i++) {
+        if (IsSameCardName(DUEL_CARD_ID(&p->hand[i]), id))
+            last = i;
+    }
+    for (i = 0; i <= last; i++) {
+        if (IsSameCardName(DUEL_CARD_ID(&p->hand[i]), id))
+            DuelCmd_Push(cmd, i, i == last, 0);
+    }
+    BanishDeckCopies(opponent, ((const u16 *)CARD_ID_TO_NUMBER_ADDR)[id & CARD_ID_MASK]);
+    DuelCmd_Push(opponent ? DUEL_CMD_PLAYER | DUEL_CMD_SHUFFLE_DECK : DUEL_CMD_SHUFFLE_DECK, 0, 0, 0);
+    return EFFECT_STEP_DONE;
+}
+#endif /* HAS_CARD_CHAIN_DISAPPEARANCE */
+
 #ifdef HAS_CARD_TORRENTIAL_TRIBUTE
 /* ---- Torrential Tribute --------------------------------------------------------------------------------------
  * "When a monster(s) is Summoned: Destroy all monsters on the field."
@@ -6320,6 +6399,9 @@ static int AiSelfLpLoss(struct ChainEntry *card)
     switch (CardNumberOfId(card->card)) {
     case CARD_ULTIMATE_OFFERING:
     case CARD_TREMENDOUS_FIRE:
+#ifdef HAS_CARD_CHAIN_DISAPPEARANCE
+    case CARD_CHAIN_DISAPPEARANCE:
+#endif
         return 500;
     case CARD_PREMATURE_BURIAL:
 #ifdef HAS_CARD_BRAIN_CONTROL
@@ -7639,6 +7721,16 @@ const struct CardEffect gAddedCardEffects[] = {
         NULL,
         EffectDarkMimicLv1Prepare,
         NULL,
+        NULL,
+    },
+#endif
+#ifdef HAS_CARD_CHAIN_DISAPPEARANCE
+    {
+        CARD_CHAIN_DISAPPEARANCE, 0,
+        EffectChainDisappearanceResolve,
+        NULL,
+        EffectChainDisappearancePrepare,
+        EffectChainDisappearanceChainA,
         NULL,
     },
 #endif

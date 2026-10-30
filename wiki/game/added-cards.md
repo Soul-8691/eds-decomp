@@ -1213,6 +1213,22 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
 - Release `.text` after it ends at 0x080809E8, 0x38 bytes below `.rodata` at 0x08080A20.
 - Checked in the source and the build; not tested in an emulator.
 
+### Chain Disappearance (2026-10-30)
+- Normal Trap. ID 942. Coded with its **original TCG text**: "Activate only when your opponent Normal Summons, Flip
+  Summons or Special Summons a monster with 1000 or less ATK. Pay 500 Life Points to remove from play the summoned
+  monster and all cards with the same name from your opponent's hand and Deck." The fetched text is the later errata
+  (no cost, either player's summon).
+- **Window.** Bottomless Trap Hole's: `RESPONSE_SUMMONED`, `RESPONSE_FLIP_SUMMONED` or `RESPONSE_SPECIAL_SUMMONED`,
+  the summoned monster at `loc0`; it must be the opponent's, face up, with 1000 or less ATK (`ChainDisappearanceTarget`),
+  at activation (with 500 LP to pay) and again at resolution.
+- **Cost.** ChainA: 500 LP (`DUEL_CMD_LOSE_LP`). `AiSelfLpLoss` lists it, so the CPU never pays its last LP.
+- **Resolve**, shaped as the original Chain Destruction's (effect_resolve4.c), banishing instead of destroying: the
+  monster (`BanishFieldCard`), each card of the opponent's hand with its name (`IsSameCardName`,
+  `DUEL_CMD_BANISH_HAND_CARD`; the hand keeps its holes until the last one, which compacts it), every copy in the
+  opponent's Deck (`BanishDeckCopies`, duel_card_actions.c), then the Deck is shuffled.
+- **CPU.** A Set copy goes off whenever the human's summon qualifies (`AiShouldActivateAddedCard`'s default yes).
+- Checked in the source and the build; not tested in an emulator.
+
 ### Enemy Controller (2026-10-30)
 - Quick-Play Spell. ID 897. The fetched text: "Activate 1 of these effects. ● Target 1 face-up monster your opponent
   controls; change that target's battle position. ● Tribute 1 monster, then target 1 face-up monster your opponent
