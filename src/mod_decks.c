@@ -44,8 +44,9 @@ static const struct DeckList sYugiDeckList = { sYugiDeck, ARRAY_COUNT(sYugiDeck)
 
 STATIC_ASSERT(ARRAY_COUNT(sYugiDeck) == 30, YugiDeckSize);
 
-/* Joey Wheeler: the "sdlkilla-Warrior" deck (sdlkilla-Warrior.ydk, main deck only): Warriors with Reinforcement of the
- * Army, D.D. Warrior Lady, Blade Knight, Exiled Force and Ninja Grandmaster Sasuke, and a Trap line-up. */
+/* Joey Wheeler: the "sdlkilla-Warrior" deck (sdlkilla-Warrior.ydk, main, extra and side deck): Warriors with
+ * Reinforcement of the Army, D.D. Warrior Lady, Blade Knight, Exiled Force and Ninja Grandmaster Sasuke, and a Trap
+ * line-up. */
 #if defined(HAS_CARD_BLACK_LUSTER_SOLDIER_ENVOY_OF_THE_BEGINNING) \
     && defined(HAS_CARD_BLADE_KNIGHT) \
     && defined(HAS_CARD_BREAKER_THE_MAGICAL_WARRIOR) \
@@ -60,7 +61,16 @@ STATIC_ASSERT(ARRAY_COUNT(sYugiDeck) == 30, YugiDeckSize);
     && defined(HAS_CARD_JAR_OF_GREED) \
     && defined(HAS_CARD_SAKURETSU_ARMOR) \
     && defined(HAS_CARD_TORRENTIAL_TRIBUTE) \
-    && defined(HAS_CARD_TRAP_DUSTSHOOT)
+    && defined(HAS_CARD_TRAP_DUSTSHOOT) \
+    && defined(HAS_CARD_THOUSAND_EYES_RESTRICT) \
+    && defined(HAS_CARD_CIPHER_SOLDIER) \
+    && defined(HAS_CARD_MOBIUS_THE_FROST_MONARCH) \
+    && defined(HAS_CARD_MIND_CONTROL) \
+    && defined(HAS_CARD_MYSTIK_WOK) \
+    && defined(HAS_CARD_DARK_SCORPION_CLIFF_THE_TRAP_REMOVER) \
+    && defined(HAS_CARD_GRAVEKEEPERS_SPY) \
+    && defined(HAS_CARD_CHAOS_SORCERER) \
+    && defined(HAS_CARD_ROYAL_OPPRESSION)
 #define MOD_JOEY_DECK 1
 static const u16 sJoeyDeck[] = {
     /* Monsters (13) */
@@ -94,27 +104,32 @@ static const u16 sJoeyDeck[] = {
     X2(CARD_TRAP_DUSTSHOOT),
     X2(CARD_DUST_TORNADO),
     CARD_CALL_OF_THE_HAUNTED,
+    /* Fusion Deck (1) */
+    CARD_THOUSAND_EYES_RESTRICT,
 };
-STATIC_ASSERT(ARRAY_COUNT(sJoeyDeck) == 40, JoeyDeckSize);
+STATIC_ASSERT(ARRAY_COUNT(sJoeyDeck) == 40 + 1, JoeyDeckSize);
+/* sdlkilla-Warrior.ydk's Side Deck (15). */
+static const u16 sJoeyDeckSide[] = {
+    X2(CARD_CIPHER_SOLDIER),
+    X2(CARD_MOBIUS_THE_FROST_MONARCH),
+    CARD_DARK_SCORPION_CLIFF_THE_TRAP_REMOVER,
+    X3(CARD_GRAVEKEEPERS_SPY),
+    CARD_CHAOS_SORCERER,
+    CARD_MIND_CONTROL,
+    CARD_MYSTIK_WOK,
+    CARD_TRAP_DUSTSHOOT,
+    X2(CARD_ROYAL_OPPRESSION),
+    CARD_DUST_TORNADO,
+};
+STATIC_ASSERT(ARRAY_COUNT(sJoeyDeckSide) == 15, JoeyDeckSideSize);
 #endif
 #ifdef MOD_JOEY_DECK
 static const struct DeckList sJoeyDeckList = { sJoeyDeck, ARRAY_COUNT(sJoeyDeck), 0 };
 #endif
 
-/* Bakura: the "geistD-Goat Control" deck (geistD-Goat Control.ydk, main and extra deck): Scapegoat and Metamorphosis into
- * Thousand-Eyes Restrict, flip monsters and Tsukuyomi, Black Luster Soldier and Dark Magician of Chaos. */
-
- // For later when these cards are actually coded
-    // && defined(HAS_CARD_DARK_BALTER_THE_TERRIBLE) \
-    // && defined(HAS_CARD_DARK_BLADE_THE_DRAGON_KNIGHT) \
-    // && defined(HAS_CARD_FIEND_SKULL_DRAGON) \
-    // && defined(HAS_CARD_GATLING_DRAGON) \
-    // && defined(HAS_CARD_KING_DRAGUN) \
-    // && defined(HAS_CARD_OJAMA_KING) \
-    // && defined(HAS_CARD_REAPER_ON_THE_NIGHTMARE) \
-    // && defined(HAS_CARD_RYU_SENSHI) \
-    // && defined(HAS_CARD_THE_LAST_WARRIOR_FROM_ANOTHER_PLANET) \
- 
+/* Bakura: the "geistD-Goat Control" deck (geistD-Goat Control.ydk, main, extra and side deck): Scapegoat and
+ * Metamorphosis into Thousand-Eyes Restrict, flip monsters and Tsukuyomi, Black Luster Soldier and Dark Magician of
+ * Chaos. */
 #if defined(HAS_CARD_ABYSS_SOLDIER) \
     && defined(HAS_CARD_BLACK_LUSTER_SOLDIER_ENVOY_OF_THE_BEGINNING) \
     && defined(HAS_CARD_BREAKER_THE_MAGICAL_WARRIOR) \
@@ -129,7 +144,21 @@ static const struct DeckList sJoeyDeckList = { sJoeyDeck, ARRAY_COUNT(sJoeyDeck)
     && defined(HAS_CARD_JAR_OF_GREED) \
     && defined(HAS_CARD_TORRENTIAL_TRIBUTE) \
     && defined(HAS_CARD_TRAP_DUSTSHOOT) \
-    && defined(HAS_CARD_THOUSAND_EYES_RESTRICT)
+    && defined(HAS_CARD_THOUSAND_EYES_RESTRICT) \
+    && defined(HAS_CARD_DARK_BALTER_THE_TERRIBLE) \
+    && defined(HAS_CARD_DARK_BLADE_THE_DRAGON_KNIGHT) \
+    && defined(HAS_CARD_FIEND_SKULL_DRAGON) \
+    && defined(HAS_CARD_GATLING_DRAGON) \
+    && defined(HAS_CARD_KING_DRAGUN) \
+    && defined(HAS_CARD_OJAMA_KING) \
+    && defined(HAS_CARD_REAPER_ON_THE_NIGHTMARE) \
+    && defined(HAS_CARD_RYU_SENSHI) \
+    && defined(HAS_CARD_THE_LAST_WARRIOR_FROM_ANOTHER_PLANET) \
+    && defined(HAS_CARD_BERSERK_GORILLA) \
+    && defined(HAS_CARD_HYSTERIC_FAIRY) \
+    && defined(HAS_CARD_EMERGENCY_PROVISIONS) \
+    && defined(HAS_CARD_POISON_OF_THE_OLD_MAN) \
+    && defined(HAS_CARD_SAKURETSU_ARMOR)
 #define MOD_BAKURA_DECK 1
 static const u16 sBakuraDeck[] = {
     /* Monsters (15) */
@@ -165,28 +194,41 @@ static const u16 sBakuraDeck[] = {
     CARD_TORRENTIAL_TRIBUTE,
     X2(CARD_TRAP_DUSTSHOOT),
     /* Fusion Deck (15), the .ydk's extra deck: LoadOpponentDeck (AddCardNumberToDeckTop) puts Fusion Monsters there */
-    // CARD_DARK_BALTER_THE_TERRIBLE,
-    // CARD_DARK_BLADE_THE_DRAGON_KNIGHT,
-    // CARD_DARKFIRE_DRAGON,
-    // CARD_DRAGONESS_THE_WICKED_KNIGHT,
-    // CARD_FIEND_SKULL_DRAGON,
-    // CARD_GATLING_DRAGON,
-    // CARD_GILTIA_THE_D_KNIGHT,
-    // CARD_KING_DRAGUN,
-    // CARD_OJAMA_KING,
-    // CARD_REAPER_ON_THE_NIGHTMARE,
-    // CARD_RYU_SENSHI,
-    // CARD_THE_LAST_WARRIOR_FROM_ANOTHER_PLANET,
+    CARD_DARK_BALTER_THE_TERRIBLE,
+    CARD_DARK_BLADE_THE_DRAGON_KNIGHT,
+    CARD_DARKFIRE_DRAGON,
+    CARD_DRAGONESS_THE_WICKED_KNIGHT,
+    CARD_FIEND_SKULL_DRAGON,
+    CARD_GATLING_DRAGON,
+    CARD_GILTIA_THE_D_KNIGHT,
+    CARD_KING_DRAGUN,
+    CARD_OJAMA_KING,
+    CARD_REAPER_ON_THE_NIGHTMARE,
+    CARD_RYU_SENSHI,
+    CARD_THE_LAST_WARRIOR_FROM_ANOTHER_PLANET,
     X3(CARD_THOUSAND_EYES_RESTRICT),
 };
-STATIC_ASSERT(ARRAY_COUNT(sBakuraDeck) == 40 + 3, BakuraDeckSize);
+STATIC_ASSERT(ARRAY_COUNT(sBakuraDeck) == 40 + 15, BakuraDeckSize);
+/* geistD-Goat Control.ydk's Side Deck (15). */
+static const u16 sBakuraDeckSide[] = {
+    X2(CARD_BERSERK_GORILLA),
+    CARD_HYSTERIC_FAIRY,
+    CARD_KURIBOH,
+    X2(CARD_EMERGENCY_PROVISIONS),
+    CARD_MYSTICAL_SPACE_TYPHOON,
+    CARD_POISON_OF_THE_OLD_MAN,
+    CARD_SWORDS_OF_REVEALING_LIGHT,
+    X3(CARD_DUST_TORNADO),
+    X3(CARD_SAKURETSU_ARMOR),
+};
+STATIC_ASSERT(ARRAY_COUNT(sBakuraDeckSide) == 15, BakuraDeckSideSize);
 #endif
 #ifdef MOD_BAKURA_DECK
 static const struct DeckList sBakuraDeckList = { sBakuraDeck, ARRAY_COUNT(sBakuraDeck), 0 };
 #endif
 
-/* The Red starter deck and Tea: the "LR-Chaos Turbo" deck (LR-Chaos Turbo.ydk, main deck only): Black Luster Soldier and
- * Chaos Sorcerer fed by LIGHT and DARK flip monsters, Thunder Dragon and the discard/draw Spells. */
+/* Tea: the "LR-Chaos Turbo" deck (LR-Chaos Turbo.ydk, main, extra and side deck): Black Luster Soldier and Chaos
+ * Sorcerer fed by LIGHT and DARK flip monsters, Thunder Dragon and the discard/draw Spells. */
 #if defined(HAS_CARD_BLACK_LUSTER_SOLDIER_ENVOY_OF_THE_BEGINNING) \
     && defined(HAS_CARD_BREAKER_THE_MAGICAL_WARRIOR) \
     && defined(HAS_CARD_CHAOS_SORCERER) \
@@ -201,7 +243,24 @@ static const struct DeckList sBakuraDeckList = { sBakuraDeck, ARRAY_COUNT(sBakur
     && defined(HAS_CARD_JAR_OF_GREED) \
     && defined(HAS_CARD_PHOENIX_WING_WIND_BLAST) \
     && defined(HAS_CARD_TORRENTIAL_TRIBUTE) \
-    && defined(HAS_CARD_TRAP_DUSTSHOOT)
+    && defined(HAS_CARD_TRAP_DUSTSHOOT) \
+    && defined(HAS_CARD_THOUSAND_EYES_RESTRICT) \
+    && defined(HAS_CARD_DARK_FLARE_KNIGHT) \
+    && defined(HAS_CARD_DARK_BALTER_THE_TERRIBLE) \
+    && defined(HAS_CARD_DARK_BLADE_THE_DRAGON_KNIGHT) \
+    && defined(HAS_CARD_FIEND_SKULL_DRAGON) \
+    && defined(HAS_CARD_GATLING_DRAGON) \
+    && defined(HAS_CARD_KING_DRAGUN) \
+    && defined(HAS_CARD_OJAMA_KING) \
+    && defined(HAS_CARD_REAPER_ON_THE_NIGHTMARE) \
+    && defined(HAS_CARD_RYU_SENSHI) \
+    && defined(HAS_CARD_THE_LAST_WARRIOR_FROM_ANOTHER_PLANET) \
+    && defined(HAS_CARD_KYCOO_THE_GHOST_DESTROYER) \
+    && defined(HAS_CARD_MOBIUS_THE_FROST_MONARCH) \
+    && defined(HAS_CARD_ZOMBYRA_THE_DARK) \
+    && defined(HAS_CARD_METAMORPHOSIS) \
+    && defined(HAS_CARD_MYSTIK_WOK) \
+    && defined(HAS_CARD_SCAPEGOAT)
 #define MOD_RED_DECK 1
 static const u16 sRedStarterDeck[] = {
     /* Monsters (20) */
@@ -236,8 +295,36 @@ static const u16 sRedStarterDeck[] = {
     CARD_BELL_OF_DESTRUCTION,
     CARD_TORRENTIAL_TRIBUTE,
     CARD_TRAP_DUSTSHOOT,
+    /* Fusion Deck (15) */
+    CARD_DARK_BALTER_THE_TERRIBLE,
+    CARD_DARK_BLADE_THE_DRAGON_KNIGHT,
+    CARD_DARK_FLARE_KNIGHT,
+    CARD_DARKFIRE_DRAGON,
+    CARD_DRAGONESS_THE_WICKED_KNIGHT,
+    CARD_FIEND_SKULL_DRAGON,
+    CARD_GATLING_DRAGON,
+    CARD_KING_DRAGUN,
+    CARD_OJAMA_KING,
+    CARD_REAPER_ON_THE_NIGHTMARE,
+    CARD_RYU_SENSHI,
+    CARD_THE_LAST_WARRIOR_FROM_ANOTHER_PLANET,
+    X3(CARD_THOUSAND_EYES_RESTRICT),
 };
-STATIC_ASSERT(ARRAY_COUNT(sRedStarterDeck) == 40, RedStarterDeckSize);
+STATIC_ASSERT(ARRAY_COUNT(sRedStarterDeck) == 40 + 15, RedStarterDeckSize);
+/* LR-Chaos Turbo.ydk's Side Deck (15). */
+static const u16 sRedDeckSide[] = {
+    CARD_KYCOO_THE_GHOST_DESTROYER,
+    CARD_MOBIUS_THE_FROST_MONARCH,
+    CARD_ZOMBYRA_THE_DARK,
+    X2(CARD_METAMORPHOSIS),
+    CARD_MIND_CONTROL,
+    X2(CARD_MYSTIK_WOK),
+    X2(CARD_SCAPEGOAT),
+    CARD_SWORDS_OF_REVEALING_LIGHT,
+    X3(CARD_ROYAL_DECREE),
+    CARD_TRAP_DUSTSHOOT,
+};
+STATIC_ASSERT(ARRAY_COUNT(sRedDeckSide) == 15, RedDeckSideSize);
 #endif
 #ifdef MOD_RED_DECK
 static const struct DeckList sRedDeckList = { sRedStarterDeck, ARRAY_COUNT(sRedStarterDeck), 0 };
@@ -1805,13 +1892,13 @@ static const struct RecipePreset sRecipePresets[] = {
     { sNameScientistFtk, &sScientistFtkList, sScientistFtkSide, ARRAY_COUNT(sScientistFtkSide) },
 #endif
 #ifdef MOD_RED_DECK
-    { sNameChaosTurbo, &sRedDeckList, NULL, 0 },
+    { sNameChaosTurbo, &sRedDeckList, sRedDeckSide, ARRAY_COUNT(sRedDeckSide) },
 #endif
 #ifdef MOD_JOEY_DECK
-    { sNameWarrior, &sJoeyDeckList, NULL, 0 },
+    { sNameWarrior, &sJoeyDeckList, sJoeyDeckSide, ARRAY_COUNT(sJoeyDeckSide) },
 #endif
 #ifdef MOD_BAKURA_DECK
-    { sNameGoatControl, &sBakuraDeckList, NULL, 0 },
+    { sNameGoatControl, &sBakuraDeckList, sBakuraDeckSide, ARRAY_COUNT(sBakuraDeckSide) },
 #endif
     { NULL, NULL, NULL, 0 },
 };

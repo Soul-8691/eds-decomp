@@ -190,6 +190,10 @@ it. You can remove 1 Spell Counter from this card; target 1 Spell/Trap on the fi
     the arrays decoded from `build/src/mod_decks.o` match the three main decks card for card.
   - **Limits.** The Red starter deck and Joey use their main decks only. Bakura's Fusion Deck gives Metamorphosis its
     targets (Thousand-Eyes Restrict at Level 1, Dark Balter, and others). The CPU plays added cards only through the generic logic.
+  - **Update (2026-10-30).** The three tables now hold their .ydk's whole Main and Fusion Decks, with the Side Decks
+    beside them (`sRedDeckSide`, `sJoeyDeckSide`, `sBakuraDeckSide`): Chaos Turbo (`sRedStarterDeck`: Tea and Simon)
+    40 + 15, Warrior (`sJoeyDeck`: Joey and Pegasus) 40 + 1, Goat Control (`sBakuraDeck`: Bakura and Grandpa) 40 + 15
+    (its 12 commented-out Fusion Monsters are back). The deck guards list the added cards of all three parts.
 - **Other rules.** Decks of fewer than 40 cards may duel (`DECK_MIN_CARDS` 1), and the human player cannot deck
   out outside Link Battles (`DuelCmd_DrawCards`).
 

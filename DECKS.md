@@ -1396,7 +1396,7 @@ A testing page after the formats, left out of `make release`. Each opponent alwa
 | Goat Control | geistD-Goat Control | Thousand-Eyes Restrict |
 
 <details>
-<summary>Chaos Turbo (LR-Chaos Turbo) (40 cards)</summary>
+<summary>Chaos Turbo (LR-Chaos Turbo) (40 cards + 15 Fusion Deck + 15 Side Deck)</summary>
 
 **Monsters (20)**
 
@@ -1429,17 +1429,46 @@ A testing page after the formats, left out of `make release`. Each opponent alwa
 
 **Traps (7)**
 
+- 1x Bell of Destruction
 - 1x Jar of Greed
 - 1x Mirror Force
 - 2x Phoenix Wing Wind Blast
-- 1x Bell of Destruction
 - 1x Torrential Tribute
 - 1x Trap Dustshoot
+
+**Fusion Deck (15)**
+
+- 1x Dark Balter the Terrible
+- 1x Dark Blade the Dragon Knight
+- 1x Dark Flare Knight
+- 1x Darkfire Dragon
+- 1x Dragoness the Wicked Knight
+- 1x Fiend Skull Dragon
+- 1x Gatling Dragon
+- 1x King Dragun
+- 1x Ojama King
+- 1x Reaper on the Nightmare
+- 1x Ryu Senshi
+- 1x The Last Warrior from Another Planet
+- 3x Thousand-Eyes Restrict
+
+**Side Deck (15)**
+
+- 1x Kycoo the Ghost Destroyer
+- 2x Metamorphosis
+- 1x Mind Control
+- 1x Mobius the Frost Monarch
+- 2x Mystik Wok
+- 3x Royal Decree
+- 2x Scapegoat
+- 1x Swords of Revealing Light
+- 1x Trap Dustshoot
+- 1x Zombyra the Dark
 
 </details>
 
 <details>
-<summary>Warrior (sdlkilla-Warrior) (40 cards)</summary>
+<summary>Warrior (sdlkilla-Warrior) (40 cards + 1 Fusion Deck + 15 Side Deck)</summary>
 
 **Monsters (13)**
 
@@ -1468,20 +1497,37 @@ A testing page after the formats, left out of `make release`. Each opponent alwa
 
 **Traps (16)**
 
+- 1x Bell of Destruction
+- 1x Call Of The Haunted
+- 2x Dust Tornado
 - 2x Jar of Greed
 - 1x Mirror Force
-- 1x Bell of Destruction
 - 3x Sakuretsu Armor
 - 3x Solemn Judgment
 - 1x Torrential Tribute
 - 2x Trap Dustshoot
-- 2x Dust Tornado
-- 1x Call Of The Haunted
+
+**Fusion Deck (1)**
+
+- 1x Thousand-Eyes Restrict
+
+**Side Deck (15)**
+
+- 1x Chaos Sorcerer
+- 2x Cipher Soldier
+- 1x Dark Scorpion - Cliff the Trap Remover
+- 1x Dust Tornado
+- 3x Gravekeeper's Spy
+- 1x Mind Control
+- 2x Mobius the Frost Monarch
+- 1x Mystik Wok
+- 2x Royal Oppression
+- 1x Trap Dustshoot
 
 </details>
 
 <details>
-<summary>Goat Control (geistD-Goat Control) (43 cards)</summary>
+<summary>Goat Control (geistD-Goat Control) (40 cards + 15 Fusion Deck + 15 Side Deck)</summary>
 
 **Monsters (15)**
 
@@ -1514,12 +1560,39 @@ A testing page after the formats, left out of `make release`. Each opponent alwa
 
 **Traps (11)**
 
+- 1x Bell of Destruction
 - 3x Jar of Greed
 - 1x Mirror Force
-- 1x Bell of Destruction
 - 3x Solemn Judgment
 - 1x Torrential Tribute
 - 2x Trap Dustshoot
+
+**Fusion Deck (15)**
+
+- 1x Dark Balter the Terrible
+- 1x Dark Blade the Dragon Knight
+- 1x Darkfire Dragon
+- 1x Dragoness the Wicked Knight
+- 1x Fiend Skull Dragon
+- 1x Gatling Dragon
+- 1x Giltia the D. Knight
+- 1x King Dragun
+- 1x Ojama King
+- 1x Reaper on the Nightmare
+- 1x Ryu Senshi
+- 1x The Last Warrior from Another Planet
 - 3x Thousand-Eyes Restrict
+
+**Side Deck (15)**
+
+- 2x Berserk Gorilla
+- 3x Dust Tornado
+- 2x Emergency Provisions
+- 1x Hysteric Fairy
+- 1x Kuriboh
+- 1x Mystical Space Typhoon
+- 1x Poison of the Old Man
+- 3x Sakuretsu Armor
+- 1x Swords of Revealing Light
 
 </details>
