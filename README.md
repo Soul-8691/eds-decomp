@@ -148,6 +148,8 @@ next one.
     - It attacks your face-down Defense Position monsters with Sasuke Samurai and Mystic Swordsman LV2 (and any
       Defense Position monster with Ninja Grandmaster Sasuke), since their effects destroy the target whatever its
       DEF.
+    - It uses Chaos Emperor Dragon's effect when the damage would win, or when you have at least 3 more cards in
+      hand and on the field than it does.
     - It Special Summons Gilasaurus when your best monster to revive has less than 1500 ATK (or you have none), or
       as a Tribute for a Level 5-6 monster it couldn't summon otherwise. When you Special Summon Gilasaurus, it
       always revives a monster if it can.

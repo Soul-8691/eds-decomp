@@ -1902,3 +1902,6 @@ updated: 2026-09-29
 
 ## [2026-10-30] progress | Chaos opponent decks and recipes
 - src/mod_decks.c: sChaosControl (ellietincan-Chaos Control) and sChaosWarrior (indoors-Chaos Warrior), Main + Fusion + Side Decks, checked against the .ydk files; ChaosDeck (80% / 20%) for DUELIST_STRINGS; recipe presets 25-26 after the Vampire ones (the debug presets are now 27-29). Both legal under April 2004; no missing cards (Black Skull Dragon = B. Skull Dragon, Dark Paladin added as 98502115). Uncoded effects: Chaos Emperor Dragon, Thunder Nyan Nyan, Dark Balter, Ryu Senshi, Fiend Skull Dragon, Dark Flare Knight, Dark Paladin. DECKS.md. [[deck-recipes]], [[yugi-kaiba-opponent]]. Release .text 0x80560. Built (make and make release); not tested in an emulator.
+
+## [2026-10-30] progress | Chaos Emperor Dragon - Envoy of the End coded (first edition)
+- src/added_effects.c: EffectChaosEmperorDragon* and its row (pay 1000, both fields then both hands to the Graveyard, 300 damage per card sent from either player), AiWantsChaosEmperorDragon, AiLightDarkBanishSummon and AiSelfLpLoss cases. Summon cases next to Chaos Sorcerer's in card_detail.c, summon_checks.c, effect_hooks.c, effect_target_collect.c; ACTIVATE in card_command_menu.c. README CPU list, DECKS.md. [[added-cards]]. Release .text 0x805A4. Built (make and make release); not tested in an emulator.

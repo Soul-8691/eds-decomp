@@ -704,6 +704,9 @@ u32 IsSpecialSummonOnly(u16 cardId)
 #ifdef HAS_CARD_CHAOS_SORCERER
     case CARD_CHAOS_SORCERER:                                /* added card */
 #endif
+#ifdef HAS_CARD_CHAOS_EMPEROR_DRAGON_ENVOY_OF_THE_END
+    case CARD_CHAOS_EMPEROR_DRAGON_ENVOY_OF_THE_END:         /* added card */
+#endif
 #ifdef HAS_CARD_GIGANTES
     case CARD_GIGANTES:                                      /* added card */
 #endif

@@ -425,6 +425,9 @@ int CanSummonFromHand(int player, u16 cardId)
 #ifdef HAS_CARD_CHAOS_SORCERER
     case CARD_CHAOS_SORCERER:                                /* added card: banish 1 LIGHT and 1 DARK */
 #endif
+#ifdef HAS_CARD_CHAOS_EMPEROR_DRAGON_ENVOY_OF_THE_END
+    case CARD_CHAOS_EMPEROR_DRAGON_ENVOY_OF_THE_END:         /* added card: banish 1 LIGHT and 1 DARK */
+#endif
 #ifdef HAS_LIGHT_DARK_BANISH_SUMMON
         if (CanSpecialSummon(player) == 0)
             return 0;

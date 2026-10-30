@@ -79,7 +79,7 @@ next to the one before it.
   Lord, Chaos Chaos Emperor Dragon - Envoy of the End, Warrior D.D. Warrior Lady, Goat Scapegoat, Cyber Cyber Dragon,
   Reaper Spirit Reaper. Fiber Jar, Yata-Garasu, Magical Scientist, Chaos Emperor Dragon and Cyber Dragon were added
   to `config/new_cards.txt` for these (IDs 1130-1134; their effects were not coded then. Fiber Jar, Yata-Garasu, Cyber
-  Dragon and Magical Scientist have been coded since, see [[added-cards]]). An added portrait card that is
+  Dragon, Magical Scientist and Chaos Emperor Dragon have been coded since, see [[added-cards]]). An added portrait card that is
   not in the build leaves the page's own portrait (the `ART_*` guards).
 - **Free palette entries.** Page 1 has 26, page 2 94 and page 3 23. A Python preview of the three pages looked
   clean.

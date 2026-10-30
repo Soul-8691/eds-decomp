@@ -1202,6 +1202,32 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
 - Release `.text` after it ends at 0x080809E8, 0x38 bytes below `.rodata` at 0x08080A20.
 - Checked in the source and the build; not tested in an emulator.
 
+### Chaos Emperor Dragon - Envoy of the End (2026-10-30)
+- Effect Monster (Level 8, DARK Dragon, 3000/2500). ID 1132. Coded with its **first-edition** text, as the user asked:
+  "This card can only be Special Summoned by removing 1 LIGHT and 1 DARK monster in your Graveyard from play. Pay 1000
+  of your Life Points to send all cards in both players' hands and on the field to the Graveyard. Inflict 300 points of
+  damage to your opponent's Life Points for each card that is sent to the Graveyard by this effect."
+  The fetched text is the later errata (once per turn, damage only for the cards sent to the opponent's Graveyard, and
+  no other cards or effects that turn); none of that applies.
+- **Summon.** Black Luster Soldier's (`HAS_LIGHT_DARK_BANISH_SUMMON`): it joins the Chaos Sorcerer cases in
+  `IsSpecialSummonOnly` (card_detail.c), `CanSummonFromHand` (summon_checks.c), the summon steps (effect_hooks.c) and
+  the banish list (effect_target_collect.c). The CPU summons it as it does the other two (`AiLightDarkBanishSummon`).
+- **Effect.** The card menu's ACTIVATE in the Main Phase (card_command_menu.c), with no limit per turn:
+  - prepare: face up on the field, 1000 LP or more;
+  - chainA: the 1000 LP (`DUEL_CMD_LOSE_LP`, a cost);
+  - resolve (`EffectChaosEmperorDragonResolve`): every card on both fields (zones 0-10, as Final Destiny walks them)
+    goes to the Graveyard (`SendFieldCardToGrave`, with its leave-the-field effects), then every card in both hands
+    (`DUEL_CMD_SEND_HAND_CARD_TO_GRAVEYARD`: sent, not discarded, so no discard effects such as Night Assailant's;
+    the hand is compacted after its last card). The opponent then loses 300 LP for each card sent (`LoseLifePoints`),
+    from either player and the Dragon itself included. They are counted before the moves; a token does not count, as
+    it never reaches a Graveyard.
+- **CPU** (`AiWantsChaosEmperorDragon`, through `AiWantsMonsterEffect` / `AiPlayAddedCards`): it activates the effect
+  when the damage would win (300 per card in both hands and on both fields), or when the human has 3
+  (`AI_CED_CARD_LEAD`) or more cards in hand and on the field than the CPU, not counting the Dragon. `AiSelfLpLoss`
+  lists its 1000, so it never pays its last LP.
+- Release `.text` 0x080805A4.
+- Checked in the source and the build; not tested in an emulator.
+
 ### Sasuke Samurai (2026-10-30)
 - Appended to `config/new_cards.txt` for the Vampire opponent's decks ([[yugi-kaiba-opponent]]): it is in
   Woawa-Warrior Control's Side Deck (passcode 16222645, looked up on YGOPRODeck). ID 1160 (the last line, so no other

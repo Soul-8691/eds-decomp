@@ -345,6 +345,91 @@ int EffectChaosSorcererPrepare(struct ChainEntry *card, struct ChainEntry *chain
 }
 #endif /* HAS_CARD_CHAOS_SORCERER */
 
+#ifdef HAS_CARD_CHAOS_EMPEROR_DRAGON_ENVOY_OF_THE_END
+/* ---- Chaos Emperor Dragon - Envoy of the End -------------------------------------------------------------------
+ * Its first-edition text, as the user asked (the fetched one is the later errata, with "Once per turn", damage only for
+ * the opponent's cards, and "You cannot activate other cards or effects during the turn you activate this card's
+ * effect"): "This card can only be Special Summoned by removing 1 LIGHT and 1 DARK monster in your Graveyard from
+ * play. Pay 1000 of your Life Points to send all cards in both players' hands and on the field to the Graveyard.
+ * Inflict 300 points of damage to your opponent's Life Points for each card that is sent to the Graveyard by this
+ * effect."
+ * The summon is Black Luster Soldier - Envoy of the Beginning's (the same hooks, HAS_LIGHT_DARK_BANISH_SUMMON). The
+ * effect is the card menu's ACTIVATE in the Main Phase (CanActivateMonsterEffect), with no limit per turn:
+ *   prepare  face up on the field and 1000 LP
+ *   chainA   1000 LP (DUEL_CMD_LOSE_LP, a cost)
+ *   resolve  every card on both fields (zones 0-10, as Final Destiny walks them) goes to the Graveyard
+ *            (SendFieldCardToGrave, with its leave-the-field effects), then every card in both hands
+ *            (DUEL_CMD_SEND_HAND_CARD_TO_GRAVEYARD: sent, not discarded, so no discard effect); then the opponent
+ *            takes 300 for each card sent, from either player (counted before: a token goes nowhere and does not
+ *            count; the Dragon itself does)
+ * The CPU: AiWantsMonsterEffect (AiWantsChaosEmperorDragon). */
+#define CED_COST 1000
+#define CED_DAMAGE_PER_CARD 300
+
+int EffectChaosEmperorDragonPrepare(struct ChainEntry *card, struct ChainEntry *chainLink, u16 fromHand)
+{
+    struct DuelZone *z;
+
+    if (fromHand || card->event != RESPONSE_NONE || gDuelPlayers[card->player & 1].lifePoints < CED_COST)
+        return 0;
+    z = ZoneOf(card->player, card->zone);
+    return z->isFaceUp && DUEL_CARD_ID(&z->card) == (card->card & CARD_ID_MASK);
+}
+
+int EffectChaosEmperorDragonChainA(struct ChainEntry *link, struct ChainEntry *prevLink)
+{
+    DuelCmd_Push(link->player ? DUEL_CMD_PLAYER | DUEL_CMD_LOSE_LP : DUEL_CMD_LOSE_LP, CED_COST, 1, 0);
+    return 1;
+}
+
+/* 1 if card `id` is a token (it leaves the field without going to a Graveyard). */
+static int IsTokenCardId(u16 id)
+{
+    u16 number = ((const u16 *)CARD_ID_TO_NUMBER_ADDR)[id & CARD_ID_MASK];
+
+    return (u16)(number - CARD_NUMBER_TOKEN_FIRST) < CARD_NUMBER_TOKEN_END - CARD_NUMBER_TOKEN_FIRST;
+}
+
+int EffectChaosEmperorDragonResolve(struct ChainEntry *link, struct ChainEntry *chainedTo)
+{
+    int opponent = 1 - (link->player & 1);
+    int side, player, zone, i, count, sent = 0;
+
+    if (link->negated)
+        return EFFECT_STEP_DONE;
+    for (side = 0; side <= 1; side++) {
+        player = side ? opponent : link->player & 1;
+        for (zone = ZONE_MONSTER_0; zone <= ZONE_FIELD; zone++) {
+            struct DuelZone *z = ZoneOf(player, zone);
+            u16 id = DUEL_CARD_ID(&z->card);
+
+            if (id == 0)
+                continue;
+            if (!IsTokenCardId(id))
+                sent++;
+            SendFieldCardToGrave(player, zone, 0, 1);
+        }
+    }
+    for (side = 0; side <= 1; side++) {
+        struct DuelPlayer *p;
+
+        player = side ? opponent : link->player & 1;
+        p = &gDuelPlayers[player];
+        count = p->handCount;
+        sent += count;
+        for (i = 0; i < count; i++) {
+            /* the hand keeps its holes until the last card, so the indices stay valid */
+            DuelCmd_Push(player ? DUEL_CMD_PLAYER | DUEL_CMD_SEND_HAND_CARD_TO_GRAVEYARD
+                                : DUEL_CMD_SEND_HAND_CARD_TO_GRAVEYARD,
+                         i, i == count - 1, 0);
+        }
+    }
+    if (sent > 0)
+        LoseLifePoints(opponent, sent * CED_DAMAGE_PER_CARD);
+    return EFFECT_STEP_DONE;
+}
+#endif /* HAS_CARD_CHAOS_EMPEROR_DRAGON_ENVOY_OF_THE_END */
+
 #ifdef HAS_CARD_TRIBE_INFECTING_VIRUS
 /* ---- Tribe-Infecting Virus -----------------------------------------------------------------------------------
  * "Once per turn: You can discard 1 card, then declare 1 Monster Type; destroy all face-up monsters of the declared
@@ -5955,6 +6040,9 @@ static int AiSelfLpLoss(struct ChainEntry *card)
 #ifdef HAS_CARD_MAGICAL_SCIENTIST
     case CARD_MAGICAL_SCIENTIST:
 #endif
+#ifdef HAS_CARD_CHAOS_EMPEROR_DRAGON_ENVOY_OF_THE_END
+    case CARD_CHAOS_EMPEROR_DRAGON_ENVOY_OF_THE_END:
+#endif
         return 1000;
 #ifdef HAS_CARD_DIMENSION_FUSION
     case CARD_DIMENSION_FUSION:
@@ -6422,6 +6510,34 @@ int EffectTribeInfectingVirusChainB(struct ChainEntry *link, struct ChainEntry *
 }
 #endif
 
+#ifdef HAS_CARD_CHAOS_EMPEROR_DRAGON_ENVOY_OF_THE_END
+/* The cards of `player` in the hand and on the field. */
+static int CountHandAndFieldCards(int player)
+{
+    int zone, n = gDuelPlayers[player & 1].handCount;
+
+    for (zone = ZONE_MONSTER_0; zone <= ZONE_FIELD; zone++) {
+        if (DUEL_CARD_ID(&ZoneOf(player, zone)->card) != 0)
+            n++;
+    }
+    return n;
+}
+
+/* The CPU wipes the board with Chaos Emperor Dragon when its damage would win (300 per card in both hands and on both
+ * fields, the Dragon included; tokens are counted here too, so it may fall a little short), or when the human would
+ * lose AI_CED_CARD_LEAD more cards than the CPU (not counting the Dragon itself). AiSelfLpLoss keeps it from paying its
+ * last 1000 LP. */
+#define AI_CED_CARD_LEAD 3
+
+static int AiWantsChaosEmperorDragon(void)
+{
+    int human = CountHandAndFieldCards(AI_HUMAN), cpu = CountHandAndFieldCards(AI_PLAYER) - 1;
+
+    return (human + cpu + 1) * CED_DAMAGE_PER_CARD >= gDuelPlayers[AI_HUMAN].lifePoints
+           || human >= cpu + AI_CED_CARD_LEAD;
+}
+#endif
+
 /* Should the CPU use the card-menu effect of its added monster `number` now? (CanActivateMonsterEffect said it may.) */
 static int AiWantsMonsterEffect(u16 number, int zone)
 {
@@ -6437,6 +6553,10 @@ static int AiWantsMonsterEffect(u16 number, int zone)
 #ifdef HAS_CARD_CHAOS_SORCERER
     case CARD_CHAOS_SORCERER:
         return CountFaceUpMonsters(AI_HUMAN) > 0;
+#endif
+#ifdef HAS_CARD_CHAOS_EMPEROR_DRAGON_ENVOY_OF_THE_END
+    case CARD_CHAOS_EMPEROR_DRAGON_ENVOY_OF_THE_END:
+        return AiWantsChaosEmperorDragon();
 #endif
 #ifdef HAS_CARD_TRIBE_INFECTING_VIRUS
     case CARD_TRIBE_INFECTING_VIRUS: {
@@ -6561,6 +6681,9 @@ static int AiLightDarkBanishSummon(void)
 #endif
 #ifdef HAS_CARD_CHAOS_SORCERER
             number != CARD_CHAOS_SORCERER &&
+#endif
+#ifdef HAS_CARD_CHAOS_EMPEROR_DRAGON_ENVOY_OF_THE_END
+            number != CARD_CHAOS_EMPEROR_DRAGON_ENVOY_OF_THE_END &&
 #endif
             1)
             continue;
@@ -7414,6 +7537,16 @@ const struct CardEffect gAddedCardEffects[] = {
         EffectChaosSorcererPrepare,
         NULL,
         (int (*)(struct ChainEntry *, struct ChainEntry *))EffectTargetableFaceUpMonsterChainB,
+    },
+#endif
+#ifdef HAS_CARD_CHAOS_EMPEROR_DRAGON_ENVOY_OF_THE_END
+    {
+        CARD_CHAOS_EMPEROR_DRAGON_ENVOY_OF_THE_END, 0,
+        EffectChaosEmperorDragonResolve,
+        NULL,
+        EffectChaosEmperorDragonPrepare,
+        EffectChaosEmperorDragonChainA,
+        NULL,
     },
 #endif
 #ifdef HAS_CARD_TRIBE_INFECTING_VIRUS

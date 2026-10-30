@@ -502,6 +502,9 @@ int CanActivateMonsterEffect(u16 id, int player, int zone)
 #ifdef HAS_CARD_CHAOS_SORCERER
     case CARD_CHAOS_SORCERER:                               /* added card (src/added_effects.c) */
 #endif
+#ifdef HAS_CARD_CHAOS_EMPEROR_DRAGON_ENVOY_OF_THE_END
+    case CARD_CHAOS_EMPEROR_DRAGON_ENVOY_OF_THE_END:        /* added card (src/added_effects.c) */
+#endif
 #ifdef HAS_CARD_TRIBE_INFECTING_VIRUS
     case CARD_TRIBE_INFECTING_VIRUS:                        /* added card (src/added_effects.c) */
 #endif

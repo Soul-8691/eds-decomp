@@ -1739,7 +1739,7 @@ Banlist: April 2004.
 
 </details>
 
-Every card was already in the game (Black Skull Dragon is the original B. Skull Dragon). Cards here with no coded effect yet: Chaos Emperor Dragon - Envoy of the End, Thunder Nyan Nyan, Dark Balter the Terrible, Ryu Senshi, Fiend Skull Dragon, Dark Flare Knight and Dark Paladin.
+Every card was already in the game (Black Skull Dragon is the original B. Skull Dragon). Cards here with no coded effect yet: Thunder Nyan Nyan, Dark Balter the Terrible, Ryu Senshi, Fiend Skull Dragon, Dark Flare Knight and Dark Paladin.
 
 ### 12-15. Warrior to Reaper
 

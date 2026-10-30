@@ -1126,6 +1126,9 @@ u16 CollectEffectTargets(int player, u16 cardNumber, int param)
 #ifdef HAS_CARD_CHAOS_SORCERER
     case CARD_CHAOS_SORCERER:
 #endif
+#ifdef HAS_CARD_CHAOS_EMPEROR_DRAGON_ENVOY_OF_THE_END
+    case CARD_CHAOS_EMPEROR_DRAGON_ENVOY_OF_THE_END:
+#endif
 #ifdef HAS_CARD_GIGANTES
     case CARD_GIGANTES:
 #endif

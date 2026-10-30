@@ -1118,6 +1118,9 @@ void CardMenu_SummonMonster(u16 faceUp, u16 special)
 #ifdef HAS_CARD_CHAOS_SORCERER
         case CARD_CHAOS_SORCERER:
 #endif
+#ifdef HAS_CARD_CHAOS_EMPEROR_DRAGON_ENVOY_OF_THE_END
+        case CARD_CHAOS_EMPEROR_DRAGON_ENVOY_OF_THE_END:
+#endif
 #ifdef HAS_CARD_GIGANTES
         case CARD_GIGANTES:         /* added card: one EARTH (BanishSummonCount) */
 #endif
