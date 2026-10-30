@@ -918,3 +918,13 @@ updated: 2026-09-29
   is 939, not 943. `write_tables.py` now reserves them.
 - Verified: the Gods, Tickets and Insect Monster Token have copy limit 0 (unplayable).
 - Pages: [[cards]], [[card-capacity]], [[card-expand]], [[open-questions]].
+
+## [2026-10-30] setup | expand_rom.py: leftover-effect cards hardcoded at their numbers
+- `tools/card_expand/expand_rom.py`: reads and moves the card tables of the binary ROM itself (no `make setup`),
+  adds the 157 leftover-effect cards (plus the 3 tokens they summon) at their own card numbers with stats, text,
+  passwords and art from YGOPRODeck, then `new_cards.txt` (50 duplicates skipped). `test_leftovers.py` checks
+  them in Unicorn; both it and `test_tables.py` pass.
+- Identified every leftover number with a real card (behaviour against card texts, release-set order, the
+  game's Fusion/ritual recipes): `LEFTOVER_EFFECTS.md` now has a Card column. Corrections: 1243 Ancient Lamp,
+  1327 Sword Hunter, 1340 Vampire Baby (descriptions), 1422 Lightning Blade is Partial (WATER -500 not coded).
+- Pages: [[card-expand]].

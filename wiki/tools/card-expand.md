@@ -17,6 +17,8 @@ patch a built `eds.gba`; they don't change the decomp sources.
 | `refs.py` | Rebuilds `card_table_refs.csv`: every literal-pool word in `build/eds.elf` that points into the per-card block, plus aligned words in `.rodata` and the game tables. It needs `arm-none-eabi-objdump` and a matching build. |
 | `card_table_refs.csv` | The 1,275 pointers by table, index and function (committed: addresses only, no game data). |
 | `write_tables.py [LAST_ID]` | Builds an expanded ROM from the original one, adding the cards named in `new_cards.txt` (repo root) as IDs 821, 822, … in list order. Each name is looked up on the [YGOPRODeck API](https://ygoprodeck.com/api-guide/) (`cardinfo.php` v7, 30 exact names per request), and the data and cropped art are cached in `assets/new_cards/` (git-ignored). It applies the code patches (or accepts a ROM that already has them), grows the ROM to the next power of two (16 MiB up to last ID 1640), and writes every card table at its new address. The existing cards come from `assets/cards/`, encoded by the converters in `tools/assets.py`. `--base ADDR` (also on `card_expand.py`) starts the moved art at a later word-aligned address than `0x08800000`, with the palettes right after it. Every art and palette pointer shifts with it, and the gap is left as `--fill` bytes for other data. `LAST_ID` defaults to the smallest encodable value, with hidden placeholders (number 1999) in the gap, and `--move-scratch` turns on by itself past 310 non-monsters. The script reports whether existing cards are byte-identical to the original and warns about card numbers that clash, are reserved by code, or are hidden from Card Trading. |
+| `expand_rom.py [LAST_ID]` | Like `write_tables.py`, but it needs only the binary ROM: the 821 original entries of every card table are copied byte for byte from the ROM and moved, with no `make setup` files involved. It also adds the 157 cards whose effects are already coded (`LEFTOVER_EFFECTS.md`) at their own card numbers, as IDs 821–977 in number order. That covers the 150 effect numbers, the 4 recipe-only Fusion materials and ritual monster, and the Kuriboh, Sheep and Slime tokens (1921–1923). Their stats, text, password and art come from YGOPRODeck through `write_tables.py`'s code and cache. The cards of `new_cards.txt` follow; a listed card that is already a leftover card is skipped, and listed cards never get a leftover number. The added cards are listed in `<out>_cards.csv`. `--no-leftovers` skips the hardcoded cards. Other options as in `write_tables.py`. |
+| `test_leftovers.py` | A Unicorn test of a ROM from `expand_rom.py`: for every leftover card, the number↔ID maps, `FindCardByPassword` with its password, and `DeckEdit_IsFusionMonster`; `IsMaterialOfFusion` for the five Fusion recipes that use leftover numbers; `FindRitualRecipe` for Curse of the Masked Beast. |
 | `test_tables.py` | A Unicorn test of a written ROM. For IDs 1–820 the game's own readers must give the same results as on the original: `LoadCardPicture` (VRAM and palette), `UnpackCardArt8bpp`, `IsEffect/Fusion/SpecialSummonOnly`, `FindCardByPassword`, `IsSameCardName`, and the Deck Edit lists. `--clone NEW=OLD` checks a new card made as a copy of OLD. |
 | `test_relocation.py` | A Unicorn CPU test of the list code. Over 200 random valid saves, the original ROM and the relocated ROM give identical results. With the full patch for last ID 1020, Deck Edit lists 1018 cards. Needs `pip install unicorn`. |
 
@@ -27,7 +29,14 @@ python3 tools/card_expand/test_relocation.py --seeds 200
 # edit new_cards.txt, then (pip install pillow once; network needed the first time):
 python3 tools/card_expand/write_tables.py --rom eds.gba --out build/card_expand/expanded.gba
 python3 tools/card_expand/test_tables.py --new build/card_expand/expanded.gba
+# or, from the ROM alone, with every leftover-effect card added first:
+python3 tools/card_expand/expand_rom.py --rom eds.gba --out build/card_expand/expanded.gba
+python3 tools/card_expand/test_leftovers.py --rom build/card_expand/expanded.gba
 ```
+
+Checked 2026-10-30 (`expand_rom.py`):
+- Leftovers only: 157 cards, last ID 980, 16 MiB. `test_tables.py` passes; `test_leftovers.py` passes, and wrong pairs (a non-material, a non-ritual card) are rejected.
+- With the 314-line `new_cards.txt`: 50 listed cards were already leftover cards and were skipped. 264 were added, last ID 1248, and the non-monster buffer moved by itself. Both tests pass.
 
 ### Adding cards (`new_cards.txt` → `write_tables.py`)
 One exact YGOPRODeck name per line. `Name | shown name` sets the name shown in the game (at most 41 characters,
