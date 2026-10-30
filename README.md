@@ -139,6 +139,11 @@ next one.
       Pyramid Turtle, Apprentice Magician) summon another copy of themselves from the Deck when they can, so
       the next one can recruit again.
     - Its Mystical Space Typhoon (and Gust, Driving Snow) also targets your face-up Traps, and never its own cards.
+    - It uses Magical Scientist with Catapult Turtle or Cannon Soldier: it summons a Fusion Monster, then Tributes
+      it for damage, and repeats while it has more than 1000 LP. Without either of those, it summons one Fusion
+      Monster a turn in Main Phase 1 (with 4000 LP or more) when it could destroy one of your face-up monsters.
+      Its Catapult Turtle and Cannon Soldier Tribute a Fusion Monster from Magical Scientist first, since it
+      leaves at the End Phase anyway.
     - When you attack into its flip monsters that remove or stop a monster (Man-Eater Bug, Hane-Hane, Penguin
       Soldier, Dark-Eyes Illusionist, Night Assailant, Tsukuyomi), it targets your strongest monster that hasn't
       attacked yet, so it can't attack this turn.

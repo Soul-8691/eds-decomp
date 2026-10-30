@@ -1378,8 +1378,8 @@ Banlist: November 2003.
 
 </details>
 
-Cards here with no coded effect yet: Magical Scientist, Gilasaurus, Super Robolady, Super Roboyarou, Dark Balter the
-Terrible, Fiend Skull Dragon and Ryu Senshi.
+Cards here with no coded effect yet: Gilasaurus, Super Robolady, Super Roboyarou, Dark Balter the Terrible, Fiend
+Skull Dragon and Ryu Senshi.
 
 ### 10-15. Vampire to Reaper
 

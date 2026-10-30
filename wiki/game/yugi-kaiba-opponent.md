@@ -58,9 +58,9 @@ next to the one before it.
     for them and is coded ([[added-cards]]). Dice Jar, in Warrior Tomato Control's Side Deck, was added and removed
     again, so that Side Deck has 14 cards.
   - Scientist plays Aretos-Tomato Control (Scientist) 60% and DK-ZERO-Scientist FTK 40% (`ScientistDeck`, Umbra &
-    Lumis' slot). Every card in both was already in the game. No coded effect yet: Magical Scientist, Gilasaurus,
-    Super Robolady, Super Roboyarou (and Dark Balter, Fiend Skull Dragon, Ryu Senshi below), so the FTK deck cannot
-    make its combo yet (Magical Scientist into Catapult Turtle).
+    Lumis' slot). Every card in both was already in the game. Magical Scientist is coded (2026-10-30, [[added-cards]]);
+    no coded effect yet: Gilasaurus, Super Robolady, Super Roboyarou (and Dark Balter, Fiend Skull Dragon, Ryu Senshi
+    below).
   - The other 6 keep their original duelists' decks for now.
   - Cards in these decks with no coded effect yet: Dark Balter the Terrible, Fiend Skull Dragon, Ryu Senshi (Joey-
     Pegasus Tomato Control's Fusion Deck), Skull Lair and The Last Warrior from Another Planet (Joey-Pegasus Vanilla
@@ -71,7 +71,8 @@ next to the one before it.
   Joey-Pegasus Graceful Charity, Fiber Fiber Jar, Yata Yata-Garasu, Scientist Magical Scientist, Vampire Vampire
   Lord, Chaos Chaos Emperor Dragon - Envoy of the End, Warrior D.D. Warrior Lady, Goat Scapegoat, Cyber Cyber Dragon,
   Reaper Spirit Reaper. Fiber Jar, Yata-Garasu, Magical Scientist, Chaos Emperor Dragon and Cyber Dragon were added
-  to `config/new_cards.txt` for these (IDs 1130-1134; their effects are not coded). An added portrait card that is
+  to `config/new_cards.txt` for these (IDs 1130-1134; their effects were not coded then. Fiber Jar, Yata-Garasu, Cyber
+  Dragon and Magical Scientist have been coded since, see [[added-cards]]). An added portrait card that is
   not in the build leaves the page's own portrait (the `ART_*` guards).
 - **Free palette entries.** Page 1 has 26, page 2 94 and page 3 23. A Python preview of the three pages looked
   clean.

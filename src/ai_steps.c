@@ -162,6 +162,7 @@ static inline u32 CardCost(u32 id)
  * original call/store tail without changing its reads. */
 int AiUseThunderDragon(void);   /* mod: src/added_effects.c */
 int AiSpecialSummonCyberDragon(void);
+int AiUseMagicalScientist(void);
 int AiSummonFaceUpOnOpenField(u16 id);
 int AiPickTributeFor(u16 id, int excludeZone);     /* mod: src/added_effects.c */
 
@@ -193,6 +194,10 @@ int AiStepMainPhase(void)
             return 0;
         if (AiSpecialSummonCyberDragon())   /* added: before a Normal Summon gives the CPU a monster */
             return 0;
+#ifdef HAS_CARD_MAGICAL_SCIENTIST
+        if (AiUseMagicalScientist())    /* added: Magical Scientist and its burn (src/added_effects.c) */
+            return 0;
+#endif
         if ((gDuelPlayers.flags1_8 & 0x10) != 0 || CanNormalSummon(1) == 0) {
             /* changed: also in Main Phase 2 (the original tested gAiState.step <= 3) */
             if (gDuelPlayers.unk1B0C != 0) {

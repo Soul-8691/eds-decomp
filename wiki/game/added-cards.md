@@ -4,7 +4,7 @@ type: game
 status: draft
 confidence: high
 sources: [rom-analysis, web-card-references]
-updated: 2026-10-28
+updated: 2026-10-30
 ---
 # Added cards
 
@@ -931,6 +931,40 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
   - **Stats:** `CalcZoneCardStats` (card_stats.c) gives +800 ATK and DEF per face-up monster of the equip card's
     controller (`CountMonstersFiltered(sourcePlayer, 1, 0)`), counting the equipped monster too.
 - The other added cards keep their IDs; their card numbers after it move down one.
+- Checked in the source and the build; not tested in an emulator.
+
+### Magical Scientist (2026-10-30)
+- Effect monster. ID 1131. "You can pay 1000 Life Points; Special Summon 1 Level 6 or lower Fusion Monster from your
+  Extra Deck in face-up Attack or Defense Position. That Fusion Monster cannot attack your opponent directly, and is
+  returned to the Extra Deck at the end of this turn."
+- **Activation.** The card menu's ACTIVATE in the Main Phase (`CanActivateMonsterEffect` lists it), as many times as
+  the player can pay, as Cyber-Stein's.
+  - Prepare (`EffectMagicalScientistPrepare`): face up, 1000 LP or more, a free monster zone, and a Level 6 or lower
+    Fusion Monster that can be Special Summoned in the Fusion Deck.
+  - ChainA: the 1000 LP (`DUEL_CMD_LOSE_LP`, a cost).
+  - Resolve: Metamorphosis' steps. `ModCollectEffectTargets` lists the Fusion Deck's Level 6 or lower Fusion
+    Monsters (`IsScientistFusion`); the human picks under Cyber-Stein's prompt, and the CPU takes the highest ATK.
+    The monster leaves the Fusion Deck and is Special Summoned face up in the position its player picks
+    (`QueueSpecialSummonChoosePosition`).
+- **Mark.** The zone (`FindFreeMonsterZone`, the zone the summon takes) and the card ID go to
+  `gModDuel.scientistReturn` / `scientistReturnIds`, as Return from the Different Dimension marks its monsters. A
+  mark only counts while that card is still in that zone (`IsScientistSummoned`).
+- **End Phase.** `EndPhase_ReturnMagicalScientist` (DuelPhase_End, battle_phase3.c) returns each marked monster with
+  `ReturnFieldCardToHand`, which sends a Fusion Monster to the Fusion Deck, then clears the marks.
+- **No direct attack.** `CanMonsterAttack` (card_menu_input.c) now asks `ModCannotAttackDirectly`, which refuses the
+  attack of a marked monster, or of Zombyra the Dark, while the opponent has no monster. Zombyra's inline check moved
+  into it.
+- **CPU** (`AiUseMagicalScientist`, called from `AiStepMainPhase` after `AiSpecialSummonCyberDragon`, so it runs
+  again after each activation):
+  - **Burn.** A face-up Catapult Turtle or Cannon Soldier of the CPU's, with a marked monster to Tribute, is
+    activated. `AiPickEffectTribute` (summon_builders.c) first asks `AiPickScientistTribute`, the strongest marked
+    monster, so the vanilla Cannon Soldier activation Tributes it too. The CPU never used Catapult Turtle before.
+  - **Summon.** The Scientist pays while the CPU keeps more than 1000 LP (`AiSelfLpLoss` lists its 1000): always
+    with Catapult Turtle or Cannon Soldier face up; otherwise once per turn (`gModDuel.aiScientistTurn`) in Main
+    Phase 1 with 4000 LP or more, when the strongest such Fusion Monster has more ATK than a face-up monster of the
+    human's ATK (Attack Position) or DEF (Defense Position).
+  - `AiWantsMonsterEffect` returns 0 for it, so `AiPlayAddedCards` leaves it to the above.
+- Release `.text` 0x08080554 (16 bytes less: Zombyra's check left card_menu_input.c).
 - Checked in the source and the build; not tested in an emulator.
 
 ### Threatening Roar (2026-10-29)

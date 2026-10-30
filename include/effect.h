@@ -115,6 +115,7 @@ void EndPhase_DarkMagicianOfChaos(int turnPlayer);
 void EndPhase_ReturnFromTheDifferentDimension(void);
 /* Yata-Garasu (src/added_effects.c): back to the hand at the End Phase; its battle damage skips a Draw Phase. */
 void EndPhase_ReturnYataGarasu(void);
+void EndPhase_ReturnMagicalScientist(void);
 void YataGarasuDealtDamage(int player, u16 id);
 void EndPhase_MysticSwordsmanLevelUp(int turnPlayer);
 void InjectionFairyLilyEndAttack(int player);

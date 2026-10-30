@@ -520,6 +520,9 @@ int CanActivateMonsterEffect(u16 id, int player, int zone)
 #ifdef HAS_CARD_GUARDIAN_SPHINX
     case CARD_GUARDIAN_SPHINX:                              /* added card (src/added_effects.c) */
 #endif
+#ifdef HAS_CARD_MAGICAL_SCIENTIST
+    case CARD_MAGICAL_SCIENTIST:                            /* added card (src/added_effects.c) */
+#endif
     case CARD_1430:
     case CARD_1432:
     case CARD_1433:

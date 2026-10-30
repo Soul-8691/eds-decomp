@@ -424,12 +424,20 @@ needTwo:
  * other than excludeZone. The Witch pass and the lowest ATK + DEF pass can therefore never find anything;
  * they are kept because the unit must match the ROM byte for byte.
  */
+int AiPickScientistTribute(int excludeZone);   /* added: src/added_effects.c */
+
 int AiPickEffectTribute(int excludeZone)
 {
     int i;
     int best;
     int bestZone;
     struct ZoneCardStats stats;
+
+#ifdef HAS_CARD_MAGICAL_SCIENTIST
+    i = AiPickScientistTribute(excludeZone);    /* added: a Fusion Monster that leaves at the End Phase anyway */
+    if (i >= 0)
+        return i;
+#endif
 
     for (i = 0; i < MONSTER_ZONE_COUNT; i++) {
         u16 id = CARD_ID(ZONE1_WORD(i));

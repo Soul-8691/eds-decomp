@@ -406,6 +406,7 @@ static inline u16 DuelCardNumber(u16 id)
 #ifdef HAS_CARD_MIND_CONTROL
 int IsMindControlled(int player, int zone);     /* added card (src/added_effects.c) */
 #endif
+int ModCannotAttackDirectly(int player, int zone);  /* added cards (src/added_effects.c) */
 u16 CanMonsterAttack(int player, int zone, u16 flag)
 {
     struct DuelZoneWord *zn = &gDuelPlayerZones[player & 1].zones[zone];
@@ -459,11 +460,10 @@ u16 CanMonsterAttack(int player, int zone, u16 flag)
     if (IsMindControlled(player, zone))         /* added card: a monster taken by Mind Control */
         return 0;
 #endif
-#ifdef HAS_CARD_ZOMBYRA_THE_DARK
-    /* added card: Zombyra the Dark cannot attack directly (the opponent has no monster to attack) */
-    if (DuelCardNumber(id) == CARD_ZOMBYRA_THE_DARK && CountMonsters(1 - player) == 0)
+    /* added cards: Zombyra the Dark and Magical Scientist's Fusion Monsters cannot attack directly (the opponent has
+     * no monster to attack; src/added_effects.c) */
+    if (ModCannotAttackDirectly(player, zone))
         return 0;
-#endif
     if (flag != 0) {
         switch (DuelCardNumber(id)) {
         case CARD_DARK_ELF:

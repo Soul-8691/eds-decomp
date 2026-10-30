@@ -69,6 +69,9 @@ struct ModDuelState {
     u8 mirageDrawn[2];          /* Mirage of Nightmare: per player, the cards to discard in their next Standby Phase */
     u8 standbyPart;             /* ModStandbyStep: Treeborn Frog, Mirage's discard, Mirage's draw */
     u16 roarTurn[2];            /* Threatening Roar: per player, gDuel.turnCount + 1 of the turn they cannot attack */
+    u16 scientistReturn;        /* Magical Scientist: bit player * 5 + zone, return to the Fusion Deck in the End Phase */
+    u16 scientistReturnIds[10]; /* ... and the card ID summoned into that zone */
+    u16 aiScientistTurn;        /* AiUseMagicalScientist: gDuel.turnCount + 1 of its last summon for battle */
 };
 extern struct ModDuelState gModDuel;
 
@@ -971,6 +974,8 @@ void ModDuelInit(void)
     gModDuel.standbyPart = 0;
     gModDuel.roarTurn[0] = 0;
     gModDuel.roarTurn[1] = 0;
+    gModDuel.scientistReturn = 0;
+    gModDuel.aiScientistTurn = 0;
 #ifdef HAS_CARD_INJECTION_FAIRY_LILY
     InjectionFairyLilyResetBattle();
 #endif
@@ -3436,6 +3441,152 @@ int EffectMetamorphosisResolve(struct ChainEntry *link, struct ChainEntry *chain
 }
 #endif /* HAS_CARD_METAMORPHOSIS */
 
+#ifdef HAS_CARD_MAGICAL_SCIENTIST
+/* ---- Magical Scientist ---------------------------------------------------------------------------------------------
+ * "You can pay 1000 Life Points; Special Summon 1 Level 6 or lower Fusion Monster from your Extra Deck in face-up
+ * Attack or Defense Position. That Fusion Monster cannot attack your opponent directly, and is returned to the Extra
+ * Deck at the end of this turn."
+ * The card menu's ACTIVATE in the Main Phase (CanActivateMonsterEffect), with no limit per turn, as Cyber-Stein's:
+ *   prepare  face up on the field, 1000 LP, a free monster zone and such a Fusion Monster in the Fusion Deck
+ *   chainA   1000 LP (DUEL_CMD_LOSE_LP, a cost)
+ *   resolve  Metamorphosis' steps with a list of the Fusion Deck's Level 6 or lower Fusion Monsters
+ *            (ModCollectEffectTargets: IsScientistFusion; the CPU takes the highest ATK), Special Summoned face up in
+ *            the position the player picks (QueueSpecialSummonChoosePosition, which takes FindFreeMonsterZone's zone).
+ *            The zone and card ID go to gModDuel.scientistReturn, as Return from the Different Dimension marks its own.
+ *   DuelPhase_End (battle_phase3.c)  EndPhase_ReturnMagicalScientist returns each marked monster still in its zone
+ *            (ReturnFieldCardToHand: a Fusion Monster goes to the Fusion Deck), then clears the marks.
+ *   No direct attack  CanMonsterAttack (card_menu_input.c) asks ModCannotAttackDirectly, which refuses a marked
+ *            monster's attack while the opponent has no monster, as for Zombyra the Dark.
+ * The CPU: AiUseMagicalScientist, below AiSpecialSummonCyberDragon. */
+#define SCIENTIST_COST 1000
+#define SCIENTIST_MAX_LEVEL 6
+
+/* 1 if card `id` is a Fusion Monster of Level 6 or lower that may be Special Summoned. */
+static int IsScientistFusion(u16 id, int param)
+{
+    u32 stats = gCardStats[id & CARD_ID_MASK];
+
+    return CARD_STATS_TYPE(stats) <= CARD_TYPE_REPTILE && CARD_STATS_KIND(stats) == CARD_KIND_FUSION
+           && (int)CARD_STATS_LEVEL(stats) <= SCIENTIST_MAX_LEVEL && !IsCannotSpecialSummon(id & CARD_ID_MASK);
+}
+
+/* 1 if the monster in (player, zone) was Special Summoned by Magical Scientist this turn. */
+static int IsScientistSummoned(int player, int zone)
+{
+    int bit = (player & 1) * 5 + zone;
+
+    return zone <= ZONE_MONSTER_4 && (gModDuel.scientistReturn & (1 << bit))
+           && DUEL_CARD_ID(&ZoneOf(player, zone)->card) == gModDuel.scientistReturnIds[bit];
+}
+
+int EffectMagicalScientistPrepare(struct ChainEntry *card, struct ChainEntry *chainLink, u16 fromHand)
+{
+    struct DuelPlayer *p = &gDuelPlayers[card->player & 1];
+    struct DuelZone *z;
+    int i;
+
+    if (fromHand || card->event != RESPONSE_NONE || p->lifePoints < SCIENTIST_COST
+        || CountFreeMonsterZones(card->player) == 0 || !CanSpecialSummon(card->player))
+        return 0;
+    z = ZoneOf(card->player, card->zone);
+    if (!z->isFaceUp || DUEL_CARD_ID(&z->card) != (card->card & CARD_ID_MASK))
+        return 0;
+    for (i = 0; i < p->fusionCount; i++) {
+        if (IsScientistFusion(DUEL_CARD_ID(&p->fusionDeck[i]), 0))
+            return 1;
+    }
+    return 0;
+}
+
+int EffectMagicalScientistChainA(struct ChainEntry *link, struct ChainEntry *prevLink)
+{
+    DuelCmd_Push(link->player ? DUEL_CMD_PLAYER | DUEL_CMD_LOSE_LP : DUEL_CMD_LOSE_LP, SCIENTIST_COST, 1, 0);
+    return 1;
+}
+
+int EffectMagicalScientistResolve(struct ChainEntry *link, struct ChainEntry *chainedTo)
+{
+    struct DuelCard *picked;
+    u16 cmd;
+    int zone, bit;
+
+    if (link->negated)
+        return EFFECT_STEP_DONE;
+    switch (gChain.effectStep) {
+    case EFFECT_STEP_START:
+        if (CountFreeMonsterZones(link->player) == 0
+            || CollectEffectTargets(link->player, CARD_MAGICAL_SCIENTIST, 0) == 0)
+            return EFFECT_STEP_DONE;
+        if (link->player) {
+            int i, best = 0;
+
+            for (i = 1; i < gCardListView.count; i++) {
+                if (CARD_STATS_ATK(gCardStats[gCardListView.cards[i] & CARD_ID_MASK])
+                    > CARD_STATS_ATK(gCardStats[gCardListView.cards[best] & CARD_ID_MASK]))
+                    best = i;
+            }
+            gCardListView.cursorRow = 0;
+            gCardListView.top = best;
+            return EFFECT_STEP_3;
+        }
+        TextBoxOpen(TEXTBOX_POS(5, 2), TEXTBOX_SIZE(20, 9), TEXTBOX_FLAGS_DEFAULT, gStrCyberSteinSelectPrompt);
+        return EFFECT_STEP_2;
+    case EFFECT_STEP_2:
+        CardListView_Open(link->player, -1, CARD_MAGICAL_SCIENTIST, 0);
+        return EFFECT_STEP_3;
+    case EFFECT_STEP_3:
+        picked = (struct DuelCard *)&gCardListView.cards[gCardListView.cursorRow + gCardListView.top];
+        cmd = link->player ? DUEL_CMD_PLAYER | DUEL_CMD_REMOVE_CARD_FROM_FUSION_DECK
+                           : DUEL_CMD_REMOVE_CARD_FROM_FUSION_DECK;
+        DuelCmd_Push(cmd, ((u16 *)picked)[0], ((u16 *)picked)[1], 0);
+        return EFFECT_STEP_4;
+    case EFFECT_STEP_4:
+        picked = (struct DuelCard *)&gCardListView.cards[gCardListView.cursorRow + gCardListView.top];
+        zone = FindFreeMonsterZone(link->player);
+        if (zone >= 0) {
+            bit = (link->player & 1) * 5 + zone;
+            gModDuel.scientistReturn |= 1 << bit;
+            gModDuel.scientistReturnIds[bit] = DUEL_CARD_ID(picked);
+        }
+        QueueSpecialSummonChoosePosition(link->player, picked, 1, 0);
+        return EFFECT_STEP_END;
+    }
+    return EFFECT_STEP_DONE;
+}
+
+void EndPhase_ReturnMagicalScientist(void)
+{
+    int player, zone;
+
+    for (player = 0; player <= 1; player++) {
+        for (zone = ZONE_MONSTER_0; zone <= ZONE_MONSTER_4; zone++) {
+            if (IsScientistSummoned(player, zone))
+                ReturnFieldCardToHand(player, zone, 0);
+        }
+    }
+    gModDuel.scientistReturn = 0;
+}
+#endif /* HAS_CARD_MAGICAL_SCIENTIST */
+
+/* CanMonsterAttack (card_menu_input.c): 1 if the monster in (player, zone) may not attack now because it cannot
+ * attack directly and the opponent has no monster: Zombyra the Dark, and a monster Magical Scientist summoned. */
+int ModCannotAttackDirectly(int player, int zone)
+{
+    u16 id = DUEL_CARD_ID(&ZoneOf(player, zone)->card);
+
+    if (CountMonsters(1 - player) != 0)
+        return 0;
+#ifdef HAS_CARD_ZOMBYRA_THE_DARK
+    if (CARD_NUMBER(id) == CARD_ZOMBYRA_THE_DARK)
+        return 1;
+#endif
+#ifdef HAS_CARD_MAGICAL_SCIENTIST
+    if (IsScientistSummoned(player, zone))
+        return 1;
+#endif
+    return 0;
+}
+
 #ifdef HAS_CARD_REINFORCEMENT_OF_THE_ARMY
 /* ---- Reinforcement of the Army -----------------------------------------------------------------------------------
  * Normal Spell: "Add 1 Level 4 or lower Warrior monster from your Deck to your hand."
@@ -4612,6 +4763,11 @@ void ModCollectEffectTargets(int player, u16 cardNumber, int param)
         ModAddPileTargets(p->hand, p->handCount, CARDLIST_SRC_HAND, IsTypeId, CARD_TYPE_MAGIC);
         break;
 #endif
+#ifdef HAS_CARD_MAGICAL_SCIENTIST
+    case CARD_MAGICAL_SCIENTIST:            /* the Fusion Deck's Level 6 or lower Fusion Monsters */
+        ModAddPileTargets(p->fusionDeck, p->fusionCount, CARDLIST_SRC_FUSION_DECK, IsScientistFusion, 0);
+        break;
+#endif
     }
 }
 
@@ -5334,6 +5490,113 @@ int AiSpecialSummonCyberDragon(void)
 }
 
 
+#ifdef HAS_CARD_MAGICAL_SCIENTIST
+/* ---- Magical Scientist (the CPU) -----------------------------------------------------------------------------------
+ * AiStepMainPhase (ai_steps.c) calls AiUseMagicalScientist first thing, with AiSpecialSummonCyberDragon, so it runs
+ * again after each activation. In order:
+ *   burn     a face-up Catapult Turtle or Cannon Soldier of the CPU's Tributes a monster Magical Scientist summoned
+ *            (AiPickEffectTribute, summon_builders.c, asks AiPickScientistTribute first: the strongest such one)
+ *   summon   a face-up Magical Scientist pays 1000 LP while the CPU keeps more than 1000:
+ *              with Catapult Turtle or Cannon Soldier face up, for the burn above
+ *              else once per turn in Main Phase 1 with 4000 LP or more, when its strongest Fusion Monster would beat
+ *              a face-up monster of the human's (it cannot attack directly)
+ * AiWantsMonsterEffect keeps AiPlayAddedCards from activating it otherwise. */
+#define AI_SCIENTIST_BATTLE_MIN_LP 4000
+
+static int IsScientistBurner(u16 number)
+{
+    return number == CARD_CATAPULT_TURTLE || number == CARD_CANNON_SOLDIER;
+}
+
+/* The CPU's strongest monster Magical Scientist summoned (not excludeZone), -1 for none. */
+int AiPickScientistTribute(int excludeZone)
+{
+    int zone, best = -1;
+
+    for (zone = ZONE_MONSTER_0; zone <= ZONE_MONSTER_4; zone++) {
+        if (zone != excludeZone && IsScientistSummoned(AI_PLAYER, zone)
+            && (best < 0 || GetZoneCardAtk(AI_PLAYER, zone) > GetZoneCardAtk(AI_PLAYER, best)))
+            best = zone;
+    }
+    return best;
+}
+
+/* The highest ATK of the Fusion Monsters Magical Scientist could summon for the CPU. */
+static int AiBestScientistFusionAtk(void)
+{
+    struct DuelPlayer *p = &gDuelPlayers[AI_PLAYER];
+    int i, best = -1;
+
+    for (i = 0; i < p->fusionCount; i++) {
+        u16 id = DUEL_CARD_ID(&p->fusionDeck[i]);
+        int atk = CARD_STATS_ATK(gCardStats[id & CARD_ID_MASK]) * CARD_STATS_POINTS_SCALE;
+
+        if (IsScientistFusion(id, 0) && atk > best)
+            best = atk;
+    }
+    return best;
+}
+
+/* 1 if a Fusion Monster of `atk` ATK would destroy a face-up monster of the human's in battle. */
+static int AiScientistHasBattleTarget(int atk)
+{
+    int zone;
+
+    for (zone = ZONE_MONSTER_0; zone <= ZONE_MONSTER_4; zone++) {
+        struct DuelZone *z = ZoneOf(AI_HUMAN, zone);
+
+        if (DUEL_CARD_ID(&z->card) != 0 && z->isFaceUp
+            && atk > (int)(z->isDefense ? GetZoneCardDef(AI_HUMAN, zone) : GetZoneCardAtk(AI_HUMAN, zone)))
+            return 1;
+    }
+    return 0;
+}
+
+static void AiActivateMonsterAt(int zone)
+{
+    u16 id = DUEL_CARD_ID(&ZoneOf(AI_PLAYER, zone)->card);
+
+    DuelCmd_Push(DUEL_CMD_PLAYER | DUEL_CMD_POINT_AT_CARD, AI_PLAYER, (u8)zone << 8, 0);
+    Chain_AddPending(((u32)(zone & 0x1F) << 16) | id | CPU_CHAIN_KIND_MONSTER, 0);
+}
+
+int AiUseMagicalScientist(void)
+{
+    int zone, scientist = -1, burner = 0, atk;
+
+    for (zone = ZONE_MONSTER_0; zone <= ZONE_MONSTER_4; zone++) {
+        struct DuelZone *z = ZoneOf(AI_PLAYER, zone);
+        u16 id = DUEL_CARD_ID(&z->card);
+        u16 number;
+
+        if (id == 0 || !z->isFaceUp)
+            continue;
+        number = CardNumberOfId(id);
+        if (IsScientistBurner(number)) {
+            burner = 1;
+            if (AiPickScientistTribute(zone) >= 0 && CanActivateMonsterEffect(id, AI_PLAYER, zone)) {
+                AiActivateMonsterAt(zone);
+                return 1;
+            }
+        }
+        if (number == CARD_MAGICAL_SCIENTIST && scientist < 0 && CanActivateMonsterEffect(id, AI_PLAYER, zone))
+            scientist = zone;
+    }
+    if (scientist < 0 || gDuelPlayers[AI_PLAYER].lifePoints <= SCIENTIST_COST)
+        return 0;
+    if (!burner) {
+        atk = AiBestScientistFusionAtk();
+        if (gAiState.step != AI_STEP_MAIN_PHASE_1 || gDuelPlayers[AI_PLAYER].lifePoints < AI_SCIENTIST_BATTLE_MIN_LP
+            || gModDuel.aiScientistTurn == (u16)(gDuel.turnCount + 1) || !AiScientistHasBattleTarget(atk))
+            return 0;
+        gModDuel.aiScientistTurn = gDuel.turnCount + 1;
+    }
+    AiActivateMonsterAt(scientist);
+    return 1;
+}
+#endif /* HAS_CARD_MAGICAL_SCIENTIST */
+
+
 /* ---- The CPU counts the ATK boosts it will get when it judges positions -------------------------------------------
  * When the CPU chooses Attack or Defense (the summon simulations, the position-change step and AiShouldRetreatToDefense)
  * it judges a monster by the ATK it will have once the boosts it plays are on it:
@@ -5580,6 +5843,9 @@ static int AiSelfLpLoss(struct ChainEntry *card)
     case CARD_CONFISCATION:
     case CARD_DELINQUENT_DUO:
     case CARD_SEAL_OF_THE_ANCIENTS:
+#ifdef HAS_CARD_MAGICAL_SCIENTIST
+    case CARD_MAGICAL_SCIENTIST:
+#endif
         return 1000;
 #ifdef HAS_CARD_DIMENSION_FUSION
     case CARD_DIMENSION_FUSION:
@@ -6091,6 +6357,10 @@ static int AiWantsMonsterEffect(u16 number, int zone)
 #ifdef HAS_CARD_GUARDIAN_SPHINX
     case CARD_GUARDIAN_SPHINX:                  /* face down, so its next Flip Summon bounces the human's monsters */
         return CountMonsters(AI_HUMAN) > 0;
+#endif
+#ifdef HAS_CARD_MAGICAL_SCIENTIST
+    case CARD_MAGICAL_SCIENTIST:                /* AiUseMagicalScientist decides */
+        return 0;
 #endif
     }
     return 1;
@@ -6777,6 +7047,16 @@ const struct CardEffect gAddedCardEffects[] = {
         EffectPhoenixWingWindBlastPrepare,
         EffectPhoenixWingWindBlastChainA,
         EffectPhoenixWingWindBlastChainB,
+    },
+#endif
+#ifdef HAS_CARD_MAGICAL_SCIENTIST
+    {
+        CARD_MAGICAL_SCIENTIST, 0,
+        EffectMagicalScientistResolve,
+        NULL,
+        EffectMagicalScientistPrepare,
+        EffectMagicalScientistChainA,
+        NULL,
     },
 #endif
 #ifdef HAS_CARD_METAMORPHOSIS
