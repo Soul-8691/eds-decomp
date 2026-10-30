@@ -172,6 +172,24 @@ next one.
     - It Special Summons Gilasaurus when your best monster to revive has less than 1500 ATK (or you have none), or
       as a Tribute for a Level 5-6 monster it couldn't summon otherwise. When you Special Summon Gilasaurus, it
       always revives a monster if it can.
+    - It counts Cipher Soldier's +2000 against Warriors when it predicts a battle, for its own copy and for yours.
+    - Its Set Chain Disappearance goes off on any summon of yours that it can answer.
+    - It flips Threatening Roar as your Battle Phase begins when you have a face-up monster with 2000 or more ATK,
+      and otherwise uses it against an attack when you have at least 2 monsters.
+    - When your Spell or Trap would destroy its Set Blast with Chain (a targeted removal, Heavy Storm or Harpie's
+      Feather Duster), it chains Blast with Chain onto one of its face-up monsters first, so the destruction pops it.
+      Against an attack it equips Blast with Chain to one of its face-up monsters.
+    - It answers your Spells with Magic Drain before Solemn Judgment, since Magic Drain costs nothing.
+    - It activates Ojama Trio only when you have three empty monster zones.
+    - It activates Secret Barrel in the Main Phase (or in a chain) when the damage would win, or when it would deal
+      600 or more (200 per card in your hand and on your field).
+    - It plays Mystik Wok at 6000 LP or less, when the weakest monster it can Tribute has 1500 or more ATK or DEF,
+      and gains whichever is higher.
+    - Its Roulette Barrel keeps the die that matches the Level of your strongest face-up monster, so it destroys
+      the best target it can.
+    - It plays Level Limit - Area B, Gravity Bind, Final Attack Orders and Royal Oppression in its Main Phase. It
+      uses Royal Oppression against your Special Summons while it has more than 800 LP.
+    - Its Dark Scorpion - Cliff the Trap Remover picks its Spell or Trap target like Mystical Space Typhoon does.
     - When you attack into its flip monsters that remove or stop a monster (Man-Eater Bug, Hane-Hane, Penguin
       Soldier, Dark-Eyes Illusionist, Night Assailant, Tsukuyomi), it targets your strongest monster that hasn't
       attacked yet, so it can't attack this turn.

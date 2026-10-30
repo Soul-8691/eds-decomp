@@ -2031,3 +2031,6 @@ updated: 2026-09-29
 
 ## [2026-10-30] progress | Final Attack Orders
 - src/added_effects.c: `ApplyFinalAttackOrders`, `EffectFinalAttackOrdersResolve`, `gAddedCardEffects` row, `ModDuelStateCheck`, `AiPlayAddedCards`. src/summon_action.c, src/card_command_menu.c, src/ai_picks.c. missing.txt, missing-main.txt. [[added-cards]]. Built (`make`); not tested in an emulator.
+
+## [2026-10-30] progress | README: CPU notes for the new cards
+- README.md, Smarter CPU / Card use: Cipher Soldier, Chain Disappearance, Threatening Roar, Blast with Chain, Magic Drain, Ojama Trio, Secret Barrel, Mystik Wok, Roulette Barrel, Level Limit - Area B, Gravity Bind, Final Attack Orders, Royal Oppression, Dark Scorpion - Cliff the Trap Remover (each checked against its CPU code in src/added_effects.c and src/ai_picks.c). Docs only, no build.
