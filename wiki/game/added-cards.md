@@ -1220,6 +1220,19 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
 - Release `.text` after it ends at 0x080809E8, 0x38 bytes below `.rodata` at 0x08080A20.
 - Checked in the source and the build; not tested in an emulator.
 
+### Poison of the Old Man (2026-10-30)
+- Quick-Play Spell. ID 920. The fetched text: "Activate 1 of these effects; ● Gain 1200 LP. ● Inflict 800 damage to
+  your opponent."
+- **ChainA: the choice**, in the link's unused `unk12` as Enemy Controller's. The human picks from a two-line menu
+  (`TEXTBOX_MENU_TWO_CHOICE`); the handler returns 0 while `gTextBox.active`, since `Chain_Build` calls it every frame
+  (the lesson from Enemy Controller). The CPU decides at once (`AiPoisonOfTheOldManChoice`).
+- **Resolve.** `GainLifePoints` (1200) for its player, or `LoseLifePoints` (800) for the opponent. No prepare: it can
+  always be activated.
+- **CPU.** `AiWantsSpell` plays it whenever it may (`AiPlayAddedCards`, its Main Phase). The choice: the damage when
+  the human has 800 LP or less (it wins the duel), the 1200 LP while the CPU has 3000 (`POTOM_AI_LOW_LP`) or less, else
+  the damage.
+- Checked in the source and the build; not tested in an emulator.
+
 ### Chain Disappearance (2026-10-30)
 - Normal Trap. ID 942. Coded with its **original TCG text**: "Activate only when your opponent Normal Summons, Flip
   Summons or Special Summons a monster with 1000 or less ATK. Pay 500 Life Points to remove from play the summoned

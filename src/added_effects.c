@@ -7223,6 +7223,61 @@ static int AiWantsEnemyController(void)
 }
 #endif /* HAS_CARD_ENEMY_CONTROLLER */
 
+#ifdef HAS_CARD_POISON_OF_THE_OLD_MAN
+/* ---- Poison of the Old Man -----------------------------------------------------------------------------------------
+ * Quick-Play Spell: "Activate 1 of these effects; ● Gain 1200 LP. ● Inflict 800 damage to your opponent."
+ *   chainA   the choice, kept in the link's unused unk12 as Enemy Controller's: the human picks from a two-line menu
+ *            (the handler waits while the box is open: Chain_Build calls it every frame); the CPU decides
+ *            (AiPoisonOfTheOldManChoice)
+ *   resolve  GainLifePoints (1200) for the player, or LoseLifePoints (800) for the opponent
+ *   CPU      AiPoisonOfTheOldManChoice: the damage when it wins the duel, the LP while it has POTOM_AI_LOW_LP or
+ *            less, else the damage; AiWantsSpell plays it whenever it may (AiPlayAddedCards, Main Phase) */
+static const u8 sStrPoisonOfTheOldManMenu[] = "Poison of the Old Man:\n    @3Gain 1200 LP\n    @2Inflict 800 damage";
+#define POTOM_GAIN          1200
+#define POTOM_DAMAGE        800
+#define POTOM_MODE_GAIN     1
+#define POTOM_MODE_DAMAGE   2
+#define POTOM_AI_LOW_LP     3000
+
+static int AiPoisonOfTheOldManChoice(int player)
+{
+    if ((int)gDuelPlayers[(1 - player) & 1].lifePoints <= POTOM_DAMAGE)
+        return POTOM_MODE_DAMAGE;
+    return (int)gDuelPlayers[player & 1].lifePoints <= POTOM_AI_LOW_LP ? POTOM_MODE_GAIN : POTOM_MODE_DAMAGE;
+}
+
+int EffectPoisonOfTheOldManChainA(struct ChainEntry *link, struct ChainEntry *prevLink)
+{
+    if (link->player) {
+        link->unk12 = AiPoisonOfTheOldManChoice(link->player);
+        return 1;
+    }
+    switch (gChain.costStep) {
+    case 0:
+        TextBoxOpen(TEXTBOX_POS(5, 2), TEXTBOX_SIZE(19, 6), TEXTBOX_FLAGS_DEFAULT, sStrPoisonOfTheOldManMenu);
+        TextBoxSetMenu(TEXTBOX_MENU_TWO_CHOICE, NULL, NULL);
+        gChain.costStep++;
+        return 0;
+    default:
+        if (gTextBox.active)
+            return 0;
+        link->unk12 = gTextBox.result ? POTOM_MODE_DAMAGE : POTOM_MODE_GAIN;
+        return 1;
+    }
+}
+
+int EffectPoisonOfTheOldManResolve(struct ChainEntry *link, struct ChainEntry *chainedTo)
+{
+    if (link->negated)
+        return EFFECT_STEP_DONE;
+    if (link->unk12 == POTOM_MODE_GAIN)
+        GainLifePoints(link->player, POTOM_GAIN);
+    else
+        LoseLifePoints(1 - (link->player & 1), POTOM_DAMAGE);
+    return EFFECT_STEP_DONE;
+}
+#endif /* HAS_CARD_POISON_OF_THE_OLD_MAN */
+
 /* Should the CPU play its added Magic card `number` in its Main Phase now? (AiTryPlaySpellTrap checks that it may.) */
 static int AiWantsSpell(u16 number)
 {
@@ -7230,6 +7285,10 @@ static int AiWantsSpell(u16 number)
 #ifdef HAS_CARD_ENEMY_CONTROLLER
     case CARD_ENEMY_CONTROLLER:                 /* to take a much stronger monster */
         return AiWantsEnemyController();
+#endif
+#ifdef HAS_CARD_POISON_OF_THE_OLD_MAN
+    case CARD_POISON_OF_THE_OLD_MAN:            /* always: AiPoisonOfTheOldManChoice picks the effect */
+        return 1;
 #endif
 #ifdef HAS_CARD_CARD_DESTRUCTION
     case CARD_CARD_DESTRUCTION:                 /* when the human holds more cards than the CPU would discard */
@@ -7870,6 +7929,16 @@ const struct CardEffect gAddedCardEffects[] = {
         NULL,
         NULL,
         NULL,
+        NULL,
+    },
+#endif
+#ifdef HAS_CARD_POISON_OF_THE_OLD_MAN
+    {
+        CARD_POISON_OF_THE_OLD_MAN, 0,
+        EffectPoisonOfTheOldManResolve,
+        NULL,
+        NULL,
+        EffectPoisonOfTheOldManChainA,
         NULL,
     },
 #endif
