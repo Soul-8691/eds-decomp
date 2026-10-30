@@ -79,6 +79,8 @@ struct ModDuelState {
     u16 noEffectDamageTurn[2];  /* Pikeru's Circle of Enchantment: the same, for effect damage only */
     u8 rouletteDie1;            /* Roulette Barrel: first die roll this activation */
     u8 rouletteDie2;            /* Roulette Barrel: second die roll this activation */
+    u16 mystikWokAtk;           /* Mystik Wok: ATK of the monster Tributed this activation */
+    u16 mystikWokDef;           /* Mystik Wok: DEF of the monster Tributed this activation */
 };
 extern struct ModDuelState gModDuel;
 /* gModDuel (0x0202FF04, symbols.ld) must end before gScratchBuffer (0x02030000). */
@@ -5278,6 +5280,120 @@ int EffectLevelLimitAreaBResolve(struct ChainEntry *link, struct ChainEntry *cha
 }
 #endif /* HAS_CARD_LEVEL_LIMIT_AREA_B */
 
+#ifdef HAS_CARD_MYSTIK_WOK
+/* ---- Mystik Wok (YGOPRODeck id 80161395) -------------------------------------------------------------------------
+ * Quick-Play Spell: "Tribute 1 monster. Select either its ATK or DEF and gain that many Life Points."
+ *   prepare  at least one monster may be Tributed
+ *   chainB   EffectTributeTargetChainB (the CPU: its weakest by ATK); ATK/DEF are read before TributeMonster
+ *   resolve  the human picks ATK or DEF from a two-line menu; the CPU takes whichever is higher
+ *   CPU      AiWantsMystikWok when LP is low and the best stat on its weakest Tribute is worth it */
+
+static const u8 sStrMystikWokMenu[] = "Mystik Wok:\n    @3Gain LP equal to its ATK\n    @2Gain LP equal to its DEF";
+#define MYSTIK_WOK_MODE_ATK 0
+#define MYSTIK_WOK_MODE_DEF 1
+#define MYSTIK_WOK_AI_LOW_LP 6000
+#define MYSTIK_WOK_AI_MIN_GAIN 1500
+
+static int MystikWokWeakestTribute(int player)
+{
+    int zone, best = -1;
+    u32 bestAtk = 0;
+
+    for (zone = ZONE_MONSTER_0; zone <= ZONE_MONSTER_4; zone++) {
+        if (IsTributableMonster(player, zone) && (best < 0 || GetZoneCardAtk(player, zone) < bestAtk)) {
+            best = zone;
+            bestAtk = GetZoneCardAtk(player, zone);
+        }
+    }
+    return best;
+}
+
+static u32 MystikWokBestGainOnWeakestTribute(int player)
+{
+    int zone = MystikWokWeakestTribute(player);
+    u32 atk, def;
+
+    if (zone < 0)
+        return 0;
+    atk = GetZoneCardAtk(player, zone);
+    def = GetZoneCardDef(player, zone);
+    return atk >= def ? atk : def;
+}
+
+static int AiWantsMystikWok(void)
+{
+    u32 gain = MystikWokBestGainOnWeakestTribute(AI_PLAYER);
+
+    if (gain < MYSTIK_WOK_AI_MIN_GAIN)
+        return 0;
+    return (int)gDuelPlayers[AI_PLAYER].lifePoints <= MYSTIK_WOK_AI_LOW_LP;
+}
+
+int EffectMystikWokPrepare(struct ChainEntry *card, struct ChainEntry *chainLink, u16 fromHand)
+{
+    return CountTributableMonsters(card->player, -1) > 0;
+}
+
+int EffectMystikWokChainB(struct ChainEntry *link, struct ChainEntry *prevLink)
+{
+    int zone;
+
+    if (link->player) {
+        zone = MystikWokWeakestTribute(link->player);
+        if (zone < 0)
+            return 1;
+        gModDuel.mystikWokAtk = (u16)GetZoneCardAtk(link->player, zone);
+        gModDuel.mystikWokDef = (u16)GetZoneCardDef(link->player, zone);
+        link->unk12 = gModDuel.mystikWokAtk >= gModDuel.mystikWokDef ? MYSTIK_WOK_MODE_ATK : MYSTIK_WOK_MODE_DEF;
+        TributeMonster(link->player, zone);
+        return 1;
+    }
+    if (!EffectTributeTargetChainB(link))
+        return 0;
+    if (link->numTargets != 1)
+        return 1;
+    zone = link->targets[0] >> 8;
+    if ((u8)link->targets[0] != link->player || !IsTributableMonster(link->player, zone)) {
+        link->numTargets = 0;
+        PlaySE(SE_ERROR);
+        return 0;
+    }
+    gModDuel.mystikWokAtk = (u16)GetZoneCardAtk(link->player, zone);
+    gModDuel.mystikWokDef = (u16)GetZoneCardDef(link->player, zone);
+    link->numTargets = 0;
+    TributeMonster(link->player, zone);
+    return 1;
+}
+
+int EffectMystikWokResolve(struct ChainEntry *link, struct ChainEntry *chainedTo)
+{
+    u32 gain;
+
+    if (link->negated)
+        return EFFECT_STEP_DONE;
+    if (link->player) {
+        gain = link->unk12 == MYSTIK_WOK_MODE_DEF ? gModDuel.mystikWokDef : gModDuel.mystikWokAtk;
+        if (gain != 0)
+            GainLifePoints(link->player, gain);
+        return EFFECT_STEP_DONE;
+    }
+    switch (gChain.effectStep) {
+    case EFFECT_STEP_START:
+        TextBoxOpen(TEXTBOX_POS(5, 2), TEXTBOX_SIZE(19, 6), TEXTBOX_FLAGS_DEFAULT, sStrMystikWokMenu);
+        TextBoxSetMenu(TEXTBOX_MENU_TWO_CHOICE, NULL, NULL);
+        return EFFECT_STEP_2;
+    case EFFECT_STEP_2:
+        if (gTextBox.active)
+            return EFFECT_STEP_2;
+        gain = gTextBox.result ? gModDuel.mystikWokDef : gModDuel.mystikWokAtk;
+        if (gain != 0)
+            GainLifePoints(link->player, gain);
+        return EFFECT_STEP_DONE;
+    }
+    return EFFECT_STEP_DONE;
+}
+#endif /* HAS_CARD_MYSTIK_WOK */
+
 #ifdef HAS_CARD_SPELL_CANCELLER
 /* ---- Spell Canceller (YGOPRODeck id 84636823) --------------------------------------------------------------------
  * "Spell Cards, and their effects on the field, cannot be activated. Negate all Spell effects on the field."
@@ -8228,6 +8344,10 @@ static int AiWantsSpell(u16 number)
     case CARD_POISON_OF_THE_OLD_MAN:            /* always: AiPoisonOfTheOldManChoice picks the effect */
         return 1;
 #endif
+#ifdef HAS_CARD_MYSTIK_WOK
+    case CARD_MYSTIK_WOK:
+        return AiWantsMystikWok();
+#endif
 #ifdef HAS_CARD_EMERGENCY_PROVISIONS
     case CARD_EMERGENCY_PROVISIONS:             /* only when low on LP */
         return AiWantsEmergencyProvisions();
@@ -9022,6 +9142,16 @@ const struct CardEffect gAddedCardEffects[] = {
         NULL,
         EffectPoisonOfTheOldManChainA,
         NULL,
+    },
+#endif
+#ifdef HAS_CARD_MYSTIK_WOK
+    {
+        CARD_MYSTIK_WOK, 0,
+        EffectMystikWokResolve,
+        NULL,
+        EffectMystikWokPrepare,
+        NULL,
+        EffectMystikWokChainB,
     },
 #endif
 #ifdef HAS_CARD_ENEMY_CONTROLLER

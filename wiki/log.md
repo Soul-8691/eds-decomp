@@ -2022,3 +2022,6 @@ updated: 2026-09-29
 
 ## [2026-10-30] progress | Spell Canceller
 - src/duel_ritual.c: `IsImperialOrderActive` includes face-up Spell Canceller. src/effect_activation.c, src/card_command_menu.c: block Spell activations. src/added_effects.c: documented. missing-main.txt. [[added-cards]]. Built (`make`); not tested in an emulator.
+
+## [2026-10-30] progress | Mystik Wok
+- src/added_effects.c: `EffectMystikWok*`, `gModDuel.mystikWokAtk/Def`, `gAddedCardEffects` row, `AiWantsMystikWok`. missing.txt, missing-main.txt. [[added-cards]]. Built (`make`); not tested in an emulator.

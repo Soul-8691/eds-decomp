@@ -1941,6 +1941,16 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
     mills 2 (`DUEL_CMD_SEND_DECK_CARD_TO_GRAVEYARD`, top is `deck[0]`).
 - Checked in the source and the build; not tested in an emulator.
 
+### Mystik Wok (2026-10-30)
+- Effect text from [YGOPRODeck](https://db.ygoprodeck.com/api/v7/cardinfo.php?name=Mystik%20Wok) (id 80161395):
+  "Tribute 1 monster. Select either its ATK or DEF and gain that many Life Points."
+- Quick-Play Spell. `EffectMystikWokPrepare` (a Tribute is available), `EffectMystikWokChainB`
+  (`EffectTributeTargetChainB`; ATK/DEF stored in `gModDuel` before `TributeMonster`), `EffectMystikWokResolve`
+  (two-choice ATK/DEF menu for the human; `GainLifePoints`). The CPU Tributes its weakest monster (by ATK) and
+  takes the higher stat; `AiWantsMystikWok` / `AiPlayAddedCards` in the Main Phase when LP is 6000 or less and that
+  best stat is at least 1500.
+- Checked in the source and the build; not tested in an emulator.
+
 ### Spell Canceller (2026-10-30)
 - Effect text from [YGOPRODeck](https://db.ygoprodeck.com/api/v7/cardinfo.php?name=Spell%20Canceller) (id 84636823):
   "Spell Cards, and their effects on the field, cannot be activated. Negate all Spell effects on the field."
