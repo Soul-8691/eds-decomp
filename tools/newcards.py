@@ -394,7 +394,7 @@ def cmd_build():
                      f'known: {", ".join(TOKEN_NUMBERS)}')
             token = dict(TOKEN_NUMBERS[name])
             number = token.pop('number')
-            c.update(token, **{'def': 0})
+            c.update({'def': 0, **token})   # DEF 0 unless the token gives it (Ojama Token: 1000)
             if n2i_old[number]:
                 fail(f'{name}: card number {number} already has a card')
         elif name in ENGINE_NUMBERS:

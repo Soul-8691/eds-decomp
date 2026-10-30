@@ -2089,6 +2089,11 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
   not call it.
 - The CPU activates it when the human has three empty monster zones (`AiShouldActivateAddedCard`).
 - Checked in the source and the build; not tested in an emulator.
+- **Bug fixed (2026-10-30, reported by the user: the tokens had 0 DEF).** `tools/newcards.py` built a token's stats
+  with `c.update(token, **{'def': 0})`: the keyword is applied after the dictionary, so every token's DEF became 0,
+  whatever `TOKEN_NUMBERS` gave. It is now `c.update({'def': 0, **token})` (0 only when the token gives none). The built
+  table (`build/assets/newcards__stats.bin`, ID 1161) now holds ATK 0, DEF 100 (x10 = 1000); Sheep Token, which gives
+  no DEF, stays at 0.
 
 ### Book of Moon (2026-10-25)
 - Quick-Play Spell: "Target 1 face-up monster on the field; change that target to face-down Defense Position." It
