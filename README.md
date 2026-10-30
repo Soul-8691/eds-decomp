@@ -70,7 +70,7 @@ next one.
 | 15 | Reaper | October 2005 |
 
 - **Decks.** Each format duelist picks one of 2-3 (sometimes more) strong decks from its format, at weighted
-  random. The first 11 duelists are fully coded. [DECKS.md](DECKS.md) lists every deck and its chance.
+  random. The first 12 duelists are fully coded. [DECKS.md](DECKS.md) lists every deck and its chance.
 - **Your deck.** It has to be legal in that format's banlist and card pool to duel them.
 - **Portraits.** Each duelist's portrait is its format's namesake card (or the Format Library picture when the
   format isn't named after a card).
@@ -80,7 +80,7 @@ next one.
   its original portrait and event dialogue. After the dialogue, your banlist switches to the challenger's format and
   the Deck Recipes screen opens: load a recipe, press SELECT for Deck Edit, or B to duel. In the release, a deck that
   isn't legal in the format (or is under 40 cards) can't duel until you fix it.
-- **Deck Recipes.** Up to 50 saved decks, about 25 of them preset to staple decks of the first eleven formats and
+- **Deck Recipes.** Up to 50 saved decks, about 25 of them preset to staple decks of the first twelve formats and
   Goat. Loading a recipe takes the cards from your trunk; any you don't have are left out (the game tells you which,
   and why). The starting decks and the format presets come with the Side and Extra Decks of their .ydk files. The
   deck recipes will eventually include all 15 TCG formats.
@@ -209,7 +209,7 @@ next one.
 ## Playing
 
 Ready-made IPS patches are in the [`patches/`](patches/) folder: a release build and a debug build (the demo, up to
-Chaos). Apply one to your own USA ROM of *The Eternal Duelist Soul* (AY5E) with any IPS patcher, or let an emulator
+Warrior). Apply one to your own USA ROM of *The Eternal Duelist Soul* (AY5E) with any IPS patcher, or let an emulator
 that auto-loads patches, such as mGBA, apply it.
 
 ## Building
