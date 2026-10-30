@@ -1974,3 +1974,6 @@ updated: 2026-09-29
 
 ## [2026-10-30] progress | "Opponent Fusion Feck" corrected to "Opponent Fusion Deck"
 - data/rodata_08080A20.s: gStrOpponentFusionDeck (0x080864CC) is the corrected text in the same 0x18 bytes (".ascii" + zero padding) instead of the .incbin of the original's typo; no address moves. src/duel_info_bar.c comment. Verified in both built ROMs. Built (make and make release).
+
+## [2026-10-30] progress | Gyaku-Gire Panda coded
+- src/added_effects.c: ModStatBonus (packed ATK/DEF bonus; Panda's 500 per opponent monster, Cipher Soldier's ModBattleStatBonus inside), ModHasPiercing case; src/card_stats.c unpacks it. DECKS.md. [[added-cards]]. Release .text 0x8071C. Built (make and make release); not tested in an emulator.

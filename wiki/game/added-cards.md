@@ -1220,12 +1220,25 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
 - Release `.text` after it ends at 0x080809E8, 0x38 bytes below `.rodata` at 0x08080A20.
 - Checked in the source and the build; not tested in an emulator.
 
+### Gyaku-Gire Panda (2026-10-30)
+- Effect Monster (Level 3, Beast, 800/1600). ID 864. The fetched text: "Increase the ATK of this card by 500 points for
+  each monster on your opponent's side of the field. When this card attacks with an ATK that is higher than the DEF of
+  your opponent's Defense Position monster, inflict the difference as Battle Damage to your opponent's Life Points."
+- **ATK.** The stat hook Cipher Soldier added to `GetZoneCardStats` (card_stats.c, step 4a, face-up monsters) is now
+  `ModStatBonus`, which returns the ATK bonus in the low halfword and the DEF bonus in the high one (both signed), so a
+  card can gain ATK alone: Panda gets 500 for each monster its opponent controls, face up or down (`CountMonsters`).
+  Cipher Soldier's damage-calculation bonus is `ModBattleStatBonus` inside it. As a stat bonus it shows on screen and
+  the CPU's predictions (`GetZoneCardAtk`) see it.
+- **Piercing.** `ModHasPiercing` (`CalcBattle`, campaign.c) lists it, as Airknight Parshath.
+- Release `.text` 0x0808071C.
+- Checked in the source and the build; not tested in an emulator.
+
 ### Cipher Soldier (2026-10-30)
 - Effect Monster (1350/1800, a Machine). ID 848. The fetched
   text: "If this card battles a Warrior-Type monster, during damage calculation: This card gains 2000 ATK and DEF
   during that damage calculation only."
-- **Stats.** `GetZoneCardStats` (card_stats.c, step 4a, face-up monsters) adds `ModBattleStatBonus` to both ATK and
-  DEF. It is nonzero only while the battle is in `BATTLE_STAGE_DAMAGE_CALC`, for the attacker (`gBattle.atkSlot` of the
+- **Stats.** `GetZoneCardStats` (card_stats.c, step 4a, face-up monsters) adds `ModBattleStatBonus` (inside
+  `ModStatBonus` since Gyaku-Gire Panda) to both ATK and DEF. It is nonzero only while the battle is in `BATTLE_STAGE_DAMAGE_CALC`, for the attacker (`gBattle.atkSlot` of the
   turn player) or the attack target (`gBattle.defSlot`), not in a direct attack. `CalcBattle` runs in that stage and
   keeps its results in `gBattle` (damage, destroyed flags), so the later stages need nothing.
 - **The condition** (`ModCipherBonus`): a face-up Cipher Soldier against a Warrior, by the other monster's printed

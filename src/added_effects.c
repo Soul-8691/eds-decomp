@@ -5021,7 +5021,8 @@ int ModAttackTargetBlocked(int attacker, int attackerZone, int zone)
 /* ---- Cipher Soldier ------------------------------------------------------------------------------------------------
  * "If this card battles a Warrior-Type monster, during damage calculation: This card gains 2000 ATK and DEF during that
  * damage calculation only."
- *   stats    GetZoneCardStats (card_stats.c) adds ModBattleStatBonus to a face-up monster's ATK and DEF: while the
+ *   stats    GetZoneCardStats (card_stats.c) adds ModStatBonus, which has ModBattleStatBonus, to a face-up monster's
+ *            ATK and DEF: while the
  *            battle is in BATTLE_STAGE_DAMAGE_CALC (CalcBattle runs there and keeps its results in gBattle, so the
  *            later stages need nothing), a face-up Cipher Soldier that is the attacker or the attack target gains 2000
  *            when the other monster is a Warrior (its printed Type: reading the other monster's stats from here would
@@ -5043,8 +5044,8 @@ int ModCipherBonus(int player, int zone, int otherPlayer, int otherZone)
     return 0;
 }
 
-/* GetZoneCardStats (card_stats.c): the ATK and DEF a face-up monster gains in the battle being calculated now. */
-int ModBattleStatBonus(int player, int zone)
+/* The ATK and DEF a face-up monster gains in the battle being calculated now (Cipher Soldier). */
+static int ModBattleStatBonus(int player, int zone)
 {
     int attacker = gDuel.turnPlayer & 1;
 
@@ -5055,6 +5056,29 @@ int ModBattleStatBonus(int player, int zone)
     if ((player & 1) != attacker && zone == gBattle.defSlot)
         return ModCipherBonus(player, zone, attacker, gBattle.atkSlot);
     return 0;
+}
+
+/* ---- Gyaku-Gire Panda ---------------------------------------------------------------------------------------------
+ * "Increase the ATK of this card by 500 points for each monster on your opponent's side of the field. When this card
+ * attacks with an ATK that is higher than the DEF of your opponent's Defense Position monster, inflict the difference
+ * as Battle Damage to your opponent's Life Points."
+ *   ATK       ModStatBonus: 500 for each monster the opponent controls, face up or down (CountMonsters)
+ *   piercing  ModHasPiercing lists it (CalcBattle, campaign.c) */
+#define PANDA_ATK_PER_MONSTER 500
+
+/* GetZoneCardStats (card_stats.c, step 4a, a face-up monster): the ATK it gains in the low halfword and the DEF in the
+ * high one (signed): Gyaku-Gire Panda's ATK, and Cipher Soldier's battle bonus (ModBattleStatBonus). */
+int ModStatBonus(int player, int zone)
+{
+    int atk = 0, def = 0, battle = ModBattleStatBonus(player, zone);
+
+    atk += battle;
+    def += battle;
+#ifdef HAS_CARD_GYAKU_GIRE_PANDA
+    if (CardNumberOfId(DUEL_CARD_ID(&ZoneOf(player, zone)->card)) == CARD_GYAKU_GIRE_PANDA)
+        atk += PANDA_ATK_PER_MONSTER * CountMonsters(1 - (player & 1));
+#endif
+    return (atk & 0xFFFF) | (def << 16);
 }
 
 /* ---- The end of each attack ---------------------------------------------------------------------------------------
@@ -5669,6 +5693,9 @@ int ModHasPiercing(u16 cardId)
 #endif
 #ifdef HAS_CARD_SPEAR_DRAGON
     case CARD_SPEAR_DRAGON:
+#endif
+#ifdef HAS_CARD_GYAKU_GIRE_PANDA
+    case CARD_GYAKU_GIRE_PANDA:
 #endif
         return 1;
     }
