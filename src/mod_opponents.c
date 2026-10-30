@@ -9,8 +9,8 @@
  *           They fill pages 0-2 in unlock order.
  *   DECK    page 3: an opponent per deck (src/mod_decks.c), always open: the LR-Chaos Turbo, sdlkilla-Warrior and
  *           geistD-Goat Control decks, and "Test Duel" in the Duel Computer's slot: the deck of the .ydk in TEST_YDK
- *           (the Makefile; tools/testdeck.py, build/include/test_deck.h), if there is one, its first card the
- *           portrait.
+ *           (the Makefile; tools/testdeck.py, build/include/test_deck.h), if there is one, with the Duel
+ *           Computer's own portrait (copied from the original page 4, DrawSlotPortrait).
  *   HIDDEN  the duelist IDs not placed, and the empty slots (duelist 0: page 3's last two, page 4): no name, the
  *           stone cover over the portrait, the cursor skips them, never open. Page 4 cannot be reached.
  * Within a page the opponents follow the cursor's ring from the top left (slots 2, 3, 4, 0, 1: top left, top right,
@@ -64,8 +64,15 @@ struct ModOpponent {
     u8 banlist;             /* KIND_FORMAT: its banlist (and card pool) */
     u8 pad;
     const char *name;
-    u16 portrait;           /* card number of the portrait's art, 0 = the page's own portrait */
+    u16 portrait;           /* card number of the portrait's art, 0 = the page's own portrait, or
+                               PORTRAIT_FROM_SLOT(page, slot): that original page's portrait there */
 };
+
+/* A portrait copied from slot `slot` of the original page `page` (gOpponentSelectPageBgs; DrawSlotPortrait). */
+#define PORTRAIT_FROM_SLOT(page, slot)  (0x8000 | (page) << 4 | (slot))
+#define PORTRAIT_IS_SLOT(p)             ((p) & 0x8000)
+/* The Duel Computer's own portrait: the original page 4, right slot (gOpponentSelectDuelists). */
+#define PORTRAIT_DUEL_COMPUTER          PORTRAIT_FROM_SLOT(4, 4)
 
 static const char sNameYugiKaiba[] = "Yugi-Kaiba";
 static const char sNameCritter[] = "Critter";
@@ -179,7 +186,7 @@ static const struct ModOpponent sOpponents[] = {
     [DUELIST_PEGASUS] = DECK(sNameWarriorDeck, ART_D_D_WARRIOR_LADY),
     [DUELIST_GRANDPA] = DECK(sNameGoatControl, ART_THOUSAND_EYES_RESTRICT),
 #ifdef MOD_TEST_DECK
-    [DUELIST_DUEL_COMPUTER] = DECK(sNameTestDuel, TEST_DECK_PORTRAIT),
+    [DUELIST_DUEL_COMPUTER] = DECK(sNameTestDuel, PORTRAIT_DUEL_COMPUTER),
 #else
     [DUELIST_DUEL_COMPUTER] = HIDDEN,
 #endif
@@ -386,41 +393,95 @@ static u32 ArtPixel(u16 id, int x, int y)
     return ((src[bit >> 3] | src[(bit >> 3) + 1] << 8) >> (bit & 7)) & 63;
 }
 
+/* The page palette entry for `color`: the nearest one in use, or, with none within COLOR_NEAR, a free entry set to it
+ * (*freeIndex: where to look for one). used[] marks the entries in use (updated). */
+static u8 PortraitColor(u16 color, u8 *used, int *freeIndex)
+{
+    u16 *pal = (u16 *)PLTT;
+    u32 best = 0xFFFFFFFF;
+    int j;
+    u8 c = 0;
+
+    for (j = 1; j < 256; j++) {
+        if (used[j] && ColorDist(color, pal[j]) < best) {
+            best = ColorDist(color, pal[j]);
+            c = j;
+        }
+    }
+    if (best > COLOR_NEAR) {
+        while (*freeIndex < 256 && used[*freeIndex])
+            (*freeIndex)++;
+        if (*freeIndex < 256) {
+            pal[*freeIndex] = color;
+            used[*freeIndex] = 1;
+            c = *freeIndex;
+        }
+    }
+    return c;
+}
+
+/* Write palette entry c at screen pixel (x, y) of both Mode 4 frames. */
+static void PutPortraitPixel(int x, int y, u32 c)
+{
+    u32 offset = y * 240 + x;
+    u16 *p0 = (u16 *)(MODE4_FRAME0 + (offset & ~1));
+    u16 *p1 = (u16 *)(MODE4_FRAME1 + (offset & ~1));
+
+    if (offset & 1) {
+        *p0 = (*p0 & 0x00FF) | c << 8;
+        *p1 = (*p1 & 0x00FF) | c << 8;
+    } else {
+        *p0 = (*p0 & 0xFF00) | c;
+        *p1 = (*p1 & 0xFF00) | c;
+    }
+}
+
+/* Copy the portrait of slot srcSlot of the original page srcPage (its bitmap and palette, gOpponentSelectPageBgs) into
+ * the portrait of `slot`: the same circle, pixel for pixel, each colour the nearest of this page's (PortraitColor). */
+static void DrawSlotPortrait(int slot, int srcPage, int srcSlot, u8 *used)
+{
+    const u16 *srcPal = gOpponentSelectPageBgs[srcPage].pal;
+    const u8 *src = gOpponentSelectPageBgs[srcPage].bitmap;
+    u8 map[256], mapped[256];
+    int i, x, y, freeIndex = 1;
+    int cx = gOpponentSelectSlotPos[slot].x + PORTRAIT_DX, cy = gOpponentSelectSlotPos[slot].y + PORTRAIT_DY;
+    int sx = gOpponentSelectSlotPos[srcSlot].x + PORTRAIT_DX, sy = gOpponentSelectSlotPos[srcSlot].y + PORTRAIT_DY;
+
+    for (i = 0; i < 256; i++)
+        mapped[i] = 0;
+    for (y = cy - 24; y <= cy + 24; y++) {
+        for (x = cx - 24; x <= cx + 24; x++) {
+            int dx = 2 * (x - cx) + 1, dy = 2 * (y - cy) + 1;
+            int ux = sx + (x - cx), uy = sy + (y - cy);
+            u32 s;
+
+            if (dx * dx + dy * dy > PORTRAIT_D2 || x < 0 || x >= 240 || y < 0 || y >= 160 || ux < 0 || ux >= 240
+                || uy < 0 || uy >= 160)
+                continue;
+            s = src[uy * 240 + ux];
+            if (!mapped[s]) {
+                map[s] = PortraitColor(srcPal[s], used, &freeIndex);
+                mapped[s] = 1;
+            }
+            PutPortraitPixel(x, y, map[s]);
+        }
+    }
+}
+
 /* Draw card art id into the portrait of `slot`; used[] marks the palette entries in use (updated). */
 static void DrawArtPortrait(int slot, u16 id, u8 *used)
 {
     const u16 *artPal = (const u16 *)(CARD_ART_PALETTES_ADDR + id * CARD_ART_PALETTE_SIZE);
-    u16 *pal = (u16 *)PLTT;
     u8 map[64];
-    int i, j, x, y, freeIndex = 1;
+    int i, x, y, freeIndex = 1;
     int cx = gOpponentSelectSlotPos[slot].x + PORTRAIT_DX, cy = gOpponentSelectSlotPos[slot].y + PORTRAIT_DY;
 
-    for (i = 0; i < 64; i++) {
-        u32 best = 0xFFFFFFFF;
-
-        map[i] = 0;
-        for (j = 1; j < 256; j++) {
-            if (used[j] && ColorDist(artPal[i], pal[j]) < best) {
-                best = ColorDist(artPal[i], pal[j]);
-                map[i] = j;
-            }
-        }
-        if (best > COLOR_NEAR) {
-            while (freeIndex < 256 && used[freeIndex])
-                freeIndex++;
-            if (freeIndex < 256) {
-                pal[freeIndex] = artPal[i];
-                used[freeIndex] = 1;
-                map[i] = freeIndex;
-            }
-        }
-    }
+    for (i = 0; i < 64; i++)
+        map[i] = PortraitColor(artPal[i], used, &freeIndex);
     for (y = cy - 24; y <= cy + 24; y++) {
         for (x = cx - 24; x <= cx + 24; x++) {
             int dx = 2 * (x - cx) + 1, dy = 2 * (y - cy) + 1;
             int ax, ay;
-            u32 offset, c;
-            u16 *p0, *p1;
 
             if (dx * dx + dy * dy > PORTRAIT_D2 || x < 0 || x >= 240 || y < 0 || y >= 160)
                 continue;
@@ -428,17 +489,7 @@ static void DrawArtPortrait(int slot, u16 id, u8 *used)
             ay = 40 + dy * PORTRAIT_SCALE / 512;
             ax = ax < 0 ? 0 : ax > 71 ? 71 : ax;
             ay = ay < 0 ? 0 : ay > 79 ? 79 : ay;
-            c = map[ArtPixel(id, ax, ay)];
-            offset = y * 240 + x;
-            p0 = (u16 *)(MODE4_FRAME0 + (offset & ~1));
-            p1 = (u16 *)(MODE4_FRAME1 + (offset & ~1));
-            if (offset & 1) {
-                *p0 = (*p0 & 0x00FF) | c << 8;
-                *p1 = (*p1 & 0x00FF) | c << 8;
-            } else {
-                *p0 = (*p0 & 0xFF00) | c;
-                *p1 = (*p1 & 0xFF00) | c;
-            }
+            PutPortraitPixel(x, y, map[ArtPixel(id, ax, ay)]);
         }
     }
 }
@@ -463,6 +514,9 @@ void ModOpponentSelectPortraits(int page)
                 used[bitmap[i]] = 1;
             scanned = 1;
         }
-        DrawArtPortrait(slot, gCardNumberToId[o->portrait], used);
+        if (PORTRAIT_IS_SLOT(o->portrait))
+            DrawSlotPortrait(slot, o->portrait >> 4 & 7, o->portrait & 7, used);
+        else
+            DrawArtPortrait(slot, gCardNumberToId[o->portrait], used);
     }
 }

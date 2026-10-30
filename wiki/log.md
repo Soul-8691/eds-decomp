@@ -1944,3 +1944,6 @@ updated: 2026-09-29
 
 ## [2026-10-30] setup | Test Duel: a debug opponent with the deck of test.ydk
 - tools/testdeck.py (new) and a Makefile rule (TEST_YDK, build/include/test_deck.h, read every build); src/mod_opponents.c: DUELIST_DUEL_COMPUTER is "Test Duel" on the deck page (bottom slot), portrait its first card; src/mod_decks.c sTestDeckList for it (make only); src/ai_deck.c LoadOpponentDeck skips RemoveOverLimitDeckCards for it. DECKS.md, README, CLAUDE.md. [[yugi-kaiba-opponent]]. Release .text 0x806B0. Built (make and make release); not tested in an emulator.
+
+## [2026-10-30] progress | Test Duel shows the Duel Computer's portrait
+- src/mod_opponents.c: PORTRAIT_FROM_SLOT / DrawSlotPortrait (copy an original page's portrait circle, colours through the shared PortraitColor) and PutPortraitPixel; Test Duel uses the original page 4 right slot. Verified with a preview from the built ROM's page bitmaps. DECKS.md. [[yugi-kaiba-opponent]]. Built (make and make release); not tested in an emulator.

@@ -96,11 +96,18 @@ Always open, with no format check:
   cursor's ring) is "Test Duel" in `make` builds, hidden in `make release`. Its deck is the .ydk in `TEST_YDK` (the
   Makefile; default `/mnt/c/ProjectIgnis/deck/test.ydk`), which `tools/testdeck.py` turns into
   `build/include/test_deck.h` on every build (rewritten only when it changes): `MOD_TEST_DECK`,
-  `TEST_DECK_PORTRAIT` (the first Main Deck card's number, the portrait) and `sTestDeck` (Main then Extra Deck card
+  `TEST_DECK_PORTRAIT` (the first Main Deck card's number; no longer used for the portrait) and `sTestDeck` (Main then Extra Deck card
   numbers; passcodes through the built password table, with the B. Skull Dragon / Dark Paladin aliases; unknown ones
   left out with a warning). `GetOpponentDeckOverride` returns it, and `LoadOpponentDeck` (ai_deck.c) skips
   `RemoveOverLimitDeckCards` for that duelist, so a test deck keeps any number of copies. Without the file (or with
   no known Main Deck card) the header defines nothing and the slot stays hidden.
+  - **Portrait: the Duel Computer's own** (same day). `PORTRAIT_FROM_SLOT(page, slot)` (bit 15 set in
+    `ModOpponent.portrait`) copies the portrait circle of an original page's slot: `DrawSlotPortrait` reads that
+    page's bitmap and palette (`gOpponentSelectPageBgs`, raw 8bpp) pixel for pixel over the same circle, and maps
+    each colour to the current page with `PortraitColor` (the nearest entry in use, or a free one: the card-art
+    portraits' rule, now shared with `DrawArtPortrait`). The Duel Computer is the original page 4, right slot
+    (`gOpponentSelectDuelists` in the ROM: page 4 = 0, 22, 23, 24, 21). A preview rendered from the built ROM's page
+    bitmaps showed it cleanly in page 3's bottom circle.
 
 ## Hidden slots
 - **On screen.** No name, and the stone cover (`OpponentSelect_DrawLockedCovers`) over the portrait.
