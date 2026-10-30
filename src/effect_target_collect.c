@@ -357,6 +357,7 @@ static inline u32 CardSpellSubtypeNv(u16 id)
 /* Mod (src/added_effects.c): the lists of the added cards with no case here (the filters below still run). This
  * unit's code must stay inside the original .text, so new added cards' lists go there. */
 void ModCollectEffectTargets(int player, u16 cardNumber, int param);
+void ModFilterEffectTargets(u16 cardNumber);    /* added: src/added_effects.c */
 
 u16 CollectEffectTargets(int player, u16 cardNumber, int param)
 {
@@ -1238,5 +1239,7 @@ u16 CollectEffectTargets(int player, u16 cardNumber, int param)
             i++;
         }
     }
+    /* added, filter 4: a summoning list drops the monsters that cannot be Special Summoned (src/added_effects.c) */
+    ModFilterEffectTargets(cardNumber);
     return gCardListView.count;
 }

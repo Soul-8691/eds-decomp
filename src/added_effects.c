@@ -4909,6 +4909,61 @@ static int IsLowLevelMainDeckMonsterId(u16 id, int param)
            && !IsSpecialSummonOnly(id);
 }
 
+/* CollectEffectTargets calls this after its own filters: a list whose card Special Summons the pick loses the monsters
+ * that cannot be Special Summoned (IsCannotSpecialSummon: Tsukuyomi, Yata-Garasu). The summon itself refuses them
+ * (QueueSpecialSummon*), but only after the effect took the card out of its pile, so the card vanished (Monster Reborn
+ * on Yata-Garasu; also Mystic Tomato on Tsukuyomi, Flying Kamakiri #1 or Marauding Captain on either). The search,
+ * banish and return lists (Sangan, Witch of the Black Forest, Kycoo, ...) keep them. */
+static int IsSummoningTargetList(u16 cardNumber)
+{
+    switch (cardNumber) {
+    case CARD_MONSTER_REBORN:
+    case CARD_LAST_WILL:
+    case CARD_GIANT_RAT:
+    case CARD_UFO_TURTLE:
+    case CARD_SHINING_FAIRY:
+    case CARD_MOTHER_GRIZZLY:
+    case CARD_FLYING_KAMAKIRI_1:
+    case CARD_MYSTIC_TOMATO:
+    case CARD_APPRENTICE_MAGICIAN:
+    case CARD_PYRAMID_TURTLE:
+    case CARD_GRAVEKEEPERS_SPY:
+    case CARD_CALL_OF_THE_HAUNTED:
+    case CARD_THE_SHALLOW_GRAVE:
+    case CARD_PREMATURE_BURIAL:
+    case CARD_1520:                         /* Gilasaurus: the opponent's revival */
+    case CARD_SPEAR_CRETIN:
+    case CARD_1318:
+#ifdef HAS_CARD_MARAUDING_CAPTAIN
+    case CARD_MARAUDING_CAPTAIN:
+#endif
+#ifdef HAS_CARD_BOOK_OF_LIFE
+    case CARD_BOOK_OF_LIFE:
+#endif
+        return 1;
+    }
+    return 0;
+}
+
+void ModFilterEffectTargets(u16 cardNumber)
+{
+    int i, j;
+
+    if (!IsSummoningTargetList(cardNumber))
+        return;
+    for (i = 0; i < gCardListView.count;) {
+        if (!IsCannotSpecialSummon(gCardListView.cards[i] & CARD_ID_MASK)) {
+            i++;
+            continue;
+        }
+        for (j = i; j + 1 < gCardListView.count; j++) {
+            gCardListView.cards[j] = gCardListView.cards[j + 1];
+            gCardListView.sources[j] = gCardListView.sources[j + 1];
+        }
+        gCardListView.count--;
+    }
+}
+
 void ModCollectEffectTargets(int player, u16 cardNumber, int param)
 {
     struct DuelPlayer *p = &gDuelPlayers[player & 1];

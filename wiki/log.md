@@ -1911,3 +1911,6 @@ updated: 2026-09-29
 
 ## [2026-10-30] progress | Kycoo: at most 2 banished for the human too
 - src/added_effects.c EffectKycooTheGhostDestroyerResolve: the human's steps written out (key 1511's resolve returned EFFECT_STEP_START after each pick, resetting the count of 2: unlimited picks, verified in its assembly); a pick now returns to EFFECT_STEP_2. [[added-cards]]. Release .text 0x805A4. Built (make and make release); not tested in an emulator.
+
+## [2026-10-30] progress | Cards that cannot be Special Summoned no longer vanish
+- src/added_effects.c ModFilterEffectTargets / IsSummoningTargetList; src/effect_target_collect.c CollectEffectTargets calls it as a fourth filter: summoning lists (Monster Reborn, recruiters, Call of the Haunted, Marauding Captain, ...) drop IsCannotSpecialSummon monsters (Yata-Garasu, Tsukuyomi), which Monster Reborn used to take out of the Graveyard before the summon refused them. [[added-cards]]. Release .text 0x80608. Built (make and make release); not tested in an emulator.

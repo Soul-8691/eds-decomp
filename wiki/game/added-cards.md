@@ -385,6 +385,17 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
   `YataGarasuDealtDamage` shows the card and pushes `DUEL_CMD_SKIP_NEXT_DRAW_PHASE` (Time Seal's command) for the
   damaged player; `DuelPhase_Draw` consumes the flag.
 - Checked in the source and the build; not tested in an emulator.
+- **Bug fixed (2026-10-30, reported by the user).** Monster Reborn could pick Yata-Garasu: `CanReviveGraveyardCard`
+  accepts it, the resolve took it out of the Graveyard, and then `QueueSpecialSummon*` refused it, so the card vanished.
+  The same could happen to Tsukuyomi (the other `IsCannotSpecialSummon` card) and from the Deck or hand: Mystic Tomato
+  on Tsukuyomi, Flying Kamakiri #1 on Yata-Garasu, Marauding Captain on either. `CollectEffectTargets`
+  (effect_target_collect.c) now ends with a fourth filter, `ModFilterEffectTargets` (added_effects.c): for a list whose
+  card Special Summons the pick (`IsSummoningTargetList`: Monster Reborn, Last Will, the six attribute recruiters,
+  Apprentice Magician, Pyramid Turtle, Gravekeeper's Spy, Call of the Haunted, The Shallow Grave, Premature Burial,
+  key 1520 / Gilasaurus, Spear Cretin, key 1318, Marauding Captain, Book of Life) it drops the monsters that cannot be
+  Special Summoned, shifting the source tags with the cards. Search, banish and return lists (Sangan, Witch of the
+  Black Forest, Kycoo, ...) keep them. With no other target, Monster Reborn cannot be activated for it either.
+  Release `.text` 0x08080608.
 
 ### Fiber Jar (2026-10-26)
 - FLIP: "Each player shuffles all cards from their hand, field, and Graveyard into the Deck, then draws 5 cards."
