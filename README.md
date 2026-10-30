@@ -160,6 +160,8 @@ next one.
       when that has at least 500 more ATK.
     - Its Poison of the Old Man deals 800 damage when that wins the duel, gains 1200 LP while it has 3000 or less,
       and otherwise deals the damage.
+    - It chains Emergency Provisions to your Heavy Storm, Harpie's Feather Duster or a card targeting its Spells and
+      Traps, turning the cards about to go into LP; from its hand it plays it only at 1500 LP or less.
     - It activates Hallowed Life Barrier against an attack that would deal it 1500 or more damage, and in answer to
       your burn Spells and Traps (Ookazi, Tremendous Fire, ...) that would deal 800 or more; either way also when the
       damage would finish it.

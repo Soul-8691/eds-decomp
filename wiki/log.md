@@ -1956,3 +1956,12 @@ updated: 2026-09-29
 
 ## [2026-10-30] progress | The CPU's Hallowed Life Barrier answers burn
 - src/added_effects.c: AiIncomingBurn (the burn Spells/Traps' damage) and AiChainHallowedLifeBarrier, tried in AiChainSolemnJudgment after Magic Drain: 800 or more, or lethal. README CPU list. [[added-cards]]. Release .text 0x806C8. Built (make and make release); not tested in an emulator.
+
+## [2026-10-30] progress | Emergency Provisions coded
+- src/added_effects.c: EffectEmergencyProvisions* (prepare; chainA: the human's cursor picks until B, the CPU's targeted or all other Spells/Traps; resolve: 1000 LP each) and its row; AiChainEmergencyProvisions in AiChainSolemnJudgment, AiWantsEmergencyProvisions in AiWantsSpell. README CPU list, DECKS.md. [[added-cards]]. Release .text 0x806C8. Built (make and make release); not tested in an emulator.
+
+## [2026-10-30] progress | Emergency Provisions no longer counts itself
+- src/added_effects.c ProvisionsOwnZone: its own zone by card ID (the Set card's activation check did not give card->zone), left out by the prepare and the cost. [[added-cards]]. Release .text 0x806C8. Built (make and make release); not tested in an emulator.
+
+## [2026-10-30] progress | Emergency Provisions: a copy from the hand may send a Set copy
+- src/added_effects.c EffectEmergencyProvisionsPrepare: from the hand nothing is left out again (fromHand is reliable; the unset zone was the bug), so a Set copy counts and can be sent. [[added-cards]]. Built (make and make release); not tested in an emulator.

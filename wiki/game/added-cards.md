@@ -1220,6 +1220,31 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
 - Release `.text` after it ends at 0x080809E8, 0x38 bytes below `.rodata` at 0x08080A20.
 - Checked in the source and the build; not tested in an emulator.
 
+### Emergency Provisions (2026-10-30)
+- Quick-Play Spell. ID 956. The fetched text: "Send any number of other Spell/Trap Cards you control to the Graveyard;
+  gain 1000 LP for each card sent to the Graveyard this way."
+- **Prepare.** Another Spell/Trap of the player's on the field (zones 5-10, the Field Spell too).
+  - **Fixed the same day (reported by the user: a Set copy could be activated with no other Spell/Trap).** The card
+    excluded itself by `card->zone`, and with `fromHand`; the activation check of a Set card does not always fill the
+    zone in (`CanActivateEffectOfCard` leaves its entry's zone unset), so the card counted itself. `ProvisionsOwnZone`
+    finds its zone by its card ID (`card->zone` only when that zone holds it). The prepare leaves it out on the field
+    (`fromHand` 0; any one copy left out counts the same) and nothing from the hand (`fromHand` 1: it is not on the
+    field yet, so a Set copy counts); the cost leaves out the link's own zone, which a chain link always has, so a
+    second, Set copy may be sent.
+- **ChainA: the cost**, counted in the link's unused `unk12`.
+  - The human: a prompt ("Select the Spell/Trap Cards to send to the Graveyard. Press B when done."), then cursor
+    picks of their own Spells/Traps (`PICK_ANY_SPELL_TRAP`, this card refused), each sent at once
+    (`SendFieldCardToGrave`, a send, not a destruction), until B (refused with the error sound before the first) or
+    none is left.
+  - The CPU: when the link it answers (`prevLink`) targets its Spells/Traps (Mystical Space Typhoon, Dust Tornado,
+    ...), just those; otherwise all its others (against Heavy Storm, Harpie's Feather Duster, or from the hand).
+- **Resolve.** `GainLifePoints`, 1000 a card sent.
+- **CPU.** A Set copy is chained (`AiChainEmergencyProvisions`, in `AiChainSolemnJudgment` after Hallowed Life
+  Barrier) to the human's Heavy Storm or Harpie's Feather Duster, or to a card targeting its Spells/Traps, when it has
+  another Spell/Trap to send. From the hand (`AiWantsSpell`) only with 1500 LP (`EP_AI_LOW_LP`) or less and 2 or more
+  other Spells/Traps.
+- Checked in the source and the build; not tested in an emulator.
+
 ### Hallowed Life Barrier (2026-10-30)
 - Normal Trap. ID 900. Coded with its **original TCG text**: "Discard 1 card. You take no damage this turn." The fetched
   text is the later wording ("any damage you take from your opponent's cards and effects becomes 0").

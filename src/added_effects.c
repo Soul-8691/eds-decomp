@@ -7381,6 +7381,157 @@ static int AiChainHallowedLifeBarrier(struct ChainEntry *entry)
 }
 #endif /* HAS_CARD_HALLOWED_LIFE_BARRIER */
 
+#ifdef HAS_CARD_EMERGENCY_PROVISIONS
+/* ---- Emergency Provisions ------------------------------------------------------------------------------------------
+ * Quick-Play Spell: "Send any number of other Spell/Trap Cards you control to the Graveyard; gain 1000 LP for each card
+ * sent to the Graveyard this way."
+ *   prepare  another Spell/Trap of the player's on the field (zones 5-10, the Field Spell too)
+ *   chainA   the cost, counted in the link's unused unk12. The human: a prompt, then cursor picks of their other
+ *            Spells/Traps, each sent at once (SendFieldCardToGrave), until B (after at least one) or none is left. The
+ *            CPU: the ones the link it answers targets, when that targets its Spells/Traps (Mystical Space Typhoon,
+ *            Dust Tornado, ...), else all of its others (against Heavy Storm, Harpie's Feather Duster, ...)
+ *   resolve  GainLifePoints, 1000 a card
+ *   CPU      a Set copy is chained (AiChainSolemnJudgment) to the human's Heavy Storm or Harpie's Feather Duster, or to
+ *            a card that targets its Spells/Traps (AiChainEmergencyProvisions); from the hand in its Main Phase
+ *            (AiWantsSpell) only with EP_AI_LOW_LP or less and 2 or more other Spells/Traps */
+static const u8 sStrEmergencyProvisionsPick[] = "Select the Spell/Trap Cards to send to the Graveyard. Press B when done.";
+#define EP_GAIN         1000
+#define EP_AI_LOW_LP    1500
+
+/* 1 if (player, zone) holds a Spell/Trap of the player's that Emergency Provisions in `own` may send. */
+static int IsProvisionsCost(int player, int zone, int own)
+{
+    return zone >= ZONE_SPELL_0 && zone <= ZONE_FIELD && zone != own
+           && DUEL_CARD_ID(&ZoneOf(player, zone)->card) != 0;
+}
+
+static int CountProvisionsCosts(int player, int own)
+{
+    int zone, n = 0;
+
+    for (zone = ZONE_SPELL_0; zone <= ZONE_FIELD; zone++)
+        n += IsProvisionsCost(player, zone, own);
+    return n;
+}
+
+/* The zone of the Emergency Provisions `card` itself, which it may not send: card->zone when it holds that card (always
+ * so for a chain link, as when the cost is paid: exactly this copy is kept), else the player's first Spell/Trap zone
+ * with that card (CanActivateEffectOfCard leaves the zone of its entry unset), -1 when none is on the field. */
+static int ProvisionsOwnZone(struct ChainEntry *card)
+{
+    u16 id = card->card & CARD_ID_MASK;
+    int zone = card->zone;
+
+    if (zone >= ZONE_SPELL_0 && zone <= ZONE_FIELD && DUEL_CARD_ID(&ZoneOf(card->player, zone)->card) == id)
+        return zone;
+    for (zone = ZONE_SPELL_0; zone <= ZONE_SPELL_4; zone++) {
+        if (DUEL_CARD_ID(&ZoneOf(card->player, zone)->card) == id)
+            return zone;
+    }
+    return -1;
+}
+
+int EffectEmergencyProvisionsPrepare(struct ChainEntry *card, struct ChainEntry *chainLink, u16 fromHand)
+{
+    /* from the hand it is not on the field yet: every Spell/Trap counts, a Set copy too. On the field the check may
+     * not give its zone (CanActivateEffectOfCard leaves it unset), but leaving out any one copy of it counts the same */
+    return CountProvisionsCosts(card->player, fromHand ? -1 : ProvisionsOwnZone(card)) > 0;
+}
+
+/* 1 if link `prev` targets a Spell/Trap of `player`'s other than zone `own`. */
+static int TargetsProvisionsCost(struct ChainEntry *prev, int player, int own)
+{
+    int t;
+
+    if (prev == NULL)
+        return 0;
+    for (t = 0; t < prev->numTargets; t++) {
+        if ((u8)prev->targets[t] == player && IsProvisionsCost(player, prev->targets[t] >> 8, own))
+            return 1;
+    }
+    return 0;
+}
+
+int EffectEmergencyProvisionsChainA(struct ChainEntry *link, struct ChainEntry *prevLink)
+{
+    int zone, t, own = ProvisionsOwnZone(link);
+
+    if (link->player) {
+        link->unk12 = 0;
+        if (TargetsProvisionsCost(prevLink, link->player, own)) {
+            for (t = 0; t < prevLink->numTargets; t++) {
+                zone = prevLink->targets[t] >> 8;
+                if ((u8)prevLink->targets[t] == link->player && IsProvisionsCost(link->player, zone, own)) {
+                    SendFieldCardToGrave(link->player, zone, 0, 1);
+                    link->unk12++;
+                }
+            }
+            return 1;
+        }
+        for (zone = ZONE_SPELL_0; zone <= ZONE_FIELD; zone++) {
+            if (IsProvisionsCost(link->player, zone, own)) {
+                SendFieldCardToGrave(link->player, zone, 0, 1);
+                link->unk12++;
+            }
+        }
+        return 1;
+    }
+    switch (gChain.costStep) {
+    case 0:
+        link->unk12 = 0;
+        TextBoxOpen(TEXTBOX_POS(6, 2), TEXTBOX_SIZE(18, 7), TEXTBOX_FLAGS_DEFAULT, sStrEmergencyProvisionsPick);
+        gChain.costStep++;
+        return 0;
+    default:
+        if (CountProvisionsCosts(link->player, own) == 0)
+            return 1;
+        if (gMain.newKeys & B_BUTTON) {
+            if (link->unk12 > 0)
+                return 1;
+            PlaySE(SE_ERROR);
+            return 0;
+        }
+        if (DuelCursor_PickTarget(PICK_ANY_SPELL_TRAP) == 0)
+            return 0;
+        zone = gDuelScreen.selArea + gDuelScreen.selIndex;
+        if (gDuelScreen.selPlayer != link->player || !IsProvisionsCost(link->player, zone, own)) {
+            PlaySE(SE_ERROR);
+            return 0;
+        }
+        SendFieldCardToGrave(link->player, zone, 0, 1);
+        link->unk12++;
+        return 0;
+    }
+}
+
+int EffectEmergencyProvisionsResolve(struct ChainEntry *link, struct ChainEntry *chainedTo)
+{
+    if (!link->negated && link->unk12 > 0)
+        GainLifePoints(link->player, EP_GAIN * link->unk12);
+    return EFFECT_STEP_DONE;
+}
+
+/* AiChainSolemnJudgment: chain a Set Emergency Provisions to the human's card that would clear the CPU's
+ * Spells/Traps. 1 if it did. */
+static int AiChainEmergencyProvisions(struct ChainEntry *entry)
+{
+    u16 number = CardNumberOfId(entry->card);
+
+    if (CountProvisionsCosts(AI_PLAYER, -1) < 2)    /* itself and at least one more */
+        return 0;
+    if (number != CARD_HEAVY_STORM && number != CARD_HARPIES_FEATHER_DUSTER
+        && !TargetsProvisionsCost(entry, AI_PLAYER, -1))
+        return 0;
+    return AiChainSetCard(entry, CARD_EMERGENCY_PROVISIONS) != 0;
+}
+
+/* AiWantsSpell: from the hand only when low on LP, with 2 or more other Spells/Traps to turn into LP. */
+static int AiWantsEmergencyProvisions(void)
+{
+    return (int)gDuelPlayers[AI_PLAYER].lifePoints <= EP_AI_LOW_LP && CountProvisionsCosts(AI_PLAYER, -1) >= 2;
+}
+#endif /* HAS_CARD_EMERGENCY_PROVISIONS */
+
 /* Should the CPU play its added Magic card `number` in its Main Phase now? (AiTryPlaySpellTrap checks that it may.) */
 static int AiWantsSpell(u16 number)
 {
@@ -7392,6 +7543,10 @@ static int AiWantsSpell(u16 number)
 #ifdef HAS_CARD_POISON_OF_THE_OLD_MAN
     case CARD_POISON_OF_THE_OLD_MAN:            /* always: AiPoisonOfTheOldManChoice picks the effect */
         return 1;
+#endif
+#ifdef HAS_CARD_EMERGENCY_PROVISIONS
+    case CARD_EMERGENCY_PROVISIONS:             /* only when low on LP */
+        return AiWantsEmergencyProvisions();
 #endif
 #ifdef HAS_CARD_CARD_DESTRUCTION
     case CARD_CARD_DESTRUCTION:                 /* when the human holds more cards than the CPU would discard */
@@ -7652,6 +7807,11 @@ int AiChainSolemnJudgment(struct ChainEntry *entry)
 #ifdef HAS_CARD_HALLOWED_LIFE_BARRIER
     /* a burn card: Hallowed Life Barrier before Solemn Judgment's half of the LP */
     if (AiChainHallowedLifeBarrier(entry))
+        return 1;
+#endif
+#ifdef HAS_CARD_EMERGENCY_PROVISIONS
+    /* a card that clears the CPU's Spells/Traps: turn them into LP first */
+    if (AiChainEmergencyProvisions(entry))
         return 1;
 #endif
     if (gDuelPlayers[AI_PLAYER].lifePoints > AI_SOLEMN_MAX_LP)
@@ -8047,6 +8207,16 @@ const struct CardEffect gAddedCardEffects[] = {
         NULL,
         NULL,
         NULL,
+        NULL,
+    },
+#endif
+#ifdef HAS_CARD_EMERGENCY_PROVISIONS
+    {
+        CARD_EMERGENCY_PROVISIONS, 0,
+        EffectEmergencyProvisionsResolve,
+        NULL,
+        EffectEmergencyProvisionsPrepare,
+        EffectEmergencyProvisionsChainA,
         NULL,
     },
 #endif
