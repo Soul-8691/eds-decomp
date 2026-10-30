@@ -32,6 +32,9 @@
 #include "text_box.h"               /* gTextBox, TextBoxOpen, TextBoxSetMenu */
 /* Mod (src/added_effects.c): King Tiger Wanghu destroys a summoned monster with 1400 or less ATK. */
 int KingTigerWanghuOnSummon(int player, int zone);
+#ifdef HAS_CARD_LEVEL_LIMIT_AREA_B
+int ApplyLevelLimitAreaB(int player);
+#endif
 
 /* Matching: the unit calls DuelCmd_Push with four int parameters. With the header's u16 cmd and arg2 the
  * register allocation of the Special step machines (kinds 4-6) differs. Same function, other view. */
@@ -553,6 +556,10 @@ u16 SummonAction_Update(void)
                     u32 byte = *(u8 *)&gSummonAction;
                     ApplyDragonCaptureJar((byte << 31) >> 31);
                 }
+#ifdef HAS_CARD_LEVEL_LIMIT_AREA_B
+                if (wasFaceUp)
+                    ApplyLevelLimitAreaB(gSummonAction.player);
+#endif
                 {
                     /* The opponent may respond to the summon: SUMMONED or SET for a Normal Summon / Set,
                      * FLIP_SUMMONED for a Flip Summon, SPECIAL_SUMMONED for the rest. */

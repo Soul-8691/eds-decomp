@@ -1998,3 +1998,12 @@ updated: 2026-09-29
 
 ## [2026-10-30] progress | Ojama Token: DEF 1000
 - tools/newcards.py: a token's DEF from TOKEN_NUMBERS is no longer overwritten with 0 (the keyword of c.update came after the dict). Verified in the built card table (ID 1161: DEF 1000). [[added-cards]]. Built (make and make release); not tested in an emulator.
+
+## [2026-10-30] progress | Level Limit - Area B
+- src/added_effects.c: `EffectLevelLimitAreaBResolve`, `gAddedCardEffects` row; `AiWantsLevelLimitAreaB`, `AiPlayAddedCards`, `AiShouldActivateAddedCard`. src/card_menu_input.c: `CanMonsterAttack` (Level 4+ blocked while active). src/ai_deck.c: `AiTryPlaySpellTrap` gate. missing.txt, missing-main.txt. [[added-cards]]. Built (`make`); not tested in an emulator.
+
+## [2026-10-30] progress | Level Limit - Area B CPU always flips
+- src/added_effects.c: removed `AiWantsLevelLimitAreaB`; CPU uses `AiPlayAddedCards` and `AiShouldActivateAddedCard` default (vanilla CARD_1323-style). [[added-cards]].
+
+## [2026-10-30] progress | Level Limit - Area B: correct effect (YGOPRODeck)
+- YGOPRODeck desc: change face-up Level 4+ monsters to Defense Position (not attack lock / CARD_1323). src/added_effects.c: `ApplyLevelLimitAreaB`, `ModLevelLimitAreaBBlocksAtkPosition`; src/summon_action.c, src/card_command_menu.c; removed wrong `CanMonsterAttack` hook. [[added-cards]].

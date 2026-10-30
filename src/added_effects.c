@@ -4840,6 +4840,70 @@ static int CountHandAndFieldCards(int player);
 int AiWantsSecretBarrel(void);
 #endif
 
+#ifdef HAS_CARD_LEVEL_LIMIT_AREA_B
+/* ---- Level Limit - Area B (YGOPRODeck id 3136426) -----------------------------------------------------------------
+ * Effect text (YGOPRODeck API): "Change all face-up Level 4 or higher monsters to Defense Position."
+ * Continuous Spell in the card pool; stays on the field when activated. Like Dragon Capture Jar (328): activation
+ * and ApplyLevelLimitAreaB after a face-up summon; ModDuelStateCheck keeps attack-position Level 4+ down while it
+ * is active; the human cannot manually switch a face-up Level 4+ monster to Attack (card_command_menu.c). */
+
+static int LevelLimitAreaBActive(void)
+{
+    return CountActiveCardsOnField(0, CARD_LEVEL_LIMIT_AREA_B) > 0
+           || CountActiveCardsOnField(1, CARD_LEVEL_LIMIT_AREA_B) > 0;
+}
+
+int ApplyLevelLimitAreaB(int player)
+{
+    int p, z, found = 0;
+
+    if (!LevelLimitAreaBActive())
+        return 0;
+    for (p = 0; p <= 1; p++) {
+        for (z = ZONE_MONSTER_0; z <= ZONE_MONSTER_4; z++) {
+            struct DuelZone *zn = ZoneOf(p, z);
+            u16 id = DUEL_CARD_ID(&zn->card);
+
+            if (id != 0 && zn->isFaceUp && !zn->isDefense
+                && (int)CARD_STATS_LEVEL(gCardStats[id & CARD_ID_MASK]) >= 4)
+                found = 1;
+        }
+    }
+    if (!found)
+        return 0;
+    DuelCmd_Push(player ? DUEL_CMD_PLAYER | DUEL_CMD_SHOW_CARD_EFFECT : DUEL_CMD_SHOW_CARD_EFFECT,
+                 gCardNumberToId[CARD_LEVEL_LIMIT_AREA_B], 1, 0);
+    for (p = 0; p <= 1; p++) {
+        for (z = ZONE_MONSTER_0; z <= ZONE_MONSTER_4; z++) {
+            struct DuelZone *zn = ZoneOf(p, z);
+            u16 id = DUEL_CARD_ID(&zn->card);
+
+            if (id != 0 && zn->isFaceUp && !zn->isDefense
+                && (int)CARD_STATS_LEVEL(gCardStats[id & CARD_ID_MASK]) >= 4)
+                ChangeBattlePosition(p, z, 0, 0);
+        }
+    }
+    return 1;
+}
+
+int ModLevelLimitAreaBBlocksAtkPosition(int player, int zone)
+{
+    struct DuelZone *z = ZoneOf(player, zone);
+    u16 id = DUEL_CARD_ID(&z->card);
+
+    if (!LevelLimitAreaBActive() || id == 0 || !z->isFaceUp)
+        return 0;
+    return (int)CARD_STATS_LEVEL(gCardStats[id & CARD_ID_MASK]) >= 4;
+}
+
+int EffectLevelLimitAreaBResolve(struct ChainEntry *link, struct ChainEntry *chainedTo)
+{
+    if (!link->negated)
+        ApplyLevelLimitAreaB(link->player);
+    return EFFECT_STEP_DONE;
+}
+#endif /* HAS_CARD_LEVEL_LIMIT_AREA_B */
+
 #ifdef HAS_CARD_SECRET_BARREL
 /* ---- Secret Barrel ------------------------------------------------------------------------------------------------
  * Normal Trap: "Inflict 200 damage to your opponent for each card in your opponent's hand and for each card they
@@ -6945,12 +7009,17 @@ int AiChainSummonTriggerResponse(struct ChainEntry *entry)
  * something (the duel step waits for it). */
 int ModDuelStateCheck(void)
 {
-#if defined(HAS_CARD_BERSERK_GORILLA) || defined(HAS_CARD_THUNDER_NYAN_NYAN)
+#if defined(HAS_CARD_BERSERK_GORILLA) || defined(HAS_CARD_THUNDER_NYAN_NYAN) \
+    || defined(HAS_CARD_LEVEL_LIMIT_AREA_B)
     int player, zone;
 
     if (gDuel.phase == PHASE_BATTLE && gDuel.battleStage >= BATTLE_STAGE_SELECT_TARGET
         && gDuel.battleStage <= BATTLE_STAGE_END_ATTACK)
         return 0;
+#ifdef HAS_CARD_LEVEL_LIMIT_AREA_B
+    if (ApplyLevelLimitAreaB(AI_HUMAN))
+        return 1;
+#endif
     for (player = 0; player <= 1; player++) {
 #ifdef HAS_CARD_BERSERK_GORILLA
         for (zone = ZONE_MONSTER_0; zone <= ZONE_MONSTER_4; zone++) {
@@ -7946,6 +8015,10 @@ int AiPlayAddedCards(void)
     if (AiWantsSecretBarrel() && AiTryPlaySpellTrap(CARD_SECRET_BARREL))
         return 1;
 #endif
+#ifdef HAS_CARD_LEVEL_LIMIT_AREA_B
+    if (AiTryPlaySpellTrap(CARD_LEVEL_LIMIT_AREA_B))
+        return 1;
+#endif
     /* added Magic cards, in the hand or Set */
     for (i = 0; i < p->handCount; i++) {
         u16 id = DUEL_CARD_ID(&p->hand[i]);
@@ -8415,6 +8488,16 @@ const struct CardEffect gAddedCardEffects[] = {
         EffectSecretBarrelResolve,
         NULL,
         EffectSecretBarrelPrepare,
+        NULL,
+        NULL,
+    },
+#endif
+#ifdef HAS_CARD_LEVEL_LIMIT_AREA_B
+    {
+        CARD_LEVEL_LIMIT_AREA_B, 0,
+        EffectLevelLimitAreaBResolve,
+        NULL,
+        NULL,
         NULL,
         NULL,
     },

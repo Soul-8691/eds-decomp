@@ -2078,6 +2078,19 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
   `CARD_SCAPEGOAT`, so it does not play Scapegoat on purpose.
 - Checked in the source and the build; not tested in an emulator.
 
+### Level Limit - Area B (2026-10-30)
+- Effect text from [YGOPRODeck](https://db.ygoprodeck.com/api/v7/cardinfo.php?name=Level%20Limit%20-%20Area%20B) (id
+  3136426): "Change all face-up Level 4 or higher monsters to Defense Position." Continuous Spell in the card pool; it
+  stays on the field when activated. `EffectLevelLimitAreaBResolve` and `ApplyLevelLimitAreaB` (same pattern as Dragon
+  Capture Jar): every face-up Level 4+ monster in Attack Position on either side is switched to Defense (`ChangeBattlePosition`).
+  `ApplyLevelLimitAreaB` also runs after a face-up summon (`summon_action.c`) and from `ModDuelStateCheck` while the card
+  is active. The human cannot pick Attack Position for a face-up Level 4+ monster while it is active
+  (`ModLevelLimitAreaBBlocksAtkPosition` in `card_command_menu.c`). The CPU flips a Set copy whenever it may
+  (`AiPlayAddedCards`, `AiShouldActivateAddedCard` default).
+- **Effect descriptions for added cards:** use the YGOPRODeck API (`tools/newcards.py` already fetches card data there;
+  cite the `desc` field when documenting behaviour in this file).
+- Checked in the source and the build; not tested in an emulator.
+
 ### Secret Barrel (2026-10-30)
 - Normal Trap: "Inflict 200 damage to your opponent for each card in your opponent's hand and for each card they
   control on the field." `EffectSecretBarrelPrepare`: Set on the field and the opponent has at least one card in hand

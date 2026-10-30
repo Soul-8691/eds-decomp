@@ -36,6 +36,9 @@
 
 /* Mod (src/added_effects.c): Cyber Dragon's Special Summon condition. */
 int CanCyberDragonSpecialSummon(int player);
+#ifdef HAS_CARD_LEVEL_LIMIT_AREA_B
+int ModLevelLimitAreaBBlocksAtkPosition(int player, int zone);
+#endif
 
 /* ROM data used only here. */
 /* Matching: card IDs read through their alias symbols (= &gCardNumberToId[number], see card_data.h). */
@@ -679,9 +682,12 @@ u16 CardMenu_GetMonsterCommands(u16 id, int player, int zone)
             && CountZoneLinksFromCard(player, zone, CARD_SPELLBINDING_CIRCLE) == 0
             && CountZoneLinksFromCard(player, zone, CARD_1244) == 0 && dragonHeld == 0) {
             if (z->isFaceUp) {
-                if (z->isDefense)
-                    flags = (u16)(flags | CARDMENU_MASK_ATK_POS);
-                else
+                if (z->isDefense) {
+#ifdef HAS_CARD_LEVEL_LIMIT_AREA_B
+                    if (!ModLevelLimitAreaBBlocksAtkPosition(player, zone))
+#endif
+                        flags = (u16)(flags | CARDMENU_MASK_ATK_POS);
+                } else
                     flags = (u16)(flags | CARDMENU_MASK_DEF_POS);
             } else {
                 flags = (u16)(flags | CARDMENU_MASK_FLIP);
