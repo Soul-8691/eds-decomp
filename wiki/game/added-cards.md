@@ -1941,6 +1941,15 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
     mills 2 (`DUEL_CMD_SEND_DECK_CARD_TO_GRAVEYARD`, top is `deck[0]`).
 - Checked in the source and the build; not tested in an emulator.
 
+### Spell Canceller (2026-10-30)
+- Effect text from [YGOPRODeck](https://db.ygoprodeck.com/api/v7/cardinfo.php?name=Spell%20Canceller) (id 84636823):
+  "Spell Cards, and their effects on the field, cannot be activated. Negate all Spell effects on the field."
+- **Continuous monster** (no ignition effect). While a face-up copy is on either side, `IsImperialOrderActive`
+  (`duel_ritual.c`) is true: `UpdateSpellTrapNegation` marks face-up Magic cards disabled and `gDuel.magicNegated`
+  negates Spell effects (same path as Imperial Order). `CanActivateEffect` (`effect_activation.c`) and the hand
+  Magic menu (`card_command_menu.c`) refuse to start Spell activations; Traps are unaffected.
+- Checked in the source and the build; not tested in an emulator.
+
 ### Creature Swap (2026-10-25)
 - Normal Spell: "Each player chooses 1 monster they control and switches control of those monsters with each other.
   Those monsters cannot change their battle positions for the rest of this turn."

@@ -5278,6 +5278,15 @@ int EffectLevelLimitAreaBResolve(struct ChainEntry *link, struct ChainEntry *cha
 }
 #endif /* HAS_CARD_LEVEL_LIMIT_AREA_B */
 
+#ifdef HAS_CARD_SPELL_CANCELLER
+/* ---- Spell Canceller (YGOPRODeck id 84636823) --------------------------------------------------------------------
+ * "Spell Cards, and their effects on the field, cannot be activated. Negate all Spell effects on the field."
+ * While a face-up copy is on either side, IsImperialOrderActive (duel_ritual.c) is true: UpdateSpellTrapNegation
+ * disables face-up Magic cards and gDuel.magicNegated negates their effects (same engine path as Imperial Order).
+ * CanActivateEffect and the hand Spell/Trap menu strip ACTIVATE from Magic cards (like Anti-Magic Fragrance, but
+ * Traps are unaffected). No gAddedCardEffects row (continuous monster, like Jinzo). */
+#endif /* HAS_CARD_SPELL_CANCELLER */
+
 #ifdef HAS_CARD_GRAVITY_BIND
 /* ---- Gravity Bind (YGOPRODeck id 85742772) -----------------------------------------------------------------------
  * Effect text (YGOPRODeck API): "Level 4 or higher monsters cannot attack." Continuous Trap; stays face-up when

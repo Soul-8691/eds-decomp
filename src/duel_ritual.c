@@ -137,12 +137,18 @@ int IsJinzoOrRoyalDecreeActive(void)
     return 1;
 }
 
-/* 1 if Imperial Order is active on either field: Magic cards are negated. */
+/* 1 if Imperial Order is active on either field: Magic cards are negated. With Spell Canceller (added card),
+ * a face-up copy on either field counts the same way. */
 int IsImperialOrderActive(void)
 {
-    if (CountActiveCardsOnField(0, CARD_IMPERIAL_ORDER) == 0 && CountActiveCardsOnField(1, CARD_IMPERIAL_ORDER) == 0)
-        return 0;
-    return 1;
+    if (CountActiveCardsOnField(0, CARD_IMPERIAL_ORDER) != 0 || CountActiveCardsOnField(1, CARD_IMPERIAL_ORDER) != 0)
+        return 1;
+#ifdef HAS_CARD_SPELL_CANCELLER
+    if (CountActiveCardsOnField(0, CARD_SPELL_CANCELLER) != 0
+        || CountActiveCardsOnField(1, CARD_SPELL_CANCELLER) != 0)
+        return 1;
+#endif
+    return 0;
 }
 
 /* FAKEMATCH: flag tests go through int-typed helpers. A plain u8 & const test is shortened to a

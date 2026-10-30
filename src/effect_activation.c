@@ -314,6 +314,12 @@ int CanActivateEffect(struct ChainEntry *card, struct ChainEntry *chainLink, u16
 
     if (IsCardProhibited(card->card))
         return FALSE;
+#ifdef HAS_CARD_SPELL_CANCELLER
+    if (CARD_TYPE(card->card) == CARD_TYPE_MAGIC
+        && (CountActiveCardsOnField(0, CARD_SPELL_CANCELLER) != 0
+            || CountActiveCardsOnField(1, CARD_SPELL_CANCELLER) != 0))
+        return FALSE;
+#endif
     if (AiActivationWouldLoseLp(card))     /* added: the CPU never pays itself to 0 LP (src/added_effects.c) */
         return FALSE;
 #ifdef HAS_CARD_XING_ZHEN_HU

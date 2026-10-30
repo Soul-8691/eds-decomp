@@ -414,6 +414,12 @@ int CardMenu_GetHandCardCommands(u16 id, int player)
             flags &= (u16)~CARDMENU_MASK_ACTIVATE;
         if (CountActiveCardsOnField(1, CARD_ANTI_MAGIC_FRAGRANCE) > 0)
             flags &= (u16)~CARDMENU_MASK_ACTIVATE;
+#ifdef HAS_CARD_SPELL_CANCELLER
+        if (CountActiveCardsOnField(0, CARD_SPELL_CANCELLER) > 0)
+            flags &= (u16)~CARDMENU_MASK_ACTIVATE;
+        if (CountActiveCardsOnField(1, CARD_SPELL_CANCELLER) > 0)
+            flags &= (u16)~CARDMENU_MASK_ACTIVATE;
+#endif
     }
     t = CARD_STATS_TYPE(CARD_STATS_OF(id));
     switch (t) {
