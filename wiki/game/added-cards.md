@@ -2078,6 +2078,17 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
   `CARD_SCAPEGOAT`, so it does not play Scapegoat on purpose.
 - Checked in the source and the build; not tested in an emulator.
 
+### Roulette Barrel (2026-10-30)
+- Effect text from [YGOPRODeck](https://db.ygoprodeck.com/api/v7/cardinfo.php?name=Roulette%20Barrel) (id 46303688):
+  "Once per turn: You can roll a six-sided die twice, choose 1 result, and destroy 1 monster on the field whose Level
+  is equal to that result." `EffectRouletteBarrelPrepare` (face-up, `effectUnused`, a face-up monster Level 1–6 exists),
+  `EffectRouletteBarrelChainA` (two `DUEL_CMD_ROLL_PLAIN_DIE` rolls; the human picks first or second; the CPU picks the
+  roll that destroys the human's strongest legal monster), `EffectRouletteBarrelChainB` / `EffectRouletteBarrelCheck`
+  (face-up monster whose Level equals the chosen roll), `EffectRouletteBarrelResolve` (`DestroyFieldCard`,
+  `DUEL_CMD_SET_EFFECT_UNUSED`). Listed in `CanActivateMonsterEffect` (`card_command_menu.c`); the CPU uses
+  `AiWantsMonsterEffect` and `AiPlayAddedCards` like other added monsters.
+- Checked in the source and the build; not tested in an emulator.
+
 ### Des Koala (2026-10-30)
 - Effect text from [YGOPRODeck](https://db.ygoprodeck.com/api/v7/cardinfo.php?name=Des%20Koala) (id 69579761): "FLIP:
   Inflict 400 damage to your opponent for each card in their hand." `EffectDesKoalaResolve` (`LoseLifePoints` on the

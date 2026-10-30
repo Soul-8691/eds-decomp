@@ -77,6 +77,8 @@ struct ModDuelState {
     u16 asuraSerials[5][5];     /* ... where the monster had this DuelZone.serial (a new monster there is not it) */
     u16 noDamageTurn[2];        /* Hallowed Life Barrier: per player, gDuel.turnCount + 1 of the turn of no damage */
     u16 noEffectDamageTurn[2];  /* Pikeru's Circle of Enchantment: the same, for effect damage only */
+    u8 rouletteDie1;            /* Roulette Barrel: first die roll this activation */
+    u8 rouletteDie2;            /* Roulette Barrel: second die roll this activation */
 };
 extern struct ModDuelState gModDuel;
 /* gModDuel (0x0202FF04, symbols.ld) must end before gScratchBuffer (0x02030000). */
@@ -3055,6 +3057,226 @@ int EffectDesKoalaResolve(struct ChainEntry *link, struct ChainEntry *chainedTo)
     return EFFECT_STEP_DONE;
 }
 #endif /* HAS_CARD_DES_KOALA */
+
+#ifdef HAS_CARD_ROULETTE_BARREL
+/* ---- Roulette Barrel (YGOPRODeck id 46303688) ---------------------------------------------------------------------
+ * Effect text (YGOPRODeck API): "Once per turn: You can roll a six-sided die twice, choose 1 result, and destroy 1
+ * monster on the field whose Level is equal to that result." The card menu's ACTIVATE in the Main Phase
+ * (CanActivateMonsterEffect), once per turn (effectUnused). ChainA rolls twice (DUEL_CMD_ROLL_PLAIN_DIE), the human
+ * picks a result; the chosen level is kept in gChain.effectSubStep for ChainB and resolve. */
+
+static const u8 sStrRouletteBarrelMenu[] = "Choose a die result:\n    @3First roll\n    @2Second roll";
+
+static int RouletteBarrelInZone(int player, int zone)
+{
+    u16 id = DUEL_CARD_ID(&ZoneOf(player, zone)->card);
+
+    if (zone > ZONE_MONSTER_4 || id == 0)
+        return 0;
+    return ((const u16 *)CARD_ID_TO_NUMBER_ADDR)[id & CARD_ID_MASK] == CARD_ROULETTE_BARREL;
+}
+
+static int RouletteHasFaceUpMonsterOfLevel(int level)
+{
+    int player, zone, lv;
+
+    for (player = 0; player <= 1; player++) {
+        for (zone = ZONE_MONSTER_0; zone <= ZONE_MONSTER_4; zone++) {
+            lv = FaceUpMonsterLevel(player, zone);
+            if (lv == level)
+                return 1;
+        }
+    }
+    return 0;
+}
+
+static int AiRouletteChooseRoll(int roll1, int roll2)
+{
+    int rolls[2] = { roll1, roll2 };
+    int i, bestRoll = roll1;
+    u32 bestAtk = 0;
+    int found = 0;
+
+    for (i = 0; i < 2; i++) {
+        int level = rolls[i], zone;
+
+        if (!RouletteHasFaceUpMonsterOfLevel(level))
+            continue;
+        for (zone = ZONE_MONSTER_0; zone <= ZONE_MONSTER_4; zone++) {
+            if (FaceUpMonsterLevel(0, zone) != level)
+                continue;
+            found = 1;
+            if ((u32)GetZoneCardAtk(0, zone) >= bestAtk) {
+                bestAtk = GetZoneCardAtk(0, zone);
+                bestRoll = level;
+            }
+        }
+    }
+    if (found)
+        return bestRoll;
+    for (i = 0; i < 2; i++) {
+        if (RouletteHasFaceUpMonsterOfLevel(rolls[i]))
+            return rolls[i];
+    }
+    return roll1;
+}
+
+static int RouletteBarrelCanActivateNow(int player, int zone)
+{
+    struct DuelZone *z;
+    int level;
+
+    if (zone > ZONE_MONSTER_4 || !RouletteBarrelInZone(player, zone))
+        return 0;
+    z = ZoneOf(player, zone);
+    if (!z->isFaceUp || !z->effectUnused)
+        return 0;
+    for (level = 1; level <= 6; level++) {
+        if (RouletteHasFaceUpMonsterOfLevel(level))
+            return 1;
+    }
+    return 0;
+}
+
+int RouletteBarrelCanActivateInZone(int player, int zone)
+{
+    return RouletteBarrelCanActivateNow(player, zone);
+}
+
+int EffectRouletteBarrelPrepare(struct ChainEntry *card, struct ChainEntry *chainLink, u16 fromHand)
+{
+    if (fromHand || card->event != RESPONSE_NONE)
+        return 0;
+    return RouletteBarrelCanActivateNow(card->player, card->zone);
+}
+
+u16 EffectRouletteBarrelCheck(struct ChainEntry *card, u16 pos)
+{
+    int player = (u8)pos;
+    int zone = pos >> 8;
+    int level;
+
+    if (!EffectTargetableFaceUpMonsterCheck(card, pos))
+        return 0;
+    level = FaceUpMonsterLevel(player, zone);
+    if (level < 1)
+        return 0;
+    if (gChain.effectSubStep >= 1 && gChain.effectSubStep <= 6)
+        return level == gChain.effectSubStep;
+    /* CanActivateEffect (before the die is chosen): any face-up Level 1-6 monster is a legal outcome. */
+    return level <= 6;
+}
+
+int EffectRouletteBarrelChainA(struct ChainEntry *link, struct ChainEntry *prevLink)
+{
+    if (link->player) {
+        gModDuel.rouletteDie1 = (u8)(Random() % 6 + 1);
+        gModDuel.rouletteDie2 = (u8)(Random() % 6 + 1);
+        gChain.effectSubStep = AiRouletteChooseRoll(gModDuel.rouletteDie1, gModDuel.rouletteDie2);
+        return 1;
+    }
+    switch (gChain.costStep) {
+    case 0:
+        gModDuel.rouletteDie1 = (u8)(Random() % 6 + 1);
+        gModDuel.rouletteDie2 = (u8)(Random() % 6 + 1);
+        DuelCmd_Push(link->player ? DUEL_CMD_PLAYER | DUEL_CMD_ROLL_PLAIN_DIE : DUEL_CMD_ROLL_PLAIN_DIE,
+                     gModDuel.rouletteDie1, 0, 0);
+        DuelCmd_Push(link->player ? DUEL_CMD_PLAYER | DUEL_CMD_OPEN_DUEL_SCREEN : DUEL_CMD_OPEN_DUEL_SCREEN, 0, 0, 0);
+        gChain.costStep++;
+        return 0;
+    case 1:
+        if (gDuelCmd.running)
+            return 0;
+        DuelCmd_Push(link->player ? DUEL_CMD_PLAYER | DUEL_CMD_ROLL_PLAIN_DIE : DUEL_CMD_ROLL_PLAIN_DIE,
+                     gModDuel.rouletteDie2, 0, 0);
+        DuelCmd_Push(link->player ? DUEL_CMD_PLAYER | DUEL_CMD_OPEN_DUEL_SCREEN : DUEL_CMD_OPEN_DUEL_SCREEN, 0, 0, 0);
+        gChain.costStep++;
+        return 0;
+    case 2:
+        if (gDuelCmd.running)
+            return 0;
+        if (!RouletteHasFaceUpMonsterOfLevel(gModDuel.rouletteDie1)
+            && !RouletteHasFaceUpMonsterOfLevel(gModDuel.rouletteDie2)) {
+            gChain.effectSubStep = gModDuel.rouletteDie1;
+            DuelCmd_Push(link->player ? DUEL_CMD_PLAYER | DUEL_CMD_OPEN_DUEL_SCREEN : DUEL_CMD_OPEN_DUEL_SCREEN,
+                         0, 0, 0);
+            gChain.costStep = 5;
+            return 0;
+        }
+        TextBoxOpen(TEXTBOX_POS(5, 2), TEXTBOX_SIZE(19, 6), TEXTBOX_FLAGS_DEFAULT, sStrRouletteBarrelMenu);
+        TextBoxSetMenu(TEXTBOX_MENU_TWO_CHOICE, NULL, NULL);
+        gChain.costStep++;
+        return 0;
+    case 5:
+        if (gDuelCmd.running)
+            return 0;
+        return 1;
+    default:
+        if (gTextBox.active)
+            return 0;
+        gChain.effectSubStep = gTextBox.result ? gModDuel.rouletteDie2 : gModDuel.rouletteDie1;
+        if (gChain.costStep == 4) {
+            if (gDuelCmd.running)
+                return 0;
+            return 1;
+        }
+        DuelCmd_Push(link->player ? DUEL_CMD_PLAYER | DUEL_CMD_OPEN_DUEL_SCREEN : DUEL_CMD_OPEN_DUEL_SCREEN, 0, 0, 0);
+        gChain.costStep = 4;
+        return 0;
+    }
+}
+
+int EffectRouletteBarrelChainB(struct ChainEntry *link, struct ChainEntry *prevLink)
+{
+    int zone, best = -1;
+    u32 bestAtk = 0;
+
+    link->numTargets = 0;
+    if (!RouletteHasFaceUpMonsterOfLevel(gChain.effectSubStep))
+        return 1;
+
+    if (link->player) {
+        for (zone = ZONE_MONSTER_0; zone <= ZONE_MONSTER_4; zone++) {
+            if (EffectRouletteBarrelCheck(link, zone << 8 | (1 - link->player))
+                && (best < 0 || GetZoneCardAtk(1 - link->player, zone) > bestAtk)) {
+                best = zone;
+                bestAtk = GetZoneCardAtk(1 - link->player, zone);
+            }
+        }
+        if (best < 0) {
+            for (zone = ZONE_MONSTER_0; zone <= ZONE_MONSTER_4; zone++) {
+                if (EffectRouletteBarrelCheck(link, zone << 8 | link->player))
+                    TryAddEffectTarget(link, link->player, zone);
+            }
+        } else
+            TryAddEffectTarget(link, 1 - link->player, best);
+        return 1;
+    }
+    if (!EffectTargetableFaceUpMonsterChainB(link))
+        return 0;
+    if (link->numTargets == 1 && !EffectRouletteBarrelCheck(link, link->targets[0])) {
+        link->numTargets = 0;
+        PlaySE(SE_ERROR);
+        return 0;
+    }
+    return 1;
+}
+
+int EffectRouletteBarrelResolve(struct ChainEntry *link, struct ChainEntry *chainedTo)
+{
+    if (!link->negated && link->numTargets >= 1 && EffectRouletteBarrelCheck(link, link->targets[0])) {
+        int targetPlayer = (u8)link->targets[0];
+        int targetZone = link->targets[0] >> 8;
+
+        DestroyFieldCard(targetPlayer, targetZone, 1);
+        OnCardDestroyedByEffect(link->player, targetPlayer, targetZone);
+    }
+    if (!link->negated)
+        DuelCmd_Push(link->player ? DUEL_CMD_PLAYER | DUEL_CMD_SET_EFFECT_UNUSED : DUEL_CMD_SET_EFFECT_UNUSED,
+                     link->zone, 0, 0);
+    return EFFECT_STEP_DONE;
+}
+#endif /* HAS_CARD_ROULETTE_BARREL */
 
 #if defined(HAS_CARD_YATA_GARASU) || defined(HAS_CARD_ASURA_PRIEST)
 /* The Spirit monsters that cannot be Special Summoned: Yata-Garasu and Asura Priest (2026-10-30). Each goes back to its
@@ -7244,6 +7466,16 @@ static int AiWantsMonsterEffect(u16 number, int zone)
     case CARD_GOLEM_SENTRY:                     /* face down, so its next Flip Summon can bounce a monster */
         return CountMonsters(AI_HUMAN) > 0;
 #endif
+#ifdef HAS_CARD_ROULETTE_BARREL
+    case CARD_ROULETTE_BARREL: {
+        int level;
+        for (level = 1; level <= 6; level++) {
+            if (RouletteHasFaceUpMonsterOfLevel(level))
+                return 1;
+        }
+        return 0;
+    }
+#endif
 #ifdef HAS_CARD_GUARDIAN_SPHINX
     case CARD_GUARDIAN_SPHINX:                  /* face down, so its next Flip Summon bounces the human's monsters */
         return CountMonsters(AI_HUMAN) > 0;
@@ -8589,6 +8821,16 @@ const struct CardEffect gAddedCardEffects[] = {
         NULL,
         NULL,
         NULL,
+    },
+#endif
+#ifdef HAS_CARD_ROULETTE_BARREL
+    {
+        CARD_ROULETTE_BARREL, 0,
+        EffectRouletteBarrelResolve,
+        EffectRouletteBarrelCheck,
+        EffectRouletteBarrelPrepare,
+        EffectRouletteBarrelChainA,
+        EffectRouletteBarrelChainB,
     },
 #endif
 #ifdef HAS_CARD_FIBER_JAR

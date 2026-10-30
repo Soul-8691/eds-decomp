@@ -52,6 +52,9 @@ u16 CardMenu_GetMonsterCommands(u16 cardId, int player, int zone);
 int CardMenu_GetSpellTrapCommands(u16 cardId, int player, int zone);
 /* Can the face-up monster in (player, zone) use its activated effect now? */
 int CanActivateMonsterEffect(u16 cardId, int player, int zone);
+#ifdef HAS_CARD_ROULETTE_BARREL
+int RouletteBarrelCanActivateInZone(int player, int zone);  /* added card (src/added_effects.c) */
+#endif
 
 /* ---- Running a command ---- */
 

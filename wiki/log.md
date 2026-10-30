@@ -2005,6 +2005,9 @@ updated: 2026-09-29
 ## [2026-10-30] progress | Level Limit - Area B CPU always flips
 - src/added_effects.c: removed `AiWantsLevelLimitAreaB`; CPU uses `AiPlayAddedCards` and `AiShouldActivateAddedCard` default (vanilla CARD_1323-style). [[added-cards]].
 
+## [2026-10-30] progress | Roulette Barrel
+- src/added_effects.c: `EffectRouletteBarrel*` handlers, `gAddedCardEffects` row, `AiWantsMonsterEffect`; src/card_command_menu.c: `CanActivateMonsterEffect`. missing.txt, missing-main.txt. [[added-cards]]. Built (`make`); not tested in an emulator.
+
 ## [2026-10-30] progress | Des Koala
 - src/added_effects.c: `EffectDesKoalaResolve`, `gAddedCardEffects` row; src/card_detail.c: `HasFlipEffect`. missing.txt, missing-main.txt. [[added-cards]]. Built (`make`); not tested in an emulator.
 

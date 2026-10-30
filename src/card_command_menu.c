@@ -538,6 +538,11 @@ int CanActivateMonsterEffect(u16 id, int player, int zone)
     case CARD_1510:
         return CanActivateEffectInZone(player, zone, 0);
 
+#ifdef HAS_CARD_ROULETTE_BARREL
+    case CARD_ROULETTE_BARREL:                              /* added card (src/added_effects.c) */
+        return RouletteBarrelCanActivateInZone(player, zone);
+#endif
+
     case CARD_BLAST_JUGGLER:
     case CARD_PATROL_ROBO:
     case CARD_JIGEN_BAKUDAN:
