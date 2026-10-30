@@ -55,8 +55,9 @@ def main():
     print(f'{len(rows)} leftover cards: numbers, IDs, passwords and Fusion Deck flags checked')
 
     names = {}
+    base = struct.unpack_from('<I', rom, 0x001020)[0] - 0x08000000   # gCardNames, from Bustup_UpdateTextBox's literal
     for i in range(821):
-        names[rom[0x22C720 + i * 0x40:0x22C720 + i * 0x40 + 0x40].split(b'\0')[0].decode('cp1252')] = i
+        names[rom[base + i * 0x40:base + i * 0x40 + 0x40].split(b'\0')[0].decode('cp1252')] = i
     for result, mats in RECIPES.items():
         fid = int(by_number[result]['id'])
         ids = [int(by_number[m]['id']) for m in mats if m] + ([names[EDS_MATERIALS[result]]] if result in EDS_MATERIALS else [])

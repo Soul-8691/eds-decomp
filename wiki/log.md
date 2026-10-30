@@ -928,3 +928,13 @@ updated: 2026-09-29
   game's Fusion/ritual recipes): `LEFTOVER_EFFECTS.md` now has a Card column. Corrections: 1243 Ancient Lamp,
   1327 Sword Hunter, 1340 Vampire Baby (descriptions), 1422 Lightning Blade is Partial (WATER -500 not coded).
 - Pages: [[card-expand]].
+
+## [2026-10-30] setup | expand_rom.py: table offsets as options, edited ROMs
+- `--src-TABLE` / `--TABLE` for all 8 card tables; pointers are checked against the source and moved one by one.
+  Edited ROMs (8-32 MiB) are accepted; non-blank data in the way and edited code sites are refused (`--force`).
+  `run_expand.sh` holds every offset. `test_leftovers.py` reads the name table through the code's pointer.
+- Checked: original ROM output byte-identical to the previous version; edited ROMs with appended data
+  (kept, art placed after it), a moved name table (needs `--src-names`), an edited count site (refused) and
+  data in the name bank (refused; `--force` overwrites). `test_tables.py` and `test_leftovers.py` pass on the
+  outputs.
+- Pages: [[card-expand]].
