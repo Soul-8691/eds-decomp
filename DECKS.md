@@ -30,7 +30,7 @@ Formats unlock in this order; in the release build each takes 10 wins to open th
 | 6 | Joey-Pegasus | May 2003 | Tomato Control 80%, Vanilla Beat 20% |
 | 7 | Fiber | July 2003 | Tomato Control 80%, Recruiter Control 20% |
 | 8 | Yata | August 2003 | Tomato Control 50%, Warrior Tomato Control 40%, Gearfried 10% |
-| 9 | Scientist | November 2003 | Vanilla (unchanged) |
+| 9 | Scientist | November 2003 | Tomato Control 60%, Scientist FTK 40% |
 | 10 | Vampire | February 2004 | Vanilla (unchanged) |
 | 11 | Chaos | April 2004 | Vanilla (unchanged) |
 | 12 | Warrior | October 2004 | Vanilla (unchanged) |
@@ -1234,7 +1234,154 @@ Banlist: August 2003.
 
 </details>
 
-### 9-15. Scientist to Reaper
+### 9. Scientist
+
+Banlist: November 2003.
+
+<details>
+<summary>Tomato Control: 60% (Aretos-Tomato Control (Scientist)) (40 cards + 15 Fusion Deck + 15 Side Deck)</summary>
+
+**Monsters (17)**
+
+- 1x Breaker the Magical Warrior
+- 1x Exiled Force
+- 1x Fiber Jar
+- 2x Gravekeeper's Spy
+- 1x Jinzo
+- 1x King Tiger Wanghu
+- 2x Magical Scientist
+- 1x Magician of Faith
+- 3x Mystic Tomato
+- 1x Sangan
+- 1x Sinister Serpent
+- 1x Tribe-Infecting Virus
+- 1x Witch of the Black Forest
+
+**Spells (16)**
+
+- 1x Change of Heart
+- 1x Confiscation
+- 1x Dark Hole
+- 1x Delinquent Duo
+- 1x Graceful Charity
+- 1x Harpie's Feather Duster
+- 1x Mirage of Nightmare
+- 1x Monster Reborn
+- 3x Mystical Space Typhoon
+- 1x Painful Choice
+- 1x Pot of Greed
+- 1x Raigeki
+- 1x Snatch Steal
+- 1x The Forceful Sentry
+
+**Traps (7)**
+
+- 1x Bell of Destruction
+- 1x Call Of The Haunted
+- 1x Imperial Order
+- 1x Jar of Greed
+- 1x Mirror Force
+- 2x Torrential Tribute
+
+**Fusion Deck (15)**
+
+- 2x Dark Balter the Terrible
+- 1x Darkfire Dragon
+- 1x Dragoness the Wicked Knight
+- 1x Empress Judge
+- 1x Fiend Skull Dragon
+- 3x Punished Eagle
+- 3x Roaring Ocean Snake
+- 1x Ryu Senshi
+- 2x Thousand-Eyes Restrict
+
+**Side Deck (15)**
+
+- 1x Airknight Parshath
+- 1x Book of Moon
+- 1x Catapult Turtle
+- 1x Ceasefire
+- 2x Dust Tornado
+- 1x Heavy Storm
+- 2x King Tiger Wanghu
+- 1x Magical Scientist
+- 1x Newdoria
+- 2x Nobleman of Crossout
+- 1x Spirit Reaper
+- 1x Torrential Tribute
+
+</details>
+
+<details>
+<summary>Scientist FTK: 40% (DK-ZERO-Scientist FTK) (40 cards + 15 Fusion Deck + 15 Side Deck)</summary>
+
+**Monsters (17)**
+
+- 3x Cannon Soldier
+- 3x Catapult Turtle
+- 3x Gilasaurus
+- 3x Magical Scientist
+- 3x Mystic Tomato
+- 1x Sangan
+- 1x Witch of the Black Forest
+
+**Spells (20)**
+
+- 1x Card Destruction
+- 1x Dark Hole
+- 1x Giant Trunade
+- 1x Graceful Charity
+- 1x Harpie's Feather Duster
+- 1x Heavy Storm
+- 3x Last Will
+- 3x Metamorphosis
+- 1x Monster Reborn
+- 1x Painful Choice
+- 1x Pot of Greed
+- 1x Premature Burial
+- 1x Raigeki
+- 3x Reasoning
+
+**Traps (3)**
+
+- 1x Bell of Destruction
+- 1x Call Of The Haunted
+- 1x Imperial Order
+
+**Fusion Deck (15)**
+
+- 2x Dark Balter the Terrible
+- 1x Darkfire Dragon
+- 1x Dragoness the Wicked Knight
+- 1x Empress Judge
+- 1x Fiend Skull Dragon
+- 1x Punished Eagle
+- 1x Roaring Ocean Snake
+- 2x Ryu Senshi
+- 1x Super Robolady
+- 1x Super Roboyarou
+- 3x Thousand-Eyes Restrict
+
+**Side Deck (15)**
+
+- 1x Change of Heart
+- 1x Cyber Jar
+- 1x Dark Ruler Ha Des
+- 1x Fiber Jar
+- 1x Jinzo
+- 1x Mirage of Nightmare
+- 1x Mirror Force
+- 3x Mystical Space Typhoon
+- 1x Sinister Serpent
+- 1x Snatch Steal
+- 3x Torrential Tribute
+
+</details>
+
+Cards here with no coded effect yet: Magical Scientist, Gilasaurus, Super Robolady, Super Roboyarou, Dark Balter the
+Terrible, Fiend Skull Dragon and Ryu Senshi.
+
+### 10-15. Vampire to Reaper
 
 Vanilla (unchanged): these opponents still use the original game's decks.
 

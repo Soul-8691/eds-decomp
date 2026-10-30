@@ -1486,6 +1486,162 @@ static const struct DeckList *YataDeck(void)
 }
 #endif
 
+/* The Scientist format opponent (Umbra & Lumis' slot, src/mod_opponents.c): one of two decks per duel
+ * (ScientistDeck): Tomato Control 60%, Scientist FTK 40% (decks/Aretos-Tomato Control (Scientist).ydk,
+ * decks/DK-ZERO-Scientist FTK.ydk; main and extra decks). Every card was already in the game. */
+#if defined(HAS_CARD_MAGICAL_SCIENTIST) && defined(HAS_CARD_GRAVEKEEPERS_SPY) && defined(HAS_CARD_KING_TIGER_WANGHU) \
+    && defined(HAS_CARD_BREAKER_THE_MAGICAL_WARRIOR) && defined(HAS_CARD_TRIBE_INFECTING_VIRUS) \
+    && defined(HAS_CARD_EXILED_FORCE) && defined(HAS_CARD_FIBER_JAR) && defined(HAS_CARD_MIRAGE_OF_NIGHTMARE) \
+    && defined(HAS_CARD_TORRENTIAL_TRIBUTE) && defined(HAS_CARD_JAR_OF_GREED) && defined(HAS_CARD_RYU_SENSHI) \
+    && defined(HAS_CARD_DARK_BALTER_THE_TERRIBLE) && defined(HAS_CARD_FIEND_SKULL_DRAGON) \
+    && defined(HAS_CARD_THOUSAND_EYES_RESTRICT) && defined(HAS_CARD_NEWDORIA) && defined(HAS_CARD_SPIRIT_REAPER) \
+    && defined(HAS_CARD_AIRKNIGHT_PARSHATH) && defined(HAS_CARD_BOOK_OF_MOON)
+#define MOD_SCIENTIST_TOMATO_CONTROL 1
+static const u16 sScientistTomatoControl[] = {
+    /* Monsters (17) */
+    X3(CARD_MYSTIC_TOMATO),
+    X2(CARD_MAGICAL_SCIENTIST),
+    X2(CARD_GRAVEKEEPERS_SPY),
+    CARD_WITCH_OF_THE_BLACK_FOREST,
+    CARD_SANGAN,
+    CARD_JINZO,
+    CARD_KING_TIGER_WANGHU,
+    CARD_BREAKER_THE_MAGICAL_WARRIOR,
+    CARD_TRIBE_INFECTING_VIRUS,
+    CARD_EXILED_FORCE,
+    CARD_SINISTER_SERPENT,
+    CARD_FIBER_JAR,
+    CARD_MAGICIAN_OF_FAITH,
+    /* Spells (16) */
+    CARD_GRACEFUL_CHARITY,
+    CARD_POT_OF_GREED,
+    CARD_MIRAGE_OF_NIGHTMARE,
+    X3(CARD_MYSTICAL_SPACE_TYPHOON),
+    CARD_HARPIES_FEATHER_DUSTER,
+    CARD_PAINFUL_CHOICE,
+    CARD_RAIGEKI,
+    CARD_DARK_HOLE,
+    CARD_MONSTER_REBORN,
+    CARD_CHANGE_OF_HEART,
+    CARD_SNATCH_STEAL,
+    CARD_DELINQUENT_DUO,
+    CARD_CONFISCATION,
+    CARD_THE_FORCEFUL_SENTRY,
+    /* Traps (7) */
+    X2(CARD_TORRENTIAL_TRIBUTE),
+    CARD_MIRROR_FORCE,
+    CARD_BELL_OF_DESTRUCTION,
+    CARD_CALL_OF_THE_HAUNTED,
+    CARD_IMPERIAL_ORDER,
+    CARD_JAR_OF_GREED,
+    /* Fusion Deck (15) */
+    X3(CARD_ROARING_OCEAN_SNAKE),
+    X3(CARD_PUNISHED_EAGLE),
+    CARD_EMPRESS_JUDGE,
+    CARD_RYU_SENSHI,
+    X2(CARD_DARK_BALTER_THE_TERRIBLE),
+    CARD_FIEND_SKULL_DRAGON,
+    CARD_DARKFIRE_DRAGON,
+    CARD_DRAGONESS_THE_WICKED_KNIGHT,
+    X2(CARD_THOUSAND_EYES_RESTRICT),
+};
+STATIC_ASSERT(ARRAY_COUNT(sScientistTomatoControl) == 40 + 15, ScientistTomatoControlSize);
+static const struct DeckList sScientistTomatoControlList = { sScientistTomatoControl,
+                                                             ARRAY_COUNT(sScientistTomatoControl), 0 };
+/* Aretos-Tomato Control (Scientist).ydk's Side Deck (15). */
+static const u16 sScientistTomatoControlSide[] = {
+    X2(CARD_KING_TIGER_WANGHU),
+    CARD_NEWDORIA,
+    CARD_SPIRIT_REAPER,
+    CARD_MAGICAL_SCIENTIST,
+    CARD_CATAPULT_TURTLE,
+    CARD_AIRKNIGHT_PARSHATH,
+    X2(CARD_NOBLEMAN_OF_CROSSOUT),
+    CARD_BOOK_OF_MOON,
+    CARD_HEAVY_STORM,
+    X2(CARD_DUST_TORNADO),
+    CARD_TORRENTIAL_TRIBUTE,
+    CARD_CEASEFIRE,
+};
+STATIC_ASSERT(ARRAY_COUNT(sScientistTomatoControlSide) == 15, ScientistTomatoControlSideSize);
+#endif
+
+#if defined(HAS_CARD_GILASAURUS) && defined(HAS_CARD_MAGICAL_SCIENTIST) && defined(HAS_CARD_CARD_DESTRUCTION) \
+    && defined(HAS_CARD_METAMORPHOSIS) && defined(HAS_CARD_REASONING) && defined(HAS_CARD_DARK_BALTER_THE_TERRIBLE) \
+    && defined(HAS_CARD_FIEND_SKULL_DRAGON) && defined(HAS_CARD_RYU_SENSHI) && defined(HAS_CARD_SUPER_ROBOLADY) \
+    && defined(HAS_CARD_SUPER_ROBOYAROU) && defined(HAS_CARD_THOUSAND_EYES_RESTRICT) \
+    && defined(HAS_CARD_DARK_RULER_HA_DES) && defined(HAS_CARD_FIBER_JAR) && defined(HAS_CARD_MIRAGE_OF_NIGHTMARE) \
+    && defined(HAS_CARD_TORRENTIAL_TRIBUTE)
+#define MOD_SCIENTIST_FTK 1
+static const u16 sScientistFtk[] = {
+    /* Monsters (17) */
+    X3(CARD_CANNON_SOLDIER),
+    X3(CARD_CATAPULT_TURTLE),
+    X3(CARD_GILASAURUS),
+    X3(CARD_MAGICAL_SCIENTIST),
+    X3(CARD_MYSTIC_TOMATO),
+    CARD_SANGAN,
+    CARD_WITCH_OF_THE_BLACK_FOREST,
+    /* Spells (20) */
+    CARD_CARD_DESTRUCTION,
+    CARD_DARK_HOLE,
+    CARD_GIANT_TRUNADE,
+    CARD_GRACEFUL_CHARITY,
+    CARD_HARPIES_FEATHER_DUSTER,
+    CARD_HEAVY_STORM,
+    X3(CARD_LAST_WILL),
+    X3(CARD_METAMORPHOSIS),
+    CARD_MONSTER_REBORN,
+    CARD_PAINFUL_CHOICE,
+    CARD_POT_OF_GREED,
+    CARD_PREMATURE_BURIAL,
+    CARD_RAIGEKI,
+    X3(CARD_REASONING),
+    /* Traps (3) */
+    CARD_CALL_OF_THE_HAUNTED,
+    CARD_IMPERIAL_ORDER,
+    CARD_BELL_OF_DESTRUCTION,
+    /* Fusion Deck (15) */
+    X2(CARD_DARK_BALTER_THE_TERRIBLE),
+    CARD_DARKFIRE_DRAGON,
+    CARD_DRAGONESS_THE_WICKED_KNIGHT,
+    CARD_EMPRESS_JUDGE,
+    CARD_FIEND_SKULL_DRAGON,
+    CARD_PUNISHED_EAGLE,
+    CARD_ROARING_OCEAN_SNAKE,
+    X2(CARD_RYU_SENSHI),
+    CARD_SUPER_ROBOLADY,
+    CARD_SUPER_ROBOYAROU,
+    X3(CARD_THOUSAND_EYES_RESTRICT),
+};
+STATIC_ASSERT(ARRAY_COUNT(sScientistFtk) == 40 + 15, ScientistFtkSize);
+static const struct DeckList sScientistFtkList = { sScientistFtk, ARRAY_COUNT(sScientistFtk), 0 };
+/* DK-ZERO-Scientist FTK.ydk's Side Deck (15). */
+static const u16 sScientistFtkSide[] = {
+    CARD_CYBER_JAR,
+    CARD_DARK_RULER_HA_DES,
+    CARD_FIBER_JAR,
+    CARD_JINZO,
+    CARD_SINISTER_SERPENT,
+    CARD_CHANGE_OF_HEART,
+    CARD_MIRAGE_OF_NIGHTMARE,
+    X3(CARD_MYSTICAL_SPACE_TYPHOON),
+    CARD_SNATCH_STEAL,
+    CARD_MIRROR_FORCE,
+    X3(CARD_TORRENTIAL_TRIBUTE),
+};
+STATIC_ASSERT(ARRAY_COUNT(sScientistFtkSide) == 15, ScientistFtkSideSize);
+#endif
+
+#if defined(MOD_SCIENTIST_TOMATO_CONTROL) && defined(MOD_SCIENTIST_FTK)
+#define MOD_SCIENTIST_DECKS 1
+/* The Scientist opponent's deck for this duel: Tomato Control 6 in 10, Scientist FTK 4 in 10. */
+static const struct DeckList *ScientistDeck(void)
+{
+    return (u32)Random() % 10 < 6 ? &sScientistTomatoControlList : &sScientistFtkList;
+}
+#endif
+
 /* The replacement deck of opponent `opponent` (enum DuelistId), or NULL to keep the original: a new pick (the
  * weighted random ones roll again); GetOpponentDeckOverride keeps it for the match. */
 static const struct DeckList *PickOpponentDeckOverride(int opponent)
@@ -1508,6 +1664,10 @@ static const struct DeckList *PickOpponentDeckOverride(int opponent)
 #ifdef MOD_YATA_DECKS
     case DUELIST_ARKANA:                /* the Yata format opponent */
         return YataDeck();
+#endif
+#ifdef MOD_SCIENTIST_DECKS
+    case DUELIST_UMBRA_LUMIS:           /* the Scientist format opponent */
+        return ScientistDeck();
 #endif
 #ifdef MOD_JOEY_PEGASUS_DECKS
     case DUELIST_WEEVIL:                /* the Joey-Pegasus format opponent */
@@ -1582,6 +1742,8 @@ static const char sNameFiberRecruiter[] = "GBO-Recruiter Control";
 static const char sNameYataTomato[] = "Shigeki Kitamura-Tomato Control";
 static const char sNameYataWarriorTomato[] = "ellietincan-Warrior Tomato Control";
 static const char sNameYataGearfried[] = "AlephYa2-Gearfried";
+static const char sNameScientistTomato[] = "Aretos-Tomato Control (Scientist)";
+static const char sNameScientistFtk[] = "DK-ZERO-Scientist FTK";
 static const char sNameChaosTurbo[] = "LR-Chaos Turbo";
 static const char sNameWarrior[] = "sdlkilla-Warrior";
 static const char sNameGoatControl[] = "geistD-Goat Control";
@@ -1635,6 +1797,12 @@ static const struct RecipePreset sRecipePresets[] = {
 #endif
 #ifdef MOD_YATA_GEARFRIED
     { sNameYataGearfried, &sYataGearfriedList, sYataGearfriedSide, ARRAY_COUNT(sYataGearfriedSide) },
+#endif
+#ifdef MOD_SCIENTIST_TOMATO_CONTROL
+    { sNameScientistTomato, &sScientistTomatoControlList, sScientistTomatoControlSide, ARRAY_COUNT(sScientistTomatoControlSide) },
+#endif
+#ifdef MOD_SCIENTIST_FTK
+    { sNameScientistFtk, &sScientistFtkList, sScientistFtkSide, ARRAY_COUNT(sScientistFtkSide) },
 #endif
 #ifdef MOD_RED_DECK
     { sNameChaosTurbo, &sRedDeckList, NULL, 0 },

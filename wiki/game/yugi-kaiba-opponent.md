@@ -4,7 +4,7 @@ type: game
 status: draft
 confidence: medium
 sources: [rom-analysis]
-updated: 2026-10-28
+updated: 2026-10-30
 ---
 # Campaign opponents (mod)
 
@@ -57,7 +57,11 @@ next to the one before it.
     10% (`YataDeck`, Arkana's slot). Mirage of Nightmare (all three Main Decks) was added to `config/new_cards.txt`
     for them and is coded ([[added-cards]]). Dice Jar, in Warrior Tomato Control's Side Deck, was added and removed
     again, so that Side Deck has 14 cards.
-  - The other 7 keep their original duelists' decks for now.
+  - Scientist plays Aretos-Tomato Control (Scientist) 60% and DK-ZERO-Scientist FTK 40% (`ScientistDeck`, Umbra &
+    Lumis' slot). Every card in both was already in the game. No coded effect yet: Magical Scientist, Gilasaurus,
+    Super Robolady, Super Roboyarou (and Dark Balter, Fiend Skull Dragon, Ryu Senshi below), so the FTK deck cannot
+    make its combo yet (Magical Scientist into Catapult Turtle).
+  - The other 6 keep their original duelists' decks for now.
   - Cards in these decks with no coded effect yet: Dark Balter the Terrible, Fiend Skull Dragon, Ryu Senshi (Joey-
     Pegasus Tomato Control's Fusion Deck), Skull Lair and The Last Warrior from Another Planet (Joey-Pegasus Vanilla
     Beat and both Android decks).
