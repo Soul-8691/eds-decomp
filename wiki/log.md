@@ -1923,3 +1923,6 @@ updated: 2026-09-29
 
 ## [2026-10-30] progress | Asura Priest coded
 - src/added_effects.c: IsCannotSpecialSummon case; EndPhase_ReturnSpiritMonsters (Yata-Garasu's End Phase return, renamed and shared; battle_phase3.c, effect.h); gModDuel.asuraTargets, AsuraEndAttack (ModEndAttack), ModAttackTargetBlocked (used by card_menu_input.c and ai_picks.c instead of ModAttackTargetLocked); ModBattlePhaseStart clears the record and calls AiRoarBeforeBattle. DECKS.md. [[added-cards]]. Release .text 0x80618. Built (make and make release); not tested in an emulator.
+
+## [2026-10-30] progress | Asura Priest may attack monsters recruited into an attacked zone
+- src/added_effects.c: Asura Priest's record is per monster (zone bit + DuelZone.serial from gBattle.zoneSerialSnapshot, AsuraAttackedMonster), for the Battle Phase of gModDuel.asuraTurn; STATIC_ASSERT that gModDuel fits before gScratchBuffer. [[added-cards]]. Release .text 0x80618. Built (make and make release); not tested in an emulator.

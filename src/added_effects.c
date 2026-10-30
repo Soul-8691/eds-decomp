@@ -72,10 +72,13 @@ struct ModDuelState {
     u16 scientistReturn;        /* Magical Scientist: bit player * 5 + zone, return to the Fusion Deck in the End Phase */
     u16 scientistReturnIds[10]; /* ... and the card ID summoned into that zone */
     u16 aiScientistTurn;        /* AiUseMagicalScientist: gDuel.turnCount + 1 of its last summon for battle */
-    u8 asuraTargets[10];        /* Asura Priest: per player * 5 + zone, bit zone of each opponent zone it attacked this
-                                   Battle Phase (cleared by ModBattlePhaseStart) */
+    u16 asuraTurn;              /* Asura Priest: gDuel.turnCount + 1 of the Battle Phase the two below are for */
+    u8 asuraTargets[5];         /* ... per zone of the attacking player: bit t, it attacked the opponent's zone t ... */
+    u16 asuraSerials[5][5];     /* ... where the monster had this DuelZone.serial (a new monster there is not it) */
 };
 extern struct ModDuelState gModDuel;
+/* gModDuel (0x0202FF04, symbols.ld) must end before gScratchBuffer (0x02030000). */
+STATIC_ASSERT(sizeof(struct ModDuelState) <= 0x02030000 - 0x0202FF04, ModDuelStateFits);
 
 static inline struct DuelZone *ZoneOf(int player, int zone)
 {
@@ -1104,7 +1107,7 @@ void ModDuelInit(void)
     gModDuel.roarTurn[1] = 0;
     gModDuel.scientistReturn = 0;
     gModDuel.aiScientistTurn = 0;
-    MemClear16(gModDuel.asuraTargets, sizeof(gModDuel.asuraTargets));
+    gModDuel.asuraTurn = 0;
 #ifdef HAS_CARD_INJECTION_FAIRY_LILY
     InjectionFairyLilyResetBattle();
 #endif
@@ -4721,8 +4724,9 @@ void ModBattlePhaseStart(int player)
 #ifdef HAS_CARD_ASURA_PRIEST
     int i;
 
-    for (i = 0; i < 5; i++)     /* Asura Priest's attacked zones */
-        gModDuel.asuraTargets[(player & 1) * 5 + i] = 0;
+    gModDuel.asuraTurn = gDuel.turnCount + 1;   /* Asura Priest's record is for this Battle Phase */
+    for (i = 0; i < 5; i++)
+        gModDuel.asuraTargets[i] = 0;
 #endif
 #ifdef HAS_CARD_THREATENING_ROAR
     AiRoarBeforeBattle(player);
@@ -4869,14 +4873,17 @@ int EffectMaraudingCaptainResolve(struct ChainEntry *link, struct ChainEntry *ch
 /* ---- Asura Priest: attacks every opponent monster once -------------------------------------------------------------
  * "This card can attack all monsters your opponent controls once each." (Its Spirit rule and "Cannot be Special
  * Summoned" are with Yata-Garasu's: EndPhase_ReturnSpiritMonsters, IsCannotSpecialSummon.)
- *   record   gModDuel.asuraTargets[player * 5 + zone]: the opponent's zones it attacked this Battle Phase, cleared as
- *            each Battle Phase starts (ModBattlePhaseStart)
+ *   record   for the Battle Phase of turn gModDuel.asuraTurn - 1 (set, and the record emptied, as each Battle Phase
+ *            starts: ModBattlePhaseStart): per zone of the attacking player, the monsters it attacked, as the
+ *            opponent's zone (asuraTargets, a bit per zone) and that monster's DuelZone.serial there (asuraSerials;
+ *            gBattle.zoneSerialSnapshot holds the target's at the declaration). The serial is stamped when a card is
+ *            placed and kept when it is flipped, so a monster that came into the zone later (recruited by Mystic
+ *            Tomato, Special Summoned, ...) is a new one it may attack
  *   again    ModEndAttack: after an attack on a monster (not a direct one) by a face-up Asura Priest still in its zone,
- *            its target zone is recorded, and while the opponent controls a monster in a zone it has not attacked,
- *            its attack mark (attackedMask) is cleared so it may attack again (as Black Luster Soldier's second
- *            attack does)
+ *            the target is recorded, and while the opponent controls a monster it has not attacked, its attack mark
+ *            (attackedMask) is cleared so it may attack again (as Black Luster Soldier's second attack does)
  *   targets  ModAttackTargetBlocked: the human's target pick (BattleStage_SelectTarget, card_menu_input.c) and the
- *            CPU's attack plans (AiFindAttackTarget, ai_picks.c) refuse a zone it has attacked; with the mark still
+ *            CPU's attack plans (AiFindAttackTarget, ai_picks.c) refuse a monster it has attacked; with the mark still
  *            set after its last monster, it cannot follow with a direct attack, and after a direct attack it is done */
 #ifdef HAS_CARD_ASURA_PRIEST
 static int IsAsuraAttacker(int player, int zone)
@@ -4887,17 +4894,24 @@ static int IsAsuraAttacker(int player, int zone)
     return id != 0 && z->isFaceUp && CardNumberOfId(id) == CARD_ASURA_PRIEST;
 }
 
+/* 1 if the Asura Priest of `player` in `zone` already attacked the monster now in the opponent's zone `target`. */
+static int AsuraAttackedMonster(int player, int zone, int target)
+{
+    return gModDuel.asuraTurn == (u16)(gDuel.turnCount + 1) && (gModDuel.asuraTargets[zone] & (1 << target))
+           && gModDuel.asuraSerials[zone][target] == ZoneOf(1 - (player & 1), target)->serial;
+}
+
 static void AsuraEndAttack(int player)
 {
     int zone = gBattle.atkSlot, opponent = 1 - (player & 1), i;
-    u8 *done = &gModDuel.asuraTargets[(player & 1) * 5 + zone];
 
-    if (gBattle.direct || !IsAsuraAttacker(player, zone)
+    if (gBattle.direct || !IsAsuraAttacker(player, zone) || gModDuel.asuraTurn != (u16)(gDuel.turnCount + 1)
         || DUEL_CARD_ID(&ZoneOf(player, zone)->card) != (gBattle.side[player].cardId & CARD_ID_MASK))
         return;
-    *done |= 1 << gBattle.defSlot;
+    gModDuel.asuraTargets[zone] |= 1 << gBattle.defSlot;
+    gModDuel.asuraSerials[zone][gBattle.defSlot] = gBattle.zoneSerialSnapshot[opponent];
     for (i = ZONE_MONSTER_0; i <= ZONE_MONSTER_4; i++) {
-        if (DUEL_CARD_ID(&ZoneOf(opponent, i)->card) != 0 && !(*done & (1 << i))) {
+        if (DUEL_CARD_ID(&ZoneOf(opponent, i)->card) != 0 && !AsuraAttackedMonster(player, zone, i)) {
             gDuelPlayers[player & 1].attackedMask &= ~(1 << zone);
             return;
         }
@@ -4913,7 +4927,7 @@ int ModAttackTargetBlocked(int attacker, int attackerZone, int zone)
         return 1;
 #ifdef HAS_CARD_ASURA_PRIEST
     if (attackerZone >= ZONE_MONSTER_0 && attackerZone <= ZONE_MONSTER_4 && IsAsuraAttacker(attacker, attackerZone)
-        && (gModDuel.asuraTargets[(attacker & 1) * 5 + attackerZone] & (1 << zone)))
+        && AsuraAttackedMonster(attacker, attackerZone, zone))
         return 1;
 #endif
     return 0;

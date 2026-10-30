@@ -1222,9 +1222,12 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
   from `EndPhase_ReturnYataGarasu`; battle_phase3.c and effect.h follow) returns every face-up Yata-Garasu and Asura
   Priest to its owner's hand.
 - **Attacks every monster once.**
-  - `gModDuel.asuraTargets[player * 5 + zone]`: a bit for each of the opponent's zones that Asura Priest attacked this
-    Battle Phase, cleared as each Battle Phase starts (`ModBattlePhaseStart`, now split so Threatening Roar's part is
-    `AiRoarBeforeBattle`).
+  - The record, for the Battle Phase of turn `gModDuel.asuraTurn` - 1 (set, and the record emptied, as each Battle
+    Phase starts: `ModBattlePhaseStart`, now split so Threatening Roar's part is `AiRoarBeforeBattle`): per zone of the
+    attacking player, a bit for each of the opponent's zones it attacked (`asuraTargets[5]`) and the `DuelZone.serial`
+    of the monster attacked there (`asuraSerials[5][5]`, from `gBattle.zoneSerialSnapshot` at the declaration). The
+    serial is stamped when a card is placed and kept when it flips, so a monster that arrives in the zone later is a
+    new one. The turn stamp keeps the CPU's Main Phase battle simulations from reading the last turn's record.
   - `ModEndAttack` → `AsuraEndAttack`: after an attack on a monster by a face-up Asura Priest still in its zone, the
     target zone is recorded; while the opponent still controls a monster in a zone it has not attacked, its bit of
     `attackedMask` is cleared, so it can be picked as an attacker again (Black Luster Soldier's second attack does the
@@ -1234,7 +1237,9 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
     attack plans (`AiFindAttackTarget`, ai_picks.c): a zone Asura Priest already attacked is refused.
   - After its last monster the mark stays set, so it cannot follow with a direct attack; a direct attack (the
     opponent had no monster) ends its attacks for the turn.
-  - Not modelled: a new monster summoned into a zone it already attacked cannot be attacked by it.
+  - **Fixed the same day (reported by the user):** the first version recorded zones only, so a monster recruited into
+    a zone it had attacked (Mystic Tomato's) could not be attacked. It records the monster now (the serial above).
+  - `gModDuel` is in fixed EWRAM before `gScratchBuffer`; a `STATIC_ASSERT` (`ModDuelStateFits`) now checks it fits.
 - Release `.text` 0x08080618.
 - Checked in the source and the build; not tested in an emulator.
 
