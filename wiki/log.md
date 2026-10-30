@@ -1914,3 +1914,6 @@ updated: 2026-09-29
 
 ## [2026-10-30] progress | Cards that cannot be Special Summoned no longer vanish
 - src/added_effects.c ModFilterEffectTargets / IsSummoningTargetList; src/effect_target_collect.c CollectEffectTargets calls it as a fourth filter: summoning lists (Monster Reborn, recruiters, Call of the Haunted, Marauding Captain, ...) drop IsCannotSpecialSummon monsters (Yata-Garasu, Tsukuyomi), which Monster Reborn used to take out of the Graveyard before the summon refused them. [[added-cards]]. Release .text 0x80608. Built (make and make release); not tested in an emulator.
+
+## [2026-10-30] progress | Thunder Nyan Nyan coded
+- src/added_effects.c: HasFaceUpNonLightMonster / DoomedThunderNyanNyan; ModDuelStateCheck destroys a face-up Nyan Nyan whose controller has a face-up non-LIGHT monster; AiSimSummonBoosts clears doomed ones in the CPU's summon simulation. README CPU list, DECKS.md. [[added-cards]]. Release .text 0x80608. Built (make and make release); not tested in an emulator.

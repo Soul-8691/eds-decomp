@@ -152,6 +152,8 @@ next one.
       hand and on the field than it does.
     - Its Kycoo the Ghost Destroyer banishes the two strongest monsters in your Graveyard by itself (before the fix,
       you were asked to pick them).
+    - It doesn't summon Thunder Nyan Nyan next to its own face-up non-LIGHT monsters, or a non-LIGHT monster next to
+      it, when that would just destroy Nyan Nyan.
     - It Special Summons Gilasaurus when your best monster to revive has less than 1500 ATK (or you have none), or
       as a Tribute for a Level 5-6 monster it couldn't summon otherwise. When you Special Summon Gilasaurus, it
       always revives a monster if it can.

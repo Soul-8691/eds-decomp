@@ -6029,6 +6029,53 @@ static u32 AiBestAtkWithHandEquip(int zone, int keep, int played)
 
 /* AiSimSummon: the simulated monster in `zone` gets its summon boosts (Breaker's counter) and the best hand Equip.
  * Inside the simulation sandbox. */
+#ifdef HAS_CARD_THUNDER_NYAN_NYAN
+/* ---- Thunder Nyan Nyan ---------------------------------------------------------------------------------------------
+ * "If there is a non-LIGHT monster on your side of the field, destroy this face-up card."
+ *   rule  ModDuelStateCheck (DuelMainStep, while nothing else is busy; not during an attack, as for Berserk Gorilla)
+ *         destroys a face-up Thunder Nyan Nyan whose controller has a face-up monster that is not LIGHT (its effective
+ *         attribute, GetZoneCardStats). A face-down monster has no attribute and does not count; a face-down Nyan
+ *         Nyan is not destroyed.
+ *   CPU   AiSimSummonBoosts (the summon simulation's sandbox) removes the CPU's Nyan Nyans the rule would destroy, so
+ *         the CPU does not summon it next to a non-LIGHT monster, nor a non-LIGHT monster next to it, unless the
+ *         simulation still comes out ahead. */
+
+/* 1 if `player` controls a face-up monster whose attribute is not LIGHT. */
+static int HasFaceUpNonLightMonster(int player)
+{
+    struct ZoneCardStats info;
+    int zone;
+
+    for (zone = ZONE_MONSTER_0; zone <= ZONE_MONSTER_4; zone++) {
+        struct DuelZone *z = ZoneOf(player, zone);
+
+        if (DUEL_CARD_ID(&z->card) == 0 || !z->isFaceUp)
+            continue;
+        GetZoneCardStats(player, zone, &info);
+        if (info.attribute != ATTRIBUTE_LIGHT)
+            return 1;
+    }
+    return 0;
+}
+
+/* The zone of a face-up Thunder Nyan Nyan of `player` that its rule destroys now, -1 for none. */
+static int DoomedThunderNyanNyan(int player)
+{
+    int zone;
+
+    if (!HasFaceUpNonLightMonster(player))
+        return -1;
+    for (zone = ZONE_MONSTER_0; zone <= ZONE_MONSTER_4; zone++) {
+        struct DuelZone *z = ZoneOf(player, zone);
+        u16 id = DUEL_CARD_ID(&z->card);
+
+        if (id != 0 && z->isFaceUp && CardNumberOfId(id) == CARD_THUNDER_NYAN_NYAN)
+            return zone;
+    }
+    return -1;
+}
+#endif /* HAS_CARD_THUNDER_NYAN_NYAN */
+
 void AiSimSummonBoosts(int zone)
 {
     struct DuelZone *z = ZoneOf(AI_PLAYER, zone);
@@ -6041,6 +6088,15 @@ void AiSimSummonBoosts(int zone)
         AddZoneLink(DUEL_LOC(AI_PLAYER, zone), id, ZONE_LINK_KIND(ZONE_LINK_ATK_300_PER_VALUE, 1));
 #endif
     AiBestAtkWithHandEquip(zone, 1, 1);    /* the summoned monster has left the hand */
+#ifdef HAS_CARD_THUNDER_NYAN_NYAN
+    {
+        int doomed;
+
+        /* the sandbox is restored afterwards: clear the Nyan Nyans the rule would destroy */
+        while ((doomed = DoomedThunderNyanNyan(AI_PLAYER)) >= 0)
+            MemClear16(ZoneOf(AI_PLAYER, doomed), sizeof(struct DuelZone));
+    }
+#endif
 }
 
 /* The ATK the CPU's monster in `zone` will have face up with the best Equip from its hand (its own sandbox; not
@@ -6536,13 +6592,14 @@ int AiChainSummonTriggerResponse(struct ChainEntry *entry)
  * something (the duel step waits for it). */
 int ModDuelStateCheck(void)
 {
-#ifdef HAS_CARD_BERSERK_GORILLA
+#if defined(HAS_CARD_BERSERK_GORILLA) || defined(HAS_CARD_THUNDER_NYAN_NYAN)
     int player, zone;
 
     if (gDuel.phase == PHASE_BATTLE && gDuel.battleStage >= BATTLE_STAGE_SELECT_TARGET
         && gDuel.battleStage <= BATTLE_STAGE_END_ATTACK)
         return 0;
     for (player = 0; player <= 1; player++) {
+#ifdef HAS_CARD_BERSERK_GORILLA
         for (zone = ZONE_MONSTER_0; zone <= ZONE_MONSTER_4; zone++) {
             struct DuelZone *z = ZoneOf(player, zone);
             u16 id = DUEL_CARD_ID(&z->card);
@@ -6553,6 +6610,15 @@ int ModDuelStateCheck(void)
                 return 1;
             }
         }
+#endif
+#ifdef HAS_CARD_THUNDER_NYAN_NYAN
+        zone = DoomedThunderNyanNyan(player);
+        if (zone >= 0) {
+            ShowCardEffect(player, DUEL_CARD_ID(&ZoneOf(player, zone)->card));
+            DestroyFieldCard(player, zone, 1);
+            return 1;
+        }
+#endif
     }
 #endif
     return 0;

@@ -1213,6 +1213,19 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
 - Release `.text` after it ends at 0x080809E8, 0x38 bytes below `.rodata` at 0x08080A20.
 - Checked in the source and the build; not tested in an emulator.
 
+### Thunder Nyan Nyan (2026-10-30)
+- Effect Monster (Level 4, LIGHT Thunder, 1900/800). ID 1054. The fetched text: "If there is a non-LIGHT monster on
+  your side of the field, destroy this face-up card."
+- **Rule.** `ModDuelStateCheck` (DuelMainStep, once per idle frame, as Berserk Gorilla's) destroys a face-up Thunder
+  Nyan Nyan (`DestroyFieldCard`, by its own effect) when its controller has a face-up monster that is not LIGHT
+  (`DoomedThunderNyanNyan`; the effective attribute from `GetZoneCardStats`). A face-down monster has no attribute
+  and does not count, and a face-down Nyan Nyan is not destroyed. Not checked during an attack (battle stages 2-11),
+  as for Berserk Gorilla: it goes once the attack is over.
+- **CPU.** `AiSimSummonBoosts` (inside the summon simulation's sandbox, ai_summon.c) clears the CPU's Nyan Nyans the
+  rule would destroy, so the simulation sees the loss: the CPU does not summon Nyan Nyan next to a face-up non-LIGHT
+  monster, or a non-LIGHT monster face up next to it, unless it still comes out ahead.
+- Checked in the source and the build; not tested in an emulator.
+
 ### Chaos Emperor Dragon - Envoy of the End (2026-10-30)
 - Effect Monster (Level 8, DARK Dragon, 3000/2500). ID 1132. Coded with its **first-edition** text, as the user asked:
   "This card can only be Special Summoned by removing 1 LIGHT and 1 DARK monster in your Graveyard from play. Pay 1000
