@@ -4,20 +4,20 @@
 # Edit the values below. An empty destination means "the default" (see python3 tools/card_expand/expand_rom.py -h).
 set -e
 
-ROM=eds.gba                                   # original or edited ROM (8-32 MiB)
+ROM=EDS_Kertra.gba                                   # original or edited ROM (8-32 MiB)
 OUT=build/card_expand/expanded.gba            # also writes build/card_expand/expanded_cards.csv
 LIST=new_cards.txt                            # cards to add after the leftover-effect cards ("" for none)
 LAST_ID=                                      # highest card ID ("" = the smallest that fits)
 EXTRA=""                                      # more options, e.g. "--offline --move-scratch --force --no-leftovers"
 
 # Where the card tables are in $ROM. These are the original addresses; change one if an edit moved that table.
-SRC_NAMES=0x0822C720        # 0x40 bytes per card
-SRC_DESCS=0x082461A0        # 0x1E0 bytes per card
-SRC_ART=0x082A6500          # 0x10E0 bytes per card
-SRC_PALETTES=0x08608360     # 0x80 bytes per card
-SRC_STATS=0x08621DE0        # 4 bytes per card
-SRC_ID2N=0x08622AB4         # 2 bytes per card (card ID -> card number)
-SRC_PASSWORDS=0x08623120    # 4 bytes per card
+SRC_NAMES=0x08268AC0        # 0x40 bytes per card
+SRC_DESCS=0x087FAA20        # 0x1E0 bytes per card
+SRC_ART=0x08276300          # 0x10E0 bytes per card
+SRC_PALETTES=0x086067E0     # 0x80 bytes per card
+SRC_STATS=0x0822CC00        # 4 bytes per card
+SRC_ID2N=0x0822C4E0         # 2 bytes per card (card ID -> card number)
+SRC_PASSWORDS=0x08623080    # 4 bytes per card
 SRC_N2ID=0x08623DF4         # 2048 x 2 bytes (card number -> card ID)
 
 # Where to write them in $OUT. Empty = default:
@@ -26,7 +26,7 @@ SRC_N2ID=0x08623DF4         # 2048 x 2 bytes (card number -> card ID)
 #   art: the first blank space at or after 0x08800000; palettes: right after the art
 DST_NAMES=
 DST_DESCS=
-DST_ART=
+DST_ART=                    # empty: placed after the tables that cannot grow in place (0x08860000 overlaps the descs)
 DST_PALETTES=
 DST_STATS=
 DST_ID2N=

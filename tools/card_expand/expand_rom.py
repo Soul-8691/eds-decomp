@@ -26,13 +26,22 @@ checked: it must point at its table's source address (plus its offset into the t
 A ROM whose editor moved a table works when --src-TABLE gives the new address. Pointers that point elsewhere
 stop the run (--force patches the others and leaves those alone).
 
-Edited ROMs: any ROM of 8 to 32 MiB whose card code is the original one works; its SHA-1 is only reported. The
-sites card_expand.py patches (the Deck Edit list, the card count) must hold their original bytes, otherwise the
-run stops: that is a ROM that is already expanded or whose code was changed there. The new tables are written
-only over the old tables and over blank space (runs of 0x00 or 0xFF). Anything else in the way stops the run
-with the address, so data an edit added (for example after 0x08800000) is not overwritten; move a table with
---TABLE, or pass --force. The default art address is the first address at or after 0x08800000 after which the
-ROM is blank, so data appended to an edited ROM is kept.
+Edited ROMs (8 to 32 MiB; the SHA-1 is only reported):
+- Card count: the ROM's current last card ID is read from Deck Edit's card loop (--src-last overrides it), so a
+  hack that already has more than 821 cards works; every card-count site is rewritten from whatever count it
+  holds, and sites that disagreed are listed. The Deck Edit list sites must hold their original bytes (a ROM
+  already expanded by card_expand.py is refused).
+- Placement: each table stays at its usual spot when it fits there; one that would run into data the edit put
+  after it is moved, with the art, into the space after the end of the used ROM (reported as "moved"). New
+  tables are written only over the old tables and blank space (0x00/0xFF); explicit --TABLE addresses that
+  would overwrite data stop the run (--force).
+- Pointers: a pointer into a table at another entry than the original (an edit repointed it) moves with the
+  table, keeping its entry. A pointer to a modified copy of a table (all but a few entries equal; a hack can give
+  some functions their own version) gets a full-length copy of the new table with the copy's own entries kept.
+  Any other pointer stops the run (--force leaves it alone).
+- Cards: a leftover card the ROM already has at its number is kept; another card on a leftover number keeps the
+  number (and gets that number's coded effect), with a warning; a card from either list that the ROM already has
+  (same name or password) is skipped.
 
 The game has duel code for card numbers that no EDS card uses (LEFTOVER_EFFECTS.md). LEFTOVER below gives each of
 those numbers its real card, so the effect works in a duel: the card IDs after 820 go to these cards in card
@@ -68,7 +77,7 @@ def load(name, path):
 wt = load('write_tables', os.path.join(HERE, 'write_tables.py'))
 ROM = wt.ROM
 ORIGINAL_SHA1 = '510fbba212aca9bab95ea12f8fd933e62ee34dea'     # USA AY5E
-ORIGINAL_CARDS = 821                                              # IDs 0..820
+ORIGINAL_LAST = 820                                               # highest card ID of the original game
 ART_MIN = 0x08800000                                              # the end of the original ROM
 
 # option name: (key in the card dict, entry size, original address, table name in card_table_refs.csv)
@@ -83,7 +92,21 @@ TABLES = {
     'n2id': ('n2id', 2, 0x08623DF4, 'gCardNumberToId'),
 }
 END_POINTER = 0x08063D98      # IsCardCollectionComplete: &gCardIdToNumber[LAST_ID + 1]
-SKIP_SITES = {0x0806D004}     # DeckStats_Init: &gCardIdToNumber[0x439], an out-of-range read; left as it is
+SKIP_SITES = {0x0806D004,     # DeckStats_Init: &gCardIdToNumber[0x439], an out-of-range read; left as it is
+              END_POINTER}   # handled by itself (it moves with the card count)
+# The card-count sites (card_expand.counts): movs rD,#imm8; lsls rD,rD,#s pairs holding the last card ID, and literal
+# words holding the last ID plus a delta. An edited ROM may hold other counts there (or disagree between sites).
+COUNT_PAIRS = [(0x08007058, 0, 'DebugCardDetail_Browse'), (0x0801AE0E, 0, 'GiveMissingCards'),
+               (0x08063D86, 0, 'IsCardCollectionComplete'), (0x08068826, 0, 'DeckEdit_BuildCardLists mode 1'),
+               (0x08068916, 0, 'DeckEdit_BuildCardLists mode 0'), (0x0806892E, 3, 'DeckEdit_BuildCardLists mode 2'),
+               (0x0806AB6C, 0, 'SideDeckSwap_Init'), (0x0806D3CE, 0, 'DeckEdit_Init'),
+               (0x0806F232, 0, 'ProhibitCardSelect_Init'), (0x08070C38, 0, 'TradeCardSelect_Init'),
+               (0x08070D9A, 0, 'TradeCardSelect_Init'), (0x0807715E, 0, 'DebugGetAllCards'),
+               (0x0807C362, 0, 'FindCardByPassword')]
+COUNT_WORDS = [(0x08062BC0, 1, 'GeneratePackCards: random id range'), (0x08062C84, 1, 'GeneratePackCards: random id range'),
+               (0x08062D5C, 1, 'GeneratePackCards: random id range'), (0x08007050, -1, 'DebugCardDetail_Browse'),
+               (0x08007054, -10, 'DebugCardDetail_Browse'), (0x0800726C, -1, 'DebugAutoDetail_Cycle')]
+DETECT_SITE = 0x08068916      # Deck Edit's own loop bound: the card count the ROM really lists
 
 # Card number -> YGOPRODeck name, [settings as in new_cards.txt]. LEFTOVER_EFFECTS.md has each effect and its status.
 TOKEN = {'level': '1', 'password': 'none'}
@@ -141,6 +164,7 @@ LEFTOVER = [
     (1923, 'Slime Token', dict(TOKEN, race='Aqua', attr='WATER', atk='500', **{'def': '500'})),
 ]
 LEFTOVER = [(e[0], e[1], e[2] if len(e) > 2 else {}) for e in LEFTOVER]
+ALL_LEFTOVER_NUMBERS = {no for no, _, _ in LEFTOVER}
 
 
 def die(msg):
@@ -159,9 +183,8 @@ def word_at(rom, a):
 
 
 # ------------------------------------------------------------------------------------------- input ROM
-def read_rom_tables(rom, src):
-    """The 821 original entries of every card table, as raw bytes per ID, read at the source addresses."""
-    n = ORIGINAL_CARDS
+def read_rom_tables(rom, src, n):
+    """The n existing entries (IDs 0..n-1) of every card table, as raw bytes per ID, read at the source addresses."""
     for opt, (key, size, _, _) in TABLES.items():
         length = 2048 * 2 if opt == 'n2id' else n * size
         if src[opt] + length > ROM + len(rom):
@@ -209,48 +232,137 @@ def in_use(rom, start, end, free):
 
 
 # ------------------------------------------------------------------------------------------- code patches
-def code_patches(rom, last, scratch, src, dst, force):
+def read_pair(rom, a, rd):
+    """The value of a movs rD,#imm8; lsls rD,rD,#s pair, or None if the site holds something else."""
+    h1, h2 = struct.unpack_from('<HH', rom, a - ROM)
+    if h1 & 0xFF00 != 0x2000 | rd << 8 or h2 & 0xF83F != rd << 3 | rd:
+        return None
+    return (h1 & 0xFF) << (h2 >> 6 & 31)
+
+
+def encode_pair(rd, value):
+    s = next(s for s in range(32) if value >> s < 256 and value >> s << s == value)
+    return struct.pack('<HH', 0x2000 | rd << 8 | value >> s, s << 6 | rd << 3 | rd)
+
+
+def detect_last(rom):
+    """The ROM's last card ID (Deck Edit's loop bound) and a note for every count site that disagrees."""
+    last = read_pair(rom, DETECT_SITE, 0)
+    if last is None or not ORIGINAL_LAST <= last < 2048:
+        die(f'0x{DETECT_SITE:08X} (Deck Edit card loop) does not hold a card count: the code there was edited')
+    notes = []
+    for a, rd, what in COUNT_PAIRS:
+        v = read_pair(rom, a, rd)
+        if v != last:
+            notes.append(f'0x{a:08X} ({what}) ' + (f'counts to {v}' if v is not None else 'holds other code'))
+    for a, delta, what in COUNT_WORDS:
+        v = word_at(rom, a)
+        if v != last + delta:
+            notes.append(f'0x{a:08X} ({what}) holds {v}, expected {last + delta}')
+    return last, notes
+
+
+def count_patches(rom, last, force):
+    """Patches setting every count site to LAST_ID, from whatever count it holds now."""
+    out, bad = [], []
+    for a, rd, what in COUNT_PAIRS:
+        if read_pair(rom, a, rd) is None:
+            bad.append(f'0x{a:08X} ({what})')
+            continue
+        out.append((a, bytes(rom[a - ROM:a - ROM + 4]), encode_pair(rd, last), what + ': last card ID'))
+    for a, delta, what in COUNT_WORDS:
+        v = word_at(rom, a)
+        if not 0 <= v < 0x1000:
+            bad.append(f'0x{a:08X} ({what}) holds 0x{v:X}')
+            continue
+        out.append((a, struct.pack('<I', v), struct.pack('<I', last + delta), what))
+    if bad and not force:
+        die('these card-count sites do not hold a count (the code was edited): ' + ', '.join(bad))
+    return out, bad
+
+
+def pointer_sites():
+    """[(site, table option, offset into the table, description)] for every code pointer to a card table."""
+    by_name = {t[3]: opt for opt, t in TABLES.items()}
+    out = []
+    for r in csv.DictReader(open(os.path.join(HERE, 'card_table_refs.csv'))):
+        site, value, table = int(r['address'], 16), int(r['value'], 16), r['table']
+        if r['function'] == '(data)' or site in SKIP_SITES or table not in by_name:
+            continue
+        opt = by_name[table]
+        out.append((site, opt, value - TABLES[opt][2], f"{r['function']}: {table}"))
+    return out
+
+
+def table_span(opt, n):
+    return 4096 if opt == 'n2id' else n * TABLES[opt][1] + (2 if opt == 'id2n' else 0)
+
+
+def find_copies(rom, src, n_src):
+    """Modified copies of a table that some code points at instead of the table itself (an edit can give a few
+    functions their own version, e.g. another card number for one card): {copy address: (option, {index: entry})}.
+    A copy matches the source table in all but a few entries; those entries are kept when it is rebuilt."""
+    copies = {}
+    for site, opt, offset, _ in pointer_sites():
+        cur = word_at(rom, site)
+        base = cur - offset
+        if cur == src[opt] + offset or src[opt] <= cur < src[opt] + table_span(opt, n_src) or base in copies:
+            continue
+        size, count = TABLES[opt][1], (2048 if opt == 'n2id' else n_src)
+        if size > 4 or base < ROM or base + count * size > ROM + len(rom):
+            continue
+        a, b = rom[base - ROM:base - ROM + count * size], rom[src[opt] - ROM:src[opt] - ROM + count * size]
+        diff = {i: a[i * size:(i + 1) * size] for i in range(count) if a[i * size:(i + 1) * size] != b[i * size:(i + 1) * size]}
+        if len(diff) <= max(4, count // 50):
+            copies[base] = (opt, diff)
+    return copies
+
+
+def code_patches(rom, last, src_last, scratch, src, dst, force, copies):
     """card_expand.py's patches (Deck Edit list, card count, optional scratch) plus the table pointers, moved from
     their source to their destination. Returns (patches, notes)."""
     ce = load('card_expand_patches', os.path.join(HERE, 'card_expand.py'))   # fresh module: P has the RAM patches
-    ce.counts(last)
     if scratch:
         ce.word(0x080693D8, 0x0201EFC4, ce.NEW_SCRATCH, 'scratch')
         ce.word(0x08069A88, 0x0201EFC4, ce.NEW_SCRATCH, 'scratch')
     fixed = list(ce.P)
     at = lambda ad, b: bytes(rom[ad - ROM:ad - ROM + len(b)])
     if all(at(ad, nw) == nw for ad, o, nw, _ in fixed) and fixed:
-        die('the ROM is already expanded (the card count and Deck Edit list sites hold patched bytes)')
+        die('the ROM is already expanded (its Deck Edit list was already moved by card_expand.py)')
     changed = [ad for ad, o, nw, _ in fixed if at(ad, o) != o]
     if changed:
-        die(f'{len(changed)} code sites card_expand.py patches do not hold the original bytes (e.g. '
+        die(f'{len(changed)} Deck Edit list sites card_expand.py patches do not hold the original bytes (e.g. '
             + ', '.join(f'0x{x:08X}' for x in changed[:5]) + '): the code there was edited, or the ROM is already expanded')
+    counts, bad_counts = count_patches(rom, last, force)
 
-    by_name = {t[3]: opt for opt, t in TABLES.items()}
     pointers, odd = [], []
-    for r in csv.DictReader(open(os.path.join(HERE, 'card_table_refs.csv'))):
-        site, value, table = int(r['address'], 16), int(r['value'], 16), r['table']
-        if r['function'] == '(data)' or site in SKIP_SITES or table not in by_name:
-            continue
-        opt = by_name[table]
-        offset = value - TABLES[opt][2]
-        expect, new = src[opt] + offset, dst[opt] + offset
+    for site, opt, offset, what in pointer_sites():
+        expect = src[opt] + offset
         cur = word_at(rom, site)
-        if cur != expect:
-            odd.append(f"0x{site:08X} ({r['function']}: {table}) holds 0x{cur:08X}, not 0x{expect:08X}")
-        elif new != cur:
-            pointers.append((site, struct.pack('<I', cur), struct.pack('<I', new), f"{r['function']}: {table}"))
-    expect = src['id2n'] + ORIGINAL_CARDS * 2
+        if cur == expect:
+            new = dst[opt] + offset
+        elif src[opt] <= cur < src[opt] + table_span(opt, src_last + 1):
+            new = dst[opt] + (cur - src[opt])           # another entry of the same table (an edit repointed it)
+            what += f' (entry {(cur - src[opt]) // TABLES[opt][1]}, as the ROM has it)'
+        elif cur - offset in copies:
+            new = copies[cur - offset] + offset         # a modified copy of the table, rebuilt at full length
+            what += f' (copy at 0x{cur - offset:08X})'
+        else:
+            odd.append(f'0x{site:08X} ({what}) holds 0x{cur:08X}, not 0x{expect:08X}')
+            continue
+        if new != cur:
+            pointers.append((site, struct.pack('<I', cur), struct.pack('<I', new), what))
+    expect = (src['id2n'] + (src_last + 1) * 2, TABLES['id2n'][2] + (ORIGINAL_LAST + 1) * 2)
     cur = word_at(rom, END_POINTER)
-    if cur != expect:
-        odd.append(f'0x{END_POINTER:08X} (IsCardCollectionComplete: end of gCardIdToNumber) holds 0x{cur:08X}, not 0x{expect:08X}')
+    if cur not in expect:   # the end of the table, or the original value (an edit that moved the table may keep it)
+        odd.append(f'0x{END_POINTER:08X} (IsCardCollectionComplete: end of gCardIdToNumber) holds 0x{cur:08X}, not 0x{expect[0]:08X}')
     else:
         pointers.append((END_POINTER, struct.pack('<I', cur), struct.pack('<I', dst['id2n'] + (last + 1) * 2),
                          'IsCardCollectionComplete: &gCardIdToNumber[last+1]'))
     if odd and not force:
         die(f'{len(odd)} table pointers do not point where the --src-* addresses say:\n  ' + '\n  '.join(odd[:20])
             + ('\n  ...' if len(odd) > 20 else '') + '\nGive the right --src-TABLE, or --force to leave these alone')
-    return fixed + pointers, odd
+    return fixed + counts + pointers, odd + [f'{b}: not a card count' for b in bad_counts]
 
 
 # ------------------------------------------------------------------------------------------- cards
@@ -262,16 +374,18 @@ def add_cards(t, entries, a, A, leftover_numbers):
     taken = set(t['id2n'])
     known = {name.lower(): i for i, name in enumerate(t['text']) if name}
     known_pw = {p: i for i, p in enumerate(t['pw']) if i and p != b'\xff' * 4}
-    rows = []
+    rows, skipped = [], []
     for where, name, shown, opts in entries:
         c = info[name]
         card = wt.new_card(c, shown, opts, where)
         cid = len(t['names'])
-        if card['name'].lower() in known:
-            die(f"{where}: {card['name']!r} is already card ID {known[card['name'].lower()]}")
-        if card['pw'] in known_pw:
+        if card['name'].lower() in known:       # an edited ROM can have the card already
+            skipped.append(f"{where}: {card['name']} is already card ID {known[card['name'].lower()]}; not added")
+            continue
+        if card['pw'] in known_pw:              # the same card under another name
             i = known_pw[card['pw']]
-            die(f"{where}: {c['name']!r} has the password of card ID {i}, {t['text'][i]!r}: it is already in the game")
+            skipped.append(f"{where}: {c['name']} has the password of card ID {i}, {t['text'][i]!r}; not added")
+            continue
         if card['pw'] != b'\xff' * 4:
             known_pw[card['pw']] = cid
         if card['number'] is not None:
@@ -298,7 +412,7 @@ def add_cards(t, entries, a, A, leftover_numbers):
         known[card['name'].lower()] = cid
         rows.append([cid, number, 'leftover' if number in leftover_numbers else 'new_cards.txt',
                      card['pw'].hex() if card['pw'] != b'\xff' * 4 else '', card['name'], card['class'], c['name'], c['id']])
-    return rows
+    return rows, skipped
 
 
 # ------------------------------------------------------------------------------------------- main
@@ -324,6 +438,8 @@ def main():
                        help=f'where the input ROM has it (default 0x{orig:08X})')
         g.add_argument(f'--{opt}', type=addr, default=None, metavar='ADDR', help='where to write it')
     g.add_argument('--base', type=addr, default=None, metavar='ADDR', help='same as --art')
+    ap.add_argument('--src-last', type=lambda s: int(s, 0), default=None,
+                    help="the input ROM's highest card ID (default: read from Deck Edit's card loop, 820 originally)")
     a = ap.parse_args()
     src = {opt: getattr(a, f'src_{opt}') for opt in TABLES}
     if a.base is not None:
@@ -337,15 +453,33 @@ def main():
         die(f'{a.rom}: {len(rom):#x} bytes; expected 8 to 32 MiB')
     sha = hashlib.sha1(rom).hexdigest()
     kind = 'original USA ROM' if sha == ORIGINAL_SHA1 else f'edited ROM (SHA-1 {sha[:8]}, {len(rom) >> 20} MiB)'
-    t = read_rom_tables(rom, src)
+    src_last, count_notes = detect_last(rom)
+    if a.src_last is not None:
+        src_last = a.src_last
+    n_src = src_last + 1
+    t = read_rom_tables(rom, src, n_src)
 
-    leftover = [] if a.no_leftovers else LEFTOVER
+    # An edited ROM can already hold some leftover cards (or other cards on their numbers): keep what it has.
+    present, warn_left = [], []
+    rom_names = {name.lower(): i for i, name in enumerate(t['text']) if name}
+    leftover = []
+    for no, name, opts in ([] if a.no_leftovers else LEFTOVER):
+        cid = t['n2id'][no] if no < 2048 and t['n2id'][no] else (t['id2n'].index(no) if no in t['id2n'] else None)
+        if cid is not None:
+            if t['text'][cid].lower() == name.lower():
+                present.append(f'{no} {name} (ID {cid})')
+            else:
+                warn_left.append(f"card number {no} is {t['text'][cid]!r} (ID {cid}) in this ROM, so that card gets the "
+                                 f'effect coded for {name}; {name} is not added')
+        elif name.lower() in rom_names:
+            i = rom_names[name.lower()]
+            warn_left.append(f"{name} is already ID {i} with card number {t['id2n'][i]}, not {no}: it does not get the "
+                             f'effect coded for {no}, which stays unused; not added again')
+        else:
+            leftover.append((no, name, opts))
     leftover_numbers = {no for no, _, _ in leftover}
-    clash = sorted(no for no in leftover_numbers if no in t['id2n'] or t['n2id'][no])
-    if clash:
-        die(f'leftover card numbers {clash[:10]} are already used in this ROM (--no-leftovers to skip them)')
     entries = [(f'leftover {no}', name, name, dict(opts, number=str(no))) for no, name, opts in leftover]
-    leftover_names = {name.lower(): no for no, name, _ in leftover}
+    leftover_names = {name.lower(): no for no, name, _ in LEFTOVER}
     skipped = []
     for no, name, shown, opts in (wt.read_list(a.list) if a.list else []):
         if name.lower() in leftover_names:
@@ -354,16 +488,16 @@ def main():
         if 'number' in opts and int(opts['number']) in leftover_numbers:
             die(f'{a.list}:{no}: card number {opts["number"]} belongs to a leftover card')
         entries.append((f'{a.list}:{no}', name, shown, opts))
-    rows = add_cards(t, entries, a, A, leftover_numbers) if entries else []
+    rows, dupes = add_cards(t, entries, a, A, leftover_numbers) if entries else ([], [])
 
     real = len(t['names'])
     last = a.last
     if last is None:
-        last = next(v for v in range(max(real - 1, 820), 2048) if wt.encodable(v))
+        last = next(v for v in range(max(real - 1, src_last), 2048) if wt.encodable(v))
     if not wt.encodable(last):
         die(f'LAST_ID {last} cannot be encoded (must be imm8 << n)')
-    if not 820 <= last <= 2047:
-        die('LAST_ID must be 820..2047')
+    if not src_last <= last <= 2047:
+        die(f'LAST_ID must be {src_last}..2047')
     if last < real - 1:
         die(f'LAST_ID {last} is too small for {real - 1} cards')
     n = last + 1
@@ -378,34 +512,64 @@ def main():
     data = {opt: b''.join(t[TABLES[opt][0]]) for opt in ('names', 'descs', 'stats', 'passwords', 'art', 'palettes')}
     data['id2n'] = struct.pack(f'<{n + 1}H', *t['id2n'], 0)      # [LAST_ID + 1] = 0: IsCardCollectionComplete's gate
     data['n2id'] = struct.pack('<2048H', *t['n2id'])
-    dst = {opt: getattr(a, opt) for opt in TABLES}
-    for opt in ('names', 'descs', 'id2n', 'n2id'):
-        dst[opt] = dst[opt] or src[opt]
-    dst['stats'] = dst['stats'] or src['palettes']
-    dst['passwords'] = dst['passwords'] or dst['stats'] + len(data['stats'])
-    dst['art'] = dst['art'] or blank_end(rom)
-    dst['palettes'] = dst['palettes'] or dst['art'] + len(data['art'])
+    # modified copies of a table: the new table with the copy's own entries kept (left at their old place too)
+    copies = find_copies(rom, src, n_src)
+    copy_key = {}
+    for base, (opt, diff) in sorted(copies.items()):
+        size, b = TABLES[opt][1], bytearray(data[opt])
+        for i, v in diff.items():
+            b[i * size:(i + 1) * size] = v
+        key = f'{opt} copy 0x{base:08X}'
+        copy_key[base] = key
+        data[key] = bytes(b)
+    # the old tables are free (everything in them is rewritten or moved); anything else must be blank
+    free = [(src[o], src[o] + (4096 if o == 'n2id' else n_src * TABLES[o][1] + (2 if o == 'id2n' else 0)))
+            for o in TABLES]
+    # Destinations: the ones given; then each table's usual spot if it fits there (in place; stats in the old
+    # palettes, passwords after the stats; palettes after a given art); the rest, and the art, one after another
+    # after the end of the used ROM.
+    placed = {o: (getattr(a, o), getattr(a, o) + len(data[o])) for o in TABLES if getattr(a, o)}
+
+    def fits(o, start):
+        end = start + len(data[o])
+        return (end <= ROM + 0x2000000 and not any(s < end and start < e for s, e in placed.values())
+                and not in_use(rom, start, end, free))
+
+    moved = []
+    for o in ('n2id', 'id2n', 'names', 'descs', 'stats', 'passwords', 'palettes'):
+        if o in placed:
+            continue
+        want = {'stats': src['palettes'], 'passwords': placed.get('stats', (0, None))[1],
+                'palettes': placed.get('art', (0, None))[1]}.get(o, src[o])
+        if want is not None and fits(o, want):
+            placed[o] = (want, want + len(data[o]))
+        elif o != 'palettes':
+            moved.append(o)
+    cursor = max([blank_end(rom)] + [e for s, e in placed.values() if e > ART_MIN])
+    for o in moved + list(copy_key.values()) + [o for o in ('art', 'palettes') if o not in placed]:
+        cursor = (cursor + 3) & ~3
+        placed[o] = (cursor, cursor + len(data[o]))
+        cursor += len(data[o])
+    dst = {o: placed[o][0] for o in TABLES}
+    copy_dst = {base: placed[key][0] for base, key in copy_key.items()}
     for opt, v in dst.items():
         if v % 4 and opt not in ('id2n', 'n2id') or v % 2:
             die(f'--{opt} 0x{v:08X} is not aligned')
 
-    regions = sorted((dst[o], dst[o] + len(data[o]), o) for o in TABLES)
+    regions = sorted((s, e, o) for o, (s, e) in placed.items())
     for (s1, e1, k1), (s2, e2, k2) in zip(regions, regions[1:]):
         if e1 > s2:
             die(f'{k1} (0x{s1:08X}-0x{e1:08X}) overlaps {k2} (from 0x{s2:08X}); move one with --{k1} or --{k2}')
     rom_end = max(e for _, e, _ in regions)
     if rom_end > ROM + 0x2000000:
         die(f'the tables end at 0x{rom_end:08X}, past the 32 MiB limit')
-    # the old tables are free (everything in them is rewritten or moved); anything else must be blank
-    free = [(src[o], src[o] + (4096 if o == 'n2id' else ORIGINAL_CARDS * TABLES[o][1] + (2 if o == 'id2n' else 0)))
-            for o in TABLES]
     used = [(o, s, e) for s0, e0, o in regions for s, e in in_use(rom, s0, e0, free)]
     if used and not a.force:
         die('the new tables would overwrite data that is not blank:\n  '
             + '\n  '.join(f'{o}: 0x{s:08X}-0x{e:08X}' for o, s, e in used[:10])
             + '\nMove the table with --TABLE, or pass --force')
 
-    patches, odd = ([], []) if a.no_code else code_patches(rom, last, scratch, src, dst, a.force)
+    patches, odd = ([], []) if a.no_code else code_patches(rom, last, src_last, scratch, src, dst, a.force, copy_dst)
     size = 0x800000
     while size < max(len(rom), rom_end - ROM):
         size *= 2
@@ -426,24 +590,38 @@ def main():
         w.writerows(rows)
     n_left = sum(r[2] == 'leftover' for r in rows)
     code = 'left alone (--no-code)' if a.no_code else f'{len(patches)} sites patched'
-    print(f'{a.out}: {size >> 20} MiB from the {kind}; card IDs 0..{last}: 820 original + {n_left} leftover + '
+    print(f'{a.out}: {size >> 20} MiB from the {kind}; card IDs 0..{last}: {src_last} existing + {n_left} leftover + '
           f'{len(rows) - n_left} from {a.list or "no list"}' + (f' + {pad} placeholders' if pad else '')
           + f'; code: {code}' + (f' (non-monster buffer moved: {others} non-monsters)' if scratch else ''))
     print('  table      source       destination')
     for opt in TABLES:
-        print(f'  {opt:10} 0x{src[opt]:08X}   0x{dst[opt]:08X}-0x{dst[opt] + len(data[opt]):08X}')
-    print('original cards 0..820: copied byte for byte from the source tables; every added card is listed in', csv_path)
+        how = ' (did not fit at its usual spot: moved)' if opt in moved else ''
+        print(f'  {opt:10} 0x{src[opt]:08X}   0x{dst[opt]:08X}-0x{dst[opt] + len(data[opt]):08X}{how}')
+    for base, (opt, diff) in sorted(copies.items()):
+        d = copy_dst[base]
+        print(f'  {opt:10} 0x{base:08X}   0x{d:08X}-0x{d + len(data[copy_key[base]]):08X} (a modified copy some code uses: '
+              f'rebuilt from the new table, keeping its own entries for IDs {sorted(diff)})')
+    print(f'existing cards 0..{src_last}: copied byte for byte from the source tables; every added card is listed in', csv_path)
+    if count_notes:
+        print(f'note: the card count is {src_last} (Deck Edit); these count sites disagreed and now hold {last} too: '
+              + '; '.join(count_notes))
     for msg in odd:
         print('warning: left alone (--force):', msg)
     if used:
         print('warning: overwritten (--force): ' + ', '.join(f'{o} 0x{s:08X}-0x{e:08X}' for o, s, e in used))
+    if present:
+        print(f'already in this ROM at their own numbers ({len(present)}): ' + ', '.join(present))
+    for msg in warn_left:
+        print('warning:', msg)
+    for msg in dupes:
+        print('skipped, already in this ROM:', msg)
     for s in skipped:
         print('skipped from the list, already a leftover card:', s)
     expected = ('is used by game code', 'is hidden from Card Trading', 'is in the Ticket/God range')
     hidden = 0
     for msg in wt.check_numbers(t['id2n'], t['n2id'], real, t['pw']):
         cid = int(msg.split()[1].rstrip(':')) if msg.startswith('ID ') else None
-        if cid is not None and t['id2n'][cid] in leftover_numbers and any(e in msg for e in expected):
+        if cid is not None and t['id2n'][cid] in ALL_LEFTOVER_NUMBERS and any(e in msg for e in expected):
             hidden += 'Card Trading' in msg
             continue                                     # the reason these cards have their numbers
         print('warning:', msg)

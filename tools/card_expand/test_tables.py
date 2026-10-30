@@ -106,13 +106,14 @@ def main():
     orig, new = open(a.orig, 'rb').read(), open(a.new, 'rb').read()
     # where the new ROM keeps its passwords: FindCardByPassword's literal
     pw_new = struct.unpack_from('<I', new, 0x07C35C)[0]
+    pw_orig = struct.unpack_from('<I', orig, 0x07C35C)[0]   # an edited ROM can have its passwords elsewhere
     last = a.last or None
     if last is None:   # the pack generator's range literal holds LAST_ID + 1
         last = struct.unpack_from('<I', new, 0x062BC0)[0] - 1
     go, gn = Gba(orig), Gba(new)
     ids = range(1, 821)
     print('comparing the table readers for IDs 1..820 ...')
-    ro, rn = readers(go, orig, ids, 0x08623120), readers(gn, new, ids, pw_new)
+    ro, rn = readers(go, orig, ids, pw_orig), readers(gn, new, ids, pw_new)
     names = ['LoadCardPicture', 'UnpackCardArt8bpp', 'Is*Monster flags', 'FindCardByPassword']
     bad = 0
     for k, name in enumerate(names):
@@ -128,16 +129,23 @@ def main():
     ln = lists(Gba(new), last)
     extra = set(range(821, last + 1))
     kept = [[x for x in l if x not in extra] for l in ln]
-    # list building keeps ID order; the ATK sort (QuickSortS16) is unstable, so extra cards may reorder ties
-    same = kept[:3] == lo[:3] and sorted(kept[3]) == sorted(lo[3])
+    # list building keeps ID order; the ATK sort (QuickSortS16) is unstable, so extra cards may reorder ties.
+    # An edited input ROM with more than 821 cards and the original 821-slot Deck Edit list overflows that list in
+    # the Prohibition picker (which lists every card, owned or not), so mode 2 cannot be compared there.
+    h1, h2 = struct.unpack_from('<HH', orig, 0x068916)                   # Deck Edit's loop bound: the last card ID
+    orig_last = (h1 & 0xFF) << (h2 >> 6 & 31)
+    modes = [0, 1] if orig_last > 820 else [0, 1, 2]
+    same = all(kept[m] == lo[m] for m in modes) and sorted(kept[3]) == sorted(lo[3])
     bad += not same
-    print('  %-20s %s' % ('Deck Edit lists', 'identical for the original cards' if same else 'DIFFER'))
+    print('  %-20s %s' % ('Deck Edit lists', ('identical for the original cards' if same else 'DIFFER')
+                          + ('' if len(modes) == 3 else f' (Prohibition picker skipped: the input has {orig_last + 1} '
+                                                        'cards in an 821-slot list)')))
     print('  new IDs listed (Deck Edit / Trading / Prohibition):',
           [len([x for x in l if x in extra]) for l in ln[:3]], 'of', len(extra))
 
     for spec in a.clone:
         nid, oid = (int(x, 0) for x in spec.split('='))
-        r_old, r_new = readers(go, orig, [oid], 0x08623120)[oid], readers(gn, new, [nid], pw_new)[nid]
+        r_old, r_new = readers(go, orig, [oid], pw_orig)[oid], readers(gn, new, [nid], pw_new)[nid]
         # palette bit 15 is ignored by the hardware and kept per ID in art/palette_bit15.json: mask it
         unmask = lambda pic: pic[:0x18000] + bytes(b & 0x7F if k % 2 else b for k, b in enumerate(pic[0x18000:]))
         checks = [('art', unmask(r_old[0]) == unmask(r_new[0]) and r_old[1] == r_new[1]), ('flags', r_old[2] == r_new[2]),

@@ -938,3 +938,14 @@ updated: 2026-09-29
   data in the name bank (refused; `--force` overwrites). `test_tables.py` and `test_leftovers.py` pass on the
   outputs.
 - Pages: [[card-expand]].
+
+## [2026-10-30] setup | expand_rom.py on a hack that already changed the cards (EDS_Kertra)
+- The card count is read from the ROM (Kertra: 860; its pack-range and debug constants still said 820, now
+  rewritten). Tables that cannot grow in place move into free space automatically. Pointers to another entry of a
+  table, and to modified copies of a table (Kertra's Brain Control tables), are handled. Leftover and listed cards
+  the ROM already has are kept or skipped. The end pointer is no longer patched twice.
+- Kertra notes: its passwords are at 0x08623080; 1221 (Card Destruction's code) holds Brain Control, 1323 (Gravity
+  Bind's code) holds Infinite Dismissal; its unmoved 821-slot Deck Edit list overflows in the Prohibition picker
+  (fixed by the expansion); several number<->ID inconsistencies predate the expansion.
+- Checked: original ROM output still byte-identical; Kertra output passes `test_tables.py` and `test_leftovers.py`.
+- Pages: [[card-expand]].
