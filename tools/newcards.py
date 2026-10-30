@@ -59,6 +59,9 @@ NUMBER_BANDS = [(1, 1210), (1600, 1900)]
 # Token (1920) they have no password, and the token number range keeps them out of the trunk and the card lists.
 # YGOPRODeck leaves a token's stats to the card that summons it, so they are given here, with the text.
 TOKEN_NUMBERS = {
+    'Ojama Token': {**dict(number=1921, race='Beast', attribute='LIGHT', level=2, atk=0,  # TOKEN_KIND_1
+                            desc='A token summoned by Ojama Trio.'),
+                    'def': 1000},
     'Sheep Token': dict(number=1922,    # TOKEN_KIND_2: Scapegoat (EffectSummonFourTokensResolve)
                         race='Beast', attribute='EARTH', level=1, atk=0, desc='A token summoned by Scapegoat.'),
 }

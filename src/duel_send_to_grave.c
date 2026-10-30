@@ -148,6 +148,7 @@ void UpdateMonsterControl(int player, int zone, u16 removedLink)
  *  - DestroyLinkedCards.
  */
 void SandMothDestroyed(int player, u16 id);     /* mod: src/added_effects.c */
+void OjamaTokenDestroyed(int player);           /* mod: src/added_effects.c */
 void BlastWithChainEquipDestroyed(int player, int zone);
 
 void SendFieldCardToGrave(int player, int zone, u16 destroyed, u16 runTriggers)
@@ -205,6 +206,11 @@ void SendFieldCardToGrave(int player, int zone, u16 destroyed, u16 runTriggers)
     /* added: a destroyed face-down Defense Position Sand Moth comes back (src/added_effects.c) */
     if (destroyed && zone <= ZONE_MONSTER_4 && !z->isFaceUp && z->isDefense && CARD_NUMBER(id) == CARD_SAND_MOTH)
         SandMothDestroyed(ZONE_CARD(z)->owner, id);     /* its owner's Graveyard, as Sangan's trigger */
+#endif
+#ifdef HAS_CARD_OJAMA_TOKEN
+    /* added: Ojama Token's 300 damage to its controller (src/added_effects.c) */
+    if (destroyed && zone <= ZONE_MONSTER_4 && CARD_NUMBER(id) == CARD_OJAMA_TOKEN)
+        OjamaTokenDestroyed(player);
 #endif
     switch (CARD_TYPE(id)) {
     case CARD_TYPE_MAGIC:

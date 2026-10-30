@@ -2078,6 +2078,18 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
   `CARD_SCAPEGOAT`, so it does not play Scapegoat on purpose.
 - Checked in the source and the build; not tested in an emulator.
 
+### Ojama Trio and the Ojama Token (2026-10-30)
+- Normal Trap: "Special Summon 3 'Ojama Tokens' (Beast-Type/LIGHT/Level 2/ATK 0/DEF 1000) in Defense Position on
+  your opponent's side of the field." `EffectOjamaTrioPrepare`: Set on the field and the opponent has three free
+  monster zones. `EffectOjamaTrioResolve`: three `DUEL_CMD_SUMMON_TOKEN` on the opponent with `TOKEN_KIND_1` (card
+  number 1921). The row is guarded on `HAS_CARD_OJAMA_TRIO` and `HAS_CARD_OJAMA_TOKEN`.
+- **The token card.** `Ojama Token` is appended last in `config/new_cards.txt`; `TOKEN_NUMBERS` gives it number 1921
+  (Beast/LIGHT/Level 2/0/1000). When it is destroyed, `OjamaTokenDestroyed` (`SendFieldCardToGrave` in
+  `duel_send_to_grave.c`) inflicts 300 damage to its controller (`LoseLifePoints`); banish-without-destroy paths do
+  not call it.
+- The CPU activates it when the human has three empty monster zones (`AiShouldActivateAddedCard`).
+- Checked in the source and the build; not tested in an emulator.
+
 ### Book of Moon (2026-10-25)
 - Quick-Play Spell: "Target 1 face-up monster on the field; change that target to face-down Defense Position." It
   targets like Chaos Sorcerer (`EffectTargetableFaceUpMonsterCheck` / `ChainB`). `EffectBookOfMoonResolve` first

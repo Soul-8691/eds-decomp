@@ -4832,6 +4832,52 @@ int EffectThreateningRoarResolve(struct ChainEntry *link, struct ChainEntry *cha
 }
 #endif /* HAS_CARD_THREATENING_ROAR */
 
+#ifdef HAS_CARD_OJAMA_TOKEN
+/* ---- Ojama Token --------------------------------------------------------------------------------------------------
+ * "When this Token is destroyed, inflict 300 points of damage to its controller." SendFieldCardToGrave
+ * (duel_send_to_grave.c) calls this when the token is destroyed (battle or effect); banish instead of destroy
+ * (Banisher of the Light, and the like) does not run it. */
+#define OJAMA_TOKEN_DAMAGE 300
+
+void OjamaTokenDestroyed(int player)
+{
+    LoseLifePoints(player & 1, OJAMA_TOKEN_DAMAGE);
+}
+#endif /* HAS_CARD_OJAMA_TOKEN */
+
+#if defined(HAS_CARD_OJAMA_TRIO) && defined(HAS_CARD_OJAMA_TOKEN)
+/* ---- Ojama Trio ---------------------------------------------------------------------------------------------------
+ * Normal Trap: "Special Summon 3 'Ojama Tokens' (Beast-Type/LIGHT/Level 2/ATK 0/DEF 1000) in Defense Position on
+ * your opponent's side of the field." The tokens are TOKEN_KIND_1 (card number 1921, tools/newcards.py
+ * TOKEN_NUMBERS). */
+#define OJAMA_TRIO_CMD(player, cmd) ((player) ? DUEL_CMD_PLAYER | (cmd) : (cmd))
+
+int EffectOjamaTrioPrepare(struct ChainEntry *card, struct ChainEntry *chainLink, u16 fromHand)
+{
+    int opponent = (1 - card->player) & 1;
+
+    return !fromHand && CountFreeMonsterZones(opponent) > 2;
+}
+
+int EffectOjamaTrioResolve(struct ChainEntry *link, struct ChainEntry *chainedTo)
+{
+    if (!link->negated) {
+        int opponent = (1 - link->player) & 1;
+        int zone;
+        int summoned;
+
+        for (zone = ZONE_MONSTER_0, summoned = 0; zone <= ZONE_MONSTER_4 && summoned < 3; zone++) {
+            if (IsMonsterZoneFree(opponent, zone)) {
+                DuelCmd_Push(OJAMA_TRIO_CMD(opponent, DUEL_CMD_SUMMON_TOKEN), (u8)zone | link->zone << 8,
+                             TOKEN_KIND_1, 0);
+                summoned++;
+            }
+        }
+    }
+    return EFFECT_STEP_DONE;
+}
+#endif /* HAS_CARD_OJAMA_TRIO && HAS_CARD_OJAMA_TOKEN */
+
 #ifdef HAS_CARD_THESTALOS_THE_FIRESTORM_MONARCH
 /* ---- Thestalos the Firestorm Monarch ------------------------------------------------------------------------------
  * "If this card is Tribute Summoned: Discard 1 random card from your opponent's hand, then, if it was a Monster Card,
@@ -7984,6 +8030,10 @@ int AiShouldActivateAddedCard(struct ChainEntry *entry)
     case CARD_SCAPEGOAT:                        /* against an attack, or with nothing to defend */
         return entry->event == RESPONSE_ATTACK_DECLARED || CountMonsters(AI_PLAYER) == 0;
 #endif
+#ifdef HAS_CARD_OJAMA_TRIO
+    case CARD_OJAMA_TRIO:                       /* the human needs three empty monster zones */
+        return CountFreeMonsterZones(AI_HUMAN) > 2;
+#endif
 #ifdef HAS_CARD_COMPULSORY_EVACUATION_DEVICE
     case CARD_COMPULSORY_EVACUATION_DEVICE:     /* against an attack or a summon (the target step takes the strongest) */
         return CountMonsters(AI_HUMAN) > 0
@@ -8078,6 +8128,16 @@ const struct CardEffect gAddedCardEffects[] = {
         EffectThreateningRoarResolve,
         NULL,
         EffectThreateningRoarPrepare,
+        NULL,
+        NULL,
+    },
+#endif
+#if defined(HAS_CARD_OJAMA_TRIO) && defined(HAS_CARD_OJAMA_TOKEN)
+    {
+        CARD_OJAMA_TRIO, 0,
+        EffectOjamaTrioResolve,
+        NULL,
+        EffectOjamaTrioPrepare,
         NULL,
         NULL,
     },

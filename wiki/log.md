@@ -1983,3 +1983,9 @@ updated: 2026-09-29
 
 ## [2026-10-30] progress | Goat opponent decks and recipes
 - src/mod_decks.c: sGoatChaosControl, sGoatPandaBurn, sGoatChaosReturn, sGoatReasoningGateTurbo (Main + Fusion + Side, generated from the .ydk files and checked against them); GoatDeck (Chaos Turbo 40, Warrior 20, Goat Control 15, Chaos Control 10, the other three 5) for DUELIST_ISHIZU; recipe presets 34-37 after the three Goat-era ones. All legal under April 2005, no missing cards; the recipe of N♡va-Chaos Control is "Nova-Chaos Control". DECKS.md lists the uncoded cards. [[deck-recipes]], [[yugi-kaiba-opponent]]. Release .text 0x807D0. Built (make and make release); not tested in an emulator.
+
+## [2026-10-30] progress | Ojama Trio and the Ojama Token
+- src/added_effects.c: `EffectOjamaTrioPrepare` / `EffectOjamaTrioResolve`, `gAddedCardEffects` row for `CARD_OJAMA_TRIO`; `AiShouldActivateAddedCard`. config/new_cards.txt: `Ojama Token`; tools/newcards.py `TOKEN_NUMBERS` (1921, `TOKEN_KIND_1`). missing.txt, missing-main.txt. [[added-cards]]. Built (`make`); not tested in an emulator.
+
+## [2026-10-30] progress | Ojama Token destroy damage
+- src/added_effects.c: `OjamaTokenDestroyed`; src/duel_send_to_grave.c calls it from `SendFieldCardToGrave`. [[added-cards]]. Built (`make`); not tested in an emulator.
