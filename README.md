@@ -39,6 +39,7 @@
 <p align="center">
   <img src="eds-25.png" width="24%" alt="Screenshot 25">
   <img src="eds-26.png" width="24%" alt="Screenshot 26">
+  <img src="eds-36.png" width="24%" alt="Screenshot 27">
 </p>
 
 A hack of *Yu-Gi-Oh! The Eternal Duelist Soul* (GBA) that follows the
