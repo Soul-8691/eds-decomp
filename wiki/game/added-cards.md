@@ -2002,6 +2002,17 @@ monsters).
 - **Resolve target list:** `EffectBanishOpponentGraveMonstersResolve` asks `CollectEffectTargets` with
   `CARD_NUMBER(link->card)` so the added card and key 1511 share one implementation.
 - Checked in the source; not tested in an emulator.
+- **Bug fixed (2026-10-30, reported by the user).** Key 1511's resolve has no CPU branch, so when the CPU's Kycoo dealt
+  battle damage, its Yes/No questions and the Graveyard list came up on the human's screen, and the human picked their
+  own monsters to banish. Kycoo's row now has its own resolve, `EffectKycooTheGhostDestroyerResolve`. The CPU's
+  banishes, without asking, the two monsters in the human's Graveyard with the highest ATK (or the only one), through
+  the same `DUEL_CMD_BANISH_GRAVEYARD_CARD` command.
+- **Second bug fixed (same day, reported by the user):** the human could banish more than 2. Key 1511's resolve
+  returns step 0x80 (`EFFECT_STEP_START`) after each pick (checked in
+  `asm/nonmatching/effect_resolve11/EffectBanishOpponentGraveMonstersResolve.s`), and that case sets the picks left
+  (`gChain.effectSubStep`) back to 2, so it never runs out. Kycoo's resolve now has the human's steps too, with the
+  same questions, list and text box: a pick counts down and goes back to `EFFECT_STEP_2` (the "another?" question),
+  so it stops after 2. Key 1511 itself (no EDS card) is unchanged.
 
 ### Torrential Tribute (2026-10-25)
 A Normal Trap for the response window a summon opens: Normal, Flip or Special Summon by either player (not a Set),

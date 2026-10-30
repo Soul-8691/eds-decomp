@@ -150,6 +150,8 @@ next one.
       DEF.
     - It uses Chaos Emperor Dragon's effect when the damage would win, or when you have at least 3 more cards in
       hand and on the field than it does.
+    - Its Kycoo the Ghost Destroyer banishes the two strongest monsters in your Graveyard by itself (before the fix,
+      you were asked to pick them).
     - It Special Summons Gilasaurus when your best monster to revive has less than 1500 ATK (or you have none), or
       as a Tribute for a Level 5-6 monster it couldn't summon otherwise. When you Special Summon Gilasaurus, it
       always revives a monster if it can.

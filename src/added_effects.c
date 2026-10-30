@@ -4239,6 +4239,76 @@ int EffectKycooTheGhostDestroyerPrepare(struct ChainEntry *card, struct ChainEnt
         return 0;
     }
 }
+
+/* The resolve. Key 1511's (EffectBanishOpponentGraveMonstersResolve, effect_resolve11.c) has two bugs, so Kycoo no
+ * longer uses it:
+ *   - no CPU branch: it asked its Yes/No questions and opened the Graveyard list on the human's screen for the CPU's
+ *     Kycoo too, so the human picked their own monsters to lose;
+ *   - no limit: after each pick it returns EFFECT_STEP_START (0x80 in the ROM), whose case sets the picks left back
+ *     to 2, so the human could banish their opponent's whole Graveyard.
+ * The human: the same questions and list, up to KYCOO_MAX_BANISH picks (gChain.effectSubStep counts them down; a pick
+ * goes back to EFFECT_STEP_2, the question). The CPU banishes, without asking, the two monsters of the human's
+ * Graveyard with the highest ATK (the strongest revival targets), or the one there is. */
+#define KYCOO_MAX_BANISH 2
+
+int EffectKycooTheGhostDestroyerResolve(struct ChainEntry *link, struct ChainEntry *chainedTo)
+{
+    u8 taken[KYCOO_MAX_BANISH];
+    int n, i, k, best;
+    u16 *picked;
+
+    if (link->negated)
+        return EFFECT_STEP_DONE;
+    if (link->player == 0) {
+        switch (gChain.effectStep) {
+        case EFFECT_STEP_START:
+            gChain.effectSubStep = KYCOO_MAX_BANISH;
+            /* fall through */
+        case EFFECT_STEP_2:
+            if (gChain.effectSubStep == 0
+                || CollectEffectTargetsInt(link->player, CARD_KYCOO_THE_GHOST_DESTROYER, 0) == 0)
+                return EFFECT_STEP_DONE;
+            TextBoxOpen(TEXTBOX_POS(6, 2), TEXTBOX_SIZE(18, 7), TEXTBOX_FLAGS_DEFAULT,
+                        (const u8 *)(gChain.effectSubStep == KYCOO_MAX_BANISH
+                                         ? gStrBanishOpponentGraveMonsterQuestion
+                                         : gStrBanishAnotherOpponentGraveMonsterQuestion));
+            TextBoxSetMenu(TEXTBOX_MENU_YES_NO, NULL, NULL);
+            return EFFECT_STEP_3;
+        case EFFECT_STEP_3:
+            if (gTextBox.result == 0)
+                return EFFECT_STEP_DONE;
+            TextBoxOpen(TEXTBOX_POS(6, 2), TEXTBOX_SIZE(18, 7), TEXTBOX_FLAGS_DEFAULT,
+                        (const u8 *)gStrSelectOpponentGraveMonsterToBanish);
+            return EFFECT_STEP_4;
+        case EFFECT_STEP_4:
+            CardListView_Open(link->player, -1, CARD_KYCOO_THE_GHOST_DESTROYER, 0);
+            return EFFECT_STEP_5;
+        case EFFECT_STEP_5:
+            picked = (u16 *)&gCardListView.cards[gCardListView.top + gCardListView.cursorRow];
+            DuelCmd_Push(DUEL_CMD_PLAYER | DUEL_CMD_BANISH_GRAVEYARD_CARD, picked[0], picked[1], 0);
+            gChain.effectSubStep--;
+            return EFFECT_STEP_2;
+        }
+        return EFFECT_STEP_DONE;
+    }
+    n = CollectEffectTargetsInt(link->player, CARD_KYCOO_THE_GHOST_DESTROYER, 0);
+    for (k = 0; k < KYCOO_MAX_BANISH && k < n; k++) {
+        best = -1;
+        for (i = 0; i < gCardListView.count; i++) {
+            if ((k > 0 && taken[0] == i)
+                || (best >= 0 && CARD_STATS_ATK(gCardStats[gCardListView.cards[i] & CARD_ID_MASK])
+                                     <= CARD_STATS_ATK(gCardStats[gCardListView.cards[best] & CARD_ID_MASK])))
+                continue;
+            best = i;
+        }
+        if (best < 0)
+            break;
+        taken[k] = best;
+        DuelCmd_Push(DUEL_CMD_BANISH_GRAVEYARD_CARD, ((u16 *)&gCardListView.cards[best])[0],
+                     ((u16 *)&gCardListView.cards[best])[1], 0);
+    }
+    return EFFECT_STEP_DONE;
+}
 #endif /* HAS_CARD_KYCOO_THE_GHOST_DESTROYER */
 
 /* ---- Blade Knight --------------------------------------------------------------------------------------------
@@ -7522,7 +7592,7 @@ const struct CardEffect gAddedCardEffects[] = {
 #ifdef HAS_CARD_KYCOO_THE_GHOST_DESTROYER
     {
         CARD_KYCOO_THE_GHOST_DESTROYER, 0,
-        (int (*)(struct ChainEntry *, struct ChainEntry *))EffectBanishOpponentGraveMonstersResolve,
+        EffectKycooTheGhostDestroyerResolve,
         NULL,
         EffectKycooTheGhostDestroyerPrepare,
         NULL,

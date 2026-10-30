@@ -1905,3 +1905,9 @@ updated: 2026-09-29
 
 ## [2026-10-30] progress | Chaos Emperor Dragon - Envoy of the End coded (first edition)
 - src/added_effects.c: EffectChaosEmperorDragon* and its row (pay 1000, both fields then both hands to the Graveyard, 300 damage per card sent from either player), AiWantsChaosEmperorDragon, AiLightDarkBanishSummon and AiSelfLpLoss cases. Summon cases next to Chaos Sorcerer's in card_detail.c, summon_checks.c, effect_hooks.c, effect_target_collect.c; ACTIVATE in card_command_menu.c. README CPU list, DECKS.md. [[added-cards]]. Release .text 0x805A4. Built (make and make release); not tested in an emulator.
+
+## [2026-10-30] progress | Kycoo: the CPU's banish no longer prompts the human
+- src/added_effects.c: EffectKycooTheGhostDestroyerResolve (row of Kycoo): the CPU banishes the human's two highest-ATK Graveyard monsters itself; the human's Kycoo keeps key 1511's EffectBanishOpponentGraveMonstersResolve, which had no CPU branch. README CPU list. [[added-cards]]. Release .text 0x805A4. Built (make and make release); not tested in an emulator.
+
+## [2026-10-30] progress | Kycoo: at most 2 banished for the human too
+- src/added_effects.c EffectKycooTheGhostDestroyerResolve: the human's steps written out (key 1511's resolve returned EFFECT_STEP_START after each pick, resetting the count of 2: unlimited picks, verified in its assembly); a pick now returns to EFFECT_STEP_2. [[added-cards]]. Release .text 0x805A4. Built (make and make release); not tested in an emulator.
