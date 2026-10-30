@@ -1213,6 +1213,40 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
 - Release `.text` after it ends at 0x080809E8, 0x38 bytes below `.rodata` at 0x08080A20.
 - Checked in the source and the build; not tested in an emulator.
 
+### Enemy Controller (2026-10-30)
+- Quick-Play Spell. ID 897. The fetched text: "Activate 1 of these effects. ● Target 1 face-up monster your opponent
+  controls; change that target's battle position. ● Tribute 1 monster, then target 1 face-up monster your opponent
+  controls; take control of that target until the End Phase."
+- **Prepare.** The opponent has a face-up monster it may target (`CanCardTargetZone`).
+- **ChainA: the choice**, kept in the link's unused `unk12` (1 position, 2 control, 3 control with the Tribute paid).
+  The human gets a two-line menu (`TEXTBOX_MENU_TWO_CHOICE`, laid out like the coin toss's), offered only when they
+  have a monster to Tribute; otherwise it is the position change. The CPU takes control when it can Tribute.
+  - **Fixed the same day (reported by the user: the menu did not show, the position just changed).** `Chain_Build`
+    (duel_setup.c) calls a cost handler once per frame without waiting for a text box (the original costs keep their
+    prompt open during a cursor pick, e.g. key 1232's), so the step after `TextBoxOpen` read `gTextBox.result` (0, the
+    first line) at once. The handler now returns 0 while `gTextBox.active` is set, and reads the choice once the menu
+    has closed.
+- **ChainB.** For control, first the Tribute: Catapult Turtle's `EffectTributeTargetChainB` pick (a monster that cannot
+  be Tributed is refused with the error sound), Tributed at once as Metamorphosis does; the CPU Tributes its weakest.
+  Then the target, a face-up monster of the opponent's: the human's cursor (`PICK_PLAYER1(PICK_FACE_UP_MONSTER_ANY)`),
+  the CPU's highest ATK one for control, its first one for the position.
+- **Resolve.** The target must still be face up there. Position: `ChangeBattlePosition`. Control: Change of Heart's
+  resolve (`EffectChangeOfHeartResolve`) moves it to a free zone and links it (`ZONE_LINK_CARD_EFFECT` from Enemy
+  Controller); `DuelCmd_TurnEnd` (duel_cmd_turn.c) gives it back with `ReturnControlAtTurnEnd(..., CARD_ENEMY_CONTROLLER)`.
+  Unlike with Mind Control, the monster may attack and be Tributed.
+  - **Fixed the same day (reported by the user).** The CPU's Trap Hole on the human's summon, answered with Enemy
+    Controller Tributing that summoned monster, destroyed the taken monster: the engine names a card by its zone,
+    Trap Hole's link kept the summoned monster's zone (`loc0`), the Tribute freed it, and Change of Heart's resolve
+    puts the taken monster in the first free zone, that one. Enemy Controller now does the move and link itself into
+    the first free zone that no other link of the chain names (`IsZoneNamedByChain`: `loc0`, `loc1`, targets), so
+    Trap Hole finds its zone empty and does nothing, as the rules have it. With no other free zone left it still
+    takes the named one.
+- **CPU** (`AiWantsEnemyController`, `AiWantsSpell`): it plays the card in Main Phase 1 to take the human's strongest
+  face-up monster when that has 500 (`AI_EC_GAIN`) or more ATK than its weakest monster it may Tribute. It does not
+  use the position effect on its own, nor the card as a response.
+- Release `.text` 0x08080690.
+- Checked in the source and the build; not tested in an emulator.
+
 ### Asura Priest (2026-10-30)
 - Spirit monster (Level 4, LIGHT Fairy, 1700/1200). ID 847. The fetched text: "Cannot be Special Summoned. During the
   End Phase of the turn this card is Normal Summoned or flipped face-up: Return it to the hand. This card can attack

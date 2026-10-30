@@ -6899,10 +6899,248 @@ static int AiWantsMonsterEffect(u16 number, int zone)
     return 1;
 }
 
+#ifdef HAS_CARD_ENEMY_CONTROLLER
+/* ---- Enemy Controller ----------------------------------------------------------------------------------------------
+ * Quick-Play Spell: "Activate 1 of these effects.
+ *   - Target 1 face-up monster your opponent controls; change that target's battle position.
+ *   - Tribute 1 monster, then target 1 face-up monster your opponent controls; take control of that target until the
+ *     End Phase."
+ *   prepare  the opponent has a face-up monster the card may target
+ *   chainA   the choice (kept in the link's unused unk12): the human picks from a two-line menu, offered only with a
+ *            monster to Tribute; the CPU takes control when it can, else changes the position
+ *   chainB   control: first the Tribute (the cost), Catapult Turtle's EffectTributeTargetChainB pick, a monster that
+ *            cannot be Tributed refused, Tributed at once (as Metamorphosis does); the CPU Tributes its weakest. Then
+ *            the target: a face-up monster of the opponent's (the human's cursor; the CPU, for control the highest ATK,
+ *            for the position its first one)
+ *   resolve  the target must still be face up there: the position changes (ChangeBattlePosition), or Change of
+ *            Heart's resolve moves it to the player and links it (ZONE_LINK_CARD_EFFECT from Enemy Controller), and
+ *            DuelCmd_TurnEnd gives it back (ReturnControlAtTurnEnd, duel_cmd_turn.c). Unlike Mind Control's, the monster
+ *            may attack and be Tributed.
+ *   CPU      AiWantsSpell: in Main Phase 1, to take a monster with AI_EC_GAIN more ATK than the weakest one it would
+ *            Tribute */
+static const u8 sStrEnemyControllerMenu[] = "Enemy Controller:\n    @3Change battle position\n    @2Take control";
+static const u8 sStrEnemyControllerTarget[] = "Select a face-up monster of your opponent's.";
+#define EC_MODE_POSITION 1
+#define EC_MODE_CONTROL 2           /* the Tribute is still to be paid */
+#define EC_MODE_CONTROL_PAID 3
+#define AI_EC_GAIN 500
+
+/* 1 if the face-up monster of `player` in `zone` may be targeted by card `card`. */
+static int IsEnemyControllerTarget(u16 card, int player, int zone)
+{
+    struct DuelZone *z = ZoneOf(player, zone);
+
+    return zone <= ZONE_MONSTER_4 && DUEL_CARD_ID(&z->card) != 0 && z->isFaceUp && CanCardTargetZone(card, player, zone);
+}
+
+/* The face-up target of the opponent of `player` with the highest ATK, -1 for none. */
+static int EnemyControllerBestTarget(u16 card, int player)
+{
+    int opponent = 1 - (player & 1), zone, best = -1;
+
+    for (zone = ZONE_MONSTER_0; zone <= ZONE_MONSTER_4; zone++) {
+        if (IsEnemyControllerTarget(card, opponent, zone)
+            && (best < 0 || GetZoneCardAtk(opponent, zone) > GetZoneCardAtk(opponent, best)))
+            best = zone;
+    }
+    return best;
+}
+
+/* The monster of `player` with the lowest ATK that may be Tributed, -1 for none. */
+static int EnemyControllerWeakestTribute(int player)
+{
+    int zone, best = -1;
+
+    for (zone = ZONE_MONSTER_0; zone <= ZONE_MONSTER_4; zone++) {
+        if (IsTributableMonster(player, zone)
+            && (best < 0 || GetZoneCardAtk(player, zone) < GetZoneCardAtk(player, best)))
+            best = zone;
+    }
+    return best;
+}
+
+int EffectEnemyControllerPrepare(struct ChainEntry *card, struct ChainEntry *chainLink, u16 fromHand)
+{
+    return EnemyControllerBestTarget(card->card, card->player) >= 0;
+}
+
+int EffectEnemyControllerChainA(struct ChainEntry *link, struct ChainEntry *prevLink)
+{
+    int canControl = CountTributableMonsters(link->player, -1) > 0;
+
+    if (link->player) {
+        link->unk12 = canControl ? EC_MODE_CONTROL : EC_MODE_POSITION;
+        return 1;
+    }
+    switch (gChain.costStep) {
+    case 0:
+        if (!canControl) {
+            link->unk12 = EC_MODE_POSITION;
+            return 1;
+        }
+        TextBoxOpen(TEXTBOX_POS(5, 2), TEXTBOX_SIZE(19, 6), TEXTBOX_FLAGS_DEFAULT, sStrEnemyControllerMenu);
+        TextBoxSetMenu(TEXTBOX_MENU_TWO_CHOICE, NULL, NULL);
+        gChain.costStep++;
+        return 0;
+    default:
+        /* the chain calls a cost handler every frame, text box or not: wait for the menu to close */
+        if (gTextBox.active)
+            return 0;
+        link->unk12 = gTextBox.result ? EC_MODE_CONTROL : EC_MODE_POSITION;
+        return 1;
+    }
+}
+
+int EffectEnemyControllerChainB(struct ChainEntry *link, struct ChainEntry *prevLink)
+{
+    int opponent = 1 - (link->player & 1), zone;
+
+    /* the Tribute first (the control effect's cost) */
+    if (link->unk12 == EC_MODE_CONTROL) {
+        if (link->player) {
+            zone = EnemyControllerWeakestTribute(link->player);
+            if (zone < 0) {
+                link->numTargets = 0;
+                return 1;
+            }
+            TributeMonster(link->player, zone);
+        } else {
+            if (!EffectTributeTargetChainB(link))
+                return 0;
+            if (link->numTargets != 1 || (u8)link->targets[0] != link->player
+                || !IsTributableMonster(link->player, link->targets[0] >> 8)) {
+                link->numTargets = 0;
+                PlaySE(SE_ERROR);
+                return 0;
+            }
+            TributeMonster(link->player, link->targets[0] >> 8);
+            gChain.targetStep = 0;
+        }
+        link->numTargets = 0;
+        link->unk12 = EC_MODE_CONTROL_PAID;
+        return 0;
+    }
+    /* the target */
+    if (link->player) {
+        link->numTargets = 0;
+        zone = EnemyControllerBestTarget(link->card, link->player);
+        if (link->unk12 == EC_MODE_POSITION) {
+            for (zone = ZONE_MONSTER_0; zone <= ZONE_MONSTER_4; zone++) {
+                if (IsEnemyControllerTarget(link->card, opponent, zone))
+                    break;
+            }
+        }
+        if (zone >= ZONE_MONSTER_0 && zone <= ZONE_MONSTER_4)
+            TryAddEffectTarget(link, opponent, zone);
+        return 1;
+    }
+    switch (gChain.targetStep) {
+    case 0:
+        link->numTargets = 0;
+        if (EnemyControllerBestTarget(link->card, link->player) < 0)
+            return 1;
+        TextBoxOpen(TEXTBOX_POS(6, 2), TEXTBOX_SIZE(18, 7), TEXTBOX_FLAGS_DEFAULT, sStrEnemyControllerTarget);
+        gChain.targetStep++;
+        return 0;
+    default:
+        if (DuelCursor_PickTarget(PICK_PLAYER1(PICK_FACE_UP_MONSTER_ANY)) == 0)
+            return 0;
+        zone = gDuelScreen.selArea + gDuelScreen.selIndex;
+        if (gDuelScreen.selPlayer == opponent && IsEnemyControllerTarget(link->card, opponent, zone)
+            && TryAddEffectTarget(link, opponent, zone) != 0)
+            return 1;
+        PlaySE(SE_ERROR);
+        return 0;
+    }
+}
+
+/* 1 if a link of the chain other than `self` names (player, zone): its event locations or its targets. The engine
+ * knows a card by its zone, so a link still to resolve that named a monster gone from the zone (Trap Hole on a summon
+ * whose monster was then Tributed) would hit whatever came there next. */
+static int IsZoneNamedByChain(struct ChainEntry *self, int player, int zone)
+{
+    u16 loc = DUEL_LOC(player, zone);
+    int i, t;
+
+    for (i = 0; i < gChain.linkCount; i++) {
+        struct ChainEntry *e = &gChain.links[i];
+
+        if (e == self)
+            continue;
+        if (e->loc0 == loc || e->loc1 == loc)
+            return 1;
+        for (t = 0; t < e->numTargets; t++) {
+            if (e->targets[t] == loc)
+                return 1;
+        }
+    }
+    return 0;
+}
+
+/* The free monster zone of `player` the taken monster goes to: the first one no other link names, else the first. */
+static int EnemyControllerFreeZone(struct ChainEntry *self, int player)
+{
+    int zone, first = -1;
+
+    for (zone = ZONE_MONSTER_0; zone <= ZONE_MONSTER_4; zone++) {
+        if (!IsMonsterZoneFree(player, zone))
+            continue;
+        if (first < 0)
+            first = zone;
+        if (!IsZoneNamedByChain(self, player, zone))
+            return zone;
+    }
+    return first;
+}
+
+int EffectEnemyControllerResolve(struct ChainEntry *link, struct ChainEntry *chainedTo)
+{
+    int player, zone, freeZone;
+
+    if (link->negated || link->numTargets != 1)
+        return EFFECT_STEP_DONE;
+    player = (u8)link->targets[0];
+    zone = link->targets[0] >> 8;
+    if (player == link->player || !IsEnemyControllerTarget(link->card, player, zone))
+        return EFFECT_STEP_DONE;
+    if (link->unk12 == EC_MODE_POSITION) {
+        ChangeBattlePosition(player, zone, 0, 0);
+        return EFFECT_STEP_DONE;
+    }
+    /* Change of Heart's move and link, into a zone no other link of the chain names: a Trap Hole chained below on
+     * the summon of the monster Tributed for the cost names that monster's zone, which is free now (the first free
+     * one, where Change of Heart's resolve would put it), and would destroy the taken monster there */
+    freeZone = EnemyControllerFreeZone(link, link->player);
+    if (freeZone < 0)
+        return EFFECT_STEP_DONE;
+    MoveFieldCard(link->player, link->targets[0], DUEL_LOC(link->player, freeZone));
+    QueueAddZoneLink(link->player, link->card, DUEL_LOC(link->player, freeZone), ZONE_LINK_CARD_EFFECT);
+    return EFFECT_STEP_DONE;
+}
+
+/* AiWantsSpell: take a face-up monster of the human's in Main Phase 1 when it has AI_EC_GAIN more ATK than the CPU's
+ * weakest monster it may Tribute (the Tribute frees the zone the stolen monster goes to). */
+static int AiWantsEnemyController(void)
+{
+    int target, tribute;
+
+    if (gAiState.step != AI_STEP_MAIN_PHASE_1)
+        return 0;
+    target = EnemyControllerBestTarget(gCardNumberToId[CARD_ENEMY_CONTROLLER], AI_PLAYER);
+    tribute = EnemyControllerWeakestTribute(AI_PLAYER);
+    return target >= 0 && tribute >= 0
+           && (int)GetZoneCardAtk(AI_HUMAN, target) >= (int)GetZoneCardAtk(AI_PLAYER, tribute) + AI_EC_GAIN;
+}
+#endif /* HAS_CARD_ENEMY_CONTROLLER */
+
 /* Should the CPU play its added Magic card `number` in its Main Phase now? (AiTryPlaySpellTrap checks that it may.) */
 static int AiWantsSpell(u16 number)
 {
     switch (number) {
+#ifdef HAS_CARD_ENEMY_CONTROLLER
+    case CARD_ENEMY_CONTROLLER:                 /* to take a much stronger monster */
+        return AiWantsEnemyController();
+#endif
 #ifdef HAS_CARD_CARD_DESTRUCTION
     case CARD_CARD_DESTRUCTION:                 /* when the human holds more cards than the CPU would discard */
         return gDuelPlayers[AI_PLAYER].handCount - 1 < gDuelPlayers[AI_HUMAN].handCount;
@@ -7533,6 +7771,16 @@ const struct CardEffect gAddedCardEffects[] = {
         NULL,
         NULL,
         NULL,
+    },
+#endif
+#ifdef HAS_CARD_ENEMY_CONTROLLER
+    {
+        CARD_ENEMY_CONTROLLER, 0,
+        EffectEnemyControllerResolve,
+        NULL,
+        EffectEnemyControllerPrepare,
+        EffectEnemyControllerChainA,
+        EffectEnemyControllerChainB,
     },
 #endif
 #ifdef HAS_CARD_MIND_CONTROL

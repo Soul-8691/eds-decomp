@@ -1926,3 +1926,12 @@ updated: 2026-09-29
 
 ## [2026-10-30] progress | Asura Priest may attack monsters recruited into an attacked zone
 - src/added_effects.c: Asura Priest's record is per monster (zone bit + DuelZone.serial from gBattle.zoneSerialSnapshot, AsuraAttackedMonster), for the Battle Phase of gModDuel.asuraTurn; STATIC_ASSERT that gModDuel fits before gScratchBuffer. [[added-cards]]. Release .text 0x80618. Built (make and make release); not tested in an emulator.
+
+## [2026-10-30] progress | Enemy Controller coded
+- src/added_effects.c: EffectEnemyController* (prepare, chainA mode choice in unk12, chainB Tribute + face-up target, resolve: ChangeBattlePosition or EffectChangeOfHeartResolve) and its row, AiWantsEnemyController in AiWantsSpell; src/duel_cmd_turn.c ReturnControlAtTurnEnd for it. README CPU list, DECKS.md. [[added-cards]]. Release .text 0x80690. Built (make and make release); not tested in an emulator.
+
+## [2026-10-30] progress | Enemy Controller: the mode menu waits for the answer
+- src/added_effects.c EffectEnemyControllerChainA: returns 0 while gTextBox.active (Chain_Build calls cost handlers every frame, so the choice was read before the menu was answered: always the position change). [[added-cards]]. Release .text 0x80690. Built (make and make release); not tested in an emulator.
+
+## [2026-10-30] progress | Enemy Controller: the taken monster avoids zones the chain names
+- src/added_effects.c EffectEnemyControllerResolve: moves and links the monster itself (EnemyControllerFreeZone / IsZoneNamedByChain) instead of Change of Heart's resolve, so a Trap Hole on the Tributed monster's summon no longer destroys it. [[added-cards]]. Release .text 0x80690. Built (make and make release); not tested in an emulator.
