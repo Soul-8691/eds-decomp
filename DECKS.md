@@ -32,7 +32,7 @@ Formats unlock in this order; in the release build each takes 10 wins to open th
 | 8 | Yata | August 2003 | Tomato Control 50%, Warrior Tomato Control 40%, Gearfried 10% |
 | 9 | Scientist | November 2003 | Tomato Control 60%, Scientist FTK 40% |
 | 10 | Vampire | February 2004 | Warrior Control 80%, Scientist FTK 10%, Warrior Tomato Control 10% |
-| 11 | Chaos | April 2004 | Vanilla (unchanged) |
+| 11 | Chaos | April 2004 | Chaos Control 80%, Chaos Warrior 20% |
 | 12 | Warrior | October 2004 | Vanilla (unchanged) |
 | 13 | Goat | April 2005 | Vanilla (unchanged) |
 | 14 | Cyber | April 2005 | Vanilla (unchanged) |
@@ -1595,7 +1595,153 @@ Banlist: February 2004.
 
 Sasuke Samurai (Warrior Control's Side Deck) was added to the game for these decks.
 
-### 11-15. Chaos to Reaper
+### 11. Chaos
+
+Banlist: April 2004.
+
+<details>
+<summary>Chaos Control: 80% (ellietincan-Chaos Control) (40 cards + 15 Fusion Deck + 15 Side Deck)</summary>
+
+**Monsters (17)**
+
+- 1x Black Luster Soldier - Envoy of Beginning
+- 1x Breaker the Magical Warrior
+- 1x Chaos Emperor Dragon - Envoy of the End
+- 3x D.D. Warrior Lady
+- 1x Exiled Force
+- 1x Injection Fairy Lily
+- 2x Kycoo the Ghost Destroyer
+- 1x Magical Scientist
+- 1x Sangan
+- 2x Shining Fairy
+- 1x Sinister Serpent
+- 1x Tribe-Infecting Virus
+- 1x Witch of the Black Forest
+
+**Spells (17)**
+
+- 1x Change of Heart
+- 1x Confiscation
+- 1x Dark Hole
+- 1x Delinquent Duo
+- 1x Graceful Charity
+- 1x Harpie's Feather Duster
+- 1x Mirage of Nightmare
+- 1x Monster Reborn
+- 3x Mystical Space Typhoon
+- 1x Painful Choice
+- 1x Pot of Greed
+- 1x Premature Burial
+- 1x Raigeki
+- 1x Snatch Steal
+- 1x The Forceful Sentry
+
+**Traps (6)**
+
+- 1x Bell of Destruction
+- 1x Call Of The Haunted
+- 1x Imperial Order
+- 1x Mirror Force
+- 2x Torrential Tribute
+
+**Fusion Deck (15)**
+
+- 2x Dark Balter the Terrible
+- 3x Dark Flare Knight
+- 2x Fiend Skull Dragon
+- 3x Roaring Ocean Snake
+- 2x Ryu Senshi
+- 3x Thousand-Eyes Restrict
+
+**Side Deck (15)**
+
+- 1x Chaos Sorcerer
+- 1x Fiber Jar
+- 1x Kycoo the Ghost Destroyer
+- 2x Magician of Faith
+- 2x Nobleman of Crossout
+- 2x Reinforcement of the Army
+- 3x Sakuretsu Armor
+- 1x Skilled Dark Magician
+- 1x Torrential Tribute
+- 1x Yata-Garasu
+
+</details>
+
+<details>
+<summary>Chaos Warrior: 20% (indoors-Chaos Warrior) (40 cards + 15 Fusion Deck + 15 Side Deck)</summary>
+
+**Monsters (17)**
+
+- 1x Black Luster Soldier - Envoy of Beginning
+- 1x Breaker the Magical Warrior
+- 1x Chaos Emperor Dragon - Envoy of the End
+- 3x D.D. Warrior Lady
+- 1x Exiled Force
+- 1x Fiber Jar
+- 2x Kycoo the Ghost Destroyer
+- 1x Magical Scientist
+- 1x Magician of Faith
+- 1x Sangan
+- 1x Thunder Nyan Nyan
+- 1x Tribe-Infecting Virus
+- 1x Witch of the Black Forest
+- 1x Yata-Garasu
+
+**Spells (17)**
+
+- 1x Change of Heart
+- 1x Confiscation
+- 1x Dark Hole
+- 1x Delinquent Duo
+- 1x Graceful Charity
+- 1x Harpie's Feather Duster
+- 1x Mirage of Nightmare
+- 1x Monster Reborn
+- 3x Mystical Space Typhoon
+- 1x Painful Choice
+- 1x Pot of Greed
+- 1x Raigeki
+- 1x Reinforcement of the Army
+- 1x Snatch Steal
+- 1x The Forceful Sentry
+
+**Traps (6)**
+
+- 1x Bell of Destruction
+- 1x Call Of The Haunted
+- 1x Imperial Order
+- 1x Mirror Force
+- 2x Torrential Tribute
+
+**Fusion Deck (15)**
+
+- 1x B. Skull Dragon
+- 3x Dark Balter the Terrible
+- 1x Dark Paladin
+- 3x Fiend Skull Dragon
+- 1x Fusionist
+- 3x Ryu Senshi
+- 3x Thousand-Eyes Restrict
+
+**Side Deck (15)**
+
+- 1x Heavy Storm
+- 1x Kycoo the Ghost Destroyer
+- 1x Morphing Jar
+- 2x Nobleman of Crossout
+- 1x Premature Burial
+- 3x Sakuretsu Armor
+- 1x Soul Release
+- 2x Thunder Nyan Nyan
+- 1x Torrential Tribute
+- 2x Waboku
+
+</details>
+
+Every card was already in the game (Black Skull Dragon is the original B. Skull Dragon). Cards here with no coded effect yet: Chaos Emperor Dragon - Envoy of the End, Thunder Nyan Nyan, Dark Balter the Terrible, Ryu Senshi, Fiend Skull Dragon, Dark Flare Knight and Dark Paladin.
+
+### 12-15. Warrior to Reaper
 
 Vanilla (unchanged): these opponents still use the original game's decks.
 

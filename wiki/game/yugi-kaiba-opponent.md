@@ -64,7 +64,11 @@ next to the one before it.
   - Vampire plays Woawa-Warrior Control 80%, ellietincan-Scientist FTK 10% and AJTBLS-Warrior Tomato Control 10%
     (`VampireDeck`, Marik's slot). Sasuke Samurai (Warrior Control's Side Deck) was added to `config/new_cards.txt`
     for them (ID 1160) and coded the same day ([[added-cards]]).
-  - The other 5 keep their original duelists' decks for now.
+  - Chaos plays ellietincan-Chaos Control 80% and indoors-Chaos Warrior 20% (`ChaosDeck`, Strings' slot). Every card
+    was already in the game. Two passcodes do not match the built table: Black Skull Dragon (11901678) is the original
+    B. Skull Dragon, which has no passcode in EDS, and Dark Paladin (98502113) was added under 98502115 (an
+    alternative artwork's ID on YGOPRODeck); a .ydk lookup needs those two aliases.
+  - The other 4 keep their original duelists' decks for now.
   - Cards in these decks with no coded effect yet: Dark Balter the Terrible, Fiend Skull Dragon, Ryu Senshi (Joey-
     Pegasus Tomato Control's Fusion Deck), Skull Lair and The Last Warrior from Another Planet (Joey-Pegasus Vanilla
     Beat and both Android decks).

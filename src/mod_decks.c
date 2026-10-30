@@ -1967,6 +1967,168 @@ static const struct DeckList *VampireDeck(void)
 }
 #endif
 
+/* The Chaos format opponent (Strings' slot, src/mod_opponents.c): one of two decks per duel (ChaosDeck): Chaos Control
+ * 80%, Chaos Warrior 20% (decks/ellietincan-Chaos Control.ydk, decks/indoors-Chaos Warrior.ydk; main and extra decks).
+ * Every card was already in the game: Chaos Warrior's Black Skull Dragon (11901678) is the original B. Skull Dragon,
+ * which has no passcode in EDS, and its Dark Paladin (98502113) was added as 98502115. */
+#if defined(HAS_CARD_BLACK_LUSTER_SOLDIER_ENVOY_OF_THE_BEGINNING) && defined(HAS_CARD_BREAKER_THE_MAGICAL_WARRIOR) \
+    && defined(HAS_CARD_CHAOS_EMPEROR_DRAGON_ENVOY_OF_THE_END) && defined(HAS_CARD_D_D_WARRIOR_LADY) \
+    && defined(HAS_CARD_EXILED_FORCE) && defined(HAS_CARD_INJECTION_FAIRY_LILY) \
+    && defined(HAS_CARD_KYCOO_THE_GHOST_DESTROYER) && defined(HAS_CARD_MAGICAL_SCIENTIST) \
+    && defined(HAS_CARD_TRIBE_INFECTING_VIRUS) && defined(HAS_CARD_MIRAGE_OF_NIGHTMARE) \
+    && defined(HAS_CARD_TORRENTIAL_TRIBUTE) && defined(HAS_CARD_DARK_BALTER_THE_TERRIBLE) \
+    && defined(HAS_CARD_DARK_FLARE_KNIGHT) && defined(HAS_CARD_FIEND_SKULL_DRAGON) && defined(HAS_CARD_RYU_SENSHI) \
+    && defined(HAS_CARD_THOUSAND_EYES_RESTRICT) && defined(HAS_CARD_CHAOS_SORCERER) && defined(HAS_CARD_FIBER_JAR) \
+    && defined(HAS_CARD_SKILLED_DARK_MAGICIAN) && defined(HAS_CARD_YATA_GARASU) \
+    && defined(HAS_CARD_REINFORCEMENT_OF_THE_ARMY) && defined(HAS_CARD_SAKURETSU_ARMOR)
+#define MOD_CHAOS_CONTROL 1
+static const u16 sChaosControl[] = {
+    /* Monsters (17) */
+    CARD_BLACK_LUSTER_SOLDIER_ENVOY_OF_THE_BEGINNING,
+    CARD_BREAKER_THE_MAGICAL_WARRIOR,
+    CARD_CHAOS_EMPEROR_DRAGON_ENVOY_OF_THE_END,
+    X3(CARD_D_D_WARRIOR_LADY),
+    CARD_EXILED_FORCE,
+    CARD_INJECTION_FAIRY_LILY,
+    X2(CARD_KYCOO_THE_GHOST_DESTROYER),
+    CARD_MAGICAL_SCIENTIST,
+    CARD_SANGAN,
+    X2(CARD_SHINING_FAIRY),
+    CARD_SINISTER_SERPENT,
+    CARD_TRIBE_INFECTING_VIRUS,
+    CARD_WITCH_OF_THE_BLACK_FOREST,
+    /* Spells (17) */
+    CARD_CHANGE_OF_HEART,
+    CARD_CONFISCATION,
+    CARD_DARK_HOLE,
+    CARD_DELINQUENT_DUO,
+    CARD_GRACEFUL_CHARITY,
+    CARD_HARPIES_FEATHER_DUSTER,
+    CARD_MIRAGE_OF_NIGHTMARE,
+    CARD_MONSTER_REBORN,
+    X3(CARD_MYSTICAL_SPACE_TYPHOON),
+    CARD_PAINFUL_CHOICE,
+    CARD_POT_OF_GREED,
+    CARD_PREMATURE_BURIAL,
+    CARD_RAIGEKI,
+    CARD_SNATCH_STEAL,
+    CARD_THE_FORCEFUL_SENTRY,
+    /* Traps (6) */
+    CARD_CALL_OF_THE_HAUNTED,
+    CARD_IMPERIAL_ORDER,
+    CARD_MIRROR_FORCE,
+    CARD_BELL_OF_DESTRUCTION,
+    X2(CARD_TORRENTIAL_TRIBUTE),
+    /* Fusion Deck (15) */
+    X2(CARD_DARK_BALTER_THE_TERRIBLE),
+    X3(CARD_DARK_FLARE_KNIGHT),
+    X2(CARD_FIEND_SKULL_DRAGON),
+    X3(CARD_ROARING_OCEAN_SNAKE),
+    X2(CARD_RYU_SENSHI),
+    X3(CARD_THOUSAND_EYES_RESTRICT),
+};
+STATIC_ASSERT(ARRAY_COUNT(sChaosControl) == 40 + 15, ChaosControlSize);
+static const struct DeckList sChaosControlList = { sChaosControl, ARRAY_COUNT(sChaosControl), 0 };
+/* ellietincan-Chaos Control.ydk's Side Deck (15). */
+static const u16 sChaosControlSide[] = {
+    CARD_CHAOS_SORCERER,
+    CARD_FIBER_JAR,
+    CARD_KYCOO_THE_GHOST_DESTROYER,
+    X2(CARD_MAGICIAN_OF_FAITH),
+    CARD_SKILLED_DARK_MAGICIAN,
+    CARD_YATA_GARASU,
+    X2(CARD_NOBLEMAN_OF_CROSSOUT),
+    X2(CARD_REINFORCEMENT_OF_THE_ARMY),
+    X3(CARD_SAKURETSU_ARMOR),
+    CARD_TORRENTIAL_TRIBUTE,
+};
+STATIC_ASSERT(ARRAY_COUNT(sChaosControlSide) == 15, ChaosControlSideSize);
+#endif
+
+#if defined(HAS_CARD_BLACK_LUSTER_SOLDIER_ENVOY_OF_THE_BEGINNING) && defined(HAS_CARD_CHAOS_EMPEROR_DRAGON_ENVOY_OF_THE_END) \
+    && defined(HAS_CARD_BREAKER_THE_MAGICAL_WARRIOR) && defined(HAS_CARD_KYCOO_THE_GHOST_DESTROYER) \
+    && defined(HAS_CARD_D_D_WARRIOR_LADY) && defined(HAS_CARD_EXILED_FORCE) && defined(HAS_CARD_YATA_GARASU) \
+    && defined(HAS_CARD_FIBER_JAR) && defined(HAS_CARD_MAGICAL_SCIENTIST) && defined(HAS_CARD_TRIBE_INFECTING_VIRUS) \
+    && defined(HAS_CARD_THUNDER_NYAN_NYAN) && defined(HAS_CARD_MIRAGE_OF_NIGHTMARE) \
+    && defined(HAS_CARD_REINFORCEMENT_OF_THE_ARMY) && defined(HAS_CARD_TORRENTIAL_TRIBUTE) \
+    && defined(HAS_CARD_THOUSAND_EYES_RESTRICT) && defined(HAS_CARD_DARK_BALTER_THE_TERRIBLE) \
+    && defined(HAS_CARD_RYU_SENSHI) && defined(HAS_CARD_FIEND_SKULL_DRAGON) && defined(HAS_CARD_DARK_PALADIN) \
+    && defined(HAS_CARD_SAKURETSU_ARMOR)
+#define MOD_CHAOS_WARRIOR 1
+static const u16 sChaosWarrior[] = {
+    /* Monsters (17) */
+    CARD_BLACK_LUSTER_SOLDIER_ENVOY_OF_THE_BEGINNING,
+    CARD_CHAOS_EMPEROR_DRAGON_ENVOY_OF_THE_END,
+    CARD_BREAKER_THE_MAGICAL_WARRIOR,
+    CARD_SANGAN,
+    CARD_WITCH_OF_THE_BLACK_FOREST,
+    X2(CARD_KYCOO_THE_GHOST_DESTROYER),
+    X3(CARD_D_D_WARRIOR_LADY),
+    CARD_EXILED_FORCE,
+    CARD_YATA_GARASU,
+    CARD_FIBER_JAR,
+    CARD_MAGICAL_SCIENTIST,
+    CARD_TRIBE_INFECTING_VIRUS,
+    CARD_MAGICIAN_OF_FAITH,
+    CARD_THUNDER_NYAN_NYAN,
+    /* Spells (17) */
+    CARD_POT_OF_GREED,
+    CARD_GRACEFUL_CHARITY,
+    CARD_DELINQUENT_DUO,
+    CARD_CONFISCATION,
+    CARD_THE_FORCEFUL_SENTRY,
+    CARD_RAIGEKI,
+    CARD_DARK_HOLE,
+    CARD_MONSTER_REBORN,
+    CARD_CHANGE_OF_HEART,
+    CARD_SNATCH_STEAL,
+    CARD_MIRAGE_OF_NIGHTMARE,
+    CARD_PAINFUL_CHOICE,
+    CARD_HARPIES_FEATHER_DUSTER,
+    X3(CARD_MYSTICAL_SPACE_TYPHOON),
+    CARD_REINFORCEMENT_OF_THE_ARMY,
+    /* Traps (6) */
+    CARD_CALL_OF_THE_HAUNTED,
+    CARD_IMPERIAL_ORDER,
+    CARD_MIRROR_FORCE,
+    CARD_BELL_OF_DESTRUCTION,
+    X2(CARD_TORRENTIAL_TRIBUTE),
+    /* Fusion Deck (15) */
+    X3(CARD_THOUSAND_EYES_RESTRICT),
+    X3(CARD_DARK_BALTER_THE_TERRIBLE),
+    X3(CARD_RYU_SENSHI),
+    X3(CARD_FIEND_SKULL_DRAGON),
+    CARD_B_SKULL_DRAGON,
+    CARD_FUSIONIST,
+    CARD_DARK_PALADIN,
+};
+STATIC_ASSERT(ARRAY_COUNT(sChaosWarrior) == 40 + 15, ChaosWarriorSize);
+static const struct DeckList sChaosWarriorList = { sChaosWarrior, ARRAY_COUNT(sChaosWarrior), 0 };
+/* indoors-Chaos Warrior.ydk's Side Deck (15). */
+static const u16 sChaosWarriorSide[] = {
+    CARD_MORPHING_JAR,
+    CARD_KYCOO_THE_GHOST_DESTROYER,
+    X2(CARD_THUNDER_NYAN_NYAN),
+    CARD_PREMATURE_BURIAL,
+    CARD_HEAVY_STORM,
+    X2(CARD_NOBLEMAN_OF_CROSSOUT),
+    CARD_SOUL_RELEASE,
+    CARD_TORRENTIAL_TRIBUTE,
+    X2(CARD_WABOKU),
+    X3(CARD_SAKURETSU_ARMOR),
+};
+STATIC_ASSERT(ARRAY_COUNT(sChaosWarriorSide) == 15, ChaosWarriorSideSize);
+#endif
+
+#if defined(MOD_CHAOS_CONTROL) && defined(MOD_CHAOS_WARRIOR)
+#define MOD_CHAOS_DECKS 1
+/* The Chaos opponent's deck for this duel: Chaos Control 8 in 10, Chaos Warrior 2 in 10. */
+static const struct DeckList *ChaosDeck(void)
+{
+    return (u32)Random() % 10 < 8 ? &sChaosControlList : &sChaosWarriorList;
+}
+#endif
+
 /* The replacement deck of opponent `opponent` (enum DuelistId), or NULL to keep the original: a new pick (the
  * weighted random ones roll again); GetOpponentDeckOverride keeps it for the match. */
 static const struct DeckList *PickOpponentDeckOverride(int opponent)
@@ -1997,6 +2159,10 @@ static const struct DeckList *PickOpponentDeckOverride(int opponent)
 #ifdef MOD_VAMPIRE_DECKS
     case DUELIST_MARIK:                 /* the Vampire format opponent */
         return VampireDeck();
+#endif
+#ifdef MOD_CHAOS_DECKS
+    case DUELIST_STRINGS:               /* the Chaos format opponent */
+        return ChaosDeck();
 #endif
 #ifdef MOD_JOEY_PEGASUS_DECKS
     case DUELIST_WEEVIL:                /* the Joey-Pegasus format opponent */
@@ -2076,6 +2242,8 @@ static const char sNameScientistFtk[] = "DK-ZERO-Scientist FTK";
 static const char sNameVampireWarriorControl[] = "Woawa-Warrior Control";
 static const char sNameVampireScientistFtk[] = "ellietincan-Scientist FTK";
 static const char sNameVampireWarriorTomato[] = "AJTBLS-Warrior Tomato Control";
+static const char sNameChaosControl[] = "ellietincan-Chaos Control";
+static const char sNameChaosWarrior[] = "indoors-Chaos Warrior";
 static const char sNameChaosTurbo[] = "LR-Chaos Turbo";
 static const char sNameWarrior[] = "sdlkilla-Warrior";
 static const char sNameGoatControl[] = "geistD-Goat Control";
@@ -2147,6 +2315,12 @@ static const struct RecipePreset sRecipePresets[] = {
 #ifdef MOD_VAMPIRE_WARRIOR_TOMATO_CONTROL
     { sNameVampireWarriorTomato, &sVampireWarriorTomatoControlList, sVampireWarriorTomatoControlSide,
       ARRAY_COUNT(sVampireWarriorTomatoControlSide) },
+#endif
+#ifdef MOD_CHAOS_CONTROL
+    { sNameChaosControl, &sChaosControlList, sChaosControlSide, ARRAY_COUNT(sChaosControlSide) },
+#endif
+#ifdef MOD_CHAOS_WARRIOR
+    { sNameChaosWarrior, &sChaosWarriorList, sChaosWarriorSide, ARRAY_COUNT(sChaosWarriorSide) },
 #endif
 #ifdef MOD_RED_DECK
     { sNameChaosTurbo, &sRedDeckList, sRedDeckSide, ARRAY_COUNT(sRedDeckSide) },

@@ -1899,3 +1899,6 @@ updated: 2026-09-29
 
 ## [2026-10-30] progress | Sasuke Samurai coded
 - src/added_effects.c: CARD_SASUKE_SAMURAI in DestroyTargetBeforeDamageStep (as Mystic Swordsman LV2) and the new AiDestroysBeforeDamage; src/battle_phase1.c guard; src/ai_picks.c AiEvalAttack counts those attacks as wins. README CPU list. [[added-cards]]. Release .text 0x80560. Built (make and make release); not tested in an emulator.
+
+## [2026-10-30] progress | Chaos opponent decks and recipes
+- src/mod_decks.c: sChaosControl (ellietincan-Chaos Control) and sChaosWarrior (indoors-Chaos Warrior), Main + Fusion + Side Decks, checked against the .ydk files; ChaosDeck (80% / 20%) for DUELIST_STRINGS; recipe presets 25-26 after the Vampire ones (the debug presets are now 27-29). Both legal under April 2004; no missing cards (Black Skull Dragon = B. Skull Dragon, Dark Paladin added as 98502115). Uncoded effects: Chaos Emperor Dragon, Thunder Nyan Nyan, Dark Balter, Ryu Senshi, Fiend Skull Dragon, Dark Flare Knight, Dark Paladin. DECKS.md. [[deck-recipes]], [[yugi-kaiba-opponent]]. Release .text 0x80560. Built (make and make release); not tested in an emulator.
