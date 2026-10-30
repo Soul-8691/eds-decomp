@@ -80,7 +80,7 @@ next one.
   its original portrait and event dialogue. After the dialogue, your banlist switches to the challenger's format and
   the Deck Recipes screen opens: load a recipe, press SELECT for Deck Edit, or B to duel. In the release, a deck that
   isn't legal in the format (or is under 40 cards) can't duel until you fix it.
-- **Deck Recipes.** Up to 50 saved decks, about 25 of them preset to staple decks of the first twelve formats and
+- **Deck Recipes.** Up to 50 saved decks, about 30 of them preset to staple decks of the first twelve formats and
   Goat. Loading a recipe takes the cards from your trunk; any you don't have are left out (the game tells you which,
   and why). The starting decks and the format presets come with the Side and Extra Decks of their .ydk files. The
   deck recipes will eventually include all 15 TCG formats.

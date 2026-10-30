@@ -34,7 +34,7 @@ Formats unlock in this order; in the release build each takes 10 wins to open th
 | 10 | Vampire | February 2004 | Warrior Control 80%, Scientist FTK 10%, Warrior Tomato Control 10% |
 | 11 | Chaos | April 2004 | Chaos Control 80%, Chaos Warrior 20% |
 | 12 | Warrior | October 2004 | Goat Control 40%, Warrior 30%, Warrior Control 20%, Chaos Return 10% |
-| 13 | Goat | April 2005 | Vanilla (unchanged) |
+| 13 | Goat | April 2005 | Chaos Turbo 40%, Warrior 20%, Goat Control 15%, Chaos Control 10%, Panda Burn 5%, Chaos Return 5%, Reasoning Gate Turbo 5% |
 | 14 | Cyber | April 2005 | Vanilla (unchanged) |
 | 15 | Reaper | October 2005 | Vanilla (unchanged) |
 
@@ -2010,7 +2010,284 @@ Banlist: October 2004.
 
 Every card was already in the game. Cards here with no coded effect yet: the Fusion Monsters Dark Balter the Terrible, Ryu Senshi, Dark Blade the Dragon Knight, Fiend Skull Dragon, Reaper on the Nightmare, The Last Warrior from Another Planet, Ojama King and Dark Flare Knight.
 
-### 13-15. Goat to Reaper
+### 13. Goat
+
+Banlist: April 2005.
+
+Chaos Turbo 40%, Warrior 20% and Goat Control 15% are the deck opponents' decks (lists under [Deck opponents](#deck-opponents)); the other four:
+
+<details>
+<summary>Chaos Control: 10% (N♡va-Chaos Control; recipe "Nova-Chaos Control") (40 cards + 15 Fusion Deck + 15 Side Deck)</summary>
+
+**Monsters (18)**
+
+- 1x Black Luster Soldier - Envoy of Beginning
+- 1x Breaker the Magical Warrior
+- 1x Chaos Sorcerer
+- 2x Gravekeeper's Spy
+- 3x Magician of Faith
+- 1x Mystic Tomato
+- 1x Sangan
+- 1x Sinister Serpent
+- 3x Spirit Reaper
+- 3x Thunder Dragon
+- 1x Tsukuyomi
+
+**Spells (14)**
+
+- 1x Delinquent Duo
+- 1x Graceful Charity
+- 1x Heavy Storm
+- 3x Metamorphosis
+- 2x Nobleman of Crossout
+- 1x Pot of Greed
+- 2x Scapegoat
+- 1x Snatch Steal
+- 2x Upstart Goblin
+
+**Traps (8)**
+
+- 1x Bell of Destruction
+- 3x Jar of Greed
+- 1x Mirror Force
+- 2x Raigeki Break
+- 1x Torrential Tribute
+
+**Fusion Deck (15)**
+
+- 1x Dark Balter the Terrible
+- 1x Dark Blade the Dragon Knight
+- 1x Darkfire Dragon
+- 1x Dragoness the Wicked Knight
+- 1x Fiend Skull Dragon
+- 1x Gatling Dragon
+- 1x King Dragun
+- 1x Master of Oz
+- 1x Ojama King
+- 1x Reaper on the Nightmare
+- 1x Ryu Senshi
+- 1x The Last Warrior from Another Planet
+- 3x Thousand-Eyes Restrict
+
+**Side Deck (15)**
+
+- 3x Kycoo the Ghost Destroyer
+- 3x Messenger of Peace
+- 2x Mind Control
+- 1x Mystic Swordsman LV2
+- 1x Mystical Space Typhoon
+- 3x Royal Decree
+- 1x Trap Dustshoot
+- 1x Tsukuyomi
+
+</details>
+
+<details>
+<summary>Panda Burn: 5% (wolfe_KMH-Panda Burn) (40 cards + 15 Fusion Deck + 15 Side Deck)</summary>
+
+**Monsters (14)**
+
+- 1x Big Shield Gardna
+- 1x Breaker the Magical Warrior
+- 1x Cyber Jar
+- 1x D.D. Warrior Lady
+- 1x Des Koala
+- 1x Exiled Force
+- 3x Giant Rat
+- 3x Gyaku-Gire Panda
+- 1x Injection Fairy Lily
+- 1x Morphing Jar
+
+**Spells (13)**
+
+- 2x Book of Moon
+- 3x Giant Trunade
+- 1x Graceful Charity
+- 1x Heavy Storm
+- 2x Level Limit - Area B
+- 1x Pot of Greed
+- 1x Premature Burial
+- 1x Snatch Steal
+- 1x Swords of Revealing Light
+
+**Traps (13)**
+
+- 1x Bell of Destruction
+- 1x Ceasefire
+- 1x Gravity Bind
+- 3x Just Desserts
+- 1x Magic Cylinder
+- 3x Ojama Trio
+- 3x Secret Barrel
+
+**Fusion Deck (15)**
+
+- 1x Dark Balter the Terrible
+- 1x Dark Blade the Dragon Knight
+- 1x Dark Flare Knight
+- 1x Darkfire Dragon
+- 1x Fiend Skull Dragon
+- 1x Flame Ghost
+- 1x Gatling Dragon
+- 1x King Dragun
+- 1x Master of Oz
+- 1x Ojama King
+- 1x Reaper on the Nightmare
+- 1x Ryu Senshi
+- 1x The Last Warrior from Another Planet
+- 2x Thousand-Eyes Restrict
+
+**Side Deck (15)**
+
+- 2x D.D. Assailant
+- 3x Final Attack Orders
+- 2x Gigantes
+- 3x Goblin Attack Force
+- 1x Kycoo the Ghost Destroyer
+- 1x Mirror Force
+- 1x Mystic Swordsman LV2
+- 1x Nobleman of Crossout
+- 1x Reinforcement of the Army
+
+</details>
+
+<details>
+<summary>Chaos Return: 5% (Dingosig-Chaos Return) (40 cards + 15 Fusion Deck + 15 Side Deck)</summary>
+
+**Monsters (18)**
+
+- 1x Bazoo the Soul-Eater
+- 1x Black Luster Soldier - Envoy of Beginning
+- 2x Blade Knight
+- 1x Breaker the Magical Warrior
+- 1x Chaos Sorcerer
+- 1x D.D. Warrior Lady
+- 3x Dekoichi the Battlechanted Locomotive
+- 3x Gravekeeper's Spy
+- 1x Sangan
+- 2x Shining Fairy
+- 2x Zaborg the Thunder Monarch
+
+**Spells (10)**
+
+- 2x Book of Moon
+- 1x Delinquent Duo
+- 1x Graceful Charity
+- 1x Heavy Storm
+- 1x Mystical Space Typhoon
+- 2x Nobleman of Crossout
+- 1x Pot of Greed
+- 1x Snatch Steal
+
+**Traps (12)**
+
+- 1x Bell of Destruction
+- 2x Dust Tornado
+- 1x Mirror Force
+- 2x Return from the Different Dimension
+- 3x Solemn Judgment
+- 1x Torrential Tribute
+- 2x Trap Dustshoot
+
+**Fusion Deck (15)**
+
+- 2x Dark Balter the Terrible
+- 1x Dark Blade the Dragon Knight
+- 2x Fiend Skull Dragon
+- 1x Gatling Dragon
+- 2x King Dragun
+- 1x Master of Oz
+- 1x Ojama King
+- 1x Reaper on the Nightmare
+- 1x Ryu Senshi
+- 2x The Last Warrior from Another Planet
+- 1x Thousand-Eyes Restrict
+
+**Side Deck (15)**
+
+- 1x Asura Priest
+- 1x Dust Tornado
+- 1x Kuriboh
+- 2x Mind Control
+- 1x Mobius the Frost Monarch
+- 2x Mystik Wok
+- 1x Roulette Barrel
+- 3x Sakuretsu Armor
+- 1x Swords of Revealing Light
+- 1x Tribe-Infecting Virus
+- 1x Xing Zhen Hu
+
+</details>
+
+<details>
+<summary>Reasoning Gate Turbo: 5% (paede17-Reasoning Gate Turbo) (40 cards + 15 Fusion Deck + 15 Side Deck)</summary>
+
+**Monsters (8)**
+
+- 1x Black Luster Soldier - Envoy of Beginning
+- 2x Chaos Sorcerer
+- 1x Dark Magician of Chaos
+- 1x Jinzo
+- 2x Sacred Crane
+- 1x Toon Cannon Soldier
+
+**Spells (28)**
+
+- 1x Card Destruction
+- 3x Dimension Fusion
+- 3x Giant Trunade
+- 1x Graceful Charity
+- 1x Heavy Storm
+- 1x Lightning Vortex
+- 3x Monster Gate
+- 1x Monster Reincarnation
+- 1x Pot of Greed
+- 1x Premature Burial
+- 3x Reasoning
+- 3x Scapegoat
+- 1x Snatch Steal
+- 3x Toon Table of Contents
+- 2x Upstart Goblin
+
+**Traps (4)**
+
+- 1x Call Of The Haunted
+- 3x Jar of Greed
+
+**Fusion Deck (15)**
+
+- 1x Dark Balter the Terrible
+- 1x Dark Blade the Dragon Knight
+- 1x Dark Paladin
+- 1x Darkfire Dragon
+- 1x Fiend Skull Dragon
+- 1x Flame Ghost
+- 1x King Dragun
+- 1x Master of Oz
+- 1x Ojama King
+- 1x Reaper on the Nightmare
+- 1x Ryu Senshi
+- 1x The Last Warrior from Another Planet
+- 3x Thousand-Eyes Restrict
+
+**Side Deck (15)**
+
+- 1x Airknight Parshath
+- 1x Bell of Destruction
+- 1x Mirror Force
+- 1x Raigeki Break
+- 2x Royal Decree
+- 2x Spell Canceller
+- 1x Swords of Revealing Light
+- 3x Threatening Roar
+- 2x Token Thanksgiving
+- 1x Torrential Tribute
+
+</details>
+
+Every card was already in the game. Cards in these seven decks with no coded effect yet: Mystik Wok, Level Limit - Area B, Secret Barrel, Ojama Trio, Gravity Bind, Spell Canceller, Des Koala, Toon Table of Contents, Token Thanksgiving, Monster Reincarnation, Roulette Barrel, Toon Cannon Soldier, Final Attack Orders, Dark Scorpion - Cliff the Trap Remover, Hysteric Fairy, Royal Oppression, and the Fusion Monsters Dark Balter the Terrible, Ryu Senshi, Gatling Dragon, Dark Blade the Dragon Knight, Fiend Skull Dragon, Reaper on the Nightmare, The Last Warrior from Another Planet, King Dragun, Ojama King, Dark Flare Knight and Dark Paladin.
+
+### 14-15. Cyber to Reaper
 
 Vanilla (unchanged): these opponents still use the original game's decks.
 

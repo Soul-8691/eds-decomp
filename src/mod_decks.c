@@ -2550,6 +2550,404 @@ void ModSetOpponentRecipe(const u16 *deck, int deckCount, const u16 *fusion, int
     gModOpponentRecipe.valid = MOD_OPPONENT_RECIPE_VALID;
 }
 
+/* The Goat format opponent (Ishizu's slot, src/mod_opponents.c): one of seven decks per duel (GoatDeck): LR-Chaos
+ * Turbo 40%, sdlkilla-Warrior 20%, geistD-Goat Control 15% (the deck opponents' decks, above), Chaos Control 10%,
+ * Panda Burn, Chaos Return and Reasoning Gate Turbo 5% each (decks/N\u2661va-Chaos Control.ydk,
+ * decks/wolfe_KMH-Panda Burn.ydk, decks/Dingosig-Chaos Return.ydk, decks/paede17-Reasoning Gate Turbo.ydk; main and
+ * extra decks). Every card was already in the game. */
+#if defined(HAS_CARD_GRAVEKEEPERS_SPY) \
+    && defined(HAS_CARD_SPIRIT_REAPER) \
+    && defined(HAS_CARD_BLACK_LUSTER_SOLDIER_ENVOY_OF_THE_BEGINNING) \
+    && defined(HAS_CARD_CHAOS_SORCERER) \
+    && defined(HAS_CARD_BREAKER_THE_MAGICAL_WARRIOR) \
+    && defined(HAS_CARD_TSUKUYOMI) \
+    && defined(HAS_CARD_METAMORPHOSIS) \
+    && defined(HAS_CARD_SCAPEGOAT) \
+    && defined(HAS_CARD_JAR_OF_GREED) \
+    && defined(HAS_CARD_RAIGEKI_BREAK) \
+    && defined(HAS_CARD_TORRENTIAL_TRIBUTE) \
+    && defined(HAS_CARD_DARK_BALTER_THE_TERRIBLE) \
+    && defined(HAS_CARD_DARK_BLADE_THE_DRAGON_KNIGHT) \
+    && defined(HAS_CARD_FIEND_SKULL_DRAGON) \
+    && defined(HAS_CARD_GATLING_DRAGON) \
+    && defined(HAS_CARD_KING_DRAGUN) \
+    && defined(HAS_CARD_MASTER_OF_OZ) \
+    && defined(HAS_CARD_OJAMA_KING) \
+    && defined(HAS_CARD_REAPER_ON_THE_NIGHTMARE) \
+    && defined(HAS_CARD_RYU_SENSHI) \
+    && defined(HAS_CARD_THE_LAST_WARRIOR_FROM_ANOTHER_PLANET) \
+    && defined(HAS_CARD_THOUSAND_EYES_RESTRICT) \
+    && defined(HAS_CARD_KYCOO_THE_GHOST_DESTROYER) \
+    && defined(HAS_CARD_MYSTIC_SWORDSMAN_LV2) \
+    && defined(HAS_CARD_MIND_CONTROL) \
+    && defined(HAS_CARD_TRAP_DUSTSHOOT)
+#define MOD_GOAT_CHAOS_CONTROL 1
+static const u16 sGoatChaosControl[] = {
+    /* Monsters (18) */
+    X2(CARD_GRAVEKEEPERS_SPY),
+    CARD_MYSTIC_TOMATO,
+    X3(CARD_MAGICIAN_OF_FAITH),
+    X3(CARD_THUNDER_DRAGON),
+    CARD_SINISTER_SERPENT,
+    X3(CARD_SPIRIT_REAPER),
+    CARD_BLACK_LUSTER_SOLDIER_ENVOY_OF_THE_BEGINNING,
+    CARD_CHAOS_SORCERER,
+    CARD_BREAKER_THE_MAGICAL_WARRIOR,
+    CARD_SANGAN,
+    CARD_TSUKUYOMI,
+    /* Spells (14) */
+    X2(CARD_NOBLEMAN_OF_CROSSOUT),
+    CARD_POT_OF_GREED,
+    CARD_DELINQUENT_DUO,
+    CARD_GRACEFUL_CHARITY,
+    CARD_SNATCH_STEAL,
+    CARD_HEAVY_STORM,
+    X3(CARD_METAMORPHOSIS),
+    X2(CARD_SCAPEGOAT),
+    X2(CARD_UPSTART_GOBLIN),
+    /* Traps (8) */
+    X3(CARD_JAR_OF_GREED),
+    X2(CARD_RAIGEKI_BREAK),
+    CARD_BELL_OF_DESTRUCTION,
+    CARD_TORRENTIAL_TRIBUTE,
+    CARD_MIRROR_FORCE,
+    /* Fusion Deck (15) */
+    CARD_DARK_BALTER_THE_TERRIBLE,
+    CARD_DARK_BLADE_THE_DRAGON_KNIGHT,
+    CARD_DARKFIRE_DRAGON,
+    CARD_DRAGONESS_THE_WICKED_KNIGHT,
+    CARD_FIEND_SKULL_DRAGON,
+    CARD_GATLING_DRAGON,
+    CARD_KING_DRAGUN,
+    CARD_MASTER_OF_OZ,
+    CARD_OJAMA_KING,
+    CARD_REAPER_ON_THE_NIGHTMARE,
+    CARD_RYU_SENSHI,
+    CARD_THE_LAST_WARRIOR_FROM_ANOTHER_PLANET,
+    X3(CARD_THOUSAND_EYES_RESTRICT),
+};
+STATIC_ASSERT(ARRAY_COUNT(sGoatChaosControl) == 40 + 15, GoatChaosControlSize);
+static const struct DeckList sGoatChaosControlList = { sGoatChaosControl, ARRAY_COUNT(sGoatChaosControl), 0 };
+/* N\u2661va-Chaos Control.ydk's Side Deck (15). */
+static const u16 sGoatChaosControlSide[] = {
+    CARD_TSUKUYOMI,
+    X3(CARD_KYCOO_THE_GHOST_DESTROYER),
+    CARD_MYSTIC_SWORDSMAN_LV2,
+    CARD_MYSTICAL_SPACE_TYPHOON,
+    X2(CARD_MIND_CONTROL),
+    X3(CARD_MESSENGER_OF_PEACE),
+    X3(CARD_ROYAL_DECREE),
+    CARD_TRAP_DUSTSHOOT,
+};
+STATIC_ASSERT(ARRAY_COUNT(sGoatChaosControlSide) == 15, GoatChaosControlSideSize);
+#endif
+
+#if defined(HAS_CARD_BREAKER_THE_MAGICAL_WARRIOR) \
+    && defined(HAS_CARD_EXILED_FORCE) \
+    && defined(HAS_CARD_GYAKU_GIRE_PANDA) \
+    && defined(HAS_CARD_INJECTION_FAIRY_LILY) \
+    && defined(HAS_CARD_D_D_WARRIOR_LADY) \
+    && defined(HAS_CARD_BOOK_OF_MOON) \
+    && defined(HAS_CARD_OJAMA_TRIO) \
+    && defined(HAS_CARD_DES_KOALA) \
+    && defined(HAS_CARD_LEVEL_LIMIT_AREA_B) \
+    && defined(HAS_CARD_SECRET_BARREL) \
+    && defined(HAS_CARD_MAGIC_CYLINDER) \
+    && defined(HAS_CARD_GRAVITY_BIND) \
+    && defined(HAS_CARD_MASTER_OF_OZ) \
+    && defined(HAS_CARD_THE_LAST_WARRIOR_FROM_ANOTHER_PLANET) \
+    && defined(HAS_CARD_GATLING_DRAGON) \
+    && defined(HAS_CARD_KING_DRAGUN) \
+    && defined(HAS_CARD_DARK_BLADE_THE_DRAGON_KNIGHT) \
+    && defined(HAS_CARD_OJAMA_KING) \
+    && defined(HAS_CARD_DARK_FLARE_KNIGHT) \
+    && defined(HAS_CARD_RYU_SENSHI) \
+    && defined(HAS_CARD_DARK_BALTER_THE_TERRIBLE) \
+    && defined(HAS_CARD_FIEND_SKULL_DRAGON) \
+    && defined(HAS_CARD_REAPER_ON_THE_NIGHTMARE) \
+    && defined(HAS_CARD_THOUSAND_EYES_RESTRICT) \
+    && defined(HAS_CARD_GOBLIN_ATTACK_FORCE) \
+    && defined(HAS_CARD_D_D_ASSAILANT) \
+    && defined(HAS_CARD_GIGANTES) \
+    && defined(HAS_CARD_KYCOO_THE_GHOST_DESTROYER) \
+    && defined(HAS_CARD_MYSTIC_SWORDSMAN_LV2) \
+    && defined(HAS_CARD_REINFORCEMENT_OF_THE_ARMY) \
+    && defined(HAS_CARD_FINAL_ATTACK_ORDERS)
+#define MOD_GOAT_PANDA_BURN 1
+static const u16 sGoatPandaBurn[] = {
+    /* Monsters (14) */
+    CARD_BREAKER_THE_MAGICAL_WARRIOR,
+    CARD_CYBER_JAR,
+    CARD_EXILED_FORCE,
+    X3(CARD_GIANT_RAT),
+    X3(CARD_GYAKU_GIRE_PANDA),
+    CARD_INJECTION_FAIRY_LILY,
+    CARD_MORPHING_JAR,
+    CARD_D_D_WARRIOR_LADY,
+    CARD_BIG_SHIELD_GARDNA,
+    CARD_DES_KOALA,
+    /* Spells (13) */
+    CARD_POT_OF_GREED,
+    CARD_GRACEFUL_CHARITY,
+    X3(CARD_GIANT_TRUNADE),
+    CARD_PREMATURE_BURIAL,
+    CARD_SNATCH_STEAL,
+    X2(CARD_BOOK_OF_MOON),
+    CARD_HEAVY_STORM,
+    CARD_SWORDS_OF_REVEALING_LIGHT,
+    X2(CARD_LEVEL_LIMIT_AREA_B),
+    /* Traps (13) */
+    CARD_CEASEFIRE,
+    X3(CARD_OJAMA_TRIO),
+    CARD_BELL_OF_DESTRUCTION,
+    X3(CARD_JUST_DESSERTS),
+    X3(CARD_SECRET_BARREL),
+    CARD_MAGIC_CYLINDER,
+    CARD_GRAVITY_BIND,
+    /* Fusion Deck (15) */
+    CARD_MASTER_OF_OZ,
+    CARD_THE_LAST_WARRIOR_FROM_ANOTHER_PLANET,
+    CARD_GATLING_DRAGON,
+    CARD_KING_DRAGUN,
+    CARD_DARK_BLADE_THE_DRAGON_KNIGHT,
+    CARD_OJAMA_KING,
+    CARD_DARK_FLARE_KNIGHT,
+    CARD_RYU_SENSHI,
+    CARD_DARK_BALTER_THE_TERRIBLE,
+    CARD_FIEND_SKULL_DRAGON,
+    CARD_REAPER_ON_THE_NIGHTMARE,
+    CARD_DARKFIRE_DRAGON,
+    CARD_FLAME_GHOST,
+    X2(CARD_THOUSAND_EYES_RESTRICT),
+};
+STATIC_ASSERT(ARRAY_COUNT(sGoatPandaBurn) == 40 + 15, GoatPandaBurnSize);
+static const struct DeckList sGoatPandaBurnList = { sGoatPandaBurn, ARRAY_COUNT(sGoatPandaBurn), 0 };
+/* wolfe_KMH-Panda Burn.ydk's Side Deck (15). */
+static const u16 sGoatPandaBurnSide[] = {
+    X3(CARD_GOBLIN_ATTACK_FORCE),
+    X2(CARD_D_D_ASSAILANT),
+    X2(CARD_GIGANTES),
+    CARD_KYCOO_THE_GHOST_DESTROYER,
+    CARD_MYSTIC_SWORDSMAN_LV2,
+    CARD_NOBLEMAN_OF_CROSSOUT,
+    CARD_REINFORCEMENT_OF_THE_ARMY,
+    X3(CARD_FINAL_ATTACK_ORDERS),
+    CARD_MIRROR_FORCE,
+};
+STATIC_ASSERT(ARRAY_COUNT(sGoatPandaBurnSide) == 15, GoatPandaBurnSideSize);
+#endif
+
+#if defined(HAS_CARD_BAZOO_THE_SOUL_EATER) \
+    && defined(HAS_CARD_BLACK_LUSTER_SOLDIER_ENVOY_OF_THE_BEGINNING) \
+    && defined(HAS_CARD_BLADE_KNIGHT) \
+    && defined(HAS_CARD_BREAKER_THE_MAGICAL_WARRIOR) \
+    && defined(HAS_CARD_CHAOS_SORCERER) \
+    && defined(HAS_CARD_D_D_WARRIOR_LADY) \
+    && defined(HAS_CARD_DEKOICHI_THE_BATTLECHANTED_LOCOMOTIVE) \
+    && defined(HAS_CARD_GRAVEKEEPERS_SPY) \
+    && defined(HAS_CARD_ZABORG_THE_THUNDER_MONARCH) \
+    && defined(HAS_CARD_BOOK_OF_MOON) \
+    && defined(HAS_CARD_RETURN_FROM_THE_DIFFERENT_DIMENSION) \
+    && defined(HAS_CARD_TORRENTIAL_TRIBUTE) \
+    && defined(HAS_CARD_TRAP_DUSTSHOOT) \
+    && defined(HAS_CARD_DARK_BALTER_THE_TERRIBLE) \
+    && defined(HAS_CARD_DARK_BLADE_THE_DRAGON_KNIGHT) \
+    && defined(HAS_CARD_FIEND_SKULL_DRAGON) \
+    && defined(HAS_CARD_GATLING_DRAGON) \
+    && defined(HAS_CARD_KING_DRAGUN) \
+    && defined(HAS_CARD_MASTER_OF_OZ) \
+    && defined(HAS_CARD_OJAMA_KING) \
+    && defined(HAS_CARD_REAPER_ON_THE_NIGHTMARE) \
+    && defined(HAS_CARD_RYU_SENSHI) \
+    && defined(HAS_CARD_THE_LAST_WARRIOR_FROM_ANOTHER_PLANET) \
+    && defined(HAS_CARD_THOUSAND_EYES_RESTRICT) \
+    && defined(HAS_CARD_ASURA_PRIEST) \
+    && defined(HAS_CARD_MOBIUS_THE_FROST_MONARCH) \
+    && defined(HAS_CARD_ROULETTE_BARREL) \
+    && defined(HAS_CARD_TRIBE_INFECTING_VIRUS) \
+    && defined(HAS_CARD_MIND_CONTROL) \
+    && defined(HAS_CARD_MYSTIK_WOK) \
+    && defined(HAS_CARD_SAKURETSU_ARMOR) \
+    && defined(HAS_CARD_XING_ZHEN_HU)
+#define MOD_GOAT_CHAOS_RETURN 1
+static const u16 sGoatChaosReturn[] = {
+    /* Monsters (18) */
+    CARD_BAZOO_THE_SOUL_EATER,
+    CARD_BLACK_LUSTER_SOLDIER_ENVOY_OF_THE_BEGINNING,
+    X2(CARD_BLADE_KNIGHT),
+    CARD_BREAKER_THE_MAGICAL_WARRIOR,
+    CARD_CHAOS_SORCERER,
+    CARD_D_D_WARRIOR_LADY,
+    X3(CARD_DEKOICHI_THE_BATTLECHANTED_LOCOMOTIVE),
+    X3(CARD_GRAVEKEEPERS_SPY),
+    CARD_SANGAN,
+    X2(CARD_SHINING_FAIRY),
+    X2(CARD_ZABORG_THE_THUNDER_MONARCH),
+    /* Spells (10) */
+    X2(CARD_BOOK_OF_MOON),
+    CARD_DELINQUENT_DUO,
+    CARD_GRACEFUL_CHARITY,
+    CARD_HEAVY_STORM,
+    CARD_MYSTICAL_SPACE_TYPHOON,
+    X2(CARD_NOBLEMAN_OF_CROSSOUT),
+    CARD_POT_OF_GREED,
+    CARD_SNATCH_STEAL,
+    /* Traps (12) */
+    X2(CARD_DUST_TORNADO),
+    CARD_MIRROR_FORCE,
+    X2(CARD_RETURN_FROM_THE_DIFFERENT_DIMENSION),
+    CARD_BELL_OF_DESTRUCTION,
+    X3(CARD_SOLEMN_JUDGMENT),
+    CARD_TORRENTIAL_TRIBUTE,
+    X2(CARD_TRAP_DUSTSHOOT),
+    /* Fusion Deck (15) */
+    X2(CARD_DARK_BALTER_THE_TERRIBLE),
+    CARD_DARK_BLADE_THE_DRAGON_KNIGHT,
+    X2(CARD_FIEND_SKULL_DRAGON),
+    CARD_GATLING_DRAGON,
+    X2(CARD_KING_DRAGUN),
+    CARD_MASTER_OF_OZ,
+    CARD_OJAMA_KING,
+    CARD_REAPER_ON_THE_NIGHTMARE,
+    CARD_RYU_SENSHI,
+    X2(CARD_THE_LAST_WARRIOR_FROM_ANOTHER_PLANET),
+    CARD_THOUSAND_EYES_RESTRICT,
+};
+STATIC_ASSERT(ARRAY_COUNT(sGoatChaosReturn) == 40 + 15, GoatChaosReturnSize);
+static const struct DeckList sGoatChaosReturnList = { sGoatChaosReturn, ARRAY_COUNT(sGoatChaosReturn), 0 };
+/* Dingosig-Chaos Return.ydk's Side Deck (15). */
+static const u16 sGoatChaosReturnSide[] = {
+    CARD_ASURA_PRIEST,
+    CARD_KURIBOH,
+    CARD_MOBIUS_THE_FROST_MONARCH,
+    CARD_ROULETTE_BARREL,
+    CARD_TRIBE_INFECTING_VIRUS,
+    X2(CARD_MIND_CONTROL),
+    X2(CARD_MYSTIK_WOK),
+    CARD_SWORDS_OF_REVEALING_LIGHT,
+    CARD_DUST_TORNADO,
+    X3(CARD_SAKURETSU_ARMOR),
+    CARD_XING_ZHEN_HU,
+};
+STATIC_ASSERT(ARRAY_COUNT(sGoatChaosReturnSide) == 15, GoatChaosReturnSideSize);
+#endif
+
+#if defined(HAS_CARD_BLACK_LUSTER_SOLDIER_ENVOY_OF_THE_BEGINNING) \
+    && defined(HAS_CARD_CHAOS_SORCERER) \
+    && defined(HAS_CARD_DARK_MAGICIAN_OF_CHAOS) \
+    && defined(HAS_CARD_SACRED_CRANE) \
+    && defined(HAS_CARD_TOON_CANNON_SOLDIER) \
+    && defined(HAS_CARD_CARD_DESTRUCTION) \
+    && defined(HAS_CARD_DIMENSION_FUSION) \
+    && defined(HAS_CARD_LIGHTNING_VORTEX) \
+    && defined(HAS_CARD_MONSTER_GATE) \
+    && defined(HAS_CARD_MONSTER_REINCARNATION) \
+    && defined(HAS_CARD_REASONING) \
+    && defined(HAS_CARD_SCAPEGOAT) \
+    && defined(HAS_CARD_TOON_TABLE_OF_CONTENTS) \
+    && defined(HAS_CARD_JAR_OF_GREED) \
+    && defined(HAS_CARD_DARK_BALTER_THE_TERRIBLE) \
+    && defined(HAS_CARD_DARK_BLADE_THE_DRAGON_KNIGHT) \
+    && defined(HAS_CARD_DARK_PALADIN) \
+    && defined(HAS_CARD_FIEND_SKULL_DRAGON) \
+    && defined(HAS_CARD_KING_DRAGUN) \
+    && defined(HAS_CARD_MASTER_OF_OZ) \
+    && defined(HAS_CARD_OJAMA_KING) \
+    && defined(HAS_CARD_REAPER_ON_THE_NIGHTMARE) \
+    && defined(HAS_CARD_RYU_SENSHI) \
+    && defined(HAS_CARD_THE_LAST_WARRIOR_FROM_ANOTHER_PLANET) \
+    && defined(HAS_CARD_THOUSAND_EYES_RESTRICT) \
+    && defined(HAS_CARD_AIRKNIGHT_PARSHATH) \
+    && defined(HAS_CARD_SPELL_CANCELLER) \
+    && defined(HAS_CARD_TOKEN_THANKSGIVING) \
+    && defined(HAS_CARD_RAIGEKI_BREAK) \
+    && defined(HAS_CARD_THREATENING_ROAR) \
+    && defined(HAS_CARD_TORRENTIAL_TRIBUTE)
+#define MOD_GOAT_REASONING_GATE_TURBO 1
+static const u16 sGoatReasoningGateTurbo[] = {
+    /* Monsters (8) */
+    CARD_BLACK_LUSTER_SOLDIER_ENVOY_OF_THE_BEGINNING,
+    X2(CARD_CHAOS_SORCERER),
+    CARD_DARK_MAGICIAN_OF_CHAOS,
+    CARD_JINZO,
+    X2(CARD_SACRED_CRANE),
+    CARD_TOON_CANNON_SOLDIER,
+    /* Spells (28) */
+    CARD_CARD_DESTRUCTION,
+    X3(CARD_DIMENSION_FUSION),
+    X3(CARD_GIANT_TRUNADE),
+    CARD_GRACEFUL_CHARITY,
+    CARD_HEAVY_STORM,
+    CARD_LIGHTNING_VORTEX,
+    X3(CARD_MONSTER_GATE),
+    CARD_MONSTER_REINCARNATION,
+    CARD_POT_OF_GREED,
+    CARD_PREMATURE_BURIAL,
+    X3(CARD_REASONING),
+    X3(CARD_SCAPEGOAT),
+    CARD_SNATCH_STEAL,
+    X3(CARD_TOON_TABLE_OF_CONTENTS),
+    X2(CARD_UPSTART_GOBLIN),
+    /* Traps (4) */
+    CARD_CALL_OF_THE_HAUNTED,
+    X3(CARD_JAR_OF_GREED),
+    /* Fusion Deck (15) */
+    CARD_DARK_BALTER_THE_TERRIBLE,
+    CARD_DARK_BLADE_THE_DRAGON_KNIGHT,
+    CARD_DARK_PALADIN,
+    CARD_DARKFIRE_DRAGON,
+    CARD_FIEND_SKULL_DRAGON,
+    CARD_FLAME_GHOST,
+    CARD_KING_DRAGUN,
+    CARD_MASTER_OF_OZ,
+    CARD_OJAMA_KING,
+    CARD_REAPER_ON_THE_NIGHTMARE,
+    CARD_RYU_SENSHI,
+    CARD_THE_LAST_WARRIOR_FROM_ANOTHER_PLANET,
+    X3(CARD_THOUSAND_EYES_RESTRICT),
+};
+STATIC_ASSERT(ARRAY_COUNT(sGoatReasoningGateTurbo) == 40 + 15, GoatReasoningGateTurboSize);
+static const struct DeckList sGoatReasoningGateTurboList = { sGoatReasoningGateTurbo, ARRAY_COUNT(sGoatReasoningGateTurbo), 0 };
+/* paede17-Reasoning Gate Turbo.ydk's Side Deck (15). */
+static const u16 sGoatReasoningGateTurboSide[] = {
+    CARD_AIRKNIGHT_PARSHATH,
+    X2(CARD_SPELL_CANCELLER),
+    CARD_SWORDS_OF_REVEALING_LIGHT,
+    X2(CARD_TOKEN_THANKSGIVING),
+    CARD_MIRROR_FORCE,
+    CARD_RAIGEKI_BREAK,
+    CARD_BELL_OF_DESTRUCTION,
+    X2(CARD_ROYAL_DECREE),
+    X3(CARD_THREATENING_ROAR),
+    CARD_TORRENTIAL_TRIBUTE,
+};
+STATIC_ASSERT(ARRAY_COUNT(sGoatReasoningGateTurboSide) == 15, GoatReasoningGateTurboSideSize);
+#endif
+#if defined(MOD_RED_DECK) && defined(MOD_JOEY_DECK) && defined(MOD_BAKURA_DECK) && defined(MOD_GOAT_CHAOS_CONTROL) \
+    && defined(MOD_GOAT_PANDA_BURN) && defined(MOD_GOAT_CHAOS_RETURN) && defined(MOD_GOAT_REASONING_GATE_TURBO)
+#define MOD_GOAT_DECKS 1
+/* The Goat opponent's deck for this duel, in twentieths: Chaos Turbo 8, Warrior 4, Goat Control 3, Chaos Control 2,
+ * Panda Burn, Chaos Return and Reasoning Gate Turbo 1 each. */
+static const struct DeckList *GoatDeck(void)
+{
+    u32 roll = (u32)Random() % 20;
+
+    if (roll < 8)
+        return &sRedDeckList;
+    if (roll < 12)
+        return &sJoeyDeckList;
+    if (roll < 15)
+        return &sBakuraDeckList;
+    if (roll < 17)
+        return &sGoatChaosControlList;
+    if (roll < 18)
+        return &sGoatPandaBurnList;
+    if (roll < 19)
+        return &sGoatChaosReturnList;
+    return &sGoatReasoningGateTurboList;
+}
+#endif
+
 /* The replacement deck of opponent `opponent` (enum DuelistId), or NULL to keep the original: a new pick (the
  * weighted random ones roll again); GetOpponentDeckOverride keeps it for the match. */
 static const struct DeckList *PickOpponentDeckOverride(int opponent)
@@ -2588,6 +2986,10 @@ static const struct DeckList *PickOpponentDeckOverride(int opponent)
 #ifdef MOD_WARRIOR_DECKS
     case DUELIST_KAIBA:                 /* the Warrior format opponent */
         return WarriorDeck();
+#endif
+#ifdef MOD_GOAT_DECKS
+    case DUELIST_ISHIZU:                /* the Goat format opponent */
+        return GoatDeck();
 #endif
 #ifdef MOD_JOEY_PEGASUS_DECKS
     case DUELIST_WEEVIL:                /* the Joey-Pegasus format opponent */
@@ -2682,6 +3084,10 @@ static const char sNameWarriorChaosReturn[] = "paoloNS-Chaos Return";
 static const char sNameChaosTurbo[] = "LR-Chaos Turbo";
 static const char sNameWarrior[] = "sdlkilla-Warrior";
 static const char sNameGoatControl[] = "geistD-Goat Control";
+static const char sNameGoatChaosControl[] = "Nova-Chaos Control";      /* N\u2661va: the game's font has no heart */
+static const char sNameGoatPandaBurn[] = "wolfe_KMH-Panda Burn";
+static const char sNameGoatChaosReturn[] = "Dingosig-Chaos Return";
+static const char sNameGoatReasoningGateTurbo[] = "paede17-Reasoning Gate Turbo";
 
 static const struct RecipePreset sRecipePresets[] = {
 #ifdef MOD_TRISTAN_SOUL_CONTROL
@@ -2780,6 +3186,19 @@ static const struct RecipePreset sRecipePresets[] = {
 #endif
 #ifdef MOD_BAKURA_DECK
     { sNameGoatControl, &sBakuraDeckList, sBakuraDeckSide, ARRAY_COUNT(sBakuraDeckSide) },
+#endif
+#ifdef MOD_GOAT_CHAOS_CONTROL
+    { sNameGoatChaosControl, &sGoatChaosControlList, sGoatChaosControlSide, ARRAY_COUNT(sGoatChaosControlSide) },
+#endif
+#ifdef MOD_GOAT_PANDA_BURN
+    { sNameGoatPandaBurn, &sGoatPandaBurnList, sGoatPandaBurnSide, ARRAY_COUNT(sGoatPandaBurnSide) },
+#endif
+#ifdef MOD_GOAT_CHAOS_RETURN
+    { sNameGoatChaosReturn, &sGoatChaosReturnList, sGoatChaosReturnSide, ARRAY_COUNT(sGoatChaosReturnSide) },
+#endif
+#ifdef MOD_GOAT_REASONING_GATE_TURBO
+    { sNameGoatReasoningGateTurbo, &sGoatReasoningGateTurboList, sGoatReasoningGateTurboSide,
+      ARRAY_COUNT(sGoatReasoningGateTurboSide) },
 #endif
     { NULL, NULL, NULL, 0 },
 };

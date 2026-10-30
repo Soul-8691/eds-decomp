@@ -71,7 +71,11 @@ next to the one before it.
   - Warrior plays Gyomberman-Goat Control 40%, ellietincan-Warrior 30%, Patrick Smith-Warrior Control 20% and
     paoloNS-Chaos Return 10% (`WarriorDeck`, Kaiba's slot). Every card was already in the game; the uncoded ones are
     listed in DECKS.md.
-  - The other 3 keep their original duelists' decks for now.
+  - Goat plays LR-Chaos Turbo 40%, sdlkilla-Warrior 20%, geistD-Goat Control 15% (the deck opponents' decks),
+    N♡va-Chaos Control 10% (recipe "Nova-Chaos Control"), wolfe_KMH-Panda Burn, Dingosig-Chaos Return and
+    paede17-Reasoning Gate Turbo 5% each (`GoatDeck`, Ishizu's slot, in twentieths: 8/4/3/2/1/1/1). Every card was
+    already in the game; the uncoded ones are listed in DECKS.md.
+  - The other 2 keep their original duelists' decks for now.
   - Cards in these decks with no coded effect yet: Dark Balter the Terrible, Fiend Skull Dragon, Ryu Senshi (Joey-
     Pegasus Tomato Control's Fusion Deck), Skull Lair and The Last Warrior from Another Planet (Joey-Pegasus Vanilla
     Beat and both Android decks).

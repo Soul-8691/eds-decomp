@@ -26,7 +26,7 @@ An eighth main-menu item added by this build (`src/mod_recipes.c`, a `@farcode`/
   - `MainMenu_Init` writes the label to tiles 0x200-0x23F, the two tile rows after the 0x4000-byte sheet.
 
 ## Preset recipes
-The SRAM area is set up on the first visit (and after a New Game) with recipes 01-33 from `GetRecipePreset` (src/mod_decks.c). These are the
+The SRAM area is set up on the first visit (and after a New Game) with recipes 01-37 from `GetRecipePreset` (src/mod_decks.c). These are the
 mod's deck tables, named after their .ydk files. Every preset carries the .ydk's Side Deck too (`s<Deck>Side`,
 passed by `GetRecipePreset` and put in the recipe's side list by `PresetToBuf`) and has its .ydk's Extra Deck as
 its Fusion Deck. Presets 31-33 (Chaos Turbo, Warrior, Goat Control; 22-24 until the Vampire, Chaos and Warrior decks came) got theirs on 2026-10-30: until then they held
@@ -67,9 +67,13 @@ Control's Side Deck (4-Starred Ladybug of Doom is an added card now, [[added-car
 | 28 | ellietincan-Warrior | the Warrior opponent (30%) |
 | 29 | Patrick Smith-Warrior Control | the Warrior opponent (20%) |
 | 30 | paoloNS-Chaos Return | the Warrior opponent (10%) |
-| 31 | LR-Chaos Turbo | Tea, the Chaos Turbo deck opponent (debug build) |
-| 32 | sdlkilla-Warrior | the Warrior deck opponent (debug build) |
-| 33 | geistD-Goat Control | the Goat Control deck opponent (debug build) |
+| 31 | LR-Chaos Turbo | Tea, the Chaos Turbo deck opponent (debug build); the Goat opponent (40%) |
+| 32 | sdlkilla-Warrior | the Warrior deck opponent (debug build); the Goat opponent (20%) |
+| 33 | geistD-Goat Control | the Goat Control deck opponent (debug build); the Goat opponent (15%) |
+| 34 | Nova-Chaos Control | the Goat opponent (10%; N♡va-Chaos Control.ydk, the font has no heart) |
+| 35 | wolfe_KMH-Panda Burn | the Goat opponent (5%) |
+| 36 | Dingosig-Chaos Return | the Goat opponent (5%) |
+| 37 | paede17-Reasoning Gate Turbo | the Goat opponent (5%) |
 
 "ellietincan-Warrior Tomato Control" is 34 characters, so the slot stores the first 31 (`RECIPE_NAME_SIZE` 32), and
 the list row shows 26 and "..". "Aretos-Tomato Control (Scientist)" (33) is cut the same way.
