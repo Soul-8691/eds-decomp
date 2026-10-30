@@ -162,6 +162,8 @@ next one.
       and otherwise deals the damage.
     - It chains Emergency Provisions to your Heavy Storm, Harpie's Feather Duster or a card targeting its Spells and
       Traps, turning the cards about to go into LP; from its hand it plays it only at 1500 LP or less.
+    - It chains Pikeru's Circle of Enchantment to your burn Spells and Traps that would deal it 500 or more damage
+      (or finish it), before using Hallowed Life Barrier for that.
     - It activates Hallowed Life Barrier against an attack that would deal it 1500 or more damage, and in answer to
       your burn Spells and Traps (Ookazi, Tremendous Fire, ...) that would deal 800 or more; either way also when the
       damage would finish it.

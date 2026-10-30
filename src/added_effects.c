@@ -76,6 +76,7 @@ struct ModDuelState {
     u8 asuraTargets[5];         /* ... per zone of the attacking player: bit t, it attacked the opponent's zone t ... */
     u16 asuraSerials[5][5];     /* ... where the monster had this DuelZone.serial (a new monster there is not it) */
     u16 noDamageTurn[2];        /* Hallowed Life Barrier: per player, gDuel.turnCount + 1 of the turn of no damage */
+    u16 noEffectDamageTurn[2];  /* Pikeru's Circle of Enchantment: the same, for effect damage only */
 };
 extern struct ModDuelState gModDuel;
 /* gModDuel (0x0202FF04, symbols.ld) must end before gScratchBuffer (0x02030000). */
@@ -1190,6 +1191,8 @@ void ModDuelInit(void)
     gModDuel.asuraTurn = 0;
     gModDuel.noDamageTurn[0] = 0;
     gModDuel.noDamageTurn[1] = 0;
+    gModDuel.noEffectDamageTurn[0] = 0;
+    gModDuel.noEffectDamageTurn[1] = 0;
 #ifdef HAS_CARD_INJECTION_FAIRY_LILY
     InjectionFairyLilyResetBattle();
 #endif
@@ -7281,12 +7284,25 @@ int EffectPoisonOfTheOldManResolve(struct ChainEntry *link, struct ChainEntry *c
 }
 #endif /* HAS_CARD_POISON_OF_THE_OLD_MAN */
 
-/* LoseLifePoints and InflictBattleDamage (duel_card_actions.c): 1 if `player` takes no damage now (Hallowed Life
- * Barrier). LP paid as a cost does not go through them. */
+/* InflictBattleDamage (duel_card_actions.c): 1 if `player` takes no damage now (Hallowed Life Barrier). LP paid as a
+ * cost does not go through it, nor through LoseLifePoints. */
 int ModTakesNoDamage(int player)
 {
 #ifdef HAS_CARD_HALLOWED_LIFE_BARRIER
     return gModDuel.noDamageTurn[player & 1] == (u16)(gDuel.turnCount + 1);
+#else
+    return 0;
+#endif
+}
+
+/* LoseLifePoints (duel_card_actions.c), the effect damage: 1 if `player` takes none now (Hallowed Life Barrier, or
+ * Pikeru's Circle of Enchantment). */
+int ModTakesNoEffectDamage(int player)
+{
+    if (ModTakesNoDamage(player))
+        return 1;
+#ifdef HAS_CARD_PIKERUS_CIRCLE_OF_ENCHANTMENT
+    return gModDuel.noEffectDamageTurn[player & 1] == (u16)(gDuel.turnCount + 1);
 #else
     return 0;
 #endif
@@ -7375,11 +7391,41 @@ static int AiChainHallowedLifeBarrier(struct ChainEntry *entry)
 
     if (damage < HLB_AI_MIN_BURN && damage < (int)gDuelPlayers[AI_PLAYER].lifePoints)
         return 0;
-    if (damage <= 0 || ModTakesNoDamage(AI_PLAYER))
+    if (damage <= 0 || ModTakesNoEffectDamage(AI_PLAYER))
         return 0;
     return AiChainSetCard(entry, CARD_HALLOWED_LIFE_BARRIER) != 0;
 }
 #endif /* HAS_CARD_HALLOWED_LIFE_BARRIER */
+
+#ifdef HAS_CARD_PIKERUS_CIRCLE_OF_ENCHANTMENT
+/* ---- Pikeru's Circle of Enchantment -------------------------------------------------------------------------------
+ * Normal Trap: "Damage to you from card effects becomes 0 until the end of this turn."
+ *   resolve  gModDuel.noEffectDamageTurn[player] = this turn: ModTakesNoEffectDamage stops the damage of
+ *            LoseLifePoints (every effect damage) for the player until the turn ends. Battle damage
+ *            (InflictBattleDamage) and LP paid as a cost are not effect damage.
+ *   CPU      only chained to the human's burn Spell or Trap (AiChainPikerusCircle, in AiChainSolemnJudgment before
+ *            Hallowed Life Barrier, which costs a card): PIKERU_AI_MIN_BURN or more, or all of its LP
+ *            (AiIncomingBurn); AiShouldActivateAddedCard keeps it Set otherwise */
+#define PIKERU_AI_MIN_BURN 500
+
+int EffectPikerusCircleResolve(struct ChainEntry *link, struct ChainEntry *chainedTo)
+{
+    if (!link->negated)
+        gModDuel.noEffectDamageTurn[link->player & 1] = gDuel.turnCount + 1;
+    return EFFECT_STEP_DONE;
+}
+
+static int AiChainPikerusCircle(struct ChainEntry *entry)
+{
+    int damage = AiIncomingBurn(entry);
+
+    if (damage <= 0 || ModTakesNoEffectDamage(AI_PLAYER))
+        return 0;
+    if (damage < PIKERU_AI_MIN_BURN && damage < (int)gDuelPlayers[AI_PLAYER].lifePoints)
+        return 0;
+    return AiChainSetCard(entry, CARD_PIKERUS_CIRCLE_OF_ENCHANTMENT) != 0;
+}
+#endif /* HAS_CARD_PIKERUS_CIRCLE_OF_ENCHANTMENT */
 
 #ifdef HAS_CARD_EMERGENCY_PROVISIONS
 /* ---- Emergency Provisions ------------------------------------------------------------------------------------------
@@ -7804,6 +7850,11 @@ int AiChainSolemnJudgment(struct ChainEntry *entry)
     if (type == CARD_TYPE_MAGIC && AiChainSetCard(entry, CARD_MAGIC_DRAIN))
         return 1;
 #endif
+#ifdef HAS_CARD_PIKERUS_CIRCLE_OF_ENCHANTMENT
+    /* a burn card: Pikeru's Circle first, it costs nothing */
+    if (AiChainPikerusCircle(entry))
+        return 1;
+#endif
 #ifdef HAS_CARD_HALLOWED_LIFE_BARRIER
     /* a burn card: Hallowed Life Barrier before Solemn Judgment's half of the LP */
     if (AiChainHallowedLifeBarrier(entry))
@@ -7840,6 +7891,10 @@ int AiShouldActivateAddedCard(struct ChainEntry *entry)
     case CARD_THREATENING_ROAR:                 /* against an attack, when another of the human's could attack after */
         return entry->event == RESPONSE_ATTACK_DECLARED && gDuel.turnPlayer == AI_HUMAN
                && CountMonsters(AI_HUMAN) >= 2;
+#endif
+#ifdef HAS_CARD_PIKERUS_CIRCLE_OF_ENCHANTMENT
+    case CARD_PIKERUS_CIRCLE_OF_ENCHANTMENT:    /* only chained to burn (AiChainPikerusCircle) */
+        return 0;
 #endif
 #ifdef HAS_CARD_HALLOWED_LIFE_BARRIER
     case CARD_HALLOWED_LIFE_BARRIER: {          /* against an attack that hurts */
@@ -8204,6 +8259,16 @@ const struct CardEffect gAddedCardEffects[] = {
     {
         CARD_FIBER_JAR, 0,
         EffectFiberJarResolve,
+        NULL,
+        NULL,
+        NULL,
+        NULL,
+    },
+#endif
+#ifdef HAS_CARD_PIKERUS_CIRCLE_OF_ENCHANTMENT
+    {
+        CARD_PIKERUS_CIRCLE_OF_ENCHANTMENT, 0,
+        EffectPikerusCircleResolve,
         NULL,
         NULL,
         NULL,

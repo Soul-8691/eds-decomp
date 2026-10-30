@@ -1220,6 +1220,18 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
 - Release `.text` after it ends at 0x080809E8, 0x38 bytes below `.rodata` at 0x08080A20.
 - Checked in the source and the build; not tested in an emulator.
 
+### Pikeru's Circle of Enchantment (2026-10-30)
+- Normal Trap. ID 1039. The fetched text: "Damage to you from card effects becomes 0 until the end of this turn."
+- **Resolve.** `gModDuel.noEffectDamageTurn[player]` = `gDuel.turnCount` + 1. No prepare and no cost.
+- **Hook.** `LoseLifePoints` (duel_card_actions.c), through which every effect damage goes, now asks
+  `ModTakesNoEffectDamage`: Hallowed Life Barrier's flag or this one. `InflictBattleDamage` still asks only
+  `ModTakesNoDamage` (Hallowed Life Barrier), so battle damage is taken; LP paid as a cost is not damage.
+- **CPU.** Only chained to the human's burn Spell or Trap (`AiChainPikerusCircle`, in `AiChainSolemnJudgment` before
+  Hallowed Life Barrier, which costs a card): when `AiIncomingBurn` gives 500 (`PIKERU_AI_MIN_BURN`) or more, or all
+  its LP, and it is not already protected. `AiShouldActivateAddedCard` returns 0 for it, so it is not used at a random
+  window. Hallowed Life Barrier's burn check now also sees this protection.
+- Checked in the source and the build; not tested in an emulator.
+
 ### Emergency Provisions (2026-10-30)
 - Quick-Play Spell. ID 956. The fetched text: "Send any number of other Spell/Trap Cards you control to the Graveyard;
   gain 1000 LP for each card sent to the Graveyard this way."

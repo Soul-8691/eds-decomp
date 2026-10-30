@@ -1965,3 +1965,6 @@ updated: 2026-09-29
 
 ## [2026-10-30] progress | Emergency Provisions: a copy from the hand may send a Set copy
 - src/added_effects.c EffectEmergencyProvisionsPrepare: from the hand nothing is left out again (fromHand is reliable; the unset zone was the bug), so a Set copy counts and can be sent. [[added-cards]]. Built (make and make release); not tested in an emulator.
+
+## [2026-10-30] progress | Pikeru's Circle of Enchantment coded
+- src/added_effects.c: EffectPikerusCircleResolve (gModDuel.noEffectDamageTurn) and its row, ModTakesNoEffectDamage, AiChainPikerusCircle (in AiChainSolemnJudgment before Hallowed Life Barrier), AiShouldActivateAddedCard case; src/duel_card_actions.c LoseLifePoints asks ModTakesNoEffectDamage. README CPU list, DECKS.md. [[added-cards]]. Release .text 0x806C8. Built (make and make release); not tested in an emulator.
