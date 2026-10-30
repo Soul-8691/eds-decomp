@@ -98,6 +98,15 @@ Sasuke Samurai
 Chaos Emperor Dragon - Envoy of the End
 Thunder Nyan Nyan
 ------
+Asura Priest
+Chain Disappearance
+Poison of the Old Man
+Hallowed Life Barrier
+Enemy Controller
+Emergency Provisions
+Cipher Soldier
+Gyaku-Gire Panda
+Pikeru's Circle of Enchantment
 Mask of Restrict
 My Body as a Shield
 Big Bang Shot
@@ -129,16 +138,13 @@ Chiron the Mage
 Secret Barrel
 Level Limit - Area B
 Ojama Trio
-Gyaku-Gire Panda
 Gravity Bind
 Nightmare Wheel
 Des Koala
 Wave-Motion Cannon
-Poison of the Old Man
 Nightmare's Steelcage
 Lava Golem
 Des Wombat
-Hallowed Life Barrier
 Barrel Behind the Door
 Skill Drain
 Fusilier Dragon, the Dual-Mode Beast
@@ -146,7 +152,6 @@ Enraged Battle Ox
 Gravekeeper's Spear Soldier
 Dark Scorpion - Cliff the Trap Remover
 Mystik Wok
-Asura Priest
 Iron Blacksmith Kotetsu
 Armed Samurai - Ben Kei
 Dark Balter the Terrible

@@ -33,7 +33,7 @@ Formats unlock in this order; in the release build each takes 10 wins to open th
 | 9 | Scientist | November 2003 | Tomato Control 60%, Scientist FTK 40% |
 | 10 | Vampire | February 2004 | Warrior Control 80%, Scientist FTK 10%, Warrior Tomato Control 10% |
 | 11 | Chaos | April 2004 | Chaos Control 80%, Chaos Warrior 20% |
-| 12 | Warrior | October 2004 | Vanilla (unchanged) |
+| 12 | Warrior | October 2004 | Goat Control 40%, Warrior 30%, Warrior Control 20%, Chaos Return 10% |
 | 13 | Goat | April 2005 | Vanilla (unchanged) |
 | 14 | Cyber | April 2005 | Vanilla (unchanged) |
 | 15 | Reaper | October 2005 | Vanilla (unchanged) |
@@ -1741,7 +1741,276 @@ Banlist: April 2004.
 
 Every card was already in the game (Black Skull Dragon is the original B. Skull Dragon). Cards here with no coded effect yet: Dark Balter the Terrible, Ryu Senshi, Fiend Skull Dragon, Dark Flare Knight and Dark Paladin.
 
-### 12-15. Warrior to Reaper
+### 12. Warrior
+
+Banlist: October 2004.
+
+<details>
+<summary>Goat Control: 40% (Gyomberman-Goat Control) (40 cards + 15 Fusion Deck + 15 Side Deck)</summary>
+
+**Monsters (17)**
+
+- 1x Asura Priest
+- 1x Black Luster Soldier - Envoy of Beginning
+- 1x Breaker the Magical Warrior
+- 3x D.D. Warrior Lady
+- 1x Exiled Force
+- 2x Gravekeeper's Spy
+- 1x Injection Fairy Lily
+- 2x Magician of Faith
+- 1x Sinister Serpent
+- 1x Tribe-Infecting Virus
+- 1x Tsukuyomi
+- 1x Zaborg the Thunder Monarch
+- 1x Zombyra the Dark
+
+**Spells (19)**
+
+- 1x Book of Moon
+- 1x Change of Heart
+- 1x Confiscation
+- 2x Creature Swap
+- 1x Heavy Storm
+- 2x Metamorphosis
+- 1x Mystical Space Typhoon
+- 1x Nobleman of Crossout
+- 1x Painful Choice
+- 1x Pot of Greed
+- 2x Reinforcement of the Army
+- 3x Scapegoat
+- 1x Snatch Steal
+- 1x The Forceful Sentry
+
+**Traps (4)**
+
+- 1x Bell of Destruction
+- 3x Royal Decree
+
+**Fusion Deck (15)**
+
+- 1x Dark Balter the Terrible
+- 1x Dark Blade the Dragon Knight
+- 1x Darkfire Dragon
+- 1x Dragoness the Wicked Knight
+- 1x Fiend Skull Dragon
+- 1x Master of Oz
+- 1x Ojama King
+- 1x Reaper on the Nightmare
+- 2x Ryu Senshi
+- 1x St. Joan
+- 1x The Last Warrior from Another Planet
+- 3x Thousand-Eyes Restrict
+
+**Side Deck (15)**
+
+- 1x Cipher Soldier
+- 1x Gyaku-Gire Panda
+- 1x Magical Scientist
+- 1x Mystic Swordsman LV2
+- 1x Ninja Grandmaster Sasuke
+- 1x Nobleman of Crossout
+- 3x Sakuretsu Armor
+- 1x Torrential Tribute
+- 3x Trap Dustshoot
+- 1x Tsukuyomi
+- 1x Zombyra the Dark
+
+</details>
+
+<details>
+<summary>Warrior: 30% (ellietincan-Warrior) (40 cards + 15 Fusion Deck + 15 Side Deck)</summary>
+
+**Monsters (10)**
+
+- 1x Breaker the Magical Warrior
+- 3x D.D. Warrior Lady
+- 1x Don Zaloog
+- 1x Exiled Force
+- 3x Kycoo the Ghost Destroyer
+- 1x Tribe-Infecting Virus
+
+**Spells (9)**
+
+- 1x Confiscation
+- 1x Painful Choice
+- 3x Poison of the Old Man
+- 1x Pot of Greed
+- 2x Reinforcement of the Army
+- 1x The Forceful Sentry
+
+**Traps (21)**
+
+- 1x Bell of Destruction
+- 3x Chain Disappearance
+- 3x Compulsory Evacuation Device
+- 1x Hallowed Life Barrier
+- 3x Magic Drain
+- 3x Magic Jammer
+- 3x Raigeki Break
+- 3x Solemn Judgment
+- 1x Torrential Tribute
+
+**Fusion Deck (15)**
+
+- 2x Dark Balter the Terrible
+- 3x Dark Blade the Dragon Knight
+- 3x Dark Flare Knight
+- 2x Fiend Skull Dragon
+- 2x Ryu Senshi
+- 3x Thousand-Eyes Restrict
+
+**Side Deck (15)**
+
+- 1x Black Luster Soldier - Envoy of Beginning
+- 2x Blade Knight
+- 1x Change of Heart
+- 1x Chaos Sorcerer
+- 1x Heavy Storm
+- 1x Magical Scientist
+- 1x Mystical Space Typhoon
+- 3x Sakuretsu Armor
+- 3x Smashing Ground
+- 1x Snatch Steal
+
+</details>
+
+<details>
+<summary>Warrior Control: 20% (Patrick Smith-Warrior Control) (40 cards + 15 Fusion Deck + 15 Side Deck)</summary>
+
+**Monsters (16)**
+
+- 1x Black Luster Soldier - Envoy of Beginning
+- 2x Blade Knight
+- 1x Breaker the Magical Warrior
+- 3x D.D. Assailant
+- 3x D.D. Warrior Lady
+- 1x Fiber Jar
+- 2x Kycoo the Ghost Destroyer
+- 1x Magical Scientist
+- 1x Sinister Serpent
+- 1x Tribe-Infecting Virus
+
+**Spells (18)**
+
+- 1x Emergency Provisions
+- 3x Enemy Controller
+- 1x Heavy Storm
+- 1x Mirage of Nightmare
+- 1x Mystical Space Typhoon
+- 1x Painful Choice
+- 1x Pot of Greed
+- 1x Premature Burial
+- 2x Reinforcement of the Army
+- 3x Scapegoat
+- 2x Smashing Ground
+- 1x Snatch Steal
+
+**Traps (6)**
+
+- 1x Bell of Destruction
+- 1x Call Of The Haunted
+- 3x Sakuretsu Armor
+- 1x Torrential Tribute
+
+**Fusion Deck (15)**
+
+- 2x Dark Balter the Terrible
+- 2x Dark Blade the Dragon Knight
+- 1x Darkfire Dragon
+- 1x Dragoness the Wicked Knight
+- 1x Fiend Skull Dragon
+- 1x Giltia the D. Knight
+- 1x Ojama King
+- 1x Reaper on the Nightmare
+- 2x Ryu Senshi
+- 3x Thousand-Eyes Restrict
+
+**Side Deck (15)**
+
+- 1x Ceasefire
+- 1x Cipher Soldier
+- 1x Confiscation
+- 3x Dust Tornado
+- 2x Giant Trunade
+- 2x Hallowed Life Barrier
+- 1x Jinzo
+- 2x Nobleman of Crossout
+- 1x Pikeru's Circle of Enchantment
+- 1x The Forceful Sentry
+
+</details>
+
+<details>
+<summary>Chaos Return: 10% (paoloNS-Chaos Return) (40 cards + 15 Fusion Deck + 15 Side Deck)</summary>
+
+**Monsters (19)**
+
+- 1x Black Luster Soldier - Envoy of Beginning
+- 1x Blade Knight
+- 1x Breaker the Magical Warrior
+- 1x Chaos Sorcerer
+- 3x D.D. Warrior Lady
+- 1x Don Zaloog
+- 1x Exiled Force
+- 1x Fiber Jar
+- 2x Kycoo the Ghost Destroyer
+- 1x Magical Merchant
+- 1x Magical Scientist
+- 1x Magician of Faith
+- 1x Morphing Jar
+- 1x Sinister Serpent
+- 1x Spirit Reaper
+- 1x Tribe-Infecting Virus
+
+**Spells (15)**
+
+- 1x Change of Heart
+- 1x Confiscation
+- 1x Heavy Storm
+- 1x Mirage of Nightmare
+- 1x Mystical Space Typhoon
+- 1x Nobleman of Crossout
+- 1x Painful Choice
+- 1x Pot of Greed
+- 1x Premature Burial
+- 2x Reinforcement of the Army
+- 2x Smashing Ground
+- 1x Snatch Steal
+- 1x The Forceful Sentry
+
+**Traps (6)**
+
+- 1x Bell of Destruction
+- 1x Magic Cylinder
+- 2x Return from the Different Dimension
+- 1x Sakuretsu Armor
+- 1x Torrential Tribute
+
+**Fusion Deck (15)**
+
+- 3x Dark Balter the Terrible
+- 3x Dark Blade the Dragon Knight
+- 2x Empress Judge
+- 1x Ojama King
+- 3x Ryu Senshi
+- 3x Thousand-Eyes Restrict
+
+**Side Deck (15)**
+
+- 1x Ceasefire
+- 3x Cipher Soldier
+- 2x Dust Tornado
+- 1x Jinzo
+- 3x King Tiger Wanghu
+- 1x Ninja Grandmaster Sasuke
+- 2x Pikeru's Circle of Enchantment
+- 2x Sakuretsu Armor
+
+</details>
+
+Every card was already in the game. Cards here with no coded effect yet: Asura Priest, Cipher Soldier, Gyaku-Gire Panda, Enemy Controller, Hallowed Life Barrier, Poison of the Old Man, Chain Disappearance, Emergency Provisions, Pikeru's Circle of Enchantment, and the Fusion Monsters Dark Balter the Terrible, Ryu Senshi, Dark Blade the Dragon Knight, Fiend Skull Dragon, Reaper on the Nightmare, The Last Warrior from Another Planet, Ojama King and Dark Flare Knight.
+
+### 13-15. Goat to Reaper
 
 Vanilla (unchanged): these opponents still use the original game's decks.
 

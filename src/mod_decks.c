@@ -2129,6 +2129,387 @@ static const struct DeckList *ChaosDeck(void)
 }
 #endif
 
+/* The Warrior format opponent (Kaiba's slot, src/mod_opponents.c): one of four decks per duel (WarriorDeck): Goat
+ * Control 40%, Warrior 30%, Warrior Control 20%, Chaos Return 10% (decks/Gyomberman-Goat Control.ydk,
+ * decks/ellietincan-Warrior.ydk, decks/Patrick Smith-Warrior Control.ydk, decks/paoloNS-Chaos Return.ydk; main and
+ * extra decks). Every card was already in the game. */
+#if defined(HAS_CARD_ASURA_PRIEST) \
+    && defined(HAS_CARD_BLACK_LUSTER_SOLDIER_ENVOY_OF_THE_BEGINNING) \
+    && defined(HAS_CARD_BREAKER_THE_MAGICAL_WARRIOR) \
+    && defined(HAS_CARD_D_D_WARRIOR_LADY) \
+    && defined(HAS_CARD_EXILED_FORCE) \
+    && defined(HAS_CARD_GRAVEKEEPERS_SPY) \
+    && defined(HAS_CARD_INJECTION_FAIRY_LILY) \
+    && defined(HAS_CARD_ZABORG_THE_THUNDER_MONARCH) \
+    && defined(HAS_CARD_TRIBE_INFECTING_VIRUS) \
+    && defined(HAS_CARD_TSUKUYOMI) \
+    && defined(HAS_CARD_ZOMBYRA_THE_DARK) \
+    && defined(HAS_CARD_CREATURE_SWAP) \
+    && defined(HAS_CARD_METAMORPHOSIS) \
+    && defined(HAS_CARD_BOOK_OF_MOON) \
+    && defined(HAS_CARD_REINFORCEMENT_OF_THE_ARMY) \
+    && defined(HAS_CARD_SCAPEGOAT) \
+    && defined(HAS_CARD_DARK_BALTER_THE_TERRIBLE) \
+    && defined(HAS_CARD_DARK_BLADE_THE_DRAGON_KNIGHT) \
+    && defined(HAS_CARD_FIEND_SKULL_DRAGON) \
+    && defined(HAS_CARD_MASTER_OF_OZ) \
+    && defined(HAS_CARD_OJAMA_KING) \
+    && defined(HAS_CARD_REAPER_ON_THE_NIGHTMARE) \
+    && defined(HAS_CARD_RYU_SENSHI) \
+    && defined(HAS_CARD_ST_JOAN) \
+    && defined(HAS_CARD_THE_LAST_WARRIOR_FROM_ANOTHER_PLANET) \
+    && defined(HAS_CARD_THOUSAND_EYES_RESTRICT) \
+    && defined(HAS_CARD_CIPHER_SOLDIER) \
+    && defined(HAS_CARD_GYAKU_GIRE_PANDA) \
+    && defined(HAS_CARD_MYSTIC_SWORDSMAN_LV2) \
+    && defined(HAS_CARD_NINJA_GRANDMASTER_SASUKE) \
+    && defined(HAS_CARD_MAGICAL_SCIENTIST) \
+    && defined(HAS_CARD_SAKURETSU_ARMOR) \
+    && defined(HAS_CARD_TRAP_DUSTSHOOT) \
+    && defined(HAS_CARD_TORRENTIAL_TRIBUTE)
+#define MOD_WARRIOR_GOAT_CONTROL 1
+static const u16 sWarriorGoatControl[] = {
+    /* Monsters (17) */
+    CARD_ASURA_PRIEST,
+    CARD_BLACK_LUSTER_SOLDIER_ENVOY_OF_THE_BEGINNING,
+    CARD_BREAKER_THE_MAGICAL_WARRIOR,
+    X3(CARD_D_D_WARRIOR_LADY),
+    CARD_EXILED_FORCE,
+    X2(CARD_GRAVEKEEPERS_SPY),
+    CARD_INJECTION_FAIRY_LILY,
+    X2(CARD_MAGICIAN_OF_FAITH),
+    CARD_ZABORG_THE_THUNDER_MONARCH,
+    CARD_SINISTER_SERPENT,
+    CARD_TRIBE_INFECTING_VIRUS,
+    CARD_TSUKUYOMI,
+    CARD_ZOMBYRA_THE_DARK,
+    /* Spells (19) */
+    CARD_CHANGE_OF_HEART,
+    CARD_CONFISCATION,
+    CARD_PAINFUL_CHOICE,
+    CARD_THE_FORCEFUL_SENTRY,
+    CARD_POT_OF_GREED,
+    CARD_HEAVY_STORM,
+    X2(CARD_CREATURE_SWAP),
+    X2(CARD_METAMORPHOSIS),
+    CARD_BOOK_OF_MOON,
+    CARD_MYSTICAL_SPACE_TYPHOON,
+    CARD_NOBLEMAN_OF_CROSSOUT,
+    X2(CARD_REINFORCEMENT_OF_THE_ARMY),
+    X3(CARD_SCAPEGOAT),
+    CARD_SNATCH_STEAL,
+    /* Traps (4) */
+    CARD_BELL_OF_DESTRUCTION,
+    X3(CARD_ROYAL_DECREE),
+    /* Fusion Deck (15) */
+    CARD_DARK_BALTER_THE_TERRIBLE,
+    CARD_DARK_BLADE_THE_DRAGON_KNIGHT,
+    CARD_DARKFIRE_DRAGON,
+    CARD_DRAGONESS_THE_WICKED_KNIGHT,
+    CARD_FIEND_SKULL_DRAGON,
+    CARD_MASTER_OF_OZ,
+    CARD_OJAMA_KING,
+    CARD_REAPER_ON_THE_NIGHTMARE,
+    X2(CARD_RYU_SENSHI),
+    CARD_ST_JOAN,
+    CARD_THE_LAST_WARRIOR_FROM_ANOTHER_PLANET,
+    X3(CARD_THOUSAND_EYES_RESTRICT),
+};
+STATIC_ASSERT(ARRAY_COUNT(sWarriorGoatControl) == 40 + 15, WarriorGoatControlSize);
+static const struct DeckList sWarriorGoatControlList = { sWarriorGoatControl, ARRAY_COUNT(sWarriorGoatControl), 0 };
+/* Gyomberman-Goat Control.ydk's Side Deck (15). */
+static const u16 sWarriorGoatControlSide[] = {
+    CARD_CIPHER_SOLDIER,
+    CARD_GYAKU_GIRE_PANDA,
+    CARD_MYSTIC_SWORDSMAN_LV2,
+    CARD_NINJA_GRANDMASTER_SASUKE,
+    CARD_ZOMBYRA_THE_DARK,
+    CARD_MAGICAL_SCIENTIST,
+    CARD_TSUKUYOMI,
+    CARD_NOBLEMAN_OF_CROSSOUT,
+    X3(CARD_SAKURETSU_ARMOR),
+    X3(CARD_TRAP_DUSTSHOOT),
+    CARD_TORRENTIAL_TRIBUTE,
+};
+STATIC_ASSERT(ARRAY_COUNT(sWarriorGoatControlSide) == 15, WarriorGoatControlSideSize);
+#endif
+
+#if defined(HAS_CARD_BREAKER_THE_MAGICAL_WARRIOR) \
+    && defined(HAS_CARD_D_D_WARRIOR_LADY) \
+    && defined(HAS_CARD_DON_ZALOOG) \
+    && defined(HAS_CARD_EXILED_FORCE) \
+    && defined(HAS_CARD_KYCOO_THE_GHOST_DESTROYER) \
+    && defined(HAS_CARD_TRIBE_INFECTING_VIRUS) \
+    && defined(HAS_CARD_POISON_OF_THE_OLD_MAN) \
+    && defined(HAS_CARD_REINFORCEMENT_OF_THE_ARMY) \
+    && defined(HAS_CARD_CHAIN_DISAPPEARANCE) \
+    && defined(HAS_CARD_COMPULSORY_EVACUATION_DEVICE) \
+    && defined(HAS_CARD_HALLOWED_LIFE_BARRIER) \
+    && defined(HAS_CARD_MAGIC_DRAIN) \
+    && defined(HAS_CARD_RAIGEKI_BREAK) \
+    && defined(HAS_CARD_TORRENTIAL_TRIBUTE) \
+    && defined(HAS_CARD_DARK_BALTER_THE_TERRIBLE) \
+    && defined(HAS_CARD_DARK_BLADE_THE_DRAGON_KNIGHT) \
+    && defined(HAS_CARD_DARK_FLARE_KNIGHT) \
+    && defined(HAS_CARD_FIEND_SKULL_DRAGON) \
+    && defined(HAS_CARD_RYU_SENSHI) \
+    && defined(HAS_CARD_THOUSAND_EYES_RESTRICT) \
+    && defined(HAS_CARD_BLACK_LUSTER_SOLDIER_ENVOY_OF_THE_BEGINNING) \
+    && defined(HAS_CARD_BLADE_KNIGHT) \
+    && defined(HAS_CARD_CHAOS_SORCERER) \
+    && defined(HAS_CARD_MAGICAL_SCIENTIST) \
+    && defined(HAS_CARD_SMASHING_GROUND) \
+    && defined(HAS_CARD_SAKURETSU_ARMOR)
+#define MOD_WARRIOR_WARRIOR 1
+static const u16 sWarriorWarrior[] = {
+    /* Monsters (10) */
+    CARD_BREAKER_THE_MAGICAL_WARRIOR,
+    X3(CARD_D_D_WARRIOR_LADY),
+    CARD_DON_ZALOOG,
+    CARD_EXILED_FORCE,
+    X3(CARD_KYCOO_THE_GHOST_DESTROYER),
+    CARD_TRIBE_INFECTING_VIRUS,
+    /* Spells (9) */
+    CARD_CONFISCATION,
+    CARD_PAINFUL_CHOICE,
+    X3(CARD_POISON_OF_THE_OLD_MAN),
+    CARD_POT_OF_GREED,
+    X2(CARD_REINFORCEMENT_OF_THE_ARMY),
+    CARD_THE_FORCEFUL_SENTRY,
+    /* Traps (21) */
+    X3(CARD_CHAIN_DISAPPEARANCE),
+    X3(CARD_COMPULSORY_EVACUATION_DEVICE),
+    CARD_HALLOWED_LIFE_BARRIER,
+    X3(CARD_MAGIC_DRAIN),
+    X3(CARD_MAGIC_JAMMER),
+    X3(CARD_RAIGEKI_BREAK),
+    CARD_BELL_OF_DESTRUCTION,
+    X3(CARD_SOLEMN_JUDGMENT),
+    CARD_TORRENTIAL_TRIBUTE,
+    /* Fusion Deck (15) */
+    X2(CARD_DARK_BALTER_THE_TERRIBLE),
+    X3(CARD_DARK_BLADE_THE_DRAGON_KNIGHT),
+    X3(CARD_DARK_FLARE_KNIGHT),
+    X2(CARD_FIEND_SKULL_DRAGON),
+    X2(CARD_RYU_SENSHI),
+    X3(CARD_THOUSAND_EYES_RESTRICT),
+};
+STATIC_ASSERT(ARRAY_COUNT(sWarriorWarrior) == 40 + 15, WarriorWarriorSize);
+static const struct DeckList sWarriorWarriorList = { sWarriorWarrior, ARRAY_COUNT(sWarriorWarrior), 0 };
+/* ellietincan-Warrior.ydk's Side Deck (15). */
+static const u16 sWarriorWarriorSide[] = {
+    CARD_BLACK_LUSTER_SOLDIER_ENVOY_OF_THE_BEGINNING,
+    X2(CARD_BLADE_KNIGHT),
+    CARD_CHAOS_SORCERER,
+    CARD_MAGICAL_SCIENTIST,
+    CARD_CHANGE_OF_HEART,
+    CARD_HEAVY_STORM,
+    CARD_MYSTICAL_SPACE_TYPHOON,
+    X3(CARD_SMASHING_GROUND),
+    CARD_SNATCH_STEAL,
+    X3(CARD_SAKURETSU_ARMOR),
+};
+STATIC_ASSERT(ARRAY_COUNT(sWarriorWarriorSide) == 15, WarriorWarriorSideSize);
+#endif
+
+#if defined(HAS_CARD_BLACK_LUSTER_SOLDIER_ENVOY_OF_THE_BEGINNING) \
+    && defined(HAS_CARD_BLADE_KNIGHT) \
+    && defined(HAS_CARD_BREAKER_THE_MAGICAL_WARRIOR) \
+    && defined(HAS_CARD_D_D_ASSAILANT) \
+    && defined(HAS_CARD_D_D_WARRIOR_LADY) \
+    && defined(HAS_CARD_FIBER_JAR) \
+    && defined(HAS_CARD_KYCOO_THE_GHOST_DESTROYER) \
+    && defined(HAS_CARD_MAGICAL_SCIENTIST) \
+    && defined(HAS_CARD_TRIBE_INFECTING_VIRUS) \
+    && defined(HAS_CARD_EMERGENCY_PROVISIONS) \
+    && defined(HAS_CARD_ENEMY_CONTROLLER) \
+    && defined(HAS_CARD_MIRAGE_OF_NIGHTMARE) \
+    && defined(HAS_CARD_REINFORCEMENT_OF_THE_ARMY) \
+    && defined(HAS_CARD_SCAPEGOAT) \
+    && defined(HAS_CARD_SMASHING_GROUND) \
+    && defined(HAS_CARD_SAKURETSU_ARMOR) \
+    && defined(HAS_CARD_TORRENTIAL_TRIBUTE) \
+    && defined(HAS_CARD_DARK_BALTER_THE_TERRIBLE) \
+    && defined(HAS_CARD_DARK_BLADE_THE_DRAGON_KNIGHT) \
+    && defined(HAS_CARD_FIEND_SKULL_DRAGON) \
+    && defined(HAS_CARD_OJAMA_KING) \
+    && defined(HAS_CARD_REAPER_ON_THE_NIGHTMARE) \
+    && defined(HAS_CARD_RYU_SENSHI) \
+    && defined(HAS_CARD_THOUSAND_EYES_RESTRICT) \
+    && defined(HAS_CARD_CIPHER_SOLDIER) \
+    && defined(HAS_CARD_HALLOWED_LIFE_BARRIER) \
+    && defined(HAS_CARD_PIKERUS_CIRCLE_OF_ENCHANTMENT)
+#define MOD_WARRIOR_WARRIOR_CONTROL 1
+static const u16 sWarriorWarriorControl[] = {
+    /* Monsters (16) */
+    CARD_BLACK_LUSTER_SOLDIER_ENVOY_OF_THE_BEGINNING,
+    X2(CARD_BLADE_KNIGHT),
+    CARD_BREAKER_THE_MAGICAL_WARRIOR,
+    X3(CARD_D_D_ASSAILANT),
+    X3(CARD_D_D_WARRIOR_LADY),
+    CARD_FIBER_JAR,
+    X2(CARD_KYCOO_THE_GHOST_DESTROYER),
+    CARD_MAGICAL_SCIENTIST,
+    CARD_SINISTER_SERPENT,
+    CARD_TRIBE_INFECTING_VIRUS,
+    /* Spells (18) */
+    CARD_EMERGENCY_PROVISIONS,
+    X3(CARD_ENEMY_CONTROLLER),
+    CARD_HEAVY_STORM,
+    CARD_MIRAGE_OF_NIGHTMARE,
+    CARD_MYSTICAL_SPACE_TYPHOON,
+    CARD_PAINFUL_CHOICE,
+    CARD_POT_OF_GREED,
+    CARD_PREMATURE_BURIAL,
+    X2(CARD_REINFORCEMENT_OF_THE_ARMY),
+    X3(CARD_SCAPEGOAT),
+    X2(CARD_SMASHING_GROUND),
+    CARD_SNATCH_STEAL,
+    /* Traps (6) */
+    CARD_CALL_OF_THE_HAUNTED,
+    CARD_BELL_OF_DESTRUCTION,
+    X3(CARD_SAKURETSU_ARMOR),
+    CARD_TORRENTIAL_TRIBUTE,
+    /* Fusion Deck (15) */
+    X2(CARD_DARK_BALTER_THE_TERRIBLE),
+    X2(CARD_DARK_BLADE_THE_DRAGON_KNIGHT),
+    CARD_DARKFIRE_DRAGON,
+    CARD_DRAGONESS_THE_WICKED_KNIGHT,
+    CARD_FIEND_SKULL_DRAGON,
+    CARD_GILTIA_THE_D_KNIGHT,
+    CARD_OJAMA_KING,
+    CARD_REAPER_ON_THE_NIGHTMARE,
+    X2(CARD_RYU_SENSHI),
+    X3(CARD_THOUSAND_EYES_RESTRICT),
+};
+STATIC_ASSERT(ARRAY_COUNT(sWarriorWarriorControl) == 40 + 15, WarriorWarriorControlSize);
+static const struct DeckList sWarriorWarriorControlList = { sWarriorWarriorControl, ARRAY_COUNT(sWarriorWarriorControl), 0 };
+/* Patrick Smith-Warrior Control.ydk's Side Deck (15). */
+static const u16 sWarriorWarriorControlSide[] = {
+    CARD_CIPHER_SOLDIER,
+    CARD_JINZO,
+    CARD_CONFISCATION,
+    X2(CARD_GIANT_TRUNADE),
+    X2(CARD_NOBLEMAN_OF_CROSSOUT),
+    CARD_THE_FORCEFUL_SENTRY,
+    CARD_CEASEFIRE,
+    X3(CARD_DUST_TORNADO),
+    X2(CARD_HALLOWED_LIFE_BARRIER),
+    CARD_PIKERUS_CIRCLE_OF_ENCHANTMENT,
+};
+STATIC_ASSERT(ARRAY_COUNT(sWarriorWarriorControlSide) == 15, WarriorWarriorControlSideSize);
+#endif
+
+#if defined(HAS_CARD_BLACK_LUSTER_SOLDIER_ENVOY_OF_THE_BEGINNING) \
+    && defined(HAS_CARD_BLADE_KNIGHT) \
+    && defined(HAS_CARD_BREAKER_THE_MAGICAL_WARRIOR) \
+    && defined(HAS_CARD_CHAOS_SORCERER) \
+    && defined(HAS_CARD_D_D_WARRIOR_LADY) \
+    && defined(HAS_CARD_DON_ZALOOG) \
+    && defined(HAS_CARD_EXILED_FORCE) \
+    && defined(HAS_CARD_FIBER_JAR) \
+    && defined(HAS_CARD_KYCOO_THE_GHOST_DESTROYER) \
+    && defined(HAS_CARD_MAGICAL_MERCHANT) \
+    && defined(HAS_CARD_MAGICAL_SCIENTIST) \
+    && defined(HAS_CARD_SPIRIT_REAPER) \
+    && defined(HAS_CARD_TRIBE_INFECTING_VIRUS) \
+    && defined(HAS_CARD_MIRAGE_OF_NIGHTMARE) \
+    && defined(HAS_CARD_REINFORCEMENT_OF_THE_ARMY) \
+    && defined(HAS_CARD_SMASHING_GROUND) \
+    && defined(HAS_CARD_MAGIC_CYLINDER) \
+    && defined(HAS_CARD_RETURN_FROM_THE_DIFFERENT_DIMENSION) \
+    && defined(HAS_CARD_SAKURETSU_ARMOR) \
+    && defined(HAS_CARD_TORRENTIAL_TRIBUTE) \
+    && defined(HAS_CARD_DARK_BALTER_THE_TERRIBLE) \
+    && defined(HAS_CARD_DARK_BLADE_THE_DRAGON_KNIGHT) \
+    && defined(HAS_CARD_OJAMA_KING) \
+    && defined(HAS_CARD_RYU_SENSHI) \
+    && defined(HAS_CARD_THOUSAND_EYES_RESTRICT) \
+    && defined(HAS_CARD_CIPHER_SOLDIER) \
+    && defined(HAS_CARD_KING_TIGER_WANGHU) \
+    && defined(HAS_CARD_NINJA_GRANDMASTER_SASUKE) \
+    && defined(HAS_CARD_PIKERUS_CIRCLE_OF_ENCHANTMENT)
+#define MOD_WARRIOR_CHAOS_RETURN 1
+static const u16 sWarriorChaosReturn[] = {
+    /* Monsters (19) */
+    CARD_BLACK_LUSTER_SOLDIER_ENVOY_OF_THE_BEGINNING,
+    CARD_BLADE_KNIGHT,
+    CARD_BREAKER_THE_MAGICAL_WARRIOR,
+    CARD_CHAOS_SORCERER,
+    X3(CARD_D_D_WARRIOR_LADY),
+    CARD_DON_ZALOOG,
+    CARD_EXILED_FORCE,
+    CARD_FIBER_JAR,
+    X2(CARD_KYCOO_THE_GHOST_DESTROYER),
+    CARD_MAGICAL_MERCHANT,
+    CARD_MAGICAL_SCIENTIST,
+    CARD_MAGICIAN_OF_FAITH,
+    CARD_MORPHING_JAR,
+    CARD_SINISTER_SERPENT,
+    CARD_SPIRIT_REAPER,
+    CARD_TRIBE_INFECTING_VIRUS,
+    /* Spells (15) */
+    CARD_CHANGE_OF_HEART,
+    CARD_CONFISCATION,
+    CARD_HEAVY_STORM,
+    CARD_MIRAGE_OF_NIGHTMARE,
+    CARD_MYSTICAL_SPACE_TYPHOON,
+    CARD_NOBLEMAN_OF_CROSSOUT,
+    CARD_PAINFUL_CHOICE,
+    CARD_POT_OF_GREED,
+    CARD_PREMATURE_BURIAL,
+    X2(CARD_REINFORCEMENT_OF_THE_ARMY),
+    X2(CARD_SMASHING_GROUND),
+    CARD_SNATCH_STEAL,
+    CARD_THE_FORCEFUL_SENTRY,
+    /* Traps (6) */
+    CARD_MAGIC_CYLINDER,
+    X2(CARD_RETURN_FROM_THE_DIFFERENT_DIMENSION),
+    CARD_BELL_OF_DESTRUCTION,
+    CARD_SAKURETSU_ARMOR,
+    CARD_TORRENTIAL_TRIBUTE,
+    /* Fusion Deck (15) */
+    X3(CARD_DARK_BALTER_THE_TERRIBLE),
+    X3(CARD_DARK_BLADE_THE_DRAGON_KNIGHT),
+    X2(CARD_EMPRESS_JUDGE),
+    CARD_OJAMA_KING,
+    X3(CARD_RYU_SENSHI),
+    X3(CARD_THOUSAND_EYES_RESTRICT),
+};
+STATIC_ASSERT(ARRAY_COUNT(sWarriorChaosReturn) == 40 + 15, WarriorChaosReturnSize);
+static const struct DeckList sWarriorChaosReturnList = { sWarriorChaosReturn, ARRAY_COUNT(sWarriorChaosReturn), 0 };
+/* paoloNS-Chaos Return.ydk's Side Deck (15). */
+static const u16 sWarriorChaosReturnSide[] = {
+    X3(CARD_CIPHER_SOLDIER),
+    CARD_JINZO,
+    X3(CARD_KING_TIGER_WANGHU),
+    CARD_NINJA_GRANDMASTER_SASUKE,
+    CARD_CEASEFIRE,
+    X2(CARD_DUST_TORNADO),
+    X2(CARD_PIKERUS_CIRCLE_OF_ENCHANTMENT),
+    X2(CARD_SAKURETSU_ARMOR),
+};
+STATIC_ASSERT(ARRAY_COUNT(sWarriorChaosReturnSide) == 15, WarriorChaosReturnSideSize);
+#endif
+#if defined(MOD_WARRIOR_GOAT_CONTROL) && defined(MOD_WARRIOR_WARRIOR) && defined(MOD_WARRIOR_WARRIOR_CONTROL) \
+    && defined(MOD_WARRIOR_CHAOS_RETURN)
+#define MOD_WARRIOR_DECKS 1
+/* The Warrior opponent's deck for this duel: Goat Control 4 in 10, Warrior 3 in 10, Warrior Control 2 in 10, Chaos
+ * Return 1 in 10. */
+static const struct DeckList *WarriorDeck(void)
+{
+    u32 roll = (u32)Random() % 10;
+
+    if (roll < 4)
+        return &sWarriorGoatControlList;
+    if (roll < 7)
+        return &sWarriorWarriorList;
+    if (roll < 9)
+        return &sWarriorWarriorControlList;
+    return &sWarriorChaosReturnList;
+}
+#endif
+
 /* The replacement deck of opponent `opponent` (enum DuelistId), or NULL to keep the original: a new pick (the
  * weighted random ones roll again); GetOpponentDeckOverride keeps it for the match. */
 static const struct DeckList *PickOpponentDeckOverride(int opponent)
@@ -2163,6 +2544,10 @@ static const struct DeckList *PickOpponentDeckOverride(int opponent)
 #ifdef MOD_CHAOS_DECKS
     case DUELIST_STRINGS:               /* the Chaos format opponent */
         return ChaosDeck();
+#endif
+#ifdef MOD_WARRIOR_DECKS
+    case DUELIST_KAIBA:                 /* the Warrior format opponent */
+        return WarriorDeck();
 #endif
 #ifdef MOD_JOEY_PEGASUS_DECKS
     case DUELIST_WEEVIL:                /* the Joey-Pegasus format opponent */
@@ -2244,6 +2629,10 @@ static const char sNameVampireScientistFtk[] = "ellietincan-Scientist FTK";
 static const char sNameVampireWarriorTomato[] = "AJTBLS-Warrior Tomato Control";
 static const char sNameChaosControl[] = "ellietincan-Chaos Control";
 static const char sNameChaosWarrior[] = "indoors-Chaos Warrior";
+static const char sNameWarriorGoatControl[] = "Gyomberman-Goat Control";
+static const char sNameWarriorWarrior[] = "ellietincan-Warrior";
+static const char sNameWarriorWarriorControl[] = "Patrick Smith-Warrior Control";
+static const char sNameWarriorChaosReturn[] = "paoloNS-Chaos Return";
 static const char sNameChaosTurbo[] = "LR-Chaos Turbo";
 static const char sNameWarrior[] = "sdlkilla-Warrior";
 static const char sNameGoatControl[] = "geistD-Goat Control";
@@ -2321,6 +2710,21 @@ static const struct RecipePreset sRecipePresets[] = {
 #endif
 #ifdef MOD_CHAOS_WARRIOR
     { sNameChaosWarrior, &sChaosWarriorList, sChaosWarriorSide, ARRAY_COUNT(sChaosWarriorSide) },
+#endif
+#ifdef MOD_WARRIOR_GOAT_CONTROL
+    { sNameWarriorGoatControl, &sWarriorGoatControlList, sWarriorGoatControlSide,
+      ARRAY_COUNT(sWarriorGoatControlSide) },
+#endif
+#ifdef MOD_WARRIOR_WARRIOR
+    { sNameWarriorWarrior, &sWarriorWarriorList, sWarriorWarriorSide, ARRAY_COUNT(sWarriorWarriorSide) },
+#endif
+#ifdef MOD_WARRIOR_WARRIOR_CONTROL
+    { sNameWarriorWarriorControl, &sWarriorWarriorControlList, sWarriorWarriorControlSide,
+      ARRAY_COUNT(sWarriorWarriorControlSide) },
+#endif
+#ifdef MOD_WARRIOR_CHAOS_RETURN
+    { sNameWarriorChaosReturn, &sWarriorChaosReturnList, sWarriorChaosReturnSide,
+      ARRAY_COUNT(sWarriorChaosReturnSide) },
 #endif
 #ifdef MOD_RED_DECK
     { sNameChaosTurbo, &sRedDeckList, sRedDeckSide, ARRAY_COUNT(sRedDeckSide) },
