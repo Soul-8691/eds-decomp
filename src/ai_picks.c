@@ -641,6 +641,7 @@ int AiPickOpponentHandCard(void)
  *  - Attack Position target: compared by ATK. Beating it sets wins, targetDestroyed and damage = difference;
  *    losing sets attackerDestroyed and a negative damage; a tie destroys both and leaves damage 0. */
 int AiDestroysBeforeDamage(int attackerZone, int targetZone);     /* added: src/added_effects.c */
+int ModCipherBonus(int player, int zone, int otherPlayer, int otherZone);  /* added: Cipher Soldier */
 
 void AiEvalAttack(int attackerZone, int targetZone, struct AttackPlan *plan)
 {
@@ -657,6 +658,7 @@ void AiEvalAttack(int attackerZone, int targetZone, struct AttackPlan *plan)
     plan->unk2 = 0;
     plan->damage = 0;
     target = ZONE_AT(0, targetZone);
+    attackerAtk += ModCipherBonus(1, attackerZone, 0, targetZone);   /* added: Cipher Soldier against a Warrior */
 #if defined(HAS_CARD_NINJA_GRANDMASTER_SASUKE) || defined(HAS_CARD_MYSTIC_SWORDSMAN_LV2) \
     || defined(HAS_CARD_SASUKE_SAMURAI)
     /* added: Ninja Grandmaster Sasuke, Mystic Swordsman LV2 and Sasuke Samurai destroy their target before the
@@ -669,6 +671,7 @@ void AiEvalAttack(int attackerZone, int targetZone, struct AttackPlan *plan)
 #endif
     if (target->isDefense) {
         targetValue = AiVisibleDef(0, targetZone);     /* changed: a guess when face down */
+        targetValue += ModCipherBonus(0, targetZone, 1, attackerZone);  /* added: the human's Cipher Soldier */
         /* changed: a face-down monster counts as beaten by an attacker with the guessed DEF (1400) or more, so the
          * CPU attacks it rather than holding back on a tie with its own guess */
         if (targetValue < attackerAtk || (IsHiddenHumanMonster(0, targetZone) && targetValue <= attackerAtk)) {
@@ -678,7 +681,7 @@ void AiEvalAttack(int attackerZone, int targetZone, struct AttackPlan *plan)
             plan->damage = attackerAtk - targetValue;
         }
     } else {
-        targetValue = GetZoneCardAtk(0, targetZone);
+        targetValue = GetZoneCardAtk(0, targetZone) + ModCipherBonus(0, targetZone, 1, attackerZone);  /* added */
         if (targetValue < attackerAtk) {
             plan->wins = 1;
             plan->targetDestroyed = 1;

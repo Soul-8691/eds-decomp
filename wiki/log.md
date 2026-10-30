@@ -1968,3 +1968,6 @@ updated: 2026-09-29
 
 ## [2026-10-30] progress | Pikeru's Circle of Enchantment coded
 - src/added_effects.c: EffectPikerusCircleResolve (gModDuel.noEffectDamageTurn) and its row, ModTakesNoEffectDamage, AiChainPikerusCircle (in AiChainSolemnJudgment before Hallowed Life Barrier), AiShouldActivateAddedCard case; src/duel_card_actions.c LoseLifePoints asks ModTakesNoEffectDamage. README CPU list, DECKS.md. [[added-cards]]. Release .text 0x806C8. Built (make and make release); not tested in an emulator.
+
+## [2026-10-30] progress | Cipher Soldier coded
+- src/added_effects.c: ModCipherBonus, ModBattleStatBonus; src/card_stats.c GetZoneCardStats adds the bonus (damage calculation only); src/ai_picks.c AiEvalAttack counts it both ways. DECKS.md. [[added-cards]]. Release .text 0x80718. Built (make and make release); not tested in an emulator.

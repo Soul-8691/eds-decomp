@@ -5018,6 +5018,45 @@ int ModAttackTargetBlocked(int attacker, int attackerZone, int zone)
     return 0;
 }
 
+/* ---- Cipher Soldier ------------------------------------------------------------------------------------------------
+ * "If this card battles a Warrior-Type monster, during damage calculation: This card gains 2000 ATK and DEF during that
+ * damage calculation only."
+ *   stats    GetZoneCardStats (card_stats.c) adds ModBattleStatBonus to a face-up monster's ATK and DEF: while the
+ *            battle is in BATTLE_STAGE_DAMAGE_CALC (CalcBattle runs there and keeps its results in gBattle, so the
+ *            later stages need nothing), a face-up Cipher Soldier that is the attacker or the attack target gains 2000
+ *            when the other monster is a Warrior (its printed Type: reading the other monster's stats from here would
+ *            loop between two Cipher Soldiers)
+ *   CPU      AiEvalAttack (ai_picks.c) adds ModCipherBonus to both sides of the battles it predicts */
+#define CIPHER_BONUS 2000
+
+/* 2000 if (player, zone) is a face-up Cipher Soldier and (otherPlayer, otherZone) a Warrior monster, else 0. */
+int ModCipherBonus(int player, int zone, int otherPlayer, int otherZone)
+{
+#ifdef HAS_CARD_CIPHER_SOLDIER
+    struct DuelZone *z = ZoneOf(player, zone), *o = ZoneOf(otherPlayer, otherZone);
+    u16 id = DUEL_CARD_ID(&z->card), other = DUEL_CARD_ID(&o->card);
+
+    if (id != 0 && z->isFaceUp && CardNumberOfId(id) == CARD_CIPHER_SOLDIER && other != 0
+        && CARD_STATS_TYPE(gCardStats[other & CARD_ID_MASK]) == CARD_TYPE_WARRIOR)
+        return CIPHER_BONUS;
+#endif
+    return 0;
+}
+
+/* GetZoneCardStats (card_stats.c): the ATK and DEF a face-up monster gains in the battle being calculated now. */
+int ModBattleStatBonus(int player, int zone)
+{
+    int attacker = gDuel.turnPlayer & 1;
+
+    if (gDuel.phase != PHASE_BATTLE || gDuel.battleStage != BATTLE_STAGE_DAMAGE_CALC || gBattle.direct)
+        return 0;
+    if ((player & 1) == attacker && zone == gBattle.atkSlot)
+        return ModCipherBonus(player, zone, 1 - attacker, gBattle.defSlot);
+    if ((player & 1) != attacker && zone == gBattle.defSlot)
+        return ModCipherBonus(player, zone, attacker, gBattle.atkSlot);
+    return 0;
+}
+
 /* ---- The end of each attack ---------------------------------------------------------------------------------------
  * BattleStage_EndAttack (battle_phase3.c) calls ModEndAttack first, once each attack (and its Damage Step) is over:
  *   Injection Fairy Lily   its 3000 ATK go (InjectionFairyLilyEndAttack)

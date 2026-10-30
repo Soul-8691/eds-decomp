@@ -8,6 +8,7 @@
 #include "util.h"                   /* HalveRoundUp */
 
 int ModHasSwappedStats(int player, int zone);   /* mod: Sand Moth's swapped ATK/DEF (src/added_effects.c) */
+int ModBattleStatBonus(int player, int zone);   /* mod: Cipher Soldier's damage calculation bonus */
 
 /*
  * Effective card stats (wiki/functions/card-stats-c.md).
@@ -663,6 +664,13 @@ void GetZoneCardStats(int player, int zone, struct ZoneCardStats *out)
     }
 
     /* 4a. The monster's own effect. */
+    {
+        /* added: a battle bonus during damage calculation (Cipher Soldier, src/added_effects.c) */
+        int bonus = ModBattleStatBonus(player, zone);
+
+        addAtk += bonus;
+        addDef += bonus;
+    }
 #ifdef HAS_CARD_BLADE_KNIGHT
     if (IsBladeKnightCard(out->id) && gDuelPlayers[player & 1].handCount <= 1)
         addAtk += 400;
