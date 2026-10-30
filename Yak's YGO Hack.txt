@@ -26,4 +26,3 @@ Fix general AI shortcomings
 Fix Flip Effect Monster AI
 Move hooks out of original units
 Move added card lists out of effect_target_collect.c
-Opponent Fusion Feck change

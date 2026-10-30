@@ -93,7 +93,7 @@ extern const u8 gTextBoxPal[];              /* BG palette 8, used by the text bo
 extern const u8 gTextBoxFrameGfx[];         /* the 3x3 text box frame, 9 tiles */
 /* Info bar labels (DuelScreen_DrawCursorInfo) */
 extern const u8 gStrMyFusionDeck[];         /* "My Fusion Deck:" */
-extern const u8 gStrOpponentFusionDeck[];   /* "Opponent Fusion Feck" (typo in the ROM) */
+extern const u8 gStrOpponentFusionDeck[];   /* "Opponent Fusion Deck" (the ROM's "Fusion Feck" typo is corrected in data/rodata_08080A20.s) */
 extern const u8 gStrMyDeck[];               /* "My Deck:" */
 extern const u8 gStrOpponentDeck[];         /* "Opponent Deck" */
 extern const u8 gStrMyGraveyard[];          /* "My Graveyard:" */

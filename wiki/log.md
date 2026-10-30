@@ -1971,3 +1971,6 @@ updated: 2026-09-29
 
 ## [2026-10-30] progress | Cipher Soldier coded
 - src/added_effects.c: ModCipherBonus, ModBattleStatBonus; src/card_stats.c GetZoneCardStats adds the bonus (damage calculation only); src/ai_picks.c AiEvalAttack counts it both ways. DECKS.md. [[added-cards]]. Release .text 0x80718. Built (make and make release); not tested in an emulator.
+
+## [2026-10-30] progress | "Opponent Fusion Feck" corrected to "Opponent Fusion Deck"
+- data/rodata_08080A20.s: gStrOpponentFusionDeck (0x080864CC) is the corrected text in the same 0x18 bytes (".ascii" + zero padding) instead of the .incbin of the original's typo; no address moves. src/duel_info_bar.c comment. Verified in both built ROMs. Built (make and make release).

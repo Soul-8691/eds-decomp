@@ -1056,7 +1056,9 @@ gStrMyFusionDeck: @ 0x080864BC
 	.incbin "build/assets/rodata__strings_and_tables.bin", 0x5A9C, 0x10
 	.global gStrOpponentFusionDeck
 gStrOpponentFusionDeck: @ 0x080864CC
-	.incbin "build/assets/rodata__strings_and_tables.bin", 0x5AAC, 0x18
+	@ changed: the original's "Opponent Fusion Feck" (a typo), corrected in the same 0x18 bytes
+	.ascii "Opponent Fusion Deck"
+	.byte 0, 0, 0, 0
 	.global gStrMyDeck
 gStrMyDeck: @ 0x080864E4
 	.incbin "build/assets/rodata__strings_and_tables.bin", 0x5AC4, 0xC
