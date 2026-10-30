@@ -199,8 +199,12 @@ void ShowRevealedCard(int player, u16 cardId)
 }
 
 /* Lose amount LP (DUEL_CMD_LOSE_LP, animated) and open a RESPONSE_LP_CHANGE window; nothing for 0. */
+int ModTakesNoDamage(int player);   /* added: Hallowed Life Barrier (src/added_effects.c) */
+
 void LoseLifePoints(int player, int amount)
 {
+    if (ModTakesNoDamage(player))   /* added: no damage this turn */
+        return;
     if (amount != 0) {
         DuelCmd_Push(PLAYER_CMD(player, DUEL_CMD_LOSE_LP), amount, 1, 0);
         EventResponse_Request(player, RESPONSE_LP_CHANGE, (player << 16) | (u16)amount);
@@ -220,6 +224,8 @@ void InflictBattleDamage(int player, int amount, u16 attackerLoc, u16 defenderLo
     /* Matching: the card number stays in one local, used for the count and the table index. */
     int goblins = CountActiveCardsOnField(1 - player, cardNo = CARD_ROBBIN_GOBLIN);
 
+    if (ModTakesNoDamage(player))   /* added: no damage this turn (Hallowed Life Barrier) */
+        return;
     if (amount != 0) {
         DuelCmd_Push(PLAYER_CMD(player, DUEL_CMD_LOSE_LP), amount, 1, 0);
         if (goblins > 0) {

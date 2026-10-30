@@ -1220,6 +1220,31 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
 - Release `.text` after it ends at 0x080809E8, 0x38 bytes below `.rodata` at 0x08080A20.
 - Checked in the source and the build; not tested in an emulator.
 
+### Hallowed Life Barrier (2026-10-30)
+- Normal Trap. ID 900. Coded with its **original TCG text**: "Discard 1 card. You take no damage this turn." The fetched
+  text is the later wording ("any damage you take from your opponent's cards and effects becomes 0").
+- **Prepare.** A card in the hand.
+- **Cost.** ChainA posts the engine's discard prompt (`DuelPrompt_PostDiscardCost`, any card), which also makes the
+  CPU's pick.
+- **Resolve.** `gModDuel.noDamageTurn[player]` = `gDuel.turnCount` + 1. `ModTakesNoDamage(player)` holds for the rest
+  of that turn, and two hooks in duel_card_actions.c return early for that player:
+  - `LoseLifePoints`, which every effect damage goes through (burn cards, Poison of the Old Man, Thestalos, Chaos
+    Emperor Dragon, ...);
+  - `InflictBattleDamage`, the battle damage (and with it the battle-damage response window: nothing was dealt).
+  LP paid as a cost (Premature Burial, Magical Scientist, ...) pushes `DUEL_CMD_LOSE_LP` directly and is still paid.
+- **CPU** (`AiShouldActivateAddedCard`): a Set copy answers the human's attack declaration when the attack would deal
+  1500 (`HLB_AI_MIN_DAMAGE`) or more, or all its LP (`AiIncomingAttackDamage`: the attacker's ATK when direct, the
+  ATK difference against its face-up Attack Position monster, none against a Defense Position one; piercing is not
+  counted).
+  - **Against burn (added the same day; the user saw it ignore Ookazi).** `AiChainSolemnJudgment` (the CPU's answer to
+    the human's Spell or Trap, from `AiTryChainResponse`) now tries `AiChainHallowedLifeBarrier` after Magic Drain and
+    before Solemn Judgment: `AiIncomingBurn` knows the burn cards (Sparks 200, Hinotama 500, Final Flame 600, Ookazi
+    800, Tremendous Fire 1000, Just Desserts 500 per CPU monster, Poison of the Old Man 800 when its damage was
+    chosen), and the CPU chains a Set copy (`AiChainSetCard`) when the damage is 800 (`HLB_AI_MIN_BURN`) or more, or
+    all its LP, and it is not already protected. Monster burn effects (Cannon Soldier, ...) are not covered.
+- Release `.text` 0x080806C8.
+- Checked in the source and the build; not tested in an emulator.
+
 ### Poison of the Old Man (2026-10-30)
 - Quick-Play Spell. ID 920. The fetched text: "Activate 1 of these effects; ● Gain 1200 LP. ● Inflict 800 damage to
   your opponent."

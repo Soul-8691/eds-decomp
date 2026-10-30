@@ -1950,3 +1950,9 @@ updated: 2026-09-29
 
 ## [2026-10-30] progress | Poison of the Old Man coded
 - src/added_effects.c: EffectPoisonOfTheOldManChainA (two-line menu, waits for it; the CPU's AiPoisonOfTheOldManChoice), EffectPoisonOfTheOldManResolve (GainLifePoints 1200 / LoseLifePoints 800) and its row; AiWantsSpell case. README CPU list, DECKS.md. [[added-cards]]. Release .text 0x806B0. Built (make and make release); not tested in an emulator.
+
+## [2026-10-30] progress | Hallowed Life Barrier coded (original text)
+- src/added_effects.c: EffectHallowedLifeBarrier* (prepare: a hand card; chainA: DuelPrompt_PostDiscardCost; resolve: gModDuel.noDamageTurn) and its row, ModTakesNoDamage, AiIncomingAttackDamage and the AiShouldActivateAddedCard case; src/duel_card_actions.c LoseLifePoints / InflictBattleDamage return early for a protected player. README CPU list, DECKS.md. [[added-cards]]. Release .text 0x806C8. Built (make and make release); not tested in an emulator.
+
+## [2026-10-30] progress | The CPU's Hallowed Life Barrier answers burn
+- src/added_effects.c: AiIncomingBurn (the burn Spells/Traps' damage) and AiChainHallowedLifeBarrier, tried in AiChainSolemnJudgment after Magic Drain: 800 or more, or lethal. README CPU list. [[added-cards]]. Release .text 0x806C8. Built (make and make release); not tested in an emulator.

@@ -160,6 +160,9 @@ next one.
       when that has at least 500 more ATK.
     - Its Poison of the Old Man deals 800 damage when that wins the duel, gains 1200 LP while it has 3000 or less,
       and otherwise deals the damage.
+    - It activates Hallowed Life Barrier against an attack that would deal it 1500 or more damage, and in answer to
+      your burn Spells and Traps (Ookazi, Tremendous Fire, ...) that would deal 800 or more; either way also when the
+      damage would finish it.
     - It Special Summons Gilasaurus when your best monster to revive has less than 1500 ATK (or you have none), or
       as a Tribute for a Level 5-6 monster it couldn't summon otherwise. When you Special Summon Gilasaurus, it
       always revives a monster if it can.

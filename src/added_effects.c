@@ -75,6 +75,7 @@ struct ModDuelState {
     u16 asuraTurn;              /* Asura Priest: gDuel.turnCount + 1 of the Battle Phase the two below are for */
     u8 asuraTargets[5];         /* ... per zone of the attacking player: bit t, it attacked the opponent's zone t ... */
     u16 asuraSerials[5][5];     /* ... where the monster had this DuelZone.serial (a new monster there is not it) */
+    u16 noDamageTurn[2];        /* Hallowed Life Barrier: per player, gDuel.turnCount + 1 of the turn of no damage */
 };
 extern struct ModDuelState gModDuel;
 /* gModDuel (0x0202FF04, symbols.ld) must end before gScratchBuffer (0x02030000). */
@@ -1187,6 +1188,8 @@ void ModDuelInit(void)
     gModDuel.scientistReturn = 0;
     gModDuel.aiScientistTurn = 0;
     gModDuel.asuraTurn = 0;
+    gModDuel.noDamageTurn[0] = 0;
+    gModDuel.noDamageTurn[1] = 0;
 #ifdef HAS_CARD_INJECTION_FAIRY_LILY
     InjectionFairyLilyResetBattle();
 #endif
@@ -7278,6 +7281,106 @@ int EffectPoisonOfTheOldManResolve(struct ChainEntry *link, struct ChainEntry *c
 }
 #endif /* HAS_CARD_POISON_OF_THE_OLD_MAN */
 
+/* LoseLifePoints and InflictBattleDamage (duel_card_actions.c): 1 if `player` takes no damage now (Hallowed Life
+ * Barrier). LP paid as a cost does not go through them. */
+int ModTakesNoDamage(int player)
+{
+#ifdef HAS_CARD_HALLOWED_LIFE_BARRIER
+    return gModDuel.noDamageTurn[player & 1] == (u16)(gDuel.turnCount + 1);
+#else
+    return 0;
+#endif
+}
+
+#ifdef HAS_CARD_HALLOWED_LIFE_BARRIER
+/* ---- Hallowed Life Barrier -----------------------------------------------------------------------------------------
+ * Normal Trap, its original TCG text (the fetched one is the later "damage you take from your opponent's cards and
+ * effects becomes 0"): "Discard 1 card. You take no damage this turn."
+ *   prepare  a card in the hand to discard
+ *   chainA   the cost: the engine's discard prompt (DuelPrompt_PostDiscardCost, any card; the CPU's own pick)
+ *   resolve  gModDuel.noDamageTurn[player] = this turn: ModTakesNoDamage stops the damage of LoseLifePoints (effect
+ *            damage) and InflictBattleDamage (battle damage, and with it the battle damage response) for the player
+ *            until the turn ends. LP paid as a cost goes straight to DUEL_CMD_LOSE_LP and is still paid.
+ *   CPU      AiShouldActivateAddedCard: against an attack of the human's that would deal HLB_AI_MIN_DAMAGE or more,
+ *            or all of its LP (AiIncomingAttackDamage); AiChainSolemnJudgment (AiTryChainResponse): chained to the
+ *            human's burn Spell or Trap that would deal HLB_AI_MIN_BURN or more, or all of its LP (AiIncomingBurn) */
+#define HLB_AI_MIN_DAMAGE 1500
+#define HLB_AI_MIN_BURN 800
+
+int EffectHallowedLifeBarrierPrepare(struct ChainEntry *card, struct ChainEntry *chainLink, u16 fromHand)
+{
+    return !fromHand && gDuelPlayers[card->player & 1].handCount > 0;
+}
+
+int EffectHallowedLifeBarrierChainA(struct ChainEntry *link, struct ChainEntry *prevLink)
+{
+    DuelPrompt_PostDiscardCost(link->player, 1, FALSE, FALSE);
+    return 1;
+}
+
+int EffectHallowedLifeBarrierResolve(struct ChainEntry *link, struct ChainEntry *chainedTo)
+{
+    if (!link->negated)
+        gModDuel.noDamageTurn[link->player & 1] = gDuel.turnCount + 1;
+    return EFFECT_STEP_DONE;
+}
+
+/* The battle damage the CPU takes from the attack being declared (gBattle): the attacker's ATK when direct, the
+ * difference against its face-up Attack Position monster; 0 against a Defense Position one (piercing not counted). */
+static int AiIncomingAttackDamage(void)
+{
+    struct DuelZone *def;
+    int atk = GetZoneCardAtk(AI_HUMAN, gBattle.atkSlot);
+
+    if (gBattle.direct)
+        return atk;
+    def = ZoneOf(AI_PLAYER, gBattle.defSlot);
+    if (DUEL_CARD_ID(&def->card) == 0)
+        return atk;
+    if (def->isDefense || !def->isFaceUp)
+        return 0;
+    atk -= GetZoneCardAtk(AI_PLAYER, gBattle.defSlot);
+    return atk > 0 ? atk : 0;
+}
+
+/* The damage the human's Spell/Trap link `entry` deals the CPU: the burn cards (Sparks, Hinotama, Final Flame, Ookazi,
+ * Tremendous Fire, Just Desserts, and Poison of the Old Man when its damage was chosen); 0 for any other card. */
+static int AiIncomingBurn(struct ChainEntry *entry)
+{
+    switch (CardNumberOfId(entry->card)) {
+    case CARD_SPARKS:
+        return 200;
+    case CARD_HINOTAMA:
+        return 500;
+    case CARD_FINAL_FLAME:
+        return 600;
+    case CARD_OOKAZI:
+        return 800;
+    case CARD_TREMENDOUS_FIRE:
+        return 1000;
+    case CARD_JUST_DESSERTS:
+        return 500 * CountMonsters(AI_PLAYER);
+#ifdef HAS_CARD_POISON_OF_THE_OLD_MAN
+    case CARD_POISON_OF_THE_OLD_MAN:
+        return entry->unk12 == POTOM_MODE_DAMAGE ? POTOM_DAMAGE : 0;
+#endif
+    }
+    return 0;
+}
+
+/* AiChainSolemnJudgment: chain a Set Hallowed Life Barrier to the human's burn card that hurts. 1 if it did. */
+static int AiChainHallowedLifeBarrier(struct ChainEntry *entry)
+{
+    int damage = AiIncomingBurn(entry);
+
+    if (damage < HLB_AI_MIN_BURN && damage < (int)gDuelPlayers[AI_PLAYER].lifePoints)
+        return 0;
+    if (damage <= 0 || ModTakesNoDamage(AI_PLAYER))
+        return 0;
+    return AiChainSetCard(entry, CARD_HALLOWED_LIFE_BARRIER) != 0;
+}
+#endif /* HAS_CARD_HALLOWED_LIFE_BARRIER */
+
 /* Should the CPU play its added Magic card `number` in its Main Phase now? (AiTryPlaySpellTrap checks that it may.) */
 static int AiWantsSpell(u16 number)
 {
@@ -7546,6 +7649,11 @@ int AiChainSolemnJudgment(struct ChainEntry *entry)
     if (type == CARD_TYPE_MAGIC && AiChainSetCard(entry, CARD_MAGIC_DRAIN))
         return 1;
 #endif
+#ifdef HAS_CARD_HALLOWED_LIFE_BARRIER
+    /* a burn card: Hallowed Life Barrier before Solemn Judgment's half of the LP */
+    if (AiChainHallowedLifeBarrier(entry))
+        return 1;
+#endif
     if (gDuelPlayers[AI_PLAYER].lifePoints > AI_SOLEMN_MAX_LP)
         return 0;
     return AiChainSetCard(entry, CARD_SOLEMN_JUDGMENT) != 0;
@@ -7572,6 +7680,16 @@ int AiShouldActivateAddedCard(struct ChainEntry *entry)
     case CARD_THREATENING_ROAR:                 /* against an attack, when another of the human's could attack after */
         return entry->event == RESPONSE_ATTACK_DECLARED && gDuel.turnPlayer == AI_HUMAN
                && CountMonsters(AI_HUMAN) >= 2;
+#endif
+#ifdef HAS_CARD_HALLOWED_LIFE_BARRIER
+    case CARD_HALLOWED_LIFE_BARRIER: {          /* against an attack that hurts */
+        int damage;
+
+        if (entry->event != RESPONSE_ATTACK_DECLARED || gDuel.turnPlayer != AI_HUMAN)
+            return 0;
+        damage = AiIncomingAttackDamage();
+        return damage >= HLB_AI_MIN_DAMAGE || damage >= (int)gDuelPlayers[AI_PLAYER].lifePoints;
+    }
 #endif
 #ifdef HAS_CARD_BLAST_WITH_CHAIN
     case CARD_BLAST_WITH_CHAIN:                 /* against an attack, on a face-up monster of its own */
@@ -7929,6 +8047,16 @@ const struct CardEffect gAddedCardEffects[] = {
         NULL,
         NULL,
         NULL,
+        NULL,
+    },
+#endif
+#ifdef HAS_CARD_HALLOWED_LIFE_BARRIER
+    {
+        CARD_HALLOWED_LIFE_BARRIER, 0,
+        EffectHallowedLifeBarrierResolve,
+        NULL,
+        EffectHallowedLifeBarrierPrepare,
+        EffectHallowedLifeBarrierChainA,
         NULL,
     },
 #endif
