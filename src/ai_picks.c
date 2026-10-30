@@ -713,7 +713,7 @@ static int AiOtherAttackerBeats(int attackerZone, int targetZone)
     return 0;
 }
 
-int ModAttackTargetLocked(int player, int zone);    /* mod: src/added_effects.c */
+int ModAttackTargetBlocked(int attacker, int attackerZone, int zone);  /* mod: src/added_effects.c */
 
 u16 AiFindAttackTarget(int attackerZone, struct AttackPlan *plan)
 {
@@ -736,7 +736,8 @@ u16 AiFindAttackTarget(int attackerZone, struct AttackPlan *plan)
     plan->wins = 0;
     plan->isDirect = 0;
     for (i = 0; i < MONSTER_ZONE_COUNT; i++) {
-        if (CARD_EMPTY(ZONE_AT(0, i)->card) || ModAttackTargetLocked(0, i))   /* added: Marauding Captain */
+        if (CARD_EMPTY(ZONE_AT(0, i)->card) || ModAttackTargetBlocked(1, attackerZone, i))   /* added: Marauding
+                                                                     Captain, Asura Priest */
             continue;
         AiEvalAttack(attackerZone, i, &candidate);
         if (!candidate.wins) {

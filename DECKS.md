@@ -2008,7 +2008,7 @@ Banlist: October 2004.
 
 </details>
 
-Every card was already in the game. Cards here with no coded effect yet: Asura Priest, Cipher Soldier, Gyaku-Gire Panda, Enemy Controller, Hallowed Life Barrier, Poison of the Old Man, Chain Disappearance, Emergency Provisions, Pikeru's Circle of Enchantment, and the Fusion Monsters Dark Balter the Terrible, Ryu Senshi, Dark Blade the Dragon Knight, Fiend Skull Dragon, Reaper on the Nightmare, The Last Warrior from Another Planet, Ojama King and Dark Flare Knight.
+Every card was already in the game. Cards here with no coded effect yet: Cipher Soldier, Gyaku-Gire Panda, Enemy Controller, Hallowed Life Barrier, Poison of the Old Man, Chain Disappearance, Emergency Provisions, Pikeru's Circle of Enchantment, and the Fusion Monsters Dark Balter the Terrible, Ryu Senshi, Dark Blade the Dragon Knight, Fiend Skull Dragon, Reaper on the Nightmare, The Last Warrior from Another Planet, Ojama King and Dark Flare Knight.
 
 ### 13-15. Goat to Reaper
 

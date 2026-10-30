@@ -72,6 +72,8 @@ struct ModDuelState {
     u16 scientistReturn;        /* Magical Scientist: bit player * 5 + zone, return to the Fusion Deck in the End Phase */
     u16 scientistReturnIds[10]; /* ... and the card ID summoned into that zone */
     u16 aiScientistTurn;        /* AiUseMagicalScientist: gDuel.turnCount + 1 of its last summon for battle */
+    u8 asuraTargets[10];        /* Asura Priest: per player * 5 + zone, bit zone of each opponent zone it attacked this
+                                   Battle Phase (cleared by ModBattlePhaseStart) */
 };
 extern struct ModDuelState gModDuel;
 
@@ -906,6 +908,10 @@ int IsCannotSpecialSummon(u16 cardId)
     if (CARD_NUMBER(cardId) == CARD_YATA_GARASU)    /* "This card cannot be Special Summoned." */
         return 1;
 #endif
+#ifdef HAS_CARD_ASURA_PRIEST
+    if (CARD_NUMBER(cardId) == CARD_ASURA_PRIEST)   /* "Cannot be Special Summoned." */
+        return 1;
+#endif
     return 0;
 }
 
@@ -1098,6 +1104,7 @@ void ModDuelInit(void)
     gModDuel.roarTurn[1] = 0;
     gModDuel.scientistReturn = 0;
     gModDuel.aiScientistTurn = 0;
+    MemClear16(gModDuel.asuraTargets, sizeof(gModDuel.asuraTargets));
 #ifdef HAS_CARD_INJECTION_FAIRY_LILY
     InjectionFairyLilyResetBattle();
 #endif
@@ -2941,19 +2948,27 @@ int EffectLadybugOfDoomResolve(struct ChainEntry *link, struct ChainEntry *chain
 }
 #endif /* HAS_CARD_4_STARRED_LADYBUG_OF_DOOM */
 
+#if defined(HAS_CARD_YATA_GARASU) || defined(HAS_CARD_ASURA_PRIEST)
+/* The Spirit monsters that cannot be Special Summoned: Yata-Garasu and Asura Priest (2026-10-30). Each goes back to its
+ * owner's hand in the End Phase of the turn it was Normal Summoned or flipped face up; since it always leaves then and
+ * cannot be Special Summoned, every face-up one at an End Phase is such a one (EndPhase_ReturnSpiritMonsters). */
+static int IsReturningSpirit(u16 id)
+{
+    u16 number = CARD_NUMBER(id);
+
 #ifdef HAS_CARD_YATA_GARASU
-/* ---- Yata-Garasu ---------------------------------------------------------------------------------------------------
- * "This card cannot be Special Summoned. This card returns to its owner's hand during the End Phase of the turn it is
- * Normal Summoned or flipped face-up. When this card inflicts Battle Damage to your opponent, they skip their next Draw
- * Phase."
- *   IsCannotSpecialSummon lists it (QueueSpecialSummon* refuse it; CanReviveGraveyardCard's IsSpecialSummonOnly path
- *   does not apply, but the summon itself is refused).
- *   EndPhase_ReturnYataGarasu (DuelPhase_End, battle_phase3.c): every face-up Yata-Garasu on the field goes back to its
- *   owner's hand. A face-up one at an End Phase was Normal Summoned or flipped face up that turn (it always leaves at
- *   the End Phase, and it cannot be Special Summoned), so no record of the turn is needed.
- *   Battle damage (BattleStage_InflictDamage steps 0 and 2, battle_phase2.c): DUEL_CMD_SKIP_NEXT_DRAW_PHASE (Time
- *   Seal's command) for the damaged player. */
-void EndPhase_ReturnYataGarasu(void)
+    if (number == CARD_YATA_GARASU)
+        return 1;
+#endif
+#ifdef HAS_CARD_ASURA_PRIEST
+    if (number == CARD_ASURA_PRIEST)
+        return 1;
+#endif
+    return 0;
+}
+
+/* DuelPhase_End (battle_phase3.c): every face-up Yata-Garasu and Asura Priest goes back to its owner's hand. */
+void EndPhase_ReturnSpiritMonsters(void)
 {
     int player, zone;
 
@@ -2962,14 +2977,27 @@ void EndPhase_ReturnYataGarasu(void)
             struct DuelZone *z = ZoneOf(player, zone);
             u16 id = DUEL_CARD_ID(&z->card);
 
-            if (id != 0 && z->isFaceUp && CARD_NUMBER(id) == CARD_YATA_GARASU) {
+            if (id != 0 && z->isFaceUp && IsReturningSpirit(id)) {
                 DuelCmd_Push(player ? DUEL_CMD_PLAYER | DUEL_CMD_SHOW_CARD_EFFECT : DUEL_CMD_SHOW_CARD_EFFECT, id, 1, 0);
                 ReturnFieldCardToHand(player, zone, 0);
             }
         }
     }
 }
+#endif /* HAS_CARD_YATA_GARASU || HAS_CARD_ASURA_PRIEST */
 
+#ifdef HAS_CARD_YATA_GARASU
+/* ---- Yata-Garasu ---------------------------------------------------------------------------------------------------
+ * "This card cannot be Special Summoned. This card returns to its owner's hand during the End Phase of the turn it is
+ * Normal Summoned or flipped face-up. When this card inflicts Battle Damage to your opponent, they skip their next Draw
+ * Phase."
+ *   IsCannotSpecialSummon lists it (QueueSpecialSummon* refuse it; CanReviveGraveyardCard's IsSpecialSummonOnly path
+ *   does not apply, but the summon itself is refused).
+ *   EndPhase_ReturnSpiritMonsters (DuelPhase_End, battle_phase3.c; above): every face-up Yata-Garasu on the field goes
+ *   back to its owner's hand. A face-up one at an End Phase was Normal Summoned or flipped face up that turn (it always
+ *   leaves at the End Phase, and it cannot be Special Summoned), so no record of the turn is needed.
+ *   Battle damage (BattleStage_InflictDamage steps 0 and 2, battle_phase2.c): DUEL_CMD_SKIP_NEXT_DRAW_PHASE (Time
+ *   Seal's command) for the damaged player. */
 /* Battle damage by Yata-Garasu (owned by `player`): the damaged player skips their next Draw Phase. */
 void YataGarasuDealtDamage(int player, u16 id)
 {
@@ -4650,10 +4678,10 @@ int ModAttacksBlocked(int player)
     return gModDuel.roarTurn[player & 1] != 0 && gModDuel.roarTurn[player & 1] == (u16)(gDuel.turnCount + 1);
 }
 
-/* BattleStage_Start (card_menu_input.c) calls this as `player`'s Battle Phase begins (before its attackable mask). */
-void ModBattlePhaseStart(int player)
-{
 #ifdef HAS_CARD_THREATENING_ROAR
+/* The CPU's Threatening Roar as the human's Battle Phase begins (ModBattlePhaseStart). */
+static void AiRoarBeforeBattle(int player)
+{
     int zone, strong = 0;
 
     if (player != AI_HUMAN || gDuelCtrl.isLinkDuel || ModAttacksBlocked(AI_HUMAN))
@@ -4684,6 +4712,20 @@ void ModBattlePhaseStart(int player)
                          0);
         return;
     }
+}
+#endif /* HAS_CARD_THREATENING_ROAR */
+
+/* BattleStage_Start (card_menu_input.c) calls this as `player`'s Battle Phase begins (before its attackable mask). */
+void ModBattlePhaseStart(int player)
+{
+#ifdef HAS_CARD_ASURA_PRIEST
+    int i;
+
+    for (i = 0; i < 5; i++)     /* Asura Priest's attacked zones */
+        gModDuel.asuraTargets[(player & 1) * 5 + i] = 0;
+#endif
+#ifdef HAS_CARD_THREATENING_ROAR
+    AiRoarBeforeBattle(player);
 #endif
 }
 
@@ -4824,13 +4866,67 @@ int EffectMaraudingCaptainResolve(struct ChainEntry *link, struct ChainEntry *ch
 }
 #endif /* HAS_CARD_MARAUDING_CAPTAIN */
 
+/* ---- Asura Priest: attacks every opponent monster once -------------------------------------------------------------
+ * "This card can attack all monsters your opponent controls once each." (Its Spirit rule and "Cannot be Special
+ * Summoned" are with Yata-Garasu's: EndPhase_ReturnSpiritMonsters, IsCannotSpecialSummon.)
+ *   record   gModDuel.asuraTargets[player * 5 + zone]: the opponent's zones it attacked this Battle Phase, cleared as
+ *            each Battle Phase starts (ModBattlePhaseStart)
+ *   again    ModEndAttack: after an attack on a monster (not a direct one) by a face-up Asura Priest still in its zone,
+ *            its target zone is recorded, and while the opponent controls a monster in a zone it has not attacked,
+ *            its attack mark (attackedMask) is cleared so it may attack again (as Black Luster Soldier's second
+ *            attack does)
+ *   targets  ModAttackTargetBlocked: the human's target pick (BattleStage_SelectTarget, card_menu_input.c) and the
+ *            CPU's attack plans (AiFindAttackTarget, ai_picks.c) refuse a zone it has attacked; with the mark still
+ *            set after its last monster, it cannot follow with a direct attack, and after a direct attack it is done */
+#ifdef HAS_CARD_ASURA_PRIEST
+static int IsAsuraAttacker(int player, int zone)
+{
+    struct DuelZone *z = ZoneOf(player, zone);
+    u16 id = DUEL_CARD_ID(&z->card);
+
+    return id != 0 && z->isFaceUp && CardNumberOfId(id) == CARD_ASURA_PRIEST;
+}
+
+static void AsuraEndAttack(int player)
+{
+    int zone = gBattle.atkSlot, opponent = 1 - (player & 1), i;
+    u8 *done = &gModDuel.asuraTargets[(player & 1) * 5 + zone];
+
+    if (gBattle.direct || !IsAsuraAttacker(player, zone)
+        || DUEL_CARD_ID(&ZoneOf(player, zone)->card) != (gBattle.side[player].cardId & CARD_ID_MASK))
+        return;
+    *done |= 1 << gBattle.defSlot;
+    for (i = ZONE_MONSTER_0; i <= ZONE_MONSTER_4; i++) {
+        if (DUEL_CARD_ID(&ZoneOf(opponent, i)->card) != 0 && !(*done & (1 << i))) {
+            gDuelPlayers[player & 1].attackedMask &= ~(1 << zone);
+            return;
+        }
+    }
+}
+#endif
+
+/* The attacker in (attacker, attackerZone) may not target the monster in (1 - attacker, zone): Marauding Captain's lock
+ * (ModAttackTargetLocked) or a zone Asura Priest already attacked this Battle Phase. */
+int ModAttackTargetBlocked(int attacker, int attackerZone, int zone)
+{
+    if (ModAttackTargetLocked(1 - (attacker & 1), zone))
+        return 1;
+#ifdef HAS_CARD_ASURA_PRIEST
+    if (attackerZone >= ZONE_MONSTER_0 && attackerZone <= ZONE_MONSTER_4 && IsAsuraAttacker(attacker, attackerZone)
+        && (gModDuel.asuraTargets[(attacker & 1) * 5 + attackerZone] & (1 << zone)))
+        return 1;
+#endif
+    return 0;
+}
+
 /* ---- The end of each attack ---------------------------------------------------------------------------------------
  * BattleStage_EndAttack (battle_phase3.c) calls ModEndAttack first, once each attack (and its Damage Step) is over:
  *   Injection Fairy Lily   its 3000 ATK go (InjectionFairyLilyEndAttack)
  *   Spear Dragon           "If this card attacks, it is changed to Defense Position at the end of the Damage Step.":
  *                          the attacker, still face up in Attack Position in its zone, turns to Defense Position
  *                          (ChangeBattlePosition), as Goblin Attack Force does at the end of the Battle Phase. Its
- *                          other effect, piercing damage, is ModHasPiercing's. */
+ *                          other effect, piercing damage, is ModHasPiercing's.
+ *   Asura Priest           may attack again while an opponent monster it has not attacked remains (AsuraEndAttack) */
 void ModEndAttack(int player)
 {
 #ifdef HAS_CARD_SPEAR_DRAGON
@@ -4840,6 +4936,9 @@ void ModEndAttack(int player)
 
 #ifdef HAS_CARD_INJECTION_FAIRY_LILY
     InjectionFairyLilyEndAttack(player);
+#endif
+#ifdef HAS_CARD_ASURA_PRIEST
+    AsuraEndAttack(player);
 #endif
 #ifdef HAS_CARD_SPEAR_DRAGON
     if (id != 0 && id == (gBattle.side[player].cardId & CARD_ID_MASK) && z->isFaceUp && !z->isDefense

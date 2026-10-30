@@ -763,8 +763,8 @@ int DuelPhase_End(void)
 #ifdef HAS_CARD_RETURN_FROM_THE_DIFFERENT_DIMENSION
             EndPhase_ReturnFromTheDifferentDimension(); /* added card (src/added_effects.c) */
 #endif
-#ifdef HAS_CARD_YATA_GARASU
-            EndPhase_ReturnYataGarasu();                /* added card (src/added_effects.c) */
+#if defined(HAS_CARD_YATA_GARASU) || defined(HAS_CARD_ASURA_PRIEST)
+            EndPhase_ReturnSpiritMonsters();            /* added cards: Yata-Garasu, Asura Priest (src/added_effects.c) */
 #endif
 #ifdef HAS_CARD_MAGICAL_SCIENTIST
             EndPhase_ReturnMagicalScientist();          /* added card (src/added_effects.c) */

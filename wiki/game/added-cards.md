@@ -377,7 +377,7 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
   the turn it is Normal Summoned or flipped face-up. When this card inflicts Battle Damage to your opponent, they skip
   their next Draw Phase."
 - **No Special Summon.** `IsCannotSpecialSummon` lists it.
-- **End Phase.** `EndPhase_ReturnYataGarasu` (DuelPhase_End, next to the Dark Magician of Chaos / Return from the
+- **End Phase.** `EndPhase_ReturnSpiritMonsters` (DuelPhase_End, next to the Dark Magician of Chaos / Return from the
   Different Dimension hooks) returns every face-up Yata-Garasu to its owner's hand (`ReturnFieldCardToHand`). No
   turn record is kept: a face-up one at an End Phase was Normal Summoned or flipped that turn, since it always
   leaves at the End Phase and can't be Special Summoned. A Set one stays.
@@ -1211,6 +1211,31 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
 - **Piercing.** `CalcBattle` (campaign.c) asks `ModHasPiercing`, which replaces Airknight Parshath's own number check
   and covers both cards, so the original unit's code hardly grows.
 - Release `.text` after it ends at 0x080809E8, 0x38 bytes below `.rodata` at 0x08080A20.
+- Checked in the source and the build; not tested in an emulator.
+
+### Asura Priest (2026-10-30)
+- Spirit monster (Level 4, LIGHT Fairy, 1700/1200). ID 847. The fetched text: "Cannot be Special Summoned. During the
+  End Phase of the turn this card is Normal Summoned or flipped face-up: Return it to the hand. This card can attack
+  all monsters your opponent controls once each."
+- **Spirit, no Special Summon.** As Yata-Garasu: `IsCannotSpecialSummon` lists it (so the summoning target lists drop
+  it too, `ModFilterEffectTargets`), and the End Phase return is now shared: `EndPhase_ReturnSpiritMonsters` (renamed
+  from `EndPhase_ReturnYataGarasu`; battle_phase3.c and effect.h follow) returns every face-up Yata-Garasu and Asura
+  Priest to its owner's hand.
+- **Attacks every monster once.**
+  - `gModDuel.asuraTargets[player * 5 + zone]`: a bit for each of the opponent's zones that Asura Priest attacked this
+    Battle Phase, cleared as each Battle Phase starts (`ModBattlePhaseStart`, now split so Threatening Roar's part is
+    `AiRoarBeforeBattle`).
+  - `ModEndAttack` → `AsuraEndAttack`: after an attack on a monster by a face-up Asura Priest still in its zone, the
+    target zone is recorded; while the opponent still controls a monster in a zone it has not attacked, its bit of
+    `attackedMask` is cleared, so it can be picked as an attacker again (Black Luster Soldier's second attack does the
+    same).
+  - `ModAttackTargetBlocked(attacker, attackerZone, zone)` (Marauding Captain's lock plus this) replaces
+    `ModAttackTargetLocked` in the human's target pick (`BattleStage_SelectTarget`, card_menu_input.c) and the CPU's
+    attack plans (`AiFindAttackTarget`, ai_picks.c): a zone Asura Priest already attacked is refused.
+  - After its last monster the mark stays set, so it cannot follow with a direct attack; a direct attack (the
+    opponent had no monster) ends its attacks for the turn.
+  - Not modelled: a new monster summoned into a zone it already attacked cannot be attacked by it.
+- Release `.text` 0x08080618.
 - Checked in the source and the build; not tested in an emulator.
 
 ### Thunder Nyan Nyan (2026-10-30)
