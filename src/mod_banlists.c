@@ -61,6 +61,9 @@ struct LabelChunk {
 };
 void BuildMenuLabel(const struct LabelChunk *chunks, int count, u16 *dst);
 
+/* src/mod_decks.c: 1 while the player builds Solomon's deck */
+int ModSolomonBuilding(void);
+
 /* ---- The banlist in use ---- */
 
 int GetActiveBanlist(void)
@@ -99,6 +102,8 @@ s32 GetBanlistCopyLimit(u32 id)
 #if !MOD_RELEASE
     return CARD_COPY_LIMIT_NONE;    /* make (testing): the deck builder ignores the banlist and its card pool */
 #endif
+    if (ModSolomonBuilding())
+        return CARD_COPY_LIMIT_NONE;    /* Solomon's deck: no banlist (src/mod_decks.c) */
     if (number >= CARD_NUMBER_ALT_ART && number != 0xFFFF)
         number -= CARD_NUMBER_ALT_ART;
     if (!InBanlistPool(b, number))
@@ -121,6 +126,8 @@ int IsInActiveBanlistPool(u32 id)
 {
     u16 number = gCardIdToNumber[id & CARD_ID_MASK];
 
+    if (ModSolomonBuilding())
+        return 1;
     if (number >= CARD_NUMBER_ALT_ART && number != 0xFFFF)
         number -= CARD_NUMBER_ALT_ART;
     return InBanlistPool(&sBanlists[GetActiveBanlist()], number);

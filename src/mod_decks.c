@@ -19,6 +19,7 @@
 #include "main.h"               /* gMain.duelFormat, matchDuelCount */
 #include "constants/duel.h"     /* DUEL_FORMAT_MATCH */
 #include "util.h"               /* MemCopy16 */
+#include "gba.h"                /* SRAM */
 
 int Random(void);   /* util.h */
 
@@ -2530,7 +2531,7 @@ static const struct DeckList sTestDeckList = { sTestDeck, ARRAY_COUNT(sTestDeck)
 struct ModOpponentRecipe {
     struct DeckList list;
     u16 valid;                                          /* MOD_OPPONENT_RECIPE_VALID: list is set */
-    u16 pad;
+    u16 building;                                       /* MOD_SOLOMON_BUILDING: ModSolomonBuildBegin's collection */
     u16 cards[DECK_MAX_CARDS + FUSION_DECK_MAX_CARDS];
 };
 extern struct ModOpponentRecipe gModOpponentRecipe;
@@ -2548,6 +2549,51 @@ void ModSetOpponentRecipe(const u16 *deck, int deckCount, const u16 *fusion, int
     gModOpponentRecipe.list.count = n;
     gModOpponentRecipe.list.pad = 0;
     gModOpponentRecipe.valid = MOD_OPPONENT_RECIPE_VALID;
+}
+
+/* Building Solomon's deck (CB_OpponentRecipes, SELECT): the player's save is written to SRAM (SaveGame), then
+ * gSaveData gets a temporary collection: SOLOMON_BUILD_COPIES of every card in the trunk (the cards of
+ * GiveStartingTrunk) and empty decks, and GetBanlistCopyLimit ignores the banlists (src/mod_banlists.c). Deck Edit
+ * and the recipes then work on it as usual; nothing saves the game meanwhile. ModSolomonBuildEnd reads the save back
+ * from SRAM, so the player's own collection, decks and banlist return as they were (a reset also finds them there). */
+#define MOD_SOLOMON_BUILDING    0x5B1D
+#define SOLOMON_BUILD_COPIES    3
+
+int ModSolomonBuilding(void)
+{
+    return gModOpponentRecipe.building == MOD_SOLOMON_BUILDING;
+}
+
+void ModSolomonBuildBegin(void)
+{
+    u32 id, total = 0;
+
+    SaveGame();
+    for (id = 1; id < ARRAY_COUNT(gSaveData.trunk); id++) {
+        u16 number = id <= CARD_ID_LAST ? gCardIdToNumber[id] : 0xFFFF;
+        int copies = number == 0xFFFF
+                     || (u16)(number - CARD_NUMBER_TOKEN_FIRST) < CARD_NUMBER_TOKEN_END - CARD_NUMBER_TOKEN_FIRST
+                     ? 0 : SOLOMON_BUILD_COPIES;
+
+        gSaveData.trunk[id].count = copies;
+        SetTrunkDeckCopies(id, 0);
+        SetTrunkSideCopies(id, 0);
+        SetTrunkFusionCopies(id, 0);
+        total += copies;
+    }
+    gSaveData.trunkSize = total;
+    gSaveData.deckSize = 0;
+    gSaveData.sideDeckSize = 0;
+    gSaveData.fusionDeckSize = 0;
+    gModOpponentRecipe.building = MOD_SOLOMON_BUILDING;
+}
+
+void ModSolomonBuildEnd(void)
+{
+    if (!ModSolomonBuilding())
+        return;
+    ReadSram((u8 *)SRAM, (u8 *)&gSaveData, sizeof(gSaveData));
+    gModOpponentRecipe.building = 0;
 }
 
 /* The Goat format opponent (Ishizu's slot, src/mod_opponents.c): one of seven decks per duel (GoatDeck): LR-Chaos

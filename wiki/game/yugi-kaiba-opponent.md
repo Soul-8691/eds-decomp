@@ -107,6 +107,24 @@ Always open, with no format check:
     `DeckList`; nothing of the player's is loaded or changed. B returns 2 and the step goes back to the opponent
     select. `GetOpponentDeckOverride` returns that list for him; the match's later duels keep it (gModMatch).
     `LoadOpponentDeck` (ai_deck.c) skips `RemoveOverLimitDeckCards` for him, as for Test Duel.
+  - **Building his deck (2026-10-30).** SELECT in the picker calls `ModSolomonBuildBegin` (mod_decks.c). It writes the save
+    (`SaveGame`), then gives `gSaveData` a temporary collection: 3 of every card ID in the trunk (the cards of
+    `GiveStartingTrunk`: no tokens, no unused IDs), the deck copy counters at 0, and empty decks. It also sets
+    `gModOpponentRecipe.building` (the struct's old pad). While that is set, `GetBanlistCopyLimit` returns
+    `CARD_COPY_LIMIT_NONE` (3 in make release) and `IsInActiveBanlistPool` returns 1 (mod_banlists.c), so no banlist
+    applies. `CB_OpponentRecipes` then runs `CB_DeckEdit` itself (`solomonDeckEdit` in `gDeckRecipes`), not through a
+    Campaign sub-step, so campaign_steps.c (size-limited `.text`) is unchanged. After that it runs the scene again.
+    While he builds, the scene shows "Solomon's deck: Dn Sn Fn" and the keys work as follows:
+    - A opens the usual actions. Load puts a recipe into his deck (cards over the copy limit are listed as left out,
+      "banlist: none"). Save here writes his deck to a slot (the name entry starts at "Solomon"). Neither marks the
+      slot (`SetActive`) nor saves the game.
+    - SELECT opens Deck Edit again.
+    - B, if his Main Deck has cards, calls `ModSetOpponentRecipe` with it, then `ModSolomonBuildEnd`.
+    - START calls `ModSolomonBuildEnd` only.
+
+    `ModSolomonBuildEnd` reads `gSaveData` back from SRAM, so the player's collection, decks and banlist return as
+    they were. Nothing between the two saves the game: Deck Edit never calls `SaveGame`. A reset reloads the save
+    from SRAM, and the boot clears EWRAM, flag included.
   - **No DP.** `AwardDuelDP` (mod_dp.c) returns early for him.
   - Original ties to Grandpa's ID: his unlock (a complete collection) is overridden by `ModIsOpponentUnlocked`.
   - Release `.text` 0x080807D0 (the Campaign step and the copy-limit test).

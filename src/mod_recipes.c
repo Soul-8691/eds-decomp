@@ -17,7 +17,13 @@
  *                           never gets stuck. The event's BGM keeps playing.
  *   CB_OpponentRecipes      the same scene before a duel with Solomon (Campaign_SelectOpponent): A on a
  *                           recipe makes it his deck (ModSetOpponentRecipe, src/mod_decks.c); nothing is loaded or
- *                           changed; B goes back to the opponent select
+ *                           changed; B goes back to the opponent select. SELECT builds his deck instead: the player's
+ *                           collection is set aside for 3 of every card with no banlist (ModSolomonBuildBegin) and
+ *                           Deck Edit opens (CB_OpponentRecipes runs it, then the scene again). While he builds, the scene
+ *                           works on that deck: A opens the actions as in Deck Recipes (Load a recipe into it, Save
+ *                           it to a slot; neither marks the slot nor saves the game), SELECT is Deck Edit again, B
+ *                           makes it Solomon's deck and START discards it; both give the player's collection back
+ *                           (ModSolomonBuildEnd)
  *   DeckRecipes_OnNewGame   BuildStarterDeck (title_screen.c): a New Game clears the recipes back to the presets
  * Up to RECIPE_COUNT recipes, each a name and a saved Deck, Side Deck and Fusion Deck list, live in SRAM after the
  * save image (RECIPE_SRAM; the game's save is 0x2170 bytes of the 32 KiB). The first ones start as the decks of
@@ -64,8 +70,14 @@ int CountIllegalCards(int format);
 /* src/mod_banlists.c */
 int BanlistMainDeckCapacity(int banlist);
 int SwitchToBanlist(int banlist);
-/* src/mod_decks.c: Solomon's deck */
+/* src/deck_edit.c */
+u16 CB_DeckEdit(void);
+#define RESET_SEQ_STATE() (gMain.seqIndex1 = 0, gMain.seqState1 = 0, gMain.seqState2 = 0)  /* as campaign_steps.c */
+/* src/mod_decks.c: Solomon's deck, and the temporary collection to build it from */
 void ModSetOpponentRecipe(const u16 *deck, int deckCount, const u16 *fusion, int fusionCount);
+int ModSolomonBuilding(void);
+void ModSolomonBuildBegin(void);
+void ModSolomonBuildEnd(void);
 
 extern const u8 gMainMenuObjPal[], gMainMenuObjGfx[];
 extern const u16 gMainMenuSkyImage[];
@@ -156,9 +168,12 @@ struct DeckRecipes {
     u8 leftOutCount;                /* MODE_LEFT_OUT: entries */
     u8 leftOutScroll;
     u8 startConfirm;                /* the challenger: 1 after a B the deck check warned about */
-    u8 deckEdit;                    /* the challenger: 1 when the player left with SELECT, for Deck Edit */
+    u8 deckEdit;                    /* the challenger, or Solomon's deck: 1 when the player left with SELECT, for
+                                     * Deck Edit */
     u8 opponentPick;                /* 1: CB_OpponentRecipes (A picks Solomon's deck) */
     u8 picked;                      /* CB_OpponentRecipes: 1 when a recipe was picked, 0 when the player went back */
+    u8 solomonDeckEdit;             /* CB_OpponentRecipes: 1 while Deck Edit runs on Solomon's deck (0 again before
+                                     * the scene starts over) */
     struct LeftOut leftOut[LEFT_OUT_MAX];
     struct RecipeSlot buf;
 };
@@ -509,8 +524,10 @@ static int SwitchTo(int n)
                              GetTrunkSideCopies, SIDE_DECK_MAX_CARDS);
     missing += TakeFromTrunk(b->fusion, b->used ? b->fusionSize : 0, AddCardToSavedFusionDeck,
                              &gSaveData.fusionDeckSize, GetTrunkFusionCopies, FUSION_DECK_MAX_CARDS);
-    SetActive(n);
-    SaveGame();
+    if (!ModSolomonBuilding()) {    /* Solomon's deck: the mark and the save are the player's own deck's */
+        SetActive(n);
+        SaveGame();
+    }
     return missing;
 }
 
@@ -634,7 +651,14 @@ static const char sStrLeftOutHelp2[] = "Deck Edit's banlist is set in Banlists."
 static const char sStrLeftOutChallenger[] = "The banlist is now the challenger's format.";
 static const char sStrChallengerHelp[] = "A: options  B: duel  SELECT: Deck Edit";
 static const char sStrOpponentHelp[] = "A: Solomon plays it   B: back";
-static const char sStrOpponentPrompt[] = "Pick the recipe Solomon will duel with.";
+static const char sStrOpponentPrompt[] = "SELECT: build his deck (3 of every card).";
+static const char sStrSolomonHelp[] = "A: options  B: duel  SELECT: Deck Edit";
+static const char sStrSolomonDeck[] = "Solomon's deck: ";
+static const char sStrSolomonDiscard[] = ". START: discard";
+static const char sStrSolomonEmpty[] = "Solomon's deck is empty. SELECT: Deck Edit.";
+static const char sStrSolomonDiscarded[] = "Solomon's deck was discarded.";
+static const char sStrSolomonName[] = "Solomon";
+static const char sStrNoBanlist[] = "none";
 static const char sStrChallengerFormat[] = "Challenger's format: ";
 static const char sStrChallengerBanlist[] = "Now using the ";
 static const char sStrChallengerBanlistEnd[] = " banlist.";
@@ -766,6 +790,12 @@ static void RenderList(void)
             x += gTextCanvas.right - x + 14;
         }
         DrawLine(ROWS_VISIBLE * ROW_HEIGHT + 10, COLOR_HELP, sStrMenuHelp);
+    } else if (s->opponentPick && ModSolomonBuilding()) {
+        DrawLine(ROWS_VISIBLE * ROW_HEIGHT, COLOR_HELP, sStrSolomonHelp);
+        p = AppendNum(AppendStr(AppendStr(line, sStrSolomonDeck), "D"), gSaveData.deckSize, 1);
+        p = AppendNum(AppendStr(p, " S"), gSaveData.sideDeckSize, 1);
+        AppendStr(AppendNum(AppendStr(p, " F"), gSaveData.fusionDeckSize, 1), sStrSolomonDiscard);
+        DrawLine(ROWS_VISIBLE * ROW_HEIGHT + 10, COLOR_CURSOR, line);
     } else if (s->opponentPick) {
         DrawLine(ROWS_VISIBLE * ROW_HEIGHT, COLOR_HELP, sStrOpponentHelp);
         DrawLine(ROWS_VISIBLE * ROW_HEIGHT + 10, COLOR_CURSOR, sStrOpponentPrompt);
@@ -823,7 +853,7 @@ static void RenderLeftOut(void)
         total += s->leftOut[i].count;
     p = AppendNum(line, total, 1);
     p = AppendStr(p, sStrLeftOutHead);
-    AppendStr(AppendStr(p, BanlistName(GetActiveBanlist())), "):");
+    AppendStr(AppendStr(p, ModSolomonBuilding() ? sStrNoBanlist : BanlistName(GetActiveBanlist())), "):");
     DrawLine(0, COLOR_STATUS, line);
     for (i = 0; i < LEFT_OUT_ROWS && s->leftOutScroll + i < s->leftOutCount; i++) {
         struct LeftOut *e = &s->leftOut[s->leftOutScroll + i];
@@ -926,7 +956,8 @@ static void FinishNameEntry(void)
     if (s->nameForSave) {
         CurrentDeckToBuf(s->name);
         WriteSlot(n);
-        SetActive(n);
+        if (!ModSolomonBuilding())
+            SetActive(n);
         AppendStr(AppendNum(AppendStr(s->status, sStrSaved), n + 1, 2), ".");
     } else {
         ReadSlot(n);
@@ -1018,7 +1049,8 @@ static void DoAction(void)
         return;
     case ACTION_SAVE:
         if (!used) {
-            StartNameEntry(1, s->active < RECIPE_COUNT ? SlotName(s->active) : "");
+            StartNameEntry(1, ModSolomonBuilding() ? sStrSolomonName
+                              : s->active < RECIPE_COUNT ? SlotName(s->active) : "");
             PlaySE(SE_CONFIRM);
             return;
         }
@@ -1032,7 +1064,8 @@ static void DoAction(void)
         MemCopy16(s->name, s->buf.name, sizeof(s->name));
         CurrentDeckToBuf(s->name);
         WriteSlot(n);
-        SetActive(n);
+        if (!ModSolomonBuilding())
+            SetActive(n);
         AppendStr(AppendNum(AppendStr(s->status, sStrSaved), n + 1, 2), ".");
         s->mode = MODE_LIST;
         PlaySE(SE_CONFIRM);
@@ -1162,7 +1195,40 @@ static int HandleInput(void)
         Render();
         return 0;
     }
-    if (s->opponentPick) {
+    if (s->opponentPick && ModSolomonBuilding()) {
+        /* building Solomon's deck: the list and the actions work on it, as in Deck Recipes */
+        if (keys & B_BUTTON) {
+            if (gSaveData.deckSize == 0) {
+                AppendStr(s->status, sStrSolomonEmpty);
+                PlaySE(SE_ERROR);
+                Render();
+                return 0;
+            }
+            ModSetOpponentRecipe(gSaveData.deck, gSaveData.deckSize, gSaveData.fusionDeck, gSaveData.fusionDeckSize);
+            ModSolomonBuildEnd();
+            s->picked = 1;
+            PlaySE(SE_CONFIRM);
+            return 1;
+        }
+        if (keys & SELECT_BUTTON) {
+            s->deckEdit = 1;
+            PlaySE(SE_CONFIRM);
+            return 1;
+        }
+        if (keys & START_BUTTON) {
+            ModSolomonBuildEnd();
+            AppendStr(s->status, sStrSolomonDiscarded);
+            PlaySE(SE_CANCEL);
+            Render();
+            return 0;
+        }
+    } else if (s->opponentPick) {
+        if (keys & SELECT_BUTTON) {
+            ModSolomonBuildBegin();
+            s->deckEdit = 1;
+            PlaySE(SE_CONFIRM);
+            return 1;
+        }
         if (keys & B_BUTTON) {
             PlaySE(SE_CANCEL);
             return 1;
@@ -1294,7 +1360,7 @@ static u16 RunScene(int format)
         if (!FadeToBlack(2))
             return 0;
         if (s->opponentPick)
-            return s->picked ? 1 : 2;
+            return s->picked ? 1 : s->deckEdit ? 3 : 2;
         return s->challenger && s->deckEdit ? 2 : 1;
     }
 }
@@ -1304,11 +1370,26 @@ u16 CB_DeckRecipes(void)
     return RunScene(RECIPES_NORMAL);
 }
 
-/* Before a duel with Solomon: the player picks his deck from their Deck Recipes. 1 when one was picked (the duel goes
- * on), 2 when the player went back (to the opponent select). */
+/* Before a duel with Solomon: the player picks his deck from their Deck Recipes, or builds it in Deck Edit (run here,
+ * so the Campaign step stays as it was). 1 when one was picked (the duel goes on), 2 when the player went back (to the
+ * opponent select). */
 u16 CB_OpponentRecipes(void)
 {
-    return RunScene(RECIPES_PICK_OPPONENT);
+    u16 r;
+
+    if (gDeckRecipes.solomonDeckEdit) {     /* Deck Edit on Solomon's deck, then the scene again */
+        if (CB_DeckEdit()) {
+            gDeckRecipes.solomonDeckEdit = 0;
+            RESET_SEQ_STATE();
+        }
+        return 0;
+    }
+    r = RunScene(RECIPES_PICK_OPPONENT);
+    if (r != 3)
+        return r;
+    gDeckRecipes.solomonDeckEdit = 1;       /* no SaveGame after it: the collection is Solomon's (src/mod_decks.c) */
+    RESET_SEQ_STATE();
+    return 0;
 }
 
 /* Before a calendar event's duel with a format opponent: Deck Recipes for banlist `format` (see RunScene): 1 to go

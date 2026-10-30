@@ -105,6 +105,11 @@ next one.
   bug in the original game).
 - **Solomon.** The opponent page after the formats starts with Solomon, open from the start: before the duel you
   pick one of your own Deck Recipes for him to play. Beating him gives no DP, so he's for practice and testing decks.
+  - **Building his deck.** Press SELECT on the recipe list to build his deck instead. Deck Edit opens with a
+    temporary collection of 3 copies of every card and no banlist. Back on the list, A opens the recipe actions:
+    load a recipe into his deck to start from, or save his deck to a slot. SELECT goes back to Deck Edit, B starts
+    the duel with his deck, and START discards it. Your own cards, decks and banlist come back unchanged either way
+    (they stay saved while you build, so a reset loses nothing).
 - **Best-of-3 matches.** Every Campaign duel against the CPU is a best-of-3 match, not only on match days.
   Between games you can side, swapping cards between your Main Deck and Side Deck. Your deck goes back to how it
   was once the match ends. The CPU uses the same deck for every game of the match. Records, DP and the pack

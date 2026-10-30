@@ -2034,3 +2034,6 @@ updated: 2026-09-29
 
 ## [2026-10-30] progress | README: CPU notes for the new cards
 - README.md, Smarter CPU / Card use: Cipher Soldier, Chain Disappearance, Threatening Roar, Blast with Chain, Magic Drain, Ojama Trio, Secret Barrel, Mystik Wok, Roulette Barrel, Level Limit - Area B, Gravity Bind, Final Attack Orders, Royal Oppression, Dark Scorpion - Cliff the Trap Remover (each checked against its CPU code in src/added_effects.c and src/ai_picks.c). Docs only, no build.
+
+## [2026-10-30] progress | Solomon: build his deck
+- src/mod_decks.c: ModSolomonBuildBegin / ModSolomonBuildEnd / ModSolomonBuilding. The save is written, gSaveData gets 3 of every card and empty decks, and the save is read back from SRAM afterwards. src/mod_banlists.c: no banlist while building. src/mod_recipes.c: SELECT in Solomon's picker builds his deck; CB_OpponentRecipes runs Deck Edit itself. While building, A has the recipe actions (load and save, no mark and no save), SELECT is Deck Edit, B duels and START discards. Recipes can still be picked as before. README (Solomon), [[yugi-kaiba-opponent]]. Release .text 0x0808098C (unchanged; a first try added a Campaign sub-step, +0x64, which was moved into the farcode unit instead). Built (make and make release); not tested in an emulator.
