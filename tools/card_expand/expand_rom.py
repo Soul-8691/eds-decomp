@@ -39,7 +39,8 @@ Edited ROMs (8 to 32 MiB; the SHA-1 is only reported):
   table, keeping its entry. A pointer to a modified copy of a table (all but a few entries equal; a hack can give
   some functions their own version) gets a full-length copy of the new table with the copy's own entries kept.
   Any other pointer stops the run (--force leaves it alone).
-- Cards: a leftover card the ROM already has at its number is kept; another card on a leftover number keeps the
+- Cards: a leftover card the ROM already has at its number is kept, but gets the same artwork as the added cards
+  (its name, text, stats and password stay; --keep-art keeps its old art too); another card on a leftover number keeps the
   number (and gets that number's coded effect), with a warning; a card from either list that the ROM already has
   (same name or password) is skipped.
 
@@ -427,6 +428,8 @@ def main():
     ap.add_argument('--offline', action='store_true', help='use only the data already downloaded')
     ap.add_argument('--refresh', action='store_true', help='ask the API again for every card')
     ap.add_argument('--no-leftovers', action='store_true', help='do not add the cards with leftover effects')
+    ap.add_argument('--keep-art', action='store_true',
+                    help='keep the artwork of leftover cards the ROM already has (default: give them the new art)')
     ap.add_argument('--no-code', action='store_true', help='leave the code alone (patch it yourself)')
     ap.add_argument('--move-scratch', action='store_true', help='always move the List Filter non-monster buffer')
     ap.add_argument('--fill', type=lambda s: int(s, 0), default=0xFF, help='byte for the added ROM space (default 0xFF)')
@@ -460,7 +463,7 @@ def main():
     t = read_rom_tables(rom, src, n_src)
 
     # An edited ROM can already hold some leftover cards (or other cards on their numbers): keep what it has.
-    present, warn_left = [], []
+    present, warn_left, have = [], [], []          # have: (ID, number, name, settings) of leftover cards it holds
     rom_names = {name.lower(): i for i, name in enumerate(t['text']) if name}
     leftover = []
     for no, name, opts in ([] if a.no_leftovers else LEFTOVER):
@@ -468,6 +471,7 @@ def main():
         if cid is not None:
             if t['text'][cid].lower() == name.lower():
                 present.append(f'{no} {name} (ID {cid})')
+                have.append((cid, no, name, opts))
             else:
                 warn_left.append(f"card number {no} is {t['text'][cid]!r} (ID {cid}) in this ROM, so that card gets the "
                                  f'effect coded for {name}; {name} is not added')
@@ -475,6 +479,7 @@ def main():
             i = rom_names[name.lower()]
             warn_left.append(f"{name} is already ID {i} with card number {t['id2n'][i]}, not {no}: it does not get the "
                              f'effect coded for {no}, which stays unused; not added again')
+            have.append((i, no, name, opts))
         else:
             leftover.append((no, name, opts))
     leftover_numbers = {no for no, _, _ in leftover}
@@ -489,6 +494,21 @@ def main():
             die(f'{a.list}:{no}: card number {opts["number"]} belongs to a leftover card')
         entries.append((f'{a.list}:{no}', name, shown, opts))
     rows, dupes = add_cards(t, entries, a, A, leftover_numbers) if entries else ([], [])
+    # the leftover cards the ROM already has get the same artwork as the added ones (name, text, stats and
+    # password stay as the ROM has them); --keep-art leaves their art alone
+    new_art = []
+    if have and not a.keep_art:
+        info = wt.fetch_info([(f'leftover {no}', name, name, opts) for _, no, name, opts in have],
+                             os.path.join(a.new_dir, 'cardinfo.json'), a.offline, a.refresh)
+        for cid, no, name, opts in have:
+            c = info[name]
+            png = os.path.join(a.new_dir, 'art', f"{c['id']}.png")
+            if not os.path.exists(png):
+                wt.convert_art(wt.fetch_image(c, os.path.join(a.new_dir, 'img'), a.offline), png, A)
+            art, pal = wt.art_from_png(open(png, 'rb').read(), png, A)
+            if (art, pal) != (t['art'][cid], t['pal'][cid]):
+                t['art'][cid], t['pal'][cid] = art, pal
+                new_art.append(f'{name} (ID {cid})')
 
     real = len(t['names'])
     last = a.last
@@ -611,6 +631,8 @@ def main():
         print('warning: overwritten (--force): ' + ', '.join(f'{o} 0x{s:08X}-0x{e:08X}' for o, s, e in used))
     if present:
         print(f'already in this ROM at their own numbers ({len(present)}): ' + ', '.join(present))
+    if new_art:
+        print(f'new artwork for leftover cards this ROM already had ({len(new_art)}): ' + ', '.join(new_art))
     for msg in warn_left:
         print('warning:', msg)
     for msg in dupes:

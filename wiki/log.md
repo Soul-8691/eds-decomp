@@ -949,3 +949,9 @@ updated: 2026-09-29
   (fixed by the expansion); several number<->ID inconsistencies predate the expansion.
 - Checked: original ROM output still byte-identical; Kertra output passes `test_tables.py` and `test_leftovers.py`.
 - Pages: [[card-expand]].
+
+## [2026-10-30] setup | expand_rom.py: new art for leftover cards a hack already has
+- Leftover cards an edited ROM already holds (Kertra: 18, e.g. Multiply ID 515, password 40703222) now get the
+  YGOPRODeck artwork like the added ones; name, text, stats and password are kept. `--keep-art` turns it off.
+  Original-ROM output unchanged; `test_leftovers.py` passes on the Kertra build.
+- Pages: [[card-expand]] (via the script's help).
