@@ -1941,6 +1941,18 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
     mills 2 (`DUEL_CMD_SEND_DECK_CARD_TO_GRAVEYARD`, top is `deck[0]`).
 - Checked in the source and the build; not tested in an emulator.
 
+### Royal Oppression (2026-10-30)
+- Effect text from [YGOPRODeck](https://db.ygoprodeck.com/api/v7/cardinfo.php?name=Royal%20Oppression) (id 93016201):
+  "Either player can pay 800 Life Points to negate the Special Summon of a monster(s), and/or an effect that Special
+  Summons a monster(s), and destroy those cards."
+- Continuous Trap. `EffectRoyalOppressionPrepare` (face-up or Set on the field, 800+ LP,
+  `RESPONSE_SPECIAL_SUMMONED` with the monster at `loc0`), `EffectRoyalOppressionChainA` (800 LP),
+  `EffectRoyalOppressionResolve` (Horn of Heaven-style summon negate + destroy). Face-up reactivation like Skull Lair.
+  The CPU always chains on the human's Special Summon when it can pay 800 LP (`AiShouldActivateAddedCard`,
+  `AiChainSummonTriggerResponse` for a face-up copy); `AiPlayAddedCards` Sets it in the Main Phase.
+- Not modelled: negating a Spell/Trap **effect** that Special Summons before the summon response window.
+- Checked in the source and the build; not tested in an emulator.
+
 ### Mystik Wok (2026-10-30)
 - Effect text from [YGOPRODeck](https://db.ygoprodeck.com/api/v7/cardinfo.php?name=Mystik%20Wok) (id 80161395):
   "Tribute 1 monster. Select either its ATK or DEF and gain that many Life Points."

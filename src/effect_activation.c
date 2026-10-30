@@ -466,6 +466,9 @@ u16 CanChainFieldCard(struct ChainEntry *chainLink, int player, int zone)
 #ifdef HAS_CARD_SKULL_LAIR
     case CARD_SKULL_LAIR:          /* added card: also face up (src/added_effects.c) */
 #endif
+#ifdef HAS_CARD_ROYAL_OPPRESSION
+    case CARD_ROYAL_OPPRESSION:    /* added card: continuous, face-up reactivation */
+#endif
     case CARD_1428:
     case CARD_1532:
         faceUp = FALSE;

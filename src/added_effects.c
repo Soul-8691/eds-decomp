@@ -618,6 +618,63 @@ int EffectChainDisappearanceResolve(struct ChainEntry *link, struct ChainEntry *
 }
 #endif /* HAS_CARD_CHAIN_DISAPPEARANCE */
 
+#ifdef HAS_CARD_ROYAL_OPPRESSION
+/* ---- Royal Oppression (YGOPRODeck id 93016201) -------------------------------------------------------------------
+ * Continuous Trap: "Either player can pay 800 Life Points to negate the Special Summon of a monster(s), and/or an
+ * effect that Special Summons a monster(s), and destroy those cards."
+ *   prepare  on the field, 800+ LP, RESPONSE_SPECIAL_SUMMONED with the summoned monster at loc0 (either player's
+ *            Special Summon; not Normal/Flip). Chains to the summon window like Horn of Heaven (effect_prepare1.c),
+ *            but only Special Summons. Face-up reactivation like Skull Lair (card_command_menu.c, effect_activation.c,
+ *            effect_targets4.c).
+ *   chainA   800 LP (DUEL_CMD_LOSE_LP; AiSelfLpLoss)
+ *   resolve  Horn of Heaven's negate (DUEL_CMD_CLEAR_ZONE_STATUS_FLAGS on loc0, then DestroyFieldCard)
+ *   CPU      AiShouldActivateAddedCard always chains on the human's Special Summon when LP > 800;
+ *            AiChainSummonTriggerResponse also chains a face-up copy. Not modelled: negating a Spell/Trap effect that
+ *            Special Summons before the RESPONSE_SPECIAL_SUMMONED window. */
+
+#define ROYAL_OPPRESSION_COST 800
+#define PLAYER_CMD_RO(player, cmd) ((player) ? (DUEL_CMD_PLAYER | (cmd)) : (cmd))
+#define RO_ZONE_SUMMON_FLAGS (ZONE_STATUS_UNK14 | ZONE_STATUS_NORMAL_SUMMONED | ZONE_STATUS_SPECIAL_SUMMONED)
+
+static int RoyalOppressionSpecialSummonTarget(struct ChainEntry *card)
+{
+    int player = DUEL_LOC_PLAYER(card->loc0);
+    int zone = DUEL_LOC_ZONE(card->loc0);
+
+    if (card->event != RESPONSE_SPECIAL_SUMMONED)
+        return 0;
+    if (zone > ZONE_MONSTER_4)
+        return 0;
+    return DUEL_CARD_ID(&ZoneOf(player, zone)->card) != 0;
+}
+
+int EffectRoyalOppressionPrepare(struct ChainEntry *card, struct ChainEntry *chainLink, u16 fromHand)
+{
+    return !fromHand && (int)gDuelPlayers[card->player & 1].lifePoints > ROYAL_OPPRESSION_COST
+           && RoyalOppressionSpecialSummonTarget(card);
+}
+
+int EffectRoyalOppressionChainA(struct ChainEntry *link, struct ChainEntry *prevLink)
+{
+    DuelCmd_Push(link->player ? DUEL_CMD_PLAYER | DUEL_CMD_LOSE_LP : DUEL_CMD_LOSE_LP, ROYAL_OPPRESSION_COST, 1,
+                 0);
+    return 1;
+}
+
+int EffectRoyalOppressionResolve(struct ChainEntry *link, struct ChainEntry *chainedTo)
+{
+    if (link->negated || !RoyalOppressionSpecialSummonTarget(link))
+        return EFFECT_STEP_DONE;
+    if (gChain.effectStep == EFFECT_STEP_START) {
+        DuelCmd_Push(PLAYER_CMD_RO((u8)link->loc0, DUEL_CMD_CLEAR_ZONE_STATUS_FLAGS), link->loc0 >> 8,
+                     RO_ZONE_SUMMON_FLAGS, 0);
+        return EFFECT_STEP_2;
+    }
+    DestroyFieldCard((u8)link->loc0, link->loc0 >> 8, 1);
+    return EFFECT_STEP_DONE;
+}
+#endif /* HAS_CARD_ROYAL_OPPRESSION */
+
 #ifdef HAS_CARD_TORRENTIAL_TRIBUTE
 /* ---- Torrential Tribute --------------------------------------------------------------------------------------
  * "When a monster(s) is Summoned: Destroy all monsters on the field."
@@ -7140,6 +7197,9 @@ static int AiSelfLpLoss(struct ChainEntry *card)
 #ifdef HAS_CARD_BRAIN_CONTROL
     case CARD_BRAIN_CONTROL:
 #endif
+#ifdef HAS_CARD_ROYAL_OPPRESSION
+    case CARD_ROYAL_OPPRESSION:
+#endif
         return 800;
     case CARD_MONSTER_EYE:
     case CARD_SEVEN_TOOLS_OF_THE_BANDIT:
@@ -7487,6 +7547,8 @@ int KingTigerWanghuOnSummon(int player, int zone)
 }
 #endif /* HAS_CARD_KING_TIGER_WANGHU */
 
+int AiShouldActivateAddedCard(struct ChainEntry *entry); /* below: added-card Set/face-up chain policy */
+
 /* ---- The CPU answers a summon trigger with a summon trap ----------------------------------------------------------
  * A monster's own summon trigger (Mobius, Zaborg, Breaker, Sonic Bird, ...) is a chain link with the summon's event
  * (RESPONSE_SUMMONED and the like) and the monster at loc0, and a response keeps that event and those locations
@@ -7503,6 +7565,20 @@ int AiChainSummonTriggerResponse(struct ChainEntry *entry)
     if (entry->player != AI_HUMAN || (entry->event != RESPONSE_SUMMONED && entry->event != RESPONSE_FLIP_SUMMONED
                                       && entry->event != RESPONSE_SPECIAL_SUMMONED))
         return 0;
+#ifdef HAS_CARD_ROYAL_OPPRESSION
+    if (entry->event == RESPONSE_SPECIAL_SUMMONED) {
+        for (zone = ZONE_SPELL_0; zone <= ZONE_SPELL_4; zone++) {
+            struct DuelZone *z = ZoneOf(AI_PLAYER, zone);
+            u16 id = DUEL_CARD_ID(&z->card);
+
+            if (id == 0 || !z->isFaceUp || CardNumberOfId(id) != CARD_ROYAL_OPPRESSION)
+                continue;
+            MemCopy16(&ref, entry, sizeof(ref));
+            if (CanActivateFieldCard(&ref, AI_PLAYER, zone) && AiShouldActivateAddedCard(&ref))
+                return AiChainSetCard(entry, CARD_ROYAL_OPPRESSION);
+        }
+    }
+#endif
     for (zone = ZONE_SPELL_0; zone <= ZONE_SPELL_4; zone++) {
         struct DuelZone *z = ZoneOf(AI_PLAYER, zone);
         u16 id = DUEL_CARD_ID(&z->card);
@@ -8548,6 +8624,10 @@ int AiPlayAddedCards(void)
     if (AiTryPlaySpellTrap(CARD_GRAVITY_BIND))
         return 1;
 #endif
+#ifdef HAS_CARD_ROYAL_OPPRESSION
+    if (AiTryPlaySpellTrap(CARD_ROYAL_OPPRESSION))
+        return 1;
+#endif
     /* added Magic cards, in the hand or Set */
     for (i = 0; i < p->handCount; i++) {
         u16 id = DUEL_CARD_ID(&p->hand[i]);
@@ -8716,6 +8796,18 @@ int AiShouldActivateAddedCard(struct ChainEntry *entry)
         if (theirs > CountFreeMonsterZones(1 - AI_PLAYER))
             theirs = CountFreeMonsterZones(1 - AI_PLAYER);
         return mine >= 2 && mine > theirs && gDuelPlayers[AI_PLAYER].lifePoints > 3000;
+    }
+#endif
+#ifdef HAS_CARD_ROYAL_OPPRESSION
+    case CARD_ROYAL_OPPRESSION: {
+        int summonPlayer = DUEL_LOC_PLAYER(entry->loc0);
+        int summonZone = DUEL_LOC_ZONE(entry->loc0);
+
+        if (entry->event != RESPONSE_SPECIAL_SUMMONED || summonPlayer != AI_HUMAN
+            || summonZone > ZONE_MONSTER_4
+            || (int)gDuelPlayers[AI_PLAYER].lifePoints <= ROYAL_OPPRESSION_COST)
+            return 0;
+        return 1;
     }
 #endif
 #ifdef HAS_CARD_SKULL_LAIR
@@ -9038,6 +9130,16 @@ const struct CardEffect gAddedCardEffects[] = {
         NULL,
         NULL,
         NULL,
+        NULL,
+    },
+#endif
+#ifdef HAS_CARD_ROYAL_OPPRESSION
+    {
+        CARD_ROYAL_OPPRESSION, 0,
+        EffectRoyalOppressionResolve,
+        NULL,
+        EffectRoyalOppressionPrepare,
+        EffectRoyalOppressionChainA,
         NULL,
     },
 #endif
