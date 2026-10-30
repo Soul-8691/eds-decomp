@@ -2078,6 +2078,14 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
   `CARD_SCAPEGOAT`, so it does not play Scapegoat on purpose.
 - Checked in the source and the build; not tested in an emulator.
 
+### Gravity Bind (2026-10-30)
+- Effect text from [YGOPRODeck](https://db.ygoprodeck.com/api/v7/cardinfo.php?name=Gravity%20Bind) (id 85742772):
+  "Level 4 or higher monsters cannot attack." Continuous Trap; it stays on the field when activated.
+  `EffectGravityBindResolve` is a no-op. While a face-up copy is active on either side, `CanMonsterAttack`
+  (`card_menu_input.c`) blocks Level 4+ monsters the same way as vanilla effect key `CARD_1323`. The CPU flips a Set
+  copy whenever it may (`AiPlayAddedCards`, `AiShouldActivateAddedCard` default).
+- Checked in the source and the build; not tested in an emulator.
+
 ### Level Limit - Area B (2026-10-30)
 - Effect text from [YGOPRODeck](https://db.ygoprodeck.com/api/v7/cardinfo.php?name=Level%20Limit%20-%20Area%20B) (id
   3136426): "Change all face-up Level 4 or higher monsters to Defense Position." Continuous Spell in the card pool; it

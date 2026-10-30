@@ -4904,6 +4904,18 @@ int EffectLevelLimitAreaBResolve(struct ChainEntry *link, struct ChainEntry *cha
 }
 #endif /* HAS_CARD_LEVEL_LIMIT_AREA_B */
 
+#ifdef HAS_CARD_GRAVITY_BIND
+/* ---- Gravity Bind (YGOPRODeck id 85742772) -----------------------------------------------------------------------
+ * Effect text (YGOPRODeck API): "Level 4 or higher monsters cannot attack." Continuous Trap; stays face-up when
+ * activated. The attack rule is in CanMonsterAttack (card_menu_input.c), with vanilla effect key CARD_1323.
+ * CPU: AiPlayAddedCards; AiShouldActivateAddedCard default yes (CARD_1323 in AiShouldActivateSetCard). */
+
+int EffectGravityBindResolve(struct ChainEntry *link, struct ChainEntry *chainedTo)
+{
+    return EFFECT_STEP_DONE;
+}
+#endif /* HAS_CARD_GRAVITY_BIND */
+
 #ifdef HAS_CARD_SECRET_BARREL
 /* ---- Secret Barrel ------------------------------------------------------------------------------------------------
  * Normal Trap: "Inflict 200 damage to your opponent for each card in your opponent's hand and for each card they
@@ -8019,6 +8031,10 @@ int AiPlayAddedCards(void)
     if (AiTryPlaySpellTrap(CARD_LEVEL_LIMIT_AREA_B))
         return 1;
 #endif
+#ifdef HAS_CARD_GRAVITY_BIND
+    if (AiTryPlaySpellTrap(CARD_GRAVITY_BIND))
+        return 1;
+#endif
     /* added Magic cards, in the hand or Set */
     for (i = 0; i < p->handCount; i++) {
         u16 id = DUEL_CARD_ID(&p->hand[i]);
@@ -8496,6 +8512,16 @@ const struct CardEffect gAddedCardEffects[] = {
     {
         CARD_LEVEL_LIMIT_AREA_B, 0,
         EffectLevelLimitAreaBResolve,
+        NULL,
+        NULL,
+        NULL,
+        NULL,
+    },
+#endif
+#ifdef HAS_CARD_GRAVITY_BIND
+    {
+        CARD_GRAVITY_BIND, 0,
+        EffectGravityBindResolve,
         NULL,
         NULL,
         NULL,

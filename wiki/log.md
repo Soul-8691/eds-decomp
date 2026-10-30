@@ -2005,5 +2005,8 @@ updated: 2026-09-29
 ## [2026-10-30] progress | Level Limit - Area B CPU always flips
 - src/added_effects.c: removed `AiWantsLevelLimitAreaB`; CPU uses `AiPlayAddedCards` and `AiShouldActivateAddedCard` default (vanilla CARD_1323-style). [[added-cards]].
 
+## [2026-10-30] progress | Gravity Bind
+- src/added_effects.c: `EffectGravityBindResolve`, `gAddedCardEffects` row; `AiPlayAddedCards`. src/card_menu_input.c: `CanMonsterAttack` (Level 4+ blocked while active, with CARD_1323). missing.txt, missing-main.txt. [[added-cards]]. Built (`make`); not tested in an emulator.
+
 ## [2026-10-30] progress | Level Limit - Area B: correct effect (YGOPRODeck)
 - YGOPRODeck desc: change face-up Level 4+ monsters to Defense Position (not attack lock / CARD_1323). src/added_effects.c: `ApplyLevelLimitAreaB`, `ModLevelLimitAreaBBlocksAtkPosition`; src/summon_action.c, src/card_command_menu.c; removed wrong `CanMonsterAttack` hook. [[added-cards]].

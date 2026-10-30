@@ -441,7 +441,12 @@ u16 CanMonsterAttack(int player, int zone, u16 flag)
         if (atkVal > 0x5DB) /* 1499 ATK */
             return 0;
     }
-    if (CountActiveCardsOnField(0, CARD_1323) > 0 || CountActiveCardsOnField(1, CARD_1323) > 0) {
+    if (CountActiveCardsOnField(0, CARD_1323) > 0 || CountActiveCardsOnField(1, CARD_1323) > 0
+#ifdef HAS_CARD_GRAVITY_BIND
+        || CountActiveCardsOnField(0, CARD_GRAVITY_BIND) > 0
+        || CountActiveCardsOnField(1, CARD_GRAVITY_BIND) > 0
+#endif
+    ) {
         CARD_LEVEL(lv, id);
         if (lv > 3)
             return 0;
