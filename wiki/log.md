@@ -1977,3 +1977,6 @@ updated: 2026-09-29
 
 ## [2026-10-30] progress | Gyaku-Gire Panda coded
 - src/added_effects.c: ModStatBonus (packed ATK/DEF bonus; Panda's 500 per opponent monster, Cipher Soldier's ModBattleStatBonus inside), ModHasPiercing case; src/card_stats.c unpacks it. DECKS.md. [[added-cards]]. Release .text 0x8071C. Built (make and make release); not tested in an emulator.
+
+## [2026-10-30] progress | Solomon: an opponent that plays a Deck Recipe the player picks
+- src/mod_opponents.c: Grandpa's ID is "Solomon" (DECK_ALWAYS: make release too), first on page 3 with his own portrait (PORTRAIT_FROM_SLOT(4, 3)); page 3 visited in both builds; geistD-Goat Control moved to Shadi's ID; ModOpponentPlaysRecipe. src/mod_recipes.c CB_OpponentRecipes (opponentPick); src/mod_decks.c gModOpponentRecipe / ModSetOpponentRecipe (EWRAM 0x0202F400, symbols.ld); src/campaign_steps.c sub-step 5; src/ai_deck.c no copy-limit trim for him; src/mod_dp.c no DP. (A first version briefly put "Simon" in the left slot with ellietincan-Chaos Control; replaced at the user's correction.) README, DECKS.md. [[yugi-kaiba-opponent]]. Release .text 0x807D0. Built (make and make release); not tested in an emulator.

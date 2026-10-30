@@ -73,6 +73,9 @@ int ModSkipsDuelDialogue(u16 duelist);
 int ModOpponentFormat(u16 duelist);
 /* Mod (src/mod_recipes.c): Deck Recipes for the challenger's format; 1 when the player goes on to the duel. */
 u16 CB_ChallengerRecipes(int format);
+/* Mod: Solomon plays a Deck Recipe the player picks (src/mod_opponents.c, src/mod_recipes.c). */
+int ModOpponentPlaysRecipe(u16 duelist);
+u16 CB_OpponentRecipes(void);
 
 /* Mod: a calendar event's challenger (Campaign_StartDay fixed a format opponent, ModEventChallenger). */
 static int IsEventChallenger(void)
@@ -93,6 +96,9 @@ static int HasEventDialogue(void)
  * (its format is now the Deck Edit banlist), or opens Deck Edit and comes back to the recipes. */
 #define SELECT_STEP_CHALLENGER_RECIPES 3
 #define SELECT_STEP_CHALLENGER_DECK_EDIT 4
+/* Sub-step 5 (added): Solomon's deck, picked from the player's Deck Recipes before a match's first duel; B goes back
+ * to the opponent select. */
+#define SELECT_STEP_OPPONENT_RECIPE 5
 
 u16 Campaign_SelectOpponent(void)
 {
@@ -108,6 +114,12 @@ u16 Campaign_SelectOpponent(void)
         gMain.subStep++;
         /* fall through */
     case 1:
+        /* added: Solomon's deck first (later duels of a match keep it) */
+        if (ModOpponentPlaysRecipe(gMain.opponent) && gMain.matchDuelCount == 0) {
+            gMain.subStep = SELECT_STEP_OPPONENT_RECIPE;
+            RESET_SEQ_STATE();
+            return 0;
+        }
         /* added: no dialogue, except a calendar event challenger's */
         if (ModSkipsDuelDialogue(gMain.opponent) && !(IsEventChallenger() && HasEventDialogue())) {
             if (!IsEventChallenger())
@@ -144,6 +156,16 @@ u16 Campaign_SelectOpponent(void)
             SaveGame();
             gMain.subStep = SELECT_STEP_CHALLENGER_RECIPES;
             RESET_SEQ_STATE();
+        }
+        return 0;
+    case SELECT_STEP_OPPONENT_RECIPE:       /* added: Solomon's deck */
+        switch (CB_OpponentRecipes()) {
+        case 1:
+            return 1;
+        case 2:
+            gMain.subStep = 0;
+            RESET_SEQ_STATE();
+            return 0;
         }
         return 0;
     }

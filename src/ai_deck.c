@@ -135,7 +135,8 @@ void LoadOpponentDeck(u16 useAltDeck)
         for (k = 0; k < list->count; k++)
             AddCardNumberToDeckTop(1, list->cards[k]);
     }
-    if (opponent != DUELIST_DUEL_COMPUTER)  /* added: the testing opponent keeps its copies (src/mod_decks.c) */
+    /* added: the testing opponent and Solomon (a recipe the player picked) keep their copies (src/mod_decks.c) */
+    if (opponent != DUELIST_DUEL_COMPUTER && opponent != DUELIST_GRANDPA)
         RemoveOverLimitDeckCards(1);
 }
 

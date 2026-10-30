@@ -2521,6 +2521,35 @@ static const struct DeckList *WarriorDeck(void)
 static const struct DeckList sTestDeckList = { sTestDeck, ARRAY_COUNT(sTestDeck), 0 };
 #endif
 
+/* Solomon's deck (Grandpa's slot on the deck opponents' page, src/mod_opponents.c, in both builds): the Deck Recipe the
+ * player picks before the duel (CB_OpponentRecipes, src/mod_recipes.c), as card numbers: its Main Deck, then its
+ * Fusion Deck (LoadOpponentDeck puts Fusion Monsters there); its Side Deck is not used. gModOpponentRecipe (EWRAM
+ * 0x0202F400, symbols.ld) keeps it for the whole match. LoadOpponentDeck leaves its copy counts as they are. */
+#define MOD_OPPONENT_RECIPE_VALID 0x50C0
+
+struct ModOpponentRecipe {
+    struct DeckList list;
+    u16 valid;                                          /* MOD_OPPONENT_RECIPE_VALID: list is set */
+    u16 pad;
+    u16 cards[DECK_MAX_CARDS + FUSION_DECK_MAX_CARDS];
+};
+extern struct ModOpponentRecipe gModOpponentRecipe;
+
+/* CB_OpponentRecipes: the picked recipe's Main Deck and Fusion Deck (card IDs). */
+void ModSetOpponentRecipe(const u16 *deck, int deckCount, const u16 *fusion, int fusionCount)
+{
+    int i, n = 0;
+
+    for (i = 0; i < deckCount && n < DECK_MAX_CARDS; i++)
+        gModOpponentRecipe.cards[n++] = gCardIdToNumber[deck[i] & CARD_ID_MASK];
+    for (i = 0; i < fusionCount && i < FUSION_DECK_MAX_CARDS; i++)
+        gModOpponentRecipe.cards[n++] = gCardIdToNumber[fusion[i] & CARD_ID_MASK];
+    gModOpponentRecipe.list.cards = gModOpponentRecipe.cards;
+    gModOpponentRecipe.list.count = n;
+    gModOpponentRecipe.list.pad = 0;
+    gModOpponentRecipe.valid = MOD_OPPONENT_RECIPE_VALID;
+}
+
 /* The replacement deck of opponent `opponent` (enum DuelistId), or NULL to keep the original: a new pick (the
  * weighted random ones roll again); GetOpponentDeckOverride keeps it for the match. */
 static const struct DeckList *PickOpponentDeckOverride(int opponent)
@@ -2598,9 +2627,11 @@ static const struct DeckList *PickOpponentDeckOverride(int opponent)
         return &sJoeyDeckList;
 #endif
 #ifdef MOD_BAKURA_DECK
-    case DUELIST_GRANDPA:
+    case DUELIST_SHADI:                 /* geistD-Goat Control (Grandpa's ID until 2026-10-30) */
         return &sBakuraDeckList;
 #endif
+    case DUELIST_GRANDPA:               /* Solomon (make release too): the Deck Recipe the player picked */
+        return gModOpponentRecipe.valid == MOD_OPPONENT_RECIPE_VALID ? &gModOpponentRecipe.list : NULL;
 #if defined(MOD_TEST_DECK) && !MOD_RELEASE
     case DUELIST_DUEL_COMPUTER:         /* "Test Duel": test.ydk */
         return &sTestDeckList;

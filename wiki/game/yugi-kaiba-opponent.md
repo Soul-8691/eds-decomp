@@ -89,8 +89,23 @@ next to the one before it.
 
 ## Deck opponents
 Always open, with no format check:
-- Simon plays the LR-Chaos Turbo deck, Pegasus the sdlkilla-Warrior deck and Grandpa the geistD-Goat Control deck
-  (`GetOpponentDeckOverride`).
+- Simon plays the LR-Chaos Turbo deck, Pegasus the sdlkilla-Warrior deck and Shadi's ID the geistD-Goat Control deck
+  (Grandpa's ID until 2026-10-30) (`GetOpponentDeckOverride`).
+- **Solomon (2026-10-30).** Grandpa's ID (`DUELIST_GRANDPA`), named "Solomon", first on the page (top left; the
+  layout is Solomon, Chaos Turbo, Warrior, Goat Control, Test Duel in the cursor's ring order) with his own portrait
+  (`PORTRAIT_FROM_SLOT(4, 3)`, the original page 4 top right; a preview from the built ROM's page bitmaps checked it).
+  He is `DECK_ALWAYS`, so `make release` has him too (the only open slot of page 3, now visited in both builds:
+  `PAGE_COUNT` 4), always open (`ModIsOpponentUnlocked`).
+  - **His deck.** `Campaign_SelectOpponent` (campaign_steps.c) goes to the added sub-step 5 for him before a match's
+    first duel (`ModOpponentPlaysRecipe`): `CB_OpponentRecipes` (mod_recipes.c) is the Deck Recipes scene with
+    `opponentPick` set. A on a used recipe with a Main Deck calls `ModSetOpponentRecipe` (mod_decks.c), which keeps
+    its Main Deck then Fusion Deck as card numbers in `gModOpponentRecipe` (EWRAM 0x0202F400, symbols.ld) and its
+    `DeckList`; nothing of the player's is loaded or changed. B returns 2 and the step goes back to the opponent
+    select. `GetOpponentDeckOverride` returns that list for him; the match's later duels keep it (gModMatch).
+    `LoadOpponentDeck` (ai_deck.c) skips `RemoveOverLimitDeckCards` for him, as for Test Duel.
+  - **No DP.** `AwardDuelDP` (mod_dp.c) returns early for him.
+  - Original ties to Grandpa's ID: his unlock (a complete collection) is overridden by `ModIsOpponentUnlocked`.
+  - Release `.text` 0x080807D0 (the Campaign step and the copy-limit test).
 - Portraits: Black Luster Soldier - Envoy of the Beginning, D.D. Warrior Lady and Thousand-Eyes Restrict.
 - **Test Duel (2026-10-30).** The Duel Computer's slot (`DUELIST_DUEL_COMPUTER`, page 3 bottom: the fourth in the
   cursor's ring) is "Test Duel" in `make` builds, hidden in `make release`. Its deck is the .ydk in `TEST_YDK` (the

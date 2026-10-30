@@ -103,6 +103,8 @@ next one.
   no longer scrolls either.
 - **Fixes.** Deck Edit no longer blots out the first letters of the row above the cursor after Card View (a
   bug in the original game).
+- **Solomon.** The opponent page after the formats starts with Solomon, open from the start: before the duel you
+  pick one of your own Deck Recipes for him to play. Beating him gives no DP, so he's for practice and testing decks.
 - **Best-of-3 matches.** Every Campaign duel against the CPU is a best-of-3 match, not only on match days.
   Between games you can side, swapping cards between your Main Deck and Side Deck. Your deck goes back to how it
   was once the match ends. The CPU uses the same deck for every game of the match. Records, DP and the pack

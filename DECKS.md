@@ -2014,18 +2014,24 @@ Every card was already in the game. Cards here with no coded effect yet: the Fus
 
 Vanilla (unchanged): these opponents still use the original game's decks.
 
-## Deck opponents (debug build only)
+## Deck opponents
 
-A testing page after the formats, left out of `make release`. Each opponent always uses its one deck, all Goat format (April 2005).
+The page after the formats. Solomon comes first and is in both builds from the start; the others are a testing page,
+left out of `make release`, each always with its one deck, all Goat format (April 2005).
 
 | Opponent | Deck | Portrait |
 |---|---|---|
+| Solomon | a Deck Recipe you pick before the duel | Solomon (Grandpa) |
 | Chaos Turbo | LR-Chaos Turbo | Black Luster Soldier - Envoy of the Beginning |
 | Warrior | sdlkilla-Warrior | D.D. Warrior Lady |
 | Goat Control | geistD-Goat Control | Thousand-Eyes Restrict |
 | Test Duel | `C:\ProjectIgnis\deck\test.ydk`, read at every build | Duel Computer |
 
-Test Duel (the Duel Computer's slot, bottom of the page) plays whatever `test.ydk` holds when the ROM is built
+Solomon: after you choose him, your Deck Recipes list opens; A on a recipe makes it his deck (Main and Fusion Deck;
+nothing of yours is loaded or changed), B goes back to the opponent select. A best-of-3 keeps the same deck. His copy
+counts are kept as the recipe has them, and beating him gives no DP.
+
+Test Duel (the Duel Computer's slot, left on the page) plays whatever `test.ydk` holds when the ROM is built
 (`tools/testdeck.py`; `make TEST_YDK=<path>` reads another file). Its copy counts are kept as they are (no limit is
 applied), and Main Deck cards the game does not have are left out with a warning. Without the file the slot stays
 empty.

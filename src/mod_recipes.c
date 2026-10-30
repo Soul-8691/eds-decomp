@@ -15,6 +15,9 @@
  *                           cards, or a card the format does not allow), unless the collection cannot make a legal
  *                           deck at all (ModEventChallenger avoids that): then a second B duels anyway, so an event
  *                           never gets stuck. The event's BGM keeps playing.
+ *   CB_OpponentRecipes      the same scene before a duel with Solomon (Campaign_SelectOpponent): A on a
+ *                           recipe makes it his deck (ModSetOpponentRecipe, src/mod_decks.c); nothing is loaded or
+ *                           changed; B goes back to the opponent select
  *   DeckRecipes_OnNewGame   BuildStarterDeck (title_screen.c): a New Game clears the recipes back to the presets
  * Up to RECIPE_COUNT recipes, each a name and a saved Deck, Side Deck and Fusion Deck list, live in SRAM after the
  * save image (RECIPE_SRAM; the game's save is 0x2170 bytes of the 32 KiB). The first ones start as the decks of
@@ -61,6 +64,8 @@ int CountIllegalCards(int format);
 /* src/mod_banlists.c */
 int BanlistMainDeckCapacity(int banlist);
 int SwitchToBanlist(int banlist);
+/* src/mod_decks.c: Solomon's deck */
+void ModSetOpponentRecipe(const u16 *deck, int deckCount, const u16 *fusion, int fusionCount);
 
 extern const u8 gMainMenuObjPal[], gMainMenuObjGfx[];
 extern const u16 gMainMenuSkyImage[];
@@ -152,10 +157,16 @@ struct DeckRecipes {
     u8 leftOutScroll;
     u8 startConfirm;                /* the challenger: 1 after a B the deck check warned about */
     u8 deckEdit;                    /* the challenger: 1 when the player left with SELECT, for Deck Edit */
+    u8 opponentPick;                /* 1: CB_OpponentRecipes (A picks Solomon's deck) */
+    u8 picked;                      /* CB_OpponentRecipes: 1 when a recipe was picked, 0 when the player went back */
     struct LeftOut leftOut[LEFT_OUT_MAX];
     struct RecipeSlot buf;
 };
 extern struct DeckRecipes gDeckRecipes;
+STATIC_ASSERT(sizeof(struct DeckRecipes) <= 0x0202F000 - 0x0202E400, DeckRecipesFits);  /* before gPackShop */
+
+#define RECIPES_NORMAL          (-1)    /* RunScene's `format`: Deck Recipes from the main menu */
+#define RECIPES_PICK_OPPONENT   (-2)    /* ... CB_OpponentRecipes; >= 0: a challenger's format */
 
 #define CHALLENGER_MIN_MAIN_DECK    40      /* as BANLIST_MIN_MAIN_DECK (src/mod_banlists.c) */
 
@@ -622,6 +633,8 @@ static const char sStrLeftOutHelp1[] = "UP/DOWN: scroll   A/B: close";
 static const char sStrLeftOutHelp2[] = "Deck Edit's banlist is set in Banlists.";
 static const char sStrLeftOutChallenger[] = "The banlist is now the challenger's format.";
 static const char sStrChallengerHelp[] = "A: options  B: duel  SELECT: Deck Edit";
+static const char sStrOpponentHelp[] = "A: Solomon plays it   B: back";
+static const char sStrOpponentPrompt[] = "Pick the recipe Solomon will duel with.";
 static const char sStrChallengerFormat[] = "Challenger's format: ";
 static const char sStrChallengerBanlist[] = "Now using the ";
 static const char sStrChallengerBanlistEnd[] = " banlist.";
@@ -753,6 +766,9 @@ static void RenderList(void)
             x += gTextCanvas.right - x + 14;
         }
         DrawLine(ROWS_VISIBLE * ROW_HEIGHT + 10, COLOR_HELP, sStrMenuHelp);
+    } else if (s->opponentPick) {
+        DrawLine(ROWS_VISIBLE * ROW_HEIGHT, COLOR_HELP, sStrOpponentHelp);
+        DrawLine(ROWS_VISIBLE * ROW_HEIGHT + 10, COLOR_CURSOR, sStrOpponentPrompt);
     } else if (s->challenger) {
         DrawLine(ROWS_VISIBLE * ROW_HEIGHT, COLOR_HELP, sStrChallengerHelp);
         AppendStr(AppendStr(line, sStrChallengerFormat), BanlistName(s->format));
@@ -1146,6 +1162,26 @@ static int HandleInput(void)
         Render();
         return 0;
     }
+    if (s->opponentPick) {
+        if (keys & B_BUTTON) {
+            PlaySE(SE_CANCEL);
+            return 1;
+        }
+        if (keys & A_BUTTON) {
+            if (!s->sizes[n][3] || s->sizes[n][0] == 0) {
+                AppendStr(StatusRecipe(n), sStrIsEmpty);
+                PlaySE(SE_ERROR);
+                Render();
+                return 0;
+            }
+            ReadSlot(n);
+            ModSetOpponentRecipe(s->buf.deck, s->buf.deckSize, s->buf.fusion, s->buf.fusionSize);
+            s->picked = 1;
+            PlaySE(SE_CONFIRM);
+            return 1;
+        }
+        keys &= DPAD_UP | DPAD_DOWN | L_BUTTON | R_BUTTON;     /* the list moves as usual */
+    }
     if (keys & B_BUTTON) {
         if (s->challenger) {
             if (!ChallengerMayStart())
@@ -1211,7 +1247,7 @@ static u16 RunScene(int format)
             ResetBgScroll();
             REG_BG1CNT = BGCNT_256COLOR | BGCNT_CHARBASE(1);
             gMain.vblankFlags = VBLANK_COPY_OAM | VBLANK_COPY_BG_MAPS;
-            if (format < 0)
+            if (format == RECIPES_NORMAL)
                 PlayBGMNoTrack(SONG_MAIN_MENU);
             break;
         default:
@@ -1219,6 +1255,7 @@ static u16 RunScene(int format)
             LoadBgImage(0, 0, 0x20, gMainMenuSkyImage);
             DeckRecipes_BuildLabel((u16 *)OBJ_TILE(TITLE_TILE));
             MemClear16(s, sizeof(*s) - sizeof(s->buf));
+            s->opponentPick = format == RECIPES_PICK_OPPONENT;
             if (format >= 0) {
                 s->challenger = 1;
                 s->format = format;
@@ -1247,7 +1284,7 @@ static u16 RunScene(int format)
     case 2:
         DrawSprites();
         if (HandleInput()) {
-            if (format < 0)
+            if (format == RECIPES_NORMAL)
                 FadeOutBGM();
             gMain.seqIndex1++;
         }
@@ -1256,13 +1293,22 @@ static u16 RunScene(int format)
         DrawSprites();
         if (!FadeToBlack(2))
             return 0;
+        if (s->opponentPick)
+            return s->picked ? 1 : 2;
         return s->challenger && s->deckEdit ? 2 : 1;
     }
 }
 
 u16 CB_DeckRecipes(void)
 {
-    return RunScene(-1);
+    return RunScene(RECIPES_NORMAL);
+}
+
+/* Before a duel with Solomon: the player picks his deck from their Deck Recipes. 1 when one was picked (the duel goes
+ * on), 2 when the player went back (to the opponent select). */
+u16 CB_OpponentRecipes(void)
+{
+    return RunScene(RECIPES_PICK_OPPONENT);
 }
 
 /* Before a calendar event's duel with a format opponent: Deck Recipes for banlist `format` (see RunScene): 1 to go

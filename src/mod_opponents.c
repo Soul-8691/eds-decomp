@@ -7,8 +7,11 @@
  *           open at the start; beating format k sWinsToUnlockNext[k] times (10) opens format k + 1. That is
  *           make release; a plain make (testing) opens every format.
  *           They fill pages 0-2 in unlock order.
- *   DECK    page 3: an opponent per deck (src/mod_decks.c), always open: the LR-Chaos Turbo, sdlkilla-Warrior and
- *           geistD-Goat Control decks, and "Test Duel" in the Duel Computer's slot: the deck of the .ydk in TEST_YDK
+ *   DECK    page 3: an opponent per deck (src/mod_decks.c), always open. First Solomon (Grandpa's ID and portrait,
+ *           top left; in make release too, the only one there): he plays the Deck Recipe the player picks before the
+ *           duel (CB_OpponentRecipes), and beating him gives no DP (src/mod_dp.c). Then, make only: the LR-Chaos
+ *           Turbo, sdlkilla-Warrior and geistD-Goat Control (Shadi's ID) decks, and "Test Duel" in the Duel
+ *           Computer's slot: the deck of the .ydk in TEST_YDK
  *           (the Makefile; tools/testdeck.py, build/include/test_deck.h), if there is one, with the Duel
  *           Computer's own portrait (copied from the original page 4, DrawSlotPortrait).
  *   HIDDEN  the duelist IDs not placed, and the empty slots (duelist 0: page 3's last two, page 4): no name, the
@@ -71,8 +74,10 @@ struct ModOpponent {
 /* A portrait copied from slot `slot` of the original page `page` (gOpponentSelectPageBgs; DrawSlotPortrait). */
 #define PORTRAIT_FROM_SLOT(page, slot)  (0x8000 | (page) << 4 | (slot))
 #define PORTRAIT_IS_SLOT(p)             ((p) & 0x8000)
-/* The Duel Computer's own portrait: the original page 4, right slot (gOpponentSelectDuelists). */
+/* The Duel Computer's and Solomon's (Grandpa's) own portraits: the original page 4, right and top right slots
+ * (gOpponentSelectDuelists). */
 #define PORTRAIT_DUEL_COMPUTER          PORTRAIT_FROM_SLOT(4, 4)
+#define PORTRAIT_SOLOMON                PORTRAIT_FROM_SLOT(4, 3)
 
 static const char sNameYugiKaiba[] = "Yugi-Kaiba";
 static const char sNameCritter[] = "Critter";
@@ -93,6 +98,7 @@ static const char sNameChaosTurbo[] = "LR-Chaos Turbo";
 static const char sNameWarriorDeck[] = "sdlkilla-Warrior";
 static const char sNameGoatControl[] = "geistD-Goat Control";
 static const char sNameTestDuel[] = "Test Duel";
+static const char sNameSolomon[] = "Solomon";
 
 /* Portrait cards that are added cards (config/new_cards.txt): 0 (the page's own portrait) when not in the build. */
 #ifdef HAS_CARD_SCAPEGOAT
@@ -158,6 +164,7 @@ static const char sNameTestDuel[] = "Test Duel";
 #else
 #define DECK(name, portrait) { KIND_DECK, 0, 0, 0, name, portrait }
 #endif
+#define DECK_ALWAYS(name, portrait) { KIND_DECK, 0, 0, 0, name, portrait }     /* in make release too */
 
 /* By enum DuelistId. */
 static const struct ModOpponent sOpponents[] = {
@@ -181,10 +188,10 @@ static const struct ModOpponent sOpponents[] = {
     [DUELIST_ISHIZU] = FORMAT(12, BANLIST_GOAT, sNameGoat, ART_SCAPEGOAT),
     [DUELIST_YAMI_BAKURA] = FORMAT(13, BANLIST_CYBER, sNameCyber, ART_CYBER_DRAGON),
     [DUELIST_YAMI_YUGI] = FORMAT(14, BANLIST_REAPER, sNameReaper, ART_SPIRIT_REAPER),
-    [DUELIST_SHADI] = HIDDEN,
+    [DUELIST_SHADI] = DECK(sNameGoatControl, ART_THOUSAND_EYES_RESTRICT),   /* Grandpa's ID until 2026-10-30 */
     [DUELIST_SIMON] = DECK(sNameChaosTurbo, ART_BLACK_LUSTER_SOLDIER_ENVOY_OF_THE_BEGINNING),
     [DUELIST_PEGASUS] = DECK(sNameWarriorDeck, ART_D_D_WARRIOR_LADY),
-    [DUELIST_GRANDPA] = DECK(sNameGoatControl, ART_THOUSAND_EYES_RESTRICT),
+    [DUELIST_GRANDPA] = DECK_ALWAYS(sNameSolomon, PORTRAIT_SOLOMON),
 #ifdef MOD_TEST_DECK
     [DUELIST_DUEL_COMPUTER] = DECK(sNameTestDuel, PORTRAIT_DUEL_COMPUTER),
 #else
@@ -211,17 +218,14 @@ static const u8 sWinsToUnlockNext[FORMAT_COUNT - 1] = {
 };
 
 /* The duelist of each [page][slot] (slots: 0 bottom, 1 left, 2 top left, 3 top right, 4 right); 0 = empty. */
-#if MOD_RELEASE
-#define PAGE_COUNT      3               /* pages that can be visited: the formats (the deck page is make only) */
-#else
-#define PAGE_COUNT      4               /* pages that can be visited: the formats, then the deck opponents */
-#endif
+#define PAGE_COUNT      4               /* pages that can be visited: the formats, then the deck opponents (in make
+                                           release only Solomon there) */
 static const u8 sPageDuelists[5][5] = {
     /*  bottom                left                top left               top right              right */
     { DUELIST_MAKO,         DUELIST_MAI,        DUELIST_TRISTAN,       DUELIST_REX,           DUELIST_ESPA_ROBA },
     { DUELIST_UMBRA_LUMIS,  DUELIST_MARIK,      DUELIST_WEEVIL,        DUELIST_RARE_HUNTER,   DUELIST_ARKANA },
     { DUELIST_YAMI_BAKURA,  DUELIST_YAMI_YUGI,  DUELIST_STRINGS,       DUELIST_KAIBA,         DUELIST_ISHIZU },
-    { DUELIST_DUEL_COMPUTER, 0,                 DUELIST_SIMON,         DUELIST_PEGASUS,       DUELIST_GRANDPA },
+    { DUELIST_SHADI,        DUELIST_DUEL_COMPUTER, DUELIST_GRANDPA,    DUELIST_SIMON,         DUELIST_PEGASUS },
     { 0,                    0,                  0,                     0,                     0 },
 };
 
@@ -359,6 +363,12 @@ const u8 *ModOpponentSelectName(u16 duelist, const u8 *name)
 int ModSkipsDuelDialogue(u16 duelist)
 {
     return Opponent(duelist)->kind != KIND_HIDDEN;
+}
+
+/* Campaign_SelectOpponent (campaign_steps.c): 1 if `duelist` plays a Deck Recipe the player picks (Solomon). */
+int ModOpponentPlaysRecipe(u16 duelist)
+{
+    return duelist == DUELIST_GRANDPA && Opponent(duelist)->kind == KIND_DECK;
 }
 
 int ModOpponentFormat(u16 duelist)
