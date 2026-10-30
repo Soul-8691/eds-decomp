@@ -4832,6 +4832,38 @@ int EffectThreateningRoarResolve(struct ChainEntry *link, struct ChainEntry *cha
 }
 #endif /* HAS_CARD_THREATENING_ROAR */
 
+#if defined(HAS_CARD_CHAOS_EMPEROR_DRAGON_ENVOY_OF_THE_END) || defined(HAS_CARD_SECRET_BARREL)
+static int CountHandAndFieldCards(int player);
+#endif
+
+#ifdef HAS_CARD_SECRET_BARREL
+int AiWantsSecretBarrel(void);
+#endif
+
+#ifdef HAS_CARD_SECRET_BARREL
+/* ---- Secret Barrel ------------------------------------------------------------------------------------------------
+ * Normal Trap: "Inflict 200 damage to your opponent for each card in your opponent's hand and for each card they
+ * control on the field." The CPU: AiWantsSecretBarrel, AiPlayAddedCards (Main Phase), AiShouldActivateAddedCard. */
+#define SECRET_BARREL_DAMAGE_PER_CARD 200
+
+int EffectSecretBarrelPrepare(struct ChainEntry *card, struct ChainEntry *chainLink, u16 fromHand)
+{
+    return !fromHand && CountHandAndFieldCards((1 - card->player) & 1) > 0;
+}
+
+int EffectSecretBarrelResolve(struct ChainEntry *link, struct ChainEntry *chainedTo)
+{
+    if (!link->negated) {
+        int opponent = (1 - link->player) & 1;
+        int cards = CountHandAndFieldCards(opponent);
+
+        if (cards > 0)
+            LoseLifePoints(opponent, cards * SECRET_BARREL_DAMAGE_PER_CARD);
+    }
+    return EFFECT_STEP_DONE;
+}
+#endif /* HAS_CARD_SECRET_BARREL */
+
 #ifdef HAS_CARD_OJAMA_TOKEN
 /* ---- Ojama Token --------------------------------------------------------------------------------------------------
  * "When this Token is destroyed, inflict 300 points of damage to its controller." SendFieldCardToGrave
@@ -7022,8 +7054,8 @@ int EffectTribeInfectingVirusChainB(struct ChainEntry *link, struct ChainEntry *
 }
 #endif
 
-#ifdef HAS_CARD_CHAOS_EMPEROR_DRAGON_ENVOY_OF_THE_END
-/* The cards of `player` in the hand and on the field. */
+#if defined(HAS_CARD_CHAOS_EMPEROR_DRAGON_ENVOY_OF_THE_END) || defined(HAS_CARD_SECRET_BARREL)
+/* The cards of `player` in the hand and on the field (monster, Spell/Trap and Field zones). */
 static int CountHandAndFieldCards(int player)
 {
     int zone, n = gDuelPlayers[player & 1].handCount;
@@ -7034,6 +7066,22 @@ static int CountHandAndFieldCards(int player)
     }
     return n;
 }
+
+/* Main Phase (AiPlayAddedCards) and Set-card windows (AiShouldActivateAddedCard). */
+int AiWantsSecretBarrel(void)
+{
+    int cards = CountHandAndFieldCards(AI_HUMAN);
+    int damage = cards * SECRET_BARREL_DAMAGE_PER_CARD;
+
+    if (cards == 0)
+        return 0;
+    if (damage >= (int)gDuelPlayers[AI_HUMAN].lifePoints)
+        return 1;
+    return damage >= 600;
+}
+#endif
+
+#ifdef HAS_CARD_CHAOS_EMPEROR_DRAGON_ENVOY_OF_THE_END
 
 /* The CPU wipes the board with Chaos Emperor Dragon when its damage would win (300 per card in both hands and on both
  * fields, the Dragon included; tokens are counted here too, so it may fall a little short), or when the human would
@@ -7492,6 +7540,10 @@ static int AiIncomingBurn(struct ChainEntry *entry)
     case CARD_POISON_OF_THE_OLD_MAN:
         return entry->unk12 == POTOM_MODE_DAMAGE ? POTOM_DAMAGE : 0;
 #endif
+#ifdef HAS_CARD_SECRET_BARREL
+    case CARD_SECRET_BARREL:
+        return CountHandAndFieldCards(AI_PLAYER) * SECRET_BARREL_DAMAGE_PER_CARD;
+#endif
     }
     return 0;
 }
@@ -7889,6 +7941,11 @@ int AiPlayAddedCards(void)
     /* Nobleman of Crossout on a face-down monster of the human's (see AiNoblemanOfCrossoutTarget) */
     if (HasFaceDownMonster(AI_HUMAN) && AiTryPlaySpellTrap(CARD_NOBLEMAN_OF_CROSSOUT))
         return 1;
+#ifdef HAS_CARD_SECRET_BARREL
+    /* Set Secret Barrel: flip and resolve in the Main Phase when the human holds enough cards */
+    if (AiWantsSecretBarrel() && AiTryPlaySpellTrap(CARD_SECRET_BARREL))
+        return 1;
+#endif
     /* added Magic cards, in the hand or Set */
     for (i = 0; i < p->handCount; i++) {
         u16 id = DUEL_CARD_ID(&p->hand[i]);
@@ -8033,6 +8090,10 @@ int AiShouldActivateAddedCard(struct ChainEntry *entry)
 #ifdef HAS_CARD_OJAMA_TRIO
     case CARD_OJAMA_TRIO:                       /* the human needs three empty monster zones */
         return CountFreeMonsterZones(AI_HUMAN) > 2;
+#endif
+#ifdef HAS_CARD_SECRET_BARREL
+    case CARD_SECRET_BARREL:
+        return AiWantsSecretBarrel();
 #endif
 #ifdef HAS_CARD_COMPULSORY_EVACUATION_DEVICE
     case CARD_COMPULSORY_EVACUATION_DEVICE:     /* against an attack or a summon (the target step takes the strongest) */
@@ -8345,6 +8406,16 @@ const struct CardEffect gAddedCardEffects[] = {
         NULL,
         EffectDimensionFusionPrepare,
         EffectDimensionFusionChainA,
+        NULL,
+    },
+#endif
+#ifdef HAS_CARD_SECRET_BARREL
+    {
+        CARD_SECRET_BARREL, 0,
+        EffectSecretBarrelResolve,
+        NULL,
+        EffectSecretBarrelPrepare,
+        NULL,
         NULL,
     },
 #endif

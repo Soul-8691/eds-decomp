@@ -31,6 +31,9 @@
 #include "effect.h"                 /* CanActivateEffect */
 /* Mod (src/added_effects.c): the CPU's use of the added cards. */
 int AiPlayAddedCards(void);
+#ifdef HAS_CARD_SECRET_BARREL
+int AiWantsSecretBarrel(void);
+#endif
 #include "effect_handlers.h"        /* EffectEquipTargetCheck, EffectBackupSoldierPrepare, ... */
 #include "save.h"                   /* GetCardCopyLimit */
 #include "util.h"                   /* MemClear16, Random */
@@ -259,6 +262,10 @@ int AiTryPlaySpellTrap(u16 number)
     /* added: Dark Hole only while the human has more monsters than the CPU (every AiPlaySpells case asks here) */
     if (number == CARD_DARK_HOLE && CountMonsters(0) <= CountMonsters(1))
         return 0;
+#ifdef HAS_CARD_SECRET_BARREL
+    if (number == CARD_SECRET_BARREL && !AiWantsSecretBarrel())
+        return 0;
+#endif
     cardId = CardNumberToId(number);
     if (GetSpellSubtype(CARD_STATS(cardId)) == SPELL_FIELD && GetFaceUpFieldMagicNumber() == number)
         return 0;

@@ -1990,5 +1990,11 @@ updated: 2026-09-29
 ## [2026-10-30] progress | Ojama Token destroy damage
 - src/added_effects.c: `OjamaTokenDestroyed`; src/duel_send_to_grave.c calls it from `SendFieldCardToGrave`. [[added-cards]]. Built (`make`); not tested in an emulator.
 
+## [2026-10-30] progress | Secret Barrel coded
+- src/added_effects.c: `EffectSecretBarrelPrepare` / `EffectSecretBarrelResolve`, `gAddedCardEffects` row; `CountHandAndFieldCards` shared with Chaos Emperor Dragon; `AiShouldActivateAddedCard`. [[added-cards]]. Built (`make`); not tested in an emulator.
+
+## [2026-10-30] progress | Secret Barrel CPU logic
+- src/added_effects.c: `AiWantsSecretBarrel`, `AiPlayAddedCards`, `AiIncomingBurn`; src/ai_deck.c: `AiTryPlaySpellTrap` gate. [[added-cards]]. Built (`make`); not tested in an emulator.
+
 ## [2026-10-30] progress | Ojama Token: DEF 1000
 - tools/newcards.py: a token's DEF from TOKEN_NUMBERS is no longer overwritten with 0 (the keyword of c.update came after the dict). Verified in the built card table (ID 1161: DEF 1000). [[added-cards]]. Built (make and make release); not tested in an emulator.

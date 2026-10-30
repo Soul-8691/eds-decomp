@@ -2078,6 +2078,16 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
   `CARD_SCAPEGOAT`, so it does not play Scapegoat on purpose.
 - Checked in the source and the build; not tested in an emulator.
 
+### Secret Barrel (2026-10-30)
+- Normal Trap: "Inflict 200 damage to your opponent for each card in your opponent's hand and for each card they
+  control on the field." `EffectSecretBarrelPrepare`: Set on the field and the opponent has at least one card in hand
+  or on the field (`CountHandAndFieldCards`, shared with Chaos Emperor Dragon). `EffectSecretBarrelResolve`:
+  `LoseLifePoints` on the opponent for 200 × that count. The CPU uses `AiWantsSecretBarrel` (lethal, or at least 600
+  damage): `AiPlayAddedCards` flips a Set copy in its Main Phase (`AiTryPlaySpellTrap`), and `AiShouldActivateAddedCard`
+  answers chain windows; `AiIncomingBurn` counts the card when the human plays it (Pikeru's Circle / Hallowed Life
+  Barrier).
+- Checked in the source and the build; not tested in an emulator.
+
 ### Ojama Trio and the Ojama Token (2026-10-30)
 - Normal Trap: "Special Summon 3 'Ojama Tokens' (Beast-Type/LIGHT/Level 2/ATK 0/DEF 1000) in Defense Position on
   your opponent's side of the field." `EffectOjamaTrioPrepare`: Set on the field and the opponent has three free
