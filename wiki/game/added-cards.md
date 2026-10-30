@@ -1927,6 +1927,20 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
   - **Deck:** `DUEL_CMD_SEND_DECK_CARD_TO_GRAVEYARD` for `deck[0]` and `deck[1]` (the top is index 0).
 - Checked in the source and the build; not tested in an emulator.
 
+### Dark Scorpion - Cliff the Trap Remover (2026-10-30)
+- Effect text from [YGOPRODeck](https://db.ygoprodeck.com/api/v7/cardinfo.php?name=Dark%20Scorpion%20-%20Cliff%20the%20Trap%20Remover) (id 06967870):
+  "When this card inflicts Battle Damage to your opponent, you can activate 1 of these effects: Target 1 Spell/Trap
+  Card on the field; destroy that target; or send the top 2 cards of their Deck to the Graveyard."
+- **Trigger.** Same battle-damage pending path as Don Zaloog in `BattleStage_InflictDamage` (`battle_phase2.c`):
+  attacker (`RESPONSE_BATTLE_DAMAGE`) and deflect (`RESPONSE_BATTLE_DEFLECTED_DAMAGE`); low nibble of `loc1` is the
+  damaged player.
+- **Resolve** (`EffectDarkScorpionCliffResolve`, resolve-only `gAddedCardEffects` row).
+  - **Human:** two-choice menu when both destroy and mill are possible; destroy-only opens targeting (B cancels);
+    mill-only Yes/No; choosing mill from the menu sends the top two immediately.
+  - **CPU:** destroys an opponent Spell/Trap via `AiPickSpellTrapToDestroy` when any S/T exists on the field, else
+    mills 2 (`DUEL_CMD_SEND_DECK_CARD_TO_GRAVEYARD`, top is `deck[0]`).
+- Checked in the source and the build; not tested in an emulator.
+
 ### Creature Swap (2026-10-25)
 - Normal Spell: "Each player chooses 1 monster they control and switches control of those monsters with each other.
   Those monsters cannot change their battle positions for the rest of this turn."

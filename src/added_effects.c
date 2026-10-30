@@ -3474,6 +3474,138 @@ int EffectDonZaloogResolve(struct ChainEntry *link, struct ChainEntry *chainedTo
 }
 #endif /* HAS_CARD_DON_ZALOOG */
 
+#ifdef HAS_CARD_DARK_SCORPION_CLIFF_THE_TRAP_REMOVER
+void AiPickSpellTrapToDestroy(struct ChainEntry *link); /* below: Mystical Space Typhoon CPU target */
+
+/* ---- Dark Scorpion - Cliff the Trap Remover (YGOPRODeck id 06967870) ----------------------------------------------
+ * "When this card inflicts Battle Damage to your opponent, you can activate 1 of these effects:
+ *  ● Target 1 Spell/Trap Card on the field; destroy that target.
+ *  ● Send the top 2 cards of their Deck to the Graveyard."
+ * Queued from BattleStage_InflictDamage (battle_phase2.c) like Don Zaloog (RESPONSE_BATTLE_DAMAGE /
+ * RESPONSE_BATTLE_DEFLECTED_DAMAGE). The human picks one effect from a two-line menu when both are possible; the CPU
+ * destroys an opponent Spell/Trap when one exists, otherwise mills 2. */
+
+static const u8 sStrCliffMenu[] = "Choose an effect:\n    @3Destroy 1 Spell/Trap\n    @2Mill 2 from their Deck";
+static const u8 sStrCliffDestroy[] = "Select 1 Spell/Trap Card to destroy.";
+static const u8 sStrCliffMill[] = "Use Cliff's effect to send the top 2 cards of the opponent's Deck to the "
+                                  "Graveyard?";
+
+#define CLIFF_CHOICE_DESTROY 0
+#define CLIFF_CHOICE_MILL 1
+
+static int CliffBattleDamageToOpponent(struct ChainEntry *link)
+{
+    if (link->event != RESPONSE_BATTLE_DAMAGE && link->event != RESPONSE_BATTLE_DEFLECTED_DAMAGE)
+        return 0;
+    return (link->loc1 & 0xF) != link->player;
+}
+
+static int CliffAnySpellTrapOnField(void)
+{
+    int player, zone;
+
+    for (player = 0; player <= 1; player++) {
+        for (zone = ZONE_SPELL_0; zone <= ZONE_FIELD; zone++) {
+            if (DUEL_CARD_ID(&ZoneOf(player, zone)->card) != 0)
+                return 1;
+        }
+    }
+    return 0;
+}
+
+static void CliffMillDeckTop(int opponent)
+{
+    struct DuelPlayer *o = &gDuelPlayers[opponent & 1];
+    u16 cmd = opponent ? DUEL_CMD_PLAYER | DUEL_CMD_SEND_DECK_CARD_TO_GRAVEYARD : DUEL_CMD_SEND_DECK_CARD_TO_GRAVEYARD;
+    int i;
+
+    for (i = 0; i < 2 && i < o->deckCount; i++)
+        DuelCmd_Push(cmd, ((u16 *)&o->deck[i])[0], ((u16 *)&o->deck[i])[1], 0);
+}
+
+static int CliffDestroyAt(struct ChainEntry *link, int targetPlayer, int zone)
+{
+    if (zone > ZONE_FIELD || DUEL_CARD_ID(&ZoneOf(targetPlayer, zone)->card) == 0)
+        return 0;
+    if (!CanCardTargetZone(link->card, targetPlayer, zone))
+        return 0;
+    DestroyFieldCard(targetPlayer, zone, 1);
+    OnCardDestroyedByEffect(link->player, targetPlayer, zone);
+    return 1;
+}
+
+int EffectDarkScorpionCliffResolve(struct ChainEntry *link, struct ChainEntry *chainedTo)
+{
+    int opponent = 1 - link->player;
+    struct DuelPlayer *o = &gDuelPlayers[opponent & 1];
+    int choice;
+
+    if (link->negated || !CliffBattleDamageToOpponent(link))
+        return EFFECT_STEP_DONE;
+    switch (gChain.effectStep) {
+    case EFFECT_STEP_START:
+        ShowCardEffect(link->player, link->card & CARD_ID_MASK);
+        if (link->player) {
+            if (CliffAnySpellTrapOnField()) {
+                link->numTargets = 0;
+                AiPickSpellTrapToDestroy(link);
+                if (link->numTargets >= 1) {
+                    int targetPlayer = (u8)link->targets[0];
+                    int targetZone = link->targets[0] >> 8;
+
+                    CliffDestroyAt(link, targetPlayer, targetZone);
+                }
+            } else
+                CliffMillDeckTop(opponent);
+            return EFFECT_STEP_DONE;
+        }
+        if (!CliffAnySpellTrapOnField() && o->deckCount == 0)
+            return EFFECT_STEP_DONE;
+        if (!CliffAnySpellTrapOnField()) {
+            TextBoxOpen(TEXTBOX_POS(5, 2), TEXTBOX_SIZE(20, 9), TEXTBOX_FLAGS_DEFAULT, sStrCliffMill);
+            TextBoxSetMenu(TEXTBOX_MENU_YES_NO, NULL, NULL);
+            return EFFECT_STEP_4;
+        }
+        if (o->deckCount == 0) {
+            TextBoxOpen(TEXTBOX_POS(5, 2), TEXTBOX_SIZE(20, 9), TEXTBOX_FLAGS_DEFAULT, sStrCliffDestroy);
+            DuelCmd_Push(link->player ? DUEL_CMD_PLAYER | DUEL_CMD_OPEN_DUEL_SCREEN : DUEL_CMD_OPEN_DUEL_SCREEN,
+                         0, 0, 0);
+            return EFFECT_STEP_3;
+        }
+        TextBoxOpen(TEXTBOX_POS(5, 2), TEXTBOX_SIZE(20, 9), TEXTBOX_FLAGS_DEFAULT, sStrCliffMenu);
+        TextBoxSetMenu(TEXTBOX_MENU_TWO_CHOICE, NULL, NULL);
+        return EFFECT_STEP_2;
+    case EFFECT_STEP_2:
+        choice = gTextBox.result ? CLIFF_CHOICE_MILL : CLIFF_CHOICE_DESTROY;
+        gChain.effectSubStep = choice;
+        if (choice == CLIFF_CHOICE_MILL) {
+            CliffMillDeckTop(opponent);
+            return EFFECT_STEP_DONE;
+        }
+        TextBoxOpen(TEXTBOX_POS(5, 2), TEXTBOX_SIZE(20, 9), TEXTBOX_FLAGS_DEFAULT, sStrCliffDestroy);
+        DuelCmd_Push(link->player ? DUEL_CMD_PLAYER | DUEL_CMD_OPEN_DUEL_SCREEN : DUEL_CMD_OPEN_DUEL_SCREEN, 0, 0,
+                     0);
+        return EFFECT_STEP_3;
+    case EFFECT_STEP_3:
+        if (gDuelCmd.running || gTextBox.active)
+            return EFFECT_STEP_3;
+        if (gMain.newKeys & B_BUTTON)
+            return EFFECT_STEP_DONE;
+        if (DuelCursor_PickTarget(PICK_BOTH_SIDES(PICK_ANY_SPELL_TRAP)) == 0)
+            return EFFECT_STEP_3;
+        if (CliffDestroyAt(link, gDuelScreen.selPlayer, gDuelScreen.selArea + gDuelScreen.selIndex))
+            return EFFECT_STEP_DONE;
+        PlaySE(SE_ERROR);
+        return EFFECT_STEP_3;
+    case EFFECT_STEP_4:
+        if (gTextBox.result)
+            CliffMillDeckTop(opponent);
+        return EFFECT_STEP_DONE;
+    }
+    return EFFECT_STEP_DONE;
+}
+#endif /* HAS_CARD_DARK_SCORPION_CLIFF_THE_TRAP_REMOVER */
+
 #ifdef HAS_CARD_CREATURE_SWAP
 /* ---- Creature Swap -------------------------------------------------------------------------------------------------
  * Normal Spell: "Each player chooses 1 monster they control and switches control of those monsters with each other.
@@ -8917,6 +9049,16 @@ const struct CardEffect gAddedCardEffects[] = {
     {
         CARD_DON_ZALOOG, 0,
         EffectDonZaloogResolve,
+        NULL,
+        NULL,
+        NULL,
+        NULL,
+    },
+#endif
+#ifdef HAS_CARD_DARK_SCORPION_CLIFF_THE_TRAP_REMOVER
+    {
+        CARD_DARK_SCORPION_CLIFF_THE_TRAP_REMOVER, 0,
+        EffectDarkScorpionCliffResolve,
         NULL,
         NULL,
         NULL,

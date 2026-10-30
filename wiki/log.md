@@ -2016,3 +2016,6 @@ updated: 2026-09-29
 
 ## [2026-10-30] progress | Level Limit - Area B: correct effect (YGOPRODeck)
 - YGOPRODeck desc: change face-up Level 4+ monsters to Defense Position (not attack lock / CARD_1323). src/added_effects.c: `ApplyLevelLimitAreaB`, `ModLevelLimitAreaBBlocksAtkPosition`; src/summon_action.c, src/card_command_menu.c; removed wrong `CanMonsterAttack` hook. [[added-cards]].
+
+## [2026-10-30] progress | Dark Scorpion - Cliff the Trap Remover
+- src/battle_phase2.c: battle-damage trigger (with Don Zaloog). src/added_effects.c: `EffectDarkScorpionCliffResolve`, `gAddedCardEffects` row. missing.txt, missing-main.txt. [[added-cards]]. Built (`make`); not tested in an emulator.
