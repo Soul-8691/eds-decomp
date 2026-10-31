@@ -323,6 +323,9 @@ void GetZoneCardStats(int player, int zone, struct ZoneCardStats *out)
                 break;
             case CARD_1231: otherAtk -= (value + 1) * 500; break;
             case CARD_1314: atkDoubles++; break;
+#ifdef HAS_CARD_LIMITER_REMOVAL
+            case CARD_LIMITER_REMOVAL: atkDoubles++; break;
+#endif
             case CARD_1415: otherAtk -= (value + 1) * 700; break;
             case CARD_1534:
                 /* +100 ATK per monster in the graveyard. Quirk (ROM): the scan reuses the link-loop index,

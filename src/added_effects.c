@@ -101,6 +101,7 @@ struct ModDuelState {
     u8 wmcStandbyTicked;        /* Wave-Motion Cannon: 1 after this Standby Phase's counter tick (ModStandbyStep) */
     u8 manticoreGyPending[2];   /* Manticore of Darkness: copies sent to the GY this turn (End Phase triggers) */
     u8 ddSurvivorPending[2];    /* D.D. Survivor: per owner, face-up copies banished this turn before the End Phase */
+    u16 limiterRemovalTurn;     /* Limiter Removal: gDuel.turnCount of the turn it resolves (End Phase destroy) */
 };
 extern struct ModDuelState gModDuel;
 /* gModDuel (0x0202FF04, symbols.ld) must end before gScratchBuffer (0x02030000). */
@@ -1287,6 +1288,7 @@ void ModDuelInit(void)
     gModDuel.manticoreGyPending[1] = 0;
     gModDuel.ddSurvivorPending[0] = 0;
     gModDuel.ddSurvivorPending[1] = 0;
+    gModDuel.limiterRemovalTurn = 0;
 #ifdef HAS_CARD_INJECTION_FAIRY_LILY
     InjectionFairyLilyResetBattle();
 #endif
@@ -9725,6 +9727,73 @@ int ModTakesNoEffectDamage(int player)
  * CPU: AiIsKeyCard tier 2 keeps it in hand; burn traps skip chaining when ModTakesNoEffectDamage already holds. */
 #endif /* HAS_CARD_DES_WOMBAT */
 
+#ifdef HAS_CARD_LIMITER_REMOVAL
+/* ---- Limiter Removal (early effect text) ---------------------------------------------------------------------------
+ * "Double the ATK of all Machine monsters you currently control, until the end of this turn. During the End Phase of
+ * this turn, destroy those monsters." Same engine pattern as key CARD_1314 (EffectDoubleMachineAtkResolve): a
+ * ZONE_LINK_CARD_EFFECT from this card's id on each qualifying monster; GetZoneCardStats doubles ATK for that link;
+ * EndPhase_LimiterRemoval destroys every monster that still holds the link on the activation turn. Machines you
+ * summon later this turn are not affected. */
+int EffectLimiterRemovalPrepare(struct ChainEntry *card, struct ChainEntry *chainLink, u16 fromHand)
+{
+    int zone;
+
+    (void)chainLink;
+    (void)fromHand;
+    for (zone = ZONE_MONSTER_0; zone <= ZONE_MONSTER_4; zone++) {
+        if (DUEL_CARD_ID(&ZoneOf(card->player, zone)->card)
+            && GetZoneCardType(card->player, zone) == CARD_TYPE_MACHINE)
+            return 1;
+    }
+    return 0;
+}
+
+int EffectLimiterRemovalResolve(struct ChainEntry *link, struct ChainEntry *chainedTo)
+{
+    int zone;
+
+    (void)chainedTo;
+    if (link->negated)
+        return 0;
+    gModDuel.limiterRemovalTurn = gDuel.turnCount;
+    for (zone = ZONE_MONSTER_0; zone <= ZONE_MONSTER_4; zone++) {
+        if (DUEL_CARD_ID(&ZoneOf(link->player, zone)->card)
+            && GetZoneCardType(link->player, zone) == CARD_TYPE_MACHINE
+            && IsZoneTargetable(link->player, zone))
+            QueueAddZoneLink(link->player, link->card, link->player | (u8)zone << 8, ZONE_LINK_CARD_EFFECT);
+    }
+    return 0;
+}
+
+void EndPhase_LimiterRemoval(int turnPlayer)
+{
+    int player, zone;
+
+    (void)turnPlayer;
+    if (gModDuel.limiterRemovalTurn != (u16)gDuel.turnCount)
+        return;
+    for (player = 0; player <= 1; player++) {
+        for (zone = ZONE_MONSTER_0; zone <= ZONE_MONSTER_4; zone++) {
+            if (CountZoneLinksFromCard(player, zone, CARD_LIMITER_REMOVAL))
+                DestroyFieldCard(player, zone, 1);
+        }
+    }
+    gModDuel.limiterRemovalTurn = 0;
+}
+
+static int AiWantsLimiterRemoval(void)
+{
+    int zone;
+
+    for (zone = ZONE_MONSTER_0; zone <= ZONE_MONSTER_4; zone++) {
+        if (DUEL_CARD_ID(&ZoneOf(AI_PLAYER, zone)->card)
+            && GetZoneCardType(AI_PLAYER, zone) == CARD_TYPE_MACHINE)
+            return 1;
+    }
+    return 0;
+}
+#endif /* HAS_CARD_LIMITER_REMOVAL */
+
 #ifdef HAS_CARD_HALLOWED_LIFE_BARRIER
 /* ---- Hallowed Life Barrier -----------------------------------------------------------------------------------------
  * Normal Trap, its original TCG text (the fetched one is the later "damage you take from your opponent's cards and
@@ -10061,6 +10130,10 @@ static int AiWantsSpell(u16 number)
 #ifdef HAS_CARD_WAVE_MOTION_CANNON
     case CARD_WAVE_MOTION_CANNON:
         return 1;
+#endif
+#ifdef HAS_CARD_LIMITER_REMOVAL
+    case CARD_LIMITER_REMOVAL:
+        return AiWantsLimiterRemoval();
 #endif
 #ifdef HAS_CARD_EMERGENCY_PROVISIONS
     case CARD_EMERGENCY_PROVISIONS:             /* only when low on LP */
@@ -11281,6 +11354,16 @@ const struct CardEffect gAddedCardEffects[] = {
         NULL,
         EffectDivineWrathPrepare,
         EffectDivineWrathChainA,
+        NULL,
+    },
+#endif
+#ifdef HAS_CARD_LIMITER_REMOVAL
+    {
+        CARD_LIMITER_REMOVAL, 0,
+        EffectLimiterRemovalResolve,
+        NULL,
+        EffectLimiterRemovalPrepare,
+        NULL,
         NULL,
     },
 #endif

@@ -1127,6 +1127,7 @@ enum CardNumber {
     CARD_MASK_OF_RESTRICT = 825,                          /* id 969, added card */
     CARD_DIVINE_WRATH = 826,                              /* id 970, added card */
     CARD_DES_WOMBAT = 827,                                /* id 971, added card */
+    CARD_LIMITER_REMOVAL = 828,                           /* id 972, added card */
     CARD_MAGIC_CYLINDER = 1214,                           /* id 888, added card */
     CARD_SOUL_EXCHANGE = 1220,                            /* id 931, added card */
     CARD_THOUSAND_EYES_IDOL = 1333,                       /* id 938, added card */

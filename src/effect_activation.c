@@ -365,6 +365,9 @@ int CanActivateEffect(struct ChainEntry *card, struct ChainEntry *chainLink, u16
         case CARD_GRACEFUL_DICE:
         case CARD_SKULL_DICE:
         case CARD_1314:
+#ifdef HAS_CARD_LIMITER_REMOVAL
+        case CARD_LIMITER_REMOVAL:
+#endif
         case CARD_1415:
         case CARD_1534:
             break;

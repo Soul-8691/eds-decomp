@@ -27,7 +27,6 @@ Fix Flip Effect Monster AI
 Move hooks out of original units (like duel_info_bar)
 Move added card lists out of effect_target_collect.c
 Card priority orders
-The card list for the opponent's deck is bugged.
 Show "new packs are available" when unlocking the packs from 10/20 wins per format.
 Make a note that these Fusion cards aren't coded in, yet, in the README:
 - Dark Balter the Terrible
@@ -44,4 +43,5 @@ Make a note that these Fusion cards aren't coded in, yet, in the README:
 - Dark Paladin
 - Cyber Blader
 Add the 4 new cards to NEW_CARDS.md
+Update README
 Edit make setup to look in root for the baserom.

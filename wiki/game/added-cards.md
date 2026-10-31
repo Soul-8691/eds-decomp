@@ -1293,6 +1293,15 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
 - Release `.text` 0x08080718.
 - Checked in the source and the build; not tested in an emulator.
 
+### Limiter Removal (2026-10-31)
+- Early effect text (not modern YGOPRODeck): "Double the ATK of all Machine monsters you currently control, until the
+  end of this turn. During the End Phase of this turn, destroy those monsters." Normal Spell. On resolve, each Machine
+  on the activator's field gets a `ZONE_LINK_CARD_EFFECT` from this card (same pattern as ROM key `CARD_1314` /
+  `EffectDoubleMachineAtkResolve`); `GetZoneCardStats` treats `CARD_LIMITER_REMOVAL` like `CARD_1314` (`atkDoubles++`).
+  `EndPhase_LimiterRemoval` destroys every monster that still holds that link on the activation turn (`gModDuel.limiterRemovalTurn`).
+  CPU: `AiWantsLimiterRemoval` (at least one Machine on its field).
+- Built; not tested in an emulator.
+
 ### Des Wombat (2026-10-31)
 - Effect text from [YGOPRODeck](https://db.ygoprodeck.com/api/v7/cardinfo.php?name=Des%20Wombat) (id 9637706):
   "Any damage to you from a card effect becomes 0." EARTH Beast Effect Monster (1600/300, Level 3). While a face-up
