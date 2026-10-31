@@ -270,10 +270,12 @@ u16 CardMenu_GetAvailableCommands(void)
                 flags |= CardMenu_GetSpellTrapCommands(id, 0, 5);
             break;
         case DUEL_AREA_DECK:
-            flags = ModCardMenuDeckCommands(((u32)(gDuelView.flags1B12 << 27) >> 29));
+            flags = ModCardMenuDeckCommands(((u32)(gDuelView.flags1B12 << 27) >> 29), gDuelScreen.selPlayer);
             break;
         case DUEL_AREA_FUSION_DECK:
-            if (GetFaceUpFieldMagicNumber() == CARD_1547) {
+            if (gDuelScreen.selPlayer != 0 && ModDeckListVisible())
+                flags = CARDMENU_MASK_CARD_VIEW;
+            else if (GetFaceUpFieldMagicNumber() == CARD_1547) {
                 ref.unk2_0 = 0;
                 if (EffectPolymerizationPrepare(&ref, 0, 0))
                     flags |= CARDMENU_MASK_FUSION;
@@ -328,7 +330,7 @@ int DuelScreen_HandleInput(void)
         return 0;
     case DUEL_AREA_FUSION_DECK:
     case DUEL_AREA_DECK:
-        if (player == 0) {
+        if (player == 0 || ModDeckListVisible()) {
             gDuelView.cardMenu.open = 1;
             gDuelView.cardMenu.state = 0;
             gDuelView.cardMenu.available = CardMenu_GetAvailableCommands();

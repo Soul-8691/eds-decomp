@@ -292,15 +292,14 @@ void DuelCmd_ShuffleDeck(void)
     }
 }
 
-/* Added (make, and in make release a duel with Debug): the human player (player 0) cannot deck out, except in a Link
- * Battle, where both games must agree on the result: drawing from an empty deck just draws nothing. */
+/* Added: only duels vs Test Duel or the Debug duelist (ModTestDuel / ModDebugDuel) block deck-out for either side.
+ * Every other opponent uses the vanilla rule: a draw from an empty deck sets deckOut and can end the duel. */
 static inline int CanDeckOut(int player)
 {
-#if MOD_RELEASE
-    return player != 0 || !ModDebugDuel();      /* ModDebugDuel is never true in a Link Battle */
-#else
-    return player != 0 || gDuelCtrl.isLinkDuel;
-#endif
+    (void)player;
+    if (ModTestDuel() || ModDebugDuel())
+        return 0;
+    return 1;
 }
 
 /* 0x61 DUEL_CMD_DRAW_CARDS: the acting player draws arg4 cards, one animation each (arg2 is passed to

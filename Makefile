@@ -62,12 +62,13 @@ all: $(ROM)
 release:
 	$(MAKE) RELEASE=1 all
 
-# Demo card pool: repo-root new_cards.txt above the ------ line (coded cards only), not config/new_cards.txt.
+# Demo card pool: same as plain `make` (RELEASE=0, eds.gba rules) but repo-root new_cards.txt above ------ only.
 demo:
-	$(MAKE) NEWCARDS_PROFILE=demo ROM=eds_demo.gba all
+	$(MAKE) RELEASE=0 NEWCARDS_PROFILE=demo ROM=eds_demo.gba all
 
+# Release rules with the demo card pool only (not the same as `make demo`).
 release-demo:
-	$(MAKE) NEWCARDS_PROFILE=demo RELEASE=1 ROM=eds_release_demo.gba all
+	$(MAKE) RELEASE=1 NEWCARDS_PROFILE=demo ROM=eds_release_demo.gba all
 
 # MOD_RELEASE for the C code, rewritten only when RELEASE changes (so a switch rebuilds what includes it).
 MOD_CONFIG := build/include/mod_config.h

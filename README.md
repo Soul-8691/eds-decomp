@@ -113,7 +113,8 @@ next one.
   they're for practice and testing decks. Against Debug you first pick your own deck the same way (a recipe, or
   one you build from 8 of every card with no limits), then Debug's; your cards and decks aren't touched, and your
   pick is used for the whole match. Debug's duels use debug mode's rules: its hand is shown face up, you can
-  read its face-down cards (info bar and Card View), and you can't deck out.
+  read its face-down cards (info bar and Card View), open its main and fusion deck piles in order, and neither side
+  can deck out.
   - **Building their deck.** Press SELECT on the recipe list to build their deck instead. Deck Edit opens with a
     temporary collection of 3 copies of every card and no banlist (Debug: 8 copies of every card, and no copy
     limit). Back on the list, A opens the recipe actions:
@@ -249,13 +250,19 @@ next one.
     when deciding whether to attack one, judging how threatening your field is, and choosing targets for its
     effects.
 - **Thunder Dragon** can be activated even with no copy left in the Deck; the search then finds nothing.
-- **Debug mode** (testing builds only, not in the release). You start with 8 copies of every card, and you can't
-  deck out. Decks can be under 40 cards, can hold any number of copies of a card, and ignore banlists. Switching
+- **Debug mode** (testing builds only, not in the release). You start with 8 copies of every card. Deck-out is turned
+  off only in duels vs **Test Duel** or the **Debug** duelist (Solomon/Debug page); format opponents use normal
+  deck-out rules. Decks can be under 40 cards, can hold any number of copies of a card, and ignore banlists. Switching
   banlists skips the 40-card Main Deck check. Every format is unlocked, and the Record (Duel Score) screen
   shows every duelist on every page. The opponent's hand is shown face up during
-  duels, and the cursor shows the info of all their cards (face-down ones too), with Card View. The deck
-  opponents' page has a third opponent, Test Duel (right), whose deck is `C:\ProjectIgnis\deck\test.ydk` as it
-  is when the ROM is built.
+  duels, and the cursor shows the info of all their cards (face-down ones too), with Card View.   You can open your deck pile from the command menu (Draw / Card View / Surrender) and the opponent's main or fusion
+  deck pile with **Card View** (draw order on the main deck; works even when their deck is empty).
+  The deck
+  opponents' page (fourth page, right slot) has **Test Duel**, whose deck is the `.ydk` in `TEST_YDK` (default
+  `/mnt/c/ProjectIgnis/deck/test.ydk`) as read when the ROM is built. Only cards in **that** build exist: for
+  `make demo`, every passcode in the deck must be among the coded cards in repo-root `new_cards.txt` above `------`;
+  passcodes that are missing are dropped, and if none remain the opponent starts with **no deck** (not the vanilla
+  Duel Computer deck). An empty `.ydk` does the same.
 
 ### Planned
 
@@ -266,8 +273,9 @@ next one.
 
 - **Coded cards.** Every card listed in [`new_cards.txt`](new_cards.txt) above the `------` line is fully coded,
   effects included; the lines below the separator are planned, not in the demo ROM yet.
-- **Card data.** `make` / `make release` use every name in `config/new_cards.txt`. `make demo` / `make release-demo`
-  use only the coded block at the top of repo-root `new_cards.txt`. The build fetches each card's stats, text and
+- **Card data.** `make` / `make release` use every name in `config/new_cards.txt`. `make demo` is the same as `make`
+  (debug/testing rules, `MOD_RELEASE` 0) but only the coded block at the top of repo-root `new_cards.txt`.
+  `make release-demo` is the release rules with that same demo list. The build fetches each card's stats, text and
   artwork from [YGOPRODeck](https://ygoprodeck.com/api-guide/) and appends it to the game's card tables
   (`tools/newcards.py`).
 - **Effects.** Effects are written in C on top of the original duel engine, mostly in `src/added_effects.c`. Each

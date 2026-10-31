@@ -208,8 +208,17 @@ static const struct ModOpponent sOpponents[] = {
     [DUELIST_SIMON] = HIDDEN,           /* LR-Chaos Turbo until 2026-10-30 (the same) */
     [DUELIST_PEGASUS] = DECK_ALWAYS(sNameDebug, ART_CYBER_TWIN_DRAGON),     /* sdlkilla-Warrior until 2026-10-30 */
     [DUELIST_GRANDPA] = DECK_ALWAYS(sNameSolomon, PORTRAIT_SOLOMON),
+#if !MOD_RELEASE
 #ifdef MOD_TEST_DECK
+#ifdef TEST_DECK_PORTRAIT
+    [DUELIST_DUEL_COMPUTER] = DECK(sNameTestDuel, TEST_DECK_PORTRAIT),
+#else
     [DUELIST_DUEL_COMPUTER] = DECK(sNameTestDuel, PORTRAIT_DUEL_COMPUTER),
+#endif
+#else
+    /* Slot stays on the deck page even when test.ydk had no card in this ROM (e.g. make demo pool). */
+    [DUELIST_DUEL_COMPUTER] = DECK(sNameTestDuel, PORTRAIT_DUEL_COMPUTER),
+#endif
 #else
     [DUELIST_DUEL_COMPUTER] = HIDDEN,
 #endif
@@ -429,35 +438,42 @@ int ModOpponentPicksPlayerDeck(u16 duelist)
 
 /* The testing build's duel rules in a Campaign duel with Debug, in make release too: the opponent's hand is shown
  * (IsHandRevealed, duel_piles.c), its face-down cards can be read (duel_info_bar.c, card_menu_input.c), the
- * player can open their main deck in draw order (ModDeckListVisible, card_menu_input.c, campaign.c), and the
- * player cannot deck out (duel_cmd_deck.c). Never in a Link Battle. */
+ * player can open deck lists in draw order (ModDeckListVisible: own deck menu or opponent deck/fusion pile,
+ * card_menu_input.c, campaign.c), and neither player can deck out (duel_cmd_deck.c). Never in a Link Battle. */
 int ModDebugDuel(void)
 {
     return gMain.opponent == DUELIST_DEBUG && !gDuelCtrl.isLinkDuel;
 }
 
-/* 1 if the human may open their main deck as a card list (deck[0] first = next draw). make (testing) and
- * ModDebugDuel duels; never Link Battle. */
+/* 1 in a testing-build Campaign duel against Test Duel (Duel Computer slot): neither player decks out
+ * (CanDeckOut, duel_cmd_deck.c). Never in a Link Battle. */
+int ModTestDuel(void)
+{
+    return !MOD_RELEASE && gMain.opponent == DUELIST_DUEL_COMPUTER && !gDuelCtrl.isLinkDuel;
+}
+
+/* 1 if the human may open main/fusion deck lists (deck[0] first = next draw on the main deck). make (testing)
+ * and ModDebugDuel duels; never Link Battle. */
 int ModDeckListVisible(void)
 {
+    if (gDuelCtrl.isLinkDuel)
+        return 0;
+    if (ModDebugDuel() || ModTestDuel())
+        return 1;
 #if !MOD_RELEASE
-    return !gDuelCtrl.isLinkDuel;
+    return 1;
 #else
-    return ModDebugDuel();
+    return 0;
 #endif
 }
 
-u16 ModCardMenuDeckCommands(int phase)
+u16 ModCardMenuDeckCommands(int phase, int deckPlayer)
 {
-    u16 flags;
-
+    if (deckPlayer != 0 && ModDeckListVisible())
+        return CARDMENU_MASK_CARD_VIEW;
     if (phase == PHASE_DRAW)
-        flags = CARDMENU_MASK_DRAW;
-    else
-        flags = CARDMENU_MASK_SURRENDER;
-    if (ModDeckListVisible())
-        flags |= CARDMENU_MASK_CARD_VIEW;
-    return flags;
+        return CARDMENU_MASK_DRAW | (ModDeckListVisible() ? CARDMENU_MASK_CARD_VIEW : 0);
+    return CARDMENU_MASK_SURRENDER | (ModDeckListVisible() ? CARDMENU_MASK_CARD_VIEW : 0);
 }
 
 #define DECK_MENU_CMD_ORDER_COUNT 3

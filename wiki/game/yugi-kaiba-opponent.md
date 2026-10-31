@@ -117,10 +117,12 @@ Always open, with no format check:
       with a copy limit of 99, Solomon's from 3 and 3 (`ModRecipeBuildCopies`, passed to `ModRecipeBuildBegin`;
       `GetBanlistCopyLimit` returns `ModRecipeBuildLimit`). The recipe scene's lines use the opponent's name.
     - `ModDebugDuel` (gMain.opponent is Debug, not a Link Battle) turns on make's duel rules in make release too:
-      `IsHandRevealed` returns 1 (duel_piles.c), `CanDeckOut` is 0 for the player (duel_cmd_deck.c), Card View opens
-      on the opponent's face-down cards (card_menu_input.c), and the info bar describes them. `ModDeckListVisible`
-      also lets the human open **Card View** on their own main deck pile (`deck[0]` first = next draw;
-      `CardListView_Open`, campaign.c). On the deck pile the command icons are ordered Draw, then Card View, then
+      `IsHandRevealed` returns 1 (duel_piles.c), `CanDeckOut` is 0 for both players (duel_cmd_deck.c), Card View opens
+      on the opponent's face-down cards (card_menu_input.c), and the info bar describes them.       `ModDeckListVisible`
+      also lets the human open deck lists via **Card View**: their own main deck from the deck command menu
+      (`deck[0]` first = next draw, campaign.c), and the opponent's main or fusion deck pile (Card View only — no Draw
+      or Surrender — card_menu_input.c, `CardListView_Open`).
+      On your deck pile the command icons are ordered Draw, then Card View, then
       Surrender (`CardMenu_DrawIcons` / `CardMenu_Update`, campaign.c).
     - **The info bar moved.** Three checks in `DuelScreen_DrawCursorInfo` grew duel_info_bar.c by 0x90 bytes, which
       the size-limited `.text` (to 0x08080A20) could not take. The function moved to a new `@farcode` unit,
@@ -165,8 +167,11 @@ Always open, with no format check:
   - Original ties to Grandpa's ID: his unlock (a complete collection) is overridden by `ModIsOpponentUnlocked`.
   - Release `.text` 0x080807D0 (the Campaign step and the copy-limit test).
 - Portraits: Black Luster Soldier - Envoy of the Beginning, D.D. Warrior Lady and Thousand-Eyes Restrict.
-- **Test Duel (2026-10-30).** The Duel Computer's slot (`DUELIST_DUEL_COMPUTER`, page 3 bottom: the fourth in the
-  cursor's ring) is "Test Duel" in `make` builds, hidden in `make release`. Its deck is the .ydk in `TEST_YDK` (the
+- **Test Duel (2026-10-30).** The Duel Computer's slot (`DUELIST_DUEL_COMPUTER`, deck opponents' page, right slot) is
+  "Test Duel" in every testing build (`make`, `make demo`; hidden in `make release`). The slot stays visible even when
+  the `.ydk` is missing (`MOD_TEST_DECK` off, vanilla Duel Computer deck). When the file is present but zero cards
+  resolve in this ROM (empty file or none in the demo pool), `MOD_TEST_DECK` still applies and the opponent has **no
+  deck**. Its deck is the .ydk in `TEST_YDK` (the
   Makefile; default `/mnt/c/ProjectIgnis/deck/test.ydk`), which `tools/testdeck.py` turns into
   `build/include/test_deck.h` on every build (rewritten only when it changes): `MOD_TEST_DECK`,
   `TEST_DECK_PORTRAIT` (the first Main Deck card's number; no longer used for the portrait) and `sTestDeck` (Main then Extra Deck card

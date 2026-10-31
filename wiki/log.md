@@ -2264,6 +2264,27 @@ updated: 2026-09-29
 ## [2026-10-31] progress | D.D. Survivor from the Graveyard
 - src/duel_cmd_piles.c: `DuelCmd_BanishGraveyardCard` calls `DDSurvivorBanished` (Bazoo, Chaos costs). [[added-cards]].
 
+## [2026-10-31] progress | Test Duel on make demo
+- mod_opponents.c: Test Duel slot always in !MOD_RELEASE (even without MOD_TEST_DECK); TEST_DECK_PORTRAIT when deck resolves. testdeck.py message for demo pool. README.md, [[yugi-kaiba-opponent]].
+
+## [2026-10-31] setup | make demo is debug + demo list
+- Makefile: `make demo` passes `RELEASE=0` explicitly (testing ROM, root `new_cards.txt` above ------). [[release-build]]; README.md.
+
+## [2026-10-31] progress | Opponent deck Card View menu
+- card_menu_input.c: opponent main/fusion deck opens command menu with Card View only; ModCardMenuDeckCommands(phase, player). README.md, [[yugi-kaiba-opponent]].
+
+## [2026-10-31] progress | Test Duel empty deck (0 cards)
+- tools/testdeck.py: MOD_TEST_DECK with empty sTestDeck when ydk resolves to 0 cards; mod_opponents.c TEST_DECK_PORTRAIT optional. README.md, [[yugi-kaiba-opponent]].
+
+## [2026-10-31] progress | Opponent deck list in debug
+- card_menu_input.c: `ModDeckListVisible` — A on opponent main/fusion deck opens `CardListView_Open`. global.h; [[yugi-kaiba-opponent]]; README.md.
+
+## [2026-10-31] progress | Deck-out only vs Test Duel and Debug
+- duel_cmd_deck.c `CanDeckOut`: `ModTestDuel` / `ModDebugDuel` only; all other opponents vanilla deck-out. [[release-build]]; README.md.
+
+## [2026-10-31] progress | No CPU deck-out in debug
+- Superseded by deck-out only vs Test Duel and Debug (above).
+
 ## [2026-10-31] progress | Solemn Wishes effect
 - YGOPRODeck text: +500 LP each time you draw. `ModDrawCardsAddedLifeGain` from `DrawCards` (like `CARD_1305`); noop activation resolve. [[added-cards]]; missing-main.txt.
 

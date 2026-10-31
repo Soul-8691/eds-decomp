@@ -90,16 +90,19 @@ u32 GetTrunkSideCopies(u16 id);
 u32 GetTrunkFusionCopies(u16 id);
 
 /* 1 in a Campaign duel with Debug (src/mod_opponents.c): the testing build's duel rules apply in make release too
- * (the opponent's hand and face-down cards shown, no deck-out). */
+ * (the opponent's hand and face-down cards shown; neither player can deck out in that duel). */
 int ModDebugDuel(void);
-/* 1 in make (testing) or ModDebugDuel: the human can Card View their main deck in draw order. */
+/* 1 in a testing-build duel vs Test Duel (Duel Computer slot): neither player can deck out. */
+int ModTestDuel(void);
+/* 1 in make (testing), ModTestDuel, or ModDebugDuel: the human can use Card View on main/fusion deck piles
+ * (own deck menu or opponent deck with Card View only) in draw/stack order (deck[0] = next draw). */
 int ModDeckListVisible(void);
 /* Main-deck command menu: Draw before Card View (campaign.c hooks). */
 int ModCardMenuDeckFirstCommand(u16 available);
 int ModCardMenuDeckCycleCommand(u8 command, int dir, u16 available);
 void ModCardMenuDeckDrawIcons(int x, int y, u16 available, u8 command, u8 timer);
 void ModCardMenuDeckDrawLabel(int x, u16 available, u8 command);
-u16 ModCardMenuDeckCommands(int phase);
+u16 ModCardMenuDeckCommands(int phase, int player);
 
 /* Every card ID in name order, then 0 (card_data.h); the card-list builders walk it. */
 extern const u16 gCardIdsByName[];

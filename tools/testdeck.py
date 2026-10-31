@@ -8,7 +8,8 @@ The header defines MOD_TEST_DECK, TEST_DECK_PORTRAIT (the card number of the fir
 and, when TEST_DECK_WANT_CARDS is defined first, sTestDeck[]: the card numbers of the Main Deck, then the Extra Deck
 (LoadOpponentDeck puts Fusion Monsters into the Fusion Deck). The Side Deck is not used. Passcodes resolve through the
 built password table (build/assets/newcards__passwords.bin, 4 BCD bytes a card ID); a card the game does not have is
-left out with a warning. With no .ydk, or no card in it, the header only says so, and there is no test opponent.
+left out with a warning. With no .ydk, the header only says so (no MOD_TEST_DECK). When the .ydk resolves to zero cards in this ROM, MOD_TEST_DECK
+is still set and sTestDeck is empty (Test Duel starts with no opponent deck).
 The header is rewritten only when it changes, so an unchanged deck does not rebuild anything.
 """
 import os
@@ -83,14 +84,23 @@ def header(path):
             else:
                 print(f'testdeck: passcode {p} ({sec[1:]}) is not in the game: left out', file=sys.stderr)
     main, extra = cards['#main'][:MAIN_MAX], cards['#extra'][:EXTRA_MAX]
-    if not main:
-        print(f'testdeck: {path} has no Main Deck card the game has: no test opponent', file=sys.stderr)
-        return '\n'.join(lines + ['/* no Main Deck card: no test opponent */', ''])
-    lines += ['#define MOD_TEST_DECK 1',
-              f'#define TEST_DECK_PORTRAIT {number(main[0])}    /* {name(main[0])} */',
-              '#ifdef TEST_DECK_WANT_CARDS',
+    deck = main + extra
+    if not deck:
+        print(f'testdeck: {path}: 0 cards in this ROM — Test Duel with empty opponent deck '
+              f'(for make demo, cards must be in new_cards.txt above ------)', file=sys.stderr)
+        lines += ['#define MOD_TEST_DECK 1',
+                  '/* zero cards: opponent starts with no deck */',
+                  '#ifdef TEST_DECK_WANT_CARDS',
+                  'static const u16 sTestDeck[] = {',
+                  '};',
+                  '#endif', '']
+        return '\n'.join(lines)
+    lines += ['#define MOD_TEST_DECK 1']
+    if main:
+        lines += [f'#define TEST_DECK_PORTRAIT {number(main[0])}    /* {name(main[0])} */']
+    lines += ['#ifdef TEST_DECK_WANT_CARDS',
               f'static const u16 sTestDeck[] = {{    /* Main Deck ({len(main)}), Extra Deck ({len(extra)}) */']
-    lines += [f'    {number(cid)},    /* {name(cid)} */' for cid in main + extra]
+    lines += [f'    {number(cid)},    /* {name(cid)} */' for cid in deck]
     lines += ['};', '#endif', '']
     print(f'testdeck: {path}: {len(main)} Main Deck + {len(extra)} Extra Deck cards', file=sys.stderr)
     return '\n'.join(lines)

@@ -23,7 +23,7 @@ updated: 2026-10-26
 
 | | `make` (testing) | `make release` |
 |---|---|---|
-| Deck out (`CanDeckOut`, duel_cmd_deck.c) | the human cannot deck out (except Link Battle) | anyone can |
+| Deck out (`CanDeckOut`, duel_cmd_deck.c) | normal rules; neither side vs Test Duel or Debug | normal rules; neither side vs Debug |
 | New game trunk (`BuildStarterDeck`, title_screen.c) | `GiveStartingTrunk`: 8 of every card | none (the starter deck only) |
 | `DECK_MIN_CARDS` (save.h) | 1 | 40 |
 | `CARD_COPY_LIMIT_NONE` (save.h) | 99 (no copy limit) | 3 |
@@ -35,16 +35,22 @@ updated: 2026-10-26
 
 ## Checked
 Both builds were checked in the preprocessed units:
-- release `CanDeckOut` returns 1;
+- `CanDeckOut` returns 0 only for ModTestDuel / ModDebugDuel; otherwise 1;
 - `GetBanlistCopyLimit`'s default is 3;
 - no `GiveStartingTrunk` call;
 - `make` then switches back.
 
 ## Demo card pool (`make demo` / `make release-demo`)
 
-Same testing vs release rules as above, but the added-card list is repo-root `new_cards.txt` only **above** the
-`------` separator (the cards with coded effects), not the full `config/new_cards.txt` pool. Outputs:
-`eds_demo.gba` and `eds_release_demo.gba`. The Makefile sets `NEWCARDS_PROFILE=demo` and passes
+The added-card list is repo-root `new_cards.txt` only **above** the `------` separator (coded cards), not the full
+`config/new_cards.txt` pool.
+
+| Target | `MOD_RELEASE` | Output |
+|---|---|---|
+| `make demo` | 0 (same rules as `eds.gba` / plain `make`) | `eds_demo.gba` |
+| `make release-demo` | 1 (same rules as `eds_release.gba`) | `eds_release_demo.gba` |
+
+The Makefile sets `NEWCARDS_PROFILE=demo` and passes
 `NEW_CARDS_LIST=new_cards.txt` to `tools/newcards.py`. Switching between a full and demo build re-runs the card
 tables (`build/assets/.newcards-full` vs `.newcards-demo`) and rebuilds C units that depend on `card_count.h`.
 
