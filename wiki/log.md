@@ -2045,6 +2045,14 @@ updated: 2026-09-29
 - src/mod_opponents.c: `ModOpponentSelectStart` opens on Test Duel when `MOD_TEST_DECK` (`make` only); `make release` unchanged (newest format). [[yugi-kaiba-opponent]].
 - Fix: use `#if !MOD_RELEASE` (not `#ifndef`; `MOD_RELEASE` is always defined as 0 or 1).
 
+## [2026-10-30] progress | Hysteric Fairy (CPU off)
+- CPU no longer activates Hysteric Fairy (`AiWantsMonsterEffect` returns 0). [[added-cards]].
+
+## [2026-10-30] progress | Hysteric Fairy
+- src/added_effects.c: `EffectHystericFairy*`, `gAddedCardEffects` row. src/card_command_menu.c:
+  activate gate (`CountTributableMonsters > 1`). missing.txt, missing-main.txt. [[added-cards]]. Built (`make`); not
+  tested in an emulator.
+
 ## [2026-10-30] progress | Token Thanksgiving
 - src/added_effects.c: `EffectTokenThanksgivingResolve`, `gAddedCardEffects` row, `AiWantsTokenThanksgiving`. missing.txt, missing-main.txt. [[added-cards]]. Built (`make`); not tested in an emulator.
 

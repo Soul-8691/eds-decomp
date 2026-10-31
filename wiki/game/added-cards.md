@@ -1963,6 +1963,15 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
   best stat is at least 1500.
 - Checked in the source and the build; not tested in an emulator.
 
+### Hysteric Fairy (2026-10-30)
+- Effect text from [YGOPRODeck](https://db.ygoprodeck.com/api/v7/cardinfo.php?name=Hysteric%20Fairy) (id
+  21297224): "Tribute 2 monsters on your side of the field to increase your Life Points by 1000 points." Level 4
+  LIGHT Fairy 1800/500. `EffectHystericFairyPrepare` (face-up, no key 1418, at least two tributable monsters),
+  `EffectHystericFairyChainB` (`EffectTributeTwoMonstersChainB` for the human; the CPU picks its two weakest by ATK),
+  `EffectHystericFairyResolve` (tribute both targets, `GainLifePoints` 1000). `CanActivateMonsterEffect` requires
+  `CountTributableMonsters > 1`. The CPU never activates it (`AiWantsMonsterEffect` returns 0). `gAddedCardEffects` row.
+- Checked in the source and the build; not tested in an emulator.
+
 ### Token Thanksgiving (2026-10-30)
 - Effect text from [YGOPRODeck](https://db.ygoprodeck.com/api/v7/cardinfo.php?name=Token%20Thanksgiving) (id
   57182235): "Destroy all tokens on the field. Increase your Life Points by the number of tokens destroyed x 800

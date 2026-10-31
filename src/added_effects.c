@@ -5623,6 +5623,103 @@ int EffectMystikWokResolve(struct ChainEntry *link, struct ChainEntry *chainedTo
 }
 #endif /* HAS_CARD_MYSTIK_WOK */
 
+#ifdef HAS_CARD_HYSTERIC_FAIRY
+/* ---- Hysteric Fairy (YGOPRODeck id 21297224) -----------------------------------------------------------------------
+ * "Tribute 2 monsters on your side of the field to increase your Life Points by 1000 points."
+ * Same tribute pick and resolve shape as ROM keys 1432/1442 (EffectTributeTwoMonsters*); the CPU picks its two
+ * weakest tributable monsters. The CPU never activates it (AiWantsMonsterEffect returns 0). */
+
+#define HYSTERIC_FAIRY_LP_GAIN 1000
+
+static void HystericFairyTwoWeakestTributes(int player, int *zoneA, int *zoneB)
+{
+    int zone;
+    int a = -1;
+    int b = -1;
+    u32 atkA = 0xffffffff;
+    u32 atkB = 0xffffffff;
+
+    for (zone = ZONE_MONSTER_0; zone <= ZONE_MONSTER_4; zone++) {
+        u32 atk;
+
+        if (!IsTributableMonster(player, zone))
+            continue;
+        atk = GetZoneCardAtk(player, zone);
+        if (a < 0 || atk < atkA) {
+            b = a;
+            atkB = atkA;
+            a = zone;
+            atkA = atk;
+        } else if (b < 0 || atk < atkB) {
+            b = zone;
+            atkB = atk;
+        }
+    }
+    *zoneA = a;
+    *zoneB = b;
+}
+
+int EffectHystericFairyPrepare(struct ChainEntry *card, struct ChainEntry *chainLink, u16 fromHand)
+{
+    struct DuelZone *z;
+
+    if (fromHand)
+        return 0;
+    if (card->event != RESPONSE_NONE)
+        return 0;
+    z = ZoneOf(card->player, card->zone);
+    if (!z->isFaceUp || DUEL_CARD_ID(&z->card) != (card->card & CARD_ID_MASK))
+        return 0;
+    if (CountActiveCardsOnField(0, CARD_1418) > 0 || CountActiveCardsOnField(1, CARD_1418) > 0)
+        return 0;
+    return CountTributableMonsters(card->player, -1) > 1;
+}
+
+int EffectHystericFairyChainB(struct ChainEntry *link, struct ChainEntry *prevLink)
+{
+    int z0, z1;
+
+    (void)prevLink;
+    if (link->player) {
+        HystericFairyTwoWeakestTributes(link->player, &z0, &z1);
+        link->numTargets = 0;
+        if (z0 < 0 || z1 < 0)
+            return 1;
+        if (TryAddEffectTarget(link, link->player, z0) == 0)
+            return 1;
+        if (TryAddEffectTarget(link, link->player, z1) == 0)
+            return 1;
+        return 1;
+    }
+    return EffectTributeTwoMonstersChainB(link);
+}
+
+int EffectHystericFairyResolve(struct ChainEntry *link, struct ChainEntry *chainedTo)
+{
+    int i;
+
+    (void)chainedTo;
+    if (link->negated)
+        return EFFECT_STEP_DONE;
+    if (CountActiveCardsOnField(0, CARD_1418) > 0 || CountActiveCardsOnField(1, CARD_1418) > 0
+        || link->numTargets != 2)
+        return EFFECT_STEP_DONE;
+    for (i = 0; i < 2; i++) {
+        int targetPlayer = DUEL_LOC_PLAYER(link->targets[i]);
+        int targetZone = DUEL_LOC_ZONE(link->targets[i]);
+
+        if (targetPlayer != link->player)
+            return EFFECT_STEP_DONE;
+        if (DUEL_CARD_ID(&ZoneOf(targetPlayer, targetZone)->card) == 0)
+            return EFFECT_STEP_DONE;
+    }
+    for (i = 0; i < 2; i++)
+        TributeMonster(DUEL_LOC_PLAYER(link->targets[i]), DUEL_LOC_ZONE(link->targets[i]));
+    GainLifePoints(link->player, HYSTERIC_FAIRY_LP_GAIN);
+    return EFFECT_STEP_DONE;
+}
+#endif /* HAS_CARD_HYSTERIC_FAIRY */
+
 #ifdef HAS_CARD_SPELL_CANCELLER
 /* ---- Spell Canceller (YGOPRODeck id 84636823) --------------------------------------------------------------------
  * "Spell Cards, and their effects on the field, cannot be activated. Negate all Spell effects on the field."
@@ -8004,6 +8101,10 @@ static int AiWantsMonsterEffect(u16 number, int zone)
     case CARD_MAGICAL_SCIENTIST:                /* AiUseMagicalScientist decides */
         return 0;
 #endif
+#ifdef HAS_CARD_HYSTERIC_FAIRY
+    case CARD_HYSTERIC_FAIRY:                   /* two Tributes for 1000 LP is never worth it */
+        return 0;
+#endif
     }
     return 1;
 }
@@ -9800,6 +9901,16 @@ const struct CardEffect gAddedCardEffects[] = {
         NULL,
         NULL,
         NULL,
+    },
+#endif
+#ifdef HAS_CARD_HYSTERIC_FAIRY
+    {
+        CARD_HYSTERIC_FAIRY, 0,
+        EffectHystericFairyResolve,
+        NULL,
+        EffectHystericFairyPrepare,
+        NULL,
+        EffectHystericFairyChainB,
     },
 #endif
 #ifdef HAS_CARD_POT_OF_AVARICE
