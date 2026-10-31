@@ -24,16 +24,34 @@ KNOWN = {
     'dc25f733cee913afdf187ec03df30909fe28b03c': 'the Japanese release (Duel Monsters 5 Expert 1, AY5J). '
                                                 'This project builds the USA release for now.',
 }
+ROOT_BASEROM = 'baserom.gba'
+SKIP_BASENAMES = frozenset({
+    'eds.gba', 'eds_release.gba', 'eds_demo.gba', 'eds_release_demo.gba',
+})
+
+
+def add_candidate(found, path):
+    if path in found or not os.path.isfile(path):
+        return
+    base = os.path.basename(path)
+    if base in SKIP_BASENAMES:
+        return
+    if not path.lower().endswith(('.gba', '.zip', '.agb', '.bin')):
+        return
+    found.append(path)
 
 
 def candidates(args):
     if args:
         return args
     found = []
-    for pattern in ('roms/*', 'baserom.gba', '*.gba', '*.zip'):
-        for f in sorted(glob.glob(pattern)):
-            if f not in found and os.path.basename(f) != 'eds.gba' and f.lower().endswith(('.gba', '.zip', '.agb', '.bin')):
-                found.append(f)
+    add_candidate(found, ROOT_BASEROM)
+    for f in sorted(glob.glob('roms/*')):
+        add_candidate(found, f)
+    for f in sorted(glob.glob('*.gba')):
+        add_candidate(found, f)
+    for f in sorted(glob.glob('*.zip')):
+        add_candidate(found, f)
     return found
 
 
@@ -77,8 +95,8 @@ def main():
     os.makedirs('roms', exist_ok=True)
     files = candidates(sys.argv[1:])
     if not files:
-        sys.exit('No ROM found. Copy your dump of Yu-Gi-Oh! The Eternal Duelist Soul (USA) into the roms/ folder\n'
-                 '(a .gba file, or the .zip it came in), then run `tools/dr make setup` again.')
+        sys.exit('No ROM found. Copy your dump of Yu-Gi-Oh! The Eternal Duelist Soul (USA) to baserom.gba in the\n'
+                 'repository root, or into roms/ (a .gba file or the .zip it came in), then run `make setup` again.')
     good, problems = None, []
     for f in files:
         for label, data in images(f):

@@ -1,6 +1,6 @@
 # Yu-Gi-Oh! The Eternal Duelist Soul (USA) - matching decompilation.
 # Builds natively in WSL (or Linux) with agbcc and binutils-arm-none-eabi, like the pret decomps:
-#     make setup            # once: check your ROM (put it in roms/) and extract its data into assets/
+#     make setup            # once: check your ROM (baserom.gba in repo root or roms/) and extract into assets/
 #     make -j$(nproc)       # build eds.gba
 #     make -j$(nproc) compare   # build and check the SHA-1 against the original (now fails, see below)
 # The ROM adds the cards listed in config/new_cards.txt (one name per line), so it no longer matches the
@@ -129,7 +129,7 @@ $(ELF): build/ld_script.ld build/autosyms.o $(OBJS) | $(CC1_INSTALLED)
 ASSET_FILES  := $(shell find assets -path assets/new_cards -prune -o -type f -print 2>/dev/null)
 ASSETS_BUILT := build/assets/.built
 $(ASSETS_BUILT): config/assets.tsv config/functions.tsv tools/assets.py $(wildcard tools/assetfmt/*.py) $(ASSET_FILES)
-	@test -d assets || { echo "error: assets/ not found. Put your copy of the game in roms/ and run 'make setup' (see README.md)."; exit 1; }
+	@test -d assets || { echo "error: assets/ not found. Put baserom.gba in the repo root or your ROM in roms/ and run 'make setup' (see README.md)."; exit 1; }
 	$(PYTHON) tools/assets.py build
 
 build/asm/crt0.o: $(ASSETS_BUILT)   # cartridge header
