@@ -381,7 +381,7 @@ u16 TurnOrder_NopStep(void)
 
 /*
  * Step 1 of gTurnOrderCpuChoiceSteps: copies the three 64x64 DUEL logo pieces to OBJ tiles 0x210, 0x218 and
- * 0x310, starts the banner tween, picks FIRST or SECOND at random and skips the input (phase =
+ * 0x310, starts the banner tween, takes the first turn (changed: was FIRST or SECOND at random) and skips the input (phase =
  * TurnOrder_ShowChoice). Returns 1.
  */
 u16 TurnOrder_CpuChooseTurn(void)
@@ -391,7 +391,7 @@ u16 TurnOrder_CpuChooseTurn(void)
     TurnOrder_LoadObjTiles(gDuelLogoTiles2, 0x110, 8, 8);
     TweenInit(0, 0, 0x40, 0xF, 3, 1, &sTurnOrder.tween, TWEEN_APPROACH);
     sTurnOrder.phase = CHOICE_PHASE_SHOW_CHOICE;
-    sTurnOrder.turnChoice = Random() & 1;
+    sTurnOrder.turnChoice = TURN_CHOICE_SECOND;    /* changed: the CPU goes first (was Random() & 1) */
     return 1;
 }
 

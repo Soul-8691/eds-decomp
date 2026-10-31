@@ -197,11 +197,12 @@ void TurnOrder_UpdateChoiceBob(u8 choice, struct ChoiceBob *bob)
         bob[which].amp = 0;
 }
 
-/* The CPU's turn choice for the player when the player loses: the parity of the frame counter
- * (enum TurnChoice). */
+/* The CPU's turn choice for the player when the player loses (enum TurnChoice, from the player's side).
+ * Changed: the CPU always takes the first turn, so the player goes second; the original took the parity of the frame
+ * counter. */
 u8 TurnOrder_CpuPickTurn(u8 frame)
 {
-    return frame & 1;
+    return TURN_CHOICE_SECOND;
 }
 
 /* ---- Script steps ---- */
