@@ -105,6 +105,19 @@ int FormatPackIndexFromId(u16 packId)
     return (int)packId - FORMAT_PACK_ID_FIRST;
 }
 
+int ModFormatPackShopCost(u16 packId, u32 *costOut)
+{
+    int fi = FormatPackIndexFromId(packId);
+
+    if (fi < 0)
+        return 0;
+    if (sFormatPackFlags[fi] & FORMAT_PACK_FLAG_USAGE)
+        *costOut = FORMAT_PACK_COST_USAGE;
+    else
+        *costOut = FORMAT_PACK_COST_TCG;
+    return 1;
+}
+
 static void EnsureFormatPackInfo(void)
 {
     int fi;

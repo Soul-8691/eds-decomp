@@ -7,8 +7,11 @@
 /* Pack shop TCG set packs (601..). FORMAT_PACK_COUNT is in build/include/format_pack_data.h. */
 #define FORMAT_PACK_ID_FIRST  601
 #define VANILLA_PACK_INFO_COUNT 23
+#define FORMAT_PACK_COST_TCG    250
+#define FORMAT_PACK_COST_USAGE  500
 
 int FormatPackIndexFromId(u16 packId);
+int ModFormatPackShopCost(u16 packId, u32 *costOut);
 u16 ModGetSelectedPackId(u16 packRowIndex);
 const struct PackInfo *ModPackInfoAtRow(u16 packRowIndex);
 void ModPackList_AddUnlockedPacks(void);

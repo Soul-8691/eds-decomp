@@ -2213,6 +2213,9 @@ updated: 2026-09-29
 - Tried first: `@farcode coin_toss_scene` (0x101C bytes) also fits, but DuelScene_SkullDice stops matching in check.py (its bl out of the unit moves), which CI would count as a lost match.
 - Other candidates with no matched functions: duel_info_bar (0xCC8, 0/21). Moving a unit with matches costs those that call out of it.
 
+## [2026-10-31] progress | Format pack DP prices (250 / 500)
+- `GetPackCost`: TCG set packs 250 DP, usage format packs 500 (`ModFormatPackShopCost`). [[pack-shop]].
+
 ## [2026-10-31] progress | Usage pack pull weights flattened
 - tools/format_packs.py: `USAGE_PACK_SCORE_POWER` + `USAGE_PACK_UNIFORM_WEIGHT` loosen inverse-usage pulls; regenerated format pack data. [[pack-shop]].
 

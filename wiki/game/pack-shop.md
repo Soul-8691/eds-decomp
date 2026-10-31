@@ -36,7 +36,9 @@ on the game's own Get-a-pack screens. Checked in the source and the build; not t
     main menu.
   - **A finished pack** saves the game (`SaveGame`) and restarts the steps at the list, with the pack just opened
     back in the centre (`firstIndex` is set before `PackList_Init` draws the covers).
-- **Duelist Points** ([[duelist-points]]). `PackShop_Cost` is `GetPackCost` (1000 for every pack for now), and
+- **Duelist Points** ([[duelist-points]]). `GetPackCost` charges **250** DP for TCG set packs and **500** for
+  usage-weighted format packs (`FORMAT_PACK_COST_*` in `include/format_packs.h`); vanilla campaign packs stay at
+  1000. `PackShop_Cost` uses `GetPackCost`, and
   `PackShop_CanOpen` needs that many DP. A refused A plays `SE_ERROR` and shows "Not enough DP!". `PackShop_Pay`
   takes the DP. The list shows the centre pack's name and price at the top and the player's DP at the bottom.
 - **RAM.** The state is `gPackShop` (EWRAM `0x0202F000`, symbols.ld).

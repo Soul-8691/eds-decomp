@@ -8,7 +8,7 @@
  *                         (PackList_AddUnlockedPacks), then the opening and the five-card reveal, the cards going
  *                         to the trunk. Added around them: B on the list goes back to the main menu, a finished
  *                         pack comes back to the list (on the pack just opened), and the pack price check.
- * A pack costs Duelist Points (src/mod_dp.c: GetPackCost); a pack the player cannot pay for is refused ("Not
+ * A pack costs Duelist Points (src/mod_dp.c: GetPackCost — 250/500 for mod format packs); a pack the player cannot pay for is refused ("Not
  * enough DP!") in release builds only (MOD_RELEASE). The list shows the centre pack's name and price at the top
  * and the player's DP at the bottom (PackListDP_Draw).
  * Like the other mod units, this one is @farcode and @rodata in units.txt and keeps its state at a fixed EWRAM

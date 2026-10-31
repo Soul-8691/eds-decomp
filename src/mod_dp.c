@@ -87,6 +87,7 @@ struct CardCostTable {
  * the share running it in the extra deck * 100, times 3 if limited and 1.5 if semi-limited in that format, at least
  * 20 DP (MIN_PRICE). Only the cards the format's decks use are listed. */
 #include "card_prices.h"
+#include "format_packs.h"
 
 /* A card of an unlocked format's pool that none of their decks use: the minimum price (tools/cardprices.py's
  * MIN_PRICE). */
@@ -162,7 +163,10 @@ int SpendDP(u32 amount)
 u32 GetPackCost(u16 packId)
 {
     u32 i;
+    u32 cost;
 
+    if (ModFormatPackShopCost(packId, &cost))
+        return cost;
     for (i = 0; i < ARRAY_COUNT(sPackCosts); i++) {
         if (sPackCosts[i].packId == packId)
             return sPackCosts[i].cost;
