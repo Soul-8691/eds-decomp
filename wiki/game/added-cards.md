@@ -1963,6 +1963,17 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
   best stat is at least 1500.
 - Checked in the source and the build; not tested in an emulator.
 
+### Monster Reincarnation (2026-10-30)
+- Effect text from [YGOPRODeck](https://db.ygoprodeck.com/api/v7/cardinfo.php?name=Monster%20Reincarnation) (id
+  74848038): "Discard 1 card, then target 1 monster in your Graveyard; add that target to your hand." Normal Spell.
+  `EffectMonsterReincarnationPrepare` (hand discard cost and a Graveyard monster via `ModCollectEffectTargets`),
+  `EffectMonsterReincarnationChainA` (`DuelPrompt_PostDiscardCost`), `EffectCardListTargetChainB`, resolve
+  `EffectMaskOfDarknessResolve` (`DUEL_CMD_RETURN_GRAVEYARD_CARD_TO_HAND`). The CPU uses `AiWantsMonsterReincarnation`
+  only when it controls no monsters (still needs at least one card in hand to discard and a valid Graveyard target). `AiPickCardListEntry`
+  uses the default list logic: if the human controls a monster, prefer a Graveyard pick whose ATK (or DEF) can beat
+  their strongest; otherwise the best ATK among the candidates.
+- Checked in the source and the build; not tested in an emulator.
+
 ### Spell Canceller (2026-10-30)
 - Effect text from [YGOPRODeck](https://db.ygoprodeck.com/api/v7/cardinfo.php?name=Spell%20Canceller) (id 84636823):
   "Spell Cards, and their effects on the field, cannot be activated. Negate all Spell effects on the field."

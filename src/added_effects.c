@@ -4637,6 +4637,35 @@ int EffectPotOfAvariceResolve(struct ChainEntry *link, struct ChainEntry *chaine
 }
 #endif /* HAS_CARD_POT_OF_AVARICE */
 
+#ifdef HAS_CARD_MONSTER_REINCARNATION
+/* ---- Monster Reincarnation (YGOPRODeck id 74848038) ---------------------------------------------------------------
+ * Normal Spell: "Discard 1 card, then target 1 monster in your Graveyard; add that target to your hand."
+ *   prepare  at least one card in the hand to discard and a monster in the Graveyard (ModCollectEffectTargets)
+ *   chainA   DuelPrompt_PostDiscardCost (any card; the CPU picks its own)
+ *   chainB   EffectCardListTargetChainB (graveyard monsters)
+ *   resolve  EffectMaskOfDarknessResolve (DUEL_CMD_RETURN_GRAVEYARD_CARD_TO_HAND)
+ *   CPU      AiWantsMonsterReincarnation (empty monster field only); AiPickCardListEntry prefers a monster that beats
+ *            the human's strongest field monster when they control one */
+
+int CollectEffectTargetsInt(int player, int cardNumber, int param) asm("CollectEffectTargets");
+
+int EffectMonsterReincarnationPrepare(struct ChainEntry *card, struct ChainEntry *chainLink, u16 fromHand)
+{
+    if (chainLink != NULL)
+        return 0;
+    (void)fromHand;
+    if (gDuelPlayers[card->player & 1].handCount < 1)
+        return 0;
+    return CollectEffectTargetsInt(card->player, CARD_MONSTER_REINCARNATION, 0) > 0;
+}
+
+int EffectMonsterReincarnationChainA(struct ChainEntry *link, struct ChainEntry *prevLink)
+{
+    DuelPrompt_PostDiscardCost(link->player, 1, FALSE, FALSE);
+    return 1;
+}
+#endif /* HAS_CARD_MONSTER_REINCARNATION */
+
 #ifdef HAS_CARD_NEWDORIA
 /* ---- Newdoria -----------------------------------------------------------------------------------------------------
  * "If this card is destroyed by battle and sent to the GY: Target 1 monster on the field; destroy that target."
@@ -6009,6 +6038,11 @@ void ModCollectEffectTargets(int player, u16 cardNumber, int param)
 #endif
 #ifdef HAS_CARD_POT_OF_AVARICE
     case CARD_POT_OF_AVARICE:               /* the player's Graveyard monsters */
+        ModAddPileTargets(p->graveyard, p->graveCount, CARDLIST_SRC_GRAVEYARD, IsMonsterId, 0);
+        break;
+#endif
+#ifdef HAS_CARD_MONSTER_REINCARNATION
+    case CARD_MONSTER_REINCARNATION:        /* the player's Graveyard monsters */
         ModAddPileTargets(p->graveyard, p->graveCount, CARDLIST_SRC_GRAVEYARD, IsMonsterId, 0);
         break;
 #endif
@@ -8463,6 +8497,17 @@ static int AiWantsEmergencyProvisions(void)
 }
 #endif /* HAS_CARD_EMERGENCY_PROVISIONS */
 
+#ifdef HAS_CARD_MONSTER_REINCARNATION
+static int AiWantsMonsterReincarnation(void)
+{
+    if (CountMonsters(AI_PLAYER) != 0)
+        return 0;
+    if (gDuelPlayers[AI_PLAYER].handCount < 1)
+        return 0;
+    return CollectEffectTargetsInt(AI_PLAYER, CARD_MONSTER_REINCARNATION, 0) > 0;
+}
+#endif /* HAS_CARD_MONSTER_REINCARNATION */
+
 /* Should the CPU play its added Magic card `number` in its Main Phase now? (AiTryPlaySpellTrap checks that it may.) */
 static int AiWantsSpell(u16 number)
 {
@@ -8478,6 +8523,10 @@ static int AiWantsSpell(u16 number)
 #ifdef HAS_CARD_MYSTIK_WOK
     case CARD_MYSTIK_WOK:
         return AiWantsMystikWok();
+#endif
+#ifdef HAS_CARD_MONSTER_REINCARNATION
+    case CARD_MONSTER_REINCARNATION:
+        return AiWantsMonsterReincarnation();
 #endif
 #ifdef HAS_CARD_EMERGENCY_PROVISIONS
     case CARD_EMERGENCY_PROVISIONS:             /* only when low on LP */
@@ -8998,6 +9047,16 @@ const struct CardEffect gAddedCardEffects[] = {
         NULL,
         NULL,
         NULL,
+    },
+#endif
+#ifdef HAS_CARD_MONSTER_REINCARNATION
+    {
+        CARD_MONSTER_REINCARNATION, 0,
+        (int (*)(struct ChainEntry *, struct ChainEntry *))EffectMaskOfDarknessResolve,
+        NULL,
+        EffectMonsterReincarnationPrepare,
+        EffectMonsterReincarnationChainA,
+        (int (*)(struct ChainEntry *, struct ChainEntry *))EffectCardListTargetChainB,
     },
 #endif
 #ifdef HAS_CARD_DARK_MAGICIAN_OF_CHAOS
