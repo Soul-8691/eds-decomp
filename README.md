@@ -71,7 +71,7 @@ next one.
 | 15 | Reaper | October 2005 |
 
 - **Decks.** Each format duelist picks one of 2-3 (sometimes more) strong decks from its format, at weighted
-  random. The first 12 duelists are fully coded. [DECKS.md](DECKS.md) lists every deck and its chance.
+  random. The first 13 duelists are fully coded. [DECKS.md](DECKS.md) lists every deck and its chance.
 - **Your deck.** It has to be legal in that format's banlist and card pool to duel them.
 - **Portraits.** Each duelist's portrait is its format's namesake card (or the Format Library picture when the
   format isn't named after a card).
@@ -81,8 +81,8 @@ next one.
   its original portrait and event dialogue. After the dialogue, your banlist switches to the challenger's format and
   the Deck Recipes screen opens: load a recipe, press SELECT for Deck Edit, or B to duel. In the release, a deck that
   isn't legal in the format (or is under 40 cards) can't duel until you fix it.
-- **Deck Recipes.** Up to 50 saved decks, about 30 of them preset to staple decks of the first twelve formats and
-  Goat. Loading a recipe takes the cards from your trunk; any you don't have are left out (the game tells you which,
+- **Deck Recipes.** Up to 50 saved decks, about 40 of them preset to staple decks of the first thirteen formats (including
+  Goat). Loading a recipe takes the cards from your trunk; any you don't have are left out (the game tells you which,
   and why). The starting decks and the format presets come with the Side and Extra Decks of their .ydk files. The
   deck recipes will eventually include all 15 TCG formats.
 - **Banlists** (main menu). Choose the banlist your deck is built under. Cards your current deck can no longer hold
@@ -155,11 +155,14 @@ next one.
       Pyramid Turtle, Apprentice Magician) summon another copy of themselves from the Deck when they can, so
       the next one can recruit again.
     - Its Mystical Space Typhoon (and Gust, Driving Snow) also targets your face-up Traps, and never its own cards.
-    - It uses Magical Scientist with Catapult Turtle or Cannon Soldier: it summons a Fusion Monster, then Tributes
-      it for damage, and repeats while it has more than 1000 LP. Without either of those, it summons one Fusion
-      Monster a turn in Main Phase 1 (with 4000 LP or more) when it could destroy one of your face-up monsters.
-      Its Catapult Turtle and Cannon Soldier Tribute a Fusion Monster from Magical Scientist first, since it
-      leaves at the End Phase anyway.
+    - It uses Magical Scientist with Catapult Turtle, Cannon Soldier, or Toon Cannon Soldier: it summons a Fusion
+      Monster, then Tributes it for damage, and repeats while it has more than 1000 LP. Without any of those, it
+      summons one Fusion Monster a turn in Main Phase 1 (with 4000 LP or more) when it could destroy one of your
+      face-up monsters. Its burn monsters Tribute a Fusion Monster from Magical Scientist first, since it leaves
+      at the End Phase anyway. It never fires Scientist's effect from the generic monster scan; only its dedicated
+      Main Phase logic does.
+    - In its Toon World strategy it Normal Summons Toon Cannon Soldier from the hand (other Toons still Special
+      Summon).
     - It attacks your face-down Defense Position monsters with Sasuke Samurai and Mystic Swordsman LV2 (and any
       Defense Position monster with Ninja Grandmaster Sasuke), since their effects destroy the target whatever its
       DEF.
@@ -196,6 +199,15 @@ next one.
       600 or more (200 per card in your hand and on your field).
     - It plays Mystik Wok at 6000 LP or less, when the weakest monster it can Tribute has 1500 or more ATK or DEF,
       and gains whichever is higher.
+    - It plays Monster Reincarnation only with an empty monster field and a monster in its Graveyard to add; the
+      graveyard pick favors a monster that can beat your strongest field monster.
+    - It plays Toon Table of Contents only when its Deck still has a "Toon" card to search.
+    - It plays Token Thanksgiving when any token is on the field (yours or its).
+    - It plays Card Destruction when you hold more cards in hand than it would discard after paying the cost.
+    - It plays Creature Swap when it can trade its weakest monster for one of yours with higher ATK.
+    - It plays Monster Gate when it can Tribute a monster with less than 1500 ATK.
+    - It plays Book of Moon when you have a face-up monster and it has a monster on the field.
+    - It never activates Hysteric Fairy's effect (two Tributes for 1000 LP).
     - Its Roulette Barrel keeps the die that matches the Level of your strongest face-up monster, so it destroys
       the best target it can.
     - It plays Level Limit - Area B, Gravity Bind, Final Attack Orders and Royal Oppression in its Main Phase. It
@@ -240,7 +252,7 @@ next one.
 ## Playing
 
 Ready-made IPS patches are in the [`patches/`](patches/) folder: a release build and a debug build (the demo, up to
-Warrior). Apply one to your own USA ROM of *The Eternal Duelist Soul* (AY5E) with any IPS patcher, or let an emulator
+Goat). Apply one to your own USA ROM of *The Eternal Duelist Soul* (AY5E) with any IPS patcher, or let an emulator
 that auto-loads patches, such as mGBA, apply it.
 
 ## Building
