@@ -24,6 +24,6 @@ Detail card prices in CARD_PRICES.md
 Make AI use new cards properly
 Fix general AI shortcomings
 Fix Flip Effect Monster AI
-Move hooks out of original units
+Move hooks out of original units (like duel_info_bar)
 Move added card lists out of effect_target_collect.c
 Card priority orders
