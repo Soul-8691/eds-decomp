@@ -2257,3 +2257,9 @@ updated: 2026-09-29
 
 ## [2026-10-31] progress | Stealth Bird FLIP with two on field
 - `ModCanActivateFlipEffect`: flip gates use `CanActivateEffectInZone` + flip event (correct zone); summon_action.c, duel_field_moves.c, battle_phase2.c. [[added-cards]].
+
+## [2026-10-31] progress | D.D. Survivor effect
+- src/added_effects.c: `DDSurvivorBanished`, `EndPhase_DDSurvivor`, `EffectDDSurvivorPrepare` / `Resolve`, `gModDuel.ddSurvivorPending`, `gAddedCardEffects` row. Hooks: duel_cmd_field.c (`DuelCmd_Banish`), duel_field_moves.c (`BanishBattleDestroyedCard`), battle_phase3.c (`DuelPhase_End`); include/effect.h. Removed from missing-main.txt; DECKS.md. [[added-cards]] (Stealth Bird flip-gate note too).
+
+## [2026-10-31] progress | D.D. Survivor from the Graveyard
+- src/duel_cmd_piles.c: `DuelCmd_BanishGraveyardCard` calls `DDSurvivorBanished` (Bazoo, Chaos costs). [[added-cards]].

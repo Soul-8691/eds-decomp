@@ -2307,7 +2307,7 @@ The Last Warrior from Another Planet, King Dragun, Master of Oz, and Ojama King.
 `config/new_cards.txt` for Bazoo Return's Extra Deck (YGOPRODeck id `23995346` aliases to passcode `77121851` in
 `tools/testdeck.py` / `tools/deckgen.py`).
 
-Cards with **no coded effect yet** across these five decks (union): **Manticore of Darkness** (new); **D.D. Survivor**; **Magical Scientist**, **Chaos Emperor Dragon - Envoy of the End**, **Fiber Jar**, **Yata-Garasu**;
+Cards with **no coded effect yet** across these five decks (union): **Manticore of Darkness** (new); **Magical Scientist**, **Chaos Emperor Dragon - Envoy of the End**, **Fiber Jar**, **Yata-Garasu**;
 **Mirage of Nightmare** (if still tracked in `missing-main.txt`; effect may be partially handled elsewhere); fusion
 materials **Dark Balter the Terrible**, **Ryu Senshi**, **Fiend Skull Dragon**, **Reaper on the Nightmare**, **The Last
 Warrior from Another Planet**, **King Dragun**, **Gatling Dragon**, **Master of Oz**, **Ojama King**, **Dark Flare

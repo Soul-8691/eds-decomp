@@ -24,6 +24,9 @@
 
 /* Mod (src/added_effects.c): a monster turned face down loses its counters. */
 void OnMonsterTurnedFaceDown(int player, int zone);
+#ifdef HAS_CARD_D_D_SURVIVOR
+void DDSurvivorBanished(u16 cardId, int owner, int faceUp);     /* mod: src/added_effects.c */
+#endif
 
 /* Local view of DuelAnim_MoveCard (duel_screen.h, u16 cardId): the same symbol called with a u32 card ID, by
  * DuelCmd_SendToGraveyard and DuelCmd_Banish. With the header's u16 parameter the argument set-up (mov r0, ip)
@@ -263,6 +266,11 @@ void DuelCmd_Banish(void)
         u32 cardId;
 
         CopyDuelCard(saved, (struct DuelCard *)(playerZones + slotOffset));
+#ifdef HAS_CARD_D_D_SURVIVOR
+        if (slot <= ZONE_MONSTER_4)
+            DDSurvivorBanished(saved->id, saved->owner,
+                               ((struct DuelZone *)(playerZones + slotOffset))->isFaceUp);
+#endif
         BanishZoneCard(player, slot);
         card = *saved;
         cardId = card.id;

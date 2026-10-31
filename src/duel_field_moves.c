@@ -26,6 +26,9 @@
  * 32-bit IDs without the narrowing a u16 prototype adds at the call. */
 int CanActivateEffectOfCardU32(int player, u32 cardId, int fromHand) asm("CanActivateEffectOfCard");
 void ShowActivatedCardInt(int player, int cardId) asm("ShowActivatedCard");
+#ifdef HAS_CARD_D_D_SURVIVOR
+void DDSurvivorBanished(u16 cardId, int owner, int faceUp);     /* mod: src/added_effects.c */
+#endif
 
 /* Command id for DuelCmd_Push: DUEL_CMD_PLAYER (bit 15) marks a command of player 1. */
 #define PLAYER_CMD(player, cmd) ((player) ? (DUEL_CMD_PLAYER | (cmd)) : (cmd))
@@ -134,6 +137,9 @@ void DestroyPlayerMonsters(int player, u16 withEffects)
  * DUEL_CMD_ADD_CARD_TO_BANISHED with its card word, then destroys the linked cards. */
 void BanishBattleDestroyedCard(int player, int zone, u16 *card)
 {
+#ifdef HAS_CARD_D_D_SURVIVOR
+    DDSurvivorBanished(((struct DuelCard *)card)->id, ((struct DuelCard *)card)->owner, 1);
+#endif
     DuelCmd_Push(PLAYER_CMD(player, DUEL_CMD_ADD_CARD_TO_BANISHED), card[0], card[1], 0);
     DetachRevivingCards(player, zone); /* mod: no Graveyard triggers for a banished revived monster */
     DestroyLinkedCards(player, zone, 1);

@@ -763,6 +763,9 @@ int DuelPhase_End(void)
 #ifdef HAS_CARD_MANTICORE_OF_DARKNESS
             EndPhase_ManticoreOfDarkness(player);       /* added card (src/added_effects.c) */
 #endif
+#ifdef HAS_CARD_D_D_SURVIVOR
+            EndPhase_DDSurvivor(player);                /* added card (src/added_effects.c) */
+#endif
 #ifdef HAS_CARD_RETURN_FROM_THE_DIFFERENT_DIMENSION
             EndPhase_ReturnFromTheDifferentDimension(); /* added card (src/added_effects.c) */
 #endif

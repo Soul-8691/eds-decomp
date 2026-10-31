@@ -37,6 +37,10 @@
  */
 #define CMD_CARD        (&gDuelCmd.card)
 
+#ifdef HAS_CARD_D_D_SURVIVOR
+void DDSurvivorBanished(u16 cardId, int owner, int faceUp);     /* mod: src/added_effects.c */
+#endif
+
 /*
  * Card tables read through integer-constant addresses. Matching: DuelCmd_ReturnGraveyardCardToHand only
  * matches with this form (card_data.h's symbols load the table address at another point).
@@ -280,6 +284,10 @@ void DuelCmd_BanishGraveyardCard(void)
         break;
     default:
         AddCardToBanished((struct DuelCard *)&cardWord);
+#ifdef HAS_CARD_D_D_SURVIVOR
+        /* Graveyard cards are face up: D.D. Survivor banished from there returns too. */
+        DDSurvivorBanished(((struct DuelCard *)&cardWord)->id, CARD_WORD_OWNER(cardWord), 1);
+#endif
         DrawAllAreaTiles();
         DuelCursor_Select(player, DUEL_AREA_BANISHED, 0);
         gDuelCmd.running = 0;

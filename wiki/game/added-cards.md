@@ -2258,6 +2258,29 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
   `EffectStealthBirdPrepare` / `ChainB` / `EffectBookOfMoonResolve` on `RESPONSE_NONE` (`CanActivateMonsterEffect`,
   `effectUnused`; `DuelCmd_TurnStart` resets `effectUnused`). Same face-down rules as Golem Sentry / Guardian Sphinx
   (ACTIVATE while manual position changes are locked). Full `gAddedCardEffects` row.
+- The flip gates (`summon_action.c`, `ChangeBattlePosition`'s field flip, the battle flip in `battle_phase2.c`) call
+  `ModCanActivateFlipEffect`, which runs Stealth Bird's check through `CanActivateEffectInZone` with the real zone and
+  flip event. `CanActivateEffectOfCard` leaves the zone and event unset (event 0 = `RESPONSE_NONE`, the same as menu
+  ACTIVATE), so a copy that had used its face-down effect, or another copy on the field, could block the FLIP burn.
+- Checked in the source and the build. The user tested the earlier fixes in an emulator; the two-copy FLIP fix is not
+  confirmed yet.
+
+### D.D. Survivor (2026-10-31)
+- Effect text from [YGOPRODeck](https://db.ygoprodeck.com/api/v7/cardinfo.php?name=D.D.%20Survivor): "If this face-up
+  card is banished: Special Summon it during the End Phase."
+- `DDSurvivorBanished` runs when a face-up copy leaves a monster zone through `DuelCmd_Banish` (`duel_cmd_field.c`:
+  effect banishes, Banisher of the Light, the End Phase banish of Return from the Different Dimension) or is banished
+  after being destroyed in battle (`BanishBattleDestroyedCard`), and when banished from the Graveyard
+  (`DuelCmd_BanishGraveyardCard` in `duel_cmd_piles.c`: Bazoo the Soul-Eater, Chaos summon costs; Graveyard cards are
+  face up, the 2005-era Chaos-deck use). Before the End Phase it counts the copy in
+  `gModDuel.ddSurvivorPending[owner]`, and `EndPhase_DDSurvivor` (`DuelPhase_End`) queues one off-field trigger per
+  copy. During the End Phase it queues the trigger at once, so a copy banished by Return from the Different
+  Dimension's End Phase banish comes back in that End Phase.
+- `EffectDDSurvivorResolve` (mandatory, no prompt) takes the most recently banished D.D. Survivor (`BANISH_NORMAL`)
+  out of the owner's banished pile and Special Summons it face up, in the position the owner picks
+  (`QueueSpecialSummonChoosePosition`). It does nothing without a free monster zone or when Special Summons are blocked.
+- Not handled: `DUEL_CMD_BANISH_FLAGGED` (only card key 1547) and Interdimensional Matter Transporter-style
+  `DUEL_CMD_BANISH_UNTIL_END_PHASE`, which returns the card on its own.
 - Checked in the source and the build; not tested in an emulator.
 
 ### Gravity Bind (2026-10-30)

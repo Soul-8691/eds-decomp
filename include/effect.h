@@ -114,6 +114,8 @@ void EndPhase_DarkMagicianOfChaos(int turnPlayer);
 /* Manticore of Darkness (src/added_effects.c): End Phase optional revival after it was sent to the GY this turn. */
 void ManticoreSentToGraveyard(int player, u16 number);
 void EndPhase_ManticoreOfDarkness(int turnPlayer);
+/* D.D. Survivor (src/added_effects.c): the End Phase Special Summon of the copies banished face up this turn. */
+void EndPhase_DDSurvivor(int turnPlayer);
 /* Return from the Different Dimension (src/added_effects.c): the End Phase banish of the monsters it summoned. */
 void EndPhase_ReturnFromTheDifferentDimension(void);
 /* Yata-Garasu (src/added_effects.c): back to the hand at the End Phase; its battle damage skips a Draw Phase. */

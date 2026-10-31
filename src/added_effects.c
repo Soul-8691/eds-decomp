@@ -88,6 +88,7 @@ struct ModDuelState {
     u8 exarionPenaltyStacks[10]; /* ... per zone (player * 5 + zone): -400 ATK per stack until that player's turn ends */
     u8 wmcStandbyTicked;        /* Wave-Motion Cannon: 1 after this Standby Phase's counter tick (ModStandbyStep) */
     u8 manticoreGyPending[2];   /* Manticore of Darkness: copies sent to the GY this turn (End Phase triggers) */
+    u8 ddSurvivorPending[2];    /* D.D. Survivor: per owner, face-up copies banished this turn before the End Phase */
 };
 extern struct ModDuelState gModDuel;
 /* gModDuel (0x0202FF04, symbols.ld) must end before gScratchBuffer (0x02030000). */
@@ -1272,6 +1273,8 @@ void ModDuelInit(void)
     gModDuel.wmcStandbyTicked = 0;
     gModDuel.manticoreGyPending[0] = 0;
     gModDuel.manticoreGyPending[1] = 0;
+    gModDuel.ddSurvivorPending[0] = 0;
+    gModDuel.ddSurvivorPending[1] = 0;
 #ifdef HAS_CARD_INJECTION_FAIRY_LILY
     InjectionFairyLilyResetBattle();
 #endif
@@ -1979,6 +1982,81 @@ int EffectManticoreResolve(struct ChainEntry *link, struct ChainEntry *chainedTo
     }
 }
 #endif /* HAS_CARD_MANTICORE_OF_DARKNESS */
+
+#ifdef HAS_CARD_D_D_SURVIVOR
+/* ---- D.D. Survivor -------------------------------------------------------------------------------------------------
+ * "If this face-up card is banished: Special Summon it during the End Phase."
+ *   DuelCmd_Banish (duel_cmd_field.c), BanishBattleDestroyedCard   DDSurvivorBanished
+ *   DuelCmd_BanishGraveyardCard (duel_cmd_piles.c: Bazoo, Chaos costs; Graveyard cards are face up)
+ *   DuelPhase_End (battle_phase3.c)                                EndPhase_DDSurvivor
+ * Banished before the End Phase, the owner's count goes up and EndPhase_DDSurvivor queues one trigger per copy;
+ * banished during the End Phase (Return from the Different Dimension's banish), the trigger is queued at once, so it
+ * still returns that End Phase. Mandatory: the resolve Special Summons a D.D. Survivor from the owner's banished pile
+ * (banished normally, not face down) face up in the position the owner picks. */
+
+static int FindBanishedDDSurvivor(int player)
+{
+    struct DuelPlayer *p = &gDuelPlayers[player & 1];
+    int i;
+
+    for (i = p->banishedCount - 1; i >= 0; i--) {
+        if ((p->banishedInfo[i] & 0xFF) == BANISH_NORMAL
+            && ((const u16 *)CARD_ID_TO_NUMBER_ADDR)[DUEL_CARD_ID(&p->banished[i]) & CARD_ID_MASK]
+                   == CARD_D_D_SURVIVOR)
+            return i;
+    }
+    return -1;
+}
+
+static void QueueDDSurvivorTrigger(int owner)
+{
+    Chain_AddPending(TRIGGER_PLAYER(owner & 1) | TRIGGER_KIND(CHAIN_KIND_OFF_FIELD) | TRIGGER_EVENT(RESPONSE_NONE)
+                         | gCardNumberToId[CARD_D_D_SURVIVOR],
+                     0);
+}
+
+void DDSurvivorBanished(u16 cardId, int owner, int faceUp)
+{
+    if (!faceUp || ((const u16 *)CARD_ID_TO_NUMBER_ADDR)[cardId & CARD_ID_MASK] != CARD_D_D_SURVIVOR)
+        return;
+    if (gDuel.phase == PHASE_END)
+        QueueDDSurvivorTrigger(owner);
+    else if (gModDuel.ddSurvivorPending[owner & 1] < 5)
+        gModDuel.ddSurvivorPending[owner & 1]++;
+}
+
+void EndPhase_DDSurvivor(int turnPlayer)
+{
+    int pass, player, n;
+
+    for (pass = 0; pass <= 1; pass++) {
+        player = pass ? 1 - turnPlayer : turnPlayer;
+        for (n = gModDuel.ddSurvivorPending[player & 1]; n > 0; n--)
+            QueueDDSurvivorTrigger(player);
+        gModDuel.ddSurvivorPending[player & 1] = 0;
+    }
+}
+
+int EffectDDSurvivorPrepare(struct ChainEntry *card, struct ChainEntry *chainLink, u16 fromHand)
+{
+    return !fromHand && FindBanishedDDSurvivor(card->player) >= 0 && CountFreeMonsterZones(card->player) > 0
+           && CanSpecialSummon(card->player);
+}
+
+int EffectDDSurvivorResolve(struct ChainEntry *link, struct ChainEntry *chainedTo)
+{
+    struct DuelCard survivor;
+    int i;
+
+    if (link->negated || !EffectDDSurvivorPrepare(link, chainedTo, 0))
+        return EFFECT_STEP_DONE;
+    i = FindBanishedDDSurvivor(link->player);
+    survivor = gDuelPlayers[link->player & 1].banished[i];
+    RemoveBanishedCardAt(link->player, i);
+    QueueSpecialSummonChoosePosition(link->player, &survivor, 1, 0);
+    return EFFECT_STEP_DONE;
+}
+#endif /* HAS_CARD_D_D_SURVIVOR */
 
 #ifdef HAS_CARD_ABYSS_SOLDIER
 /* ---- Abyss Soldier -------------------------------------------------------------------------------------------------
@@ -10932,6 +11010,16 @@ const struct CardEffect gAddedCardEffects[] = {
         EffectManticoreResolve,
         NULL,
         EffectManticorePrepare,
+        NULL,
+        NULL,
+    },
+#endif
+#ifdef HAS_CARD_D_D_SURVIVOR
+    {
+        CARD_D_D_SURVIVOR, 0,
+        EffectDDSurvivorResolve,
+        NULL,
+        EffectDDSurvivorPrepare,
         NULL,
         NULL,
     },
