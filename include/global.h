@@ -103,6 +103,8 @@ int ModCardMenuDeckCycleCommand(u8 command, int dir, u16 available);
 void ModCardMenuDeckDrawIcons(int x, int y, u16 available, u8 command, u8 timer);
 void ModCardMenuDeckDrawLabel(int x, u16 available, u8 command);
 u16 ModCardMenuDeckCommands(int phase, int player);
+/* After CardListView_Open from the deck menu: close the menu and restore the duel cursor. */
+void ModCardMenuCloseForListView(void);
 
 /* Every card ID in name order, then 0 (card_data.h); the card-list builders walk it. */
 extern const u16 gCardIdsByName[];

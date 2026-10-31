@@ -330,7 +330,12 @@ int DuelScreen_HandleInput(void)
         return 0;
     case DUEL_AREA_FUSION_DECK:
     case DUEL_AREA_DECK:
-        if (player == 0 || ModDeckListVisible()) {
+        if (player != 0 && ModDeckListVisible()) {
+            CardListView_Open(player, area, 0, 0);
+            PlaySE(SE_CONFIRM);
+            return 1;
+        }
+        if (player == 0) {
             gDuelView.cardMenu.open = 1;
             gDuelView.cardMenu.state = 0;
             gDuelView.cardMenu.available = CardMenu_GetAvailableCommands();

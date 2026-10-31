@@ -671,11 +671,11 @@ void CardMenu_Update(void)
                 if (MENU.area == DUEL_AREA_FUSION_DECK) {
                     CardListView_Open(MENU.player, DUEL_AREA_FUSION_DECK, 0, 0);
                     PlaySE(SE_CONFIRM);
-                    MENU.state = CARDMENU_STATE_INPUT;
+                    ModCardMenuCloseForListView();
                 } else if (MENU.area == DUEL_AREA_DECK) {
                     CardListView_Open(MENU.player, DUEL_AREA_DECK, 0, 0);
                     PlaySE(SE_CONFIRM);
-                    MENU.state = CARDMENU_STATE_INPUT;
+                    ModCardMenuCloseForListView();
                 } else {
                     PlaySE(SE_CONFIRM);
                     MENU.confirmed = 0;

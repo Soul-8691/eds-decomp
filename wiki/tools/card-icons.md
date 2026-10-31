@@ -43,8 +43,12 @@ art. `make` builds the game's data with it (`--data`, below); `make card-icons` 
   0x1D8-0x22F, 0x28E-0x2FF. Called from `DrawZoneTiles` (face up) and `DrawAreaTiles` (Graveyard, banished).
 - **Redraws.** The battle scene clears char blocks 1-2 and BG palettes 4-15; every way back (`DuelScreen_Init`,
   from the battle scene, card detail and card list) reloads and redraws.
-- **Data.** `build/assets/field_icons.bin` (341,009 bytes: palette, 12 frames, 15x16 per card ID) through
-  `data/mod_field_icons_data.s` (`gModFieldIconData`, @rodata). Checked offline by rebuilding cells from it.
+- **Data.** `build/assets/field_icons.bin` (grows with `CARD_ID_COUNT`: palette, BG/OBJ frames, pose maps, 15×16
+  miniatures per card ID, then Deck Edit ring entries) through `data/mod_field_icons_data.s` (`gModFieldIconData`,
+  @rodata). The Makefile rebuilds it when `newcards__*.bin` changes, not only the newcards stamp.
+- **Stale blob.** If `field_icons.bin` is older than the card tables, `ModFieldCardTile` reads the wrong slice of
+  `gModFieldIconData` (wrong art on every face-up icon). Regenerate with `python3 tools/cardicons.py --data
+  build/assets/field_icons.bin` after `make` updates the card tables.
 - **Sprites.** The OBJ card icons get the art too (`ModAddCardSprite`, `ModAddAffineCardSprite`): the hand
   (`DrawHandCards`), the card menu's card (`CardMenu_DrawCardPreview`, including the turn-over frames), the deck
   reorder row (`DeckReorder_DrawCards` / `DrawSwap`), the change-position, flip and move animations, the

@@ -625,6 +625,7 @@ enum {
  */
 /* Mod (src/mod_opponents.c): an event's challenger is one of the unlocked formats. */
 u16 ModEventChallenger(void);
+void ModMatchClearOpponentDeck(void);   /* src/mod_decks.c */
 
 int Campaign_StartDay(void)
 {
@@ -652,6 +653,7 @@ int Campaign_StartDay(void)
         gMain.duelFormat = DUEL_FORMAT_SINGLE;
         gMain.matchDuelCount = 0;
         gMain.matchScore = 0;
+        ModMatchClearOpponentDeck();
         if (events & CAL_TOURNAMENT_ROUND1) {
             /* Championship rounds 1 to 3 and the final: an opponent of tier 1-4 (texts 201/203/205/207). */
             gMain.opponent = ModEventChallenger();     /* mod: was gTournamentOpponents[Random() % 5] */

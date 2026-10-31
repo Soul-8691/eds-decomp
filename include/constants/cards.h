@@ -990,12 +990,6 @@ enum CardNumber {
     /* ---- Added cards (config/new_cards.txt), written by tools/newcards.py ---- */
     /* ---- end of the added cards ---- */
     /* ---- Added cards (new_cards list), written by tools/newcards.py ---- */
-    /* ---- end of the added cards ---- */
-    /* ---- Added cards (new_cards list), written by tools/newcards.py ---- */
-    /* ---- end of the added cards ---- */
-    /* ---- Added cards (new_cards list), written by tools/newcards.py ---- */
-    /* ---- end of the added cards ---- */
-    /* ---- Added cards (new_cards list), written by tools/newcards.py ---- */
     CARD_4_STARRED_LADYBUG_OF_DOOM = 115,                 /* id 821, added card */
     CARD_ABYSS_SOLDIER = 143,                             /* id 822, added card */
     CARD_AIRKNIGHT_PARSHATH = 147,                        /* id 823, added card */

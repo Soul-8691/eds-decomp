@@ -38,6 +38,8 @@
 #include "global.h"
 #include "gba.h"
 #include "card_data.h"
+#include "duel.h"
+#include "duel_screen.h"
 #include "save.h"
 #include "campaign.h"
 #include "constants/cards.h"
@@ -474,6 +476,14 @@ u16 ModCardMenuDeckCommands(int phase, int deckPlayer)
     if (phase == PHASE_DRAW)
         return CARDMENU_MASK_DRAW | (ModDeckListVisible() ? CARDMENU_MASK_CARD_VIEW : 0);
     return CARDMENU_MASK_SURRENDER | (ModDeckListVisible() ? CARDMENU_MASK_CARD_VIEW : 0);
+}
+
+void ModCardMenuCloseForListView(void)
+{
+    gDuel.cardMenu.open = 0;
+    gDuel.cardMenu.state = 0;
+    gDuel.cardMenu.confirmed = 0;
+    gDuelScreen.showCursor = 1;
 }
 
 #define DECK_MENU_CMD_ORDER_COUNT 3

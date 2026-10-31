@@ -191,6 +191,7 @@ u16 Campaign_DecideTurnOrder(void)
  * Returns 1. */
 void ModMatchSavePlayerDeck(void);      /* mod: src/mod_decks.c */
 void ModMatchRestorePlayerDeck(void);
+void ModMatchClearOpponentDeck(void);
 
 u16 Campaign_SetupDuel(void)
 {
@@ -587,8 +588,12 @@ u16 Campaign_ShowDuelResult(void)
                 break;
             }
         }
-        if (matchDecided)
+        if (matchDecided) {
             ModMatchRestorePlayerDeck();    /* added: the match's Deck and Side Deck as they were before it */
+            ModMatchClearOpponentDeck();
+            gMain.matchDuelCount = 0;
+            gMain.matchScore = 0;
+        }
         if (!matchDecided && ModSkipsDuelDialogue(opp)) {
             /* added: no between-duels text; straight to the side-deck swap */
             RESET_SEQ_STATE();

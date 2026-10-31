@@ -2270,6 +2270,12 @@ updated: 2026-09-29
 ## [2026-10-31] setup | make demo is debug + demo list
 - Makefile: `make demo` passes `RELEASE=0` explicitly (testing ROM, root `new_cards.txt` above ------). [[release-build]]; README.md.
 
+## [2026-10-31] progress | Opponent deck list view fix
+- card_menu_input.c: opponent deck/fusion opens CardListView on A (no misplaced deck menu). campaign.c + mod_opponents.c: ModCardMenuCloseForListView after own deck Card View.
+
+## [2026-10-31] progress | Format opponent decks (HAS_CARD base-game guards)
+- tools/newcards.py: define HAS_CARD_* for base-game cards in mod_decks.c guards. mod_decks.c: GetOpponentDeckOverride cache fix; Test Duel empty list without MOD_TEST_DECK.
+
 ## [2026-10-31] progress | Opponent deck Card View menu
 - card_menu_input.c: opponent main/fusion deck opens command menu with Card View only; ModCardMenuDeckCommands(phase, player). README.md, [[yugi-kaiba-opponent]].
 
@@ -2290,3 +2296,6 @@ updated: 2026-09-29
 
 ## [2026-10-31] progress | Demo card-pool builds
 - Makefile: `make demo` / `make release-demo` (`NEWCARDS_PROFILE=demo`, `eds_demo.gba` / `eds_release_demo.gba`). tools/newcards.py: `NEW_CARDS_LIST`, stop at `------`, separate stamp. README.md, CLAUDE.md, [[release-build]]. Demo compile guards: mod_decks.c (Solemn Wishes side), added_effects.c (Gravekeeper's Spy, Dark Mimic LV helpers). new_cards.txt: BLS alias, `D.D. Survivor` spelling.
+
+## [2026-10-31] progress | Field card icon art stale blob
+- Wrong duel icons when `build/assets/field_icons.bin` lagged `newcards__stats.bin` (413 KiB vs 485 KiB for 1164 IDs). Makefile: `field_icons.bin` depends on the newcards table bins. [[card-icons]]. Rebuilt `eds.gba` and `eds_demo.gba`.

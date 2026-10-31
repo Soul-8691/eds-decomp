@@ -28,6 +28,8 @@
 #include "campaign.h"           /* gOpponentSelect, OPPSEL_STEP_*, OpponentSelect_*, unlock checks */
 #include "main_menu.h"          /* CB_MainMenu */
 
+void ModMatchClearOpponentDeck(void);   /* src/mod_decks.c */
+
 /* A scene step: returns nonzero when done, and the runner moves on to the next entry. */
 typedef u16 (*StepFunc)(void);
 
@@ -473,6 +475,8 @@ u16 OpponentSelect_HandleInput(void)
             if (BanlistBlocksDuel(PAGE_DUELIST(gOpponentSelect.page, gOpponentSelect.cursor)))
                 return 0;       /* mod: an illegal deck for this opponent's format: the warning opened */
             gMain.opponent = PAGE_DUELIST(gOpponentSelect.page, gOpponentSelect.cursor);
+            if (gMain.matchDuelCount == 0)
+                ModMatchClearOpponentDeck();
             PlaySE(SE_CONFIRM);
             return 1;
         }

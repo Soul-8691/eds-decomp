@@ -200,7 +200,10 @@ build/data/mod_format_pack_roulettes.o: $(FORMAT_PACK_ROULETTES_BIN)
 # The field card icons' palette, frames and art miniatures (tools/cardicons.py --data), for
 # data/mod_field_icons_data.s.
 FIELD_ICONS := build/assets/field_icons.bin
-$(FIELD_ICONS): $(NEWCARDS_BUILT) tools/cardicons.py tools/assets.py $(wildcard card_icons/*.png)
+NEWCARDS_TABLES := build/assets/newcards__stats.bin build/assets/newcards__art_gfx.bin \
+	build/assets/newcards__art_palettes.bin build/assets/newcards__id_to_number.bin \
+	build/assets/newcards__names.bin build/assets/gfx__bank_a.bin
+$(FIELD_ICONS): $(NEWCARDS_BUILT) $(NEWCARDS_TABLES) tools/cardicons.py tools/assets.py $(wildcard card_icons/*.png)
 	$(PYTHON) tools/cardicons.py --data $@
 build/data/mod_field_icons_data.o: $(FIELD_ICONS)
 

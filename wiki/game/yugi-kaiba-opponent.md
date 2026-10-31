@@ -120,8 +120,8 @@ Always open, with no format check:
       `IsHandRevealed` returns 1 (duel_piles.c), `CanDeckOut` is 0 for both players (duel_cmd_deck.c), Card View opens
       on the opponent's face-down cards (card_menu_input.c), and the info bar describes them.       `ModDeckListVisible`
       also lets the human open deck lists via **Card View**: their own main deck from the deck command menu
-      (`deck[0]` first = next draw, campaign.c), and the opponent's main or fusion deck pile (Card View only — no Draw
-      or Surrender — card_menu_input.c, `CardListView_Open`).
+      (`deck[0]` first = next draw, campaign.c), and the opponent's main or fusion deck pile on **A** (opens the list
+      directly, like the graveyard; card_menu_input.c, `CardListView_Open`).
       On your deck pile the command icons are ordered Draw, then Card View, then
       Surrender (`CardMenu_DrawIcons` / `CardMenu_Update`, campaign.c).
     - **The info bar moved.** Three checks in `DuelScreen_DrawCursorInfo` grew duel_info_bar.c by 0x90 bytes, which

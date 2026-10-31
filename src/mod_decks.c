@@ -2529,6 +2529,9 @@ static const struct DeckList *WarriorDeck(void)
 #include "test_deck.h"
 #if defined(MOD_TEST_DECK) && !MOD_RELEASE
 static const struct DeckList sTestDeckList = { sTestDeck, ARRAY_COUNT(sTestDeck), 0 };
+#elif !MOD_RELEASE
+static const u16 sEmptyTestDuelDeck[] = { };
+static const struct DeckList sEmptyTestDuelDeckList = { sEmptyTestDuelDeck, 0, 0 };
 #endif
 
 /* The deck of Solomon and Debug (Grandpa's and Pegasus' slots on the deck opponents' page, src/mod_opponents.c, in both
@@ -3778,9 +3781,13 @@ static const struct DeckList *PickOpponentDeckOverride(int opponent)
     case DUELIST_GRANDPA:               /* Solomon (make release too): the Deck Recipe the player picked or built */
     case DUELIST_PEGASUS:               /* Debug, the same */
         return gModOpponentRecipe.valid == MOD_OPPONENT_RECIPE_VALID ? &gModOpponentRecipe.list : NULL;
-#if defined(MOD_TEST_DECK) && !MOD_RELEASE
-    case DUELIST_DUEL_COMPUTER:         /* "Test Duel": test.ydk */
+#if !MOD_RELEASE
+    case DUELIST_DUEL_COMPUTER:         /* "Test Duel": test.ydk, or empty when none apply */
+#if defined(MOD_TEST_DECK)
         return &sTestDeckList;
+#else
+        return &sEmptyTestDuelDeckList;
+#endif
 #endif
     }
     return NULL;
@@ -4091,19 +4098,30 @@ extern struct ModMatch gModMatch;
 static int IsLaterMatchDuel(int opponent)
 {
     return gMain.duelFormat == DUEL_FORMAT_MATCH && gMain.matchDuelCount > 0 && gModMatch.deckValid == MOD_MATCH_VALID
-           && gModMatch.opponent == opponent;
+           && gModMatch.opponent == opponent && gModMatch.opponentDeck != NULL;
+}
+
+/* After a decided match or when a new opponent is chosen: drop the cached CPU deck (EWRAM is not cleared at boot). */
+void ModMatchClearOpponentDeck(void)
+{
+    gModMatch.opponentDeck = NULL;
+    gModMatch.deckValid = 0;
+    gModMatch.opponent = 0;
 }
 
 /* The replacement deck of opponent `opponent` (enum DuelistId), or NULL to keep the original: the same one for
  * every duel of a match (see above). */
 const struct DeckList *GetOpponentDeckOverride(int opponent)
 {
+    const struct DeckList *list;
+
     if (IsLaterMatchDuel(opponent))
         return gModMatch.opponentDeck;
-    gModMatch.opponentDeck = PickOpponentDeckOverride(opponent);
+    list = PickOpponentDeckOverride(opponent);
     gModMatch.opponent = opponent;
-    gModMatch.deckValid = MOD_MATCH_VALID;
-    return gModMatch.opponentDeck;
+    gModMatch.opponentDeck = list;
+    gModMatch.deckValid = list != NULL ? MOD_MATCH_VALID : 0;
+    return list;
 }
 
 /* Add `delta` copies of each card of `cards` to the saved Deck (side 0) or Side Deck (side 1) counters of the
