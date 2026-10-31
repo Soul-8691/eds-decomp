@@ -397,6 +397,12 @@ int ModRecipeBuildCopies(u16 duelist, int *limit)
     return SOLOMON_BUILD_COPIES;
 }
 
+/* CB_OpponentRecipes: 1 if the player also picks their own deck for the duel (Debug), the same way. */
+int ModOpponentPicksPlayerDeck(u16 duelist)
+{
+    return duelist == DUELIST_DEBUG;
+}
+
 /* The testing build's duel rules in a Campaign duel with Debug, in make release too: the opponent's hand is shown
  * (IsHandRevealed, duel_piles.c), its face-down cards can be read (duel_info_bar.c, card_menu_input.c), and the
  * player cannot deck out (duel_cmd_deck.c). Never in a Link Battle. */

@@ -278,10 +278,14 @@ s32 HalveRoundDown(s32 x)
     x += 4;
     return x / 10;
 }
+int ModRecipeBuilding(void);    /* mod (src/mod_decks.c): gSaveData holds a temporary collection */
+
 void SaveGame(void)
 {
     s32 i;
 
+    if (ModRecipeBuilding())    /* added: never save the temporary collection (Solomon's and Debug's decks) */
+        return;
     UpdateSaveChecksum();
     i = 0;
     do {

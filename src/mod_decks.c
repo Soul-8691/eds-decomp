@@ -2557,9 +2557,10 @@ void ModSetOpponentRecipe(const u16 *deck, int deckCount, const u16 *fusion, int
 /* Building the deck of Solomon or Debug (CB_OpponentRecipes, SELECT): the player's save is written to SRAM (SaveGame),
  * then gSaveData gets a temporary collection: `copies` of every card in the trunk (the cards of GiveStartingTrunk)
  * and empty decks, and GetBanlistCopyLimit gives `limit` for every card, ignoring the banlists (src/mod_banlists.c).
- * Deck Edit and the recipes then work on it as usual; nothing saves the game meanwhile. ModRecipeBuildEnd reads the
- * save back from SRAM, so the player's own collection, decks and banlist return as they were (a reset also finds them
- * there). */
+ * Deck Edit and the recipes then work on it as usual; SaveGame (main.c) writes nothing meanwhile. ModRecipeBuildEnd
+ * reads the collection back from SRAM, so the player's own cards, decks and banlist return as they were (a reset also
+ * finds them there). Against Debug the player's own deck comes from such a collection too (CB_OpponentRecipes): it
+ * stays for the whole match, and ModMatchRestorePlayerDeck ends it when the match is decided. */
 #define MOD_RECIPE_BUILDING     0x5B1D
 
 int ModRecipeBuilding(void)
@@ -2598,11 +2599,13 @@ void ModRecipeBuildBegin(int copies, int limit)
     gModOpponentRecipe.building = MOD_RECIPE_BUILDING;
 }
 
+/* Only the collection comes back from SRAM (the trunk, the three decks and the banlist: gSaveData +0x8 to +0x20D0), so
+ * what changed meanwhile (the duel records, the day of a duel with Debug) stays. */
 void ModRecipeBuildEnd(void)
 {
     if (!ModRecipeBuilding())
         return;
-    ReadSram((u8 *)SRAM, (u8 *)&gSaveData, sizeof(gSaveData));
+    ReadSram((u8 *)SRAM + 8, (u8 *)gSaveData.trunk, (u32)&gSaveData.duelRecords - (u32)gSaveData.trunk);
     gModOpponentRecipe.building = 0;
 }
 
@@ -3404,6 +3407,12 @@ void ModMatchSavePlayerDeck(void)
  * per-card Deck / Side Deck counters). */
 void ModMatchRestorePlayerDeck(void)
 {
+    if (ModRecipeBuilding()) {      /* a match with Debug: the player's own collection back, then the save */
+        gModMatch.playerValid = 0;
+        ModRecipeBuildEnd();
+        SaveGame();
+        return;
+    }
     if (gModMatch.playerValid != MOD_MATCH_VALID)
         return;
     gModMatch.playerValid = 0;

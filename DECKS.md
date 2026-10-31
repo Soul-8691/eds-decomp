@@ -2305,7 +2305,9 @@ The page after the formats. Solomon (top left) and Debug (top right) are in both
 Solomon and Debug: after you choose one, your Deck Recipes list opens. A on a recipe makes it their deck (Main and
 Fusion Deck; nothing of yours is loaded or changed), SELECT builds one in Deck Edit, and B goes back to the opponent
 select. A best-of-3 keeps the same deck. Their copy counts are kept as the deck has them, and beating them gives no
-DP. In a duel with Debug, as in debug mode, their hand is shown face up, you can read their face-down cards (info bar
+DP. Against Debug you first pick or build your own deck the same way (8 of every card, no copy limit), then
+Debug's; your real cards and decks are not touched, and your pick lasts the whole match. In a duel with Debug, as in
+debug mode, their hand is shown face up, you can read their face-down cards (info bar
 and Card View), and you can't deck out.
 
 The Chaos Turbo, Warrior and Goat Control deck opponents left this page on 2026-10-30; the Goat opponent plays their

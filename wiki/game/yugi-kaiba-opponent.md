@@ -123,6 +123,20 @@ Always open, with no format check:
       the size-limited `.text` (to 0x08080A20) could not take. The function moved to a new `@farcode` unit,
       src/mod_info_bar.c, written more compactly (one `ZoneCardShown` check and one `DrawPileLabel` helper). Release
       `.text` went from 0x0808098C to 0x080807D0. duel_info_bar already matched none of its 21 functions.
+  - **The player's deck against Debug (2026-10-30).** Before Debug's deck, the player picks their own the same way
+    (`ModOpponentPicksPlayerDeck`; `pickPlayer` in `gDeckRecipes`).
+    - **Picking your deck.** The scene's start calls `ModRecipeBuildBegin(8, 99)`. A on a recipe loads it into
+      that temporary collection (`SwitchTo`, no mark, no save). SELECT builds a deck (`playerBuilding`). B goes back
+      to the opponent select (`ModRecipeBuildEnd`). Every line says "Your deck" here, never "Debug's".
+    - **Picking Debug's deck.** `FinishPlayerPick` stashes the player's lists in `gModPlayerDeckStash` (EWRAM
+      0x0202F500, a `RecipeSlot`), empties the decks and starts the scene over ("Now pick Debug's deck.").
+      Debug's deck is then picked or built in the same collection (`opponentBuilding`). B there goes back to the
+      player's pick. `FinishOpponentPick` loads the stash back (`LoadBuf`).
+    - **The match.** The player's deck stays in the temporary collection for the whole match. `SaveGame` (main.c)
+      writes nothing while `ModRecipeBuilding()` is set. `ModMatchRestorePlayerDeck` ends the collection when the
+      match is decided, then saves. `ModRecipeBuildEnd` reads back only the collection (gSaveData +0x8 to +0x20D0:
+      trunk, decks, banlist), so the match's records and day count stay. Every match ends there (no early exit),
+      and a reset reloads the real save from SRAM.
   - **Building his deck (2026-10-30).** SELECT in the picker calls `ModRecipeBuildBegin` (mod_decks.c). It writes the save
     (`SaveGame`), then gives `gSaveData` a temporary collection: 3 of every card ID in the trunk (the cards of
     `GiveStartingTrunk`: no tokens, no unused IDs), the deck copy counters at 0, and empty decks. It also sets

@@ -2046,3 +2046,9 @@ updated: 2026-09-29
 
 ## [2026-10-30] progress | Recipe scene: messages name the opponent's deck while building
 - src/mod_recipes.c: AppendOwner. While the deck of Solomon or Debug is being built, the Load, Save and confirm messages say "<name>'s deck", not "your deck". A Load there always went into the opponent's deck; only the text was wrong (reported). [[yugi-kaiba-opponent]]. Built (make and make release); not tested in an emulator.
+
+## [2026-10-30] progress | Debug: the player picks their own deck first
+- src/mod_recipes.c: against Debug the scene first picks the player's deck (a recipe, or one built from 8 of every card with no copy limit) in a temporary collection, stashes it (gModPlayerDeckStash, symbols.ld 0x0202F500), then picks Debug's and puts the player's back (FinishPlayerPick / FinishOpponentPick, LoadBuf). While the player picks, the lines say "Your deck". src/mod_decks.c: ModRecipeBuildEnd restores only the collection; ModMatchRestorePlayerDeck ends the collection when the match is decided and saves. src/main.c: SaveGame writes nothing while a temporary collection is active. src/mod_opponents.c: ModOpponentPicksPlayerDeck. README, DECKS.md, [[yugi-kaiba-opponent]]. Release .text 0x080807D8. Built (make and make release); not tested in an emulator.
+
+## [2026-10-30] progress | Debug pick: state kept while the scene runs
+- src/mod_recipes.c: CB_OpponentRecipes cleared the pick state on every frame the scene was still running (RunScene returned 0), so the first redraw (a scroll) showed Debug's prompt while the player was picking their own deck (reported). It now returns at once on 0. Built (make and make release); not tested in an emulator.

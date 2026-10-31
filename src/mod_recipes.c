@@ -81,6 +81,7 @@ void ModRecipeBuildBegin(int copies, int limit);
 void ModRecipeBuildEnd(void);
 /* src/mod_opponents.c */
 int ModRecipeBuildCopies(u16 duelist, int *limit);
+int ModOpponentPicksPlayerDeck(u16 duelist);
 const u8 *ModOpponentSelectName(u16 duelist, const u8 *name);
 
 extern const u8 gMainMenuObjPal[], gMainMenuObjGfx[];
@@ -176,12 +177,23 @@ struct DeckRecipes {
                                      * Deck Edit */
     u8 opponentPick;                /* 1: CB_OpponentRecipes (A picks the deck of Solomon or Debug) */
     u8 picked;                      /* CB_OpponentRecipes: 1 when a recipe was picked, 0 when the player went back */
-    u8 opponentDeckEdit;            /* CB_OpponentRecipes: 1 while Deck Edit runs on the opponent's deck (0 again before
-                                     * the scene starts over) */
+    u8 restart;                     /* CB_OpponentRecipes: 1 to start the scene over for the next pick */
     struct LeftOut leftOut[LEFT_OUT_MAX];
     struct RecipeSlot buf;
+    /* CB_OpponentRecipes, kept while the scene starts over (after Deck Edit, or for the next pick): */
+    u8 opponentDeckEdit;            /* 1 while Deck Edit runs on the deck being built */
+    u8 pickPlayer;                  /* 1: against Debug, the player picks their own deck first (temporary collection) */
+    u8 playerBuilding;              /* pickPlayer: 1 while the player builds their deck (0: A on a recipe plays it) */
+    u8 playerPicked;                /* 1: the player's deck is picked (in gModPlayerDeckStash); now Debug's */
+    u8 opponentBuilding;            /* 1 while the player builds the opponent's deck (0: A on a recipe gives it) */
+    u8 pad[3];
 };
+#define DECK_RECIPES_KEPT   ((u32)&((struct DeckRecipes *)0)->opponentDeckEdit)    /* RunScene clears up to here */
 extern struct DeckRecipes gDeckRecipes;
+/* The player's deck against Debug while Debug's deck is picked (EWRAM 0x0202F500, symbols.ld: after
+ * gModOpponentRecipe, which ends by 0x0202F4B0). */
+extern struct RecipeSlot gModPlayerDeckStash;
+STATIC_ASSERT(sizeof(struct RecipeSlot) <= 0x100, PlayerDeckStashFits);
 STATIC_ASSERT(sizeof(struct DeckRecipes) <= 0x0202F000 - 0x0202E400, DeckRecipesFits);  /* before gPackShop */
 
 #define RECIPES_NORMAL          (-1)    /* RunScene's `format`: Deck Recipes from the main menu */
@@ -513,13 +525,28 @@ static int TakeFromTrunk(const u16 *ids, int n, void (*add)(u16), const u16 *siz
 
 /* Load recipe n as the player's deck (the recipe itself is not changed); returns the cards the trunk could not
  * give. */
+static int LoadBuf(void);
+
 static int SwitchTo(int n)
+{
+    int missing;
+
+    ReadSlot(n);
+    missing = LoadBuf();
+    if (!ModRecipeBuilding()) {    /* a temporary collection: the mark and the save are the player's own deck's */
+        SetActive(n);
+        SaveGame();
+    }
+    return missing;
+}
+
+/* buf as the current Deck, Side Deck and Fusion Deck (the cards come out of the trunk); returns the cards left out. */
+static int LoadBuf(void)
 {
     struct RecipeSlot *b = &gDeckRecipes.buf;
     int missing;
 
     ReturnDecksToTrunk();
-    ReadSlot(n);
     gDeckRecipes.leftOutCount = 0;
     gDeckRecipes.leftOutScroll = 0;
     missing = TakeFromTrunk(b->deck, b->used ? b->deckSize : 0, AddCardToSavedDeck, &gSaveData.deckSize,
@@ -528,10 +555,6 @@ static int SwitchTo(int n)
                              GetTrunkSideCopies, SIDE_DECK_MAX_CARDS);
     missing += TakeFromTrunk(b->fusion, b->used ? b->fusionSize : 0, AddCardToSavedFusionDeck,
                              &gSaveData.fusionDeckSize, GetTrunkFusionCopies, FUSION_DECK_MAX_CARDS);
-    if (!ModRecipeBuilding()) {    /* the opponent's deck: the mark and the save are the player's own deck's */
-        SetActive(n);
-        SaveGame();
-    }
     return missing;
 }
 
@@ -647,6 +670,7 @@ static const char sStrReplace[] = "A again: replace it with ";     /* then the o
 static const char sStrClearAsk[] = "A again: clear it.";
 static const char sStrSaved[] = " deck was saved as recipe ";    /* after the owner */
 static const char sStrDeckEnd[] = " deck.";
+static const char sStrDeckEndPossessive[] = "'s deck.";
 static const char sStrRenamed[] = " was renamed.";
 static const char sStrCleared[] = " was cleared.";
 static const char sStrIsEmpty[] = " is empty.";
@@ -659,10 +683,15 @@ static const char sStrOpponentHelp[] = " plays it   B: back";        /* after "A
 static const char sStrOpponentPrompt[] = "SELECT: build a deck (";      /* then "N of every card)." */
 static const char sStrOpponentPromptEnd[] = " of every card).";
 static const char sStrBuildHelp[] = "A: options  B: duel  SELECT: Deck Edit";
+static const char sStrPlayerHelp[] = "A: you play it   B: back";
+static const char sStrPlayerPrompt[] = "SELECT: build your deck (";
+static const char sStrPickPlayer[] = "First pick your own deck for the duel.";
+static const char sStrPickOpponent[] = "Now pick ";       /* then the name's " deck." */
+static const char sStrYour[] = "Your";
 static const char sStrBuildDeck[] = "'s deck: ";                       /* after the name */
 static const char sStrBuildDiscard[] = ". START: discard";
-static const char sStrBuildEmpty[] = "'s deck is empty. SELECT: Deck Edit.";
-static const char sStrBuildDiscarded[] = "'s deck was discarded.";
+static const char sStrBuildEmpty[] = " deck is empty. SELECT: Deck Edit.";      /* after the owner */
+static const char sStrBuildDiscarded[] = " deck was discarded.";               /* after the owner */
 static const char sStrNoBanlist[] = "none";
 static const char sStrChallengerFormat[] = "Challenger's format: ";
 static const char sStrChallengerBanlist[] = "Now using the ";
@@ -738,11 +767,17 @@ static const char *OpponentName(void)
     return (const char *)ModOpponentSelectName(gMain.opponent, (const u8 *)"");
 }
 
+/* 1 while the player builds the deck of Solomon or Debug (not their own deck against Debug). */
+static int BuildingOpponentDeck(void)
+{
+    return gDeckRecipes.opponentPick && !gDeckRecipes.pickPlayer && gDeckRecipes.opponentBuilding;
+}
+
 /* Whose deck the scene loads into and saves: "Your" ("your" unless `capital`), or "Solomon's" / "Debug's" while the
  * player builds the opponent's deck (CB_OpponentRecipes). Returns the end. */
 static char *AppendOwner(char *dst, int capital)
 {
-    if (ModRecipeBuilding())
+    if (BuildingOpponentDeck())
         return AppendStr(AppendStr(dst, OpponentName()), "'s");
     return AppendStr(dst, capital ? "Your" : "your");
 }
@@ -810,9 +845,17 @@ static void RenderList(void)
             x += gTextCanvas.right - x + 14;
         }
         DrawLine(ROWS_VISIBLE * ROW_HEIGHT + 10, COLOR_HELP, sStrMenuHelp);
-    } else if (s->opponentPick && ModRecipeBuilding()) {
+    } else if (s->opponentPick && s->pickPlayer && !s->playerBuilding) {
+        int limit;
+
+        DrawLine(ROWS_VISIBLE * ROW_HEIGHT, COLOR_HELP, sStrPlayerHelp);
+        p = AppendNum(AppendStr(line, sStrPlayerPrompt), ModRecipeBuildCopies(gMain.opponent, &limit), 1);
+        AppendStr(p, sStrOpponentPromptEnd);
+        DrawLine(ROWS_VISIBLE * ROW_HEIGHT + 10, COLOR_CURSOR, line);
+    } else if (s->opponentPick && (s->pickPlayer || s->opponentBuilding)) {
         DrawLine(ROWS_VISIBLE * ROW_HEIGHT, COLOR_HELP, sStrBuildHelp);
-        p = AppendNum(AppendStr(AppendStr(AppendStr(line, OpponentName()), sStrBuildDeck), "D"), gSaveData.deckSize, 1);
+        p = AppendStr(line, s->pickPlayer ? sStrYour : OpponentName());
+        p = AppendNum(AppendStr(AppendStr(p, s->pickPlayer ? " deck: " : sStrBuildDeck), "D"), gSaveData.deckSize, 1);
         p = AppendNum(AppendStr(p, " S"), gSaveData.sideDeckSize, 1);
         AppendStr(AppendNum(AppendStr(p, " F"), gSaveData.fusionDeckSize, 1), sStrBuildDiscard);
         DrawLine(ROWS_VISIBLE * ROW_HEIGHT + 10, COLOR_CURSOR, line);
@@ -1074,7 +1117,7 @@ static void DoAction(void)
         return;
     case ACTION_SAVE:
         if (!used) {
-            StartNameEntry(1, ModRecipeBuilding() ? OpponentName()
+            StartNameEntry(1, BuildingOpponentDeck() ? OpponentName()
                               : s->active < RECIPE_COUNT ? SlotName(s->active) : "");
             PlaySE(SE_CONFIRM);
             return;
@@ -1189,6 +1232,38 @@ static int ChallengerMayStart(void)
 #endif
 }
 
+/* Against Debug, the player's own deck is picked: it waits in gModPlayerDeckStash (the decks are emptied for Debug's,
+ * in the same temporary collection) and the scene starts over for Debug's deck. */
+static void FinishPlayerPick(void)
+{
+    struct DeckRecipes *s = &gDeckRecipes;
+
+    CurrentDeckToBuf("");
+    MemCopy16(&gModPlayerDeckStash, &s->buf, sizeof(s->buf));
+    ReturnDecksToTrunk();
+    s->pickPlayer = 0;
+    s->playerBuilding = 0;
+    s->playerPicked = 1;
+    s->restart = 1;
+}
+
+/* The opponent's deck is set (gModOpponentRecipe): the duel can start. Against Debug the player's deck comes back
+ * from gModPlayerDeckStash (it stays in the temporary collection for the match); for Solomon the player's own
+ * collection comes back. */
+static void FinishOpponentPick(void)
+{
+    struct DeckRecipes *s = &gDeckRecipes;
+
+    if (s->playerPicked) {
+        MemCopy16(&s->buf, &gModPlayerDeckStash, sizeof(s->buf));
+        LoadBuf();
+    } else {
+        ModRecipeBuildEnd();
+    }
+    s->opponentBuilding = 0;
+    s->picked = 1;
+}
+
 /* Returns 1 when the player leaves. */
 static int HandleInput(void)
 {
@@ -1220,18 +1295,49 @@ static int HandleInput(void)
         Render();
         return 0;
     }
-    if (s->opponentPick && ModRecipeBuilding()) {
-        /* building the opponent's deck: the list and the actions work on it, as in Deck Recipes */
-        if (keys & B_BUTTON) {
-            if (gSaveData.deckSize == 0) {
-                AppendStr(AppendStr(s->status, OpponentName()), sStrBuildEmpty);
+    if (s->opponentPick && s->pickPlayer && !s->playerBuilding) {
+        /* against Debug, the player's own deck first, in the temporary collection */
+        if (keys & SELECT_BUTTON) {
+            s->playerBuilding = 1;
+            s->deckEdit = 1;
+            PlaySE(SE_CONFIRM);
+            return 1;
+        }
+        if (keys & B_BUTTON) {      /* back to the opponent select */
+            ModRecipeBuildEnd();
+            PlaySE(SE_CANCEL);
+            return 1;
+        }
+        if (keys & A_BUTTON) {
+            if (!s->sizes[n][3] || s->sizes[n][0] == 0) {
+                AppendStr(StatusRecipe(n), sStrIsEmpty);
                 PlaySE(SE_ERROR);
                 Render();
                 return 0;
             }
-            ModSetOpponentRecipe(gSaveData.deck, gSaveData.deckSize, gSaveData.fusionDeck, gSaveData.fusionDeckSize);
-            ModRecipeBuildEnd();
-            s->picked = 1;
+            SwitchTo(n);            /* into the temporary collection: no mark, no save */
+            FinishPlayerPick();
+            PlaySE(SE_CONFIRM);
+            return 1;
+        }
+        keys &= DPAD_UP | DPAD_DOWN | L_BUTTON | R_BUTTON;     /* the list moves as usual */
+    } else if (s->opponentPick && (s->pickPlayer || s->opponentBuilding)) {
+        /* building the player's own deck against Debug, or the opponent's deck: the list and the actions work on it,
+         * as in Deck Recipes */
+        if (keys & B_BUTTON) {
+            if (gSaveData.deckSize == 0) {
+                AppendStr(AppendOwner(s->status, 1), sStrBuildEmpty);
+                PlaySE(SE_ERROR);
+                Render();
+                return 0;
+            }
+            if (s->pickPlayer) {
+                FinishPlayerPick();
+            } else {
+                ModSetOpponentRecipe(gSaveData.deck, gSaveData.deckSize, gSaveData.fusionDeck,
+                                     gSaveData.fusionDeckSize);
+                FinishOpponentPick();
+            }
             PlaySE(SE_CONFIRM);
             return 1;
         }
@@ -1241,8 +1347,18 @@ static int HandleInput(void)
             return 1;
         }
         if (keys & START_BUTTON) {
-            ModRecipeBuildEnd();
-            AppendStr(AppendStr(s->status, OpponentName()), sStrBuildDiscarded);
+            AppendOwner(s->status, 1);
+            if (s->pickPlayer) {
+                ReturnDecksToTrunk();       /* the temporary collection stays, for the pick */
+                s->playerBuilding = 0;
+            } else {
+                if (s->playerPicked)
+                    ReturnDecksToTrunk();   /* Debug: the collection stays for the player's deck */
+                else
+                    ModRecipeBuildEnd();
+                s->opponentBuilding = 0;
+            }
+            AppendStr(s->status, sStrBuildDiscarded);
             PlaySE(SE_CANCEL);
             Render();
             return 0;
@@ -1251,13 +1367,21 @@ static int HandleInput(void)
         if (keys & SELECT_BUTTON) {
             int copies, limit;
 
-            copies = ModRecipeBuildCopies(gMain.opponent, &limit);
-            ModRecipeBuildBegin(copies, limit);
+            if (!s->playerPicked) {     /* Solomon: a temporary collection (Debug's is already there) */
+                copies = ModRecipeBuildCopies(gMain.opponent, &limit);
+                ModRecipeBuildBegin(copies, limit);
+            }
+            s->opponentBuilding = 1;
             s->deckEdit = 1;
             PlaySE(SE_CONFIRM);
             return 1;
         }
         if (keys & B_BUTTON) {
+            if (s->playerPicked) {      /* Debug: back to the player's own deck */
+                s->playerPicked = 0;
+                s->pickPlayer = 1;
+                s->restart = 1;
+            }
             PlaySE(SE_CANCEL);
             return 1;
         }
@@ -1270,7 +1394,7 @@ static int HandleInput(void)
             }
             ReadSlot(n);
             ModSetOpponentRecipe(s->buf.deck, s->buf.deckSize, s->buf.fusion, s->buf.fusionSize);
-            s->picked = 1;
+            FinishOpponentPick();
             PlaySE(SE_CONFIRM);
             return 1;
         }
@@ -1348,7 +1472,7 @@ static u16 RunScene(int format)
             CopyDoubleWords((void *)OBJ_PLTT, gMainMenuObjPal, 0x20);
             LoadBgImage(0, 0, 0x20, gMainMenuSkyImage);
             DeckRecipes_BuildLabel((u16 *)OBJ_TILE(TITLE_TILE));
-            MemClear16(s, sizeof(*s) - sizeof(s->buf));
+            MemClear16(s, DECK_RECIPES_KEPT - sizeof(s->buf));
             s->opponentPick = format == RECIPES_PICK_OPPONENT;
             if (format >= 0) {
                 s->challenger = 1;
@@ -1359,6 +1483,20 @@ static u16 RunScene(int format)
                           sStrChallengerBanlistEnd);
             }
             LoadRecipes();
+            if (s->opponentPick && !s->pickPlayer && !s->playerPicked
+                && ModOpponentPicksPlayerDeck(gMain.opponent)) {
+                int copies, limit;
+
+                /* Debug: the player's own deck first, from a temporary collection like Debug's (the duel cannot change
+                 * the player's cards; SaveGame writes nothing until ModMatchRestorePlayerDeck ends it) */
+                copies = ModRecipeBuildCopies(gMain.opponent, &limit);
+                ModRecipeBuildBegin(copies, limit);
+                s->pickPlayer = 1;
+            }
+            if (s->opponentPick && s->pickPlayer && !s->playerBuilding)
+                AppendStr(s->status, sStrPickPlayer);
+            else if (s->opponentPick && s->playerPicked && !s->opponentBuilding)
+                AppendStr(AppendStr(AppendStr(s->status, sStrPickOpponent), OpponentName()), sStrDeckEndPossessive);
             s->cursor = s->active < RECIPE_COUNT ? s->active : 0;
             s->scroll = s->cursor >= ROWS_VISIBLE ? s->cursor - ROWS_VISIBLE / 2 : 0;
             if (s->scroll > RECIPE_COUNT - ROWS_VISIBLE)
@@ -1388,7 +1526,7 @@ static u16 RunScene(int format)
         if (!FadeToBlack(2))
             return 0;
         if (s->opponentPick)
-            return s->picked ? 1 : s->deckEdit ? 3 : 2;
+            return s->picked ? 1 : s->deckEdit ? 3 : s->restart ? 4 : 2;
         return s->challenger && s->deckEdit ? 2 : 1;
     }
 }
@@ -1398,9 +1536,9 @@ u16 CB_DeckRecipes(void)
     return RunScene(RECIPES_NORMAL);
 }
 
-/* Before a duel with Solomon or Debug: the player picks its deck from their Deck Recipes, or builds it in Deck Edit (run here,
- * so the Campaign step stays as it was). 1 when one was picked (the duel goes on), 2 when the player went back (to the
- * opponent select). */
+/* Before a duel with Solomon or Debug: the player picks its deck from their Deck Recipes, or builds it in Deck Edit (run
+ * here, so the Campaign step stays as it was); against Debug they first pick or build their own deck the same way. 1
+ * when the decks are picked (the duel goes on), 2 when the player went back (to the opponent select). */
 u16 CB_OpponentRecipes(void)
 {
     u16 r;
@@ -1413,11 +1551,20 @@ u16 CB_OpponentRecipes(void)
         return 0;
     }
     r = RunScene(RECIPES_PICK_OPPONENT);
-    if (r != 3)
-        return r;
-    gDeckRecipes.opponentDeckEdit = 1;       /* no SaveGame after it: the collection is the opponent's (src/mod_decks.c) */
-    RESET_SEQ_STATE();
-    return 0;
+    if (r == 0)
+        return 0;                               /* the scene is still running */
+    if (r == 3 || r == 4) {
+        gDeckRecipes.opponentDeckEdit = r == 3;  /* Deck Edit (no SaveGame after it: the collection is temporary) */
+        RESET_SEQ_STATE();                      /* then the scene again, or the next pick */
+        return 0;
+    }
+    /* the duel (1; against Debug the player's deck stays in the temporary collection until the match is decided), or
+     * back to the opponent select (2) */
+    gDeckRecipes.pickPlayer = 0;
+    gDeckRecipes.playerBuilding = 0;
+    gDeckRecipes.playerPicked = 0;
+    gDeckRecipes.opponentBuilding = 0;
+    return r;
 }
 
 /* Before a calendar event's duel with a format opponent: Deck Recipes for banlist `format` (see RunScene): 1 to go
