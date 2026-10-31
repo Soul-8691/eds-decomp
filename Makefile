@@ -179,7 +179,7 @@ TESTDECK_GEN := build/include/test_deck.h
 $(TESTDECK_GEN): tools/testdeck.py $(NEWCARDS_BUILT) FORCE
 	@mkdir -p $(@D)
 	@$(PYTHON) tools/testdeck.py "$(TEST_YDK)" $@
-build/src/mod_decks.o build/src/mod_opponents.o: $(TESTDECK_GEN)
+build/src/mod_decks.o build/src/mod_opponents.o: $(TESTDECK_GEN) $(NEWCARDS_GEN)
 
 # Password-machine card prices from the Yugi-Kaiba usage statistics (src/mod_dp.c).
 PRICES_GEN := build/include/card_prices.h

@@ -203,6 +203,11 @@ whose name plates and portraits are BG images (`Record_DrawPage`).
 - **Art decoding.** `gCardArtGfx` of the *built* ROM: 6 bits per pixel, a little-endian bit stream, 9 x 10 tiles of
   8 x 8, as `LoadCardPicture` and `UnpackCardArt8bpp` read it. The baserom's art at 0x082A6500 doesn't decode this
   way; the build re-packs the art.
+- **Card number -> ID.** `PortraitCardId` (src/mod_opponents.c) maps the portrait's card number through
+  `gCardNumberToId` (with the usual `CARD_ID_MASK` / alternate-art rule) before sampling art. `make demo` and
+  `make` assign different card **numbers** to the same added card (`tools/newcards.py`), so `mod_opponents.o` must
+  rebuild whenever `include/constants/cards.h` changes (Makefile: `NEWCARDS_GEN`). A stale object shows the wrong
+  card art (e.g. Mushroom Man instead of D.D. Warrior Lady).
 - **Colours.** The art's colours map to the nearest colour the page bitmap uses; colours with none close take
   palette entries the bitmap doesn't use. Page 0 has 27 free, page 4 18; later portraits share earlier ones'
   colours.

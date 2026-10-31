@@ -581,6 +581,16 @@ int ModOpponentFormat(u16 duelist)
 
 /* ---- Portraits ---- */
 
+/* Card number (enum CardNumber / portrait field) -> card ID for gCardArtGfx, as elsewhere in the decomp. */
+static inline u16 PortraitCardId(u16 number)
+{
+    if (number == 0 || number == 0xFFFF)
+        return 0;
+    if (number < CARD_NUMBER_ALT_ART)
+        return gCardNumberToId[number & CARD_ID_MASK];
+    return gCardNumberToId[(number - CARD_NUMBER_ALT_ART) & CARD_ID_MASK] + 1;
+}
+
 #define PORTRAIT_DX         31
 #define PORTRAIT_DY         33
 #define PORTRAIT_D2         (47 * 47)       /* (2 * radius)^2, in half pixels */
@@ -727,7 +737,11 @@ void ModOpponentSelectPortraits(int page)
         }
         if (PORTRAIT_IS_SLOT(o->portrait))
             DrawSlotPortrait(slot, o->portrait >> 4 & 7, o->portrait & 7, used);
-        else
-            DrawArtPortrait(slot, gCardNumberToId[o->portrait], used);
+        else {
+            u16 cardId = PortraitCardId(o->portrait);
+
+            if (cardId != 0)
+                DrawArtPortrait(slot, cardId, used);
+        }
     }
 }
