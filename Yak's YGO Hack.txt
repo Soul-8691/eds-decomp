@@ -27,3 +27,4 @@ Fix Flip Effect Monster AI
 Move hooks out of original units
 Move added card lists out of effect_target_collect.c
 Card priority orders
+CPU should always pick first
