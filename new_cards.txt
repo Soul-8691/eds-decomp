@@ -1,5 +1,5 @@
 Breaker the Magical Warrior
-Black Luster Soldier - Envoy of the Beginning
+Black Luster Soldier - Envoy of the Beginning | Black Luster Soldier - Envoy of Beginning
 Tribe-Infecting Virus
 Torrential Tribute
 D.D. Warrior Lady
@@ -130,8 +130,10 @@ Wave-Motion Cannon
 Chiron the Mage
 Manticore of Darkness
 Stealth Bird
-D.D Survivor
+D.D. Survivor
+Gravekeeper's Spy
 ------
+Solemn Wishes
 Mask of Restrict
 My Body as a Shield
 Big Bang Shot

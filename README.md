@@ -262,10 +262,11 @@ next one.
 
 ## How the new cards are added
 
-- **Coded cards.** Every card listed in [`new_cards.txt`](new_cards.txt) (in the repository root) is fully coded,
-  effects included.
-- **Card data.** New cards are listed by name in `config/new_cards.txt`. The build fetches each card's stats, text
-  and artwork from [YGOPRODeck](https://ygoprodeck.com/api-guide/) and appends it to the game's card tables
+- **Coded cards.** Every card listed in [`new_cards.txt`](new_cards.txt) above the `------` line is fully coded,
+  effects included; the lines below the separator are planned, not in the demo ROM yet.
+- **Card data.** `make` / `make release` use every name in `config/new_cards.txt`. `make demo` / `make release-demo`
+  use only the coded block at the top of repo-root `new_cards.txt`. The build fetches each card's stats, text and
+  artwork from [YGOPRODeck](https://ygoprodeck.com/api-guide/) and appends it to the game's card tables
   (`tools/newcards.py`).
 - **Effects.** Effects are written in C on top of the original duel engine, mostly in `src/added_effects.c`. Each
   card gets the same handlers the game's own cards use: activation check, cost, targeting, resolution. Small hooks
@@ -288,8 +289,10 @@ it is never included.
 ```
 (cd ../agbcc && ./build.sh)    # once: pret/agbcc checked out next to this repository
 make setup                     # once: put your ROM in roms/ and extract the game data
-make -j$(nproc)                # eds.gba: the debug/testing build
+make -j$(nproc)                # eds.gba: the debug/testing build (config/new_cards.txt)
 make -j$(nproc) release        # eds_release.gba: the release build
+make -j$(nproc) demo           # eds_demo.gba: debug build, cards in new_cards.txt above ------
+make -j$(nproc) release-demo   # eds_release_demo.gba: release build, same demo card pool
 ```
 
 You need `make`, `cpp`, `python3` and `binutils-arm-none-eabi`, plus network access the first time new cards are

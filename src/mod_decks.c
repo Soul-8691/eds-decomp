@@ -856,7 +856,12 @@ static const u16 sImperialTomatoControlSide[] = {
     X3(CARD_EXCHANGE),
     CARD_RUSH_RECKLESSLY,
     CARD_HEAVY_STORM,
+#if defined(HAS_CARD_SOLEMN_WISHES)
     X2(CARD_SOLEMN_WISHES),
+#else
+    CARD_MIRROR_FORCE,
+    CARD_WABOKU,
+#endif
     CARD_TRAP_HOLE,
     CARD_ACID_TRAP_HOLE,
     CARD_DUST_TORNADO,
@@ -909,7 +914,11 @@ static const u16 sImperialRelinquishedSide[] = {
     X2(CARD_NOBLEMAN_OF_CROSSOUT),
     CARD_CEASEFIRE,
     X3(CARD_DUST_TORNADO),
+#if defined(HAS_CARD_SOLEMN_WISHES)
     X3(CARD_SOLEMN_WISHES),
+#else
+    X3(CARD_SOLEMN_JUDGMENT),
+#endif
     X2(CARD_WABOKU),
 };
 STATIC_ASSERT(ARRAY_COUNT(sImperialRelinquishedSide) == 15, ImperialRelinquishedSideSize);

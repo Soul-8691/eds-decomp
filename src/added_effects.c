@@ -1284,7 +1284,7 @@ void ModDuelInit(void)
 }
 
 #if (defined(HAS_CARD_MYSTIC_SWORDSMAN_LV2) && defined(HAS_CARD_MYSTIC_SWORDSMAN_LV4)) \
-    || (defined(HAS_CARD_DARK_MIMIC_LV1) && defined(HAS_CARD_DARK_MIMIC_LV3))
+    || defined(HAS_CARD_DARK_MIMIC_LV1)
 /* ---- LV monsters: send this card to the GY, Special Summon the next level from the Deck or hand -------------------
  * Shared by Mystic Swordsman LV2 (asks the human first) and Dark Mimic LV1 (activated from the card menu, so it does
  * not ask). LevelUpResolve's steps: the card `from` must still be face up in link's zone and a `to` in the Deck or
@@ -7091,7 +7091,9 @@ static int IsSummoningTargetList(u16 cardNumber)
     case CARD_MYSTIC_TOMATO:
     case CARD_APPRENTICE_MAGICIAN:
     case CARD_PYRAMID_TURTLE:
+#ifdef HAS_CARD_GRAVEKEEPERS_SPY
     case CARD_GRAVEKEEPERS_SPY:
+#endif
     case CARD_CALL_OF_THE_HAUNTED:
     case CARD_THE_SHALLOW_GRAVE:
     case CARD_PREMATURE_BURIAL:

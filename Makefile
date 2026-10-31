@@ -53,7 +53,7 @@ UNITS    := $(shell sed -e 's/\#.*//' -e '/^[[:space:]]*$$/d' -e '/^@/d' units.t
 unit_obj  = $(if $(and $(wildcard src/$(1).c),$(if $(filter $(1),$(ASM_UNITS)),,y)),build/src/$(1).o,$(if $(wildcard src/$(1).s),build/srcasm/$(1).o,$(if $(wildcard asm/$(1).s),build/asm/$(1).o,build/data/$(1).o)))
 OBJS     := $(foreach u,$(UNITS),$(call unit_obj,$(u)))
 
-.PHONY: all release compare clean tidy objdiff-report setup agbcc card-icons FORCE
+.PHONY: all release demo release-demo compare clean tidy objdiff-report setup agbcc card-icons FORCE
 .SECONDARY:
 .DELETE_ON_ERROR:
 
@@ -61,6 +61,13 @@ all: $(ROM)
 
 release:
 	$(MAKE) RELEASE=1 all
+
+# Demo card pool: repo-root new_cards.txt above the ------ line (coded cards only), not config/new_cards.txt.
+demo:
+	$(MAKE) NEWCARDS_PROFILE=demo ROM=eds_demo.gba all
+
+release-demo:
+	$(MAKE) NEWCARDS_PROFILE=demo RELEASE=1 ROM=eds_release_demo.gba all
 
 # MOD_RELEASE for the C code, rewritten only when RELEASE changes (so a switch rebuilds what includes it).
 MOD_CONFIG := build/include/mod_config.h
@@ -92,7 +99,7 @@ $(CC1_INSTALLED):
 	chmod +x $(AGBCC_DIR)/bin/*
 
 clean:
-	rm -rf build eds.gba eds_release.gba
+	rm -rf build eds.gba eds_release.gba eds_demo.gba eds_release_demo.gba
 
 $(ROM): $(ELF)
 	$(OBJCOPY) -O binary -j .text -j .rodata -j .text.added -j .rodata.pinned -j .data --gap-fill 0 $< $@
@@ -142,10 +149,18 @@ build/assets/%.bin: ;
 # The added cards: their data is fetched once into assets/new_cards/, then appended to the card tables.
 # It also writes the card count (build/include/card_count.h/.inc) and the cards' constants in
 # include/constants/cards.h, only when they change; the empty rule makes make look at them again afterwards.
-NEWCARDS_BUILT := build/assets/.newcards
+# NEWCARDS_PROFILE=full (default) uses config/new_cards.txt; demo uses repo-root new_cards.txt above ------.
+NEWCARDS_PROFILE ?= full
+ifeq ($(NEWCARDS_PROFILE),demo)
+CARD_LIST      := new_cards.txt
+NEWCARDS_BUILT := build/assets/.newcards-demo
+else
+CARD_LIST      := config/new_cards.txt
+NEWCARDS_BUILT := build/assets/.newcards-full
+endif
 NEWCARDS_GEN   := build/include/card_count.h build/include/card_count.inc include/constants/cards.h
-$(NEWCARDS_BUILT): $(ASSETS_BUILT) config/new_cards.txt tools/newcards.py $(wildcard assets/new_cards/art/*.png)
-	$(PYTHON) tools/newcards.py build
+$(NEWCARDS_BUILT): $(ASSETS_BUILT) $(CARD_LIST) tools/newcards.py $(wildcard assets/new_cards/art/*.png)
+	NEW_CARDS_LIST=$(CARD_LIST) NEWCARDS_STAMP=$(NEWCARDS_BUILT) $(PYTHON) tools/newcards.py build
 $(NEWCARDS_GEN): $(NEWCARDS_BUILT) ;
 
 # The Deck Edit banlists (banlists/*_ban.json) that src/mod_banlists.c offers.

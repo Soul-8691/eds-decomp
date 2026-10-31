@@ -40,4 +40,12 @@ Both builds were checked in the preprocessed units:
 - no `GiveStartingTrunk` call;
 - `make` then switches back.
 
+## Demo card pool (`make demo` / `make release-demo`)
+
+Same testing vs release rules as above, but the added-card list is repo-root `new_cards.txt` only **above** the
+`------` separator (the cards with coded effects), not the full `config/new_cards.txt` pool. Outputs:
+`eds_demo.gba` and `eds_release_demo.gba`. The Makefile sets `NEWCARDS_PROFILE=demo` and passes
+`NEW_CARDS_LIST=new_cards.txt` to `tools/newcards.py`. Switching between a full and demo build re-runs the card
+tables (`build/assets/.newcards-full` vs `.newcards-demo`) and rebuilds C units that depend on `card_count.h`.
+
 Related: [[duelist-points]], [[yugi-kaiba-opponent]], [[banlists-menu]].
