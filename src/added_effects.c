@@ -4318,6 +4318,57 @@ int IsToonTableDeckTarget(u16 id)
 }
 #endif /* HAS_CARD_TOON_TABLE_OF_CONTENTS */
 
+#ifdef HAS_CARD_TOKEN_THANKSGIVING
+/* ---- Token Thanksgiving (YGOPRODeck id 57182235) -----------------------------------------------------------------
+ * Normal Spell: "Destroy all tokens on the field. Increase your Life Points by the number of tokens destroyed x 800
+ * points." No prepare: it may be activated with no tokens (0 LP). DestroyFieldCard runs Ojama Token's trigger.
+ * CPU: AiWantsTokenThanksgiving when any token is on the field. */
+
+#define TOKEN_THANKSGIVING_LP_PER_TOKEN 800
+
+static int TokenThanksgivingIsToken(u16 id)
+{
+    u16 number = CARD_NUMBER(id);
+
+    return (u16)(number - CARD_NUMBER_TOKEN_FIRST) < CARD_NUMBER_TOKEN_END - CARD_NUMBER_TOKEN_FIRST;
+}
+
+static int CountTokensOnField(void)
+{
+    int player, zone, n = 0;
+
+    for (player = 0; player <= 1; player++) {
+        for (zone = ZONE_MONSTER_0; zone <= ZONE_MONSTER_4; zone++) {
+            u16 id = DUEL_CARD_ID(&ZoneOf(player, zone)->card);
+
+            if (id != 0 && TokenThanksgivingIsToken(id))
+                n++;
+        }
+    }
+    return n;
+}
+
+int EffectTokenThanksgivingResolve(struct ChainEntry *link, struct ChainEntry *chainedTo)
+{
+    int player, zone, count;
+
+    if (link->negated)
+        return EFFECT_STEP_DONE;
+    count = CountTokensOnField();
+    for (player = 0; player <= 1; player++) {
+        for (zone = ZONE_MONSTER_0; zone <= ZONE_MONSTER_4; zone++) {
+            u16 id = DUEL_CARD_ID(&ZoneOf(player, zone)->card);
+
+            if (id != 0 && TokenThanksgivingIsToken(id))
+                DestroyFieldCard(player, zone, 1);
+        }
+    }
+    if (count > 0)
+        GainLifePoints(link->player, count * TOKEN_THANKSGIVING_LP_PER_TOKEN);
+    return EFFECT_STEP_DONE;
+}
+#endif /* HAS_CARD_TOKEN_THANKSGIVING */
+
 #ifdef HAS_CARD_CARD_DESTRUCTION
 /* ---- Card Destruction ----------------------------------------------------------------------------------------------
  * Normal Spell: "Both players discard as many cards as possible from their hands, then each player draws the same
@@ -8562,6 +8613,13 @@ static int AiWantsToonTableOfContents(void)
 }
 #endif /* HAS_CARD_TOON_TABLE_OF_CONTENTS */
 
+#ifdef HAS_CARD_TOKEN_THANKSGIVING
+static int AiWantsTokenThanksgiving(void)
+{
+    return CountTokensOnField() > 0;
+}
+#endif /* HAS_CARD_TOKEN_THANKSGIVING */
+
 /* Should the CPU play its added Magic card `number` in its Main Phase now? (AiTryPlaySpellTrap checks that it may.) */
 static int AiWantsSpell(u16 number)
 {
@@ -8585,6 +8643,10 @@ static int AiWantsSpell(u16 number)
 #ifdef HAS_CARD_TOON_TABLE_OF_CONTENTS
     case CARD_TOON_TABLE_OF_CONTENTS:
         return AiWantsToonTableOfContents();
+#endif
+#ifdef HAS_CARD_TOKEN_THANKSGIVING
+    case CARD_TOKEN_THANKSGIVING:
+        return AiWantsTokenThanksgiving();
 #endif
 #ifdef HAS_CARD_EMERGENCY_PROVISIONS
     case CARD_EMERGENCY_PROVISIONS:             /* only when low on LP */
@@ -9591,6 +9653,16 @@ const struct CardEffect gAddedCardEffects[] = {
     {
         CARD_TOON_TABLE_OF_CONTENTS, 0,
         (int (*)(struct ChainEntry *, struct ChainEntry *))EffectSanganResolve,
+        NULL,
+        NULL,
+        NULL,
+        NULL,
+    },
+#endif
+#ifdef HAS_CARD_TOKEN_THANKSGIVING
+    {
+        CARD_TOKEN_THANKSGIVING, 0,
+        EffectTokenThanksgivingResolve,
         NULL,
         NULL,
         NULL,

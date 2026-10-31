@@ -2041,6 +2041,9 @@ updated: 2026-09-29
 ## [2026-10-30] progress | Toon Cannon Soldier Normal Summon
 - Card text has no Special Summon requirement: `summon_action.c` consumes `normalSummonUsed` for Toon Cannon (other Toons still do not); `summon_builders.c` rejects `QueueSpecialSummonFromHand`; CPU `ai_strategy.c` uses `QueueNormalSummon`. [[added-cards]].
 
+## [2026-10-30] progress | Token Thanksgiving
+- src/added_effects.c: `EffectTokenThanksgivingResolve`, `gAddedCardEffects` row, `AiWantsTokenThanksgiving`. missing.txt, missing-main.txt. [[added-cards]]. Built (`make`); not tested in an emulator.
+
 ## [2026-10-30] progress | Toon Table of Contents
 - src/added_effects.c: `IsToonTableDeckTarget`, `AiWantsToonTableOfContents`, `gAddedCardEffects` row (`EffectSanganResolve`, no prepare). src/effect_target_collect.c: deck list, `skipToonFilter`. missing.txt, missing-main.txt. [[added-cards]]. Built (`make`); not tested in an emulator.
 

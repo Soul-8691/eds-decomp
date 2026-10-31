@@ -1963,6 +1963,14 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
   best stat is at least 1500.
 - Checked in the source and the build; not tested in an emulator.
 
+### Token Thanksgiving (2026-10-30)
+- Effect text from [YGOPRODeck](https://db.ygoprodeck.com/api/v7/cardinfo.php?name=Token%20Thanksgiving) (id
+  57182235): "Destroy all tokens on the field. Increase your Life Points by the number of tokens destroyed x 800
+  points." `EffectTokenThanksgivingResolve`: counts tokens on both sides (card numbers `1920`–`1999`), destroys each
+  with `DestroyFieldCard` (Ojama Token's 300 damage still runs), then `GainLifePoints` for the activator. No prepare
+  (empty field is legal). CPU `AiWantsTokenThanksgiving` when any token is on the field. `gAddedCardEffects` row.
+- Checked in the source and the build; not tested in an emulator.
+
 ### Toon Table of Contents (2026-10-30)
 - Effect text from [YGOPRODeck](https://db.ygoprodeck.com/api/v7/cardinfo.php?name=Toon%20Table%20of%20Contents) (id
   89997728): "Add 1 \"Toon\" card from your Deck to your hand." Normal Spell; `EffectSanganResolve` with
