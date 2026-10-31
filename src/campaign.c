@@ -658,6 +658,10 @@ void CardMenu_Update(void)
                     CardListView_Open(MENU.player, DUEL_AREA_FUSION_DECK, 0, 0);
                     PlaySE(SE_CONFIRM);
                     MENU.state = CARDMENU_STATE_INPUT;
+                } else if (MENU.area == DUEL_AREA_DECK) {
+                    CardListView_Open(MENU.player, DUEL_AREA_DECK, 0, 0);
+                    PlaySE(SE_CONFIRM);
+                    MENU.state = CARDMENU_STATE_INPUT;
                 } else {
                     PlaySE(SE_CONFIRM);
                     MENU.confirmed = 0;

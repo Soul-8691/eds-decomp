@@ -274,6 +274,8 @@ u16 CardMenu_GetAvailableCommands(void)
                 flags = CARDMENU_MASK_DRAW;
             else
                 flags = CARDMENU_MASK_SURRENDER;
+            if (ModDeckListVisible())
+                flags |= CARDMENU_MASK_CARD_VIEW;
             break;
         case DUEL_AREA_FUSION_DECK:
             if (GetFaceUpFieldMagicNumber() == CARD_1547) {

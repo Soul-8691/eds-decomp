@@ -92,6 +92,8 @@ u32 GetTrunkFusionCopies(u16 id);
 /* 1 in a Campaign duel with Debug (src/mod_opponents.c): the testing build's duel rules apply in make release too
  * (the opponent's hand and face-down cards shown, no deck-out). */
 int ModDebugDuel(void);
+/* 1 in make (testing) or ModDebugDuel: the human can Card View their main deck in draw order. */
+int ModDeckListVisible(void);
 
 /* Every card ID in name order, then 0 (card_data.h); the card-list builders walk it. */
 extern const u16 gCardIdsByName[];

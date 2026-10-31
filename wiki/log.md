@@ -2133,3 +2133,7 @@ updated: 2026-09-29
 ## [2026-10-31] progress | Different Dimension Capsule Standby to hand
 - src/added_effects.c: next own Standby returns the banished Capsule card via `DUEL_CMD_RETURN_BANISHED_CARD_TO_HAND`.
   [[added-cards]]. Built (`make`); not tested in an emulator.
+
+## [2026-10-31] progress | Debug deck list (draw order)
+- src/mod_opponents.c: `ModDeckListVisible` (make testing or `ModDebugDuel`). src/card_menu_input.c + src/campaign.c:
+  **Card View** on your main deck opens the list viewer in `deck[0]` order. [[yugi-kaiba-opponent]]. Built (`make`).

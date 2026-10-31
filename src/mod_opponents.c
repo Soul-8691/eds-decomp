@@ -414,11 +414,23 @@ int ModOpponentPicksPlayerDeck(u16 duelist)
 }
 
 /* The testing build's duel rules in a Campaign duel with Debug, in make release too: the opponent's hand is shown
- * (IsHandRevealed, duel_piles.c), its face-down cards can be read (duel_info_bar.c, card_menu_input.c), and the
+ * (IsHandRevealed, duel_piles.c), its face-down cards can be read (duel_info_bar.c, card_menu_input.c), the
+ * player can open their main deck in draw order (ModDeckListVisible, card_menu_input.c, campaign.c), and the
  * player cannot deck out (duel_cmd_deck.c). Never in a Link Battle. */
 int ModDebugDuel(void)
 {
     return gMain.opponent == DUELIST_DEBUG && !gDuelCtrl.isLinkDuel;
+}
+
+/* 1 if the human may open their main deck as a card list (deck[0] first = next draw). make (testing) and
+ * ModDebugDuel duels; never Link Battle. */
+int ModDeckListVisible(void)
+{
+#if !MOD_RELEASE
+    return !gDuelCtrl.isLinkDuel;
+#else
+    return ModDebugDuel();
+#endif
 }
 
 int ModOpponentFormat(u16 duelist)

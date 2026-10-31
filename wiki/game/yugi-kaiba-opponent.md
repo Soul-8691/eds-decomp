@@ -118,7 +118,9 @@ Always open, with no format check:
       `GetBanlistCopyLimit` returns `ModRecipeBuildLimit`). The recipe scene's lines use the opponent's name.
     - `ModDebugDuel` (gMain.opponent is Debug, not a Link Battle) turns on make's duel rules in make release too:
       `IsHandRevealed` returns 1 (duel_piles.c), `CanDeckOut` is 0 for the player (duel_cmd_deck.c), Card View opens
-      on the opponent's face-down cards (card_menu_input.c), and the info bar describes them.
+      on the opponent's face-down cards (card_menu_input.c), and the info bar describes them. `ModDeckListVisible`
+      also lets the human open **Card View** on their own main deck pile (`deck[0]` first = next draw;
+      `CardListView_Open`, campaign.c).
     - **The info bar moved.** Three checks in `DuelScreen_DrawCursorInfo` grew duel_info_bar.c by 0x90 bytes, which
       the size-limited `.text` (to 0x08080A20) could not take. The function moved to a new `@farcode` unit,
       src/mod_info_bar.c, written more compactly (one `ZoneCardShown` check and one `DrawPileLabel` helper). Release
