@@ -8,7 +8,10 @@ mGBA script: a Card View screenshot of every coded new card, saved as cards/<car
 Use a ROM built from the repo-root new_cards.txt (make demo, make release-demo, or a Demo patch) with a save that
 can open Deck Edit: the cards are the lines above "------", and they get card IDs 821, 822, ... in that order
 (tools/newcards.py). Each ID's name in the ROM (gCardNames) is checked against the list first, so another card
-pool stops the script.
+pool stops the script. After reordering new_cards.txt, rebuild the ROM before capturing.
+
+Optional cards/_capture_only.txt (one display name per line, before "|"): capture only those entries, then run
+tools/gen_new_cards_md.py to refresh NEW_CARDS.md.
 
 The script plays the game with key presses: A until the main menu, then Down, Down, A into Deck Edit. For each
 card it writes the card's ID into the list entry under the cursor (DeckEdit_GetListCard's cell), opens the
@@ -79,7 +82,7 @@ local function loadCards()
             if gameName == "" then
                 gameName = name
             end
-            cards[#cards + 1] = { name = name, gameName = gameName }
+            cards[#cards + 1] = { name = name, gameName = gameName, id = FIRST_ADDED_ID + #cards }
         end
     end
     f:close()
@@ -96,13 +99,46 @@ local function fileName(name)
     return (name:gsub('[<>:"/\\|%?%*]', "_")) .. ".png"
 end
 
-local cards = loadCards()
-if not cards then
+local allDemoCards = loadCards()
+if not allDemoCards then
     log("cannot read " .. root .. "/new_cards.txt")
     return
 end
-log(#cards .. " cards listed in new_cards.txt")
-local cardIdCount = FIRST_ADDED_ID + #cards
+local demoCardCount = #allDemoCards
+local cards = allDemoCards
+
+-- Optional cards/_capture_only.txt: one display name per line (from new_cards.txt, before |).
+-- When present, only those cards are captured (for new entries without re-shooting the whole list).
+local function loadCaptureOnly()
+    local f = io.open(outDir .. "/_capture_only.txt", "r")
+    if not f then
+        return nil
+    end
+    local set = {}
+    for line in f:lines() do
+        line = trim(line:gsub("\r", ""))
+        if line ~= "" and line:sub(1, 1) ~= "#" then
+            set[line] = true
+        end
+    end
+    f:close()
+    return set
+end
+
+local captureOnly = loadCaptureOnly()
+if captureOnly then
+    local filtered = {}
+    for _, c in ipairs(cards) do
+        if captureOnly[c.name] then
+            filtered[#filtered + 1] = c
+        end
+    end
+    log(string.format("capture filter: %d of %d cards", #filtered, demoCardCount))
+    cards = filtered
+end
+
+log(#cards .. " cards to capture")
+local cardIdCount = FIRST_ADDED_ID + demoCardCount
 local listRowSize = (cardIdCount + 80 + 15) * 2
 
 local function callback() return emu:read32(MAIN_CALLBACK) end
@@ -174,11 +210,10 @@ local function onFrame()
 
     if state == "check" then
         for k, c in ipairs(cards) do
-            local inRom = romCardName(FIRST_ADDED_ID + k - 1)
+            local inRom = romCardName(c.id)
             if inRom ~= c.gameName then
-                stop(string.format("card ID %d is \"%s\" in this ROM, but new_cards.txt line %d is \"%s\": "
-                    .. "load a ROM built from new_cards.txt (make demo)", FIRST_ADDED_ID + k - 1, inRom, k,
-                    c.gameName))
+                stop(string.format("card ID %d is \"%s\" in this ROM, but new_cards.txt entry \"%s\" expects \"%s\": "
+                    .. "load a ROM built from new_cards.txt (make demo)", c.id, inRom, c.name, c.gameName))
                 return
             end
         end
@@ -210,7 +245,7 @@ local function onFrame()
         if inListView() and timer > 20 then
             entryAddr = cursorEntry()
             entryOld = emu:read16(entryAddr)
-            emu:write16(entryAddr, FIRST_ADDED_ID + index - 1)
+            emu:write16(entryAddr, cards[index].id)
             press(KEY_A)
             goTo("menu")
         end

@@ -41,6 +41,5 @@ Make a note that these Fusion cards aren't coded in, yet, in the README:
 - Dark Flare Knight
 - Dark Paladin
 - Cyber Blader
-Add the 4 new cards to NEW_CARDS.md
-Update README
-Edit make setup to look in root for the baserom.
+Update README with changes since 2e6afec
+Edit make setup to look in root for the baserom

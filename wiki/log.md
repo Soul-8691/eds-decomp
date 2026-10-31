@@ -2310,6 +2310,9 @@ updated: 2026-09-29
 - `mod_format_packs.c` kept its list in `static` `.bss` (0xE99 bytes linked at `0x02000000`, over `gTextCanvas`), so the list's text overwrote the rows. The Campaign win list showed Vol.1 for every pack after the 32nd. The state is now `gModPackList` (EWRAM `0x0202F010`, symbols.ld), with one `PackInfo` filled on demand instead of a 50-entry table. No mod unit has `.bss` now. [[pack-shop]].
 - `tools/newcards.py`: `make` after `make demo` (or the reverse) linked the other card list, because both profiles share `build/assets/newcards__*` but keep separate stamps. Writing a stamp now deletes the other profile's stamp, and the stamp is always rewritten so its time changes. Checked with demo, make, release-demo, release, make: 14141100 / 13113164 bytes as expected. [[release-build]].
 
+## [2026-10-31] progress | NEW_CARDS.md: 17 screenshots, alphabetical reorder
+- mGBA `tools/card_screenshots.lua` (+ optional `cards/_capture_only.txt`); `tools/gen_new_cards_md.py`. 152 demo cards in `NEW_CARDS.md` matching `new_cards.txt`.
+
 ## [2026-10-31] progress | "New packs" notice for format pack unlocks
 - `Campaign_RecordDuelResult`: `ModCountUnlockedFormatPacks` before/after the duel (10-win usage packs, 20-win format TCG sets). [[pack-shop]].
 

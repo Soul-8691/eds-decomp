@@ -22,20 +22,27 @@ Cipher Soldier
 Cold Wave
 Compulsory Evacuation Device
 Creature Swap
+Cyber Blader
 Cyber Dragon
 Cyber End Dragon
 Cyber Twin Dragon
 D.D. Assailant
 D.D. Survivor
 D.D. Warrior Lady
+Dark Balter the Terrible
+Dark Blade the Dragon Knight
+Dark Flare Knight
 Dark Magician of Chaos
 Dark Mimic LV1
+Dark Paladin
 Dark Ruler Ha Des
 Dark Scorpion - Cliff the Trap Remover
 Dekoichi the Battlechanted Locomotive
 Des Koala
+Des Wombat
 Different Dimension Capsule
 Dimension Fusion
+Divine Wrath
 Don Zaloog
 Drillroid
 Emergency Provisions
@@ -44,7 +51,9 @@ Exarion Universe
 Exiled Force
 Fairy Box
 Fiber Jar
+Fiend Skull Dragon
 Final Attack Orders
+Gatling Dragon
 Gearfried the Iron Knight
 Gigantes
 Gilasaurus
@@ -60,10 +69,12 @@ Hydrogeddon
 Hysteric Fairy
 Injection Fairy Lily
 Jar of Greed
+King Dragun
 King Tiger Wanghu
 Kycoo the Ghost Destroyer
 Level Limit - Area B
 Lightning Vortex
+Limiter Removal
 Mage Power
 Magic Cylinder
 Magic Drain
@@ -71,7 +82,9 @@ Magical Merchant
 Magical Scientist
 Manticore of Darkness
 Marauding Captain
+Mask of Restrict
 Masked Dragon
+Master of Oz
 Metamorphosis
 Mind Control
 Mirage of Nightmare
@@ -83,6 +96,7 @@ Mystik Wok
 Newdoria
 Night Assailant
 Ninja Grandmaster Sasuke
+Ojama King
 Ojama Token
 Ojama Trio
 Phoenix Wing Wind Blast
@@ -91,12 +105,14 @@ Poison of the Old Man
 Pot of Avarice
 Pyramid Turtle
 Raigeki Break
+Reaper on the Nightmare
 Reasoning
 Reinforcement of the Army
 Return from the Different Dimension
 Roulette Barrel
 Royal Oppression
 Ryu Kokki
+Ryu Senshi
 Sacred Crane
 Sakuretsu Armor
 Sand Moth
@@ -114,6 +130,7 @@ Spell Canceller
 Spirit Reaper
 Stealth Bird
 The Fiend Megacyber
+The Last Warrior from Another Planet
 Thestalos the Firestorm Monarch
 Thousand-Eyes Idol
 Thousand-Eyes Restrict
@@ -133,23 +150,6 @@ Xing Zhen Hu
 Yata-Garasu
 Zaborg the Thunder Monarch
 Zombyra the Dark
-Dark Balter the Terrible
-Ryu Senshi
-Gatling Dragon
-Dark Blade the Dragon Knight
-Fiend Skull Dragon
-Reaper on the Nightmare
-The Last Warrior from Another Planet
-King Dragun
-Ojama King
-Master of Oz
-Dark Flare Knight
-Dark Paladin
-Cyber Blader
-Mask of Restrict
-Divine Wrath
-Des Wombat
-Limiter Removal
 ------
 My Body as a Shield
 Big Bang Shot
