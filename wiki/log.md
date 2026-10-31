@@ -2175,3 +2175,8 @@ updated: 2026-09-29
 - README.md **Smarter CPU → Card use**: Cold Wave lock respect, Standby activations (Dark Mimic LV1 and vanilla
   Standby monsters), Chiron the Mage, Wave-Motion Cannon ignition, Exarion Universe piercing. Matches [[added-cards]]
   CPU notes; Different Dimension Capsule omitted (no dedicated CPU policy).
+
+## [2026-10-31] progress | Code slack: password_trade moved to far code
+- The release build overlapped the pinned data at 0x08080A20 by 0x14C bytes (release .text 0x08080B6C after the Exarion Universe, Wave-Motion Cannon, Chiron the Mage and Draw-icon commits). `@farcode password_trade` (units.txt) moves that original unit (0xC8C bytes; 0/21 functions matched, so CI loses nothing) after the data: release .text 0x0807FEE0, 0xB40 bytes of slack.
+- Tried first: `@farcode coin_toss_scene` (0x101C bytes) also fits, but DuelScene_SkullDice stops matching in check.py (its bl out of the unit moves), which CI would count as a lost match.
+- Other candidates with no matched functions: duel_info_bar (0xCC8, 0/21). Moving a unit with matches costs those that call out of it.
