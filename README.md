@@ -71,7 +71,7 @@ next one.
 | 15 | Reaper | October 2005 |
 
 - **Decks.** Each format duelist picks one of 2-3 (sometimes more) strong decks from its format, at weighted
-  random. The first 14 duelists are fully coded. [DECKS.md](DECKS.md) lists every deck and its chance.
+  random. The first 15 duelists are fully coded. [DECKS.md](DECKS.md) lists every deck and its chance.
 - **Your deck.** It has to be legal in that format's banlist and card pool to duel them.
 - **Portraits.** Each duelist's portrait is its format's namesake card (or the Format Library picture when the
   format isn't named after a card).
@@ -82,7 +82,7 @@ next one.
   the Deck Recipes screen opens: load a recipe, press SELECT for Deck Edit, or B to duel. In the release, a deck that
   isn't legal in the format (or is under 40 cards) can't duel until you fix it.
 - **Deck Recipes.** Up to 50 saved decks. In the debug build (`make`), the first slots are premade staple decks of the
-  first fourteen formats (including Goat), named after their .ydk files; the release build starts with empty slots until
+  first fifteen formats (including Goat), named after their .ydk files; the release build starts with empty slots until
   you save your own. Loading a recipe takes the cards from your trunk; any you don't have are left out (the game tells
   you which, and why). Premade recipes include Side and Extra Decks from their .ydk files. The deck recipes will
   eventually include all 15 TCG formats in release too.
@@ -217,6 +217,18 @@ next one.
     - On its Standby Phase it activates face-up monsters with Standby effects on its own turn (Dark Mimic LV1's
       level-up, and the original game's Jigen Bakudan and similar cards), without waiting for you to move the cursor.
     - Its Chiron the Mage discards a Spell to destroy one of your Spells or Traps when it can, once per turn.
+    - Its Bazoo the Soul-Eater activates once per turn when it has monsters in its Graveyard, banishing its three
+      weakest (by ATK) for +300 ATK each until the end of your turn.
+    - Its Golem Sentry and Guardian Sphinx use their once-per-turn face-down effect in the Main Phase when you control
+      a monster, so their next Flip Summon can bounce yours.
+    - Its Stealth Bird uses its once-per-turn face-down effect in the Main Phase whenever the menu allows (including
+      while manual position changes are locked); its FLIP burn still triggers on Flip Summon and battle flips.
+    - At the End Phase, its Manticore of Darkness always Special Summons itself from the Graveyard when it was sent
+      there this turn and it can pay the cost: it sends its weakest Beast, Beast-Warrior, or Winged Beast from its
+      field or hand to the Graveyard.
+    - D.D. Survivor is mandatory: if a face-up copy is banished from the field or the Graveyard (including as Bazoo or
+      a Chaos summon cost), it Special Summons itself in that End Phase when there is a free zone; the CPU picks
+      Attack or Defense like any other Special Summon.
     - It Sets Wave-Motion Cannon from its hand and later ignites it after at least two of its Standby Phases have
       passed, or sooner when the burn would win the duel.
     - It pays Exarion Universe's ATK cost for piercing damage when its ATK minus 400 still beats your Defense Position
@@ -265,7 +277,7 @@ next one.
 ## Playing
 
 Ready-made IPS patches are in the [`patches/`](patches/) folder: a release build and a debug build (the demo, up to
-Cyber). Apply one to your own USA ROM of *The Eternal Duelist Soul* (AY5E) with any IPS patcher, or let an emulator
+Reaper). Apply one to your own USA ROM of *The Eternal Duelist Soul* (AY5E) with any IPS patcher, or let an emulator
 that auto-loads patches, such as mGBA, apply it.
 
 ## Building
