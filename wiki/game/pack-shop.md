@@ -4,7 +4,7 @@ type: game
 status: draft
 confidence: medium
 sources: [rom-analysis]
-updated: 2026-10-26
+updated: 2026-10-31
 ---
 # Booster Packs menu (mod)
 
@@ -17,9 +17,13 @@ on the game's own Get-a-pack screens. Checked in the source and the build; not t
     of the other labels, with 1-pixel gaps so the 95-pixel text leaves room for the icons (at most 96). It goes to
     OBJ tiles 0x240-0x27F.
 - **Scene.** `CB_PackShop` runs `CB_GetPack` (`gGetPackSteps`, as the Campaign rewards and the debug menu do) with
-  `gMain.rewardPack = 0`, so step 0 shows the pack list. The list holds only the unlocked packs
-  (`PackList_AddUnlockedPacks`, `IsPackUnlocked`). Then come the usual opening, the reveal and card detail, and the
-  cards go to the trunk.
+  `gMain.rewardPack = 0`, so step 0 shows the pack list. While the shop is open, `ModPackList_AddUnlockedPacks`
+  (`src/mod_format_packs.c`) lists the unlocked **format** packs (IDs 601–615, one per [[banlists]] entry), not the
+  vanilla `IsPackUnlocked` sets. Campaign and other Get-a-pack flows still call the vanilla list. Card pools and
+  inverse-usage weights come from `tools/format_packs.py` (same usage statistics and Limited/Semi-Limited factors as
+  [[duelist-points]] / `tools/cardprices.py`). Pack covers are rendered from each duelist's portrait card art at open
+  time (`ModFormatPackLoadCoverGfx`, uniform scale to fill 56×112). Then come the usual opening, the reveal and card
+  detail, and the cards go to the trunk.
 - **Added around the steps:**
   - **B on the list** (no slide running) fades out (`FadeToBlack(4)`, as `PackList_FadeOut`) and returns to the
     main menu.

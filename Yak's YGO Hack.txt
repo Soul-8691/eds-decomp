@@ -8,7 +8,7 @@ Duelist Point (DP) system
 Start out with 5000 DP
 Cards are from 5-3000 DP
 Buy packs with DP (all are 1000 DP at beginning)
-Packs are by attribute/race/spells/traps/ocg/tcg
+Packs are by attribute/race/spells/traps/ocg/tcg/usage
 Rank cards
 Price cards
 Price packs

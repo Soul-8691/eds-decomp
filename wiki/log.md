@@ -2176,6 +2176,22 @@ updated: 2026-09-29
   Standby monsters), Chiron the Mage, Wave-Motion Cannon ignition, Exarion Universe piercing. Matches [[added-cards]]
   CPU notes; Different Dimension Capsule omitted (no dedicated CPU policy).
 
+## [2026-10-31] progress | Format pack roulette 65536
+- tools/format_packs.py: `FORMAT_PACK_ROULETTE_SIZE` 65536 (was 512); tables in `build/assets/format_pack_roulettes.bin`
+  via data/mod_format_pack_roulettes.s. src/mod_format_packs.c: `RandomBelow` for index (15-bit `Random()`).
+  [[pack-shop]]. Built (`make`).
+
+## [2026-10-31] progress | Format pack RNG fix (Hitotsu-Me Giant)
+- src/mod_format_packs.c: precomputed roulette + distinct picks (replaced broken runtime `Random() % sum`).
+  [[pack-shop]].
+
+## [2026-10-31] progress | Format booster packs (15 formats)
+- tools/format_packs.py → build/include/format_pack_data.h: per-format card pools (card_pools + banlists), weights
+  inversely from usage/*.json with Limited ×3 and Semi-Limited ×1.5 on the usage score (as cardprices.py).
+- src/mod_format_packs.c: pack IDs 601–615, unlock with ModIsOpponentUnlocked, weighted five-card generation,
+  portrait pack icons (object-fit cover from 72×80 art into 56×112 8bpp tiles). Hooks in booster_pack.c,
+  booster_get_pack.c, deck_edit_panel.c, mod_packs.c. README.md, [[pack-shop]]. Built (`make`); not tested in an emulator.
+
 ## [2026-10-31] progress | Code slack: password_trade moved to far code
 - The release build overlapped the pinned data at 0x08080A20 by 0x14C bytes (release .text 0x08080B6C after the Exarion Universe, Wave-Motion Cannon, Chiron the Mage and Draw-icon commits). `@farcode password_trade` (units.txt) moves that original unit (0xC8C bytes; 0/21 functions matched, so CI loses nothing) after the data: release .text 0x0807FEE0, 0xB40 bytes of slack.
 - Tried first: `@farcode coin_toss_scene` (0x101C bytes) also fits, but DuelScene_SkullDice stops matching in check.py (its bl out of the unit moves), which CI would count as a lost match.

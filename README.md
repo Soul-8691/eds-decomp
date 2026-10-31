@@ -94,9 +94,11 @@ next one.
   - The card password machine now sells cards: it shows the price and asks before buying.
   - Prices run from 5 to 3000 DP, depending on how much the card is played in the furthest format you've unlocked.
   Cards not in the current furthest format you've unlocked are priced at 3000 DP. [CARD_PRICES.md](CARD_PRICES.md) lists each format's prices.
-- **Booster Packs** (main menu). Open any unlocked pack for 1000 DP each for now; prices will change in the release.
-  Packs will cover the TCG/OCG sets up to Reaper/Victory format, plus attribute/race/Spell/Trap packs once there are
-  enough cards.
+- **Booster Packs** (main menu). One pack per TCG format (Yugi-Kaiba through Reaper), unlocked with that format's
+  duelist. Each costs 1000 DP for now. Five cards per pack are drawn from the format's legal card pool with
+  inverse-usage weights (staples and Limited/Semi-Limited cards are harder to pull, using the same 3×/1.5× factors as
+  password prices). The pack icon is the format duelist's portrait card, zoomed to fill the cover without stretching.
+  Campaign rewards still use the original in-game booster sets.
   The screen that shows a pack's cards no longer has the scrolling patterned background (Campaign packs too).
 - **Card art in duels.** Face-up cards show a small picture of their artwork inside their icon: on the field
   (monsters, Spells/Traps, the Field zone, the top card of each Graveyard and banished pile), in your hand, in the

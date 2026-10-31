@@ -25,6 +25,7 @@
 #include "sound.h"                 /* PlaySE */
 #include "sprite.h"                 /* AddSprite */
 
+#include "format_packs.h"
 #include "booster.h"                /* struct PackOpenWork, PackListWork, StarterDeckSelectWork, PackInfo,
                                      * gPackOpenWork, gPackInfo, and the prototypes of the functions
                                      * defined here (plus GetPack_InitScene and the card_canvas.c helpers) */
@@ -776,6 +777,9 @@ void PackList_AddPack(u32 id) {
     u16 *cnt = &gSceneWork.packCount;
     u16 *list = cnt - 0x20;
     const struct PackInfo *row = gPackInfo;
+
+    if (ModPackList_AddFormatPackById((u16)id))
+        return;
     do {
         if (row->id == id) {
             list[*cnt] = i;
@@ -878,8 +882,13 @@ void PackList_SetCoverAlpha(u32 eva) {
 
 /* Copy the cover of pack `packId` into the tile buffer at slot `slot` (tile 0x10 + slot * 0x62). */
 void PackList_LoadCoverGfx(u16 slot, u16 packId) {
-    const u8 *src = GetPackCoverGfx(packId);
-    u16 tile = slot * 0x62;
+    const u8 *src;
+    u16 tile;
+
+    if (ModFormatPackLoadCoverGfx(slot, packId))
+        return;
+    src = GetPackCoverGfx(packId);
+    tile = slot * 0x62;
     tile += 0x10;
     if (src) {
         /* an SDK-style DMA macro (do { ... } while (0)) */
@@ -952,7 +961,7 @@ void PackList_DrawCovers(s32 arg) {
     packMainMaps.bgHofs1 = 0;
     cnt = &gPackListPackCount;   /* hoisted: the ROM rematerialises it in the loop */
     for (i = 0; i <= 2; i++) {
-        PackList_LoadCoverGfx(i, gPackInfo[gSceneWork.packRows[sel]].id);
+        PackList_LoadCoverGfx(i, ModGetSelectedPackId(gSceneWork.packRows[sel]));
         PackList_DrawCoverTiles(1, (u16)(i * 10 + 0x62), (u16)i);
         if (gSceneWork.centerSlot == i)
             PackList_DrawCoverTiles(4, (u16)(i * 10 + 0x62), (u16)i);

@@ -21,6 +21,7 @@
 #include "palette.h"
 #include "sound.h"
 #include "booster.h"
+#include "format_packs.h"
 #include "save.h"
 #include "constants/sound.h"
 
@@ -103,7 +104,14 @@ void PackShop_Start(void)
 /* The gPackInfo row of the pack in the list's centre slot. */
 static const struct PackInfo *CentrePack(void)
 {
-    return &gPackInfo[gSceneWork.packRows[(gSceneWork.firstIndex + gSceneWork.centerSlot) % gSceneWork.packCount]];
+    u16 row = gSceneWork.packRows[(gSceneWork.firstIndex + gSceneWork.centerSlot) % gSceneWork.packCount];
+
+    return ModPackInfoAtRow(row);
+}
+
+int ModPackShopIsOpen(void)
+{
+    return gPackShop.started && !gPackShop.leaving;
 }
 
 static u16 CentrePackId(void)
@@ -146,7 +154,7 @@ u16 CB_PackShop(void)
 
             s->restore = 0;
             for (r = 0; r < gSceneWork.packCount; r++) {
-                if (gPackInfo[gSceneWork.packRows[r]].id == s->lastPackId) {
+                if (ModPackInfoAtRow(gSceneWork.packRows[r])->id == s->lastPackId) {
                     gSceneWork.firstIndex = (r + gSceneWork.packCount - gSceneWork.centerSlot) % gSceneWork.packCount;
                     break;
                 }

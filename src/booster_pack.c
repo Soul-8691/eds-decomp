@@ -19,6 +19,7 @@
 #include "gba.h"                  /* REG_DISPCNT, REG_BG0CNT..REG_BG3CNT, REG_MOSAIC, REG_IE, REG_IME, OBJ_PLTT, BG_PLTT, VRAM, OBJ_VRAM0, A_BUTTON, B_BUTTON, DPAD_* */
 #include "main.h"                 /* struct Main, gMain */
 #include "booster.h"              /* struct PackSlots, struct PackOpenWork, struct PackInfo, struct PackContentsEntry, struct PackListWork, gPackOpenWork, gPackInfo, enum GetPackDetailState, enum PackRevealFrame, enum PackCursorAnim */
+#include "format_packs.h"
 #include "card_detail.h"          /* struct CardDetail, gCardDetail, CardDetail_Reset, CardDetail_InitVideo, CardDetail_DrawCard */
 #include "save.h"                 /* struct SaveData, gSaveData, SaveGame, AddCardToTrunk */
 #include "sound.h"                /* PlaySE */
@@ -261,6 +262,13 @@ int GeneratePackCards(u16 *cardNumbers, u16 packId)
     int commonSlot;
     int poolIndex;
 
+    if (FormatPackIndexFromId(packId) >= 0) {
+        int fmtSlot = ModGenerateFormatPackCards(cardNumbers, packId);
+
+        if (fmtSlot >= 0)
+            return fmtSlot;
+    }
+
     /* Each special case has its own tail; cross-jumping merges them after reload, which keeps the
      * reload-register rotation of the ROM. */
     switch (packId) {
@@ -368,7 +376,7 @@ int GetPack_SelectAndGenerate(void)
             SaveGame();
             return 1;
         }
-        PackList_AddUnlockedPacks();
+        ModPackList_AddUnlockedPacks();
         goto next;
     case 1:
         result = PackList_InitInt();
@@ -393,7 +401,7 @@ int GetPack_SelectAndGenerate(void)
         packInfo = gPackInfo;
         /* The ROM loads the table base before reading the selected index. */
         asm volatile ("" : : "r"(packInfo));
-        packId = packInfo[*index].id;
+        packId = ModGetSelectedPackId(*index);
         GeneratePackCards(cardNumbers, packId);
         SaveGame();
         return 1;

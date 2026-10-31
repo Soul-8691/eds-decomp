@@ -130,6 +130,8 @@ mod_recipes
 @farcode mod_recipes
 mod_packs
 @farcode mod_packs
+mod_format_packs
+@farcode mod_format_packs
 mod_dp
 @farcode mod_dp
 mod_banlists
@@ -160,6 +162,7 @@ rodata_08087FD0
 @rodata mod_banlist
 @rodata mod_recipes
 @rodata mod_packs
+@rodata mod_format_packs
 @rodata mod_dp
 @rodata mod_banlists
 @rodata mod_opponents
@@ -167,3 +170,5 @@ rodata_08087FD0
 @rodata mod_field_icons
 @rodata mod_info_bar
 @rodata mod_field_icons_data
+mod_format_pack_roulettes
+@rodata mod_format_pack_roulettes

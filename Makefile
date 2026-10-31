@@ -172,6 +172,14 @@ $(PRICES_GEN): tools/cardprices.py tools/banlist.py $(wildcard usage/*.json) $(w
 	$(PYTHON) tools/cardprices.py $@
 build/src/mod_dp.o: $(PRICES_GEN)
 
+FORMAT_PACKS_GEN := build/include/format_pack_data.h
+FORMAT_PACK_ROULETTES_BIN := build/assets/format_pack_roulettes.bin
+$(FORMAT_PACKS_GEN): tools/format_packs.py tools/cardprices.py tools/banlist.py $(wildcard usage/*.json) $(wildcard banlists/*_ban.json) $(wildcard card_pools/*.txt) $(NEWCARDS_BUILT)
+	@mkdir -p $(@D)
+	$(PYTHON) tools/format_packs.py $@
+build/src/mod_format_packs.o: $(FORMAT_PACKS_GEN)
+build/data/mod_format_pack_roulettes.o: $(FORMAT_PACK_ROULETTES_BIN)
+
 # The field card icons' palette, frames and art miniatures (tools/cardicons.py --data), for
 # data/mod_field_icons_data.s.
 FIELD_ICONS := build/assets/field_icons.bin

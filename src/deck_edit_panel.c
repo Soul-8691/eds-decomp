@@ -19,6 +19,7 @@
 #include "main.h"       /* struct Main gMain, newKeys, bgMapBuffer, bgHofs */
 #include "sound.h"                 /* PlaySE */
 #include "booster.h"                /* struct PackListWork, struct PackInfo gPackInfo, PackList_* prototypes */
+#include "format_packs.h"
 #include "deck_edit.h"              /* struct DeckEdit gDeckEdit, prototypes of the DeckEdit_* functions defined here */
 
 /* gSceneWork (0x02020310) under the pack-list view; the starter-deck screen uses the second view of
@@ -144,7 +145,7 @@ u16 PackList_HandleInput(void)
         gSceneWork.slideFrame = 8;
         gSceneWork.slideDir = 1;
         gSceneWork.slideTo = gSceneWork.slideFrom - 0x50;
-        PackList_LoadCoverGfx(3, gPackInfo[gSceneWork.packRows[(firstIndex + gSceneWork.packCount - 1) % gSceneWork.packCount]].id);
+        PackList_LoadCoverGfx(3, ModGetSelectedPackId(gSceneWork.packRows[(firstIndex + gSceneWork.packCount - 1) % gSceneWork.packCount]));
         zero = 0;
         dma = (vu32 *)&REG_DMA3SAD;
         dma[0] = (u32)&zero;
@@ -171,7 +172,7 @@ u16 PackList_HandleInput(void)
         gSceneWork.slideFrame = 8;
         gSceneWork.slideDir = 2;
         gSceneWork.slideTo = gSceneWork.slideFrom + 0x50;
-        PackList_LoadCoverGfx(3, gPackInfo[gSceneWork.packRows[(firstIndex + 3) % gSceneWork.packCount]].id);
+        PackList_LoadCoverGfx(3, ModGetSelectedPackId(gSceneWork.packRows[(firstIndex + 3) % gSceneWork.packCount]));
         zero = 0;
         dma = (vu32 *)&REG_DMA3SAD;
         dma[0] = (u32)&zero;
