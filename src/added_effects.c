@@ -7359,6 +7359,114 @@ int EffectMagicDrainResolve(struct ChainEntry *link, struct ChainEntry *chainedT
 }
 #endif /* HAS_CARD_MAGIC_DRAIN */
 
+#ifdef HAS_CARD_DIVINE_WRATH
+/* ---- Divine Wrath (YGOPRODeck id 49010598) -----------------------------------------------------------------------
+ * "When a monster effect is activated: Discard 1 card; negate the activation, and if you do, destroy that
+ * monster." Counter Trap (discard cost: DuelPrompt_PostDiscardCost, as Magic Jammer).
+ *   prepare   the opponent's activated monster effect (CHAIN_KIND_MONSTER, not a summon-only window); hand card
+ *             to discard
+ *   chainA    discard 1 card
+ *   resolve   DUEL_CMD_NEGATE_ACTIVATION, then DestroyFieldCard on the chained monster
+ *   CPU       AiChainDivineWrath (AiTryChainResponse); sets from hand when the human has a wide board */
+
+#define DIVINE_WRATH_PLAYER_CMD(player, cmd) ((player) ? (DUEL_CMD_PLAYER | (cmd)) : (cmd))
+
+int EffectDivineWrathPrepare(struct ChainEntry *card, struct ChainEntry *chainLink, u16 fromHand)
+{
+    u16 id;
+    int type;
+
+    if (fromHand || chainLink == NULL || chainLink->player == card->player)
+        return 0;
+    if (gDuelPlayers[card->player & 1].handCount == 0)
+        return 0;
+    if (chainLink->kind != CHAIN_KIND_MONSTER)
+        return 0;
+    switch (chainLink->event) {
+    case RESPONSE_SUMMONED:
+    case RESPONSE_FLIP_SUMMONED:
+    case RESPONSE_SPECIAL_SUMMONED:
+        return 0;
+    default:
+        break;
+    }
+    id = chainLink->card & CARD_ID_MASK;
+    type = CARD_STATS_TYPE(gCardStats[id]);
+    return type <= CARD_TYPE_REPTILE && chainLink->zone <= ZONE_MONSTER_4;
+}
+
+int EffectDivineWrathChainA(struct ChainEntry *link, struct ChainEntry *prevLink)
+{
+    (void)prevLink;
+    DuelPrompt_PostDiscardCost(link->player, 1, 0, 0);
+    return 1;
+}
+
+int EffectDivineWrathResolve(struct ChainEntry *link, struct ChainEntry *chainedTo)
+{
+    u16 id;
+    int type;
+    int zone;
+
+    if (link->negated || chainedTo == NULL)
+        return EFFECT_STEP_DONE;
+    id = chainedTo->card & CARD_ID_MASK;
+    type = CARD_STATS_TYPE(gCardStats[id]);
+    if (type > CARD_TYPE_REPTILE || chainedTo->kind != CHAIN_KIND_MONSTER)
+        return EFFECT_STEP_DONE;
+    zone = chainedTo->zone;
+    if (zone > ZONE_MONSTER_4 || DUEL_CARD_ID(&ZoneOf(chainedTo->player, zone)->card) == 0)
+        return EFFECT_STEP_DONE;
+    DuelCmd_Push(DIVINE_WRATH_PLAYER_CMD(link->player, DUEL_CMD_NEGATE_ACTIVATION), 1, 0, 0);
+    DestroyFieldCard(chainedTo->player, zone, 1);
+    return EFFECT_STEP_DONE;
+}
+
+static int AiWantsDivineWrathSet(void)
+{
+    return CountMonsters(AI_HUMAN) > 0 || gDuelPlayers[AI_HUMAN].handCount >= 5;
+}
+
+static int AiMonsterEffectWorthDivineWrath(u16 number)
+{
+    switch (number) {
+    case CARD_MAGICAL_SCIENTIST:
+    case CARD_MOBIUS_THE_FROST_MONARCH:
+    case CARD_BREAKER_THE_MAGICAL_WARRIOR:
+    case CARD_EXILED_FORCE:
+#ifdef HAS_CARD_TRIBE_INFECTING_VIRUS
+    case CARD_TRIBE_INFECTING_VIRUS:
+#endif
+#ifdef HAS_CARD_SPIRIT_REAPER
+    case CARD_SPIRIT_REAPER:
+#endif
+        return 1;
+    default:
+        return 0;
+    }
+}
+
+int AiChainDivineWrath(struct ChainEntry *entry)
+{
+    u32 type = CARD_STATS_TYPE(gCardStats[entry->card & CARD_ID_MASK]);
+    u16 number;
+
+    if (entry->player != AI_HUMAN || gDuelPlayers[AI_PLAYER].handCount == 0)
+        return 0;
+    if (type > CARD_TYPE_REPTILE || entry->kind != CHAIN_KIND_MONSTER)
+        return 0;
+    if (entry->event == RESPONSE_SUMMONED || entry->event == RESPONSE_FLIP_SUMMONED
+        || entry->event == RESPONSE_SPECIAL_SUMMONED)
+        return 0;
+    number = CardNumberOfId(entry->card);
+    if (AiMonsterEffectWorthDivineWrath(number))
+        return AiChainSetCard(entry, CARD_DIVINE_WRATH);
+    if (gDuelPlayers[AI_PLAYER].handCount >= 3)
+        return AiChainSetCard(entry, CARD_DIVINE_WRATH);
+    return 0;
+}
+#endif /* HAS_CARD_DIVINE_WRATH */
+
 #ifdef HAS_CARD_BLAST_WITH_CHAIN
 /* ---- Blast with Chain ---------------------------------------------------------------------------------------------
  * "Target 1 face-up monster you control; equip this card to that target. It gains 500 ATK. If this card is destroyed
@@ -10146,6 +10254,10 @@ int AiPlayAddedCards(void)
     if (AiWantsMaskOfRestrict() && AiTryPlaySpellTrap(CARD_MASK_OF_RESTRICT))
         return 1;
 #endif
+#ifdef HAS_CARD_DIVINE_WRATH
+    if (AiWantsDivineWrathSet() && AiTryPlaySpellTrap(CARD_DIVINE_WRATH))
+        return 1;
+#endif
 #ifdef HAS_CARD_FINAL_ATTACK_ORDERS
     if (AiTryPlaySpellTrap(CARD_FINAL_ATTACK_ORDERS))
         return 1;
@@ -10342,6 +10454,10 @@ int AiShouldActivateAddedCard(struct ChainEntry *entry)
             theirs = CountFreeMonsterZones(1 - AI_PLAYER);
         return mine >= 2 && mine > theirs && gDuelPlayers[AI_PLAYER].lifePoints > 3000;
     }
+#endif
+#ifdef HAS_CARD_DIVINE_WRATH
+    case CARD_DIVINE_WRATH:                     /* only chained (AiChainDivineWrath), not flipped blindly */
+        return 0;
 #endif
 #ifdef HAS_CARD_ROYAL_OPPRESSION
     case CARD_ROYAL_OPPRESSION: {
@@ -11143,6 +11259,16 @@ const struct CardEffect gAddedCardEffects[] = {
         NULL,
         EffectMagicDrainPrepare,
         NULL,
+        NULL,
+    },
+#endif
+#ifdef HAS_CARD_DIVINE_WRATH
+    {
+        CARD_DIVINE_WRATH, 0,
+        EffectDivineWrathResolve,
+        NULL,
+        EffectDivineWrathPrepare,
+        EffectDivineWrathChainA,
         NULL,
     },
 #endif

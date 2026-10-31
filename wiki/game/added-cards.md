@@ -2303,6 +2303,16 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
   copy whenever it may (`AiPlayAddedCards`, `AiShouldActivateAddedCard` default).
 - Checked in the source and the build; not tested in an emulator.
 
+### Divine Wrath (2026-10-31)
+- Effect text from [YGOPRODeck](https://db.ygoprodeck.com/api/v7/cardinfo.php?name=Divine%20Wrath) (id 49010598):
+  "When a monster effect is activated: Discard 1 card; negate the activation, and if you do, destroy that
+  monster." Counter Trap. `EffectDivineWrathPrepare` (opponent's `CHAIN_KIND_MONSTER` effect, not a summon-only
+  window; discard cost requires a hand card), `EffectDivineWrathChainA` (`DuelPrompt_PostDiscardCost`),
+  `EffectDivineWrathResolve` (`DUEL_CMD_NEGATE_ACTIVATION`, then `DestroyFieldCard` on the chained monster).
+  CPU: `AiChainDivineWrath` (`AiTryChainResponse`); sets from hand with `AiWantsDivineWrathSet`; does not
+  blind-flip (`AiShouldActivateAddedCard` returns 0).
+- Built; not tested in an emulator.
+
 ### Mask of Restrict (2026-10-31)
 - Effect text from [YGOPRODeck](https://db.ygoprodeck.com/api/v7/cardinfo.php?name=Mask%20of%20Restrict) (id 100100):
   "Neither player can Tribute cards." Continuous Trap; `EffectMaskOfRestrictResolve` is a no-op. Face-up copies on

@@ -587,6 +587,10 @@ int AiTryChainResponse(struct ChainEntry *entry)
      * chain, so the mask, switch value and table base get r1/r2/r3 as in the ROM. */
     if (AiChainSummonTriggerResponse(entry))    /* added */
         return 1;
+#ifdef HAS_CARD_DIVINE_WRATH
+    if (AiChainDivineWrath(entry))
+        return 1;
+#endif
     m = CARD_ID_MASK;
     number = ((const u16 *)CARD_ID_TO_NUMBER_ADDR)[entry->card & m];
     switch (number) {

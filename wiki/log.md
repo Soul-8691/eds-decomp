@@ -2313,6 +2313,9 @@ updated: 2026-09-29
 ## [2026-10-31] progress | Field icon art after make demo then make
 - Wrong card-art miniatures on `eds.gba` after fixing demo portraits: `make demo` then plain `make` can leave `mod_field_icons.o` compiled with the demo `CARD_ID_COUNT` while `field_icons.bin` and `gModFieldIconData` are full-pool (or the reverse). Makefile: `mod_field_icons.o` and `mod_field_icons_data.o` depend on `NEWCARDS_GEN` and `FIELD_ICONS`. [[card-icons]].
 
+## [2026-10-31] progress | Divine Wrath effect and AI
+- `EffectDivineWrathPrepare` / `ChainA` / `Resolve`, `AiChainDivineWrath`, `AiWantsDivineWrathSet`. [[added-cards]].
+
 ## [2026-10-31] progress | Mask of Restrict effect and AI
 - `IsTributeLockActive` wires added `CARD_MASK_OF_RESTRICT` into every former `CARD_1418` tribute lock check; `EffectMaskOfRestrictResolve`, `AiWantsMaskOfRestrict`. [[added-cards]].
 

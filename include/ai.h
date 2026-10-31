@@ -289,6 +289,8 @@ u16 AiChainSetCard(struct ChainEntry *entry, int number);
 /* CPU answer to the chain link entry (White Hole against Dark Hole, Magic Jammer, ...); 1 if it chained a
  * set card. */
 int AiTryChainResponse(struct ChainEntry *entry);
+/* Chain a Set Divine Wrath to the human's Spell/Trap/monster effect activation (src/added_effects.c). */
+int AiChainDivineWrath(struct ChainEntry *entry);
 
 /* --- Summons and tributes ------------------------------------------------------------------------------- */
 

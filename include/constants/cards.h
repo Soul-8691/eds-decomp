@@ -1125,6 +1125,7 @@ enum CardNumber {
     CARD_DARK_PALADIN = 823,                              /* id 967, added card */
     CARD_CYBER_BLADER = 824,                              /* id 968, added card */
     CARD_MASK_OF_RESTRICT = 825,                          /* id 969, added card */
+    CARD_DIVINE_WRATH = 826,                              /* id 970, added card */
     CARD_MAGIC_CYLINDER = 1214,                           /* id 888, added card */
     CARD_SOUL_EXCHANGE = 1220,                            /* id 931, added card */
     CARD_THOUSAND_EYES_IDOL = 1333,                       /* id 938, added card */
