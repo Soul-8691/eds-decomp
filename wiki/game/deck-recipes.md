@@ -4,7 +4,7 @@ type: game
 status: draft
 confidence: medium
 sources: [rom-analysis]
-updated: 2026-10-30
+updated: 2026-10-31
 ---
 # Deck Recipes (mod)
 
@@ -27,7 +27,7 @@ An eighth main-menu item added by this build (`src/mod_recipes.c`, a `@farcode`/
 
 ## Preset recipes
 In **`make`** (`MOD_RELEASE` 0) only, the SRAM area is set up on the first visit (and after a New Game) with recipes
-01-39 from `GetRecipePreset` (src/mod_decks.c). **`make release`** leaves every slot empty until the player saves a
+01-44 from `GetRecipePreset` (src/mod_decks.c) when every Reaper deck card is in the build. **`make release`** leaves every slot empty until the player saves a
 deck (`GetRecipePreset` returns 0). These are the
 mod's deck tables, named after their .ydk files. Every preset carries the .ydk's Side Deck too (`s<Deck>Side`,
 passed by `GetRecipePreset` and put in the recipe's side list by `PresetToBuf`) and has its .ydk's Extra Deck as
@@ -78,10 +78,10 @@ Control's Side Deck (4-Starred Ladybug of Doom is an added card now, [[added-car
 | 37 | paede17-Reasoning Gate Turbo | the Goat opponent (5%) |
 | 38 | Brian Long-Goat Control | the Cyber opponent (50%) |
 | 39 | splevin-Stein Monarch | the Cyber opponent (50%) |
-| 40 | splevin-Stein Monarch | the Reaper opponent (40%) |
-| 41 | sdlkilla-Warrior | the Reaper opponent (20%) |
+| 40 | Jazz-Stein Monarch | the Reaper opponent (40%) |
+| 41 | tobitomatenkopf-Warrior | the Reaper opponent (20%) |
 | 42 | brahimpoke-Bazoo Return | the Reaper opponent (15%) |
-| 43 | ellietincan-Chaos Control | the Reaper opponent (15%) |
+| 43 | jcvd93-Chaos Control | the Reaper opponent (15%) |
 | 44 | Roland Gress-Tomato Control | the Reaper opponent (10%) |
 
 "ellietincan-Warrior Tomato Control" is 34 characters, so the slot stores the first 31 (`RECIPE_NAME_SIZE` 32), and

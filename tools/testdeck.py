@@ -24,6 +24,8 @@ ALIASES = {
     70095154: 'Cyber Dragon',
     1546123: 'Cyber End Dragon',
     23995346: 'Manticore of Darkness',  # YGOPRODeck .ydk id (in-game passcode 77121851)
+    10248389: 'Cyber Blader',
+    86099788: 'The Last Warrior from Another Planet',
 }
 MAIN_MAX = 60
 EXTRA_MAX = 20

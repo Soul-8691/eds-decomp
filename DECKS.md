@@ -2300,9 +2300,10 @@ The Last Warrior from Another Planet, King Dragun, Master of Oz, and Ojama King.
 
 ### 15. Reaper (Yami Yugi)
 
-40% **splevin-Stein Monarch**, 20% **sdlkilla-Warrior**, 15% **brahimpoke-Bazoo Return**, 15%
-**ellietincan-Chaos Control**, 10% **Roland Gress-Tomato Control** (main, fusion and side decks match the `.ydk`
-files). Deck Recipe presets 40–44 (after the Cyber presets). **Manticore of Darkness** was added to
+40% **Jazz-Stein Monarch** (`decks/Jazz-Stein Monarch.ydk`), 20% **tobitomatenkopf-Warrior**
+(`decks/tobitomatenkopf-Warrior.ydk`), 15% **brahimpoke-Bazoo Return**, 15% **jcvd93-Chaos Control**
+(`decks/jcvd93-Chaos Control.ydk`), 10% **Roland Gress-Tomato Control** (main, fusion and side decks match the
+`.ydk` files). Deck Recipe presets 40–44. **Cyber Blader** and **Manticore of Darkness** were added to
 `config/new_cards.txt` for Bazoo Return's Extra Deck (YGOPRODeck id `23995346` aliases to passcode `77121851` in
 `tools/testdeck.py` / `tools/deckgen.py`).
 

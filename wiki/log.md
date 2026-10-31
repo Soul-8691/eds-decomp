@@ -2225,5 +2225,11 @@ updated: 2026-09-29
 ## [2026-10-31] progress | Usage packs: stats-only card pools
 - tools/format_packs.py: `usage_card_numbers()`; usage packs no longer union `card_pools/*.txt` or default-weight pool-only cards. Regenerated `build/include/format_pack_data.h`. [[pack-shop]].
 
+## [2026-10-31] progress | Reaper decks: latest five .ydk lists
+- Reaper opponent + presets 40-44 now use Jazz-Stein Monarch, tobitomatenkopf-Warrior, brahimpoke-Bazoo Return, jcvd93-Chaos Control, Roland Gress-Tomato Control (regenerated from decks/*.ydk). config/new_cards.txt Cyber Blader; tools/deckgen.py resolves base-game passcodes via assets/cards/passwords.csv. DECKS.md, [[deck-recipes]].
+
+## [2026-10-31] progress | Reaper Deck Recipe presets compile
+- src/mod_decks.c: MOD_REAPER_BAZOO_RETURN / MOD_REAPER_TOMATO_CONTROL guards used HAS_CARD for base-game cards (never defined in card_count.h), so presets 40-44 and ReaperDeck were omitted; guards now match other opponents (added cards only). [[deck-recipes]].
+
 ## [2026-10-31] progress | Manticore of Darkness effect
 - src/added_effects.c: End Phase optional revival (GY send mark, Beast/Beast-Warrior/Winged Beast cost, Special Summon from GY); gAddedCardEffects row; ModCollectEffectTargets hand list. Hooks in duel_send_to_grave.c, duel_field_moves.c; battle_phase3.c EndPhase_ManticoreOfDarkness. include/effect.h. Removed from missing-fusion.txt (misfiled).

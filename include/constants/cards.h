@@ -1328,7 +1328,8 @@ enum CardNumber {
     CARD_MIRAGE_OF_NIGHTMARE = 1600,                      /* id 1159, added card */
     CARD_SASUKE_SAMURAI = 1601,                           /* id 1160, added card */
     CARD_MANTICORE_OF_DARKNESS = 1602,                    /* id 1161, added card */
-    CARD_OJAMA_TOKEN = 1921,                              /* id 1162, added card */
+    CARD_CYBER_BLADER = 1603,                             /* id 1162, added card */
+    CARD_OJAMA_TOKEN = 1921,                              /* id 1163, added card */
     CARD_SHEEP_TOKEN = 1922,                              /* id 1110, added card */
     /* ---- end of the added cards ---- */
 };

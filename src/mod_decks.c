@@ -3199,48 +3199,221 @@ static const struct DeckList *CyberDeck(void)
 #endif
 
 /* Reaper format opponent (Yami Yugi's slot): Stein Monarch 40%, Warrior 20%, Bazoo Return 15%, Chaos Control 15%,
- * Tomato Control 10% (decks/splevin-Stein Monarch.ydk, sdlkilla-Warrior.ydk, brahimpoke-Bazoo Return.ydk,
- * ellietincan-Chaos Control.ydk, Roland Gress-Tomato Control.ydk). */
-#if defined(HAS_CARD_BAZOO_THE_SOUL_EATER) \
+ * Tomato Control 10% (decks/Jazz-Stein Monarch.ydk, tobitomatenkopf-Warrior.ydk, brahimpoke-Bazoo Return.ydk,
+ * jcvd93-Chaos Control.ydk, Roland Gress-Tomato Control.ydk). Generated from .ydk via tools/deckgen.py. */
+/* Jazz-Stein Monarch.ydk */
+#if defined(HAS_CARD_BRAIN_CONTROL) \
     && defined(HAS_CARD_BREAKER_THE_MAGICAL_WARRIOR) \
-    && defined(HAS_CARD_CHAOS_SORCERER) \
-    && defined(HAS_CARD_CONFISCATION) \
+    && defined(HAS_CARD_CYBER_BLADER) \
     && defined(HAS_CARD_CYBER_DRAGON) \
     && defined(HAS_CARD_CYBER_END_DRAGON) \
-    && defined(HAS_CARD_CYBER_JAR) \
     && defined(HAS_CARD_CYBER_TWIN_DRAGON) \
-    && defined(HAS_CARD_DARK_HOLE) \
-    && defined(HAS_CARD_DEKOICHI_THE_BATTLECHANTED_LOCOMOTIVE) \
+    && defined(HAS_CARD_DARK_BALTER_THE_TERRIBLE) \
+    && defined(HAS_CARD_DARK_BLADE_THE_DRAGON_KNIGHT) \
+    && defined(HAS_CARD_DARK_FLARE_KNIGHT) \
+    && defined(HAS_CARD_DARK_RULER_HA_DES) \
+    && defined(HAS_CARD_DIVINE_WRATH) \
+    && defined(HAS_CARD_D_D_WARRIOR_LADY) \
+    && defined(HAS_CARD_FIEND_SKULL_DRAGON) \
+    && defined(HAS_CARD_GATLING_DRAGON) \
+    && defined(HAS_CARD_KING_DRAGUN) \
+    && defined(HAS_CARD_MASTER_OF_OZ) \
+    && defined(HAS_CARD_METAMORPHOSIS) \
+    && defined(HAS_CARD_MOBIUS_THE_FROST_MONARCH) \
+    && defined(HAS_CARD_RAIGEKI_BREAK) \
+    && defined(HAS_CARD_REAPER_ON_THE_NIGHTMARE) \
+    && defined(HAS_CARD_RYU_SENSHI) \
+    && defined(HAS_CARD_SAKURETSU_ARMOR) \
+    && defined(HAS_CARD_SOUL_EXCHANGE) \
+    && defined(HAS_CARD_SPELL_CANCELLER) \
+    && defined(HAS_CARD_SPIRIT_REAPER) \
+    && defined(HAS_CARD_THESTALOS_THE_FIRESTORM_MONARCH) \
+    && defined(HAS_CARD_THE_LAST_WARRIOR_FROM_ANOTHER_PLANET) \
+    && defined(HAS_CARD_THOUSAND_EYES_RESTRICT) \
+    && defined(HAS_CARD_THREATENING_ROAR) \
+    && defined(HAS_CARD_TORRENTIAL_TRIBUTE) \
+    && defined(HAS_CARD_TREEBORN_FROG) \
+    && defined(HAS_CARD_ZABORG_THE_THUNDER_MONARCH)
+#define MOD_REAPER_STEIN_MONARCH 1
+static const u16 sReaperSteinMonarch[] = {
+    /* Main + Fusion (55) */
+    CARD_BREAKER_THE_MAGICAL_WARRIOR,
+    X2(CARD_CYBER_DRAGON),
+    CARD_CYBER_STEIN,
+    CARD_D_D_WARRIOR_LADY,
+    X3(CARD_MOBIUS_THE_FROST_MONARCH),
+    X3(CARD_MYSTIC_TOMATO),
+    CARD_SANGAN,
+    X2(CARD_SPIRIT_REAPER),
+    X3(CARD_THESTALOS_THE_FIRESTORM_MONARCH),
+    X3(CARD_TREEBORN_FROG),
+    X3(CARD_ZABORG_THE_THUNDER_MONARCH),
+    X3(CARD_BRAIN_CONTROL),
+    CARD_CONFISCATION,
+    CARD_DARK_HOLE,
+    CARD_HEAVY_STORM,
+    X2(CARD_LAST_WILL),
+    CARD_METAMORPHOSIS,
+    CARD_MYSTICAL_SPACE_TYPHOON,
+    CARD_SNATCH_STEAL,
+    X2(CARD_SOUL_EXCHANGE),
+    X3(CARD_RAIGEKI_BREAK),
+    CARD_TORRENTIAL_TRIBUTE,
+    CARD_CYBER_BLADER,
+    CARD_CYBER_END_DRAGON,
+    CARD_CYBER_TWIN_DRAGON,
+    CARD_DARK_BALTER_THE_TERRIBLE,
+    CARD_DARK_BLADE_THE_DRAGON_KNIGHT,
+    CARD_DARK_FLARE_KNIGHT,
+    CARD_DARKFIRE_DRAGON,
+    CARD_FIEND_SKULL_DRAGON,
+    CARD_GATLING_DRAGON,
+    CARD_KING_DRAGUN,
+    CARD_MASTER_OF_OZ,
+    CARD_REAPER_ON_THE_NIGHTMARE,
+    CARD_RYU_SENSHI,
+    CARD_THE_LAST_WARRIOR_FROM_ANOTHER_PLANET,
+    CARD_THOUSAND_EYES_RESTRICT,
+};
+STATIC_ASSERT(ARRAY_COUNT(sReaperSteinMonarch) == 55, ReaperSteinMonarchSize);
+static const struct DeckList sReaperSteinMonarchList = { sReaperSteinMonarch, ARRAY_COUNT(sReaperSteinMonarch), 0 };
+static const u16 sReaperSteinMonarchSide[] = {
+    /* Side (15) */
+    CARD_CYBER_DRAGON,
+    X2(CARD_DARK_RULER_HA_DES),
+    CARD_JINZO,
+    X3(CARD_SPELL_CANCELLER),
+    CARD_SOUL_EXCHANGE,
+    X2(CARD_DIVINE_WRATH),
+    X2(CARD_SAKURETSU_ARMOR),
+    X3(CARD_THREATENING_ROAR),
+};
+STATIC_ASSERT(ARRAY_COUNT(sReaperSteinMonarchSide) == 15, ReaperSteinMonarchSideSize);
+#endif
+
+/* tobitomatenkopf-Warrior.ydk (Extra Deck passcode 5368615 / Steam Gyroid omitted: not in this build) */
+#if defined(HAS_CARD_BOOK_OF_MOON) \
+    && defined(HAS_CARD_BOTTOMLESS_TRAP_HOLE) \
+    && defined(HAS_CARD_BREAKER_THE_MAGICAL_WARRIOR) \
+    && defined(HAS_CARD_CYBER_DRAGON) \
+    && defined(HAS_CARD_CYBER_END_DRAGON) \
+    && defined(HAS_CARD_DARK_BALTER_THE_TERRIBLE) \
+    && defined(HAS_CARD_DARK_BLADE_THE_DRAGON_KNIGHT) \
+    && defined(HAS_CARD_DES_WOMBAT) \
     && defined(HAS_CARD_DON_ZALOOG) \
-    && defined(HAS_CARD_DUST_TORNADO) \
+    && defined(HAS_CARD_D_D_ASSAILANT) \
     && defined(HAS_CARD_D_D_WARRIOR_LADY) \
     && defined(HAS_CARD_EXILED_FORCE) \
+    && defined(HAS_CARD_FIEND_SKULL_DRAGON) \
     && defined(HAS_CARD_GATLING_DRAGON) \
-    && defined(HAS_CARD_GIANT_TRUNADE) \
-    && defined(HAS_CARD_HEAVY_STORM) \
+    && defined(HAS_CARD_INJECTION_FAIRY_LILY) \
     && defined(HAS_CARD_KING_DRAGUN) \
     && defined(HAS_CARD_KING_TIGER_WANGHU) \
     && defined(HAS_CARD_KYCOO_THE_GHOST_DESTROYER) \
     && defined(HAS_CARD_MANTICORE_OF_DARKNESS) \
-    && defined(HAS_CARD_MOBIUS_THE_FROST_MONARCH) \
-    && defined(HAS_CARD_MYSTICAL_SPACE_TYPHOON) \
+    && defined(HAS_CARD_MASK_OF_RESTRICT) \
     && defined(HAS_CARD_MYSTIC_SWORDSMAN_LV2) \
-    && defined(HAS_CARD_NINJA_GRANDMASTER_SASUKE) \
-    && defined(HAS_CARD_NOBLEMAN_OF_CROSSOUT) \
-    && defined(HAS_CARD_PREMATURE_BURIAL) \
+    && defined(HAS_CARD_OJAMA_KING) \
+    && defined(HAS_CARD_REAPER_ON_THE_NIGHTMARE) \
     && defined(HAS_CARD_REINFORCEMENT_OF_THE_ARMY) \
-    && defined(HAS_CARD_RETURN_FROM_THE_DIFFERENT_DIMENSION) \
+    && defined(HAS_CARD_RYU_SENSHI) \
     && defined(HAS_CARD_SAKURETSU_ARMOR) \
-    && defined(HAS_CARD_SANGAN) \
     && defined(HAS_CARD_SMASHING_GROUND) \
-    && defined(HAS_CARD_SNATCH_STEAL) \
     && defined(HAS_CARD_SPIRIT_REAPER) \
     && defined(HAS_CARD_THE_LAST_WARRIOR_FROM_ANOTHER_PLANET) \
     && defined(HAS_CARD_THOUSAND_EYES_RESTRICT) \
     && defined(HAS_CARD_THREATENING_ROAR) \
     && defined(HAS_CARD_TORRENTIAL_TRIBUTE) \
-    && defined(HAS_CARD_TRAP_DUSTSHOOT) \
-    && defined(HAS_CARD_WIDESPREAD_RUIN)
+    && defined(HAS_CARD_TRAP_DUSTSHOOT)
+#define MOD_REAPER_WARRIOR 1
+static const u16 sReaperWarrior[] = {
+    /* Main + Fusion (54) */
+    CARD_BREAKER_THE_MAGICAL_WARRIOR,
+    X3(CARD_CYBER_DRAGON),
+    X3(CARD_D_D_ASSAILANT),
+    CARD_D_D_WARRIOR_LADY,
+    CARD_DON_ZALOOG,
+    CARD_EXILED_FORCE,
+    CARD_KING_TIGER_WANGHU,
+    X2(CARD_KYCOO_THE_GHOST_DESTROYER),
+    CARD_MYSTIC_SWORDSMAN_LV2,
+    CARD_SANGAN,
+    X3(CARD_SPIRIT_REAPER),
+    CARD_BOOK_OF_MOON,
+    CARD_CONFISCATION,
+    CARD_DARK_HOLE,
+    CARD_HEAVY_STORM,
+    CARD_MYSTICAL_SPACE_TYPHOON,
+    CARD_NOBLEMAN_OF_CROSSOUT,
+    CARD_PREMATURE_BURIAL,
+    X2(CARD_REINFORCEMENT_OF_THE_ARMY),
+    X3(CARD_SMASHING_GROUND),
+    CARD_SNATCH_STEAL,
+    CARD_BOTTOMLESS_TRAP_HOLE,
+    CARD_CALL_OF_THE_HAUNTED,
+    X3(CARD_SAKURETSU_ARMOR),
+    X3(CARD_SOLEMN_JUDGMENT),
+    CARD_TORRENTIAL_TRIBUTE,
+    CARD_MANTICORE_OF_DARKNESS,
+    CARD_CYBER_END_DRAGON,
+    CARD_DARK_BALTER_THE_TERRIBLE,
+    CARD_DARK_BLADE_THE_DRAGON_KNIGHT,
+    CARD_DRAGONESS_THE_WICKED_KNIGHT,
+    CARD_FIEND_SKULL_DRAGON,
+    CARD_GATLING_DRAGON,
+    CARD_KING_DRAGUN,
+    CARD_OJAMA_KING,
+    CARD_REAPER_ON_THE_NIGHTMARE,
+    CARD_RYU_SENSHI,
+    CARD_THE_LAST_WARRIOR_FROM_ANOTHER_PLANET,
+    CARD_THOUSAND_EYES_RESTRICT,
+    CARD_WARRIOR_OF_TRADITION,
+};
+STATIC_ASSERT(ARRAY_COUNT(sReaperWarrior) == 54, ReaperWarriorSize);
+static const struct DeckList sReaperWarriorList = { sReaperWarrior, ARRAY_COUNT(sReaperWarrior), 0 };
+static const u16 sReaperWarriorSide[] = {
+    /* Side (15) */
+    CARD_DES_WOMBAT,
+    CARD_INJECTION_FAIRY_LILY,
+    CARD_MYSTIC_SWORDSMAN_LV2,
+    CARD_BOTTOMLESS_TRAP_HOLE,
+    X3(CARD_DUST_TORNADO),
+    X3(CARD_MASK_OF_RESTRICT),
+    X3(CARD_THREATENING_ROAR),
+    X2(CARD_TRAP_DUSTSHOOT),
+};
+STATIC_ASSERT(ARRAY_COUNT(sReaperWarriorSide) == 15, ReaperWarriorSideSize);
+#endif
+
+/* brahimpoke-Bazoo Return.ydk */
+#if defined(HAS_CARD_BAZOO_THE_SOUL_EATER) \
+    && defined(HAS_CARD_BREAKER_THE_MAGICAL_WARRIOR) \
+    && defined(HAS_CARD_CHAOS_SORCERER) \
+    && defined(HAS_CARD_CYBER_DRAGON) \
+    && defined(HAS_CARD_CYBER_END_DRAGON) \
+    && defined(HAS_CARD_CYBER_TWIN_DRAGON) \
+    && defined(HAS_CARD_DEKOICHI_THE_BATTLECHANTED_LOCOMOTIVE) \
+    && defined(HAS_CARD_DON_ZALOOG) \
+    && defined(HAS_CARD_D_D_WARRIOR_LADY) \
+    && defined(HAS_CARD_EXILED_FORCE) \
+    && defined(HAS_CARD_GATLING_DRAGON) \
+    && defined(HAS_CARD_KING_DRAGUN) \
+    && defined(HAS_CARD_KING_TIGER_WANGHU) \
+    && defined(HAS_CARD_KYCOO_THE_GHOST_DESTROYER) \
+    && defined(HAS_CARD_MANTICORE_OF_DARKNESS) \
+    && defined(HAS_CARD_MOBIUS_THE_FROST_MONARCH) \
+    && defined(HAS_CARD_MYSTIC_SWORDSMAN_LV2) \
+    && defined(HAS_CARD_NINJA_GRANDMASTER_SASUKE) \
+    && defined(HAS_CARD_REINFORCEMENT_OF_THE_ARMY) \
+    && defined(HAS_CARD_RETURN_FROM_THE_DIFFERENT_DIMENSION) \
+    && defined(HAS_CARD_SAKURETSU_ARMOR) \
+    && defined(HAS_CARD_SMASHING_GROUND) \
+    && defined(HAS_CARD_SPIRIT_REAPER) \
+    && defined(HAS_CARD_THE_LAST_WARRIOR_FROM_ANOTHER_PLANET) \
+    && defined(HAS_CARD_THOUSAND_EYES_RESTRICT) \
+    && defined(HAS_CARD_THREATENING_ROAR) \
+    && defined(HAS_CARD_TORRENTIAL_TRIBUTE) \
+    && defined(HAS_CARD_TRAP_DUSTSHOOT)
 #define MOD_REAPER_BAZOO_RETURN 1
 static const u16 sReaperBazooReturn[] = {
     /* Main + Fusion (55) */
@@ -3294,42 +3467,130 @@ static const u16 sReaperBazooReturnSide[] = {
 STATIC_ASSERT(ARRAY_COUNT(sReaperBazooReturnSide) == 15, ReaperBazooReturnSideSize);
 #endif
 
+/* jcvd93-Chaos Control.ydk */
+#if defined(HAS_CARD_BRAIN_CONTROL) \
+    && defined(HAS_CARD_BREAKER_THE_MAGICAL_WARRIOR) \
+    && defined(HAS_CARD_CHAOS_SORCERER) \
+    && defined(HAS_CARD_CREATURE_SWAP) \
+    && defined(HAS_CARD_CYBER_BLADER) \
+    && defined(HAS_CARD_CYBER_DRAGON) \
+    && defined(HAS_CARD_CYBER_END_DRAGON) \
+    && defined(HAS_CARD_CYBER_TWIN_DRAGON) \
+    && defined(HAS_CARD_DARK_BALTER_THE_TERRIBLE) \
+    && defined(HAS_CARD_DARK_BLADE_THE_DRAGON_KNIGHT) \
+    && defined(HAS_CARD_DEKOICHI_THE_BATTLECHANTED_LOCOMOTIVE) \
+    && defined(HAS_CARD_D_D_WARRIOR_LADY) \
+    && defined(HAS_CARD_ENEMY_CONTROLLER) \
+    && defined(HAS_CARD_FIEND_SKULL_DRAGON) \
+    && defined(HAS_CARD_GATLING_DRAGON) \
+    && defined(HAS_CARD_JAR_OF_GREED) \
+    && defined(HAS_CARD_KING_DRAGUN) \
+    && defined(HAS_CARD_KYCOO_THE_GHOST_DESTROYER) \
+    && defined(HAS_CARD_LEVEL_LIMIT_AREA_B) \
+    && defined(HAS_CARD_LIMITER_REMOVAL) \
+    && defined(HAS_CARD_MANTICORE_OF_DARKNESS) \
+    && defined(HAS_CARD_METAMORPHOSIS) \
+    && defined(HAS_CARD_MOBIUS_THE_FROST_MONARCH) \
+    && defined(HAS_CARD_REAPER_ON_THE_NIGHTMARE) \
+    && defined(HAS_CARD_RYU_SENSHI) \
+    && defined(HAS_CARD_SAKURETSU_ARMOR) \
+    && defined(HAS_CARD_SCAPEGOAT) \
+    && defined(HAS_CARD_SPIRIT_REAPER) \
+    && defined(HAS_CARD_THE_LAST_WARRIOR_FROM_ANOTHER_PLANET) \
+    && defined(HAS_CARD_THOUSAND_EYES_RESTRICT) \
+    && defined(HAS_CARD_THREATENING_ROAR) \
+    && defined(HAS_CARD_TORRENTIAL_TRIBUTE) \
+    && defined(HAS_CARD_TRAP_DUSTSHOOT) \
+    && defined(HAS_CARD_TSUKUYOMI) \
+    && defined(HAS_CARD_ZABORG_THE_THUNDER_MONARCH)
+#define MOD_REAPER_CHAOS_CONTROL 1
+static const u16 sReaperChaosControl[] = {
+    /* Main + Fusion (55) */
+    CARD_BREAKER_THE_MAGICAL_WARRIOR,
+    X2(CARD_CHAOS_SORCERER),
+    X3(CARD_CYBER_DRAGON),
+    CARD_CYBER_STEIN,
+    CARD_D_D_WARRIOR_LADY,
+    X2(CARD_DEKOICHI_THE_BATTLECHANTED_LOCOMOTIVE),
+    CARD_JINZO,
+    CARD_MAGICIAN_OF_FAITH,
+    X2(CARD_MYSTIC_TOMATO),
+    CARD_SANGAN,
+    CARD_SPIRIT_REAPER,
+    CARD_TSUKUYOMI,
+    CARD_ZABORG_THE_THUNDER_MONARCH,
+    CARD_CONFISCATION,
+    X2(CARD_CREATURE_SWAP),
+    CARD_DARK_HOLE,
+    CARD_ENEMY_CONTROLLER,
+    CARD_GIANT_TRUNADE,
+    CARD_HEAVY_STORM,
+    CARD_LIMITER_REMOVAL,
+    CARD_METAMORPHOSIS,
+    CARD_MYSTICAL_SPACE_TYPHOON,
+    CARD_NOBLEMAN_OF_CROSSOUT,
+    CARD_PREMATURE_BURIAL,
+    CARD_SCAPEGOAT,
+    CARD_SNATCH_STEAL,
+    CARD_SWORDS_OF_REVEALING_LIGHT,
+    X2(CARD_UPSTART_GOBLIN),
+    X2(CARD_JAR_OF_GREED),
+    CARD_TORRENTIAL_TRIBUTE,
+    X2(CARD_TRAP_DUSTSHOOT),
+    CARD_MANTICORE_OF_DARKNESS,
+    CARD_CYBER_BLADER,
+    CARD_CYBER_END_DRAGON,
+    X2(CARD_CYBER_TWIN_DRAGON),
+    CARD_DARK_BALTER_THE_TERRIBLE,
+    CARD_DARK_BLADE_THE_DRAGON_KNIGHT,
+    CARD_DRAGONESS_THE_WICKED_KNIGHT,
+    CARD_FIEND_SKULL_DRAGON,
+    CARD_GATLING_DRAGON,
+    CARD_KING_DRAGUN,
+    CARD_REAPER_ON_THE_NIGHTMARE,
+    CARD_RYU_SENSHI,
+    CARD_THE_LAST_WARRIOR_FROM_ANOTHER_PLANET,
+    CARD_THOUSAND_EYES_RESTRICT,
+};
+STATIC_ASSERT(ARRAY_COUNT(sReaperChaosControl) == 55, ReaperChaosControlSize);
+static const struct DeckList sReaperChaosControlList = { sReaperChaosControl, ARRAY_COUNT(sReaperChaosControl), 0 };
+static const u16 sReaperChaosControlSide[] = {
+    /* Side (15) */
+    X2(CARD_KYCOO_THE_GHOST_DESTROYER),
+    X2(CARD_MOBIUS_THE_FROST_MONARCH),
+    CARD_BRAIN_CONTROL,
+    CARD_GIANT_TRUNADE,
+    CARD_LEVEL_LIMIT_AREA_B,
+    X3(CARD_ROYAL_DECREE),
+    X2(CARD_SAKURETSU_ARMOR),
+    X3(CARD_THREATENING_ROAR),
+};
+STATIC_ASSERT(ARRAY_COUNT(sReaperChaosControlSide) == 15, ReaperChaosControlSideSize);
+#endif
+
+/* Roland Gress-Tomato Control.ydk */
 #if defined(HAS_CARD_BOOK_OF_MOON) \
     && defined(HAS_CARD_BOTTOMLESS_TRAP_HOLE) \
     && defined(HAS_CARD_BRAIN_CONTROL) \
     && defined(HAS_CARD_BREAKER_THE_MAGICAL_WARRIOR) \
-    && defined(HAS_CARD_CALL_OF_THE_HAUNTED) \
-    && defined(HAS_CARD_CEASEFIRE) \
     && defined(HAS_CARD_CYBER_DRAGON) \
-    && defined(HAS_CARD_DARK_HOLE) \
     && defined(HAS_CARD_DON_ZALOOG) \
-    && defined(HAS_CARD_DUST_TORNADO) \
     && defined(HAS_CARD_D_D_ASSAILANT) \
     && defined(HAS_CARD_D_D_SURVIVOR) \
     && defined(HAS_CARD_D_D_WARRIOR_LADY) \
     && defined(HAS_CARD_ENEMY_CONTROLLER) \
     && defined(HAS_CARD_EXILED_FORCE) \
-    && defined(HAS_CARD_HEAVY_STORM) \
     && defined(HAS_CARD_MAGIC_CYLINDER) \
     && defined(HAS_CARD_MOBIUS_THE_FROST_MONARCH) \
-    && defined(HAS_CARD_MYSTICAL_SPACE_TYPHOON) \
     && defined(HAS_CARD_MYSTIC_SWORDSMAN_LV2) \
-    && defined(HAS_CARD_MYSTIC_TOMATO) \
-    && defined(HAS_CARD_NOBLEMAN_OF_CROSSOUT) \
-    && defined(HAS_CARD_PREMATURE_BURIAL) \
     && defined(HAS_CARD_REINFORCEMENT_OF_THE_ARMY) \
     && defined(HAS_CARD_SAKURETSU_ARMOR) \
-    && defined(HAS_CARD_SANGAN) \
     && defined(HAS_CARD_SCAPEGOAT) \
     && defined(HAS_CARD_SMASHING_GROUND) \
-    && defined(HAS_CARD_SNATCH_STEAL) \
-    && defined(HAS_CARD_SOLEMN_JUDGMENT) \
     && defined(HAS_CARD_SPIRIT_REAPER) \
     && defined(HAS_CARD_STEALTH_BIRD) \
-    && defined(HAS_CARD_SWORDS_OF_REVEALING_LIGHT) \
     && defined(HAS_CARD_TORRENTIAL_TRIBUTE) \
-    && defined(HAS_CARD_WAVE_MOTION_CANNON) \
-    && defined(HAS_CARD_WIDESPREAD_RUIN)
+    && defined(HAS_CARD_WAVE_MOTION_CANNON)
 #define MOD_REAPER_TOMATO_CONTROL 1
 static const u16 sReaperTomatoControl[] = {
     /* Main + Fusion (40) */
@@ -3380,21 +3641,22 @@ static const u16 sReaperTomatoControlSide[] = {
 STATIC_ASSERT(ARRAY_COUNT(sReaperTomatoControlSide) == 15, ReaperTomatoControlSideSize);
 #endif
 
-#if defined(MOD_CYBER_STEIN_MONARCH) && defined(MOD_JOEY_DECK) && defined(MOD_REAPER_BAZOO_RETURN) \
-    && defined(MOD_CHAOS_CONTROL) && defined(MOD_REAPER_TOMATO_CONTROL)
+
+#if defined(MOD_REAPER_STEIN_MONARCH) && defined(MOD_REAPER_WARRIOR) && defined(MOD_REAPER_BAZOO_RETURN) \
+    && defined(MOD_REAPER_CHAOS_CONTROL) && defined(MOD_REAPER_TOMATO_CONTROL)
 #define MOD_REAPER_DECKS 1
 static const struct DeckList *ReaperDeck(void)
 {
     u32 roll = (u32)Random() % 100;
 
     if (roll < 40)
-        return &sCyberSteinMonarchList;
+        return &sReaperSteinMonarchList;
     if (roll < 60)
-        return &sJoeyDeckList;
+        return &sReaperWarriorList;
     if (roll < 75)
         return &sReaperBazooReturnList;
     if (roll < 90)
-        return &sChaosControlList;
+        return &sReaperChaosControlList;
     return &sReaperTomatoControlList;
 }
 #endif
@@ -3563,7 +3825,10 @@ static const char sNameGoatChaosReturn[] = "Dingosig-Chaos Return";
 static const char sNameGoatReasoningGateTurbo[] = "paede17-Reasoning Gate Turbo";
 static const char sNameCyberBrianLongGoat[] = "Brian Long-Goat Control";
 static const char sNameCyberSteinMonarch[] = "splevin-Stein Monarch";
+static const char sNameReaperSteinMonarch[] = "Jazz-Stein Monarch";
+static const char sNameReaperWarrior[] = "tobitomatenkopf-Warrior";
 static const char sNameReaperBazooReturn[] = "brahimpoke-Bazoo Return";
+static const char sNameReaperChaosControl[] = "jcvd93-Chaos Control";
 static const char sNameReaperTomatoControl[] = "Roland Gress-Tomato Control";
 
 static const struct RecipePreset sRecipePresets[] = {
@@ -3686,12 +3951,13 @@ static const struct RecipePreset sRecipePresets[] = {
       ARRAY_COUNT(sCyberSteinMonarchSide) },
 #endif
 #ifdef MOD_REAPER_DECKS
-    { sNameCyberSteinMonarch, &sCyberSteinMonarchList, sCyberSteinMonarchSide,
-      ARRAY_COUNT(sCyberSteinMonarchSide) },
-    { sNameWarrior, &sJoeyDeckList, sJoeyDeckSide, ARRAY_COUNT(sJoeyDeckSide) },
+    { sNameReaperSteinMonarch, &sReaperSteinMonarchList, sReaperSteinMonarchSide,
+      ARRAY_COUNT(sReaperSteinMonarchSide) },
+    { sNameReaperWarrior, &sReaperWarriorList, sReaperWarriorSide, ARRAY_COUNT(sReaperWarriorSide) },
     { sNameReaperBazooReturn, &sReaperBazooReturnList, sReaperBazooReturnSide,
       ARRAY_COUNT(sReaperBazooReturnSide) },
-    { sNameChaosControl, &sChaosControlList, sChaosControlSide, ARRAY_COUNT(sChaosControlSide) },
+    { sNameReaperChaosControl, &sReaperChaosControlList, sReaperChaosControlSide,
+      ARRAY_COUNT(sReaperChaosControlSide) },
     { sNameReaperTomatoControl, &sReaperTomatoControlList, sReaperTomatoControlSide,
       ARRAY_COUNT(sReaperTomatoControlSide) },
 #endif
