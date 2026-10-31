@@ -830,7 +830,7 @@ Banlist: May 2003.
 </details>
 
 <details>
-<summary>Vanilla Beat: 20% (ellietincan-Vanilla Beat (JP)) (40 cards + 15 Fusion Deck + 15 Side Deck)</summary>
+<summary>Vanilla Beat: 20% (ellietincan-Vanilla Beat (JP)) (40 cards + 12 Fusion Deck + 15 Side Deck)</summary>
 
 **Monsters (13)**
 
@@ -870,12 +870,11 @@ Banlist: May 2003.
 - 1x Skull Lair
 - 2x Torrential Tribute
 
-**Fusion Deck (15)**
+**Fusion Deck (12)**
 
 - 3x B. Skull Dragon
 - 3x Flame Swordsman
 - 3x Gaia the Dragon Champion
-- 3x St. Joan
 - 3x The Last Warrior from Another Planet
 
 **Side Deck (15)**
@@ -898,7 +897,7 @@ Banlist: May 2003.
 Banlist: July 2003.
 
 <details>
-<summary>Tomato Control: 80% (Aretos-Tomato Control (Fiber)) (40 cards + 15 Fusion Deck + 15 Side Deck)</summary>
+<summary>Tomato Control: 80% (Aretos-Tomato Control (Fiber)) (40 cards + 13 Fusion Deck + 15 Side Deck)</summary>
 
 **Monsters (15)**
 
@@ -940,7 +939,7 @@ Banlist: July 2003.
 - 1x Time Seal
 - 3x Jar of Greed
 
-**Fusion Deck (15)**
+**Fusion Deck (13)**
 
 - 1x B. Skull Dragon
 - 1x Twin-Headed Thunder Dragon
@@ -948,8 +947,6 @@ Banlist: July 2003.
 - 1x The Last Warrior from Another Planet
 - 1x Roaring Ocean Snake
 - 1x Ryu Senshi
-- 1x Super Robolady
-- 1x Super Roboyarou
 - 1x Dark Balter the Terrible
 - 1x Fiend Skull Dragon
 - 1x Musician King
@@ -1108,7 +1105,7 @@ Banlist: August 2003.
 </details>
 
 <details>
-<summary>Warrior Tomato Control: 40% (ellietincan-Warrior Tomato Control) (40 cards + 15 Fusion Deck + 15 Side Deck)</summary>
+<summary>Warrior Tomato Control: 40% (ellietincan-Warrior Tomato Control) (40 cards + 12 Fusion Deck + 14 Side Deck)</summary>
 
 **Monsters (16)**
 
@@ -1150,13 +1147,12 @@ Banlist: August 2003.
 - 1x Bell of Destruction
 - 3x Torrential Tribute
 
-**Fusion Deck (15)**
+**Fusion Deck (12)**
 
 - 3x B. Skull Dragon
 - 3x Flame Swordsman
 - 3x Gaia the Dragon Champion
 - 3x Ryu Senshi
-- 3x St. Joan
 
 **Side Deck (14)**
 
@@ -1313,7 +1309,7 @@ Banlist: November 2003.
 </details>
 
 <details>
-<summary>Scientist FTK: 40% (DK-ZERO-Scientist FTK) (40 cards + 15 Fusion Deck + 15 Side Deck)</summary>
+<summary>Scientist FTK: 40% (DK-ZERO-Scientist FTK) (40 cards + 13 Fusion Deck + 15 Side Deck)</summary>
 
 **Monsters (17)**
 
@@ -1348,7 +1344,7 @@ Banlist: November 2003.
 - 1x Call Of The Haunted
 - 1x Imperial Order
 
-**Fusion Deck (15)**
+**Fusion Deck (13)**
 
 - 2x Dark Balter the Terrible
 - 1x Darkfire Dragon
@@ -1358,8 +1354,6 @@ Banlist: November 2003.
 - 1x Punished Eagle
 - 1x Roaring Ocean Snake
 - 2x Ryu Senshi
-- 1x Super Robolady
-- 1x Super Roboyarou
 - 3x Thousand-Eyes Restrict
 
 **Side Deck (15)**
@@ -1378,8 +1372,9 @@ Banlist: November 2003.
 
 </details>
 
-Cards here with no coded effect yet: Super Robolady, Super Roboyarou, Dark Balter the Terrible, Fiend Skull Dragon
-and Ryu Senshi.
+Cards here with no coded effect yet: Dark Balter the Terrible, Fiend Skull Dragon and Ryu Senshi. St. Joan, Super
+Robolady and Super Roboyarou stay in the card pool but are omitted from format Fusion Deck lists until their fusion
+recipes work.
 
 ### 10. Vampire
 
@@ -1746,7 +1741,7 @@ Every card was already in the game (Black Skull Dragon is the original B. Skull 
 Banlist: October 2004.
 
 <details>
-<summary>Goat Control: 40% (Gyomberman-Goat Control) (40 cards + 15 Fusion Deck + 15 Side Deck)</summary>
+<summary>Goat Control: 40% (Gyomberman-Goat Control) (40 cards + 14 Fusion Deck + 15 Side Deck)</summary>
 
 **Monsters (17)**
 
@@ -1786,7 +1781,7 @@ Banlist: October 2004.
 - 1x Bell of Destruction
 - 3x Royal Decree
 
-**Fusion Deck (15)**
+**Fusion Deck (14)**
 
 - 1x Dark Balter the Terrible
 - 1x Dark Blade the Dragon Knight
@@ -1797,7 +1792,6 @@ Banlist: October 2004.
 - 1x Ojama King
 - 1x Reaper on the Nightmare
 - 2x Ryu Senshi
-- 1x St. Joan
 - 1x The Last Warrior from Another Planet
 - 3x Thousand-Eyes Restrict
 

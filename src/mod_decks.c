@@ -1137,7 +1137,6 @@ STATIC_ASSERT(ARRAY_COUNT(sJoeyPegasusTomatoControlSide) == 15, JoeyPegasusTomat
 
 #if defined(HAS_CARD_BAZOO_THE_SOUL_EATER) && defined(HAS_CARD_KYCOO_THE_GHOST_DESTROYER) \
     && defined(HAS_CARD_JAR_OF_GREED) && defined(HAS_CARD_SKULL_LAIR) && defined(HAS_CARD_TORRENTIAL_TRIBUTE) \
-    && defined(HAS_CARD_ST_JOAN) \
     && defined(HAS_CARD_THE_LAST_WARRIOR_FROM_ANOTHER_PLANET)
 #define MOD_JOEY_PEGASUS_VANILLA_BEAT 1
 static const u16 sJoeyPegasusVanillaBeat[] = {
@@ -1173,14 +1172,13 @@ static const u16 sJoeyPegasusVanillaBeat[] = {
     CARD_MIRROR_FORCE,
     CARD_SKULL_LAIR,
     X2(CARD_TORRENTIAL_TRIBUTE),
-    /* Fusion Deck (15) */
+    /* Fusion Deck (12): no St. Joan until its fusion is supported */
     X3(CARD_B_SKULL_DRAGON),
     X3(CARD_FLAME_SWORDSMAN),
     X3(CARD_GAIA_THE_DRAGON_CHAMPION),
-    X3(CARD_ST_JOAN),
     X3(CARD_THE_LAST_WARRIOR_FROM_ANOTHER_PLANET),
 };
-STATIC_ASSERT(ARRAY_COUNT(sJoeyPegasusVanillaBeat) == 40 + 15, JoeyPegasusVanillaBeatSize);
+STATIC_ASSERT(ARRAY_COUNT(sJoeyPegasusVanillaBeat) == 40 + 12, JoeyPegasusVanillaBeatSize);
 static const struct DeckList sJoeyPegasusVanillaBeatList = { sJoeyPegasusVanillaBeat,
                                                              ARRAY_COUNT(sJoeyPegasusVanillaBeat), 0 };
 /* ellietincan-Vanilla Beat (JP).ydk's Side Deck (15). */
@@ -1210,13 +1208,12 @@ static const struct DeckList *JoeyPegasusDeck(void)
 
 /* The Fiber format opponent (the Rare Hunter's slot, src/mod_opponents.c): one of two decks per duel (FiberDeck):
  * Tomato Control 80%, Recruiter Control 20% (decks/Aretos-Tomato Control (Fiber).ydk, decks/GBO-Recruiter
- * Control.ydk; main and extra decks). Super Robolady (75923050) was added to config/new_cards.txt for Tomato
- * Control. */
+ * Control.ydk; main and extra decks). Super Robolady / Super Roboyarou omitted from the Extra Deck until
+ * their fusion is supported. */
 #if defined(HAS_CARD_BAZOO_THE_SOUL_EATER) && defined(HAS_CARD_KYCOO_THE_GHOST_DESTROYER) \
     && defined(HAS_CARD_INJECTION_FAIRY_LILY) && defined(HAS_CARD_EXILED_FORCE) && defined(HAS_CARD_FIBER_JAR) \
     && defined(HAS_CARD_JAR_OF_GREED) && defined(HAS_CARD_TORRENTIAL_TRIBUTE) \
     && defined(HAS_CARD_THE_LAST_WARRIOR_FROM_ANOTHER_PLANET) && defined(HAS_CARD_RYU_SENSHI) \
-    && defined(HAS_CARD_SUPER_ROBOLADY) && defined(HAS_CARD_SUPER_ROBOYAROU) \
     && defined(HAS_CARD_DARK_BALTER_THE_TERRIBLE) && defined(HAS_CARD_FIEND_SKULL_DRAGON) \
     && defined(HAS_CARD_THOUSAND_EYES_RESTRICT)
 #define MOD_FIBER_TOMATO_CONTROL 1
@@ -1255,15 +1252,13 @@ static const u16 sFiberTomatoControl[] = {
     CARD_TRAP_HOLE,
     CARD_TIME_SEAL,
     X3(CARD_JAR_OF_GREED),
-    /* Fusion Deck (15) */
+    /* Fusion Deck (13) */
     CARD_B_SKULL_DRAGON,
     CARD_TWIN_HEADED_THUNDER_DRAGON,
     CARD_LABYRINTH_TANK,
     CARD_THE_LAST_WARRIOR_FROM_ANOTHER_PLANET,
     CARD_ROARING_OCEAN_SNAKE,
     CARD_RYU_SENSHI,
-    CARD_SUPER_ROBOLADY,
-    CARD_SUPER_ROBOYAROU,
     CARD_DARK_BALTER_THE_TERRIBLE,
     CARD_FIEND_SKULL_DRAGON,
     CARD_MUSICIAN_KING,
@@ -1271,7 +1266,7 @@ static const u16 sFiberTomatoControl[] = {
     CARD_DRAGONESS_THE_WICKED_KNIGHT,
     X2(CARD_THOUSAND_EYES_RESTRICT),
 };
-STATIC_ASSERT(ARRAY_COUNT(sFiberTomatoControl) == 40 + 15, FiberTomatoControlSize);
+STATIC_ASSERT(ARRAY_COUNT(sFiberTomatoControl) == 40 + 13, FiberTomatoControlSize);
 static const struct DeckList sFiberTomatoControlList = { sFiberTomatoControl, ARRAY_COUNT(sFiberTomatoControl), 0 };
 /* Aretos-Tomato Control (Fiber).ydk's Side Deck (15). */
 static const u16 sFiberTomatoControlSide[] = {
@@ -1441,7 +1436,7 @@ STATIC_ASSERT(ARRAY_COUNT(sYataTomatoControlSide) == 15, YataTomatoControlSideSi
 #if defined(HAS_CARD_DON_ZALOOG) && defined(HAS_CARD_EXILED_FORCE) && defined(HAS_CARD_FIBER_JAR) \
     && defined(HAS_CARD_INJECTION_FAIRY_LILY) && defined(HAS_CARD_SPIRIT_REAPER) && defined(HAS_CARD_YATA_GARASU) \
     && defined(HAS_CARD_MIRAGE_OF_NIGHTMARE) && defined(HAS_CARD_REINFORCEMENT_OF_THE_ARMY) \
-    && defined(HAS_CARD_TORRENTIAL_TRIBUTE) && defined(HAS_CARD_RYU_SENSHI) && defined(HAS_CARD_ST_JOAN) \
+    && defined(HAS_CARD_TORRENTIAL_TRIBUTE) && defined(HAS_CARD_RYU_SENSHI) \
     && defined(HAS_CARD_BAZOO_THE_SOUL_EATER) && defined(HAS_CARD_MARAUDING_CAPTAIN) \
     && defined(HAS_CARD_TRAP_DUSTSHOOT)
 #define MOD_YATA_WARRIOR_TOMATO_CONTROL 1
@@ -1480,14 +1475,13 @@ static const u16 sYataWarriorTomatoControl[] = {
     CARD_MIRROR_FORCE,
     CARD_BELL_OF_DESTRUCTION,
     X3(CARD_TORRENTIAL_TRIBUTE),
-    /* Fusion Deck (15) */
+    /* Fusion Deck (12) */
     X3(CARD_B_SKULL_DRAGON),
     X3(CARD_FLAME_SWORDSMAN),
     X3(CARD_GAIA_THE_DRAGON_CHAMPION),
     X3(CARD_RYU_SENSHI),
-    X3(CARD_ST_JOAN),
 };
-STATIC_ASSERT(ARRAY_COUNT(sYataWarriorTomatoControl) == 40 + 15, YataWarriorTomatoControlSize);
+STATIC_ASSERT(ARRAY_COUNT(sYataWarriorTomatoControl) == 40 + 12, YataWarriorTomatoControlSize);
 static const struct DeckList sYataWarriorTomatoControlList = { sYataWarriorTomatoControl,
                                                                ARRAY_COUNT(sYataWarriorTomatoControl), 0 };
 /* ellietincan-Warrior Tomato Control.ydk's Side Deck (15), without its Dice Jar (14). */
@@ -1665,8 +1659,8 @@ STATIC_ASSERT(ARRAY_COUNT(sScientistTomatoControlSide) == 15, ScientistTomatoCon
 
 #if defined(HAS_CARD_GILASAURUS) && defined(HAS_CARD_MAGICAL_SCIENTIST) && defined(HAS_CARD_CARD_DESTRUCTION) \
     && defined(HAS_CARD_METAMORPHOSIS) && defined(HAS_CARD_REASONING) && defined(HAS_CARD_DARK_BALTER_THE_TERRIBLE) \
-    && defined(HAS_CARD_FIEND_SKULL_DRAGON) && defined(HAS_CARD_RYU_SENSHI) && defined(HAS_CARD_SUPER_ROBOLADY) \
-    && defined(HAS_CARD_SUPER_ROBOYAROU) && defined(HAS_CARD_THOUSAND_EYES_RESTRICT) \
+    && defined(HAS_CARD_FIEND_SKULL_DRAGON) && defined(HAS_CARD_RYU_SENSHI) \
+    && defined(HAS_CARD_THOUSAND_EYES_RESTRICT) \
     && defined(HAS_CARD_DARK_RULER_HA_DES) && defined(HAS_CARD_FIBER_JAR) && defined(HAS_CARD_MIRAGE_OF_NIGHTMARE) \
     && defined(HAS_CARD_TORRENTIAL_TRIBUTE)
 #define MOD_SCIENTIST_FTK 1
@@ -1698,7 +1692,7 @@ static const u16 sScientistFtk[] = {
     CARD_CALL_OF_THE_HAUNTED,
     CARD_IMPERIAL_ORDER,
     CARD_BELL_OF_DESTRUCTION,
-    /* Fusion Deck (15) */
+    /* Fusion Deck (13) */
     X2(CARD_DARK_BALTER_THE_TERRIBLE),
     CARD_DARKFIRE_DRAGON,
     CARD_DRAGONESS_THE_WICKED_KNIGHT,
@@ -1707,11 +1701,9 @@ static const u16 sScientistFtk[] = {
     CARD_PUNISHED_EAGLE,
     CARD_ROARING_OCEAN_SNAKE,
     X2(CARD_RYU_SENSHI),
-    CARD_SUPER_ROBOLADY,
-    CARD_SUPER_ROBOYAROU,
     X3(CARD_THOUSAND_EYES_RESTRICT),
 };
-STATIC_ASSERT(ARRAY_COUNT(sScientistFtk) == 40 + 15, ScientistFtkSize);
+STATIC_ASSERT(ARRAY_COUNT(sScientistFtk) == 40 + 13, ScientistFtkSize);
 static const struct DeckList sScientistFtkList = { sScientistFtk, ARRAY_COUNT(sScientistFtk), 0 };
 /* DK-ZERO-Scientist FTK.ydk's Side Deck (15). */
 static const u16 sScientistFtkSide[] = {
@@ -2166,7 +2158,6 @@ static const struct DeckList *ChaosDeck(void)
     && defined(HAS_CARD_OJAMA_KING) \
     && defined(HAS_CARD_REAPER_ON_THE_NIGHTMARE) \
     && defined(HAS_CARD_RYU_SENSHI) \
-    && defined(HAS_CARD_ST_JOAN) \
     && defined(HAS_CARD_THE_LAST_WARRIOR_FROM_ANOTHER_PLANET) \
     && defined(HAS_CARD_THOUSAND_EYES_RESTRICT) \
     && defined(HAS_CARD_CIPHER_SOLDIER) \
@@ -2211,7 +2202,7 @@ static const u16 sWarriorGoatControl[] = {
     /* Traps (4) */
     CARD_BELL_OF_DESTRUCTION,
     X3(CARD_ROYAL_DECREE),
-    /* Fusion Deck (15) */
+    /* Fusion Deck (14) */
     CARD_DARK_BALTER_THE_TERRIBLE,
     CARD_DARK_BLADE_THE_DRAGON_KNIGHT,
     CARD_DARKFIRE_DRAGON,
@@ -2221,11 +2212,10 @@ static const u16 sWarriorGoatControl[] = {
     CARD_OJAMA_KING,
     CARD_REAPER_ON_THE_NIGHTMARE,
     X2(CARD_RYU_SENSHI),
-    CARD_ST_JOAN,
     CARD_THE_LAST_WARRIOR_FROM_ANOTHER_PLANET,
     X3(CARD_THOUSAND_EYES_RESTRICT),
 };
-STATIC_ASSERT(ARRAY_COUNT(sWarriorGoatControl) == 40 + 15, WarriorGoatControlSize);
+STATIC_ASSERT(ARRAY_COUNT(sWarriorGoatControl) == 40 + 14, WarriorGoatControlSize);
 static const struct DeckList sWarriorGoatControlList = { sWarriorGoatControl, ARRAY_COUNT(sWarriorGoatControl), 0 };
 /* Gyomberman-Goat Control.ydk's Side Deck (15). */
 static const u16 sWarriorGoatControlSide[] = {
