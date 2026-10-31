@@ -44,7 +44,7 @@
 </p>
 
 A hack of *Yu-Gi-Oh! The Eternal Duelist Soul* (GBA) that follows the
-[Format Library](https://www.formatlibrary.com/) pantheon of TCG formats, from Yugi-Kaiba up to Reaper. About 120
+[Format Library](https://www.formatlibrary.com/) pantheon of TCG formats, from Yugi-Kaiba up to Reaper. About 130
 Goat-era cards have been added so far, with roughly 50 more planned.
 
 ## The formats
@@ -71,7 +71,7 @@ next one.
 | 15 | Reaper | October 2005 |
 
 - **Decks.** Each format duelist picks one of 2-3 (sometimes more) strong decks from its format, at weighted
-  random. The first 13 duelists are fully coded. [DECKS.md](DECKS.md) lists every deck and its chance.
+  random. The first 14 duelists are fully coded. [DECKS.md](DECKS.md) lists every deck and its chance.
 - **Your deck.** It has to be legal in that format's banlist and card pool to duel them.
 - **Portraits.** Each duelist's portrait is its format's namesake card (or the Format Library picture when the
   format isn't named after a card).
@@ -82,7 +82,7 @@ next one.
   the Deck Recipes screen opens: load a recipe, press SELECT for Deck Edit, or B to duel. In the release, a deck that
   isn't legal in the format (or is under 40 cards) can't duel until you fix it.
 - **Deck Recipes.** Up to 50 saved decks. In the debug build (`make`), the first slots are premade staple decks of the
-  first thirteen formats (including Goat), named after their .ydk files; the release build starts with empty slots until
+  first fourteen formats (including Goat), named after their .ydk files; the release build starts with empty slots until
   you save your own. Loading a recipe takes the cards from your trunk; any you don't have are left out (the game tells
   you which, and why). Premade recipes include Side and Extra Decks from their .ydk files. The deck recipes will
   eventually include all 15 TCG formats in release too.
@@ -210,6 +210,15 @@ next one.
     - It plays Monster Gate when it can Tribute a monster with less than 1500 ATK.
     - It plays Book of Moon when you have a face-up monster and it has a monster on the field.
     - It never activates Hysteric Fairy's effect (two Tributes for 1000 LP).
+    - It plays Cold Wave in its Main Phase and does not keep playing Spells or Traps while either player's Cold Wave
+      lock is active.
+    - On its Standby Phase it activates face-up monsters with Standby effects on its own turn (Dark Mimic LV1's
+      level-up, and the original game's Jigen Bakudan and similar cards), without waiting for you to move the cursor.
+    - Its Chiron the Mage discards a Spell to destroy one of your Spells or Traps when it can, once per turn.
+    - It Sets Wave-Motion Cannon from its hand and later ignites it after at least two of its Standby Phases have
+      passed, or sooner when the burn would win the duel.
+    - It pays Exarion Universe's ATK cost for piercing damage when its ATK minus 400 still beats your Defense Position
+      monster's DEF.
     - Its Roulette Barrel keeps the die that matches the Level of your strongest face-up monster, so it destroys
       the best target it can.
     - It plays Level Limit - Area B, Gravity Bind, Final Attack Orders and Royal Oppression in its Main Phase. It
@@ -254,7 +263,7 @@ next one.
 ## Playing
 
 Ready-made IPS patches are in the [`patches/`](patches/) folder: a release build and a debug build (the demo, up to
-Goat). Apply one to your own USA ROM of *The Eternal Duelist Soul* (AY5E) with any IPS patcher, or let an emulator
+Cyber). Apply one to your own USA ROM of *The Eternal Duelist Soul* (AY5E) with any IPS patcher, or let an emulator
 that auto-loads patches, such as mGBA, apply it.
 
 ## Building

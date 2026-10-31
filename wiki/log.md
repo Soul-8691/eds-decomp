@@ -2170,3 +2170,8 @@ updated: 2026-09-29
 ## [2026-10-31] progress | Debug deck list (draw order)
 - src/mod_opponents.c: `ModDeckListVisible` (make testing or `ModDebugDuel`). src/card_menu_input.c + src/campaign.c:
   **Card View** on your main deck opens the list viewer in `deck[0]` order. [[yugi-kaiba-opponent]]. Built (`make`).
+
+## [2026-10-31] setup | README: added-card CPU list
+- README.md **Smarter CPU → Card use**: Cold Wave lock respect, Standby activations (Dark Mimic LV1 and vanilla
+  Standby monsters), Chiron the Mage, Wave-Motion Cannon ignition, Exarion Universe piercing. Matches [[added-cards]]
+  CPU notes; Different Dimension Capsule omitted (no dedicated CPU policy).
