@@ -2134,6 +2134,18 @@ updated: 2026-09-29
 - src/added_effects.c: next own Standby returns the banished Capsule card via `DUEL_CMD_RETURN_BANISHED_CARD_TO_HAND`.
   [[added-cards]]. Built (`make`); not tested in an emulator.
 
+## [2026-10-31] progress | Wave-Motion Cannon standby counter (once per phase)
+- src/added_effects.c: `gModDuel.wmcStandbyTicked` so `turnCounter` increments once per Standby Phase, not every
+  `ModStandbyStep` frame. Fixes 4000 burn after one standby. [[added-cards]]. Built (`make`).
+
+## [2026-10-31] progress | Wave-Motion Cannon face-up Activate fix
+- duel_card_lists.c, card_command_menu.c, effect_targets4.c, duel_cmd_turn.c: face-up ignition needed canActivate and
+  CanActivateFieldCard exceptions (like Ultimate Offering). [[added-cards]].
+
+## [2026-10-31] progress | Wave-Motion Cannon effect
+- src/added_effects.c (+ card_command_menu.c): Continuous Spell, Standby counter on zone, Main Phase send-to-GY burn.
+  [[added-cards]]. Built (`make`).
+
 ## [2026-10-31] progress | Exarion Universe effect
 - src/added_effects.c (+ battle_phase1, duel_prompts, duel_cmd_turn): optional -400 ATK and piercing when attacking a
   Defense Position monster (YGOPRODeck text); ATK penalty until turn end. [[added-cards]]. Built (`make`).

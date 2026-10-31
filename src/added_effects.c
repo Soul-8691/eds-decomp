@@ -86,6 +86,7 @@ struct ModDuelState {
     u8 exarionAskStep;          /* Exarion Universe: enum ExarionUniverseStep for this attack's prompt */
     u8 exarionPierce;           /* ... 1 if this attack inflicts piercing from its effect */
     u8 exarionPenaltyStacks[10]; /* ... per zone (player * 5 + zone): -400 ATK per stack until that player's turn ends */
+    u8 wmcStandbyTicked;        /* Wave-Motion Cannon: 1 after this Standby Phase's counter tick (ModStandbyStep) */
 };
 extern struct ModDuelState gModDuel;
 /* gModDuel (0x0202FF04, symbols.ld) must end before gScratchBuffer (0x02030000). */
@@ -1266,6 +1267,7 @@ void ModDuelInit(void)
     gModDuel.exarionAskStep = 0;
     gModDuel.exarionPierce = 0;
     MemClear16(gModDuel.exarionPenaltyStacks, sizeof(gModDuel.exarionPenaltyStacks));
+    gModDuel.wmcStandbyTicked = 0;
 #ifdef HAS_CARD_INJECTION_FAIRY_LILY
     InjectionFairyLilyResetBattle();
 #endif
@@ -7123,6 +7125,89 @@ int TreebornFrogStandbyStep(int player)
 }
 #endif /* HAS_CARD_TREEBORN_FROG */
 
+#ifdef HAS_CARD_WAVE_MOTION_CANNON
+/* ---- Wave-Motion Cannon (YGOPRODeck passcode 38992735) -----------------------------------------------------------
+ * Continuous Spell: "During your Main Phase: You can send this face-up card to the GY; inflict 1000 damage to your
+ * opponent for each of your Standby Phases that have passed since this card was activated."
+ *   activation from hand   resolve does nothing (the card stays face-up); turnCounter stays 0 until Standby
+ *   each Standby Phase   once per phase (gModDuel.wmcStandbyTicked), turnCounter on the turn player's face-up copies
+ *   ignition from field  prepare requires Main Phase and !fromHand; resolve sends the card to the GY and burns
+ *                        1000 * turnCounter (link kind CHAIN_KIND_SPELL_TRAP, as field activations in
+ *                        duel_cmd_queue.c). Card menu and CanChainFieldCard allow face-up activation in Main Phase. */
+
+#define WMC_DAMAGE_PER_STANDBY 1000
+
+static void WaveMotionStandbyCount(int player)
+{
+    int zone;
+
+    if (gModDuel.wmcStandbyTicked)
+        return;
+    gModDuel.wmcStandbyTicked = 1;
+
+    for (zone = ZONE_SPELL_0; zone <= ZONE_SPELL_4; zone++) {
+        struct DuelZone *z = ZoneOf(player, zone);
+        u16 id = DUEL_CARD_ID(&z->card);
+
+        if (id != 0 && z->isFaceUp && !z->isDisabled
+            && ((const u16 *)CARD_ID_TO_NUMBER_ADDR)[id & CARD_ID_MASK] == CARD_WAVE_MOTION_CANNON
+            && z->turnCounter < 15)
+            z->turnCounter++;
+    }
+}
+
+int EffectWaveMotionCannonPrepare(struct ChainEntry *card, struct ChainEntry *chainLink, u16 fromHand)
+{
+    if (fromHand)
+        return 1;
+    if (gDuel.phase != PHASE_MAIN1 && gDuel.phase != PHASE_MAIN2)
+        return 0;
+    if (gDuel.turnPlayer != (card->player & 1))
+        return 0;
+    if (card->zone < ZONE_SPELL_0 || card->zone > ZONE_SPELL_4)
+        return 0;
+    {
+        struct DuelZone *z = ZoneOf(card->player, card->zone);
+        u16 id = DUEL_CARD_ID(&z->card);
+
+        return id != 0 && z->isFaceUp && !z->isDisabled
+               && ((const u16 *)CARD_ID_TO_NUMBER_ADDR)[id & CARD_ID_MASK] == CARD_WAVE_MOTION_CANNON;
+    }
+}
+
+int EffectWaveMotionCannonResolve(struct ChainEntry *link, struct ChainEntry *chainedTo)
+{
+    struct DuelZone *z;
+    int damage;
+
+    if (link->negated || link->kind != CHAIN_KIND_SPELL_TRAP)
+        return EFFECT_STEP_DONE;
+    if (link->zone < ZONE_SPELL_0 || link->zone > ZONE_SPELL_4)
+        return EFFECT_STEP_DONE;
+    z = ZoneOf(link->player, link->zone);
+    if (DUEL_CARD_ID(&z->card) == 0
+        || ((const u16 *)CARD_ID_TO_NUMBER_ADDR)[DUEL_CARD_ID(&z->card) & CARD_ID_MASK] != CARD_WAVE_MOTION_CANNON)
+        return EFFECT_STEP_DONE;
+    damage = z->turnCounter * WMC_DAMAGE_PER_STANDBY;
+    SendFieldCardToGrave(link->player, link->zone, 0, 1);
+    if (damage > 0)
+        LoseLifePoints(1 - (link->player & 1), damage);
+    return EFFECT_STEP_DONE;
+}
+
+static int AiWantsWaveMotionIgnition(int zone)
+{
+    struct DuelZone *z = ZoneOf(AI_PLAYER, zone);
+    int damage = z->turnCounter * WMC_DAMAGE_PER_STANDBY;
+
+    if (damage <= 0)
+        return 0;
+    if ((int)gDuelPlayers[AI_HUMAN].lifePoints <= damage)
+        return 1;
+    return z->turnCounter >= 2;
+}
+#endif /* HAS_CARD_WAVE_MOTION_CANNON */
+
 #ifdef HAS_CARD_MIRAGE_OF_NIGHTMARE
 /* ---- Mirage of Nightmare ------------------------------------------------------------------------------------------
  * "Once per turn, during your opponent's Standby Phase: Draw cards until you have 4 cards in your hand. If you do,
@@ -7202,6 +7287,9 @@ int ModStandbyStep(int player)
 #ifdef HAS_CARD_DIFFERENT_DIMENSION_CAPSULE
     DifferentDimensionCapsuleStandbyStep(player);
 #endif
+#ifdef HAS_CARD_WAVE_MOTION_CANNON
+    WaveMotionStandbyCount(player);
+#endif
     switch (gModDuel.standbyPart) {
     case 0:
         done = TreebornFrogStandbyStep(player);
@@ -7216,6 +7304,9 @@ int ModStandbyStep(int player)
 #endif
     default:
         gModDuel.standbyPart = 0;
+#ifdef HAS_CARD_WAVE_MOTION_CANNON
+        gModDuel.wmcStandbyTicked = 0;
+#endif
         return 1;
     }
     if (done) {
@@ -8778,6 +8869,12 @@ static int AiIncomingBurn(struct ChainEntry *entry)
     case CARD_SECRET_BARREL:
         return CountHandAndFieldCards(AI_PLAYER) * SECRET_BARREL_DAMAGE_PER_CARD;
 #endif
+#ifdef HAS_CARD_WAVE_MOTION_CANNON
+    case CARD_WAVE_MOTION_CANNON:
+        if (entry->zone >= ZONE_SPELL_0 && entry->zone <= ZONE_SPELL_4)
+            return ZoneOf(entry->player, entry->zone)->turnCounter * WMC_DAMAGE_PER_STANDBY;
+        return 0;
+#endif
     }
     return 0;
 }
@@ -9029,6 +9126,10 @@ static int AiWantsSpell(u16 number)
     case CARD_TOKEN_THANKSGIVING:
         return AiWantsTokenThanksgiving();
 #endif
+#ifdef HAS_CARD_WAVE_MOTION_CANNON
+    case CARD_WAVE_MOTION_CANNON:
+        return 1;
+#endif
 #ifdef HAS_CARD_EMERGENCY_PROVISIONS
     case CARD_EMERGENCY_PROVISIONS:             /* only when low on LP */
         return AiWantsEmergencyProvisions();
@@ -9236,6 +9337,25 @@ int AiPlayAddedCards(void)
 #ifdef HAS_CARD_ROYAL_OPPRESSION
     if (AiTryPlaySpellTrap(CARD_ROYAL_OPPRESSION))
         return 1;
+#endif
+#ifdef HAS_CARD_WAVE_MOTION_CANNON
+    for (zone = ZONE_SPELL_0; zone <= ZONE_SPELL_4; zone++) {
+        struct DuelZone *z = ZoneOf(AI_PLAYER, zone);
+        u16 id = DUEL_CARD_ID(&z->card);
+        struct ChainEntry ref;
+
+        if (id == 0 || !z->isFaceUp || CardNumberOfId(id) != CARD_WAVE_MOTION_CANNON || !AiWantsWaveMotionIgnition(zone))
+            continue;
+        MemClear16(&ref, sizeof(ref));
+        ref.player = AI_PLAYER;
+        ref.zone = zone;
+        ref.card = id;
+        if (!CanActivateEffect(&ref, 0, 0))
+            continue;
+        DuelCmd_Push(DUEL_CMD_PLAYER | DUEL_CMD_POINT_AT_CARD, AI_PLAYER, (u8)zone << 8, 0);
+        Chain_AddPending(((u32)(zone & 0x1F) << 16) | (CHAIN_KIND_SPELL_TRAP << 21) | id | (1u << 31), 0);
+        return 1;
+    }
 #endif
     /* added Magic cards, in the hand or Set */
     for (i = 0; i < p->handCount; i++) {
@@ -10166,6 +10286,16 @@ const struct CardEffect gAddedCardEffects[] = {
         EffectMirageOfNightmareResolve,
         NULL,
         NULL,
+        NULL,
+        NULL,
+    },
+#endif
+#ifdef HAS_CARD_WAVE_MOTION_CANNON
+    {
+        CARD_WAVE_MOTION_CANNON, 0,
+        EffectWaveMotionCannonResolve,
+        NULL,
+        EffectWaveMotionCannonPrepare,
         NULL,
         NULL,
     },

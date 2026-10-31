@@ -154,6 +154,11 @@ void PlaceSpellTrapCard(int player, int slot, struct DuelCard *card, u16 faceUp)
             && CountActiveCardsOnField(1, CARD_ANTI_MAGIC_FRAGRANCE) == 0)
             z->canActivate = TRUE;
     }
+#ifdef HAS_CARD_WAVE_MOTION_CANNON
+    /* Face-up activation from the hand leaves canActivate clear; the Main Phase ignition needs it set. */
+    else if (CARD_NUMBER_C(id) == CARD_WAVE_MOTION_CANNON)
+        z->canActivate = TRUE;
+#endif
 }
 
 /* Put *card on top of `player`'s deck (deck[0]), shifting the others down. Clears the graverobbed bit of *card

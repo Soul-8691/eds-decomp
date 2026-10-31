@@ -1112,6 +1112,20 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
   (`ChangeBattlePosition`). That covers a direct attack too.
 - Checked in the source and the build; not tested in an emulator.
 
+### Wave-Motion Cannon (2026-10-31)
+- Continuous Spell. Passcode 38992735 ([YGOPRODeck](https://ygoprodeck.com/card/wave-motion-cannon-3305)): "During your Main Phase: You can send this
+  face-up card to the GY; inflict 1000 damage to your opponent for each of your Standby Phases that have passed since
+  this card was activated."
+- **Activation from hand** resolves with no effect (the card stays on the field); `turnCounter` on the zone starts at 0.
+- **Each Standby Phase** of the controller, `ModStandbyStep` increments `turnCounter` once per phase on that player's
+  face-up copies (`gModDuel.wmcStandbyTicked`; max 15). Standby sub-steps can run for many frames, so the counter must not
+  tick every call.
+- **Ignition from the field** in Main Phase 1/2: **Activate** on the face-up card (`card_command_menu.c`); `prepare` requires
+  `!fromHand`; `resolve` (`kind == CHAIN_KIND_SPELL_TRAP`) sends it to the Graveyard and inflicts `1000 × turnCounter` damage.
+- **CPU:** sets it from the hand; later ignites in Main Phase when `turnCounter ≥ 2` or the burn is lethal (`AiPlayAddedCards`);
+  `AiIncomingBurn` counts the damage for Hallowed Life Barrier.
+- Checked in the source and the build; not tested in an emulator.
+
 ### Exarion Universe (2026-10-31)
 - Effect Monster (Level 4, DARK Beast-Warrior, 1800/1900). Passcode 63749102 ([YGOPRODeck](https://ygoprodeck.com/card/exarion-universe-5385)):
   "During your Battle Step, if this card attacks a Defense Position monster: You can make this card lose exactly 400

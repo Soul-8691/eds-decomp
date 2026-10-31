@@ -843,6 +843,9 @@ int CanActivateFieldCard(struct ChainEntry *ref, int player, int zone)
 #ifdef HAS_CARD_ROYAL_OPPRESSION
     case CARD_ROYAL_OPPRESSION:    /* added card: continuous, face-up reactivation */
 #endif
+#ifdef HAS_CARD_WAVE_MOTION_CANNON
+    case CARD_WAVE_MOTION_CANNON:  /* added card: continuous, Main Phase ignition */
+#endif
     case CARD_1428:
     case CARD_1532:
         faceUp = 0;
@@ -854,6 +857,9 @@ int CanActivateFieldCard(struct ChainEntry *ref, int player, int zone)
         /* The zone must allow activation and the card must not be negated. */
         int side2 = 1 & player;
         struct DuelZoneBits91 *z2 = (struct DuelZoneBits91 *)ZONE_AT(side2, zone);
+#ifdef HAS_CARD_WAVE_MOTION_CANNON
+        if (CARD_NUMBER(id) != CARD_WAVE_MOTION_CANNON || !z->isFaceUp)
+#endif
         if (!z2->canActivate)
             return 0;
         if (z2->isDisabled)
