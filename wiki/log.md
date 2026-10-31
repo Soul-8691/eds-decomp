@@ -2045,6 +2045,11 @@ updated: 2026-09-29
 - src/mod_opponents.c: `ModOpponentSelectStart` opens on Test Duel when `MOD_TEST_DECK` (`make` only); `make release` unchanged (newest format). [[yugi-kaiba-opponent]].
 - Fix: use `#if !MOD_RELEASE` (not `#ifndef`; `MOD_RELEASE` is always defined as 0 or 1).
 
+## [2026-10-30] progress | Cyber opponent decks and recipes
+- src/mod_decks.c: sCyberBrianLongGoatControl, sCyberSteinMonarch (from decks/*.ydk), CyberDeck 50/50 for
+  DUELIST_YAMI_BAKURA; recipe presets 38-39. tools/testdeck.py: YGOPRODeck id aliases for Cyber Dragon / Cyber End
+  Dragon. DECKS.md, [[deck-recipes]]. Built (`make`); not tested in an emulator.
+
 ## [2026-10-30] progress | Hysteric Fairy (CPU off)
 - CPU no longer activates Hysteric Fairy (`AiWantsMonsterEffect` returns 0). [[added-cards]].
 

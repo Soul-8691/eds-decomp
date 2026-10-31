@@ -2287,9 +2287,20 @@ Chaos Turbo 40%, Warrior 20% and Goat Control 15% were the deck opponents' decks
 
 Every card was already in the game. Cards in these seven decks with no coded effect yet: Mystik Wok, Level Limit - Area B, Secret Barrel, Ojama Trio, Gravity Bind, Spell Canceller, Des Koala, Toon Table of Contents, Token Thanksgiving, Monster Reincarnation, Roulette Barrel, Toon Cannon Soldier, Final Attack Orders, Dark Scorpion - Cliff the Trap Remover, Hysteric Fairy, Royal Oppression, and the Fusion Monsters Dark Balter the Terrible, Ryu Senshi, Gatling Dragon, Dark Blade the Dragon Knight, Fiend Skull Dragon, Reaper on the Nightmare, The Last Warrior from Another Planet, King Dragun, Ojama King, Dark Flare Knight and Dark Paladin.
 
-### 14-15. Cyber to Reaper
+### 14. Cyber (Yami Bakura)
 
-Vanilla (unchanged): these opponents still use the original game's decks.
+50% **Brian Long-Goat Control** (`decks/Brian Long-Goat Control.ydk`), 50% **splevin-Stein Monarch**
+(`decks/splevin-Stein Monarch.ydk`). Main, Fusion and Side Decks match the `.ydk` files (Cyber Dragon and Cyber End
+Dragon use the YGOPRODeck id aliases in `tools/testdeck.py`, same as other deck imports). Deck Recipes presets 38-39.
+
+Every card was already in the game. Cards in these two decks with **no coded effect yet**: Chiron the Mage, Cold Wave,
+Different Dimension Capsule, D.D. Assailant, Exarion Universe, Wave-Motion Cannon, and the Fusion Monsters Dark Balter
+the Terrible, Ryu Senshi, Gatling Dragon, Dark Blade the Dragon Knight, Fiend Skull Dragon, Reaper on the Nightmare,
+The Last Warrior from Another Planet, King Dragun, Master of Oz, and Ojama King.
+
+### 15. Reaper
+
+Vanilla (unchanged): this opponent still uses the original game's deck.
 
 ## Deck opponents
 

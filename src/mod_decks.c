@@ -2982,6 +2982,222 @@ static const u16 sGoatReasoningGateTurboSide[] = {
 };
 STATIC_ASSERT(ARRAY_COUNT(sGoatReasoningGateTurboSide) == 15, GoatReasoningGateTurboSideSize);
 #endif
+
+/* The Cyber format opponent (Yami Bakura's slot, src/mod_opponents.c): Brian Long-Goat Control or splevin-Stein
+ * Monarch 50% each (decks/Brian Long-Goat Control.ydk, decks/splevin-Stein Monarch.ydk; main and extra decks). */
+#if defined(HAS_CARD_AIRKNIGHT_PARSHATH) \
+    && defined(HAS_CARD_ASURA_PRIEST) \
+    && defined(HAS_CARD_BLACK_LUSTER_SOLDIER_ENVOY_OF_THE_BEGINNING) \
+    && defined(HAS_CARD_BOOK_OF_MOON) \
+    && defined(HAS_CARD_BRAIN_CONTROL) \
+    && defined(HAS_CARD_BREAKER_THE_MAGICAL_WARRIOR) \
+    && defined(HAS_CARD_CHAIN_DISAPPEARANCE) \
+    && defined(HAS_CARD_CHIRON_THE_MAGE) \
+    && defined(HAS_CARD_CYBER_END_DRAGON) \
+    && defined(HAS_CARD_CYBER_TWIN_DRAGON) \
+    && defined(HAS_CARD_DARK_BALTER_THE_TERRIBLE) \
+    && defined(HAS_CARD_DARK_BLADE_THE_DRAGON_KNIGHT) \
+    && defined(HAS_CARD_DIFFERENT_DIMENSION_CAPSULE) \
+    && defined(HAS_CARD_D_D_ASSAILANT) \
+    && defined(HAS_CARD_D_D_WARRIOR_LADY) \
+    && defined(HAS_CARD_EXARION_UNIVERSE) \
+    && defined(HAS_CARD_FIEND_SKULL_DRAGON) \
+    && defined(HAS_CARD_GATLING_DRAGON) \
+    && defined(HAS_CARD_INJECTION_FAIRY_LILY) \
+    && defined(HAS_CARD_LIGHTNING_VORTEX) \
+    && defined(HAS_CARD_METAMORPHOSIS) \
+    && defined(HAS_CARD_MOBIUS_THE_FROST_MONARCH) \
+    && defined(HAS_CARD_MYSTIC_SWORDSMAN_LV2) \
+    && defined(HAS_CARD_OJAMA_KING) \
+    && defined(HAS_CARD_REAPER_ON_THE_NIGHTMARE) \
+    && defined(HAS_CARD_RYU_SENSHI) \
+    && defined(HAS_CARD_SAKURETSU_ARMOR) \
+    && defined(HAS_CARD_SCAPEGOAT) \
+    && defined(HAS_CARD_SPIRIT_REAPER) \
+    && defined(HAS_CARD_THOUSAND_EYES_RESTRICT) \
+    && defined(HAS_CARD_TORRENTIAL_TRIBUTE) \
+    && defined(HAS_CARD_TRIBE_INFECTING_VIRUS) \
+    && defined(HAS_CARD_TSUKUYOMI) \
+    && defined(HAS_CARD_WAVE_MOTION_CANNON)
+#define MOD_CYBER_BRIAN_LONG_GOAT 1
+static const u16 sCyberBrianLongGoatControl[] = {
+    /* Main + Fusion (55) */
+    X2(CARD_AIRKNIGHT_PARSHATH),
+    CARD_ASURA_PRIEST,
+    CARD_BLACK_LUSTER_SOLDIER_ENVOY_OF_THE_BEGINNING,
+    CARD_BREAKER_THE_MAGICAL_WARRIOR,
+    CARD_D_D_ASSAILANT,
+    CARD_D_D_WARRIOR_LADY,
+    CARD_EXARION_UNIVERSE,
+    CARD_INJECTION_FAIRY_LILY,
+    X2(CARD_MAGICIAN_OF_FAITH),
+    CARD_SANGAN,
+    CARD_SINISTER_SERPENT,
+    CARD_SPIRIT_REAPER,
+    CARD_TRIBE_INFECTING_VIRUS,
+    CARD_TSUKUYOMI,
+    CARD_BOOK_OF_MOON,
+    CARD_BRAIN_CONTROL,
+    CARD_DELINQUENT_DUO,
+    CARD_DIFFERENT_DIMENSION_CAPSULE,
+    CARD_GRACEFUL_CHARITY,
+    CARD_HEAVY_STORM,
+    CARD_LIGHTNING_VORTEX,
+    X2(CARD_METAMORPHOSIS),
+    CARD_MYSTICAL_SPACE_TYPHOON,
+    X2(CARD_NOBLEMAN_OF_CROSSOUT),
+    CARD_POT_OF_GREED,
+    CARD_PREMATURE_BURIAL,
+    X2(CARD_SCAPEGOAT),
+    CARD_SNATCH_STEAL,
+    CARD_CALL_OF_THE_HAUNTED,
+    CARD_MIRROR_FORCE,
+    CARD_BELL_OF_DESTRUCTION,
+    X3(CARD_SAKURETSU_ARMOR),
+    CARD_TORRENTIAL_TRIBUTE,
+    CARD_CYBER_END_DRAGON,
+    CARD_CYBER_TWIN_DRAGON,
+    CARD_DARK_BALTER_THE_TERRIBLE,
+    CARD_DARK_BLADE_THE_DRAGON_KNIGHT,
+    CARD_DARKFIRE_DRAGON,
+    CARD_DRAGONESS_THE_WICKED_KNIGHT,
+    CARD_FIEND_SKULL_DRAGON,
+    CARD_GATLING_DRAGON,
+    CARD_GILTIA_THE_D_KNIGHT,
+    CARD_OJAMA_KING,
+    CARD_REAPER_ON_THE_NIGHTMARE,
+    CARD_RYU_SENSHI,
+    X3(CARD_THOUSAND_EYES_RESTRICT),
+};
+STATIC_ASSERT(ARRAY_COUNT(sCyberBrianLongGoatControl) == 55, CyberBrianLongGoatControlSize);
+static const struct DeckList sCyberBrianLongGoatControlList = { sCyberBrianLongGoatControl, ARRAY_COUNT(sCyberBrianLongGoatControl), 0 };
+static const u16 sCyberBrianLongGoatControlSide[] = {
+    /* Side (15) */
+    CARD_CHIRON_THE_MAGE,
+    CARD_JINZO,
+    X2(CARD_MOBIUS_THE_FROST_MONARCH),
+    CARD_MYSTIC_SWORDSMAN_LV2,
+    CARD_WAVE_MOTION_CANNON,
+    CARD_CEASEFIRE,
+    CARD_CHAIN_DISAPPEARANCE,
+    X3(CARD_DUST_TORNADO),
+    CARD_ROYAL_DECREE,
+    X3(CARD_WABOKU),
+};
+STATIC_ASSERT(ARRAY_COUNT(sCyberBrianLongGoatControlSide) == 15, CyberBrianLongGoatControlSideSize);
+#endif
+
+#if defined(HAS_CARD_ABYSS_SOLDIER) \
+    && defined(HAS_CARD_BLACK_LUSTER_SOLDIER_ENVOY_OF_THE_BEGINNING) \
+    && defined(HAS_CARD_BOOK_OF_MOON) \
+    && defined(HAS_CARD_BRAIN_CONTROL) \
+    && defined(HAS_CARD_BREAKER_THE_MAGICAL_WARRIOR) \
+    && defined(HAS_CARD_COLD_WAVE) \
+    && defined(HAS_CARD_CYBER_DRAGON) \
+    && defined(HAS_CARD_CYBER_END_DRAGON) \
+    && defined(HAS_CARD_CYBER_TWIN_DRAGON) \
+    && defined(HAS_CARD_DARK_BALTER_THE_TERRIBLE) \
+    && defined(HAS_CARD_DARK_BLADE_THE_DRAGON_KNIGHT) \
+    && defined(HAS_CARD_D_D_WARRIOR_LADY) \
+    && defined(HAS_CARD_EXILED_FORCE) \
+    && defined(HAS_CARD_FIEND_SKULL_DRAGON) \
+    && defined(HAS_CARD_GATLING_DRAGON) \
+    && defined(HAS_CARD_GRAVEKEEPERS_SPY) \
+    && defined(HAS_CARD_KING_DRAGUN) \
+    && defined(HAS_CARD_KING_TIGER_WANGHU) \
+    && defined(HAS_CARD_LIGHTNING_VORTEX) \
+    && defined(HAS_CARD_MASTER_OF_OZ) \
+    && defined(HAS_CARD_MOBIUS_THE_FROST_MONARCH) \
+    && defined(HAS_CARD_OJAMA_KING) \
+    && defined(HAS_CARD_REAPER_ON_THE_NIGHTMARE) \
+    && defined(HAS_CARD_RYU_SENSHI) \
+    && defined(HAS_CARD_SAKURETSU_ARMOR) \
+    && defined(HAS_CARD_SPIRIT_REAPER) \
+    && defined(HAS_CARD_THE_LAST_WARRIOR_FROM_ANOTHER_PLANET) \
+    && defined(HAS_CARD_THOUSAND_EYES_RESTRICT) \
+    && defined(HAS_CARD_TORRENTIAL_TRIBUTE) \
+    && defined(HAS_CARD_TRAP_DUSTSHOOT) \
+    && defined(HAS_CARD_TRIBE_INFECTING_VIRUS) \
+    && defined(HAS_CARD_ZABORG_THE_THUNDER_MONARCH)
+#define MOD_CYBER_STEIN_MONARCH 1
+static const u16 sCyberSteinMonarch[] = {
+    /* Main + Fusion (55) */
+    CARD_BLACK_LUSTER_SOLDIER_ENVOY_OF_THE_BEGINNING,
+    CARD_JINZO,
+    X3(CARD_ZABORG_THE_THUNDER_MONARCH),
+    X2(CARD_CYBER_DRAGON),
+    CARD_ABYSS_SOLDIER,
+    CARD_TRIBE_INFECTING_VIRUS,
+    CARD_SINISTER_SERPENT,
+    CARD_BREAKER_THE_MAGICAL_WARRIOR,
+    X2(CARD_MYSTIC_TOMATO),
+    CARD_SANGAN,
+    CARD_CYBER_STEIN,
+    CARD_SPIRIT_REAPER,
+    X3(CARD_GRAVEKEEPERS_SPY),
+    CARD_MAGICIAN_OF_FAITH,
+    CARD_D_D_WARRIOR_LADY,
+    CARD_EXILED_FORCE,
+    CARD_BOOK_OF_MOON,
+    CARD_NOBLEMAN_OF_CROSSOUT,
+    CARD_POT_OF_GREED,
+    CARD_DELINQUENT_DUO,
+    CARD_GRACEFUL_CHARITY,
+    CARD_HEAVY_STORM,
+    X2(CARD_COLD_WAVE),
+    CARD_LAST_WILL,
+    CARD_BRAIN_CONTROL,
+    CARD_SNATCH_STEAL,
+    CARD_PREMATURE_BURIAL,
+    CARD_CALL_OF_THE_HAUNTED,
+    CARD_MIRROR_FORCE,
+    CARD_BELL_OF_DESTRUCTION,
+    CARD_TORRENTIAL_TRIBUTE,
+    X2(CARD_TRAP_DUSTSHOOT),
+    CARD_CYBER_END_DRAGON,
+    CARD_CYBER_TWIN_DRAGON,
+    CARD_DARK_BALTER_THE_TERRIBLE,
+    CARD_DARK_BLADE_THE_DRAGON_KNIGHT,
+    CARD_DARKFIRE_DRAGON,
+    CARD_DRAGONESS_THE_WICKED_KNIGHT,
+    CARD_FIEND_SKULL_DRAGON,
+    CARD_GATLING_DRAGON,
+    CARD_KING_DRAGUN,
+    CARD_MASTER_OF_OZ,
+    CARD_OJAMA_KING,
+    CARD_REAPER_ON_THE_NIGHTMARE,
+    CARD_RYU_SENSHI,
+    CARD_THE_LAST_WARRIOR_FROM_ANOTHER_PLANET,
+    CARD_THOUSAND_EYES_RESTRICT,
+};
+STATIC_ASSERT(ARRAY_COUNT(sCyberSteinMonarch) == 55, CyberSteinMonarchSize);
+static const struct DeckList sCyberSteinMonarchList = { sCyberSteinMonarch, ARRAY_COUNT(sCyberSteinMonarch), 0 };
+static const u16 sCyberSteinMonarchSide[] = {
+    /* Side (15) */
+    X2(CARD_MOBIUS_THE_FROST_MONARCH),
+    CARD_CYBER_DRAGON,
+    X2(CARD_KING_TIGER_WANGHU),
+    X2(CARD_KURIBOH),
+    CARD_BOOK_OF_MOON,
+    CARD_MYSTICAL_SPACE_TYPHOON,
+    CARD_NOBLEMAN_OF_CROSSOUT,
+    CARD_LIGHTNING_VORTEX,
+    CARD_TRAP_DUSTSHOOT,
+    X3(CARD_SAKURETSU_ARMOR),
+};
+STATIC_ASSERT(ARRAY_COUNT(sCyberSteinMonarchSide) == 15, CyberSteinMonarchSideSize);
+#endif
+
+#if defined(MOD_CYBER_BRIAN_LONG_GOAT) && defined(MOD_CYBER_STEIN_MONARCH)
+#define MOD_CYBER_DECKS 1
+static const struct DeckList *CyberDeck(void)
+{
+    if ((Random() & 1) != 0)
+        return &sCyberBrianLongGoatControlList;
+    return &sCyberSteinMonarchList;
+}
+#endif
+
 #if defined(MOD_RED_DECK) && defined(MOD_JOEY_DECK) && defined(MOD_BAKURA_DECK) && defined(MOD_GOAT_CHAOS_CONTROL) \
     && defined(MOD_GOAT_PANDA_BURN) && defined(MOD_GOAT_CHAOS_RETURN) && defined(MOD_GOAT_REASONING_GATE_TURBO)
 #define MOD_GOAT_DECKS 1
@@ -3049,6 +3265,10 @@ static const struct DeckList *PickOpponentDeckOverride(int opponent)
 #ifdef MOD_GOAT_DECKS
     case DUELIST_ISHIZU:                /* the Goat format opponent */
         return GoatDeck();
+#endif
+#ifdef MOD_CYBER_DECKS
+    case DUELIST_YAMI_BAKURA:           /* the Cyber format opponent */
+        return CyberDeck();
 #endif
 #ifdef MOD_JOEY_PEGASUS_DECKS
     case DUELIST_WEEVIL:                /* the Joey-Pegasus format opponent */
@@ -3136,6 +3356,8 @@ static const char sNameGoatChaosControl[] = "Nova-Chaos Control";      /* N\u266
 static const char sNameGoatPandaBurn[] = "wolfe_KMH-Panda Burn";
 static const char sNameGoatChaosReturn[] = "Dingosig-Chaos Return";
 static const char sNameGoatReasoningGateTurbo[] = "paede17-Reasoning Gate Turbo";
+static const char sNameCyberBrianLongGoat[] = "Brian Long-Goat Control";
+static const char sNameCyberSteinMonarch[] = "splevin-Stein Monarch";
 
 static const struct RecipePreset sRecipePresets[] = {
 #ifdef MOD_TRISTAN_SOUL_CONTROL
@@ -3247,6 +3469,14 @@ static const struct RecipePreset sRecipePresets[] = {
 #ifdef MOD_GOAT_REASONING_GATE_TURBO
     { sNameGoatReasoningGateTurbo, &sGoatReasoningGateTurboList, sGoatReasoningGateTurboSide,
       ARRAY_COUNT(sGoatReasoningGateTurboSide) },
+#endif
+#ifdef MOD_CYBER_BRIAN_LONG_GOAT
+    { sNameCyberBrianLongGoat, &sCyberBrianLongGoatControlList, sCyberBrianLongGoatControlSide,
+      ARRAY_COUNT(sCyberBrianLongGoatControlSide) },
+#endif
+#ifdef MOD_CYBER_STEIN_MONARCH
+    { sNameCyberSteinMonarch, &sCyberSteinMonarchList, sCyberSteinMonarchSide,
+      ARRAY_COUNT(sCyberSteinMonarchSide) },
 #endif
     { NULL, NULL, NULL, 0 },
 };

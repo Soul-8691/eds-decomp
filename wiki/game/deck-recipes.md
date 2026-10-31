@@ -26,7 +26,7 @@ An eighth main-menu item added by this build (`src/mod_recipes.c`, a `@farcode`/
   - `MainMenu_Init` writes the label to tiles 0x200-0x23F, the two tile rows after the 0x4000-byte sheet.
 
 ## Preset recipes
-The SRAM area is set up on the first visit (and after a New Game) with recipes 01-37 from `GetRecipePreset` (src/mod_decks.c). These are the
+The SRAM area is set up on the first visit (and after a New Game) with recipes 01-39 from `GetRecipePreset` (src/mod_decks.c). These are the
 mod's deck tables, named after their .ydk files. Every preset carries the .ydk's Side Deck too (`s<Deck>Side`,
 passed by `GetRecipePreset` and put in the recipe's side list by `PresetToBuf`) and has its .ydk's Extra Deck as
 its Fusion Deck. Presets 31-33 (Chaos Turbo, Warrior, Goat Control; 22-24 until the Vampire, Chaos and Warrior decks came) got theirs on 2026-10-30: until then they held
@@ -74,6 +74,8 @@ Control's Side Deck (4-Starred Ladybug of Doom is an added card now, [[added-car
 | 35 | wolfe_KMH-Panda Burn | the Goat opponent (5%) |
 | 36 | Dingosig-Chaos Return | the Goat opponent (5%) |
 | 37 | paede17-Reasoning Gate Turbo | the Goat opponent (5%) |
+| 38 | Brian Long-Goat Control | the Cyber opponent (50%) |
+| 39 | splevin-Stein Monarch | the Cyber opponent (50%) |
 
 "ellietincan-Warrior Tomato Control" is 34 characters, so the slot stores the first 31 (`RECIPE_NAME_SIZE` 32), and
 the list row shows 26 and "..". "Aretos-Tomato Control (Scientist)" (33) is cut the same way.

@@ -17,7 +17,13 @@ import sys
 
 ASSETS = 'build/assets'
 # Passcodes the table does not hold: B. Skull Dragon has none in EDS; Dark Paladin was added under 98502115.
-ALIASES = {11901678: 'B. Skull Dragon', 98502113: 'Dark Paladin'}
+ALIASES = {
+    11901678: 'B. Skull Dragon',
+    98502113: 'Dark Paladin',
+    # YGOPRODeck .ydk ids (not the BCD passcodes in new_cards.tsv):
+    70095154: 'Cyber Dragon',
+    1546123: 'Cyber End Dragon',
+}
 MAIN_MAX = 60
 EXTRA_MAX = 20
 
