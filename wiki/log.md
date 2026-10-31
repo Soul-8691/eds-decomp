@@ -2043,3 +2043,6 @@ updated: 2026-09-29
 - src/mod_decks.c (ModRecipeBuild*, renamed from ModSolomonBuild*, with copies and a limit), src/mod_banlists.c, src/mod_recipes.c (the opponent's name in its lines), src/mod_dp.c (no DP), src/ai_deck.c (copies kept).
 - Debug's duels get debug mode's rules: duel_piles.c (IsHandRevealed), duel_cmd_deck.c (CanDeckOut), card_menu_input.c (Card View). The info bar's DuelScreen_DrawCursorInfo moved from duel_info_bar.c to the new @farcode unit src/mod_info_bar.c. Release .text 0x080807D0 (from 0x0808098C).
 - README, DECKS.md, [[yugi-kaiba-opponent]]. Built (make and make release); not tested in an emulator.
+
+## [2026-10-30] progress | Recipe scene: messages name the opponent's deck while building
+- src/mod_recipes.c: AppendOwner. While the deck of Solomon or Debug is being built, the Load, Save and confirm messages say "<name>'s deck", not "your deck". A Load there always went into the opponent's deck; only the text was wrong (reported). [[yugi-kaiba-opponent]]. Built (make and make release); not tested in an emulator.

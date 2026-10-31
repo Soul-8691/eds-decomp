@@ -639,13 +639,14 @@ static const char sStrNameHelp1[] = "A: type   B: delete";
 static const char sStrNameHelp2[] = "START: done   SELECT: cancel";
 static const char sStrNamePrompt[] = "Name: ";
 static const char sStrRecipe[] = "Recipe ";
-static const char sStrLoaded[] = " is now your deck.";
+static const char sStrLoaded[] = " is now ";                     /* then the owner's " deck." */
 static const char sStrMissing[] = " cards were left out.";
 static const char sStrMissing1[] = " card was left out.";
-static const char sStrUnsaved[] = "Your deck is not saved. A again: load anyway.";
-static const char sStrReplace[] = "A again: replace it with your deck.";
+static const char sStrUnsaved[] = " deck is not saved. A again: load anyway.";    /* after the owner */
+static const char sStrReplace[] = "A again: replace it with ";     /* then the owner's " deck." */
 static const char sStrClearAsk[] = "A again: clear it.";
-static const char sStrSaved[] = "Your deck was saved as recipe ";
+static const char sStrSaved[] = " deck was saved as recipe ";    /* after the owner */
+static const char sStrDeckEnd[] = " deck.";
 static const char sStrRenamed[] = " was renamed.";
 static const char sStrCleared[] = " was cleared.";
 static const char sStrIsEmpty[] = " is empty.";
@@ -735,6 +736,15 @@ static char *AppendNum(char *dst, u32 n, int width)
 static const char *OpponentName(void)
 {
     return (const char *)ModOpponentSelectName(gMain.opponent, (const u8 *)"");
+}
+
+/* Whose deck the scene loads into and saves: "Your" ("your" unless `capital`), or "Solomon's" / "Debug's" while the
+ * player builds the opponent's deck (CB_OpponentRecipes). Returns the end. */
+static char *AppendOwner(char *dst, int capital)
+{
+    if (ModRecipeBuilding())
+        return AppendStr(AppendStr(dst, OpponentName()), "'s");
+    return AppendStr(dst, capital ? "Your" : "your");
 }
 
 /* "Recipe NN" at the start of the status line; returns its end. */
@@ -973,7 +983,7 @@ static void FinishNameEntry(void)
         WriteSlot(n);
         if (!ModRecipeBuilding())
             SetActive(n);
-        AppendStr(AppendNum(AppendStr(s->status, sStrSaved), n + 1, 2), ".");
+        AppendStr(AppendNum(AppendStr(AppendOwner(s->status, 1), sStrSaved), n + 1, 2), ".");
     } else {
         ReadSlot(n);
         MemClear16(s->buf.name, sizeof(s->buf.name));
@@ -1050,13 +1060,13 @@ static void DoAction(void)
             break;
         }
         if (!s->confirm && IsDeckUnsaved()) {
-            AppendStr(s->status, sStrUnsaved);
+            AppendStr(AppendOwner(s->status, 1), sStrUnsaved);
             s->confirm = 1;
             PlaySE(SE_CURSOR);
             return;
         }
         missing = SwitchTo(n);
-        p = AppendStr(StatusRecipe(n), sStrLoaded);
+        p = AppendStr(AppendOwner(AppendStr(StatusRecipe(n), sStrLoaded), 0), sStrDeckEnd);
         if (missing != 0)
             AppendStr(AppendNum(AppendStr(p, " "), missing, 1), missing == 1 ? sStrMissing1 : sStrMissing);
         s->mode = s->leftOutCount != 0 ? MODE_LEFT_OUT : MODE_LIST;
@@ -1070,7 +1080,7 @@ static void DoAction(void)
             return;
         }
         if (!s->confirm) {
-            AppendStr(AppendStr(StatusRecipe(n), ": "), sStrReplace);
+            AppendStr(AppendOwner(AppendStr(AppendStr(StatusRecipe(n), ": "), sStrReplace), 0), sStrDeckEnd);
             s->confirm = 1;
             PlaySE(SE_CURSOR);
             return;
@@ -1081,7 +1091,7 @@ static void DoAction(void)
         WriteSlot(n);
         if (!ModRecipeBuilding())
             SetActive(n);
-        AppendStr(AppendNum(AppendStr(s->status, sStrSaved), n + 1, 2), ".");
+        AppendStr(AppendNum(AppendStr(AppendOwner(s->status, 1), sStrSaved), n + 1, 2), ".");
         s->mode = MODE_LIST;
         PlaySE(SE_CONFIRM);
         return;

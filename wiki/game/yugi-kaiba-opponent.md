@@ -123,7 +123,7 @@ Always open, with no format check:
       the size-limited `.text` (to 0x08080A20) could not take. The function moved to a new `@farcode` unit,
       src/mod_info_bar.c, written more compactly (one `ZoneCardShown` check and one `DrawPileLabel` helper). Release
       `.text` went from 0x0808098C to 0x080807D0. duel_info_bar already matched none of its 21 functions.
-  - **Building his deck (2026-10-30).** SELECT in the picker calls `ModSolomonBuildBegin` (mod_decks.c). It writes the save
+  - **Building his deck (2026-10-30).** SELECT in the picker calls `ModRecipeBuildBegin` (mod_decks.c). It writes the save
     (`SaveGame`), then gives `gSaveData` a temporary collection: 3 of every card ID in the trunk (the cards of
     `GiveStartingTrunk`: no tokens, no unused IDs), the deck copy counters at 0, and empty decks. It also sets
     `gModOpponentRecipe.building` (the struct's old pad). While that is set, `GetBanlistCopyLimit` returns
@@ -135,10 +135,13 @@ Always open, with no format check:
       "banlist: none"). Save here writes his deck to a slot (the name entry starts at "Solomon"). Neither marks the
       slot (`SetActive`) nor saves the game.
     - SELECT opens Deck Edit again.
-    - B, if his Main Deck has cards, calls `ModSetOpponentRecipe` with it, then `ModSolomonBuildEnd`.
-    - START calls `ModSolomonBuildEnd` only.
+    - B, if his Main Deck has cards, calls `ModSetOpponentRecipe` with it, then `ModRecipeBuildEnd`.
+    - START calls `ModRecipeBuildEnd` only.
+    - The status lines name whose deck it is (`AppendOwner`): "Recipe 05 is now Debug's deck.", "Solomon's deck was saved
+      as recipe 12.", and so on. They said "your deck" until 2026-10-30, so a Load looked as if it went to the player's
+      deck (reported). It always went to the opponent's.
 
-    `ModSolomonBuildEnd` reads `gSaveData` back from SRAM, so the player's collection, decks and banlist return as
+    `ModRecipeBuildEnd` reads `gSaveData` back from SRAM, so the player's collection, decks and banlist return as
     they were. Nothing between the two saves the game: Deck Edit never calls `SaveGame`. A reset reloads the save
     from SRAM, and the boot clears EWRAM, flag included.
   - **No DP.** `AwardDuelDP` (mod_dp.c) returns early for him.
