@@ -2264,5 +2264,8 @@ updated: 2026-09-29
 ## [2026-10-31] progress | D.D. Survivor from the Graveyard
 - src/duel_cmd_piles.c: `DuelCmd_BanishGraveyardCard` calls `DDSurvivorBanished` (Bazoo, Chaos costs). [[added-cards]].
 
+## [2026-10-31] progress | Solemn Wishes effect
+- YGOPRODeck text: +500 LP each time you draw. `ModDrawCardsAddedLifeGain` from `DrawCards` (like `CARD_1305`); noop activation resolve. [[added-cards]]; missing-main.txt.
+
 ## [2026-10-31] progress | Demo card-pool builds
 - Makefile: `make demo` / `make release-demo` (`NEWCARDS_PROFILE=demo`, `eds_demo.gba` / `eds_release_demo.gba`). tools/newcards.py: `NEW_CARDS_LIST`, stop at `------`, separate stamp. README.md, CLAUDE.md, [[release-build]]. Demo compile guards: mod_decks.c (Solemn Wishes side), added_effects.c (Gravekeeper's Spy, Dark Mimic LV helpers). new_cards.txt: BLS alias, `D.D. Survivor` spelling.

@@ -146,6 +146,8 @@ int ModCanActivateFaceUpFieldCard(u16 cardNumber);
 /* 0 for face-up Wave-Motion Cannon (skips the zone canActivate gate). */
 int ModFieldCardRequiresCanActivate(u16 cardNumber, int isFaceUp);
 void ModTurnStartRefreshZoneCanActivate(struct DuelZone *zone, u16 id);
+/* Solemn Wishes (src/added_effects.c): LP gain when DrawCards runs (duel_card_actions.c). */
+void ModDrawCardsAddedLifeGain(int player);
 void ModPlaceSpellZoneCanActivate(struct DuelZone *z, u16 id, int faceUp);
 u32 ModFaceUpSpellActivateMenuFlags(u32 flags, u16 id, int player, int zone);
 int ModCanActivateMonsterEffect(u16 id, int player, int zone);

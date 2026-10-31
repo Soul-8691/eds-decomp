@@ -150,7 +150,6 @@ Spirit Message "N"
 Spirit Message "L"
 Spirit Message "A"
 Spell Purification
-Solemn Wishes
 Royal Command
 Rivalry of Warlords
 Otohime

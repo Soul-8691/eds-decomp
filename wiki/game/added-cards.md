@@ -110,6 +110,10 @@ An added card without an effect plays as a vanilla monster, or as a Spell/Trap t
 those run only for cards that have an effect.
 
 **Effects of added cards** live in `src/added_effects.c`:
+- **Effect text.** Before coding an effect, read the current YGOPRODeck `desc` for that name
+  (`https://db.ygoprodeck.com/api/v7/cardinfo.php?name=…`, or `assets/new_cards/cards.json` after `make`). Do not
+  guess from other games or old forum posts (e.g. Solemn Wishes is +500 LP each time **you draw**, not Standby
+  pay-to-draw).
 - **Table.** `gAddedCardEffects` holds rows like `gCardEffects` (`struct CardEffect`, keyed by `CARD_<NAME>`,
   ending with number 0xFFFF). `FindCardEffect` searches it after the original 426 rows and returns
   `CARD_EFFECT_ROWS_ORIGINAL` + its index. Every row read goes through `CARD_EFFECT_ROW(row)` /
@@ -2282,6 +2286,14 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
 - Not handled: `DUEL_CMD_BANISH_FLAGGED` (only card key 1547) and Interdimensional Matter Transporter-style
   `DUEL_CMD_BANISH_UNTIL_END_PHASE`, which returns the card on its own.
 - Checked in the source and the build; not tested in an emulator.
+
+### Solemn Wishes (2026-10-31)
+- [YGOPRODeck](https://ygoprodeck.com/card/solemn-wishes-3000) (id 35346968): Continuous Trap — "Increase your Life
+  Points by 500 points each time you draw a card (or cards)." `ModDrawCardsAddedLifeGain` (`added_effects.c`) runs from
+  `DrawCards` (`duel_card_actions.c`) like vanilla effect key `CARD_1305`: each draw action shows the card and gains
+  500 LP per face-up copy on the drawing player's field. Chain resolve is a no-op (trap stays face-up). CPU: default
+  Set/flip in Main Phase (`AiPlayAddedCards`).
+- Checked against YGOPRODeck text and the source build; not tested in an emulator.
 
 ### Gravity Bind (2026-10-30)
 - Effect text from [YGOPRODeck](https://db.ygoprodeck.com/api/v7/cardinfo.php?name=Gravity%20Bind) (id 85742772):

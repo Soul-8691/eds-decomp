@@ -1464,7 +1464,9 @@ int EffectDarkMimicLv1Resolve(struct ChainEntry *link, struct ChainEntry *chaine
         DrawCards(link->player, 1);
     return EFFECT_STEP_DONE;
 }
+#endif /* HAS_CARD_DARK_MIMIC_LV1 */
 
+#ifdef HAS_CARD_DARK_MIMIC_LV1
 /* The CPU's Standby Phase activations (DuelPhase_Standby, STANDBY_STEP_FIELD, on the CPU's turn; that step otherwise
  * waits for the human's cursor): its first face-up Dark Mimic LV1 that may level up, once per turn. 1 if it queued
  * one. */
@@ -3416,6 +3418,36 @@ int EffectSkullLairResolve(struct ChainEntry *link, struct ChainEntry *chainedTo
     return EFFECT_STEP_DONE;
 }
 #endif /* HAS_CARD_SKULL_LAIR */
+
+#ifdef HAS_CARD_SOLEMN_WISHES
+/* ---- Solemn Wishes (YGOPRODeck id 35346968) ---------------------------------------------------------------------
+ * Continuous Trap (YGOPRODeck text): "Increase your Life Points by 500 points each time you draw a card (or cards)."
+ * Same behaviour as the vanilla effect key CARD_1305 (DrawCards in duel_card_actions.c): while a face-up copy is on
+ * your field, each DrawCards call shows the card and gains 500 LP per copy (one gain per draw action, not per card
+ * in the batch). Activation resolve is a no-op; the trap stays face-up. CPU: AiPlayAddedCards / default Set flip. */
+
+#define SOLEMN_WISHES_LP_PER_DRAW 500
+
+int EffectSolemnWishesResolve(struct ChainEntry *link, struct ChainEntry *chainedTo)
+{
+    return EFFECT_STEP_DONE;
+}
+
+void ModDrawCardsAddedLifeGain(int player)
+{
+    int copies = CountActiveCardsOnField(player, CARD_SOLEMN_WISHES);
+
+    if (copies > 0) {
+        DuelCmd_Push(player ? DUEL_CMD_PLAYER | DUEL_CMD_SHOW_CARD_EFFECT : DUEL_CMD_SHOW_CARD_EFFECT,
+                     gCardNumberToId[CARD_SOLEMN_WISHES], 1, 0);
+        GainLifePoints(player, copies * SOLEMN_WISHES_LP_PER_DRAW);
+    }
+}
+#else
+void ModDrawCardsAddedLifeGain(int player)
+{
+}
+#endif /* HAS_CARD_SOLEMN_WISHES */
 
 #ifdef HAS_CARD_FIBER_JAR
 /* ---- Fiber Jar ---------------------------------------------------------------------------------------------------
@@ -10646,6 +10678,16 @@ const struct CardEffect gAddedCardEffects[] = {
         EffectSkullLairPrepare,
         NULL,
         EffectSkullLairChainB,
+    },
+#endif
+#ifdef HAS_CARD_SOLEMN_WISHES
+    {
+        CARD_SOLEMN_WISHES, 0,
+        EffectSolemnWishesResolve,
+        NULL,
+        NULL,
+        NULL,
+        NULL,
     },
 #endif
 #ifdef HAS_CARD_GIGANTES

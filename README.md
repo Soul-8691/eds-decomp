@@ -44,7 +44,7 @@
 </p>
 
 A hack of *Yu-Gi-Oh! The Eternal Duelist Soul* (GBA) that follows the
-[Format Library](https://www.formatlibrary.com/) pantheon of TCG formats, from Yugi-Kaiba up to Reaper. About 130
+[Format Library](https://www.formatlibrary.com/) pantheon of TCG formats, from Yugi-Kaiba up to Reaper. About 135
 Goat-era cards have been added so far, with roughly 50 more planned.
 
 ## The formats
@@ -216,6 +216,8 @@ next one.
       lock is active.
     - On its Standby Phase it activates face-up monsters with Standby effects on its own turn (Dark Mimic LV1's
       level-up, and the original game's Jigen Bakudan and similar cards), without waiting for you to move the cursor.
+    - Its Solemn Wishes is Set like other continuous Traps; while face-up, each time it draws it gains 500 LP per copy
+      on its field (same rule as vanilla effect key 1305).
     - Its Chiron the Mage discards a Spell to destroy one of your Spells or Traps when it can, once per turn.
     - Its Bazoo the Soul-Eater activates once per turn when it has monsters in its Graveyard, banishing its three
       weakest (by ATK) for +300 ATK each until the end of your turn.

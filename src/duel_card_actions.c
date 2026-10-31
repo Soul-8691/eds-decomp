@@ -277,7 +277,8 @@ static inline u32 CardAttack(u16 id)
  * Draw count cards: one DUEL_CMD_DRAW_CARDS per card, and the draw triggers. The deck is unchanged until
  * the commands run, so the i-th card drawn is deck[i]; handIdx follows the hand slot it lands in and does
  * not advance for a card that is summoned or discarded at once.
- *  - First, each active copy of effect key 1305 (no EDS card) gives the player 500 LP.
+ *  - First, each active copy of effect key 1305 (no EDS card) gives the player 500 LP; added Solemn Wishes
+ *    (ModDrawCardsAddedLifeGain) uses the same rule.
  *  - Parasite Paracide planted by the opponent (owner != player, planted): summoned face up in defense
  *    position to the first free monster zone (summon status UNK14 | SPECIAL_SUMMONED | PLANTED) and the
  *    player takes 1000 damage; discarded when no zone is free.
@@ -298,6 +299,7 @@ void DrawCards(int player, int count)
         DuelCmd_Push(PLAYER_CMD(player, DUEL_CMD_SHOW_CARD_EFFECT), CARD_NUMBER_TO_ID[cardNo], 1, 0);
         GainLifePoints(player, copies * 500);
     }
+    ModDrawCardsAddedLifeGain(player);
     for (i = 0; i < count; i++) {
         u32 *card = (u32 *)&PLAYER(player).deck[i];
         int handled = 0;
