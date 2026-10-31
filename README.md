@@ -49,8 +49,8 @@ Goat-era cards have been added so far, with roughly 50 more planned.
 
 ## The formats
 
-Each format is a Campaign "duelist". You start with Yugi-Kaiba only; beating a format **10 times** unlocks the
-next one.
+Each format is a Campaign "duelist". You start with Yugi-Kaiba only; beat the current format duelist **20 times**
+(in release; every format is open in the debug build) to unlock the next one.
 
 | # | Format | Banlist |
 |---|---|---|
@@ -96,9 +96,11 @@ next one.
   Cards not in the current furthest format you've unlocked are priced at 3000 DP. [CARD_PRICES.md](CARD_PRICES.md) lists each format's prices.
 - **Booster Packs** (main menu). TCG sets from `packs/*_tcg.json` (including **Dark Revelation Volume 1**, imported
   with `tools/import_yugipedia_drv1.py`). Only ROM cards are in each pool; pull rates follow listed rarities; the cover
-  art is the pool's rarest card. The scrolling list holds 32 sets at once (booster sets first; three Structure Decks
-  are omitted when more than 32 JSON files are present). 1000 DP per pack in release; free in debug (`make`).
-  Campaign rewards still use the original in-game booster sets.
+  art is the pool's rarest card. A TCG set unlocks when its format opponent is unlocked (for example Metal Raiders
+  with Critter). Each format also has a **usage-weighted pack** (cards priced from that format's usage statistics);
+  those unlock after **10 wins** against that format duelist. The scrolling list holds 32 sets at once (booster sets
+  first; three Structure Decks are omitted when more than 32 JSON files are present). 1000 DP per pack in release;
+  free in debug (`make`). Campaign rewards still use the original in-game booster sets.
   The screen that shows a pack's cards no longer has the scrolling patterned background (Campaign packs too).
 - **Card art in duels.** Face-up cards show a small picture of their artwork inside their icon: on the field
   (monsters, Spells/Traps, the Field zone, the top card of each Graveyard and banished pile), in your hand, in the
@@ -283,7 +285,9 @@ next one.
   in the engine cover timings it doesn't already have, and each card gets a rule for when the computer should use it.
 - **Engine leftovers.** The engine already contains several cards that never made it into EDS, such as Magic
   Cylinder, Soul Exchange, Fairy Box and Thousand-Eyes Restrict. Those reuse that existing code instead of being
-  written from scratch.
+  written from scratch. The full inventory (157 unused card numbers and what each handler does) is in
+  [LEFTOVER_EFFECTS.md](https://github.com/Soul-8691/eds-decomp/blob/binary/LEFTOVER_EFFECTS.md) on the
+  [`binary`](https://github.com/Soul-8691/eds-decomp/tree/binary) branch.
 
 ## Playing
 
