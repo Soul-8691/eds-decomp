@@ -207,7 +207,9 @@ NEWCARDS_TABLES := build/assets/newcards__stats.bin build/assets/newcards__art_g
 	build/assets/newcards__names.bin build/assets/gfx__bank_a.bin
 $(FIELD_ICONS): $(NEWCARDS_BUILT) $(NEWCARDS_TABLES) tools/cardicons.py tools/assets.py $(wildcard card_icons/*.png)
 	$(PYTHON) tools/cardicons.py --data $@
-build/data/mod_field_icons_data.o: $(FIELD_ICONS)
+# CARD_ID_COUNT (DATA_DECK_EDIT) must match field_icons.bin; both profiles share one checkout.
+build/src/mod_field_icons.o: $(NEWCARDS_GEN) $(FIELD_ICONS)
+build/data/mod_field_icons_data.o: $(NEWCARDS_GEN) $(FIELD_ICONS)
 
 build/data/%.o: data/%.s $(ASSETS_BUILT) $(NEWCARDS_BUILT)
 	@mkdir -p $(@D)

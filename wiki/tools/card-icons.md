@@ -46,9 +46,12 @@ art. `make` builds the game's data with it (`--data`, below); `make card-icons` 
 - **Data.** `build/assets/field_icons.bin` (grows with `CARD_ID_COUNT`: palette, BG/OBJ frames, pose maps, 15×16
   miniatures per card ID, then Deck Edit ring entries) through `data/mod_field_icons_data.s` (`gModFieldIconData`,
   @rodata). The Makefile rebuilds it when `newcards__*.bin` changes, not only the newcards stamp.
-- **Stale blob.** If `field_icons.bin` is older than the card tables, `ModFieldCardTile` reads the wrong slice of
-  `gModFieldIconData` (wrong art on every face-up icon). Regenerate with `python3 tools/cardicons.py --data
-  build/assets/field_icons.bin` after `make` updates the card tables.
+- **Stale blob / profile switch.** `gModFieldIconData` must match the built card pool (`make` vs `make demo`:
+  different `CARD_ID_COUNT` and `field_icons.bin` size). If the blob lags the card tables, or `mod_field_icons.o`
+  was compiled with the other profile's `CARD_ID_COUNT` (`DATA_DECK_EDIT` wrong), face-up icons and Deck Edit's
+  ring art read the wrong slice (garbage or another card's miniature). The Makefile rebuilds `field_icons.bin`,
+  `mod_field_icons_data.o`, and `mod_field_icons.o` when the newcards stamp or tables change; after switching
+  profiles run `make` or `make demo` (or `make clean && make`) so all three stay in sync.
 - **Sprites.** The OBJ card icons get the art too (`ModAddCardSprite`, `ModAddAffineCardSprite`): the hand
   (`DrawHandCards`), the card menu's card (`CardMenu_DrawCardPreview`, including the turn-over frames), the deck
   reorder row (`DeckReorder_DrawCards` / `DrawSwap`), the change-position, flip and move animations, the
