@@ -1963,6 +1963,15 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
   best stat is at least 1500.
 - Checked in the source and the build; not tested in an emulator.
 
+### Toon Table of Contents (2026-10-30)
+- Effect text from [YGOPRODeck](https://db.ygoprodeck.com/api/v7/cardinfo.php?name=Toon%20Table%20of%20Contents) (id
+  89997728): "Add 1 \"Toon\" card from your Deck to your hand." Normal Spell; `EffectSanganResolve` with
+  `CollectEffectTargets` (`IsToonTableDeckTarget`: `IsToonMonster` or the name contains `Toon`; `skipToonFilter` so
+  Toon World is not required to search). No prepare: it may be activated with no valid Deck card (like Thunder Dragon);
+  resolve shows `gStrNoDeckCardsToAdd` and shuffles. CPU `AiWantsToonTableOfContents` plays it only when the list is
+  non-empty. `gAddedCardEffects` row.
+- Checked in the source and the build; not tested in an emulator.
+
 ### Toon Cannon Soldier (2026-10-30)
 - Effect text from [YGOPRODeck](https://db.ygoprodeck.com/api/v7/cardinfo.php?name=Toon%20Cannon%20Soldier) (id
   79875176): "This card cannot attack the turn it is Summoned. If \"Toon World\" on the field is destroyed, destroy this

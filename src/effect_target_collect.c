@@ -764,6 +764,16 @@ u16 CollectEffectTargets(int player, u16 cardNumber, int param)
         }
         break;
 #endif
+#ifdef HAS_CARD_TOON_TABLE_OF_CONTENTS
+    case CARD_TOON_TABLE_OF_CONTENTS:
+        /* Added card: deck \"Toon\" cards (IsToonTableDeckTarget); no Toon World filter. */
+        skipToonFilter = 1;
+        for (i = 0; i < PLAYER(player).deckCount; i++) {
+            if (IsToonTableDeckTarget(CARD_ID(*PILE_WORD_FLAT(gDuelDecks, i, player))))
+                ADD_TARGET_DOWHILE(PLAYER(player).deck[i], CARDLIST_SRC_DECK);
+        }
+        break;
+#endif
 #ifdef HAS_CARD_NIGHT_ASSAILANT
     case CARD_NIGHT_ASSAILANT:
         /* Added card: Graveyard Flip monsters other than Night Assailant. */

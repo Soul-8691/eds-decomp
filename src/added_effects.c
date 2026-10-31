@@ -4289,6 +4289,35 @@ int EffectReinforcementOfTheArmyPrepare(struct ChainEntry *card, struct ChainEnt
 }
 #endif /* HAS_CARD_REINFORCEMENT_OF_THE_ARMY */
 
+#ifdef HAS_CARD_TOON_TABLE_OF_CONTENTS
+/* ---- Toon Table of Contents (YGOPRODeck id 89997728) -----------------------------------------------------------
+ * Normal Spell: "Add 1 \"Toon\" card from your Deck to your hand." Resolves with EffectSanganResolve (pick from
+ * CollectEffectTargets). No prepare: it may be activated even with no \"Toon\" card left in the Deck (like Thunder
+ * Dragon after the prepare change); the resolve then shows gStrNoDeckCardsToAdd and shuffles. Deck list:
+ * IsToonTableDeckTarget (IsToonMonster, e.g. Manga Ryu-Ran, or the card name contains \"Toon\"). skipToonFilter in
+ * effect_target_collect.c so Toon monsters are listed without face-up Toon World. CPU: AiWantsSpell only when the
+ * list is non-empty. */
+
+int IsToonTableDeckTarget(u16 id)
+{
+    u16 number = CARD_NUMBER(id);
+    const u8 *name;
+    int i, j;
+    static const char sToonNeedle[] = "Toon";
+
+    if (IsToonMonster(number))
+        return 1;
+    name = gCardNames + (id & CARD_ID_MASK) * CARD_NAME_SIZE;
+    for (i = 0; name[i] != 0 && i < CARD_NAME_SIZE; i++) {
+        for (j = 0; sToonNeedle[j] != 0 && name[i + j] == (u8)sToonNeedle[j]; j++)
+            ;
+        if (sToonNeedle[j] == 0)
+            return 1;
+    }
+    return 0;
+}
+#endif /* HAS_CARD_TOON_TABLE_OF_CONTENTS */
+
 #ifdef HAS_CARD_CARD_DESTRUCTION
 /* ---- Card Destruction ----------------------------------------------------------------------------------------------
  * Normal Spell: "Both players discard as many cards as possible from their hands, then each player draws the same
@@ -8526,6 +8555,13 @@ static int AiWantsMonsterReincarnation(void)
 }
 #endif /* HAS_CARD_MONSTER_REINCARNATION */
 
+#ifdef HAS_CARD_TOON_TABLE_OF_CONTENTS
+static int AiWantsToonTableOfContents(void)
+{
+    return CollectEffectTargetsInt(AI_PLAYER, CARD_TOON_TABLE_OF_CONTENTS, 0) > 0;
+}
+#endif /* HAS_CARD_TOON_TABLE_OF_CONTENTS */
+
 /* Should the CPU play its added Magic card `number` in its Main Phase now? (AiTryPlaySpellTrap checks that it may.) */
 static int AiWantsSpell(u16 number)
 {
@@ -8545,6 +8581,10 @@ static int AiWantsSpell(u16 number)
 #ifdef HAS_CARD_MONSTER_REINCARNATION
     case CARD_MONSTER_REINCARNATION:
         return AiWantsMonsterReincarnation();
+#endif
+#ifdef HAS_CARD_TOON_TABLE_OF_CONTENTS
+    case CARD_TOON_TABLE_OF_CONTENTS:
+        return AiWantsToonTableOfContents();
 #endif
 #ifdef HAS_CARD_EMERGENCY_PROVISIONS
     case CARD_EMERGENCY_PROVISIONS:             /* only when low on LP */
@@ -9543,6 +9583,16 @@ const struct CardEffect gAddedCardEffects[] = {
         (int (*)(struct ChainEntry *, struct ChainEntry *))EffectSanganResolve,
         NULL,
         EffectReinforcementOfTheArmyPrepare,
+        NULL,
+        NULL,
+    },
+#endif
+#ifdef HAS_CARD_TOON_TABLE_OF_CONTENTS
+    {
+        CARD_TOON_TABLE_OF_CONTENTS, 0,
+        (int (*)(struct ChainEntry *, struct ChainEntry *))EffectSanganResolve,
+        NULL,
+        NULL,
         NULL,
         NULL,
     },
