@@ -838,6 +838,12 @@ int AiStrategyToonWorld(void)
                     }
                     S.stepState--;
                     return 0;
+#ifdef HAS_CARD_TOON_CANNON_SOLDIER
+                case CARD_TOON_CANNON_SOLDIER:
+                    QueueNormalSummon(1, j, FindFreeMonsterZone(1), 0, 1);
+                    S.stepState--;
+                    return 0;
+#endif
                 }
             } while (++j < StrategyHandCount());
         }

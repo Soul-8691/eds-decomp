@@ -1963,6 +1963,20 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
   best stat is at least 1500.
 - Checked in the source and the build; not tested in an emulator.
 
+### Toon Cannon Soldier (2026-10-30)
+- Effect text from [YGOPRODeck](https://db.ygoprodeck.com/api/v7/cardinfo.php?name=Toon%20Cannon%20Soldier) (id
+  79875176): "This card cannot attack the turn it is Summoned. If \"Toon World\" on the field is destroyed, destroy this
+  card. While you control \"Toon World\" and your opponent controls no Toon Monsters, this card can attack your opponent
+  directly. You can Tribute 1 monster; inflict 500 damage to your opponent." Registered as a Toon (`IsToonMonster` for
+  Toon World / direct attack / `cannotAttack` the turn it is placed) but **not** `IsSpecialSummonOnly`: it is **Normal
+  Summoned or Set** like any Level 4 monster (`CanSummonFromHand` does not require Toon World for this card; Toon World
+  is still required for direct attack). It uses the
+  turn's Normal Summon (`summon_action.c`; legacy Toons do not). It cannot be Special Summoned from the hand
+  (`QueueSpecialSummonFromHand`). Ignition effect reuses Cannon Soldier (`EffectCatapultTurtleResolve`,
+  `EffectTributeTargetChainB`). `gAddedCardEffects` row; CPU Toon World strategy uses `QueueNormalSummon`; Magical
+  Scientist burn (`IsScientistBurner`).
+- Checked in the source and the build; not tested in an emulator.
+
 ### Monster Reincarnation (2026-10-30)
 - Effect text from [YGOPRODeck](https://db.ygoprodeck.com/api/v7/cardinfo.php?name=Monster%20Reincarnation) (id
   74848038): "Discard 1 card, then target 1 monster in your Graveyard; add that target to your hand." Normal Spell.

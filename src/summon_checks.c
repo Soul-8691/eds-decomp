@@ -378,7 +378,7 @@ int CanPayBanishSummonCost(int player, u16 cardId)
 /*
  * Can the player summon the hand monster `cardId` now? Returns 0 for an empty slot, a card under Prohibition, a
  * non-monster (type above CARD_TYPE_REPTILE), a ritual or fusion monster, and a Toon monster without the
- * player's face-up Toon World. Then per card number:
+ * player's face-up Toon World (except Toon Cannon Soldier, added card). Then per card number:
  *   1514-1519 (non-EDS keys): a Special Summon must be allowed, and a free monster zone (or banishCostFromField)
  *     and CanPayBanishSummonCost;
  *   Red-Eyes Black Metal Dragon, Harpie Lady Sisters, Metalzoa, Dark Sage: never;
@@ -407,7 +407,11 @@ int CanSummonFromHand(int player, u16 cardId)
     if (GetCardKind(cardId) == CARD_KIND_FUSION)
         return 0;
     number = CARD_NUMBER_C(cardId);
-    if (IsToonMonster(number) != 0 && HasFaceUpToonWorld(player) == 0)
+    if (IsToonMonster(number) != 0 && HasFaceUpToonWorld(player) == 0
+#ifdef HAS_CARD_TOON_CANNON_SOLDIER
+        && number != CARD_TOON_CANNON_SOLDIER
+#endif
+    )
         return 0;
     switch (number) {
     case CARD_1514:     /* keys 1514-1519: Special Summons that remove monsters from play (non-EDS) */

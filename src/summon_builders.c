@@ -284,6 +284,10 @@ void QueueSpecialSummonFromHand(int player, int handIndex, int zone, int tribute
     gSummonAction.cardId = CARD_ID(*(u32 *)((player & 1) * PLAYER_STRIDE + handIndex * 4 + (u32)gDuelHands));
     if (IsCannotSpecialSummon(gSummonAction.cardId) != 0)
         return;
+#ifdef HAS_CARD_TOON_CANNON_SOLDIER
+    if (CARD_NUMBER(gSummonAction.cardId) == CARD_TOON_CANNON_SOLDIER)
+        return;
+#endif
     gSummonAction.kind = SUMMON_ACTION_SPECIAL_FROM_HAND;
     gSummonAction.statusFlags = ZONE_STATUS_SPECIAL_SUMMONED | ZONE_STATUS_UNK14;
     PayChainEnergyCost(player);

@@ -566,6 +566,9 @@ int EffectCatapultTurtleResolve(struct ChainEntry *link)
             damage = HalveRoundUp(GetZoneCardAtk(player, zone));
             break;
         case CARD_CANNON_SOLDIER:
+#ifdef HAS_CARD_TOON_CANNON_SOLDIER
+        case CARD_TOON_CANNON_SOLDIER:
+#endif
             damage = 500;
             break;
         }

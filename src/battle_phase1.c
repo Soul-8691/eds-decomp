@@ -192,6 +192,9 @@ int BattleStage_DeclareAttack(int player)
             case CARD_TOON_MERMAID:
             case CARD_TOON_SUMMONED_SKULL:
             case CARD_BLUE_EYES_TOON_DRAGON:
+#ifdef HAS_CARD_TOON_CANNON_SOLDIER
+            case CARD_TOON_CANNON_SOLDIER:
+#endif
                 /* The Toons pay 500 LP to attack. */
                 DuelCmd_Push(player ? DUEL_CMD_PLAYER | DUEL_CMD_LOSE_LP : DUEL_CMD_LOSE_LP, 500, 1, 0);
                 return 1;

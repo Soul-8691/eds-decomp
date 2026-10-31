@@ -1643,6 +1643,9 @@ void OnFieldCardTargeted(struct ChainEntry *link, int player, int zone)
     switch (((const u16 *)CARD_ID_TO_NUMBER_ADDR)[link->card & CARD_ID_MASK]) {
     case CARD_CATAPULT_TURTLE:
     case CARD_CANNON_SOLDIER:
+#ifdef HAS_CARD_TOON_CANNON_SOLDIER
+    case CARD_TOON_CANNON_SOLDIER:
+#endif
     case CARD_THE_LITTLE_SWORDSMAN_OF_AILE:
 #ifdef HAS_CARD_METAMORPHOSIS
     case CARD_METAMORPHOSIS:
@@ -4666,6 +4669,15 @@ int EffectMonsterReincarnationChainA(struct ChainEntry *link, struct ChainEntry 
 }
 #endif /* HAS_CARD_MONSTER_REINCARNATION */
 
+#ifdef HAS_CARD_TOON_CANNON_SOLDIER
+/* ---- Toon Cannon Soldier (YGOPRODeck id 79875176) ---------------------------------------------------------------
+ * Toon Effect Monster: cannot attack the turn it is Summoned; destroyed if Toon World is destroyed; direct attack
+ * while you control Toon World and the opponent controls no Toons; ignition "Tribute 1 monster; inflict 500 damage"
+ * (Cannon Soldier handlers). Not IsSpecialSummonOnly: Normal Summon/Set like any Level 4 (summon_checks.c skips the
+ * Toon World gate for this card only; Toon World still needed for direct attack). Uses the turn's Normal Summon
+ * (summon_action.c; other Toons do not). No Special Summon-from-hand (summon_builders.c). gAddedCardEffects row. */
+#endif /* HAS_CARD_TOON_CANNON_SOLDIER */
+
 #ifdef HAS_CARD_NEWDORIA
 /* ---- Newdoria -----------------------------------------------------------------------------------------------------
  * "If this card is destroyed by battle and sent to the GY: Target 1 monster on the field; destroy that target."
@@ -6891,7 +6903,13 @@ int AiSpecialSummonCyberDragon(void)
 
 static int IsScientistBurner(u16 number)
 {
-    return number == CARD_CATAPULT_TURTLE || number == CARD_CANNON_SOLDIER;
+    if (number == CARD_CATAPULT_TURTLE || number == CARD_CANNON_SOLDIER)
+        return 1;
+#ifdef HAS_CARD_TOON_CANNON_SOLDIER
+    if (number == CARD_TOON_CANNON_SOLDIER)
+        return 1;
+#endif
+    return 0;
 }
 
 /* The CPU's strongest monster Magical Scientist summoned (not excludeZone), -1 for none. */
@@ -9057,6 +9075,16 @@ const struct CardEffect gAddedCardEffects[] = {
         EffectMonsterReincarnationPrepare,
         EffectMonsterReincarnationChainA,
         (int (*)(struct ChainEntry *, struct ChainEntry *))EffectCardListTargetChainB,
+    },
+#endif
+#ifdef HAS_CARD_TOON_CANNON_SOLDIER
+    {
+        CARD_TOON_CANNON_SOLDIER, 0,
+        (int (*)(struct ChainEntry *, struct ChainEntry *))EffectCatapultTurtleResolve,
+        NULL,
+        NULL,
+        NULL,
+        (int (*)(struct ChainEntry *, struct ChainEntry *))EffectTributeTargetChainB,
     },
 #endif
 #ifdef HAS_CARD_DARK_MAGICIAN_OF_CHAOS

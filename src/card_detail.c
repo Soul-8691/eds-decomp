@@ -564,6 +564,9 @@ u32 IsToonMonster(u16 cardNo)
     case CARD_TOON_MERMAID:
     case CARD_TOON_SUMMONED_SKULL:
     case CARD_BLUE_EYES_TOON_DRAGON:
+#ifdef HAS_CARD_TOON_CANNON_SOLDIER
+    case CARD_TOON_CANNON_SOLDIER:
+#endif
         return 1;
     }
     return 0;

@@ -373,6 +373,9 @@ int CanAttackDirectly(int player, int zone)
     case CARD_TOON_MERMAID:
     case CARD_TOON_SUMMONED_SKULL:
     case CARD_BLUE_EYES_TOON_DRAGON:
+#ifdef HAS_CARD_TOON_CANNON_SOLDIER
+    case CARD_TOON_CANNON_SOLDIER:
+#endif
         if (HasFaceUpToonMonster(1 - player) == 0)
             return 1;
         return 0;
@@ -480,6 +483,9 @@ u16 CanMonsterAttack(int player, int zone, u16 flag)
         case CARD_TOON_MERMAID:
         case CARD_TOON_SUMMONED_SKULL:
         case CARD_BLUE_EYES_TOON_DRAGON:
+#ifdef HAS_CARD_TOON_CANNON_SOLDIER
+        case CARD_TOON_CANNON_SOLDIER:
+#endif
             if (gDuelPlayerZones[player & 1].lifePoints <= 0x1F3 /* 499 */)
                 return 0;
             break;

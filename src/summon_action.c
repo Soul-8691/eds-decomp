@@ -745,21 +745,27 @@ void QueueNormalSummon(int player, int handIndex, int zone, int tributes, int fa
         record->statusFlags = ZONE_STATUS_NORMAL_SUMMONED | ZONE_STATUS_UNK14;
         /* FAKEMATCH: the card number is read back from the record inside a statement expression, so the
          * ID halves stay in the registers the ROM uses. */
-        if (!IsToonMonster(({
-            u32 value;
-            byte3 >>= 7;
-            value = idHighMask;
-            value &= *(u16 *)((u8 *)record + 4);
-            value <<= 1;
-            value |= byte3;
-            idMask = CARD_ID_MASK;
-            value &= idMask;
-            value <<= 1;
-            idToNumber = (const u16 *)CARD_ID_TO_NUMBER_ADDR;   /* gCardIdToNumber */
-            *(const u16 *)((u32)idToNumber + value);
-        }
-        ))) {
-            /* Not a Toon monster: it counts as the turn's Normal Summon, statusFlags lose UNK14. */
+        {
+            u16 summonedNumber = ({
+                u32 value;
+                byte3 >>= 7;
+                value = idHighMask;
+                value &= *(u16 *)((u8 *)record + 4);
+                value <<= 1;
+                value |= byte3;
+                idMask = CARD_ID_MASK;
+                value &= idMask;
+                value <<= 1;
+                idToNumber = (const u16 *)CARD_ID_TO_NUMBER_ADDR;   /* gCardIdToNumber */
+                *(const u16 *)((u32)idToNumber + value);
+            });
+
+            if (!IsToonMonster(summonedNumber)
+#ifdef HAS_CARD_TOON_CANNON_SOLDIER
+                || summonedNumber == CARD_TOON_CANNON_SOLDIER
+#endif
+            ) {
+            /* Not a legacy Toon (or Toon Cannon Soldier): uses the turn's Normal Summon; statusFlags lose UNK14. */
             record->statusFlags = ZONE_STATUS_NORMAL_SUMMONED;
             {
                 /* Matching: the player is addressed from gDuelHands (hand[] is at +0x684 of
@@ -767,6 +773,7 @@ void QueueNormalSummon(int player, int handIndex, int zone, int tributes, int fa
                 u32 base = (u32)gDuelHands - 0x684;
                 base = playerOffset + base;
                 ((struct DuelPlayer *)base)->normalSummonUsed = 1;
+            }
             }
         }
     }

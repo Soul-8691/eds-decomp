@@ -2032,6 +2032,18 @@ updated: 2026-09-29
 ## [2026-10-30] progress | Final Attack Orders
 - src/added_effects.c: `ApplyFinalAttackOrders`, `EffectFinalAttackOrdersResolve`, `gAddedCardEffects` row, `ModDuelStateCheck`, `AiPlayAddedCards`. src/summon_action.c, src/card_command_menu.c, src/ai_picks.c. missing.txt, missing-main.txt. [[added-cards]]. Built (`make`); not tested in an emulator.
 
+## [2026-10-30] progress | Toon Cannon Soldier
+- src/added_effects.c: `CanSummonToonCannonSoldier`, `gAddedCardEffects` row, `IsScientistBurner`. card_detail.c, summon_checks.c, card_command_menu.c, effect_prepare2/3.c, effect_resolve8.c, card_menu_input.c, battle_phase1.c, ai_strategy.c. missing.txt, missing-main.txt. [[added-cards]]. Built (`make`); not tested in an emulator.
+
+## [2026-10-30] progress | Toon Cannon Soldier summon (YGOPRODeck text)
+- Removed erroneous Metal-Ra-style Tribute Special Summon; YGOPRODeck id 79875176 has no summon Tribute. Level 4 + Toon World only; dropped `IsSpecialSummonOnly` and `CanSummonToonCannonSoldier`. [[added-cards]].
+
+## [2026-10-30] progress | Toon Cannon Soldier Normal Summon
+- Card text has no Special Summon requirement: `summon_action.c` consumes `normalSummonUsed` for Toon Cannon (other Toons still do not); `summon_builders.c` rejects `QueueSpecialSummonFromHand`; CPU `ai_strategy.c` uses `QueueNormalSummon`. [[added-cards]].
+
+## [2026-10-30] progress | Toon Cannon Soldier without Toon World
+- `summon_checks.c`: `CanSummonFromHand` no longer requires face-up Toon World for Toon Cannon Soldier (other Toons unchanged). [[added-cards]].
+
 ## [2026-10-30] progress | Monster Reincarnation
 - src/added_effects.c: `EffectMonsterReincarnation*`, `ModCollectEffectTargets`, `gAddedCardEffects` row (`EffectMaskOfDarknessResolve`, `EffectCardListTargetChainB`), `AiWantsMonsterReincarnation`. src/ai_picks.c: list pick. [[added-cards]]. Built (`make`); not tested in an emulator.
 

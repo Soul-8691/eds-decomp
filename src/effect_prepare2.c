@@ -397,6 +397,9 @@ int EffectCanTributeOpponentMonsterPrepare(struct ChainEntry *card)
                 case CARD_CATAPULT_TURTLE:
                 case CARD_THE_LITTLE_SWORDSMAN_OF_AILE:
                 case CARD_CANNON_SOLDIER:
+#ifdef HAS_CARD_TOON_CANNON_SOLDIER
+                case CARD_TOON_CANNON_SOLDIER:
+#endif
                     return 1;
                 }
             }

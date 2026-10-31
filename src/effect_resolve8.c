@@ -687,6 +687,9 @@ int EffectTributeOpponentMonsterResolve(struct ChainEntry *link, int chainedTo)
                         case CARD_CATAPULT_TURTLE:
                         case CARD_THE_LITTLE_SWORDSMAN_OF_AILE:
                         case CARD_CANNON_SOLDIER:
+#ifdef HAS_CARD_TOON_CANNON_SOLDIER
+                        case CARD_TOON_CANNON_SOLDIER:
+#endif
                             hasEffectMonster = 1;
                             break;
                         }
@@ -772,6 +775,9 @@ int EffectTributeOpponentMonsterResolve(struct ChainEntry *link, int chainedTo)
             case CARD_CATAPULT_TURTLE:
             case CARD_THE_LITTLE_SWORDSMAN_OF_AILE:
             case CARD_CANNON_SOLDIER:
+#ifdef HAS_CARD_TOON_CANNON_SOLDIER
+            case CARD_TOON_CANNON_SOLDIER:
+#endif
                 PlaySE(SE_CONFIRM);
                 DuelCmd_Push(PLAYER_CMD(link->player, DUEL_CMD_POINT_AT_CARD), (u16)gDuelScreen.selPlayer,
                              (u8)gDuelScreen.selArea | (u8)gDuelScreen.selIndex << 8, 0);
@@ -790,6 +796,9 @@ int EffectTributeOpponentMonsterResolve(struct ChainEntry *link, int chainedTo)
             switch (CARD_NUMBER(gChain.proxyLink.card)) {
             case CARD_CATAPULT_TURTLE:
             case CARD_CANNON_SOLDIER:
+#ifdef HAS_CARD_TOON_CANNON_SOLDIER
+            case CARD_TOON_CANNON_SOLDIER:
+#endif
                 EffectCatapultTurtleResolve2(&gChainProxyLink, 0);
                 return TRIBUTE_OPP_EFFECT_DONE;
             case CARD_THE_LITTLE_SWORDSMAN_OF_AILE:

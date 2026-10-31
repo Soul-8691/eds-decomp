@@ -493,6 +493,9 @@ int CanActivateMonsterEffect(u16 id, int player, int zone)
     switch (CARD_NUMBER_OF(id)) {
     case CARD_CATAPULT_TURTLE:
     case CARD_CANNON_SOLDIER:
+#ifdef HAS_CARD_TOON_CANNON_SOLDIER
+    case CARD_TOON_CANNON_SOLDIER:
+#endif
         return CountTributableMonsters(player, -1) > 0;
     case CARD_THE_LITTLE_SWORDSMAN_OF_AILE:
         return CountTributableMonsters(player, zone) > 0;
