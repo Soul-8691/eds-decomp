@@ -2134,6 +2134,10 @@ updated: 2026-09-29
 - src/added_effects.c: next own Standby returns the banished Capsule card via `DUEL_CMD_RETURN_BANISHED_CARD_TO_HAND`.
   [[added-cards]]. Built (`make`); not tested in an emulator.
 
+## [2026-10-31] progress | Exarion Universe effect
+- src/added_effects.c (+ battle_phase1, duel_prompts, duel_cmd_turn): optional -400 ATK and piercing when attacking a
+  Defense Position monster (YGOPRODeck text); ATK penalty until turn end. [[added-cards]]. Built (`make`).
+
 ## [2026-10-31] progress | Debug deck list (draw order)
 - src/mod_opponents.c: `ModDeckListVisible` (make testing or `ModDebugDuel`). src/card_menu_input.c + src/campaign.c:
   **Card View** on your main deck opens the list viewer in `deck[0]` order. [[yugi-kaiba-opponent]]. Built (`make`).

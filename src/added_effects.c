@@ -83,6 +83,9 @@ struct ModDuelState {
     u16 mystikWokDef;           /* Mystik Wok: DEF of the monster Tributed this activation */
     u8 ddcReturnPending[2];     /* Different Dimension Capsule: return banished card to hand next Standby */
     u16 ddcReturnCardId[2];     /* ... card ID to find in the banished pile (face-down) */
+    u8 exarionAskStep;          /* Exarion Universe: enum ExarionUniverseStep for this attack's prompt */
+    u8 exarionPierce;           /* ... 1 if this attack inflicts piercing from its effect */
+    u8 exarionPenaltyStacks[10]; /* ... per zone (player * 5 + zone): -400 ATK per stack until that player's turn ends */
 };
 extern struct ModDuelState gModDuel;
 /* gModDuel (0x0202FF04, symbols.ld) must end before gScratchBuffer (0x02030000). */
@@ -1260,8 +1263,14 @@ void ModDuelInit(void)
     gModDuel.ddcReturnPending[1] = 0;
     gModDuel.ddcReturnCardId[0] = 0;
     gModDuel.ddcReturnCardId[1] = 0;
+    gModDuel.exarionAskStep = 0;
+    gModDuel.exarionPierce = 0;
+    MemClear16(gModDuel.exarionPenaltyStacks, sizeof(gModDuel.exarionPenaltyStacks));
 #ifdef HAS_CARD_INJECTION_FAIRY_LILY
     InjectionFairyLilyResetBattle();
+#endif
+#ifdef HAS_CARD_EXARION_UNIVERSE
+    ExarionUniverseResetBattle();
 #endif
 }
 
@@ -3882,6 +3891,126 @@ void InjectionFairyLilyEndAttack(int player)
 }
 #endif /* HAS_CARD_INJECTION_FAIRY_LILY */
 
+#ifdef HAS_CARD_EXARION_UNIVERSE
+/* ---- Exarion Universe ----------------------------------------------------------------------------------------------
+ * (YGOPRODeck) "During your Battle Step, if this card attacks a Defense Position monster: You can make this card lose
+ * exactly 400 ATK, and if it does, it will inflict piercing battle damage. These effects last until the end of this
+ * turn."
+ * Like Injection Fairy Lily, the optional effect is handled in the battle code (no face-up monster response window):
+ *   BattleStage_DamageCalc, DAMAGE_STEP_MARK_ATTACKER   ExarionUniverseResetBattle
+ *   BattleStage_DamageCalc, DAMAGE_STEP_CALC            ExarionUniverseDamageStep before CalcBattle: the attacking
+ *                                                       Exarion vs a Defense Position monster, ATK at least 400. The
+ *                                                       human is asked (PROMPT_CONFIRM_CARD_EFFECT); the CPU pays when
+ *                                                       its ATK exceeds the DEF (piercing LP damage). Paying queues a
+ *                                                       gModDuel.exarionPenaltyStacks (ModStatBonus: -400 ATK each,
+ *                                                       cleared when that player's turn ends) and sets exarionPierce
+ *                                                       for ModHasPiercing.
+ *   DuelCmd_TurnEnd                                       ExarionUniverseClearTurnPenalty for the turn player.
+ *   ModEndAttack                                        clears exarionPierce for the next attack. */
+
+#define EXARION_ATK_COST 400
+
+const u8 gStrExarionUniversePrompt[] =
+    "Make Exarion Universe lose 400 ATK to inflict piercing battle damage?";
+
+enum ExarionUniverseStep {
+    EXARION_STEP_ASK = 0,
+    EXARION_STEP_ASKED = 1,
+    EXARION_STEP_DONE = 2,
+};
+
+static int AttackingExarion(int player, int *zone)
+{
+    struct DuelZone *z;
+
+    *zone = gBattle.atkSlot;
+    z = ZoneOf(player, *zone);
+    if (DUEL_CARD_ID(&z->card) == 0 || !z->isFaceUp || z->isDefense)
+        return 0;
+    return ((const u16 *)CARD_ID_TO_NUMBER_ADDR)[DUEL_CARD_ID(&z->card) & CARD_ID_MASK] == CARD_EXARION_UNIVERSE;
+}
+
+static int ExarionCanActivate(int player, int atkZone)
+{
+    int defPlayer, defZone;
+    struct DuelZone *def;
+
+    if (gBattle.direct)
+        return 0;
+    defPlayer = 1 - player;
+    defZone = gBattle.defSlot;
+    def = ZoneOf(defPlayer, defZone);
+    if (DUEL_CARD_ID(&def->card) == 0 || !def->isDefense)
+        return 0;
+    return GetZoneCardAtk(player, atkZone) >= EXARION_ATK_COST;
+}
+
+static int CpuWantsExarion(int player, int atkZone)
+{
+    int defPlayer = 1 - player;
+    int defZone = gBattle.defSlot;
+    u32 atk = GetZoneCardAtk(player, atkZone);
+    u32 def = GetZoneCardDef(defPlayer, defZone);
+
+    return atk >= EXARION_ATK_COST && atk - EXARION_ATK_COST > def;
+}
+
+static void ActivateExarion(int player, int zone)
+{
+    u16 id = DUEL_CARD_ID(&ZoneOf(player, zone)->card);
+    int idx = (player & 1) * 5 + zone;
+
+    ShowCardEffect(player, id);
+    if (gModDuel.exarionPenaltyStacks[idx] < 255)
+        gModDuel.exarionPenaltyStacks[idx]++;
+    gModDuel.exarionPierce = 1;
+}
+
+void ExarionUniverseClearTurnPenalty(int turnPlayer)
+{
+    int base = (turnPlayer & 1) * 5;
+    int z;
+
+    for (z = 0; z < 5; z++)
+        gModDuel.exarionPenaltyStacks[base + z] = 0;
+}
+
+void ExarionUniverseResetBattle(void)
+{
+    gModDuel.exarionAskStep = EXARION_STEP_ASK;
+    gModDuel.exarionPierce = 0;
+}
+
+int ExarionUniverseDamageStep(int player)
+{
+    int zone;
+
+    switch (gModDuel.exarionAskStep) {
+    case EXARION_STEP_ASK:
+        if (!AttackingExarion(player, &zone) || !ExarionCanActivate(player, zone)) {
+            gModDuel.exarionAskStep = EXARION_STEP_DONE;
+            return 0;
+        }
+        if (player != 0) {
+            gModDuel.exarionAskStep = EXARION_STEP_DONE;
+            if (CpuWantsExarion(player, zone))
+                ActivateExarion(player, zone);
+            return 1;
+        }
+        DuelPrompt_Post(0, PROMPT_CONFIRM_CARD_EFFECT, CARD_EXARION_UNIVERSE, 0);
+        gModDuel.exarionAskStep = EXARION_STEP_ASKED;
+        return 1;
+    case EXARION_STEP_ASKED:
+        gModDuel.exarionAskStep = EXARION_STEP_DONE;
+        if (gDuel.promptResult && AttackingExarion(player, &zone) && ExarionCanActivate(player, zone))
+            ActivateExarion(player, zone);
+        return 1;
+    default:
+        return 0;
+    }
+}
+#endif /* HAS_CARD_EXARION_UNIVERSE */
+
 #ifdef HAS_CARD_PHOENIX_WING_WIND_BLAST
 /* ---- Phoenix Wing Wind Blast ---------------------------------------------------------------------------------------
  * Normal Spell: "Discard 1 card, then target 1 card your opponent controls; place that target on the top of the Deck."
@@ -6186,6 +6315,13 @@ int ModStatBonus(int player, int zone)
     if (CardNumberOfId(DUEL_CARD_ID(&ZoneOf(player, zone)->card)) == CARD_GYAKU_GIRE_PANDA)
         atk += PANDA_ATK_PER_MONSTER * CountMonsters(1 - (player & 1));
 #endif
+#ifdef HAS_CARD_EXARION_UNIVERSE
+    if (CardNumberOfId(DUEL_CARD_ID(&ZoneOf(player, zone)->card)) == CARD_EXARION_UNIVERSE) {
+        int stacks = gModDuel.exarionPenaltyStacks[(player & 1) * 5 + zone];
+
+        atk -= EXARION_ATK_COST * stacks;
+    }
+#endif
     return (atk & 0xFFFF) | (def << 16);
 }
 
@@ -6204,6 +6340,9 @@ void ModEndAttack(int player)
     u16 id = DUEL_CARD_ID(&z->card);
 #endif
 
+#ifdef HAS_CARD_EXARION_UNIVERSE
+    gModDuel.exarionPierce = 0;
+#endif
 #ifdef HAS_CARD_INJECTION_FAIRY_LILY
     InjectionFairyLilyEndAttack(player);
 #endif
@@ -6816,6 +6955,10 @@ int ModHasPiercing(u16 cardId)
     case CARD_GYAKU_GIRE_PANDA:
 #endif
         return 1;
+#ifdef HAS_CARD_EXARION_UNIVERSE
+    case CARD_EXARION_UNIVERSE:
+        return gModDuel.exarionPierce;
+#endif
     }
     return 0;
 }

@@ -296,6 +296,9 @@ void DuelCmd_TurnEnd(void)
     int j;
 
     ClearFlipEffectsLockForTurn();
+#ifdef HAS_CARD_EXARION_UNIVERSE
+    ExarionUniverseClearTurnPenalty(player);
+#endif
 
     if ((s8)gDuelCmd.step == 0) {      /* FAKEMATCH: the (s8) cast is needed to match */
         DuelScreen_ScrollToZone(player, DUEL_AREA_MONSTER);

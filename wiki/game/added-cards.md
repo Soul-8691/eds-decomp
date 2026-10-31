@@ -1112,6 +1112,18 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
   (`ChangeBattlePosition`). That covers a direct attack too.
 - Checked in the source and the build; not tested in an emulator.
 
+### Exarion Universe (2026-10-31)
+- Effect Monster (Level 4, DARK Beast-Warrior, 1800/1900). Passcode 63749102 ([YGOPRODeck](https://ygoprodeck.com/card/exarion-universe-5385)):
+  "During your Battle Step, if this card attacks a Defense Position monster: You can make this card lose exactly 400
+  ATK, and if it does, it will inflict piercing battle damage. These effects last until the end of this turn."
+- **No effect row.** Like Injection Fairy Lily, the optional battle effect is in `ExarionUniverseDamageStep`
+  (battle_phase1.c, `DAMAGE_STEP_CALC` before `CalcBattle`): face-up Exarion attacking a Defense Position monster with
+  ATK at least 400. Yes/No via `PROMPT_CONFIRM_CARD_EFFECT`; the CPU pays when `ATK - 400` still beats the DEF.
+  Paying shows the card, adds a stack to `gModDuel.exarionPenaltyStacks` (`ModStatBonus`: -400 ATK per stack), and sets
+  `exarionPierce` so `ModHasPiercing` applies for that attack only (`ModEndAttack` clears pierce). Stacks on the turn
+  player's monsters clear in `DuelCmd_TurnEnd` (`ExarionUniverseClearTurnPenalty`).
+- Checked in the source and the build; not tested in an emulator.
+
 ### Magic Drain (2026-10-29)
 - Counter Trap. ID 953. The fetched text: "When your opponent activates a Spell Card: They can discard 1 Spell Card to
   negate this card's effect, otherwise negate the activation of their Spell Card, and if you do, destroy it."

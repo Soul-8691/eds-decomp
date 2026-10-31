@@ -119,6 +119,10 @@ void EndPhase_ReturnMagicalScientist(void);
 void YataGarasuDealtDamage(int player, u16 id);
 void EndPhase_MysticSwordsmanLevelUp(int turnPlayer);
 void InjectionFairyLilyEndAttack(int player);
+/* Exarion Universe (src/added_effects.c): optional -400 ATK / piercing when attacking a Defense Position monster. */
+void ExarionUniverseResetBattle(void);
+int ExarionUniverseDamageStep(int player);
+void ExarionUniverseClearTurnPenalty(int turnPlayer);
 /* Night Assailant (src/added_effects.c): its discard effect's targets, and the trigger DiscardHandCard queues. */
 int IsNightAssailantTarget(u16 id);
 /* DuelCmd_FlipCard turned the monster in (player, zone) face down: it loses its counters (src/added_effects.c). */

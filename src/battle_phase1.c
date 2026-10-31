@@ -608,6 +608,10 @@ struct LinkCardPromptByte {
  *           the attacker into a free zone of the defender, make it the target, flip it, CalcBattle
  */
 int DrillroidBeforeDamageCalc(int player);  /* mod: src/added_effects.c */
+#ifdef HAS_CARD_EXARION_UNIVERSE
+void ExarionUniverseResetBattle(void);
+int ExarionUniverseDamageStep(int player);
+#endif
 
 int BattleStage_DamageCalc(int player)
 {
@@ -649,6 +653,9 @@ int BattleStage_DamageCalc(int player)
 #ifdef HAS_CARD_INJECTION_FAIRY_LILY
         InjectionFairyLilyResetBattle();    /* added card (src/added_effects.c) */
 #endif
+#ifdef HAS_CARD_EXARION_UNIVERSE
+        ExarionUniverseResetBattle();
+#endif
         i = ZONE_SPELL_0;
         opponent = 1 - player;
         /* Every face-up, enabled Mirror Wall of the opponent gets a link to the attacker. */
@@ -666,6 +673,10 @@ int BattleStage_DamageCalc(int player)
         int opponent;
         u16 number;
 
+#ifdef HAS_CARD_EXARION_UNIVERSE
+        if (ExarionUniverseDamageStep(player))
+            return 0;
+#endif
 #ifdef HAS_CARD_INJECTION_FAIRY_LILY
         if (InjectionFairyLilyDamageStep(player))   /* added card: its prompt or payment first */
             return 0;

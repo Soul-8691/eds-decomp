@@ -188,6 +188,13 @@ u32 DuelPrompt_ConfirmCardEffect(int player, u16 cardNumber)
             break;
         }
 #endif
+#ifdef HAS_CARD_EXARION_UNIVERSE
+        case CARD_EXARION_UNIVERSE: {
+            extern const u8 gStrExarionUniversePrompt[];
+            TextBoxOpen(PROMPT_BOX_POS, PROMPT_BOX_SIZE, TEXTBOX_FLAGS_DEFAULT, gStrExarionUniversePrompt);
+            break;
+        }
+#endif
         }
         TextBoxSetMenu(TEXTBOX_MENU_YES_NO, NULL, NULL);
         gDuel.promptStep++;
