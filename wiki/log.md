@@ -2134,6 +2134,14 @@ updated: 2026-09-29
 - src/added_effects.c: next own Standby returns the banished Capsule card via `DUEL_CMD_RETURN_BANISHED_CARD_TO_HAND`.
   [[added-cards]]. Built (`make`); not tested in an emulator.
 
+## [2026-10-31] progress | .text size: deck menu and WMC hooks in @farcode
+- Main `.text` had passed `0x08080A20` (linker overlap with `.rodata`). Deck command UI moved to
+  `mod_opponents.c`; Wave-Motion Cannon / face-up field hooks moved to `added_effects.c` (single-call sites in
+  campaign, card_command_menu, duel_cmd_turn, duel_card_lists, effect_targets4). Built (`make`).
+
+## [2026-10-31] progress | Deck menu: Draw icon before Card View
+- src/campaign.c: main-deck command row order Draw → Card View → Surrender; d-pad cycles that order. [[yugi-kaiba-opponent]].
+
 ## [2026-10-31] progress | Wave-Motion Cannon standby counter (once per phase)
 - src/added_effects.c: `gModDuel.wmcStandbyTicked` so `turnCounter` increments once per Standby Phase, not every
   `ModStandbyStep` frame. Fixes 4000 burn after one standby. [[added-cards]]. Built (`make`).

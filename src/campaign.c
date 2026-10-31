@@ -416,6 +416,7 @@ void CalcBattle(int attacker, u16 zeroAtk)
 
 #define CARDMENU_CMD_COUNT 13           /* enum CardMenuCommand 0-12 */
 #define MENU (gDuel.cardMenu)
+#define MENU_HAS(command) ((s32)MENU.available >> (command) & 1)
 
 /*
  * Draw the icon of every available command (gDuel.cardMenu.available bit i; OBJ tile 0x224 + 4 * i,
@@ -447,7 +448,9 @@ void CardMenu_DrawIcons(void)
         break;
     }
     MENU.timer++;
-    for (i = 0; i < CARDMENU_CMD_COUNT; i++) {
+    if (gDuelScreen.selArea == DUEL_AREA_DECK)
+        ModCardMenuDeckDrawIcons(x, y, MENU.available, MENU.command, MENU.timer);
+    else for (i = 0; i < CARDMENU_CMD_COUNT; i++) {
         s32 bits = MENU.available;
         bits >>= i;
         if (bits & 1) {
@@ -487,7 +490,9 @@ void CardMenu_DrawLabel(void)
         x = 32 - count * 8;
         break;
     }
-    for (i = 0; i < CARDMENU_CMD_COUNT; i++) {
+    if (gDuelScreen.selArea == DUEL_AREA_DECK)
+        ModCardMenuDeckDrawLabel(x, MENU.available, MENU.command);
+    else for (i = 0; i < CARDMENU_CMD_COUNT; i++) {
         if ((MENU.available >> i) & 1) {
             if (MENU.command == i)
                 AddSprite((96 << 16) | x, SPRITE_SHAPE_32x16, attr2);
@@ -579,9 +584,6 @@ void CardMenu_DrawCardPreview(void)
     }
 }
 
-/* Bit `command` of gDuel.cardMenu.available: is that command offered? */
-#define MENU_HAS(command) ((s32)MENU.available >> (command) & 1)
-
 /*
  * One frame of the card command menu (enum CardMenuState): select the first available command, slide the
  * menu in, then Left/Right move over the available commands, B closes the menu, and A confirms the
@@ -597,15 +599,19 @@ void CardMenu_Update(void)
     case CARDMENU_STATE_INIT:
         gDuelScreen.showCursor = 0;
         MENU.slide = 0;
-        MENU.command = 0;
-        /* Start at command 0, else the last available one. */
-        for (i = 0; !MENU_HAS(MENU.command); ) {
-            if (MENU.command)
-                MENU.command--;
-            else
-                MENU.command = CARDMENU_CMD_COUNT - 1;
-            if (++i > CARDMENU_CMD_COUNT - 1)
-                break;
+        if (gDuelScreen.selArea == DUEL_AREA_DECK)
+            MENU.command = ModCardMenuDeckFirstCommand(MENU.available);
+        else {
+            MENU.command = 0;
+            /* Start at command 0, else the last available one. */
+            for (i = 0; !MENU_HAS(MENU.command); ) {
+                if (MENU.command)
+                    MENU.command--;
+                else
+                    MENU.command = CARDMENU_CMD_COUNT - 1;
+                if (++i > CARDMENU_CMD_COUNT - 1)
+                    break;
+            }
         }
         MENU.state++;
         break;
@@ -621,24 +627,32 @@ void CardMenu_Update(void)
         CardMenu_DrawIcons();
         CardMenu_DrawLabel();
         if (gMain.newKeys & DPAD_LEFT) {
-            for (i = 0; i < CARDMENU_CMD_COUNT; i++) {
-                if (MENU.command)
-                    MENU.command--;
-                else
-                    MENU.command = CARDMENU_CMD_COUNT - 1;
-                if (MENU_HAS(MENU.command))
-                    break;
+            if (gDuelScreen.selArea == DUEL_AREA_DECK)
+                MENU.command = ModCardMenuDeckCycleCommand(MENU.command, -1, MENU.available);
+            else {
+                for (i = 0; i < CARDMENU_CMD_COUNT; i++) {
+                    if (MENU.command)
+                        MENU.command--;
+                    else
+                        MENU.command = CARDMENU_CMD_COUNT - 1;
+                    if (MENU_HAS(MENU.command))
+                        break;
+                }
             }
             PlaySE(SE_CURSOR);
         }
         if (gMain.newKeys & DPAD_RIGHT) {
-            for (i = 0; i < CARDMENU_CMD_COUNT; i++) {
-                if (MENU.command < CARDMENU_CMD_COUNT - 1)
-                    MENU.command++;
-                else
-                    MENU.command = 0;
-                if (MENU_HAS(MENU.command))
-                    break;
+            if (gDuelScreen.selArea == DUEL_AREA_DECK)
+                MENU.command = ModCardMenuDeckCycleCommand(MENU.command, 1, MENU.available);
+            else {
+                for (i = 0; i < CARDMENU_CMD_COUNT; i++) {
+                    if (MENU.command < CARDMENU_CMD_COUNT - 1)
+                        MENU.command++;
+                    else
+                        MENU.command = 0;
+                    if (MENU_HAS(MENU.command))
+                        break;
+                }
             }
             PlaySE(SE_CURSOR);
         }

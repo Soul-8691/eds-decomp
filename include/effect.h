@@ -136,6 +136,13 @@ int AiStandbyActivations(int player);
 /* Xing Zhen Hu (src/added_effects.c): 1 if `card` is a Set card it locks (CanActivateEffect refuses it). */
 int IsLockedByXingZhenHu(struct ChainEntry *card);
 int IsZoneLockedByXingZhenHu(int player, int zone);
+/* Continuous Spells that may activate face-up (CanActivateFieldCard, src/effect_targets4.c). */
+int ModCanActivateFaceUpFieldCard(u16 cardNumber);
+/* 0 for face-up Wave-Motion Cannon (skips the zone canActivate gate). */
+int ModFieldCardRequiresCanActivate(u16 cardNumber, int isFaceUp);
+void ModTurnStartRefreshZoneCanActivate(struct DuelZone *zone, u16 id);
+void ModPlaceSpellZoneCanActivate(struct DuelZone *z, u16 id, int faceUp);
+u32 ModFaceUpSpellActivateMenuFlags(u32 flags, u16 id, int player, int zone);
 /* Spirit Reaper (src/added_effects.c): TryAddEffectTarget reports each field target here. */
 void OnFieldCardTargeted(struct ChainEntry *link, int player, int zone);
 /* Metamorphosis (src/added_effects.c): a Fusion Monster of the given Level. */

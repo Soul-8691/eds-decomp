@@ -270,12 +270,7 @@ u16 CardMenu_GetAvailableCommands(void)
                 flags |= CardMenu_GetSpellTrapCommands(id, 0, 5);
             break;
         case DUEL_AREA_DECK:
-            if (((u32)(gDuelView.flags1B12 << 27) >> 29) == PHASE_DRAW)
-                flags = CARDMENU_MASK_DRAW;
-            else
-                flags = CARDMENU_MASK_SURRENDER;
-            if (ModDeckListVisible())
-                flags |= CARDMENU_MASK_CARD_VIEW;
+            flags = ModCardMenuDeckCommands(((u32)(gDuelView.flags1B12 << 27) >> 29));
             break;
         case DUEL_AREA_FUSION_DECK:
             if (GetFaceUpFieldMagicNumber() == CARD_1547) {

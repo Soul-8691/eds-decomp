@@ -94,6 +94,12 @@ u32 GetTrunkFusionCopies(u16 id);
 int ModDebugDuel(void);
 /* 1 in make (testing) or ModDebugDuel: the human can Card View their main deck in draw order. */
 int ModDeckListVisible(void);
+/* Main-deck command menu: Draw before Card View (campaign.c hooks). */
+int ModCardMenuDeckFirstCommand(u16 available);
+int ModCardMenuDeckCycleCommand(u8 command, int dir, u16 available);
+void ModCardMenuDeckDrawIcons(int x, int y, u16 available, u8 command, u8 timer);
+void ModCardMenuDeckDrawLabel(int x, u16 available, u8 command);
+u16 ModCardMenuDeckCommands(int phase);
 
 /* Every card ID in name order, then 0 (card_data.h); the card-list builders walk it. */
 extern const u16 gCardIdsByName[];

@@ -7208,6 +7208,66 @@ static int AiWantsWaveMotionIgnition(int zone)
 }
 #endif /* HAS_CARD_WAVE_MOTION_CANNON */
 
+int ModCanActivateFaceUpFieldCard(u16 cardNumber)
+{
+    switch (cardNumber) {
+#ifdef HAS_CARD_SKULL_LAIR
+    case CARD_SKULL_LAIR:
+        return 1;
+#endif
+#ifdef HAS_CARD_ROYAL_OPPRESSION
+    case CARD_ROYAL_OPPRESSION:
+        return 1;
+#endif
+#ifdef HAS_CARD_WAVE_MOTION_CANNON
+    case CARD_WAVE_MOTION_CANNON:
+        return 1;
+#endif
+    default:
+        return 0;
+    }
+}
+
+int ModFieldCardRequiresCanActivate(u16 cardNumber, int isFaceUp)
+{
+#ifdef HAS_CARD_WAVE_MOTION_CANNON
+    if (cardNumber == CARD_WAVE_MOTION_CANNON && isFaceUp)
+        return 0;
+#endif
+    return 1;
+}
+
+void ModTurnStartRefreshZoneCanActivate(struct DuelZone *zone, u16 id)
+{
+#ifdef HAS_CARD_WAVE_MOTION_CANNON
+    if (id && zone->isFaceUp && CardNumberOfId(id) == CARD_WAVE_MOTION_CANNON)
+        zone->canActivate = 1;
+#endif
+}
+
+void ModPlaceSpellZoneCanActivate(struct DuelZone *z, u16 id, int faceUp)
+{
+#ifdef HAS_CARD_WAVE_MOTION_CANNON
+    if (faceUp && CardNumberOfId(id) == CARD_WAVE_MOTION_CANNON)
+        z->canActivate = TRUE;
+#endif
+}
+
+extern int CanActivateEffectInZoneInt(int player, int zone, u16 event) asm("CanActivateEffectInZone");
+
+u32 ModFaceUpSpellActivateMenuFlags(u32 flags, u16 id, int player, int zone)
+{
+#ifdef HAS_CARD_WAVE_MOTION_CANNON
+    struct DuelZone *z = ZoneOf(player, zone + ZONE_SPELL_0);
+
+    if (z->isFaceUp && CardNumberOfId(id) == CARD_WAVE_MOTION_CANNON
+        && (gDuel.phase == PHASE_MAIN1 || gDuel.phase == PHASE_MAIN2) && gDuel.turnPlayer == 0
+        && CanActivateEffectInZoneInt(player, zone + ZONE_SPELL_0, 0) != 0)
+        flags |= CARDMENU_MASK_ACTIVATE;
+#endif
+    return flags;
+}
+
 #ifdef HAS_CARD_MIRAGE_OF_NIGHTMARE
 /* ---- Mirage of Nightmare ------------------------------------------------------------------------------------------
  * "Once per turn, during your opponent's Standby Phase: Draw cards until you have 4 cards in your hand. If you do,

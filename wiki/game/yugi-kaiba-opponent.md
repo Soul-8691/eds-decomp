@@ -120,7 +120,8 @@ Always open, with no format check:
       `IsHandRevealed` returns 1 (duel_piles.c), `CanDeckOut` is 0 for the player (duel_cmd_deck.c), Card View opens
       on the opponent's face-down cards (card_menu_input.c), and the info bar describes them. `ModDeckListVisible`
       also lets the human open **Card View** on their own main deck pile (`deck[0]` first = next draw;
-      `CardListView_Open`, campaign.c).
+      `CardListView_Open`, campaign.c). On the deck pile the command icons are ordered Draw, then Card View, then
+      Surrender (`CardMenu_DrawIcons` / `CardMenu_Update`, campaign.c).
     - **The info bar moved.** Three checks in `DuelScreen_DrawCursorInfo` grew duel_info_bar.c by 0x90 bytes, which
       the size-limited `.text` (to 0x08080A20) could not take. The function moved to a new `@farcode` unit,
       src/mod_info_bar.c, written more compactly (one `ZoneCardShown` check and one `DrawPileLabel` helper). Release

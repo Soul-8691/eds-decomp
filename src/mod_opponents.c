@@ -44,7 +44,9 @@
 #include "constants/game.h"
 #include "test_deck.h"          /* MOD_TEST_DECK, TEST_DECK_PORTRAIT (tools/testdeck.py) */
 #include "main.h"               /* gMain.opponent */
-#include "duel_flow.h"          /* gDuelCtrl.isLinkDuel */
+#include "duel_flow.h"          /* gDuelCtrl.isLinkDuel, gPulseScaleCurve */
+#include "constants/duel.h"     /* enum CardMenuCommand, enum DuelPhase */
+#include "sprite.h"             /* AddSprite, AddAffineSprite */
 
 /* The opponent select's page pictures (campaign_select.c). */
 extern struct Mode4Bitmap gOpponentSelectPageBgs[5];
@@ -431,6 +433,98 @@ int ModDeckListVisible(void)
 #else
     return ModDebugDuel();
 #endif
+}
+
+u16 ModCardMenuDeckCommands(int phase)
+{
+    u16 flags;
+
+    if (phase == PHASE_DRAW)
+        flags = CARDMENU_MASK_DRAW;
+    else
+        flags = CARDMENU_MASK_SURRENDER;
+    if (ModDeckListVisible())
+        flags |= CARDMENU_MASK_CARD_VIEW;
+    return flags;
+}
+
+#define DECK_MENU_CMD_ORDER_COUNT 3
+static const u8 sDeckMenuCmdOrder[DECK_MENU_CMD_ORDER_COUNT] = {
+    CARDMENU_CMD_DRAW,
+    CARDMENU_CMD_CARD_VIEW,
+    CARDMENU_CMD_SURRENDER,
+};
+
+#define DECK_MENU_HAS(available, cmd) ((s32)(available) >> (cmd) & 1)
+
+int ModCardMenuDeckFirstCommand(u16 available)
+{
+    int j;
+
+    for (j = 0; j < DECK_MENU_CMD_ORDER_COUNT; j++) {
+        if (DECK_MENU_HAS(available, sDeckMenuCmdOrder[j]))
+            return sDeckMenuCmdOrder[j];
+    }
+    return 0;
+}
+
+int ModCardMenuDeckCycleCommand(u8 command, int dir, u16 available)
+{
+    int j;
+    int idx = -1;
+
+    for (j = 0; j < DECK_MENU_CMD_ORDER_COUNT; j++) {
+        if (sDeckMenuCmdOrder[j] == command) {
+            idx = j;
+            break;
+        }
+    }
+    if (idx < 0)
+        return command;
+    for (j = 0; j < DECK_MENU_CMD_ORDER_COUNT; j++) {
+        idx = (idx + dir + DECK_MENU_CMD_ORDER_COUNT) % DECK_MENU_CMD_ORDER_COUNT;
+        if (DECK_MENU_HAS(available, sDeckMenuCmdOrder[idx]))
+            return sDeckMenuCmdOrder[idx];
+    }
+    return command;
+}
+
+void ModCardMenuDeckDrawIcons(int x, int y, u16 available, u8 command, u8 timer)
+{
+    int j;
+    u16 attr2;
+
+    for (j = 0; j < DECK_MENU_CMD_ORDER_COUNT; j++) {
+        int cmd = sDeckMenuCmdOrder[j];
+
+        if (!DECK_MENU_HAS(available, cmd))
+            continue;
+        attr2 = OAM_ATTR2_PALETTE(2) | OAM_ATTR2_PRIORITY(1) | (0x224 + 4 * cmd);
+        if (command == cmd)
+            AddAffineSprite((y << 16) | x, SPRITE_SHAPE_16x16, attr2,
+                            gPulseScaleCurve[(timer >> 1) & 0xF] << 16);
+        else
+            AddSprite((y << 16) | x, SPRITE_SHAPE_16x16, attr2);
+        x += 16;
+    }
+}
+
+void ModCardMenuDeckDrawLabel(int x, u16 available, u8 command)
+{
+    int j;
+
+    for (j = 0; j < DECK_MENU_CMD_ORDER_COUNT; j++) {
+        int cmd = sDeckMenuCmdOrder[j];
+        u16 attr2;
+
+        if (!DECK_MENU_HAS(available, cmd))
+            continue;
+        if (command == cmd) {
+            attr2 = OAM_ATTR2_PALETTE(3) | OAM_ATTR2_PRIORITY(1) | (0x264 + 8 * cmd);
+            AddSprite((96 << 16) | x, SPRITE_SHAPE_32x16, attr2);
+        }
+        x += 16;
+    }
 }
 
 int ModOpponentFormat(u16 duelist)

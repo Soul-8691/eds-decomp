@@ -794,15 +794,7 @@ int CardMenu_GetSpellTrapCommands(u16 id, int player, int zone)
                     flags |= CARDMENU_MASK_ACTIVATE;
             }
         }
-#ifdef HAS_CARD_WAVE_MOTION_CANNON
-        if ((zn->flags6 & 2) != 0 && CARD_NUMBER_AT(n) == CARD_WAVE_MOTION_CANNON) {
-            struct DuelState *duel = (struct DuelState *)((u8 *)gDuelZones - ZONES_OFFSET);
-
-            if ((duel->phase == PHASE_MAIN1 || duel->phase == PHASE_MAIN2) && duel->turnPlayer == 0
-                && CanActivateEffectInZoneInt(player, zone + ZONE_SPELL_0, 0) != 0)
-                flags |= CARDMENU_MASK_ACTIVATE;
-        }
-#endif
+        flags = ModFaceUpSpellActivateMenuFlags(flags, id, player, zone);
         e = (u8 *)&gDuel;
         {
             struct DuelState *duel = (struct DuelState *)e;

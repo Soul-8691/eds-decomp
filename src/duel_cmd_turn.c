@@ -21,6 +21,7 @@
 #include "card_detail.h"            /* CardDetail_Init, CardDetail_Run */
 #include "duel_actions.h"           /* QueueRemoveZoneLink, DestroyFieldCard, ShowCardEffect */
 #include "duel_flow.h"              /* gDuelCtrl */
+#include "effect.h"                 /* ModTurnStartRefreshZoneCanActivate */
 
 #include "duel.h"                   /* struct DuelCard / DuelZone / DuelPlayer / DuelState, gDuel, ... */
 #include "effect.h"                 /* ClearFlipEffectsLockForTurn */
@@ -389,10 +390,7 @@ void DuelCmd_TurnEnd(void)
             if (id && ((*((const u32 *)CARD_STATS_ADDR + (id & CARD_ID_MASK)) & CARD_STATS_TYPE_MASK)
                            >> CARD_STATS_TYPE_SHIFT) > CARD_TYPE_REPTILE && !zone->isFaceUp)
                 zone->canActivate = 1;
-#ifdef HAS_CARD_WAVE_MOTION_CANNON
-            if (id && zone->isFaceUp && gCardIdToNumber[id & CARD_ID_MASK] == CARD_WAVE_MOTION_CANNON)
-                zone->canActivate = 1;
-#endif
+            ModTurnStartRefreshZoneCanActivate(zone, id);
         }
     }
 
