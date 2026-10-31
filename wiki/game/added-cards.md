@@ -1737,6 +1737,13 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
   activated anyway.
 - Checked in the source and the build; not tested in an emulator.
 
+### Different Dimension Capsule (2026-10-31)
+- Normal Trap (PGD, early / Goat-era text): select 1 card from the Deck and remove it from play face-down; on your
+  next Standby Phase, add it to your hand (`DUEL_CMD_RETURN_BANISHED_CARD_TO_HAND`). Any main-Deck card; no Spell/Trap
+  zone. `ModStandbyStep`, `gModDuel.ddcReturnPending` / `ddcReturnCardId`. `gAddedCardEffects` row.
+- **Fix (2026-10-31).** Deck list was Magic/Trap only; remove-from-play at resolve plus Standby return to hand.
+- Checked in the source and the build; not tested in an emulator.
+
 ### Cold Wave (2026-10-30)
 - Effect text from [YGOPRODeck](https://db.ygoprodeck.com/api/v7/cardinfo.php?name=Cold%20Wave) (id 23171648):
   "This turn and the next turn, no player can play any Spell or Trap Cards." Normal Spell. Reuses engine key 1312:

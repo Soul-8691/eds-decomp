@@ -81,6 +81,8 @@ struct ModDuelState {
     u8 rouletteDie2;            /* Roulette Barrel: second die roll this activation */
     u16 mystikWokAtk;           /* Mystik Wok: ATK of the monster Tributed this activation */
     u16 mystikWokDef;           /* Mystik Wok: DEF of the monster Tributed this activation */
+    u8 ddcReturnPending[2];     /* Different Dimension Capsule: return banished card to hand next Standby */
+    u16 ddcReturnCardId[2];     /* ... card ID to find in the banished pile (face-down) */
 };
 extern struct ModDuelState gModDuel;
 /* gModDuel (0x0202FF04, symbols.ld) must end before gScratchBuffer (0x02030000). */
@@ -1254,6 +1256,10 @@ void ModDuelInit(void)
     gModDuel.noDamageTurn[1] = 0;
     gModDuel.noEffectDamageTurn[0] = 0;
     gModDuel.noEffectDamageTurn[1] = 0;
+    gModDuel.ddcReturnPending[0] = 0;
+    gModDuel.ddcReturnPending[1] = 0;
+    gModDuel.ddcReturnCardId[0] = 0;
+    gModDuel.ddcReturnCardId[1] = 0;
 #ifdef HAS_CARD_INJECTION_FAIRY_LILY
     InjectionFairyLilyResetBattle();
 #endif
@@ -4415,6 +4421,112 @@ int EffectColdWavePrepare(struct ChainEntry *card, struct ChainEntry *chainLink,
 }
 #endif /* HAS_CARD_COLD_WAVE */
 
+#ifdef HAS_CARD_DIFFERENT_DIMENSION_CAPSULE
+/* ---- Different Dimension Capsule -----------------------------------------------------------------------------------
+ * Normal Trap (PGD, early text): select 1 card from the Deck and remove it from play face-down; during your next
+ * Standby Phase, add that card to your hand (DUEL_CMD_RETURN_BANISHED_CARD_TO_HAND). Any main-Deck card may be
+ * chosen; no Spell & Trap zone is used. */
+
+static const u8 sStrDdcSelectDeckCard[] = "Select a card from your Deck.";
+extern const u8 gStrNoDeckCardsToAdd[];
+
+int CollectEffectTargetsInt(int player, int cardNumber, int param) asm("CollectEffectTargets");
+
+static int IsDifferentDimensionCapsuleDeckTarget(u16 id, int param)
+{
+    int type = (int)CARD_STATS_TYPE(gCardStats[id & CARD_ID_MASK]);
+
+    (void)param;
+    return type <= CARD_TYPE_REPTILE || type == CARD_TYPE_MAGIC || type == CARD_TYPE_TRAP;
+}
+
+int EffectDifferentDimensionCapsulePrepare(struct ChainEntry *card, struct ChainEntry *chainLink, u16 fromHand)
+{
+    (void)chainLink;
+    (void)fromHand;
+    return CollectEffectTargetsInt(card->player, CARD_DIFFERENT_DIMENSION_CAPSULE, 0) > 0;
+}
+
+static int DifferentDimensionCapsuleStandbyStep(int player)
+{
+    int side = player & 1;
+    int i;
+    u16 cmd;
+
+    if (!gModDuel.ddcReturnPending[side])
+        return 1;
+    if (gChain.resolving || gChain.building)
+        return 1;
+    for (i = 0; i < gDuelPlayers[side].banishedCount; i++) {
+        u32 info = gDuelPlayers[side].banishedInfo[i];
+        u16 id = gDuelPlayers[side].banished[i].id & CARD_ID_MASK;
+
+        if ((u8)info == BANISH_FACE_DOWN && id == (gModDuel.ddcReturnCardId[side] & CARD_ID_MASK)) {
+            ShowCardEffect(player, id);
+            cmd = DUEL_CMD_RETURN_BANISHED_CARD_TO_HAND;
+            if (player)
+                cmd = DUEL_CMD_RETURN_BANISHED_CARD_TO_HAND | DUEL_CMD_PLAYER;
+            DuelCmd_Push(cmd, i, 1, 0);
+            gModDuel.ddcReturnPending[side] = 0;
+            return 1;
+        }
+    }
+    gModDuel.ddcReturnPending[side] = 0;
+    return 1;
+}
+
+int EffectDifferentDimensionCapsuleResolve(struct ChainEntry *link, struct ChainEntry *chainedTo)
+{
+    u16 remove;
+    u16 *picked;
+    struct DuelCard *banish;
+
+    (void)chainedTo;
+    if (link->negated)
+        return EFFECT_STEP_DONE;
+    switch (gChain.effectStep) {
+    case EFFECT_STEP_START:
+        if (CollectEffectTargetsInt(link->player, CARD_DIFFERENT_DIMENSION_CAPSULE, 0) == 0) {
+            if (link->player)
+                return EFFECT_STEP_DONE;
+            TextBoxOpen(TEXTBOX_POS(6, 2), TEXTBOX_SIZE(18, 7), TEXTBOX_FLAGS_DEFAULT, gStrNoDeckCardsToAdd);
+            return EFFECT_STEP_END;
+        }
+        if (link->player) {
+            AiPickCardListEntry(link->card);
+            gCardListView.cursorRow = 0;
+            gCardListView.top = gAiWork.listPick;
+            return EFFECT_STEP_3;
+        }
+        TextBoxOpen(TEXTBOX_POS(6, 2), TEXTBOX_SIZE(18, 7), TEXTBOX_FLAGS_DEFAULT, sStrDdcSelectDeckCard);
+        return EFFECT_STEP_2;
+    case EFFECT_STEP_2:
+        CardListView_Open(link->player, -1, CARD_DIFFERENT_DIMENSION_CAPSULE, 0);
+        return EFFECT_STEP_3;
+    case EFFECT_STEP_3:
+        picked = (u16 *)&gCardListView.cards[gCardListView.top + gCardListView.cursorRow];
+        ShowPickedCard(link->player,
+                       gCardListView.cards[gCardListView.top + gCardListView.cursorRow] & CARD_ID_MASK);
+        CopyDuelCard((u32 *)&gChain.effectCard, &gCardListView.cards[gCardListView.top + gCardListView.cursorRow]);
+        remove = link->player ? DUEL_CMD_PLAYER | DUEL_CMD_REMOVE_CARD_FROM_DECK : DUEL_CMD_REMOVE_CARD_FROM_DECK;
+        DuelCmd_Push(remove, picked[0], picked[1], 0);
+        return EFFECT_STEP_4;
+    case EFFECT_STEP_4: {
+        int side = link->player & 1;
+
+        banish = (struct DuelCard *)&gChain.effectCard;
+        banish->owner = side;
+        AddCardToBanishedFaceDown(banish);
+        gModDuel.ddcReturnCardId[side] = banish->id & CARD_ID_MASK;
+        gModDuel.ddcReturnPending[side] = 1;
+        DuelCmd_Push(link->player ? DUEL_CMD_PLAYER | DUEL_CMD_SHUFFLE_DECK : DUEL_CMD_SHUFFLE_DECK, 0, 0, 0);
+        return EFFECT_STEP_END;
+    }
+    }
+    return EFFECT_STEP_DONE;
+}
+#endif /* HAS_CARD_DIFFERENT_DIMENSION_CAPSULE */
+
 #ifdef HAS_CARD_JAR_OF_GREED
 /* ---- Jar of Greed --------------------------------------------------------------------------------------------------
  * Normal Trap: "Draw 1 card." A row with no prepare or check, like Gift of the Mystical Elf's: CanActivateEffect
@@ -6277,6 +6389,11 @@ void ModCollectEffectTargets(int player, u16 cardNumber, int param)
         ModAddPileTargets(p->fusionDeck, p->fusionCount, CARDLIST_SRC_FUSION_DECK, IsScientistFusion, 0);
         break;
 #endif
+#ifdef HAS_CARD_DIFFERENT_DIMENSION_CAPSULE
+    case CARD_DIFFERENT_DIMENSION_CAPSULE:    /* any main-Deck card (Set in a Spell & Trap zone) */
+        ModAddPileTargets(p->deck, p->deckCount, CARDLIST_SRC_DECK, IsDifferentDimensionCapsuleDeckTarget, 0);
+        break;
+#endif
     }
 }
 
@@ -6939,6 +7056,9 @@ int ModStandbyStep(int player)
 {
     int done;
 
+#ifdef HAS_CARD_DIFFERENT_DIMENSION_CAPSULE
+    DifferentDimensionCapsuleStandbyStep(player);
+#endif
     switch (gModDuel.standbyPart) {
     case 0:
         done = TreebornFrogStandbyStep(player);
@@ -9803,6 +9923,16 @@ const struct CardEffect gAddedCardEffects[] = {
         (int (*)(struct ChainEntry *, struct ChainEntry *))EffectLockMagicTrapResolve,
         NULL,
         EffectColdWavePrepare,
+        NULL,
+        NULL,
+    },
+#endif
+#ifdef HAS_CARD_DIFFERENT_DIMENSION_CAPSULE
+    {
+        CARD_DIFFERENT_DIMENSION_CAPSULE, 0,
+        EffectDifferentDimensionCapsuleResolve,
+        NULL,
+        EffectDifferentDimensionCapsulePrepare,
         NULL,
         NULL,
     },

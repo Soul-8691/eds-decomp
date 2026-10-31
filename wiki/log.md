@@ -2105,3 +2105,31 @@ updated: 2026-09-29
 
 ## [2026-10-30] progress | Pack contents screen: no scrolling background
 - src/booster_pack.c: GetPack_InitScene no longer fills the BG3 map with the 2x2 pattern (tiles 0x130-0x133, palette 1), and GetPack_FadeIn turns on BG0-2 and OBJ only (0x1700, was 0x1F00); src/booster_get_pack.c: GetPack_FadeInAndResume the same (after Card View); src/card_canvas.c: GetPack_ScrollBg only steps the border's colour cycle (GetPack_HBlank), no BG3 scroll. Applies to every pack opening (Booster Packs menu and Campaign rewards). Release .text 0x08080954 (from 0x080809CC). README. Built (make and make release); not tested in an emulator.
+
+## [2026-10-31] progress | Different Dimension Capsule
+- src/added_effects.c: trap resolve, Deck search (Magic/Trap), delayed Standby activation (`gModDuel.ddcPendingZone`).
+  missing.txt, missing-main.txt. [[added-cards]]. Built (`make`); not tested in an emulator.
+
+## [2026-10-31] progress | Different Dimension Capsule fixes
+- src/added_effects.c: Deck list includes monsters; delayed Standby fires once (`ddcFireTurn` exact match, cleared on fire).
+  [[added-cards]]. Built (`make`); not tested in an emulator.
+
+## [2026-10-31] progress | Different Dimension Capsule return to hand
+- src/added_effects.c: next Standby returns the Set card to the hand (early effect text), not destroy/force-activate.
+  [[added-cards]]. Built (`make`); not tested in an emulator.
+
+## [2026-10-31] progress | Different Dimension Capsule banish face-down
+- src/added_effects.c: next Standby sends the Set card to removed from play face-down (`AddCardToBanishedFaceDown`).
+  [[added-cards]]. Built (`make`); not tested in an emulator.
+
+## [2026-10-31] progress | Different Dimension Capsule zone/banish fix
+- src/added_effects.c: correct S/T zone index for Set and Standby; banish via `BanishFieldCard` + `BANISH_FACE_DOWN` patch.
+  [[added-cards]]. Built (`make`); not tested in an emulator.
+
+## [2026-10-31] progress | Different Dimension Capsule remove from play
+- src/added_effects.c: picked card goes straight to banished face-down (no Set in a Spell/Trap zone); prepare needs no free S/T zone.
+  [[added-cards]]. Built (`make`); not tested in an emulator.
+
+## [2026-10-31] progress | Different Dimension Capsule Standby to hand
+- src/added_effects.c: next own Standby returns the banished Capsule card via `DUEL_CMD_RETURN_BANISHED_CARD_TO_HAND`.
+  [[added-cards]]. Built (`make`); not tested in an emulator.
