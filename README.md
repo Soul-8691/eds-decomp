@@ -274,7 +274,8 @@ Each format is a Campaign "duelist". You start with Yugi-Kaiba only; beat the cu
 ## How the new cards are added
 
 - **Coded cards.** Every card listed in [`new_cards.txt`](new_cards.txt) above the `------` line is fully coded,
-  effects included; the lines below the separator are planned, not in the demo ROM yet.
+  effects included; the lines below the separator are planned, not in the demo ROM yet. [NEW_CARDS.md](NEW_CARDS.md)
+  shows a screenshot of each of them in the game (taken by `tools/card_screenshots.lua` in mGBA).
 - **Card data.** `make` / `make release` use every name in `config/new_cards.txt`. `make demo` is the same as `make`
   (debug/testing rules, `MOD_RELEASE` 0) but only the coded block at the top of repo-root `new_cards.txt`.
   `make release-demo` is the release rules with that same demo list. The build fetches each card's stats, text and

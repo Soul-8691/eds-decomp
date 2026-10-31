@@ -26,3 +26,4 @@ tools/watch_*.sh
 tools/dashboard.py
 tools/dashboard.html
 docker/opencode/
+cards/_log.txt
