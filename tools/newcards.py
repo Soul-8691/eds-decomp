@@ -512,7 +512,13 @@ def cmd_build():
         f'{c["id"]}\t{c["number"]}\t{c["passcode"]}\t{c["name"]}\t{c["game_name"]}\n' for c in new))
     stamp = f'{total}\n{os.path.abspath(LIST)}\n'
     stamp_path = os.environ.get('NEWCARDS_STAMP', f'{OUT}/.newcards')
-    write_if_changed(stamp_path, stamp)
+    with open(stamp_path, 'w') as f:    # always: make compares its time (what depends on it must rebuild)
+        f.write(stamp)
+    # The tables are shared by every list (make vs make demo): the other lists' stamps no longer describe them.
+    for other in os.listdir(OUT):
+        path = os.path.join(OUT, other)
+        if other.startswith('.newcards') and os.path.abspath(path) != os.path.abspath(stamp_path):
+            os.remove(path)
     print(f'newcards: {len(new)} added cards (IDs {OLD_COUNT}-{total - 1}), room for {cap - len(new)} more '
           f'from {LIST}')
 

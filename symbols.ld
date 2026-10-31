@@ -22,6 +22,8 @@ gBanlistView = 0x0202E000;
 gDeckRecipes = 0x0202E400;
 /* Mod: the Booster Packs scene of src/mod_packs.c (after gDeckRecipes, which ends by 0x0202EC40). */
 gPackShop = 0x0202F000;
+/* Mod: the pick-a-pack list's rows and a pack's info of src/mod_format_packs.c (0xCC bytes, after gPackShop). */
+gModPackList = 0x0202F010;
 /* Mod: the DP lines of src/mod_dp.c. */
 gModDP = 0x0202F100;
 /* Mod: the Banlists scene of src/mod_banlists.c, and the main menu's scroll (main_menu.c). */

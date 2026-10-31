@@ -8,8 +8,8 @@
  *   AwardDuelDP               DP earned by beating a Campaign duelist (Campaign_RecordDuelResult)
  *   DpText_*                  a line of text drawn into OBJ tiles and shown as 32 x 8 sprites (a 32 x 2 tile canvas,
  *                             so it works with 1D and 2D OBJ mapping), for the screens that show DP:
- *                             the main menu (MainMenuDP_*), the Booster Packs list (PackListDP_*) and the password
- *                             machine (PasswordDP_*).
+ *                             the main menu (MainMenuDP_*), the Booster Packs list (PackListDP_*; the Campaign win's
+ *                             free pack list, PackListReward_Draw) and the password machine (PasswordDP_*).
  * Like the other mod units, this one is @farcode and @rodata in units.txt; its state is in gSaveData and in gModDP
  * (EWRAM, symbols.ld), never in .bss.
  */
@@ -297,6 +297,7 @@ static const char sStrDPSuffix[] = " DP";
 static const char sStrYouHave[] = "You have ";
 static const char sStrPackHelp[] = "    A: open   B: back";
 static const char sStrNotEnough[] = "Not enough DP!";
+static const char sStrRewardHelp[] = "Free pack   A: open";
 static const char sStrNeed[] = "Need ";
 static const char sStrNeedSuffix[] = " DP!";
 
@@ -326,10 +327,11 @@ void MainMenuDP_Draw(void)
 #define FONT_SHADOW         TEXT_SIZE_COLOR(10, 15)
 
 /* The list's lines: "<pack name>   <cost> DP" at the top, "You have <DP> DP   A: open   B: back" (or "Not enough
- * DP!") at the bottom. Drawn each frame while the list is up. A line is rendered again when what it shows changes,
+ * DP!") at the bottom; for the free pack of a Campaign win (`free`), "<pack name>" and "Free pack   A: open".
+ * Drawn each frame while the list is up. A line is rendered again when what it shows changes,
  * one line a frame and only when `idle` (the list is not sliding or uploading covers): a slide's last frame redraws
  * the covers, and rendering text on top of that made the cover change lag. */
-void PackListDP_Draw(u16 packId, const char *packName, int idle)
+static void PackListLines_Draw(u16 packId, const char *packName, int idle, int free)
 {
     struct ModDP *s = &gModDP;
     char line[96];
@@ -341,13 +343,17 @@ void PackListDP_Draw(u16 packId, const char *packName, int idle)
         s->packShownId = packId;
         MemCopy16((void *)(OBJ_PLTT + FONT_PALETTE * 0x20), gSystemFontPal, 0x20);
         p = AppendStr(line, packName);
-        p = AppendStr(p, "   ");
-        AppendStr(AppendNum(p, GetPackCost(packId)), sStrDPSuffix);
+        if (!free) {
+            p = AppendStr(p, "   ");
+            AppendStr(AppendNum(p, GetPackCost(packId)), sStrDPSuffix);
+        }
         s->packTopWidth = DpText_Render(PACK_TOP_TILE, line, FONT_COLOR, FONT_SHADOW);
     } else if (s->packShownDP != GetDP() || s->packShownFlag != (s->packNotEnough != 0)) {
         s->packShownDP = GetDP();
         s->packShownFlag = s->packNotEnough != 0;
-        if (s->packNotEnough) {
+        if (free) {
+            AppendStr(line, sStrRewardHelp);
+        } else if (s->packNotEnough) {
             p = AppendStr(line, sStrNotEnough);
         } else {
             p = AppendStr(AppendNum(AppendStr(line, sStrYouHave), GetDP()), sStrDPSuffix);
@@ -359,6 +365,16 @@ void PackListDP_Draw(u16 packId, const char *packName, int idle)
         s->packNotEnough--;
     DpText_Draw(120 - s->packTopWidth / 2, 2, PACK_TOP_TILE, FONT_PALETTE, s->packTopWidth);
     DpText_Draw(120 - s->packBottomWidth / 2, 146, PACK_BOTTOM_TILE, FONT_PALETTE, s->packBottomWidth);
+}
+
+void PackListDP_Draw(u16 packId, const char *packName, int idle)
+{
+    PackListLines_Draw(packId, packName, idle, 0);
+}
+
+void PackListReward_Draw(u16 packId, const char *packName, int idle)
+{
+    PackListLines_Draw(packId, packName, idle, 1);
 }
 
 /* A refused pack: "Not enough DP!" for two seconds. */

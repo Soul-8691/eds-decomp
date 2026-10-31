@@ -76,6 +76,9 @@ u16 CB_ChallengerRecipes(int format);
 /* Mod: Solomon plays a Deck Recipe the player picks (src/mod_opponents.c, src/mod_recipes.c). */
 int ModOpponentPlaysRecipe(u16 duelist);
 u16 CB_OpponentRecipes(void);
+/* Mod: a win's pack (src/mod_opponents.c, src/mod_packs.c). */
+int ModWinGivesPack(u16 duelist);
+u16 CB_RewardPack(void);
 
 /* Mod: a calendar event's challenger (Campaign_StartDay fixed a format opponent, ModEventChallenger). */
 static int IsEventChallenger(void)
@@ -278,10 +281,10 @@ u16 Campaign_GiveRewards(void)
         return 0;
     case REWARD_STEP_CHOOSE:
         /* Added: this build's opponents (src/mod_opponents.c) have no calendar-event rewards or penalties: a win
-         * always leads to the regular pick-a-pack list, a loss to nothing. */
+         * leads to the Booster Packs list (CB_RewardPack), except against Solomon and Debug; a loss to nothing. */
         if (ModSkipsDuelDialogue(gMain.opponent)) {
             RESET_SEQ_STATE();
-            if (gDuel.result != DUEL_RESULT_WIN)
+            if (gDuel.result != DUEL_RESULT_WIN || !ModWinGivesPack(gMain.opponent))
                 return 1;
             gMain.subStep++;
             return 0;
@@ -449,7 +452,7 @@ u16 Campaign_GiveRewards(void)
         }
         return 0;
     case REWARD_STEP_PICK_PACK:
-        return CB_GetPack();
+        return CB_RewardPack();     /* changed from CB_GetPack: the Booster Packs list (src/mod_packs.c) */
     case REWARD_STEP_TICKET:
         if (CB_BustupU32()) {
             if (gMain.rewardCard) {

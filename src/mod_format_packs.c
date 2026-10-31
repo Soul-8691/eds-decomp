@@ -1,5 +1,6 @@
 /*
- * TCG booster packs for the main-menu Booster Packs shop (tools/format_packs.py, packs/*_tcg.json).
+ * TCG booster packs for the main-menu Booster Packs shop and the pack a Campaign win gives (tools/format_packs.py,
+ * packs/*_tcg.json).
  * Rarity-weighted pulls; pack cover art is the pool's rarest card (tools/format_packs.py portrait pick).
  */
 
@@ -19,9 +20,16 @@ extern struct PackOpenWork gPackOpenWork;
 
 #define MOD_PACK_SHOP_LIST_MAX  64
 
-static u16 sModPackShopRows[MOD_PACK_SHOP_LIST_MAX];
-static u16 sModPackShopCount;
-static u8 sModPackShopListActive;
+/* The list's state: gModPackList (EWRAM 0x0202F010, symbols.ld), never .bss, which links at 0x02000000 over
+ * gTextCanvas: drawing the list's text lines overwrote the rows. */
+struct ModPackList {
+    u16 rows[MOD_PACK_SHOP_LIST_MAX];
+    u16 count;
+    u8 active;
+    u8 pad;
+    struct PackInfo info;       /* the format pack ModPackInfoAtRow returned last */
+};
+extern struct ModPackList gModPackList;
 
 /* gPackListPal at 0x0863CC7C (256 BGR555 colours for pack covers). */
 extern const u16 gPackListPal[];
@@ -30,9 +38,6 @@ extern const u16 gPackListPal[];
 #define PACK_COVER_H        112
 #define PACK_COVER_TILES    98
 #define PACK_COVER_BYTES    (PACK_COVER_TILES * 64)
-
-static struct PackInfo sFormatPackInfoRows[FORMAT_PACK_COUNT];
-static u8 sFormatPackInfoReady;
 
 static u32 ColorDist(u16 a, u16 b)
 {
@@ -118,24 +123,20 @@ int ModFormatPackShopCost(u16 packId, u32 *costOut)
     return 1;
 }
 
-static void EnsureFormatPackInfo(void)
+/* The PackInfo of format pack fi, in gModPackList.info (valid until the next call). */
+static const struct PackInfo *FormatPackInfo(int fi)
 {
-    int fi;
+    struct PackInfo *info = &gModPackList.info;
+    const char *name = sFormatPackNames[fi];
+    int i;
 
-    if (sFormatPackInfoReady)
-        return;
-    for (fi = 0; fi < FORMAT_PACK_COUNT; fi++) {
-        const char *name = sFormatPackNames[fi];
-        int i;
-
-        sFormatPackInfoRows[fi].id = FORMAT_PACK_ID_FIRST + fi;
-        sFormatPackInfoRows[fi].pad2 = 0;
-        sFormatPackInfoRows[fi].coverGfx = NULL;
-        for (i = 0; i < 0x3F && name[i]; i++)
-            sFormatPackInfoRows[fi].name[i] = name[i];
-        sFormatPackInfoRows[fi].name[i] = 0;
-    }
-    sFormatPackInfoReady = 1;
+    info->id = FORMAT_PACK_ID_FIRST + fi;
+    info->pad2 = 0;
+    info->coverGfx = NULL;
+    for (i = 0; i < 0x3F && name[i]; i++)
+        info->name[i] = name[i];
+    info->name[i] = 0;
+    return info;
 }
 
 u16 ModGetSelectedPackId(u16 packRowIndex)
@@ -147,17 +148,15 @@ u16 ModGetSelectedPackId(u16 packRowIndex)
 
 const struct PackInfo *ModPackInfoAtRow(u16 packRowIndex)
 {
-    if (packRowIndex >= VANILLA_PACK_INFO_COUNT) {
-        EnsureFormatPackInfo();
-        return &sFormatPackInfoRows[packRowIndex - VANILLA_PACK_INFO_COUNT];
-    }
+    if (packRowIndex >= VANILLA_PACK_INFO_COUNT)
+        return FormatPackInfo(packRowIndex - VANILLA_PACK_INFO_COUNT);
     return &gPackInfo[packRowIndex];
 }
 
 u16 ModPackList_Count(void)
 {
-    if (sModPackShopCount != 0)
-        return sModPackShopCount;
+    if (gModPackList.count != 0)
+        return gModPackList.count;
     if (ModPackShopIsOpen() && gSceneWork.packCount != 0)
         return gSceneWork.packCount;
     return gSceneWork.packCount;
@@ -184,9 +183,9 @@ u16 ModPackList_RowAt(u16 index)
     u16 n;
     u16 slot;
 
-    if (sModPackShopCount != 0) {
-        n = sModPackShopCount;
-        return sModPackShopRows[index % n];
+    if (gModPackList.count != 0) {
+        n = gModPackList.count;
+        return gModPackList.rows[index % n];
     }
     n = gSceneWork.packCount;
     if (n == 0)
@@ -201,24 +200,24 @@ u16 ModPackList_RowAt(u16 index)
 
 void ModPackShopList_Begin(void)
 {
-    sModPackShopListActive = 1;
-    sModPackShopCount = 0;
+    gModPackList.active = 1;
+    gModPackList.count = 0;
 }
 
 void ModPackShopList_Reset(void)
 {
-    sModPackShopListActive = 0;
-    sModPackShopCount = 0;
+    gModPackList.active = 0;
+    gModPackList.count = 0;
 }
 
 void ModPackShopList_SyncSceneWork(void)
 {
     u16 i;
-    u16 n = sModPackShopCount;
+    u16 n = gModPackList.count;
 
     gSceneWork.packCount = n;
     for (i = 0; i < n && i < 0x20; i++)
-        gSceneWork.packRows[i] = sModPackShopRows[i];
+        gSceneWork.packRows[i] = gModPackList.rows[i];
 }
 
 static int ModIsFormatPackUnlocked(int fi)
@@ -226,8 +225,7 @@ static int ModIsFormatPackUnlocked(int fi)
     u8 fmt;
 
 #if !MOD_RELEASE
-    if (ModPackShopIsOpen())
-        return 1;
+    return 1;
 #endif
     fmt = sFormatPackFormatIndex[fi];
     if (sFormatPackFlags[fi] & FORMAT_PACK_FLAG_USAGE)
@@ -240,10 +238,10 @@ static int ModPackList_AppendFormatRow(int fi)
 {
     u16 row = VANILLA_PACK_INFO_COUNT + fi;
 
-    if (sModPackShopListActive || ModPackShopIsOpen()) {
-        if (sModPackShopCount >= MOD_PACK_SHOP_LIST_MAX)
+    if (gModPackList.active || ModPackShopIsOpen()) {
+        if (gModPackList.count >= MOD_PACK_SHOP_LIST_MAX)
             return 0;
-        sModPackShopRows[sModPackShopCount++] = row;
+        gModPackList.rows[gModPackList.count++] = row;
         return 1;
     }
     if (gSceneWork.packCount >= 0x20)
@@ -261,23 +259,18 @@ int ModPackList_AddFormatPackById(u16 packId)
     return ModPackList_AppendFormatRow(fi);
 }
 
+/* The pick-a-pack list, in the Booster Packs shop and after a Campaign win alike (CB_PackShop, CB_RewardPack). */
 void ModPackList_AddUnlockedPacks(void)
 {
     int fi;
 
-    if (!ModPackShopIsOpen()) {
-        sModPackShopListActive = 0;
-        sModPackShopCount = 0;
-        PackList_AddUnlockedPacks();
-        return;
-    }
     ModPackShopList_Begin();
     for (fi = 0; fi < FORMAT_PACK_COUNT; fi++) {
         if (ModIsFormatPackUnlocked(fi))
             ModPackList_AppendFormatRow(fi);
     }
     ModPackShopList_SyncSceneWork();
-    sModPackShopListActive = 0;
+    gModPackList.active = 0;
 }
 
 int ModFormatPackLoadCoverGfx(u16 slot, u16 packId)

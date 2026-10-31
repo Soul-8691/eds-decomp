@@ -28,7 +28,7 @@ on the game's own Get-a-pack screens. Checked in the source and the build; not t
   Metal Raiders with Critter, and so on). Usage packs need 10 wins in that format. The next format opponent
   needs 20 campaign wins. Event dates in `packs/formats.json` (`date`) are used at generation time for ordering
   and metadata (`sFormatEventDate[]`). Debug builds (`make`, not `make release`) show every
-  pack. Campaign reward flows still use the vanilla list. Pack covers are rendered from card art at open
+  pack. Pack covers are rendered from card art at open
   time (`ModFormatPackLoadCoverGfx`, uniform scale to fill 56×112). Then come the usual opening, the reveal and card
   detail, and the cards go to the trunk.
 - **Added around the steps:**
@@ -41,6 +41,24 @@ on the game's own Get-a-pack screens. Checked in the source and the build; not t
   1000. `PackShop_Cost` uses `GetPackCost`, and
   `PackShop_CanOpen` needs that many DP. A refused A plays `SE_ERROR` and shows "Not enough DP!". `PackShop_Pay`
   takes the DP. The list shows the centre pack's name and price at the top and the player's DP at the bottom.
-- **RAM.** The state is `gPackShop` (EWRAM `0x0202F000`, symbols.ld).
+- **RAM.** The state is `gPackShop` (EWRAM `0x0202F000`, symbols.ld). The list's rows (up to 64, more than
+  `gSceneWork.packRows`' 32) and the `PackInfo` that `ModPackInfoAtRow` fills for a format pack are `gModPackList`
+  (`0x0202F010`, 0xCC bytes). Until 2026-10-31 they were `static` variables in `.bss`, which the linker places at
+  `0x02000000`, on top of `gTextCanvas`. Drawing the list's text then overwrote them, and on the Campaign win list
+  (no shop fallback) every pack after the 32nd (Ancient Sanctuary in `make`) showed as Vol.1. A mod unit must not
+  have `.bss`; check the map for `.bss` with a size other than `0x0` in `build/src/mod_*.o`.
+
+## The pack of a Campaign win
+`ModPackList_AddUnlockedPacks` builds the format-pack list every time a pick-a-pack list opens, not only in the shop.
+The vanilla `PackList_AddUnlockedPacks` list is no longer shown. The only lists with `gMain.rewardPack = 0` are the shop's
+and the Campaign win's (magazines and event prizes pass a fixed pack and skip the list), so after a won match
+`Campaign_GiveRewards` offers the same packs as the shop. Its pick step runs `CB_RewardPack`, which wraps
+`CB_GetPack`. The pack is free: there is no price check, and B does nothing. `PackListReward_Draw` (src/mod_dp.c) shows the centre pack's name at the top and
+"Free pack   A: open" at the bottom. A win against Solomon or Debug skips the pick (`ModWinGivesPack`). Test Duel
+(make builds only) gives one. Built from a clean tree with `make`, `make release`, `make demo` and
+`make release-demo` (2026-10-31), not tested in an emulator.
+
+> [!question] The "new packs" notice (text 351) before the list still counts the vanilla unlocks
+> (`IsPackUnlocked`), so it no longer matches what the list shows.
 
 Related: [[booster-packs]], [[booster-get-pack-c]], [[main-menu]], [[deck-recipes]].

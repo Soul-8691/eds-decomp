@@ -420,6 +420,13 @@ int ModOpponentPlaysRecipe(u16 duelist)
     return (duelist == DUELIST_GRANDPA || duelist == DUELIST_DEBUG) && Opponent(duelist)->kind == KIND_DECK;
 }
 
+/* Campaign_GiveRewards (campaign_steps.c): 1 if beating `duelist` gives a pack from the pick-a-pack list (not Solomon
+ * or Debug, whose decks the player picks; they give no DP either, AwardDuelDP). */
+int ModWinGivesPack(u16 duelist)
+{
+    return duelist != DUELIST_GRANDPA && duelist != DUELIST_DEBUG;
+}
+
 /* CB_OpponentRecipes: the copies of every card a deck built for `duelist` starts from, and the copies of a card it may
  * hold (*limit): Debug has the testing build's 8 (GiveStartingTrunk) and no copy limit, Solomon 3 and 3. */
 int ModRecipeBuildCopies(u16 duelist, int *limit)

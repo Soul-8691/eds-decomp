@@ -2299,3 +2299,13 @@ updated: 2026-09-29
 
 ## [2026-10-31] progress | Field card icon art stale blob
 - Wrong duel icons when `build/assets/field_icons.bin` lagged `newcards__stats.bin` (413 KiB vs 485 KiB for 1164 IDs). Makefile: `field_icons.bin` depends on the newcards table bins. [[card-icons]]. Rebuilt `eds.gba` and `eds_demo.gba`.
+
+## [2026-10-31] progress | Campaign win pack = Booster Packs list
+- The pick-a-pack list after a Campaign win now shows the shop's packs (`ModPackList_AddUnlockedPacks` always builds the format list), for free, via `CB_RewardPack` (src/mod_packs.c) and `PackListReward_Draw` (src/mod_dp.c). Solomon and Debug give no pack (`ModWinGivesPack`, src/mod_opponents.c; campaign_steps.c). Test Duel already reached the list. Compile-checked with stub generated headers (no assets in this checkout); not emulator-tested. [[pack-shop]], [[yugi-kaiba-opponent]].
+
+## [2026-10-31] setup | Clean builds of all four targets
+- `make setup` from the root `baserom.gba` (now `roms/base_eng.gba`). From a clean tree, `make`, `make release`, `make demo` and `make release-demo` all build. Two dependency fixes were needed: `tools/format_packs.py`'s `format_pack_data.d` named the old `build/assets/.newcards` stamp (now `.newcards-full`/`-demo`; the Makefile rule already lists it), which broke both demo targets; and `format_pack_roulettes.bin` matched the empty `build/assets/%.bin` rule, so a fresh parallel `make` assembled `mod_format_pack_roulettes.s` before the bin existed (it now has an explicit rule on the header). `check_all.py`: 1/112 units match, the same for `campaign_steps` (0/6) with and without the Campaign win pack change. [[pack-shop]].
+
+## [2026-10-31] progress | Pack list past 32 showed Vol.1; stale card list between make and make demo
+- `mod_format_packs.c` kept its list in `static` `.bss` (0xE99 bytes linked at `0x02000000`, over `gTextCanvas`), so the list's text overwrote the rows. The Campaign win list showed Vol.1 for every pack after the 32nd. The state is now `gModPackList` (EWRAM `0x0202F010`, symbols.ld), with one `PackInfo` filled on demand instead of a 50-entry table. No mod unit has `.bss` now. [[pack-shop]].
+- `tools/newcards.py`: `make` after `make demo` (or the reverse) linked the other card list, because both profiles share `build/assets/newcards__*` but keep separate stamps. Writing a stamp now deletes the other profile's stamp, and the stamp is always rewritten so its time changes. Checked with demo, make, release-demo, release, make: 14141100 / 13113164 bytes as expected. [[release-build]].

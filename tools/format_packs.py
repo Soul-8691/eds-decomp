@@ -517,7 +517,6 @@ def write_make_deps(header_path):
         'packs/formats.json',
         *[esc(p) for p in tcg],
         *[esc(p) for p in usage],
-        'build/assets/.newcards',
     ]
     line = f'{esc(header_path)}: {" ".join(prereqs)}\n'
     try:

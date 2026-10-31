@@ -216,8 +216,11 @@ whose name plates and portraits are BG images (`Record_DrawPage`).
 
 ## Rewards
 - **Event days.** `Campaign_GiveRewards`'s choose step ignores the calendar event for these opponents. A win always
-  goes to the regular pick-a-pack list (no fixed holiday/event packs, no tournament tickets), and a loss has no
+  goes to the free pick-a-pack list (no fixed holiday/event packs, no tournament tickets), and a loss has no
   penalty (no Rare Hunter card loss).
+- **Which list.** The pick step runs `CB_RewardPack` (src/mod_packs.c), which shows the same packs as the
+  [[pack-shop]], for free. A win against Solomon or Debug gives no pack (`ModWinGivesPack`, src/mod_opponents.c),
+  just as it gives no DP. Test Duel (make builds only) gives one like any other opponent.
 - **Stale reward pack.** The "new packs" step now clears `gMain.rewardPack` in both branches. The original
   cleared it only without a notice, so a magazine day's pack left there opened at once and skipped the list.
 
