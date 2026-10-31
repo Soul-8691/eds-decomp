@@ -73,7 +73,7 @@ u16 PackList_Init(void)
     switch (s->state) {
     case 0:
         s->centerSlot = 1;
-        s->firstIndex = s->packCount - 1;
+        s->firstIndex = ModPackList_Count() - 1;
         PackList_InitVideo();
         goto next;
     case 1:
@@ -138,14 +138,14 @@ u16 PackList_HandleInput(void)
         s32 firstIndex;
         s32 packCount;
         PlaySE(SE_CURSOR);
-        packCount = gSceneWork.packCount;
+        packCount = ModPackList_Count();
         firstIndex = gSceneWork.firstIndex;
         gSceneWork.nextFirstIndex = (firstIndex + packCount - 1) % packCount;
         gSceneWork.coverAlphaTarget = 0x10;
         gSceneWork.slideFrame = 8;
         gSceneWork.slideDir = 1;
         gSceneWork.slideTo = gSceneWork.slideFrom - 0x50;
-        PackList_LoadCoverGfx(3, ModGetSelectedPackId(gSceneWork.packRows[(firstIndex + gSceneWork.packCount - 1) % gSceneWork.packCount]));
+        PackList_LoadCoverGfx(3, ModGetSelectedPackId(ModPackList_RowAt((firstIndex + packCount - 1) % packCount)));
         zero = 0;
         dma = (vu32 *)&REG_DMA3SAD;
         dma[0] = (u32)&zero;
@@ -167,12 +167,12 @@ u16 PackList_HandleInput(void)
         s32 firstIndex;
         PlaySE(SE_CURSOR);
         firstIndex = gSceneWork.firstIndex;
-        gSceneWork.nextFirstIndex = (firstIndex + 1) % gSceneWork.packCount;
+        gSceneWork.nextFirstIndex = (firstIndex + 1) % ModPackList_Count();
         gSceneWork.coverAlphaTarget = 0x10;
         gSceneWork.slideFrame = 8;
         gSceneWork.slideDir = 2;
         gSceneWork.slideTo = gSceneWork.slideFrom + 0x50;
-        PackList_LoadCoverGfx(3, ModGetSelectedPackId(gSceneWork.packRows[(firstIndex + 3) % gSceneWork.packCount]));
+        PackList_LoadCoverGfx(3, ModGetSelectedPackId(ModPackList_RowAt((firstIndex + 3) % ModPackList_Count())));
         zero = 0;
         dma = (vu32 *)&REG_DMA3SAD;
         dma[0] = (u32)&zero;

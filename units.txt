@@ -151,6 +151,8 @@ mod_field_icons_data
 # password_trade (the Password and Card Trading scenes, 0xC8C bytes; none of its 21 functions matched, so moving it
 # loses no match: a moved unit's calls out of it no longer match check.py, as DuelScene_SkullDice showed) went too.
 @farcode password_trade
+# card_list_viewer (~0x3KB+): pack-shop hooks in booster_get_pack / deck_edit_panel pushed release .text past 0x08080A20.
+@farcode card_list_viewer
 @libs
 veneer
 rodata_08080A20
@@ -170,5 +172,6 @@ rodata_08087FD0
 @rodata mod_field_icons
 @rodata mod_info_bar
 @rodata mod_field_icons_data
+@rodata card_list_viewer
 mod_format_pack_roulettes
 @rodata mod_format_pack_roulettes

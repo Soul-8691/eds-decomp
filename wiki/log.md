@@ -2176,6 +2176,22 @@ updated: 2026-09-29
   Standby monsters), Chiron the Mage, Wave-Motion Cannon ignition, Exarion Universe piercing. Matches [[added-cards]]
   CPU notes; Different Dimension Capsule omitted (no dedicated CPU policy).
 
+## [2026-10-31] progress | Release link: card_list_viewer @farcode, roulette 8192
+- `make release` overlapped `.text` with `.rodata` at 0x08080A20 (pack-shop hooks in matched units). `@farcode card_list_viewer` in units.txt (same pattern as password_trade).
+- tools/format_packs.py: `FORMAT_PACK_ROULETTE_SIZE` 8192 (50 packs). [[pack-shop]].
+
+## [2026-10-31] progress | Pack shop chronology, formats.json dates, unlock rules
+- tools/format_packs.py: TCG sets in Yugipedia release order, then 15 usage packs; `sFormatEventDate[]` from
+  `packs/formats.json` `"date"` (per [[banlists]] name). Early TCG access when release &lt; next format's event date;
+  usage packs after 10 wins in that format. Extended shop list (64 entries) in mod EWRAM when &gt;32 packs.
+- src/mod_opponents.c: 20 wins to unlock the next format (was 10); ModFormatWins / ModIsFormatUnlocked.
+- src/mod_format_packs.c: ModIsFormatPackUnlocked, debug shows all packs. [[pack-shop]].
+
+## [2026-10-31] progress | TCG set booster packs (packs/*.json)
+- tools/format_packs.py reads packs/*_tcg.json (rarity weights, ROM-only pools, rarest card = cover). 35 sets;
+  shop list capped at 32 (gSceneWork.packRows). tools/import_yugipedia_drv1.py → Dark Revelation Volume 1.
+  All packs unlocked in Booster Packs menu. README, [[pack-shop]]. Built (`make`).
+
 ## [2026-10-31] progress | Format pack roulette 65536
 - tools/format_packs.py: `FORMAT_PACK_ROULETTE_SIZE` 65536 (was 512); tables in `build/assets/format_pack_roulettes.bin`
   via data/mod_format_pack_roulettes.s. src/mod_format_packs.c: `RandomBelow` for index (15-bit `Random()`).

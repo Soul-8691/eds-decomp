@@ -46,10 +46,10 @@ extern struct PackListWork gSceneWork;
 
 /* The scene's state: gPackShop (EWRAM 0x0202F000, symbols.ld). */
 struct PackShop {
-    u8 started;
+    u8 started;             /* in the Booster Packs scene (MainMenu_Launch sets before Get-a-pack runs) */
     u8 leaving;             /* B on the list: fading out to the main menu */
     u8 restore;             /* put lastPackId back in the centre when the list comes back */
-    u8 pad;
+    u8 music;               /* menu BGM started for this visit */
     u16 lastPackId;
 };
 extern struct PackShop gPackShop;
@@ -107,13 +107,15 @@ static void PackShop_Pay(u16 packId)
 
 void PackShop_Start(void)
 {
-    gPackShop.started = 0;
+    gPackShop.started = 1;
+    gPackShop.leaving = 0;
+    gPackShop.music = 0;
 }
 
 /* The gPackInfo row of the pack in the list's centre slot. */
 static const struct PackInfo *CentrePack(void)
 {
-    u16 row = gSceneWork.packRows[(gSceneWork.firstIndex + gSceneWork.centerSlot) % gSceneWork.packCount];
+    u16 row = ModPackList_RowAt((gSceneWork.firstIndex + gSceneWork.centerSlot) % ModPackList_Count());
 
     return ModPackInfoAtRow(row);
 }
@@ -142,9 +144,8 @@ u16 CB_PackShop(void)
 {
     struct PackShop *s = &gPackShop;
 
-    if (!s->started) {
-        s->started = 1;
-        s->leaving = 0;
+    if (!s->music) {
+        s->music = 1;
         s->restore = 0;
         gMain.rewardPack = 0;
         PlayBGMNoTrack(SONG_MAIN_MENU);
@@ -153,6 +154,8 @@ u16 CB_PackShop(void)
         if (FadeToBlack(4)) {
             REG_DISPCNT &= ~(DISPCNT_BG0_ON | DISPCNT_OBJ_ON);
             FadeOutBGM();
+            s->started = 0;
+            ModPackShopList_Reset();
             return 1;
         }
         return 0;
@@ -162,9 +165,9 @@ u16 CB_PackShop(void)
             int r;
 
             s->restore = 0;
-            for (r = 0; r < gSceneWork.packCount; r++) {
-                if (ModPackInfoAtRow(gSceneWork.packRows[r])->id == s->lastPackId) {
-                    gSceneWork.firstIndex = (r + gSceneWork.packCount - gSceneWork.centerSlot) % gSceneWork.packCount;
+            for (r = 0; r < ModPackList_Count(); r++) {
+                if (ModPackInfoAtRow(ModPackList_RowAt(r))->id == s->lastPackId) {
+                    gSceneWork.firstIndex = (r + ModPackList_Count() - gSceneWork.centerSlot) % ModPackList_Count();
                     break;
                 }
             }

@@ -1,6 +1,6 @@
 /*
- * Format booster packs for the main-menu Booster Packs shop (tools/format_packs.py).
- * Inverse-usage weights, Limited/Semi-Limited factors like card prices, portrait pack icons from card art.
+ * TCG booster packs for the main-menu Booster Packs shop (tools/format_packs.py, packs/*_tcg.json).
+ * Rarity-weighted pulls; pack cover art is the pool's rarest card (tools/format_packs.py portrait pick).
  */
 
 #include "global.h"
@@ -11,10 +11,17 @@
 #include "format_pack_data.h"
 #include "util.h"
 
-extern int ModIsOpponentUnlocked(u16 duelist);
 extern int ModPackShopIsOpen(void);
+extern int ModIsFormatUnlocked(int order);
+extern int ModFormatWins(int order);
 extern struct PackListWork gSceneWork;
 extern struct PackOpenWork gPackOpenWork;
+
+#define MOD_PACK_SHOP_LIST_MAX  64
+
+static u16 sModPackShopRows[MOD_PACK_SHOP_LIST_MAX];
+static u16 sModPackShopCount;
+static u8 sModPackShopListActive;
 
 /* gPackListPal at 0x0863CC7C (256 BGR555 colours for pack covers). */
 extern const u16 gPackListPal[];
@@ -134,21 +141,111 @@ const struct PackInfo *ModPackInfoAtRow(u16 packRowIndex)
     return &gPackInfo[packRowIndex];
 }
 
+u16 ModPackList_Count(void)
+{
+    if (sModPackShopCount != 0)
+        return sModPackShopCount;
+    if (ModPackShopIsOpen() && gSceneWork.packCount != 0)
+        return gSceneWork.packCount;
+    return gSceneWork.packCount;
+}
+
+/* Shop slot (0..n-1) -> gPackInfo row when the EWRAM table is missing (packRows holds only 32). */
+static u16 ModPackList_RowForShopSlot(u16 slot)
+{
+    u16 pos = 0;
+    int fi;
+
+    for (fi = 0; fi < FORMAT_PACK_COUNT; fi++) {
+        if (!ModIsFormatPackUnlocked(fi))
+            continue;
+        if (pos == slot)
+            return VANILLA_PACK_INFO_COUNT + (u16)fi;
+        pos++;
+    }
+    return 0;
+}
+
+u16 ModPackList_RowAt(u16 index)
+{
+    u16 n;
+    u16 slot;
+
+    if (sModPackShopCount != 0) {
+        n = sModPackShopCount;
+        return sModPackShopRows[index % n];
+    }
+    n = gSceneWork.packCount;
+    if (n == 0)
+        return 0;
+    slot = index % n;
+    if (slot < 0x20)
+        return gSceneWork.packRows[slot];
+    if (ModPackShopIsOpen())
+        return ModPackList_RowForShopSlot(slot);
+    return gSceneWork.packRows[slot];
+}
+
+void ModPackShopList_Begin(void)
+{
+    sModPackShopListActive = 1;
+    sModPackShopCount = 0;
+}
+
+void ModPackShopList_Reset(void)
+{
+    sModPackShopListActive = 0;
+    sModPackShopCount = 0;
+}
+
+void ModPackShopList_SyncSceneWork(void)
+{
+    u16 i;
+    u16 n = sModPackShopCount;
+
+    gSceneWork.packCount = n;
+    for (i = 0; i < n && i < 0x20; i++)
+        gSceneWork.packRows[i] = sModPackShopRows[i];
+}
+
+static int ModIsFormatPackUnlocked(int fi)
+{
+    u8 fmt;
+
+#if !MOD_RELEASE
+    if (ModPackShopIsOpen())
+        return 1;
+#endif
+    fmt = sFormatPackFormatIndex[fi];
+    if (sFormatPackFlags[fi] & FORMAT_PACK_FLAG_USAGE)
+        return ModFormatWins(fmt) >= FORMAT_PACK_USAGE_WINS;
+    /* TCG sets: only when their campaign format is unlocked (e.g. Metal Raiders with Critter, not Yugi-Kaiba). */
+    return ModIsFormatUnlocked(fmt);
+}
+
+static int ModPackList_AppendFormatRow(int fi)
+{
+    u16 row = VANILLA_PACK_INFO_COUNT + fi;
+
+    if (sModPackShopListActive || ModPackShopIsOpen()) {
+        if (sModPackShopCount >= MOD_PACK_SHOP_LIST_MAX)
+            return 0;
+        sModPackShopRows[sModPackShopCount++] = row;
+        return 1;
+    }
+    if (gSceneWork.packCount >= 0x20)
+        return 0;
+    gSceneWork.packRows[gSceneWork.packCount++] = row;
+    return 1;
+}
+
 int ModPackList_AddFormatPackById(u16 packId)
 {
     int fi = FormatPackIndexFromId(packId);
-    u16 *cnt;
-    u16 *list;
 
-    if (fi < 0)
+    if (fi < 0 || !ModIsFormatPackUnlocked(fi))
         return 0;
-    cnt = &gSceneWork.packCount;
-    if (*cnt >= 0x20)
-        return 0;
-    list = cnt - 0x20;
-    list[*cnt] = VANILLA_PACK_INFO_COUNT + fi;
-    (*cnt)++;
-    return 1;
+    return ModPackList_AppendFormatRow(fi);
 }
 
 void ModPackList_AddUnlockedPacks(void)
@@ -156,13 +253,18 @@ void ModPackList_AddUnlockedPacks(void)
     int fi;
 
     if (!ModPackShopIsOpen()) {
+        sModPackShopListActive = 0;
+        sModPackShopCount = 0;
         PackList_AddUnlockedPacks();
         return;
     }
+    ModPackShopList_Begin();
     for (fi = 0; fi < FORMAT_PACK_COUNT; fi++) {
-        if (ModIsOpponentUnlocked(sFormatPackDuelist[fi]))
-            ModPackList_AddFormatPackById(FORMAT_PACK_ID_FIRST + fi);
+        if (ModIsFormatPackUnlocked(fi))
+            ModPackList_AppendFormatRow(fi);
     }
+    ModPackShopList_SyncSceneWork();
+    sModPackShopListActive = 0;
 }
 
 int ModFormatPackLoadCoverGfx(u16 slot, u16 packId)
@@ -216,7 +318,7 @@ static int CardAlreadyPicked(const u16 *cardNumbers, int count, u16 number)
     return 0;
 }
 
-/* Random() is 15-bit (see sprite.c); widen before % FORMAT_PACK_ROULETTE_SIZE (65536). */
+/* Random() is 15-bit (see sprite.c); widen before % FORMAT_PACK_ROULETTE_SIZE. */
 static u32 RandomBelow(u32 n)
 {
     u32 r;

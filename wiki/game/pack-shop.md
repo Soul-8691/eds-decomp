@@ -18,10 +18,12 @@ on the game's own Get-a-pack screens. Checked in the source and the build; not t
     OBJ tiles 0x240-0x27F.
 - **Scene.** `CB_PackShop` runs `CB_GetPack` (`gGetPackSteps`, as the Campaign rewards and the debug menu do) with
   `gMain.rewardPack = 0`, so step 0 shows the pack list. While the shop is open, `ModPackList_AddUnlockedPacks`
-  (`src/mod_format_packs.c`) lists the unlocked **format** packs (IDs 601–615, one per [[banlists]] entry), not the
-  vanilla `IsPackUnlocked` sets. Campaign and other Get-a-pack flows still call the vanilla list. Card pools and
-  inverse-usage weights come from `tools/format_packs.py` (same usage statistics and Limited/Semi-Limited factors as
-  [[duelist-points]] / `tools/cardprices.py`). Pack covers are rendered from each duelist's portrait card art at open
+  (`src/mod_format_packs.c`)   lists unlocked packs interleaved by format: each format's TCG sets (`packs/*_tcg.json`, release
+  order within the format) then its usage-weighted pack (e.g. LOB, Yugi/Kaiba starters, Yugi-Kaiba, Metal Raiders, Critter, …).   TCG sets unlock when their [[banlists]] format opponent is unlocked (LOB/Yugi/Kaiba starters with Yugi-Kaiba,
+  Metal Raiders with Critter, and so on). Usage packs need 10 wins in that format. The next format opponent
+  needs 20 campaign wins. Event dates in `packs/formats.json` (`date`) are used at generation time for ordering
+  and metadata (`sFormatEventDate[]`). Debug builds (`make`, not `make release`) show every
+  pack. Campaign reward flows still use the vanilla list. Pack covers are rendered from card art at open
   time (`ModFormatPackLoadCoverGfx`, uniform scale to fill 56×112). Then come the usual opening, the reveal and card
   detail, and the cards go to the trunk.
 - **Added around the steps:**

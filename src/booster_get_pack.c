@@ -961,12 +961,12 @@ void PackList_DrawCovers(s32 arg) {
     packMainMaps.bgHofs1 = 0;
     cnt = &gPackListPackCount;   /* hoisted: the ROM rematerialises it in the loop */
     for (i = 0; i <= 2; i++) {
-        PackList_LoadCoverGfx(i, ModGetSelectedPackId(gSceneWork.packRows[sel]));
+        PackList_LoadCoverGfx(i, ModGetSelectedPackId(ModPackList_RowAt((u16)sel)));
         PackList_DrawCoverTiles(1, (u16)(i * 10 + 0x62), (u16)i);
         if (gSceneWork.centerSlot == i)
             PackList_DrawCoverTiles(4, (u16)(i * 10 + 0x62), (u16)i);
         sel++;
-        sel %= *cnt;
+        sel %= ModPackList_Count();
     }
     {
         /* A u32 temporary (not u8 or |=) gives the ROM's register choice for the flag update. */

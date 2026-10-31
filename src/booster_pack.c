@@ -358,7 +358,6 @@ u8 IsCardNumberOwned(u16 cardNumber)
  */
 int GetPack_SelectAndGenerate(void)
 {
-    u16 *index;
     const struct PackInfo *packInfo;
     int result;
     u16 packId;
@@ -396,12 +395,12 @@ int GetPack_SelectAndGenerate(void)
         return 0;
     default:
         MemClear16(&gPackOpenWork, sizeof(gPackOpenWork));
-        index = &gSceneWork.packRows[(gSceneWork.firstIndex + gSceneWork.centerSlot) % gSceneWork.packCount];
         cardNumbers = gPackOpenWork.cardNumbers;
         packInfo = gPackInfo;
         /* The ROM loads the table base before reading the selected index. */
         asm volatile ("" : : "r"(packInfo));
-        packId = ModGetSelectedPackId(*index);
+        packId = ModGetSelectedPackId(
+            ModPackList_RowAt((gSceneWork.firstIndex + gSceneWork.centerSlot) % ModPackList_Count()));
         GeneratePackCards(cardNumbers, packId);
         SaveGame();
         return 1;

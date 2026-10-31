@@ -4,7 +4,7 @@
  * for one of these (sOpponents), and sPageDuelists places them (instead of gOpponentSelectDuelists):
  *   FORMAT  an opponent per format, named after it; the player's deck must be legal in it (BanlistBlocksDuel,
  *           src/mod_banlist.c, with the format's banlist and card pool from src/mod_banlists.c). Only the first is
- *           open at the start; beating format k sWinsToUnlockNext[k] times (10) opens format k + 1. That is
+ *           open at the start; beating format k sWinsToUnlockNext[k] times (20) opens format k + 1. That is
  *           make release; a plain make (testing) opens every format.
  *           They fill pages 0-2 in unlock order.
  *   DECK    page 3: an opponent per deck (src/mod_decks.c), always open. Solomon (Grandpa's ID and portrait, top
@@ -217,20 +217,20 @@ static const struct ModOpponent sOpponents[] = {
 
 /* Wins against format k (in unlock order) that open format k + 1 (make release; with make every format is open). */
 static const u8 sWinsToUnlockNext[FORMAT_COUNT - 1] = {
-    10,     /* Yugi-Kaiba   -> Critter */
-    10,     /* Critter      -> Treasure */
-    10,     /* Treasure     -> Imperial */
-    10,     /* Imperial     -> Android */
-    10,     /* Android      -> Joey-Pegasus */
-    10,     /* Joey-Pegasus -> Fiber */
-    10,     /* Fiber        -> Yata */
-    10,     /* Yata         -> Scientist */
-    10,     /* Scientist    -> Vampire */
-    10,     /* Vampire      -> Chaos */
-    10,     /* Chaos        -> Warrior */
-    10,     /* Warrior      -> Goat */
-    10,     /* Goat         -> Cyber */
-    10,     /* Cyber        -> Reaper */
+    20,     /* Yugi-Kaiba   -> Critter */
+    20,     /* Critter      -> Treasure */
+    20,     /* Treasure     -> Imperial */
+    20,     /* Imperial     -> Android */
+    20,     /* Android      -> Joey-Pegasus */
+    20,     /* Joey-Pegasus -> Fiber */
+    20,     /* Fiber        -> Yata */
+    20,     /* Yata         -> Scientist */
+    20,     /* Scientist    -> Vampire */
+    20,     /* Vampire      -> Chaos */
+    20,     /* Chaos        -> Warrior */
+    20,     /* Warrior      -> Goat */
+    20,     /* Goat         -> Cyber */
+    20,     /* Cyber        -> Reaper */
 };
 
 /* The duelist of each [page][slot] (slots: 0 bottom, 1 left, 2 top left, 3 top right, 4 right); 0 = empty. */
@@ -321,6 +321,18 @@ static u16 FormatDuelist(int order)
             return d;
     }
     return DUELIST_TRISTAN;
+}
+
+/* Wins against the format opponent at `order` in the unlock order. */
+int ModFormatWins(int order)
+{
+    return gSaveData.duelRecords[FormatDuelist(order)].wins;
+}
+
+/* 1 if campaign format `order` is unlocked (same as its format duelist). */
+int ModIsFormatUnlocked(int order)
+{
+    return ModIsOpponentUnlocked(FormatDuelist(order));
 }
 
 /* A calendar event's challenger (Campaign_StartDay: Championship rounds, Duel Ceremony, Grandpa Cup, Rare Hunter

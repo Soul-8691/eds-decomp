@@ -94,10 +94,10 @@ next one.
   - The card password machine now sells cards: it shows the price and asks before buying.
   - Prices run from 5 to 3000 DP, depending on how much the card is played in the furthest format you've unlocked.
   Cards not in the current furthest format you've unlocked are priced at 3000 DP. [CARD_PRICES.md](CARD_PRICES.md) lists each format's prices.
-- **Booster Packs** (main menu). One pack per TCG format (Yugi-Kaiba through Reaper), unlocked with that format's
-  duelist. Each costs 1000 DP for now. Five cards per pack are drawn from the format's legal card pool with
-  inverse-usage weights (staples and Limited/Semi-Limited cards are harder to pull, using the same 3×/1.5× factors as
-  password prices). The pack icon is the format duelist's portrait card, zoomed to fill the cover without stretching.
+- **Booster Packs** (main menu). TCG sets from `packs/*_tcg.json` (including **Dark Revelation Volume 1**, imported
+  with `tools/import_yugipedia_drv1.py`). Only ROM cards are in each pool; pull rates follow listed rarities; the cover
+  art is the pool's rarest card. The scrolling list holds 32 sets at once (booster sets first; three Structure Decks
+  are omitted when more than 32 JSON files are present). 1000 DP per pack in release; free in debug (`make`).
   Campaign rewards still use the original in-game booster sets.
   The screen that shows a pack's cards no longer has the scrolling patterned background (Campaign packs too).
 - **Card art in duels.** Face-up cards show a small picture of their artwork inside their icon: on the field
