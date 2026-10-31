@@ -3198,6 +3198,207 @@ static const struct DeckList *CyberDeck(void)
 }
 #endif
 
+/* Reaper format opponent (Yami Yugi's slot): Stein Monarch 40%, Warrior 20%, Bazoo Return 15%, Chaos Control 15%,
+ * Tomato Control 10% (decks/splevin-Stein Monarch.ydk, sdlkilla-Warrior.ydk, brahimpoke-Bazoo Return.ydk,
+ * ellietincan-Chaos Control.ydk, Roland Gress-Tomato Control.ydk). */
+#if defined(HAS_CARD_BAZOO_THE_SOUL_EATER) \
+    && defined(HAS_CARD_BREAKER_THE_MAGICAL_WARRIOR) \
+    && defined(HAS_CARD_CHAOS_SORCERER) \
+    && defined(HAS_CARD_CONFISCATION) \
+    && defined(HAS_CARD_CYBER_DRAGON) \
+    && defined(HAS_CARD_CYBER_END_DRAGON) \
+    && defined(HAS_CARD_CYBER_JAR) \
+    && defined(HAS_CARD_CYBER_TWIN_DRAGON) \
+    && defined(HAS_CARD_DARK_HOLE) \
+    && defined(HAS_CARD_DEKOICHI_THE_BATTLECHANTED_LOCOMOTIVE) \
+    && defined(HAS_CARD_DON_ZALOOG) \
+    && defined(HAS_CARD_DUST_TORNADO) \
+    && defined(HAS_CARD_D_D_WARRIOR_LADY) \
+    && defined(HAS_CARD_EXILED_FORCE) \
+    && defined(HAS_CARD_GATLING_DRAGON) \
+    && defined(HAS_CARD_GIANT_TRUNADE) \
+    && defined(HAS_CARD_HEAVY_STORM) \
+    && defined(HAS_CARD_KING_DRAGUN) \
+    && defined(HAS_CARD_KING_TIGER_WANGHU) \
+    && defined(HAS_CARD_KYCOO_THE_GHOST_DESTROYER) \
+    && defined(HAS_CARD_MANTICORE_OF_DARKNESS) \
+    && defined(HAS_CARD_MOBIUS_THE_FROST_MONARCH) \
+    && defined(HAS_CARD_MYSTICAL_SPACE_TYPHOON) \
+    && defined(HAS_CARD_MYSTIC_SWORDSMAN_LV2) \
+    && defined(HAS_CARD_NINJA_GRANDMASTER_SASUKE) \
+    && defined(HAS_CARD_NOBLEMAN_OF_CROSSOUT) \
+    && defined(HAS_CARD_PREMATURE_BURIAL) \
+    && defined(HAS_CARD_REINFORCEMENT_OF_THE_ARMY) \
+    && defined(HAS_CARD_RETURN_FROM_THE_DIFFERENT_DIMENSION) \
+    && defined(HAS_CARD_SAKURETSU_ARMOR) \
+    && defined(HAS_CARD_SANGAN) \
+    && defined(HAS_CARD_SMASHING_GROUND) \
+    && defined(HAS_CARD_SNATCH_STEAL) \
+    && defined(HAS_CARD_SPIRIT_REAPER) \
+    && defined(HAS_CARD_THE_LAST_WARRIOR_FROM_ANOTHER_PLANET) \
+    && defined(HAS_CARD_THOUSAND_EYES_RESTRICT) \
+    && defined(HAS_CARD_THREATENING_ROAR) \
+    && defined(HAS_CARD_TORRENTIAL_TRIBUTE) \
+    && defined(HAS_CARD_TRAP_DUSTSHOOT) \
+    && defined(HAS_CARD_WIDESPREAD_RUIN)
+#define MOD_REAPER_BAZOO_RETURN 1
+static const u16 sReaperBazooReturn[] = {
+    /* Main + Fusion (55) */
+    X3(CARD_BAZOO_THE_SOUL_EATER),
+    CARD_BREAKER_THE_MAGICAL_WARRIOR,
+    CARD_CHAOS_SORCERER,
+    X2(CARD_CYBER_DRAGON),
+    CARD_CYBER_JAR,
+    CARD_D_D_WARRIOR_LADY,
+    X3(CARD_DEKOICHI_THE_BATTLECHANTED_LOCOMOTIVE),
+    CARD_EXILED_FORCE,
+    X2(CARD_KING_TIGER_WANGHU),
+    X2(CARD_KYCOO_THE_GHOST_DESTROYER),
+    CARD_NINJA_GRANDMASTER_SASUKE,
+    CARD_SANGAN,
+    CARD_DON_ZALOOG,
+    CARD_CONFISCATION,
+    CARD_DARK_HOLE,
+    CARD_HEAVY_STORM,
+    CARD_MYSTICAL_SPACE_TYPHOON,
+    CARD_NOBLEMAN_OF_CROSSOUT,
+    CARD_PREMATURE_BURIAL,
+    CARD_REINFORCEMENT_OF_THE_ARMY,
+    X2(CARD_SMASHING_GROUND),
+    CARD_SNATCH_STEAL,
+    X2(CARD_DUST_TORNADO),
+    X3(CARD_RETURN_FROM_THE_DIFFERENT_DIMENSION),
+    X3(CARD_SAKURETSU_ARMOR),
+    CARD_TORRENTIAL_TRIBUTE,
+    CARD_WIDESPREAD_RUIN,
+    CARD_MANTICORE_OF_DARKNESS,
+    X3(CARD_CYBER_END_DRAGON),
+    X3(CARD_CYBER_TWIN_DRAGON),
+    X3(CARD_GATLING_DRAGON),
+    X3(CARD_KING_DRAGUN),
+    CARD_THE_LAST_WARRIOR_FROM_ANOTHER_PLANET,
+    CARD_THOUSAND_EYES_RESTRICT,
+};
+STATIC_ASSERT(ARRAY_COUNT(sReaperBazooReturn) == 55, ReaperBazooReturnSize);
+static const struct DeckList sReaperBazooReturnList = { sReaperBazooReturn, ARRAY_COUNT(sReaperBazooReturn), 0 };
+static const u16 sReaperBazooReturnSide[] = {
+    /* Side (15) */
+    X2(CARD_MOBIUS_THE_FROST_MONARCH),
+    X2(CARD_MYSTIC_SWORDSMAN_LV2),
+    X2(CARD_SPIRIT_REAPER),
+    X2(CARD_GIANT_TRUNADE),
+    X3(CARD_THREATENING_ROAR),
+    X2(CARD_TRAP_DUSTSHOOT),
+    X2(CARD_WIDESPREAD_RUIN),
+};
+STATIC_ASSERT(ARRAY_COUNT(sReaperBazooReturnSide) == 15, ReaperBazooReturnSideSize);
+#endif
+
+#if defined(HAS_CARD_BOOK_OF_MOON) \
+    && defined(HAS_CARD_BOTTOMLESS_TRAP_HOLE) \
+    && defined(HAS_CARD_BRAIN_CONTROL) \
+    && defined(HAS_CARD_BREAKER_THE_MAGICAL_WARRIOR) \
+    && defined(HAS_CARD_CALL_OF_THE_HAUNTED) \
+    && defined(HAS_CARD_CEASEFIRE) \
+    && defined(HAS_CARD_CYBER_DRAGON) \
+    && defined(HAS_CARD_DARK_HOLE) \
+    && defined(HAS_CARD_DON_ZALOOG) \
+    && defined(HAS_CARD_DUST_TORNADO) \
+    && defined(HAS_CARD_D_D_ASSAILANT) \
+    && defined(HAS_CARD_D_D_SURVIVOR) \
+    && defined(HAS_CARD_D_D_WARRIOR_LADY) \
+    && defined(HAS_CARD_ENEMY_CONTROLLER) \
+    && defined(HAS_CARD_EXILED_FORCE) \
+    && defined(HAS_CARD_HEAVY_STORM) \
+    && defined(HAS_CARD_MAGIC_CYLINDER) \
+    && defined(HAS_CARD_MOBIUS_THE_FROST_MONARCH) \
+    && defined(HAS_CARD_MYSTICAL_SPACE_TYPHOON) \
+    && defined(HAS_CARD_MYSTIC_SWORDSMAN_LV2) \
+    && defined(HAS_CARD_MYSTIC_TOMATO) \
+    && defined(HAS_CARD_NOBLEMAN_OF_CROSSOUT) \
+    && defined(HAS_CARD_PREMATURE_BURIAL) \
+    && defined(HAS_CARD_REINFORCEMENT_OF_THE_ARMY) \
+    && defined(HAS_CARD_SAKURETSU_ARMOR) \
+    && defined(HAS_CARD_SANGAN) \
+    && defined(HAS_CARD_SCAPEGOAT) \
+    && defined(HAS_CARD_SMASHING_GROUND) \
+    && defined(HAS_CARD_SNATCH_STEAL) \
+    && defined(HAS_CARD_SOLEMN_JUDGMENT) \
+    && defined(HAS_CARD_SPIRIT_REAPER) \
+    && defined(HAS_CARD_STEALTH_BIRD) \
+    && defined(HAS_CARD_SWORDS_OF_REVEALING_LIGHT) \
+    && defined(HAS_CARD_TORRENTIAL_TRIBUTE) \
+    && defined(HAS_CARD_WAVE_MOTION_CANNON) \
+    && defined(HAS_CARD_WIDESPREAD_RUIN)
+#define MOD_REAPER_TOMATO_CONTROL 1
+static const u16 sReaperTomatoControl[] = {
+    /* Main + Fusion (40) */
+    CARD_BREAKER_THE_MAGICAL_WARRIOR,
+    X3(CARD_CYBER_DRAGON),
+    X2(CARD_D_D_ASSAILANT),
+    CARD_D_D_SURVIVOR,
+    CARD_D_D_WARRIOR_LADY,
+    CARD_DON_ZALOOG,
+    CARD_EXILED_FORCE,
+    X2(CARD_MOBIUS_THE_FROST_MONARCH),
+    CARD_MYSTIC_SWORDSMAN_LV2,
+    X2(CARD_MYSTIC_TOMATO),
+    CARD_SANGAN,
+    X3(CARD_SPIRIT_REAPER),
+    CARD_BOOK_OF_MOON,
+    CARD_BRAIN_CONTROL,
+    CARD_DARK_HOLE,
+    CARD_ENEMY_CONTROLLER,
+    CARD_HEAVY_STORM,
+    CARD_MYSTICAL_SPACE_TYPHOON,
+    CARD_NOBLEMAN_OF_CROSSOUT,
+    CARD_PREMATURE_BURIAL,
+    X2(CARD_REINFORCEMENT_OF_THE_ARMY),
+    X2(CARD_SMASHING_GROUND),
+    CARD_SNATCH_STEAL,
+    CARD_CALL_OF_THE_HAUNTED,
+    CARD_DUST_TORNADO,
+    X3(CARD_SAKURETSU_ARMOR),
+    CARD_TORRENTIAL_TRIBUTE,
+    X2(CARD_WIDESPREAD_RUIN),
+};
+STATIC_ASSERT(ARRAY_COUNT(sReaperTomatoControl) == 40, ReaperTomatoControlSize);
+static const struct DeckList sReaperTomatoControlList = { sReaperTomatoControl, ARRAY_COUNT(sReaperTomatoControl), 0 };
+static const u16 sReaperTomatoControlSide[] = {
+    /* Side (15) */
+    CARD_D_D_ASSAILANT,
+    X2(CARD_STEALTH_BIRD),
+    CARD_SCAPEGOAT,
+    CARD_SWORDS_OF_REVEALING_LIGHT,
+    X2(CARD_WAVE_MOTION_CANNON),
+    X2(CARD_BOTTOMLESS_TRAP_HOLE),
+    CARD_CEASEFIRE,
+    CARD_DUST_TORNADO,
+    CARD_MAGIC_CYLINDER,
+    X3(CARD_SOLEMN_JUDGMENT),
+};
+STATIC_ASSERT(ARRAY_COUNT(sReaperTomatoControlSide) == 15, ReaperTomatoControlSideSize);
+#endif
+
+#if defined(MOD_CYBER_STEIN_MONARCH) && defined(MOD_JOEY_DECK) && defined(MOD_REAPER_BAZOO_RETURN) \
+    && defined(MOD_CHAOS_CONTROL) && defined(MOD_REAPER_TOMATO_CONTROL)
+#define MOD_REAPER_DECKS 1
+static const struct DeckList *ReaperDeck(void)
+{
+    u32 roll = (u32)Random() % 100;
+
+    if (roll < 40)
+        return &sCyberSteinMonarchList;
+    if (roll < 60)
+        return &sJoeyDeckList;
+    if (roll < 75)
+        return &sReaperBazooReturnList;
+    if (roll < 90)
+        return &sChaosControlList;
+    return &sReaperTomatoControlList;
+}
+#endif
+
 #if defined(MOD_RED_DECK) && defined(MOD_JOEY_DECK) && defined(MOD_BAKURA_DECK) && defined(MOD_GOAT_CHAOS_CONTROL) \
     && defined(MOD_GOAT_PANDA_BURN) && defined(MOD_GOAT_CHAOS_RETURN) && defined(MOD_GOAT_REASONING_GATE_TURBO)
 #define MOD_GOAT_DECKS 1
@@ -3269,6 +3470,10 @@ static const struct DeckList *PickOpponentDeckOverride(int opponent)
 #ifdef MOD_CYBER_DECKS
     case DUELIST_YAMI_BAKURA:           /* the Cyber format opponent */
         return CyberDeck();
+#endif
+#ifdef MOD_REAPER_DECKS
+    case DUELIST_YAMI_YUGI:             /* the Reaper format opponent */
+        return ReaperDeck();
 #endif
 #ifdef MOD_JOEY_PEGASUS_DECKS
     case DUELIST_WEEVIL:                /* the Joey-Pegasus format opponent */
@@ -3358,6 +3563,8 @@ static const char sNameGoatChaosReturn[] = "Dingosig-Chaos Return";
 static const char sNameGoatReasoningGateTurbo[] = "paede17-Reasoning Gate Turbo";
 static const char sNameCyberBrianLongGoat[] = "Brian Long-Goat Control";
 static const char sNameCyberSteinMonarch[] = "splevin-Stein Monarch";
+static const char sNameReaperBazooReturn[] = "brahimpoke-Bazoo Return";
+static const char sNameReaperTomatoControl[] = "Roland Gress-Tomato Control";
 
 static const struct RecipePreset sRecipePresets[] = {
 #ifdef MOD_TRISTAN_SOUL_CONTROL
@@ -3477,6 +3684,16 @@ static const struct RecipePreset sRecipePresets[] = {
 #ifdef MOD_CYBER_STEIN_MONARCH
     { sNameCyberSteinMonarch, &sCyberSteinMonarchList, sCyberSteinMonarchSide,
       ARRAY_COUNT(sCyberSteinMonarchSide) },
+#endif
+#ifdef MOD_REAPER_DECKS
+    { sNameCyberSteinMonarch, &sCyberSteinMonarchList, sCyberSteinMonarchSide,
+      ARRAY_COUNT(sCyberSteinMonarchSide) },
+    { sNameWarrior, &sJoeyDeckList, sJoeyDeckSide, ARRAY_COUNT(sJoeyDeckSide) },
+    { sNameReaperBazooReturn, &sReaperBazooReturnList, sReaperBazooReturnSide,
+      ARRAY_COUNT(sReaperBazooReturnSide) },
+    { sNameChaosControl, &sChaosControlList, sChaosControlSide, ARRAY_COUNT(sChaosControlSide) },
+    { sNameReaperTomatoControl, &sReaperTomatoControlList, sReaperTomatoControlSide,
+      ARRAY_COUNT(sReaperTomatoControlSide) },
 #endif
     { NULL, NULL, NULL, 0 },
 };

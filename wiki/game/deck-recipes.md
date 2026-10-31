@@ -78,6 +78,11 @@ Control's Side Deck (4-Starred Ladybug of Doom is an added card now, [[added-car
 | 37 | paede17-Reasoning Gate Turbo | the Goat opponent (5%) |
 | 38 | Brian Long-Goat Control | the Cyber opponent (50%) |
 | 39 | splevin-Stein Monarch | the Cyber opponent (50%) |
+| 40 | splevin-Stein Monarch | the Reaper opponent (40%) |
+| 41 | sdlkilla-Warrior | the Reaper opponent (20%) |
+| 42 | brahimpoke-Bazoo Return | the Reaper opponent (15%) |
+| 43 | ellietincan-Chaos Control | the Reaper opponent (15%) |
+| 44 | Roland Gress-Tomato Control | the Reaper opponent (10%) |
 
 "ellietincan-Warrior Tomato Control" is 34 characters, so the slot stores the first 31 (`RECIPE_NAME_SIZE` 32), and
 the list row shows 26 and "..". "Aretos-Tomato Control (Scientist)" (33) is cut the same way.

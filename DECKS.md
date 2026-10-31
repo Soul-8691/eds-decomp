@@ -36,7 +36,7 @@ Formats unlock in this order; in the release build each takes 10 wins to open th
 | 12 | Warrior | October 2004 | Goat Control 40%, Warrior 30%, Warrior Control 20%, Chaos Return 10% |
 | 13 | Goat | April 2005 | Chaos Turbo 40%, Warrior 20%, Goat Control 15%, Chaos Control 10%, Panda Burn 5%, Chaos Return 5%, Reasoning Gate Turbo 5% |
 | 14 | Cyber | April 2005 | Vanilla (unchanged) |
-| 15 | Reaper | October 2005 | Vanilla (unchanged) |
+| 15 | Reaper | October 2005 | Stein Monarch 40%, Warrior 20%, Bazoo Return 15%, Chaos Control 15%, Tomato Control 10% |
 
 ### 1. Yugi-Kaiba
 
@@ -2298,9 +2298,21 @@ D.D. Assailant, Exarion Universe, Wave-Motion Cannon, and the Fusion Monsters Da
 the Terrible, Ryu Senshi, Gatling Dragon, Dark Blade the Dragon Knight, Fiend Skull Dragon, Reaper on the Nightmare,
 The Last Warrior from Another Planet, King Dragun, Master of Oz, and Ojama King.
 
-### 15. Reaper
+### 15. Reaper (Yami Yugi)
 
-Vanilla (unchanged): this opponent still uses the original game's deck.
+40% **splevin-Stein Monarch**, 20% **sdlkilla-Warrior**, 15% **brahimpoke-Bazoo Return**, 15%
+**ellietincan-Chaos Control**, 10% **Roland Gress-Tomato Control** (main, fusion and side decks match the `.ydk`
+files). Deck Recipe presets 40–44 (after the Cyber presets). **Manticore of Darkness** was added to
+`config/new_cards.txt` for Bazoo Return's Extra Deck (YGOPRODeck id `23995346` aliases to passcode `77121851` in
+`tools/testdeck.py` / `tools/deckgen.py`).
+
+Cards with **no coded effect yet** across these five decks (union): **Manticore of Darkness** (new); **Stealth Bird**,
+**D.D. Survivor**; **Magical Scientist**, **Chaos Emperor Dragon - Envoy of the End**, **Fiber Jar**, **Yata-Garasu**;
+**Mirage of Nightmare** (if still tracked in `missing-main.txt`; effect may be partially handled elsewhere); fusion
+materials **Dark Balter the Terrible**, **Ryu Senshi**, **Fiend Skull Dragon**, **Reaper on the Nightmare**, **The Last
+Warrior from Another Planet**, **King Dragun**, **Gatling Dragon**, **Master of Oz**, **Ojama King**, **Dark Flare
+Knight**; plus **Mystik Wok** and **Royal Oppression** (Warrior side). Many staples are fully implemented (e.g. Bazoo,
+Cyber Stein, Spirit Reaper, Bottomless Trap Hole, Enemy Controller, Wave-Motion Cannon in `src/added_effects.c`).
 
 ## Deck opponents
 

@@ -23,6 +23,7 @@ ALIASES = {
     # YGOPRODeck .ydk ids (not the BCD passcodes in new_cards.tsv):
     70095154: 'Cyber Dragon',
     1546123: 'Cyber End Dragon',
+    23995346: 'Manticore of Darkness',  # YGOPRODeck .ydk id (in-game passcode 77121851)
 }
 MAIN_MAX = 60
 EXTRA_MAX = 20
