@@ -2041,6 +2041,10 @@ updated: 2026-09-29
 ## [2026-10-30] progress | Toon Cannon Soldier Normal Summon
 - Card text has no Special Summon requirement: `summon_action.c` consumes `normalSummonUsed` for Toon Cannon (other Toons still do not); `summon_builders.c` rejects `QueueSpecialSummonFromHand`; CPU `ai_strategy.c` uses `QueueNormalSummon`. [[added-cards]].
 
+## [2026-10-30] progress | Opponent select defaults to Test Duel (make)
+- src/mod_opponents.c: `ModOpponentSelectStart` opens on Test Duel when `MOD_TEST_DECK` (`make` only); `make release` unchanged (newest format). [[yugi-kaiba-opponent]].
+- Fix: use `#if !MOD_RELEASE` (not `#ifndef`; `MOD_RELEASE` is always defined as 0 or 1).
+
 ## [2026-10-30] progress | Token Thanksgiving
 - src/added_effects.c: `EffectTokenThanksgivingResolve`, `gAddedCardEffects` row, `AiWantsTokenThanksgiving`. missing.txt, missing-main.txt. [[added-cards]]. Built (`make`); not tested in an emulator.
 

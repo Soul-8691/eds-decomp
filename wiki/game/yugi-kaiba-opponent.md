@@ -29,8 +29,8 @@ next to the one before it.
 - **Names in brackets** are the duelist IDs, which key the records, decks and unlocks.
 - **Hidden.** The IDs not placed (Yugi, Tea, Joey, Bakura, Shadi, Duel Computer) are hidden. Page 4 is empty and
   can't be reached (`ModNextPageOpen`: pages 0-3).
-- **Opening position.** The select opens on the newest unlocked format (`ModOpponentSelectStart`, in
-  `OpponentSelect_Init`).
+- **Opening position.** `ModOpponentSelectStart` (`OpponentSelect_Init`): in `make` with `MOD_TEST_DECK`, the cursor
+  starts on Test Duel (deck page, right slot); `make release` opens on the newest unlocked format.
 - **History.** The first version kept the ROM's placement (formats from page 1, slot order), which put Critter at
   page 1's bottom centre instead of next to Yugi-Kaiba.
 

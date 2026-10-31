@@ -22,7 +22,7 @@
  *   ModIsOpponentUnlocked    IsOpponentUnlocked (booster_get_pack.c) asks it first
  *   ModSlotHidden            the opponent select (campaign_select.c): names, cursor
  *   ModPageDuelist           the duelist of a page's slot (campaign_select.c PAGE_DUELIST)
- *   ModOpponentSelectStart   OpponentSelect_Init: the select opens on the newest unlocked format
+ *   ModOpponentSelectStart   OpponentSelect_Init: make opens on Test Duel when present; make release on the newest format
  *   ModNextPageOpen          the opponent select: pages 0-3 can be visited (locked opponents show covers)
  *   ModOpponentSelectName    the slot names
  *   ModOpponentSelectPortraits  card art drawn into the portraits that have one (DrawArtPortrait)
@@ -350,12 +350,22 @@ int ModNextPageOpen(int page)
     return page < PAGE_COUNT - 1;
 }
 
-/* Where the opponent select opens: page * 5 + slot of the newest unlocked format. */
+/* Where the opponent select opens (page * 5 + slot). Debug (`make`): Test Duel when MOD_TEST_DECK; else the newest format. */
 int ModOpponentSelectStart(void)
 {
     int newest = ModUnlockedFormatCount() - 1;
     int page, slot;
 
+#if !MOD_RELEASE
+    if (Opponent(DUELIST_DUEL_COMPUTER)->kind == KIND_DECK) {
+        for (page = 0; page < PAGE_COUNT; page++) {
+            for (slot = 0; slot < 5; slot++) {
+                if (ModPageDuelist(page, slot) == DUELIST_DUEL_COMPUTER)
+                    return page * 5 + slot;
+            }
+        }
+    }
+#endif
     for (page = 0; page < PAGE_COUNT; page++) {
         for (slot = 0; slot < 5; slot++) {
             const struct ModOpponent *o = Opponent(ModPageDuelist(page, slot));
