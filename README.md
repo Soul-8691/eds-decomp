@@ -44,8 +44,10 @@
 </p>
 
 A hack of *Yu-Gi-Oh! The Eternal Duelist Soul* (GBA) that follows the
-[Format Library](https://www.formatlibrary.com/) pantheon of TCG formats, from Yugi-Kaiba up to Reaper. About 135
-Goat-era cards have been added so far, with roughly 50 more planned.
+[Format Library](https://www.formatlibrary.com/) pantheon of TCG formats, from Yugi-Kaiba up to Reaper. The **demo**
+build (`make demo`) adds **152** cards (repo-root [`new_cards.txt`](new_cards.txt) above `------`, in alphabetical
+order); **`make`** / **`make release`** use the full list in [`config/new_cards.txt`](config/new_cards.txt)
+(**343** names today, still growing).
 
 ## The formats
 
@@ -71,7 +73,9 @@ Each format is a Campaign "duelist". You start with Yugi-Kaiba only; beat the cu
 | 15 | Reaper | October 2005 |
 
 - **Decks.** Each format duelist picks one of 2-3 (sometimes more) strong decks from its format, at weighted
-  random. The first 15 duelists are fully coded. [DECKS.md](DECKS.md) lists every deck and its chance.
+  random. The first 15 duelists are fully coded. [DECKS.md](DECKS.md) lists every deck and its chance. **St. Joan**,
+  **Super Robolady**, and **Super Roboyarou** stay in the card pool but are left out of format **Fusion Deck** lists
+  until their fusion recipes are coded.
 - **Your deck.** It has to be legal in that format's banlist and card pool to duel them.
 - **Portraits.** Each duelist's portrait is its format's namesake card (or the Format Library picture when the
   format isn't named after a card).
@@ -98,10 +102,13 @@ Each format is a Campaign "duelist". You start with Yugi-Kaiba only; beat the cu
   with `tools/import_yugipedia_drv1.py`). Only ROM cards are in each pool; pull rates follow listed rarities; the cover
   art is the pool's rarest card. A TCG set unlocks when its format opponent is unlocked (for example Metal Raiders
   with Critter). Each format also has a **usage-weighted pack** (cards priced from that format's usage statistics);
-  those unlock after **10 wins** against that format duelist. The scrolling list holds 32 sets at once (booster sets
-  first; three Structure Decks are omitted when more than 32 JSON files are present). 1000 DP per pack in release;
-  free in debug (`make`). Campaign rewards still use the original in-game booster sets.
-  The screen that shows a pack's cards no longer has the scrolling patterned background (Campaign packs too).
+  those unlock after **10 wins** against that format duelist. Format packs cost **250** DP (TCG sets) or **500** DP
+  (usage packs); vanilla campaign booster IDs still cost **1000** DP when they appear. Free in debug (`make`). The shop
+  list can hold **64** unlocked format rows (interleaved by format); `gSceneWork` still shows 32 at a time while
+  scrolling. **Campaign wins** against format duelists (not Solomon or Debug) use this **same unlocked list**: pick
+  **one free pack** after the duel. When a win opens new packs (usage pack at 10 wins in that format, or TCG sets
+  when the next format unlocks at **20** wins), the game shows the **"new packs are available"** message before the
+  list. The screen that shows a pack's cards no longer has the scrolling patterned background (Campaign packs too).
 - **Card art in duels.** Face-up cards show a small picture of their artwork inside their icon: on the field
   (monsters, Spells/Traps, the Field zone, the top card of each Graveyard and banished pile), in your hand, in the
   card menu, in the chain list, when reordering cards, and while cards move, flip or change position. Deck Edit's
@@ -109,7 +116,8 @@ Each format is a Campaign "duelist". You start with Yugi-Kaiba only; beat the cu
 - **Still backgrounds.** The field background no longer scrolls during duels, and the title screen's background
   no longer scrolls either.
 - **Fixes.** Deck Edit no longer blots out the first letters of the row above the cursor after Card View (a
-  bug in the original game).
+  bug in the original game). Added-card **icons** in duels and Deck Edit use the correct cropped art; format
+  **duelist portraits** are generated from the intended namesake art again.
 - **Solomon and Debug.** The opponent page after the formats has Solomon (top left) and Debug (top right), open from
   the start: before the duel you pick one of your own Deck Recipes for them to play. Beating them gives no DP, so
   they're for practice and testing decks. Against Debug you first pick your own deck the same way (a recipe, or
@@ -186,7 +194,16 @@ Each format is a Campaign "duelist". You start with Yugi-Kaiba only; beat the cu
     - It chains Emergency Provisions to your Heavy Storm, Harpie's Feather Duster or a card targeting its Spells and
       Traps, turning the cards about to go into LP; from its hand it plays it only at 1500 LP or less.
     - It chains Pikeru's Circle of Enchantment to your burn Spells and Traps that would deal it 500 or more damage
-      (or finish it), before using Hallowed Life Barrier for that.
+      (or finish it), before using Hallowed Life Barrier for that, unless you already take no effect damage (for
+      example a face-up **Des Wombat** on your field).
+    - It chains **Divine Wrath** to your activated monster effects (not plain summons), discarding a card to negate and
+      destroy the monster; it answers Mobius, Breaker, Exiled Force, Magical Scientist, Tribe-Infecting Virus, Spirit
+      Reaper, and similar high-impact effects, or any effect when it has three or more cards to discard. It Sets
+      Divine Wrath from the hand when you have a wide board (five or more hand cards or any monster on your field).
+    - It plays **Mask of Restrict** in Main Phase when you have tribute plays it wants to stop, or more tributable
+      monsters than it does; it Sets the trap whenever it can.
+    - It plays **Limiter Removal** when it controls at least one Machine monster (doubles their ATK until End Phase,
+      then destroys those Machines).
     - It activates Hallowed Life Barrier against an attack that would deal it 1500 or more damage, and in answer to
       your burn Spells and Traps (Ookazi, Tremendous Fire, ...) that would deal 800 or more; either way also when the
       damage would finish it.
@@ -252,7 +269,9 @@ Each format is a Campaign "duelist". You start with Yugi-Kaiba only; beat the cu
     when deciding whether to attack one, judging how threatening your field is, and choosing targets for its
     effects.
 - **Thunder Dragon** can be activated even with no copy left in the Deck; the search then finds nothing.
-- **Debug mode** (testing builds only, not in the release). You start with 8 copies of every card. Deck-out is turned
+- **Debug mode** (testing builds only, not in the release). You start with 8 copies of every card. On **New Game**,
+  choosing the **red** starter deck leaves your saved Main, Fusion and Side Decks **empty** (build from the trunk);
+  green and black still load their premade Yugi-Kaiba recipe decks. Deck-out is turned
   off only in duels vs **Test Duel** or the **Debug** duelist (Solomon/Debug page); format opponents use normal
   deck-out rules. Decks can be under 40 cards, can hold any number of copies of a card, and ignore banlists. Switching
   banlists skips the 40-card Main Deck check. Every format is unlocked, and the Record (Duel Score) screen
@@ -273,9 +292,21 @@ Each format is a Campaign "duelist". You start with Yugi-Kaiba only; beat the cu
 
 ## How the new cards are added
 
-- **Coded cards.** Every card listed in [`new_cards.txt`](new_cards.txt) above the `------` line is fully coded,
-  effects included; the lines below the separator are planned, not in the demo ROM yet. [NEW_CARDS.md](NEW_CARDS.md)
-  shows a screenshot of each of them in the game (taken by `tools/card_screenshots.lua` in mGBA).
+- **Coded cards.** Every card listed in [`new_cards.txt`](new_cards.txt) above the `------` line is in the demo
+  ROM with stats, text and art; the lines below the separator are planned, not in the demo ROM yet.
+  [NEW_CARDS.md](NEW_CARDS.md) shows a screenshot of each of them in the game (taken by
+  `tools/card_screenshots.lua` in mGBA; optional `cards/_capture_only.txt` for new entries only;
+  `tools/gen_new_cards_md.py` refreshes the gallery). Reorder `new_cards.txt` only together with **`make demo`**
+  so card IDs stay in sync before re-running the script.
+- **Recent demo effects (since early demo builds).** **Mask of Restrict** (neither player can Tribute while face-up),
+  **Divine Wrath** (Counter Trap: discard 1, negate a monster effect activation and destroy that monster),
+  **Des Wombat** (you take no damage from card effects while it is face-up on your field),
+  **Limiter Removal** (double the ATK of all Machine monsters you control this turn; destroy them in your End Phase).
+- **Fusion monsters not coded yet.** These demo-list Fusion Monsters are **not** fully implemented (no fusion
+  effects yet; they do not behave like their real cards):
+  Dark Balter the Terrible, Ryu Senshi, Gatling Dragon, Dark Blade the Dragon Knight, Fiend Skull Dragon,
+  Reaper on the Nightmare, The Last Warrior from Another Planet, King Dragun, Ojama King, Master of Oz,
+  Dark Flare Knight, Dark Paladin, and Cyber Blader.
 - **Card data.** `make` / `make release` use every name in `config/new_cards.txt`. `make demo` is the same as `make`
   (debug/testing rules, `MOD_RELEASE` 0) but only the coded block at the top of repo-root `new_cards.txt`.
   `make release-demo` is the release rules with that same demo list. The build fetches each card's stats, text and

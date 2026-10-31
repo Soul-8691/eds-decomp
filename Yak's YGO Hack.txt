@@ -27,19 +27,4 @@ Fix Flip Effect Monster AI
 Move hooks out of original units (like duel_info_bar)
 Move added card lists out of effect_target_collect.c
 Card priority orders
-Make a note that these Fusion cards aren't coded in, yet, in the README:
-- Dark Balter the Terrible
-- Ryu Senshi
-- Gatling Dragon
-- Dark Blade the Dragon Knight
-- Fiend Skull Dragon
-- Reaper on the Nightmare
-- The Last Warrior from Another Planet
-- King Dragun
-- Ojama King
-- Master of Oz
-- Dark Flare Knight
-- Dark Paladin
-- Cyber Blader
-Update README with changes since 2e6afec
 Edit make setup to look in root for the baserom
