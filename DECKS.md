@@ -12,7 +12,7 @@ A new game offers the three Yugi-Kaiba format decks (lists under [Yugi-Kaiba](#1
 
 | Starter | Deck | Format |
 |---|---|---|
-| Red | Soul Control (El Duelista DEX-Soul Control) | Yugi-Kaiba |
+| Red | Soul Control (El Duelista DEX-Soul Control); **empty main/extra/side in the debug build** (`make`, not `make release`) | Yugi-Kaiba |
 | Green | Vanilla Beat (ellietincan-Vanilla Beat) | Yugi-Kaiba |
 | Black | Stall Mill (DK-ZERO-Stall Mill) | Yugi-Kaiba |
 

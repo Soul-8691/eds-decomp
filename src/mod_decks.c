@@ -4022,6 +4022,12 @@ int BuildModStarterDeck(int choice)
     const u16 *side = NULL;
     u32 sideCount = 0, i;
 
+#if !MOD_RELEASE
+    /* Debug ROM: Red starter is empty so the player builds from the full trunk (GiveStartingTrunk). */
+    if (choice == STARTER_DECK_RED)
+        return 1;
+#endif
+
     switch (choice) {
 #ifdef MOD_TRISTAN_SOUL_CONTROL
     case STARTER_DECK_RED:

@@ -27,7 +27,6 @@ Fix Flip Effect Monster AI
 Move hooks out of original units (like duel_info_bar)
 Move added card lists out of effect_target_collect.c
 Card priority orders
-Make the red starting deck in the debug build empty.
 The card list for the opponent's deck is bugged.
 Show "new packs are available" when unlocking the packs from 10/20 wins per format.
 Make a note that these Fusion cards aren't coded in, yet, in the README:
