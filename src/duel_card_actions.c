@@ -200,7 +200,7 @@ void ShowRevealedCard(int player, u16 cardId)
 
 /* Lose amount LP (DUEL_CMD_LOSE_LP, animated) and open a RESPONSE_LP_CHANGE window; nothing for 0. */
 int ModTakesNoDamage(int player);       /* added: Hallowed Life Barrier (src/added_effects.c) */
-int ModTakesNoEffectDamage(int player); /* added: Hallowed Life Barrier, Pikeru's Circle of Enchantment */
+int ModTakesNoEffectDamage(int player); /* added: Hallowed Life Barrier, Pikeru's Circle, Des Wombat */
 
 void LoseLifePoints(int player, int amount)
 {

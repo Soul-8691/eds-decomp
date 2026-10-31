@@ -1293,6 +1293,14 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
 - Release `.text` 0x08080718.
 - Checked in the source and the build; not tested in an emulator.
 
+### Des Wombat (2026-10-31)
+- Effect text from [YGOPRODeck](https://db.ygoprodeck.com/api/v7/cardinfo.php?name=Des%20Wombat) (id 9637706):
+  "Any damage to you from a card effect becomes 0." EARTH Beast Effect Monster (1600/300, Level 3). While a face-up
+  copy is on a player's field, `ModTakesNoEffectDamage` is true for that player (`LoseLifePoints` in
+  duel_card_actions.c). Battle damage and LP costs are unaffected. No effect table row. CPU: `AiIsKeyCard` tier 2;
+  burn answers (`AiChainPikerusCircle`, `AiChainHallowedLifeBarrier`) skip when already protected.
+- Built; not tested in an emulator.
+
 ### Pikeru's Circle of Enchantment (2026-10-30)
 - Normal Trap. ID 1039. The fetched text: "Damage to you from card effects becomes 0 until the end of this turn."
 - **Resolve.** `gModDuel.noEffectDamageTurn[player]` = `gDuel.turnCount` + 1. No prepare and no cost.

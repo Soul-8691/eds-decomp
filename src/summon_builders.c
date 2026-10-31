@@ -332,6 +332,10 @@ int AiIsKeyCard(int tier, u16 number)
     if (tier > 1) {
         if (number == CARD_KURIBOH || number == CARD_CYBER_STEIN)
             return 1;
+#ifdef HAS_CARD_DES_WOMBAT
+        if (number == CARD_DES_WOMBAT)
+            return 1;
+#endif
     }
     return 0;
 }

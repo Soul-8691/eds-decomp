@@ -9700,18 +9700,30 @@ int ModTakesNoDamage(int player)
 #endif
 }
 
-/* LoseLifePoints (duel_card_actions.c), the effect damage: 1 if `player` takes none now (Hallowed Life Barrier, or
- * Pikeru's Circle of Enchantment). */
+/* LoseLifePoints (duel_card_actions.c), the effect damage: 1 if `player` takes none now (Hallowed Life Barrier,
+ * Pikeru's Circle of Enchantment, or a face-up Des Wombat on that player's field). */
 int ModTakesNoEffectDamage(int player)
 {
     if (ModTakesNoDamage(player))
         return 1;
-#ifdef HAS_CARD_PIKERUS_CIRCLE_OF_ENCHANTMENT
-    return gModDuel.noEffectDamageTurn[player & 1] == (u16)(gDuel.turnCount + 1);
-#else
-    return 0;
+#ifdef HAS_CARD_DES_WOMBAT
+    if (CountActiveCardsOnField(player, CARD_DES_WOMBAT) > 0)
+        return 1;
 #endif
+#ifdef HAS_CARD_PIKERUS_CIRCLE_OF_ENCHANTMENT
+    if (gModDuel.noEffectDamageTurn[player & 1] == (u16)(gDuel.turnCount + 1))
+        return 1;
+#endif
+    return 0;
 }
+
+#ifdef HAS_CARD_DES_WOMBAT
+/* ---- Des Wombat (YGOPRODeck id 9637706) ---------------------------------------------------------------------------
+ * "Any damage to you from a card effect becomes 0." Continuous Effect Monster: while a face-up copy is on the
+ * player's field, ModTakesNoEffectDamage is true for that player (LoseLifePoints in duel_card_actions.c). Battle
+ * damage and LP paid as costs are unchanged. No gAddedCardEffects row (passive, like Jinzo's rules hook).
+ * CPU: AiIsKeyCard tier 2 keeps it in hand; burn traps skip chaining when ModTakesNoEffectDamage already holds. */
+#endif /* HAS_CARD_DES_WOMBAT */
 
 #ifdef HAS_CARD_HALLOWED_LIFE_BARRIER
 /* ---- Hallowed Life Barrier -----------------------------------------------------------------------------------------
