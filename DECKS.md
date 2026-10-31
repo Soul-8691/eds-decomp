@@ -2014,7 +2014,7 @@ Every card was already in the game. Cards here with no coded effect yet: the Fus
 
 Banlist: April 2005.
 
-Chaos Turbo 40%, Warrior 20% and Goat Control 15% are the deck opponents' decks (lists under [Deck opponents](#deck-opponents)); the other four:
+Chaos Turbo 40%, Warrior 20% and Goat Control 15% were the deck opponents' decks until 2026-10-30 (lists under [Deck opponents](#deck-opponents)); the other four:
 
 <details>
 <summary>Chaos Control: 10% (N♡va-Chaos Control; recipe "Nova-Chaos Control") (40 cards + 15 Fusion Deck + 15 Side Deck)</summary>
@@ -2293,22 +2293,25 @@ Vanilla (unchanged): these opponents still use the original game's decks.
 
 ## Deck opponents
 
-The page after the formats. Solomon comes first and is in both builds from the start; the others are a testing page,
-left out of `make release`, each always with its one deck, all Goat format (April 2005).
+The page after the formats. Solomon (top left) and Debug (top right) are in both builds from the start; Test Duel
+(right) is in testing builds only.
 
 | Opponent | Deck | Portrait |
 |---|---|---|
-| Solomon | a Deck Recipe you pick before the duel | Solomon (Grandpa) |
-| Chaos Turbo | LR-Chaos Turbo | Black Luster Soldier - Envoy of the Beginning |
-| Warrior | sdlkilla-Warrior | D.D. Warrior Lady |
-| Goat Control | geistD-Goat Control | Thousand-Eyes Restrict |
+| Solomon | a Deck Recipe you pick, or a deck you build (3 of every card), before the duel | Solomon (Grandpa) |
+| Debug | the same, built from 8 of every card with no copy limit; the duel has debug mode's rules | Cyber Twin Dragon |
 | Test Duel | `C:\ProjectIgnis\deck\test.ydk`, read at every build | Duel Computer |
 
-Solomon: after you choose him, your Deck Recipes list opens; A on a recipe makes it his deck (Main and Fusion Deck;
-nothing of yours is loaded or changed), B goes back to the opponent select. A best-of-3 keeps the same deck. His copy
-counts are kept as the recipe has them, and beating him gives no DP.
+Solomon and Debug: after you choose one, your Deck Recipes list opens. A on a recipe makes it their deck (Main and
+Fusion Deck; nothing of yours is loaded or changed), SELECT builds one in Deck Edit, and B goes back to the opponent
+select. A best-of-3 keeps the same deck. Their copy counts are kept as the deck has them, and beating them gives no
+DP. In a duel with Debug, as in debug mode, their hand is shown face up, you can read their face-down cards (info bar
+and Card View), and you can't deck out.
 
-Test Duel (the Duel Computer's slot, left on the page) plays whatever `test.ydk` holds when the ROM is built
+The Chaos Turbo, Warrior and Goat Control deck opponents left this page on 2026-10-30; the Goat opponent plays their
+decks (lists below).
+
+Test Duel (the Duel Computer's slot, right on the page) plays whatever `test.ydk` holds when the ROM is built
 (`tools/testdeck.py`; `make TEST_YDK=<path>` reads another file). Its copy counts are kept as they are (no limit is
 applied), and Main Deck cards the game does not have are left out with a warning. Without the file the slot stays
 empty.

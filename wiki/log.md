@@ -2037,3 +2037,9 @@ updated: 2026-09-29
 
 ## [2026-10-30] progress | Solomon: build his deck
 - src/mod_decks.c: ModSolomonBuildBegin / ModSolomonBuildEnd / ModSolomonBuilding. The save is written, gSaveData gets 3 of every card and empty decks, and the save is read back from SRAM afterwards. src/mod_banlists.c: no banlist while building. src/mod_recipes.c: SELECT in Solomon's picker builds his deck; CB_OpponentRecipes runs Deck Edit itself. While building, A has the recipe actions (load and save, no mark and no save), SELECT is Deck Edit, B duels and START discards. Recipes can still be picked as before. README (Solomon), [[yugi-kaiba-opponent]]. Release .text 0x0808098C (unchanged; a first try added a Campaign sub-step, +0x64, which was moved into the farcode unit instead). Built (make and make release); not tested in an emulator.
+
+## [2026-10-30] progress | Debug opponent; deck opponents page trimmed
+- src/mod_opponents.c: Debug (Pegasus' ID, Cyber Twin Dragon art, top right, both builds) plays a recipe or a built deck like Solomon; ModRecipeBuildCopies (Debug: 8 of every card, limit 99; Solomon: 3 and 3); ModDebugDuel. The Chaos Turbo, Warrior and Goat Control deck opponents removed (the Goat opponent plays those decks); Test Duel moved from left to right.
+- src/mod_decks.c (ModRecipeBuild*, renamed from ModSolomonBuild*, with copies and a limit), src/mod_banlists.c, src/mod_recipes.c (the opponent's name in its lines), src/mod_dp.c (no DP), src/ai_deck.c (copies kept).
+- Debug's duels get debug mode's rules: duel_piles.c (IsHandRevealed), duel_cmd_deck.c (CanDeckOut), card_menu_input.c (Card View). The info bar's DuelScreen_DrawCursorInfo moved from duel_info_bar.c to the new @farcode unit src/mod_info_bar.c. Release .text 0x080807D0 (from 0x0808098C).
+- README, DECKS.md, [[yugi-kaiba-opponent]]. Built (make and make release); not tested in an emulator.

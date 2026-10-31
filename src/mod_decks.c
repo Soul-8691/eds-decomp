@@ -2522,17 +2522,20 @@ static const struct DeckList *WarriorDeck(void)
 static const struct DeckList sTestDeckList = { sTestDeck, ARRAY_COUNT(sTestDeck), 0 };
 #endif
 
-/* Solomon's deck (Grandpa's slot on the deck opponents' page, src/mod_opponents.c, in both builds): the Deck Recipe the
- * player picks before the duel (CB_OpponentRecipes, src/mod_recipes.c), as card numbers: its Main Deck, then its
- * Fusion Deck (LoadOpponentDeck puts Fusion Monsters there); its Side Deck is not used. gModOpponentRecipe (EWRAM
- * 0x0202F400, symbols.ld) keeps it for the whole match. LoadOpponentDeck leaves its copy counts as they are. */
+/* The deck of Solomon and Debug (Grandpa's and Pegasus' slots on the deck opponents' page, src/mod_opponents.c, in both
+ * builds): the Deck Recipe the player picks or builds before the duel (CB_OpponentRecipes, src/mod_recipes.c), as card
+ * numbers: its Main Deck, then its Fusion Deck (LoadOpponentDeck puts Fusion Monsters there); its Side Deck is not
+ * used. gModOpponentRecipe (EWRAM 0x0202F400, symbols.ld) keeps it for the whole match. LoadOpponentDeck leaves its
+ * copy counts as they are. */
 #define MOD_OPPONENT_RECIPE_VALID 0x50C0
 
 struct ModOpponentRecipe {
     struct DeckList list;
     u16 valid;                                          /* MOD_OPPONENT_RECIPE_VALID: list is set */
-    u16 building;                                       /* MOD_SOLOMON_BUILDING: ModSolomonBuildBegin's collection */
+    u16 building;                                       /* MOD_RECIPE_BUILDING: ModRecipeBuildBegin's collection */
     u16 cards[DECK_MAX_CARDS + FUSION_DECK_MAX_CARDS];
+    u16 buildLimit;                                     /* while building: the copies a deck may hold of a card */
+    u16 pad;
 };
 extern struct ModOpponentRecipe gModOpponentRecipe;
 
@@ -2551,46 +2554,53 @@ void ModSetOpponentRecipe(const u16 *deck, int deckCount, const u16 *fusion, int
     gModOpponentRecipe.valid = MOD_OPPONENT_RECIPE_VALID;
 }
 
-/* Building Solomon's deck (CB_OpponentRecipes, SELECT): the player's save is written to SRAM (SaveGame), then
- * gSaveData gets a temporary collection: SOLOMON_BUILD_COPIES of every card in the trunk (the cards of
- * GiveStartingTrunk) and empty decks, and GetBanlistCopyLimit ignores the banlists (src/mod_banlists.c). Deck Edit
- * and the recipes then work on it as usual; nothing saves the game meanwhile. ModSolomonBuildEnd reads the save back
- * from SRAM, so the player's own collection, decks and banlist return as they were (a reset also finds them there). */
-#define MOD_SOLOMON_BUILDING    0x5B1D
-#define SOLOMON_BUILD_COPIES    3
+/* Building the deck of Solomon or Debug (CB_OpponentRecipes, SELECT): the player's save is written to SRAM (SaveGame),
+ * then gSaveData gets a temporary collection: `copies` of every card in the trunk (the cards of GiveStartingTrunk)
+ * and empty decks, and GetBanlistCopyLimit gives `limit` for every card, ignoring the banlists (src/mod_banlists.c).
+ * Deck Edit and the recipes then work on it as usual; nothing saves the game meanwhile. ModRecipeBuildEnd reads the
+ * save back from SRAM, so the player's own collection, decks and banlist return as they were (a reset also finds them
+ * there). */
+#define MOD_RECIPE_BUILDING     0x5B1D
 
-int ModSolomonBuilding(void)
+int ModRecipeBuilding(void)
 {
-    return gModOpponentRecipe.building == MOD_SOLOMON_BUILDING;
+    return gModOpponentRecipe.building == MOD_RECIPE_BUILDING;
 }
 
-void ModSolomonBuildBegin(void)
+/* GetBanlistCopyLimit while building. */
+int ModRecipeBuildLimit(void)
+{
+    return gModOpponentRecipe.buildLimit;
+}
+
+void ModRecipeBuildBegin(int copies, int limit)
 {
     u32 id, total = 0;
 
     SaveGame();
     for (id = 1; id < ARRAY_COUNT(gSaveData.trunk); id++) {
         u16 number = id <= CARD_ID_LAST ? gCardIdToNumber[id] : 0xFFFF;
-        int copies = number == 0xFFFF
-                     || (u16)(number - CARD_NUMBER_TOKEN_FIRST) < CARD_NUMBER_TOKEN_END - CARD_NUMBER_TOKEN_FIRST
-                     ? 0 : SOLOMON_BUILD_COPIES;
+        int n = number == 0xFFFF
+                || (u16)(number - CARD_NUMBER_TOKEN_FIRST) < CARD_NUMBER_TOKEN_END - CARD_NUMBER_TOKEN_FIRST
+                ? 0 : copies;
 
-        gSaveData.trunk[id].count = copies;
+        gSaveData.trunk[id].count = n;
         SetTrunkDeckCopies(id, 0);
         SetTrunkSideCopies(id, 0);
         SetTrunkFusionCopies(id, 0);
-        total += copies;
+        total += n;
     }
     gSaveData.trunkSize = total;
     gSaveData.deckSize = 0;
     gSaveData.sideDeckSize = 0;
     gSaveData.fusionDeckSize = 0;
-    gModOpponentRecipe.building = MOD_SOLOMON_BUILDING;
+    gModOpponentRecipe.buildLimit = limit;
+    gModOpponentRecipe.building = MOD_RECIPE_BUILDING;
 }
 
-void ModSolomonBuildEnd(void)
+void ModRecipeBuildEnd(void)
 {
-    if (!ModSolomonBuilding())
+    if (!ModRecipeBuilding())
         return;
     ReadSram((u8 *)SRAM, (u8 *)&gSaveData, sizeof(gSaveData));
     gModOpponentRecipe.building = 0;
@@ -3066,19 +3076,8 @@ static const struct DeckList *PickOpponentDeckOverride(int opponent)
         return &sBakuraDeckList;
 #endif
     /* The deck opponents of page 4 (src/mod_opponents.c). */
-#ifdef MOD_RED_DECK
-    case DUELIST_SIMON:
-        return &sRedDeckList;
-#endif
-#ifdef MOD_JOEY_DECK
-    case DUELIST_PEGASUS:
-        return &sJoeyDeckList;
-#endif
-#ifdef MOD_BAKURA_DECK
-    case DUELIST_SHADI:                 /* geistD-Goat Control (Grandpa's ID until 2026-10-30) */
-        return &sBakuraDeckList;
-#endif
-    case DUELIST_GRANDPA:               /* Solomon (make release too): the Deck Recipe the player picked */
+    case DUELIST_GRANDPA:               /* Solomon (make release too): the Deck Recipe the player picked or built */
+    case DUELIST_PEGASUS:               /* Debug, the same */
         return gModOpponentRecipe.valid == MOD_OPPONENT_RECIPE_VALID ? &gModOpponentRecipe.list : NULL;
 #if defined(MOD_TEST_DECK) && !MOD_RELEASE
     case DUELIST_DUEL_COMPUTER:         /* "Test Duel": test.ydk */

@@ -7,14 +7,15 @@
  *           open at the start; beating format k sWinsToUnlockNext[k] times (10) opens format k + 1. That is
  *           make release; a plain make (testing) opens every format.
  *           They fill pages 0-2 in unlock order.
- *   DECK    page 3: an opponent per deck (src/mod_decks.c), always open. First Solomon (Grandpa's ID and portrait,
- *           top left; in make release too, the only one there): he plays the Deck Recipe the player picks before the
- *           duel (CB_OpponentRecipes), and beating him gives no DP (src/mod_dp.c). Then, make only: the LR-Chaos
- *           Turbo, sdlkilla-Warrior and geistD-Goat Control (Shadi's ID) decks, and "Test Duel" in the Duel
- *           Computer's slot: the deck of the .ydk in TEST_YDK
+ *   DECK    page 3: an opponent per deck (src/mod_decks.c), always open. Solomon (Grandpa's ID and portrait, top
+ *           left) and Debug (Pegasus' ID, Cyber Twin Dragon's art, top right), in make release too: each plays the
+ *           Deck Recipe the player picks or builds before the duel (CB_OpponentRecipes; Solomon's built decks get 3 of
+ *           every card, Debug's 8 with no copy limit: ModRecipeBuildCopies), and beating them gives no DP
+ *           (src/mod_dp.c). A duel with Debug has the testing build's duel rules (ModDebugDuel). Then, make only,
+ *           "Test Duel" in the Duel Computer's slot (right): the deck of the .ydk in TEST_YDK
  *           (the Makefile; tools/testdeck.py, build/include/test_deck.h), if there is one, with the Duel
  *           Computer's own portrait (copied from the original page 4, DrawSlotPortrait).
- *   HIDDEN  the duelist IDs not placed, and the empty slots (duelist 0: page 3's last two, page 4): no name, the
+ *   HIDDEN  the duelist IDs not placed, and the empty slots (duelist 0: page 3's bottom and left, page 4): no name, the
  *           stone cover over the portrait, the cursor skips them, never open. Page 4 cannot be reached.
  * Within a page the opponents follow the cursor's ring from the top left (slots 2, 3, 4, 0, 1: top left, top right,
  * right, bottom, left), so each one sits next to the one before it.
@@ -42,6 +43,8 @@
 #include "constants/cards.h"
 #include "constants/game.h"
 #include "test_deck.h"          /* MOD_TEST_DECK, TEST_DECK_PORTRAIT (tools/testdeck.py) */
+#include "main.h"               /* gMain.opponent */
+#include "duel_flow.h"          /* gDuelCtrl.isLinkDuel */
 
 /* The opponent select's page pictures (campaign_select.c). */
 extern struct Mode4Bitmap gOpponentSelectPageBgs[5];
@@ -94,11 +97,9 @@ static const char sNameWarrior[] = "Warrior";
 static const char sNameGoat[] = "Goat";
 static const char sNameCyber[] = "Cyber";
 static const char sNameReaper[] = "Reaper";
-static const char sNameChaosTurbo[] = "LR-Chaos Turbo";
-static const char sNameWarriorDeck[] = "sdlkilla-Warrior";
-static const char sNameGoatControl[] = "geistD-Goat Control";
 static const char sNameTestDuel[] = "Test Duel";
 static const char sNameSolomon[] = "Solomon";
+static const char sNameDebug[] = "Debug";
 
 /* Portrait cards that are added cards (config/new_cards.txt): 0 (the page's own portrait) when not in the build. */
 #ifdef HAS_CARD_SCAPEGOAT
@@ -156,6 +157,11 @@ static const char sNameSolomon[] = "Solomon";
 #else
 #define ART_CYBER_DRAGON 0
 #endif
+#ifdef HAS_CARD_CYBER_TWIN_DRAGON
+#define ART_CYBER_TWIN_DRAGON CARD_CYBER_TWIN_DRAGON
+#else
+#define ART_CYBER_TWIN_DRAGON 0
+#endif
 
 #define FORMAT(order, banlist, name, portrait) { KIND_FORMAT, order, banlist, 0, name, portrait }
 #define HIDDEN { KIND_HIDDEN, 0, 0, 0, NULL, 0 }
@@ -165,6 +171,14 @@ static const char sNameSolomon[] = "Solomon";
 #define DECK(name, portrait) { KIND_DECK, 0, 0, 0, name, portrait }
 #endif
 #define DECK_ALWAYS(name, portrait) { KIND_DECK, 0, 0, 0, name, portrait }     /* in make release too */
+
+/* Debug: Pegasus' ID. Its built decks start from DEBUG_BUILD_COPIES of every card with no copy limit (as make);
+ * Solomon's from 3 of every card, at most 3 of one. */
+#define DUELIST_DEBUG           DUELIST_PEGASUS
+#define DEBUG_BUILD_COPIES      8
+#define DEBUG_COPY_LIMIT        99
+#define SOLOMON_BUILD_COPIES    3
+#define SOLOMON_COPY_LIMIT      3
 
 /* By enum DuelistId. */
 static const struct ModOpponent sOpponents[] = {
@@ -188,9 +202,9 @@ static const struct ModOpponent sOpponents[] = {
     [DUELIST_ISHIZU] = FORMAT(12, BANLIST_GOAT, sNameGoat, ART_SCAPEGOAT),
     [DUELIST_YAMI_BAKURA] = FORMAT(13, BANLIST_CYBER, sNameCyber, ART_CYBER_DRAGON),
     [DUELIST_YAMI_YUGI] = FORMAT(14, BANLIST_REAPER, sNameReaper, ART_SPIRIT_REAPER),
-    [DUELIST_SHADI] = DECK(sNameGoatControl, ART_THOUSAND_EYES_RESTRICT),   /* Grandpa's ID until 2026-10-30 */
-    [DUELIST_SIMON] = DECK(sNameChaosTurbo, ART_BLACK_LUSTER_SOLDIER_ENVOY_OF_THE_BEGINNING),
-    [DUELIST_PEGASUS] = DECK(sNameWarriorDeck, ART_D_D_WARRIOR_LADY),
+    [DUELIST_SHADI] = HIDDEN,           /* geistD-Goat Control until 2026-10-30 (the Goat opponent plays it now) */
+    [DUELIST_SIMON] = HIDDEN,           /* LR-Chaos Turbo until 2026-10-30 (the same) */
+    [DUELIST_PEGASUS] = DECK_ALWAYS(sNameDebug, ART_CYBER_TWIN_DRAGON),     /* sdlkilla-Warrior until 2026-10-30 */
     [DUELIST_GRANDPA] = DECK_ALWAYS(sNameSolomon, PORTRAIT_SOLOMON),
 #ifdef MOD_TEST_DECK
     [DUELIST_DUEL_COMPUTER] = DECK(sNameTestDuel, PORTRAIT_DUEL_COMPUTER),
@@ -219,13 +233,13 @@ static const u8 sWinsToUnlockNext[FORMAT_COUNT - 1] = {
 
 /* The duelist of each [page][slot] (slots: 0 bottom, 1 left, 2 top left, 3 top right, 4 right); 0 = empty. */
 #define PAGE_COUNT      4               /* pages that can be visited: the formats, then the deck opponents (in make
-                                           release only Solomon there) */
+                                           release Solomon and Debug there) */
 static const u8 sPageDuelists[5][5] = {
     /*  bottom                left                top left               top right              right */
     { DUELIST_MAKO,         DUELIST_MAI,        DUELIST_TRISTAN,       DUELIST_REX,           DUELIST_ESPA_ROBA },
     { DUELIST_UMBRA_LUMIS,  DUELIST_MARIK,      DUELIST_WEEVIL,        DUELIST_RARE_HUNTER,   DUELIST_ARKANA },
     { DUELIST_YAMI_BAKURA,  DUELIST_YAMI_YUGI,  DUELIST_STRINGS,       DUELIST_KAIBA,         DUELIST_ISHIZU },
-    { DUELIST_SHADI,        DUELIST_DUEL_COMPUTER, DUELIST_GRANDPA,    DUELIST_SIMON,         DUELIST_PEGASUS },
+    { 0,                    0,                  DUELIST_GRANDPA,       DUELIST_PEGASUS,       DUELIST_DUEL_COMPUTER },
     { 0,                    0,                  0,                     0,                     0 },
 };
 
@@ -365,10 +379,30 @@ int ModSkipsDuelDialogue(u16 duelist)
     return Opponent(duelist)->kind != KIND_HIDDEN;
 }
 
-/* Campaign_SelectOpponent (campaign_steps.c): 1 if `duelist` plays a Deck Recipe the player picks (Solomon). */
+/* Campaign_SelectOpponent (campaign_steps.c): 1 if `duelist` plays a Deck Recipe the player picks (Solomon, Debug). */
 int ModOpponentPlaysRecipe(u16 duelist)
 {
-    return duelist == DUELIST_GRANDPA && Opponent(duelist)->kind == KIND_DECK;
+    return (duelist == DUELIST_GRANDPA || duelist == DUELIST_DEBUG) && Opponent(duelist)->kind == KIND_DECK;
+}
+
+/* CB_OpponentRecipes: the copies of every card a deck built for `duelist` starts from, and the copies of a card it may
+ * hold (*limit): Debug has the testing build's 8 (GiveStartingTrunk) and no copy limit, Solomon 3 and 3. */
+int ModRecipeBuildCopies(u16 duelist, int *limit)
+{
+    if (duelist == DUELIST_DEBUG) {
+        *limit = DEBUG_COPY_LIMIT;
+        return DEBUG_BUILD_COPIES;
+    }
+    *limit = SOLOMON_COPY_LIMIT;
+    return SOLOMON_BUILD_COPIES;
+}
+
+/* The testing build's duel rules in a Campaign duel with Debug, in make release too: the opponent's hand is shown
+ * (IsHandRevealed, duel_piles.c), its face-down cards can be read (duel_info_bar.c, card_menu_input.c), and the
+ * player cannot deck out (duel_cmd_deck.c). Never in a Link Battle. */
+int ModDebugDuel(void)
+{
+    return gMain.opponent == DUELIST_DEBUG && !gDuelCtrl.isLinkDuel;
 }
 
 int ModOpponentFormat(u16 duelist)

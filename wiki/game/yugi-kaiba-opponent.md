@@ -107,6 +107,22 @@ Always open, with no format check:
     `DeckList`; nothing of the player's is loaded or changed. B returns 2 and the step goes back to the opponent
     select. `GetOpponentDeckOverride` returns that list for him; the match's later duels keep it (gModMatch).
     `LoadOpponentDeck` (ai_deck.c) skips `RemoveOverLimitDeckCards` for him, as for Test Duel.
+  - **Debug (2026-10-30).** Pegasus' ID (`DUELIST_DEBUG` = `DUELIST_PEGASUS` in mod_opponents.c), named "Debug",
+    top right on the page with Cyber Twin Dragon's art, `DECK_ALWAYS`. The page now holds only Solomon (top left),
+    Debug (top right) and Test Duel (right, make only; it was on the left). The LR-Chaos Turbo, sdlkilla-Warrior and
+    geistD-Goat Control deck opponents (Simon's, Pegasus' and Shadi's IDs) are gone (`HIDDEN`); the Goat format
+    opponent plays those decks, and they stay recipe presets 31-33.
+    - Debug works like Solomon (`ModOpponentPlaysRecipe`; `GetOpponentDeckOverride` gives `gModOpponentRecipe`;
+      `LoadOpponentDeck` keeps its copy counts; `AwardDuelDP` gives no DP). Its built decks start from 8 of every card
+      with a copy limit of 99, Solomon's from 3 and 3 (`ModRecipeBuildCopies`, passed to `ModRecipeBuildBegin`;
+      `GetBanlistCopyLimit` returns `ModRecipeBuildLimit`). The recipe scene's lines use the opponent's name.
+    - `ModDebugDuel` (gMain.opponent is Debug, not a Link Battle) turns on make's duel rules in make release too:
+      `IsHandRevealed` returns 1 (duel_piles.c), `CanDeckOut` is 0 for the player (duel_cmd_deck.c), Card View opens
+      on the opponent's face-down cards (card_menu_input.c), and the info bar describes them.
+    - **The info bar moved.** Three checks in `DuelScreen_DrawCursorInfo` grew duel_info_bar.c by 0x90 bytes, which
+      the size-limited `.text` (to 0x08080A20) could not take. The function moved to a new `@farcode` unit,
+      src/mod_info_bar.c, written more compactly (one `ZoneCardShown` check and one `DrawPileLabel` helper). Release
+      `.text` went from 0x0808098C to 0x080807D0. duel_info_bar already matched none of its 21 functions.
   - **Building his deck (2026-10-30).** SELECT in the picker calls `ModSolomonBuildBegin` (mod_decks.c). It writes the save
     (`SaveGame`), then gives `gSaveData` a temporary collection: 3 of every card ID in the trunk (the cards of
     `GiveStartingTrunk`: no tokens, no unused IDs), the deck copy counters at 0, and empty decks. It also sets

@@ -310,8 +310,9 @@ int DuelScreen_HandleInput(void)
     case DUEL_AREA_MONSTER:
     case DUEL_AREA_SPELL_TRAP:
     case DUEL_AREA_FIELD:
-        /* changed: make (testing) also opens the menu (Card View) on the opponent's face-down cards */
-        if (id != 0 && (gDuelScreen.selPlayer == 0 || !MOD_RELEASE || (((struct ZoneFlagsView *)((gDuelScreen.selPlayer & 1) * 0xD64 + (gDuelScreen.selArea + gDuelScreen.selIndex) * 0x94 + (u32)gDuelPlayerZones[0].zones))->flags6 & 2))) {
+        /* changed: make (testing), and a duel with Debug, also open the menu (Card View) on the opponent's face-down
+         * cards */
+        if (id != 0 && (gDuelScreen.selPlayer == 0 || !MOD_RELEASE || ModDebugDuel() || (((struct ZoneFlagsView *)((gDuelScreen.selPlayer & 1) * 0xD64 + (gDuelScreen.selArea + gDuelScreen.selIndex) * 0x94 + (u32)gDuelPlayerZones[0].zones))->flags6 & 2))) {
             gDuelView.cardMenu.open = 1;
             gDuelView.cardMenu.state = 0;
             gDuelView.cardMenu.available = CardMenu_GetAvailableCommands();

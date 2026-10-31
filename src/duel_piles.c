@@ -435,6 +435,9 @@ int IsHandRevealed(int player)
 
 #if !MOD_RELEASE
     return 1;   /* mod: make (testing) shows every hand: drawn face up, the info bar and Card View (not in release) */
+#else
+    if (ModDebugDuel())
+        return 1;   /* mod: so does a duel with Debug */
 #endif
     if (gDuelPlayers[player & 1].handRevealed)
         return 1;

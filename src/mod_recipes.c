@@ -15,15 +15,16 @@
  *                           cards, or a card the format does not allow), unless the collection cannot make a legal
  *                           deck at all (ModEventChallenger avoids that): then a second B duels anyway, so an event
  *                           never gets stuck. The event's BGM keeps playing.
- *   CB_OpponentRecipes      the same scene before a duel with Solomon (Campaign_SelectOpponent): A on a
+ *   CB_OpponentRecipes      the same scene before a duel with Solomon or Debug (Campaign_SelectOpponent): A on a
  *                           recipe makes it his deck (ModSetOpponentRecipe, src/mod_decks.c); nothing is loaded or
  *                           changed; B goes back to the opponent select. SELECT builds his deck instead: the player's
- *                           collection is set aside for 3 of every card with no banlist (ModSolomonBuildBegin) and
+ *                           collection is set aside for 3 of every card (Debug: 8, no copy limit;
+ *                           ModRecipeBuildCopies, src/mod_opponents.c) with no banlist (ModRecipeBuildBegin) and
  *                           Deck Edit opens (CB_OpponentRecipes runs it, then the scene again). While he builds, the scene
  *                           works on that deck: A opens the actions as in Deck Recipes (Load a recipe into it, Save
  *                           it to a slot; neither marks the slot nor saves the game), SELECT is Deck Edit again, B
- *                           makes it Solomon's deck and START discards it; both give the player's collection back
- *                           (ModSolomonBuildEnd)
+ *                           makes it the opponent's deck and START discards it; both give the player's collection back
+ *                           (ModRecipeBuildEnd)
  *   DeckRecipes_OnNewGame   BuildStarterDeck (title_screen.c): a New Game clears the recipes back to the presets
  * Up to RECIPE_COUNT recipes, each a name and a saved Deck, Side Deck and Fusion Deck list, live in SRAM after the
  * save image (RECIPE_SRAM; the game's save is 0x2170 bytes of the 32 KiB). The first ones start as the decks of
@@ -73,11 +74,14 @@ int SwitchToBanlist(int banlist);
 /* src/deck_edit.c */
 u16 CB_DeckEdit(void);
 #define RESET_SEQ_STATE() (gMain.seqIndex1 = 0, gMain.seqState1 = 0, gMain.seqState2 = 0)  /* as campaign_steps.c */
-/* src/mod_decks.c: Solomon's deck, and the temporary collection to build it from */
+/* src/mod_decks.c: the deck of Solomon or Debug, and the temporary collection to build it from */
 void ModSetOpponentRecipe(const u16 *deck, int deckCount, const u16 *fusion, int fusionCount);
-int ModSolomonBuilding(void);
-void ModSolomonBuildBegin(void);
-void ModSolomonBuildEnd(void);
+int ModRecipeBuilding(void);
+void ModRecipeBuildBegin(int copies, int limit);
+void ModRecipeBuildEnd(void);
+/* src/mod_opponents.c */
+int ModRecipeBuildCopies(u16 duelist, int *limit);
+const u8 *ModOpponentSelectName(u16 duelist, const u8 *name);
 
 extern const u8 gMainMenuObjPal[], gMainMenuObjGfx[];
 extern const u16 gMainMenuSkyImage[];
@@ -168,11 +172,11 @@ struct DeckRecipes {
     u8 leftOutCount;                /* MODE_LEFT_OUT: entries */
     u8 leftOutScroll;
     u8 startConfirm;                /* the challenger: 1 after a B the deck check warned about */
-    u8 deckEdit;                    /* the challenger, or Solomon's deck: 1 when the player left with SELECT, for
+    u8 deckEdit;                    /* the challenger, or the opponent's deck: 1 when the player left with SELECT, for
                                      * Deck Edit */
-    u8 opponentPick;                /* 1: CB_OpponentRecipes (A picks Solomon's deck) */
+    u8 opponentPick;                /* 1: CB_OpponentRecipes (A picks the deck of Solomon or Debug) */
     u8 picked;                      /* CB_OpponentRecipes: 1 when a recipe was picked, 0 when the player went back */
-    u8 solomonDeckEdit;             /* CB_OpponentRecipes: 1 while Deck Edit runs on Solomon's deck (0 again before
+    u8 opponentDeckEdit;            /* CB_OpponentRecipes: 1 while Deck Edit runs on the opponent's deck (0 again before
                                      * the scene starts over) */
     struct LeftOut leftOut[LEFT_OUT_MAX];
     struct RecipeSlot buf;
@@ -524,7 +528,7 @@ static int SwitchTo(int n)
                              GetTrunkSideCopies, SIDE_DECK_MAX_CARDS);
     missing += TakeFromTrunk(b->fusion, b->used ? b->fusionSize : 0, AddCardToSavedFusionDeck,
                              &gSaveData.fusionDeckSize, GetTrunkFusionCopies, FUSION_DECK_MAX_CARDS);
-    if (!ModSolomonBuilding()) {    /* Solomon's deck: the mark and the save are the player's own deck's */
+    if (!ModRecipeBuilding()) {    /* the opponent's deck: the mark and the save are the player's own deck's */
         SetActive(n);
         SaveGame();
     }
@@ -650,14 +654,14 @@ static const char sStrLeftOutHelp1[] = "UP/DOWN: scroll   A/B: close";
 static const char sStrLeftOutHelp2[] = "Deck Edit's banlist is set in Banlists.";
 static const char sStrLeftOutChallenger[] = "The banlist is now the challenger's format.";
 static const char sStrChallengerHelp[] = "A: options  B: duel  SELECT: Deck Edit";
-static const char sStrOpponentHelp[] = "A: Solomon plays it   B: back";
-static const char sStrOpponentPrompt[] = "SELECT: build his deck (3 of every card).";
-static const char sStrSolomonHelp[] = "A: options  B: duel  SELECT: Deck Edit";
-static const char sStrSolomonDeck[] = "Solomon's deck: ";
-static const char sStrSolomonDiscard[] = ". START: discard";
-static const char sStrSolomonEmpty[] = "Solomon's deck is empty. SELECT: Deck Edit.";
-static const char sStrSolomonDiscarded[] = "Solomon's deck was discarded.";
-static const char sStrSolomonName[] = "Solomon";
+static const char sStrOpponentHelp[] = " plays it   B: back";        /* after "A: " and the name */
+static const char sStrOpponentPrompt[] = "SELECT: build a deck (";      /* then "N of every card)." */
+static const char sStrOpponentPromptEnd[] = " of every card).";
+static const char sStrBuildHelp[] = "A: options  B: duel  SELECT: Deck Edit";
+static const char sStrBuildDeck[] = "'s deck: ";                       /* after the name */
+static const char sStrBuildDiscard[] = ". START: discard";
+static const char sStrBuildEmpty[] = "'s deck is empty. SELECT: Deck Edit.";
+static const char sStrBuildDiscarded[] = "'s deck was discarded.";
 static const char sStrNoBanlist[] = "none";
 static const char sStrChallengerFormat[] = "Challenger's format: ";
 static const char sStrChallengerBanlist[] = "Now using the ";
@@ -727,6 +731,12 @@ static char *AppendNum(char *dst, u32 n, int width)
     return dst;
 }
 
+/* The name of the opponent whose deck CB_OpponentRecipes picks (Solomon, Debug). */
+static const char *OpponentName(void)
+{
+    return (const char *)ModOpponentSelectName(gMain.opponent, (const u8 *)"");
+}
+
 /* "Recipe NN" at the start of the status line; returns its end. */
 static char *StatusRecipe(int n)
 {
@@ -790,15 +800,20 @@ static void RenderList(void)
             x += gTextCanvas.right - x + 14;
         }
         DrawLine(ROWS_VISIBLE * ROW_HEIGHT + 10, COLOR_HELP, sStrMenuHelp);
-    } else if (s->opponentPick && ModSolomonBuilding()) {
-        DrawLine(ROWS_VISIBLE * ROW_HEIGHT, COLOR_HELP, sStrSolomonHelp);
-        p = AppendNum(AppendStr(AppendStr(line, sStrSolomonDeck), "D"), gSaveData.deckSize, 1);
+    } else if (s->opponentPick && ModRecipeBuilding()) {
+        DrawLine(ROWS_VISIBLE * ROW_HEIGHT, COLOR_HELP, sStrBuildHelp);
+        p = AppendNum(AppendStr(AppendStr(AppendStr(line, OpponentName()), sStrBuildDeck), "D"), gSaveData.deckSize, 1);
         p = AppendNum(AppendStr(p, " S"), gSaveData.sideDeckSize, 1);
-        AppendStr(AppendNum(AppendStr(p, " F"), gSaveData.fusionDeckSize, 1), sStrSolomonDiscard);
+        AppendStr(AppendNum(AppendStr(p, " F"), gSaveData.fusionDeckSize, 1), sStrBuildDiscard);
         DrawLine(ROWS_VISIBLE * ROW_HEIGHT + 10, COLOR_CURSOR, line);
     } else if (s->opponentPick) {
-        DrawLine(ROWS_VISIBLE * ROW_HEIGHT, COLOR_HELP, sStrOpponentHelp);
-        DrawLine(ROWS_VISIBLE * ROW_HEIGHT + 10, COLOR_CURSOR, sStrOpponentPrompt);
+        int limit;
+
+        AppendStr(AppendStr(AppendStr(line, "A: "), OpponentName()), sStrOpponentHelp);
+        DrawLine(ROWS_VISIBLE * ROW_HEIGHT, COLOR_HELP, line);
+        p = AppendNum(AppendStr(line, sStrOpponentPrompt), ModRecipeBuildCopies(gMain.opponent, &limit), 1);
+        AppendStr(p, sStrOpponentPromptEnd);
+        DrawLine(ROWS_VISIBLE * ROW_HEIGHT + 10, COLOR_CURSOR, line);
     } else if (s->challenger) {
         DrawLine(ROWS_VISIBLE * ROW_HEIGHT, COLOR_HELP, sStrChallengerHelp);
         AppendStr(AppendStr(line, sStrChallengerFormat), BanlistName(s->format));
@@ -853,7 +868,7 @@ static void RenderLeftOut(void)
         total += s->leftOut[i].count;
     p = AppendNum(line, total, 1);
     p = AppendStr(p, sStrLeftOutHead);
-    AppendStr(AppendStr(p, ModSolomonBuilding() ? sStrNoBanlist : BanlistName(GetActiveBanlist())), "):");
+    AppendStr(AppendStr(p, ModRecipeBuilding() ? sStrNoBanlist : BanlistName(GetActiveBanlist())), "):");
     DrawLine(0, COLOR_STATUS, line);
     for (i = 0; i < LEFT_OUT_ROWS && s->leftOutScroll + i < s->leftOutCount; i++) {
         struct LeftOut *e = &s->leftOut[s->leftOutScroll + i];
@@ -956,7 +971,7 @@ static void FinishNameEntry(void)
     if (s->nameForSave) {
         CurrentDeckToBuf(s->name);
         WriteSlot(n);
-        if (!ModSolomonBuilding())
+        if (!ModRecipeBuilding())
             SetActive(n);
         AppendStr(AppendNum(AppendStr(s->status, sStrSaved), n + 1, 2), ".");
     } else {
@@ -1049,7 +1064,7 @@ static void DoAction(void)
         return;
     case ACTION_SAVE:
         if (!used) {
-            StartNameEntry(1, ModSolomonBuilding() ? sStrSolomonName
+            StartNameEntry(1, ModRecipeBuilding() ? OpponentName()
                               : s->active < RECIPE_COUNT ? SlotName(s->active) : "");
             PlaySE(SE_CONFIRM);
             return;
@@ -1064,7 +1079,7 @@ static void DoAction(void)
         MemCopy16(s->name, s->buf.name, sizeof(s->name));
         CurrentDeckToBuf(s->name);
         WriteSlot(n);
-        if (!ModSolomonBuilding())
+        if (!ModRecipeBuilding())
             SetActive(n);
         AppendStr(AppendNum(AppendStr(s->status, sStrSaved), n + 1, 2), ".");
         s->mode = MODE_LIST;
@@ -1195,17 +1210,17 @@ static int HandleInput(void)
         Render();
         return 0;
     }
-    if (s->opponentPick && ModSolomonBuilding()) {
-        /* building Solomon's deck: the list and the actions work on it, as in Deck Recipes */
+    if (s->opponentPick && ModRecipeBuilding()) {
+        /* building the opponent's deck: the list and the actions work on it, as in Deck Recipes */
         if (keys & B_BUTTON) {
             if (gSaveData.deckSize == 0) {
-                AppendStr(s->status, sStrSolomonEmpty);
+                AppendStr(AppendStr(s->status, OpponentName()), sStrBuildEmpty);
                 PlaySE(SE_ERROR);
                 Render();
                 return 0;
             }
             ModSetOpponentRecipe(gSaveData.deck, gSaveData.deckSize, gSaveData.fusionDeck, gSaveData.fusionDeckSize);
-            ModSolomonBuildEnd();
+            ModRecipeBuildEnd();
             s->picked = 1;
             PlaySE(SE_CONFIRM);
             return 1;
@@ -1216,15 +1231,18 @@ static int HandleInput(void)
             return 1;
         }
         if (keys & START_BUTTON) {
-            ModSolomonBuildEnd();
-            AppendStr(s->status, sStrSolomonDiscarded);
+            ModRecipeBuildEnd();
+            AppendStr(AppendStr(s->status, OpponentName()), sStrBuildDiscarded);
             PlaySE(SE_CANCEL);
             Render();
             return 0;
         }
     } else if (s->opponentPick) {
         if (keys & SELECT_BUTTON) {
-            ModSolomonBuildBegin();
+            int copies, limit;
+
+            copies = ModRecipeBuildCopies(gMain.opponent, &limit);
+            ModRecipeBuildBegin(copies, limit);
             s->deckEdit = 1;
             PlaySE(SE_CONFIRM);
             return 1;
@@ -1370,16 +1388,16 @@ u16 CB_DeckRecipes(void)
     return RunScene(RECIPES_NORMAL);
 }
 
-/* Before a duel with Solomon: the player picks his deck from their Deck Recipes, or builds it in Deck Edit (run here,
+/* Before a duel with Solomon or Debug: the player picks its deck from their Deck Recipes, or builds it in Deck Edit (run here,
  * so the Campaign step stays as it was). 1 when one was picked (the duel goes on), 2 when the player went back (to the
  * opponent select). */
 u16 CB_OpponentRecipes(void)
 {
     u16 r;
 
-    if (gDeckRecipes.solomonDeckEdit) {     /* Deck Edit on Solomon's deck, then the scene again */
+    if (gDeckRecipes.opponentDeckEdit) {     /* Deck Edit on the opponent's deck, then the scene again */
         if (CB_DeckEdit()) {
-            gDeckRecipes.solomonDeckEdit = 0;
+            gDeckRecipes.opponentDeckEdit = 0;
             RESET_SEQ_STATE();
         }
         return 0;
@@ -1387,7 +1405,7 @@ u16 CB_OpponentRecipes(void)
     r = RunScene(RECIPES_PICK_OPPONENT);
     if (r != 3)
         return r;
-    gDeckRecipes.solomonDeckEdit = 1;       /* no SaveGame after it: the collection is Solomon's (src/mod_decks.c) */
+    gDeckRecipes.opponentDeckEdit = 1;       /* no SaveGame after it: the collection is the opponent's (src/mod_decks.c) */
     RESET_SEQ_STATE();
     return 0;
 }

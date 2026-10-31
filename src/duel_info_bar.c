@@ -9,8 +9,8 @@
  * hand, the two-line choice shows an arrow, and callers may install their own callbacks. The answer is left
  * in gTextBox.result.
  *
- * Info bar: DuelScreen_DrawCursorInfo redraws the two text rows at the bottom of the screen for the card or
- * pile under the field cursor (the drawing helpers are in battle_scene.c).
+ * Info bar: DuelScreen_DrawCursorInfo, which redraws the two text rows at the bottom of the screen for the card or
+ * pile under the field cursor, moved to src/mod_info_bar.c (the drawing helpers are in battle_scene.c).
  *
  * Screen setup, called by DuelScreen_Init: the BG control registers, the scrolling field background on BG0
  * (DuelScreen_VBlank drifts it), the OBJ and BG graphics loads, and the life-point numbers and the
@@ -91,16 +91,6 @@ extern const u8 gLpLabelGfx[];              /* the 'LP' label, 2 tiles */
 extern const u8 gPhaseIndicatorGfx[];       /* phase letters D S M B M E: highlighted, then normal, 12 tiles */
 extern const u8 gTextBoxPal[];              /* BG palette 8, used by the text box frame and text */
 extern const u8 gTextBoxFrameGfx[];         /* the 3x3 text box frame, 9 tiles */
-/* Info bar labels (DuelScreen_DrawCursorInfo) */
-extern const u8 gStrMyFusionDeck[];         /* "My Fusion Deck:" */
-extern const u8 gStrOpponentFusionDeck[];   /* "Opponent Fusion Deck" (the ROM's "Fusion Feck" typo is corrected in data/rodata_08080A20.s) */
-extern const u8 gStrMyDeck[];               /* "My Deck:" */
-extern const u8 gStrOpponentDeck[];         /* "Opponent Deck" */
-extern const u8 gStrMyGraveyard[];          /* "My Graveyard:" */
-extern const u8 gStrOpponentGraveyard[];    /* "Opponent Graveyard:" */
-extern const u8 gStrMyRemovedCards[];       /* "My Removed Cards:" */
-extern const u8 gStrOpponentRemovedCards[]; /* "Opponent Removed Cards:" */
-
 /* VRAM and palette addresses of the duel graphics. */
 #define TILE_SIZE               0x20                            /* bytes per 4bpp 8x8 tile */
 #define TILES(n)                ((n) * TILE_SIZE)
@@ -185,7 +175,6 @@ enum TextBoxFrameTile {
 #define TEXTBOX_OBJ_ATTR2(tile) (OAM_ATTR2_PALETTE(4) | (tile))
 
 /* Info bar */
-#define INFO_LABEL_GLYPH_WIDTH  10      /* glyph width argument of DuelInfo_DrawLabelNumber */
 
 /* Life points and phase letters (BG2 map, screen block 3 of gMain.bgMapBuffer; cell = row * 32 + column). */
 #define BG2_MAP_BLOCK           3
@@ -209,139 +198,8 @@ enum TextBoxFrameTile {
 #define FIELD_BG_BLOCK          4       /* the texture is 4 x 4 tiles */
 #define BG_MAP_SIZE             0x20    /* a BG map is 32 x 32 entries */
 
-/*
- * Matching: the zones are addressed with explicit byte arithmetic, in the operand order below (player offset
- * first for DUEL_ZONE, zone offset first for SPELL_TRAP_ZONE). gDuelZones[player].zones[zone] and a base
- * of zone 5 or 10 through gDuelZones compile to other code; the ROM loads the alias symbols
- * gDuelSpellTrapZones (zone 5 of player 0) and gDuelFieldZone (zone 10) from their own literals.
- */
-#define DUEL_ZONE(player, zone) \
-    ((struct DuelZone *)((player) * sizeof(struct DuelPlayer) + (zone) * sizeof(struct DuelZone) + (u32)gDuelZones))
-#define SPELL_TRAP_ZONE(player, index) \
-    ((struct DuelZone *)(((index) * sizeof(struct DuelZone) + (player) * sizeof(struct DuelPlayer)) + (u32)&gDuelSpellTrapZones))
-#define FIELD_ZONE(player) \
-    ((struct DuelZone *)((player) * sizeof(struct DuelPlayer) + (u32)&gDuelFieldZone))
-
-/*
- * Redraws the info bar (the two text rows at the bottom of the screen) for what the field cursor is on:
- * (selPlayer, selArea, selIndex) in gDuelScreen, with selArea an enum DuelArea. A card is described only if it
- * is the human player's own, or the opponent's and face up (in the hand: IsHandRevealed returns 1); otherwise
- * the bar stays blank. The four piles print their label and card count ("My Deck: 35"); the opponent's deck
- * and fusion deck show the label alone, so their sizes stay hidden.
- */
-void DuelScreen_DrawCursorInfo(void)
-{
-    u16 cardId;
-    u32 player;                     /* selPlayer: 0 = human, 1 = opponent */
-    u32 area;                       /* selArea: enum DuelArea */
-    u32 index;                      /* selIndex: zone within the row, or the hand index */
-    u32 playerCopy;
-    u32 areaPlusIndex;
-    int isVisible;                  /* the card may be shown: own card, or the opponent's face-up card */
-
-    cardId = DuelCursor_GetCardId();
-    player = gDuelScreen.selPlayer;
-    area = gDuelScreen.selArea;
-    index = gDuelScreen.selIndex;
-    /* Matching: the ROM keeps copies of selPlayer and selArea + selIndex in callee-saved registers, computed
-     * before TextCellsClear; only the monster-row case uses them (the other cases recompute area + index). */
-    playerCopy = player;
-    areaPlusIndex = area + index;
-    TextCellsClear();
-    switch (area) {
-    case DUEL_AREA_MONSTER:
-        if (player != 0 && MOD_RELEASE)     /* changed: make (testing) shows the opponent's face-down cards */
-            isVisible = DUEL_ZONE(player & 1, index)->isFaceUp;
-        else
-            isVisible = 1;
-        if (cardId && isVisible)
-            DuelInfo_DrawMonsterZone(playerCopy, areaPlusIndex);
-        break;
-    case DUEL_AREA_SPELL_TRAP:
-        /* selIndex counts within the spell/trap row (zone 5 + selIndex) */
-        if (player != 0 && MOD_RELEASE)     /* changed: as above */
-            isVisible = SPELL_TRAP_ZONE(player & 1, index)->isFaceUp;
-        else
-            isVisible = 1;
-        if (cardId && isVisible)
-            DuelInfo_DrawSpellZone(cardId, 1, player, area + index);
-        break;
-    case DUEL_AREA_FIELD:
-        if (player != 0 && MOD_RELEASE)     /* changed: as above */
-            isVisible = FIELD_ZONE(player & 1)->isFaceUp;
-        else
-            isVisible = 1;
-        if (cardId && isVisible)
-            DuelInfo_DrawSpellZone(cardId, 1, player, area + index);
-        break;
-    case DUEL_AREA_HAND:
-        if (player != 0)
-            isVisible = (u16)IsHandRevealed(player);
-        else
-            isVisible = 1;
-        if (cardId && isVisible)
-            DuelInfo_DrawCard(cardId, 1);
-        break;
-    case DUEL_AREA_FUSION_DECK:
-        switch (player) {
-        case 0: {
-            const u8 *label = gStrMyFusionDeck;
-            u8 count = gDuelPlayers[player].fusionCount;
-            DuelInfo_DrawLabelNumber(INFO_LABEL_GLYPH_WIDTH, label, count, StrLen(label));
-            break;
-        }
-        case 1:
-            DuelInfo_DrawLabelNumber(INFO_LABEL_GLYPH_WIDTH, gStrOpponentFusionDeck, 0, 0);
-            break;
-        }
-        break;
-    case DUEL_AREA_DECK:
-        switch (player) {
-        case 0: {
-            const u8 *label = gStrMyDeck;
-            u8 count = gDuelPlayers[player].deckCount;
-            DuelInfo_DrawLabelNumber(INFO_LABEL_GLYPH_WIDTH, label, count, StrLen(label));
-            break;
-        }
-        case 1:
-            DuelInfo_DrawLabelNumber(INFO_LABEL_GLYPH_WIDTH, gStrOpponentDeck, 0, 0);
-            break;
-        }
-        break;
-    case DUEL_AREA_GRAVEYARD:
-        switch (player) {
-        case 0: {
-            const u8 *label = gStrMyGraveyard;
-            u8 count = gDuelPlayers[player].graveCount;
-            DuelInfo_DrawLabelNumber(INFO_LABEL_GLYPH_WIDTH, label, count, StrLen(label));
-            break;
-        }
-        case 1: {
-            const u8 *label = gStrOpponentGraveyard;
-            u8 count = gDuelPlayers[player].graveCount;
-            DuelInfo_DrawLabelNumber(INFO_LABEL_GLYPH_WIDTH, label, count, StrLen(label));
-            break;
-        }
-        }
-        break;
-    case DUEL_AREA_BANISHED:
-        switch (player) {
-        case 0: {
-            const u8 *label = gStrMyRemovedCards;
-            u8 count = gDuelPlayers[player].banishedCount;
-            DuelInfo_DrawLabelNumber(INFO_LABEL_GLYPH_WIDTH, label, count, StrLen(label));
-            break;
-        }
-        case 1: {
-            const u8 *label = gStrOpponentRemovedCards;
-            u8 count = gDuelPlayers[player].banishedCount;
-            DuelInfo_DrawLabelNumber(INFO_LABEL_GLYPH_WIDTH, label, count, StrLen(label));
-            break;
-        }
-        }
-        break;
-    }
-}
+/* DuelScreen_DrawCursorInfo (the info bar for what the field cursor is on) was here: it moved to src/mod_info_bar.c
+ * (@farcode), so the duel with Debug can show the opponent's face-down cards without growing this unit's code. */
 
 /*
  * Draw callback of the two-line choice menu (TEXTBOX_MENU_TWO_CHOICE): an 8x8 arrow sprite left of the line

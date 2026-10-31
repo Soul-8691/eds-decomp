@@ -103,12 +103,15 @@ next one.
   no longer scrolls either.
 - **Fixes.** Deck Edit no longer blots out the first letters of the row above the cursor after Card View (a
   bug in the original game).
-- **Solomon.** The opponent page after the formats starts with Solomon, open from the start: before the duel you
-  pick one of your own Deck Recipes for him to play. Beating him gives no DP, so he's for practice and testing decks.
-  - **Building his deck.** Press SELECT on the recipe list to build his deck instead. Deck Edit opens with a
-    temporary collection of 3 copies of every card and no banlist. Back on the list, A opens the recipe actions:
-    load a recipe into his deck to start from, or save his deck to a slot. SELECT goes back to Deck Edit, B starts
-    the duel with his deck, and START discards it. Your own cards, decks and banlist come back unchanged either way
+- **Solomon and Debug.** The opponent page after the formats has Solomon (top left) and Debug (top right), open from
+  the start: before the duel you pick one of your own Deck Recipes for them to play. Beating them gives no DP, so
+  they're for practice and testing decks. Debug's duels use debug mode's rules: its hand is shown face up, you can
+  read its face-down cards (info bar and Card View), and you can't deck out.
+  - **Building their deck.** Press SELECT on the recipe list to build their deck instead. Deck Edit opens with a
+    temporary collection of 3 copies of every card and no banlist (Debug: 8 copies of every card, and no copy
+    limit). Back on the list, A opens the recipe actions:
+    load a recipe into their deck to start from, or save their deck to a slot. SELECT goes back to Deck Edit, B
+    starts the duel with their deck, and START discards it. Your own cards, decks and banlist come back unchanged either way
     (they stay saved while you build, so a reset loses nothing).
 - **Best-of-3 matches.** Every Campaign duel against the CPU is a best-of-3 match, not only on match days.
   Between games you can side, swapping cards between your Main Deck and Side Deck. Your deck goes back to how it
@@ -209,8 +212,8 @@ next one.
   banlists skips the 40-card Main Deck check. Every format is unlocked, and the Record (Duel Score) screen
   shows every duelist on every page. The opponent's hand is shown face up during
   duels, and the cursor shows the info of all their cards (face-down ones too), with Card View. The deck
-  opponents' page has a fourth opponent, Test Duel, whose deck is `C:\ProjectIgnis\deck\test.ydk` as it is
-  when the ROM is built.
+  opponents' page has a third opponent, Test Duel (right), whose deck is `C:\ProjectIgnis\deck\test.ydk` as it
+  is when the ROM is built.
 
 ### Planned
 

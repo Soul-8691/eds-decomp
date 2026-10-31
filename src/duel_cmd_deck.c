@@ -292,12 +292,12 @@ void DuelCmd_ShuffleDeck(void)
     }
 }
 
-/* Added (make, not make release): the human player (player 0) cannot deck out, except in a Link Battle, where both
- * games must agree on the result: drawing from an empty deck just draws nothing. */
+/* Added (make, and in make release a duel with Debug): the human player (player 0) cannot deck out, except in a Link
+ * Battle, where both games must agree on the result: drawing from an empty deck just draws nothing. */
 static inline int CanDeckOut(int player)
 {
 #if MOD_RELEASE
-    return 1;
+    return player != 0 || !ModDebugDuel();      /* ModDebugDuel is never true in a Link Battle */
 #else
     return player != 0 || gDuelCtrl.isLinkDuel;
 #endif
