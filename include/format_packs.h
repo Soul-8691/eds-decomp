@@ -15,6 +15,7 @@ int ModFormatPackShopCost(u16 packId, u32 *costOut);
 u16 ModGetSelectedPackId(u16 packRowIndex);
 const struct PackInfo *ModPackInfoAtRow(u16 packRowIndex);
 void ModPackList_AddUnlockedPacks(void);
+int ModCountUnlockedFormatPacks(void);
 int ModPackList_AddFormatPackById(u16 packId);
 int ModFormatPackLoadCoverGfx(u16 slot, u16 packId);
 int ModGenerateFormatPackCards(u16 *cardNumbers, u16 packId);

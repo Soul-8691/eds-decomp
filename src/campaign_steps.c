@@ -28,6 +28,7 @@
 #include "duel_flow.h"          /* Duel_Setup, gDuelCtrl */
 #include "ai.h"                 /* LoadOpponentDeck */
 #include "booster.h"            /* CB_GetPack, GetRewardPack */
+#include "format_packs.h"       /* ModCountUnlockedFormatPacks */
 #include "card_detail.h"        /* CardDetail_Init, CardDetail_Run */
 #include "deck_edit.h"          /* SideDeckSwap_Run */
 
@@ -211,8 +212,9 @@ u16 Campaign_SetupDuel(void)
 
 /*
  * Record the duel's win, loss or draw against gMain.opponent. If that raised the campaign level, set
- * unlockNotices bit 0 (new opponents, text 350 on the next day); if it unlocked more of the Get Pack list,
- * set bit 1 (text 351, shown by Campaign_GiveRewards).
+ * unlockNotices bit 0 (new opponents, text 350 on the next day); if it unlocked more format booster packs
+ * (TCG sets when the next format opens at 20 wins; usage packs at 10 wins in that format), set bit 1 (text 351,
+ * shown by Campaign_GiveRewards before the pick-a-pack list).
  */
 void AwardDuelDP(u16 duelist);
 
@@ -220,13 +222,9 @@ void Campaign_RecordDuelResult(void)
 {
     /* Matching: compared as signed below, so GetCampaignLevel's u32 result is read as int. */
     int levelBefore = GetCampaignLevel();
-    u32 i;
-    int packsBefore, packsAfter;
+    int packsBefore = ModCountUnlockedFormatPacks();
+    int packsAfter;
 
-    for (i = 0, packsBefore = 0; i < ARRAY_COUNT(gPackDisplayOrder); i++) {
-        if (IsPackUnlockedU32(gPackDisplayOrder[i]))
-            packsBefore++;
-    }
     switch (gDuel.result) {
     case DUEL_RESULT_WIN:
         RecordDuelWin(gMain.opponent);
@@ -241,10 +239,7 @@ void Campaign_RecordDuelResult(void)
     }
     if ((int)GetCampaignLevel() > levelBefore)
         gSaveData.unlockNotices |= 1;
-    for (i = 0, packsAfter = 0; i < ARRAY_COUNT(gPackDisplayOrder); i++) {
-        if (IsPackUnlockedU32(gPackDisplayOrder[i]))
-            packsAfter++;
-    }
+    packsAfter = ModCountUnlockedFormatPacks();
     if (packsAfter > packsBefore)
         gSaveData.unlockNotices |= 2;
 }

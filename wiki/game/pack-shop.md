@@ -58,7 +58,9 @@ and the Campaign win's (magazines and event prizes pass a fixed pack and skip th
 (make builds only) gives one. Built from a clean tree with `make`, `make release`, `make demo` and
 `make release-demo` (2026-10-31), not tested in an emulator.
 
-> [!question] The "new packs" notice (text 351) before the list still counts the vanilla unlocks
-> (`IsPackUnlocked`), so it no longer matches what the list shows.
+**"New packs" notice (text 351).** After a campaign win, `Campaign_RecordDuelResult` compares
+`ModCountUnlockedFormatPacks()` before and after the duel; if more format rows are unlocked (TCG sets when a
+format opponent opens at 20 wins against the previous format; usage-weighted packs at 10 wins in that format),
+`unlockNotices` bit 1 is set and `Campaign_GiveRewards` shows dialogue 351 before the free pick-a-pack list.
 
 Related: [[booster-packs]], [[booster-get-pack-c]], [[main-menu]], [[deck-recipes]].

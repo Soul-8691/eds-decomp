@@ -259,6 +259,21 @@ int ModPackList_AddFormatPackById(u16 packId)
     return ModPackList_AppendFormatRow(fi);
 }
 
+/* How many format-pack rows are unlocked (TCG sets when their format opens; usage packs at FORMAT_PACK_USAGE_WINS). */
+int ModCountUnlockedFormatPacks(void)
+{
+    int fi, n = 0;
+
+#if !MOD_RELEASE
+    return FORMAT_PACK_COUNT;
+#endif
+    for (fi = 0; fi < FORMAT_PACK_COUNT; fi++) {
+        if (ModIsFormatPackUnlocked(fi))
+            n++;
+    }
+    return n;
+}
+
 /* The pick-a-pack list, in the Booster Packs shop and after a Campaign win alike (CB_PackShop, CB_RewardPack). */
 void ModPackList_AddUnlockedPacks(void)
 {
