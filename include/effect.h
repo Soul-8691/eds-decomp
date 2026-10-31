@@ -147,6 +147,8 @@ void ModTurnStartRefreshZoneCanActivate(struct DuelZone *zone, u16 id);
 void ModPlaceSpellZoneCanActivate(struct DuelZone *z, u16 id, int faceUp);
 u32 ModFaceUpSpellActivateMenuFlags(u32 flags, u16 id, int player, int zone);
 int ModCanActivateMonsterEffect(u16 id, int player, int zone);
+/* Flip trigger gate (summon_action, battle flip, …): zone-aware for added cards that share one effect row. */
+int ModCanActivateFlipEffect(int player, int zone, u16 cardId, u16 event);
 int ModMonsterMenuCanActivateEffect(u16 id, int player, int zone);
 /* Spirit Reaper (src/added_effects.c): TryAddEffectTarget reports each field target here. */
 void OnFieldCardTargeted(struct ChainEntry *link, int player, int zone);

@@ -167,6 +167,15 @@ void DuelCmd_TurnStart(void)
 #ifdef HAS_CARD_ABYSS_SOLDIER
                 case CARD_ABYSS_SOLDIER:                                 /* added card: once per turn */
 #endif
+#ifdef HAS_CARD_GOLEM_SENTRY
+                case CARD_GOLEM_SENTRY:                                  /* added card: face-down once per turn */
+#endif
+#ifdef HAS_CARD_GUARDIAN_SPHINX
+                case CARD_GUARDIAN_SPHINX:                               /* added card: face-down once per turn */
+#endif
+#ifdef HAS_CARD_STEALTH_BIRD
+                case CARD_STEALTH_BIRD:                                  /* added card: face-down once per turn */
+#endif
                 case CARD_1334:
                 case CARD_1513:
                     monster->effectUnused = 1;

@@ -359,7 +359,8 @@ int BattleStage_TriggerFlipEffect(int player)
             canActivate = 0;
         else
 #endif
-            canActivate = (u16)CanActivateEffectOfCard(opponent, gBattle.flipCardId, 0);
+            canActivate = (u16)ModCanActivateFlipEffect(opponent, gBattle.defSlot, gBattle.flipCardId,
+                                                      RESPONSE_BATTLE_FLIP_EFFECT);
 #ifdef HAS_CARD_DARK_RULER_HA_DES
         if (HaDesNegatesBattleFlipEffect())     /* added card */
             canActivate = 0;

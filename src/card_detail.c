@@ -633,6 +633,9 @@ u32 HasFlipEffect(u16 cardNo, int inBattleArg)
 #ifdef HAS_CARD_DES_KOALA
     case CARD_DES_KOALA:                    /* added card (src/added_effects.c) */
 #endif
+#ifdef HAS_CARD_STEALTH_BIRD
+    case CARD_STEALTH_BIRD:                 /* added card (src/added_effects.c) */
+#endif
 #ifdef HAS_CARD_TSUKUYOMI
     case CARD_TSUKUYOMI:            /* added card (src/added_effects.c) */
 #endif

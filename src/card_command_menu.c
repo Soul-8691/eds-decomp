@@ -541,6 +541,9 @@ int CanActivateMonsterEffect(u16 id, int player, int zone)
 #ifdef HAS_CARD_GUARDIAN_SPHINX
     case CARD_GUARDIAN_SPHINX:                              /* added card (src/added_effects.c) */
 #endif
+#ifdef HAS_CARD_STEALTH_BIRD
+    case CARD_STEALTH_BIRD:                                 /* added card (src/added_effects.c) */
+#endif
 #ifdef HAS_CARD_MAGICAL_SCIENTIST
     case CARD_MAGICAL_SCIENTIST:                            /* added card (src/added_effects.c) */
 #endif
@@ -655,7 +658,9 @@ struct ZoneFlagBytesPlayer {
  *              Spellbinding Circle or key 1244, or it is the Dragon that a Dragon Capture Jar holds:
  *              face up -> ATK_POS in defense / DEF_POS in attack; face down -> FLIP (needs CanNormalSummon(0))
  *              plus DEF_POS if in attack position; with key 1334 on a field only that card keeps these bits.
- *              Then ACTIVATE for a face-up monster when CanActivateMonsterEffect
+ *              Then ACTIVATE for a face-up monster when CanActivateMonsterEffect (including Stealth Bird /
+ *              Golem Sentry / Guardian Sphinx face-down once per turn while positionLocked or
+ *              positionChangeLocked blocks Def Pos / Atk Pos / Flip)
  *   Battle     ATTACK when CanMonsterAttack(player, zone, 1) and the zone's attackedMask bit is clear
  */
 u16 CardMenu_GetMonsterCommands(u16 id, int player, int zone)

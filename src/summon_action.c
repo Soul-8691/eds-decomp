@@ -226,8 +226,9 @@ u16 SummonStep_Flip(void)
         }
         /* A monster with a flip effect activates it, unless key 1530 is on either field. */
         if (HasFlipEffect(CARD_NUMBER(gSummonAction.cardId), 0)) {
-            if (CanActivateEffectOfCard(gSummonAction.player, DUEL_CARD_ID(&SummonZone(&gSummonAction)->card), 0) &&
-                !CountActiveCardsOnField(0, CARD_1530) && !CountActiveCardsOnField(1, CARD_1530)
+            if (ModCanActivateFlipEffect(gSummonAction.player, gSummonAction.zone,
+                                         DUEL_CARD_ID(&SummonZone(&gSummonAction)->card), RESPONSE_FLIP_SUMMONED)
+                && !CountActiveCardsOnField(0, CARD_1530) && !CountActiveCardsOnField(1, CARD_1530)
                 && !FlipEffectsLockedForTurn()) {
                 int player = gSummonAction.player;
                 u32 trigger = (u32)(player & 1) << 31;
@@ -507,7 +508,7 @@ u16 SummonAction_Update(void)
 #endif
 #if defined(HAS_CARD_DARK_MAGICIAN_OF_CHAOS) || defined(HAS_CARD_SACRED_CRANE) || defined(HAS_CARD_APPRENTICE_MAGICIAN) \
     || defined(HAS_CARD_GOLEM_SENTRY) || defined(HAS_CARD_SAND_MOTH) || defined(HAS_CARD_GUARDIAN_SPHINX) \
-    || defined(HAS_CARD_MARAUDING_CAPTAIN)
+    || defined(HAS_CARD_STEALTH_BIRD) || defined(HAS_CARD_MARAUDING_CAPTAIN)
                 /* added cards: their summon effects (src/added_effects.c) */
                 AddedCardsSummoned(action->player, action->zone, id, (int)SUMMON_FLAGS_KIND(flags), wasFaceUp);
 #endif

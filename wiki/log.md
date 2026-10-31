@@ -2233,3 +2233,27 @@ updated: 2026-09-29
 
 ## [2026-10-31] progress | Manticore of Darkness effect
 - src/added_effects.c: End Phase optional revival (GY send mark, Beast/Beast-Warrior/Winged Beast cost, Special Summon from GY); gAddedCardEffects row; ModCollectEffectTargets hand list. Hooks in duel_send_to_grave.c, duel_field_moves.c; battle_phase3.c EndPhase_ManticoreOfDarkness. include/effect.h. Removed from missing-fusion.txt (misfiled).
+
+## [2026-10-31] progress | Stealth Bird FLIP effect
+- src/added_effects.c: `EffectStealthBirdResolve`, `gAddedCardEffects` row; src/card_detail.c: `HasFlipEffect`. missing-main.txt, [[added-cards]], DECKS.md.
+
+## [2026-10-31] progress | Stealth Bird once-per-turn face-down
+- src/added_effects.c: `EffectStealthBirdPrepare` / `Check` / `ChainB`, shares `EffectBookOfMoonResolve`; card_command_menu.c: `CanActivateMonsterEffect`. [[added-cards]].
+
+## [2026-10-31] progress | Face-down self effects vs position lock
+- src/added_effects.c: `ZoneOfFaceDownSelfEffectCard`, Stealth Bird / Golem Sentry prepare+check (flip prepare without zone; ACTIVATE while position locked). src/duel_cmd_turn.c: `effectUnused` reset for those three. [[added-cards]].
+
+## [2026-10-31] progress | Face-down self effect zone targeting
+- src/added_effects.c: single-copy fallback, `FaceDownSelfEffectPosOk` / chainB zone fix (Stealth Bird, Golem Sentry, Guardian Sphinx); `FaceDownSelfEffectOnSummonedFaceUp` from `AddedCardsSummoned`. [[added-cards]].
+
+## [2026-10-31] progress | Stealth Bird FLIP gate
+- src/added_effects.c: `EffectStealthBirdPrepare` / `Check` allow `CanActivateEffectOfCard` flip tests (unset event) while keeping RESPONSE_NONE face-down rules. [[added-cards]].
+
+## [2026-10-31] progress | Stealth Bird face-down activation fix
+- src/added_effects.c: `FaceDownSelfEffectMenuPrepare` / `EntryHasKnownZone`; `ModCanActivateMonsterEffect` direct zone gate; FLIP resolve re-arms `effectUnused`; Golem/Sphinx use same menu prepare/check. [[added-cards]].
+
+## [2026-10-31] progress | Stealth Bird FLIP after face-down
+- src/added_effects.c: `EffectStealthBirdPrepare` / `Check` apply face-down rules only when the entry zone is known (menu); `CanActivateEffectOfCard` flip gate (event 0, no zone) no longer requires `effectUnused`. [[added-cards]].
+
+## [2026-10-31] progress | Stealth Bird FLIP with two on field
+- `ModCanActivateFlipEffect`: flip gates use `CanActivateEffectInZone` + flip event (correct zone); summon_action.c, duel_field_moves.c, battle_phase2.c. [[added-cards]].

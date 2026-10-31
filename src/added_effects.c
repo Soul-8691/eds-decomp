@@ -989,7 +989,7 @@ void OnMonsterTurnedFaceDown(int player, int zone)
 }
 
 #if defined(HAS_CARD_BOOK_OF_MOON) || defined(HAS_CARD_TSUKUYOMI) || defined(HAS_CARD_GOLEM_SENTRY) \
-    || defined(HAS_CARD_GUARDIAN_SPHINX)
+    || defined(HAS_CARD_GUARDIAN_SPHINX) || defined(HAS_CARD_STEALTH_BIRD)
 /* ---- Book of Moon / Tsukuyomi ------------------------------------------------------------------------------------
  * Book of Moon (Quick-Play Spell) and Tsukuyomi (FLIP) share the same effect: target 1 face-up monster on the
  * field; change it to face-down Defense Position. Targeting uses EffectTargetableFaceUpMonsterCheck / ChainB
@@ -1028,7 +1028,8 @@ int EffectBookOfMoonResolve(struct ChainEntry *link, struct ChainEntry *chainedT
     DuelCmd_Push(cmd, zone, 0, 0);
     return EFFECT_STEP_DONE;
 }
-#endif /* HAS_CARD_BOOK_OF_MOON || HAS_CARD_TSUKUYOMI || HAS_CARD_GOLEM_SENTRY || HAS_CARD_GUARDIAN_SPHINX */
+#endif /* HAS_CARD_BOOK_OF_MOON || HAS_CARD_TSUKUYOMI || HAS_CARD_GOLEM_SENTRY || HAS_CARD_GUARDIAN_SPHINX
+        || HAS_CARD_STEALTH_BIRD */
 
 #ifdef HAS_CARD_TSUKUYOMI
 #ifndef CARD_NUMBER
@@ -2120,11 +2121,42 @@ int CanActivateMonsterEffect(u16 id, int player, int zone); /* card_command_menu
 
 int ModCanActivateMonsterEffect(u16 id, int player, int zone)
 {
+#if defined(HAS_CARD_STEALTH_BIRD) || defined(HAS_CARD_GOLEM_SENTRY) || defined(HAS_CARD_GUARDIAN_SPHINX)
+    switch (((const u16 *)CARD_ID_TO_NUMBER_ADDR)[id & CARD_ID_MASK]) {
+#ifdef HAS_CARD_STEALTH_BIRD
+    case CARD_STEALTH_BIRD:
+#endif
+#ifdef HAS_CARD_GOLEM_SENTRY
+    case CARD_GOLEM_SENTRY:
+#endif
+#ifdef HAS_CARD_GUARDIAN_SPHINX
+    case CARD_GUARDIAN_SPHINX:
+#endif
+    {
+        struct DuelZone *z = ZoneOf(player, zone);
+
+        if (DUEL_CARD_ID(&z->card) != (id & CARD_ID_MASK))
+            return 0;
+        return z->isFaceUp && z->effectUnused;
+    }
+    default:
+        break;
+    }
+#endif
 #ifdef HAS_CARD_CHIRON_THE_MAGE
     if (CardNumberOfId(id) == CARD_CHIRON_THE_MAGE)
         return CanActivateEffectInZone(player, zone, 0);
 #endif
     return 0;
+}
+
+int ModCanActivateFlipEffect(int player, int zone, u16 cardId, u16 event)
+{
+#ifdef HAS_CARD_STEALTH_BIRD
+    if (((const u16 *)CARD_ID_TO_NUMBER_ADDR)[cardId & CARD_ID_MASK] == CARD_STEALTH_BIRD)
+        return CanActivateEffectInZone(player, zone, event);
+#endif
+    return CanActivateEffectOfCard(player, cardId, 0);
 }
 
 int ModMonsterMenuCanActivateEffect(u16 id, int player, int zone)
@@ -2686,7 +2718,7 @@ static void ApprenticeMagicianPlaceCounter(int player, u16 id)
 
 #if defined(HAS_CARD_DARK_MAGICIAN_OF_CHAOS) || defined(HAS_CARD_SACRED_CRANE) || defined(HAS_CARD_APPRENTICE_MAGICIAN) \
     || defined(HAS_CARD_GOLEM_SENTRY) || defined(HAS_CARD_SAND_MOTH) || defined(HAS_CARD_GUARDIAN_SPHINX) \
-    || defined(HAS_CARD_MARAUDING_CAPTAIN)
+    || defined(HAS_CARD_STEALTH_BIRD) || defined(HAS_CARD_MARAUDING_CAPTAIN)
 /* SummonAction_Update calls this for every summon once the monster is in (player, zone): `kind` is the
  * enum SummonActionKind, faceUp its position. */
 #ifdef HAS_CARD_SAND_MOTH
@@ -2704,6 +2736,10 @@ void AddedCardsSummoned(int player, int zone, u16 id, int kind, int faceUp)
 #endif
 #ifdef HAS_CARD_SAND_MOTH
     SandMothSummoned(player, zone, id);
+#endif
+#if defined(HAS_CARD_GOLEM_SENTRY) || defined(HAS_CARD_GUARDIAN_SPHINX) || defined(HAS_CARD_STEALTH_BIRD)
+    if (faceUp)
+        FaceDownSelfEffectOnSummonedFaceUp(player, zone, id);
 #endif
 #ifdef HAS_CARD_MARAUDING_CAPTAIN
     if (((const u16 *)CARD_ID_TO_NUMBER_ADDR)[id & CARD_ID_MASK] == CARD_MARAUDING_CAPTAIN && faceUp
@@ -3452,6 +3488,213 @@ int EffectDesKoalaResolve(struct ChainEntry *link, struct ChainEntry *chainedTo)
     return EFFECT_STEP_DONE;
 }
 #endif /* HAS_CARD_DES_KOALA */
+
+#if defined(HAS_CARD_STEALTH_BIRD) || defined(HAS_CARD_GOLEM_SENTRY) || defined(HAS_CARD_GUARDIAN_SPHINX)
+/* Once-per-turn "turn this card face-down Defense Position" (Stealth Bird, Golem Sentry, Guardian Sphinx): not a
+ * manual battle-position change, so it stays legal while the monster or player cannot change battle positions
+ * (positionLocked after an attack or a manual flip, positionChangeLocked, Final Attack Orders, ...). The menu
+ * still offers ACTIVATE (CardMenu_GetMonsterCommands); prepare/check locate the card by zone or field search when
+ * CanActivateEffectOfCard leaves the entry's zone unset (flip triggers). */
+
+static int CountFaceDownSelfEffectOnField(int player, u16 id)
+{
+    int zone, count = 0;
+
+    for (zone = ZONE_MONSTER_0; zone <= ZONE_MONSTER_4; zone++) {
+        if (DUEL_CARD_ID(&ZoneOf(player, zone)->card) == id)
+            count++;
+    }
+    return count;
+}
+
+static struct DuelZone *ZoneOfFaceDownSelfEffectCard(struct ChainEntry *card, int *outZone)
+{
+    u16 id = card->card & CARD_ID_MASK;
+    int player = card->player & 1;
+    int zone, soleZone = -1, count = 0;
+    struct DuelZone *z;
+
+    if (card->zone <= ZONE_MONSTER_4) {
+        z = ZoneOf(player, card->zone);
+        if (DUEL_CARD_ID(&z->card) == id) {
+            *outZone = card->zone;
+            return z;
+        }
+    }
+    for (zone = ZONE_MONSTER_0; zone <= ZONE_MONSTER_4; zone++) {
+        z = ZoneOf(player, zone);
+        if (DUEL_CARD_ID(&z->card) == id) {
+            count++;
+            soleZone = zone;
+        }
+    }
+    if (count == 1) {
+        *outZone = soleZone;
+        return ZoneOf(player, soleZone);
+    }
+    return NULL;
+}
+
+static int FaceDownSelfEffectPosOk(struct ChainEntry *card, u16 pos)
+{
+    int p = pos & 1;
+    int z = pos >> 8;
+
+    if (z > ZONE_MONSTER_4 || p != (int)(card->player & 1))
+        return 0;
+    if (DUEL_CARD_ID(&ZoneOf(p, z)->card) != (card->card & CARD_ID_MASK))
+        return 0;
+    if (card->zone <= ZONE_MONSTER_4)
+        return z == (int)card->zone;
+    return CountFaceDownSelfEffectOnField(p, card->card & CARD_ID_MASK) == 1;
+}
+
+static int FaceDownSelfEffectMarkUsedZone(struct ChainEntry *link, int *outZone)
+{
+    struct DuelZone *z = ZoneOfFaceDownSelfEffectCard(link, outZone);
+
+    if (z != NULL)
+        return 1;
+    if (link->zone <= ZONE_MONSTER_4) {
+        *outZone = link->zone;
+        return 1;
+    }
+    return 0;
+}
+
+/* 1 when the chain entry's zone field points at this card (menu ACTIVATE / CanActivateEffectInZone). */
+static int FaceDownSelfEffectEntryHasKnownZone(struct ChainEntry *card)
+{
+    int p = card->player & 1;
+    u16 id = card->card & CARD_ID_MASK;
+
+    if (card->zone > ZONE_MONSTER_4)
+        return 0;
+    return DUEL_CARD_ID(&ZoneOf(p, card->zone)->card) == id;
+}
+
+static int FaceDownSelfEffectMenuPrepare(struct ChainEntry *card)
+{
+    int p = card->player & 1;
+
+    if (FaceDownSelfEffectEntryHasKnownZone(card))
+        return ZoneOf(p, card->zone)->isFaceUp && ZoneOf(p, card->zone)->effectUnused;
+    {
+        struct DuelZone *z;
+        int zone;
+
+        z = ZoneOfFaceDownSelfEffectCard(card, &zone);
+        if (z != NULL && z->isFaceUp)
+            return z->effectUnused;
+    }
+    return 0;
+}
+
+void FaceDownSelfEffectOnSummonedFaceUp(int player, int zone, u16 id)
+{
+    u16 number = ((const u16 *)CARD_ID_TO_NUMBER_ADDR)[id & CARD_ID_MASK];
+
+    switch (number) {
+#ifdef HAS_CARD_GOLEM_SENTRY
+    case CARD_GOLEM_SENTRY:
+#endif
+#ifdef HAS_CARD_GUARDIAN_SPHINX
+    case CARD_GUARDIAN_SPHINX:
+#endif
+#ifdef HAS_CARD_STEALTH_BIRD
+    case CARD_STEALTH_BIRD:
+#endif
+        if (DUEL_CARD_ID(&ZoneOf(player, zone)->card) == (id & CARD_ID_MASK)
+            && ZoneOf(player, zone)->isFaceUp)
+            ZoneOf(player, zone)->effectUnused = 1;
+        break;
+    default:
+        break;
+    }
+}
+#endif
+
+#ifdef HAS_CARD_STEALTH_BIRD
+/* ---- Stealth Bird (YGOPRODeck id 58451858) -------------------------------------------------------------------------
+ * "FLIP: Inflict 1000 damage to your opponent. You can change this card to face-down Defense Position once per turn."
+ *   flip events   HasFlipEffect (card_detail.c): 1000 to the opponent (LoseLifePoints)
+ *   RESPONSE_NONE the card menu's ACTIVATE in the Main Phase (CanActivateMonsterEffect), once per turn
+ *                 (effectUnused): this card is turned face-down Defense Position (EffectBookOfMoonResolve) */
+
+#define STEALTH_BIRD_DAMAGE 1000
+
+static inline int EffectStealthBirdIsFlipEvent(struct ChainEntry *link)
+{
+    switch (link->event) {
+    case RESPONSE_FLIP_SUMMONED:
+    case RESPONSE_BATTLE_FLIP_EFFECT:
+    case RESPONSE_FLIPPED:
+        return 1;
+    default:
+        return 0;
+    }
+}
+
+int EffectStealthBirdPrepare(struct ChainEntry *card, struct ChainEntry *chainLink, u16 fromHand)
+{
+    if (fromHand)
+        return 0;
+    if (EffectStealthBirdIsFlipEvent(card))
+        return 1;
+    /* Menu ACTIVATE (CanActivateEffectInZone) sets zone + RESPONSE_NONE. CanActivateEffectOfCard's flip gate
+     * also leaves event at 0 with no zone — must not require effectUnused or face-up (blocked after face-down). */
+    if (card->event == RESPONSE_NONE && FaceDownSelfEffectEntryHasKnownZone(card))
+        return FaceDownSelfEffectMenuPrepare(card);
+    if (card->event == RESPONSE_NONE)
+        return 1;
+    return 1;
+}
+
+u16 EffectStealthBirdCheck(struct ChainEntry *card, u16 pos)
+{
+    int p;
+    int z;
+
+    if (EffectStealthBirdIsFlipEvent(card))
+        return 1;
+    if (card->event == RESPONSE_NONE && FaceDownSelfEffectEntryHasKnownZone(card)) {
+        p = card->player & 1;
+        z = card->zone;
+        return pos == (u16)(p | (z << 8));
+    }
+    if (card->event == RESPONSE_NONE)
+        return 1;
+    return 1;
+}
+
+int EffectStealthBirdChainB(struct ChainEntry *link, struct ChainEntry *prevLink)
+{
+    u16 cmd;
+    int zone;
+
+    if (EffectStealthBirdIsFlipEvent(link))
+        return 1;
+    if (!FaceDownSelfEffectMarkUsedZone(link, &zone))
+        return 1;
+    link->numTargets = 1;
+    link->targets[0] = DUEL_LOC(link->player & 1, zone);
+    cmd = link->player ? DUEL_CMD_PLAYER | DUEL_CMD_SET_EFFECT_UNUSED : DUEL_CMD_SET_EFFECT_UNUSED;
+    DuelCmd_Push(cmd, zone, 0, 0);
+    return 1;
+}
+
+int EffectStealthBirdResolve(struct ChainEntry *link, struct ChainEntry *chainedTo)
+{
+    if (EffectStealthBirdIsFlipEvent(link)) {
+        if (!link->negated)
+            LoseLifePoints(1 - (link->player & 1), STEALTH_BIRD_DAMAGE);
+        /* FLIP does not spend the once-per-turn face-down ignition; re-arm in case the chain cleared effectUnused. */
+        FaceDownSelfEffectOnSummonedFaceUp(link->player & 1, link->zone, link->card);
+        return EFFECT_STEP_DONE;
+    }
+    return EffectBookOfMoonResolve(link, chainedTo);
+}
+#endif /* HAS_CARD_STEALTH_BIRD */
 
 #ifdef HAS_CARD_ROULETTE_BARREL
 /* ---- Roulette Barrel (YGOPRODeck id 46303688) ---------------------------------------------------------------------
@@ -5137,28 +5380,36 @@ static inline int IsGuardianSphinx(struct ChainEntry *link)
 
 int EffectGolemSentryPrepare(struct ChainEntry *card, struct ChainEntry *chainLink, u16 fromHand)
 {
-    struct DuelZone *z;
-
     if (fromHand)
-        return 0;
-    z = ZoneOf(card->player, card->zone);
-    if (!z->isFaceUp || DUEL_CARD_ID(&z->card) != (card->card & CARD_ID_MASK))
         return 0;
     if (card->event == RESPONSE_FLIP_SUMMONED)
         return IsGolemSentryFlipTrigger(card);
-    return card->event == RESPONSE_NONE && z->effectUnused;
+    if (card->event != RESPONSE_NONE)
+        return 0;
+    return FaceDownSelfEffectMenuPrepare(card);
 }
 
 u16 EffectGolemSentryCheck(struct ChainEntry *card, u16 pos)
 {
+    int p;
+    int z;
+
     if (card->event == RESPONSE_FLIP_SUMMONED)
         return IsGuardianSphinx(card) || EffectOpponentMonsterCheck(card, pos);
-    return pos == DUEL_LOC(card->player, card->zone);
+    if (card->event != RESPONSE_NONE)
+        return 0;
+    if (FaceDownSelfEffectEntryHasKnownZone(card)) {
+        p = card->player & 1;
+        z = card->zone;
+        return pos == (u16)(p | (z << 8));
+    }
+    return FaceDownSelfEffectPosOk(card, pos);
 }
 
 int EffectGolemSentryChainB(struct ChainEntry *link, struct ChainEntry *prevLink)
 {
     u16 cmd;
+    int zone;
 
     if (link->event == RESPONSE_FLIP_SUMMONED) {
         if (IsGuardianSphinx(link)) {
@@ -5167,11 +5418,12 @@ int EffectGolemSentryChainB(struct ChainEntry *link, struct ChainEntry *prevLink
         }
         return EffectOpponentMonsterChainB(link);
     }
-    /* the face-down change: itself, and the effect is used for this turn */
+    if (!FaceDownSelfEffectMarkUsedZone(link, &zone))
+        return 1;
     link->numTargets = 1;
-    link->targets[0] = DUEL_LOC(link->player, link->zone);
+    link->targets[0] = DUEL_LOC(link->player & 1, zone);
     cmd = link->player ? DUEL_CMD_PLAYER | DUEL_CMD_SET_EFFECT_UNUSED : DUEL_CMD_SET_EFFECT_UNUSED;
-    DuelCmd_Push(cmd, link->zone, 0, 0);
+    DuelCmd_Push(cmd, zone, 0, 0);
     return 1;
 }
 
@@ -10347,6 +10599,16 @@ const struct CardEffect gAddedCardEffects[] = {
         NULL,
         NULL,
         NULL,
+    },
+#endif
+#ifdef HAS_CARD_STEALTH_BIRD
+    {
+        CARD_STEALTH_BIRD, 0,
+        EffectStealthBirdResolve,
+        EffectStealthBirdCheck,
+        EffectStealthBirdPrepare,
+        NULL,
+        EffectStealthBirdChainB,
     },
 #endif
 #ifdef HAS_CARD_ROULETTE_BARREL

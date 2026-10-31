@@ -396,7 +396,7 @@ void FlipFieldCard(int player, int zone, u16 triggerFlip)
         if (!z->isFaceUp) {
             DuelCmd_Push(PLAYER_CMD(player, DUEL_CMD_SET_ZONE_STATUS_FLAGS), zone, ZONE_STATUS_NORMAL_SUMMONED, 0);
             if (triggerFlip != 0 && HasFlipEffect(CARD_NUMBER(id), 0) != 0
-                && CanActivateEffectOfCard(player, id, 0) != 0
+                && ModCanActivateFlipEffect(player, zone, id, RESPONSE_FLIPPED) != 0
                 && CountActiveCardsOnField(0, CARD_1530) == 0 && CountActiveCardsOnField(1, CARD_1530) == 0
                 && !FlipEffectsLockedForTurn()) {
                 /* The OR order of the trigger word matches only when built through two locals. */

@@ -503,8 +503,10 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
   - **Face down** (`RESPONSE_NONE`): the card menu's ACTIVATE in the Main Phase (`CanActivateMonsterEffect`), once
     per turn through `effectUnused`, which chainB clears and `DuelCmd_TurnStart` sets again. The target is the card
     itself; Book of Moon's `EffectBookOfMoonResolve` turns it to face-down Defense Position (its Equip Cards are
-    destroyed, its counters removed). The CPU uses it while the human controls a monster (`AiWantsMonsterEffect`),
-    so its next Flip Summon has a target.
+    destroyed, its counters removed). This is not a manual battle-position change: ACTIVATE stays available while
+    `positionLocked` / `positionChangeLocked` hide Def Pos / Atk Pos / Flip (TCG: after attacking or after already
+    changing position). The CPU uses it while the human controls a monster (`AiWantsMonsterEffect`), so its next Flip
+    Summon has a target.
 - Checked in the source and the build; not tested in an emulator.
 
 ### The CPU chains summon traps to summon triggers (2026-10-28)
@@ -2247,6 +2249,15 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
   Inflict 400 damage to your opponent for each card in their hand." `EffectDesKoalaResolve` (`LoseLifePoints` on the
   opponent for 400 × their hand size). Listed in `HasFlipEffect` (`card_detail.c`); resolve-only `gAddedCardEffects`
   row. Flip Summon and battle flips use the normal flip-effect chain.
+- Checked in the source and the build; not tested in an emulator.
+
+### Stealth Bird (2026-10-31)
+- Effect text from [YGOPRODeck](https://db.ygoprodeck.com/api/v7/cardinfo.php?name=Stealth%20Bird) (id 58451858):
+  "FLIP: Inflict 1000 damage to your opponent. You can change this card to face-down Defense Position once per turn."
+  Flip damage: `EffectStealthBirdResolve` on flip events (`HasFlipEffect`, `card_detail.c`). Once per turn face-down:
+  `EffectStealthBirdPrepare` / `ChainB` / `EffectBookOfMoonResolve` on `RESPONSE_NONE` (`CanActivateMonsterEffect`,
+  `effectUnused`; `DuelCmd_TurnStart` resets `effectUnused`). Same face-down rules as Golem Sentry / Guardian Sphinx
+  (ACTIVATE while manual position changes are locked). Full `gAddedCardEffects` row.
 - Checked in the source and the build; not tested in an emulator.
 
 ### Gravity Bind (2026-10-30)
