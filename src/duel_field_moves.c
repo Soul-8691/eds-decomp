@@ -637,6 +637,11 @@ void DiscardHandCard(int player, int handIdx, u16 byOpponentEffect, u16 compactH
         QueueNightAssailantTrigger(player, id);
         break;
 #endif
+#ifdef HAS_CARD_MANTICORE_OF_DARKNESS
+    case CARD_MANTICORE_OF_DARKNESS:
+        ManticoreSentToGraveyard(player, CARD_MANTICORE_OF_DARKNESS);
+        break;
+#endif
     }
     /* Matching: the card number stays in one local, used for the count and the table index. */
     thorns = CountActiveCardsOnField(1 - player, cardNo = CARD_MAGIC_THORN);

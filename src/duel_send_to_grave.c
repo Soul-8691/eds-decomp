@@ -149,6 +149,9 @@ void UpdateMonsterControl(int player, int zone, u16 removedLink)
  */
 void SandMothDestroyed(int player, u16 id);     /* mod: src/added_effects.c */
 void OjamaTokenDestroyed(int player);           /* mod: src/added_effects.c */
+#ifdef HAS_CARD_MANTICORE_OF_DARKNESS
+void ManticoreSentToGraveyard(int player, u16 number); /* mod: src/added_effects.c */
+#endif
 void BlastWithChainEquipDestroyed(int player, int zone);
 
 void SendFieldCardToGrave(int player, int zone, u16 destroyed, u16 runTriggers)
@@ -201,7 +204,12 @@ void SendFieldCardToGrave(int player, int zone, u16 destroyed, u16 runTriggers)
             DestroyLinkedCards(player, zone, 1);
         return;
     }
+    number = CARD_NUMBER(id);
     DuelCmd_Push(PLAYER_CMD(player, DUEL_CMD_SEND_TO_GRAVEYARD), zone, destroyed, 0);
+#ifdef HAS_CARD_MANTICORE_OF_DARKNESS
+    if (number == CARD_MANTICORE_OF_DARKNESS)
+        ManticoreSentToGraveyard(player, number);
+#endif
 #ifdef HAS_CARD_SAND_MOTH
     /* added: a destroyed face-down Defense Position Sand Moth comes back (src/added_effects.c) */
     if (destroyed && zone <= ZONE_MONSTER_4 && !z->isFaceUp && z->isDefense && CARD_NUMBER(id) == CARD_SAND_MOTH)
@@ -558,6 +566,10 @@ int TributeMonster(int player, int zone)
             return; /* Matching: no value (r0 is whatever DestroyLinkedCards left) */
         }
         DuelCmd_Push(PLAYER_CMD(player, DUEL_CMD_TRIBUTE_MONSTER), zone, 0, 0);
+#ifdef HAS_CARD_MANTICORE_OF_DARKNESS
+        if (CARD_NUMBER(id) == CARD_MANTICORE_OF_DARKNESS)
+            ManticoreSentToGraveyard(player, CARD_MANTICORE_OF_DARKNESS);
+#endif
         if (CARD_TYPE(id) <= CARD_TYPE_REPTILE)
             gDuelPlayers[player & 1].monsterSentToGraveThisTurn = 1;
         LoseLpOnSendToGraveyard(player, 1);
@@ -623,6 +635,10 @@ int SendFusionMaterialToGrave(int player, int zone)
             return; /* Matching: no value, as in TributeMonster */
         }
         DuelCmd_Push(PLAYER_CMD(player, DUEL_CMD_FUSION_MATERIAL_TO_GRAVE), zone, 0, 0);
+#ifdef HAS_CARD_MANTICORE_OF_DARKNESS
+        if (CARD_NUMBER(id) == CARD_MANTICORE_OF_DARKNESS)
+            ManticoreSentToGraveyard(player, CARD_MANTICORE_OF_DARKNESS);
+#endif
         if (CARD_TYPE(id) <= CARD_TYPE_REPTILE)
             gDuelPlayers[player & 1].monsterSentToGraveThisTurn = 1;
         LoseLpOnSendToGraveyard(player, 1);

@@ -87,6 +87,7 @@ struct ModDuelState {
     u8 exarionPierce;           /* ... 1 if this attack inflicts piercing from its effect */
     u8 exarionPenaltyStacks[10]; /* ... per zone (player * 5 + zone): -400 ATK per stack until that player's turn ends */
     u8 wmcStandbyTicked;        /* Wave-Motion Cannon: 1 after this Standby Phase's counter tick (ModStandbyStep) */
+    u8 manticoreGyPending[2];   /* Manticore of Darkness: copies sent to the GY this turn (End Phase triggers) */
 };
 extern struct ModDuelState gModDuel;
 /* gModDuel (0x0202FF04, symbols.ld) must end before gScratchBuffer (0x02030000). */
@@ -1268,6 +1269,8 @@ void ModDuelInit(void)
     gModDuel.exarionPierce = 0;
     MemClear16(gModDuel.exarionPenaltyStacks, sizeof(gModDuel.exarionPenaltyStacks));
     gModDuel.wmcStandbyTicked = 0;
+    gModDuel.manticoreGyPending[0] = 0;
+    gModDuel.manticoreGyPending[1] = 0;
 #ifdef HAS_CARD_INJECTION_FAIRY_LILY
     InjectionFairyLilyResetBattle();
 #endif
@@ -1753,6 +1756,228 @@ void EndPhase_DarkMagicianOfChaos(int turnPlayer)
     gModDuel.chaosSummoned = 0;
 }
 #endif /* HAS_CARD_DARK_MAGICIAN_OF_CHAOS */
+
+#ifdef HAS_CARD_MANTICORE_OF_DARKNESS
+/* ---- Manticore of Darkness -----------------------------------------------------------------------------------------
+ * "During the End Phase of the turn this card was sent to the Graveyard: You can send to the Graveyard 1 Beast,
+ *  Beast-Warrior, or Winged Beast-Type monster from your hand or your side of the field; Special Summon this card
+ *  from your Graveyard."
+ *   SendFieldCardToGrave / TributeMonster / DiscardHandCard   ManticoreSentToGraveyard
+ *   DuelPhase_End (battle_phase3.c)                           EndPhase_ManticoreOfDarkness
+ *   Hand cost list                                            CollectEffectTargets case (arg 0) */
+
+static const u8 sStrManticorePrompt[] = "Special Summon Manticore of Darkness from the Graveyard?";
+static const u8 sStrManticoreCostField[] = "Select a Beast, Beast-Warrior, or Winged Beast to send to the GY.";
+
+int CollectEffectTargetsInt(int player, int cardNumber, int param) asm("CollectEffectTargets");
+
+int ManticoreValidCostType(u16 id)
+{
+    u8 type;
+
+    if (id == 0)
+        return 0;
+    type = (u8)CARD_STATS_TYPE(gCardStats[id & CARD_ID_MASK]);
+    return type == CARD_TYPE_BEAST || type == CARD_TYPE_BEAST_WARRIOR || type == CARD_TYPE_WINGED_BEAST;
+}
+
+void ManticoreSentToGraveyard(int player, u16 number)
+{
+    if (number != CARD_MANTICORE_OF_DARKNESS)
+        return;
+    if (gModDuel.manticoreGyPending[player & 1] < 3)
+        gModDuel.manticoreGyPending[player & 1]++;
+}
+
+static int ManticoreHasCost(int player)
+{
+    struct DuelPlayer *p = &gDuelPlayers[player & 1];
+    int i, zone;
+
+    for (zone = ZONE_MONSTER_0; zone <= ZONE_MONSTER_4; zone++) {
+        u16 id = DUEL_CARD_ID(&ZoneOf(player, zone)->card);
+
+        if (ManticoreValidCostType(id))
+            return 1;
+    }
+    for (i = 0; i < p->handCount; i++) {
+        u16 id = DUEL_CARD_ID(&p->hand[i]);
+
+        if (ManticoreValidCostType(id))
+            return 1;
+    }
+    return 0;
+}
+
+static int ManticorePickFieldCost(int player)
+{
+    int zone, best = -1;
+    u32 bestAtk = 0;
+
+    for (zone = ZONE_MONSTER_0; zone <= ZONE_MONSTER_4; zone++) {
+        u16 id = DUEL_CARD_ID(&ZoneOf(player, zone)->card);
+
+        if (ManticoreValidCostType(id)) {
+            u32 atk = GetZoneCardAtk(player, zone);
+
+            if (best < 0 || atk < bestAtk) {
+                best = zone;
+                bestAtk = atk;
+            }
+        }
+    }
+    return best;
+}
+
+static int ManticorePickHandCost(int player, struct DuelCard *out)
+{
+    struct DuelPlayer *p = &gDuelPlayers[player & 1];
+    int i, best = -1;
+    u32 bestAtk = 0;
+
+    for (i = 0; i < p->handCount; i++) {
+        u16 id = DUEL_CARD_ID(&p->hand[i]);
+
+        if (ManticoreValidCostType(id)) {
+            u32 atk = CARD_STATS_ATK(gCardStats[id & CARD_ID_MASK]) * CARD_STATS_POINTS_SCALE;
+
+            if (best < 0 || atk < bestAtk) {
+                best = i;
+                bestAtk = atk;
+            }
+        }
+    }
+    if (best >= 0)
+        CopyDuelCard((u32 *)out, (u32 *)&p->hand[best]);
+    return best;
+}
+
+static int ManticoreFieldCostCheck(struct ChainEntry *card, u16 pos)
+{
+    int player = pos & 1;
+    int zone = pos >> 8;
+
+    if (player != card->player || zone > ZONE_MONSTER_4)
+        return 0;
+    return ManticoreValidCostType(DUEL_CARD_ID(&ZoneOf(player, zone)->card));
+}
+
+static void ManticorePayFieldCost(int player, int zone)
+{
+    SendFieldCardToGrave(player, zone, 0, 1);
+}
+
+static void ManticorePayHandCost(int player, int handIdx)
+{
+    DiscardHandCard(player, handIdx, 0, 1);
+}
+
+void EndPhase_ManticoreOfDarkness(int turnPlayer)
+{
+    int pass, player, n;
+
+    for (pass = 0; pass <= 1; pass++) {
+        player = pass ? 1 - turnPlayer : turnPlayer;
+        n = gModDuel.manticoreGyPending[player & 1];
+        while (n > 0 && CountGraveyardCardsByNumber(player, CARD_MANTICORE_OF_DARKNESS) > 0
+               && ManticoreHasCost(player) && CountFreeMonsterZones(player) > 0 && CanSpecialSummon(player)) {
+            Chain_AddPending(TRIGGER_PLAYER(player & 1) | TRIGGER_KIND(CHAIN_KIND_OFF_FIELD)
+                                 | TRIGGER_EVENT(RESPONSE_NONE) | gCardNumberToId[CARD_MANTICORE_OF_DARKNESS],
+                             0);
+            n--;
+        }
+        gModDuel.manticoreGyPending[player & 1] = 0;
+    }
+}
+
+static int EffectManticorePrepare(struct ChainEntry *card, struct ChainEntry *chainLink, u16 fromHand)
+{
+    return CountGraveyardCardsByNumber(card->player, CARD_MANTICORE_OF_DARKNESS) > 0 && ManticoreHasCost(card->player)
+           && CountFreeMonsterZones(card->player) > 0 && CanSpecialSummon(card->player);
+}
+
+static int ManticoreFinishSpecialSummon(struct ChainEntry *link)
+{
+    if (!RemoveGraveyardCardByNumber(link->player, CARD_MANTICORE_OF_DARKNESS, (u32 *)&gChain.effectCard))
+        return 0;
+    ShowCardEffect(link->player, link->card & CARD_ID_MASK);
+    QueueSpecialSummonChoosePosition(link->player, &gChain.effectCard, 1, ZONE_STATUS_FROM_GRAVEYARD);
+    return 1;
+}
+
+int EffectManticoreResolve(struct ChainEntry *link, struct ChainEntry *chainedTo)
+{
+    int zone, handIdx;
+    u16 pickMask;
+
+    if (link->negated)
+        return EFFECT_STEP_DONE;
+    switch (gChain.effectStep) {
+    case EFFECT_STEP_START:
+        if (!EffectManticorePrepare(link, chainedTo, 0))
+            return EFFECT_STEP_DONE;
+        if (link->player) {
+            struct DuelCard costCard;
+
+            zone = ManticorePickFieldCost(link->player);
+            if (zone >= 0)
+                ManticorePayFieldCost(link->player, zone);
+            else if ((handIdx = ManticorePickHandCost(link->player, &costCard)) >= 0)
+                ManticorePayHandCost(link->player, handIdx);
+            else
+                return EFFECT_STEP_DONE;
+            if (!ManticoreFinishSpecialSummon(link))
+                return EFFECT_STEP_DONE;
+            return EFFECT_STEP_DONE;
+        }
+        TextBoxOpen(TEXTBOX_POS(5, 2), TEXTBOX_SIZE(20, 9), TEXTBOX_FLAGS_DEFAULT, sStrManticorePrompt);
+        TextBoxSetMenu(TEXTBOX_MENU_YES_NO, NULL, NULL);
+        return EFFECT_STEP_2;
+    case EFFECT_STEP_2:
+        if (!gTextBox.result)
+            return EFFECT_STEP_DONE;
+        if (ManticorePickFieldCost(link->player) >= 0) {
+            TextBoxOpen(TEXTBOX_POS(6, 2), TEXTBOX_SIZE(18, 7), TEXTBOX_FLAGS_DEFAULT, sStrManticoreCostField);
+            return EFFECT_STEP_3;
+        }
+        if (CollectEffectTargetsInt(link->player, CARD_MANTICORE_OF_DARKNESS, 0) == 0)
+            return EFFECT_STEP_DONE;
+        CardListView_Open(link->player, CARDLIST_AREA_EFFECT_TARGETS, CARD_MANTICORE_OF_DARKNESS, 0);
+        return EFFECT_STEP_4;
+    case EFFECT_STEP_3:
+        pickMask = link->player ? PICK_PLAYER1(PICK_ANY_MONSTER) : PICK_ANY_MONSTER;
+        if (gMain.newKeys & B_BUTTON)
+            return EFFECT_STEP_DONE;
+        if (DuelCursor_PickTarget(pickMask) == 0)
+            return EFFECT_STEP_3;
+        zone = gDuelScreen.selArea + gDuelScreen.selIndex;
+        if ((int)gDuelScreen.selPlayer != link->player || !ManticoreFieldCostCheck(link, DUEL_LOC(link->player, zone)))
+            return EFFECT_STEP_3;
+        ManticorePayFieldCost(link->player, zone);
+        if (!ManticoreFinishSpecialSummon(link))
+            return EFFECT_STEP_DONE;
+        return EFFECT_STEP_DONE;
+    case EFFECT_STEP_4:
+        {
+            u16 *picked = (u16 *)&gCardListView.cards[gCardListView.cursorRow + gCardListView.top];
+            struct DuelPlayer *p = &gDuelPlayers[link->player & 1];
+
+            for (handIdx = 0; handIdx < p->handCount; handIdx++) {
+                if (((u16 *)&p->hand[handIdx])[0] == picked[0] && ((u16 *)&p->hand[handIdx])[1] == picked[1])
+                    break;
+            }
+            if (handIdx >= p->handCount || !ManticoreValidCostType(DUEL_CARD_ID(&p->hand[handIdx])))
+                return EFFECT_STEP_DONE;
+            ManticorePayHandCost(link->player, handIdx);
+        }
+        if (!ManticoreFinishSpecialSummon(link))
+            return EFFECT_STEP_DONE;
+        return EFFECT_STEP_DONE;
+    default:
+        return EFFECT_STEP_DONE;
+    }
+}
+#endif /* HAS_CARD_MANTICORE_OF_DARKNESS */
 
 #ifdef HAS_CARD_ABYSS_SOLDIER
 /* ---- Abyss Soldier -------------------------------------------------------------------------------------------------
@@ -6493,6 +6718,14 @@ static int IsTypeId(u16 id, int type)
     return (int)CARD_STATS_TYPE(gCardStats[id & CARD_ID_MASK]) == type;
 }
 
+#ifdef HAS_CARD_MANTICORE_OF_DARKNESS
+static int IsManticoreCostTypeId(u16 id, int param)
+{
+    (void)param;
+    return ManticoreValidCostType(id);
+}
+#endif
+
 static int IsWeakDragonId(u16 id, int param)
 {
     u32 stats = gCardStats[id & CARD_ID_MASK];
@@ -6609,6 +6842,12 @@ void ModCollectEffectTargets(int player, u16 cardNumber, int param)
 #ifdef HAS_CARD_MARAUDING_CAPTAIN
     case CARD_MARAUDING_CAPTAIN:            /* the hand's Level 4 or lower monsters (not Fusion or Ritual ones) */
         ModAddPileTargets(p->hand, p->handCount, CARDLIST_SRC_HAND, IsLowLevelMainDeckMonsterId, 0);
+        break;
+#endif
+#ifdef HAS_CARD_MANTICORE_OF_DARKNESS
+    case CARD_MANTICORE_OF_DARKNESS:        /* param 0: hand Beasts, Beast-Warriors and Winged Beasts (cost) */
+        if (param == 0)
+            ModAddPileTargets(p->hand, p->handCount, CARDLIST_SRC_HAND, IsManticoreCostTypeId, 0);
         break;
 #endif
 #ifdef HAS_CARD_MAGIC_DRAIN
@@ -10421,6 +10660,16 @@ const struct CardEffect gAddedCardEffects[] = {
         EffectMaraudingCaptainResolve,
         NULL,
         EffectMaraudingCaptainPrepare,
+        NULL,
+        NULL,
+    },
+#endif
+#ifdef HAS_CARD_MANTICORE_OF_DARKNESS
+    {
+        CARD_MANTICORE_OF_DARKNESS, 0,
+        EffectManticoreResolve,
+        NULL,
+        EffectManticorePrepare,
         NULL,
         NULL,
     },

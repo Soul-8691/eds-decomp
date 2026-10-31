@@ -760,6 +760,9 @@ int DuelPhase_End(void)
 #ifdef HAS_CARD_DARK_MAGICIAN_OF_CHAOS
             EndPhase_DarkMagicianOfChaos(player);       /* added card (src/added_effects.c) */
 #endif
+#ifdef HAS_CARD_MANTICORE_OF_DARKNESS
+            EndPhase_ManticoreOfDarkness(player);       /* added card (src/added_effects.c) */
+#endif
 #ifdef HAS_CARD_RETURN_FROM_THE_DIFFERENT_DIMENSION
             EndPhase_ReturnFromTheDifferentDimension(); /* added card (src/added_effects.c) */
 #endif

@@ -2224,3 +2224,6 @@ updated: 2026-09-29
 
 ## [2026-10-31] progress | Usage packs: stats-only card pools
 - tools/format_packs.py: `usage_card_numbers()`; usage packs no longer union `card_pools/*.txt` or default-weight pool-only cards. Regenerated `build/include/format_pack_data.h`. [[pack-shop]].
+
+## [2026-10-31] progress | Manticore of Darkness effect
+- src/added_effects.c: End Phase optional revival (GY send mark, Beast/Beast-Warrior/Winged Beast cost, Special Summon from GY); gAddedCardEffects row; ModCollectEffectTargets hand list. Hooks in duel_send_to_grave.c, duel_field_moves.c; battle_phase3.c EndPhase_ManticoreOfDarkness. include/effect.h. Removed from missing-fusion.txt (misfiled).

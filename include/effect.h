@@ -111,6 +111,9 @@ void DarkMagicianOfChaosSummoned(int player, int zone, u16 id, int kind, int fac
 /* Every summon, once the monster is placed (SummonAction_Update): the added cards' summon effects (src/added_effects.c). */
 void AddedCardsSummoned(int player, int zone, u16 id, int kind, int faceUp);
 void EndPhase_DarkMagicianOfChaos(int turnPlayer);
+/* Manticore of Darkness (src/added_effects.c): End Phase optional revival after it was sent to the GY this turn. */
+void ManticoreSentToGraveyard(int player, u16 number);
+void EndPhase_ManticoreOfDarkness(int turnPlayer);
 /* Return from the Different Dimension (src/added_effects.c): the End Phase banish of the monsters it summoned. */
 void EndPhase_ReturnFromTheDifferentDimension(void);
 /* Yata-Garasu (src/added_effects.c): back to the hand at the End Phase; its battle damage skips a Draw Phase. */
