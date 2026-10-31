@@ -738,7 +738,7 @@ u16 CardMenu_GetMonsterCommands(u16 id, int player, int zone)
             int offset = ZONE_OFFSET(side, zone);
 
             if (((struct DuelZone *)(offset + (u32)gDuelZones))->isFaceUp
-                && (u16)CanActivateMonsterEffect(cardId, player, zone) != 0)
+                && ModMonsterMenuCanActivateEffect(cardId, player, zone))
                 flags = (u16)(flags | CARDMENU_MASK_ACTIVATE);
         }
         break;

@@ -143,6 +143,8 @@ int ModFieldCardRequiresCanActivate(u16 cardNumber, int isFaceUp);
 void ModTurnStartRefreshZoneCanActivate(struct DuelZone *zone, u16 id);
 void ModPlaceSpellZoneCanActivate(struct DuelZone *z, u16 id, int faceUp);
 u32 ModFaceUpSpellActivateMenuFlags(u32 flags, u16 id, int player, int zone);
+int ModCanActivateMonsterEffect(u16 id, int player, int zone);
+int ModMonsterMenuCanActivateEffect(u16 id, int player, int zone);
 /* Spirit Reaper (src/added_effects.c): TryAddEffectTarget reports each field target here. */
 void OnFieldCardTargeted(struct ChainEntry *link, int player, int zone);
 /* Metamorphosis (src/added_effects.c): a Fusion Monster of the given Level. */

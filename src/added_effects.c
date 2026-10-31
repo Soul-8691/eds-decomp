@@ -1891,6 +1891,97 @@ int EffectAbyssSoldierResolve(struct ChainEntry *link, struct ChainEntry *chaine
 }
 #endif /* HAS_CARD_ABYSS_SOLDIER */
 
+int CanActivateMonsterEffect(u16 id, int player, int zone); /* card_command_menu.c */
+
+int ModCanActivateMonsterEffect(u16 id, int player, int zone)
+{
+#ifdef HAS_CARD_CHIRON_THE_MAGE
+    if (CardNumberOfId(id) == CARD_CHIRON_THE_MAGE)
+        return CanActivateEffectInZone(player, zone, 0);
+#endif
+    return 0;
+}
+
+int ModMonsterMenuCanActivateEffect(u16 id, int player, int zone)
+{
+    if (CanActivateMonsterEffect(id, player, zone))
+        return 1;
+    return ModCanActivateMonsterEffect(id, player, zone);
+}
+
+#ifdef HAS_CARD_CHIRON_THE_MAGE
+/* ---- Chiron the Mage ---------------------------------------------------------------------------------------------
+ * "Once per turn: You can discard 1 Spell, then target 1 Spell/Trap your opponent controls; destroy that target."
+ * Passcode 16956455 ([YGOPRODeck](https://ygoprodeck.com/card/chiron-the-mage-5386)). Main Phase ignition
+ * (CanActivateMonsterEffect), once per turn (effectUnused). ChainA discards a Magic card (DISCARD_FLAG_SPELL for the
+ * human; the CPU uses FindMagicInHand). ChainB targets the opponent's Spell/Trap zones (EffectOpponentSpellTrapCheck;
+ * the human uses EffectDustTornadoChainB). Resolve: EffectDestroyTargetResolve. */
+
+int EffectChironTheMagePrepare(struct ChainEntry *card, struct ChainEntry *chainLink, u16 fromHand)
+{
+    struct DuelZone *z;
+    int opponent = 1 - (card->player & 1);
+    int zone;
+
+    if (fromHand || card->event != RESPONSE_NONE)
+        return 0;
+    z = ZoneOf(card->player, card->zone);
+    if (!z->isFaceUp || DUEL_CARD_ID(&z->card) != (card->card & CARD_ID_MASK) || !z->effectUnused)
+        return 0;
+    if (FindMagicInHand(card->player) < 0)
+        return 0;
+    for (zone = ZONE_SPELL_0; zone <= ZONE_FIELD; zone++) {
+        if (DUEL_CARD_ID(&ZoneOf(opponent, zone)->card) != 0)
+            return 1;
+    }
+    return 0;
+}
+
+u16 EffectChironTheMageCheck(struct ChainEntry *card, u16 pos)
+{
+    return EffectOpponentSpellTrapCheck(card, pos);
+}
+
+int EffectChironTheMageChainA(struct ChainEntry *link, struct ChainEntry *prevLink)
+{
+    u16 cmd = link->player ? DUEL_CMD_PLAYER | DUEL_CMD_SET_EFFECT_UNUSED : DUEL_CMD_SET_EFFECT_UNUSED;
+
+    if (link->player) {
+        int i = FindMagicInHand(link->player);
+
+        if (i >= 0)
+            DiscardHandCard(link->player, i, 0, 1);
+    } else {
+        /* PROMPT_DISCARD_COST: Magic cards only (DISCARD_FLAG_SPELL) */
+        DuelPrompt_Post(0, PROMPT_DISCARD_COST, 1, 8);
+    }
+    DuelCmd_Push(cmd, link->zone, 0, 0);
+    return 1;
+}
+
+int EffectChironTheMageChainB(struct ChainEntry *link, struct ChainEntry *prevLink)
+{
+    int opponent = 1 - link->player;
+    int zone;
+
+    if (link->player) {
+        link->numTargets = 0;
+        for (zone = ZONE_SPELL_0; zone <= ZONE_FIELD; zone++) {
+            if (EffectOpponentSpellTrapCheck(link, DUEL_LOC(opponent, zone))
+                && TryAddEffectTarget(link, opponent, zone))
+                return 1;
+        }
+        return 1;
+    }
+    return EffectDustTornadoChainB(link);
+}
+
+int EffectChironTheMageResolve(struct ChainEntry *link, struct ChainEntry *chainedTo)
+{
+    return EffectDestroyTargetResolve(link);
+}
+#endif /* HAS_CARD_CHIRON_THE_MAGE */
+
 #ifdef HAS_CARD_BRAIN_CONTROL
 /* ---- Brain Control -------------------------------------------------------------------------------------------------
  * Normal Spell: "Pay 800 LP, then target 1 face-up monster your opponent controls that can be Normal Summoned/Set;
@@ -8506,6 +8597,10 @@ static int AiWantsMonsterEffect(u16 number, int zone)
     case CARD_ABYSS_SOLDIER:
         return CountMonsters(AI_HUMAN) > 0 || CountSpellTrapCards(AI_HUMAN) > 0;
 #endif
+#ifdef HAS_CARD_CHIRON_THE_MAGE
+    case CARD_CHIRON_THE_MAGE:
+        return FindMagicInHand(AI_PLAYER) >= 0 && CountSpellTrapCards(AI_HUMAN) > 0;
+#endif
 #ifdef HAS_CARD_THOUSAND_EYES_RESTRICT
     case CARD_THOUSAND_EYES_RESTRICT:
         return CountMonsters(AI_HUMAN) > 0;
@@ -9768,6 +9863,16 @@ const struct CardEffect gAddedCardEffects[] = {
         EffectAbyssSoldierPrepare,
         EffectAbyssSoldierChainA,
         EffectAbyssSoldierChainB,
+    },
+#endif
+#ifdef HAS_CARD_CHIRON_THE_MAGE
+    {
+        CARD_CHIRON_THE_MAGE, 0,
+        EffectChironTheMageResolve,
+        EffectChironTheMageCheck,
+        EffectChironTheMagePrepare,
+        EffectChironTheMageChainA,
+        EffectChironTheMageChainB,
     },
 #endif
 #ifdef HAS_CARD_BRAIN_CONTROL

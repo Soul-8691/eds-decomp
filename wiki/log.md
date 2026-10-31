@@ -2134,6 +2134,15 @@ updated: 2026-09-29
 - src/added_effects.c: next own Standby returns the banished Capsule card via `DUEL_CMD_RETURN_BANISHED_CARD_TO_HAND`.
   [[added-cards]]. Built (`make`); not tested in an emulator.
 
+## [2026-10-31] progress | Chiron the Mage Activate menu fix
+- Effect row alone did not show **Activate**: `CanActivateMonsterEffect` had no Chiron case. `ModMonsterMenuCanActivateEffect`
+  (added_effects.c) wraps the vanilla check plus Chiron; `CardMenu_GetMonsterCommands` calls it (keeps `.text` under
+  0x08080A20). [[added-cards]]. Built (`make`).
+
+## [2026-10-31] progress | Chiron the Mage effect
+- src/added_effects.c (+ duel_turn_end.c DISCARD_FLAG_SPELL): discard 1 Spell, destroy opponent Spell/Trap, once per
+  turn. [[added-cards]]. Built (`make`); not tested in an emulator.
+
 ## [2026-10-31] progress | .text size: deck menu and WMC hooks in @farcode
 - Main `.text` had passed `0x08080A20` (linker overlap with `.rodata`). Deck command UI moved to
   `mod_opponents.c`; Wave-Motion Cannon / face-up field hooks moved to `added_effects.c` (single-call sites in

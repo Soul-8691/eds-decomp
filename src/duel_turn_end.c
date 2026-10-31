@@ -102,6 +102,7 @@ int AiRunTurnInt(void) asm("AiRunTurn");
 #define DISCARD_FLAG_MONSTERS_ONLY  1
 #define DISCARD_FLAG_BY_OPPONENT    2
 #define DISCARD_FLAG_WATER          4   /* added: WATER monsters only (Abyss Soldier, src/added_effects.c) */
+#define DISCARD_FLAG_SPELL          8   /* added: Magic cards only (Chiron the Mage, src/added_effects.c) */
 #ifdef HAS_CARD_ABYSS_SOLDIER
 int IsWaterMonster(u16 id);             /* src/added_effects.c */
 #endif
@@ -619,6 +620,9 @@ u16 DiscardPrompt_TryDiscardSelected(u16 monstersOnly, u16 byOpponent)
             if ((gDuel.promptArgs[1] & DISCARD_FLAG_WATER) && !IsWaterMonster(value.id))
                 ok = 0;
 #endif
+            if ((gDuel.promptArgs[1] & DISCARD_FLAG_SPELL)
+                && CARD_STATS_TYPE(gCardStats[value.id & CARD_ID_MASK]) != CARD_TYPE_MAGIC)
+                ok = 0;
             if (ok != 0) {
                 DiscardHandCard(0, index, byOpponent, 1);
                 return 1;

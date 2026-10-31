@@ -1112,6 +1112,18 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
   (`ChangeBattlePosition`). That covers a direct attack too.
 - Checked in the source and the build; not tested in an emulator.
 
+### Chiron the Mage (2026-10-31)
+- Effect Monster (Level 4, EARTH Beast-Warrior, 1800/1000). Passcode 16956455 ([YGOPRODeck](https://ygoprodeck.com/card/chiron-the-mage-5386)):
+  "Once per turn: You can discard 1 Spell, then target 1 Spell/Trap your opponent controls; destroy that target."
+- **Main Phase ignition** from the card menu (`ModMonsterMenuCanActivateEffect` → `CanActivateEffectInZone` for Chiron;
+  vanilla monsters still use `CanActivateMonsterEffect`), once per turn (`effectUnused`).
+- **ChainA** discards one Magic card from the hand (`DISCARD_FLAG_SPELL` on the discard-cost prompt; the CPU uses
+  `FindMagicInHand`) and marks the effect used.
+- **ChainB** targets an opponent Spell/Trap (`EffectOpponentSpellTrapCheck`; the human uses `EffectDustTornadoChainB`).
+- **Resolve** destroys the target (`EffectDestroyTargetResolve`).
+- **CPU:** `AiPlayAddedCards` / `AiWantsMonsterEffect` when it holds a Spell and the opponent has a Spell/Trap on the field.
+- Checked in the source and the build; not tested in an emulator.
+
 ### Wave-Motion Cannon (2026-10-31)
 - Continuous Spell. Passcode 38992735 ([YGOPRODeck](https://ygoprodeck.com/card/wave-motion-cannon-3305)): "During your Main Phase: You can send this
   face-up card to the GY; inflict 1000 damage to your opponent for each of your Standby Phases that have passed since
