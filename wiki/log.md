@@ -2045,6 +2045,9 @@ updated: 2026-09-29
 - src/mod_opponents.c: `ModOpponentSelectStart` opens on Test Duel when `MOD_TEST_DECK` (`make` only); `make release` unchanged (newest format). [[yugi-kaiba-opponent]].
 - Fix: use `#if !MOD_RELEASE` (not `#ifndef`; `MOD_RELEASE` is always defined as 0 or 1).
 
+## [2026-10-30] progress | Deck Recipe presets debug-only
+- src/mod_decks.c: `GetRecipePreset` returns nothing when `MOD_RELEASE`. [[deck-recipes]], README.
+
 ## [2026-10-30] progress | Cold Wave CPU lock fix
 - src/ai_deck.c: `AiTryPlaySpellTrap` refuses while `magicTrapLockTurns` is set (CPU bypassed hand/field lock).
   [[added-cards]].
@@ -2099,3 +2102,6 @@ updated: 2026-09-29
 
 ## [2026-10-30] progress | Debug pick: state kept while the scene runs
 - src/mod_recipes.c: CB_OpponentRecipes cleared the pick state on every frame the scene was still running (RunScene returned 0), so the first redraw (a scroll) showed Debug's prompt while the player was picking their own deck (reported). It now returns at once on 0. Built (make and make release); not tested in an emulator.
+
+## [2026-10-30] progress | Pack contents screen: no scrolling background
+- src/booster_pack.c: GetPack_InitScene no longer fills the BG3 map with the 2x2 pattern (tiles 0x130-0x133, palette 1), and GetPack_FadeIn turns on BG0-2 and OBJ only (0x1700, was 0x1F00); src/booster_get_pack.c: GetPack_FadeInAndResume the same (after Card View); src/card_canvas.c: GetPack_ScrollBg only steps the border's colour cycle (GetPack_HBlank), no BG3 scroll. Applies to every pack opening (Booster Packs menu and Campaign rewards). Release .text 0x08080954 (from 0x080809CC). README. Built (make and make release); not tested in an emulator.

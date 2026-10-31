@@ -439,20 +439,8 @@ int GetPack_InitScene(void)
     MemCopy16((void *)(BG_PLTT + 0x40), gPackCursorFramePal, 0x20);
     MemCopy16((void *)(VRAM + 0x6600), gPackSceneBgTiles, 0x80);
     MemCopy16((void *)(VRAM + 0x8000), gPackCursorFrameTiles, 0x120);
-    map = gMain.bgMapBuffer[3];
-    for (i = 0; i < 16; i++) {
-        j = 15; /* set before row: lengthens j's live range so map wins r2 in global alloc */
-        row = map + 32;
-        for (; j >= 0; j--) {
-            map[0] = 0x1130;
-            map[1] = 0x1131;
-            row[0] = 0x1132;
-            map[33] = 0x1133;
-            row += 2;
-            map += 2;
-        }
-        map += 32;
-    }
+    /* changed: the BG3 pattern (2x2 tiles 0x130-0x133, palette 1, over the whole map) is no longer drawn; BG3 stays
+     * off (GetPack_FadeIn, GetPack_FadeInAndResume) */
     map = gMain.bgMapBuffer[1];
     map[0] = 0x2200;
     map[96] = 0x2201;
@@ -496,7 +484,7 @@ int GetPack_InitScene(void)
  */
 u16 GetPack_FadeIn(void)
 {
-    REG_DISPCNT |= 0x1F00; /* BG0-3 and OBJ layers on */
+    REG_DISPCNT |= 0x1700; /* changed: BG0-2 and OBJ layers on; the scrolling BG3 pattern is gone (was 0x1F00) */
     GetPack_ScrollBg();
     return FadeFromBlack(4);
 }

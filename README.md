@@ -81,10 +81,11 @@ next one.
   its original portrait and event dialogue. After the dialogue, your banlist switches to the challenger's format and
   the Deck Recipes screen opens: load a recipe, press SELECT for Deck Edit, or B to duel. In the release, a deck that
   isn't legal in the format (or is under 40 cards) can't duel until you fix it.
-- **Deck Recipes.** Up to 50 saved decks, about 40 of them preset to staple decks of the first thirteen formats (including
-  Goat). Loading a recipe takes the cards from your trunk; any you don't have are left out (the game tells you which,
-  and why). The starting decks and the format presets come with the Side and Extra Decks of their .ydk files. The
-  deck recipes will eventually include all 15 TCG formats.
+- **Deck Recipes.** Up to 50 saved decks. In the debug build (`make`), the first slots are premade staple decks of the
+  first thirteen formats (including Goat), named after their .ydk files; the release build starts with empty slots until
+  you save your own. Loading a recipe takes the cards from your trunk; any you don't have are left out (the game tells
+  you which, and why). Premade recipes include Side and Extra Decks from their .ydk files. The deck recipes will
+  eventually include all 15 TCG formats in release too.
 - **Banlists** (main menu). Choose the banlist your deck is built under. Cards your current deck can no longer hold
   go back to the trunk. Before switching, the game checks that your cards can still make a Main Deck of at least
   40 cards under the new banlist (counting its limits and card pool); if they can't, the switch is refused.
@@ -96,6 +97,7 @@ next one.
 - **Booster Packs** (main menu). Open any unlocked pack for 1000 DP each for now; prices will change in the release.
   Packs will cover the TCG/OCG sets up to Reaper/Victory format, plus attribute/race/Spell/Trap packs once there are
   enough cards.
+  The screen that shows a pack's cards no longer has the scrolling patterned background (Campaign packs too).
 - **Card art in duels.** Face-up cards show a small picture of their artwork inside their icon: on the field
   (monsters, Spells/Traps, the Field zone, the top card of each Graveyard and banished pile), in your hand, in the
   card menu, in the chain list, when reordering cards, and while cards move, flip or change position. Deck Edit's

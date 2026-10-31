@@ -134,7 +134,7 @@ u32 GetPack_RestoreScene(void) {
 /* Step 9 (GETPACK_STEP_RESUME): turn all layers on, scroll and draw the cards, and once the fade-in is
  * done go back 5 steps to GETPACK_STEP_INPUT. Always returns 0. */
 u32 GetPack_FadeInAndResume(void) {
-    REG_DISPCNT |= 0x1F00;
+    REG_DISPCNT |= 0x1700;     /* changed: BG3 (the scrolling pattern) stays off (was 0x1F00) */
     GetPack_ScrollBg();
     GetPack_DrawCardSprites();
     if (FadeFromBlack(4))

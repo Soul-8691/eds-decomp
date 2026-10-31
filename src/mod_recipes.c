@@ -27,8 +27,9 @@
  *                           (ModRecipeBuildEnd)
  *   DeckRecipes_OnNewGame   BuildStarterDeck (title_screen.c): a New Game clears the recipes back to the presets
  * Up to RECIPE_COUNT recipes, each a name and a saved Deck, Side Deck and Fusion Deck list, live in SRAM after the
- * save image (RECIPE_SRAM; the game's save is 0x2170 bytes of the 32 KiB). The first ones start as the decks of
- * GetRecipePreset (src/mod_decks.c), named after their .ydk files; like any recipe they can be replaced or cleared.
+ * save image (RECIPE_SRAM; the game's save is 0x2170 bytes of the 32 KiB). In make (`MOD_RELEASE` 0) the first slots
+ * start as the premade decks of GetRecipePreset (src/mod_decks.c), named after their .ydk files; in make release the
+ * slots start empty. Like any recipe they can be replaced or cleared.
  * A recipe changes only when the player saves to it, renames it or clears it. A on a slot opens its actions:
  *   Load       put every card of the three decks back into the trunk, then take the recipe's cards out of it; a card
  *              the trunk no longer holds (or that the copy limits refuse) is left out and counted as missing. When

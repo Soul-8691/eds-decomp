@@ -31,6 +31,9 @@ updated: 2026-10-02
 | `0x0806360C` | 0xA0 | matching | `GetPack_ScrollBg; GetPack_DrawCardSprites(5,-1,0)`; if `FadeToBlack(2)` passes, calls `AddCardToTrunk(IdToKey(ids[i]))` for the 5 pack cards (adds them to the trunk?) | `PackAddCardsToTrunk` |
 | `0x080636AC` | 0x37C | **matching** (wave 3, 2026-10-01) | card browser state machine on `gMain+0x485A` (12 states, jump table): state 0 fills `0x02013D90` (key at +2, ATK*10 at +0x2C, DEF*10 at +0x30 of the current card); 1-2 fade in; state 3 LEFT/RIGHT (0x20/0x10) moves `row = (row +/- 1) % 5` and goes to state 10; 4/10 wait; 11 resets to 0; other states return 1 | `PackCardBrowserStep` |
 
+> [!note] Mod change (2026-10-30)
+> This build turns on 0x1700 in `0x08063330` (GetPack_FadeIn) (no BG3), leaves BG3's map empty in `GetPack_InitScene`, and `GetPack_ScrollBg` (card_canvas.c) only steps `colorCyclePhase`: the pack contents screen has no scrolling background. These functions no longer match.
+
 ## Structs and globals
 - `struct PackSlots { struct { const u16 *cards; s32 count; } slot[8]; }` (0x40 bytes), table `0x081A562C` = `{PackSlots *p; u16 id; u16 pad}[28]`.
 - Save mirror `0x02011C20`: `+0x2154` u16 last opened pack id, `+0x2156` u16 pity counter (commons-only packs); `+8 + key*4` card trunk entry.

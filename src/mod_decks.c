@@ -3,7 +3,7 @@
  *   GetOpponentDeckOverride   opponent decks (gOpponentDecks); LoadOpponentDeck (ai_deck.c) asks it first
  *  *   BuildModStarterDeck       starter decks (Red, Green, Black); BuildStarterDeck (title_screen.c) asks it first
  *   GiveStartingTrunk         the cards a new game starts with in the trunk (BuildStarterDeck)
- *   GetRecipePreset           the decks the Deck Recipes start with (src/mod_recipes.c), named after their .ydk files
+ *   GetRecipePreset           premade Deck Recipes (make only; src/mod_recipes.c), named after their .ydk files
  * Like added_effects, this unit is @farcode and @rodata at the end in units.txt, so it does not move the game's
  * code or data. Decks keep to the Forbidden/Limited list (gCardCopyLimits): LoadOpponentDeck drops every copy of
  * a card that is over its limit, and AddCardToSavedDeck refuses the copies over it.
@@ -3481,9 +3481,19 @@ static const struct RecipePreset sRecipePresets[] = {
     { NULL, NULL, NULL, 0 },
 };
 
-/* Preset recipe n: its name, its cards (card numbers) and count, and its Side Deck's; 0 past the last one. */
+/* Preset recipe n: its name, its cards (card numbers) and count, and its Side Deck's; 0 past the last one.
+ * MOD_RELEASE: no presets (empty recipe slots until the player saves). */
 int GetRecipePreset(int n, const char **name, const u16 **cards, u32 *count, const u16 **side, u32 *sideCount)
 {
+#if MOD_RELEASE
+    (void)n;
+    (void)name;
+    (void)cards;
+    (void)count;
+    (void)side;
+    (void)sideCount;
+    return 0;
+#else
     if (n < 0 || n >= (int)ARRAY_COUNT(sRecipePresets) - 1)
         return 0;
     *name = sRecipePresets[n].name;
@@ -3492,6 +3502,7 @@ int GetRecipePreset(int n, const char **name, const u16 **cards, u32 *count, con
     *side = sRecipePresets[n].side;
     *sideCount = sRecipePresets[n].sideCount;
     return 1;
+#endif
 }
 
 /* Copies of every card a new game puts in the trunk. */

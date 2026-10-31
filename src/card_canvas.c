@@ -474,16 +474,11 @@ void GetPack_HBlank(void)
     *(u16 *)(BG_PLTT + 0x1E) = gPackSceneRasterColors[(REG_VCOUNT + (gPackOpenWork.colorCyclePhase >> 1)) & 7];
 }
 
-/* Push the two frame counters into gMain and decrement the third.
- * Matching: the post-increments through a struct Main * local fix the ROM's load order. */
+/* Decrement the colour cycle of the border (GetPack_HBlank).
+ * Changed: the BG3 pattern no longer scrolls (it is off, booster_pack.c); the original pushed the two frame counters
+ * bgScrollX/bgScrollY into gMain.bgHofs[3]/bgVofs[3] first. */
 void GetPack_ScrollBg(void)
 {
-    u16 scroll;
-    struct Main *m = &gMain;
-    scroll = gPackOpenWork.bgScrollX++;
-    m->bgHofs[3] = scroll;
-    scroll = gPackOpenWork.bgScrollY++;
-    m->bgVofs[3] = scroll;
     gPackOpenWork.colorCyclePhase--;
 }
 
