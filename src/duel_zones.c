@@ -4,6 +4,7 @@
 #include "constants/card_stats.h"   /* enum CardType, enum CardAttribute, SPELL_FIELD */
 #include "constants/duel.h"         /* zone indexes, ZONE_LINK_*, BANISH_*, DUEL_LOC_ZONE */
 #include "duel.h"                   /* struct DuelCard / DuelZone / DuelPlayer / DuelState, gDuel, gDuelPlayers, gDuelZones */
+#include "effect.h"                 /* IsTributeLockActive (Mask of Restrict) */
 
 /*
  * Duel field helpers (wiki/functions/duel-zones-c.md):
@@ -90,7 +91,7 @@ u16 IsTributableMonster(int player, int zone)
 #endif
 
     if (cardId != 0 && !IS_TOKEN(cardId) && CARD_TYPE(cardId) <= CARD_TYPE_REPTILE
-        && CountActiveCardsOnField(0, CARD_1418) <= 0 && CountActiveCardsOnField(1, CARD_1418) <= 0)
+        && !IsTributeLockActive())
         return TRUE;
     return FALSE;
 }
@@ -102,7 +103,7 @@ int CountTributableMonsters(int player, int excludeZone)
     int zone;
 
     /* card 1418 active on either field: no tributes at all */
-    if (CountActiveCardsOnField(0, CARD_1418) > 0 || CountActiveCardsOnField(1, CARD_1418) > 0)
+    if (IsTributeLockActive())
         return 0;
     count = 0;
     for (zone = ZONE_MONSTER_0; zone <= ZONE_MONSTER_4; zone++) {

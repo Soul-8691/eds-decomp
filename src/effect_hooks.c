@@ -1408,7 +1408,7 @@ void CardMenu_SummonMonster(u16 faceUp, u16 special)
            Tributes from the field) is not active; the hand if it is there (player 0 only, as in the ROM), and
            for Gamma also a free monster zone. */
         CM.tributeSources = 0;
-        if (CountActiveCardsOnField(0, CARD_1418) == 0 && CountActiveCardsOnField(1, CARD_1418) == 0
+        if (!IsTributeLockActive()
             && CountFaceUpMonstersByNumber(0, requiredNumber) > 0)
             CM.tributeSources |= TRIBUTE_FROM_FIELD;
         if (CountHandCardsByNumber(0, requiredNumber) && (CM.summonSeq <= 1 || CountFreeMonsterZones(0) > 0))

@@ -631,12 +631,17 @@ int EffectRitualSummonResolve(struct ChainEntry *link)
         int recipeIdx;
         int key;
         gChain.effectSubStep = negated; /* 0 */
-        key = CARD_1418;
-        if (CountActiveCardsOnField(0, key) > 0) {
-            ShowCardEffect(link->player, CARD_ID_TABLE[key]);
-            return EFFECT_STEP_DONE;
-        } else if (CountActiveCardsOnField(1, key) > 0) {
-            ShowCardEffect(link->player, CARD_ID_TABLE[key]);
+        if (IsTributeLockActive()) {
+#ifdef HAS_CARD_MASK_OF_RESTRICT
+            if (CountActiveCardsOnField(0, CARD_MASK_OF_RESTRICT) > 0
+                || CountActiveCardsOnField(1, CARD_MASK_OF_RESTRICT) > 0)
+                ShowCardEffect(link->player, gCardNumberToId[CARD_MASK_OF_RESTRICT]);
+            else
+#endif
+            {
+                key = CARD_1418;
+                ShowCardEffect(link->player, CARD_ID_TABLE[key]);
+            }
             return EFFECT_STEP_DONE;
         }
         if ((u16)CALL_RITUAL_PREPARE(link) == 0)

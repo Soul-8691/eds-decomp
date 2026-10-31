@@ -67,8 +67,7 @@ int EffectJigenBakudanPrepare(struct ChainEntry *card, int chainLink, u16 fromHa
         int player = card->player;
         struct DuelZone *zone = ZONE_AT(player, card->zone);
 
-        if (!zone->effectUnused && CountActiveCardsOnField(0, CARD_1418) <= 0
-            && CountActiveCardsOnField(1, CARD_1418) <= 0)
+        if (!zone->effectUnused && !IsTributeLockActive())
             return 1;
     }
     return 0;
@@ -97,8 +96,7 @@ int EffectOncePerTurnPrepare(struct ChainEntry *card, int chainLink, u16 fromHan
  */
 int EffectValkyrionTheMagnaWarriorPrepare(struct ChainEntry *card, int chainLink, u16 fromHand)
 {
-    if (fromHand == 0 && CountFreeMonsterZones(card->player) > 1 && CountActiveCardsOnField(0, CARD_1418) <= 0
-        && CountActiveCardsOnField(1, CARD_1418) <= 0
+    if (fromHand == 0 && CountFreeMonsterZones(card->player) > 1 && !IsTributeLockActive()
         && CountGraveyardCardsByNumber(card->player, CARD_ALPHA_THE_MAGNET_WARRIOR) != 0
         && CountGraveyardCardsByNumber(card->player, CARD_BETA_THE_MAGNET_WARRIOR) != 0
         && CountGraveyardCardsByNumber(card->player, CARD_GAMMA_THE_MAGNET_WARRIOR) != 0)

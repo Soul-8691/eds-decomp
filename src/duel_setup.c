@@ -502,7 +502,7 @@ u32 Chain_GetResponseCommands(struct ChainEntry *link, int player, int area, int
         id = zone->card << 20 >> 20;
         if (id != 0 && zone->isFaceUp && CARD_NUMBER_C(id) == CARD_1525
             && CARD_TYPE_C(link->card) == CARD_TYPE_MAGIC
-            && !CountActiveCardsOnField(0, CARD_1418) && !CountActiveCardsOnField(1, CARD_1418)
+            && !IsTributeLockActive()
             && CARD_NUMBER_C(link->card) != CARD_1539)
             ret = CARDMENU_MASK_CARD_VIEW | CARDMENU_MASK_ACTIVATE;
         break;

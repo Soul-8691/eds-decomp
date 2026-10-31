@@ -231,13 +231,8 @@ int DuelPrompt_PickOneOfFiveCards(void)
 int CanSummonValkyrion(int player)
 {
     int hasAlpha = 0, hasBeta = 0, hasGamma = 0;
-    int tributesAllowed = 1;
+    int tributesAllowed = !IsTributeLockActive();
     int fieldCount = 0;
-    u16 noTributeKey = CARD_1418;
-    if (CountActiveCardsOnField(0, noTributeKey) > 0)
-        tributesAllowed = 0;
-    if (CountActiveCardsOnField(1, noTributeKey) > 0)
-        tributesAllowed = 0;
     if (player != 0 && CountHandCardsByNumber(player, CARD_VALKYRION_THE_MAGNA_WARRIOR) == 0)
         return 0;
     if (CountFaceUpMonstersByNumber(player, CARD_ALPHA_THE_MAGNET_WARRIOR) && tributesAllowed) {
@@ -276,8 +271,7 @@ int CanSummonValkyrion(int player)
 int CanSummonKey1257(int player)
 {
     int hasKeyMonster = 0;
-    u16 noTributeKey = CARD_1418;
-    if (CountActiveCardsOnField(0, noTributeKey) > 0 || CountActiveCardsOnField(1, noTributeKey) > 0)
+    if (IsTributeLockActive())
         return 0;
     if (CountMonstersByNumber(player, CARD_1410))
         hasKeyMonster = 1;

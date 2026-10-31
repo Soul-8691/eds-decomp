@@ -260,7 +260,7 @@ int EffectAcidTrapHoleCheck(struct ChainEntry *card, u16 pos)
     int player = (u8)pos;
     int zone = pos >> 8;
 
-    if (CountActiveCardsOnField(0, CARD_1418) <= 0 && CountActiveCardsOnField(1, CARD_1418) <= 0
+    if (!IsTributeLockActive()
         && zone <= ZONE_MONSTER_4) {
         int side = player & 1;
         struct DuelZone *target = ZONE_AT(side, zone);
@@ -579,7 +579,7 @@ int EffectTributeForInsectCheck(struct ChainEntry *card, u16 pos)
     int targetId = CARD_ID(CARD_WORD(target->card));
 
     if (player == card->player && zone <= ZONE_MONSTER_4 && targetId
-        && CountActiveCardsOnField(0, CARD_1418) <= 0 && CountActiveCardsOnField(1, CARD_1418) <= 0) {
+        && !IsTributeLockActive()) {
         int level = GetCardLevel(targetId);
 
         /* FAKEMATCH: retain the initialized result through the shared test

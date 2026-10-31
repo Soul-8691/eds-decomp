@@ -2303,6 +2303,14 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
   copy whenever it may (`AiPlayAddedCards`, `AiShouldActivateAddedCard` default).
 - Checked in the source and the build; not tested in an emulator.
 
+### Mask of Restrict (2026-10-31)
+- Effect text from [YGOPRODeck](https://db.ygoprodeck.com/api/v7/cardinfo.php?name=Mask%20of%20Restrict) (id 100100):
+  "Neither player can Tribute cards." Continuous Trap; `EffectMaskOfRestrictResolve` is a no-op. Face-up copies on
+  either side count through `IsTributeLockActive` (`include/effect.h`, `src/added_effects.c`), the same tribute lock as
+  vanilla effect key `CARD_1418` (`IsTributableMonster`, ritual summon, tribute costs, …). CPU: `AiWantsMaskOfRestrict`
+  in Main Phase (`AiPlayAddedCards`); Set copies flip when `AiShouldActivateAddedCard` returns yes (default).
+- Built; not tested in an emulator.
+
 ### Final Attack Orders (2026-10-30)
 - Effect text from [YGOPRODeck](https://db.ygoprodeck.com/api/v7/cardinfo.php?name=Final%20Attack%20Orders) (id
   18710707): "All face-up monsters on the field are changed to Attack Position, and their battle positions cannot be

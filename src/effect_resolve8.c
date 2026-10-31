@@ -291,7 +291,7 @@ int EffectTimeWizardResolve(struct ChainEntry *link)
                 /* the target collector of Time Wizard lists Dark Sage in the hand and deck */
                 if (CollectEffectTargetsInt(link->player, CARD_TIME_WIZARD, 0) <= 0)
                     goto done;
-                if (CountActiveCardsOnField(0, CARD_1418) != 0 || CountActiveCardsOnField(1, CARD_1418) != 0)
+                if (IsTributeLockActive())
                     goto done;
                 if (CountFaceUpMonstersByNumber(link->player, CARD_DARK_MAGICIAN) == 0
                     && CountFaceUpMonstersByNumber(link->player, CARD_1210) == 0

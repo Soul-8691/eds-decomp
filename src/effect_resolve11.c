@@ -548,7 +548,7 @@ int EffectReturnFusionMaterialsToHandResolve(struct ChainEntry *link)
  */
 int EffectTributeNegateMagicResolve(struct ChainEntry *link, u16 *chainedTo)
 {
-    if (CountActiveCardsOnField(0, CARD_1418) <= 0 && CountActiveCardsOnField(1, CARD_1418) <= 0) {
+    if (!IsTributeLockActive()) {
         TributeMonster(link->player, link->zone);
         if (chainedTo != NULL && CARD_TYPE(*chainedTo) == CARD_TYPE_MAGIC)
             DuelCmd_Push(PLAYER_CMD(link->player, DUEL_CMD_NEGATE_ACTIVATION), 1, 0, 0);

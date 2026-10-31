@@ -23,6 +23,7 @@
 #include "constants/duel_cmds.h"    /* DUEL_CMD_PLAYER, DUEL_CMD_POINT_AT_CARD */
 #include "debug.h"                  /* DebugPrintFlush */
 #include "duel_flow.h"              /* struct DuelCtrl, gDuelCtrl */
+#include "effect.h"                 /* IsTributeLockActive */
 
 /* The unit reads gDuel and gDuelPlayers through its own byte-level views below, so duel.h's declarations of
  * those two symbols are renamed out of the way while it is included. */
@@ -788,10 +789,7 @@ int AiChooseStrategy(void)
         case AI_STRATEGY_FOUR_TOKENS_CANNON_SOLDIER:
             if (gDuel.unk1B10 == 0)
                 ok = 0;
-            k = CARD_1418;
-            if (CountActiveCardsOnField(0, k) > 0)
-                ok = 0;
-            if (CountActiveCardsOnField(1, k) > 0)
+            if (IsTributeLockActive())
                 ok = 0;
             if (CountFaceUpMonstersByNumber(1, CARD_CANNON_SOLDIER) == 0)
                 ok = 0;

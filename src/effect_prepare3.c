@@ -155,7 +155,7 @@ int EffectRedirectAttackPrepare(struct ChainEntry *card, struct ChainEntry *chai
  */
 int EffectTributeRecoverGraveMonsterPrepare(struct ChainEntry *card)
 {
-    if (CountActiveCardsOnField(0, CARD_1418) > 0 || CountActiveCardsOnField(1, CARD_1418) > 0
+    if (IsTributeLockActive()
         || CollectEffectTargetsInt(card->player, CARD_1421, 0) <= 0)
         return 0;
     return 1;
@@ -175,7 +175,7 @@ int EffectTributeTwoMonstersPrepare(struct ChainEntry *card)
  */
 int EffectTributeRecoverGraveMagicPrepare(struct ChainEntry *card)
 {
-    if (CountActiveCardsOnField(0, CARD_1418) > 0 || CountActiveCardsOnField(1, CARD_1418) > 0
+    if (IsTributeLockActive()
         || CollectEffectTargetsInt(card->player, CARD_1439, 0) <= 0)
         return 0;
     return 1;
@@ -215,7 +215,7 @@ int EffectTwoSpellTrapsOnFieldPrepare(void)
 int EffectTributeNegateMagicPrepare(struct ChainEntry *card, struct ChainEntry *chainLink, u16 fromHand)
 {
     if (fromHand == 0 && chainLink != NULL && CARD_TYPE(chainLink->card) == CARD_TYPE_MAGIC
-        && CountActiveCardsOnField(0, CARD_1418) <= 0 && CountActiveCardsOnField(1, CARD_1418) <= 0
+        && !IsTributeLockActive()
         && CARD_NUMBER(chainLink->card) != CARD_1539)
         return 1;
     return 0;

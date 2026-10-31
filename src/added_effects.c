@@ -41,6 +41,18 @@
 #include "duel_screen.h"            /* DuelCursor_PickTarget, gDuelScreen */
 #include "duel_flow.h"              /* gDuelCtrl.isLinkDuel */
 
+#ifdef HAS_CARD_MASK_OF_RESTRICT
+int IsTributeLockActive(void)
+{
+    if (CountActiveCardsOnField(0, CARD_1418) > 0 || CountActiveCardsOnField(1, CARD_1418) > 0)
+        return 1;
+    if (CountActiveCardsOnField(0, CARD_MASK_OF_RESTRICT) > 0
+        || CountActiveCardsOnField(1, CARD_MASK_OF_RESTRICT) > 0)
+        return 1;
+    return 0;
+}
+#endif /* HAS_CARD_MASK_OF_RESTRICT */
+
 /* ---- Spell Counters ----------------------------------------------------------------------------------------
  * A Spell Counter on a monster is a ZONE_LINK_ATK_300_PER_VALUE link from the monster's own card ID: the link's
  * count (high byte) is the number of counters, and the stat code (card_stats.c) already gives the monster 300
@@ -6608,7 +6620,7 @@ int EffectHystericFairyPrepare(struct ChainEntry *card, struct ChainEntry *chain
     z = ZoneOf(card->player, card->zone);
     if (!z->isFaceUp || DUEL_CARD_ID(&z->card) != (card->card & CARD_ID_MASK))
         return 0;
-    if (CountActiveCardsOnField(0, CARD_1418) > 0 || CountActiveCardsOnField(1, CARD_1418) > 0)
+    if (IsTributeLockActive())
         return 0;
     return CountTributableMonsters(card->player, -1) > 1;
 }
@@ -6639,8 +6651,7 @@ int EffectHystericFairyResolve(struct ChainEntry *link, struct ChainEntry *chain
     (void)chainedTo;
     if (link->negated)
         return EFFECT_STEP_DONE;
-    if (CountActiveCardsOnField(0, CARD_1418) > 0 || CountActiveCardsOnField(1, CARD_1418) > 0
-        || link->numTargets != 2)
+    if (IsTributeLockActive() || link->numTargets != 2)
         return EFFECT_STEP_DONE;
     for (i = 0; i < 2; i++) {
         int targetPlayer = DUEL_LOC_PLAYER(link->targets[i]);
@@ -6678,6 +6689,49 @@ int EffectGravityBindResolve(struct ChainEntry *link, struct ChainEntry *chained
     return EFFECT_STEP_DONE;
 }
 #endif /* HAS_CARD_GRAVITY_BIND */
+
+#ifdef HAS_CARD_MASK_OF_RESTRICT
+/* ---- Mask of Restrict (YGOPRODeck id 100100) ---------------------------------------------------------------------
+ * "Neither player can Tribute cards." Continuous Trap; the tribute lock is vanilla effect key CARD_1418 in the
+ * original engine — face-up copies count through IsTributeLockActive (every CARD_1418 check in the duel code).
+ * CPU: AiWantsMaskOfRestrict, AiPlayAddedCards (Main Phase); Set copies use AiShouldActivateAddedCard (yes). */
+
+int EffectMaskOfRestrictResolve(struct ChainEntry *link, struct ChainEntry *chainedTo)
+{
+    (void)link;
+    (void)chainedTo;
+    return EFFECT_STEP_DONE;
+}
+
+static int AiHandCanTributeSummonNow(int player)
+{
+    struct DuelPlayer *p = &gDuelPlayers[player & 1];
+    int i;
+
+    for (i = 0; i < p->handCount; i++) {
+        u16 id = DUEL_CARD_ID(&p->hand[i]);
+        int level = CARD_STATS_LEVEL(gCardStats[id & CARD_ID_MASK]);
+        int need = level >= 7 ? 2 : level >= 5 ? 1 : 0;
+
+        if (need > 0 && CountTributableMonsters(player, -1) >= need)
+            return 1;
+    }
+    return 0;
+}
+
+static int AiWantsMaskOfRestrict(void)
+{
+    if (IsTributeLockActive())
+        return 0;
+    if (AiHandCanTributeSummonNow(AI_HUMAN))
+        return 1;
+    if (CountTributableMonsters(AI_HUMAN, -1) > CountTributableMonsters(AI_PLAYER, -1))
+        return 1;
+    if (AiHandCanTributeSummonNow(AI_PLAYER))
+        return 0;
+    return CountTributableMonsters(AI_HUMAN, -1) > 0;
+}
+#endif /* HAS_CARD_MASK_OF_RESTRICT */
 
 #ifdef HAS_CARD_SECRET_BARREL
 /* ---- Secret Barrel ------------------------------------------------------------------------------------------------
@@ -10088,6 +10142,10 @@ int AiPlayAddedCards(void)
     if (AiTryPlaySpellTrap(CARD_GRAVITY_BIND))
         return 1;
 #endif
+#ifdef HAS_CARD_MASK_OF_RESTRICT
+    if (AiWantsMaskOfRestrict() && AiTryPlaySpellTrap(CARD_MASK_OF_RESTRICT))
+        return 1;
+#endif
 #ifdef HAS_CARD_FINAL_ATTACK_ORDERS
     if (AiTryPlaySpellTrap(CARD_FINAL_ATTACK_ORDERS))
         return 1;
@@ -10654,6 +10712,16 @@ const struct CardEffect gAddedCardEffects[] = {
     {
         CARD_GRAVITY_BIND, 0,
         EffectGravityBindResolve,
+        NULL,
+        NULL,
+        NULL,
+        NULL,
+    },
+#endif
+#ifdef HAS_CARD_MASK_OF_RESTRICT
+    {
+        CARD_MASK_OF_RESTRICT, 0,
+        EffectMaskOfRestrictResolve,
         NULL,
         NULL,
         NULL,

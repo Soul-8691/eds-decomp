@@ -549,7 +549,7 @@ int TributeMonster(int player, int zone)
 
     if (zone > ZONE_MONSTER_4)
         return 0;
-    if (CountActiveCardsOnField(0, CARD_1418) > 0 || CountActiveCardsOnField(1, CARD_1418) > 0)
+    if (IsTributeLockActive())
         return 0;
     if (id != 0) {
         struct DuelZone *z = &gDuelPlayers[player & 1].zones[zone];

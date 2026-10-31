@@ -592,9 +592,7 @@ int CanActivateMonsterEffect(u16 id, int player, int zone)
             return 0;
         for (i = 0; i < gDuelPlayers[player & 1].deckCount; i++) {
             if (CARD_NUMBER_OF((DECK_CARD_WORD(player, i) << 20) >> 20) == target) {
-                if (CountActiveCardsOnField(0, CARD_1418) > 0)
-                    return 0;
-                if (CountActiveCardsOnField(1, CARD_1418) > 0)
+                if (IsTributeLockActive())
                     return 0;
                 return 1;
             }

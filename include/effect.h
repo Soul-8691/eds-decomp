@@ -172,6 +172,13 @@ int HaDesNegatesBattleFlipEffect(void);
 int FlipEffectsLockedForTurn(void);
 void LockFlipEffectsForTurn(void);
 void ClearFlipEffectsLockForTurn(void);
+/* Neither player may Tribute (vanilla effect key CARD_1418; added Mask of Restrict). */
+#ifndef HAS_CARD_MASK_OF_RESTRICT
+#define IsTributeLockActive() \
+    (CountActiveCardsOnField(0, CARD_1418) > 0 || CountActiveCardsOnField(1, CARD_1418) > 0)
+#else
+int IsTributeLockActive(void);
+#endif
 /* Tsukuyomi (src/added_effects.c): cannot be Special Summoned. */
 int IsCannotSpecialSummon(u16 cardId);
 void TsukuyomiMarkForEndReturn(int player, int zone);

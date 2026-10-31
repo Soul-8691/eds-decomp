@@ -797,7 +797,7 @@ int EffectCrushCardPrepare(struct ChainEntry *card)
     struct ZoneCardStats stats;
     int zone;
 
-    if (CountActiveCardsOnField(0, CARD_1418) > 0 || CountActiveCardsOnField(1, CARD_1418) > 0)
+    if (IsTributeLockActive())
         return FALSE;
     for (zone = 0; zone <= ZONE_MONSTER_4; zone++) {
         struct DuelZonesPlayer *zones = &gDuelZones[card->player];

@@ -2313,5 +2313,8 @@ updated: 2026-09-29
 ## [2026-10-31] progress | Field icon art after make demo then make
 - Wrong card-art miniatures on `eds.gba` after fixing demo portraits: `make demo` then plain `make` can leave `mod_field_icons.o` compiled with the demo `CARD_ID_COUNT` while `field_icons.bin` and `gModFieldIconData` are full-pool (or the reverse). Makefile: `mod_field_icons.o` and `mod_field_icons_data.o` depend on `NEWCARDS_GEN` and `FIELD_ICONS`. [[card-icons]].
 
+## [2026-10-31] progress | Mask of Restrict effect and AI
+- `IsTributeLockActive` wires added `CARD_MASK_OF_RESTRICT` into every former `CARD_1418` tribute lock check; `EffectMaskOfRestrictResolve`, `AiWantsMaskOfRestrict`. [[added-cards]].
+
 ## [2026-10-31] progress | Opponent portrait art after profile switch
 - Wrong duelist portraits on `eds_demo` (card art not matching the format name): `make demo` and `make` assign different card numbers to the same added cards; stale `mod_opponents.o` kept old `CARD_*` values in `sOpponents` while `gCardNumberToId` / art matched the other profile. `PortraitCardId` in src/mod_opponents.c; Makefile already lists `NEWCARDS_GEN` for `mod_opponents.o` / `mod_decks.o`. Rebuild `make demo` after switching profiles. [[yugi-kaiba-opponent]].

@@ -473,7 +473,7 @@ int EffectEquippedTributeCheck(struct ChainEntry *entry, u16 pos)
     }
     if (CARD_NUMBER(id) != targetNo)
         return 0;
-    if (CountActiveCardsOnField(0, CARD_1418) > 0 || CountActiveCardsOnField(1, CARD_1418) > 0)
+    if (IsTributeLockActive())
         return 0;
     for (i = 0; i < ZONE_AT_PLAYER_FIRST(player & 1, zone)->numLinks; i++) {
         u16 link = ZONE_AT_PLAYER_FIRST(player & 1, zone)->links[i];

@@ -380,7 +380,7 @@ int EffectCanTributeOpponentMonsterPrepare(struct ChainEntry *card)
     if (CountMonsters(card->player) == 0)
         return 0;
 #endif
-    if (CountActiveCardsOnField(0, CARD_1418) > 0 || CountActiveCardsOnField(1, CARD_1418) > 0)
+    if (IsTributeLockActive())
         return 0;
     for (i = ZONE_MONSTER_0; i <= ZONE_MONSTER_4; i++) {
         int side = 1 & card->player;
@@ -457,7 +457,7 @@ int EffectCanTributeOpponentMonsterPrepare(struct ChainEntry *card)
 /* Key 1232: no key 1418 (forbids tributes) active and the player has a face-up Kuriboh. */
 int EffectFaceUpKuribohPrepare(struct ChainEntry *card)
 {
-    if (CountActiveCardsOnField(0, CARD_1418) > 0 || CountActiveCardsOnField(1, CARD_1418) > 0
+    if (IsTributeLockActive()
         || CountFaceUpMonstersByNumber(card->player, CARD_KURIBOH) <= 0)
         return 0;
     return 1;

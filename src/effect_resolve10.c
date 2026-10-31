@@ -637,7 +637,7 @@ int EffectRecoverGraveMonsterResolve(struct ChainEntry *link)
  * 1000 LP. */
 int EffectTributeTwoMonstersResolve(struct ChainEntry *link)
 {
-    if (!link->negated && CountActiveCardsOnField(0, CARD_1418) <= 0 && CountActiveCardsOnField(1, CARD_1418) <= 0
+    if (!link->negated && !IsTributeLockActive()
         && link->numTargets == 2) {
         int i;
         /* FAKEMATCH: targets pinned to r3 as the indexed-check base (see below). */

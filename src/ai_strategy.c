@@ -316,10 +316,17 @@ int AiStrategyFourTokensCannonSoldier(void)
         }
         return 0;
     case 2:
-        k = CARD_1418;
-        if (CountActiveCardsOnField(0, k) > 0)
+        if (CountActiveCardsOnField(0, CARD_1418) > 0
+#ifdef HAS_CARD_MASK_OF_RESTRICT
+            || CountActiveCardsOnField(0, CARD_MASK_OF_RESTRICT) > 0
+#endif
+        )
             goto fail;
-        if (CountActiveCardsOnField(1, k) > 0) {
+        if (CountActiveCardsOnField(1, CARD_1418) > 0
+#ifdef HAS_CARD_MASK_OF_RESTRICT
+            || CountActiveCardsOnField(1, CARD_MASK_OF_RESTRICT) > 0
+#endif
+        ) {
             {
                 /* FAKEMATCH: preserve this distinct flag-clear prefix. */
                 register u8 *base asm("r1") = (u8 *)&gAiWork;
