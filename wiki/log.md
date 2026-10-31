@@ -2212,3 +2212,9 @@ updated: 2026-09-29
 - The release build overlapped the pinned data at 0x08080A20 by 0x14C bytes (release .text 0x08080B6C after the Exarion Universe, Wave-Motion Cannon, Chiron the Mage and Draw-icon commits). `@farcode password_trade` (units.txt) moves that original unit (0xC8C bytes; 0/21 functions matched, so CI loses nothing) after the data: release .text 0x0807FEE0, 0xB40 bytes of slack.
 - Tried first: `@farcode coin_toss_scene` (0x101C bytes) also fits, but DuelScene_SkullDice stops matching in check.py (its bl out of the unit moves), which CI would count as a lost match.
 - Other candidates with no matched functions: duel_info_bar (0xCC8, 0/21). Moving a unit with matches costs those that call out of it.
+
+## [2026-10-31] progress | Usage pack pull weights flattened
+- tools/format_packs.py: `USAGE_PACK_SCORE_POWER` + `USAGE_PACK_UNIFORM_WEIGHT` loosen inverse-usage pulls; regenerated format pack data. [[pack-shop]].
+
+## [2026-10-31] progress | Usage packs: stats-only card pools
+- tools/format_packs.py: `usage_card_numbers()`; usage packs no longer union `card_pools/*.txt` or default-weight pool-only cards. Regenerated `build/include/format_pack_data.h`. [[pack-shop]].

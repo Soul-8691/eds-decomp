@@ -5,6 +5,7 @@
 
 TCG sets from packs/*_tcg.json interleaved with usage-weighted format packs (BANLISTS order):
 each format's real sets in release order, then that format's usage pack (LOB / Yugi / Kaiba / Yugi-Kaiba / MRD / …).
+Usage packs list only cards present in usage/<stem>.json (weighted like cardprices.py), not the full card pool.
 Format event dates come from packs/formats.json field \"date\".
 """
 import bisect
@@ -25,7 +26,11 @@ VANILLA_PACK_INFO_COUNT = 23
 # 50 packs × ROULETTE_SIZE × 2 bytes (mod_format_pack_roulettes @rodata); keep .text.added headroom.
 ROULETTE_SIZE = 8192
 WEIGHT_SCALE = 10000
-DEFAULT_SHARE_DIVISOR = 50
+# Usage-pack pull weight ∝ 1/share^POWER (before banlist limits). 1.0 = full inverse usage;
+# lower values flatten pulls so staples (high usage) show up more and the tail repeats less.
+USAGE_PACK_SCORE_POWER = 0.4
+# Baseline weight so every card in the pool keeps some chance (reduces “same six cards” loops).
+USAGE_PACK_UNIFORM_WEIGHT = 120
 FORMAT_PACK_FLAG_USAGE = 1
 FORMAT_PACK_USAGE_WINS = 10
 
@@ -253,14 +258,33 @@ def usage_maps(stem, lookup, missing):
     return total, extra, decks
 
 
+def usage_card_numbers(stem, lookup, missing):
+    """Card numbers that appear in usage/<stem>.json (main, side, or extra lists)."""
+    numbers = set()
+    path = f'usage/{stem}.json'
+    try:
+        usage = json.load(open(path, encoding='utf-8'))
+    except FileNotFoundError:
+        return numbers
+    for key in ('total', 'extra'):
+        for entry in usage.get(key, []):
+            nums = lookup(entry['name'])
+            if nums is None:
+                missing.append(entry['name'])
+                continue
+            numbers |= nums
+    return numbers
+
+
 def card_weight(number, total, extra, decks, limits):
     if limits.get(number) == 0:
         return None
     s = total.get(number, 0.0) + extra.get(number, 0.0) / EXTRA_DIVISOR
     if s <= 0.0:
-        s = 1.0 / (decks * DEFAULT_SHARE_DIVISOR)
+        return None
     score = s * BASE * LIMIT_FACTOR.get(limits.get(number), 1.0)
-    w = int(WEIGHT_SCALE / score + 0.5)
+    skew = WEIGHT_SCALE / (score ** USAGE_PACK_SCORE_POWER)
+    w = int((1.0 - USAGE_PACK_UNIFORM_WEIGHT / WEIGHT_SCALE) * skew + USAGE_PACK_UNIFORM_WEIGHT + 0.5)
     return max(1, min(w, 65535))
 
 
@@ -390,12 +414,9 @@ def main():
             flags.append(FORMAT_PACK_FLAG_USAGE)
             stem = spec['stem']
             limits, _ = banlist.read_limits(f'banlists/{stem}_ban.json', lookup, missing)
-            pool = set()
-            for pool_stem in spec['pools']:
-                pool |= banlist.read_pool(f'card_pools/{pool_stem}.txt', lookup, missing)
             total, extra, decks = usage_maps(stem, lookup, missing)
             entries = []
-            for number in sorted(pool):
+            for number in sorted(usage_card_numbers(stem, lookup, missing)):
                 if number == 0:
                     continue
                 w = card_weight(number, total, extra, decks, limits)
@@ -473,11 +494,38 @@ def main():
     lines.append('')
 
     banlist.write_if_changed(out, '\n'.join(lines))
+    write_make_deps(out)
     print(
         f'format_packs: {len(pack_specs)} packs (TCG + usage interleaved per format), '
         f'{len(set(missing))} names not in ROM (skipped)',
         file=sys.stderr,
     )
+
+
+def write_make_deps(header_path):
+    """GNU make splits prerequisites on spaces; TCG JSON paths contain spaces."""
+    dep_path = os.path.splitext(header_path)[0] + '.d'
+    tcg = sorted(glob.glob('packs/*_tcg.json'))
+    usage = sorted(glob.glob('usage/*.json'))
+
+    def esc(path):
+        return path.replace('\\', '/').replace(' ', r'\ ')
+
+    prereqs = [
+        'tools/format_packs.py',
+        'tools/banlist.py',
+        'packs/formats.json',
+        *[esc(p) for p in tcg],
+        *[esc(p) for p in usage],
+        'build/assets/.newcards',
+    ]
+    line = f'{esc(header_path)}: {" ".join(prereqs)}\n'
+    try:
+        if open(dep_path, encoding='utf-8').read() == line:
+            return
+    except FileNotFoundError:
+        pass
+    open(dep_path, 'w', encoding='utf-8').write(line)
 
 
 if __name__ == '__main__':

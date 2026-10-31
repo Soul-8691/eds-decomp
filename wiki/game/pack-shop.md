@@ -18,8 +18,13 @@ on the game's own Get-a-pack screens. Checked in the source and the build; not t
     OBJ tiles 0x240-0x27F.
 - **Scene.** `CB_PackShop` runs `CB_GetPack` (`gGetPackSteps`, as the Campaign rewards and the debug menu do) with
   `gMain.rewardPack = 0`, so step 0 shows the pack list. While the shop is open, `ModPackList_AddUnlockedPacks`
-  (`src/mod_format_packs.c`)   lists unlocked packs interleaved by format: each format's TCG sets (`packs/*_tcg.json`, release
-  order within the format) then its usage-weighted pack (e.g. LOB, Yugi/Kaiba starters, Yugi-Kaiba, Metal Raiders, Critter, …).   TCG sets unlock when their [[banlists]] format opponent is unlocked (LOB/Yugi/Kaiba starters with Yugi-Kaiba,
+  (`src/mod_format_packs.c`) lists unlocked packs interleaved by format: each format's TCG sets
+  (`packs/*_tcg.json`, release order within the format) then its usage-weighted pack (e.g. LOB, Yugi/Kaiba
+  starters, Yugi-Kaiba, Metal Raiders, Critter, …). Usage packs include only cards in that format's
+  `usage/<stem>.json` (same universe as [[duelist-points]] / `tools/cardprices.py`), not the full legal pool.
+  Pull weights still favor lower-usage cards, but `tools/format_packs.py` flattens the curve (`USAGE_PACK_SCORE_POWER`,
+  uniform baseline) so staples are easier to hit and the same low-tier cards repeat less.
+  TCG sets unlock when their [[banlists]] format opponent is unlocked (LOB/Yugi/Kaiba starters with Yugi-Kaiba,
   Metal Raiders with Critter, and so on). Usage packs need 10 wins in that format. The next format opponent
   needs 20 campaign wins. Event dates in `packs/formats.json` (`date`) are used at generation time for ordering
   and metadata (`sFormatEventDate[]`). Debug builds (`make`, not `make release`) show every

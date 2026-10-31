@@ -174,9 +174,10 @@ build/src/mod_dp.o: $(PRICES_GEN)
 
 FORMAT_PACKS_GEN := build/include/format_pack_data.h
 FORMAT_PACK_ROULETTES_BIN := build/assets/format_pack_roulettes.bin
-$(FORMAT_PACKS_GEN): tools/format_packs.py tools/banlist.py packs/formats.json $(wildcard packs/*_tcg.json) $(wildcard usage/*.json) $(NEWCARDS_BUILT)
+$(FORMAT_PACKS_GEN): tools/format_packs.py tools/banlist.py packs/formats.json $(wildcard usage/*.json) $(NEWCARDS_BUILT)
 	@mkdir -p $(@D)
 	$(PYTHON) tools/format_packs.py $@
+-include build/include/format_pack_data.d
 build/src/mod_format_packs.o: $(FORMAT_PACKS_GEN)
 build/data/mod_format_pack_roulettes.o: $(FORMAT_PACK_ROULETTES_BIN)
 
