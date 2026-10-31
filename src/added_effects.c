@@ -4398,6 +4398,23 @@ int EffectCardDestructionResolve(struct ChainEntry *link, struct ChainEntry *cha
 }
 #endif /* HAS_CARD_CARD_DESTRUCTION */
 
+#ifdef HAS_CARD_COLD_WAVE
+/* ---- Cold Wave (YGOPRODeck id 23171648) ---------------------------------------------------------------------------
+ * Normal Spell: "This turn and the next turn, no player can play any Spell or Trap Cards." Same as engine key 1312
+ * (EffectStartOfMainPhase1Prepare, EffectLockMagicTrapResolve): Main Phase 1 before any Spell/Trap activation or
+ * Normal Summon; then both players get magicTrapLockTurns = 2 (DUEL_CMD_SET_MAGIC_TRAP_LOCK_TURNS). The hand menu
+ * drops ACTIVATE after either flag is set (card_command_menu.c, as CARD_1312). CPU: AiWantsSpell whenever it may;
+ * AiTryPlaySpellTrap also refuses while magicTrapLockTurns is set (ai_deck.c). */
+
+int EffectColdWavePrepare(struct ChainEntry *card, struct ChainEntry *chainLink, u16 fromHand)
+{
+    (void)chainLink;
+    if (!fromHand)
+        return 0;
+    return EffectStartOfMainPhase1Prepare(card);
+}
+#endif /* HAS_CARD_COLD_WAVE */
+
 #ifdef HAS_CARD_JAR_OF_GREED
 /* ---- Jar of Greed --------------------------------------------------------------------------------------------------
  * Normal Trap: "Draw 1 card." A row with no prepare or check, like Gift of the Mystical Elf's: CanActivateEffect
@@ -9776,6 +9793,16 @@ const struct CardEffect gAddedCardEffects[] = {
         EffectCardDestructionResolve,
         NULL,
         NULL,
+        NULL,
+        NULL,
+    },
+#endif
+#ifdef HAS_CARD_COLD_WAVE
+    {
+        CARD_COLD_WAVE, 0,
+        (int (*)(struct ChainEntry *, struct ChainEntry *))EffectLockMagicTrapResolve,
+        NULL,
+        EffectColdWavePrepare,
         NULL,
         NULL,
     },

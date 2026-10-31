@@ -333,6 +333,9 @@ int CardMenu_GetHandCardCommands(u16 id, int player)
             case CARD_1544:
                 flags &= (u16)~CARDMENU_MASK_SET;
                 break;
+#ifdef HAS_CARD_COLD_WAVE
+            case CARD_COLD_WAVE:                                /* added card (src/added_effects.c) */
+#endif
             case CARD_1312:
                 {
                     /* Matching: the base of the players first, as a separate term (it also fixes the

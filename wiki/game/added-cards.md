@@ -1737,6 +1737,18 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
   activated anyway.
 - Checked in the source and the build; not tested in an emulator.
 
+### Cold Wave (2026-10-30)
+- Effect text from [YGOPRODeck](https://db.ygoprodeck.com/api/v7/cardinfo.php?name=Cold%20Wave) (id 23171648):
+  "This turn and the next turn, no player can play any Spell or Trap Cards." Normal Spell. Reuses engine key 1312:
+  `EffectColdWavePrepare` (`EffectStartOfMainPhase1Prepare`: Main Phase 1, no Spell/Trap activated and no Normal
+  Summon yet), `EffectLockMagicTrapResolve` (both players' `magicTrapLockTurns` = 2). Hand menu ACTIVATE gate matches
+  `CARD_1312` in `card_command_menu.c`. CPU plays it whenever `AiWantsSpell` may (default yes). `gAddedCardEffects`
+  row.
+- **Fix (2026-10-30).** The CPU could still play Raigeki and other Spells on a locked turn because `AiTryPlaySpellTrap`
+  calls `CanActivateEffect` directly; the ROM applies `magicTrapLockTurns` in `CanActivateHandCard` /
+  `CanActivateFieldCard` instead. `ai_deck.c` now returns early when player 1's lock is nonzero.
+- Checked in the source and the build; not tested in an emulator.
+
 ### Xing Zhen Hu (2026-10-26)
 - Continuous Trap, the card data's (older) text: "Activate by selecting 2 Set Spell or Trap Cards on the field. The
   selected Spell or Trap Cards cannot be activated." Engine key 1312 (`EffectLockMagicTrapResolve`) is a different

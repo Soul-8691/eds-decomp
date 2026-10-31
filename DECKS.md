@@ -2293,7 +2293,7 @@ Every card was already in the game. Cards in these seven decks with no coded eff
 (`decks/splevin-Stein Monarch.ydk`). Main, Fusion and Side Decks match the `.ydk` files (Cyber Dragon and Cyber End
 Dragon use the YGOPRODeck id aliases in `tools/testdeck.py`, same as other deck imports). Deck Recipes presets 38-39.
 
-Every card was already in the game. Cards in these two decks with **no coded effect yet**: Chiron the Mage, Cold Wave,
+Every card was already in the game. Cards in these two decks with **no coded effect yet**: Chiron the Mage,
 Different Dimension Capsule, D.D. Assailant, Exarion Universe, Wave-Motion Cannon, and the Fusion Monsters Dark Balter
 the Terrible, Ryu Senshi, Gatling Dragon, Dark Blade the Dragon Knight, Fiend Skull Dragon, Reaper on the Nightmare,
 The Last Warrior from Another Planet, King Dragun, Master of Oz, and Ojama King.

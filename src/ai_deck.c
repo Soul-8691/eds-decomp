@@ -250,6 +250,11 @@ int AiTryPlaySpellTrap(u16 number)
     u32 pos;
     u16 cardId;
 
+    /* ROM: CanActivateHandCard / CanActivateFieldCard refuse Magic and Trap while magicTrapLockTurns is set
+     * (Cold Wave, key 1312). AiTryPlaySpellTrap calls CanActivateEffect directly, so enforce the same rule. */
+    if (gDuelPlayers[1].magicTrapLockTurns != 0)
+        return 0;
+
     if (CountActivatableSetCards(0, CARD_MAGIC_JAMMER) != 0) {
         if (gDuelCtrl.aiFlags & AI_FLAG_CAREFUL) {
             if ((Random() & 3) != 0)
