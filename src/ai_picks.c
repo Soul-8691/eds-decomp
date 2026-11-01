@@ -696,6 +696,9 @@ int AiPickOpponentHandCard(void)
  *  - Attack Position target: compared by ATK. Beating it sets wins, targetDestroyed and damage = difference;
  *    losing sets attackerDestroyed and a negative damage; a tie destroys both and leaves damage 0. */
 int AiDestroysBeforeDamage(int attackerZone, int targetZone);     /* added: src/added_effects.c */
+#ifdef HAS_CARD_D_D_WARRIOR_LADY
+int AiDDWarriorLadyBanishTrade(int attackerZone, int targetZone, struct AttackPlan *plan);
+#endif
 int ModCipherBonus(int player, int zone, int otherPlayer, int otherZone);  /* added: Cipher Soldier */
 
 void AiEvalAttack(int attackerZone, int targetZone, struct AttackPlan *plan)
@@ -801,12 +804,17 @@ u16 AiFindAttackTarget(int attackerZone, struct AttackPlan *plan)
             continue;
         AiEvalAttack(attackerZone, i, &candidate);
         if (!candidate.wins) {
-            if (!haveCrash && candidate.attackerDestroyed && candidate.targetDestroyed
-                && !AiOtherAttackerBeats(attackerZone, i)) {
-                MemCopy16(&crash, &candidate, sizeof(struct AttackPlan));
-                haveCrash = 1;
+#ifdef HAS_CARD_D_D_WARRIOR_LADY
+            AiDDWarriorLadyBanishTrade(attackerZone, i, &candidate);
+#endif
+            if (!candidate.wins) {
+                if (!haveCrash && candidate.attackerDestroyed && candidate.targetDestroyed
+                    && !AiOtherAttackerBeats(attackerZone, i)) {
+                    MemCopy16(&crash, &candidate, sizeof(struct AttackPlan));
+                    haveCrash = 1;
+                }
+                continue;
             }
-            continue;
         }
         /* Matching: the DEF compare below is signed (the ROM's int GetZoneCardDef); the shared prototype
          * returns u32, hence the casts. */

@@ -1271,6 +1271,28 @@ int AiDestroysBeforeDamage(int attackerZone, int targetZone)
 }
 #endif /* HAS_CARD_NINJA_GRANDMASTER_SASUKE || HAS_CARD_MYSTIC_SWORDSMAN_LV2 || HAS_CARD_SASUKE_SAMURAI */
 
+#ifdef HAS_CARD_D_D_WARRIOR_LADY
+/* AiFindAttackTarget (ai_picks.c): after AiEvalAttack, the CPU always activates D.D. Warrior Lady's effect in
+ * battle (battle_phase2.c), so any battle banishes both monsters. Count it as a winning plan when the predicted
+ * battle damage would not leave the CPU at 0 LP (plan->damage is negative when the human's monster is stronger). */
+int AiDDWarriorLadyBanishTrade(int attackerZone, int targetZone, struct AttackPlan *plan)
+{
+    struct DuelZone *attacker = ZoneOf(1, attackerZone);
+    u16 id = DUEL_CARD_ID(&attacker->card);
+
+    if (id == 0 || !attacker->isFaceUp || CARD_NUMBER(id) != CARD_D_D_WARRIOR_LADY)
+        return 0;
+    if (DUEL_CARD_ID(&ZoneOf(0, targetZone)->card) == 0 || plan->wins)
+        return 0;
+    if ((int)gDuelPlayers[1].lifePoints + plan->damage <= 0)
+        return 0;
+    plan->wins = 1;
+    plan->targetDestroyed = 1;
+    plan->attackerDestroyed = 0;
+    return 1;
+}
+#endif /* HAS_CARD_D_D_WARRIOR_LADY */
+
 /* ---- Mod state of a duel -----------------------------------------------------------------------------------------
  * gModDuel (EWRAM 0x0202FF04, symbols.ld) holds what the added cards remember during a duel; DuelPhase_Init
  * (duel_main.c) clears it with ModDuelInit, since that RAM is not cleared otherwise. */
