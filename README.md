@@ -271,9 +271,9 @@ Each format is a Campaign "duelist". You start with Yugi-Kaiba only; beat the cu
 - **Thunder Dragon** can be activated even with no copy left in the Deck; the search then finds nothing.
 - **Debug mode** (testing builds only, not in the release). You start with 8 copies of every card. On **New Game**,
   choosing the **red** starter deck leaves your saved Main, Fusion and Side Decks **empty** (build from the trunk);
-  green and black still load their premade Yugi-Kaiba recipe decks. Deck-out is turned
-  off only in duels vs **Test Duel** or the **Debug** duelist (Solomon/Debug page); format opponents use normal
-  deck-out rules. Decks can be under 40 cards, can hold any number of copies of a card, and ignore banlists. Switching
+  green and black still load their premade Yugi-Kaiba recipe decks. **Deck-out is off** in every Campaign duel
+  (format opponents included); Link Battles still use normal deck-out rules. In the **release** build, deck-out is
+  blocked only vs **Debug** (and **Test Duel** is not offered). Decks can be under 40 cards, can hold any number of copies of a card, and ignore banlists. Switching
   banlists skips the 40-card Main Deck check. Every format is unlocked, and the Record (Duel Score) screen
   shows every duelist on every page. The opponent's hand is shown face up during
   duels, and the cursor shows the info of all their cards (face-down ones too), with Card View.   You can open your deck pile from the command menu (Draw / Card View / Surrender) and the opponent's main or fusion

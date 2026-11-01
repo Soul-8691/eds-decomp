@@ -23,7 +23,7 @@ updated: 2026-10-26
 
 | | `make` (testing) | `make release` |
 |---|---|---|
-| Deck out (`CanDeckOut`, duel_cmd_deck.c) | normal rules; neither side vs Test Duel or Debug | normal rules; neither side vs Debug |
+| Deck out (`CanDeckOut`, duel_cmd_deck.c) | off in every duel except Link Battle | normal rules; neither side vs Debug |
 | New game trunk (`BuildStarterDeck`, title_screen.c) | `GiveStartingTrunk`: 8 of every card | none (the starter deck only) |
 | Red starter deck (`BuildModStarterDeck`) | empty (build from trunk) | Soul Control (El Duelista DEX) |
 | `DECK_MIN_CARDS` (save.h) | 1 | 40 |
@@ -36,7 +36,7 @@ updated: 2026-10-26
 
 ## Checked
 Both builds were checked in the preprocessed units:
-- `CanDeckOut` returns 0 only for ModTestDuel / ModDebugDuel; otherwise 1;
+- `CanDeckOut` returns 0 when `!MOD_RELEASE` (except Link Battle) or ModDebugDuel; otherwise 1;
 - `GetBanlistCopyLimit`'s default is 3;
 - no `GiveStartingTrunk` call;
 - `make` then switches back.
