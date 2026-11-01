@@ -264,8 +264,8 @@ int AiTryPlaySpellTrap(u16 number)
                 return 0;
         }
     }
-    /* added: Dark Hole only while the human has more monsters than the CPU (every AiPlaySpells case asks here) */
-    if (number == CARD_DARK_HOLE && CountMonsters(0) <= CountMonsters(1))
+    /* added: Dark Hole only while the human has at least as many monsters as the CPU (every AiPlaySpells case asks here) */
+    if (number == CARD_DARK_HOLE && CountMonsters(0) < CountMonsters(1))
         return 0;
 #ifdef HAS_CARD_SECRET_BARREL
     if (number == CARD_SECRET_BARREL && !AiWantsSecretBarrel())

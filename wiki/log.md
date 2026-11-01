@@ -2336,3 +2336,6 @@ updated: 2026-09-29
 
 ## [2026-10-31] progress | Opponent portrait art after profile switch
 - Wrong duelist portraits on `eds_demo` (card art not matching the format name): `make demo` and `make` assign different card numbers to the same added cards; stale `mod_opponents.o` kept old `CARD_*` values in `sOpponents` while `gCardNumberToId` / art matched the other profile. `PortraitCardId` in src/mod_opponents.c; Makefile already lists `NEWCARDS_GEN` for `mod_opponents.o` / `mod_decks.o`. Rebuild `make demo` after switching profiles. [[yugi-kaiba-opponent]].
+
+## [2026-11-01] progress | Dark Hole AI allows equal monster counts
+- `AiTryPlaySpellTrap` refuses Dark Hole only when `CountMonsters(0) < CountMonsters(1)` (was `<=`). README.md, [[added-cards]].

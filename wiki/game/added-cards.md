@@ -845,8 +845,8 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
   - the CPU has Sangan or Witch of the Black Forest (also in the Exodia step);
   - a risky White Hole.
   Several of those clear the CPU's own larger board.
-- **Now.** `AiTryPlaySpellTrap`, which every case goes through, refuses Dark Hole unless the human controls more
-  monsters than the CPU (`CountMonsters(0) > CountMonsters(1)`). The other Dark Hole references (Graceful Charity's
+- **Now.** `AiTryPlaySpellTrap`, which every case goes through, refuses Dark Hole unless the human controls at least
+  as many monsters as the CPU (`CountMonsters(0) >= CountMonsters(1)`). The other Dark Hole references (Graceful Charity's
   deck check, Needle Worm, the White Hole set choice in ai_turn_steps.c) don't play it.
 - Checked in the source and the build; not tested in an emulator.
 
