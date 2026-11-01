@@ -12,6 +12,9 @@ int ModDuelFastAnimAdvance(int oldStep);
 void ModDuelApplySpeedSettings(void);
 int ModGetSpeedMode(void);
 void ModSetSpeedMode(int mode);
-void ModDuelSettingsHandleInput(void);
+/* L on an idle duel frame: start the Settings screen (1 if it was started). */
+int ModDuelSettingsHandleInput(void);
+/* Runs the in-duel Settings screen; 1 while it owns the frame (DuelMainStep then does nothing else). */
+int ModDuelSettingsRun(void);
 
 #endif /* GUARD_MOD_DUEL_SPEED_H */

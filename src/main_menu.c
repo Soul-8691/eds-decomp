@@ -26,6 +26,7 @@
 #include "main_menu.h"          /* gMainMenuCursor, gRecordScreen, MainMenu_*, Record_* */
 #include "constants/game.h"     /* DUELIST_* */
 #include "constants/sound.h"    /* SE_* */
+#include "mod_settings.h"
 
 /* ---- Local data: ROM tables and images only this unit uses ---- */
 
@@ -39,8 +40,6 @@ u16 CB_DeckRecipes(void);
 void PackShop_BuildLabel(u16 *dst);
 /* Added: the Banlists item (src/mod_banlists.c). */
 void BanlistsMenu_BuildLabel(u16 *dst);
-void SettingsMenu_BuildLabel(u16 *dst);
-u16 CB_Settings(void);
 u16 CB_Banlists(void);
 /* Added: the player's DP (src/mod_dp.c). */
 void MainMenuDP_Render(void);

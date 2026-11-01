@@ -1,7 +1,7 @@
 /*
  * mod_settings: Settings, the main menu's eleventh item (duel speed: DEFAULT / ALWAYS / SUPER). Not part of the
- * original ROM. The choice is stored in gSaveData.options bits 2-3 (src/save.h). L during a duel opens this
- * menu and returns to the duel on B.
+ * original ROM. The choice is stored in gSaveData.options bits 2-3 (src/save.h). L during a duel opens the same
+ * screen inside the duel loop (ModDuelSettingsRun) and B goes back to the duel.
  */
 
 #include "global.h"
@@ -14,17 +14,15 @@
 #include "text.h"
 #include "save.h"
 #include "sound.h"
+#include "duel.h"
+#include "duel_flow.h"
 #include "duel_screen.h"
-#include "duel_cmd.h"
 #include "constants/sound.h"
-#include "constants/duel_cmds.h"
 #include "mod_duel_speed.h"
 #include "chain.h"
 
 extern const u8 gMainMenuObjPal[];
 extern const u16 gMainMenuSkyImage[];
-
-u16 CB_Settings(void);
 
 struct LabelChunk {
     u8 item;
@@ -97,35 +95,76 @@ static int DeckReorderUsesShoulderButtons(void)
     }
 }
 
-static u16 (*sSettingsReturnCallback)(void);
+/* ---- Settings scene (EWRAM gSettingsMenu) ---- */
 
-static void BeginSettingsScene(u16 (*returnCb)(void))
+/* gSettingsMenu.duelState: Settings opened with L inside a duel, run from DuelMainStep the way the card menu's
+ * Card Detail runs (fade the duel screen out, full-screen scene, DuelScreen_Init, fade back in). */
+enum SettingsDuelState {
+    SETTINGS_DUEL_NONE = 0,
+    SETTINGS_DUEL_FADE_OUT = 1,
+    SETTINGS_DUEL_RUN = 2,
+    SETTINGS_DUEL_FADE_IN = 3,
+};
+
+struct SettingsMenu {
+    u8 cursor;
+    u8 duelState;
+    u8 step;
+    u8 subStep;
+};
+
+extern struct SettingsMenu gSettingsMenu;
+
+static int SettingsScene_Step(int inDuel);
+
+int ModDuelSettingsHandleInput(void)
 {
-    sSettingsReturnCallback = returnCb;
-    SaveGame();
-    gMain.vblankCallbackEarly = NULL;
-    gMain.vblankCallback = NULL;
-    REG_IME = 0;
-    REG_IE &= 0xFFFD;
-    REG_IME = 1;
-    REG_IME = 0;
-    REG_IE &= 0xFFFD;
-    IntrTable[INTR_SLOT_HBLANK] = NULL;
-    REG_IME = 1;
-    gMain.seqIndex1 = 0;
-    gMain.seqState1 = 0;
-    gMain.seqState2 = 0;
-    gMain.callback = CB_Settings;
+    struct SettingsMenu *s = &gSettingsMenu;
+
+    if (!(gMain.newKeys & L_BUTTON) || !gDuelScreen.active || gDuelCtrl.isLinkDuel)
+        return 0;
+    if (gDuel.cardMenu.open || DeckReorderUsesShoulderButtons())
+        return 0;
+    PlaySE(SE_CONFIRM);
+    s->duelState = SETTINGS_DUEL_FADE_OUT;
+    return 1;
 }
 
-void ModDuelSettingsHandleInput(void)
+int ModDuelSettingsRun(void)
 {
-    if (!gDuelScreen.active || !(gMain.newKeys & L_BUTTON))
-        return;
-    if (DeckReorderUsesShoulderButtons())
-        return;
-    PlaySE(SE_CONFIRM);
-    BeginSettingsScene(gMain.callback);
+    struct SettingsMenu *s = &gSettingsMenu;
+
+    switch (s->duelState) {
+    case SETTINGS_DUEL_FADE_OUT:
+        DrawFieldOverlay();
+        DrawHandCards();
+        if (DuelScreen_FadeOutStep()) {
+            gDuelScreen.uiGfxLoaded = 0;
+            gDuelScreen.active = 0;
+            ResetBgScroll();
+            s->step = 0;
+            s->subStep = 0;
+            s->duelState = SETTINGS_DUEL_RUN;
+        }
+        return 1;
+    case SETTINGS_DUEL_RUN:
+        if (SettingsScene_Step(1)) {
+            gDuelScreen.fast = ModGetSpeedMode() != MOD_SPEED_DEFAULT;
+            DuelScreen_Init();
+            DuelScreen_DrawCursorInfo();
+            s->duelState = SETTINGS_DUEL_FADE_IN;
+        }
+        return 1;
+    case SETTINGS_DUEL_FADE_IN:
+        DrawFieldOverlay();
+        DrawHandCards();
+        if (DuelScreen_FadeInStep())
+            s->duelState = SETTINGS_DUEL_NONE;
+        return 1;
+    default:
+        s->duelState = SETTINGS_DUEL_NONE;
+        return 0;
+    }
 }
 
 /* ---- Menu label ---- */
@@ -146,15 +185,6 @@ void SettingsMenu_BuildLabel(u16 *dst)
 {
     BuildMenuLabel(sSettingsLabel, ARRAY_COUNT(sSettingsLabel), dst);
 }
-
-/* ---- Settings scene ---- */
-
-struct SettingsMenu {
-    u8 cursor;
-    u8 pad[3];
-};
-
-extern struct SettingsMenu gSettingsMenu;
 
 #define TITLE_TILE      0x000
 #define CANVAS_TILE     0x040
@@ -230,7 +260,6 @@ static void SelectCursor(void)
 
     if (ModGetSpeedMode() != s->cursor) {
         ModSetSpeedMode(s->cursor);
-        ModDuelApplySpeedSettings();
         PlaySE(SE_CONFIRM);
     } else {
         PlaySE(SE_CURSOR);
@@ -262,13 +291,15 @@ static int HandleInput(void)
     return 0;
 }
 
-u16 CB_Settings(void)
+/* One frame of the scene: set up, fade in, input, fade out; 1 when it has faded out. In a duel (inDuel) the duel
+ * music keeps playing. */
+static int SettingsScene_Step(int inDuel)
 {
     struct SettingsMenu *s = &gSettingsMenu;
 
-    switch (gMain.seqIndex1) {
+    switch (s->step) {
     case 0:
-        switch (gMain.seqState1++) {
+        switch (s->subStep++) {
         case 0:
             REG_DISPCNT = 0;
             break;
@@ -278,17 +309,17 @@ u16 CB_Settings(void)
             ResetBgScroll();
             REG_BG1CNT = BGCNT_256COLOR | BGCNT_CHARBASE(1);
             gMain.vblankFlags = VBLANK_COPY_OAM | VBLANK_COPY_BG_MAPS;
-            PlayBGMNoTrack(SONG_MAIN_MENU);
+            if (!inDuel)
+                PlayBGMNoTrack(SONG_MAIN_MENU);
             break;
         default:
             CopyDoubleWords((void *)OBJ_PLTT, gMainMenuObjPal, 0x20);
             LoadBgImage(0, 0, 0x20, gMainMenuSkyImage);
             SettingsMenu_BuildLabel((u16 *)OBJ_TILE(TITLE_TILE));
-            MemClear16(s, sizeof(*s));
             s->cursor = ModGetSpeedMode();
             Render();
-            gMain.seqIndex1++;
-            gMain.seqState1 = 0;
+            s->step++;
+            s->subStep = 0;
             break;
         }
         return 0;
@@ -296,33 +327,32 @@ u16 CB_Settings(void)
         REG_DISPCNT = DISPCNT_BG1_ON | DISPCNT_OBJ_ON;
         DrawSprites();
         if (FadeFromBlack(1))
-            gMain.seqIndex1++;
+            s->step++;
         return 0;
     case 2:
         DrawSprites();
         if (HandleInput()) {
-            FadeOutBGM();
-            gMain.seqIndex1++;
+            if (!inDuel)
+                FadeOutBGM();
+            s->step++;
         }
         return 0;
     default:
         DrawSprites();
-        if (FadeToBlack(2) != 0) {
-            if (sSettingsReturnCallback != NULL) {
-                u16 (*ret)(void) = sSettingsReturnCallback;
-
-                sSettingsReturnCallback = NULL;
-                ModDuelApplySpeedSettings();
-                gMain.callback = ret;
-                gMain.seqIndex1 = 0;
-                gMain.seqState1 = 0;
-                gMain.seqState2 = 0;
-                gMain.vblankFlags = VBLANK_COPY_OAM | VBLANK_COPY_BG_MAPS;
-                DuelCmd_Push(DUEL_CMD_OPEN_DUEL_SCREEN, 0, 0, 0);
-                return 0;
-            }
-            return 1;
-        }
-        return 0;
+        return FadeToBlack(2) != 0;
     }
+}
+
+/* Main menu item 10. Returns 1 when done (MainLoop goes back to the main menu, which saves the game). */
+u16 CB_Settings(void)
+{
+    struct SettingsMenu *s = &gSettingsMenu;
+
+    if (gMain.seqIndex1 == 0) {
+        s->duelState = SETTINGS_DUEL_NONE;
+        s->step = 0;
+        s->subStep = 0;
+        gMain.seqIndex1 = 1;
+    }
+    return SettingsScene_Step(0);
 }

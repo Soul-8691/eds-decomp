@@ -580,7 +580,8 @@ u32 DuelPhase_ShowResult(void)
  * 1 moves to the next step. Returns 1 when the duel is over (after the result was saved), else 0.
  */
 int ModDuelStateCheck(void);    /* mod: the added cards' continuous rules (src/added_effects.c) */
-void ModDuelSettingsHandleInput(void); /* mod: L opens Settings (src/mod_settings.c) */
+int ModDuelSettingsHandleInput(void);  /* mod: L opens Settings on an idle frame (src/mod_settings.c) */
+int ModDuelSettingsRun(void);          /* mod: the in-duel Settings screen, while it is up */
 
 u32 DuelMainStep(void)
 {
@@ -588,7 +589,8 @@ u32 DuelMainStep(void)
     u16 done;
 
     if (gDuelPhaseTable[gDuelCtrl.phase] != NULL) {
-        ModDuelSettingsHandleInput();
+        if (ModDuelSettingsRun())
+            return 0;
         busy = DuelScreen_Update();
         if (busy == 0) {
             if (gDuelCtrl.isLinkDuel && gLinkState.remoteCmdPending)
@@ -609,6 +611,8 @@ u32 DuelMainStep(void)
         }
         if (busy == 0 && !TextBoxUpdate16() && !DuelPrompt_Run16() && !SummonAction_Update() && !Chain_Update()) {
             UpdateSpellTrapNegation1(1);
+            if (ModDuelSettingsHandleInput())
+                goto end;
             if (ModDuelStateCheck())    /* added: e.g. Berserk Gorilla in Defense Position is destroyed */
                 goto end;
             if (!EventResponse_Update16()) {
