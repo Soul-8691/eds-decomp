@@ -1,50 +1,51 @@
 # Yak's YGO Hack
 
 <p align="center">
-  <img src="eds-8.png" width="24%" alt="Screenshot 1">
-  <img src="eds-9.png" width="24%" alt="Screenshot 2">
-  <img src="eds-11.png" width="24%" alt="Screenshot 3">
-  <img src="eds-10.png" width="24%" alt="Screenshot 4">
+  <img src="screenshots/Title Screen.png" width="24%" alt="Title Screen">
+  <img src="screenshots/Deck Edit.png" width="24%" alt="Deck Edit">
+  <img src="cards/Breaker the Magical Warrior.png" width="24%" alt="Breaker the Magical Warrior">
+  <img src="cards/Black Luster Soldier - Envoy of the Beginning.png" width="24%" alt="Black Luster Soldier - Envoy of the Beginning">
 </p>
 <p align="center">
-  <img src="eds-29.png" width="24%" alt="Screenshot 5">
-  <img src="eds-30.png" width="24%" alt="Screenshot 6">
-  <img src="eds-12.png" width="24%" alt="Screenshot 7">
-  <img src="eds-15.png" width="24%" alt="Screenshot 8">
+  <img src="cards/Cyber Dragon.png" width="24%" alt="Cyber Dragon">
+  <img src="cards/Treeborn Frog.png" width="24%" alt="Treeborn Frog">
+  <img src="cards/Torrential Tribute.png" width="24%" alt="Torrential Tribute">
+  <img src="cards/Trap Dustshoot.png" width="24%" alt="Trap Dustshoot">
 </p>
 <p align="center">
-  <img src="eds-13.png" width="24%" alt="Screenshot 9">
-  <img src="eds-14.png" width="24%" alt="Screenshot 10">
-  <img src="eds-31.png" width="24%" alt="Screenshot 11">
-  <img src="eds-16.png" width="24%" alt="Screenshot 12">
+  <img src="cards/Card Destruction.png" width="24%" alt="Card Destruction">
+  <img src="cards/Reinforcement of the Army.png" width="24%" alt="Reinforcement of the Army">
+  <img src="cards/Pot of Avarice.png" width="24%" alt="Pot of Avarice">
+  <img src="cards/Thousand-Eyes Restrict.png" width="24%" alt="Thousand-Eyes Restrict">
 </p>
 <p align="center">
-  <img src="eds-32.png" width="24%" alt="Screenshot 13">
-  <img src="eds-33.png" width="24%" alt="Screenshot 14">
-  <img src="eds-27.png" width="24%" alt="Screenshot 15">
-  <img src="eds-17.png" width="24%" alt="Screenshot 16">
+  <img src="cards/Cyber Twin Dragon.png" width="24%" alt="Cyber Twin Dragon">
+  <img src="cards/Cyber End Dragon.png" width="24%" alt="Cyber End Dragon">
+  <img src="screenshots/Password.png" width="24%" alt="Password">
+  <img src="screenshots/Deck Recipes (Main Menu).png" width="24%" alt="Deck Recipes (Main Menu)">
 </p>
 <p align="center">
-  <img src="eds-18.png" width="24%" alt="Screenshot 17">
-  <img src="eds-19.png" width="24%" alt="Screenshot 18">
-  <img src="eds-20.png" width="24%" alt="Screenshot 19">
-  <img src="eds_demo-2.png" width="24%" alt="Screenshot 20">
+  <img src="screenshots/Booster Packs (Main Menu).png" width="24%" alt="Booster Packs (Main Menu)">
+  <img src="screenshots/Banlists (Main Menu).png" width="24%" alt="Banlists (Main Menu)">
+  <img src="screenshots/Deck Recipes.png" width="24%" alt="Deck Recipes">
+  <img src="screenshots/Pack Opener.png" width="24%" alt="Pack Opener">
 </p>
 <p align="center">
-  <img src="eds-21.png" width="24%" alt="Screenshot 21">
-  <img src="eds-22.png" width="24%" alt="Screenshot 22">
-  <img src="eds-23.png" width="24%" alt="Screenshot 23">
-  <img src="eds-24.png" width="24%" alt="Screenshot 24">
+  <img src="screenshots/Banlists.png" width="24%" alt="Banlists">
+  <img src="screenshots/Duelists (Screen 1).png" width="24%" alt="Duelists (Screen 1)">
+  <img src="screenshots/Duelists (Screen 2).png" width="24%" alt="Duelists (Screen 2)">
+  <img src="screenshots/Duelists (Screen 3).png" width="24%" alt="Duelists (Screen 3)">
 </p>
 <p align="center">
-  <img src="eds_release-0.png" width="24%" alt="Screenshot 25">
-  <img src="eds-25.png" width="24%" alt="Screenshot 26">
-  <img src="eds_demo-3.png" width="24%" alt="Screenshot 27">
-  <img src="eds-36.png" width="24%" alt="Screenshot 28">
+  <img src="screenshots/Duelists (Screen 4).png" width="24%" alt="Duelists (Screen 4)">
+  <img src="screenshots/Card Icons.png" width="24%" alt="Card Icons">
+  <img src="screenshots/Card Icons (Up Close) - Summon-Set Order.png" width="24%" alt="Card Icons (Up Close) - Summon-Set Order">
+  <img src="screenshots/Counters.png" width="24%" alt="Counters">
 </p>
 <p align="center">
-  <img src="eds_demo-5.png" width="24%" alt="Screenshot 29">
-  <img src="eds_demo-6.png" width="24%" alt="Screenshot 30">
+  <img src="screenshots/Settings (Main Menu).png" width="24%" alt="Settings (Main Menu)">
+  <img src="screenshots/Settings.png" width="24%" alt="Settings">
+  <img src="screenshots/Activate-Set Order.png" width="24%" alt="Activate-Set Order">
 </p>
 
 A hack of *Yu-Gi-Oh! The Eternal Duelist Soul* (GBA) that follows the
