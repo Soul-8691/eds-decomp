@@ -615,6 +615,15 @@ int AiStepChangePositions(void)
                                         return 0;
                                     }
                                     break;
+                                case CARD_HANE_HANE:
+                                case CARD_PENGUIN_SOLDIER:
+                                    if (ZoneFace(savedMask, z) == 0 && CountMonsters(0) > 0
+                                        && AiShouldFlipRemovalForAttacks(1, zone) != 0) {
+                                        QueueFlipSummon(1, zone);
+                                        AI->subState++;
+                                        return 0;
+                                    }
+                                    break;
                                 }
                             }
                         }

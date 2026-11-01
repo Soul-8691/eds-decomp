@@ -8725,6 +8725,97 @@ int AiTryFlipSafeFlipEffectsForTribute(void)
     return 0;
 }
 
+/* ---- CPU: Flip Summon Hane-Hane / Penguin Soldier when bounce opens attacks -------------------------------------
+ * In the position-change step, flip these face-down when a simulated Battle Phase would deal more damage after their
+ * flip effects return the human's strongest monster(s) to the hand (same picks as in play). */
+
+static void AiSimClearMonsterOnField(int player, int zone)
+{
+    struct DuelZone *z = ZoneOf(player, zone);
+
+    if (DUEL_CARD_ID(&z->card) != 0)
+        z->card.id = 0;
+}
+
+static int AiSimCpuBattleDamage(void)
+{
+    int damage;
+
+    AiBackupDuelState();
+    AiSimSetAttackPositions();
+    damage = AiSimBattlePhase();
+    AiRestoreDuelState();
+    return damage;
+}
+
+static void AiSimFlipRemovalEffect(int cpuZone, u16 number)
+{
+    struct DuelZone *z = ZoneOf(AI_PLAYER, cpuZone);
+    int first = -1;
+    int second;
+
+    z->isFaceUp = 1;
+    z->isDefense = 0;
+    z->positionLocked = 0;
+    gDuelPlayers[AI_PLAYER].attackedMask &= ~(1 << cpuZone);
+
+    if (number == CARD_HANE_HANE) {
+        first = AiFindStrongestMonster(0, -1, 1, 1);
+        if (first >= 0)
+            AiSimClearMonsterOnField(0, first);
+        return;
+    }
+    if (number == CARD_PENGUIN_SOLDIER) {
+        first = AiFindStrongestMonster(0, -1, 1, 1);
+        if (first >= 0)
+            AiSimClearMonsterOnField(0, first);
+        if (CountMonsters(0) > 0) {
+            second = AiFindStrongestMonster(0, first, 1, 1);
+            if (second >= 0)
+                AiSimClearMonsterOnField(0, second);
+        }
+    }
+}
+
+static int AiFlipRemovalMonsterNumber(u16 id)
+{
+    u16 number = CardNumberOfId(id);
+
+    switch (number) {
+    case CARD_HANE_HANE:
+    case CARD_PENGUIN_SOLDIER:
+        return (int)number;
+    default:
+        return 0;
+    }
+}
+
+int AiShouldFlipRemovalForAttacks(int player, int zone)
+{
+    struct DuelZone *z;
+    u16 id;
+    int number;
+    int before;
+    int after;
+
+    if ((player & 1) != AI_PLAYER || CountMonsters(0) <= 0)
+        return 0;
+    z = ZoneOf(AI_PLAYER, zone);
+    id = DUEL_CARD_ID(&z->card);
+    if (id == 0 || z->isFaceUp)
+        return 0;
+    number = AiFlipRemovalMonsterNumber(id);
+    if (number == 0)
+        return 0;
+    before = AiSimCpuBattleDamage();
+    AiBackupDuelState();
+    AiSimFlipRemovalEffect(zone, (u16)number);
+    AiSimSetAttackPositions();
+    after = AiSimBattlePhase();
+    AiRestoreDuelState();
+    return after > before;
+}
+
 /* ---- The CPU counts the ATK boosts it will get when it judges positions -------------------------------------------
  * When the CPU chooses Attack or Defense (the summon simulations, the position-change step and AiShouldRetreatToDefense)
  * it judges a monster by the ATK it will have once the boosts it plays are on it:
