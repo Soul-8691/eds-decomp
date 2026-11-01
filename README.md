@@ -133,7 +133,9 @@ Each format is a Campaign "duelist". You start with Yugi-Kaiba only; beat the cu
   no longer scrolls either.
 - **Fixes.** Deck Edit no longer blots out the first letters of the row above the cursor after Card View (a
   bug in the original game). Added-card **icons** in duels and Deck Edit use the correct cropped art; format
-  **duelist portraits** are generated from the intended namesake art again.
+  **duelist portraits** are generated from the intended namesake art again. In the hand/field card menu, **Summon** comes
+  before **Set**, **Activate** comes before **Set** for Spells you can activate or Set, and **Card Info** is always the
+  last option (Left/Right order matches the row).
 - **Solomon and Debug.** The opponent page after the formats has Solomon (top left) and Debug (top right), open from
   the start: before the duel you pick one of your own Deck Recipes for them to play. Beating them gives no DP, so
   they're for practice and testing decks. Against Debug you first pick your own deck the same way (a recipe, or
@@ -178,6 +180,10 @@ Each format is a Campaign "duelist". You start with Yugi-Kaiba only; beat the cu
       unless that monster has an effect that triggers on its summon (Zaborg, Mobius, Breaker, ...).
     - It does not Normal Summon or Set **Injection Fairy Lily** from its hand when it has 2000 LP or less (it cannot
       pay the battle effect cost).
+    - When it can **Tribute Summon** (level 5+ in hand, enough tributes, normal summon not blocked), it **Flip
+      Summons** its face-down **flip-effect** monsters before tributing them, one per step, except flips that would
+      leave the field or wipe the board (**Parasite Paracide**, **Cyber Jar**, **Morphing Jar #2**, **Jigen Bakudan**,
+      **Fiber Jar** when coded).
   - **Card use.**
     - It plays its Spells after its Normal Summon, in both Main Phases. The original CPU skipped its Spells on
       any turn it summoned to attack (always, with your field empty), after a Tribute Summon, and in Main Phase 2.
