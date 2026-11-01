@@ -547,6 +547,8 @@ int CanActivateMonsterEffect(u16 id, int player, int zone)
 #ifdef HAS_CARD_MAGICAL_SCIENTIST
     case CARD_MAGICAL_SCIENTIST:                            /* added card (src/added_effects.c) */
 #endif
+        return CanActivateEffectInZone(player, zone, 0);
+
 #ifdef HAS_CARD_HYSTERIC_FAIRY
     case CARD_HYSTERIC_FAIRY:                               /* added card (src/added_effects.c) */
         return CountTributableMonsters(player, -1) > 1 && CanActivateEffectInZone(player, zone, 0);
