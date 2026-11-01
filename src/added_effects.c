@@ -9016,6 +9016,8 @@ int EffectMobiusChainB(struct ChainEntry *link, struct ChainEntry *prevLink)
         int pass, zone;
 
         link->numTargets = 0;
+        if (CanActivateEffect(link, prevLink, 0) == 0)
+            return 1;
         for (pass = 0; pass <= 1 && link->numTargets < MOBIUS_MAX_TARGETS; pass++) {
             for (zone = ZONE_SPELL_0; zone <= ZONE_FIELD && link->numTargets < MOBIUS_MAX_TARGETS; zone++) {
                 struct DuelZone *z = ZoneOf(AI_HUMAN, zone);
@@ -9030,6 +9032,8 @@ int EffectMobiusChainB(struct ChainEntry *link, struct ChainEntry *prevLink)
     switch (gChain.targetStep) {
     case 0:
         link->numTargets = 0;
+        if (CanActivateEffect(link, prevLink, 0) == 0)
+            return 1;
         TextBoxOpen(0x206, 0x712, TEXTBOX_FLAGS_DEFAULT, gStrDesignateFirstCardToDestroy);
         gChain.targetStep++;
         return 0;

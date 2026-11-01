@@ -666,9 +666,6 @@ int ExecuteSummonAction(void)
 #ifdef HAS_CARD_ZABORG_THE_THUNDER_MONARCH
         case CARD_ZABORG_THE_THUNDER_MONARCH:   /* added card: Level 5, so this summon is a Tribute Summon */
 #endif
-#ifdef HAS_CARD_MOBIUS_THE_FROST_MONARCH
-        case CARD_MOBIUS_THE_FROST_MONARCH:     /* added card: Level 6, so this summon is a Tribute Summon */
-#endif
 #ifdef HAS_CARD_THESTALOS_THE_FIRESTORM_MONARCH
         case CARD_THESTALOS_THE_FIRESTORM_MONARCH:  /* added card: Level 6, so this summon is a Tribute Summon */
 #endif
@@ -676,6 +673,15 @@ int ExecuteSummonAction(void)
             t = (gSummonAction.zone << 16) | SUMMONED_TRIGGER_BITS;
             Chain_AddPending(a | t | gSummonAction.cardId, gSummonAction.player | (gSummonAction.zone << 8));
             break;
+#ifdef HAS_CARD_MOBIUS_THE_FROST_MONARCH
+        case CARD_MOBIUS_THE_FROST_MONARCH:     /* optional: only if a Spell/Trap is on the field */
+            if (CanActivateEffectInZone(gSummonAction.player, gSummonAction.zone, RESPONSE_SUMMONED)) {
+                a = gSummonAction.player << 31;
+                t = (gSummonAction.zone << 16) | SUMMONED_TRIGGER_BITS;
+                Chain_AddPending(a | t | gSummonAction.cardId, gSummonAction.player | (gSummonAction.zone << 8));
+            }
+            break;
+#endif
         case CARD_TOTAL_DEFENSE_SHOGUN:
             ChangeBattlePosition(gSummonAction.player, gSummonAction.zone, 0, 0);
             break;
@@ -808,9 +814,6 @@ int ExecuteSummonActionAskPosition(void)
 #ifdef HAS_CARD_ZABORG_THE_THUNDER_MONARCH
         case CARD_ZABORG_THE_THUNDER_MONARCH:   /* added card: Level 5, so this summon is a Tribute Summon */
 #endif
-#ifdef HAS_CARD_MOBIUS_THE_FROST_MONARCH
-        case CARD_MOBIUS_THE_FROST_MONARCH:     /* added card: Level 6, so this summon is a Tribute Summon */
-#endif
 #ifdef HAS_CARD_THESTALOS_THE_FIRESTORM_MONARCH
         case CARD_THESTALOS_THE_FIRESTORM_MONARCH:  /* added card: Level 6, so this summon is a Tribute Summon */
 #endif
@@ -818,6 +821,15 @@ int ExecuteSummonActionAskPosition(void)
             t = (gSummonAction.zone << 16) | SUMMONED_TRIGGER_BITS;
             Chain_AddPending(a | t | gSummonAction.cardId, gSummonAction.player | (gSummonAction.zone << 8));
             break;
+#ifdef HAS_CARD_MOBIUS_THE_FROST_MONARCH
+        case CARD_MOBIUS_THE_FROST_MONARCH:     /* optional: only if a Spell/Trap is on the field */
+            if (CanActivateEffectInZone(gSummonAction.player, gSummonAction.zone, RESPONSE_SUMMONED)) {
+                a = gSummonAction.player << 31;
+                t = (gSummonAction.zone << 16) | SUMMONED_TRIGGER_BITS;
+                Chain_AddPending(a | t | gSummonAction.cardId, gSummonAction.player | (gSummonAction.zone << 8));
+            }
+            break;
+#endif
         case CARD_TOTAL_DEFENSE_SHOGUN:
             ChangeBattlePosition(gSummonAction.player, gSummonAction.zone, 0, 0);
             break;
