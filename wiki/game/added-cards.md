@@ -838,6 +838,11 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
   case for it).
 - Checked in the source and the build; not tested in an emulator.
 
+### The CPU's Snatch Steal (2026-11-01)
+- **Before.** The ROM never called `AiTryPlaySpellTrap(CARD_SNATCH_STEAL)` (Snatch is not in `gAiGenericSpells`). If it activated, `EffectTakeControlChainB` picked the human's strongest monster, including illegal targets.
+- **Now.** `AiPlaySpells` step 2 tries Snatch Steal for lethal first (`AiSnatchStealIsLethal`, any hand monster), then the same tribute-summon hand scans as Change of Heart, then when `AiWantsSnatchSteal` (stolen ATK ≥ the CPU's strongest face-up ATK, or ≥ its highest face-up DEF if it has no Attack Position monsters; opens a full field by tributing when needed). `AiSnatchStealCpuTargetZone` picks the best legal face-up target (skips Gearfried / 1351). README.md.
+- Checked in the source; not tested in an emulator.
+
 ### The CPU's Waboku (2026-11-01)
 - **Before.** Vanilla `AiShouldActivateSetCard` had no case for Waboku (1055), and `AiTryChainResponse` never chained a set copy to Heavy Storm or Giant Trunade (only Harpie's Feather Duster's panic list included similar traps, not Waboku).
 - **Now.** `AiShouldActivateSetCard` flips a set Waboku on the human's turn when the window is an attack declaration (any attack while the CPU has monsters, or a lethal attack including direct when it has none), or the human's Heavy Storm / Feather Duster / Giant Trunade (with monsters on its field). `AiTryChainResponse` adds Waboku to the Feather Duster set-card loop and chains it to Heavy Storm and Giant Trunade before the generic Magic answers.

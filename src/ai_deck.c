@@ -622,8 +622,8 @@ static inline int AiCpuDeckCountAt(u8 *ptr)
  *  1  Pot of Greed, Fusion Sage, Dark Hole / Raigeki (when the CPU's field is empty, the human threatens it, it
  *     holds its own Sangan or Witch of the Black Forest, or the human has no set White Hole / Anti-Raigeki to answer),
  *     Tribute to the Doomed, Fissure.
- *  2  Change of Heart (a tribute for a level 5-6 monster, or level 5+ when the CPU has monsters), Monster Reborn,
- *     Premature Burial.
+ *  2  Change of Heart and Snatch Steal (a tribute for a level 5-6 monster, or level 5+ when the CPU has monsters),
+ *     Monster Reborn, Premature Burial.
  *  3  Graceful Charity (with AI_FLAG_CAREFUL only with a revival card in hand or a key card in the top 3 of its deck).
  *  4  Card Destruction (key 1221) when Magic Thorn is active or the human holds key cards (the CPU reads the human's
  *     hand; a ROM bug makes the test true for "not in hand").
@@ -668,6 +668,8 @@ int AiPlaySpells(void)
         return 0;
     case AI_SPELLS_TAKE_AND_REVIVE:
         if (CountMonsters(0) > 0) {
+            if ((u16)AiSnatchStealIsLethal() && (u16)AiTryPlaySpellTrap(CARD_SNATCH_STEAL))
+                return 0;
             if (CountMonsters(1) == 0) {
                 /* The CPU has no monster: Change of Heart pays for a level 5-6 monster in its hand. */
                 i = 0;
@@ -677,6 +679,11 @@ int AiPlaySpells(void)
                         if (CARD_STATS_TYPE(CARD_STATS(id)) <= CARD_TYPE_REPTILE && IsSpecialSummonOnly(id) == 0
                             && AiCardLevel(id) > LEVEL_MAX_NO_TRIBUTE && AiCardLevel(id) <= LEVEL_MAX_ONE_TRIBUTE
                             && (u16)AiTryPlaySpellTrap(CARD_CHANGE_OF_HEART))
+                            return 0;
+                        if (((((const u32 *)CARD_STATS_ADDR)[id & CARD_ID_MASK] & CARD_STATS_TYPE_MASK) >> CARD_STATS_TYPE_SHIFT) <= CARD_TYPE_REPTILE
+                            && IsSpecialSummonOnly(id) == 0 && AiCardLevel(id) > LEVEL_MAX_NO_TRIBUTE
+                            && AiCardLevel(id) <= LEVEL_MAX_ONE_TRIBUTE
+                            && (u16)AiTryPlaySpellTrap(CARD_SNATCH_STEAL))
                             return 0;
                         i++;
                     } while (i < PLAYER(1).handCount);
@@ -698,11 +705,17 @@ int AiPlaySpells(void)
                             && IsSpecialSummonOnly(id) == 0 && AiCardLevelMasks(id, mask, typeMask) > LEVEL_MAX_NO_TRIBUTE
                             && (u16)AiTryPlaySpellTrap(CARD_CHANGE_OF_HEART))
                             return 0;
+                        if (((((const u32 *)CARD_STATS_ADDR)[id & mask] & typeMask) >> CARD_STATS_TYPE_SHIFT) <= CARD_TYPE_REPTILE
+                            && IsSpecialSummonOnly(id) == 0 && AiCardLevelMasks(id, mask, typeMask) > LEVEL_MAX_NO_TRIBUTE
+                            && (u16)AiTryPlaySpellTrap(CARD_SNATCH_STEAL))
+                            return 0;
                         i++;
                     } while (i < AiCpuHandCountReload());
                 }
             }
         }
+        if (CountMonsters(0) > 0 && (u16)AiWantsSnatchSteal() && (u16)AiTryPlaySpellTrap(CARD_SNATCH_STEAL))
+            return 0;
         number = CARD_MONSTER_REBORN;
         ref.card = CardNumberToId(number);
         ref.player = 1;

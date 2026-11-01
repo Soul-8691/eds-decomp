@@ -275,6 +275,12 @@ int AiSelectUsableSpellTrap(u16 number);
 /* Play card `number`: activate a set copy, or select the hand copy in gAiState.cardIndex (the caller
  * confirms it). 1 on success. */
 int AiTryPlaySpellTrap(u16 number);
+/* Snatch Steal (mod): play in Main Phase 1 when a legal steal is worthwhile or sets up a tribute summon. */
+int AiWantsSnatchSteal(void);
+/* Snatch Steal (mod): 1 if stealing the best legal target can end the duel this turn. */
+int AiSnatchStealIsLethal(void);
+/* Snatch Steal (mod): zone 0-4 on the human's field for the CPU's activation, or -1. */
+int AiSnatchStealCpuTargetZone(u16 cardId);
 /* 1 = go ahead; 0 now and then when the human has an activatable set counterNo (more often with
  * AI_FLAG_CAREFUL). */
 int AiRiskSetCounter(u16 counterNo);

@@ -420,7 +420,10 @@ int EffectTakeControlChainB(struct ChainEntry *link)
         int zone;
         link->numTargets = 0;
         noZone = -1;    /* FAKEMATCH: the sentinel in a variable (one register for the call and the test) */
-        zone = AiFindStrongestMonster(0, noZone, 1, one);
+        if (CARD_NUMBER(link->card) == CARD_SNATCH_STEAL)
+            zone = AiSnatchStealCpuTargetZone(link->card);
+        else
+            zone = AiFindStrongestMonster(0, noZone, 1, one);
         if (zone > noZone)
             TryAddEffectTarget(link, 0, zone);
         return 1;

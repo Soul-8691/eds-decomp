@@ -9575,6 +9575,175 @@ static int AiWantsMonsterEffect(u16 number, int zone)
     return 1;
 }
 
+/* ---- Snatch Steal (vanilla card; CPU never played it from hand in the ROM) -----------------------------------------
+ * Equip Spell: take control of a face-up monster of the human's (EffectSnatchStealResolve). Needs a free monster
+ * zone on the CPU's side when it resolves, or it only equips.
+ *   CPU      AiWantsSnatchSteal / AiPlaySpells (same tribute-summon hand checks as Change of Heart, plus lethal
+ *            with any hand monster); target = AiSnatchStealCpuTargetZone (EffectTakeControlChainB), skipping
+ *            Gearfried / 1351. */
+#define AI_SNATCH_LEVEL_NO_TRIBUTE 4
+#define AI_SNATCH_LEVEL_ONE_TRIBUTE 6
+
+static int SnatchStealWeakestTribute(int player)
+{
+    int zone, best = -1;
+
+    for (zone = ZONE_MONSTER_0; zone <= ZONE_MONSTER_4; zone++) {
+        if (IsTributableMonster(player, zone)
+            && (best < 0 || GetZoneCardAtk(player, zone) < GetZoneCardAtk(player, best)))
+            best = zone;
+    }
+    return best;
+}
+
+static int SnatchStealBestTarget(u16 cardId, int player)
+{
+    struct ChainEntry probe;
+    int opponent = 1 - (player & 1);
+    int zone, best = -1;
+    u16 pos;
+
+    probe.player = player;
+    probe.card = cardId;
+    for (zone = ZONE_MONSTER_0; zone <= ZONE_MONSTER_4; zone++) {
+        pos = (u16)opponent | (u16)(zone << 8);
+        if (EffectSnatchStealCheck(&probe, pos)
+            && (best < 0 || GetZoneCardAtk(opponent, zone) > GetZoneCardAtk(opponent, best)))
+            best = zone;
+    }
+    return best;
+}
+
+/* Same hand scan as Change of Heart in AiPlaySpells: a tribute Normal Summon after stealing their monster. */
+static int AiHandHasTributeSummonAfterSnatch(void)
+{
+    int i, empty = CountMonsters(AI_PLAYER) == 0;
+
+    for (i = 0; i < gDuelPlayers[AI_PLAYER].handCount; i++) {
+        u16 id = DUEL_CARD_ID(&gDuelPlayers[AI_PLAYER].hand[i]);
+        u32 stats;
+
+        if (CARD_STATS_TYPE(gCardStats[id & CARD_ID_MASK]) > CARD_TYPE_REPTILE)
+            continue;
+        if (IsSpecialSummonOnly(id))
+            continue;
+        stats = gCardStats[id & CARD_ID_MASK];
+        if (CARD_STATS_LEVEL(stats) <= AI_SNATCH_LEVEL_NO_TRIBUTE)
+            continue;
+        if (empty) {
+            if (CARD_STATS_LEVEL(stats) <= AI_SNATCH_LEVEL_ONE_TRIBUTE)
+                return 1;
+        } else {
+            return 1;
+        }
+    }
+    return 0;
+}
+
+static int AiCanPlaySnatchStealNow(void)
+{
+    if (FindHandCardByNumber(AI_PLAYER, CARD_SNATCH_STEAL) >= 0)
+        return 1;
+    return AiHasUsableSpellTrap(CARD_SNATCH_STEAL);
+}
+
+/* ATK bar for a worthwhile steal: strongest ATK among the CPU's face-up Attack Position monsters, else highest DEF
+ * among its face-up monsters when it has none in Attack Position. */
+static int SnatchStealCpuCompareThreshold(void)
+{
+    int zone, best = -1;
+
+    if (CountMonstersFiltered(AI_PLAYER, 1, 1) > 0) {
+        for (zone = ZONE_MONSTER_0; zone <= ZONE_MONSTER_4; zone++) {
+            struct DuelZone *z = ZoneOf(AI_PLAYER, zone);
+            int atk;
+
+            if (DUEL_CARD_ID(&z->card) == 0 || !z->isFaceUp || z->isDefense)
+                continue;
+            atk = GetZoneCardAtk(AI_PLAYER, zone);
+            if (best < 0 || atk > best)
+                best = atk;
+        }
+        return best;
+    }
+    for (zone = ZONE_MONSTER_0; zone <= ZONE_MONSTER_4; zone++) {
+        struct DuelZone *z = ZoneOf(AI_PLAYER, zone);
+        int def;
+
+        if (DUEL_CARD_ID(&z->card) == 0 || !z->isFaceUp)
+            continue;
+        def = GetZoneCardDef(AI_PLAYER, zone);
+        if (best < 0 || def > best)
+            best = def;
+    }
+    return best < 0 ? 0 : best;
+}
+
+static int SnatchStealWorthStealing(int stolenAtk)
+{
+    if (CountMonsters(AI_PLAYER) == 0)
+        return 1;
+    return stolenAtk >= SnatchStealCpuCompareThreshold();
+}
+
+int AiSnatchStealIsLethal(void)
+{
+    u16 id = gCardNumberToId[CARD_SNATCH_STEAL];
+    int target, stolen, lp;
+
+    if (CountMonsters(AI_HUMAN) == 0)
+        return 0;
+    if (!AiCanPlaySnatchStealNow())
+        return 0;
+    target = SnatchStealBestTarget(id, AI_PLAYER);
+    if (target < 0)
+        return 0;
+    stolen = GetZoneCardAtk(AI_HUMAN, target);
+    lp = (int)gDuelPlayers[AI_HUMAN].lifePoints;
+    if (stolen >= lp && CountMonsters(AI_HUMAN) == 1)
+        return 1;
+    if (CountMonsters(AI_HUMAN) == 1 && CountFreeMonsterZones(AI_PLAYER) > 0) {
+        if (stolen >= lp)
+            return 1;
+        if (SumMonsterAtk(AI_PLAYER) + stolen >= lp)
+            return 1;
+    }
+    return 0;
+}
+
+int AiSnatchStealCpuTargetZone(u16 cardId)
+{
+    return SnatchStealBestTarget(cardId, AI_PLAYER);
+}
+
+int AiWantsSnatchSteal(void)
+{
+    u16 id = gCardNumberToId[CARD_SNATCH_STEAL];
+    int target, stolen, freeZones, trib;
+
+    if (gAiState.step != AI_STEP_MAIN_PHASE_1 || CountMonsters(AI_HUMAN) == 0)
+        return 0;
+    if (!AiCanPlaySnatchStealNow())
+        return 0;
+    target = SnatchStealBestTarget(id, AI_PLAYER);
+    if (target < 0)
+        return 0;
+    if (AiSnatchStealIsLethal())
+        return 1;
+    if (AiHandHasTributeSummonAfterSnatch())
+        return 1;
+    stolen = GetZoneCardAtk(AI_HUMAN, target);
+    if (!SnatchStealWorthStealing(stolen))
+        return 0;
+    freeZones = CountFreeMonsterZones(AI_PLAYER);
+    if (freeZones > 0)
+        return 1;
+    trib = SnatchStealWeakestTribute(AI_PLAYER);
+    if (trib < 0)
+        return 0;
+    return 1;
+}
+
 #ifdef HAS_CARD_ENEMY_CONTROLLER
 /* ---- Enemy Controller ----------------------------------------------------------------------------------------------
  * Quick-Play Spell: "Activate 1 of these effects.
