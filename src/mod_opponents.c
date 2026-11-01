@@ -493,11 +493,62 @@ void ModCardMenuCloseForListView(void)
     gDuelScreen.showCursor = 1;
 }
 
+/* Card View (Card Info) is always last in the row and in Left/Right order (rodata in this @rodata unit). */
+const u8 ModCardMenuCmdOrder[MOD_CARDMENU_CMD_COUNT] = {
+    CARDMENU_CMD_DEF_POS,
+    CARDMENU_CMD_ATK_POS,
+    CARDMENU_CMD_FLIP,
+    CARDMENU_CMD_SUMMON,
+    CARDMENU_CMD_SET,
+    CARDMENU_CMD_ACTIVATE,
+    CARDMENU_CMD_ATTACK,
+    CARDMENU_CMD_DRAW,
+    CARDMENU_CMD_SURRENDER,
+    CARDMENU_CMD_FUSION,
+    CARDMENU_CMD_SP_SUMMON,
+    CARDMENU_CMD_SP_SUMMON_SET,
+    CARDMENU_CMD_CARD_VIEW,
+};
+
+#define FIELD_MENU_HAS(available, cmd) ((s32)(available) >> (cmd) & 1)
+
+int ModCardMenuFirstCommand(u16 available)
+{
+    int j;
+
+    for (j = 0; j < MOD_CARDMENU_CMD_COUNT; j++) {
+        if (FIELD_MENU_HAS(available, ModCardMenuCmdOrder[j]))
+            return ModCardMenuCmdOrder[j];
+    }
+    return CARDMENU_CMD_CARD_VIEW;
+}
+
+int ModCardMenuCycleCommand(u8 command, int dir, u16 available)
+{
+    int j;
+    int idx = -1;
+
+    for (j = 0; j < MOD_CARDMENU_CMD_COUNT; j++) {
+        if (ModCardMenuCmdOrder[j] == command) {
+            idx = j;
+            break;
+        }
+    }
+    if (idx < 0)
+        return command;
+    for (j = 0; j < MOD_CARDMENU_CMD_COUNT; j++) {
+        idx = (idx + dir + MOD_CARDMENU_CMD_COUNT) % MOD_CARDMENU_CMD_COUNT;
+        if (FIELD_MENU_HAS(available, ModCardMenuCmdOrder[idx]))
+            return ModCardMenuCmdOrder[idx];
+    }
+    return command;
+}
+
 #define DECK_MENU_CMD_ORDER_COUNT 3
 static const u8 sDeckMenuCmdOrder[DECK_MENU_CMD_ORDER_COUNT] = {
     CARDMENU_CMD_DRAW,
-    CARDMENU_CMD_CARD_VIEW,
     CARDMENU_CMD_SURRENDER,
+    CARDMENU_CMD_CARD_VIEW,
 };
 
 #define DECK_MENU_HAS(available, cmd) ((s32)(available) >> (cmd) & 1)

@@ -97,6 +97,11 @@ int ModTestDuel(void);
 /* 1 in make (testing), ModTestDuel, or ModDebugDuel: the human can use Card View on main/fusion deck piles
  * (own deck menu or opponent deck with Card View only) in draw/stack order (deck[0] = next draw). */
 int ModDeckListVisible(void);
+/* Field card command menu: Card View last in the icon row (campaign.c hooks). */
+#define MOD_CARDMENU_CMD_COUNT 13
+extern const u8 ModCardMenuCmdOrder[MOD_CARDMENU_CMD_COUNT];
+int ModCardMenuFirstCommand(u16 available);
+int ModCardMenuCycleCommand(u8 command, int dir, u16 available);
 /* Main-deck command menu: Draw before Card View (campaign.c hooks). */
 int ModCardMenuDeckFirstCommand(u16 available);
 int ModCardMenuDeckCycleCommand(u8 command, int dir, u16 available);

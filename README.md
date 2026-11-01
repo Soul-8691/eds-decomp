@@ -39,7 +39,7 @@
 <p align="center">
   <img src="eds_release-0.png" width="24%" alt="Screenshot 25">
   <img src="eds-25.png" width="24%" alt="Screenshot 26">
-  <img src="eds-26.png" width="24%" alt="Screenshot 27">
+  <img src="eds_demo-3.png" width="24%" alt="Screenshot 27">
   <img src="eds-36.png" width="24%" alt="Screenshot 28">
 </p>
 
@@ -288,7 +288,7 @@ Each format is a Campaign "duelist". You start with Yugi-Kaiba only; beat the cu
   blocked only vs **Debug** (and **Test Duel** is not offered). Decks can be under 40 cards, can hold any number of copies of a card, and ignore banlists. Switching
   banlists skips the 40-card Main Deck check. Every format is unlocked, and the Record (Duel Score) screen
   shows every duelist on every page. The opponent's hand is shown face up during
-  duels, and the cursor shows the info of all their cards (face-down ones too), with Card View.   You can open your deck pile from the command menu (Draw / Card View / Surrender) and the opponent's main or fusion
+  duels, and the cursor shows the info of all their cards (face-down ones too), with Card View.   You can open your deck pile from the command menu (Draw / Surrender / Card View) and the opponent's main or fusion
   deck pile with **Card View** (draw order on the main deck; works even when their deck is empty).
   The deck
   opponents' page (fourth page, right slot) has **Test Duel**, whose deck is the `.ydk` in `TEST_YDK` (default

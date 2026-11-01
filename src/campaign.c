@@ -414,7 +414,6 @@ void CalcBattle(int attacker, u16 zeroAtk)
 
 /* ---- Card command menu ---- */
 
-#define CARDMENU_CMD_COUNT 13           /* enum CardMenuCommand 0-12 */
 #define MENU (gDuel.cardMenu)
 #define MENU_HAS(command) ((s32)MENU.available >> (command) & 1)
 
@@ -430,13 +429,10 @@ void CardMenu_DrawIcons(void)
     u16 attr2;
     int x, y;
 
-    for (i = 0; i < CARDMENU_CMD_COUNT; i++) {
-        s32 bits = MENU.available;
-        bits >>= i;
-        if (bits & 1)
+    for (i = 0; i < MOD_CARDMENU_CMD_COUNT; i++) {
+        if (MENU_HAS(ModCardMenuCmdOrder[i]))
             count++;
     }
-    attr2 = OAM_ATTR2_PALETTE(2) | OAM_ATTR2_PRIORITY(1) | 0x224;
     x = 120 - count * 8;
     y = 160 - MENU.slide * 10;
     switch (gDuelScreen.selArea) {
@@ -450,18 +446,18 @@ void CardMenu_DrawIcons(void)
     MENU.timer++;
     if (gDuelScreen.selArea == DUEL_AREA_DECK)
         ModCardMenuDeckDrawIcons(x, y, MENU.available, MENU.command, MENU.timer);
-    else for (i = 0; i < CARDMENU_CMD_COUNT; i++) {
-        s32 bits = MENU.available;
-        bits >>= i;
-        if (bits & 1) {
-            if (MENU.command == i)
-                AddAffineSprite((y << 16) | x, SPRITE_SHAPE_16x16, attr2,
-                                gPulseScaleCurve[(MENU.timer >> 1) & 0xF] << 16);
-            else
-                AddSprite((y << 16) | x, SPRITE_SHAPE_16x16, attr2);
-            x += 16;
-        }
-        attr2 += 4;
+    else for (i = 0; i < MOD_CARDMENU_CMD_COUNT; i++) {
+        int cmd = ModCardMenuCmdOrder[i];
+
+        if (!MENU_HAS(cmd))
+            continue;
+        attr2 = OAM_ATTR2_PALETTE(2) | OAM_ATTR2_PRIORITY(1) | (0x224 + 4 * cmd);
+        if (MENU.command == cmd)
+            AddAffineSprite((y << 16) | x, SPRITE_SHAPE_16x16, attr2,
+                            gPulseScaleCurve[(MENU.timer >> 1) & 0xF] << 16);
+        else
+            AddSprite((y << 16) | x, SPRITE_SHAPE_16x16, attr2);
+        x += 16;
     }
 }
 
@@ -474,13 +470,10 @@ void CardMenu_DrawLabel(void)
     u16 attr2;
     int x;
 
-    for (i = 0; i < CARDMENU_CMD_COUNT; i++) {
-        s32 bits = MENU.available;
-        bits >>= i;     /* Matching: a separate shift keeps the lsr #16 inside the loop. */
-        if (bits & 1)
+    for (i = 0; i < MOD_CARDMENU_CMD_COUNT; i++) {
+        if (MENU_HAS(ModCardMenuCmdOrder[i]))
             count++;
     }
-    attr2 = OAM_ATTR2_PALETTE(3) | OAM_ATTR2_PRIORITY(1) | 0x264;
     x = 112 - count * 8;
     switch (gDuelScreen.selArea) {
     case DUEL_AREA_DECK:
@@ -492,13 +485,16 @@ void CardMenu_DrawLabel(void)
     }
     if (gDuelScreen.selArea == DUEL_AREA_DECK)
         ModCardMenuDeckDrawLabel(x, MENU.available, MENU.command);
-    else for (i = 0; i < CARDMENU_CMD_COUNT; i++) {
-        if ((MENU.available >> i) & 1) {
-            if (MENU.command == i)
-                AddSprite((96 << 16) | x, SPRITE_SHAPE_32x16, attr2);
-            x += 16;
+    else for (i = 0; i < MOD_CARDMENU_CMD_COUNT; i++) {
+        int cmd = ModCardMenuCmdOrder[i];
+
+        if (!MENU_HAS(cmd))
+            continue;
+        if (MENU.command == cmd) {
+            attr2 = OAM_ATTR2_PALETTE(3) | OAM_ATTR2_PRIORITY(1) | (0x264 + 8 * cmd);
+            AddSprite((96 << 16) | x, SPRITE_SHAPE_32x16, attr2);
         }
-        attr2 += 8;
+        x += 16;
     }
 }
 
@@ -601,18 +597,8 @@ void CardMenu_Update(void)
         MENU.slide = 0;
         if (gDuelScreen.selArea == DUEL_AREA_DECK)
             MENU.command = ModCardMenuDeckFirstCommand(MENU.available);
-        else {
-            MENU.command = 0;
-            /* Start at command 0, else the last available one. */
-            for (i = 0; !MENU_HAS(MENU.command); ) {
-                if (MENU.command)
-                    MENU.command--;
-                else
-                    MENU.command = CARDMENU_CMD_COUNT - 1;
-                if (++i > CARDMENU_CMD_COUNT - 1)
-                    break;
-            }
-        }
+        else
+            MENU.command = ModCardMenuFirstCommand(MENU.available);
         MENU.state++;
         break;
     case CARDMENU_STATE_SLIDE_IN:
@@ -629,31 +615,15 @@ void CardMenu_Update(void)
         if (gMain.newKeys & DPAD_LEFT) {
             if (gDuelScreen.selArea == DUEL_AREA_DECK)
                 MENU.command = ModCardMenuDeckCycleCommand(MENU.command, -1, MENU.available);
-            else {
-                for (i = 0; i < CARDMENU_CMD_COUNT; i++) {
-                    if (MENU.command)
-                        MENU.command--;
-                    else
-                        MENU.command = CARDMENU_CMD_COUNT - 1;
-                    if (MENU_HAS(MENU.command))
-                        break;
-                }
-            }
+            else
+                MENU.command = ModCardMenuCycleCommand(MENU.command, -1, MENU.available);
             PlaySE(SE_CURSOR);
         }
         if (gMain.newKeys & DPAD_RIGHT) {
             if (gDuelScreen.selArea == DUEL_AREA_DECK)
                 MENU.command = ModCardMenuDeckCycleCommand(MENU.command, 1, MENU.available);
-            else {
-                for (i = 0; i < CARDMENU_CMD_COUNT; i++) {
-                    if (MENU.command < CARDMENU_CMD_COUNT - 1)
-                        MENU.command++;
-                    else
-                        MENU.command = 0;
-                    if (MENU_HAS(MENU.command))
-                        break;
-                }
-            }
+            else
+                MENU.command = ModCardMenuCycleCommand(MENU.command, 1, MENU.available);
             PlaySE(SE_CURSOR);
         }
         if (gMain.newKeys & B_BUTTON) {
