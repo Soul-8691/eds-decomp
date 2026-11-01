@@ -304,6 +304,11 @@ int AiChooseSummonWithTribute(int *outDamage);
 int AiPickMonsterToSet(void);
 /* CPU answer to the position prompt: 1 = Defense Position, 0 = face-up Attack. faceUp != 0 skips the
  * flip-effect rule. */
+/* README / AiShouldRetreatToDefense: 1700+ ATK stays in Attack unless a face-up opponent leads by this much. */
+#define AI_RETREAT_KEEP_ATK 1700
+#define AI_RETREAT_GAP      1000
+
+int AiStrongestFaceUpMonsterAtk(int player);
 int AiShouldSetMonster(u16 cardId, u16 faceUp);
 /* 1 if the CPU has enough monsters to tribute for card id cardId. */
 int AiHasTributesFor(u16 cardId);

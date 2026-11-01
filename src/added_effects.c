@@ -7846,9 +7846,9 @@ int AiRecruiterCopyEntry(u16 cardId)
 /* ---- The CPU's Set step: strong monsters go face up ------------------------------------------------------------------
  * AiStepMainPhase's AI_MAIN_SET_MONSTER (ai_steps.c) Sets the monster it picks (on the first turn every summon goes
  * there, and later when no summon simulation is better). Changed: a monster with AI_SUMMON_ATTACK_ATK (1400) or more
- * printed ATK and no flip effect is Normal Summoned face up in Attack Position instead (with or without a Tribute),
- * unless the human controls a face-up monster with more ATK, which would run it over. (Until 2026-10-30: 1700 or more,
- * and only while the human controlled no monster.) */
+ * printed ATK and no flip effect is Normal Summoned face up in Attack Position instead of a face-down Set (with or
+ * without a Tribute), unless it would be run over. Below AI_RETREAT_KEEP_ATK that means any face-up monster with
+ * higher ATK; at 1700+ ATK only when a face-up opponent leads by AI_RETREAT_GAP (same as AiShouldRetreatToDefense). */
 #define AI_SUMMON_ATTACK_ATK 1400
 
 int AiSummonFaceUpOnOpenField(u16 id)
@@ -7856,11 +7856,18 @@ int AiSummonFaceUpOnOpenField(u16 id)
     u32 stats = gCardStats[id & CARD_ID_MASK];
     u16 number = CardNumberOfId(id);
     int atk = CARD_STATS_ATK(stats) * CARD_STATS_POINTS_SCALE, zone;
+    int threat;
 
     if (CARD_STATS_TYPE(stats) > CARD_TYPE_REPTILE || atk < AI_SUMMON_ATTACK_ATK)
         return 0;
     if (HasFlipEffect(number, 0) || HasFlipEffect(number, 1))
         return 0;
+    threat = AiStrongestFaceUpMonsterAtk(AI_HUMAN);
+    if (atk >= AI_RETREAT_KEEP_ATK) {
+        if (threat <= atk || threat - atk < AI_RETREAT_GAP)
+            return 1;
+        return 0;
+    }
     for (zone = ZONE_MONSTER_0; zone <= ZONE_MONSTER_4; zone++) {
         struct DuelZone *z = ZoneOf(AI_HUMAN, zone);
 
@@ -10393,9 +10400,7 @@ int AiPlayAddedCards(void)
 /* AiStepChangePositions (ai_steps.c), for a CPU monster that can beat none of the human's monsters: 1 if it is face
  * up in Attack Position and a face-up monster of the human (in either position: it can attack next turn) has higher
  * ATK, so the CPU switches it to Defense Position instead of leaving it to be run over. A strong monster
- * (RETREAT_KEEP_ATK or more) stays in Attack Position unless the strongest threat outclasses it by RETREAT_GAP. */
-#define RETREAT_KEEP_ATK    1700
-#define RETREAT_GAP         1000
+ * (AI_RETREAT_KEEP_ATK or more) stays in Attack Position unless the strongest threat outclasses it by AI_RETREAT_GAP. */
 
 int AiShouldRetreatToDefense(int zone)
 {
@@ -10418,7 +10423,7 @@ int AiShouldRetreatToDefense(int zone)
     }
     if (best <= atk)
         return 0;
-    return atk < RETREAT_KEEP_ATK || best - atk >= RETREAT_GAP;
+    return atk < AI_RETREAT_KEEP_ATK || best - atk >= AI_RETREAT_GAP;
 }
 
 /* ---- Solemn Judgment (the CPU) -----------------------------------------------------------------------------------

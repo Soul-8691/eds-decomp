@@ -155,7 +155,8 @@ Each format is a Campaign "duelist". You start with Yugi-Kaiba only; beat the cu
     - When it chooses Attack or Defense Position, it counts the ATK a monster will gain from an Equip Spell in its
       hand, Breaker's Spell Counter, and Blade Knight's bonus once its hand shrinks.
     - It summons a monster with 1400 or more ATK in Attack Position instead of Setting it (unless the monster has
-      a flip effect, or you have a face-up monster with more ATK), even on the first turn.
+      a flip effect, or it would be run over: below 1700 ATK that is any face-up monster with higher ATK; at 1700+
+      ATK only when your strongest face-up monster has at least 1000 more ATK), even on the first turn.
     - It attacks your face-down Defense Position monsters with any monster of 1400 ATK or more, even though it
       can't see their DEF (it guesses 1400).
     - It crashes into your monsters with equal ATK when it has no better attack, unless another of its monsters

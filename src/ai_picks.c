@@ -299,6 +299,24 @@ int AiVisibleAtk(int player, int zone)
     return (int)GetZoneCardAtk(player, zone);
 }
 
+int AiStrongestFaceUpMonsterAtk(int player)
+{
+    int best = 0;
+    int i;
+
+    for (i = 0; i < MONSTER_ZONE_COUNT; i++) {
+        struct DuelZone *zone = ZONE_AT(player & 1, i);
+        int atk;
+
+        if (CARD_EMPTY(zone->card) || !zone->isFaceUp)
+            continue;
+        atk = (int)GetZoneCardAtk(player, i);
+        if (best < atk)
+            best = atk;
+    }
+    return best;
+}
+
 /* Best (largest) score among the occupied monster zones of `player` other than `skipZone`; -1 if none.
  * score = ATK (useAtk) + DEF (useDef) from GetZoneCardStats. A face-down monster is evaluated with isFaceUp
  * set for the call, so the CPU reads its real stats (it looks through face-down cards). */
@@ -498,6 +516,13 @@ int AiShouldSetMonster(u16 cardId, u16 faceUp)
         return 1;
     }
     value = CardValue(cardId);
+    if (value >= AI_RETREAT_KEEP_ATK) {
+        int threat = AiStrongestFaceUpMonsterAtk(0);
+
+        if (threat <= value || threat - value < AI_RETREAT_GAP)
+            return 0;
+        return 1;
+    }
     if (value <= AiGetStrongestMonsterScore(0, -1, 1, 0))
         return 1;
     value = CardValue(cardId);
