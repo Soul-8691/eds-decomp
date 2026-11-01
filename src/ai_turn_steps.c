@@ -618,6 +618,12 @@ static inline u16 AiScanCardId(u16 number)
 int AiStepPlaySimpleSpells(void)
 {
     struct ChainEntry ref;
+
+    if (AiCpuRunPendingHandSpell())
+        return 0;
+    if (AiTryPlayCpuPriorityDrawSpells())
+        return 0;
+
     switch (gAiState.phase) {
     case AI_SIMPLE_SPELLS_FIELD:
         gAiState.subState = 0;

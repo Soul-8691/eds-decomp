@@ -191,8 +191,13 @@ int AiStepMainPhase(void)
     int tributeMask;
     const u16 *numPtr;
 
+    if (AiCpuRunPendingHandSpell())
+        return 0;
+
     switch (gAiState.phase) {
     case AI_MAIN_SUMMON:
+        if (AiTryPlayCpuPriorityDrawSpells())
+            return 0;
         if (AiUseThunderDragon())   /* added: discard Thunder Dragon to search one (src/added_effects.c) */
             return 0;
         if (AiTryPlayDarkHoleIfWanted())    /* clear the field before summoning */

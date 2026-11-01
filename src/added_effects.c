@@ -103,6 +103,7 @@ struct ModDuelState {
     u8 manticoreGyPending[2];   /* Manticore of Darkness: copies sent to the GY this turn (End Phase triggers) */
     u8 ddSurvivorPending[2];    /* D.D. Survivor: per owner, face-up copies banished this turn before the End Phase */
     u16 limiterRemovalTurn;     /* Limiter Removal: gDuel.turnCount of the turn it resolves (End Phase destroy) */
+    u16 aiPriorityDrawDone;     /* AiTryPlayCpuPriorityDrawSpells: turn/phase marker once Pot/Graceful are tried */
 };
 extern struct ModDuelState gModDuel;
 /* gModDuel (0x0202FF04, symbols.ld) must end before gScratchBuffer (0x02030000). */
@@ -1290,6 +1291,7 @@ void ModDuelInit(void)
     gModDuel.ddSurvivorPending[0] = 0;
     gModDuel.ddSurvivorPending[1] = 0;
     gModDuel.limiterRemovalTurn = 0;
+    gModDuel.aiPriorityDrawDone = 0;
 #ifdef HAS_CARD_INJECTION_FAIRY_LILY
     InjectionFairyLilyResetBattle();
 #endif
@@ -9212,9 +9214,45 @@ int AiActivationWouldLoseLp(struct ChainEntry *card)
     return loss > 0 && loss >= (int)gDuelPlayers[AI_PLAYER].lifePoints;
 }
 
+/* ---- Pot of Greed / Graceful Charity before other Main Phase plays -----------------------------------------------
+ * AiStepPlaySimpleSpells and AiStepMainPhase call these before heal/burn Spells, Thunder Dragon, summons, and the
+ * rest of AiPlaySpells. Each Main Phase 1 / Main Phase 2 tries Pot of Greed, then Graceful Charity, once both are
+ * unavailable. Hand activations finish through AiPlaySpells' confirm/wait substates. */
+
+static u16 AiPriorityDrawPhaseMarker(void)
+{
+    u16 marker = (u16)gDuel.turnCount;
+
+    if (gDuel.phase == PHASE_MAIN2)
+        marker |= 0x8000;
+    return marker;
+}
+
+int AiCpuRunPendingHandSpell(void)
+{
+    if (gAiState.subState != AI_SPELLS_CONFIRM_HAND_CARD && gAiState.subState != AI_SPELLS_WAIT_PLAY)
+        return 0;
+    AiPlaySpells();
+    return 1;
+}
+
+int AiTryPlayCpuPriorityDrawSpells(void)
+{
+    u16 marker = AiPriorityDrawPhaseMarker();
+
+    if (gModDuel.aiPriorityDrawDone == marker)
+        return 0;
+    if ((u16)AiTryPlaySpellTrap(CARD_POT_OF_GREED))
+        return 1;
+    if ((u16)AiTryPlaySpellTrap(CARD_GRACEFUL_CHARITY))
+        return 1;
+    gModDuel.aiPriorityDrawDone = marker;
+    return 0;
+}
+
 /* ---- Thunder Dragon (the CPU) -------------------------------------------------------------------------------------
  * The vanilla CPU never uses Thunder Dragon's "discard this card; add up to 2 Thunder Dragon from your Deck to your
- * hand". AiStepMainPhase (ai_steps.c) calls AiUseThunderDragon first in AI_MAIN_SUMMON, before it picks a summon:
+ * hand". AiStepMainPhase (ai_steps.c) calls AiUseThunderDragon in AI_MAIN_SUMMON after priority draw Spells, before it picks a summon:
  * a Thunder Dragon in the CPU's hand is discarded and its effect queued as the card menu does for the human
  * (card_command_menu.c). EffectThunderDragonResolve (effect_resolve1.c) adds only 1 for the CPU and calls
  * ModThunderDragonSearched, and the step runs again after the chain, so each new copy is discarded in turn: the
