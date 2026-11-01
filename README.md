@@ -184,6 +184,14 @@ Each format is a Campaign "duelist". You start with Yugi-Kaiba only; beat the cu
       Summons** its face-down **flip-effect** monsters before tributing them, one per step, except flips that would
       leave the field or wipe the board (**Parasite Paracide**, **Cyber Jar**, **Morphing Jar #2**, **Jigen Bakudan**,
       **Fiber Jar** when coded).
+    - In its position-change step, it **Flip Summons** face-down **Hane-Hane** or **Penguin Soldier** when a
+      simulated Battle Phase would deal more damage after their effects return your strongest monster(s) to the hand
+      (the same targets it would pick in play).
+    - In that same step, it **Flip Summons** face-down **Reaper of the Cards** when any face-up **Trap** is on the
+      field (even if your strongest face-up monster has more than **1380** ATK), or when your strongest face-up
+      monster has at most **1380** ATK and it has a Set card in its Spell/Trap zones.
+    - It still **Flip Summons** **Man-Eater Bug** in that step when you have monsters and it has its Normal Summon
+      available (vanilla behavior).
   - **Card use.**
     - It plays its Spells after its Normal Summon, in both Main Phases. The original CPU skipped its Spells on
       any turn it summoned to attack (always, with your field empty), after a Tribute Summon, and in Main Phase 2.
