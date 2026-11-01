@@ -42,6 +42,10 @@
   <img src="eds_demo-3.png" width="24%" alt="Screenshot 27">
   <img src="eds-36.png" width="24%" alt="Screenshot 28">
 </p>
+<p align="center">
+  <img src="eds_demo-5.png" width="24%" alt="Screenshot 29">
+  <img src="eds_demo-6.png" width="24%" alt="Screenshot 30">
+</p>
 
 A hack of *Yu-Gi-Oh! The Eternal Duelist Soul* (GBA) that follows the
 [Format Library](https://www.formatlibrary.com/) pantheon of TCG formats, from Yugi-Kaiba up to Reaper. The **demo**
