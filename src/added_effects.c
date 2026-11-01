@@ -10514,6 +10514,148 @@ static int AiWantsTokenThanksgiving(void)
 }
 #endif /* HAS_CARD_TOKEN_THANKSGIVING */
 
+#if defined(HAS_CARD_SCAPEGOAT) && defined(HAS_CARD_SHEEP_TOKEN)
+#ifdef HAS_CARD_METAMORPHOSIS
+/* Goat first, then Metamorphosis on a Level 1 Sheep Token (Extra Deck has a Fusion of that Level). */
+int AiScapegoatEnablesMetamorphosis(void)
+{
+    struct DuelPlayer *p = &gDuelPlayers[AI_PLAYER];
+    int zone, i;
+    u16 id;
+
+    for (i = 0; i < p->fusionCount; i++) {
+        if (IsMetamorphosisFusion(DUEL_CARD_ID(&p->fusionDeck[i]), 1))
+            goto hasLevel1Fusion;
+    }
+    return 0;
+hasLevel1Fusion:
+    if (FindHandCardByNumber(AI_PLAYER, CARD_METAMORPHOSIS) < 0
+        && !AiHasUsableSpellTrap(CARD_METAMORPHOSIS))
+        return 0;
+    for (zone = ZONE_MONSTER_0; zone <= ZONE_MONSTER_4; zone++) {
+        id = DUEL_CARD_ID(&ZoneOf(AI_PLAYER, zone)->card);
+        if (id != 0) {
+            int level = (int)CARD_STATS_LEVEL(gCardStats[id & CARD_ID_MASK]);
+
+            for (i = 0; i < p->fusionCount; i++) {
+                if (IsMetamorphosisFusion(DUEL_CARD_ID(&p->fusionDeck[i]), level))
+                    return 0;
+            }
+        }
+    }
+    return 1;
+}
+#endif
+
+/* Scapegoat prepare: four free monster zones and no summon yet this turn (EffectNoSummonFourFreeZonesPrepare). */
+static int AiScapegoatPreparePasses(void)
+{
+    struct ChainEntry ref;
+
+    MemClear16(&ref, sizeof(ref));
+    ref.player = AI_PLAYER;
+    ref.card = gCardNumberToId[CARD_SCAPEGOAT];
+    return EffectNoSummonFourFreeZonesPrepare(&ref) != 0;
+}
+
+/* 1 if the CPU would Normal or Special Summon from its hand this Main Phase (AiStepMainPhase summon step). */
+static int AiCpuHasMonsterToSummonThisTurn(void)
+{
+    struct DuelPlayer *p = &gDuelPlayers[AI_PLAYER];
+    int i, damage;
+
+    if (CountFreeMonsterZones(AI_PLAYER) == 0)
+        return 0;
+    if (CanSpecialSummon(AI_PLAYER)) {
+        for (i = 0; i < p->handCount; i++) {
+            u16 id = DUEL_CARD_ID(&p->hand[i]);
+            u16 number = CardNumberOfId(id);
+
+            if (!CanSummonFromHand(AI_PLAYER, id))
+                continue;
+#ifdef HAS_CARD_CYBER_DRAGON
+            if (number == CARD_CYBER_DRAGON && CanCyberDragonSpecialSummon(AI_PLAYER))
+                return 1;
+#endif
+#ifdef HAS_CARD_THE_FIEND_MEGACYBER
+            if (number == CARD_THE_FIEND_MEGACYBER
+                && CountMonsters(AI_PLAYER) + 1 < CountMonsters(AI_HUMAN))
+                return 1;
+#endif
+#ifdef HAS_LIGHT_DARK_BANISH_SUMMON
+            if (CanPayLightDarkBanishCost(AI_PLAYER)) {
+#ifdef HAS_CARD_BLACK_LUSTER_SOLDIER_ENVOY_OF_THE_BEGINNING
+                if (number == CARD_BLACK_LUSTER_SOLDIER_ENVOY_OF_THE_BEGINNING)
+                    return 1;
+#endif
+#ifdef HAS_CARD_CHAOS_SORCERER
+                if (number == CARD_CHAOS_SORCERER)
+                    return 1;
+#endif
+#ifdef HAS_CARD_CHAOS_EMPEROR_DRAGON_ENVOY_OF_THE_END
+                if (number == CARD_CHAOS_EMPEROR_DRAGON_ENVOY_OF_THE_END)
+                    return 1;
+#endif
+#ifdef HAS_CARD_GIGANTES
+                if (number == CARD_GIGANTES)
+                    return 1;
+#endif
+            }
+#endif
+        }
+    }
+    if (!CanNormalSummon(AI_PLAYER))
+        return 0;
+    if (CountActiveCardsOnFieldExcept(AI_HUMAN, CARD_SWORDS_OF_REVEALING_LIGHT, -1) > 0
+        && CountMonsters(AI_HUMAN) > 0)
+        return 0;
+    if (AiChooseBestNormalSummon() >= 0)
+        return 1;
+    if (AiChooseSummonWithTribute(&damage) >= 0)
+        return 1;
+    return 0;
+}
+
+/* Face-up Cannon Soldier alone on the field: four zones free for Sheep Tokens, then tribute burn. */
+static int AiWantsScapegoatForCannon(void)
+{
+    if (!AiScapegoatPreparePasses())
+        return 0;
+#ifdef HAS_CARD_MASK_OF_RESTRICT
+    if (IsTributeLockActive())
+        return 0;
+#endif
+    if (CountFaceUpMonstersByNumber(AI_PLAYER, CARD_CANNON_SOLDIER) == 0)
+        return 0;
+    return CountMonsters(AI_PLAYER) == 1;
+}
+
+/* Main Phase Scapegoat (AiShouldActivateAddedCard still flips on the human's attack). */
+int AiWantsScapegoat(void)
+{
+    if (!AiScapegoatPreparePasses())
+        return 0;
+    if (FindHandCardByNumber(AI_PLAYER, CARD_SCAPEGOAT) < 0 && !AiHasUsableSpellTrap(CARD_SCAPEGOAT))
+        return 0;
+#ifdef HAS_CARD_METAMORPHOSIS
+    if (AiScapegoatEnablesMetamorphosis())
+        return 1;
+#endif
+    if (AiCpuHasMonsterToSummonThisTurn())
+        return 0;
+    if (AiWantsScapegoatForCannon())
+        return 1;
+    return CountMonsters(AI_PLAYER) == 0 && CountMonsters(AI_HUMAN) > 0;
+}
+
+int AiTryPlayScapegoat(void)
+{
+    if (!AiWantsScapegoat())
+        return 0;
+    return AiTryPlaySpellTrap(CARD_SCAPEGOAT);
+}
+#endif /* HAS_CARD_SCAPEGOAT && HAS_CARD_SHEEP_TOKEN */
+
 /* Should the CPU play its added Magic card `number` in its Main Phase now? (AiTryPlaySpellTrap checks that it may.) */
 static int AiWantsSpell(u16 number)
 {
@@ -10565,8 +10707,8 @@ static int AiWantsSpell(u16 number)
     }
 #endif
 #ifdef HAS_CARD_SCAPEGOAT
-    case CARD_SCAPEGOAT:                        /* kept for the human's attack (AiShouldActivateAddedCard) */
-        return 0;
+    case CARD_SCAPEGOAT:
+        return AiWantsScapegoat();
 #endif
 #ifdef HAS_CARD_MONSTER_GATE
     case CARD_MONSTER_GATE: {                   /* Tribute a weak monster for whatever the Deck gives */
@@ -10921,8 +11063,8 @@ int AiShouldActivateAddedCard(struct ChainEntry *entry)
         return CountMonsters(AI_HUMAN) > CountMonsters(AI_PLAYER);
 #endif
 #ifdef HAS_CARD_SCAPEGOAT
-    case CARD_SCAPEGOAT:                        /* against an attack, or with nothing to defend */
-        return entry->event == RESPONSE_ATTACK_DECLARED || CountMonsters(AI_PLAYER) == 0;
+    case CARD_SCAPEGOAT:                        /* Main Phase: AiWantsScapegoat; chain: attack only */
+        return entry->event == RESPONSE_ATTACK_DECLARED;
 #endif
 #ifdef HAS_CARD_OJAMA_TRIO
     case CARD_OJAMA_TRIO:                       /* the human needs three empty monster zones */

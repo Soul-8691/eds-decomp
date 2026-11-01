@@ -162,6 +162,9 @@ static inline u32 CardCost(u32 id)
  * The phase-10 tails assign the same state pointer after each call so the compiler shares the
  * original call/store tail without changing its reads. */
 int AiUseThunderDragon(void);   /* mod: src/added_effects.c */
+#if defined(HAS_CARD_SCAPEGOAT) && defined(HAS_CARD_SHEEP_TOKEN)
+int AiTryPlayScapegoat(void);
+#endif
 int AiSpecialSummonCyberDragon(void);
 int AiUseMagicalScientist(void);
 int AiSummonFaceUpOnOpenField(u16 id);
@@ -192,6 +195,10 @@ int AiStepMainPhase(void)
     case AI_MAIN_SUMMON:
         if (AiUseThunderDragon())   /* added: discard Thunder Dragon to search one (src/added_effects.c) */
             return 0;
+#if defined(HAS_CARD_SCAPEGOAT) && defined(HAS_CARD_SHEEP_TOKEN)
+        if (AiTryPlayScapegoat())   /* added: empty field or before a Normal Summon uses the turn's summon */
+            return 0;
+#endif
         if (AiSpecialSummonCyberDragon())   /* added: before a Normal Summon gives the CPU a monster */
             return 0;
 #ifdef HAS_CARD_MAGICAL_SCIENTIST
@@ -790,6 +797,10 @@ int AiChooseStrategy(void)
                 ok = 0;
             if (AiFindHandCardByNumber(1, CARD_1245) != -1)
                 break;
+#if defined(HAS_CARD_SCAPEGOAT) && defined(HAS_CARD_SHEEP_TOKEN)
+            if (AiFindHandCardByNumber(1, CARD_SCAPEGOAT) != -1)
+                break;
+#endif
             continue;
         case AI_STRATEGY_ELEGANT_EGOTIST: {
             int c;

@@ -2354,3 +2354,9 @@ updated: 2026-09-29
 
 ## [2026-11-01] progress | CPU Snatch Steal lethal and ATK/DEF threshold
 - `AiSnatchStealIsLethal`, `SnatchStealCpuCompareThreshold` (added_effects.c); lethal try before CoH hand scan (ai_deck.c). README, [[added-cards]].
+
+## [2026-11-01] progress | CPU Scapegoat Main Phase and Cannon Soldier combo
+- `AiWantsScapegoat`, `AiTryPlayScapegoat` (added_effects.c); early Main Phase (ai_steps.c); Cannon Soldier and strategy 2 (ai_deck.c, ai_strategy.c). [[added-cards]].
+
+## [2026-11-01] progress | CPU Scapegoat Main Phase gates (summon / Metamorphosis)
+- `AiCpuHasMonsterToSummonThisTurn`, `AiScapegoatEnablesMetamorphosis`; set Goat chains on attack only (added_effects.c). [[added-cards]].

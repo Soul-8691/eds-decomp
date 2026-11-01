@@ -2265,8 +2265,12 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
 - The token number range (1920-1999) keeps it out of the starting trunk (`GiveStartingTrunk`), the Deck Edit and
   Card Trading lists (unowned), the prohibition picker and the Password screen. Its other token behaviour (it
   vanishes when it leaves the field) is the game's own, by number.
-- The CPU: its strategy code still names key 1245 (ai_strategy.c, ai_deck.c, ai_turn_steps.c), not
-  `CARD_SCAPEGOAT`, so it does not play Scapegoat on purpose.
+- **CPU** (`AiWantsScapegoat`, `AiTryPlayScapegoat`): Main Phase when prepare passes and the CPU holds Goat, and
+  either (1) it can set up Metamorphosis (`AiScapegoatEnablesMetamorphosis`: Metamorphosis in hand or set, a
+  Level 1 Fusion in the Extra Deck, no monster on the field yet that could be Tributed for Metamorphosis), or (2) it
+  has no monster it would Normal or Special Summon this turn (`AiCpuHasMonsterToSummonThisTurn`) and either Cannon
+  Soldier is alone on the field or the CPU has no monsters while the human has at least one. Set copies still chain
+  only on `RESPONSE_ATTACK_DECLARED` (`AiShouldActivateAddedCard`). Legacy `CARD_1245` is still tried if present.
 - Checked in the source and the build; not tested in an emulator.
 
 ### Roulette Barrel (2026-10-30)

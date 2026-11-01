@@ -273,6 +273,10 @@ int AiTryPlaySpellTrap(u16 number)
 #endif
     if (number == CARD_MEGAMORPH && !AiWantsMegamorph())
         return 0;
+#if defined(HAS_CARD_SCAPEGOAT) && defined(HAS_CARD_SHEEP_TOKEN)
+    if (number == CARD_SCAPEGOAT && !AiWantsScapegoat())
+        return 0;
+#endif
     cardId = CardNumberToId(number);
     if (GetSpellSubtype(CARD_STATS(cardId)) == SPELL_FIELD && GetFaceUpFieldMagicNumber() == number)
         return 0;
@@ -376,10 +380,10 @@ extern const u16 gAiEffectMonsters[];
 
 /*
  * Activate the effect of a face-up monster of gAiEffectMonsters on the CPU's field (listIndex walks the table,
- * zoneIndex the monster zones). Cannon Soldier first tries to play key 1245 (Scapegoat by behaviour, not an EDS
- * card); if that selects a hand card it confirms it in the card menu and returns 0, so that the tokens arrive before
- * the effect, else it needs a second monster to tribute. An activation points at the zone and adds the card to the
- * chain. Returns 1 if an effect was activated, 0 if not (or while a hand card is being confirmed).
+ * zoneIndex the monster zones). Cannon Soldier first tries Scapegoat (added card or legacy key 1245); if that selects
+ * a hand card it confirms it in the card menu and returns 0, so that the tokens arrive before the effect, else it
+ * needs a second monster to tribute. An activation points at the zone and adds the card to the chain. Returns 1 if an
+ * effect was activated, 0 if not (or while a hand card is being confirmed).
  */
 int AiActivateMonsterEffects(void)
 {
@@ -403,7 +407,7 @@ int AiActivateMonsterEffects(void)
                 && CanActivateEffect(&ref, 0, 0) != 0) {
                 ok = 1;
                 if (gAiEffectMonsters[gAiState.listIndex] == CARD_CANNON_SOLDIER) {
-                    if ((u16)AiTryPlaySpellTrap(CARD_1245) != 0) {
+                    if ((u16)AiTryPlayScapegoat() != 0 || (u16)AiTryPlaySpellTrap(CARD_1245) != 0) {
                         /* Confirm hand card cardIndex in the card menu: step = 0, cardMenuCard, player = 1,
                          * index = cardIndex, confirmed = 1. */
                         ((struct CardMenuStepView *)(gDuelZonesP1Bytes + 0xDA0))->step = 0;

@@ -283,6 +283,11 @@ int AiSnatchStealIsLethal(void);
 int AiSnatchStealCpuTargetZone(u16 cardId);
 /* Megamorph (mod): Main Phase 1, CPU LP lower than the human's, simulated battle lethal after doubling. */
 int AiWantsMegamorph(void);
+#if defined(HAS_CARD_SCAPEGOAT) && defined(HAS_CARD_SHEEP_TOKEN)
+/* Scapegoat (mod): Cannon Soldier combo or empty field before the CPU Normal Summons. */
+int AiWantsScapegoat(void);
+int AiTryPlayScapegoat(void);
+#endif
 /* 1 = go ahead; 0 now and then when the human has an activatable set counterNo (more often with
  * AI_FLAG_CAREFUL). */
 int AiRiskSetCounter(u16 counterNo);

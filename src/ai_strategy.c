@@ -282,7 +282,7 @@ int AiStrategyFourTokensCannonSoldier(void)
     case 0:
         if (CountFaceUpMonstersByNumber(1, CARD_CANNON_SOLDIER) == 0)
             goto fail;
-        if (AiTryPlaySpellTrap(CARD_1245) != 0) {
+        if (AiTryPlayScapegoat() != 0 || AiTryPlaySpellTrap(CARD_1245) != 0) {
             {
                 struct DuelAiView *duel = gCommitDuel;
                 {
