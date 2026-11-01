@@ -28,7 +28,7 @@
   <img src="eds-18.png" width="24%" alt="Screenshot 17">
   <img src="eds-19.png" width="24%" alt="Screenshot 18">
   <img src="eds-20.png" width="24%" alt="Screenshot 19">
-  <img src="eds-28.png" width="24%" alt="Screenshot 20">
+  <img src="eds_demo-2.png" width="24%" alt="Screenshot 20">
 </p>
 <p align="center">
   <img src="eds-21.png" width="24%" alt="Screenshot 21">
