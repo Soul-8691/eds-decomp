@@ -846,19 +846,25 @@ int AiPlaySpells(void)
         gDuel.cardMenu.step = 0;
         gDuel.cardMenuCard = CARD_ID(*(u32 *)((u8 *)&gDuel.players[1].hand[0] + gAiState.cardIndex * 4));
         gDuel.cardMenu.player = 1;
+        gDuel.cardMenu.area = DUEL_AREA_HAND;
+        gDuel.cardMenu.command = CARDMENU_CMD_ACTIVATE;
         gDuel.cardMenu.index = gAiState.cardIndex;
         gDuel.cardMenu.confirmed = 1;
         gAiState.subState++;
         /* fall through */
     case AI_SPELLS_WAIT_PLAY:
-        if (CountActiveCardsOnField(0, CARD_ANTI_MAGIC_FRAGRANCE) || CountActiveCardsOnField(1, CARD_ANTI_MAGIC_FRAGRANCE))
-            CardMenu_PlaySpellTrapFromHand(0, 0, 0);
-        else
-            CardMenu_PlaySpellTrapFromHand(1, 0, 0);
-        {
-            u8 confirmed = gDuelMenuBytes.flags & 2;
-            if (!confirmed) gAiState.phase = confirmed;
+        /* Only drive the menu while confirmed is still set; after PlaySpellTrapFromHand clears it, step stays in
+         * the default case and another call would Chain_AddPending again (ShowActivatedCard loop). */
+        if (gDuelMenuBytes.flags & 2) {
+            if (CountActiveCardsOnField(0, CARD_ANTI_MAGIC_FRAGRANCE) || CountActiveCardsOnField(1, CARD_ANTI_MAGIC_FRAGRANCE))
+                CardMenu_PlaySpellTrapFromHand(0, 0, 0);
+            else
+                CardMenu_PlaySpellTrapFromHand(1, 0, 0);
+            return 0;
         }
+        gDuel.cardMenu.step = 0;
+        gAiState.subState = AI_SPELLS_START;
+        gAiState.phase = AI_MAIN_SUMMON;
         return 0;
     }
     return 1;

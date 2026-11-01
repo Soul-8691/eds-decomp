@@ -6139,14 +6139,15 @@ int IsGravekeeperMonster(u16 id)
  * Swordsman of Aile or Cannon Soldier). Two fixes in effect_resolve8.c: the summon paths Tributed the opponent's zone 0
  * (the packed target was passed as the player), and the steps are cursor UI only, so the CPU gets these: */
 
-/* The CPU targets the human's strongest monster. */
+/* The CPU targets the opponent's strongest monster (EffectTargetableMonsterCheck / key 1220). */
 int SoulExchangeCpuChainB(struct ChainEntry *link)
 {
-    int zone = AiFindStrongestMonster(0, -1, 1, 1);
+    int opponent = 1 - (link->player & 1);
+    int zone = AiFindStrongestMonster(opponent, -1, 1, 1);
 
     link->numTargets = 0;
     if (zone >= 0)
-        TryAddEffectTarget(link, 0, zone);
+        TryAddEffectTarget(link, opponent, zone);
     return 1;
 }
 
@@ -6170,8 +6171,8 @@ static int WeakestOwnTribute(int player)
 int SoulExchangeCpuResolve(struct ChainEntry *link)
 {
     struct DuelPlayer *p = &gDuelPlayers[link->player & 1];
-    int targetPlayer = (u8)link->targets[0];
-    int targetZone = link->targets[0] >> 8;
+    int targetPlayer = DUEL_LOC_PLAYER(link->targets[0]);
+    int targetZone = DUEL_LOC_ZONE(link->targets[0]);
     int i, best = -1, zone, own;
     u32 bestAtk = 0;
 

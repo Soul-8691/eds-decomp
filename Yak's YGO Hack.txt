@@ -25,3 +25,4 @@ Move added card lists out of effect_target_collect.c
 Card priority orders
 Fix random freeze
 Make actual rarest cards show the rare effect (pack opener)
+AI can flip set cards the turn they are played

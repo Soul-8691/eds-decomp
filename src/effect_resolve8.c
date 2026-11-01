@@ -638,7 +638,7 @@ int EffectTributeOpponentMonsterResolve(struct ChainEntry *link, int chainedTo)
 
     if (!link->negated) {
 #ifdef HAS_CARD_SOUL_EXCHANGE
-        if (link->player)       /* mod: the CPU's Soul Exchange (src/added_effects.c); the steps below are UI */
+        if (link->player && CARD_NUMBER(link->card) == CARD_SOUL_EXCHANGE)
             return SoulExchangeCpuResolve(link);
 #endif
         switch (gChain.effectStep) {
