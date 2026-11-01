@@ -4,7 +4,7 @@ type: game
 status: draft
 confidence: medium
 sources: [rom-analysis]
-updated: 2026-10-26
+updated: 2026-11-01
 ---
 # Duelist Points (mod)
 
@@ -30,14 +30,14 @@ DP live in the save image: `gSaveData.dpLow` (+0x215A) and `dpHigh` (+0x215C), a
   `usage/<format>.json` and the format's banlist, listing only the cards its decks use.
   - **Formula.** The share of decks running the card in main + side (its "total" entry: sum of `copies` /
     `decks_processed`) * 1000, plus its share in the extra deck * 100. Then * 3 if the card is limited, or * 1.5
-    if semi-limited, in that format. At least 20 DP (`MIN_PRICE`; changed 2026-10-29, it was 1).
+    if semi-limited, in that format. Raw scores are linearly scaled per format so the cheapest listed card is
+    **200** DP and the priciest is **3000** DP (`tools/cardprices.py`).
   - **Lookup.** The price comes from the newest unlocked format ([[yugi-kaiba-opponent]], unlock order) whose
     decks use the card. So unlocking a format (e.g. Critter after Yugi-Kaiba) re-prices the cards its decks use,
     and every other card keeps its price.
-  - **Fallbacks.** A card none of the unlocked formats' decks use costs `POOL_CARD_COST` (20, the same minimum;
-    it was 5 until 2026-10-29) if it is in an unlocked format's card pool (`FormatCardLimit` != 0xFF), else
-    `DEFAULT_CARD_COST` (3000).
-  - **Yugi-Kaiba examples.** Pot of Greed 3000, Swords of Revealing Light 1463, Man-Eater Bug 1000.
+  - **Fallbacks.** A card with no row in any unlocked format's usage table costs **100** DP (`POOL_CARD_COST` and
+    `DEFAULT_CARD_COST` in `mod_dp.c`), including cards that are only in a format pool.
+  - **Yugi-Kaiba examples.** Pot of Greed and the other staples sit at 3000 DP after scaling (repo `CARD_PRICES.md`).
 - **Duel rewards.** `sDuelistRewards`: by `enum DuelistId`, 1000 each.
   `Campaign_RecordDuelResult` (campaign_steps.c) calls `AwardDuelDP(gMain.opponent)` on a win.
 

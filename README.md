@@ -99,8 +99,9 @@ Each format is a Campaign "duelist". You start with Yugi-Kaiba only; beat the cu
 - **Duelist Points (DP).**
   - You start with 5000 DP and earn more by winning duels.
   - The card password machine now sells cards: it shows the price and asks before buying.
-  - Prices run from 5 to 3000 DP, depending on how much the card is played in the furthest format you've unlocked.
-  Cards not in the current furthest format you've unlocked are priced at 3000 DP. [CARD_PRICES.md](CARD_PRICES.md) lists each format's prices.
+  - Cards that appear in a format's usage statistics are priced from 200 to 3000 DP within that format (usage share,
+    with Limited/Semi-Limited multipliers, then linearly scaled). Cards with no usage entry cost **100** DP.
+  [CARD_PRICES.md](CARD_PRICES.md) lists each format's scaled prices.
 - **Booster Packs** (main menu). TCG sets from `packs/*_tcg.json` (including **Dark Revelation Volume 1**, imported
   with `tools/import_yugipedia_drv1.py`). Only ROM cards are in each pool; pull rates follow listed rarities; the cover
   art is the pool's rarest card. A TCG set unlocks when its format opponent is unlocked (for example Metal Raiders

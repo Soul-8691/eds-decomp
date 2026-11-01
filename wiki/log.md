@@ -2369,3 +2369,6 @@ updated: 2026-09-29
 
 ## [2026-11-01] progress | CPU skips burn vs human Des Wombat only
 - `PlayerHasDesWombatOnField`, `AiShouldSkipCpuEffectDamageVsDesWombat` (added_effects.c); simple spells, `AiTryPlaySpellTrap`, Secret Barrel, Wave Motion, Magical Scientist burn, Poison of the Old Man. [[added-cards]]. quirks.txt.
+
+## [2026-11-01] progress | Card prices normalized 200-3000 DP, no-usage 100
+- `tools/cardprices.py` linear scale per format; `mod_dp.c` `POOL_CARD_COST`/`DEFAULT_CARD_COST` 100; regenerated `card_prices.h`, CARD_PRICES.md. README, [[duelist-points]].

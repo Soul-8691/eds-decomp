@@ -6,7 +6,7 @@ Up until Victory OCG format (05-09)
 Make sure all cards are early version effects in the ROM
 Duelist Point (DP) system
 Start out with 5000 DP
-Cards are from 5-3000 DP
+Cards are 200-3000 DP (usage stats) or 100 DP (no usage stats)
 Buy packs with DP
 Packs are by attribute/race/spells/traps/ocg/tcg/usage
 Rank cards
