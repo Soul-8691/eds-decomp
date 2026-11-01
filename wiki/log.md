@@ -2360,3 +2360,6 @@ updated: 2026-09-29
 
 ## [2026-11-01] progress | CPU Scapegoat Main Phase gates (summon / Metamorphosis)
 - `AiCpuHasMonsterToSummonThisTurn`, `AiScapegoatEnablesMetamorphosis`; set Goat chains on attack only (added_effects.c). [[added-cards]].
+
+## [2026-11-01] progress | CPU respects Imperial Order for Spell activations
+- `CanActivateEffect` refuses Magic while `IsImperialOrderActive`; `AiStepPlaySimpleSpells` sets Magic only (ai_turn_steps.c). quirks.txt.

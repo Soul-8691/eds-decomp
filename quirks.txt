@@ -11,5 +11,4 @@ Fairy Box: ATK is 0 for only one battle, not entire Battle Phase
 Metamorphosis: Goes for it with weaker monsters
 Toon Table of Contents: "Select a monster"
 Des Wombat: AI doesn't know not to try playing burn cards
-Imperial Order: AI still activates spells
 Injection Fairy Lily: AI summons with <= 2000 LP

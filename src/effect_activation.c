@@ -320,6 +320,8 @@ int CanActivateEffect(struct ChainEntry *card, struct ChainEntry *chainLink, u16
             || CountActiveCardsOnField(1, CARD_SPELL_CANCELLER) != 0))
         return FALSE;
 #endif
+    if (CARD_TYPE(card->card) == CARD_TYPE_MAGIC && IsImperialOrderActive())
+        return FALSE;
     if (AiActivationWouldLoseLp(card))     /* added: the CPU never pays itself to 0 LP (src/added_effects.c) */
         return FALSE;
 #ifdef HAS_CARD_XING_ZHEN_HU

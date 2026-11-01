@@ -756,10 +756,14 @@ int AiStepPlaySimpleSpells(void)
         } while (state->subState <= AI_SIMPLE_SPELL_LAST);
         break;
     }
-    case AI_SIMPLE_SPELLS_PLACE:
-        if (CountActiveCardsOnField(0, CARD_ANTI_MAGIC_FRAGRANCE) || CountActiveCardsOnField(1, CARD_ANTI_MAGIC_FRAGRANCE)) {
-            /* Anti-Magic Fragrance: Magic cannot be activated, so the card is only Set. */
-            u16 id = AiScanCardId(gAiSimpleSpells[gAiState.subState]);
+    case AI_SIMPLE_SPELLS_PLACE: {
+        u16 id = AiScanCardId(gAiSimpleSpells[gAiState.subState]);
+        int setOnlyMagic = CountActiveCardsOnField(0, CARD_ANTI_MAGIC_FRAGRANCE) != 0
+                           || CountActiveCardsOnField(1, CARD_ANTI_MAGIC_FRAGRANCE) != 0
+                           || IsImperialOrderActive() != 0;
+
+        if (setOnlyMagic && CARD_STATS_TYPE(CARD_STATS(id)) == CARD_TYPE_MAGIC) {
+            /* Anti-Magic Fragrance / Imperial Order: Magic cannot be activated, so the card is only Set. */
             int hand = AiFindHandCardByNumber(1, gAiSimpleSpells[gAiState.subState]);
             int freeZone = FindFreeSpellTrapZone(1);
             {
@@ -815,6 +819,7 @@ int AiStepPlaySimpleSpells(void)
         }
         gAiState.phase = AI_SIMPLE_SPELLS_FIELD;
         return 0;
+    }
     }
     return 1;
 }
