@@ -4864,6 +4864,8 @@ static int HasFusionOfLevel(int player, int level)
     return 0;
 }
 
+static int AiCpuMetamorphosisAllowed(void);
+
 /* 1 if the monster in (player, zone) may be Tributed for Metamorphosis. */
 static int IsMetamorphosisTribute(int player, int zone)
 {
@@ -4879,8 +4881,12 @@ int EffectMetamorphosisPrepare(struct ChainEntry *card, struct ChainEntry *chain
 {
     int zone;
 
+    if (card->player == 1 && !AiCpuMetamorphosisAllowed())
+        return 0;
     for (zone = ZONE_MONSTER_0; zone <= ZONE_MONSTER_4; zone++) {
-        if (IsMetamorphosisTribute(card->player, zone))
+        if (IsMetamorphosisTribute(card->player, zone)
+            && (card->player != 1
+                || MonsterLevel(DUEL_CARD_ID(&ZoneOf(card->player, zone)->card)) == 1))
             return 1;
     }
     return 0;
@@ -4891,14 +4897,19 @@ int EffectMetamorphosisChainB(struct ChainEntry *link, struct ChainEntry *prevLi
     int player, zone;
 
     if (link->player) {
-        int best = -1, bestLevel = -1;
+        int best = -1, bestAtk = 0x7FFFFFFF;
 
         link->numTargets = 0;
         for (zone = ZONE_MONSTER_0; zone <= ZONE_MONSTER_4; zone++) {
-            if (IsMetamorphosisTribute(link->player, zone)
-                && MonsterLevel(DUEL_CARD_ID(&ZoneOf(link->player, zone)->card)) > bestLevel) {
+            u16 id = DUEL_CARD_ID(&ZoneOf(link->player, zone)->card);
+            int atk;
+
+            if (!IsMetamorphosisTribute(link->player, zone) || MonsterLevel(id) != 1)
+                continue;
+            atk = GetZoneCardAtk(link->player, zone);
+            if (best < 0 || atk < bestAtk) {
                 best = zone;
-                bestLevel = MonsterLevel(DUEL_CARD_ID(&ZoneOf(link->player, zone)->card));
+                bestAtk = atk;
             }
         }
         if (best < 0 || !TryAddEffectTarget(link, link->player, best))
@@ -4938,6 +4949,18 @@ int EffectMetamorphosisResolve(struct ChainEntry *link, struct ChainEntry *chain
         if (link->player) {
             int i, best = 0;
 
+#ifdef HAS_CARD_THOUSAND_EYES_RESTRICT
+            if (level == 1) {
+                for (i = 0; i < gCardListView.count; i++) {
+                    if (CARD_NUMBER(gCardListView.cards[i]) == CARD_THOUSAND_EYES_RESTRICT) {
+                        best = i;
+                        gCardListView.cursorRow = 0;
+                        gCardListView.top = best;
+                        return EFFECT_STEP_3;
+                    }
+                }
+            }
+#endif
             for (i = 1; i < gCardListView.count; i++) {
                 if (CARD_STATS_ATK(gCardStats[gCardListView.cards[i] & CARD_ID_MASK])
                     > CARD_STATS_ATK(gCardStats[gCardListView.cards[best] & CARD_ID_MASK]))
@@ -9795,6 +9818,23 @@ static int AiWantsChaosEmperorDragon(void)
 }
 #endif
 
+#if defined(HAS_CARD_METAMORPHOSIS) || defined(HAS_CARD_THOUSAND_EYES_RESTRICT)
+#define AI_META_CONTROL_ATK 1500
+
+static int AiOpponentHasFaceUpMonsterAtLeast(int minAtk)
+{
+    int zone;
+
+    for (zone = ZONE_MONSTER_0; zone <= ZONE_MONSTER_4; zone++) {
+        struct DuelZone *z = ZoneOf(AI_HUMAN, zone);
+
+        if (DUEL_CARD_ID(&z->card) != 0 && z->isFaceUp && (int)GetZoneCardAtk(AI_HUMAN, zone) >= minAtk)
+            return 1;
+    }
+    return 0;
+}
+#endif
+
 /* Should the CPU use the card-menu effect of its added monster `number` now? (CanActivateMonsterEffect said it may.) */
 static int AiWantsMonsterEffect(u16 number, int zone)
 {
@@ -9838,7 +9878,7 @@ static int AiWantsMonsterEffect(u16 number, int zone)
 #endif
 #ifdef HAS_CARD_THOUSAND_EYES_RESTRICT
     case CARD_THOUSAND_EYES_RESTRICT:
-        return CountMonsters(AI_HUMAN) > 0;
+        return AiOpponentHasFaceUpMonsterAtLeast(AI_META_CONTROL_ATK);
 #endif
 #ifdef HAS_CARD_GOLEM_SENTRY
     case CARD_GOLEM_SENTRY:                     /* face down, so its next Flip Summon can bounce a monster */
@@ -10847,6 +10887,66 @@ static int AiWantsTokenThanksgiving(void)
 }
 #endif /* HAS_CARD_TOKEN_THANKSGIVING */
 
+#ifdef HAS_CARD_METAMORPHOSIS
+
+#ifdef HAS_CARD_THOUSAND_EYES_RESTRICT
+static int AiCpuFusionDeckHasThousandEyesForMetamorphosis(void)
+{
+    struct DuelPlayer *p = &gDuelPlayers[AI_PLAYER];
+    u16 ter = gCardNumberToId[CARD_THOUSAND_EYES_RESTRICT];
+    int i;
+
+    if (!IsMetamorphosisFusion(ter, 1))
+        return 0;
+    for (i = 0; i < p->fusionCount; i++) {
+        if (DUEL_CARD_ID(&p->fusionDeck[i]) == ter)
+            return 1;
+    }
+    return 0;
+}
+#endif /* HAS_CARD_THOUSAND_EYES_RESTRICT */
+
+static int AiCpuHasLevel1MetamorphosisTributeOnField(void)
+{
+    int zone;
+
+#ifdef HAS_CARD_THOUSAND_EYES_RESTRICT
+    if (!AiCpuFusionDeckHasThousandEyesForMetamorphosis())
+        return 0;
+#else
+    return 0;
+#endif
+    for (zone = ZONE_MONSTER_0; zone <= ZONE_MONSTER_4; zone++) {
+        u16 id = DUEL_CARD_ID(&ZoneOf(AI_PLAYER, zone)->card);
+
+        if (id != 0 && (int)CARD_STATS_LEVEL(gCardStats[id & CARD_ID_MASK]) == 1)
+            return 1;
+    }
+    return 0;
+}
+
+/* Metamorphosis into Thousand-Eyes Restrict is worth it: Extra Deck has TER at Level 1 and a big target to absorb. */
+static int AiCpuMetamorphosisThousandEyesWorthwhile(void)
+{
+#ifdef HAS_CARD_THOUSAND_EYES_RESTRICT
+    return AiCpuFusionDeckHasThousandEyesForMetamorphosis()
+           && AiOpponentHasFaceUpMonsterAtLeast(AI_META_CONTROL_ATK);
+#else
+    return 0;
+#endif
+}
+
+static int AiCpuMetamorphosisAllowed(void)
+{
+    return AiCpuHasLevel1MetamorphosisTributeOnField() && AiCpuMetamorphosisThousandEyesWorthwhile();
+}
+
+static int AiWantsMetamorphosis(void)
+{
+    return AiCpuMetamorphosisAllowed();
+}
+#endif /* HAS_CARD_METAMORPHOSIS */
+
 #if defined(HAS_CARD_SCAPEGOAT) && defined(HAS_CARD_SHEEP_TOKEN)
 #ifdef HAS_CARD_METAMORPHOSIS
 /* Goat first, then Metamorphosis on a Level 1 Sheep Token (Extra Deck has a Fusion of that Level). */
@@ -10856,12 +10956,8 @@ int AiScapegoatEnablesMetamorphosis(void)
     int zone, i;
     u16 id;
 
-    for (i = 0; i < p->fusionCount; i++) {
-        if (IsMetamorphosisFusion(DUEL_CARD_ID(&p->fusionDeck[i]), 1))
-            goto hasLevel1Fusion;
-    }
-    return 0;
-hasLevel1Fusion:
+    if (!AiCpuFusionDeckHasThousandEyesForMetamorphosis())
+        return 0;
     if (FindHandCardByNumber(AI_PLAYER, CARD_METAMORPHOSIS) < 0
         && !AiHasUsableSpellTrap(CARD_METAMORPHOSIS))
         return 0;
@@ -10876,7 +10972,7 @@ hasLevel1Fusion:
             }
         }
     }
-    return 1;
+    return AiCpuMetamorphosisThousandEyesWorthwhile();
 }
 #endif
 
@@ -11020,6 +11116,10 @@ static int AiWantsSpell(u16 number)
 #ifdef HAS_CARD_TOKEN_THANKSGIVING
     case CARD_TOKEN_THANKSGIVING:
         return AiWantsTokenThanksgiving();
+#endif
+#ifdef HAS_CARD_METAMORPHOSIS
+    case CARD_METAMORPHOSIS:
+        return AiWantsMetamorphosis();
 #endif
 #ifdef HAS_CARD_WAVE_MOTION_CANNON
     case CARD_WAVE_MOTION_CANNON:
