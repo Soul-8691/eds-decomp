@@ -21,7 +21,7 @@
 #include "constants/duel_cmds.h"    /* DUEL_CMD_CHAIN_BANNER, DUEL_CMD_PLAYER */
 #include "duel.h"               /* struct DuelState, struct DuelPlayer, struct DuelZone, gDuel, gDuelPlayers */
 #include "ai.h"                     /* struct AiWork, struct AttackPlan, AI_FLAG_EXODIA, the Ai* functions */
-#include "battle.h"                 /* CanEnterBattlePhase, BuildAttackableMask */
+#include "battle.h"                 /* CanEnterBattlePhase, BuildAttackableMask, gBattle */
 #include "chain.h"                  /* struct ChainEntry, Chain_AddLink */
 #include "duel_actions.h"           /* FlipFieldCard */
 #include "duel_cmd.h"               /* DuelCmd_Push */
@@ -383,6 +383,25 @@ static inline int CallZoneZero(int side)
     return GetZoneCardAtk(side, zero);
 }
 
+/* Battle damage the CPU takes from the attack being declared (same rules as AiIncomingAttackDamage in
+ * added_effects.c). */
+static int AiWabokuIncomingAttackDamage(void)
+{
+    struct DuelZone *def;
+    int atk;
+
+    atk = GetZoneCardAtk(0, gBattle.atkSlot);
+    if (gBattle.direct)
+        return atk;
+    def = ZONE_AT(1, gBattle.defSlot);
+    if (CARD_ID_OF(def->card) == 0)
+        return atk;
+    if (def->isDefense || !def->isFaceUp)
+        return 0;
+    atk -= GetZoneCardAtk(1, gBattle.defSlot);
+    return atk > 0 ? atk : 0;
+}
+
 /* AI: should the CPU activate the set card described by `entry` (an activation window; NULL gives 0)?
  * Decided by the card number of entry->card (a Trap, mostly): some always, others by the board.
  * Always: House of Adhesive Tape, Eatgaboon, Widespread Ruin, Negate Attack, Mesmeric Control, Magic-Arm
@@ -549,6 +568,31 @@ int AiShouldActivateSetCard(struct ChainEntry *entry)
         if (r != 0)
             return 1;
         return 0;
+    case CARD_WABOKU:
+        /* On the field during the human's turn (EffectWabokuPrepare); protect its monsters in battle or chain to
+         * field-clearing Spells like the other set-only answers to Harpie's Feather Duster. */
+        if (gDuel.turnPlayer != 0)
+            return 0;
+        if (entry->event == RESPONSE_ATTACK_DECLARED) {
+            a = AiWabokuIncomingAttackDamage();
+            if (a >= (int)gDuelPlayers[1].lifePoints)
+                return 1;
+            if (CountMonsters(1) != 0)
+                return 1;
+            return 0;
+        }
+        if (CountMonsters(1) == 0)
+            return 0;
+        if (entry->player != 0)
+            return 0;
+        switch (CARD_NUMBER(entry->card)) {
+        case CARD_HEAVY_STORM:
+        case CARD_HARPIES_FEATHER_DUSTER:
+        case CARD_GIANT_TRUNADE:
+            return 1;
+        default:
+            return 0;
+        }
     }
     return AiShouldActivateAddedCard(entry);     /* mod: the added cards (src/added_effects.c) */
 }
@@ -586,8 +630,9 @@ u16 AiChainSetCard(struct ChainEntry *entry, int number)
  *  - Field Magic and LP-recovery cards: never answered (0).
  *  - Dark Hole -> White Hole; Raigeki -> Anti Raigeki; Monster Reborn -> Call of the Grave or Call of the Dark.
  *  - Harpie's Feather Duster: nothing without set cards; else Gryphon Wing, then Magic Jammer (two or more set
- *    cards and a hand card), then any set Reinforcements, Castle Walls, Rush Recklessly, The Reliable
+ *    cards and a hand card), then any set Reinforcements, Castle Walls, Waboku, Rush Recklessly, The Reliable
  *    Guardian, Snake Fang, Graceful Dice, Skull Dice or key 1447.
+ *  - Heavy Storm and Giant Trunade: a set Waboku may be chained (mod), then the generic Magic answers below.
  *  - De-Spell / Mystical Space Typhoon aimed at Black Pendant or Magic Jammer: no answer.
  *  - Swords of Revealing Light -> Ceasefire when 500 per Effect Monster exceeds the human's life points, or by
  *    chance (no player check).
@@ -699,6 +744,7 @@ int AiTryChainResponse(struct ChainEntry *entry)
             switch (CARD_NUMBER(id)) {
             case CARD_REINFORCEMENTS:
             case CARD_CASTLE_WALLS:
+            case CARD_WABOKU:
             case CARD_RUSH_RECKLESSLY:
             case CARD_THE_RELIABLE_GUARDIAN:
             case CARD_SNAKE_FANG:
@@ -713,6 +759,13 @@ int AiTryChainResponse(struct ChainEntry *entry)
         if (AiChainSolemnJudgment(entry))  /* added: see below */
             return 1;
         return 0;
+    case CARD_HEAVY_STORM:
+    case CARD_GIANT_TRUNADE:
+        if (entry->player)
+            return 0;
+        if (AiChainSetCard(entry, CARD_WABOKU))
+            return 1;
+        break;
     case CARD_DE_SPELL:
     case CARD_MYSTICAL_SPACE_TYPHOON: {
         u16 target;

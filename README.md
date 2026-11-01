@@ -188,6 +188,8 @@ Each format is a Campaign "duelist". You start with Yugi-Kaiba only; beat the cu
     - It chains Trap Hole and its other summon Traps to your monster's summon effect (Mobius, Zaborg, ...), so it
       can destroy the monster before the effect resolves.
     - It plays Dark Hole only when you control at least as many monsters as it does (not when you have fewer).
+    - It activates set Waboku on your turn when it still has monsters, when your attack would be lethal (even with
+      no monsters left), or when chaining to Heavy Storm, Harpie's Feather Duster, or Giant Trunade.
     - Its recruiters (Mystic Tomato, Giant Rat, UFO Turtle, Shining Fairy, Mother Grizzly, Flying Kamakiri #1,
       Pyramid Turtle, Apprentice Magician) summon another copy of themselves from the Deck when they can, so
       the next one can recruit again.

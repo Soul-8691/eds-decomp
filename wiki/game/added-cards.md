@@ -838,6 +838,11 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
   case for it).
 - Checked in the source and the build; not tested in an emulator.
 
+### The CPU's Waboku (2026-11-01)
+- **Before.** Vanilla `AiShouldActivateSetCard` had no case for Waboku (1055), and `AiTryChainResponse` never chained a set copy to Heavy Storm or Giant Trunade (only Harpie's Feather Duster's panic list included similar traps, not Waboku).
+- **Now.** `AiShouldActivateSetCard` flips a set Waboku on the human's turn when the window is an attack declaration (any attack while the CPU has monsters, or a lethal attack including direct when it has none), or the human's Heavy Storm / Feather Duster / Giant Trunade (with monsters on its field). `AiTryChainResponse` adds Waboku to the Feather Duster set-card loop and chains it to Heavy Storm and Giant Trunade before the generic Magic answers.
+- Checked in the source; not tested in an emulator.
+
 ### The CPU's Dark Hole (2026-10-29)
 - **Before.** `AiPlaySpells` (ai_deck.c) played Dark Hole in five cases:
   - the human has monsters and the CPU none;

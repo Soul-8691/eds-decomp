@@ -2339,3 +2339,9 @@ updated: 2026-09-29
 
 ## [2026-11-01] progress | Dark Hole AI allows equal monster counts
 - `AiTryPlaySpellTrap` refuses Dark Hole only when `CountMonsters(0) < CountMonsters(1)` (was `<=`). README.md, [[added-cards]].
+
+## [2026-11-01] progress | CPU Waboku activation and chain to field removal
+- `AiShouldActivateSetCard`, `AiTryChainResponse` (ai_summon.c). [[added-cards]].
+
+## [2026-11-01] progress | CPU Waboku on lethal attacks
+- `AiWabokuIncomingAttackDamage`; flip on lethal even with no monsters (ai_summon.c). README, [[added-cards]].
