@@ -197,13 +197,17 @@ int AiPlanAttack(u16 assumeAttackPos)
  * A card whose tributes cannot be found is skipped. */
 int AiPickTributeFor(u16 id, int excludeZone);     /* mod: src/added_effects.c */
 int AiTributeIsUpgrade(u16 cardId, u16 tributeMask);
+int AiSummonCandidatePreferred(u16 aId, int aDmg, u16 bId, int bDmg);
+int AiSummonBetterWhenAttacksStopped(u16 cardId, u16 tributeMask, int cpuMonstersBefore);
 
 int AiChooseSummonWithTribute(int *outDamage)
 {
     int bestHandIndex = -1;
     int bestKills = 0;
+    int bestDamage = 0;
     int baseDamage;
     int handIndex;
+    int cpuMonstersBefore = CountMonsters(1);
 
     AiBackupDuelState();
     AiSimSetAttackPositions();
@@ -217,6 +221,7 @@ int AiChooseSummonWithTribute(int *outDamage)
         int damage;
         int tribute1, tribute2;
         u16 tributeNibble2;
+        u16 bestId;
 
         if (!CanSummonFromHand(1, cardId))
             continue;
@@ -265,6 +270,9 @@ int AiChooseSummonWithTribute(int *outDamage)
             better = 1;
         if (!better && damage >= baseDamage && AiTributeIsUpgrade(cardId, tributeMask))
             better = 1;     /* added: a stronger monster for weaker ones (src/added_effects.c) */
+        if (!better && damage >= baseDamage
+         && AiSummonBetterWhenAttacksStopped(cardId, tributeMask, cpuMonstersBefore))
+            better = 1;
         if (gDuelCtrl.aiFlags & AI_FLAG_EXODIA) {
             /* Exodia strategy: a card that digs for pieces, if the CPU survives the battle with more than
              * 1000 life points and no piece is out of the deck yet. */
@@ -278,9 +286,15 @@ int AiChooseSummonWithTribute(int *outDamage)
                 break;
             }
         }
+        if (better && bestHandIndex >= 0) {
+            bestId = CARD_ID_OF(gDuelPlayers[1].hand[bestHandIndex]);
+            if (!AiSummonCandidatePreferred(cardId, damage, bestId, bestDamage))
+                better = 0;
+        }
         if (better) {
             if (damage > 0)
                 baseDamage = damage;
+            bestDamage = damage;
             bestKills = gAiWork.simTargetsDestroyed;
             bestHandIndex = handIndex;
         }
@@ -298,8 +312,10 @@ int AiChooseSummonNoTribute(void)
 {
     int bestHandIndex = -1;
     int bestKills = 0;
+    int bestDamage = 0;
     int baseDamage;
     int handIndex;
+    int cpuMonstersBefore = CountMonsters(1);
 
     AiBackupDuelState();
     AiSimSetAttackPositions();
@@ -310,6 +326,7 @@ int AiChooseSummonNoTribute(void)
         int skip;
         int better;
         int damage;
+        u16 bestId;
 
         if (!CanSummonFromHand(1, cardId))
             continue;
@@ -335,9 +352,18 @@ int AiChooseSummonNoTribute(void)
             better = 1;
         if (damage == baseDamage && bestKills < gAiWork.simTargetsDestroyed && gAiWork.simOwnMonsters != 0)
             better = 1;
+        if (!better && damage >= baseDamage
+         && AiSummonBetterWhenAttacksStopped(cardId, 0, cpuMonstersBefore))
+            better = 1;
+        if (better && bestHandIndex >= 0) {
+            bestId = CARD_ID_OF(gDuelPlayers[1].hand[bestHandIndex]);
+            if (!AiSummonCandidatePreferred(cardId, damage, bestId, bestDamage))
+                better = 0;
+        }
         if (better) {
             if (damage > 0)
                 baseDamage = damage;
+            bestDamage = damage;
             bestKills = gAiWork.simTargetsDestroyed;
             bestHandIndex = handIndex;
         }

@@ -164,6 +164,12 @@ Each format is a Campaign "duelist". You start with Yugi-Kaiba only; beat the cu
     - It Tribute Summons a stronger monster over weaker ones even when the swap doesn't change its attacks, such
       as Gyakutenno Megami (1800/2000) over Aqua Madoor (1200/2000), as long as the summon has more ATK and at
       least as much DEF as each monster it Tributes.
+    - When it plans to attack, it compares no-tribute and tribute summons and won't pick a weaker printed ATK
+      beatstick over a stronger one unless the weaker card has a Normal Summon trigger and still beats your
+      monsters; on a tie it prefers that trigger over a higher-ATK beatstick (flip monsters are Set, not in
+      this rule).
+    - While your Swords of Revealing Light is up and you control no monsters, it still Normal Summons (including
+      Tribute Summons and tribute upgrades) instead of skipping straight to Spells.
     - It never Tributes a copy of the monster it is summoning, for a Tribute Summon or a Toon's Special Summon,
       unless that monster has an effect that triggers on its summon (Zaborg, Mobius, Breaker, ...).
   - **Card use.**

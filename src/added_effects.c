@@ -7689,6 +7689,166 @@ void BlastWithChainEquipDestroyed(int player, int zone)
 }
 #endif /* HAS_CARD_BLAST_WITH_CHAIN */
 
+/* ---- CPU summon picks: no stat downgrades (except flip / summon triggers) -----------------------------------------
+ * AiStepMainPhase's attack plan used to call only AiChooseSummonNoTribute, so level 5-6 monsters (e.g. Summoned Skull)
+ * were skipped when a level 4 (e.g. Gyakutenno Megami) looked good enough. AiChooseBestNormalSummon compares both.
+ * When two options tie on simulated damage, prefer a Normal Summon trigger (Mobius, Senju, …) over a higher-ATK
+ * beatstick if its printed ATK still beats the human's monsters; flip monsters are Set, not part of that rule. */
+
+static int AiHasSummonTrigger(u16 number);
+
+int AiPickTributeFor(u16 id, int excludeZone);
+
+static int AiPrintedMonsterAtk(u16 cardId)
+{
+    u32 stats = gCardStats[cardId & CARD_ID_MASK];
+
+    return CARD_STATS_ATK(stats) * CARD_STATS_POINTS_SCALE;
+}
+
+static int AiFlipEffectMonster(u16 cardId)
+{
+    u16 number = CardNumberOfId(cardId);
+
+    return HasFlipEffect(number, 0) || HasFlipEffect(number, 1);
+}
+
+static int AiNormalSummonTriggerMonster(u16 cardId)
+{
+    return AiHasSummonTrigger(CardNumberOfId(cardId));
+}
+
+static int AiWeakerStatSummonAllowed(u16 cardId)
+{
+    if (AiFlipEffectMonster(cardId))
+        return 1;
+    return AiNormalSummonTriggerMonster(cardId);
+}
+
+static int AiSummonBeatsPlayerMonsters(u16 cardId)
+{
+    return AiCanBeatAnyMonster(AiPrintedMonsterAtk(cardId));
+}
+
+int AiTributeIsUpgrade(u16 cardId, u16 tributeMask);
+int CountActiveCardsOnFieldExcept(int player, u16 cardNo, int skipZone);
+
+/* 1 when the human's Swords of Revealing Light is active (battle damage sim stays flat). */
+int AiHumanSwordsActive(void)
+{
+    return CountActiveCardsOnFieldExcept(0, CARD_SWORDS_OF_REVEALING_LIGHT, -1) > 0;
+}
+
+/* Summon is worth doing despite 0 battle damage: tribute upgrade, or first monster under Swords. */
+int AiSummonBetterWhenAttacksStopped(u16 cardId, u16 tributeMask, int cpuMonstersBefore)
+{
+    if (!AiHumanSwordsActive())
+        return 0;
+    if (AiTributeIsUpgrade(cardId, tributeMask))
+        return 1;
+    if (cpuMonstersBefore == 0 && tributeMask == 0
+     && (int)CARD_STATS_LEVEL(gCardStats[cardId & CARD_ID_MASK]) <= 4)
+        return 1;
+    return 0;
+}
+
+int AiSummonCandidatePreferred(u16 aId, int aDmg, u16 bId, int bDmg)
+{
+    int aAtk = AiPrintedMonsterAtk(aId);
+    int bAtk = AiPrintedMonsterAtk(bId);
+
+    if (aDmg > bDmg) {
+        if (aAtk < bAtk && !AiWeakerStatSummonAllowed(aId)) {
+            if (AiNormalSummonTriggerMonster(aId) && AiSummonBeatsPlayerMonsters(aId))
+                return 1;
+            return 0;
+        }
+        return 1;
+    }
+    if (aDmg < bDmg)
+        return 0;
+    if (AiNormalSummonTriggerMonster(aId) && !AiNormalSummonTriggerMonster(bId)
+     && AiSummonBeatsPlayerMonsters(aId))
+        return 1;
+    if (AiNormalSummonTriggerMonster(bId) && !AiNormalSummonTriggerMonster(aId)
+     && AiSummonBeatsPlayerMonsters(bId))
+        return 0;
+    if (aAtk > bAtk)
+        return 1;
+    if (aAtk < bAtk)
+        return AiNormalSummonTriggerMonster(aId) && AiSummonBeatsPlayerMonsters(aId);
+    return 0;
+}
+
+static u16 AiTributeMaskForHandIndex(int handIndex)
+{
+    u16 cardId = DUEL_CARD_ID(&gDuelPlayers[1].hand[handIndex]);
+    int level = (int)CARD_STATS_LEVEL(gCardStats[cardId & CARD_ID_MASK]);
+    int tribute1, tribute2;
+    u16 tributeNibble2;
+
+    switch (level) {
+    case 1:
+    case 2:
+    case 3:
+    case 4:
+        return 0;
+    case 5:
+    case 6:
+        tribute1 = AiPickTributeFor(cardId, -1);
+        if (tribute1 == -1)
+            return 0xFFFF;
+        return tribute1 | 8;
+    default:
+        tribute1 = AiPickTributeFor(cardId, -1);
+        tribute2 = AiPickTributeFor(cardId, tribute1);
+        if (tribute1 == -1 || tribute2 == -1)
+            return 0xFFFF;
+        tributeNibble2 = (tribute2 & 7) | 8;
+        return (((u32)tribute1 << 20) >> 16) | tributeNibble2;
+    }
+}
+
+static int AiHandSimSummonDamage(int handIndex, u16 tributeMask)
+{
+    int damage;
+
+    AiBackupDuelState();
+    AiSimSummon(handIndex, tributeMask);
+    AiSimSetAttackPositions();
+    damage = AiSimBattlePhase();
+    AiRestoreDuelState();
+    return damage;
+}
+
+int AiChooseBestNormalSummon(void)
+{
+    int dmgT = 0;
+    int idxT = AiChooseSummonWithTribute(&dmgT);
+    int idxN = AiChooseSummonNoTribute();
+    u16 idN, idT;
+    int dmgN;
+    u16 maskT;
+
+    if (idxN < 0 && idxT < 0)
+        return -1;
+    if (idxN < 0)
+        return idxT;
+    if (idxT < 0)
+        return idxN;
+
+    idN = DUEL_CARD_ID(&gDuelPlayers[1].hand[idxN]);
+    idT = DUEL_CARD_ID(&gDuelPlayers[1].hand[idxT]);
+    dmgN = AiHandSimSummonDamage(idxN, 0);
+    maskT = AiTributeMaskForHandIndex(idxT);
+    if (maskT == 0xFFFF)
+        return idxN;
+    dmgT = AiHandSimSummonDamage(idxT, maskT);
+    if (AiSummonCandidatePreferred(idT, dmgT, idN, dmgN))
+        return idxT;
+    return idxN;
+}
+
 /* ---- The CPU's Tribute Summon upgrades ----------------------------------------------------------------------------
  * AiChooseSummonWithTribute (ai_summon.c) takes a Tribute Summon only when its battle simulation deals more damage
  * (or as much while destroying more). A wall swapped for a stronger wall changes neither, so the CPU kept Aqua Madoor

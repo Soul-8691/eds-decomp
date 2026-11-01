@@ -181,7 +181,6 @@ int AiStepMainPhase(void)
     /* FAKEMATCH: initialized pointer, card and mask lifetimes retain r4/r6/r5. */
     register u32 word asm("r4");
     register u32 id asm("r6");
-    u16 hasFlip;
     u16 hasFlip2;
     register u32 idMasked asm("r5");
     int tribute1;
@@ -207,7 +206,9 @@ int AiStepMainPhase(void)
             }
             return 1;
         }
-        if (CountActiveCardsOnFieldExcept(0, CARD_SWORDS_OF_REVEALING_LIGHT, -1) > 0) {
+        /* Skip attack summons while Swords stops battle, but still summon when the human has no monsters
+         * (board building / tribute upgrades for next turn). */
+        if (CountActiveCardsOnFieldExcept(0, CARD_SWORDS_OF_REVEALING_LIGHT, -1) > 0 && CountMonsters(0) > 0) {
             gAiState.phase = AI_MAIN_RESET;
             return 0;
         }
@@ -218,24 +219,16 @@ int AiStepMainPhase(void)
         if (AiPlanAttack(1) != 0) {
             if (CanNormalSummon(1) == 0)
                 AI_MAIN_GO_TO_SPELLS();     /* changed: was return 1 */
-            handIdx = AiChooseSummonNoTribute();
+            handIdx = AiChooseBestNormalSummon();
             if (handIdx <= -1)
                 AI_MAIN_GO_TO_SPELLS();     /* changed: was return 1 */
-            word = gDuelPlayers.hand1[handIdx];
-            word <<= 21;
-            word >>= 20;
-            word += (u32)gCardIdToNumber;
-            numPtr = (const u16 *)word;
-            hasFlip = HasFlipEffect(*numPtr, 1);
-            if (HasFlipEffect(*numPtr, 0) != 0)
-                hasFlip = 1;
-            QueueNormalSummon(1, handIdx, FindFreeMonsterZone(1), 0, hasFlip == 0);
-            AI_MAIN_GO_TO_SPELLS();         /* changed: was return 1 */
+            goto aiQueueHandSummon;         /* level 5+ needs tribute bytes, not a no-tribute queue */
         }
         if (CanNormalSummon(1) == 0)
             return 1;
         handIdx = AiChooseSummonWithTribute(&damage);
         if (handIdx > -1) {
+        aiQueueHandSummon:
             {
                 /* FAKEMATCH: stage the initialized card word before extraction. */
                 register u32 raw asm("r0") = gDuelPlayers.hand1[handIdx];

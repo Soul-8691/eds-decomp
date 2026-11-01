@@ -300,6 +300,13 @@ int AiChooseSummonNoTribute(void);
 /* AiChooseSummonNoTribute for every level, with the tributes AiPickTributeMonster would take; *outDamage =
  * the best damage. Hand index or -1. */
 int AiChooseSummonWithTribute(int *outDamage);
+/* Attack-plan summon: best of no-tribute and tribute picks without preferring weaker printed ATK (flip / summon
+ * triggers excepted). Hand index or -1. */
+int AiChooseBestNormalSummon(void);
+/* 1 if hand monster aId with simulated damage aDmg should be chosen over bId / bDmg. */
+int AiSummonCandidatePreferred(u16 aId, int aDmg, u16 bId, int bDmg);
+int AiHumanSwordsActive(void);
+int AiSummonBetterWhenAttacksStopped(u16 cardId, u16 tributeMask, int cpuMonstersBefore);
 /* Hand index of the monster to Set (flip effects by situation, else the best wall), or -1. */
 int AiPickMonsterToSet(void);
 /* CPU answer to the position prompt: 1 = Defense Position, 0 = face-up Attack. faceUp != 0 skips the
