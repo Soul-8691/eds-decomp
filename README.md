@@ -109,6 +109,18 @@ Each format is a Campaign "duelist". You start with Yugi-Kaiba only; beat the cu
   **one free pack** after the duel. When a win opens new packs (usage pack at 10 wins in that format, or TCG sets
   when the next format unlocks at **20** wins), the game shows the **"new packs are available"** message before the
   list. The screen that shows a pack's cards no longer has the scrolling patterned background (Campaign packs too).
+- **Format Library usage stats ([Mobius](https://github.com/Soul-8691/Mobius)).** Card DP and the usage-weighted
+  booster pools in this hack come from [Format Library](https://www.formatlibrary.com/) tournament usage data.
+  **[Mobius](https://github.com/Soul-8691/Mobius)** is a companion Python app for exploring those stats in a table
+  (ban-weighted counts, Limited/Semi-Limited multipliers, YGOPRODeck names and art). Clone that repository, then
+  with Python 3.9 or newer run `pip install -r requirements.txt` and `python main.py`. A format appears in the
+  dropdown when it has both a pool file under `data/format_library/pools/` and a matching usage file under
+  `data/format_library/usage/` (usage is read from each JSON's top-level `main` array; pool cards with no entry count
+  as zero). On first launch the app downloads the full YGOPRODeck v7 database to
+  `data/cache/ygopro/card_database.json`; run `python download_ygopro_database.py` to refresh it. Card images cache
+  under `data/cache/ygopro/images/` as you scroll. For one card's usage across formats as a line chart, run
+  `python graph_card_usage.py "Monster Reborn"` (optional `--start yugi-kaiba --end goat` and `-o chart.png`; format
+  stems match the pool filenames, e.g. `yugi-kaiba`, `cat`). See Mobius's README for chart semantics and options.
 - **Card art in duels.** Face-up cards show a small picture of their artwork inside their icon: on the field
   (monsters, Spells/Traps, the Field zone, the top card of each Graveyard and banished pile), in your hand, in the
   card menu, in the chain list, when reordering cards, and while cards move, flip or change position. Deck Edit's
