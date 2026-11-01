@@ -868,12 +868,26 @@ static int RaigekiBreakHasTarget(struct ChainEntry *card)
     return 0;
 }
 
+static int RaigekiBreakHasOpponentTarget(struct ChainEntry *card)
+{
+    int opponent = 1 - (card->player & 1);
+    int zone;
+
+    for (zone = 0; zone <= ZONE_FIELD; zone++) {
+        if (EffectRaigekiBreakCheck(card, RAIGEKI_BREAK_POS(opponent, zone)))
+            return 1;
+    }
+    return 0;
+}
+
 int EffectRaigekiBreakPrepare(struct ChainEntry *card, struct ChainEntry *chainLink, u16 fromHand)
 {
     if (chainLink != NULL)
         return 0;
     if (gDuelPlayers[card->player & 1].handCount < 1 + fromHand)
         return 0;
+    if (card->player)
+        return RaigekiBreakHasOpponentTarget(card);
     return RaigekiBreakHasTarget(card);
 }
 
@@ -905,19 +919,26 @@ int EffectRaigekiBreakChainA(struct ChainEntry *link, struct ChainEntry *prevLin
 int EffectRaigekiBreakChainB(struct ChainEntry *link, struct ChainEntry *prevLink)
 {
     if (link->player) {
-        int player;
+        int controller = link->player & 1;
+        int opponent = 1 - controller;
         int zone;
 
         link->numTargets = 0;
         if (CanActivateEffect(link, prevLink, 0) == 0)
             return 1;
-        for (player = 0; player <= 1; player++) {
-            for (zone = 0; zone <= ZONE_FIELD; zone++) {
-                if (EffectRaigekiBreakCheck(link, RAIGEKI_BREAK_POS(player, zone))) {
-                    if (TryAddEffectTarget(link, player, zone) != 0)
-                        return 1;
-                }
-            }
+        zone = CountMonsters(opponent) > 0 ? AiFindStrongestMonster(opponent, -1, 1, 1) : -1;
+        if (zone >= 0 && EffectRaigekiBreakCheck(link, RAIGEKI_BREAK_POS(opponent, zone))
+            && TryAddEffectTarget(link, opponent, zone))
+            return 1;
+        for (zone = 0; zone <= ZONE_FIELD; zone++) {
+            if (EffectRaigekiBreakCheck(link, RAIGEKI_BREAK_POS(opponent, zone))
+                && TryAddEffectTarget(link, opponent, zone))
+                return 1;
+        }
+        for (zone = 0; zone <= ZONE_FIELD; zone++) {
+            if (EffectRaigekiBreakCheck(link, RAIGEKI_BREAK_POS(controller, zone))
+                && TryAddEffectTarget(link, controller, zone))
+                return 1;
         }
         return 1;
     }

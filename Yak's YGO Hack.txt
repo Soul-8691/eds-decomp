@@ -24,3 +24,4 @@ Move hooks out of original units (like duel_info_bar)
 Move added card lists out of effect_target_collect.c
 Card priority orders
 Fix random freeze
+Make actual rarest cards show the rare effect (pack opener)
