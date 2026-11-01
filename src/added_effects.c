@@ -6178,6 +6178,11 @@ int SoulExchangeCpuResolve(struct ChainEntry *link)
 #define AI_HUMAN 0
 #define CPU_CHAIN_KIND_MONSTER (0x80000000 | (CHAIN_KIND_MONSTER << 21))
 
+#ifdef HAS_CARD_DES_WOMBAT
+int PlayerHasDesWombatOnField(int player);
+int AiShouldSkipCpuEffectDamageVsDesWombat(u16 number);
+#endif
+
 static inline int IsAddedCardId(u16 id)
 {
     return (id & CARD_ID_MASK) >= CARD_ID_COUNT_ORIGINAL;
@@ -8235,6 +8240,10 @@ static int AiWantsWaveMotionIgnition(int zone)
     struct DuelZone *z = ZoneOf(AI_PLAYER, zone);
     int damage = z->turnCounter * WMC_DAMAGE_PER_STANDBY;
 
+#ifdef HAS_CARD_DES_WOMBAT
+    if (PlayerHasDesWombatOnField(AI_HUMAN))
+        return 0;
+#endif
     if (damage <= 0)
         return 0;
     if ((int)gDuelPlayers[AI_HUMAN].lifePoints <= damage)
@@ -8620,6 +8629,10 @@ int AiUseMagicalScientist(void)
             continue;
         number = CardNumberOfId(id);
         if (IsScientistBurner(number)) {
+#ifdef HAS_CARD_DES_WOMBAT
+            if (PlayerHasDesWombatOnField(AI_HUMAN))
+                continue;
+#endif
             burner = 1;
             if (AiPickScientistTribute(zone) >= 0 && CanActivateMonsterEffect(id, AI_PLAYER, zone)) {
                 AiActivateMonsterAt(zone);
@@ -9483,6 +9496,10 @@ int AiWantsSecretBarrel(void)
     int cards = CountHandAndFieldCards(AI_HUMAN);
     int damage = cards * SECRET_BARREL_DAMAGE_PER_CARD;
 
+#ifdef HAS_CARD_DES_WOMBAT
+    if (PlayerHasDesWombatOnField(AI_HUMAN))
+        return 0;
+#endif
     if (cards == 0)
         return 0;
     if (damage >= (int)gDuelPlayers[AI_HUMAN].lifePoints)
@@ -10077,7 +10094,13 @@ static const u8 sStrPoisonOfTheOldManMenu[] = "Poison of the Old Man:\n    @3Gai
 
 static int AiPoisonOfTheOldManChoice(int player)
 {
-    if ((int)gDuelPlayers[(1 - player) & 1].lifePoints <= POTOM_DAMAGE)
+    int opp = (1 - player) & 1;
+
+#ifdef HAS_CARD_DES_WOMBAT
+    if (PlayerHasDesWombatOnField(opp))
+        return POTOM_MODE_GAIN;
+#endif
+    if ((int)gDuelPlayers[opp].lifePoints <= POTOM_DAMAGE)
         return POTOM_MODE_DAMAGE;
     return (int)gDuelPlayers[player & 1].lifePoints <= POTOM_AI_LOW_LP ? POTOM_MODE_GAIN : POTOM_MODE_DAMAGE;
 }
@@ -10147,7 +10170,39 @@ int ModTakesNoEffectDamage(int player)
  * "Any damage to you from a card effect becomes 0." Continuous Effect Monster: while a face-up copy is on the
  * player's field, ModTakesNoEffectDamage is true for that player (LoseLifePoints in duel_card_actions.c). Battle
  * damage and LP paid as costs are unchanged. No gAddedCardEffects row (passive, like Jinzo's rules hook).
- * CPU: AiIsKeyCard tier 2 keeps it in hand; burn traps skip chaining when ModTakesNoEffectDamage already holds. */
+ * CPU: AiIsKeyCard tier 2; does not play effect LP damage while the human's face-up Des Wombat is on their field. */
+
+int PlayerHasDesWombatOnField(int player)
+{
+    return CountActiveCardsOnField(player, CARD_DES_WOMBAT) > 0;
+}
+
+/* Skip CPU burn plays that would only hurt the human while their Des Wombat is face-up (not Pikeru's Circle / HLB). */
+int AiShouldSkipCpuEffectDamageVsDesWombat(u16 number)
+{
+    if (!PlayerHasDesWombatOnField(AI_HUMAN))
+        return 0;
+    switch (number) {
+    case CARD_SPARKS:
+    case CARD_HINOTAMA:
+    case CARD_FINAL_FLAME:
+    case CARD_OOKAZI:
+    case CARD_TREMENDOUS_FIRE:
+    case CARD_RAIMEI:
+    case CARD_RESTRUCTER_REVOLUTION:
+        return 1;
+#ifdef HAS_CARD_SECRET_BARREL
+    case CARD_SECRET_BARREL:
+        return 1;
+#endif
+#ifdef HAS_CARD_WAVE_MOTION_CANNON
+    case CARD_WAVE_MOTION_CANNON:
+        return 1;
+#endif
+    default:
+        return 0;
+    }
+}
 #endif /* HAS_CARD_DES_WOMBAT */
 
 #ifdef HAS_CARD_LIMITER_REMOVAL

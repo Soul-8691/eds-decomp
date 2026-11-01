@@ -659,6 +659,10 @@ int AiStepPlaySimpleSpells(void)
                         ok = 1;
                     break;
                 }
+#ifdef HAS_CARD_DES_WOMBAT
+                if (ok && AiShouldSkipCpuEffectDamageVsDesWombat((u16)gAiSimpleSpells[gAiState.subState]))
+                    ok = 0;
+#endif
                 if (ok) {
                     int z;
                     u32 id;
@@ -748,6 +752,10 @@ int AiStepPlaySimpleSpells(void)
                         ok = 1;
                     break;
                 }
+#ifdef HAS_CARD_DES_WOMBAT
+                if (ok && AiShouldSkipCpuEffectDamageVsDesWombat((u16)numbers[state->subState]))
+                    ok = 0;
+#endif
                 if (ok) {
                     record->player = 1;
                     record->event = 0;

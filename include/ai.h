@@ -292,6 +292,11 @@ int AiTryPlayScapegoat(void);
 /* Skip summoning Lily when LP <= 2000 (battle boost cost unusable). */
 int AiShouldSkipSummonInjectionFairyLily(u16 cardId);
 #endif
+#ifdef HAS_CARD_DES_WOMBAT
+int PlayerHasDesWombatOnField(int player);
+/* Skip CPU effect-LP-damage cards while the human has a face-up Des Wombat. */
+int AiShouldSkipCpuEffectDamageVsDesWombat(u16 number);
+#endif
 /* 1 = go ahead; 0 now and then when the human has an activatable set counterNo (more often with
  * AI_FLAG_CAREFUL). */
 int AiRiskSetCounter(u16 counterNo);

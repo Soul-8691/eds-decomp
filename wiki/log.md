@@ -2366,3 +2366,6 @@ updated: 2026-09-29
 
 ## [2026-11-01] progress | CPU skips summoning Injection Fairy Lily at low LP
 - `AiShouldSkipSummonInjectionFairyLily` (added_effects.c); summon pickers and `AiPickMonsterToSet` (ai_summon.c, ai_turn_steps.c); Scapegoat gate hand scan. quirks.txt.
+
+## [2026-11-01] progress | CPU skips burn vs human Des Wombat only
+- `PlayerHasDesWombatOnField`, `AiShouldSkipCpuEffectDamageVsDesWombat` (added_effects.c); simple spells, `AiTryPlaySpellTrap`, Secret Barrel, Wave Motion, Magical Scientist burn, Poison of the Old Man. [[added-cards]]. quirks.txt.

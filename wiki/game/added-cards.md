@@ -1322,7 +1322,8 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
   "Any damage to you from a card effect becomes 0." EARTH Beast Effect Monster (1600/300, Level 3). While a face-up
   copy is on a player's field, `ModTakesNoEffectDamage` is true for that player (`LoseLifePoints` in
   duel_card_actions.c). Battle damage and LP costs are unaffected. No effect table row. CPU: `AiIsKeyCard` tier 2;
-  burn answers (`AiChainPikerusCircle`, `AiChainHallowedLifeBarrier`) skip when already protected.
+  burn answers (`AiChainPikerusCircle`, `AiChainHallowedLifeBarrier`) skip when already protected; the CPU does not
+  play its own effect-damage cards while the human's face-up Des Wombat is on their field.
 - Built; not tested in an emulator.
 
 ### Pikeru's Circle of Enchantment (2026-10-30)

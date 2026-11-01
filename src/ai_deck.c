@@ -277,6 +277,10 @@ int AiTryPlaySpellTrap(u16 number)
     if (number == CARD_SCAPEGOAT && !AiWantsScapegoat())
         return 0;
 #endif
+#ifdef HAS_CARD_DES_WOMBAT
+    if (AiShouldSkipCpuEffectDamageVsDesWombat(number))
+        return 0;
+#endif
     cardId = CardNumberToId(number);
     if (GetSpellSubtype(CARD_STATS(cardId)) == SPELL_FIELD && GetFaceUpFieldMagicNumber() == number)
         return 0;
