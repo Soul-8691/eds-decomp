@@ -439,6 +439,8 @@ int SumMonsterAtk(int player);
 /* 1 if the monster in (player, zone) may change its battle position (not locked, not held by Spellbinding
  * Circle or Dragon Capture Jar). */
 int AiCanChangePosition(int player, int zone);
+int AiCanFlipSummon(int player, int zone);
+int AiQueueFlipSummonIfLegal(int player, int zone);
 /* Number of Exodia pieces (card numbers 16-20) in the CPU's deck. */
 int AiCountExodiaInDeck(void);
 /* Number of Exodia pieces in the CPU's graveyard. */

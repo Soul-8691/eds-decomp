@@ -26,6 +26,7 @@
 #include "battle.h"                 /* CanAttackDirectly, CanMonsterAttack */
 #include "card_list_view.h"         /* gCardListViewCards */
 #include "duel_flow.h"              /* gDuelCtrl */
+#include "summon.h"                 /* CanNormalSummon, QueueFlipSummon */
 #include "util.h"                   /* MemCopy16, Random */
 
 #ifdef HAS_CARD_FINAL_ATTACK_ORDERS
@@ -486,6 +487,27 @@ int AiCanChangePosition(int player, int zone)
     if (FinalAttackOrdersActive())
         return 0;
 #endif
+    return 1;
+}
+
+/* Flip Summon legality for AI and humans: face-down monster, CanNormalSummon, and the same position locks as
+ * CardMenu_GetMonsterCommands (positionLocked is set when the card is placed and cleared at turn start). */
+int AiCanFlipSummon(int player, int zone)
+{
+    struct DuelZone *z = ZONE_AT(player & 1, zone);
+
+    if (CARD_EMPTY(z->card) || z->isFaceUp)
+        return 0;
+    if (!CanNormalSummon(player))
+        return 0;
+    return AiCanChangePosition(player, zone);
+}
+
+int AiQueueFlipSummonIfLegal(int player, int zone)
+{
+    if (!AiCanFlipSummon(player, zone))
+        return 0;
+    QueueFlipSummon(player, zone);
     return 1;
 }
 

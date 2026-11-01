@@ -8766,8 +8766,8 @@ int AiTryFlipSafeFlipEffectsForTribute(void)
     for (zone = ZONE_MONSTER_0; zone <= ZONE_MONSTER_4; zone++) {
         if (!AiShouldFlipFaceDownForTribute(AI_PLAYER, zone))
             continue;
-        QueueFlipSummon(AI_PLAYER, zone);
-        return 1;
+        if (AiQueueFlipSummonIfLegal(AI_PLAYER, zone))
+            return 1;
     }
     return 0;
 }

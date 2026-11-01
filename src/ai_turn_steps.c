@@ -979,7 +979,7 @@ int AiStepFlipSummon(void)
         return 0;
         }
     case 2:
-        QueueFlipSummon(1, state->flipZone);
+        AiQueueFlipSummonIfLegal(1, state->flipZone);
         state->flipZone++;
         state->subState = 1;
         return 0;

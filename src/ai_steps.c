@@ -544,8 +544,8 @@ int AiStepChangePositions(void)
                     AI->subState++;
                     return 0;
                 }
-                if (CanNormalSummon(1) && AiShouldFlipFaceDownForTribute(1, AI->subState) != 0) {
-                    QueueFlipSummon(1, AI->subState);
+                if (AiShouldFlipFaceDownForTribute(1, AI->subState) != 0
+                    && AiQueueFlipSummonIfLegal(1, AI->subState)) {
                     AI->subState++;
                     return 0;
                 }
@@ -607,15 +607,15 @@ int AiStepChangePositions(void)
                                 int number = *(const u16 *)(((*(u32 *)&z->card << 21) >> 20) + CARD_ID_TO_NUMBER_ADDR);
                                 switch (number) {
                                 case CARD_PARASITE_PARACIDE:
-                                    if (ZoneFace(savedMask, z) == 0 && canSummon) {
-                                        QueueFlipSummon(1, zone);
+                                    if (ZoneFace(savedMask, z) == 0
+                                        && AiQueueFlipSummonIfLegal(1, zone)) {
                                         AI->subState++;
                                         return 0;
                                     }
                                     break;
                                 case CARD_MAN_EATER_BUG:
-                                    if (ZoneFace(savedMask, z) == 0 && CountMonsters(0) > 0 && canSummon) {
-                                        QueueFlipSummon(1, AI->subState);
+                                    if (ZoneFace(savedMask, z) == 0 && CountMonsters(0) > 0
+                                        && AiQueueFlipSummonIfLegal(1, AI->subState)) {
                                         AI->subState++;
                                         return 0;
                                     }
@@ -623,16 +623,16 @@ int AiStepChangePositions(void)
                                 case CARD_HANE_HANE:
                                 case CARD_PENGUIN_SOLDIER:
                                     if (ZoneFace(savedMask, z) == 0 && CountMonsters(0) > 0
-                                        && AiShouldFlipRemovalForAttacks(1, zone) != 0) {
-                                        QueueFlipSummon(1, zone);
+                                        && AiShouldFlipRemovalForAttacks(1, zone) != 0
+                                        && AiQueueFlipSummonIfLegal(1, zone)) {
                                         AI->subState++;
                                         return 0;
                                     }
                                     break;
                                 case CARD_REAPER_OF_THE_CARDS:
                                     if (ZoneFace(savedMask, z) == 0
-                                        && AiShouldFlipReaperForTraps(1, zone) != 0) {
-                                        QueueFlipSummon(1, zone);
+                                        && AiShouldFlipReaperForTraps(1, zone) != 0
+                                        && AiQueueFlipSummonIfLegal(1, zone)) {
                                         AI->subState++;
                                         return 0;
                                     }
@@ -660,8 +660,8 @@ int AiStepChangePositions(void)
 
                             /* The original call leaves the table base in r1.
                              * HasFlipEffect explicitly consumes its low half. */
-                            if (HasFlipEffect(flipNo, CARD_ID_TO_NUMBER_ADDR) == 0 && ZoneSpaceCount(canSummon)) {
-                                QueueFlipSummon(1, cur->subState);
+                            if (HasFlipEffect(flipNo, CARD_ID_TO_NUMBER_ADDR) == 0
+                                && AiQueueFlipSummonIfLegal(1, cur->subState)) {
                                 cur->subState++;
                                 return 0;
                             }
