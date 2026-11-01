@@ -335,9 +335,10 @@ Each format is a Campaign "duelist". You start with Yugi-Kaiba only; beat the cu
 
 ## Playing
 
-Ready-made IPS patches are in the [`patches/`](patches/) folder: a release build and a debug build (the demo, up to
-Reaper). Apply one to your own USA ROM of *The Eternal Duelist Soul* (AY5E) with any IPS patcher, or let an emulator
-that auto-loads patches, such as mGBA, apply it.
+Ready-made **BPS** patches are in the [`patches/`](patches/) folder: a release build and a debug build (the demo, up
+to Reaper). You need your own USA ROM of *The Eternal Duelist Soul* (AY5E). Apply a patch in the browser with
+[Rom Patcher JS](https://www.marcrobledo.com/RomPatcher.js/): open the site, choose your ROM as the input file, choose
+the `.bps` from `patches/`, then download the patched ROM.
 
 ## Building
 
