@@ -294,6 +294,9 @@ int AiPickMonsterToSet(void)
         id = CARD_ID(HAND1_WORD(i));
         def = AiCardDef(id);
         if (bestDef < def && maxAtk <= def && CanSummonFromHand(1, id) != 0
+#ifdef HAS_CARD_INJECTION_FAIRY_LILY
+            && AiShouldSkipSummonInjectionFairyLily(id) == 0
+#endif
             && AiIsKeyCard(AI_KEY_TIER_MONSTERS, CARD_NUMBER(id)) == 0 && IsSpecialSummonOnly(id) == 0
             && AiHasTributesFor(id) != 0) {
             idx = i;
@@ -308,6 +311,9 @@ int AiPickMonsterToSet(void)
     for (i = 0; i < gDuelPlayers[1].handCount; i++) {
         u16 id2 = CARD_ID(HAND1_WORD(i));
         if (AiCardLevel(id2) <= LEVEL_MAX_NO_TRIBUTE && CARD_TYPE(id2) <= CARD_TYPE_REPTILE
+#ifdef HAS_CARD_INJECTION_FAIRY_LILY
+            && AiShouldSkipSummonInjectionFairyLily(id2) == 0
+#endif
             && AiIsKeyCard(AI_KEY_TIER_MONSTERS, CARD_NUMBER(id2)) == 0 && IsSpecialSummonOnly(id2) == 0
             && AiHasTributesFor(id2) != 0)
             return i;

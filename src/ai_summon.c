@@ -225,6 +225,10 @@ int AiChooseSummonWithTribute(int *outDamage)
 
         if (!CanSummonFromHand(1, cardId))
             continue;
+#ifdef HAS_CARD_INJECTION_FAIRY_LILY
+        if (AiShouldSkipSummonInjectionFairyLily(cardId))
+            continue;
+#endif
         /* Key cards the CPU keeps (tier 2: Exodia pieces, staple Magic/Traps, Kuriboh, Cyber-Stein). */
         if (AiIsKeyCard(2, CARD_NUMBER(cardId)))
             continue;
@@ -330,6 +334,10 @@ int AiChooseSummonNoTribute(void)
 
         if (!CanSummonFromHand(1, cardId))
             continue;
+#ifdef HAS_CARD_INJECTION_FAIRY_LILY
+        if (AiShouldSkipSummonInjectionFairyLily(cardId))
+            continue;
+#endif
         /* Key cards the CPU keeps (tier 2: Exodia pieces, staple Magic/Traps, Kuriboh, Cyber-Stein). */
         if (AiIsKeyCard(2, CARD_NUMBER(cardId)))
             continue;

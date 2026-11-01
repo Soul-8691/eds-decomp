@@ -4576,6 +4576,14 @@ void InjectionFairyLilyEndAttack(int player)
     InjectionFairyLilyResetBattle();
     gInjectionFairyLily.step = LILY_STEP_DONE;
 }
+
+/* Normal Summon pickers skip Lily when its battle cost cannot be paid (CanUseLily requires LP > LILY_COST). */
+int AiShouldSkipSummonInjectionFairyLily(u16 cardId)
+{
+    if (CARD_NUMBER(cardId) != CARD_INJECTION_FAIRY_LILY)
+        return 0;
+    return gDuelPlayers[1].lifePoints <= LILY_COST;
+}
 #endif /* HAS_CARD_INJECTION_FAIRY_LILY */
 
 #ifdef HAS_CARD_EXARION_UNIVERSE
@@ -10573,6 +10581,10 @@ static int AiCpuHasMonsterToSummonThisTurn(void)
 
             if (!CanSummonFromHand(AI_PLAYER, id))
                 continue;
+#ifdef HAS_CARD_INJECTION_FAIRY_LILY
+            if (AiShouldSkipSummonInjectionFairyLily(id))
+                continue;
+#endif
 #ifdef HAS_CARD_CYBER_DRAGON
             if (number == CARD_CYBER_DRAGON && CanCyberDragonSpecialSummon(AI_PLAYER))
                 return 1;

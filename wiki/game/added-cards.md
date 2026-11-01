@@ -2195,6 +2195,8 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
   below `gScratchBuffer`, like the Deck Edit lists at `0x0202A000`; nothing in src/, asm/ or data/ refers to
   `0x0202D000`-`0x0202FFFF`.
 - **Not modelled:** in a Link Battle, the remote player's Lily is decided by the CPU rule.
+- **AI:** the CPU does not Normal Summon or Set Lily from hand when its LP is 2000 or less (same threshold as
+  `CanUseLily` in battle).
 - Checked in the source and the build; not tested in an emulator.
 
 ### Phoenix Wing Wind Blast (2026-10-25)

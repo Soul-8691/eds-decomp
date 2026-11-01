@@ -2363,3 +2363,6 @@ updated: 2026-09-29
 
 ## [2026-11-01] progress | CPU respects Imperial Order for Spell activations
 - `CanActivateEffect` refuses Magic while `IsImperialOrderActive`; `AiStepPlaySimpleSpells` sets Magic only (ai_turn_steps.c). quirks.txt.
+
+## [2026-11-01] progress | CPU skips summoning Injection Fairy Lily at low LP
+- `AiShouldSkipSummonInjectionFairyLily` (added_effects.c); summon pickers and `AiPickMonsterToSet` (ai_summon.c, ai_turn_steps.c); Scapegoat gate hand scan. quirks.txt.

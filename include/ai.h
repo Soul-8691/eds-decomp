@@ -288,6 +288,10 @@ int AiWantsMegamorph(void);
 int AiWantsScapegoat(void);
 int AiTryPlayScapegoat(void);
 #endif
+#ifdef HAS_CARD_INJECTION_FAIRY_LILY
+/* Skip summoning Lily when LP <= 2000 (battle boost cost unusable). */
+int AiShouldSkipSummonInjectionFairyLily(u16 cardId);
+#endif
 /* 1 = go ahead; 0 now and then when the human has an activatable set counterNo (more often with
  * AI_FLAG_CAREFUL). */
 int AiRiskSetCounter(u16 counterNo);
