@@ -275,6 +275,8 @@ int AiSelectUsableSpellTrap(u16 number);
 /* Play card `number`: activate a set copy, or select the hand copy in gAiState.cardIndex (the caller
  * confirms it). 1 on success. */
 int AiTryPlaySpellTrap(u16 number);
+/* Dark Hole when AI_SPELLS_DRAW_AND_CLEAR would play it; also before the CPU summons a monster. */
+int AiTryPlayDarkHoleIfWanted(void);
 /* Snatch Steal (mod): play in Main Phase 1 when a legal steal is worthwhile or sets up a tribute summon. */
 int AiWantsSnatchSteal(void);
 /* Snatch Steal (mod): 1 if stealing the best legal target can end the duel this turn. */

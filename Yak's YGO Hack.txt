@@ -24,4 +24,3 @@ Fix Flip Effect Monster AI
 Move hooks out of original units (like duel_info_bar)
 Move added card lists out of effect_target_collect.c
 Card priority orders
-Dark Hole should be used before playing monster (CPU)

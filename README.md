@@ -190,7 +190,8 @@ Each format is a Campaign "duelist". You start with Yugi-Kaiba only; beat the cu
       cheaper answer.
     - It chains Trap Hole and its other summon Traps to your monster's summon effect (Mobius, Zaborg, ...), so it
       can destroy the monster before the effect resolves.
-    - It plays Dark Hole only when you control at least as many monsters as it does (not when you have fewer).
+    - It plays Dark Hole only when you control at least as many monsters as it does (not when you have fewer), and
+      tries to do so before it Normal or Special Summons a monster (same conditions as its later spell pass).
     - It plays Snatch Steal in Main Phase 1 for lethal (even with a level 1-4 monster in hand), to set up a tribute
       summon (same hand checks as Change of Heart), or when the stolen ATK matches or beats its strongest attacker
       (or its highest DEF if it has no Attack Position monsters). It targets your strongest legal face-up monster

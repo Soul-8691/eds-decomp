@@ -627,6 +627,20 @@ static inline int AiCpuDeckCountAt(u8 *ptr)
     return count;
 }
 
+int AiTryPlayDarkHoleIfWanted(void)
+{
+    if (CountMonsters(0) > 0 && CountMonsters(1) == 0 && AiTryPlaySpellTrap(CARD_DARK_HOLE))
+        return 1;
+    if (AiIsOpponentThreatening() && AiTryPlaySpellTrap(CARD_DARK_HOLE))
+        return 1;
+    if ((CountMonstersByNumber(1, CARD_SANGAN) > 0 || CountMonstersByNumber(1, CARD_WITCH_OF_THE_BLACK_FOREST) > 0)
+        && AiTryPlaySpellTrap(CARD_DARK_HOLE))
+        return 1;
+    if (CountMonsters(0) > 0 && AiRiskSetCounter(CARD_WHITE_HOLE) && AiTryPlaySpellTrap(CARD_DARK_HOLE))
+        return 1;
+    return 0;
+}
+
 /*
  * The CPU's main-phase spell machine, on gAiState.subState (enum AiSpellState). Each call plays at most one card
  * (AiTryPlaySpellTrap) or advances the state; returns 0 while it is still working and 1 when it is done.
@@ -666,11 +680,7 @@ int AiPlaySpells(void)
     case AI_SPELLS_DRAW_AND_CLEAR:
         if ((u16)AiTryPlaySpellTrap(CARD_POT_OF_GREED)) return 0;
         if ((u16)AiTryPlaySpellTrap(CARD_FUSION_SAGE)) return 0;
-        if (CountMonsters(0) > 0 && CountMonsters(1) == 0 && (u16)AiTryPlaySpellTrap(CARD_DARK_HOLE)) return 0;
-        if ((u16)AiIsOpponentThreatening() && (u16)AiTryPlaySpellTrap(CARD_DARK_HOLE)) return 0;
-        if ((CountMonstersByNumber(1, CARD_SANGAN) > 0 || CountMonstersByNumber(1, CARD_WITCH_OF_THE_BLACK_FOREST) > 0)
-            && (u16)AiTryPlaySpellTrap(CARD_DARK_HOLE)) return 0;
-        if (CountMonsters(0) > 0 && (u16)AiRiskSetCounter(CARD_WHITE_HOLE) && (u16)AiTryPlaySpellTrap(CARD_DARK_HOLE)) return 0;
+        if ((u16)AiTryPlayDarkHoleIfWanted()) return 0;
         if (CountMonsters(0) > 0 && CountMonsters(1) == 0 && (u16)AiTryPlaySpellTrap(CARD_RAIGEKI)) return 0;
         if (CountMonsters(0) > 0 && (u16)AiRiskSetCounter(CARD_ANTI_RAIGEKI) && (u16)AiTryPlaySpellTrap(CARD_RAIGEKI)) return 0;
         if (CountMonstersFiltered(0, 0, 0) > 0 && CountHandMonsters(1) > 0 && (u16)AiTryPlaySpellTrap(CARD_TRIBUTE_TO_THE_DOOMED)) return 0;

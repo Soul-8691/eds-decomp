@@ -195,6 +195,8 @@ int AiStepMainPhase(void)
     case AI_MAIN_SUMMON:
         if (AiUseThunderDragon())   /* added: discard Thunder Dragon to search one (src/added_effects.c) */
             return 0;
+        if (AiTryPlayDarkHoleIfWanted())    /* clear the field before summoning */
+            return 0;
 #if defined(HAS_CARD_SCAPEGOAT) && defined(HAS_CARD_SHEEP_TOKEN)
         if (AiTryPlayScapegoat())   /* added: empty field or before a Normal Summon uses the turn's summon */
             return 0;
