@@ -838,6 +838,11 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
   case for it).
 - Checked in the source and the build; not tested in an emulator.
 
+### The CPU's Megamorph (2026-11-01)
+- **Before.** Only the Cyber Stein strategy played Megamorph, with fixed LP checks (human LP above 5099 and not below the CPU's).
+- **Now.** `AiWantsMegamorph`: CPU LP must be lower than the human's; simulated battle must reach lethal only after equipping Megamorph on its best face-up attacker (not already lethal without it). `AiPlayAddedCards`, `AiPlaySpells` equip pass, and Cyber Stein step 7 use the same gate. README.md.
+- Checked in the source; not tested in an emulator.
+
 ### The CPU's Snatch Steal (2026-11-01)
 - **Before.** The ROM never called `AiTryPlaySpellTrap(CARD_SNATCH_STEAL)` (Snatch is not in `gAiGenericSpells`). If it activated, `EffectTakeControlChainB` picked the human's strongest monster, including illegal targets.
 - **Now.** `AiPlaySpells` step 2 tries Snatch Steal for lethal first (`AiSnatchStealIsLethal`, any hand monster), then the same tribute-summon hand scans as Change of Heart, then when `AiWantsSnatchSteal` (stolen ATK ≥ the CPU's strongest face-up ATK, or ≥ its highest face-up DEF if it has no Attack Position monsters; opens a full field by tributing when needed). `AiSnatchStealCpuTargetZone` picks the best legal face-up target (skips Gearfried / 1351). README.md.

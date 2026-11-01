@@ -9575,6 +9575,79 @@ static int AiWantsMonsterEffect(u16 number, int zone)
     return 1;
 }
 
+/* ---- Megamorph (vanilla; ROM only played it in the Cyber Stein strategy with hard-coded LP tests) ------------------
+ * Equip Spell: double printed ATK while the equipper has less LP than the opponent, halve while ahead
+ * (card_stats.c). EffectEquipTargetChainB equips to the CPU's highest ATK monster when behind on LP.
+ *   CPU      AiWantsMegamorph: behind on LP, can activate, simulated Battle Phase damage reaches the human's LP
+ *            only after a sandbox Megamorph equip (not already lethal without it). AiPlaySpells and
+ *            AiTryPlaySpellTrap (equip-target check). */
+static int AiMegamorphBestEquipZone(u16 cardId)
+{
+    struct ChainEntry probe;
+    int zone, best = -1, bestAtk = -1;
+
+    probe.player = AI_PLAYER;
+    probe.card = cardId;
+    for (zone = ZONE_MONSTER_0; zone <= ZONE_MONSTER_4; zone++) {
+        u16 pos = (u16)AI_PLAYER | (u16)(zone << 8);
+
+        if (EffectEquipTargetCheck(&probe, pos) != 0
+            && (best < 0 || GetZoneCardAtk(AI_PLAYER, zone) > bestAtk)) {
+            best = zone;
+            bestAtk = GetZoneCardAtk(AI_PLAYER, zone);
+        }
+    }
+    return best;
+}
+
+static int AiMegamorphSimBattleDamage(int morphZone)
+{
+    int stZone, damage;
+    u16 morphId = gCardNumberToId[CARD_MEGAMORPH];
+    struct DuelZone *spell;
+    struct ChainEntry probe;
+
+    AiBackupDuelState();
+    AiSimSetAttackPositions();
+    stZone = FindFreeSpellTrapZone(AI_PLAYER);
+    if (stZone < 0 || morphZone < ZONE_MONSTER_0) {
+        AiRestoreDuelState();
+        return -1;
+    }
+    spell = ZoneOf(AI_PLAYER, stZone);
+    spell->card.id = morphId;
+    spell->card.owner = AI_PLAYER;
+    spell->isFaceUp = 1;
+    EquipCard(AI_PLAYER, DUEL_LOC(AI_PLAYER, stZone), DUEL_LOC(AI_PLAYER, morphZone));
+    damage = AiSimBattlePhase();
+    AiRestoreDuelState();
+    return damage;
+}
+
+int AiWantsMegamorph(void)
+{
+    u16 morphId;
+    int morphZone, humanLp, damage;
+
+    if (gAiState.step != AI_STEP_MAIN_PHASE_1)
+        return 0;
+    if ((int)gDuelPlayers[AI_PLAYER].lifePoints >= (int)gDuelPlayers[AI_HUMAN].lifePoints)
+        return 0;
+    if (FindHandCardByNumber(AI_PLAYER, CARD_MEGAMORPH) < 0 && !AiHasUsableSpellTrap(CARD_MEGAMORPH))
+        return 0;
+    if (CountMonstersFiltered(AI_PLAYER, 1, 1) == 0)
+        return 0;
+    morphId = gCardNumberToId[CARD_MEGAMORPH];
+    morphZone = AiMegamorphBestEquipZone(morphId);
+    if (morphZone < 0)
+        return 0;
+    humanLp = (int)gDuelPlayers[AI_HUMAN].lifePoints;
+    if (AiSimBattleDamage(1) >= humanLp)
+        return 0;
+    damage = AiMegamorphSimBattleDamage(morphZone);
+    return damage >= humanLp;
+}
+
 /* ---- Snatch Steal (vanilla card; CPU never played it from hand in the ROM) -----------------------------------------
  * Equip Spell: take control of a face-up monster of the human's (EffectSnatchStealResolve). Needs a free monster
  * zone on the CPU's side when it resolves, or it only equips.

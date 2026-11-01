@@ -2349,5 +2349,8 @@ updated: 2026-09-29
 ## [2026-11-01] progress | CPU Snatch Steal and tribute-summon setup
 - `AiWantsSnatchSteal`, `AiSnatchStealCpuTargetZone` (added_effects.c); `AiPlaySpells` (ai_deck.c); CPU target (effect_targets2.c). README, [[added-cards]].
 
+## [2026-11-01] progress | CPU Megamorph lethal-only (general play)
+- `AiWantsMegamorph`, sandbox sim (added_effects.c); `AiTryPlaySpellTrap` gate; Cyber Stein step 7 (ai_steps.c). README, [[added-cards]].
+
 ## [2026-11-01] progress | CPU Snatch Steal lethal and ATK/DEF threshold
 - `AiSnatchStealIsLethal`, `SnatchStealCpuCompareThreshold` (added_effects.c); lethal try before CoH hand scan (ai_deck.c). README, [[added-cards]].

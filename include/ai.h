@@ -281,6 +281,8 @@ int AiWantsSnatchSteal(void);
 int AiSnatchStealIsLethal(void);
 /* Snatch Steal (mod): zone 0-4 on the human's field for the CPU's activation, or -1. */
 int AiSnatchStealCpuTargetZone(u16 cardId);
+/* Megamorph (mod): Main Phase 1, CPU LP lower than the human's, simulated battle lethal after doubling. */
+int AiWantsMegamorph(void);
 /* 1 = go ahead; 0 now and then when the human has an activatable set counterNo (more often with
  * AI_FLAG_CAREFUL). */
 int AiRiskSetCounter(u16 counterNo);

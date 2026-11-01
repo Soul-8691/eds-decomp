@@ -215,6 +215,8 @@ Each format is a Campaign "duelist". You start with Yugi-Kaiba only; beat the cu
       you were asked to pick them).
     - It doesn't summon Thunder Nyan Nyan next to its own face-up non-LIGHT monsters, or a non-LIGHT monster next to
       it, when that would just destroy Nyan Nyan.
+    - It plays Megamorph in Main Phase 1 only when its LP are lower than yours and equipping it makes a simulated
+      Battle Phase lethal (not when it would already win without Megamorph).
     - It plays Enemy Controller in Main Phase 1 to Tribute its weakest monster and take your strongest face-up one,
       when that has at least 500 more ATK.
     - Its Poison of the Old Man deals 800 damage when that wins the duel, gains 1200 LP while it has 3000 or less,

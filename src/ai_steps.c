@@ -1060,7 +1060,7 @@ int AiStrategyCyberStein(void)
         gAiState.stepState++;
         return 0;
     case 7:
-        if (gDuelPlayers.lifePoints0 <= 0x13EB || gDuelPlayers.lifePoints0 < NeighborLife()) {  /* 0x13EB = 5099 */
+        if (!AiWantsMegamorph()) {
             gAiState.stepState = 8;
             return 0;
         }

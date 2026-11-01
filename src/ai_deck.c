@@ -271,6 +271,8 @@ int AiTryPlaySpellTrap(u16 number)
     if (number == CARD_SECRET_BARREL && !AiWantsSecretBarrel())
         return 0;
 #endif
+    if (number == CARD_MEGAMORPH && !AiWantsMegamorph())
+        return 0;
     cardId = CardNumberToId(number);
     if (GetSpellSubtype(CARD_STATS(cardId)) == SPELL_FIELD && GetFaceUpFieldMagicNumber() == number)
         return 0;
@@ -285,6 +287,7 @@ int AiTryPlaySpellTrap(u16 number)
     case 0x140: case 0x141: case 0x142: case 0x143: case 0x144: case 0x145: case 0x146: case 0x147:
     case CARD_MAGICAL_LABYRINTH:
     case CARD_SALAMANDRA:
+    case CARD_MEGAMORPH:
     case CARD_BRIGHT_CASTLE:
     case CARD_BURNING_SPEAR: case CARD_GUST_FAN:
     case CARD_SWORD_OF_DEEP_SEATED:
@@ -797,6 +800,8 @@ int AiPlaySpells(void)
             result = (u16)AiTryPlaySpellTrap(gAiGenericSpells[gAiState.listIndex]);
             if (result) return 0;
         }
+        if ((u16)AiWantsMegamorph() && (u16)AiTryPlaySpellTrap(CARD_MEGAMORPH))
+            return 0;
         if (CountMonstersFiltered(1, 1, 0) > 0) {
             for (gAiState.listIndex = 0; gAiState.listIndex < AI_EQUIP_SPELL_COUNT; gAiState.listIndex++) {
                 if ((u16)AiTryPlaySpellTrap(gAiEquipSpells[gAiState.listIndex])) return 0;
