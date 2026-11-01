@@ -35,7 +35,8 @@ void AddSprite8bppAlphaU32(u32 yx, u32 shape, u32 tile) asm("AddSprite8bppAlpha"
 void AddAffineSprite8bppAlphaU32(u32 yx, u32 shape, u32 tile, u32 scaleAngle) asm("AddAffineSprite8bppAlpha");
 
 /* Fast-forward: B held, or the duel's fast mode. */
-#define FAST_FORWARD() ((gMain.heldKeys & B_BUTTON) || gDuelScreen.fast)
+#include "mod_duel_speed.h"
+#define FAST_FORWARD() ModDuelFastForwardActive()
 
 /*
  * The card grid: 4 columns x 5 rows of 32x32 sprites, top-left corner at (0x44, 2), so the card is centred
@@ -148,7 +149,7 @@ void DuelCmd_ShowCardZoomIn(void)
         tEnd = gDuelCmd.timer;
         if (tEnd < 0x78) {
             if (FAST_FORWARD() && tEnd <= 0x6F)
-                gDuelCmd.timer = tEnd + 7;
+                gDuelCmd.timer = tEnd + ModDuelFastTimerSkip(7);
             gDuelCmd.timer++;
             break;
         }
@@ -249,7 +250,7 @@ void DuelCmd_ShowCardEffect(void)
         tEnd = gDuelCmd.timer;
         if (tEnd < 0x78) {
             if (FAST_FORWARD() && tEnd <= 0x6F)
-                gDuelCmd.timer = tEnd + 7;
+                gDuelCmd.timer = tEnd + ModDuelFastTimerSkip(7);
             gDuelCmd.timer++;
             break;
         }
@@ -344,7 +345,7 @@ void DuelCmd_ShowCardScatter(void)
         tEnd = gDuelCmd.timer;
         if (tEnd < 0x78) {
             if (FAST_FORWARD() && tEnd <= 0x6F)
-                gDuelCmd.timer = tEnd + 7;
+                gDuelCmd.timer = tEnd + ModDuelFastTimerSkip(7);
             gDuelCmd.timer++;
             break;
         }
@@ -434,7 +435,7 @@ void DuelCmd_ShowCardUnrollDown(void)
         }
         gDuelCmd.timer++;
         if (FAST_FORWARD() && gDuelCmd.timer <= 0x17)
-            gDuelCmd.timer += 7;
+            gDuelCmd.timer += ModDuelFastTimerSkip(7);
         if (gDuelCmd.timer > 0x1F) {
             gDuelCmd.timer = 0;
             gDuelCmd.step++;
@@ -463,7 +464,7 @@ void DuelCmd_ShowCardUnrollDown(void)
         tEnd = gDuelCmd.timer;
         if (tEnd < 0x38) {
             if (FAST_FORWARD() && tEnd <= 0x2F)
-                gDuelCmd.timer = tEnd + 7;
+                gDuelCmd.timer = tEnd + ModDuelFastTimerSkip(7);
             gDuelCmd.timer++;
             break;
         }
@@ -606,7 +607,7 @@ void DuelCmd_ShowCardUnrollSideways(void)
         tEnd = gDuelCmd.timer;
         if (tEnd < 0x38) {
             if (FAST_FORWARD() && tEnd <= 0x2F)
-                gDuelCmd.timer = tEnd + 7;
+                gDuelCmd.timer = tEnd + ModDuelFastTimerSkip(7);
             gDuelCmd.timer++;
             break;
         }

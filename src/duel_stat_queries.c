@@ -15,6 +15,7 @@
 #include "duel.h"                  /* gDuel, gDuelZones, struct DuelZone */
 #include "duel_cmd.h"              /* gDuelCmd */
 #include "duel_screen.h"           /* gDuelScreen, DuelCursor_Select, GetAreaX / GetAreaY */
+#include "mod_duel_speed.h"
 
 /*
  * Field-card queries and the battle duel commands (wiki/functions/duel-stat-queries-c.md):
@@ -377,9 +378,9 @@ void DuelCmd_Attack(void)
         gDuelCmd.timer++;
         t = gDuelCmd.timer;
         if (t <= 31) {
-            if ((gMain.heldKeys & B_BUTTON) || gDuelScreen.fast)
+            if (ModDuelFastForwardActive())
                 if (t <= 23)
-                    gDuelCmd.timer += 7;
+                    gDuelCmd.timer += ModDuelFastTimerSkip(7);
         } else {
             gDuelCmd.timer = 0;
             gDuelCmd.step++;
@@ -408,9 +409,9 @@ void DuelCmd_Attack(void)
         gDuelCmd.timer++;
         t = gDuelCmd.timer;
         if (t <= 31) {
-            if ((gMain.heldKeys & B_BUTTON) || gDuelScreen.fast)
+            if (ModDuelFastForwardActive())
                 if (t <= 23)
-                    gDuelCmd.timer += 7;
+                    gDuelCmd.timer += ModDuelFastTimerSkip(7);
         } else {
             gDuelCmd.timer = 0;
             gDuelCmd.step++;
@@ -429,9 +430,9 @@ void DuelCmd_Attack(void)
         if (t <= 95) {
             AddAffineSprite(BANNER_YX, SPRITE_SHAPE_64x32, BANNER_ATTR2, (u32)gBounceScaleCurve[t & 31] << 16);
             gDuelCmd.timer++;
-            if ((gMain.heldKeys & B_BUTTON) || gDuelScreen.fast)
+            if (ModDuelFastForwardActive())
                 if (gDuelCmd.timer <= 87)
-                    gDuelCmd.timer += 3;
+                    gDuelCmd.timer += ModDuelFastTimerSkip(3);
             break;
         }
     }
@@ -472,9 +473,9 @@ void DuelCmd_DirectAttack(void)
         if (t <= 95) {
             AddAffineSprite(BANNER_YX, SPRITE_SHAPE_64x32, BANNER_ATTR2, gBounceScaleCurve[t & 31] << 16);
             gDuelCmd.timer++;
-            if ((gMain.heldKeys & B_BUTTON) || gDuelScreen.fast) {
+            if (ModDuelFastForwardActive()) {
                 if (gDuelCmd.timer <= 87)
-                    gDuelCmd.timer += 7;
+                    gDuelCmd.timer += ModDuelFastTimerSkip(7);
             }
             return;
         }

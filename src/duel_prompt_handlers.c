@@ -13,6 +13,7 @@
 #include "constants/sound.h"        /* SE_CONFIRM, SE_ERROR */
 #include "duel.h"                   /* gDuel, gDuelPlayers, struct DuelCard / DuelZone, IsSpecialSummonOnly, FindFreeMonsterZone */
 #include "sound.h"                  /* PlaySE */
+#include "mod_duel_speed.h"
 
 /*
  * Duel prompt handlers (wiki/functions/duel-prompt-handlers-c.md).
@@ -665,9 +666,9 @@ int TextBoxHandleChoiceInputCpu(void)
         u8 timer = box->menuTimer;
         if (timer <= CPU_CHOICE_HOLD_LAST) {
             box->menuTimer = timer + 1;
-            if ((gMain.heldKeys & B_BUTTON) || gDuelScreen.fast) {
+            if (ModDuelFastForwardActive()) {
                 if (box->menuTimer <= CPU_CHOICE_HOLD_SKIP)
-                    box->menuTimer = timer + 8;
+                    box->menuTimer = timer + ModDuelFastTimerSkip(8);
             }
         } else
             (*state)++;

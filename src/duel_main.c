@@ -580,6 +580,7 @@ u32 DuelPhase_ShowResult(void)
  * 1 moves to the next step. Returns 1 when the duel is over (after the result was saved), else 0.
  */
 int ModDuelStateCheck(void);    /* mod: the added cards' continuous rules (src/added_effects.c) */
+void ModDuelSettingsHandleInput(void); /* mod: L opens Settings (src/mod_settings.c) */
 
 u32 DuelMainStep(void)
 {
@@ -587,6 +588,7 @@ u32 DuelMainStep(void)
     u16 done;
 
     if (gDuelPhaseTable[gDuelCtrl.phase] != NULL) {
+        ModDuelSettingsHandleInput();
         busy = DuelScreen_Update();
         if (busy == 0) {
             if (gDuelCtrl.isLinkDuel && gLinkState.remoteCmdPending)

@@ -93,6 +93,9 @@ Each format is a Campaign "duelist". You start with Yugi-Kaiba only; beat the cu
 - **Banlists** (main menu). Choose the banlist your deck is built under. Cards your current deck can no longer hold
   go back to the trunk. Before switching, the game checks that your cards can still make a Main Deck of at least
   40 cards under the new banlist (counting its limits and card pool); if they can't, the switch is refused.
+- **Settings** (main menu, or **L** during a duel). Pick one duel speed: **DEFAULT** (hold B to fast-forward),
+  **ALWAYS** (always fast-forward), or **SUPER** (always fast-forward with doubled skip amounts). The choice is
+  saved; leaving settings with **B** returns to the duel when opened with **L**.
 - **Duelist Points (DP).**
   - You start with 5000 DP and earn more by winning duels.
   - The card password machine now sells cards: it shows the price and asks before buying.

@@ -136,6 +136,8 @@ mod_dp
 @farcode mod_dp
 mod_banlists
 @farcode mod_banlists
+mod_settings
+@farcode mod_settings
 mod_opponents
 @farcode mod_opponents
 mod_title
@@ -167,6 +169,7 @@ rodata_08087FD0
 @rodata mod_format_packs
 @rodata mod_dp
 @rodata mod_banlists
+@rodata mod_settings
 @rodata mod_opponents
 @rodata mod_title
 @rodata mod_field_icons

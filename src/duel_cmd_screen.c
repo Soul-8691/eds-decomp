@@ -57,7 +57,8 @@ u32 DuelScene_RunU32(void) asm("DuelScene_Run");
 #define DUEL_FROM_PLAYERS ((struct DuelState *)((u8 *)gDuelPlayers - OFFSET_OF(struct DuelState, players)))
 
 /* Banners and the hand pointer fast-forward while B is held or the duel screen runs in fast mode. */
-#define FAST_FORWARD() ((gMain.heldKeys & B_BUTTON) || gDuelScreen.fast)
+#include "mod_duel_speed.h"
+#define FAST_FORWARD() ModDuelFastForwardActive()
 
 /* Acting player of the current command: bit 15 of the command word (DUEL_CMD_PLAYER). */
 #define CMD_PLAYER (gDuelCmd.cmd >> 15)
@@ -280,7 +281,7 @@ void DuelCmd_EnterPhase(u32 phase)
             AddSpriteAlpha(SPRITE_YX(0x40, 0x58), SPRITE_SHAPE_32x16, BANNER_ATTR2_L);
             AddSpriteAlpha(SPRITE_YX(0x40, 0x78), SPRITE_SHAPE_32x16, BANNER_ATTR2_R);
             if (FAST_FORWARD() && gDuelCmd.timer <= 0x57)
-                gDuelCmd.timer += 7;
+                gDuelCmd.timer += ModDuelFastTimerSkip(7);
             gDuelCmd.timer++;
             break;
         }
@@ -343,7 +344,7 @@ void DuelCmd_ShowChainBanner(void)
                             gPulseScaleCurve[gDuelCmd.timer & 0xF] << 16);
             gDuelCmd.timer++;
             if (FAST_FORWARD() && gDuelCmd.timer <= 0x37)
-                gDuelCmd.timer += 7;
+                gDuelCmd.timer += ModDuelFastTimerSkip(7);
             break;
         }
         gDuelCmd.timer = 16;
@@ -399,7 +400,7 @@ void DuelCmd_PointAtCard(void)
                             (gShrinkScaleSteps[gDuelCmd.timer & 7] << 16) | (player << 6));
             gDuelCmd.timer++;
             if (FAST_FORWARD() && gDuelCmd.timer <= 0x37)
-                gDuelCmd.timer += 7;
+                gDuelCmd.timer += ModDuelFastTimerSkip(7);
         } else {
             gDuelCmd.step = step + 1;
         }

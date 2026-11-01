@@ -17,6 +17,7 @@
 #include "duel.h"                  /* struct DuelLoc, struct DuelZone */
 #include "constants/duel.h"         /* DUEL_AREA_DECK, DUEL_AREA_HAND */
 #include "constants/sound.h"        /* SE_CARD_FLIP */
+#include "mod_duel_speed.h"
 
 #include "duel_screen.h"            /* gDuelScreen, DuelAnim_*, GetAreaX/Y, DuelSprAnim_*, DuelCursor_Select */
 #include "battle.h"                 /* gBattle.scene, struct BattleScene */
@@ -304,9 +305,9 @@ void DuelAnim_UpdateMoveCard(void)
                             ((u32)gBounceScaleCurve[gDuelScreen.animStep] << 16) | angle);
         oldStep = gDuelScreen.animStep;
         gDuelScreen.animStep = oldStep + 1;
-        if ((gMain.heldKeys & B_BUTTON) || DUEL_SCREEN_FAST(&gDuelScreen)) {
+        if (ModDuelFastForwardActive()) {
             if (gDuelScreen.animStep <= 11)
-                gDuelScreen.animStep = oldStep + 4;
+                gDuelScreen.animStep = ModDuelFastAnimAdvance(oldStep);
         }
     }
     if (gDuelScreen.animStep == MOVE_DONE_STEP)
@@ -352,9 +353,9 @@ void DuelAnim_UpdateSwapCards(void)
                         CARD_BACK_TILE | OAM_ATTR2_PRIORITY(1), (u32)gBounceScaleCurve[*step] << 16);
         oldStep = *step;
         *step = oldStep + 1;
-        if ((gMain.heldKeys & B_BUTTON) || DUEL_SCREEN_FAST(screen)) {
+        if (ModDuelFastForwardActive()) {
             if (*step <= 11)
-                *step = oldStep + 4;
+                *step = ModDuelFastAnimAdvance(oldStep);
         }
     }
     if (gDuelScreen.animStep == MOVE_DONE_STEP)

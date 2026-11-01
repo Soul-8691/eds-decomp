@@ -303,7 +303,7 @@ static const char sStrNeedSuffix[] = " DP!";
 
 /* ---- Main menu (2D mapping, palette 0 = gMainMenuObjPal: colour 10 near-white, 1 black) ---- */
 
-#define MENU_DP_TILE    0x2C0           /* rows 22-23, after the added labels */
+#define MENU_DP_TILE    0x300           /* after item-10 label tiles (0x2C0-0x2FF); not used by menu rows */
 
 void MainMenuDP_Render(void)
 {

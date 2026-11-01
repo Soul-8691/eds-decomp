@@ -39,6 +39,8 @@ u16 CB_DeckRecipes(void);
 void PackShop_BuildLabel(u16 *dst);
 /* Added: the Banlists item (src/mod_banlists.c). */
 void BanlistsMenu_BuildLabel(u16 *dst);
+void SettingsMenu_BuildLabel(u16 *dst);
+u16 CB_Settings(void);
 u16 CB_Banlists(void);
 /* Added: the player's DP (src/mod_dp.c). */
 void MainMenuDP_Render(void);
@@ -295,7 +297,8 @@ u16 MainMenu_Init(void)
         DeckRecipes_BuildLabel((u16 *)(OBJ_VRAM0 + 0x4000));   /* added: item 7's label, tiles 0x200-0x23F */
         PackShop_BuildLabel((u16 *)(OBJ_VRAM0 + 0x4800));      /* added: item 8's label, tiles 0x240-0x27F */
         BanlistsMenu_BuildLabel((u16 *)(OBJ_VRAM0 + 0x5000));  /* added: item 9's label, tiles 0x280-0x2BF */
-        MainMenuDP_Render();                                    /* added: "DP n", tiles 0x2C0-0x2FF */
+        SettingsMenu_BuildLabel((u16 *)(OBJ_VRAM0 + 0x5800));  /* item 10: tiles 0x2C0-0x2FF (i*0x40+0x40) */
+        MainMenuDP_Render();                                    /* "DP n", tiles 0x300+ (see mod_dp.c) */
         LoadBgImage(0, 0, 0x20, gMainMenuSkyImage);
         return 1;
     }
@@ -347,6 +350,8 @@ u16 MainMenu_Launch(void)
             SetMainCallback(CB_PackShop);
         } else if (gMainMenuCursor == MAIN_MENU_BANLISTS) {
             SetMainCallback(CB_Banlists);
+        } else if (gMainMenuCursor == MAIN_MENU_SETTINGS) {
+            SetMainCallback(CB_Settings);
         } else
             SetMainCallback(gMainMenuTable[gMainMenuCursor]);
     }

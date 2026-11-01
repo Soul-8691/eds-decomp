@@ -582,7 +582,8 @@ const u8 *GetCardIconGfx(u16 cardId)
 }
 
 /* B held or the duel fast mode: the overlay's timers run faster. */
-#define FAST() ((gMain.heldKeys & B_BUTTON) || gDuelScreen.fast)
+#include "mod_duel_speed.h"
+#define FAST() ModDuelFastForwardActive()
 
 /*
  * One frame of the chain-list overlay started by ChainListScreen_Start: it lists the last four links of

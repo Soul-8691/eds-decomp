@@ -71,7 +71,8 @@ extern const u16 gCardNumberToId_InsectMonsterToken[];
 #define CMD_PLAYER_BIT()    ((gDuelCmd.cmd & DUEL_CMD_PLAYER) != 0)
 
 /* Fast-forward: B held, or the duel's fast mode. */
-#define FAST_FORWARD()      ((gMain.heldKeys & B_BUTTON) || gDuelScreen.fast)
+#include "mod_duel_speed.h"
+#define FAST_FORWARD()      ModDuelFastForwardActive()
 
 /*
  * Effect keys without an EDS card (CARD_<n>) used here: CARD_1334 and CARD_1513 refresh like the
@@ -698,7 +699,7 @@ void DuelCmd_ShowCardAssemble(void)
         }
         gDuelCmd.timer++;
         if (FAST_FORWARD() && gDuelCmd.timer <= 0x17)
-            gDuelCmd.timer += 7;
+            gDuelCmd.timer += ModDuelFastTimerSkip(7);
         if (gDuelCmd.timer >= 0x20) {
             TextCellsClear();
             DuelInfo_DrawCardNameCentered(gDuelCmd.arg2);
@@ -729,7 +730,7 @@ void DuelCmd_ShowCardAssemble(void)
         }
         gDuelCmd.timer++;
         if (FAST_FORWARD() && gDuelCmd.timer <= 0x17)
-            gDuelCmd.timer += 7;
+            gDuelCmd.timer += ModDuelFastTimerSkip(7);
         if (gDuelCmd.timer >= 0x20) {
             gDuelCmd.timer = 0;
             gDuelCmd.step++;
@@ -752,7 +753,7 @@ void DuelCmd_ShowCardAssemble(void)
         tEnd = gDuelCmd.timer;
         if (tEnd < 0x40) {
             if (FAST_FORWARD() && tEnd <= 0x37)
-                gDuelCmd.timer = tEnd + 7;
+                gDuelCmd.timer = tEnd + ModDuelFastTimerSkip(7);
             gDuelCmd.timer++;
             break;
         }

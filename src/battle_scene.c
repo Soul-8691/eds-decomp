@@ -92,12 +92,10 @@ struct MainInfoBarMap {
 };
 extern struct MainInfoBarMap gMainInfoBarMap asm("gMain");
 
-/* Save data header: byte +4 picks the label set and the character width. */
-struct SaveHdr {
-    u8 unk0[4];
-    u8 flags;                       /* +0x4: bits 0-6 == 0: Japanese labels; bit 7: 2-byte characters */
-};
-extern struct SaveHdr gSaveData;            /* 0x02011C20 */
+/* Byte +4 of gSaveData: language (bits 0-6) and sjisText (bit 7); matched code reads it as one byte. */
+extern u8 gSaveDataBytes[] asm("gSaveData");
+#define SAVE_TEXT_BYTE          4
+#define SAVE_SJIS_TEXT          0x80
 
 /* gBattle.scene states (battle_scene.h). */
 enum BattleSceneState {
@@ -126,7 +124,8 @@ enum BattleSideFlags {
 };
 
 /* B held or the fast flag: every scene timer runs fast. */
-#define BATTLE_SCENE_FAST ((gMain.heldKeys & B_BUTTON) || gDuelScreen.fast)
+#include "mod_duel_speed.h"
+#define BATTLE_SCENE_FAST ModDuelFastForwardActive()
 /* ---- Card table reads (card_data.h) ---- */
 
 /* Card ID (bits 0-11) of a struct DuelCard word. */
@@ -533,7 +532,7 @@ void DuelInfo_DrawCard(u16 cardId, u16 showStats)
     TextDrawString(2, 8 - (w >> 1), (w << 8) | 7, str);
     TextCanvasToTiles(gDuelTextTiles, 9);
     if (CARD_TYPE(cardId) <= CARD_TYPE_REPTILE && showStats != 0) {
-        if ((gSaveData.flags & 0x7F) == 0) {
+        if ((gSaveDataBytes[SAVE_TEXT_BYTE] & 0x7F) == 0) {
             TextCellsPutString(0x17, gInfoAtkLabelJp, 5);
             TextCellsPutString(0x37, gInfoDefLabelJp, 4);
         } else {
@@ -605,7 +604,7 @@ void DuelInfo_DrawSpellZone(u16 cardId, u16 showStats, int player, int zone)
     }
     TextCanvasToTiles(gDuelTextTiles, 9);
     if (CARD_TYPE(cardId) <= CARD_TYPE_REPTILE && showStats != 0 && shown == 0) {
-        if ((gSaveData.flags & 0x7F) == 0) {
+        if ((gSaveDataBytes[SAVE_TEXT_BYTE] & 0x7F) == 0) {
             TextCellsPutString(0x17, gInfoAtkLabelJp, 5);
             TextCellsPutString(0x37, gInfoDefLabelJp, 4);
         } else {
@@ -646,7 +645,7 @@ void DuelInfo_DrawLabelNumber(int glyphWidth, const u8 *label, int value, int la
         int x;
 
         if (rest > 9) {
-            u8 doubleWidth = gSaveData.flags & 0x80;
+            u8 doubleWidth = gSaveDataBytes[SAVE_TEXT_BYTE] & SAVE_SJIS_TEXT;
             do {
                 labelLen++;
                 if (doubleWidth)
@@ -673,7 +672,7 @@ void DuelInfo_DrawMonsterZone(int player, int zone)
 
     GetZoneCardStats(player, zone, &info);
     DuelInfo_DrawCard(info.id, 0);
-    if ((gSaveData.flags & 0x7F) == 0) {
+    if ((gSaveDataBytes[SAVE_TEXT_BYTE] & 0x7F) == 0) {
         TextCellsPutString(0x18, gMonsterInfoAtkLabelJp, 5);
         TextCellsPutString(0x38, gMonsterInfoDefLabelJp, 4);
     } else {

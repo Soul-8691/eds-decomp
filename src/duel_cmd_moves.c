@@ -47,7 +47,8 @@ extern const u8 gJustAMomentBannerGfx[];    /* 64x32 4bpp "Just a moment" banner
 #define CMD_CARD        ((struct DuelCard *)&gDuelCmd.card)
 
 /* Fast-forward: B held, or the duel's fast mode. */
-#define FAST_FORWARD()  ((gMain.heldKeys & B_BUTTON) || gDuelScreen.fast)
+#include "mod_duel_speed.h"
+#define FAST_FORWARD()  ModDuelFastForwardActive()
 
 /*
  * Zone (player, zone) of gDuelPlayers, addressed as zones base + byte offsets. The two association orders
@@ -352,7 +353,7 @@ void DuelCmd_Surrender(void)
                             gBounceScaleCurve[gDuelCmd.timer & 0x1F] << 16);
             gDuelCmd.timer++;
             if (FAST_FORWARD() && gDuelCmd.timer <= 0x77)
-                gDuelCmd.timer += 7;
+                gDuelCmd.timer += ModDuelFastTimerSkip(7);
             break;
         }
         /* fall through */
@@ -396,7 +397,7 @@ void DuelCmd_ShowJustAMomentBanner(void)
             AddSprite(SPRITE_YX(BANNER_X, y), SPRITE_SHAPE_64x32, BANNER_ATTR2);
             gDuelCmd.timer++;
             if (FAST_FORWARD() && gDuelCmd.timer <= 7)
-                gDuelCmd.timer += 7;
+                gDuelCmd.timer += ModDuelFastTimerSkip(7);
             break;
         }
         gDuelCmd.timer = 0;
@@ -409,7 +410,7 @@ void DuelCmd_ShowJustAMomentBanner(void)
                             gPulseScaleCurve[gDuelCmd.timer & 0xF] << 16);
             gDuelCmd.timer++;
             if (FAST_FORWARD() && gDuelCmd.timer <= 0x37)
-                gDuelCmd.timer += 7;
+                gDuelCmd.timer += ModDuelFastTimerSkip(7);
             break;
         }
         gDuelCmd.timer = 16;
@@ -496,7 +497,7 @@ void DuelCmd_ChangeLifePoints(u16 gain)
         if (gDuelCmd.timer < 0x5A) {
             gDuelCmd.timer++;
             if (FAST_FORWARD() && gDuelCmd.timer <= 0x4F)
-                gDuelCmd.timer += 7;
+                gDuelCmd.timer += ModDuelFastTimerSkip(7);
             break;
         }
         PlaySE(se);

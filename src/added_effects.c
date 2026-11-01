@@ -37,6 +37,7 @@
 #include "util.h"
 #include "ai.h"
 #include "battle.h"
+#include "mod_duel_speed.h"
 #include "main.h"                   /* gMain.newKeys */
 #include "duel_screen.h"            /* DuelCursor_PickTarget, gDuelScreen */
 #include "duel_flow.h"              /* gDuelCtrl.isLinkDuel */
@@ -1295,6 +1296,7 @@ void ModDuelInit(void)
 #ifdef HAS_CARD_EXARION_UNIVERSE
     ExarionUniverseResetBattle();
 #endif
+    ModDuelApplySpeedSettings();
 }
 
 #if (defined(HAS_CARD_MYSTIC_SWORDSMAN_LV2) && defined(HAS_CARD_MYSTIC_SWORDSMAN_LV4)) \

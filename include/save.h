@@ -35,6 +35,15 @@ enum SavedDeckCapacity {
 enum SaveOptionFlags {
     OPTION_SE_ON = 1 << 0,      /* sound effects on */
     OPTION_BGM_ON = 1 << 1,     /* music on */
+    OPTION_TURBO_ON = 1 << 2,   /* added: ModDuelSpeedMode ALWAYS (mod_settings.c) */
+    OPTION_SUPER_TURBO_ON = 1 << 3, /* added: ModDuelSpeedMode SUPER (mutually exclusive with ALWAYS) */
+};
+
+/* One of three duel speed presets in gSaveData.options bits 2-3 (mod_settings.c). */
+enum ModDuelSpeedMode {
+    MOD_SPEED_DEFAULT = 0,      /* hold B (or L+R at duel start) to fast-forward */
+    MOD_SPEED_ALWAYS = 1,       /* always fast-forward */
+    MOD_SPEED_SUPER = 2,        /* always fast-forward, 2x skip amounts */
 };
 
 /* One card of the collection, gSaveData.trunk[cardId] (4 bytes per card id).
