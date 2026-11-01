@@ -10,3 +10,4 @@ Zombyra the Dark: Keeps ATK loss on flip face-down
 Fairy Box: ATK is 0 for only one battle, not entire Battle Phase
 Metamorphosis: Goes for it with weaker monsters
 Toon Table of Contents: "Select a monster"
+Chaos Emperor Dragon: Only goes for lethal

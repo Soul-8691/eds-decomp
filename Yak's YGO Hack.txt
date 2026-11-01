@@ -20,7 +20,17 @@ Detail opp decks in DECKS.md
 Detail card prices in CARD_PRICES.md
 Make AI use new cards properly
 Fix general AI shortcomings
-Fix Flip Effect Monster AI
+Fix Flip Effect Monster AI:
+- Cyber Jar
+- Hane-Hane
+- Magician of Faith
+- Mask of Darkness
+- Morphing Jar
+- Morphing Jar #2
+- Needle Worm
+- Penguin Soldier
+- Reaper of the Cards
+- Skelengel
 Move hooks out of original units (like duel_info_bar)
 Move added card lists out of effect_target_collect.c
 Card priority orders

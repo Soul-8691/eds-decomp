@@ -197,6 +197,8 @@ int AiStepMainPhase(void)
             return 0;
         if (AiTryPlayDarkHoleIfWanted())    /* clear the field before summoning */
             return 0;
+        if (AiTryFlipSafeFlipEffectsForTribute())   /* flip safe flip effects before tributing them */
+            return 0;
 #if defined(HAS_CARD_SCAPEGOAT) && defined(HAS_CARD_SHEEP_TOKEN)
         if (AiTryPlayScapegoat())   /* added: empty field or before a Normal Summon uses the turn's summon */
             return 0;
@@ -537,6 +539,11 @@ int AiStepChangePositions(void)
                     AI->subState++;
                     return 0;
                 }
+                if (CanNormalSummon(1) && AiShouldFlipFaceDownForTribute(1, AI->subState) != 0) {
+                    QueueFlipSummon(1, AI->subState);
+                    AI->subState++;
+                    return 0;
+                }
                 if (AiCanChangePosition(1, AI->subState) != 0) {
                     canSummon = (u16)CanNormalSummon(1);
                     attack = GetZoneCardAtk(1, AI->subState);
@@ -627,9 +634,11 @@ int AiStepChangePositions(void)
                         off += (u32)gDuelZonesP1;
                         z = (struct DuelZone *)off;
                         if ((ZONE_FLAGS6(z) & 3) == 1) {
+                            u16 flipNo = *(const u16 *)(((*(u32 *)&z->card << 21) >> 20) + CARD_ID_TO_NUMBER_ADDR);
+
                             /* The original call leaves the table base in r1.
                              * HasFlipEffect explicitly consumes its low half. */
-                            if (HasFlipEffect(*(const u16 *)(((*(u32 *)&z->card << 21) >> 20) + CARD_ID_TO_NUMBER_ADDR), CARD_ID_TO_NUMBER_ADDR) == 0 && ZoneSpaceCount(canSummon)) {
+                            if (HasFlipEffect(flipNo, CARD_ID_TO_NUMBER_ADDR) == 0 && ZoneSpaceCount(canSummon)) {
                                 QueueFlipSummon(1, cur->subState);
                                 cur->subState++;
                                 return 0;

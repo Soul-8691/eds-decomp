@@ -8656,6 +8656,74 @@ int AiUseMagicalScientist(void)
 }
 #endif /* HAS_CARD_MAGICAL_SCIENTIST */
 
+/* ---- CPU: flip flip-effect monsters before Tribute Summons -------------------------------------------------------
+ * When the CPU can Tribute Summon, flip its face-down flip-effect monsters first (then tribute them), except cards
+ * that leave the field or wipe the board on flip. */
+
+static int AiFlipEffectUnsafeBeforeTribute(u16 number)
+{
+    switch (number) {
+    case CARD_PARASITE_PARACIDE:
+    case CARD_CYBER_JAR:
+    case CARD_MORPHING_JAR_2:
+    case CARD_JIGEN_BAKUDAN:
+#ifdef HAS_CARD_FIBER_JAR
+    case CARD_FIBER_JAR:
+#endif
+        return 1;
+    default:
+        return 0;
+    }
+}
+
+static int AiCpuHasTributeSummonInHand(void)
+{
+    struct DuelPlayer *p = &gDuelPlayers[AI_PLAYER];
+    int i;
+
+    if (!CanNormalSummon(AI_PLAYER))
+        return 0;
+    if (IsTributeLockActive())
+        return 0;
+    for (i = 0; i < p->handCount; i++) {
+        u16 id = DUEL_CARD_ID(&p->hand[i]);
+        u32 stats = gCardStats[id & CARD_ID_MASK];
+
+        if (CARD_STATS_TYPE(stats) > CARD_TYPE_REPTILE || IsSpecialSummonOnly(id))
+            continue;
+        if (CARD_STATS_LEVEL(stats) >= 5 && AiHasTributesFor(id))
+            return 1;
+    }
+    return 0;
+}
+
+int AiShouldFlipFaceDownForTribute(int player, int zone)
+{
+    struct DuelZone *z;
+    u16 id, number;
+
+    if ((player & 1) != AI_PLAYER || !AiCpuHasTributeSummonInHand())
+        return 0;
+    z = ZoneOf(AI_PLAYER, zone);
+    id = DUEL_CARD_ID(&z->card);
+    if (id == 0 || z->isFaceUp)
+        return 0;
+    number = CardNumberOfId(id);
+    return HasFlipEffect(number, 0) && !AiFlipEffectUnsafeBeforeTribute(number);
+}
+
+int AiTryFlipSafeFlipEffectsForTribute(void)
+{
+    int zone;
+
+    for (zone = ZONE_MONSTER_0; zone <= ZONE_MONSTER_4; zone++) {
+        if (!AiShouldFlipFaceDownForTribute(AI_PLAYER, zone))
+            continue;
+        QueueFlipSummon(AI_PLAYER, zone);
+        return 1;
+    }
+    return 0;
+}
 
 /* ---- The CPU counts the ATK boosts it will get when it judges positions -------------------------------------------
  * When the CPU chooses Attack or Defense (the summon simulations, the position-change step and AiShouldRetreatToDefense)
