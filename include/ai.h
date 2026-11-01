@@ -349,6 +349,8 @@ int AiTryFlipSafeFlipEffectsForTribute(void);
 int AiShouldFlipFaceDownForTribute(int player, int zone);
 /* 1 if Flip Summoning this face-down Hane-Hane or Penguin Soldier improves simulated battle damage. */
 int AiShouldFlipRemovalForAttacks(int player, int zone);
+/* 1 if the CPU should Flip Summon face-down Reaper of the Cards to destroy Traps (see added_effects.c). */
+int AiShouldFlipReaperForTraps(int player, int zone);
 /* CPU monster zone (not excludeZone) to tribute: Sangan, Witch of the Black Forest, else the weakest;
  * Fusion monsters only if allowFusion. -1 if none. */
 int AiPickTributeMonster(int excludeZone, u16 allowFusion);

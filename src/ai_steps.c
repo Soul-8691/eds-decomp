@@ -624,6 +624,14 @@ int AiStepChangePositions(void)
                                         return 0;
                                     }
                                     break;
+                                case CARD_REAPER_OF_THE_CARDS:
+                                    if (ZoneFace(savedMask, z) == 0
+                                        && AiShouldFlipReaperForTraps(1, zone) != 0) {
+                                        QueueFlipSummon(1, zone);
+                                        AI->subState++;
+                                        return 0;
+                                    }
+                                    break;
                                 }
                             }
                         }

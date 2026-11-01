@@ -8816,6 +8816,58 @@ int AiShouldFlipRemovalForAttacks(int player, int zone)
     return after > before;
 }
 
+/* ---- CPU: Flip Summon Reaper of the Cards for Trap removal ------------------------------------------------------
+ * Flip when the human has no face-up monster above 1380 ATK and the CPU has a Set Spell/Trap, or when any face-up Trap
+ * is on the field (flip even under a >1380 ATK threat). */
+
+#define AI_REAPER_THREAT_ATK 1380
+
+static int AiCpuHasFaceDownSpellTrap(void)
+{
+    return CountSpellTrapsFiltered(AI_PLAYER, 0, 1, 0) > 0;
+}
+
+static int AiFieldHasFaceUpTrap(void)
+{
+    int player;
+    int zone;
+
+    for (player = 0; player <= 1; player++) {
+        for (zone = ZONE_SPELL_0; zone <= ZONE_SPELL_4; zone++) {
+            struct DuelZone *z = ZoneOf(player, zone);
+            u16 id = DUEL_CARD_ID(&z->card);
+
+            if (id != 0 && z->isFaceUp
+             && CARD_STATS_TYPE(gCardStats[id & CARD_ID_MASK]) == CARD_TYPE_TRAP)
+                return 1;
+        }
+    }
+    return 0;
+}
+
+static int AiHumanThreatensReaper(void)
+{
+    return AiStrongestFaceUpMonsterAtk(AI_HUMAN) > AI_REAPER_THREAT_ATK;
+}
+
+int AiShouldFlipReaperForTraps(int player, int zone)
+{
+    struct DuelZone *z;
+    u16 id;
+
+    if ((player & 1) != AI_PLAYER)
+        return 0;
+    z = ZoneOf(AI_PLAYER, zone);
+    id = DUEL_CARD_ID(&z->card);
+    if (id == 0 || z->isFaceUp || CardNumberOfId(id) != CARD_REAPER_OF_THE_CARDS)
+        return 0;
+    if (AiFieldHasFaceUpTrap())
+        return 1;
+    if (AiHumanThreatensReaper())
+        return 0;
+    return AiCpuHasFaceDownSpellTrap();
+}
+
 /* ---- The CPU counts the ATK boosts it will get when it judges positions -------------------------------------------
  * When the CPU chooses Attack or Defense (the summon simulations, the position-change step and AiShouldRetreatToDefense)
  * it judges a monster by the ATK it will have once the boosts it plays are on it:
