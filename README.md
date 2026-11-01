@@ -27,25 +27,25 @@
 <p align="center">
   <img src="screenshots/Booster Packs (Main Menu).png" width="24%" alt="Booster Packs (Main Menu)">
   <img src="screenshots/Banlists (Main Menu).png" width="24%" alt="Banlists (Main Menu)">
+  <img src="screenshots/Settings (Main Menu).png" width="24%" alt="Settings (Main Menu)">
   <img src="screenshots/Deck Recipes.png" width="24%" alt="Deck Recipes">
-  <img src="screenshots/Pack Opener.png" width="24%" alt="Pack Opener">
 </p>
 <p align="center">
+  <img src="screenshots/Pack Opener.png" width="24%" alt="Pack Opener">
   <img src="screenshots/Banlists.png" width="24%" alt="Banlists">
+  <img src="screenshots/Settings.png" width="24%" alt="Settings">
   <img src="screenshots/Duelists (Screen 1).png" width="24%" alt="Duelists (Screen 1)">
+</p>
+<p align="center">
   <img src="screenshots/Duelists (Screen 2).png" width="24%" alt="Duelists (Screen 2)">
   <img src="screenshots/Duelists (Screen 3).png" width="24%" alt="Duelists (Screen 3)">
-</p>
-<p align="center">
   <img src="screenshots/Duelists (Screen 4).png" width="24%" alt="Duelists (Screen 4)">
   <img src="screenshots/Card Icons.png" width="24%" alt="Card Icons">
-  <img src="screenshots/Card Icons (Up Close) - Summon-Set Order.png" width="24%" alt="Card Icons (Up Close) - Summon-Set Order">
-  <img src="screenshots/Counters.png" width="24%" alt="Counters">
 </p>
 <p align="center">
-  <img src="screenshots/Settings (Main Menu).png" width="24%" alt="Settings (Main Menu)">
-  <img src="screenshots/Settings.png" width="24%" alt="Settings">
+  <img src="screenshots/Card Icons (Up Close) - Summon-Set Order.png" width="24%" alt="Card Icons (Up Close) - Summon-Set Order">
   <img src="screenshots/Activate-Set Order.png" width="24%" alt="Activate-Set Order">
+  <img src="screenshots/Counters.png" width="24%" alt="Counters">
 </p>
 
 A hack of *Yu-Gi-Oh! The Eternal Duelist Soul* (GBA) that follows the
