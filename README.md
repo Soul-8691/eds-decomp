@@ -175,6 +175,8 @@ Each format is a Campaign "duelist". You start with Yugi-Kaiba only; beat the cu
       Tribute Summons and tribute upgrades) instead of skipping straight to Spells.
     - It never Tributes a copy of the monster it is summoning, for a Tribute Summon or a Toon's Special Summon,
       unless that monster has an effect that triggers on its summon (Zaborg, Mobius, Breaker, ...).
+    - It does not Normal Summon or Set **Injection Fairy Lily** from its hand when it has 2000 LP or less (it cannot
+      pay the battle effect cost).
   - **Card use.**
     - It plays its Spells after its Normal Summon, in both Main Phases. The original CPU skipped its Spells on
       any turn it summoned to attack (always, with your field empty), after a Tribute Summon, and in Main Phase 2.
@@ -199,11 +201,12 @@ Each format is a Campaign "duelist". You start with Yugi-Kaiba only; beat the cu
       the next one can recruit again.
     - Its Mystical Space Typhoon (and Gust, Driving Snow) also targets your face-up Traps, and never its own cards.
     - It uses Magical Scientist with Catapult Turtle, Cannon Soldier, or Toon Cannon Soldier: it summons a Fusion
-      Monster, then Tributes it for damage, and repeats while it has more than 1000 LP. Without any of those, it
-      summons one Fusion Monster a turn in Main Phase 1 (with 4000 LP or more) when it could destroy one of your
-      face-up monsters. Its burn monsters Tribute a Fusion Monster from Magical Scientist first, since it leaves
-      at the End Phase anyway. It never fires Scientist's effect from the generic monster scan; only its dedicated
-      Main Phase logic does.
+      Monster, then Tributes it for damage, and repeats while it has more than 1000 LP. It skips that tribute burn
+      while you control a face-up **Des Wombat** (effect damage would be 0). Without any of those, it summons one
+      Fusion Monster a turn in Main Phase 1 (with 4000 LP or more) when it could destroy one of your face-up
+      monsters. Its burn monsters Tribute a Fusion Monster from Magical Scientist first, since it leaves at the End
+      Phase anyway. It never fires Scientist's effect from the generic monster scan; only its dedicated Main Phase
+      logic does.
     - In its Toon World strategy it Normal Summons Toon Cannon Soldier from the hand (other Toons still Special
       Summon).
     - It attacks your face-down Defense Position monsters with Sasuke Samurai and Mystic Swordsman LV2 (and any
@@ -217,15 +220,23 @@ Each format is a Campaign "duelist". You start with Yugi-Kaiba only; beat the cu
       it, when that would just destroy Nyan Nyan.
     - It plays Megamorph in Main Phase 1 only when its LP are lower than yours and equipping it makes a simulated
       Battle Phase lethal (not when it would already win without Megamorph).
+    - It plays **Scapegoat** in Main Phase 1 when the tribute-burn setup is legal: four free monster zones and it has
+      not summoned yet—for a face-up **Cannon Soldier** alone on the field, or when it has no monster it would
+      Normal or Special Summon that turn and either you have monsters while it has none or **Metamorphosis** could
+      use Sheep Tokens. A Set Scapegoat chains only when you declare an attack, not during its Main Phase on an empty
+      field.
     - It plays Enemy Controller in Main Phase 1 to Tribute its weakest monster and take your strongest face-up one,
       when that has at least 500 more ATK.
     - Its Poison of the Old Man deals 800 damage when that wins the duel, gains 1200 LP while it has 3000 or less,
-      and otherwise deals the damage.
+      and otherwise deals the damage; while you control a face-up **Des Wombat**, it always picks the LP gain.
     - It chains Emergency Provisions to your Heavy Storm, Harpie's Feather Duster or a card targeting its Spells and
       Traps, turning the cards about to go into LP; from its hand it plays it only at 1500 LP or less.
     - It chains Pikeru's Circle of Enchantment to your burn Spells and Traps that would deal it 500 or more damage
       (or finish it), before using Hallowed Life Barrier for that, unless you already take no effect damage (for
       example a face-up **Des Wombat** on your field).
+    - It does not play its own effect-damage Spells and Traps (Sparks, Hinotama, Tremendous Fire, Secret Barrel,
+      Wave-Motion Cannon ignition, and similar) while you control a face-up **Des Wombat**—only that continuous
+      effect, not Pikeru's Circle or Hallowed Life Barrier on their own.
     - It chains **Divine Wrath** to your activated monster effects (not plain summons), discarding a card to negate and
       destroy the monster; it answers Mobius, Breaker, Exiled Force, Magical Scientist, Tribe-Infecting Virus, Spirit
       Reaper, and similar high-impact effects, or any effect when it has three or more cards to discard. It Sets
@@ -250,7 +261,7 @@ Each format is a Campaign "duelist". You start with Yugi-Kaiba only; beat the cu
     - It answers your Spells with Magic Drain before Solemn Judgment, since Magic Drain costs nothing.
     - It activates Ojama Trio only when you have three empty monster zones.
     - It activates Secret Barrel in the Main Phase (or in a chain) when the damage would win, or when it would deal
-      600 or more (200 per card in your hand and on your field).
+      600 or more (200 per card in your hand and on your field), unless you control a face-up **Des Wombat**.
     - It plays Mystik Wok at 6000 LP or less, when the weakest monster it can Tribute has 1500 or more ATK or DEF,
       and gains whichever is higher.
     - It plays Monster Reincarnation only with an empty monster field and a monster in its Graveyard to add; the
@@ -264,6 +275,8 @@ Each format is a Campaign "duelist". You start with Yugi-Kaiba only; beat the cu
     - It never activates Hysteric Fairy's effect (two Tributes for 1000 LP).
     - It plays Cold Wave in its Main Phase and does not keep playing Spells or Traps while either player's Cold Wave
       lock is active.
+    - While **Imperial Order** is face-up on either field, it does not activate Magic cards from its hand (including
+      in its early heal-and-burn Spell step); it Sets them instead, like under Anti-Magic Fragrance.
     - On its Standby Phase it activates face-up monsters with Standby effects on its own turn (Dark Mimic LV1's
       level-up, and the original game's Jigen Bakudan and similar cards), without waiting for you to move the cursor.
     - Its Solemn Wishes is Set like other continuous Traps; while face-up, each time it draws it gains 500 LP per copy
@@ -282,7 +295,7 @@ Each format is a Campaign "duelist". You start with Yugi-Kaiba only; beat the cu
       a Chaos summon cost), it Special Summons itself in that End Phase when there is a free zone; the CPU picks
       Attack or Defense like any other Special Summon.
     - It Sets Wave-Motion Cannon from its hand and later ignites it after at least two of its Standby Phases have
-      passed, or sooner when the burn would win the duel.
+      passed, or sooner when the burn would win the duel, but not while you control a face-up **Des Wombat**.
     - It pays Exarion Universe's ATK cost for piercing damage when its ATK minus 400 still beats your Defense Position
       monster's DEF.
     - Its Roulette Barrel keeps the die that matches the Level of your strongest face-up monster, so it destroys
