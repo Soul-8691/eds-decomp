@@ -135,8 +135,7 @@ Each format is a Campaign "duelist". You start with Yugi-Kaiba only; beat the cu
 - **Still backgrounds.** The field background no longer scrolls during duels, the title screen's background
   no longer scrolls either, and the pack pull screen's patterned background no longer scrolls (Campaign packs too).
 - **Fixes.** Deck Edit no longer blots out the first letters of the row above the cursor after Card View (a
-  bug in the original game). Added-card **icons** in duels and Deck Edit use the correct cropped art; format
-  **duelist portraits** are generated from the intended namesake art again. In the hand/field card menu, **Summon** comes
+  bug in the original game). In the hand/field card menu, **Summon** comes
   before **Set**, **Activate** comes before **Set** for Spells you can activate or Set, and **Card Info** is always the
   last option (Left/Right order matches the row).
 - **Solomon and Debug.** The opponent page after the formats has Solomon (top left) and Debug (top right), open from
