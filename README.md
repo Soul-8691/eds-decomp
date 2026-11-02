@@ -88,7 +88,7 @@ Each format is a Campaign "duelist". You start with Yugi-Kaiba only; beat the cu
   its original portrait and event dialogue. After the dialogue, your banlist switches to the challenger's format and
   the Deck Recipes screen opens: load a recipe, press SELECT for Deck Edit, or B to duel. In the release, a deck that
   isn't legal in the format (or is under 40 cards) can't duel until you fix it.
-- **Deck Recipes.** Up to 50 saved decks. In the debug build (`make`), the first slots are premade staple decks of the
+- **Deck Recipes.** Up to 60 saved decks. In the debug build (`make`), the first slots are premade staple decks of the
   first fifteen formats (including Goat), named after their .ydk files; the release build starts with empty slots until
   you save your own. Loading a recipe takes the cards from your trunk; any you don't have are left out (the game tells
   you which, and why). Premade recipes include Side and Extra Decks from their .ydk files. The deck recipes will

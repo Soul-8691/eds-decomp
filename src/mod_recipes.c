@@ -88,10 +88,11 @@ const u8 *ModOpponentSelectName(u16 duelist, const u8 *name);
 extern const u8 gMainMenuObjPal[], gMainMenuObjGfx[];
 extern const u16 gMainMenuSkyImage[];
 
-#define RECIPE_COUNT        50
+#define RECIPE_COUNT        60
 #define RECIPE_NONE         0xFF
 #define RECIPE_SRAM         ((u8 *)SRAM + 0x4000)
-#define RECIPE_MAGIC        0x32504352      /* "RCP2" */
+#define RECIPE_MAGIC        0x33504352      /* "RCP3" (60 slots) */
+#define RECIPE_MAGIC_RCP2   0x32504352      /* "RCP2" (50 slots): migrate slots 50-59 to empty */
 #define RECIPE_NAME_SIZE    32
 #define RECIPE_SUMMARY_SIZE (4 + RECIPE_NAME_SIZE)  /* the sizes and the name, read for the list */
 
@@ -600,6 +601,14 @@ static void LoadRecipes(void)
     int n, setUp;
 
     ReadHeader(&h);
+    if (h.magic == RECIPE_MAGIC_RCP2) {
+        for (n = 50; n < RECIPE_COUNT; n++) {
+            MemClear16(&gDeckRecipes.buf, sizeof(gDeckRecipes.buf));
+            WriteSlot(n);
+        }
+        h.magic = RECIPE_MAGIC;
+        WriteSramEx((u8 *)&h, RECIPE_SRAM, sizeof(h));
+    }
     setUp = h.magic != RECIPE_MAGIC;
     if (setUp) {
         for (n = 0; n < RECIPE_COUNT; n++) {

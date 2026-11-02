@@ -9,7 +9,7 @@ updated: 2026-10-31
 # Deck Recipes (mod)
 
 An eighth main-menu item added by this build (`src/mod_recipes.c`, a `@farcode`/`@rodata` unit). The player keeps up to
-50 deck recipes and switches between them. Checked in the source and the build; not tested in an emulator.
+60 deck recipes and switches between them. Checked in the source and the build; not tested in an emulator.
 
 ## Main menu
 - `MAIN_MENU_DECK_RECIPES = 7`, `MAIN_MENU_COUNT = 8` (`include/main_menu.h`). `gMainMenuTable` still has 7 entries, so
@@ -97,8 +97,9 @@ the list row shows 26 and "..". "Aretos-Tomato Control (Scientist)" (33) is cut 
 
 ## Storage
 - **SRAM.** From `0x0E004000`, after the 0x2170-byte save. A header (magic `"RCP2"`, the active slot) is followed
-  by 50 slots. Each slot holds the three list sizes, a used flag, `name[32]`, and `deck[60]`, `side[15]`,
-  `fusion[20]` (226 bytes). A different magic (including the first build's `"RCP1"`) sets the area up again.
+  by 60 slots. Each slot holds the three list sizes, a used flag, `name[32]`, and `deck[60]`, `side[15]`,
+  `fusion[20]` (226 bytes). Magic `"RCP3"`; older `"RCP2"` (50 slots) keeps existing recipes and clears slots 50-59.
+  Other magic (including `"RCP1"`) sets the area up again.
 - **New Game.** `BuildStarterDeck` calls `DeckRecipes_OnNewGame`, which clears the recipes: it erases the header's
   magic, so the next visit sets the area up again with the presets and empty slots. The starter deck then takes
   the first empty slot (07).
