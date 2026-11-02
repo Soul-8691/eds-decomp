@@ -276,8 +276,6 @@ testing decks.
 
 The demo build (`make demo`) adds **152** cards, listed in alphabetical order above `------` in
 [`new_cards.txt`](new_cards.txt). **[NEW_CARDS.md](NEW_CARDS.md)** shows each of them in Deck Edit's Card View.
-`make` and `make release` use the full list in [`config/new_cards.txt`](config/new_cards.txt) (**343** names today, still
-growing).
 
 <table>
 <tr>
@@ -316,9 +314,9 @@ See [NEW_CARDS.md](NEW_CARDS.md) for all of them.
 
 > [!NOTE]
 > These demo-list Fusion Monsters are **not** fully implemented yet (no fusion effects, and they do not behave like their
-> real cards): Dark Balter the Terrible, Ryu Senshi, Gatling Dragon, Dark Blade the Dragon Knight, Fiend Skull Dragon,
-> Reaper on the Nightmare, The Last Warrior from Another Planet, King Dragun, Ojama King, Master of Oz, Dark Flare Knight,
-> Dark Paladin, and Cyber Blader.
+> real cards): Cyber Blader, Dark Balter the Terrible, Dark Blade the Dragon Knight, Dark Flare Knight, Dark Paladin,
+> Fiend Skull Dragon, Gatling Dragon, King Dragun, Master of Oz, Ojama King, Reaper on the Nightmare, Ryu Senshi, and The
+> Last Warrior from Another Planet.
 
 ### How they're added
 
