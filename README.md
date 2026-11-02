@@ -51,8 +51,8 @@
 A hack of *Yu-Gi-Oh! The Eternal Duelist Soul* (GBA) that follows the
 [Format Library](https://www.formatlibrary.com/) pantheon of TCG formats, from Yugi-Kaiba up to Reaper. The **demo**
 build (`make demo`) adds **152** cards (repo-root [`new_cards.txt`](new_cards.txt) above `------`, in alphabetical
-order); **`make`** / **`make release`** use the full list in [`config/new_cards.txt`](config/new_cards.txt)
-(**343** names today, still growing).
+order); **[NEW_CARDS.md](NEW_CARDS.md)** shows each of them in Deck Edit's Card View. **`make`** / **`make release`**
+use the full list in [`config/new_cards.txt`](config/new_cards.txt) (**343** names today, still growing).
 
 ## The formats
 
@@ -78,9 +78,7 @@ Each format is a Campaign "duelist". You start with Yugi-Kaiba only; beat the cu
 | 15 | Reaper | October 2005 |
 
 - **Decks.** Each format duelist picks one of 2-3 (sometimes more) strong decks from its format, at weighted
-  random. The first 15 duelists are fully coded. [DECKS.md](DECKS.md) lists every deck and its chance. **St. Joan**,
-  **Super Robolady**, and **Super Roboyarou** stay in the card pool but are left out of format **Fusion Deck** lists
-  until their fusion recipes are coded.
+  random. The first 15 duelists are fully coded. [DECKS.md](DECKS.md) lists every deck and its chance.
 - **Your deck.** It has to be legal in that format's banlist and card pool to duel them.
 - **Portraits.** Each duelist's portrait is its format's namesake card (or the Format Library picture when the
   format isn't named after a card).
