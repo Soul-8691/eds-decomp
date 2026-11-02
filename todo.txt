@@ -11,3 +11,4 @@ Race packs
 Spell pack
 Trap pack
 Custom formats
+Fix quirks with new cards
