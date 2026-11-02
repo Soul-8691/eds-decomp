@@ -2372,3 +2372,7 @@ updated: 2026-09-29
 
 ## [2026-11-01] progress | Card prices normalized 200-3000 DP, no-usage 100
 - `tools/cardprices.py` linear scale per format; `mod_dp.c` `POOL_CARD_COST`/`DEFAULT_CARD_COST` 100; regenerated `card_prices.h`, CARD_PRICES.md. README, [[duelist-points]].
+
+## [2026-11-01] progress | README reorganized, placeholder screenshots
+- README.md: regrouped by topic (play, formats, decks, packs and DP, duels, practice opponents, new cards, build), with captioned screenshot tables, a highlights table and collapsed sections for Mobius and debug mode. No facts removed.
+- screenshots/placeholders/*.svg: 12 labelled placeholders for shots not taken yet. Docs only, no build.
