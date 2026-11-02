@@ -139,8 +139,7 @@ new banlist, counting its limits and card pool. If they can't, the switch is ref
 - The card password machine now sells cards: it shows the price and asks before buying.
 - Cards that appear in a format's usage statistics cost **200 to 3000 DP** within that format (usage share, with
   Limited/Semi-Limited multipliers, then linearly scaled). Cards with no usage entry cost **100 DP**.
-  [PACKS.md](PACKS.md) documents pull rates and lists each format's scaled prices; [CARD_PRICES.md](CARD_PRICES.md)
-  is the same price tables only.
+  Per-format prices are listed in [CARD_PRICES.md](CARD_PRICES.md).
 
 ### Booster Packs
 
@@ -151,9 +150,6 @@ new banlist, counting its limits and card pool. If they can't, the switch is ref
 
 - Only cards in the ROM are in each pool, pull rates follow listed rarities, and the cover art is the pool's rarest card.
   Per-pack weights and pull percentages are in [PACKS.md](PACKS.md).
-- Packs are free in debug (`make`).
-- The shop list can hold **64** unlocked format rows, interleaved by format. `gSceneWork` still shows 32 at a time while
-  scrolling.
 - **Campaign wins** against format duelists (not Solomon or Debug) use this same unlocked list: pick **one free pack**
   after the duel. When a win opens new packs (a usage pack at 10 wins in that format, or TCG sets when the next format
   unlocks at 20 wins), the game shows the **"new packs are available"** message before the list.
