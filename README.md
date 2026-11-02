@@ -115,7 +115,7 @@ Each format is a Campaign "duelist". You start with Yugi-Kaiba only; beat the cu
   scrolling. **Campaign wins** against format duelists (not Solomon or Debug) use this **same unlocked list**: pick
   **one free pack** after the duel. When a win opens new packs (usage pack at 10 wins in that format, or TCG sets
   when the next format unlocks at **20** wins), the game shows the **"new packs are available"** message before the
-  list. The screen that shows a pack's cards no longer has the scrolling patterned background (Campaign packs too).
+  list.
 - **Format Library usage stats ([Mobius](https://github.com/Soul-8691/Mobius)).** Card DP and the usage-weighted
   booster pools in this hack come from [Format Library](https://www.formatlibrary.com/) tournament usage data.
   **[Mobius](https://github.com/Soul-8691/Mobius)** is a companion Python app for exploring those stats in a table
@@ -132,8 +132,8 @@ Each format is a Campaign "duelist". You start with Yugi-Kaiba only; beat the cu
   (monsters, Spells/Traps, the Field zone, the top card of each Graveyard and banished pile), in your hand, in the
   card menu, in the chain list, when reordering cards, and while cards move, flip or change position. Deck Edit's
   column of cards beside the list shows each card's art too.
-- **Still backgrounds.** The field background no longer scrolls during duels, and the title screen's background
-  no longer scrolls either.
+- **Still backgrounds.** The field background no longer scrolls during duels, the title screen's background
+  no longer scrolls either, and the pack pull screen's patterned background no longer scrolls (Campaign packs too).
 - **Fixes.** Deck Edit no longer blots out the first letters of the row above the cursor after Card View (a
   bug in the original game). Added-card **icons** in duels and Deck Edit use the correct cropped art; format
   **duelist portraits** are generated from the intended namesake art again. In the hand/field card menu, **Summon** comes
