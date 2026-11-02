@@ -513,7 +513,16 @@ def write_make_deps(header_path):
     usage = sorted(glob.glob('usage/*.json'))
 
     def esc(path):
-        return path.replace('\\', '/').replace(' ', r'\ ')
+        path = os.path.normpath(path).replace('\\', '/')
+        return path.replace(' ', r'\ ')
+
+    header_norm = os.path.normpath(header_path).replace('\\', '/')
+    try:
+        header_target = os.path.relpath(header_norm, os.getcwd()).replace('\\', '/')
+    except ValueError:
+        header_target = header_norm
+    if header_target.startswith('../'):
+        header_target = esc(header_norm)
 
     prereqs = [
         'tools/format_packs.py',
@@ -522,7 +531,7 @@ def write_make_deps(header_path):
         *[esc(p) for p in tcg],
         *[esc(p) for p in usage],
     ]
-    line = f'{esc(header_path)}: {" ".join(prereqs)}\n'
+    line = f'{header_target}: {" ".join(prereqs)}\n'
     try:
         if open(dep_path, encoding='utf-8').read() == line:
             return
