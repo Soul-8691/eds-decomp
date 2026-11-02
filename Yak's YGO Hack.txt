@@ -9,7 +9,6 @@ Start out with 5000 DP
 Cards are 200-3000 DP (usage stats) or 100 DP (no usage stats)
 Buy packs with DP
 Packs are by attribute/race/spells/traps/ocg/tcg/usage/anime duelists
-Rank cards
 Unlock one format at a time
 Multiple banlists
 Up to 60 deck recipes
@@ -24,3 +23,4 @@ Move hooks out of original units (like duel_info_bar)
 Move added card lists out of effect_target_collect.c
 Card priority orders
 Fix random freeze
+Custom formats
