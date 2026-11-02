@@ -142,6 +142,9 @@ RARITY_WEIGHT = {
     6: 10,
 }
 
+# Pack opener name shine for TCG pulls: Rare and above (RARITY_WEIGHT rank 2).
+FORMAT_PACK_TCG_SHINE_MAX_WEIGHT = RARITY_WEIGHT[2]
+
 RARITY_TOKEN_RANK = {
     'common': 0, 'c': 0,
     'short print': 1, 'super short print': 1, 'sp': 1, 'ssp': 1,
@@ -381,6 +384,7 @@ def main():
         f'#define FORMAT_EVENT_COUNT {len(banlist.BANLISTS)}',
         f'#define FORMAT_PACK_FLAG_USAGE {FORMAT_PACK_FLAG_USAGE}',
         f'#define FORMAT_PACK_USAGE_WINS {FORMAT_PACK_USAGE_WINS}',
+        f'#define FORMAT_PACK_TCG_SHINE_MAX_WEIGHT {FORMAT_PACK_TCG_SHINE_MAX_WEIGHT}',
         '',
         'struct FormatPackEntry { u16 number; u16 weight; };',
         '',

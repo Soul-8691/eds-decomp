@@ -170,7 +170,7 @@ struct StarterDeckSelectWork {
 
 /* gPackOpenWork (0x02015160, 0x11C bytes): the pack being opened and the reveal scene's state. */
 struct PackOpenWork {
-    u16 unused0;             /* +0x000 no access found */
+    u16 openPackId;          /* +0x000 pack id of the pack being opened (format shop packs); 0 for vanilla */
     u16 commonPool[0x80];    /* +0x002 shuffled copy of the commons slot, source of cards 2-5 */
     u16 cardNumbers[5];      /* +0x102 card numbers of the opened pack (GeneratePackCards output) */
     u8 revealFrame[5];       /* +0x10C per-card flip frame (enum PackRevealFrame) */

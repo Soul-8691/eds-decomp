@@ -9,6 +9,8 @@
 #define VANILLA_PACK_INFO_COUNT 23
 #define FORMAT_PACK_COST_TCG    250
 #define FORMAT_PACK_COST_USAGE  500
+/* Usage pack opener: rainbow name on pulls priced at least this much in that pack's format (cardprices.py). */
+#define USAGE_PACK_OPENER_SHINE_MIN_DP  500
 
 int FormatPackIndexFromId(u16 packId);
 int ModFormatPackShopCost(u16 packId, u32 *costOut);
@@ -18,7 +20,11 @@ void ModPackList_AddUnlockedPacks(void);
 int ModCountUnlockedFormatPacks(void);
 int ModPackList_AddFormatPackById(u16 packId);
 int ModFormatPackLoadCoverGfx(u16 slot, u16 packId);
+/* Usage-table DP for one card in format order (BANLISTS index); 0 if that format's table has no row. */
+u32 GetCardUsagePriceInFormat(int formatOrder, u16 cardNumber);
 int ModGenerateFormatPackCards(u16 *cardNumbers, u16 packId);
+/* Pack reveal: rainbow name colour (palette 15) for this card number in the opened pack. */
+int ModPackOpenCardNameShines(u16 cardNumber);
 int ModPackShopIsOpen(void);
 
 /* Shop list may exceed gSceneWork.packRows[0x20]; when active, rows live in mod EWRAM. */

@@ -194,14 +194,26 @@ static u32 TableCost(const struct CardCostTable *t, u16 number)
 /* The price of a card: from the newest unlocked format (src/mod_opponents.c, in unlock order) whose decks use it, so
  * a card keeps its price until a later format's decks use it; else POOL_CARD_COST if it is in an unlocked format's
  * card pool; else DEFAULT_CARD_COST. */
+static u16 NormalizeCardNumberForCost(u16 number)
+{
+    if (number >= CARD_NUMBER_ALT_ART && number != 0xFFFF)
+        number -= CARD_NUMBER_ALT_ART;
+    return number;
+}
+
+u32 GetCardUsagePriceInFormat(int formatOrder, u16 cardNumber)
+{
+    cardNumber = NormalizeCardNumberForCost(cardNumber);
+    return TableCost(&sFormatCardCosts[ModFormatBanlist(formatOrder)], cardNumber);
+}
+
 u32 GetCardCost(u16 id)
 {
     u16 number = gCardIdToNumber[id & CARD_ID_MASK];
     int k, unlocked = ModUnlockedFormatCount();
     u32 cost;
 
-    if (number >= CARD_NUMBER_ALT_ART && number != 0xFFFF)
-        number -= CARD_NUMBER_ALT_ART;      /* an alternate art costs as its card */
+    number = NormalizeCardNumberForCost(number);
     for (k = unlocked - 1; k >= 0; k--) {
         cost = TableCost(&sFormatCardCosts[ModFormatBanlist(k)], number);
         if (cost != 0)

@@ -28,6 +28,7 @@
                                    * gDuelZonePositions, DrawCardImageTile, DrawCardImageIcon16,
                                    * this unit's prototypes */
 #include "booster.h"                /* struct PackOpenWork gPackOpenWork, the GetPack_* prototypes */
+#include "format_packs.h"           /* ModPackOpenCardNameShines */
 #include "util.h"                   /* MemClear16, MemCopy16 */
 #include "text.h"                   /* TextCanvasInit, TextDrawString, TextCanvasToTiles, DrawBgDecimal */
 #include "bg.h"                     /* LoadBgImage4bpp, SetBgMapEntry */
@@ -581,7 +582,7 @@ void GetPack_DrawCardRow(int row, u16 id)
     u32 color;
     const u32 *stats;
     color = 7;
-    if (gPackOpenWork.rareCardNumber == CARD_NUMBER(id))
+    if (ModPackOpenCardNameShines(CARD_NUMBER(id)))
         color = 0xF;
     TextCanvasInit(0x18, 2);
     /* DrawText takes a u16 colour (as declared in campaign_select); this unit's prototype says u32,

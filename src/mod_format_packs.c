@@ -328,6 +328,27 @@ static u16 WeightForNumber(const struct FormatPackPool *pool, u16 number)
     return 65535;
 }
 
+int ModPackOpenCardNameShines(u16 cardNumber)
+{
+    u16 packId = gPackOpenWork.openPackId;
+    int fi = FormatPackIndexFromId(packId);
+
+    if (fi >= 0) {
+        const struct FormatPackPool *pool = &sFormatPackPools[fi];
+
+        if (sFormatPackFlags[fi] & FORMAT_PACK_FLAG_USAGE) {
+            int formatOrder = sFormatPackFormatIndex[fi];
+            u32 price = GetCardUsagePriceInFormat(formatOrder, cardNumber);
+
+            return price >= USAGE_PACK_OPENER_SHINE_MIN_DP;
+        }
+        if (WeightForNumber(pool, cardNumber) <= FORMAT_PACK_TCG_SHINE_MAX_WEIGHT)
+            return 1;
+        return 0;
+    }
+    return cardNumber == gPackOpenWork.rareCardNumber && gPackOpenWork.rareCardNumber != 9999;
+}
+
 static int CardAlreadyPicked(const u16 *cardNumbers, int count, u16 number)
 {
     int j;
@@ -357,8 +378,6 @@ int ModGenerateFormatPackCards(u16 *cardNumbers, u16 packId)
     int fi = FormatPackIndexFromId(packId);
     const struct FormatPackPool *pool;
     const u16 *roulette;
-    u16 rareNumber = 0;
-    u16 rareWeight = 65535;
     int i;
 
     if (fi < 0)
@@ -367,6 +386,7 @@ int ModGenerateFormatPackCards(u16 *cardNumbers, u16 packId)
     roulette = sFormatPackRoulettes[fi];
     if (pool->count == 0 || roulette == NULL)
         return -1;
+    gPackOpenWork.openPackId = packId;
     for (i = 0; i < 5; i++) {
         u16 n;
         int tries;
@@ -377,14 +397,6 @@ int ModGenerateFormatPackCards(u16 *cardNumbers, u16 packId)
                 break;
         }
         cardNumbers[i] = n;
-        {
-            u16 w = WeightForNumber(pool, n);
-
-            if (w < rareWeight) {
-                rareWeight = w;
-                rareNumber = n;
-            }
-        }
     }
     for (i = 0; i < 25; i++) {
         int a = Random() % 5;
@@ -393,6 +405,6 @@ int ModGenerateFormatPackCards(u16 *cardNumbers, u16 packId)
         cardNumbers[a] = cardNumbers[b];
         cardNumbers[b] = t;
     }
-    gPackOpenWork.rareCardNumber = rareNumber;
+    gPackOpenWork.rareCardNumber = 9999;
     return 7;
 }
