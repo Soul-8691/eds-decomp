@@ -140,19 +140,17 @@ new banlist, counting its limits and card pool. If they can't, the switch is ref
 - Cards that appear in a format's usage statistics cost **200 to 3000 DP** within that format (usage share, with
   Limited/Semi-Limited multipliers, then linearly scaled). Cards with no usage entry cost **100 DP**.
   [PACKS.md](PACKS.md) documents pull rates and lists each format's scaled prices; [CARD_PRICES.md](CARD_PRICES.md)
-  is the same price tables only. Regenerate with `python3 tools/pack_prices_md.py` (or `tools/cardprices.py --md CARD_PRICES.md`).
+  is the same price tables only.
 
 ### Booster Packs
 
 | Pack | Comes from | Unlocks | Price |
 |---|---|---|---|
-| **TCG sets** | `packs/*_tcg.json`, including **Dark Revelation Volume 1** (imported with `tools/import_yugipedia_drv1.py`) | When its format opponent unlocks (for example Metal Raiders with Critter) | **250 DP** |
+| **TCG sets** | Yu-Gi-Oh! TCG booster sets (through *Starter Deck 2006*, including *Dark Revelation* reprints) | When its format opponent unlocks (for example Metal Raiders with Critter) | **250 DP** |
 | **Usage-weighted packs** | One per format, from cards priced by that format's usage statistics | After **10 wins** against that format duelist | **500 DP** |
-| **Vanilla campaign boosters** | The original game's booster IDs | When they appear | **1000 DP** |
 
 - Only cards in the ROM are in each pool, pull rates follow listed rarities, and the cover art is the pool's rarest card.
-  Per-pack weights and pull percentages are in [PACKS.md](PACKS.md); refresh after card or TCG JSON changes with
-  `python3 tools/pack_chances_md.py` (or `python3 tools/packs_md.py` for the full doc).
+  Per-pack weights and pull percentages are in [PACKS.md](PACKS.md).
 - Packs are free in debug (`make`).
 - The shop list can hold **64** unlocked format rows, interleaved by format. `gSceneWork` still shows 32 at a time while
   scrolling.
