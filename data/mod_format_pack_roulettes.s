@@ -1,5 +1,5 @@
 @ Precomputed format-pack roulette tables (tools/format_packs.py, FORMAT_PACK_ROULETTE_SIZE entries per format).
-@ Linked as @rodata mod_format_pack_roulettes (units.txt).
+@ Linked in .rodata.added after gCardIdsByName (@rodata.added, units.txt).
 
 	.section .rodata
 	.balign 4

@@ -1,15 +1,15 @@
 #!/usr/bin/env python3
 """Write a pokeemerald-style .sym file from a linked ELF.
 
-  python3 tools/mksym.py build/eds.elf eds.sym
+  python3 tools/mksym.py build/eds.elf eds.sym [build/eds.map]
 
 Format (one line per entry): ``address binding size name``
   address and size are 8-digit hex; binding is the first character from objdump (g/l).
 
 Symbol list follows pret's ``objdump -t`` filter (addresses ``^0[2389]``), but drops linker/compiler
 noise with no extent, and fills in sizes objdump leaves at zero (ABS RAM labels in symbols.ld,
-rodata/asm globals). Inserts ``free space`` for holes inside each loaded ROM section and between
-sections (e.g. after ``.text.added`` until ``.rodata.pinned`` at ``0x08623DF4``).
+rodata/asm globals). Inserts ``free space`` for holes inside each loaded ROM section, linker *fill*
+padding from the map file, and gaps between sections.
 Only rewrites the output when its content changes.
 """
 import os
@@ -20,12 +20,21 @@ from dataclasses import dataclass
 
 elf = sys.argv[1] if len(sys.argv) > 1 else 'build/eds.elf'
 out = sys.argv[2] if len(sys.argv) > 2 else 'eds.sym'
+map_path = sys.argv[3] if len(sys.argv) > 3 else os.path.join(
+    os.path.dirname(elf), os.path.basename(elf).replace('.elf', '.map'))
 
 LINE = re.compile(
     r'^([0-9a-f]{8}) (\w).{6} \S+\t([0-9a-f]{8}) (\S+)$', re.I)
 SEC = re.compile(
     r'^\s+\d+\s+(\S+)\s+([0-9a-f]+)\s+([0-9a-f]+)\s+([0-9a-f]+)', re.I)
-ROM_GAP_SECTIONS = frozenset({'.text', '.rodata', '.text.added', '.rodata.pinned'})
+MAP_FILL = re.compile(r'^\s+\*fill\*\s+(0x[0-9a-f]+)\s+(0x[0-9a-f]+)', re.I)
+MAP_OBJECT = re.compile(
+    r'^\s+\.(?:text(?:\.added)?|rodata(?:\.added|\.pinned)?)\s+'
+    r'(0x[0-9a-f]+)\s+(0x[0-9a-f]+)\s+', re.I)
+MAP_SYM = re.compile(r'^\s+(0x[0-9a-f]+)\s+(\S+)\s*$', re.I)
+ROM_GAP_SECTIONS = frozenset({
+    '.text', '.rodata', '.text.added', '.rodata.added', '.rodata.pinned',
+})
 ABS_BOUNDS = {
     'ewram': (0x02000000, 0x02040000),
     'iwram': (0x03000000, 0x03008000),
@@ -73,6 +82,42 @@ def parse_sections(elf_path):
         if name in ROM_GAP_SECTIONS and size:
             secs[name] = (vma, vma + size)
     return secs
+
+
+def parse_map_objects(map_file):
+    """Per-symbol extents from linker map (.rodata 0xADDR 0xSIZE file.o lines)."""
+    if not os.path.exists(map_file):
+        return {}
+    by_name = {}
+    for line in open(map_file, encoding='utf-8', errors='replace'):
+        m = MAP_OBJECT.match(line)
+        if not m:
+            continue
+        addr, size = int(m.group(1), 16), int(m.group(2), 16)
+        if size:
+            by_name[addr] = size
+    # Attach names from the following indented symbol lines.
+    names_at = {}
+    for line in open(map_file, encoding='utf-8', errors='replace'):
+        m = MAP_SYM.match(line)
+        if m:
+            names_at[int(m.group(1), 16)] = m.group(2)
+    return {names_at[addr]: size for addr, size in by_name.items() if addr in names_at}
+
+
+def parse_map_fills(map_file):
+    """Linker *fill* padding (alignment gaps) from the GNU ld map."""
+    if not os.path.exists(map_file):
+        return []
+    rows = []
+    for line in open(map_file, encoding='utf-8', errors='replace'):
+        m = MAP_FILL.match(line)
+        if not m:
+            continue
+        addr, size = int(m.group(1), 16), int(m.group(2), 16)
+        if size and re.match(r'^0[2389]', f'{addr:08x}', re.I):
+            rows.append((addr, 'l', f'{size:08x}', 'free space'))
+    return rows
 
 
 def skip_sym(s: Sym) -> bool:
@@ -168,18 +213,41 @@ def inter_section_gap_rows(sections):
     return rows
 
 
+def dedupe_gap_rows(rows):
+    """Drop identical (addr, size) free-space rows; merge overlaps from fills vs section scan."""
+    by_addr = {}
+    for row in rows:
+        addr, bind, size_s, name = row
+        size = int(size_s, 16)
+        prev = by_addr.get(addr)
+        if prev is None or int(prev[2], 16) < size:
+            by_addr[addr] = row
+    return list(by_addr.values())
+
+
 def format_row(addr, bind, size, name):
-    return f'{addr:08x} {bind} {size:08x} {name}'
+    size_s = size if isinstance(size, str) else f'{int(size):08x}'
+    return f'{int(addr):08x} {bind} {size_s} {name}'
+
+
+def apply_map_sizes(syms, map_sizes):
+    for s in syms:
+        if s.name in map_sizes:
+            s.size = map_sizes[s.name]
 
 
 def main():
     syms = [s for s in parse_objdump(elf) if not skip_sym(s)]
     sections = parse_sections(elf)
+    fills = parse_map_fills(map_path)
+    map_sizes = parse_map_objects(map_path)
+    apply_map_sizes(syms, map_sizes)
     infer_sizes(syms, sections)
     syms = [s for s in syms if s.size > 0]
     rows = [format_row(s.addr, s.bind, s.size, s.name) for s in syms]
-    gaps = free_space_rows(syms, sections) + inter_section_gap_rows(sections)
-    rows.extend(format_row(a, b, int(s, 16), n) for a, b, s, n in gaps)
+    gaps = dedupe_gap_rows(
+        free_space_rows(syms, sections) + inter_section_gap_rows(sections) + fills)
+    rows.extend(format_row(a, b, s, n) for a, b, s, n in gaps)
     rows.sort(key=lambda line: (int(line.split()[0], 16), line.split()[3] == 'free space', line))
     text = '\n'.join(rows) + '\n'
     if not os.path.exists(out) or open(out, encoding='utf-8').read() != text:

@@ -1,8 +1,8 @@
 # Link order. A unit links src/<unit>.c, src/<unit>.s, asm/<unit>.s or data/<unit>.s
 # (first that exists). "@libs" = libgcc/libc; "@rodata <unit>" places that unit's
 # .rodata at that point of the .rodata section instead of next to its .text; "@farcode <unit>" puts that
-# unit's .text in the ROM range the moved card tables left free (0x082461A0-0x08623DF4), after the data, so
-# that the added cards' code does not grow the game's code (tools/mkld.py).
+# unit's .text in .text.added (after main .rodata, before gCardNumberToId); "@rodata.added <unit>" puts
+# gModFieldIconData and gFormatPackRouletteBlob after gCardIdsByName in .rodata.pinned (tools/mkld.py).
 crt0
 bustup_scene
 bustup_runner
@@ -155,6 +155,8 @@ mod_field_icons_data
 @farcode password_trade
 # card_list_viewer (~0x3KB+): pack-shop hooks in booster_get_pack / deck_edit_panel pushed release .text past 0x08080A20.
 @farcode card_list_viewer
+@rodata.added mod_field_icons_data
+@rodata.added mod_format_pack_roulettes
 @libs
 veneer
 rodata_08080A20
@@ -174,7 +176,5 @@ rodata_08087FD0
 @rodata mod_title
 @rodata mod_field_icons
 @rodata mod_info_bar
-@rodata mod_field_icons_data
 @rodata card_list_viewer
 mod_format_pack_roulettes
-@rodata mod_format_pack_roulettes

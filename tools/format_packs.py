@@ -23,7 +23,7 @@ from cardprices import BASE, EXTRA_DIVISOR, LIMIT_FACTOR, share  # noqa: E402
 
 FORMAT_PACK_ID_FIRST = 601
 VANILLA_PACK_INFO_COUNT = 23
-# 50 packs × ROULETTE_SIZE × 2 bytes (mod_format_pack_roulettes @rodata); keep .text.added headroom.
+# 50 packs × ROULETTE_SIZE × 2 bytes (mod_format_pack_roulettes in .rodata.added after gCardIdsByName).
 ROULETTE_SIZE = 8192
 WEIGHT_SCALE = 10000
 # Usage-pack pull weight ∝ 1/share^POWER (before banlist limits). 1.0 = full inverse usage;

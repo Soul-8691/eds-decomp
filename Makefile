@@ -107,7 +107,7 @@ clean:
 syms: $(SYM)
 
 $(ROM): $(ELF) $(SYM)
-	$(OBJCOPY) -O binary -j .text -j .rodata -j .text.added -j .rodata.pinned -j .data --gap-fill 0 $< $@
+	$(OBJCOPY) -O binary -j .text -j .rodata -j .text.added -j .rodata.pinned -j .rodata.added -j .data --gap-fill 0 $< $@
 	$(PYTHON) tools/fixptrs.py $< $@
 
 # Regenerated on every run, because the object list depends on which src/ files exist and on ASM_UNITS.
