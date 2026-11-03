@@ -27,7 +27,7 @@
 |---|---|
 | **15 formats** | Follows the [Format Library](https://www.formatlibrary.com/) pantheon of TCG formats. Each one is a Campaign duelist with its own banlist, card pool and decks. |
 | **New cards** | The demo adds **152** cards. The full list has **343** names so far and is still growing. |
-| **Smarter CPU** | Opponents play much stronger than in vanilla EDS. See [AI_IMPROVEMENTS.md](AI_IMPROVEMENTS.md). |
+| **Smarter CPU** | Opponents play much stronger than in vanilla EDS. See [AI_IMPROVEMENTS.md](AI_IMPROVEMENTS.md) and [AI_QUIRKS.md](AI_QUIRKS.md). |
 | **Best-of-3 matches** | Every Campaign duel is a match, with siding between games. |
 | **A real economy** | Earn Duelist Points, buy cards by password, and open TCG sets and usage-weighted packs. |
 | **Deck tools** | 60 Deck Recipes, a choice of banlists, and practice opponents that play decks you pick. |
@@ -212,8 +212,9 @@ See Mobius's README for chart semantics and options.
   you can side, swapping cards between your Main Deck and Side Deck, and your deck goes back to how it was once the match
   ends. The CPU uses the same deck for every game of the match. Records, DP and the pack reward count the match, not each
   game.
-- **Smarter CPU.** Campaign opponents play much stronger than vanilla EDS. See [AI_IMPROVEMENTS.md](AI_IMPROVEMENTS.md)
-  for battle and position rules, card use, flip-summon timing, and what the CPU can and cannot see.
+- **Smarter CPU.** Campaign opponents play much stronger than vanilla EDS. [AI_QUIRKS.md](AI_QUIRKS.md) lists
+  vanilla AI shortcomings that were fixed (original-roster cards only). [AI_IMPROVEMENTS.md](AI_IMPROVEMENTS.md)
+  describes current CPU behavior in full.
 - **Card art.** Face-up cards show a small picture of their artwork inside their icon: on the field (monsters,
   Spells/Traps, the Field zone, the top card of each Graveyard and banished pile), in your hand, in the card menu, in the
   chain list, when reordering cards, and while cards move, flip or change position. Deck Edit's column of cards beside
