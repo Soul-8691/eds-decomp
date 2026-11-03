@@ -22,6 +22,7 @@ ROM      := eds.gba
 endif
 ELF      := build/eds.elf
 MAP      := build/eds.map
+SYM      := $(ROM:.gba=.sym)
 SHA1     := 510fbba212aca9bab95ea12f8fd933e62ee34dea
 
 PREFIX   := arm-none-eabi-
@@ -53,7 +54,7 @@ UNITS    := $(shell sed -e 's/\#.*//' -e '/^[[:space:]]*$$/d' -e '/^@/d' units.t
 unit_obj  = $(if $(and $(wildcard src/$(1).c),$(if $(filter $(1),$(ASM_UNITS)),,y)),build/src/$(1).o,$(if $(wildcard src/$(1).s),build/srcasm/$(1).o,$(if $(wildcard asm/$(1).s),build/asm/$(1).o,build/data/$(1).o)))
 OBJS     := $(foreach u,$(UNITS),$(call unit_obj,$(u)))
 
-.PHONY: all release demo release-demo compare clean tidy objdiff-report setup agbcc card-icons FORCE
+.PHONY: all release demo release-demo compare clean tidy objdiff-report setup agbcc card-icons syms FORCE
 .SECONDARY:
 .DELETE_ON_ERROR:
 
@@ -101,8 +102,11 @@ $(CC1_INSTALLED):
 
 clean:
 	rm -rf build eds.gba eds_release.gba eds_demo.gba eds_release_demo.gba
+	rm -f eds.sym eds_release.sym eds_demo.sym eds_release_demo.sym
 
-$(ROM): $(ELF)
+syms: $(SYM)
+
+$(ROM): $(ELF) $(SYM)
 	$(OBJCOPY) -O binary -j .text -j .rodata -j .text.added -j .rodata.pinned -j .data --gap-fill 0 $< $@
 	$(PYTHON) tools/fixptrs.py $< $@
 
@@ -119,6 +123,9 @@ build/autosyms.s: $(OBJS) symbols.ld tools/autosyms.py
 
 build/autosyms.o: build/autosyms.s
 	$(AS) $(ASFLAGS) -o $@ $<
+
+$(SYM): $(ELF)
+	$(PYTHON) tools/mksym.py $< $@
 
 $(ELF): build/ld_script.ld build/autosyms.o $(OBJS) | $(CC1_INSTALLED)
 	$(LD) -T build/ld_script.ld -Map $(MAP) -o $@ $(OBJS) build/autosyms.o -L $(AGBLIB) -lgcc -lc
