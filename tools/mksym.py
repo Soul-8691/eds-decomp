@@ -28,8 +28,9 @@ LINE = re.compile(
 SEC = re.compile(
     r'^\s+\d+\s+(\S+)\s+([0-9a-f]+)\s+([0-9a-f]+)\s+([0-9a-f]+)', re.I)
 MAP_FILL = re.compile(r'^\s+\*fill\*\s+(0x[0-9a-f]+)\s+(0x[0-9a-f]+)', re.I)
+# Object-level map lines (not per-function .text aggregates; those share the first symbol's address).
 MAP_OBJECT = re.compile(
-    r'^\s+\.(?:text(?:\.added)?|rodata(?:\.added|\.pinned)?)\s+'
+    r'^\s+\.(?:rodata(?:\.added|\.pinned)?)\s+'
     r'(0x[0-9a-f]+)\s+(0x[0-9a-f]+)\s+', re.I)
 MAP_SYM = re.compile(r'^\s+(0x[0-9a-f]+)\s+(\S+)\s*$', re.I)
 ROM_GAP_SECTIONS = frozenset({
@@ -231,8 +232,9 @@ def format_row(addr, bind, size, name):
 
 
 def apply_map_sizes(syms, map_sizes):
+    """Objdump reports size 0 for some data labels; map gives the true .o contribution."""
     for s in syms:
-        if s.name in map_sizes:
+        if s.name in map_sizes and not s.size:
             s.size = map_sizes[s.name]
 
 
