@@ -1,8 +1,8 @@
 <h1 align="center">Yak's YGO Hack</h1>
 
 <p align="center">
-  <em>Yu-Gi-Oh! The Eternal Duelist Soul</em> (GBA), rebuilt around the classic TCG formats,<br>
-  from Yugi-Kaiba all the way to Reaper.
+  <em>Yu-Gi-Oh! The Eternal Duelist Soul</em> (GBA), rebuilt around the classic TCG formats<br>
+  from Yugi-Kaiba (May 2002) to Reaper (October 2005).
 </p>
 
 <p align="center">
@@ -25,7 +25,7 @@
 
 |  |  |
 |---|---|
-| **15 formats** | Follows the [Format Library](https://www.formatlibrary.com/) pantheon of TCG formats. Each one is a Campaign duelist with its own banlist, card pool and decks. |
+| **15 formats** | Follows the [Format Library](https://www.formatlibrary.com/) pantheon of TCG formats from May 2002 to October 2005 (which are just historical formats). Each one is a Campaign duelist with its own card pool and decks. |
 | **New cards** | The demo adds **152** cards. The full list has **343** names so far and is still growing. |
 | **Smarter CPU** | Opponents play much stronger than in vanilla EDS. See [AI_IMPROVEMENTS.md](AI_IMPROVEMENTS.md) and [AI_QUIRKS.md](AI_QUIRKS.md). |
 | **Best-of-3 matches** | Every Campaign duel is a match, with siding between games. |
@@ -43,6 +43,9 @@ Reaper). You need your own USA ROM of *The Eternal Duelist Soul* (AY5E); it is n
 4. Download the patched ROM.
 
 ## The formats
+
+[Format Library](https://www.formatlibrary.com/) is an independent site: a collection of retro Yu-Gi-Oh! TCG format
+information. **This project is not affiliated with Format Library in any way.**
 
 Each format is a Campaign duelist. You start with Yugi-Kaiba only. Beat the current format duelist **20 times** in the
 release to unlock the next one (every format is open in the debug build).
@@ -156,11 +159,8 @@ new banlist, counting its limits and card pool. If they can't, the switch is ref
 
 ### Usage stats and Mobius
 
-**Format Library.** [Format Library](https://www.formatlibrary.com/) is an independent site: a collection of retro
-Yu-Gi-Oh! TCG format information. **This project is not affiliated with Format Library in any way.** Tournament usage
-statistics used here were gathered **with the permission of the site's creator**.
-
-Card DP and the usage-weighted booster pools come from that usage data. **[Mobius](https://github.com/Soul-8691/Mobius)** is a companion Python app for exploring those stats in a table
+Card DP and the usage-weighted booster pools come from [Format Library](https://www.formatlibrary.com/) tournament usage
+data, gathered **with the site's creator's permission**. **[Mobius](https://github.com/Soul-8691/Mobius)** is a companion Python app for exploring those stats in a table
 (ban-weighted counts, Limited/Semi-Limited multipliers, YGOPRODeck names and art).
 
 <img src="screenshots/placeholders/mobius.svg" width="240" alt="Placeholder: Mobius">
