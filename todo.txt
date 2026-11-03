@@ -13,3 +13,4 @@ Spell pack
 Trap pack
 Custom formats
 Fix quirks with new cards
+Additional deck builder sorts

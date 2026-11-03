@@ -24,3 +24,4 @@ Move added card lists out of effect_target_collect.c
 Card priority orders
 Fix random freeze
 Custom formats
+Additional deck builder sorts
