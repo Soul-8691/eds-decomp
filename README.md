@@ -156,8 +156,11 @@ new banlist, counting its limits and card pool. If they can't, the switch is ref
 
 ### Usage stats and Mobius
 
-Card DP and the usage-weighted booster pools come from [Format Library](https://www.formatlibrary.com/) tournament usage
-data. **[Mobius](https://github.com/Soul-8691/Mobius)** is a companion Python app for exploring those stats in a table
+**Format Library.** [Format Library](https://www.formatlibrary.com/) is an independent site: a collection of retro
+Yu-Gi-Oh! TCG format information. **This project is not affiliated with Format Library in any way.** Tournament usage
+statistics used here were gathered **with the permission of the site's creator**.
+
+Card DP and the usage-weighted booster pools come from that usage data. **[Mobius](https://github.com/Soul-8691/Mobius)** is a companion Python app for exploring those stats in a table
 (ban-weighted counts, Limited/Semi-Limited multipliers, YGOPRODeck names and art).
 
 <img src="screenshots/placeholders/mobius.svg" width="240" alt="Placeholder: Mobius">
