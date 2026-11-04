@@ -2586,7 +2586,9 @@ Grandpa's and Pegasus' unlocks.
   one DARK monster through the Graveyard list (`CollectEffectTargets` case, `BlackLusterSoldierBanishAttribute`).
 - **Effects** (one row, once per turn via `effectUnused`; `DuelCmd_TurnStart` re-arms it):
   - Main Phase, from the menu (`CanActivateMonsterEffect`): target a monster on the field (Man-Eater Bug's check and
-    target pick), banish it (`BanishFieldCard`); BLS cannot attack this turn (`DUEL_CMD_SET_CANNOT_ATTACK`).
+    target pick), banish it (`BanishFieldCard`); BLS cannot attack this turn (`DUEL_CMD_SET_CANNOT_ATTACK`). If it
+    already attacked, the banish effect cannot be activated in Main Phase 2 (`EffectBlackLusterSoldierPrepare` and
+    `attackedMask`).
   - Attack again: `BattleStage_DestroyMonsters` queues a `RESPONSE_BATTLE_DESTROYED` trigger when the attacking BLS
     destroyed the target and survived. Resolve asks the human Yes/No (the CPU always takes it), then clears its
     `attackedMask` bit.

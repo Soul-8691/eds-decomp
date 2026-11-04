@@ -293,7 +293,8 @@ int EffectBanishTargetNoAttackResolve(struct ChainEntry *link, struct ChainEntry
  * Effects: one row, told apart by the link's event; both use the zone's effectUnused flag (once per turn, set again
  * by DuelCmd_TurnStart):
  *   RESPONSE_NONE              the menu's ACTIVATE in the Main Phase (CanActivateMonsterEffect): target a monster
- *                              (Man-Eater Bug's EffectTargetableMonsterCheck / ChainB), banish it, no attack
+ *                              (Man-Eater Bug's EffectTargetableMonsterCheck / ChainB), banish it, no attack; not in
+ *                              Main Phase 2 if this card already declared an attack this turn (attackedMask)
  *   RESPONSE_BATTLE_DESTROYED  queued by BattleStage_DestroyMonsters (battle_phase2.c) when it attacked, destroyed
  *                              the target and survived: on Yes, its attack mark is cleared so it can attack again */
 
@@ -307,6 +308,7 @@ static inline int IsBlsBattleTrigger(struct ChainEntry *link)
 int EffectBlackLusterSoldierPrepare(struct ChainEntry *card, struct ChainEntry *chainLink, u16 fromHand)
 {
     struct DuelZone *z;
+    int player = card->player & 1;
 
     if (fromHand)
         return 0;
@@ -315,7 +317,11 @@ int EffectBlackLusterSoldierPrepare(struct ChainEntry *card, struct ChainEntry *
         return 0;
     if (card->event == RESPONSE_BATTLE_DESTROYED)
         return IsBlsBattleTrigger(card);
-    return card->event == RESPONSE_NONE;
+    if (card->event != RESPONSE_NONE)
+        return 0;
+    if (gDuel.phase == PHASE_MAIN2 && (gDuelPlayers[player].attackedMask >> card->zone) & 1)
+        return 0;
+    return 1;
 }
 
 /* The banish effect targets any monster on the field; the second attack needs no target. */
