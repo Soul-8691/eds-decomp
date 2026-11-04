@@ -7887,6 +7887,10 @@ int AiHumanSwordsActive(void)
     return CountActiveCardsOnFieldExcept(0, CARD_SWORDS_OF_REVEALING_LIGHT, -1) > 0;
 }
 
+/* Minimum printed ATK to Normal Summon for a future direct attack while the human's Swords is up and their
+ * field is empty (weaker beatsticks are not worth the Normal Summon slot). */
+#define AI_SWORDS_DIRECT_SUMMON_MIN_ATK 1000
+
 /* Summon is worth doing despite 0 battle damage: tribute upgrade, or first monster under Swords. */
 int AiSummonBetterWhenAttacksStopped(u16 cardId, u16 tributeMask, int cpuMonstersBefore)
 {
@@ -7895,8 +7899,11 @@ int AiSummonBetterWhenAttacksStopped(u16 cardId, u16 tributeMask, int cpuMonster
     if (AiTributeIsUpgrade(cardId, tributeMask))
         return 1;
     if (cpuMonstersBefore == 0 && tributeMask == 0
-     && (int)CARD_STATS_LEVEL(gCardStats[cardId & CARD_ID_MASK]) <= 4)
+     && (int)CARD_STATS_LEVEL(gCardStats[cardId & CARD_ID_MASK]) <= 4) {
+        if (CountMonsters(0) == 0 && AiPrintedMonsterAtk(cardId) < AI_SWORDS_DIRECT_SUMMON_MIN_ATK)
+            return 0;
         return 1;
+    }
     return 0;
 }
 

@@ -697,7 +697,8 @@ int AiPlaySpells(void)
                 if (i < PLAYER(1).handCount) {
                     do {
                         u16 id = CARD_ID(*(u32 *)((u8 *)gDuelHandP1 + i * 4));
-                        if (CARD_STATS_TYPE(CARD_STATS(id)) <= CARD_TYPE_REPTILE && IsSpecialSummonOnly(id) == 0
+                        if (!AiHumanSwordsActive()
+                            && CARD_STATS_TYPE(CARD_STATS(id)) <= CARD_TYPE_REPTILE && IsSpecialSummonOnly(id) == 0
                             && AiCardLevel(id) > LEVEL_MAX_NO_TRIBUTE && AiCardLevel(id) <= LEVEL_MAX_ONE_TRIBUTE
                             && (u16)AiTryPlaySpellTrap(CARD_CHANGE_OF_HEART))
                             return 0;
@@ -722,7 +723,8 @@ int AiPlaySpells(void)
                     mask = loadMask;
                     do {
                         u32 id = CARD_ID(*(u32 *)((u8 *)gDuelHandP1 + i * 4));
-                        if (((((const u32 *)CARD_STATS_ADDR)[id & mask] & typeMask) >> CARD_STATS_TYPE_SHIFT) <= CARD_TYPE_REPTILE
+                        if (!AiHumanSwordsActive()
+                            && (((((const u32 *)CARD_STATS_ADDR)[id & mask] & typeMask) >> CARD_STATS_TYPE_SHIFT) <= CARD_TYPE_REPTILE
                             && IsSpecialSummonOnly(id) == 0 && AiCardLevelMasks(id, mask, typeMask) > LEVEL_MAX_NO_TRIBUTE
                             && (u16)AiTryPlaySpellTrap(CARD_CHANGE_OF_HEART))
                             return 0;
