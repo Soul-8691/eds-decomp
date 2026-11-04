@@ -2388,3 +2388,6 @@ updated: 2026-09-29
 
 ## [2026-11-04] progress | Vampire Lord: the declare menu shows Monster at once
 - src/added_effects.c: the menu opens after ShowCardEffect's command, which had wiped its label, so no type showed until LEFT/RIGHT (reported). [[added-cards]]. Built (make demo); not tested in an emulator.
+
+## [2026-11-04] progress | New Game: no Tea intro
+- src/title_menu.c: Title_StartGame skips dialogue events 100 and 101 and runs the starter deck screen only (which still makes the new save). [[title-screen]], README. Built (make demo); not tested in an emulator.

@@ -29,6 +29,9 @@ Verified from the code:
 - **Intro** (step 2): uses `FadeFromBlack`, `FadeToWhite`, `LoadBgImage(…, 0x087C056C)` and `FadeFromWhite`. It sets and clears the HBlank IRQ (hypothesis: the title logo flash/reveal).
 - **HandleInput:** Left/Right (`newKeys & 0x30`) toggles between New Game and Continue, but only when a save exists (`PlaySE(0)`); otherwise it plays `PlaySE(3)` (error). A plays `PlaySE(1)`, calls `FadeOutBGM()` and advances to the next step.
 - **FadeOut:** `FadeToBlack(1)`, clears the VBlank callback.
+> [!note] Mod change (2026-11-04)
+> New Game no longer plays Tea's intro: `Title_StartGame` starts BGM 1 and runs `StarterDeckSelect_Run` only (events 100 and 101 are skipped). The screen sets up its own video (`PackList_InitVideo`, `StarterDeckSelect_Init`), and it still calls `InitSaveData`, `BuildStarterDeck` and `SaveGame`. The next bullet describes the original.
+
 - **StartGame:** if **Continue** (bit1), it returns 1 immediately, so `CB_Title` returns 1 and `MainLoop` enters `CB_MainMenu`. For **New Game**: `StartDialogue(100)` (`0x08001C10`), `PlayBGM(1)`, runs the text-box runner `0x08001AE4` until it finishes, then `StarterDeckSelect_Run` (new-game setup: it calls `InitSaveData` and `SaveGame`), then `StartDialogue(101)` and runs it. Dialogue events 100/101 are Tea's intro ("Nice to meet you! I am $q02, a friend of …"); see [[text-system]]. Only then does it return 1, and the game goes to the main menu.
 
 Hypothesis: step 5 (`0x0800553C`) is the attract/intro animation that plays between the title fade-out and the game start (it loads OBJ graphics `0x087CC1D4`/`0x087CBFD4` and BG `0x087C29D4`). It hasn't been traced case by case.

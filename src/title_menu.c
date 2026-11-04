@@ -185,35 +185,20 @@ u16 Title_ConfirmDeleteSave(void)
 }
 
 /*
- * TITLE_STEP_START_GAME: Continue returns 1 at once. New Game plays Tea's intro (dialogue event 100, BGM 1),
- * runs the starter deck choice (StarterDeckSelect_Run: deck choice, new save, BuildStarterDeck), then
- * dialogue event 101, and returns 1 when that dialogue ends.
+ * TITLE_STEP_START_GAME: Continue returns 1 at once. New Game starts BGM 1 and runs the starter deck choice
+ * (StarterDeckSelect_Run: deck choice, new save, BuildStarterDeck), and returns 1 when it ends.
+ * Changed: Tea's intro is gone (dialogue events 100 before the choice and 101 after it).
  */
 u16 Title_StartGame(void)
 {
     if (gTitleState.continueSelected)
         return 1;
 
-    switch (gMain.seqState0) {
-    case 0:
-        StartDialogue(100);
+    if (gMain.seqState0 == 0) {
         PlayBGM(SONG_NEW_GAME);
         gMain.seqState0++;
-    case 1:
-        if (CB_BustupU32()) {
-            gMain.seqState0++;
-            gMain.seqIndex1 = 0;
-        }
-        return 0;
-    case 2:
-        if (StarterDeckSelect_RunU32()) {
-            StartDialogue(101);
-            gMain.seqState0++;
-        }
-        return 0;
-    default:
-        return CB_BustupU32();
     }
+    return StarterDeckSelect_RunU32();
 }
 
 /* Title scene callback: runs gTitleSteps[gMain.seqIndexTop]; a step that returns 1 moves on to the next one

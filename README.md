@@ -74,7 +74,8 @@ release to unlock the next one (every format is open in the debug build).
 - **Your deck.** It has to be legal in that format's banlist and card pool to duel them.
 - **Portraits.** Each duelist's portrait is its format's namesake card, or the Format Library picture when the format
   isn't named after a card.
-- **No dialogue.** Duelists don't talk before or after a duel.
+- **No dialogue.** Duelists don't talk before or after a duel, and a New Game goes straight to picking your starter
+  deck, without Tea's intro.
 
 <img src="screenshots/placeholders/format-check.svg" width="240" alt="Placeholder: the format check warning">
 
