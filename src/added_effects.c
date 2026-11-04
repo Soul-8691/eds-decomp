@@ -4449,6 +4449,10 @@ int EffectVampireLordResolve(struct ChainEntry *link, struct ChainEntry *chained
         ShowCardEffect(link->player, link->card & CARD_ID_MASK);
         if (gDuelPlayers[opponent & 1].deckCount == 0)
             return EFFECT_STEP_DONE;
+        return EFFECT_STEP_5;
+    case EFFECT_STEP_5:
+        /* After the card's picture: that command reloads the sprite graphics, which would wipe the menu's label
+         * (the chain waits for the commands, so this step comes after it). */
         if (link->player == 0) {
             TextBoxOpen(TEXTBOX_POS(6, 2), TEXTBOX_SIZE(15, 4), TEXTBOX_FLAGS_DEFAULT, sStrVampireDeclare);
             TextBoxSetMenu(TEXTBOX_MENU_CUSTOM, VampireMenu_Draw, VampireMenu_HandleInput);

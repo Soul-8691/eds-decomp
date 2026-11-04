@@ -2032,6 +2032,9 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
 - **Trigger.** Same battle-damage pending path as Don Zaloog and Cliff in `BattleStage_InflictDamage`
   (`battle_phase2.c`), attacker and deflect. Mandatory, as the text says: nobody is asked.
 - **Resolve** (`EffectVampireLordResolve`, resolve-only row).
+  - **Bug fixed (2026-11-04, reported: no type showed until LEFT/RIGHT; A then took Monster).** The menu opened in the
+    same step as `ShowCardEffect`, whose command reloads the sprite graphics and wiped the label tiles (0x364) drawn on
+    the menu's first frame. The menu now opens in its own step (`EFFECT_STEP_5`), after the command.
   - **Human declares** in a LEFT/RIGHT menu. `LabelMenu_Draw` / `LabelMenu_HandleInput` were split out of Reasoning's
     Level menu, which uses them too. **CPU declares** one of the three at random (`Random() % 3`), without looking at the Deck.
   - **The opponent picks**: `CollectEffectTargets(opponent, CARD_VAMPIRE_LORD, type)` (`ModCollectEffectTargets`, the

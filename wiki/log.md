@@ -2382,3 +2382,9 @@ updated: 2026-09-29
 
 ## [2026-11-04] progress | Vampire Lord: the CPU declares at random
 - src/added_effects.c: the CPU declares Monster, Spell or Trap at random, not by what the human's Deck holds; a type the human's Deck lacks does nothing. AI_IMPROVEMENTS.md, [[added-cards]]. Built (make release, make, make demo); not tested in an emulator.
+
+## [2026-11-04] progress | Pyramid Turtle: stale objects, not the source
+- Reported: no prompt when Pyramid Turtle is destroyed in battle. No source fault: killing a running release build with pkill left its compile jobs running, and they finished after the next demo build began, so 16 units (duel_field_moves among them) kept the full list's card numbers (Pyramid Turtle 750, not 775) and looked up to date. The added cards in those switches were dead in that ROM. All C objects deleted and `make demo` rebuilt; 775 confirmed in the compiled switch of SendBattleDestroyedCardToGraveyard. Not tested in an emulator.
+
+## [2026-11-04] progress | Vampire Lord: the declare menu shows Monster at once
+- src/added_effects.c: the menu opens after ShowCardEffect's command, which had wiped its label, so no type showed until LEFT/RIGHT (reported). [[added-cards]]. Built (make demo); not tested in an emulator.
