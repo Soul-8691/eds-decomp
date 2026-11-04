@@ -80,6 +80,8 @@ void DestroyFaceUpCardsByNumber(int player, u16 cardNo)
  * under Banisher of the Light) and, with withEffects, the leave-the-field triggers. The zone keeps its card
  * until the command runs. The group of effect keys 1528 and 1541-1544 (no EDS card) goes together: the
  * card is shown (cmd 0x74) and the others of the group in zones 5-9 are destroyed without effects. */
+void VampireLordFieldDestroyed(int player, int zone);   /* mod: src/added_effects.c */
+
 void DestroyFieldCard(int player, int zone, u16 withEffects)
 {
     u32 id;
@@ -89,6 +91,7 @@ void DestroyFieldCard(int player, int zone, u16 withEffects)
     id = DUEL_CARD_ID(ZONE(player, zone));
     cardId = id;
 
+    VampireLordFieldDestroyed(player, zone);    /* added: its revival next Standby Phase */
     SendFieldCardToGrave(player, zone, withEffects, withEffects != 0);
     if (id == 0)
         return;

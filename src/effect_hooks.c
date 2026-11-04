@@ -388,6 +388,7 @@ void ResolvePendingGraveyardEquip(int player, int graveIdx, u16 equip)
  * delayed trigger of duel step 6).
  */
 void BlastWithChainDestroyed(int player, int zone);     /* mod: src/added_effects.c */
+void VampireLordDestroyed(int srcPlayer, int player, int zone);     /* mod: src/added_effects.c */
 
 void OnCardDestroyedByEffect(int srcPlayer, int player, int zone)
 {
@@ -398,6 +399,7 @@ void OnCardDestroyedByEffect(int srcPlayer, int player, int zone)
     struct DuelZone *zn = (struct DuelZone *)(offset + (int)base);
 
     BlastWithChainDestroyed(player, zone);  /* added: its trigger when destroyed while equipped */
+    VampireLordDestroyed(srcPlayer, player, zone);  /* added: its revival next Standby Phase */
     if (CARD_NUMBER_OF(CARD_WORD(zn->card)) == CARD_1514 && srcPlayer != player) {
         u32 id = CARD_BANISHER_OF_THE_LIGHT;
 

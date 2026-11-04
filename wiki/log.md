@@ -2376,3 +2376,9 @@ updated: 2026-09-29
 ## [2026-11-01] progress | README reorganized, placeholder screenshots
 - README.md: regrouped by topic (play, formats, decks, packs and DP, duels, practice opponents, new cards, build), with captioned screenshot tables, a highlights table and collapsed sections for Mobius and debug mode. No facts removed.
 - screenshots/placeholders/*.svg: 12 labelled placeholders for shots not taken yet. Docs only, no build.
+
+## [2026-11-04] progress | Vampire Lord
+- src/added_effects.c: EffectVampireLordResolve (declare a type, the opponent sends a card of it from the Deck), revival next Standby Phase (VampireLordStandbyStep, first part of ModStandbyStep); LabelMenu split out of Reasoning's Level menu. src/battle_phase2.c: battle-damage trigger. src/duel_field_moves.c: DestroyFieldCard reports destruction by the resolving link, because many engine effects (Trap Hole) skip OnCardDestroyedByEffect. src/effect_hooks.c: the same outside a chain. new_cards.txt: into the coded block. [[added-cards]], AI_IMPROVEMENTS.md, README (153). Release .text 0x0807F3C8. Built (make, make release, make demo); not tested in an emulator.
+
+## [2026-11-04] progress | Vampire Lord: the CPU declares at random
+- src/added_effects.c: the CPU declares Monster, Spell or Trap at random, not by what the human's Deck holds; a type the human's Deck lacks does nothing. AI_IMPROVEMENTS.md, [[added-cards]]. Built (make release, make, make demo); not tested in an emulator.

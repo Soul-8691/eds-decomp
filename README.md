@@ -26,7 +26,7 @@
 |  |  |
 |---|---|
 | **15 formats** | Follows the [Format Library](https://www.formatlibrary.com/) pantheon of TCG formats from May 2002 to October 2005 (which are just historical formats). Each one is a Campaign duelist with its own card pool and decks. |
-| **New cards** | The demo adds **152** cards. The full list has **343** names so far and is still growing. |
+| **New cards** | The demo adds **153** cards. The full list has **343** names so far and is still growing. |
 | **Smarter CPU** | Opponents play much stronger than in vanilla EDS. See [AI_IMPROVEMENTS.md](AI_IMPROVEMENTS.md) and [AI_QUIRKS.md](AI_QUIRKS.md). |
 | **Best-of-3 matches** | Every Campaign duel is a match, with siding between games. |
 | **A real economy** | Earn Duelist Points, buy cards by password, and open TCG sets and usage-weighted packs. |
@@ -274,7 +274,7 @@ testing decks.
 
 ## The new cards
 
-The demo build (`make demo`) adds **152** cards, listed in alphabetical order above `------` in
+The demo build (`make demo`) adds **153** cards, listed in alphabetical order above `------` in
 [`new_cards.txt`](new_cards.txt). **[NEW_CARDS.md](NEW_CARDS.md)** shows each of them in Deck Edit's Card View.
 
 <table>

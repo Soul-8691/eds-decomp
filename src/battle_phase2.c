@@ -159,6 +159,9 @@ int BattleStage_InflictDamage(int player)
 #ifdef HAS_CARD_DARK_SCORPION_CLIFF_THE_TRAP_REMOVER
             case CARD_DARK_SCORPION_CLIFF_THE_TRAP_REMOVER: /* added card (src/added_effects.c) */
 #endif
+#ifdef HAS_CARD_VAMPIRE_LORD
+            case CARD_VAMPIRE_LORD:     /* added card (src/added_effects.c) */
+#endif
                 {
                     /* Matching: separate statements keep the ROM's order of the OR chain. */
                     u32 trigger = ((1 - player) & 1) << 31;
@@ -242,6 +245,9 @@ int BattleStage_InflictDamage(int player)
 #endif
 #ifdef HAS_CARD_DARK_SCORPION_CLIFF_THE_TRAP_REMOVER
             case CARD_DARK_SCORPION_CLIFF_THE_TRAP_REMOVER: /* added card (src/added_effects.c) */
+#endif
+#ifdef HAS_CARD_VAMPIRE_LORD
+            case CARD_VAMPIRE_LORD:     /* added card (src/added_effects.c) */
 #endif
                 {
                     u32 trigger = (player & 1) << 31;

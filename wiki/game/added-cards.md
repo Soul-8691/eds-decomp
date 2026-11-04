@@ -2024,6 +2024,34 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
   - **Deck:** `DUEL_CMD_SEND_DECK_CARD_TO_GRAVEYARD` for `deck[0]` and `deck[1]` (the top is index 0).
 - Checked in the source and the build; not tested in an emulator.
 
+### Vampire Lord (2026-11-04)
+- Effect text from the build's card cache (`assets/new_cards/cards.json`, YGOPRODeck, passcode 53839837): "If this card
+  inflicts battle damage to your opponent: Declare 1 type of card (Monster, Spell, or Trap); your opponent sends 1 card
+  of that type from their Deck to the GY. Once per turn, during your next Standby Phase after this card in your
+  possession was destroyed and sent to your GY by an opponent's card effect: Special Summon this card from the GY."
+- **Trigger.** Same battle-damage pending path as Don Zaloog and Cliff in `BattleStage_InflictDamage`
+  (`battle_phase2.c`), attacker and deflect. Mandatory, as the text says: nobody is asked.
+- **Resolve** (`EffectVampireLordResolve`, resolve-only row).
+  - **Human declares** in a LEFT/RIGHT menu. `LabelMenu_Draw` / `LabelMenu_HandleInput` were split out of Reasoning's
+    Level menu, which uses them too. **CPU declares** one of the three at random (`Random() % 3`), without looking at the Deck.
+  - **The opponent picks**: `CollectEffectTargets(opponent, CARD_VAMPIRE_LORD, type)` (`ModCollectEffectTargets`, the
+    type in `param`). The human uses the card list; the CPU takes its lowest-ATK entry (`AiVampireLordPick`), so its
+    weakest monster or first Spell/Trap. Then `DUEL_CMD_SEND_DECK_CARD_TO_GRAVEYARD` and a shuffle.
+  - **Not modelled:** the Deck is never revealed. A declared type the CPU's Deck lacks gives a message; one the human's
+    Deck lacks does nothing.
+- **Revival.** `gModDuel.vampireLordPending[owner]` counts copies. **`OnCardDestroyedByEffect` alone is not enough:** many
+  engine effects destroy without calling it, Trap Hole's body in `effect_resolve5.c` among them. So `DestroyFieldCard`
+  (`duel_field_moves.c`) calls `VampireLordFieldDestroyed`, which takes the source from the resolving link
+  (`gChain.links[gChain.linkCount - 1].player`) while `gChain.resolving` is set. Outside a chain, the
+  `OnCardDestroyedByEffect` hook counts instead, for effects such as Sasuke Samurai's. A copy counts when it is in a
+  monster zone, its owner controls it, and the source is the other player.
+- **Standby.** `VampireLordStandbyStep` is the first part of `ModStandbyStep` (Treeborn Frog and Mirage moved up one). It
+  runs once per pending copy, in the position the player picks, not as a chain link (as Treeborn Frog).
+- **"Once per turn"** is read as per copy: two copies destroyed before the same Standby Phase both come back.
+- Moved above `------` in `new_cards.txt` (demo list 153): ID 973, number 829. No other card's ID moved (`cards.h` gains one line). `cards/Vampire Lord.png`
+  and `NEW_CARDS.md` still need a gallery run (`tools/card_screenshots.lua`, `tools/gen_new_cards_md.py`).
+- Checked in the source and the builds (`make`, `make release`, `make demo`); not tested in an emulator.
+
 ### Dark Scorpion - Cliff the Trap Remover (2026-10-30)
 - Effect text from [YGOPRODeck](https://db.ygoprodeck.com/api/v7/cardinfo.php?name=Dark%20Scorpion%20-%20Cliff%20the%20Trap%20Remover) (id 06967870):
   "When this card inflicts Battle Damage to your opponent, you can activate 1 of these effects: Target 1 Spell/Trap

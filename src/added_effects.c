@@ -80,7 +80,7 @@ struct ModDuelState {
     u16 aiTributeFor;           /* AiPickTributeFor: the card number the CPU's tributes may not copy, 0xFFFF none */
     u8 sandMothPending;         /* Sand Moth: bit player, its effect's Special Summon is queued (swap its stats) */
     u8 mirageDrawn[2];          /* Mirage of Nightmare: per player, the cards to discard in their next Standby Phase */
-    u8 standbyPart;             /* ModStandbyStep: Treeborn Frog, Mirage's discard, Mirage's draw */
+    u8 standbyPart;             /* ModStandbyStep: Vampire Lord, Treeborn Frog, Mirage's discard, Mirage's draw */
     u16 roarTurn[2];            /* Threatening Roar: per player, gDuel.turnCount + 1 of the turn they cannot attack */
     u16 scientistReturn;        /* Magical Scientist: bit player * 5 + zone, return to the Fusion Deck in the End Phase */
     u16 scientistReturnIds[10]; /* ... and the card ID summoned into that zone */
@@ -104,6 +104,7 @@ struct ModDuelState {
     u8 ddSurvivorPending[2];    /* D.D. Survivor: per owner, face-up copies banished this turn before the End Phase */
     u16 limiterRemovalTurn;     /* Limiter Removal: gDuel.turnCount of the turn it resolves (End Phase destroy) */
     u16 aiPriorityDrawDone;     /* AiTryPlayCpuPriorityDrawSpells: turn/phase marker once Pot/Graceful are tried */
+    u8 vampireLordPending[2];   /* Vampire Lord: per owner, copies to Special Summon in their next Standby Phase */
 };
 extern struct ModDuelState gModDuel;
 /* gModDuel (0x0202FF04, symbols.ld) must end before gScratchBuffer (0x02030000). */
@@ -1322,6 +1323,8 @@ void ModDuelInit(void)
     gModDuel.mirageDrawn[0] = 0;
     gModDuel.mirageDrawn[1] = 0;
     gModDuel.standbyPart = 0;
+    gModDuel.vampireLordPending[0] = 0;
+    gModDuel.vampireLordPending[1] = 0;
     gModDuel.roarTurn[0] = 0;
     gModDuel.roarTurn[1] = 0;
     gModDuel.scientistReturn = 0;
@@ -3031,6 +3034,57 @@ int EffectMonsterGateResolve(struct ChainEntry *link, struct ChainEntry *chained
 #endif /* HAS_CARD_MONSTER_GATE */
 
 #if defined(HAS_CARD_REASONING) && defined(HAS_CARD_MONSTER_GATE)
+#if (defined(HAS_CARD_REASONING) && defined(HAS_CARD_MONSTER_GATE)) || defined(HAS_CARD_VAMPIRE_LORD)
+/* A text box menu with one word to choose (Reasoning's Level, Vampire Lord's card type), made like the Monster Type menu
+ * of DuelPrompt_SelectType: LEFT/RIGHT change gTextBox.result, A confirms. */
+#define LEVEL_LABEL_PALETTE     (OBJ_PLTT + 15 * 0x20)
+#define LEVEL_LABEL_TILE        0x364               /* the Type menu's label tiles (duel_prompt_handlers.c) */
+#define LEVEL_LABEL_TILES       ((u16 *)(OBJ_VRAM0 + LEVEL_LABEL_TILE * 0x20))
+
+static void LabelMenu_Draw(const char *label)
+{
+    struct TextBox *box = &gTextBox;
+    u32 x = (box->x + 1) << 3;
+    u32 y = (box->revealRow - box->height) << 3;
+
+    if (box->menuTimer == 0) {
+        MemCopy16((void *)LEVEL_LABEL_PALETTE, gSystemFontPal, 0x20);
+        TextCanvasInit(0xC, 2);
+        TextDrawString(1, 1, TEXT_SIZE_COLOR(10, 15), (const u8 *)label);
+        TextDrawString(0, 0, TEXT_SIZE_COLOR(10, 2), (const u8 *)label);
+        TextCanvasToTiles(LEVEL_LABEL_TILES, 0);
+        box->menuTimer++;
+    }
+    AddSprite(x | (y << 16), SPRITE_SHAPE_32x8, LEVEL_LABEL_TILE | OAM_ATTR2_PALETTE(15));
+    AddSprite((x + 0x20) | (y << 16), SPRITE_SHAPE_32x8, (LEVEL_LABEL_TILE + 4) | OAM_ATTR2_PALETTE(15));
+    AddSprite(x | ((y + 8) << 16), SPRITE_SHAPE_32x8, (LEVEL_LABEL_TILE + 12) | OAM_ATTR2_PALETTE(15));
+    AddSprite((x + 0x20) | ((y + 8) << 16), SPRITE_SHAPE_32x8, (LEVEL_LABEL_TILE + 16) | OAM_ATTR2_PALETTE(15));
+}
+
+static u16 LabelMenu_HandleInput(int count)
+{
+    struct TextBox *box = &gTextBox;
+
+    if (box->menuTimer == 0)
+        return 0;
+    if (box->menuState == TEXTBOX_MENU_STATE_SELECT) {
+        box->menuState++;
+        return 0;
+    }
+    if (gMain.newKeys & DPAD_LEFT) {
+        box->result = (box->result + count - 1) % count;
+        box->menuTimer = 0;
+        return 0;
+    }
+    if (gMain.newKeys & DPAD_RIGHT) {
+        box->result = (box->result + 1) % count;
+        box->menuTimer = 0;
+        return 0;
+    }
+    return (gMain.newKeys & A_BUTTON) != 0;
+}
+#endif
+
 /* ---- Reasoning -----------------------------------------------------------------------------------------------------
  * Normal Spell: "Your opponent declares a monster Level from 1 to 12. Excavate cards from the top of your Deck until
  * you excavate a monster that can be Normal Summoned/Set, then, if that monster is the same Level as the one declared
@@ -3050,60 +3104,23 @@ static const u8 sStrReasoningDeclare[] = "Declare a monster Level.";
 static const u8 sStrReasoningCpuDeclares[] = "Your opponent declares Level 4.";
 static const u8 sStrReasoningLevel[] = "Level ";
 
-#define LEVEL_LABEL_PALETTE     (OBJ_PLTT + 15 * 0x20)
-#define LEVEL_LABEL_TILE        0x364               /* the Type menu's label tiles (duel_prompt_handlers.c) */
-#define LEVEL_LABEL_TILES       ((u16 *)(OBJ_VRAM0 + LEVEL_LABEL_TILE * 0x20))
-
 static void LevelMenu_Draw(void)
 {
-    struct TextBox *box = &gTextBox;
-    u32 x = (box->x + 1) << 3;
-    u32 y = (box->revealRow - box->height) << 3;
+    char label[12];
+    int i, level = gTextBox.result + 1;
 
-    if (box->menuTimer == 0) {
-        char label[12];
-        int i, level = box->result + 1;
-
-        for (i = 0; sStrReasoningLevel[i]; i++)
-            label[i] = sStrReasoningLevel[i];
-        if (level >= 10)
-            label[i++] = '1';
-        label[i++] = '0' + level % 10;
-        label[i] = 0;
-        MemCopy16((void *)LEVEL_LABEL_PALETTE, gSystemFontPal, 0x20);
-        TextCanvasInit(0xC, 2);
-        TextDrawString(1, 1, TEXT_SIZE_COLOR(10, 15), (const u8 *)label);
-        TextDrawString(0, 0, TEXT_SIZE_COLOR(10, 2), (const u8 *)label);
-        TextCanvasToTiles(LEVEL_LABEL_TILES, 0);
-        box->menuTimer++;
-    }
-    AddSprite(x | (y << 16), SPRITE_SHAPE_32x8, LEVEL_LABEL_TILE | OAM_ATTR2_PALETTE(15));
-    AddSprite((x + 0x20) | (y << 16), SPRITE_SHAPE_32x8, (LEVEL_LABEL_TILE + 4) | OAM_ATTR2_PALETTE(15));
-    AddSprite(x | ((y + 8) << 16), SPRITE_SHAPE_32x8, (LEVEL_LABEL_TILE + 12) | OAM_ATTR2_PALETTE(15));
-    AddSprite((x + 0x20) | ((y + 8) << 16), SPRITE_SHAPE_32x8, (LEVEL_LABEL_TILE + 16) | OAM_ATTR2_PALETTE(15));
+    for (i = 0; sStrReasoningLevel[i]; i++)
+        label[i] = sStrReasoningLevel[i];
+    if (level >= 10)
+        label[i++] = '1';
+    label[i++] = '0' + level % 10;
+    label[i] = 0;
+    LabelMenu_Draw(label);
 }
 
 static u16 LevelMenu_HandleInput(void)
 {
-    struct TextBox *box = &gTextBox;
-
-    if (box->menuTimer == 0)
-        return 0;
-    if (box->menuState == TEXTBOX_MENU_STATE_SELECT) {
-        box->menuState++;
-        return 0;
-    }
-    if (gMain.newKeys & DPAD_LEFT) {
-        box->result = (box->result + 11) % 12;
-        box->menuTimer = 0;
-        return 0;
-    }
-    if (gMain.newKeys & DPAD_RIGHT) {
-        box->result = (box->result + 1) % 12;
-        box->menuTimer = 0;
-        return 0;
-    }
-    return (gMain.newKeys & A_BUTTON) != 0;
+    return LabelMenu_HandleInput(12);
 }
 
 int EffectReasoningPrepare(struct ChainEntry *card, struct ChainEntry *chainLink, u16 fromHand)
@@ -4356,6 +4373,175 @@ int EffectDonZaloogResolve(struct ChainEntry *link, struct ChainEntry *chainedTo
     return EFFECT_STEP_DONE;
 }
 #endif /* HAS_CARD_DON_ZALOOG */
+
+#ifdef HAS_CARD_VAMPIRE_LORD
+/* ---- Vampire Lord (YGOPRODeck passcode 53839837) ----------------------------------------------------------------------
+ * "If this card inflicts battle damage to your opponent: Declare 1 type of card (Monster, Spell, or Trap); your opponent
+ * sends 1 card of that type from their Deck to the GY. Once per turn, during your next Standby Phase after this card in
+ * your possession was destroyed and sent to your GY by an opponent's card effect: Special Summon this card from the GY."
+ *   damage   queued from BattleStage_InflictDamage (battle_phase2.c) like Don Zaloog. The human declares in a menu
+ *            (LabelMenu); the CPU declares one of the three at random (it cannot see the Deck). The opponent of the
+ *            card's controller picks: the human in the card list, the CPU its weakest monster or its first Spell/Trap.
+ *            The Deck is shuffled. A declared type the CPU's Deck lacks is only reported, and one the human's Deck lacks
+ *            does nothing (the real card has the Deck revealed).
+ *   revival  Many of the engine's effects destroy without OnCardDestroyedByEffect (Trap Hole, for one), so DestroyFieldCard
+ *            (duel_field_moves.c) asks VampireLordFieldDestroyed: while a chain resolves, the source is the resolving
+ *            link's player. Effects outside a chain (Sasuke Samurai's) still report through OnCardDestroyedByEffect
+ *            (effect_hooks.c). One its owner controlled, destroyed by the other player's effect, adds to
+ *            gModDuel.vampireLordPending. In that player's next Standby Phase, VampireLordStandbyStep (ModStandbyStep) Special Summons it from the Graveyard
+ *            in the position they pick, not as a chain link (as Treeborn Frog); a copy no longer there, or no free
+ *            zone, and nothing happens. */
+enum { VAMPIRE_DECLARE_MONSTER, VAMPIRE_DECLARE_SPELL, VAMPIRE_DECLARE_TRAP, VAMPIRE_DECLARE_COUNT };
+
+static const u8 sStrVampireDeclare[] = "Declare a type of card.";
+static const u8 sStrVampireNone[] = "Your opponent's Deck has no card of that type.";
+static const u8 sStrVampireCpuMonster[] = "Your opponent declares Monster. Send 1 Monster Card from your Deck to the "
+                                          "Graveyard.";
+static const u8 sStrVampireCpuSpell[] = "Your opponent declares Spell. Send 1 Spell Card from your Deck to the Graveyard.";
+static const u8 sStrVampireCpuTrap[] = "Your opponent declares Trap. Send 1 Trap Card from your Deck to the Graveyard.";
+
+static int VampireLordTypeMatches(u16 id, int declared)
+{
+    u32 type = CARD_STATS_TYPE(gCardStats[id & CARD_ID_MASK]);
+
+    switch (declared) {
+    case VAMPIRE_DECLARE_SPELL:
+        return type == CARD_TYPE_MAGIC;
+    case VAMPIRE_DECLARE_TRAP:
+        return type == CARD_TYPE_TRAP;
+    }
+    return type <= CARD_TYPE_REPTILE;
+}
+
+static void VampireMenu_Draw(void)
+{
+    LabelMenu_Draw(gTextBox.result == VAMPIRE_DECLARE_MONSTER ? "Monster"
+                   : gTextBox.result == VAMPIRE_DECLARE_SPELL ? "Spell" : "Trap");
+}
+
+static u16 VampireMenu_HandleInput(void)
+{
+    return LabelMenu_HandleInput(VAMPIRE_DECLARE_COUNT);
+}
+
+/* The CPU's pick in gCardListView: its weakest monster, or its first Spell/Trap. */
+static int AiVampireLordPick(void)
+{
+    int i, best = 0;
+
+    for (i = 1; i < gCardListView.count; i++) {
+        if (CARD_STATS_ATK(gCardStats[gCardListView.cards[i] & CARD_ID_MASK])
+            < CARD_STATS_ATK(gCardStats[gCardListView.cards[best] & CARD_ID_MASK]))
+            best = i;
+    }
+    return best;
+}
+
+int EffectVampireLordResolve(struct ChainEntry *link, struct ChainEntry *chainedTo)
+{
+    int opponent = 1 - link->player;
+    u16 *picked;
+
+    if (link->negated)
+        return EFFECT_STEP_DONE;
+    switch (gChain.effectStep) {
+    case EFFECT_STEP_START:
+        ShowCardEffect(link->player, link->card & CARD_ID_MASK);
+        if (gDuelPlayers[opponent & 1].deckCount == 0)
+            return EFFECT_STEP_DONE;
+        if (link->player == 0) {
+            TextBoxOpen(TEXTBOX_POS(6, 2), TEXTBOX_SIZE(15, 4), TEXTBOX_FLAGS_DEFAULT, sStrVampireDeclare);
+            TextBoxSetMenu(TEXTBOX_MENU_CUSTOM, VampireMenu_Draw, VampireMenu_HandleInput);
+            gTextBox.result = VAMPIRE_DECLARE_MONSTER;
+            return EFFECT_STEP_2;
+        }
+        gChain.effectSubStep = (u32)Random() % VAMPIRE_DECLARE_COUNT;
+        TextBoxOpen(TEXTBOX_POS(5, 2), TEXTBOX_SIZE(20, 9), TEXTBOX_FLAGS_DEFAULT,
+                    gChain.effectSubStep == VAMPIRE_DECLARE_SPELL  ? sStrVampireCpuSpell
+                    : gChain.effectSubStep == VAMPIRE_DECLARE_TRAP ? sStrVampireCpuTrap
+                                                                   : sStrVampireCpuMonster);
+        return EFFECT_STEP_3;
+    case EFFECT_STEP_2:
+        gChain.effectSubStep = gTextBox.result;
+        /* fall through */
+    case EFFECT_STEP_3:
+        if (CollectEffectTargetsInt(opponent, CARD_VAMPIRE_LORD, gChain.effectSubStep) == 0) {
+            if (opponent == 0)
+                return EFFECT_STEP_DONE;
+            TextBoxOpen(TEXTBOX_POS(5, 2), TEXTBOX_SIZE(20, 7), TEXTBOX_FLAGS_DEFAULT, sStrVampireNone);
+            return EFFECT_STEP_END;
+        }
+        if (opponent != 0) {
+            gCardListView.cursorRow = 0;
+            gCardListView.top = AiVampireLordPick();
+            return EFFECT_STEP_4;
+        }
+        CardListView_Open(opponent, -1, CARD_VAMPIRE_LORD, gChain.effectSubStep);
+        return EFFECT_STEP_4;
+    case EFFECT_STEP_4:
+        picked = (u16 *)&gCardListView.cards[gCardListView.top + gCardListView.cursorRow];
+        ShowPickedCard(opponent, picked[0] & CARD_ID_MASK);
+        DuelCmd_Push(opponent ? DUEL_CMD_PLAYER | DUEL_CMD_SEND_DECK_CARD_TO_GRAVEYARD
+                              : DUEL_CMD_SEND_DECK_CARD_TO_GRAVEYARD, picked[0], picked[1], 0);
+        DuelCmd_Push(opponent ? DUEL_CMD_PLAYER | DUEL_CMD_SHUFFLE_DECK : DUEL_CMD_SHUFFLE_DECK, 0, 0, 0);
+        return EFFECT_STEP_END;
+    }
+    return EFFECT_STEP_DONE;
+}
+
+static void VampireLordCount(int srcPlayer, int player, int zone)
+{
+    struct DuelZone *z = ZoneOf(player, zone);
+
+    if (zone <= ZONE_MONSTER_4 && srcPlayer != player && z->card.owner == (player & 1)
+        && CardNumberOfId(DUEL_CARD_ID(&z->card)) == CARD_VAMPIRE_LORD)
+        gModDuel.vampireLordPending[player & 1]++;
+}
+
+/* DestroyFieldCard: destroyed by the resolving chain link's effect. */
+void VampireLordFieldDestroyed(int player, int zone)
+{
+    if (gChain.resolving && gChain.linkCount > 0)
+        VampireLordCount(gChain.links[gChain.linkCount - 1].player, player, zone);
+}
+
+/* OnCardDestroyedByEffect: destroyed by an effect outside a chain (in a chain, DestroyFieldCard has counted it). */
+void VampireLordDestroyed(int srcPlayer, int player, int zone)
+{
+    if (!gChain.resolving)
+        VampireLordCount(srcPlayer, player, zone);
+}
+
+/* One copy per step: the summon's commands run in between. */
+static int VampireLordStandbyStep(int player)
+{
+    struct DuelCard card;
+    int side = player & 1;
+
+    if (gModDuel.vampireLordPending[side] == 0)
+        return 1;
+    gModDuel.vampireLordPending[side]--;
+    if (CountFreeMonsterZones(player) > 0 && CanSpecialSummon(player)
+        && RemoveGraveyardCardByNumber(player, CARD_VAMPIRE_LORD, (u32 *)&card)) {
+        ShowCardEffect(player, gCardNumberToId[CARD_VAMPIRE_LORD]);
+        QueueSpecialSummonChoosePosition(player, &card, 1, ZONE_STATUS_FROM_GRAVEYARD);
+    }
+    return gModDuel.vampireLordPending[side] == 0;
+}
+#else
+void VampireLordFieldDestroyed(int player, int zone)
+{
+}
+
+void VampireLordDestroyed(int srcPlayer, int player, int zone)
+{
+}
+
+static int VampireLordStandbyStep(int player)
+{
+    return 1;
+}
+#endif /* HAS_CARD_VAMPIRE_LORD */
 
 #ifdef HAS_CARD_DARK_SCORPION_CLIFF_THE_TRAP_REMOVER
 void AiPickSpellTrapToDestroy(struct ChainEntry *link); /* below: Mystical Space Typhoon CPU target */
@@ -7438,6 +7624,11 @@ void ModCollectEffectTargets(int player, u16 cardNumber, int param)
         ModAddPileTargets(p->fusionDeck, p->fusionCount, CARDLIST_SRC_FUSION_DECK, IsScientistFusion, 0);
         break;
 #endif
+#ifdef HAS_CARD_VAMPIRE_LORD
+    case CARD_VAMPIRE_LORD:                 /* the Deck's cards of the declared type (param) */
+        ModAddPileTargets(p->deck, p->deckCount, CARDLIST_SRC_DECK, VampireLordTypeMatches, param);
+        break;
+#endif
 #ifdef HAS_CARD_DIFFERENT_DIMENSION_CAPSULE
     case CARD_DIFFERENT_DIMENSION_CAPSULE:    /* any main-Deck card (Set in a Spell & Trap zone) */
         ModAddPileTargets(p->deck, p->deckCount, CARDLIST_SRC_DECK, IsDifferentDimensionCapsuleDeckTarget, 0);
@@ -8540,8 +8731,8 @@ static int MirageDrawStep(int player)
 }
 #endif /* HAS_CARD_MIRAGE_OF_NIGHTMARE */
 
-/* DuelPhase_Standby (duel_phases.c) runs this after Sinister Serpent's step, each frame until it returns 1: Treeborn
- * Frog's summon, then Mirage of Nightmare's discard and draw (gModDuel.standbyPart; gDuel.phaseSubStep restarts for
+/* DuelPhase_Standby (duel_phases.c) runs this after Sinister Serpent's step, each frame until it returns 1: Vampire
+ * Lord's summon, Treeborn Frog's, then Mirage of Nightmare's discard and draw (gModDuel.standbyPart; gDuel.phaseSubStep restarts for
  * each part). */
 int ModStandbyStep(int player)
 {
@@ -8555,13 +8746,16 @@ int ModStandbyStep(int player)
 #endif
     switch (gModDuel.standbyPart) {
     case 0:
+        done = VampireLordStandbyStep(player);
+        break;
+    case 1:
         done = TreebornFrogStandbyStep(player);
         break;
 #ifdef HAS_CARD_MIRAGE_OF_NIGHTMARE
-    case 1:
+    case 2:
         done = MirageDiscardStep(player);
         break;
-    case 2:
+    case 3:
         done = MirageDrawStep(player);
         break;
 #endif
@@ -12211,6 +12405,16 @@ const struct CardEffect gAddedCardEffects[] = {
     {
         CARD_DON_ZALOOG, 0,
         EffectDonZaloogResolve,
+        NULL,
+        NULL,
+        NULL,
+        NULL,
+    },
+#endif
+#ifdef HAS_CARD_VAMPIRE_LORD
+    {
+        CARD_VAMPIRE_LORD, 0,
+        EffectVampireLordResolve,
         NULL,
         NULL,
         NULL,
