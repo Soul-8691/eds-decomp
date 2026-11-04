@@ -154,7 +154,7 @@ new banlist, counting its limits and card pool. If they can't, the switch is ref
 
 | Pack | Comes from | Unlocks | Price |
 |---|---|---|---|
-| **TCG sets** | Yu-Gi-Oh! TCG booster sets (through *Starter Deck 2006*, including *Dark Revelation* reprints) | When its format opponent unlocks (for example Metal Raiders with Critter) | **250 DP** |
+| **TCG sets** | Yu-Gi-Oh! TCG booster sets (through *Starter Deck 2006*) | When its format opponent unlocks (for example Metal Raiders with Critter) | **250 DP** |
 | **Usage-weighted packs** | One per format, from cards priced by that format's usage statistics | After **10 wins** against that format duelist | **500 DP** |
 
 - Only cards in the ROM are in each pool, pull rates follow listed rarities, and the cover art is the pool's rarest card.
