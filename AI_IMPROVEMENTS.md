@@ -82,7 +82,7 @@ Campaign duelists in Yak's YGO Hack use a much stronger opponent AI than vanilla
 - Its Roulette Barrel keeps the die that matches the Level of your strongest face-up monster, so it destroys the best target it can.
 - It plays Level Limit - Area B, Gravity Bind, Final Attack Orders and Royal Oppression in its Main Phase. It uses Royal Oppression against your Special Summons while it has more than 800 LP.
 - Its Dark Scorpion - Cliff the Trap Remover picks its Spell or Trap target like Mystical Space Typhoon does.
-- When you attack into its flip monsters that remove or stop a monster (Man-Eater Bug, Hane-Hane, Penguin Soldier, Dark-Eyes Illusionist, Night Assailant, Tsukuyomi), it targets your strongest monster that hasn't attacked yet, so it can't attack this turn.
+- When you attack into its flip monsters that remove or stop a monster (Man-Eater Bug, Hane-Hane, Penguin Soldier, Dark-Eyes Illusionist, Night Assailant, Tsukuyomi), it usually targets your strongest monster that hasn't attacked yet, so it can't attack this turn. In the **Yugi-Kaiba** banlist, **Man-Eater Bug** always picks **Summoned Skull** when you have one on the field, even if Skull already attacked (for example it battled into Man-Eater Bug), unless another Attack Position monster that has not attacked yet can inflict lethal battle damage.
 - It never activates a card whose LP cost or self-damage would drop its own LP to 0 (Premature Burial, Cyber Stein, Tremendous Fire, a lost Time Wizard toss, ...).
 
 ## What it can see

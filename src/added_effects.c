@@ -3563,7 +3563,69 @@ int EffectFiberJarResolve(struct ChainEntry *link, struct ChainEntry *chainedTo)
  * the human's Battle Phase (flipped by an attack) they prefer the strongest (ATK) of the human's Attack Position
  * monsters that have not attacked yet (gDuelPlayers[0].attackedMask): those can still attack this turn. The target
  * pickers (EffectTargetableMonsterChainB, EffectOpponentMonsterChainB, EffectPenguinSoldierChainB,
- * EffectTargetableFaceUpMonsterChainB) ask AiFlipEffectPreferredTarget / AiFlipEffectTarget. */
+ * EffectTargetableFaceUpMonsterChainB) ask AiFlipEffectPreferredTarget / AiFlipEffectTarget.
+ * Yugi-Kaiba format: Man-Eater Bug always picks the human's Summoned Skull when it is on the field, even if Skull
+ * already attacked (for example it battled into Man-Eater Bug), unless another Attack Position monster that has not
+ * attacked yet can inflict lethal battle damage this turn. */
+int GetActiveBanlist(void);                 /* mod_banlists.c */
+int AiFindStrongestMonster(int player, int skipZone, u16 useAtk, u16 useDef);
+int AiVisibleAtk(int player, int zone);      /* ai_picks.c */
+
+#define BANLIST_YUGI_KAIBA 0
+
+static int AiFindHumanMonsterZoneByNumber(u16 number, int skipZone)
+{
+    int zone;
+
+    for (zone = ZONE_MONSTER_0; zone <= ZONE_MONSTER_4; zone++) {
+        struct DuelZone *z = ZoneOf(0, zone);
+
+        if (zone == skipZone || DUEL_CARD_ID(&z->card) == 0)
+            continue;
+        if (CARD_NUMBER(DUEL_CARD_ID(&z->card)) == number)
+            return zone;
+    }
+    return -1;
+}
+
+/* 1 if the human has a monster other than skullZone that has not attacked and can reach lethal vs the CPU. */
+static int AiHumanHasOtherUnattackedLethal(int skipZone, int skullZone)
+{
+    int zone;
+    int cpuLp = gDuelPlayers[1].lifePoints;
+
+    for (zone = ZONE_MONSTER_0; zone <= ZONE_MONSTER_4; zone++) {
+        struct DuelZone *z;
+
+        if (zone == skipZone || zone == skullZone)
+            continue;
+        z = ZoneOf(0, zone);
+        if (DUEL_CARD_ID(&z->card) == 0 || !z->isFaceUp || z->isDefense)
+            continue;
+        if (gDuelPlayers[0].attackedMask >> zone & 1)
+            continue;
+        if ((int)AiVisibleAtk(0, zone) >= cpuLp)
+            return 1;
+    }
+    return 0;
+}
+
+static int AiManEaterBugTargetYugiKaiba(struct ChainEntry *link, int skipZone)
+{
+    int skullZone;
+
+    if (GetActiveBanlist() != BANLIST_YUGI_KAIBA)
+        return -1;
+    if (CARD_NUMBER(link->card) != CARD_MAN_EATER_BUG)
+        return -1;
+    skullZone = AiFindHumanMonsterZoneByNumber(CARD_SUMMONED_SKULL, skipZone);
+    if (skullZone < 0)
+        return -1;
+    if (AiHumanHasOtherUnattackedLethal(skipZone, skullZone))
+        return -1;
+    return skullZone;
+}
+
 static int IsBattleFlipRemoval(const struct ChainEntry *link)
 {
     if (gDuel.phase != PHASE_BATTLE || (gDuel.turnPlayer & 1) != 0)
@@ -3608,8 +3670,10 @@ int AiFlipEffectPreferredTarget(struct ChainEntry *link, int skipZone)
 /* The CPU's pick among the human's monsters: the preferred one, else the strongest (AiFindStrongestMonster). */
 int AiFlipEffectTarget(struct ChainEntry *link, int skipZone)
 {
-    int zone = AiFlipEffectPreferredTarget(link, skipZone);
+    int zone = AiManEaterBugTargetYugiKaiba(link, skipZone);
 
+    if (zone < 0)
+        zone = AiFlipEffectPreferredTarget(link, skipZone);
     return zone >= 0 ? zone : AiFindStrongestMonster(0, skipZone, 1, 1);
 }
 
