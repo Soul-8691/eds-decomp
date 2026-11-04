@@ -410,6 +410,21 @@ static int AiWabokuIncomingAttackDamage(void)
     return atk > 0 ? atk : 0;
 }
 
+/* Battle damage the human (attacker) takes from this declaration vs a stronger face-up Attack Position monster. */
+static int AiWabokuHumanRecoilDamage(void)
+{
+    struct DuelZone *def;
+    int diff;
+
+    if (gBattle.direct)
+        return 0;
+    def = ZONE_AT(1, gBattle.defSlot);
+    if (CARD_ID_OF(def->card) == 0 || def->isDefense || !def->isFaceUp)
+        return 0;
+    diff = GetZoneCardAtk(1, gBattle.defSlot) - GetZoneCardAtk(0, gBattle.atkSlot);
+    return diff > 0 ? diff : 0;
+}
+
 /* AI: should the CPU activate the set card described by `entry` (an activation window; NULL gives 0)?
  * Decided by the card number of entry->card (a Trap, mostly): some always, others by the board.
  * Always: House of Adhesive Tape, Eatgaboon, Widespread Ruin, Negate Attack, Mesmeric Control, Magic-Arm
@@ -582,8 +597,7 @@ int AiShouldActivateSetCard(struct ChainEntry *entry)
         if (gDuel.turnPlayer != 0)
             return 0;
         if (entry->event == RESPONSE_ATTACK_DECLARED) {
-            a = AiWabokuIncomingAttackDamage();
-            if (a >= (int)gDuelPlayers[1].lifePoints)
+            if (AiWabokuIncomingAttackDamage() > 0 || AiWabokuHumanRecoilDamage() > 0)
                 return 1;
             if (CountMonsters(1) != 0)
                 return 1;
