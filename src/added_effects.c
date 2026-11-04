@@ -9066,6 +9066,8 @@ int AiShouldFlipFaceDownForTribute(int player, int zone)
     if (id == 0 || z->isFaceUp)
         return 0;
     number = CardNumberOfId(id);
+    if (number == CARD_MAN_EATER_BUG && CountMonsters(AI_HUMAN) == 0)
+        return 0;
     return HasFlipEffect(number, 0) && !AiFlipEffectUnsafeBeforeTribute(number);
 }
 

@@ -616,6 +616,7 @@ int AiStepChangePositions(void)
                                     break;
                                 case CARD_MAN_EATER_BUG:
                                     if (ZoneFace(savedMask, z) == 0 && CountMonsters(0) > 0
+                                        && canSummon != 0
                                         && AiShouldTurnDefenseToAttack(1, AI->subState)
                                         && AiQueueFlipSummonIfLegal(1, AI->subState)) {
                                         AI->subState++;
