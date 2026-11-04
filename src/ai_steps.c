@@ -608,6 +608,7 @@ int AiStepChangePositions(void)
                                 switch (number) {
                                 case CARD_PARASITE_PARACIDE:
                                     if (ZoneFace(savedMask, z) == 0
+                                        && AiShouldTurnDefenseToAttack(1, zone)
                                         && AiQueueFlipSummonIfLegal(1, zone)) {
                                         AI->subState++;
                                         return 0;
@@ -615,6 +616,7 @@ int AiStepChangePositions(void)
                                     break;
                                 case CARD_MAN_EATER_BUG:
                                     if (ZoneFace(savedMask, z) == 0 && CountMonsters(0) > 0
+                                        && AiShouldTurnDefenseToAttack(1, AI->subState)
                                         && AiQueueFlipSummonIfLegal(1, AI->subState)) {
                                         AI->subState++;
                                         return 0;
@@ -624,6 +626,7 @@ int AiStepChangePositions(void)
                                 case CARD_PENGUIN_SOLDIER:
                                     if (ZoneFace(savedMask, z) == 0 && CountMonsters(0) > 0
                                         && AiShouldFlipRemovalForAttacks(1, zone) != 0
+                                        && AiShouldTurnDefenseToAttack(1, zone)
                                         && AiQueueFlipSummonIfLegal(1, zone)) {
                                         AI->subState++;
                                         return 0;
@@ -632,6 +635,7 @@ int AiStepChangePositions(void)
                                 case CARD_REAPER_OF_THE_CARDS:
                                     if (ZoneFace(savedMask, z) == 0
                                         && AiShouldFlipReaperForTraps(1, zone) != 0
+                                        && AiShouldTurnDefenseToAttack(1, zone)
                                         && AiQueueFlipSummonIfLegal(1, zone)) {
                                         AI->subState++;
                                         return 0;
@@ -661,6 +665,7 @@ int AiStepChangePositions(void)
                             /* The original call leaves the table base in r1.
                              * HasFlipEffect explicitly consumes its low half. */
                             if (HasFlipEffect(flipNo, CARD_ID_TO_NUMBER_ADDR) == 0
+                                && AiShouldTurnDefenseToAttack(1, cur->subState)
                                 && AiQueueFlipSummonIfLegal(1, cur->subState)) {
                                 cur->subState++;
                                 return 0;
@@ -673,7 +678,8 @@ int AiStepChangePositions(void)
                             off *= 0x94;
                             off += (u32)gDuelZonesP1;
                             z = (struct DuelZone *)off;
-                            if ((ZONE_FLAGS6(z) & 3) == 3) {
+                            if ((ZONE_FLAGS6(z) & 3) == 3
+                                && AiShouldTurnDefenseToAttack(1, index)) {
                                 ChangeBattlePosition(1, index, 0, 0);
                                 AI->subState++;
                                 return 0;

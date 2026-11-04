@@ -7887,6 +7887,15 @@ int AiHumanSwordsActive(void)
     return CountActiveCardsOnFieldExcept(0, CARD_SWORDS_OF_REVEALING_LIGHT, -1) > 0;
 }
 
+/* Position-change step: while the human's Swords blocks attacks, do not Flip Summon or switch Defense to
+ * Attack unless ATK exceeds DEF (no point exposing a wall). Tribute flips use a separate path. */
+int AiShouldTurnDefenseToAttack(int player, int zone)
+{
+    if (player != 1 || !AiHumanSwordsActive())
+        return 1;
+    return (int)GetZoneCardAtk(player, zone) > (int)GetZoneCardDef(player, zone);
+}
+
 /* Minimum printed ATK to Normal Summon for a future direct attack while the human's Swords is up and their
  * field is empty (weaker beatsticks are not worth the Normal Summon slot). */
 #define AI_SWORDS_DIRECT_SUMMON_MIN_ATK 1000

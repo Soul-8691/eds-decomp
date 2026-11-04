@@ -334,6 +334,7 @@ int AiChooseBestNormalSummon(void);
 /* 1 if hand monster aId with simulated damage aDmg should be chosen over bId / bDmg. */
 int AiSummonCandidatePreferred(u16 aId, int aDmg, u16 bId, int bDmg);
 int AiHumanSwordsActive(void);
+int AiShouldTurnDefenseToAttack(int player, int zone);
 int AiSummonBetterWhenAttacksStopped(u16 cardId, u16 tributeMask, int cpuMonstersBefore);
 /* Hand index of the monster to Set (flip effects by situation, else the best wall), or -1. */
 int AiPickMonsterToSet(void);
