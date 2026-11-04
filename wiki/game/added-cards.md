@@ -231,7 +231,8 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
   either card is listed), with `CanPayLightDarkBanishCost` and `LightDarkBanishAttribute`.
 - **Effect.** Main Phase ACTIVATE, once per turn: it targets a face-up monster (`EffectTargetableFaceUpMonsterCheck` /
   `EffectTargetableFaceUpMonsterChainB`) and banishes it; Chaos Sorcerer cannot attack that turn
-  (`EffectBanishTargetNoAttackResolve`, shared with BLS's banish effect).
+  (`EffectBanishTargetNoAttackResolve`, shared with BLS's banish effect). If it already attacked, the banish effect
+  cannot be activated in Main Phase 2 (`EffectChaosSorcererPrepare` and `attackedMask`).
 
 ### Tsukuyomi (2026-10-25)
 - **Cannot be Special Summoned** (`IsCannotSpecialSummon` blocks `QueueSpecialSummon*` in summon_builders.c).

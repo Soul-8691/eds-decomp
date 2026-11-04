@@ -367,12 +367,16 @@ int EffectBlackLusterSoldierResolve(struct ChainEntry *link, struct ChainEntry *
  * attack the turn you activate this effect."
  * The summon is Black Luster Soldier - Envoy of the Beginning's (the same hooks, HAS_LIGHT_DARK_BANISH_SUMMON). The
  * effect is the card menu's ACTIVATE in the Main Phase (CanActivateMonsterEffect), once per turn (effectUnused, set
- * again by DuelCmd_TurnStart); the target is a face-up monster (EffectTargetableFaceUpMonsterCheck / ChainB). */
+ * again by DuelCmd_TurnStart); the target is a face-up monster (EffectTargetableFaceUpMonsterCheck / ChainB). It
+ * cannot be activated in Main Phase 2 if this card already declared an attack this turn (attackedMask). */
 int EffectChaosSorcererPrepare(struct ChainEntry *card, struct ChainEntry *chainLink, u16 fromHand)
 {
     struct DuelZone *z;
+    int player = card->player & 1;
 
     if (fromHand || card->event != RESPONSE_NONE)
+        return 0;
+    if (gDuel.phase == PHASE_MAIN2 && (gDuelPlayers[player].attackedMask >> card->zone) & 1)
         return 0;
     z = ZoneOf(card->player, card->zone);
     return z->isFaceUp && DUEL_CARD_ID(&z->card) == (card->card & CARD_ID_MASK) && z->effectUnused;
