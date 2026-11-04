@@ -8,6 +8,18 @@ updated: 2026-10-02
 ---
 # Unit deck_edit_filter
 
+> [!note] Mod change: a third page and alphabetical sorts (2026-11-04)
+> The sort page's A (Magic and Trap: the filter page's A) now opens a page from `src/mod_list_filter.c`:
+> the name's first letter, one Type, one Attribute, and from/to ranges of ATK, DEF and Level
+> (`LIST_FILTER_PHASE_REFINE`). Magic and Trap get only the letter. `DeckEdit_FilterAndSortList` ends with
+> `ListRefine_ApplyToList`, and the sort page's Type and Attribute use `ModCompareCardsByType` and
+> `ModCompareCardsByAttribute` (alphabetical by name, then by card ID). Any limit but the letter keeps monsters only,
+> because a Trap's stats word carries attribute 1 (Light). The bar's filter and sort labels are now set on confirming
+> this page, so backing out leaves them alone. The page's state is in `gDeckEdit.unusedLists`. Its text is on BG1 with
+> character base 2 (`0x06008000`), palette 15: its 450 tiles don't fit after the screen's `0x300` tiles, since a map
+> entry's tile number has 10 bits. `ListFilter_Reset`, `ListFilter_Update` and `DeckEdit_FilterAndSortList` differ
+> from the ROM for these hooks. Built; not tested in an emulator.
+
 The unit covers `0x08069284`-`0x0806A92B` (Thumb, `old_agbcc -O2`), and its source is `src/deck_edit_filter.c`. It follows the card-list screens of [[deck-edit-cards-c]] (comparators `CompareCardsByAtk/EFC/FBC/FEC`, `CompareCardsByLevel`, `SortS16` = `QuickSortS16`, `BuildLists` = `DeckEdit_BuildCardLists`) and precedes Deck Edit ([[deck-edit-c]]). It is the **filter / sort menu** of the deck-edit card list. Unit status: `unit bytes MATCH`, **8/10 functions in C**; `DeckEdit_FilterAndSortList` is a full translation under `#if 0` (register allocation only), `ListFilter_Update` (input handler) was not attempted. Names are proposals (hypotheses).
 
 > [!warning] Contradiction: the unit is now 10/10

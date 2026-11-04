@@ -2391,3 +2391,7 @@ updated: 2026-09-29
 
 ## [2026-11-04] progress | New Game: no Tea intro
 - src/title_menu.c: Title_StartGame skips dialogue events 100 and 101 and runs the starter deck screen only (which still makes the new save). [[title-screen]], README. Built (make demo); not tested in an emulator.
+
+## [2026-11-04] progress | List Filter: letter, Type, Attribute and ranges page; alphabetical sorts
+- New @farcode unit src/mod_list_filter.c: a third List Filter page (name's first letter, one Type, one Attribute, ATK/DEF/Level from and to). Magic and Trap get the letter only. Type and Attribute sorts are alphabetical, then by card ID.
+- Hooks in src/deck_edit_filter.c (ListFilter_Reset, ListFilter_Update, DeckEdit_FilterAndSortList); include/deck_edit.h; units.txt. [[deck-edit-filter-c]], README. Built (`make demo`); not tested in an emulator; release not built.

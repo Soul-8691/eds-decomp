@@ -183,6 +183,7 @@ enum ListFilterPhase {
     LIST_FILTER_PHASE_SORT = 1,     /* sort page */
     LIST_FILTER_PHASE_APPLY = 2,    /* 'Now Filtering' with the progress bar */
     LIST_FILTER_PHASE_DONE = 3,
+    LIST_FILTER_PHASE_REFINE = 4,   /* added: name, Type, Attribute, ATK/DEF/Level ranges (src/mod_list_filter.c) */
 };
 
 /* Statistics rows (category argument of DeckStats_CountCategory; row index + 1). */
@@ -439,6 +440,8 @@ extern const u8 gDeckEditCardFrameObjTiles[];      /* OBJ tiles at 0x06014200: c
 extern const u8 gDeckEditObjPal[];                 /* the 16 OBJ palettes of the card-list screens */
 extern const u8 gDeckEditLabelTiles[];             /* 0x2000 bytes of BG tiles at 0x06004000: command bar and labels */
 extern const u8 gListFilterSortPageMap[];          /* 30x28 BG0 map of the List Filter sort page */
+extern const u8 gListFilterListIconMap[];          /* the three lists' icons, 7x5 each, stacked */
+extern const u8 gListSortOptionAnims[];            /* sort option -> animation index */
 
 /* ---------------------------------------------------------------------------------------------------------- */
 /* Functions                                                                                                   */
@@ -513,6 +516,14 @@ void ListFilter_ShowNowFiltering(void);             /* 'Now Filtering' text and 
 void ListFilter_CopyBarTileColumns(u16 *src, u16 *dst, u8 width); /* copy the first `width` pixel columns of a tile */
 void ListFilter_DrawProgressBar(const void *src, void *dst, u8 width); /* progress bar `width` pixels long */
 void ListFilter_ProgressBarVBlank(void);            /* VBlank callback: advance the progress bar while sorting */
+
+/* The List Filter's added page (src/mod_list_filter.c). */
+void ListRefine_Reset(void);                        /* every field back to no limit */
+void ListRefine_Open(void);                         /* show the page: subPhase = LIST_FILTER_PHASE_REFINE */
+void ListRefine_Update(void);                       /* the page's input */
+void ListRefine_ApplyToList(u8 list, u16 *cards);   /* drop the cards of a filtered row that fail the page's fields */
+u32 ModCompareCardsByType(int a, int b);            /* 1 if a's Type name is first, then by card ID */
+u32 ModCompareCardsByAttribute(int a, int b);       /* 1 if a's Attribute name is first, then by card ID */
 
 /* Statistics screen (gDeckStatsSteps). */
 u16 DeckStats_ClearState(void);                     /* step 0: clear the sub-screen fields */

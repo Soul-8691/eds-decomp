@@ -32,8 +32,6 @@ extern const u8 gListFilterAnimScripts[];       /* 0x081A6118 */
 extern const u8 gListFilterBgPatternMap[];      /* 0x086FC060 */
 extern const u8 gListFilterPanelMap[];                /* 0x086FC0E0 */
 extern const u8 gListFilterFilterPageMap[];     /* 0x086FC590 */
-extern const u8 gListFilterSortPageMap[];       /* 0x086FCA40 */
-extern const u8 gListFilterListIconMap[];       /* 0x086FD850 */
 extern const u8 gListFilterNowFilteringMap[];   /* 0x086FD580 */
 extern const u8 gListFilterBarFrameMap[];       /* 0x086FD0D0 */
 extern const u8 gListFilterBarFillTiles[];      /* 0x086F41A0 */
@@ -47,7 +45,6 @@ extern const u8 gListFilterObjPal[];            /* 0x086F1E60 */
 extern const u8 gListFilterNav[][4];            /* 0x0808756C: filter cursor neighbours */
 extern const u8 gListFilterNavNoFusion[][4];    /* 0x08087588: same without the Fusion option */
 extern const u8 gListSortNav[][4];              /* 0x080875A4: sort cursor neighbours */
-extern const u8 gListSortOptionAnims[];         /* 0x080875BC: sort option -> animation index */
 
 /* ---- Local views kept for matching (build/readability/issues/deck_edit_filter.md) ---- */
 
@@ -218,11 +215,11 @@ void DeckEdit_FilterAndSortList(u8 list, u8 filter, u8 sort)
         gDeckEdit.listRow[list] = 1;
         break;
     case LIST_SORT_TYPE:
-        QuickSortS16(n, (s16 *)dst, (u16 (*)(s16, s16))CompareCardsByType);
+        QuickSortS16(n, (s16 *)dst, (u16 (*)(s16, s16))ModCompareCardsByType);
         gDeckEdit.listRow[list] = 1;
         break;
     case LIST_SORT_ATTRIBUTE:
-        QuickSortS16(n, (s16 *)dst, (u16 (*)(s16, s16))CompareCardsByAttribute);
+        QuickSortS16(n, (s16 *)dst, (u16 (*)(s16, s16))ModCompareCardsByAttribute);
         gDeckEdit.listRow[list] = 1;
         break;
     case LIST_SORT_LEVEL:
@@ -239,6 +236,7 @@ void DeckEdit_FilterAndSortList(u8 list, u8 filter, u8 sort)
             dst[n + i] = base[i];
         gDeckEdit.listCount[1][list] = total;
     }
+    ListRefine_ApplyToList(list, dst);
     gDeckEdit.listPos[list] = 0;
 }
 /* Clears the flag block at +0x1C49..+0x1C53 of the scene state; returns 1. */
@@ -251,6 +249,7 @@ int ListFilter_Reset(void)
     gDeckEdit.panelShown = 0;
     gDeckEdit.inputLock = 0;
     gDeckEdit.subPhase = 0;
+    ListRefine_Reset();
     return 1;
 }
 /* Scene init: clears VRAM, loads the tile maps / graphics / palettes of the screen, marks 14 objects and sets up the BG registers. */
@@ -508,6 +507,9 @@ int ListFilter_Update(void)
             if (gDeckEdit.panelShown != 0 && gDeckEdit.panelAlpha <= 8)
                 ListFilter_DrawCursor(gListSortOptionAnims[gDeckEdit.sortSel]);
             break;
+        case LIST_FILTER_PHASE_REFINE:
+            ListRefine_Update();
+            break;
         case LIST_FILTER_PHASE_APPLY:
             switch (keys) {
             case B_BUTTON:
@@ -557,13 +559,7 @@ int ListFilter_Update(void)
                 switch (gDeckEdit.filterSel) {
                 case 4:
                 case 5:
-                    gDeckEdit.commandMenu.filter[gDeckEdit.curList] = gDeckEdit.filterSel;
-                    gDeckEdit.commandMenu.anim = CMDMENU_REFRESH;
-                    gDeckEdit.commandMenu.sort[gDeckEdit.curList] = gDeckEdit.sortSel;
-                    gDeckEdit.commandMenu.anim = CMDMENU_REFRESH;
-                    gDeckEdit.inputLock = 0;
-                    ListFilter_ShowNowFiltering();
-                    gDeckEdit.subPhase = LIST_FILTER_PHASE_APPLY;
+                    ListRefine_Open();
                     break;
                 default:
                     gDeckEdit.subPhase = LIST_FILTER_PHASE_SORT;
@@ -576,14 +572,9 @@ int ListFilter_Update(void)
             break;
         case LIST_FILTER_PHASE_SORT:
             if (gDeckEdit.inputLock == 13) {
-                gDeckEdit.commandMenu.filter[gDeckEdit.curList] = gDeckEdit.filterSel;
-                gDeckEdit.commandMenu.anim = CMDMENU_REFRESH;
-                gDeckEdit.commandMenu.sort[gDeckEdit.curList] = gDeckEdit.sortSel;
-                gDeckEdit.commandMenu.anim = CMDMENU_REFRESH;
                 gDeckEdit.inputLock = 0;
                 gDeckEdit.anims.anims[gListSortOptionAnims[gDeckEdit.sortSel]].active = ANIM_HIDDEN;
-                ListFilter_ShowNowFiltering();
-                gDeckEdit.subPhase = LIST_FILTER_PHASE_APPLY;
+                ListRefine_Open();
             } else if (++gDeckEdit.inputLock <= 11) {
                 ListFilter_DrawCursorFlash(gListSortOptionAnims[gDeckEdit.sortSel]);
             }
