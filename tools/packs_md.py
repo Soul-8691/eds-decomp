@@ -109,7 +109,8 @@ def static_intro() -> list[str]:
         f'`weight = max(1, min(65535, round((1 - {fp.USAGE_PACK_UNIFORM_WEIGHT}/{fp.WEIGHT_SCALE}) × '
         f'{fp.WEIGHT_SCALE}/score^{fp.USAGE_PACK_SCORE_POWER} + {fp.USAGE_PACK_UNIFORM_WEIGHT})))`',
         '',
-        'Forbidden cards (limit 0) are omitted. Lower usage ⇒ higher weight ⇒ more common in the pack.',
+        'Forbidden cards (limit 0) are omitted. Lower usage ⇒ higher weight ⇒ more common in the pack. '
+        f'Fusion Monsters use **1/{fp.FUSION_USAGE_PACK_WEIGHT_DIVISOR}** of that weight (minimum 1).',
         '',
     ]
     return lines
@@ -119,6 +120,7 @@ def pack_chances_section() -> list[str]:
     lookup = banlist.card_lookup()
     missing: list[str] = []
     names = card_names()
+    fusion_numbers = fp.load_fusion_card_numbers()
 
     tcg_by_format: list[list[dict]] = [[] for _ in banlist.BANLISTS]
     for path in glob.glob('packs/*_tcg.json'):
@@ -173,6 +175,7 @@ def pack_chances_section() -> list[str]:
                     continue
                 w = fp.card_weight(number, total, extra, decks, limits)
                 if w is not None:
+                    w = fp.usage_pack_entry_weight(number, w, fusion_numbers)
                     entries.append((number, w))
             kind = 'Usage'
             fmt_label = display

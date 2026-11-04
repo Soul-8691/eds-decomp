@@ -31,6 +31,11 @@ WEIGHT_SCALE = 10000
 USAGE_PACK_SCORE_POWER = 0.4
 # Baseline weight so every card in the pool keeps some chance (reduces “same six cards” loops).
 USAGE_PACK_UNIFORM_WEIGHT = 120
+# Usage packs only: Fusion Monsters pull at 1/this of their usage-based weight (rarer in the pool).
+FUSION_USAGE_PACK_WEIGHT_DIVISOR = 10
+CARD_KIND_FUSION = 2
+STATS_BIN = 'build/assets/newcards__stats.bin'
+ID_TO_NUMBER_BIN = 'build/assets/newcards__id_to_number.bin'
 FORMAT_PACK_FLAG_USAGE = 1
 FORMAT_PACK_USAGE_WINS = 10
 
@@ -291,6 +296,29 @@ def card_weight(number, total, extra, decks, limits):
     return max(1, min(w, 65535))
 
 
+def load_fusion_card_numbers():
+    """Card numbers whose gCardStats kind is Fusion (usage-pack weight divisor only)."""
+    stats = open(STATS_BIN, 'rb').read()
+    i2n = open(ID_TO_NUMBER_BIN, 'rb').read()
+    fusion = set()
+    for cid in range(1, len(stats) // 4):
+        if cid * 2 + 2 > len(i2n):
+            break
+        word = struct.unpack_from('<I', stats, cid * 4)[0]
+        if ((word >> 18) & 3) != CARD_KIND_FUSION:
+            continue
+        number = struct.unpack_from('<H', i2n, cid * 2)[0]
+        if number != 0xFFFF and number > 0:
+            fusion.add(number)
+    return fusion
+
+
+def usage_pack_entry_weight(number, weight, fusion_numbers):
+    if number in fusion_numbers:
+        return max(1, weight // FUSION_USAGE_PACK_WEIGHT_DIVISOR)
+    return weight
+
+
 def portrait_number(entries):
     if not entries:
         return 0
@@ -328,6 +356,7 @@ def main():
     bin_out = os.path.join(os.path.dirname(os.path.dirname(out)), 'assets', 'format_pack_roulettes.bin')
     lookup = banlist.card_lookup()
     missing = []
+    fusion_numbers = load_fusion_card_numbers()
     format_event_dates = load_format_event_dates()
 
     tcg_by_format = [[] for _ in banlist.BANLISTS]
@@ -425,6 +454,7 @@ def main():
                     continue
                 w = card_weight(number, total, extra, decks, limits)
                 if w is not None:
+                    w = usage_pack_entry_weight(number, w, fusion_numbers)
                     entries.append((number, w))
             seed = stem
             portrait_nums.append(usage_portraits[spec['format_index']])
