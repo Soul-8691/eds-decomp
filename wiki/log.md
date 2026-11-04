@@ -2395,3 +2395,6 @@ updated: 2026-09-29
 ## [2026-11-04] progress | List Filter: letter, Type, Attribute and ranges page; alphabetical sorts
 - New @farcode unit src/mod_list_filter.c: a third List Filter page (name's first letter, one Type, one Attribute, ATK/DEF/Level from and to). Magic and Trap get the letter only. Type and Attribute sorts are alphabetical, then by card ID.
 - Hooks in src/deck_edit_filter.c (ListFilter_Reset, ListFilter_Update, DeckEdit_FilterAndSortList); include/deck_edit.h; units.txt. [[deck-edit-filter-c]], README. Built (`make demo`); not tested in an emulator; release not built.
+
+## [2026-11-04] progress | Title screen: demo version and build name
+- src/mod_title.c: demo version v1.0.2.5 top left (demo builds only), Release or Debug top right, in the 8-pixel font. Makefile and include/global.h: MOD_DEMO. [[title-screen]], README. Built (`make demo`); not tested in an emulator; release not built.

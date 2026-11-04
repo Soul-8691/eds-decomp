@@ -74,6 +74,8 @@ release to unlock the next one (every format is open in the debug build).
 - **Your deck.** It has to be legal in that format's banlist and card pool to duel them.
 - **Portraits.** Each duelist's portrait is its format's namesake card, or the Format Library picture when the format
   isn't named after a card.
+- **Title screen.** The top right says whether it's the Release or Debug build, and demo builds show the demo version
+  at the top left.
 - **List Filter.** After choosing a card category and sort order, a new page narrows the list by the name's first
   letter, one Type, one Attribute, and ATK, DEF and Level ranges. Magic and Trap lists get the letter only. Sorting by
   Type or Attribute is now alphabetical.

@@ -61,6 +61,10 @@ asm(".include \"asm/macros.inc\"");
 #ifndef MOD_RELEASE
 #define MOD_RELEASE 0
 #endif
+/* MOD_DEMO: 1 for `make demo` and `make release-demo`. Same file, same default. */
+#ifndef MOD_DEMO
+#define MOD_DEMO 0
+#endif
 /* Added cards that share code (src/added_effects.c): the "banish 1 LIGHT and 1 DARK monster from your GY" summon,
  * also used for Gigantes' "banish 1 EARTH monster from your GY". */
 #if defined(HAS_CARD_BLACK_LUSTER_SOLDIER_ENVOY_OF_THE_BEGINNING) || defined(HAS_CARD_CHAOS_SORCERER) \

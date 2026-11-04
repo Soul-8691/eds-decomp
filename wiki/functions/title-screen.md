@@ -40,3 +40,6 @@ Hypothesis: step 5 (`0x0800553C`) is the attract/intro animation that plays betw
 - `0x08001AE4` is the entry the debug menu calls "Bustup" (a bust-up portrait dialogue), and `0x08001B34` is "Auto Bustup". They step through the text-box module's function table at `0x0813ADD4` ([[text-system]]) and also work as stand-alone scenes.
 
 Related: [[program-flow]], [[license-sequence]], [[main-menu]], [[save-game]].
+
+> [!note] Mod change: version and build lines (2026-11-04)
+> `src/mod_title.c` draws two lines in the 8-pixel font: the demo version top left (`DEMO_VERSION`, only with `MOD_DEMO`: `make demo`, `make release-demo`) and `Release` or `Debug` top right (`MOD_RELEASE`). OBJ tiles 64-79, OBJ palette 15. `MOD_DEMO` comes from the Makefile through `build/include/mod_config.h`. Built; not tested in an emulator.
