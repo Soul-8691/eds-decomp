@@ -3706,6 +3706,9 @@ static int IsBattleFlipRemoval(const struct ChainEntry *link)
 #ifdef HAS_CARD_NIGHT_ASSAILANT
     case CARD_NIGHT_ASSAILANT:
 #endif
+#ifdef HAS_CARD_OLD_VINDICTIVE_MAGICIAN
+    case CARD_OLD_VINDICTIVE_MAGICIAN:
+#endif
 #ifdef HAS_CARD_TSUKUYOMI
     case CARD_TSUKUYOMI:
 #endif
@@ -13497,6 +13500,19 @@ const struct CardEffect gAddedCardEffects[] = {
         NULL,
         NULL,
         NULL,
+    },
+#endif
+#ifdef HAS_CARD_OLD_VINDICTIVE_MAGICIAN
+    /* "FLIP: Target 1 monster your opponent controls; destroy that target." Night Assailant's flip part: Crass
+     * Clown's opponent-monster target (EffectOpponentMonsterCheck / ChainB) and Man-Eater Bug's destroy
+     * (EffectDestroyTargetResolve); a flip effect through HasFlipEffect (card_detail.c). */
+    {
+        CARD_OLD_VINDICTIVE_MAGICIAN, 0,
+        (int (*)(struct ChainEntry *, struct ChainEntry *))EffectDestroyTargetResolve,
+        (u16 (*)(struct ChainEntry *, u16))EffectOpponentMonsterCheck,
+        NULL,
+        NULL,
+        (int (*)(struct ChainEntry *, struct ChainEntry *))EffectOpponentMonsterChainB,
     },
 #endif
 #ifdef HAS_CARD_NIGHT_ASSAILANT

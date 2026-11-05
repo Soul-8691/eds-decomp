@@ -2024,6 +2024,15 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
   - **Deck:** `DUEL_CMD_SEND_DECK_CARD_TO_GRAVEYARD` for `deck[0]` and `deck[1]` (the top is index 0).
 - Checked in the source and the build; not tested in an emulator.
 
+### Old Vindictive Magician (2026-11-05)
+- Flip Effect Monster (Level 2, DARK Spellcaster, 450/600; `assets/new_cards/cards.json`): "FLIP: Target 1 monster your
+  opponent controls; destroy that target."
+- Night Assailant's flip part, as its own row: Crass Clown's opponent-monster target (`EffectOpponentMonsterCheck` /
+  `ChainB`) and Man-Eater Bug's destroy (`EffectDestroyTargetResolve`). It's in `HasFlipEffect` (`card_detail.c`) and in
+  the CPU's flip-removal list (`IsBattleFlipRemoval`). My Body as a Shield and Stardust Dragon already listed it.
+- Removed from `card_pools/missing.txt` and `missing-main.txt`.
+- Checked in the source and the build; not tested in an emulator.
+
 ### Synchro test cards: Junk Synchron, Quillbolt Hedgehog, Junk Warrior, Stardust Dragon (2026-11-05)
 - The first Synchro Monster and Tuner cards. The mechanic and all four cards are described in [[synchro]].
 - Not in `card_pools/missing*.txt`, so nothing was removed there.
