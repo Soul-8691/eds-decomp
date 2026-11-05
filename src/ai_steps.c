@@ -166,6 +166,7 @@ int AiUseThunderDragon(void);   /* mod: src/added_effects.c */
 int AiTryPlayScapegoat(void);
 #endif
 int AiSpecialSummonCyberDragon(void);
+int AiStealForTributeSummon(void);      /* mod: src/added_effects.c */
 int AiUseMagicalScientist(void);
 int AiSummonFaceUpOnOpenField(u16 id);
 int AiPickTributeFor(u16 id, int excludeZone);     /* mod: src/added_effects.c */
@@ -209,6 +210,8 @@ int AiStepMainPhase(void)
             return 0;
 #endif
         if (AiSpecialSummonCyberDragon())   /* added: before a Normal Summon gives the CPU a monster */
+            return 0;
+        if (AiStealForTributeSummon())      /* added: Change of Heart before a Tribute Summon (src/added_effects.c) */
             return 0;
 #ifdef HAS_CARD_MAGICAL_SCIENTIST
         if (AiUseMagicalScientist())    /* added: Magical Scientist and its burn (src/added_effects.c) */

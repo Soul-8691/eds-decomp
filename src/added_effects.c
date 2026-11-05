@@ -9008,6 +9008,8 @@ static int AiHandSimSummonDamage(int handIndex, u16 tributeMask)
     return damage;
 }
 
+static int AiTributesBorrowed(u16 tributeMask);
+
 int AiChooseBestNormalSummon(void)
 {
     int dmgT = 0;
@@ -9031,9 +9033,65 @@ int AiChooseBestNormalSummon(void)
     if (maskT == 0xFFFF)
         return idxN;
     dmgT = AiHandSimSummonDamage(idxT, maskT);
+    /* added: tributing the human's own monster (it would go back to them) for a stronger monster comes first */
+    if (AiTributesBorrowed(maskT) && AiPrintedMonsterAtk(idT) > AiPrintedMonsterAtk(idN))
+        return idxT;
     if (AiSummonCandidatePreferred(idT, dmgT, idN, dmgN))
         return idxT;
     return idxN;
+}
+
+/* 1 if a tribute of tributeMask (AiSimSummon's nibbles) is a monster the human owns. */
+static int AiTributesBorrowed(u16 tributeMask)
+{
+    int i;
+
+    for (i = 0; i < 4; i++, tributeMask >>= 4) {
+        struct DuelZone *z = ZoneOf(AI_PLAYER, tributeMask & 7);
+
+        if ((tributeMask & 0xF) != 0 && DUEL_CARD_ID(&z->card) != 0 && z->card.owner != AI_PLAYER)
+            return 1;
+    }
+    return 0;
+}
+
+/* AiStepMainPhase, before the Normal Summon: with no monster of its own to Tribute, the CPU takes one of the human's
+ * (Change of Heart, else Snatch Steal) when its hand holds a Level 5-6 monster stronger than the best monster it could
+ * summon without a Tribute; the summon then Tributes the human's monster (AiPickTributeFor, AiChooseBestNormalSummon).
+ * Before this, it summoned the weaker monster first, and the steal came after, in its Spells step. */
+int AiStealForTributeSummon(void)
+{
+    int i, best = -1, bestAtk = 0, idxN;
+    int noTributeAtk = 0;
+
+    if (!CanNormalSummon(AI_PLAYER) || CountMonsters(AI_HUMAN) == 0 || CountMonsters(AI_PLAYER) > 0
+        || AiHumanSwordsActive() || CountFreeMonsterZones(AI_PLAYER) == 0)
+        return 0;
+    if (FindHandCardByNumber(AI_PLAYER, CARD_CHANGE_OF_HEART) < 0
+        && FindHandCardByNumber(AI_PLAYER, CARD_SNATCH_STEAL) < 0)
+        return 0;
+    for (i = 0; i < gDuelPlayers[AI_PLAYER].handCount; i++) {
+        u16 id = DUEL_CARD_ID(&gDuelPlayers[AI_PLAYER].hand[i]);
+        u32 stats = gCardStats[id & CARD_ID_MASK];
+        int level = CARD_STATS_LEVEL(stats);
+
+        if (CARD_STATS_TYPE(stats) > CARD_TYPE_REPTILE || IsSpecialSummonOnly(id) || level < 5 || level > 6)
+            continue;
+        if (AiPrintedMonsterAtk(id) > bestAtk) {
+            best = i;
+            bestAtk = AiPrintedMonsterAtk(id);
+        }
+    }
+    if (best < 0)
+        return 0;
+    idxN = AiChooseSummonNoTribute();
+    if (idxN >= 0)
+        noTributeAtk = AiPrintedMonsterAtk(DUEL_CARD_ID(&gDuelPlayers[AI_PLAYER].hand[idxN]));
+    if (bestAtk <= noTributeAtk)
+        return 0;
+    if (AiTryPlaySpellTrap(CARD_CHANGE_OF_HEART))
+        return 1;
+    return AiTryPlaySpellTrap(CARD_SNATCH_STEAL) != 0;
 }
 
 /* ---- The CPU's Tribute Summon upgrades ----------------------------------------------------------------------------
@@ -10300,10 +10358,29 @@ static u16 AiCostExcludedNumber(u16 id)
 int AiPickTributeMonster(int excludeZone, u16 allowFusion);
 
 /* AiPickTributeMonster(excludeZone, 0) for the CPU's summon of card `id`: never a copy of it (see above). */
+/* A monster the CPU controls but the human owns (Change of Heart, Snatch Steal, Brain Control): the best Tribute, since
+ * it would go back to the human. -1 if none (other than excludeZone). */
+static int AiBorrowedMonsterZone(int excludeZone)
+{
+    int zone;
+
+    for (zone = ZONE_MONSTER_0; zone <= ZONE_MONSTER_4; zone++) {
+        struct DuelZone *z = ZoneOf(AI_PLAYER, zone);
+
+        if (zone != excludeZone && DUEL_CARD_ID(&z->card) != 0 && z->card.owner != AI_PLAYER
+            && IsTributableMonster(AI_PLAYER, zone))
+            return zone;
+    }
+    return -1;
+}
+
 int AiPickTributeFor(u16 id, int excludeZone)
 {
     int zone;
 
+    zone = AiBorrowedMonsterZone(excludeZone);      /* added: the human's monster first */
+    if (zone >= 0)
+        return zone;
     gModDuel.aiTributeFor = AiCostExcludedNumber(id);
     zone = AiPickTributeMonster(excludeZone, 0);
     gModDuel.aiTributeFor = 0xFFFF;

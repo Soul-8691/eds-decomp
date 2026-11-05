@@ -75,6 +75,7 @@ Campaign duelists in Yak's YGO Hack use a much stronger opponent AI than vanilla
 - Its Chiron the Mage discards a Spell to destroy one of your Spells or Traps when it can, once per turn.
 - Its Bazoo the Soul-Eater activates once per turn when it has monsters in its Graveyard, banishing its three weakest (by ATK) for +300 ATK each until the end of your turn.
 - Its Golem Sentry and Guardian Sphinx use their once-per-turn face-down effect in the Main Phase when you control a monster, so their next Flip Summon can bounce yours.
+- With no monster of its own, it plays Change of Heart (or Snatch Steal) before its Normal Summon when it holds a Level 5 or 6 monster stronger than anything it could summon without a Tribute, then Tributes your monster for it. It always Tributes a monster it took from you first.
 - It Synchro Summons when it can gain ATK by it (the Synchro Monster stronger than its strongest material), and Special
   Summons Quillbolt Hedgehog from its Graveyard first when it controls a Tuner.
 - Its Stardust Dragon negates your cards and effects that would destroy one of its cards.

@@ -2434,3 +2434,7 @@ updated: 2026-09-29
 
 ## [2026-11-05] progress | NEW_CARDS.md: the four Synchro test cards
 - cards/: Junk Synchron, Quillbolt Hedgehog, Junk Warrior, Stardust Dragon captured (tools/card_screenshots.lua). NEW_CARDS.md regenerated (160 cards).
+
+## [2026-11-05] progress | CPU: Change of Heart before a Tribute Summon
+- Reported: in Yugi-Kaiba, going second, the CPU summoned La Jinn and then took the human's monster, instead of taking it to Tribute for Summoned Skull: AiStepMainPhase makes its Normal Summon before the Spells step, where Change of Heart's "pay for a level 5-6" rule is.
+- src/added_effects.c: AiStealForTributeSummon (called from AiStepMainPhase, ai_steps.c, before the Normal Summon): no CPU monster, Change of Heart / Snatch Steal in hand, a Level 5-6 stronger than the best no-Tribute summon. AiPickTributeFor tributes a borrowed monster (owner the human) first; AiChooseBestNormalSummon takes a Tribute Summon that tributes one when the result has more ATK. AI_IMPROVEMENTS. Built (`make demo`); not tested in an emulator.
