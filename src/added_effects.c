@@ -11239,8 +11239,8 @@ int EffectMobiusResolve(struct ChainEntry *link, struct ChainEntry *chainedTo)
 }
 #endif /* HAS_CARD_MOBIUS_THE_FROST_MONARCH */
 
-#ifdef HAS_CARD_GRANMARG_THE_ROCK_MONARCH
-/* ---- Granmarg the Rock Monarch ------------------------------------------------------------------------------------
+#if defined(HAS_CARD_GRANMARG_THE_ROCK_MONARCH) || defined(HAS_CARD_DARK_WORLD_LIGHTNING)
+/* ---- Granmarg the Rock Monarch (its Set-card target also serves Dark World Lightning) ------------------------------------------------------------------------------------
  * "If this card is Tribute Summoned: Target 1 Set card on the field; destroy that target."
  *   trigger   the two Normal Summon paths (summon_checks.c) queue its RESPONSE_SUMMONED trigger as Mobius's, only when
  *             a Set card can be targeted (CanActivateEffectInZone); it is Level 6, so that summon is a Tribute Summon
@@ -11302,7 +11302,49 @@ int EffectGranmargChainB(struct ChainEntry *link, struct ChainEntry *prevLink)
     }
     return 0;
 }
-#endif /* HAS_CARD_GRANMARG_THE_ROCK_MONARCH */
+#endif /* HAS_CARD_GRANMARG_THE_ROCK_MONARCH || HAS_CARD_DARK_WORLD_LIGHTNING */
+
+#ifdef HAS_CARD_DARK_WORLD_LIGHTNING
+/* ---- Dark World Lightning -----------------------------------------------------------------------------------------
+ * "Target 1 Set card on the field; destroy that target, then discard 1 card." Normal Spell.
+ *   target   Granmarg's: a face-down card in a monster, Spell/Trap or Field zone (EffectGranmargCheck / ChainB; the
+ *            CPU takes the human's Set Spell/Trap, else the human's face-down monster)
+ *   prepare  not as a response; a target (for the CPU, one of the human's: it does not play it on its own cards)
+ *   resolve  if the target is still a Set card: destroy it (EffectDestroyTargetResolve), then its player discards 1
+ *            card (DuelPrompt_PostDiscardCost, the engine's discard prompt; nothing if the hand is empty)
+ *   CPU      AiWantsSpell: while the human has a Set card */
+static int DarkWorldLightningHasTarget(struct ChainEntry *card, int side)
+{
+    int zone;
+
+    for (zone = 0; zone <= ZONE_FIELD; zone++) {
+        if (GranmargSetCardAt(card, side, zone))
+            return 1;
+    }
+    return 0;
+}
+
+int EffectDarkWorldLightningPrepare(struct ChainEntry *card, struct ChainEntry *chainLink, u16 fromHand)
+{
+    if (chainLink != NULL)
+        return 0;
+    if (card->player)
+        return DarkWorldLightningHasTarget(card, 0);
+    return DarkWorldLightningHasTarget(card, 0) || DarkWorldLightningHasTarget(card, 1);
+}
+
+int EffectDarkWorldLightningResolve(struct ChainEntry *link, struct ChainEntry *chainedTo)
+{
+    (void)chainedTo;
+    if (link->negated || link->numTargets != 1
+        || !GranmargSetCardAt(link, DUEL_LOC_PLAYER(link->targets[0]), DUEL_LOC_ZONE(link->targets[0])))
+        return EFFECT_STEP_DONE;
+    EffectDestroyTargetResolve(link);
+    if (gDuelPlayers[link->player & 1].handCount > 0)
+        DuelPrompt_PostDiscardCost(link->player, 1, 0, 0);
+    return EFFECT_STEP_DONE;
+}
+#endif /* HAS_CARD_DARK_WORLD_LIGHTNING */
 
 #ifdef HAS_CARD_KING_TIGER_WANGHU
 /* ---- King Tiger Wanghu --------------------------------------------------------------------------------------------
@@ -12880,6 +12922,10 @@ static int AiWantsSpell(u16 number)
     case CARD_NIGHTMARES_STEELCAGE:             /* to stall when behind */
         return AiWantsSteelcage();
 #endif
+#ifdef HAS_CARD_DARK_WORLD_LIGHTNING
+    case CARD_DARK_WORLD_LIGHTNING:             /* only on the human's Set cards (its prepare checks them) */
+        return 1;
+#endif
 #ifdef HAS_CARD_ENEMY_CONTROLLER
     case CARD_ENEMY_CONTROLLER:                 /* to take a much stronger monster */
         return AiWantsEnemyController();
@@ -13462,6 +13508,16 @@ const struct CardEffect gAddedCardEffects[] = {
         NULL,
         NULL,
         NULL,
+    },
+#endif
+#ifdef HAS_CARD_DARK_WORLD_LIGHTNING
+    {
+        CARD_DARK_WORLD_LIGHTNING, 0,
+        EffectDarkWorldLightningResolve,
+        EffectGranmargCheck,
+        EffectDarkWorldLightningPrepare,
+        NULL,
+        EffectGranmargChainB,
     },
 #endif
 #ifdef HAS_CARD_GRANMARG_THE_ROCK_MONARCH

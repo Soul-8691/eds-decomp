@@ -2024,6 +2024,20 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
   - **Deck:** `DUEL_CMD_SEND_DECK_CARD_TO_GRAVEYARD` for `deck[0]` and `deck[1]` (the top is index 0).
 - Checked in the source and the build; not tested in an emulator.
 
+### Dark World Lightning (2026-11-05)
+- Normal Spell (`assets/new_cards/cards.json`): "Target 1 Set card on the field; destroy that target, then discard 1
+  card."
+- Target: Granmarg the Rock Monarch's (`EffectGranmargCheck` / `EffectGranmargChainB`), whose block now compiles for
+  either card. The CPU takes the human's Set Spell/Trap, else the human's face-down monster.
+- `EffectDarkWorldLightningPrepare`: not as a response, and a target. For the CPU, only the human's Set cards count, so
+  it never plays it on its own.
+- `EffectDarkWorldLightningResolve`: if the target is still a Set card, destroy it (`EffectDestroyTargetResolve`), then
+  its player discards 1 card (`DuelPrompt_PostDiscardCost`). The discard happens only when something was destroyed,
+  and not with an empty hand.
+- CPU: `AiWantsSpell` plays it whenever the prepare allows, which means while the human has a Set card.
+- It was already above `------` in `new_cards.txt`, and wasn't in `card_pools/missing*.txt`.
+- Checked in the source and the build; not tested in an emulator.
+
 ### Dark Deal (2026-11-05)
 - Normal Trap (`assets/new_cards/cards.json`): "When your opponent activates a Normal Spell Card: Pay 1000 Life Points;
   the effect of that Normal Spell Card becomes 'Your opponent discards 1 random card'."

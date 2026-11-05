@@ -1144,6 +1144,7 @@ enum CardNumber {
     CARD_DIMENSION_WALL = 848,                            /* id 987, added card */
     CARD_NIGHTMARE_WHEEL = 849,                           /* id 988, added card */
     CARD_DARK_DEAL = 850,                                 /* id 990, added card */
+    CARD_DARK_WORLD_LIGHTNING = 851,                      /* id 991, added card */
     CARD_MAGIC_CYLINDER = 1214,                           /* id 899, added card */
     CARD_SOUL_EXCHANGE = 1220,                            /* id 947, added card */
     CARD_NIGHTMARES_STEELCAGE = 1230,                     /* id 989, added card */
