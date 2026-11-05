@@ -49,6 +49,7 @@ extern int EffectPainfulChoicePrepare3(struct ChainEntry *card, int chainedTo, i
 /* Matching: CollectEffectTargets is defined to return u16; this unit tests the count as an int, with no
  * narrowing of r0. */
 extern int CollectEffectTargetsInt(int player, int cardNumber, int param) asm("CollectEffectTargets");
+int AiPickRitualSearch(int player, u16 number);     /* mod: src/added_effects.c */
 /* Matching: GetGraveyardCardById is defined with a u16 cardId; Graverobber passes an int, without the
  * narrowing (lsl; lsr) that the u16 parameter adds. */
 extern int GetGraveyardCardByIdInt(int player, int cardId, struct DuelCard *out) asm("GetGraveyardCardById");
@@ -658,6 +659,11 @@ int EffectAddRitualCardToHandResolve(struct ChainEntry *link)
         case EFFECT_STEP_START:     /* candidates in the deck: ask Yes/No */
             if (CollectEffectTargetsInt(link->player, CARD_NUMBER(link->card), 0) == 0)
                 return EFFECT_STEP_DONE;
+            if (link->player) {     /* added: the CPU is not asked; it picks (src/added_effects.c) */
+                gCardListView.cursorRow = 0;
+                gCardListView.top = AiPickRitualSearch(link->player, CARD_NUMBER(link->card));
+                return EFFECT_STEP_4;
+            }
             switch (CARD_NUMBER(link->card)) {
             case CARD_SENJU_OF_THE_THOUSAND_HANDS:
                 TextBoxOpen(TEXTBOX_XY(6, 2), TEXTBOX_XY(18, 7), TEXTBOX_FLAGS_DEFAULT,

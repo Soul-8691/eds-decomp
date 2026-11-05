@@ -8274,6 +8274,32 @@ static int AiChainMyBodyAsAShield(struct ChainEntry *entry)
 #endif /* HAS_CARD_MY_BODY_AS_A_SHIELD */
 #endif /* HAS_CARD_MY_BODY_AS_A_SHIELD || HAS_CARD_STARDUST_DRAGON */
 
+/* ---- The CPU's Ritual searches -------------------------------------------------------------------------------------
+ * EffectAddRitualCardToHandResolve (effect_resolve6.c): Sonic Bird adds a Ritual Spell, Senju of the Thousand Hands a
+ * Ritual Monster, from the Deck. The ROM asked the Yes/No question of the CPU's searches too, so the human answered
+ * it; now the CPU takes one at once: a Ritual Spell whose Ritual Monster it holds (Sonic Bird), or a Ritual Monster
+ * whose Ritual Spell it holds (Senju), else the first in the list. Returns the gCardListView index. */
+extern const struct RitualRecipe gRitualRecipes[];   /* src/duel_ritual.c: ends at ritualSpell == 0 */
+
+int AiPickRitualSearch(int player, u16 number)
+{
+    int i, r;
+
+    for (i = 0; i < gCardListView.count; i++) {
+        u16 found = CardNumberOfId(gCardListView.cards[i]);
+
+        for (r = 0; gRitualRecipes[r].ritualSpell != 0; r++) {
+            if (number == CARD_SONIC_BIRD && gRitualRecipes[r].ritualSpell == found
+                && FindHandCardByNumber(player, gRitualRecipes[r].monster) >= 0)
+                return i;
+            if (number == CARD_SENJU_OF_THE_THOUSAND_HANDS && gRitualRecipes[r].monster == found
+                && FindHandCardByNumber(player, gRitualRecipes[r].ritualSpell) >= 0)
+                return i;
+        }
+    }
+    return 0;
+}
+
 /* ---- Synchro test cards (src/mod_synchro.c, wiki/game/synchro.md) ------------------------------------------------ */
 
 int CollectEffectTargetsSyn(int player, int cardNumber, int param) asm("CollectEffectTargets");
