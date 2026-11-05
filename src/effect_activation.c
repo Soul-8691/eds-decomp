@@ -522,11 +522,15 @@ u16 CanChainHandCard(struct ChainEntry *chainLink, int player, int handIdx)
  * player's own turn also a Quick-Play Magic in the hand (CanChainHandCard); otherwise, against a Magic card,
  * a face-up key 1525 in a monster zone that is not already on the chain.
  */
+int ModMonsterCanChain(struct ChainEntry *link, int player);    /* mod: src/added_effects.c (Stardust Dragon) */
+
 int CanPlayerChain(struct ChainEntry *chainLink, int player)
 {
     int i;
     int p;
 
+    if (ModMonsterCanChain(chainLink, player))
+        return TRUE;
     for (i = ZONE_SPELL_0; i <= ZONE_SPELL_4; i++) {
         if (CanChainFieldCard(chainLink, player, i))
             return TRUE;

@@ -2418,3 +2418,15 @@ updated: 2026-09-29
 ## [2026-11-05] progress | NEW_CARDS.md: four new pictures; screenshot script fix
 - tools/card_screenshots.lua: CB_MainMenu is read from eds_demo.sym / eds_release_demo.sym (fallback 0x08003B14). Its fixed 0x08003AFC was stale, so the script pressed A into a Campaign duel.
 - cards/: Vampire Lord, My Body as a Shield, Big Bang Shot, Des Lacooda captured (cards/_capture_only.txt). NEW_CARDS.md regenerated (tools/gen_new_cards_md.py).
+
+## [2026-11-05] progress | Synchro Summoning and four test cards
+- tools/newcards.py: Synchro / Tuner types, the races EDS lacks (EXTRA_RACES), gCardTypeEx (newcards__type_ex.bin), build/include/synchro_rules.h. tools/synchro_frame.py: the white frame. data/rodata_08087FD0.s, include/card_data.h, include/constants/card_stats.h, include/synchro.h, Makefile, symbols.ld (gModSynchro), units.txt.
+- New far-code unit src/mod_synchro.c: the Synchro Summon (human and CPU), the Synchro Summoned mark, Card View's type line. Hooks: card_canvas.c, card_detail.c, duel_card_anim.c, title_menu.c, card_menu_input.c, duel_cmd_queue.c, duel_setup.c, effect_activation.c, battle_phase3.c, summon_action.c.
+- src/added_effects.c: Junk Synchron, Quillbolt Hedgehog, Junk Warrior, Stardust Dragon. src/mod_list_filter.c: the new races in the Type list. [[synchro]], [[added-cards]], README, AI_IMPROVEMENTS. Built (`make demo`); not tested in an emulator.
+
+## [2026-11-05] progress | Silver Synchro field icon
+- card_icons/synchro_monster.png (template: the Fusion icon in silver). tools/cardicons.py: the Synchro icon (silver pixels in the shared art palette), its frames after Deck Edit's ring art. src/mod_field_icons.c: DATA_SYNCHRO. [[synchro]]. Built (`make demo`); not tested in an emulator.
+
+## [2026-11-05] progress | Synchro Summon: B cancels, the prompt names the Tuner
+- src/mod_synchro.c: B during the Tuner / non-Tuner picks cancels (gModSynchro.cancelled); the non-Tuner prompt says the Tuner, its Level and the Levels needed. Reported: stuck refusing Quillbolt (a legal refusal: Junk Synchron + Junk Warrior make 8, Quillbolt would make 10). [[synchro]]. Built (`make demo`); not tested in an emulator.
+- Fix: the Tuner / non-Tuner cursor could not move (reported): PICK_OWN_FACE_UP lacked the position bits DuelCursor_IsValidTarget requires with the face bit; now PICK_FACE_UP_MONSTER | PICK_ATTACK_POSITION | PICK_DEFENSE_POSITION.

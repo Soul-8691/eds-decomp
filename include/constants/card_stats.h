@@ -115,4 +115,31 @@ enum CardFrame {
     CARD_FRAME_TRAP = 5,
 };
 
+/* Added: the extended card type of gCardTypeEx (include/card_data.h; tools/newcards.py writes it), one byte per
+ * card ID, 0 for every original card. The stats word has no free bits for these. */
+#define CARD_TYPE_EX_KIND_MASK      0x03        /* enum CardKindEx */
+#define CARD_TYPE_EX_EFFECT         0x04        /* has an effect (an added monster's type line) */
+#define CARD_TYPE_EX_TUNER          0x08        /* a Tuner monster */
+#define CARD_TYPE_EX_RACE_SHIFT     4           /* bits 4-7: enum RaceEx */
+
+/* The extended kind. A Synchro Monster is an Extra Deck monster: its stats word says CARD_KIND_FUSION, so the
+ * engine keeps it in the Fusion Deck (the Extra Deck), and this tells it apart from a Fusion Monster. */
+enum CardKindEx {
+    CARD_KIND_EX_NONE = 0,
+    CARD_KIND_EX_SYNCHRO = 1,
+};
+
+/* Races EDS lacks. The stats word keeps the closest EDS type (its icon until these get their own, and what the
+ * engine's monster checks see); this is the real race. Same order as EXTRA_RACES in tools/newcards.py. */
+enum RaceEx {
+    RACE_EX_NONE = 0,           /* the stats word's type is the race */
+    RACE_EX_PSYCHIC = 1,        /* stats: Spellcaster */
+    RACE_EX_WYRM = 2,           /* stats: Dragon */
+    RACE_EX_CYBERSE = 3,        /* stats: Machine */
+    RACE_EX_ILLUSION = 4,       /* stats: Spellcaster */
+    RACE_EX_CREATOR_GOD = 5,    /* stats: Fairy */
+    RACE_EX_DIVINE_BEAST = 6,   /* stats: Fairy */
+    RACE_EX_COUNT,
+};
+
 #endif /* GUARD_CONSTANTS_CARD_STATS_H */

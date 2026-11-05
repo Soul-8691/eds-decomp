@@ -778,6 +778,9 @@ int DuelPhase_End(void)
 #ifdef HAS_CARD_LIMITER_REMOVAL
             EndPhase_LimiterRemoval(player);            /* added card (src/added_effects.c) */
 #endif
+#ifdef HAS_CARD_STARDUST_DRAGON
+            EndPhase_StardustDragon(player);            /* added card (src/added_effects.c) */
+#endif
             END_STEP++;
         }
         return 0;

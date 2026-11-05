@@ -91,6 +91,7 @@ extern const char gStrFusionEffectSuffix[];     /* "/Fusion/Effect" */
 extern const char gStrFusionSuffix[];           /* "/Fusion" */
 extern const char gStrRitualEffectSuffix[];     /* "/Ritual/Effect" */
 extern const char gStrRitualSuffix[];           /* "/Ritual" */
+void ModCardTypeLine(u16 cardId, char *buf);    /* mod: src/mod_synchro.c */
 extern const char gStrNotPlayable[];            /* "This is not able to play." (Ticket, Divine) */
 
 /* ---- Title screen steps 5 and 6 ---- */
@@ -601,6 +602,7 @@ void CardDetail_DrawInfo(u16 cardId)
             }
             break;
         }
+        ModCardTypeLine(cardId, buf);   /* added: src/mod_synchro.c */
         StrCat(buf, gStrCloseBracket);
         len = StrLen(buf);
         fontSize = 10;

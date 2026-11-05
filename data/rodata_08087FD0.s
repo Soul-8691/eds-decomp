@@ -1942,3 +1942,12 @@ gCardSortKeys:
 	.global gCardIdsByName
 gCardIdsByName:
 	.incbin "build/assets/newcards__name_order.bin"
+@ Added: the extended card type of every card ID (Synchro, Tuner, the races EDS lacks; 0 for the original cards).
+	.global gCardTypeEx
+gCardTypeEx:
+	.incbin "build/assets/newcards__type_ex.bin"
+@ Added: the Synchro Monster frame, the Fusion frame recoloured white (tools/synchro_frame.py).
+	.balign 4
+	.global gCardFrameSynchroGfx
+gCardFrameSynchroGfx:
+	.incbin "build/assets/synchro_frame.bin"

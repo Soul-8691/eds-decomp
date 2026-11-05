@@ -115,7 +115,9 @@ void LoadCardFrame(u16 id)
     default:
         switch (GetCardSubtype(id)) {
         case CARD_KIND_EFFECT: frame = (const u16 *)gCardFrameEffectGfx; break;
-        case CARD_KIND_FUSION: frame = (const u16 *)gCardFrameFusionGfx; break;
+        case CARD_KIND_FUSION:      /* added: Synchro Monsters (gCardTypeEx) have their own frame */
+            frame = (const u16 *)(IS_SYNCHRO_CARD(id) ? gCardFrameSynchroGfx : gCardFrameFusionGfx);
+            break;
         case CARD_KIND_RITUAL: frame = (const u16 *)gCardFrameRitualGfx; break;
         default: frame = (const u16 *)gCardFrameNormalGfx; break;
         }

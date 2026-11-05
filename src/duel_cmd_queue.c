@@ -11,6 +11,8 @@
  *  - PlayDuelBGM picks the duel music. The two HBlank wave handlers and DuelScene_FadeInDuelScreen are unused.
  */
 #include "global.h"
+#include "synchro.h"                /* ModSynchroMenuRun (mod) */
+void ModQuillboltMenuRun(void);         /* mod: src/added_effects.c */
 #include "constants/cards.h"        /* CARD_* card numbers */
 #include "constants/card_stats.h"   /* CARD_TYPE_*, CARD_STATS_TYPE_* */
 #include "constants/duel.h"         /* enum CardMenuCommand, DuelArea, DuelPhase, ChainEntryKind */
@@ -159,6 +161,14 @@ void CardMenu_Execute(void)
         CardMenu_SummonMonster(1, 0);
         return;
     case CARDMENU_CMD_SP_SUMMON:
+        if (MENU.area == DUEL_AREA_FUSION_DECK) {   /* added: the Synchro Summon (src/mod_synchro.c) */
+            ModSynchroMenuRun();
+            return;
+        }
+        if (MENU.area == DUEL_AREA_GRAVEYARD) {     /* added: Quillbolt Hedgehog (src/added_effects.c) */
+            ModQuillboltMenuRun();
+            return;
+        }
         CardMenu_SummonMonster(1, 1);
         return;
     case CARDMENU_CMD_SP_SUMMON_SET:

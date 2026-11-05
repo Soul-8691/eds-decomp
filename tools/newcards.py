@@ -44,6 +44,7 @@ OUT = 'build/assets'
 GEN_TSV = 'build/new_cards.tsv'
 COUNT_H = 'build/include/card_count.h'
 COUNT_INC = 'build/include/card_count.inc'
+SYNCHRO_H = 'build/include/synchro_rules.h'
 CARDS_H = 'include/constants/cards.h'
 API = 'https://db.ygoprodeck.com/api/v7/cardinfo.php?'
 
@@ -108,6 +109,18 @@ MONSTER_TYPES = {
     'Winged Beast': 16, 'Fairy': 17, 'Spellcaster': 18, 'Thunder': 19, 'Reptile': 20,
 }
 CARD_TYPE_TRAP, CARD_TYPE_MAGIC = 21, 22
+# Races EDS does not have: the stats word keeps the closest EDS monster type (its icon, and what the engine's monster
+# checks see: they treat types 1-20 as monsters), and gCardTypeEx keeps the real race (enum RaceEx in
+# include/constants/card_stats.h) for the type line and the List Filter.
+EXTRA_RACES = {
+    'Psychic': (1, 'Spellcaster'), 'Wyrm': (2, 'Dragon'), 'Cyberse': (3, 'Machine'), 'Illusion': (4, 'Spellcaster'),
+    'Creator-God': (5, 'Fairy'), 'Divine-Beast': (6, 'Fairy'),
+}
+# gCardTypeEx, one byte per card ID (0 for the original cards): bits 0-1 the extended kind (enum CardKindEx), bit 2
+# has an effect, bit 3 Tuner, bits 4-7 the extended race (EXTRA_RACES; 0 = the stats word's type).
+KIND_EX_SYNCHRO = 1
+TYPE_EX_EFFECT = 0x04
+TYPE_EX_TUNER = 0x08
 ATTRIBUTES = {'LIGHT': 1, 'DARK': 2, 'WATER': 3, 'FIRE': 4, 'EARTH': 5, 'WIND': 6}
 SUBTYPES = {'Normal': 0, 'Counter': 1, 'Field': 2, 'Equip': 3, 'Continuous': 4, 'Quick-Play': 5, 'Ritual': 6}
 # Cards whose EDS subtype is not their YGOPRODeck race: Traps that become Equip Cards are Equip Traps in EDS (as the
@@ -366,17 +379,51 @@ def stats_word(c):
         return 1 << 29 | CARD_TYPE_TRAP << 20 | sub << 17
     if c['type'] == 'Token':
         c = dict(c, type='Normal Monster')     # stats like the Insect Monster Token's: kind 0
-    if c['race'] not in MONSTER_TYPES or c.get('attribute') not in ATTRIBUTES:
+    race = EXTRA_RACES[c['race']][1] if c['race'] in EXTRA_RACES else c['race']
+    if race not in MONSTER_TYPES or c.get('attribute') not in ATTRIBUTES:
         fail(f'{c["name"]}: a {c["race"]}/{c.get("attribute")} {c["type"]} cannot be shown in EDS (no such '
              f'monster type or attribute)')
-    if any(k in c['type'] for k in ('Link', 'XYZ', 'Pendulum', 'Synchro')) or not 1 <= (c['level'] or 0) <= 12:
+    if any(k in c['type'] for k in ('Link', 'XYZ', 'Pendulum')) or not 1 <= (c['level'] or 0) <= 12:
         fail(f'{c["name"]}: {c["type"]} cards do not exist in EDS')
-    kind = 0 if c['type'] == 'Normal Monster' else 2 if 'Fusion' in c['type'] else 3 if 'Ritual' in c['type'] else 1
+    # Synchro Monsters are Extra Deck monsters: kind FUSION in the stats word (gCardTypeEx tells them apart).
+    kind = (2 if 'Fusion' in c['type'] or 'Synchro' in c['type'] else 3 if 'Ritual' in c['type']
+            else 0 if c['type'].startswith('Normal') else 1)
     atk, dfn = max(c['atk'] or 0, 0), max(c['def'] or 0, 0)
     if atk % 10 or dfn % 10 or atk > 5110 or dfn > 5110:
         fail(f'{c["name"]}: ATK/DEF {atk}/{dfn} cannot be stored (multiples of 10 up to 5110)')
     return (ATTRIBUTES[c['attribute']] << 29 | c['level'] << 25 | MONSTER_TYPES[c['race']] << 20 | kind << 18
             | (atk // 10) << 9 | dfn // 10)
+
+
+def type_ex(c):
+    """gCardTypeEx byte of an added card (0 for Spells, Traps and plain monsters)."""
+    if c['type'] in ('Spell Card', 'Trap Card', 'Token'):
+        return 0
+    b = KIND_EX_SYNCHRO if 'Synchro' in c['type'] else 0
+    if 'Tuner' in c['type']:
+        b |= TYPE_EX_TUNER
+    # Effect: YGOPRODeck says "Effect" for most; Tuners are "Tuner Monster" ("Normal Tuner Monster" without), and an
+    # Extra Deck monster's text has its effect after the materials line.
+    extra = 'Synchro' in c['type'] or 'Fusion' in c['type']
+    if ('Effect' in c['type'] or c['type'] in ('Tuner Monster', 'Synchro Tuner Monster')
+            or (extra and len(c['desc'].strip().splitlines()) > 1)):
+        b |= TYPE_EX_EFFECT
+    if c['race'] in EXTRA_RACES:
+        b |= EXTRA_RACES[c['race']][0] << 4
+    return b
+
+
+def synchro_tuner(c, numbers):
+    """The card number a Synchro needs as its Tuner (0: any Tuner), from the first sentence of its text:
+    '"Junk Synchron" + 1+ non-Tuner monsters' names one; '1 Tuner + 1+ non-Tuner monsters' takes any."""
+    m = re.match(r'\s*"([^"]+)"\s*\+', c['desc'])
+    if m:
+        if m.group(1) not in numbers:
+            fail(f'{c["name"]}: its Synchro Material "{m.group(1)}" is not an added or original card')
+        return numbers[m.group(1)]
+    if not re.match(r'\s*1 Tuner \+ 1\+ non-Tuner monsters', c['desc']):
+        print(f'newcards: warning: {c["name"]}: Synchro Materials read as "1 Tuner + 1+ non-Tuner monsters"')
+    return 0
 
 
 def bcd(passcode):
@@ -457,6 +504,7 @@ def cmd_build():
     descs, _ = read_old('descriptions.json', DESC_SIZE)
     _, art = read_old('art', 1)
     stats, _ = read_old('stats.csv', 4)
+    types_ex = [0] * OLD_COUNT
     i2n, _ = read_old('id_to_number.json', 2)
     pws, _ = read_old('passwords.csv', 4)
     keys, _ = read_old('sort_keys.json', 2)
@@ -475,6 +523,7 @@ def cmd_build():
         gfx.append(A._art_pack(px))
         pals.append(struct.pack('<64H', *[A.rgb_to_bgr555(p) for p in (plte + [(0, 0, 0)] * 64)[:64]]))
         stats.append(struct.pack('<I', stats_word(c)))
+        types_ex.append(type_ex(c))
         i2n.append(struct.pack('<H', c['number']))
         pws.append(bytes([0xFF] * 4) if c['type'] == 'Token' else bcd(c['passcode']))   # tokens: no password
         keys.append(struct.pack('<H', next_key))
@@ -497,6 +546,7 @@ def cmd_build():
         'number_to_id': struct.pack('<2048H', *n2i),
         'sort_keys': pad4(b''.join(keys)),
         'name_order': pad4(struct.pack(f'<{len(order)}H', *order)),
+        'type_ex': pad4(bytes(types_ex)),
     }
     for name, data in out.items():
         write_if_changed(f'{OUT}/newcards__{name}.bin', data)
@@ -508,6 +558,13 @@ def cmd_build():
     write_if_changed(COUNT_H, f'/* {note} */\n#define CARD_ID_COUNT_ADDED {len(new)}\n'
                      + ''.join(f'#define HAS_{s} 1\n' for s in sorted(syms))
                      + in_game_has_defines(syms))
+    # The Synchro Monsters and their Tuner (card number, 0 = any Tuner) for src/mod_synchro.c.
+    numbers = {A.dec(names[i].split(b'\0')[0]): struct.unpack('<H', i2n[i])[0] for i in range(1, total)}
+    numbers.update({c['name']: c['number'] for c in new})
+    rules = [(c['number'], synchro_tuner(c, numbers)) for c in new if 'Synchro' in c['type']]
+    write_if_changed(SYNCHRO_H, f'/* {note} */\n#define SYNCHRO_RULE_COUNT {len(rules)}\n'
+                     '/* { Synchro card number, Tuner card number (0: any Tuner) } */\n'
+                     '#define SYNCHRO_RULES { ' + ''.join(f'{{ {s}, {t} }}, ' for s, t in rules) + '{ 0, 0 } }\n')
     write_if_changed(COUNT_INC, f'@ {note}\n\t.set CARD_ID_COUNT_ADDED, {len(new)}\n'
                                 f'\t.set CARD_ID_COUNT, {total}\n')
     write_if_changed(GEN_TSV, 'id\tnumber\tpasscode\tname\tgame_name\n' + ''.join(

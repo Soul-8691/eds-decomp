@@ -780,6 +780,8 @@ static inline const u8 *GetCardFrameGfx(u16 cardId)
     case CARD_KIND_EFFECT:
         return gCardFrameEffectGfx;
     case CARD_KIND_FUSION:
+        if (IS_SYNCHRO_CARD(cardId))        /* added: Synchro Monsters (gCardTypeEx) */
+            return gCardFrameSynchroGfx;
         return gCardFrameFusionGfx;
     case CARD_KIND_RITUAL:
         return gCardFrameRitualGfx;

@@ -2024,6 +2024,11 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
   - **Deck:** `DUEL_CMD_SEND_DECK_CARD_TO_GRAVEYARD` for `deck[0]` and `deck[1]` (the top is index 0).
 - Checked in the source and the build; not tested in an emulator.
 
+### Synchro test cards: Junk Synchron, Quillbolt Hedgehog, Junk Warrior, Stardust Dragon (2026-11-05)
+- The first Synchro Monster and Tuner cards. The mechanic and all four cards are described in [[synchro]].
+- Not in `card_pools/missing*.txt`, so nothing was removed there.
+- Checked in the source and the build; not tested in an emulator.
+
 ### Des Lacooda (2026-11-04)
 - Effect Monster (Level 3, EARTH Zombie, 500/600; `assets/new_cards/cards.json`, from YGOPRODeck): "Once per turn: You can
   change this card to face-down Defense Position. When this card is Flip Summoned: Draw 1 card."

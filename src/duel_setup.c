@@ -482,6 +482,8 @@ struct DuelZoneWordView {
 /* Card-menu commands for answering `link` with the card at (player, area, index): 0x41 (Card View and
  * Activate) if that card can respond, else 1 (Card View only). A face-up key-1525 monster can answer a Magic
  * card, unless key 1418 is active on either field or the link is key 1539. */
+int ModMonsterCanRespond(struct ChainEntry *link, int player, int zone);  /* mod: src/added_effects.c */
+
 u32 Chain_GetResponseCommands(struct ChainEntry *link, int player, int area, int index)
 {
     u32 ret = CARDMENU_MASK_CARD_VIEW;
@@ -504,6 +506,8 @@ u32 Chain_GetResponseCommands(struct ChainEntry *link, int player, int area, int
             && CARD_TYPE_C(link->card) == CARD_TYPE_MAGIC
             && !IsTributeLockActive()
             && CARD_NUMBER_C(link->card) != CARD_1539)
+            ret = CARDMENU_MASK_CARD_VIEW | CARDMENU_MASK_ACTIVATE;
+        if (ModMonsterCanRespond(link, player, index))      /* added: Stardust Dragon (src/added_effects.c) */
             ret = CARDMENU_MASK_CARD_VIEW | CARDMENU_MASK_ACTIVATE;
         break;
     }
@@ -624,7 +628,8 @@ s32 Chain_AskResponse(struct ChainEntry *link, u32 player)
         /* The cursor may pick the player's hand and Magic/Trap cards on their own turn; on the opponent's
          * turn the Magic/Trap cards and the face-up monsters. */
         if (DuelCursor_PickTarget(!gDuelAlias.turnPlayer
-                ? PICK_HAND | PICK_FACE_DOWN_SPELL_TRAP | PICK_FACE_UP_MAGIC | PICK_FACE_UP_TRAP
+                ? PICK_HAND | PICK_FACE_DOWN_SPELL_TRAP | PICK_FACE_UP_MAGIC | PICK_FACE_UP_TRAP | PICK_FACE_UP_MONSTER
+                      | PICK_ATTACK_POSITION | PICK_DEFENSE_POSITION     /* added: Stardust Dragon */
                 : PICK_FACE_DOWN_SPELL_TRAP | PICK_FACE_UP_MAGIC | PICK_FACE_UP_TRAP | PICK_FACE_UP_MONSTER
                       | PICK_ATTACK_POSITION | PICK_DEFENSE_POSITION) == 0)
             return 0;

@@ -76,6 +76,16 @@ extern const u8 gCardArtPalettes[];
  * and Token stay last), then 0. The Deck Edit lists are built in this order. */
 extern const u16 gCardIdsByName[];
 
+/* Added: the extended card type per card ID (CARD_TYPE_EX_* and enum CardKindEx / RaceEx in
+ * constants/card_stats.h), after gCardIdsByName. */
+extern const u8 gCardTypeEx[];
+
+#define CARD_TYPE_EX(id)        (gCardTypeEx[(id) & CARD_ID_MASK])
+#define IS_SYNCHRO_CARD(id)     ((CARD_TYPE_EX(id) & CARD_TYPE_EX_KIND_MASK) == CARD_KIND_EX_SYNCHRO)
+#define IS_TUNER_CARD(id)       ((CARD_TYPE_EX(id) & CARD_TYPE_EX_TUNER) != 0)
+#define IS_EFFECT_CARD_EX(id)   ((CARD_TYPE_EX(id) & CARD_TYPE_EX_EFFECT) != 0)
+#define CARD_RACE_EX(id)        (CARD_TYPE_EX(id) >> CARD_TYPE_EX_RACE_SHIFT)
+
 /* ---- Table indexed by card number ---- */
 
 /* 0x08623DF4: card ID per card number (u16[CARD_NUMBER_COUNT], 0 = no card). Entries 2000-2047 are 0: code
@@ -127,6 +137,7 @@ extern const u8 gCardFrameFusionGfx[];  /* 0x0862A190: fusion */
 extern const u8 gCardFrameRitualGfx[];  /* 0x0862C828: ritual (blue); also Obelisk */
 extern const u8 gCardFrameMagicGfx[];   /* 0x0862EEC0: Magic (type 22) */
 extern const u8 gCardFrameTrapGfx[];    /* 0x08631558: Trap (type 21) */
+extern const u8 gCardFrameSynchroGfx[]; /* added: Synchro Monster (the Fusion frame made white, tools/synchro_frame.py) */
 extern const u8 gCardFrameTicketGfx[];  /* 0x08633BF0: Ticket (type 23) */
 
 /*

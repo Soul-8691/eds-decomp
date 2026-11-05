@@ -188,6 +188,14 @@ $(TESTDECK_GEN): tools/testdeck.py $(NEWCARDS_BUILT) FORCE
 	@$(PYTHON) tools/testdeck.py "$(TEST_YDK)" $@
 build/src/mod_decks.o build/src/mod_opponents.o: $(TESTDECK_GEN) $(NEWCARDS_GEN)
 
+# The Synchro Monster frame: the Fusion frame recoloured white (tools/synchro_frame.py), for data/rodata_08087FD0.s.
+SYNCHRO_FRAME := build/assets/synchro_frame.bin
+$(SYNCHRO_FRAME): $(ASSETS_BUILT) tools/synchro_frame.py
+	$(PYTHON) tools/synchro_frame.py $@
+build/data/rodata_08087FD0.o: $(SYNCHRO_FRAME)
+# src/mod_synchro.c reads build/include/synchro_rules.h, which tools/newcards.py writes.
+build/src/mod_synchro.o: $(NEWCARDS_BUILT)
+
 # Password-machine card prices from the Yugi-Kaiba usage statistics (src/mod_dp.c).
 PRICES_GEN := build/include/card_prices.h
 $(PRICES_GEN): tools/cardprices.py tools/banlist.py $(wildcard usage/*.json) $(wildcard banlists/*_ban.json) $(NEWCARDS_BUILT)

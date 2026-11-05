@@ -79,6 +79,9 @@ extern const u8 gModFieldIconData[];            /* tools/cardicons.py --data */
 #define DATA_OBJ_FRAMES         0x3080          /* 6 types x 3 poses x 1 KiB */
 #define DATA_POSE_MAPS          0x7880          /* 3 poses x POSE_MAP_SIZE */
 #define DATA_MINIS              0x7980          /* 15x16 bytes per card ID */
+/* Then Deck Edit's ring art (DATA_DECK_EDIT), then the Synchro Monster frames (tools/cardicons.py): BG upright and
+ * sideways, then the sprite poses 0-2, 1 KiB each. */
+#define DATA_SYNCHRO            ((((DATA_MINIS + CARD_ID_COUNT * 15 * 16 + 3) & ~3)) + CARD_ID_COUNT * (32 + 4 * 32))
 #define POSE_MAP_SIZE           80              /* x0, width, y0, height, the art column of each column (32), the
                                                    art row of each row (32) */
 #define SPRITE_POSES            3
@@ -151,7 +154,10 @@ u16 ModFieldCardTile(u32 player, u32 place, u16 id, u32 sideways)
     u32 i, j;
 
     sideways = sideways ? 1 : 0;
-    CopyDoubleWords(cell, gModFieldIconData + DATA_FRAMES + (type * 2 + sideways) * FRAME_SIZE, FRAME_SIZE);
+    if (IS_SYNCHRO_CARD(id))        /* the silver frame (gCardTypeEx) */
+        CopyDoubleWords(cell, gModFieldIconData + DATA_SYNCHRO + sideways * FRAME_SIZE, FRAME_SIZE);
+    else
+        CopyDoubleWords(cell, gModFieldIconData + DATA_FRAMES + (type * 2 + sideways) * FRAME_SIZE, FRAME_SIZE);
     id &= CARD_ID_MASK;
     if (id == 0 || id >= CARD_ID_COUNT)
         return tile;
@@ -216,8 +222,11 @@ static void BuildCardSprite(u32 slot, u16 id, u32 type, u32 pose)
     const u8 *mini;
     u32 x0 = map[0], w = map[1], y0 = map[2], h = map[3], r, c;
 
-    CopyDoubleWords(dst, gModFieldIconData + DATA_OBJ_FRAMES + (type * SPRITE_POSES + pose) * FRAME_SIZE,
-                    FRAME_SIZE);
+    if (IS_SYNCHRO_CARD(id))        /* the silver frame (gCardTypeEx) */
+        CopyDoubleWords(dst, gModFieldIconData + DATA_SYNCHRO + (2 + pose) * FRAME_SIZE, FRAME_SIZE);
+    else
+        CopyDoubleWords(dst, gModFieldIconData + DATA_OBJ_FRAMES + (type * SPRITE_POSES + pose) * FRAME_SIZE,
+                        FRAME_SIZE);
     if (id >= CARD_ID_COUNT)
         return;
     mini = gModFieldIconData + DATA_MINIS + id * (MINI_W * MINI_H);
@@ -407,7 +416,8 @@ void ModChainIconBuild(u32 row, u16 id)
 {
     u32 tile = ModChainIconTile(row);
     u32 type = (GetCardIconObjTile(id) - 0x80) / 0x40;
-    const u8 *frame = gModFieldIconData + DATA_OBJ_FRAMES + type * SPRITE_POSES * FRAME_SIZE;
+    const u8 *frame = IS_SYNCHRO_CARD(id) ? gModFieldIconData + DATA_SYNCHRO + 2 * FRAME_SIZE
+                                          : gModFieldIconData + DATA_OBJ_FRAMES + type * SPRITE_POSES * FRAME_SIZE;
     const u8 *mini;
     u32 r, i, j;
 

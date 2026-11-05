@@ -8,6 +8,8 @@
  * (wiki/functions/card-menu-input-c.md)
  */
 #include "global.h"
+#include "synchro.h"             /* ModSynchroAvailable (mod) */
+int ModQuillboltAvailable(int player);  /* mod: src/added_effects.c */
 #include "card_data.h"           /* gCardStats / gCardIdToNumber card database tables, CARD_ID_MASK */
 #include "constants/card_stats.h" /* CARD_STATS_* stats-word bit fields, enum CardType, enum CardAttribute */
 #include "constants/cards.h"     /* CARD_* card numbers */
@@ -272,6 +274,10 @@ u16 CardMenu_GetAvailableCommands(void)
         case DUEL_AREA_DECK:
             flags = ModCardMenuDeckCommands(((u32)(gDuelView.flags1B12 << 27) >> 29), gDuelScreen.selPlayer);
             break;
+        case DUEL_AREA_GRAVEYARD:       /* added: Quillbolt Hedgehog (src/added_effects.c) */
+            if (gDuelScreen.selPlayer == 0 && ModQuillboltAvailable(0))
+                flags |= CARDMENU_MASK_SP_SUMMON;
+            break;
         case DUEL_AREA_FUSION_DECK:
             if (gDuelScreen.selPlayer != 0 && ModDeckListVisible())
                 flags = CARDMENU_MASK_CARD_VIEW;
@@ -280,6 +286,8 @@ u16 CardMenu_GetAvailableCommands(void)
                 if (EffectPolymerizationPrepare(&ref, 0, 0))
                     flags |= CARDMENU_MASK_FUSION;
             }
+            if (gDuelScreen.selPlayer == 0 && ModSynchroAvailable(0))   /* added: src/mod_synchro.c */
+                flags |= CARDMENU_MASK_SP_SUMMON;
             break;
         }
     }
@@ -344,6 +352,13 @@ int DuelScreen_HandleInput(void)
         PlaySE(SE_ERROR);
         return 0;
     case DUEL_AREA_GRAVEYARD:
+        if (player == 0 && ModQuillboltAvailable(0)) {     /* added: Quillbolt Hedgehog (src/added_effects.c) */
+            gDuelView.cardMenu.open = 1;
+            gDuelView.cardMenu.state = 0;
+            gDuelView.cardMenu.available = CardMenu_GetAvailableCommands();
+            return 1;
+        }
+        /* fall through */
     case DUEL_AREA_BANISHED:
         CardListView_Open(player, area, 0, 0);
         PlaySE(SE_CONFIRM);

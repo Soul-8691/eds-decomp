@@ -93,23 +93,33 @@ static const u16 sTextPal[16] = {
     RGB5(21, 24, 29),   /* help */
 };
 
+/* A card's race key: its stats word's type, or RACE_KEY_EX + enum RaceEx for the races EDS lacks (gCardTypeEx; their
+ * stats word holds the closest EDS type), so a Psychic is not listed as a Spellcaster. An added Divine-Beast is the
+ * Gods' type. */
+#define RACE_KEY_EX     32
+#define RACE_KEY_COUNT  (RACE_KEY_EX + RACE_EX_COUNT)
+
 /* Alphabetical. */
 static const struct {
-    u8 type;
+    u8 type;                    /* race key */
     const char *name;
 } sTypes[] = {
     { CARD_TYPE_AQUA, "Aqua" },
     { CARD_TYPE_BEAST, "Beast" },
     { CARD_TYPE_BEAST_WARRIOR, "Beast-Warrior" },
+    { RACE_KEY_EX + RACE_EX_CREATOR_GOD, "Creator God" },
+    { RACE_KEY_EX + RACE_EX_CYBERSE, "Cyberse" },
     { CARD_TYPE_DINOSAUR, "Dinosaur" },
     { CARD_TYPE_DIVINE, "Divine-Beast" },
     { CARD_TYPE_DRAGON, "Dragon" },
     { CARD_TYPE_FAIRY, "Fairy" },
     { CARD_TYPE_FIEND, "Fiend" },
     { CARD_TYPE_FISH, "Fish" },
+    { RACE_KEY_EX + RACE_EX_ILLUSION, "Illusion" },
     { CARD_TYPE_INSECT, "Insect" },
     { CARD_TYPE_MACHINE, "Machine" },
     { CARD_TYPE_PLANT, "Plant" },
+    { RACE_KEY_EX + RACE_EX_PSYCHIC, "Psychic" },
     { CARD_TYPE_PYRO, "Pyro" },
     { CARD_TYPE_REPTILE, "Reptile" },
     { CARD_TYPE_ROCK, "Rock" },
@@ -118,8 +128,20 @@ static const struct {
     { CARD_TYPE_THUNDER, "Thunder" },
     { CARD_TYPE_WARRIOR, "Warrior" },
     { CARD_TYPE_WINGED_BEAST, "Winged Beast" },
+    { RACE_KEY_EX + RACE_EX_WYRM, "Wyrm" },
     { CARD_TYPE_ZOMBIE, "Zombie" },
 };
+
+static u32 RaceKey(u32 id)
+{
+    u32 ex = CARD_RACE_EX(id);
+
+    if (ex == RACE_EX_DIVINE_BEAST)
+        return CARD_TYPE_DIVINE;
+    if (ex != RACE_EX_NONE && ex < RACE_EX_COUNT)
+        return RACE_KEY_EX + ex;
+    return CARD_STATS_TYPE(gCardStats[id & CARD_ID_MASK]);
+}
 
 /* The Divine Attribute has no stats value: the Gods carry 2 (Dark), and are told apart by their Type. */
 #define ATTRIBUTE_DIVINE 7
@@ -139,31 +161,36 @@ static const struct {
 };
 
 /* Sort keys: sTypes and sAttributes as ranks, indexed by the card's value. Non-monsters last. */
-static const u8 sTypeRank[32] = {
+static const u8 sTypeRank[RACE_KEY_COUNT] = {
     [CARD_TYPE_AQUA] = 1,
     [CARD_TYPE_BEAST] = 2,
     [CARD_TYPE_BEAST_WARRIOR] = 3,
-    [CARD_TYPE_DINOSAUR] = 4,
-    [CARD_TYPE_DIVINE] = 5,
-    [CARD_TYPE_DRAGON] = 6,
-    [CARD_TYPE_FAIRY] = 7,
-    [CARD_TYPE_FIEND] = 8,
-    [CARD_TYPE_FISH] = 9,
-    [CARD_TYPE_INSECT] = 10,
-    [CARD_TYPE_MACHINE] = 11,
-    [CARD_TYPE_PLANT] = 12,
-    [CARD_TYPE_PYRO] = 13,
-    [CARD_TYPE_REPTILE] = 14,
-    [CARD_TYPE_ROCK] = 15,
-    [CARD_TYPE_SEA_SERPENT] = 16,
-    [CARD_TYPE_SPELLCASTER] = 17,
-    [CARD_TYPE_THUNDER] = 18,
-    [CARD_TYPE_WARRIOR] = 19,
-    [CARD_TYPE_WINGED_BEAST] = 20,
-    [CARD_TYPE_ZOMBIE] = 21,
-    [CARD_TYPE_MAGIC] = 22,
-    [CARD_TYPE_TRAP] = 23,
-    [CARD_TYPE_TICKET] = 24,
+    [RACE_KEY_EX + RACE_EX_CREATOR_GOD] = 4,
+    [RACE_KEY_EX + RACE_EX_CYBERSE] = 5,
+    [CARD_TYPE_DINOSAUR] = 6,
+    [CARD_TYPE_DIVINE] = 7,
+    [CARD_TYPE_DRAGON] = 8,
+    [CARD_TYPE_FAIRY] = 9,
+    [CARD_TYPE_FIEND] = 10,
+    [CARD_TYPE_FISH] = 11,
+    [RACE_KEY_EX + RACE_EX_ILLUSION] = 12,
+    [CARD_TYPE_INSECT] = 13,
+    [CARD_TYPE_MACHINE] = 14,
+    [CARD_TYPE_PLANT] = 15,
+    [RACE_KEY_EX + RACE_EX_PSYCHIC] = 16,
+    [CARD_TYPE_PYRO] = 17,
+    [CARD_TYPE_REPTILE] = 18,
+    [CARD_TYPE_ROCK] = 19,
+    [CARD_TYPE_SEA_SERPENT] = 20,
+    [CARD_TYPE_SPELLCASTER] = 21,
+    [CARD_TYPE_THUNDER] = 22,
+    [CARD_TYPE_WARRIOR] = 23,
+    [CARD_TYPE_WINGED_BEAST] = 24,
+    [RACE_KEY_EX + RACE_EX_WYRM] = 25,
+    [CARD_TYPE_ZOMBIE] = 26,
+    [CARD_TYPE_MAGIC] = 27,
+    [CARD_TYPE_TRAP] = 28,
+    [CARD_TYPE_TICKET] = 29,
 };
 
 static const u8 sAttributeRank[8] = {
@@ -252,7 +279,7 @@ static int MatchesLimits(u32 id, const u8 *v)
 
     if (!IsMonsterType(type))
         return 0;
-    if (v[ROW_TYPE] != 0 && sTypes[v[ROW_TYPE] - 1].type != type)
+    if (v[ROW_TYPE] != 0 && sTypes[v[ROW_TYPE] - 1].type != RaceKey(id))
         return 0;
     if (v[ROW_ATTRIBUTE] != 0 && sAttributes[v[ROW_ATTRIBUTE] - 1].attribute != AttributeOf(stats))
         return 0;
@@ -302,7 +329,7 @@ static u32 RankedFirst(u32 rankA, u32 rankB, int a, int b)
 
 u32 ModCompareCardsByType(int a, int b)
 {
-    return RankedFirst(sTypeRank[CARD_STATS_TYPE(CardStatsWord(a))], sTypeRank[CARD_STATS_TYPE(CardStatsWord(b))], a, b);
+    return RankedFirst(sTypeRank[RaceKey(a)], sTypeRank[RaceKey(b)], a, b);
 }
 
 u32 ModCompareCardsByAttribute(int a, int b)

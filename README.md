@@ -26,7 +26,7 @@
 |  |  |
 |---|---|
 | **15 formats** | Follows the [Format Library](https://www.formatlibrary.com/) pantheon of TCG formats from May 2002 to October 2005 (which are just historical formats). Each one is a Campaign duelist with its own card pool and decks. |
-| **New cards** | The demo adds **156** cards. See [NEW_CARDS.md](NEW_CARDS.md). |
+| **New cards** | The demo adds **160** cards. See [NEW_CARDS.md](NEW_CARDS.md). |
 | **Smarter CPU** | Opponents play much stronger than in vanilla EDS. See [AI_IMPROVEMENTS.md](AI_IMPROVEMENTS.md) and [AI_QUIRKS.md](AI_QUIRKS.md). |
 | **Best-of-3 matches** | Every Campaign duel is a match, with siding between games. |
 | **A real economy** | Earn Duelist Points, buy cards by password, and open TCG sets and usage-weighted packs. |
@@ -76,6 +76,11 @@ release to unlock the next one (every format is open in the debug build).
   isn't named after a card.
 - **Title screen.** The top right says whether it's the Release or Debug build, and demo builds show the demo version
   at the top left.
+- **Synchro Summoning.** Tuners and Synchro Monsters (white frame), in the Fusion Deck. In your Main Phase, press A on
+  your Fusion Deck and choose Special Summon: pick the Synchro Monster, then its Tuner and non-Tuners, whose Levels must
+  add up exactly. The first four: Junk Synchron, Quillbolt Hedgehog (Special Summoned from your Graveyard pile's menu),
+  Junk Warrior and Stardust Dragon. Psychic, Wyrm, Cyberse, Illusion and Creator God monsters can be added too; they
+  use the closest existing type icon for now.
 - **List Filter.** After choosing a card category and sort order, a new page narrows the list by the name's first
   letter, one Type, one Attribute, and ATK, DEF and Level ranges. Magic and Trap lists get the letter only. Sorting by
   Type or Attribute is now alphabetical.
@@ -280,7 +285,7 @@ testing decks.
 
 ## The new cards
 
-The demo build adds **156** cards, listed in alphabetical order above `------` in
+The demo build adds **160** cards, listed in alphabetical order above `------` in
 [`new_cards.txt`](new_cards.txt). **[NEW_CARDS.md](NEW_CARDS.md)** shows each of them in Deck Edit's Card View.
 
 <table>

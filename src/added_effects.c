@@ -41,6 +41,7 @@
 #include "main.h"                   /* gMain.newKeys */
 #include "duel_screen.h"            /* DuelCursor_PickTarget, gDuelScreen */
 #include "duel_flow.h"              /* gDuelCtrl.isLinkDuel */
+#include "synchro.h"                /* the Synchro Summon (src/mod_synchro.c) */
 
 #ifdef HAS_CARD_MASK_OF_RESTRICT
 int IsTributeLockActive(void)
@@ -69,6 +70,11 @@ int IsTributeLockActive(void)
  * DuelPhase_Init clears it with ModDuelInit. A `static` variable here would go to .bss, which the linker puts at
  * 0x02000000, over gTextCanvas: keep such state in this block. */
 struct ModDuelState {
+    u16 junkNegateId;           /* Junk Synchron: the card ID being revived (its effects negated on arrival), 0 none */
+    u16 quillboltId;            /* Quillbolt Hedgehog: the card ID its effect is summoning, 0 none */
+    u16 quillboltIds[10];       /* [player * 5 + zone]: Quillbolt Hedgehog to banish when it leaves the field */
+    u16 stardustRevive[2];      /* Stardust Dragon: [owner] its card ID, to come back in the End Phase (0 none) */
+    struct DuelCard stardustCard[2];    /* the card word it is revived with */
     u16 battleKills;            /* Mystic Swordsman LV2: bit player * 5 + zone, destroyed a monster by battle this turn */
     u16 chaosSummoned;          /* Dark Magician of Chaos: bit player * 5 + zone, Normal or Special Summoned this turn */
     u8 tsukuyomiEndReturn[2];   /* Tsukuyomi: per player, bit zone, return it to the hand in the End Phase */
@@ -1329,6 +1335,12 @@ void ModDuelInit(void)
     gModDuel.roarTurn[1] = 0;
     gModDuel.scientistReturn = 0;
     gModDuel.aiScientistTurn = 0;
+    ModSynchroReset();                      /* src/mod_synchro.c */
+    gModDuel.junkNegateId = 0;
+    gModDuel.quillboltId = 0;
+    MemClear16(gModDuel.quillboltIds, sizeof(gModDuel.quillboltIds));
+    gModDuel.stardustRevive[0] = 0;
+    gModDuel.stardustRevive[1] = 0;
     gModDuel.asuraTurn = 0;
     gModDuel.noDamageTurn[0] = 0;
     gModDuel.noDamageTurn[1] = 0;
@@ -1784,6 +1796,8 @@ void OnFieldCardTargeted(struct ChainEntry *link, int player, int zone)
  *                                          IsFaceUpDarkMagicianOfChaos: the face-up card is banished instead
  *                                          (BanishFieldCard) */
 
+int QuillboltBanishedOnLeave(int player, int zone);   /* below (the Synchro test cards) */
+
 int IsFaceUpDarkMagicianOfChaos(int player, int zone)
 {
     struct DuelZone *z;
@@ -1793,6 +1807,8 @@ int IsFaceUpDarkMagicianOfChaos(int player, int zone)
         return 0;
     z = ZoneOf(player, zone);
     id = DUEL_CARD_ID(&z->card);
+    if (QuillboltBanishedOnLeave(player, zone))     /* Quillbolt Hedgehog: banished when it leaves the field */
+        return 1;
     return id != 0 && z->isFaceUp
            && ((const u16 *)CARD_ID_TO_NUMBER_ADDR)[id & CARD_ID_MASK] == CARD_DARK_MAGICIAN_OF_CHAOS;
 }
@@ -2873,7 +2889,7 @@ static void ApprenticeMagicianPlaceCounter(int player, u16 id)
 }
 #endif /* HAS_CARD_APPRENTICE_MAGICIAN && (Breaker || Skilled Dark Magician) */
 
-#if defined(HAS_CARD_DARK_MAGICIAN_OF_CHAOS) || defined(HAS_CARD_SACRED_CRANE) || defined(HAS_CARD_APPRENTICE_MAGICIAN) \
+#if 1 /* always: the Synchro Summon mark (src/mod_synchro.c) */ || defined(HAS_CARD_DARK_MAGICIAN_OF_CHAOS) || defined(HAS_CARD_SACRED_CRANE) || defined(HAS_CARD_APPRENTICE_MAGICIAN) \
     || defined(HAS_CARD_GOLEM_SENTRY) || defined(HAS_CARD_SAND_MOTH) || defined(HAS_CARD_GUARDIAN_SPHINX) || defined(HAS_CARD_DES_LACOODA) \
     || defined(HAS_CARD_STEALTH_BIRD) || defined(HAS_CARD_MARAUDING_CAPTAIN)
 /* SummonAction_Update calls this for every summon once the monster is in (player, zone): `kind` is the
@@ -2881,8 +2897,27 @@ static void ApprenticeMagicianPlaceCounter(int player, u16 id)
 #ifdef HAS_CARD_SAND_MOTH
 void SandMothSummoned(int player, int zone, u16 id);     /* below */
 #endif
+void SynchroCardsArrived(int player, int zone, u16 id);     /* below (the Synchro test cards) */
+
 void AddedCardsSummoned(int player, int zone, u16 id, int kind, int faceUp)
 {
+    int synchroSummoned = ModSynchroArrived(player, zone, id);     /* src/mod_synchro.c: marks a Synchro Summon */
+
+    SynchroCardsArrived(player, zone, id);
+#ifdef HAS_CARD_JUNK_SYNCHRON
+    if (((const u16 *)CARD_ID_TO_NUMBER_ADDR)[id & CARD_ID_MASK] == CARD_JUNK_SYNCHRON && faceUp
+        && (kind == SUMMON_ACTION_NORMAL || kind == SUMMON_ACTION_NORMAL_CHOOSE_POSITION))
+        Chain_AddPending(TRIGGER_PLAYER(player & 1) | TRIGGER_ZONE(zone) | TRIGGER_KIND(CHAIN_KIND_MONSTER)
+                             | TRIGGER_EVENT(RESPONSE_SUMMONED) | (id & CARD_ID_MASK),
+                         DUEL_LOC(player, zone));
+#endif
+#ifdef HAS_CARD_JUNK_WARRIOR
+    if (synchroSummoned && ((const u16 *)CARD_ID_TO_NUMBER_ADDR)[id & CARD_ID_MASK] == CARD_JUNK_WARRIOR)
+        Chain_AddPending(TRIGGER_PLAYER(player & 1) | TRIGGER_ZONE(zone) | TRIGGER_KIND(CHAIN_KIND_MONSTER)
+                             | TRIGGER_EVENT(RESPONSE_SPECIAL_SUMMONED) | (id & CARD_ID_MASK),
+                         DUEL_LOC(player, zone));
+#endif
+    (void)synchroSummoned;
 #ifdef HAS_CARD_DARK_MAGICIAN_OF_CHAOS
     DarkMagicianOfChaosSummoned(player, zone, id, kind, faceUp);
 #endif
@@ -5312,6 +5347,7 @@ static int IsScientistFusion(u16 id, int param)
     u32 stats = gCardStats[id & CARD_ID_MASK];
 
     return CARD_STATS_TYPE(stats) <= CARD_TYPE_REPTILE && CARD_STATS_KIND(stats) == CARD_KIND_FUSION
+           && !IS_SYNCHRO_CARD(id)
            && (int)CARD_STATS_LEVEL(stats) <= SCIENTIST_MAX_LEVEL && !IsCannotSpecialSummon(id & CARD_ID_MASK);
 }
 
@@ -7590,6 +7626,8 @@ void ModFilterEffectTargets(u16 cardNumber)
     }
 }
 
+int JunkSynchronTargetId(u16 id, int param);   /* below (the Synchro test cards) */
+
 void ModCollectEffectTargets(int player, u16 cardNumber, int param)
 {
     struct DuelPlayer *p = &gDuelPlayers[player & 1];
@@ -7652,6 +7690,14 @@ void ModCollectEffectTargets(int player, u16 cardNumber, int param)
         ModAddPileTargets(p->fusionDeck, p->fusionCount, CARDLIST_SRC_FUSION_DECK, IsScientistFusion, 0);
         break;
 #endif
+#ifdef HAS_CARD_JUNK_SYNCHRON
+    case CARD_JUNK_SYNCHRON:                /* the Graveyard's Level 2 or lower monsters */
+        ModAddPileTargets(p->graveyard, p->graveCount, CARDLIST_SRC_GRAVEYARD, JunkSynchronTargetId, 0);
+        break;
+#endif
+    case CARD_LIST_KEY_SYNCHRO:             /* the Extra Deck's Synchro Monsters that can be summoned now */
+        ModAddPileTargets(p->fusionDeck, p->fusionCount, CARDLIST_SRC_FUSION_DECK, ModSynchroListAccepts, player);
+        break;
 #ifdef HAS_CARD_VAMPIRE_LORD
     case CARD_VAMPIRE_LORD:                 /* the Deck's cards of the declared type (param) */
         ModAddPileTargets(p->deck, p->deckCount, CARDLIST_SRC_DECK, VampireLordTypeMatches, param);
@@ -7846,7 +7892,7 @@ int AiChainDivineWrath(struct ChainEntry *entry)
 }
 #endif /* HAS_CARD_DIVINE_WRATH */
 
-#ifdef HAS_CARD_MY_BODY_AS_A_SHIELD
+#if defined(HAS_CARD_MY_BODY_AS_A_SHIELD) || defined(HAS_CARD_STARDUST_DRAGON)
 /* ---- My Body as a Shield (YGOPRODeck id 69279219) -----------------------------------------------------------------
  * Quick-Play Spell: "When your opponent activates a Spell/Trap Card or monster effect that would destroy a monster(s) on
  * the field: Pay 1500 LP; negate the activation, and if you do, destroy it." Only from the field: the engine asks hand
@@ -8032,6 +8078,7 @@ static int MyBodyHitsMonster(struct ChainEntry *link, int side)
     return 0;
 }
 
+#ifdef HAS_CARD_MY_BODY_AS_A_SHIELD
 int EffectMyBodyAsAShieldPrepare(struct ChainEntry *card, struct ChainEntry *chainLink, u16 fromHand)
 {
     if (fromHand || chainLink == NULL || chainLink->player == card->player)
@@ -8075,6 +8122,476 @@ static int AiChainMyBodyAsAShield(struct ChainEntry *entry)
     return AiChainSetCard(entry, CARD_MY_BODY_AS_A_SHIELD);
 }
 #endif /* HAS_CARD_MY_BODY_AS_A_SHIELD */
+#endif /* HAS_CARD_MY_BODY_AS_A_SHIELD || HAS_CARD_STARDUST_DRAGON */
+
+/* ---- Synchro test cards (src/mod_synchro.c, wiki/game/synchro.md) ------------------------------------------------ */
+
+int CollectEffectTargetsSyn(int player, int cardNumber, int param) asm("CollectEffectTargets");
+
+/* The monster `id` arrives (AddedCardsSummoned): Junk Synchron's revived monster has its effects negated, and
+ * Quillbolt Hedgehog summoned by its own effect is marked to be banished when it leaves the field. */
+void SynchroCardsArrived(int player, int zone, u16 id)
+{
+    struct DuelZone *z = ZoneOf(player, zone);
+
+    id &= CARD_ID_MASK;
+    if (zone > ZONE_MONSTER_4)
+        return;
+    if (gModDuel.junkNegateId != 0 && id == gModDuel.junkNegateId) {
+        gModDuel.junkNegateId = 0;
+        z->isDisabled = 1;
+    }
+    if (gModDuel.quillboltId != 0 && id == gModDuel.quillboltId) {
+        gModDuel.quillboltId = 0;
+        gModDuel.quillboltIds[(player & 1) * 5 + zone] = id;
+    }
+}
+
+#ifdef HAS_CARD_JUNK_SYNCHRON
+/* ---- Junk Synchron ------------------------------------------------------------------------------------------------
+ * "When this card is Normal Summoned: You can target 1 Level 2 or lower monster in your Graveyard; Special Summon that
+ * target in Defense Position, but it has its effects negated."
+ *   AddedCardsSummoned queues the trigger (RESPONSE_SUMMONED at its zone) for a face-up Normal Summon, as Marauding
+ *   Captain's. The human is asked, then picks the monster (ModCollectEffectTargets: JunkSynchronTargetId); the CPU takes
+ *   its highest ATK one. It leaves the Graveyard and is Special Summoned face-up in Defense Position; when it arrives,
+ *   its zone is marked disabled (isDisabled), which the engine's effect checks honour. */
+static const u8 sStrJunkSynchronPrompt[] = "Special Summon a Level 2 or lower monster from your Graveyard?";
+
+int JunkSynchronTargetId(u16 id, int param)
+{
+    u32 stats = gCardStats[id & CARD_ID_MASK];
+
+    (void)param;
+    return CARD_STATS_TYPE(stats) <= CARD_TYPE_REPTILE && CARD_STATS_LEVEL(stats) <= 2
+           && !IsCannotSpecialSummon(id & CARD_ID_MASK);
+}
+
+int EffectJunkSynchronPrepare(struct ChainEntry *card, struct ChainEntry *chainLink, u16 fromHand)
+{
+    return !fromHand && card->event == RESPONSE_SUMMONED && card->loc0 == DUEL_LOC(card->player, card->zone)
+           && CountFreeMonsterZones(card->player) > 0 && CanSpecialSummon(card->player);
+}
+
+int EffectJunkSynchronResolve(struct ChainEntry *link, struct ChainEntry *chainedTo)
+{
+    int count, i, best;
+    u32 bestAtk;
+    u16 *picked;
+
+    if (link->negated)
+        return EFFECT_STEP_DONE;
+    switch (gChain.effectStep) {
+    case EFFECT_STEP_START:
+        count = CollectEffectTargetsSyn(link->player, CARD_JUNK_SYNCHRON, 0);
+        if (count == 0 || CountFreeMonsterZones(link->player) == 0)
+            return EFFECT_STEP_DONE;
+        if (link->player) {
+            best = 0;
+            bestAtk = 0;
+            for (i = 0; i < count; i++) {
+                u32 atk = CARD_STATS_ATK(gCardStats[gCardListView.cards[i] & CARD_ID_MASK]);
+
+                if (i == 0 || atk > bestAtk) {
+                    best = i;
+                    bestAtk = atk;
+                }
+            }
+            gCardListView.cursorRow = 0;
+            gCardListView.top = best;
+            return EFFECT_STEP_3;
+        }
+        TextBoxOpen(TEXTBOX_POS(5, 2), TEXTBOX_SIZE(20, 7), TEXTBOX_FLAGS_DEFAULT, sStrJunkSynchronPrompt);
+        TextBoxSetMenu(TEXTBOX_MENU_YES_NO, NULL, NULL);
+        return EFFECT_STEP_2;
+    case EFFECT_STEP_2:
+        if (!gTextBox.result)
+            return EFFECT_STEP_DONE;
+        CardListView_Open(link->player, CARDLIST_AREA_EFFECT_TARGETS, CARD_JUNK_SYNCHRON, 0);
+        return EFFECT_STEP_3;
+    case EFFECT_STEP_3:
+        picked = (u16 *)&gCardListView.cards[gCardListView.cursorRow + gCardListView.top];
+        CopyDuelCard(&gChain.effectCard, (struct DuelCard *)picked);
+        DuelCmd_Push(link->player ? DUEL_CMD_PLAYER | DUEL_CMD_REMOVE_CARD_FROM_GRAVEYARD
+                                  : DUEL_CMD_REMOVE_CARD_FROM_GRAVEYARD, picked[0], picked[1], 0);
+        return EFFECT_STEP_4;
+    case EFFECT_STEP_4:
+        gModDuel.junkNegateId = DUEL_CARD_ID(&gChain.effectCard);
+        QueueSpecialSummon(link->player, &gChain.effectCard, 1, 1, 0);
+        return EFFECT_STEP_END;
+    }
+    return EFFECT_STEP_DONE;
+}
+#endif /* HAS_CARD_JUNK_SYNCHRON */
+
+#ifdef HAS_CARD_QUILLBOLT_HEDGEHOG
+/* ---- Quillbolt Hedgehog -------------------------------------------------------------------------------------------
+ * "If this card is in your Graveyard: You can Special Summon this card, but banish it when it leaves the field. You
+ * must control a Tuner monster to activate and to resolve this effect."
+ *   activation  the human: A on their Graveyard pile opens the card menu with Special Summon (card_menu_input.c,
+ *               ModQuillboltAvailable), which ModQuillboltMenuRun turns into an off-field activation (as Thunder
+ *               Dragon's from the hand); the CPU: AiPlayAddedCards, before its Synchro Summon
+ *   resolve     still a face-up Tuner: it leaves the Graveyard and is Special Summoned (position chosen)
+ *   banish      SynchroCardsArrived marks it (gModDuel.quillboltIds); IsFaceUpDarkMagicianOfChaos, which the ways off
+ *               the field ask (SendFieldCardToGrave, ReturnFieldCardToHand / Deck, Synchro Material too), then banishes
+ *               it instead. */
+static int ControlsFaceUpTuner(int player)
+{
+    int zone;
+
+    for (zone = ZONE_MONSTER_0; zone <= ZONE_MONSTER_4; zone++) {
+        struct DuelZone *z = ZoneOf(player, zone);
+
+        if (z->isFaceUp && DUEL_CARD_ID(&z->card) != 0 && IS_TUNER_CARD(DUEL_CARD_ID(&z->card)))
+            return 1;
+    }
+    return 0;
+}
+
+/* Index of a Quillbolt Hedgehog in player's Graveyard, or -1. */
+static int QuillboltInGraveyard(int player)
+{
+    struct DuelPlayer *p = &gDuelPlayers[player & 1];
+    int i;
+
+    for (i = 0; i < p->graveCount; i++) {
+        if (CardNumberOfId(DUEL_CARD_ID(&p->graveyard[i])) == CARD_QUILLBOLT_HEDGEHOG)
+            return i;
+    }
+    return -1;
+}
+
+int ModQuillboltAvailable(int player)
+{
+    return gDuel.turnPlayer == player && (gDuel.phase == PHASE_MAIN1 || gDuel.phase == PHASE_MAIN2)
+           && QuillboltInGraveyard(player) >= 0 && ControlsFaceUpTuner(player)
+           && CountFreeMonsterZones(player) > 0 && CanSpecialSummon(player);
+}
+
+static void QuillboltActivate(int player)
+{
+    u16 id = gCardNumberToId[CARD_QUILLBOLT_HEDGEHOG];
+
+    Chain_AddPending(TRIGGER_PLAYER(player & 1) | TRIGGER_KIND(CHAIN_KIND_OFF_FIELD) | (id & CARD_ID_MASK), 0);
+}
+
+void ModQuillboltMenuRun(void)
+{
+    if (ModQuillboltAvailable(0))
+        QuillboltActivate(0);
+    gDuel.cardMenu.confirmed = 0;
+}
+
+int EffectQuillboltHedgehogPrepare(struct ChainEntry *card, struct ChainEntry *chainLink, u16 fromHand)
+{
+    return !fromHand && chainLink == NULL && QuillboltInGraveyard(card->player) >= 0
+           && ControlsFaceUpTuner(card->player) && CountFreeMonsterZones(card->player) > 0
+           && CanSpecialSummon(card->player);
+}
+
+int EffectQuillboltHedgehogResolve(struct ChainEntry *link, struct ChainEntry *chainedTo)
+{
+    struct DuelPlayer *p = &gDuelPlayers[link->player & 1];
+    int i;
+
+    if (link->negated)
+        return EFFECT_STEP_DONE;
+    switch (gChain.effectStep) {
+    case EFFECT_STEP_START:
+        i = QuillboltInGraveyard(link->player);
+        if (i < 0 || !ControlsFaceUpTuner(link->player) || CountFreeMonsterZones(link->player) == 0)
+            return EFFECT_STEP_DONE;
+        CopyDuelCard(&gChain.effectCard, &p->graveyard[i]);
+        DuelCmd_Push(link->player ? DUEL_CMD_PLAYER | DUEL_CMD_REMOVE_CARD_FROM_GRAVEYARD
+                                  : DUEL_CMD_REMOVE_CARD_FROM_GRAVEYARD,
+                     ((u16 *)&gChain.effectCard)[0], ((u16 *)&gChain.effectCard)[1], 0);
+        return EFFECT_STEP_2;
+    case EFFECT_STEP_2:
+        gModDuel.quillboltId = DUEL_CARD_ID(&gChain.effectCard);
+        QueueSpecialSummonChoosePosition(link->player, &gChain.effectCard, 1, 0);
+        return EFFECT_STEP_END;
+    }
+    return EFFECT_STEP_DONE;
+}
+
+static int AiQuillbolt(void)
+{
+    if (!ModQuillboltAvailable(AI_PLAYER))
+        return 0;
+    QuillboltActivate(AI_PLAYER);
+    return 1;
+}
+#else
+int ModQuillboltAvailable(int player)
+{
+    return 0;
+}
+
+void ModQuillboltMenuRun(void)
+{
+    gDuel.cardMenu.confirmed = 0;
+}
+#endif /* HAS_CARD_QUILLBOLT_HEDGEHOG */
+
+/* IsFaceUpDarkMagicianOfChaos: 1 if the monster in (player, zone) is a Quillbolt Hedgehog its effect summoned. */
+int QuillboltBanishedOnLeave(int player, int zone)
+{
+    u16 id;
+
+    if (zone > ZONE_MONSTER_4)
+        return 0;
+    id = gModDuel.quillboltIds[(player & 1) * 5 + zone];
+    return id != 0 && DUEL_CARD_ID(&ZoneOf(player, zone)->card) == id;
+}
+
+#ifdef HAS_CARD_JUNK_WARRIOR
+/* ---- Junk Warrior -------------------------------------------------------------------------------------------------
+ * '"Junk Synchron" + 1 or more non-Tuner monsters. If this card is Synchro Summoned: It gains ATK equal to the total
+ * ATK of all Level 2 or lower monsters you currently control.' (The material rule is synchro_rules.h's.)
+ *   AddedCardsSummoned queues the trigger (RESPONSE_SPECIAL_SUMMONED at its zone) when ModSynchroArrived marks it. The
+ *   resolve adds the total (the monsters' current ATK, GetZoneCardStats) as a ZONE_LINK_ATK_BONUS link, which lasts
+ *   while it stays on the field. */
+int EffectJunkWarriorPrepare(struct ChainEntry *card, struct ChainEntry *chainLink, u16 fromHand)
+{
+    return !fromHand && card->event == RESPONSE_SPECIAL_SUMMONED && card->loc0 == DUEL_LOC(card->player, card->zone);
+}
+
+int EffectJunkWarriorResolve(struct ChainEntry *link, struct ChainEntry *chainedTo)
+{
+    struct ZoneCardStats stats;
+    int zone, total = 0;
+
+    if (link->negated || link->zone > ZONE_MONSTER_4
+        || CardNumberOfId(DUEL_CARD_ID(&ZoneOf(link->player, link->zone)->card)) != CARD_JUNK_WARRIOR
+        || !ZoneOf(link->player, link->zone)->isFaceUp)
+        return EFFECT_STEP_DONE;
+    for (zone = ZONE_MONSTER_0; zone <= ZONE_MONSTER_4; zone++) {
+        struct DuelZone *z = ZoneOf(link->player, zone);
+        u16 id = DUEL_CARD_ID(&z->card);
+
+        if (id == 0 || !z->isFaceUp || CARD_STATS_TYPE(gCardStats[id & CARD_ID_MASK]) > CARD_TYPE_REPTILE
+            || CARD_STATS_LEVEL(gCardStats[id & CARD_ID_MASK]) > 2)
+            continue;
+        GetZoneCardStats(link->player, zone, &stats);
+        total += stats.atk;
+    }
+    if (total > 0)
+        QueueAddZoneLink(link->player, total, DUEL_LOC(link->player, link->zone), ZONE_LINK_ATK_BONUS);
+    return EFFECT_STEP_DONE;
+}
+#endif /* HAS_CARD_JUNK_WARRIOR */
+
+#if defined(HAS_CARD_STARDUST_DRAGON) && defined(HAS_CARD_MY_BODY_AS_A_SHIELD)
+/* ---- Stardust Dragon ----------------------------------------------------------------------------------------------
+ * "1 Tuner + 1+ non-Tuner monsters. When a card or effect is activated that would destroy a card(s) on the field
+ * (Quick Effect): You can Tribute this card; negate the activation, and if you do, destroy it. During the End Phase,
+ * if this effect was activated this turn (and was not negated): You can Special Summon this card from your GY."
+ *   answer    a face-up Stardust Dragon answers a chain link like the engine's key 1525 (a monster that negates a
+ *             Magic card): CanPlayerChain and Chain_GetResponseCommands (effect_activation.c, duel_setup.c) ask
+ *             ModMonsterCanRespond. "Would destroy": My Body as a Shield's monster destroyers or sCardDestroyers (the
+ *             Spell/Trap ones); a link with targets must have one on the field.
+ *   chainA    Tribute this card (the cost)
+ *   resolve   negate and destroy, as My Body as a Shield; the revival is noted (gModDuel.stardustRevive)
+ *   End Phase EndPhase_StardustDragon (battle_phase3.c): a noted Stardust Dragon in its owner's Graveyard comes back
+ *             (always: the human is not asked)
+ *   CPU       AiChainStardustDragon (AiChainSummonTriggerResponse): the human's link that would destroy a CPU card. */
+static const u16 sCardDestroyers[] = {
+    CARD_MYSTICAL_SPACE_TYPHOON,
+    CARD_HEAVY_STORM,
+    CARD_HARPIES_FEATHER_DUSTER,
+    CARD_DUST_TORNADO,
+    CARD_GUST,
+    CARD_DRIVING_SNOW,
+#ifdef HAS_CARD_BREAKER_THE_MAGICAL_WARRIOR
+    CARD_BREAKER_THE_MAGICAL_WARRIOR,
+#endif
+#ifdef HAS_CARD_MOBIUS_THE_FROST_MONARCH
+    CARD_MOBIUS_THE_FROST_MONARCH,
+#endif
+    CARD_ARMED_NINJA,
+#ifdef HAS_CARD_CHIRON_THE_MAGE
+    CARD_CHIRON_THE_MAGE,
+#endif
+    CARD_GREENKAPPA,
+    CARD_NOBLEMAN_OF_EXTERMINATION,
+#ifdef HAS_CARD_SWARM_OF_LOCUSTS
+    CARD_SWARM_OF_LOCUSTS,
+#endif
+#ifdef HAS_CARD_SACRED_PHOENIX_OF_NEPHTHYS
+    CARD_SACRED_PHOENIX_OF_NEPHTHYS,
+#endif
+    CARD_REMOVE_TRAP,
+#ifdef HAS_CARD_GIGANTES
+    CARD_GIGANTES,
+#endif
+#ifdef HAS_CARD_CURSE_OF_ROYAL
+    CARD_CURSE_OF_ROYAL,
+#endif
+    CARD_DE_SPELL,
+#ifdef HAS_CARD_SPELL_PURIFICATION
+    CARD_SPELL_PURIFICATION,
+#endif
+    CARD_WEATHER_REPORT,
+#ifdef HAS_CARD_SPELL_SHIELD_TYPE_8
+    CARD_SPELL_SHIELD_TYPE_8,
+#endif
+#ifdef HAS_CARD_DARK_SCORPION_CLIFF_THE_TRAP_REMOVER
+    CARD_DARK_SCORPION_CLIFF_THE_TRAP_REMOVER,
+#endif
+    CARD_TRAP_MASTER,
+    CARD_CYBER_JAR,
+};
+
+static int StardustListsCard(struct ChainEntry *link)
+{
+    u16 number = CardNumberOfId(link->card);
+    u32 i;
+
+    if (MyBodyListsCard(link))
+        return 1;
+    for (i = 0; i < ARRAY_COUNT(sCardDestroyers); i++) {
+        if (sCardDestroyers[i] == number)
+            return 1;
+    }
+    return 0;
+}
+
+/* side: only that player's cards count; -1: either player's. */
+static int StardustHitsCard(struct ChainEntry *link, int side)
+{
+    int i, zone, count = 0;
+
+    if (!StardustListsCard(link))
+        return 0;
+    if (link->numTargets == 0) {
+        for (zone = 0; zone <= ZONE_FIELD; zone++) {
+            if (side < 0 ? DUEL_CARD_ID(&ZoneOf(0, zone)->card) || DUEL_CARD_ID(&ZoneOf(1, zone)->card)
+                         : DUEL_CARD_ID(&ZoneOf(side, zone)->card) != 0)
+                count++;
+        }
+        return count > 0;
+    }
+    for (i = 0; i < link->numTargets; i++) {
+        int player = DUEL_LOC_PLAYER(link->targets[i]);
+
+        zone = DUEL_LOC_ZONE(link->targets[i]);
+        if (zone <= ZONE_FIELD && (side < 0 || side == player) && DUEL_CARD_ID(&ZoneOf(player, zone)->card) != 0)
+            return 1;
+    }
+    return 0;
+}
+
+static int StardustCanAnswer(struct ChainEntry *link)
+{
+    return link != NULL && !link->negated
+           && (link->kind == CHAIN_KIND_SPELL_TRAP || link->kind == CHAIN_KIND_MONSTER)
+           && GetCardSpellSpeed(link->card) <= SPELL_SPEED_2 && StardustHitsCard(link, -1);
+}
+
+static int IsStardustAt(int player, int zone)
+{
+    struct DuelZone *z = ZoneOf(player, zone);
+
+    return zone <= ZONE_MONSTER_4 && z->isFaceUp
+           && CardNumberOfId(DUEL_CARD_ID(&z->card)) == CARD_STARDUST_DRAGON
+           && !IsZoneInActionLists(player, zone);
+}
+
+int ModMonsterCanRespond(struct ChainEntry *link, int player, int zone)
+{
+    return IsStardustAt(player, zone) && StardustCanAnswer(link);
+}
+
+int ModMonsterCanChain(struct ChainEntry *link, int player)
+{
+    int zone;
+
+    for (zone = ZONE_MONSTER_0; zone <= ZONE_MONSTER_4; zone++) {
+        if (ModMonsterCanRespond(link, player, zone))
+            return 1;
+    }
+    return 0;
+}
+
+int EffectStardustDragonPrepare(struct ChainEntry *card, struct ChainEntry *chainLink, u16 fromHand)
+{
+    return !fromHand && StardustCanAnswer(chainLink);
+}
+
+int EffectStardustDragonChainA(struct ChainEntry *link, struct ChainEntry *prevLink)
+{
+    (void)prevLink;
+    if (link->zone <= ZONE_MONSTER_4)
+        TributeMonster(link->player, link->zone);
+    return 1;
+}
+
+int EffectStardustDragonResolve(struct ChainEntry *link, struct ChainEntry *chainedTo)
+{
+    if (link->negated || chainedTo == NULL)
+        return EFFECT_STEP_DONE;
+    gModDuel.stardustRevive[link->player & 1] = link->card & CARD_ID_MASK;
+    return EffectMyBodyAsAShieldResolve(link, chainedTo);
+}
+
+void EndPhase_StardustDragon(int turnPlayer)
+{
+    int player;
+
+    (void)turnPlayer;
+    for (player = 0; player <= 1; player++) {
+        struct DuelPlayer *p = &gDuelPlayers[player];
+        u16 id = gModDuel.stardustRevive[player];
+        int i;
+
+        gModDuel.stardustRevive[player] = 0;
+        if (id == 0 || CountFreeMonsterZones(player) == 0 || !CanSpecialSummon(player))
+            continue;
+        for (i = 0; i < p->graveCount; i++) {
+            if (DUEL_CARD_ID(&p->graveyard[i]) == id) {
+                CopyDuelCard(&gModDuel.stardustCard[player], &p->graveyard[i]);
+                DuelCmd_Push(player ? DUEL_CMD_PLAYER | DUEL_CMD_REMOVE_CARD_FROM_GRAVEYARD
+                                    : DUEL_CMD_REMOVE_CARD_FROM_GRAVEYARD,
+                             ((u16 *)&gModDuel.stardustCard[player])[0], ((u16 *)&gModDuel.stardustCard[player])[1],
+                             0);
+                QueueSpecialSummonChoosePosition(player, &gModDuel.stardustCard[player], 1, 0);
+                break;
+            }
+        }
+    }
+}
+
+static int AiChainStardustDragon(struct ChainEntry *entry)
+{
+    int zone;
+
+    if (entry->player != AI_HUMAN || !StardustCanAnswer(entry) || !StardustHitsCard(entry, AI_PLAYER))
+        return 0;
+    for (zone = ZONE_MONSTER_0; zone <= ZONE_MONSTER_4; zone++) {
+        if (IsStardustAt(AI_PLAYER, zone)) {
+            DuelCmd_Push(DUEL_CMD_PLAYER | DUEL_CMD_CHAIN_BANNER, 0, 0, 0);
+            Chain_AddLink((1u << 31) | (entry->event << 25) | ((zone & 0x1F) << 16) | (CHAIN_KIND_SPELL_TRAP << 21)
+                              | DUEL_CARD_ID(&ZoneOf(AI_PLAYER, zone)->card),
+                          (entry->loc1 << 16) | entry->loc0);
+            return 1;
+        }
+    }
+    return 0;
+}
+#else
+int ModMonsterCanRespond(struct ChainEntry *link, int player, int zone)
+{
+    return 0;
+}
+
+int ModMonsterCanChain(struct ChainEntry *link, int player)
+{
+    return 0;
+}
+
+void EndPhase_StardustDragon(int turnPlayer)
+{
+}
+#endif /* HAS_CARD_STARDUST_DRAGON && HAS_CARD_MY_BODY_AS_A_SHIELD */
 
 /* ---- Big Bang Shot (engine key 1313, tools/newcards.py) -----------------------------------------------------------
  * Equip Spell: "The equipped monster gains 400 ATK. If the equipped monster attacks a Defense Position monster, inflict
@@ -10236,6 +10753,10 @@ int AiChainSummonTriggerResponse(struct ChainEntry *entry)
     if (AiChainMyBodyAsAShield(entry))
         return 1;
 #endif
+#if defined(HAS_CARD_STARDUST_DRAGON) && defined(HAS_CARD_MY_BODY_AS_A_SHIELD)
+    if (AiChainStardustDragon(entry))
+        return 1;
+#endif
     if (entry->player != AI_HUMAN || (entry->event != RESPONSE_SUMMONED && entry->event != RESPONSE_FLIP_SUMMONED
                                       && entry->event != RESPONSE_SPECIAL_SUMMONED))
         return 0;
@@ -11923,6 +12444,12 @@ int AiPlayAddedCards(void)
     if (CountFreeMonsterZones(AI_PLAYER) > 0 && AiLightDarkBanishSummon())
         return 1;
 #endif
+#ifdef HAS_CARD_QUILLBOLT_HEDGEHOG
+    if (AiQuillbolt())
+        return 1;
+#endif
+    if (AiTrySynchroSummon())               /* src/mod_synchro.c */
+        return 1;
     /* the card-menu effects of face-up added monsters */
     for (zone = ZONE_MONSTER_0; zone <= ZONE_MONSTER_4; zone++) {
         struct DuelZone *z = ZoneOf(AI_PLAYER, zone);
@@ -12982,6 +13509,46 @@ const struct CardEffect gAddedCardEffects[] = {
         NULL,
         EffectDivineWrathPrepare,
         EffectDivineWrathChainA,
+        NULL,
+    },
+#endif
+#ifdef HAS_CARD_JUNK_SYNCHRON
+    {
+        CARD_JUNK_SYNCHRON, 0,
+        EffectJunkSynchronResolve,
+        NULL,
+        EffectJunkSynchronPrepare,
+        NULL,
+        NULL,
+    },
+#endif
+#ifdef HAS_CARD_QUILLBOLT_HEDGEHOG
+    {
+        CARD_QUILLBOLT_HEDGEHOG, 0,
+        EffectQuillboltHedgehogResolve,
+        NULL,
+        EffectQuillboltHedgehogPrepare,
+        NULL,
+        NULL,
+    },
+#endif
+#ifdef HAS_CARD_JUNK_WARRIOR
+    {
+        CARD_JUNK_WARRIOR, 0,
+        EffectJunkWarriorResolve,
+        NULL,
+        EffectJunkWarriorPrepare,
+        NULL,
+        NULL,
+    },
+#endif
+#if defined(HAS_CARD_STARDUST_DRAGON) && defined(HAS_CARD_MY_BODY_AS_A_SHIELD)
+    {
+        CARD_STARDUST_DRAGON, 0,
+        EffectStardustDragonResolve,
+        NULL,
+        EffectStardustDragonPrepare,
+        EffectStardustDragonChainA,
         NULL,
     },
 #endif

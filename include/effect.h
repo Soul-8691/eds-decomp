@@ -118,6 +118,7 @@ void EndPhase_ManticoreOfDarkness(int turnPlayer);
 void EndPhase_DDSurvivor(int turnPlayer);
 /* Return from the Different Dimension (src/added_effects.c): the End Phase banish of the monsters it summoned. */
 void EndPhase_ReturnFromTheDifferentDimension(void);
+void EndPhase_StardustDragon(int turnPlayer);     /* added card: Stardust Dragon's revival (src/added_effects.c) */
 /* Yata-Garasu (src/added_effects.c): back to the hand at the End Phase; its battle damage skips a Draw Phase. */
 void EndPhase_ReturnSpiritMonsters(void);
 void EndPhase_ReturnMagicalScientist(void);
