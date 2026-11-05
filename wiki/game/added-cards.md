@@ -2024,6 +2024,20 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
   - **Deck:** `DUEL_CMD_SEND_DECK_CARD_TO_GRAVEYARD` for `deck[0]` and `deck[1]` (the top is index 0).
 - Checked in the source and the build; not tested in an emulator.
 
+### Nightmare's Steelcage (2026-11-05)
+- Continuous Spell (`assets/new_cards/cards.json`): "This card remains on the field for 2 of your opponent's turns.
+  While this card is face-up on the field, no monsters can attack."
+- **The engine already has it** as effect key 1230 (no EDS card), and `ENGINE_NUMBERS` gives the card that number.
+  - Activation: `EffectNopResolve`, and it stays face-up.
+  - `BuildAttackableMask` (`card_menu_input.c`) allows no attacks for either player while one is face-up.
+  - The battle scene shows its turn counter, as Swords of Revealing Light's.
+  - `DuelPhase_End`'s spell/trap counters (`battle_phase3.c`) destroy it at the End Phase of its controller's
+    opponent's 2nd turn.
+- CPU: `AiWantsSpell` / `AiWantsSteelcage` play it when the human's strongest face-up monster beats the CPU's, or the CPU
+  has 2000 LP or less and the human has a monster, and never while one is up already.
+- Moved above `------` in `new_cards.txt` (into the demo). It wasn't in `card_pools/missing*.txt`.
+- Checked in the source and the build; not tested in an emulator.
+
 ### Nightmare Wheel (2026-11-05)
 - Continuous Trap (`assets/new_cards/cards.json`): "Activate this card by targeting 1 monster your opponent controls; it
   cannot attack or change its battle position. When it leaves the field, destroy this card. Once per turn, during your

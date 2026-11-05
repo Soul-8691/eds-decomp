@@ -89,6 +89,10 @@ ENGINE_NUMBERS = {
                                     # position for that turn and re-arms it (DuelCmd_TurnStart)
     'United We Stand': 1449,        # key 1449: an Equip (EffectEquipResolve and the equip target rules), +800 ATK/DEF
                                     # per face-up monster of the equip card's controller (CalcZoneCardStats)
+    "Nightmare's Steelcage": 1230,  # key 1230: a Continuous Spell with no effect row of its own (EffectNopResolve);
+                                    # while it is face up neither player can attack (BuildAttackableMask), its turn
+                                    # counter (battle_scene.c) and the opponent's 2nd End Phase destroy it
+                                    # (DuelPhase_End's spell/trap counters, battle_phase3.c)
     'Big Bang Shot': 1313,          # key 1313: an Equip (EffectEquipResolve and the equip target rules) that gives piercing
                                     # (CalcBattle); +400 ATK (CalcZoneCardStats) and the banish (BigBangShotLeaves) are added
     'Mage Power': 1450,             # key 1450: an Equip, +500 ATK/DEF per Spell/Trap of the equip card's controller,

@@ -2468,3 +2468,6 @@ updated: 2026-09-29
 
 ## [2026-11-05] progress | Nightmare Wheel
 - src/added_effects.c: the row (Spellbinding Circle's handlers), NightmareWheelStandbyStep (ModStandbyStep part 2; Mirage's parts now 3-4). src/duel_piles.c: CountZoneLinksFromCard counts its link as Spellbinding Circle's. src/duel_send_to_grave.c: DestroyLinkedCards destroys it as key 1244. new_cards.txt (moved above ------), card_pools/missing*.txt, README (168), [[added-cards]]. Built (`make demo`); not tested in an emulator.
+
+## [2026-11-05] progress | Nightmare's Steelcage
+- tools/newcards.py: ENGINE_NUMBERS "Nightmare's Steelcage" = 1230 (no attacks for either player, destroyed after the opponent's 2nd turn). src/added_effects.c: AiWantsSteelcage. new_cards.txt (moved above ------), README (169), AI_IMPROVEMENTS, [[added-cards]]. Built (`make demo`); not tested in an emulator.

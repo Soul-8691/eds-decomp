@@ -12780,10 +12780,38 @@ int AiTryPlayScapegoat(void)
 }
 #endif /* HAS_CARD_SCAPEGOAT && HAS_CARD_SHEEP_TOKEN */
 
+#ifdef HAS_CARD_NIGHTMARES_STEELCAGE
+/* Nightmare's Steelcage (engine key 1230, tools/newcards.py): the CPU stops all attacks for two of the human's turns
+ * when it is behind on the field (the human's strongest face-up monster beats its own) or low on LP (2000 or less)
+ * while the human has a monster; never while one is up already. */
+static int AiWantsSteelcage(void)
+{
+    u32 human = 0, cpu = 0;
+    int zone;
+
+    if (CountActiveCardsOnField(0, CARD_NIGHTMARES_STEELCAGE) || CountActiveCardsOnField(1, CARD_NIGHTMARES_STEELCAGE)
+        || CountMonsters(AI_HUMAN) == 0)
+        return 0;
+    for (zone = ZONE_MONSTER_0; zone <= ZONE_MONSTER_4; zone++) {
+        if (DUEL_CARD_ID(&ZoneOf(AI_HUMAN, zone)->card) && ZoneOf(AI_HUMAN, zone)->isFaceUp
+            && GetZoneCardAtk(AI_HUMAN, zone) > human)
+            human = GetZoneCardAtk(AI_HUMAN, zone);
+        if (DUEL_CARD_ID(&ZoneOf(AI_PLAYER, zone)->card) && ZoneOf(AI_PLAYER, zone)->isFaceUp
+            && GetZoneCardAtk(AI_PLAYER, zone) > cpu)
+            cpu = GetZoneCardAtk(AI_PLAYER, zone);
+    }
+    return human > cpu || (int)gDuelPlayers[AI_PLAYER].lifePoints <= 2000;
+}
+#endif
+
 /* Should the CPU play its added Magic card `number` in its Main Phase now? (AiTryPlaySpellTrap checks that it may.) */
 static int AiWantsSpell(u16 number)
 {
     switch (number) {
+#ifdef HAS_CARD_NIGHTMARES_STEELCAGE
+    case CARD_NIGHTMARES_STEELCAGE:             /* to stall when behind */
+        return AiWantsSteelcage();
+#endif
 #ifdef HAS_CARD_ENEMY_CONTROLLER
     case CARD_ENEMY_CONTROLLER:                 /* to take a much stronger monster */
         return AiWantsEnemyController();

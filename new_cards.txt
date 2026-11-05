@@ -166,6 +166,7 @@ Karma Cut
 Draining Shield
 Dimension Wall
 Nightmare Wheel
+Nightmare's Steelcage
 ------
 The Rock Spirit
 D.D. Designator
@@ -180,7 +181,6 @@ Silpheed
 Steamroid
 Gravekeeper's Guard
 Necrovalley
-Nightmare's Steelcage
 Lava Golem
 Barrel Behind the Door
 Skill Drain

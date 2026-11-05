@@ -47,6 +47,7 @@ Campaign duelists in Yak's YGO Hack use a much stronger opponent AI than vanilla
 - It chains Pikeru's Circle of Enchantment to your burn Spells and Traps that would deal it 500 or more damage (or finish it), before using Hallowed Life Barrier for that, unless you already take no effect damage (for example a face-up **Des Wombat** on your field).
 - It does not play its own effect-damage Spells and Traps (Sparks, Hinotama, Tremendous Fire, Secret Barrel, Wave-Motion Cannon ignition, and similar) while you control a face-up **Des Wombat**—only that continuous effect, not Pikeru's Circle or Hallowed Life Barrier on their own.
 - Its Sonic Bird and Senju of the Thousand Hands search without asking you: it takes the Ritual card that matches one in its hand, else the first. The original game showed you its Yes/No question.
+- It plays **Nightmare's Steelcage** to stall when your strongest face-up monster beats its own, or when it has 2000 LP or less and you have a monster.
 - It activates **Dimension Wall** against your attacks that would deal it battle damage.
 - It chains **Cursed Seal of the Forbidden Spell** to your Spells when it holds a Spell to discard.
 - It chains **My Body as a Shield** to your activated cards and effects that would destroy one of its monsters, while it has more than 3000 LP.
