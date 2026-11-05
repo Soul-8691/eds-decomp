@@ -2024,6 +2024,25 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
   - **Deck:** `DUEL_CMD_SEND_DECK_CARD_TO_GRAVEYARD` for `deck[0]` and `deck[1]` (the top is index 0).
 - Checked in the source and the build; not tested in an emulator.
 
+### Dark Deal (2026-11-05)
+- Normal Trap (`assets/new_cards/cards.json`): "When your opponent activates a Normal Spell Card: Pay 1000 Life Points;
+  the effect of that Normal Spell Card becomes 'Your opponent discards 1 random card'."
+- `EffectDarkDealPrepare`: the opponent's Normal Spell link (`IsNormalSpellLink`), not already negated, and 1000 LP.
+  `EffectDarkDealChainA`: the 1000 LP (`DUEL_CMD_LOSE_LP`).
+- `EffectDarkDealResolve`:
+  - The Spell's link is marked `negated`. Its handlers then return at once, and Chain_Resolve still sends it to the
+    Graveyard as usual. No negation is shown: `DUEL_CMD_NEGATE_ACTIVATION` isn't pushed.
+  - Its new effect happens here: Dark Deal's player, the Spell controller's opponent, discards 1 random card
+    (`DuelPrompt_PostRandomDiscard`, by the opponent's effect).
+  - Deviation: the discard comes when Dark Deal resolves, one link before the Spell's turn.
+- Limit: a Spell handler that doesn't test `link->negated` would still resolve. The original Normal Spells test it.
+- A Spell played from the hand is a link of kind 0 (`CardMenu_PlaySpellTrapFromHand` adds no kind bits), so the checks go by the card's type, not `CHAIN_KIND_SPELL_TRAP`. The same fix applied to My Body as a Shield, Stardust Dragon and Cursed Seal's CPU check.
+- CPU: `AiChainDarkDeal` chains it to the human's Pot of Greed, Graceful Charity, Raigeki, Dark Hole, Monster Reborn,
+  Change of Heart, Harpie's Feather Duster, Heavy Storm or Delinquent Duo while it has more than 3000 LP. It doesn't
+  flip it blindly.
+- It was already above `------` in `new_cards.txt`, and wasn't in `card_pools/missing*.txt`.
+- Checked in the source and the build; not tested in an emulator.
+
 ### Nightmare's Steelcage (2026-11-05)
 - Continuous Spell (`assets/new_cards/cards.json`): "This card remains on the field for 2 of your opponent's turns.
   While this card is face-up on the field, no monsters can attack."

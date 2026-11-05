@@ -2474,3 +2474,10 @@ updated: 2026-09-29
 
 ## [2026-11-05] setup | ADDING_NEW_CARDS.md
 - New repo-root guide: the card lists and tools/newcards.py, engine keys (ENGINE_NUMBERS), gAddedCardEffects rows and their handlers, reusable handlers, triggers and where to queue them, rule hooks, new mechanics, the CPU's hooks, a toolbox of effect functions, and the checklist. Linked from the README.
+
+## [2026-11-05] progress | Dark Deal
+- src/added_effects.c: EffectDarkDeal* (the Spell's link marked negated, Dark Deal's player discards 1 random card), AiChainDarkDeal, the row. README (170), AI_IMPROVEMENTS, [[added-cards]]. Built (`make demo`); not tested in an emulator.
+
+## [2026-11-05] progress | Spells played from the hand are links of kind 0
+- Reported: Dark Deal could not answer the opponent's Fissure. CardMenu_PlaySpellTrapFromHand (card_command_menu.c) adds the link with no kind bits, so a Spell from the hand is kind 0, not CHAIN_KIND_SPELL_TRAP (that is a Set or face-up card activated on the field).
+- src/added_effects.c: Dark Deal (IsNormalSpellLink), Cursed Seal's CPU check, My Body as a Shield (prepare, resolve, CPU) and Stardust Dragon no longer require CHAIN_KIND_SPELL_TRAP / _MONSTER; they go by the card's type (any kind but OFF_FIELD where it matters). The same bug kept My Body and Stardust from answering a Raigeki or Fissure played from the hand. Built (`make demo`); not tested in an emulator.

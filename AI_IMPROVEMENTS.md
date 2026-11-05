@@ -49,6 +49,7 @@ Campaign duelists in Yak's YGO Hack use a much stronger opponent AI than vanilla
 - Its Sonic Bird and Senju of the Thousand Hands search without asking you: it takes the Ritual card that matches one in its hand, else the first. The original game showed you its Yes/No question.
 - It plays **Nightmare's Steelcage** to stall when your strongest face-up monster beats its own, or when it has 2000 LP or less and you have a monster.
 - It activates **Dimension Wall** against your attacks that would deal it battle damage.
+- It chains **Dark Deal** to your Pot of Greed, Graceful Charity, Raigeki, Dark Hole, Monster Reborn, Change of Heart, Harpie's Feather Duster, Heavy Storm or Delinquent Duo while it has more than 3000 LP.
 - It chains **Cursed Seal of the Forbidden Spell** to your Spells when it holds a Spell to discard.
 - It chains **My Body as a Shield** to your activated cards and effects that would destroy one of its monsters, while it has more than 3000 LP.
 - It chains **Divine Wrath** to your activated monster effects (not plain summons), discarding a card to negate and destroy the monster; it answers Mobius, Breaker, Exiled Force, Magical Scientist, Tribe-Infecting Virus, Spirit Reaper, and similar high-impact effects, or any effect when it has three or more cards to discard. It Sets Divine Wrath from the hand when you have a wide board (five or more hand cards or any monster on your field).

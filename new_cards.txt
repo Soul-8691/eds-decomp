@@ -167,6 +167,7 @@ Draining Shield
 Dimension Wall
 Nightmare Wheel
 Nightmare's Steelcage
+Dark Deal
 ------
 The Rock Spirit
 D.D. Designator
@@ -174,7 +175,6 @@ Reflect Bounder
 Yomi Ship
 Getsu Fuhma
 Dark World Lightning
-Dark Deal
 Goldd, Wu-Lord of Dark World
 Sillva, Warlord of Dark World
 Silpheed

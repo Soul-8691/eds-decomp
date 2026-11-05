@@ -1011,6 +1011,73 @@ int ModRedirectBattleDamage(int player, int amount, u16 attackerLoc, u16 defende
     return 1;
 }
 
+#ifdef HAS_CARD_DARK_DEAL
+/* ---- Dark Deal ----------------------------------------------------------------------------------------------------
+ * "When your opponent activates a Normal Spell Card: Pay 1000 Life Points; the effect of that Normal Spell Card
+ * becomes 'Your opponent discards 1 random card'." Normal Trap.
+ *   prepare  the opponent's Normal Spell as the link it answers, and 1000 LP
+ *   chainA   1000 LP (DUEL_CMD_LOSE_LP)
+ *   resolve  the Spell's link is marked negated, so its own effect does not resolve (it still goes to the
+ *            Graveyard as usual, with no negation shown), and its new effect happens here: its controller's opponent,
+ *            Dark Deal's player, discards 1 random card (DuelPrompt_PostRandomDiscard). The discard comes when Dark
+ *            Deal resolves, one link before the Spell's turn.
+ *   CPU      AiChainDarkDeal (AiChainSummonTriggerResponse): the human's strong Normal Spells, with LP to spare */
+#define DARK_DEAL_COST 1000
+#define DARK_DEAL_AI_MIN_LP 3000
+
+static int IsNormalSpellLink(struct ChainEntry *link)
+{
+    u32 stats = gCardStats[link->card & CARD_ID_MASK];
+
+    /* the type, not link->kind: a Spell played from the hand is a link of kind 0 */
+    return link->kind != CHAIN_KIND_OFF_FIELD && CARD_STATS_TYPE(stats) == CARD_TYPE_MAGIC
+           && CARD_STATS_SUBTYPE(stats) == SPELL_NORMAL && CardNumberOfId(link->card) != CARD_1539;
+}
+
+int EffectDarkDealPrepare(struct ChainEntry *card, struct ChainEntry *chainLink, u16 fromHand)
+{
+    return !fromHand && chainLink != NULL && chainLink->player != card->player && !chainLink->negated
+           && IsNormalSpellLink(chainLink) && (int)gDuelPlayers[card->player & 1].lifePoints >= DARK_DEAL_COST;
+}
+
+int EffectDarkDealChainA(struct ChainEntry *link, struct ChainEntry *prevLink)
+{
+    (void)prevLink;
+    DuelCmd_Push(link->player ? DUEL_CMD_PLAYER | DUEL_CMD_LOSE_LP : DUEL_CMD_LOSE_LP, DARK_DEAL_COST, 1, 0);
+    return 1;
+}
+
+int EffectDarkDealResolve(struct ChainEntry *link, struct ChainEntry *chainedTo)
+{
+    if (link->negated || chainedTo == NULL || chainedTo->negated || !IsNormalSpellLink(chainedTo))
+        return EFFECT_STEP_DONE;
+    chainedTo->negated = 1;
+    if (gDuelPlayers[link->player & 1].handCount > 0)
+        DuelPrompt_PostRandomDiscard(link->player, 1, 1);
+    return EFFECT_STEP_DONE;
+}
+
+static int AiChainDarkDeal(struct ChainEntry *entry)
+{
+    if (entry->player != 0 || !IsNormalSpellLink(entry)       /* the human's (0); the CPU is player 1 */
+        || (int)gDuelPlayers[1].lifePoints <= DARK_DEAL_AI_MIN_LP)
+        return 0;
+    switch (CardNumberOfId(entry->card)) {
+    case CARD_POT_OF_GREED:
+    case CARD_GRACEFUL_CHARITY:
+    case CARD_RAIGEKI:
+    case CARD_DARK_HOLE:
+    case CARD_MONSTER_REBORN:
+    case CARD_CHANGE_OF_HEART:
+    case CARD_HARPIES_FEATHER_DUSTER:
+    case CARD_HEAVY_STORM:
+    case CARD_DELINQUENT_DUO:
+        return AiChainSetCard(entry, CARD_DARK_DEAL);
+    }
+    return 0;
+}
+#endif /* HAS_CARD_DARK_DEAL */
+
 #ifdef HAS_CARD_DIMENSION_WALL
 int EffectDimensionWallPrepare(struct ChainEntry *card, struct ChainEntry *chainLink, u16 fromHand)
 {
@@ -8106,7 +8173,7 @@ int EffectCursedSealResolve(struct ChainEntry *link, struct ChainEntry *chainedT
 
 static int AiChainCursedSeal(struct ChainEntry *entry)
 {
-    if (entry->player != AI_HUMAN || entry->kind != CHAIN_KIND_SPELL_TRAP || HandSpellIndex(AI_PLAYER) < 0
+    if (entry->player != AI_HUMAN || entry->kind == CHAIN_KIND_OFF_FIELD || HandSpellIndex(AI_PLAYER) < 0
         || CARD_STATS_TYPE(gCardStats[entry->card & CARD_ID_MASK]) != CARD_TYPE_MAGIC
         || CardNumberOfId(entry->card) == CARD_1539)
         return 0;
@@ -8415,7 +8482,7 @@ int EffectMyBodyAsAShieldPrepare(struct ChainEntry *card, struct ChainEntry *cha
         return 0;
     if ((int)gDuelPlayers[card->player & 1].lifePoints < MY_BODY_COST)
         return 0;
-    if (chainLink->negated || (chainLink->kind != CHAIN_KIND_SPELL_TRAP && chainLink->kind != CHAIN_KIND_MONSTER))
+    if (chainLink->negated)     /* any kind: a Spell played from the hand is a link of kind 0 */
         return 0;
     return MyBodyHitsMonster(chainLink, -1);
 }
@@ -8432,7 +8499,7 @@ int EffectMyBodyAsAShieldResolve(struct ChainEntry *link, struct ChainEntry *cha
     if (link->negated || chainedTo == NULL)
         return EFFECT_STEP_DONE;
     DuelCmd_Push(MY_BODY_PLAYER_CMD(link->player, DUEL_CMD_NEGATE_ACTIVATION), 1, 0, 0);
-    if (chainedTo->kind == CHAIN_KIND_SPELL_TRAP) {
+    if (CARD_STATS_TYPE(gCardStats[chainedTo->card & CARD_ID_MASK]) > CARD_TYPE_REPTILE) {    /* a Spell/Trap */
         DuelCmd_Push(MY_BODY_PLAYER_CMD(chainedTo->player, DUEL_CMD_SET_SPELL_TRAP_DISABLED), chainedTo->zone, 1, 0);
     } else if (chainedTo->zone <= ZONE_MONSTER_4
                && DUEL_CARD_ID(&ZoneOf(chainedTo->player, chainedTo->zone)->card) == (chainedTo->card & CARD_ID_MASK)) {
@@ -8444,8 +8511,6 @@ int EffectMyBodyAsAShieldResolve(struct ChainEntry *link, struct ChainEntry *cha
 static int AiChainMyBodyAsAShield(struct ChainEntry *entry)
 {
     if (entry->player != AI_HUMAN || (int)gDuelPlayers[AI_PLAYER].lifePoints <= MY_BODY_AI_MIN_LP)
-        return 0;
-    if (entry->kind != CHAIN_KIND_SPELL_TRAP && entry->kind != CHAIN_KIND_MONSTER)
         return 0;
     if (!MyBodyHitsMonster(entry, AI_PLAYER))
         return 0;
@@ -8839,7 +8904,6 @@ static int StardustHitsCard(struct ChainEntry *link, int side)
 static int StardustCanAnswer(struct ChainEntry *link)
 {
     return link != NULL && !link->negated
-           && (link->kind == CHAIN_KIND_SPELL_TRAP || link->kind == CHAIN_KIND_MONSTER)
            && GetCardSpellSpeed(link->card) <= SPELL_SPEED_2 && StardustHitsCard(link, -1);
 }
 
@@ -11297,6 +11361,10 @@ int AiChainSummonTriggerResponse(struct ChainEntry *entry)
     if (AiChainCursedSeal(entry))
         return 1;
 #endif
+#ifdef HAS_CARD_DARK_DEAL
+    if (AiChainDarkDeal(entry))
+        return 1;
+#endif
 #if defined(HAS_CARD_STARDUST_DRAGON) && defined(HAS_CARD_MY_BODY_AS_A_SHIELD)
     if (AiChainStardustDragon(entry))
         return 1;
@@ -13283,6 +13351,10 @@ int AiShouldActivateAddedCard(struct ChainEntry *entry)
     case CARD_CURSED_SEAL_OF_THE_FORBIDDEN_SPELL:   /* only chained (AiChainCursedSeal), not flipped blindly */
         return 0;
 #endif
+#ifdef HAS_CARD_DARK_DEAL
+    case CARD_DARK_DEAL:                        /* only chained (AiChainDarkDeal), not flipped blindly */
+        return 0;
+#endif
 #ifdef HAS_CARD_ROYAL_OPPRESSION
     case CARD_ROYAL_OPPRESSION: {
         int summonPlayer = DUEL_LOC_PLAYER(entry->loc0);
@@ -14399,6 +14471,16 @@ const struct CardEffect gAddedCardEffects[] = {
         NULL,
         EffectTrapDustshootPrepare,
         NULL,
+        NULL,
+    },
+#endif
+#ifdef HAS_CARD_DARK_DEAL
+    {
+        CARD_DARK_DEAL, 0,
+        EffectDarkDealResolve,
+        NULL,
+        EffectDarkDealPrepare,
+        EffectDarkDealChainA,
         NULL,
     },
 #endif
