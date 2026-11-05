@@ -2431,3 +2431,6 @@ updated: 2026-09-29
 - src/mod_synchro.c: B during the Tuner / non-Tuner picks cancels (gModSynchro.cancelled); the non-Tuner prompt says the Tuner, its Level and the Levels needed. Reported: stuck refusing Quillbolt (a legal refusal: Junk Synchron + Junk Warrior make 8, Quillbolt would make 10). [[synchro]]. Built (`make demo`); not tested in an emulator.
 - Fix: the Tuner / non-Tuner cursor could not move (reported): PICK_OWN_FACE_UP lacked the position bits DuelCursor_IsValidTarget requires with the face bit; now PICK_FACE_UP_MONSTER | PICK_ATTACK_POSITION | PICK_DEFENSE_POSITION.
 - Every effect-target list (the Synchro list, Monster Reborn, Magical Scientist, ...) opens with its Decide button selected instead of Card View, also after returning from a Card View: CardListView_InitScreen (turn_order_steps.c), which reset it to Card View after CardListView_Open had set it.
+
+## [2026-11-05] progress | NEW_CARDS.md: the four Synchro test cards
+- cards/: Junk Synchron, Quillbolt Hedgehog, Junk Warrior, Stardust Dragon captured (tools/card_screenshots.lua). NEW_CARDS.md regenerated (160 cards).

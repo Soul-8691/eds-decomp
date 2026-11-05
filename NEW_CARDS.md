@@ -1,6 +1,6 @@
 # New cards
 
-The 156 cards added in the demo card list (the repo-root `new_cards.txt`, above `------`), as the game shows them in Deck Edit's Card View. The screenshots are taken by [`tools/card_screenshots.lua`](tools/card_screenshots.lua) in mGBA.
+The 160 cards added in the demo card list (the repo-root `new_cards.txt`, above `------`), as the game shows them in Deck Edit's Card View. The screenshots are taken by [`tools/card_screenshots.lua`](tools/card_screenshots.lua) in mGBA.
 
 <table>
 <tr>
@@ -119,5 +119,8 @@ The 156 cards added in the demo card list (the repo-root `new_cards.txt`, above 
 </tr>
 <tr>
 <td align="center"><img src="cards/Vampire%20Lord.png" alt="Vampire Lord" width="240"></td><td align="center"><img src="cards/My%20Body%20as%20a%20Shield.png" alt="My Body as a Shield" width="240"></td><td align="center"><img src="cards/Big%20Bang%20Shot.png" alt="Big Bang Shot" width="240"></td><td align="center"><img src="cards/Des%20Lacooda.png" alt="Des Lacooda" width="240"></td>
+</tr>
+<tr>
+<td align="center"><img src="cards/Junk%20Synchron.png" alt="Junk Synchron" width="240"></td><td align="center"><img src="cards/Quillbolt%20Hedgehog.png" alt="Quillbolt Hedgehog" width="240"></td><td align="center"><img src="cards/Junk%20Warrior.png" alt="Junk Warrior" width="240"></td><td align="center"><img src="cards/Stardust%20Dragon.png" alt="Stardust Dragon" width="240"></td>
 </tr>
 </table>
