@@ -301,6 +301,7 @@ int GetCardSpellSpeed(u16 cardId)
  * The result is a full-word 0 or 1 (the CPU callers use it as int).
  */
 int AiActivationWouldLoseLp(struct ChainEntry *card);  /* mod: src/added_effects.c */
+int ModCardNameSealed(struct ChainEntry *card);        /* mod: src/added_effects.c */
 
 int CanActivateEffect(struct ChainEntry *card, struct ChainEntry *chainLink, u16 fromHand)
 {
@@ -321,6 +322,8 @@ int CanActivateEffect(struct ChainEntry *card, struct ChainEntry *chainLink, u16
         return FALSE;
 #endif
     if (CARD_TYPE(card->card) == CARD_TYPE_MAGIC && IsImperialOrderActive())
+        return FALSE;
+    if (ModCardNameSealed(card))           /* added: Cursed Seal of the Forbidden Spell (src/added_effects.c) */
         return FALSE;
     if (AiActivationWouldLoseLp(card))     /* added: the CPU never pays itself to 0 LP (src/added_effects.c) */
         return FALSE;

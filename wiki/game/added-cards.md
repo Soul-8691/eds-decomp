@@ -2024,6 +2024,21 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
   - **Deck:** `DUEL_CMD_SEND_DECK_CARD_TO_GRAVEYARD` for `deck[0]` and `deck[1]` (the top is index 0).
 - Checked in the source and the build; not tested in an emulator.
 
+### Cursed Seal of the Forbidden Spell (2026-11-05)
+- Counter Trap (`assets/new_cards/cards.json`): "When a Spell Card is activated: Discard 1 Spell; negate the activation,
+  and if you do, destroy it, and if you do that, your opponent cannot activate Spell Cards with that name for the rest of
+  this Duel."
+- Prepare: the opponent's Spell as the link it answers (as Magic Drain's) and a Spell Card in hand. ChainA (the cost):
+  the human picks the Spell to discard in the card list (`ModCollectEffectTargets`: the hand's Spells), and the CPU
+  discards its first one. The cost step waits while the list is open, since Chain_Build calls chainA until it returns 1.
+- Resolve: negate and destroy (`DUEL_CMD_NEGATE_ACTIVATION`, `DUEL_CMD_SET_SPELL_TRAP_DISABLED`), then the Spell's card
+  number is sealed for its player (`gModDuel.sealedNumbers`, up to 4 per player). `CanActivateEffect`
+  (`effect_activation.c`) asks `ModCardNameSealed`, so that player can no longer activate Spells with that name, from
+  hand or Set.
+- CPU: `AiChainCursedSeal` chains it to the human's Spells when it holds a Spell to discard, and doesn't flip it blindly.
+- Removed from `card_pools/missing.txt` and `missing-main.txt`.
+- Checked in the source and the build; not tested in an emulator.
+
 ### Granmarg the Rock Monarch (2026-11-05)
 - Effect Monster (Level 6, EARTH Rock, 2400/1000; `assets/new_cards/cards.json`): "If this card is Tribute Summoned:
   Target 1 Set card on the field; destroy that target."

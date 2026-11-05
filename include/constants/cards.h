@@ -1138,6 +1138,7 @@ enum CardNumber {
     CARD_OLD_VINDICTIVE_MAGICIAN = 839,                   /* id 981, added card */
     CARD_SWARM_OF_LOCUSTS = 841,                          /* id 982, added card */
     CARD_GRANMARG_THE_ROCK_MONARCH = 842,                 /* id 983, added card */
+    CARD_CURSED_SEAL_OF_THE_FORBIDDEN_SPELL = 843,        /* id 984, added card */
     CARD_MAGIC_CYLINDER = 1214,                           /* id 899, added card */
     CARD_SOUL_EXCHANGE = 1220,                            /* id 947, added card */
     CARD_BIG_BANG_SHOT = 1313,                            /* id 975, added card */

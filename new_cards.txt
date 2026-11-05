@@ -161,6 +161,7 @@ Stardust Dragon
 Old Vindictive Magician
 Swarm of Locusts
 Granmarg the Rock Monarch
+Cursed Seal of the Forbidden Spell
 ------
 The Rock Spirit
 D.D. Designator
@@ -178,7 +179,6 @@ Silpheed
 Steamroid
 Gravekeeper's Guard
 Necrovalley
-Cursed Seal of the Forbidden Spell
 Nightmare Wheel
 Nightmare's Steelcage
 Lava Golem

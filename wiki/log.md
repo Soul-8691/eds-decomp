@@ -2447,3 +2447,6 @@ updated: 2026-09-29
 
 ## [2026-11-05] progress | Granmarg the Rock Monarch
 - src/added_effects.c: EffectGranmargCheck / ChainB, the row (EffectDestroyTargetResolve), AiHasSummonTrigger. src/summon_checks.c: its trigger in both Normal Summon paths (Mobius-style, only with a target). card_pools/missing*.txt, README (163), [[added-cards]]. Built (`make demo`); not tested in an emulator.
+
+## [2026-11-05] progress | Cursed Seal of the Forbidden Spell
+- src/added_effects.c: EffectCursedSeal* (Spell discard cost through the card list), ModCardNameSealed with gModDuel.sealedNumbers, AiChainCursedSeal, the row. src/effect_activation.c: CanActivateEffect asks ModCardNameSealed. card_pools/missing*.txt, README (164), AI_IMPROVEMENTS, [[added-cards]]. Built (`make demo`); not tested in an emulator.

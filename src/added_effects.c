@@ -70,6 +70,8 @@ int IsTributeLockActive(void)
  * DuelPhase_Init clears it with ModDuelInit. A `static` variable here would go to .bss, which the linker puts at
  * 0x02000000, over gTextCanvas: keep such state in this block. */
 struct ModDuelState {
+    u8 sealedCount[2];          /* Cursed Seal of the Forbidden Spell: [player] names sealed (sealedNumbers) */
+    u16 sealedNumbers[2][4];    /* [player]: Spell card numbers that player may no longer activate this Duel */
     u16 junkNegateId;           /* Junk Synchron: the card ID being revived (its effects negated on arrival), 0 none */
     u16 quillboltId;            /* Quillbolt Hedgehog: the card ID its effect is summoning, 0 none */
     u16 quillboltIds[10];       /* [player * 5 + zone]: Quillbolt Hedgehog to banish when it leaves the field */
@@ -1336,6 +1338,8 @@ void ModDuelInit(void)
     gModDuel.scientistReturn = 0;
     gModDuel.aiScientistTurn = 0;
     ModSynchroReset();                      /* src/mod_synchro.c */
+    gModDuel.sealedCount[0] = 0;
+    gModDuel.sealedCount[1] = 0;
     gModDuel.junkNegateId = 0;
     gModDuel.quillboltId = 0;
     MemClear16(gModDuel.quillboltIds, sizeof(gModDuel.quillboltIds));
@@ -7726,6 +7730,11 @@ void ModCollectEffectTargets(int player, u16 cardNumber, int param)
         ModAddPileTargets(p->graveyard, p->graveCount, CARDLIST_SRC_GRAVEYARD, JunkSynchronTargetId, 0);
         break;
 #endif
+#ifdef HAS_CARD_CURSED_SEAL_OF_THE_FORBIDDEN_SPELL
+    case CARD_CURSED_SEAL_OF_THE_FORBIDDEN_SPELL:   /* the hand's Spell Cards (the discard cost) */
+        ModAddPileTargets(p->hand, p->handCount, CARDLIST_SRC_HAND, IsTypeId, CARD_TYPE_MAGIC);
+        break;
+#endif
     case CARD_LIST_KEY_SYNCHRO:             /* the Extra Deck's Synchro Monsters that can be summoned now */
         ModAddPileTargets(p->fusionDeck, p->fusionCount, CARDLIST_SRC_FUSION_DECK, ModSynchroListAccepts, player);
         break;
@@ -7814,6 +7823,116 @@ int EffectMagicDrainResolve(struct ChainEntry *link, struct ChainEntry *chainedT
     return EFFECT_STEP_DONE;
 }
 #endif /* HAS_CARD_MAGIC_DRAIN */
+
+/* ---- Cursed Seal of the Forbidden Spell (name lock: always compiled, so CanActivateEffect can ask) --------------- */
+#define SEALED_NAMES_MAX 4
+
+/* CanActivateEffect (effect_activation.c): 1 if card's player may not activate Spell Cards of its name (Cursed Seal
+ * of the Forbidden Spell negated one of that name of theirs this Duel). */
+int ModCardNameSealed(struct ChainEntry *card)
+{
+    int player = card->player & 1, i;
+    u16 number;
+
+    if (gModDuel.sealedCount[player] == 0 || CARD_STATS_TYPE(gCardStats[card->card & CARD_ID_MASK]) != CARD_TYPE_MAGIC)
+        return 0;
+    number = CardNumberOfId(card->card);
+    for (i = 0; i < gModDuel.sealedCount[player]; i++) {
+        if (gModDuel.sealedNumbers[player][i] == number)
+            return 1;
+    }
+    return 0;
+}
+
+#ifdef HAS_CARD_CURSED_SEAL_OF_THE_FORBIDDEN_SPELL
+int CollectEffectTargetsInt(int player, int cardNumber, int param) asm("CollectEffectTargets");
+
+/* "When a Spell Card is activated: Discard 1 Spell; negate the activation, and if you do, destroy it, and if you do
+ * that, your opponent cannot activate Spell Cards with that name for the rest of this Duel." Counter Trap.
+ *   prepare   the opponent's Spell as the link it answers (as Magic Drain's), and a Spell Card in the hand
+ *   chainA    the cost: the human picks the Spell to discard in the card list (ModCollectEffectTargets: the hand's
+ *             Spells); the CPU discards its first one
+ *   resolve   negate and destroy (DUEL_CMD_NEGATE_ACTIVATION, DUEL_CMD_SET_SPELL_TRAP_DISABLED), then the name is
+ *             sealed for that player (gModDuel.sealedNumbers; ModCardNameSealed, CanActivateEffect)
+ *   CPU       AiChainCursedSeal (AiChainSummonTriggerResponse): the human's Spell, when it holds a Spell to discard */
+static int HandSpellIndex(int player)
+{
+    struct DuelPlayer *p = &gDuelPlayers[player & 1];
+    int i;
+
+    for (i = 0; i < p->handCount; i++) {
+        if (CARD_STATS_TYPE(gCardStats[DUEL_CARD_ID(&p->hand[i]) & CARD_ID_MASK]) == CARD_TYPE_MAGIC)
+            return i;
+    }
+    return -1;
+}
+
+int EffectCursedSealPrepare(struct ChainEntry *card, struct ChainEntry *chainLink, u16 fromHand)
+{
+    u16 id;
+
+    if (fromHand || chainLink == NULL || chainLink->player == card->player || HandSpellIndex(card->player) < 0)
+        return 0;
+    id = chainLink->card & CARD_ID_MASK;
+    return CARD_STATS_TYPE(gCardStats[id]) == CARD_TYPE_MAGIC && CardNumberOfId(id) != CARD_1539;
+}
+
+int EffectCursedSealChainA(struct ChainEntry *link, struct ChainEntry *prevLink)
+{
+    int player = link->player & 1, i;
+    u32 word;
+
+    (void)prevLink;
+    if (player != 0) {                      /* the CPU */
+        i = HandSpellIndex(player);
+        if (i >= 0)
+            DiscardHandCard(player, i, 0, 1);
+        return 1;
+    }
+    if (gChain.costStep == 0) {
+        if (CollectEffectTargetsInt(player, CARD_CURSED_SEAL_OF_THE_FORBIDDEN_SPELL, 0) == 0)
+            return 1;
+        CardListView_Open(player, CARDLIST_AREA_EFFECT_TARGETS, CARD_CURSED_SEAL_OF_THE_FORBIDDEN_SPELL, 0);
+        gChain.costStep++;
+        return 0;
+    }
+    if (gCardListView.active)
+        return 0;
+    word = gCardListView.cards[gCardListView.cursorRow + gCardListView.top];
+    for (i = 0; i < gDuelPlayers[player].handCount; i++) {
+        if (*(u32 *)&gDuelPlayers[player].hand[i] == word) {
+            DiscardHandCard(player, i, 0, 1);
+            break;
+        }
+    }
+    return 1;
+}
+
+int EffectCursedSealResolve(struct ChainEntry *link, struct ChainEntry *chainedTo)
+{
+    int player;
+
+    if (link->negated || chainedTo == NULL
+        || CARD_STATS_TYPE(gCardStats[chainedTo->card & CARD_ID_MASK]) != CARD_TYPE_MAGIC)
+        return EFFECT_STEP_DONE;
+    DuelCmd_Push(link->player ? DUEL_CMD_PLAYER | DUEL_CMD_NEGATE_ACTIVATION : DUEL_CMD_NEGATE_ACTIVATION, 1, 0, 0);
+    DuelCmd_Push(chainedTo->player ? DUEL_CMD_PLAYER | DUEL_CMD_SET_SPELL_TRAP_DISABLED
+                                   : DUEL_CMD_SET_SPELL_TRAP_DISABLED, chainedTo->zone, 1, 0);
+    player = chainedTo->player & 1;
+    if (gModDuel.sealedCount[player] < SEALED_NAMES_MAX)
+        gModDuel.sealedNumbers[player][gModDuel.sealedCount[player]++] = CardNumberOfId(chainedTo->card);
+    return EFFECT_STEP_DONE;
+}
+
+static int AiChainCursedSeal(struct ChainEntry *entry)
+{
+    if (entry->player != AI_HUMAN || entry->kind != CHAIN_KIND_SPELL_TRAP || HandSpellIndex(AI_PLAYER) < 0
+        || CARD_STATS_TYPE(gCardStats[entry->card & CARD_ID_MASK]) != CARD_TYPE_MAGIC
+        || CardNumberOfId(entry->card) == CARD_1539)
+        return 0;
+    return AiChainSetCard(entry, CARD_CURSED_SEAL_OF_THE_FORBIDDEN_SPELL);
+}
+#endif /* HAS_CARD_CURSED_SEAL_OF_THE_FORBIDDEN_SPELL */
 
 #ifdef HAS_CARD_DIVINE_WRATH
 /* ---- Divine Wrath (YGOPRODeck id 49010598) -----------------------------------------------------------------------
@@ -10929,6 +11048,10 @@ int AiChainSummonTriggerResponse(struct ChainEntry *entry)
     if (AiChainMyBodyAsAShield(entry))
         return 1;
 #endif
+#ifdef HAS_CARD_CURSED_SEAL_OF_THE_FORBIDDEN_SPELL
+    if (AiChainCursedSeal(entry))
+        return 1;
+#endif
 #if defined(HAS_CARD_STARDUST_DRAGON) && defined(HAS_CARD_MY_BODY_AS_A_SHIELD)
     if (AiChainStardustDragon(entry))
         return 1;
@@ -12869,6 +12992,10 @@ int AiShouldActivateAddedCard(struct ChainEntry *entry)
     case CARD_MY_BODY_AS_A_SHIELD:              /* only chained (AiChainMyBodyAsAShield), not flipped blindly */
         return 0;
 #endif
+#ifdef HAS_CARD_CURSED_SEAL_OF_THE_FORBIDDEN_SPELL
+    case CARD_CURSED_SEAL_OF_THE_FORBIDDEN_SPELL:   /* only chained (AiChainCursedSeal), not flipped blindly */
+        return 0;
+#endif
 #ifdef HAS_CARD_ROYAL_OPPRESSION
     case CARD_ROYAL_OPPRESSION: {
         int summonPlayer = DUEL_LOC_PLAYER(entry->loc0);
@@ -13752,6 +13879,16 @@ const struct CardEffect gAddedCardEffects[] = {
         NULL,
         EffectStardustDragonPrepare,
         EffectStardustDragonChainA,
+        NULL,
+    },
+#endif
+#ifdef HAS_CARD_CURSED_SEAL_OF_THE_FORBIDDEN_SPELL
+    {
+        CARD_CURSED_SEAL_OF_THE_FORBIDDEN_SPELL, 0,
+        EffectCursedSealResolve,
+        NULL,
+        EffectCursedSealPrepare,
+        EffectCursedSealChainA,
         NULL,
     },
 #endif

@@ -1,3 +1,4 @@
+Sonic Bird: CPU activation asks if you want to add card to hand
 D.D. Warrior Lady:
 - AI always activates effect
 - Needs to be able to be responded to or negated
