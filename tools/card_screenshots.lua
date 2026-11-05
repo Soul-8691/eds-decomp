@@ -22,7 +22,8 @@ closes it with B and puts the list entry back. Progress goes to the scripting co
 local G_MAIN = 0x03000040
 local MAIN_CALLBACK = G_MAIN + 0x0410
 local MAIN_SEQ_INDEX1 = G_MAIN + 0x4859
-local CB_MAIN_MENU = 0x08003AFC + 1             -- Thumb; CB_DeckEdit moves between builds, so it is read below
+-- CB_MainMenu moves between builds too: its address comes from the demo builds' symbol files (read below).
+local CB_MAIN_MENU_FALLBACK = 0x08003B14 + 1    -- Thumb; eds_demo.sym of 2026-11-05
 local CARD_DETAIL = 0x02013D90                  -- gCardDetail; bits 1-15 of the first u16 are the state
 local DECK_EDIT = 0x0201DB20                    -- gDeckEdit
 local DE_LIST_POS = DECK_EDIT + 0x0620          -- u16 listPos[3]
@@ -61,6 +62,27 @@ end
 local function trim(s)
     return (s:gsub("^%s+", ""):gsub("%s+$", ""))
 end
+
+-- The main menu's callback in any of the demo ROMs: CB_MainMenu (+1, Thumb) from eds_demo.sym and
+-- eds_release_demo.sym next to the script's repo, else the fallback. Pressing A until some other value showed up
+-- started a Campaign duel when the build had moved it.
+local mainMenuCallbacks = {}
+for _, symName in ipairs({ "eds_demo.sym", "eds_release_demo.sym" }) do
+    local f = io.open(root .. "/" .. symName, "r")
+    if f then
+        for line in f:lines() do
+            local addr = line:match("^(%x+)%s.*%sCB_MainMenu%s*$")
+            if addr then
+                mainMenuCallbacks[tonumber(addr, 16) + 1] = true
+            end
+        end
+        f:close()
+    end
+end
+if next(mainMenuCallbacks) == nil then
+    mainMenuCallbacks[CB_MAIN_MENU_FALLBACK] = true
+end
+local function inMainMenu(cb) return mainMenuCallbacks[cb] == true end
 
 -- [(name, game name)] above the ------ line, as tools/newcards.py load_list reads them.
 local function loadCards()
@@ -220,7 +242,7 @@ local function onFrame()
         goTo("title")
     elseif state == "title" then
         -- A skips the intro and picks the title screen's entry, until the main menu runs
-        if callback() == CB_MAIN_MENU then
+        if inMainMenu(callback()) then
             goTo("mainMenu")
             gapLeft = 60
         else
@@ -232,7 +254,7 @@ local function onFrame()
             press(KEY_DOWN)
         elseif menuPresses == 3 then
             press(KEY_A)
-        elseif callback() ~= CB_MAIN_MENU then
+        elseif not inMainMenu(callback()) then
             deckEditCallback = callback()
             log(string.format("in Deck Edit (callback 0x%08X)", deckEditCallback))
             goTo("list")

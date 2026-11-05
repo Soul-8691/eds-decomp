@@ -2414,3 +2414,7 @@ updated: 2026-09-29
 
 ## [2026-11-04] progress | PACKS.md and CARD_PRICES.md regenerated
 - tools/packs_md.py and tools/cardprices.py --md, from the demo build's card list. The ROM's pack and price data was already current (the demo build regenerates it).
+
+## [2026-11-05] progress | NEW_CARDS.md: four new pictures; screenshot script fix
+- tools/card_screenshots.lua: CB_MainMenu is read from eds_demo.sym / eds_release_demo.sym (fallback 0x08003B14). Its fixed 0x08003AFC was stale, so the script pressed A into a Campaign duel.
+- cards/: Vampire Lord, My Body as a Shield, Big Bang Shot, Des Lacooda captured (cards/_capture_only.txt). NEW_CARDS.md regenerated (tools/gen_new_cards_md.py).

@@ -1,6 +1,6 @@
 # New cards
 
-The 152 cards added in the demo card list (the repo-root `new_cards.txt`, above `------`), as the game shows them in Deck Edit's Card View. The screenshots are taken by [`tools/card_screenshots.lua`](tools/card_screenshots.lua) in mGBA.
+The 156 cards added in the demo card list (the repo-root `new_cards.txt`, above `------`), as the game shows them in Deck Edit's Card View. The screenshots are taken by [`tools/card_screenshots.lua`](tools/card_screenshots.lua) in mGBA.
 
 <table>
 <tr>
@@ -116,5 +116,8 @@ The 152 cards added in the demo card list (the repo-root `new_cards.txt`, above 
 </tr>
 <tr>
 <td align="center"><img src="cards/Xing%20Zhen%20Hu.png" alt="Xing Zhen Hu" width="240"></td><td align="center"><img src="cards/Yata-Garasu.png" alt="Yata-Garasu" width="240"></td><td align="center"><img src="cards/Zaborg%20the%20Thunder%20Monarch.png" alt="Zaborg the Thunder Monarch" width="240"></td><td align="center"><img src="cards/Zombyra%20the%20Dark.png" alt="Zombyra the Dark" width="240"></td>
+</tr>
+<tr>
+<td align="center"><img src="cards/Vampire%20Lord.png" alt="Vampire Lord" width="240"></td><td align="center"><img src="cards/My%20Body%20as%20a%20Shield.png" alt="My Body as a Shield" width="240"></td><td align="center"><img src="cards/Big%20Bang%20Shot.png" alt="Big Bang Shot" width="240"></td><td align="center"><img src="cards/Des%20Lacooda.png" alt="Des Lacooda" width="240"></td>
 </tr>
 </table>
