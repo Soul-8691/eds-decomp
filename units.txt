@@ -150,7 +150,10 @@ mod_list_filter
 @farcode mod_list_filter
 mod_synchro
 @farcode mod_synchro
+mod_preduel
+@farcode mod_preduel
 mod_field_icons_data
+mod_preduel_data
 # An original unit moved out of the game's code to give the hooks of the added cards room before the pinned data
 # at 0x08080A20 (its functions are reached through bl and symbols; fixptrs.py fixes its pointers in the tables).
 @farcode dice_scene
@@ -160,6 +163,7 @@ mod_field_icons_data
 # card_list_viewer (~0x3KB+): pack-shop hooks in booster_get_pack / deck_edit_panel pushed release .text past 0x08080A20.
 @farcode card_list_viewer
 @rodata.added mod_field_icons_data
+@rodata.added mod_preduel_data
 @rodata.added mod_format_pack_roulettes
 @libs
 veneer
@@ -182,5 +186,6 @@ rodata_08087FD0
 @rodata mod_info_bar
 @rodata mod_list_filter
 @rodata mod_synchro
+@rodata mod_preduel
 @rodata card_list_viewer
 mod_format_pack_roulettes

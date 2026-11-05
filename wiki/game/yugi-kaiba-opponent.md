@@ -4,7 +4,7 @@ type: game
 status: draft
 confidence: medium
 sources: [rom-analysis]
-updated: 2026-10-30
+updated: 2026-11-05
 ---
 # Campaign opponents (mod)
 
@@ -216,6 +216,19 @@ whose name plates and portraits are BG images (`Record_DrawPage`).
 `ModSkipsDuelDialogue` (every non-hidden opponent):
 - **Before the duel.** `Campaign_SelectOpponent` returns before `Campaign_StartPreDuelDialogue`. That dialogue also
   holds Simon's first-meeting gift (every missing card), which therefore no longer happens.
+- **Pre-duel picture (2026-11-05).** Instead of returning there, `Campaign_SelectOpponent` goes to an added sub-step 6,
+  `CB_ModPreDuelImage` (src/mod_preduel.c, far code), which returns 1 at once for an opponent without a picture and
+  for the later duels of a match. Yugi-Kaiba (the Tristan slot) has one, `yugi-kaiba.png` in the repository root:
+  shown in the bustup screen's layout (Mode 4 page 0, the picture in rows 0-95 over the empty dialogue box,
+  `gDialogueBoxGfx[1]`), faded in from black (the load runs under full darkening, no forced blank, which flashed white), with no text; A, B or START plays the confirm sound and fades out.
+  - **Palette.** BG colours 0-31 are the box palette's (`gDialogueBoxPalette`; the box bitmap uses 16-31, its fill colour 31 set to black as in the scene
+    sets' palettes: the box palette's own is dark grey), so a
+    picture has the other 224 colours, 32-255. `tools/preduel_image.py` takes a 240x96 indexed or RGB PNG with up to
+    224 colours (an indexed one already in 32-255 keeps its indices; otherwise the colours are renumbered from 32) and
+    writes the 224 colours plus the LZSS bitmap (`gModPreDuelYugiKaiba`, data/mod_preduel_data.s, `.rodata.added`).
+    The current picture has 64 colours (12 KB of data).
+  - **Adding one** for another format opponent: a PNG, a Makefile rule and an `.incbin` like Yugi-Kaiba's, and a
+    case in `PreDuelImage`.
 - **After the duel.** `Campaign_ShowDuelResult` returns without the result text.
 - **In a match.** Between duels it goes straight to the Side Deck swap.
 

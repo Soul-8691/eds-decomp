@@ -103,6 +103,9 @@ static int HasEventDialogue(void)
 /* Sub-step 5 (added): Solomon's deck, picked from the player's Deck Recipes before a match's first duel; B goes back
  * to the opponent select. */
 #define SELECT_STEP_OPPONENT_RECIPE 5
+/* Sub-step 6 (added): in place of the dialogue, the opponent's pre-duel picture if it has one (src/mod_preduel.c). */
+#define SELECT_STEP_PRE_DUEL_IMAGE 6
+u16 CB_ModPreDuelImage(void);
 
 u16 Campaign_SelectOpponent(void)
 {
@@ -126,8 +129,11 @@ u16 Campaign_SelectOpponent(void)
         }
         /* added: no dialogue, except a calendar event challenger's */
         if (ModSkipsDuelDialogue(gMain.opponent) && !(IsEventChallenger() && HasEventDialogue())) {
-            if (!IsEventChallenger())
-                return 1;
+            if (!IsEventChallenger()) {
+                gMain.subStep = SELECT_STEP_PRE_DUEL_IMAGE;
+                RESET_SEQ_STATE();
+                return 0;
+            }
             gMain.subStep = SELECT_STEP_CHALLENGER_RECIPES;
             RESET_SEQ_STATE();
             return 0;
@@ -162,6 +168,8 @@ u16 Campaign_SelectOpponent(void)
             RESET_SEQ_STATE();
         }
         return 0;
+    case SELECT_STEP_PRE_DUEL_IMAGE:        /* added */
+        return CB_ModPreDuelImage();
     case SELECT_STEP_OPPONENT_RECIPE:       /* added: Solomon's deck */
         switch (CB_OpponentRecipes()) {
         case 1:

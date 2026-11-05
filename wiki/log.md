@@ -2493,3 +2493,12 @@ updated: 2026-09-29
 
 ## [2026-11-05] progress | Goldd: back to the engine's prompt, then pick
 - The custom text-box input (previous entry) took no input in the chain build (reported: stuck at the prompt). EffectGolddChainB is again the engine's pattern (EffectTrapTargetChainB: a message box closed with A, then the cursor; Chain_Build does not run while the box is open), and the prompt now says to press A first: the reported freeze was most likely B pressed while the box, which only A closes, was still up (the old prompt said "B: done"). B during the picks ends them. Built (`make demo`); not tested in an emulator.
+
+## [2026-11-05] progress | Yugi-Kaiba pre-duel picture
+- Yugi-Kaiba shows `yugi-kaiba.png` before the duel, with no dialogue: `CB_ModPreDuelImage` (new far-code unit
+  src/mod_preduel.c) as `Campaign_SelectOpponent` sub-step 6 (campaign_steps.c, a few bytes of size-limited `.text`).
+  Bustup layout (picture rows 0-95 over the empty box), fade in, A/B/START, fade out; the later duels of a match skip it.
+- Palette: the box's colours 0-31, the picture's up to 224 in 32-255. tools/preduel_image.py (PNG -> colours + LZSS
+  bitmap), data/mod_preduel_data.s (`.rodata.added`), a Makefile rule, units.txt.
+- Pages: [[yugi-kaiba-opponent]], README.
+- Fix: no white flash (darkened before loading, no forced blank); the box fill (colour 31) black.
