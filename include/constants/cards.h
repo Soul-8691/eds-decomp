@@ -1136,6 +1136,7 @@ enum CardNumber {
     CARD_JUNK_WARRIOR = 835,                              /* id 979, added card */
     CARD_STARDUST_DRAGON = 838,                           /* id 980, added card */
     CARD_OLD_VINDICTIVE_MAGICIAN = 839,                   /* id 981, added card */
+    CARD_SWARM_OF_LOCUSTS = 841,                          /* id 982, added card */
     CARD_MAGIC_CYLINDER = 1214,                           /* id 899, added card */
     CARD_SOUL_EXCHANGE = 1220,                            /* id 947, added card */
     CARD_BIG_BANG_SHOT = 1313,                            /* id 975, added card */

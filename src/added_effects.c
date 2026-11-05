@@ -1043,7 +1043,7 @@ void OnMonsterTurnedFaceDown(int player, int zone)
 }
 
 #if defined(HAS_CARD_BOOK_OF_MOON) || defined(HAS_CARD_TSUKUYOMI) || defined(HAS_CARD_GOLEM_SENTRY) \
-    || defined(HAS_CARD_GUARDIAN_SPHINX) || defined(HAS_CARD_DES_LACOODA) || defined(HAS_CARD_STEALTH_BIRD)
+    || defined(HAS_CARD_GUARDIAN_SPHINX) || defined(HAS_CARD_DES_LACOODA) || defined(HAS_CARD_SWARM_OF_LOCUSTS) || defined(HAS_CARD_STEALTH_BIRD)
 /* ---- Book of Moon / Tsukuyomi ------------------------------------------------------------------------------------
  * Book of Moon (Quick-Play Spell) and Tsukuyomi (FLIP) share the same effect: target 1 face-up monster on the
  * field; change it to face-down Defense Position. Targeting uses EffectTargetableFaceUpMonsterCheck / ChainB
@@ -2291,7 +2291,7 @@ int CanActivateMonsterEffect(u16 id, int player, int zone); /* card_command_menu
 
 int ModCanActivateMonsterEffect(u16 id, int player, int zone)
 {
-#if defined(HAS_CARD_STEALTH_BIRD) || defined(HAS_CARD_GOLEM_SENTRY) || defined(HAS_CARD_GUARDIAN_SPHINX) || defined(HAS_CARD_DES_LACOODA)
+#if defined(HAS_CARD_STEALTH_BIRD) || defined(HAS_CARD_GOLEM_SENTRY) || defined(HAS_CARD_GUARDIAN_SPHINX) || defined(HAS_CARD_DES_LACOODA) || defined(HAS_CARD_SWARM_OF_LOCUSTS)
     switch (((const u16 *)CARD_ID_TO_NUMBER_ADDR)[id & CARD_ID_MASK]) {
 #ifdef HAS_CARD_STEALTH_BIRD
     case CARD_STEALTH_BIRD:
@@ -2304,6 +2304,9 @@ int ModCanActivateMonsterEffect(u16 id, int player, int zone)
 #endif
 #ifdef HAS_CARD_DES_LACOODA
     case CARD_DES_LACOODA:
+#endif
+#ifdef HAS_CARD_SWARM_OF_LOCUSTS
+    case CARD_SWARM_OF_LOCUSTS:
 #endif
     {
         struct DuelZone *z = ZoneOf(player, zone);
@@ -2890,7 +2893,7 @@ static void ApprenticeMagicianPlaceCounter(int player, u16 id)
 #endif /* HAS_CARD_APPRENTICE_MAGICIAN && (Breaker || Skilled Dark Magician) */
 
 #if 1 /* always: the Synchro Summon mark (src/mod_synchro.c) */ || defined(HAS_CARD_DARK_MAGICIAN_OF_CHAOS) || defined(HAS_CARD_SACRED_CRANE) || defined(HAS_CARD_APPRENTICE_MAGICIAN) \
-    || defined(HAS_CARD_GOLEM_SENTRY) || defined(HAS_CARD_SAND_MOTH) || defined(HAS_CARD_GUARDIAN_SPHINX) || defined(HAS_CARD_DES_LACOODA) \
+    || defined(HAS_CARD_GOLEM_SENTRY) || defined(HAS_CARD_SAND_MOTH) || defined(HAS_CARD_GUARDIAN_SPHINX) || defined(HAS_CARD_DES_LACOODA) || defined(HAS_CARD_SWARM_OF_LOCUSTS) \
     || defined(HAS_CARD_STEALTH_BIRD) || defined(HAS_CARD_MARAUDING_CAPTAIN)
 /* SummonAction_Update calls this for every summon once the monster is in (player, zone): `kind` is the
  * enum SummonActionKind, faceUp its position. */
@@ -2929,7 +2932,7 @@ void AddedCardsSummoned(int player, int zone, u16 id, int kind, int faceUp)
 #ifdef HAS_CARD_SAND_MOTH
     SandMothSummoned(player, zone, id);
 #endif
-#if defined(HAS_CARD_GOLEM_SENTRY) || defined(HAS_CARD_GUARDIAN_SPHINX) || defined(HAS_CARD_DES_LACOODA) || defined(HAS_CARD_STEALTH_BIRD)
+#if defined(HAS_CARD_GOLEM_SENTRY) || defined(HAS_CARD_GUARDIAN_SPHINX) || defined(HAS_CARD_DES_LACOODA) || defined(HAS_CARD_SWARM_OF_LOCUSTS) || defined(HAS_CARD_STEALTH_BIRD)
     if (faceUp)
         FaceDownSelfEffectOnSummonedFaceUp(player, zone, id);
 #endif
@@ -2940,7 +2943,7 @@ void AddedCardsSummoned(int player, int zone, u16 id, int kind, int faceUp)
                              | TRIGGER_EVENT(RESPONSE_SUMMONED) | (id & CARD_ID_MASK),
                          DUEL_LOC(player, zone));
 #endif
-#if defined(HAS_CARD_GOLEM_SENTRY) || defined(HAS_CARD_GUARDIAN_SPHINX) || defined(HAS_CARD_DES_LACOODA)
+#if defined(HAS_CARD_GOLEM_SENTRY) || defined(HAS_CARD_GUARDIAN_SPHINX) || defined(HAS_CARD_DES_LACOODA) || defined(HAS_CARD_SWARM_OF_LOCUSTS)
     if ((0
 #ifdef HAS_CARD_GOLEM_SENTRY
          || ((const u16 *)CARD_ID_TO_NUMBER_ADDR)[id & CARD_ID_MASK] == CARD_GOLEM_SENTRY
@@ -2950,6 +2953,9 @@ void AddedCardsSummoned(int player, int zone, u16 id, int kind, int faceUp)
 #endif
 #ifdef HAS_CARD_DES_LACOODA
          || ((const u16 *)CARD_ID_TO_NUMBER_ADDR)[id & CARD_ID_MASK] == CARD_DES_LACOODA
+#endif
+#ifdef HAS_CARD_SWARM_OF_LOCUSTS
+         || ((const u16 *)CARD_ID_TO_NUMBER_ADDR)[id & CARD_ID_MASK] == CARD_SWARM_OF_LOCUSTS
 #endif
          ) && kind == SUMMON_ACTION_FLIP)
         Chain_AddPending(TRIGGER_PLAYER(player & 1) | TRIGGER_ZONE(zone) | TRIGGER_KIND(CHAIN_KIND_MONSTER)
@@ -3795,7 +3801,7 @@ int EffectDesKoalaResolve(struct ChainEntry *link, struct ChainEntry *chainedTo)
 }
 #endif /* HAS_CARD_DES_KOALA */
 
-#if defined(HAS_CARD_STEALTH_BIRD) || defined(HAS_CARD_GOLEM_SENTRY) || defined(HAS_CARD_GUARDIAN_SPHINX) || defined(HAS_CARD_DES_LACOODA)
+#if defined(HAS_CARD_STEALTH_BIRD) || defined(HAS_CARD_GOLEM_SENTRY) || defined(HAS_CARD_GUARDIAN_SPHINX) || defined(HAS_CARD_DES_LACOODA) || defined(HAS_CARD_SWARM_OF_LOCUSTS)
 /* Once-per-turn "turn this card face-down Defense Position" (Stealth Bird, Golem Sentry, Guardian Sphinx): not a
  * manual battle-position change, so it stays legal while the monster or player cannot change battle positions
  * (positionLocked after an attack or a manual flip, positionChangeLocked, Final Attack Orders, ...). The menu
@@ -3912,6 +3918,9 @@ void FaceDownSelfEffectOnSummonedFaceUp(int player, int zone, u16 id)
 #endif
 #ifdef HAS_CARD_DES_LACOODA
     case CARD_DES_LACOODA:
+#endif
+#ifdef HAS_CARD_SWARM_OF_LOCUSTS
+    case CARD_SWARM_OF_LOCUSTS:
 #endif
         if (DUEL_CARD_ID(&ZoneOf(player, zone)->card) == (id & CARD_ID_MASK)
             && ZoneOf(player, zone)->isFaceUp)
@@ -5860,7 +5869,7 @@ int EffectExiledForceResolve(struct ChainEntry *link, struct ChainEntry *chained
 }
 #endif /* HAS_CARD_EXILED_FORCE */
 
-#if defined(HAS_CARD_GOLEM_SENTRY) || defined(HAS_CARD_GUARDIAN_SPHINX) || defined(HAS_CARD_DES_LACOODA)
+#if defined(HAS_CARD_GOLEM_SENTRY) || defined(HAS_CARD_GUARDIAN_SPHINX) || defined(HAS_CARD_DES_LACOODA) || defined(HAS_CARD_SWARM_OF_LOCUSTS)
 /* ---- Golem Sentry -------------------------------------------------------------------------------------------------
  * "Once per turn: You can change this card to face-down Defense Position. When this card is Flip Summoned: Target 1
  * monster your opponent controls; return that target to the hand."
@@ -5879,7 +5888,11 @@ int EffectExiledForceResolve(struct ChainEntry *link, struct ChainEntry *chained
  * same, and the Flip Summon trigger takes no target (IsGuardianSphinx) and returns every monster of the opponent's to
  * its owner's hand (ReturnFieldCardToHand).
  * Des Lacooda: "Once per turn: You can change this card to face-down Defense Position. When this card is Flip Summoned:
- * Draw 1 card." The same handlers again: its Flip Summon trigger takes no target and draws (DrawCards). */
+ * Draw 1 card." The same handlers again: its Flip Summon trigger takes no target and draws (DrawCards).
+ * Swarm of Locusts: "Once per turn: You can change this card to face-down Defense Position. When this card is Flip
+ * Summoned: Target 1 Spell/Trap Card your opponent controls; destroy that target." The same handlers: its Flip Summon
+ * trigger targets as Dust Tornado (EffectDustTornadoCheck: the opponent's Spell/Trap and Field zones; the
+ * EffectSpellTrapTargetChainB pick) and destroys as Mystical Space Typhoon (EffectDestroyTargetResolve). */
 static inline int IsGolemSentryFlipTrigger(struct ChainEntry *link)
 {
     return link->event == RESPONSE_FLIP_SUMMONED && link->loc0 == DUEL_LOC(link->player, link->zone);
@@ -5903,6 +5916,15 @@ static inline int IsDesLacooda(struct ChainEntry *link)
 #endif
 }
 
+static inline int IsSwarmOfLocusts(struct ChainEntry *link)
+{
+#ifdef HAS_CARD_SWARM_OF_LOCUSTS
+    return ((const u16 *)CARD_ID_TO_NUMBER_ADDR)[link->card & CARD_ID_MASK] == CARD_SWARM_OF_LOCUSTS;
+#else
+    return 0;
+#endif
+}
+
 int EffectGolemSentryPrepare(struct ChainEntry *card, struct ChainEntry *chainLink, u16 fromHand)
 {
     if (fromHand)
@@ -5920,6 +5942,8 @@ u16 EffectGolemSentryCheck(struct ChainEntry *card, u16 pos)
     int z;
 
     if (card->event == RESPONSE_FLIP_SUMMONED)
+        if (IsSwarmOfLocusts(card))
+            return EffectDustTornadoCheck(card, pos);
         return IsGuardianSphinx(card) || IsDesLacooda(card) || EffectOpponentMonsterCheck(card, pos);
     if (card->event != RESPONSE_NONE)
         return 0;
@@ -5941,6 +5965,8 @@ int EffectGolemSentryChainB(struct ChainEntry *link, struct ChainEntry *prevLink
             link->numTargets = 0;       /* all of the opponent's monsters, or a draw: no target */
             return 1;
         }
+        if (IsSwarmOfLocusts(link))
+            return EffectSpellTrapTargetChainB(link);
         return EffectOpponentMonsterChainB(link);
     }
     if (!FaceDownSelfEffectMarkUsedZone(link, &zone))
@@ -5961,6 +5987,8 @@ int EffectGolemSentryResolve(struct ChainEntry *link, struct ChainEntry *chained
             DrawCards(link->player, 1);
             return EFFECT_STEP_DONE;
         }
+        if (IsSwarmOfLocusts(link))
+            return EffectDestroyTargetResolve(link);
         if (IsGuardianSphinx(link)) {
             int opponent = 1 - link->player, zone;
 
@@ -11107,6 +11135,10 @@ static int AiWantsMonsterEffect(u16 number, int zone)
     case CARD_DES_LACOODA:                      /* face down, so its next Flip Summon draws */
         return 1;
 #endif
+#ifdef HAS_CARD_SWARM_OF_LOCUSTS
+    case CARD_SWARM_OF_LOCUSTS:                 /* face down, so its next Flip Summon destroys a Spell/Trap */
+        return CountSpellTrapCards(AI_HUMAN) > 0;
+#endif
 #ifdef HAS_CARD_ROULETTE_BARREL
     case CARD_ROULETTE_BARREL: {
         int level;
@@ -13751,6 +13783,16 @@ const struct CardEffect gAddedCardEffects[] = {
 #ifdef HAS_CARD_GUARDIAN_SPHINX
     {
         CARD_GUARDIAN_SPHINX, 0,
+        EffectGolemSentryResolve,
+        EffectGolemSentryCheck,
+        EffectGolemSentryPrepare,
+        NULL,
+        EffectGolemSentryChainB,
+    },
+#endif
+#ifdef HAS_CARD_SWARM_OF_LOCUSTS
+    {
+        CARD_SWARM_OF_LOCUSTS, 0,
         EffectGolemSentryResolve,
         EffectGolemSentryCheck,
         EffectGolemSentryPrepare,

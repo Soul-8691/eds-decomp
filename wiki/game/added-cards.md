@@ -2024,6 +2024,19 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
   - **Deck:** `DUEL_CMD_SEND_DECK_CARD_TO_GRAVEYARD` for `deck[0]` and `deck[1]` (the top is index 0).
 - Checked in the source and the build; not tested in an emulator.
 
+### Swarm of Locusts (2026-11-05)
+- Effect Monster (Level 3, EARTH Insect, 1000/500; `assets/new_cards/cards.json`): "Once per turn: You can change this
+  card to face-down Defense Position. When this card is Flip Summoned: Target 1 Spell/Trap Card your opponent controls;
+  destroy that target."
+- Golem Sentry's row handlers, as Des Lacooda (`IsSwarmOfLocusts`). The face-down change is the same. Its Flip Summon
+  trigger targets like Dust Tornado (`EffectDustTornadoCheck`, `EffectSpellTrapTargetChainB`) and destroys like
+  Mystical Space Typhoon (`EffectDestroyTargetResolve`). It's listed with the family in `ModCanActivateMonsterEffect`,
+  `CanActivateMonsterEffect` (`card_command_menu.c`), `DuelCmd_TurnStart` (`duel_cmd_turn.c`), `AddedCardsSummoned`
+  and `FaceDownSelfEffectOnSummonedFaceUp`.
+- CPU: it turns face-down while the human has a Spell/Trap.
+- Removed from `card_pools/missing.txt` and `missing-main.txt`.
+- Checked in the source and the build; not tested in an emulator.
+
 ### Old Vindictive Magician (2026-11-05)
 - Flip Effect Monster (Level 2, DARK Spellcaster, 450/600; `assets/new_cards/cards.json`): "FLIP: Target 1 monster your
   opponent controls; destroy that target."
