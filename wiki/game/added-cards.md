@@ -2024,6 +2024,23 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
   - **Deck:** `DUEL_CMD_SEND_DECK_CARD_TO_GRAVEYARD` for `deck[0]` and `deck[1]` (the top is index 0).
 - Checked in the source and the build; not tested in an emulator.
 
+### My Body as a Shield (2026-11-04)
+- Quick-Play Spell (`assets/new_cards/cards.json`, from YGOPRODeck): "When your opponent activates a Spell/Trap Card or
+  monster effect that would destroy a monster(s) on the field: Pay 1500 LP; negate the activation, and if you do, destroy
+  it." It must be Set first, because the engine asks hand cards with no link to answer (`CanActivateHandCard`). Spell
+  speed 2, so it can't answer a Counter Trap, and it isn't on `CanActivateEffect`'s Damage Step list.
+- **"Would destroy."** The engine doesn't record what an effect will do, so `sMyBodyDestroyers` lists the cards whose
+  activation can (triaged by hand from the scripts with `CATEGORY_DESTROY`). A new card that destroys monsters has to be
+  added there. A link with targets must have one on a monster, so Raigeki Break on a Spell doesn't count. A link without
+  targets is taken at its card's word.
+- `EffectMyBodyAsAShieldPrepare`, `EffectMyBodyAsAShieldChainA` (`DUEL_CMD_LOSE_LP`), `EffectMyBodyAsAShieldResolve`
+  (`DUEL_CMD_NEGATE_ACTIVATION`, then `DUEL_CMD_SET_SPELL_TRAP_DISABLED` for a Spell/Trap, `DestroyFieldCard` for a monster
+  on the field).
+- CPU: `AiChainMyBodyAsAShield` (from `AiChainSummonTriggerResponse`, so no new code in `ai_summon.c`): the human's link
+  that would hit its own monster, with over 3000 LP. `AiStepSetSpellTraps` Sets it as any Quick-Play Spell. It isn't
+  flipped blindly.
+- Checked in the source and the build; not tested in an emulator.
+
 ### Vampire Lord (2026-11-04)
 - Effect text from the build's card cache (`assets/new_cards/cards.json`, YGOPRODeck, passcode 53839837): "If this card
   inflicts battle damage to your opponent: Declare 1 type of card (Monster, Spell, or Trap); your opponent sends 1 card

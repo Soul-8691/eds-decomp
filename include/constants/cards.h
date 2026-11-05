@@ -1129,6 +1129,7 @@ enum CardNumber {
     CARD_ZABORG_THE_THUNDER_MONARCH = 827,                /* id 971, added card */
     CARD_ZOMBYRA_THE_DARK = 828,                          /* id 972, added card */
     CARD_VAMPIRE_LORD = 829,                              /* id 973, added card */
+    CARD_MY_BODY_AS_A_SHIELD = 830,                       /* id 974, added card */
     CARD_MAGIC_CYLINDER = 1214,                           /* id 899, added card */
     CARD_SOUL_EXCHANGE = 1220,                            /* id 947, added card */
     CARD_THOUSAND_EYES_IDOL = 1333,                       /* id 955, added card */

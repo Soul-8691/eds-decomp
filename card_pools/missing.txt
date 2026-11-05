@@ -2,7 +2,6 @@ Des Wombat
 Jowgen the Spiritualist
 Amazoness Archer
 Nightmare Wheel
-Wave-Motion Cannon
 Reckless Greed
 Cursed Seal of the Forbidden Spell
 Rescue Cat
@@ -18,13 +17,10 @@ Barrel Behind the Door
 ------
 Needle Ceiling
 Mass Driver
-Chiron the Mage
-My Body as a Shield
 Blowback Dragon
 Big Bang Shot
 Drop Off
 Spell Reproduction
-Vampire Lord
 Reload
 Sacred Phoenix of Nephthys
 Necrovalley
@@ -65,7 +61,6 @@ Smoke Grenade of the Thief
 Skilled White Magician
 Lava Golem
 Heavy Slump
-Divine Wrath
 Des Lacooda
 Old Vindictive Magician
 Hand of Nephthys
@@ -85,7 +80,6 @@ The Big March of Animals
 Susa Soldier
 Royal Tribute
 Peten the Dark Clown
-Mask of Restrict
 Last Turn
 Good Goblin Housekeeping
 Armed Samurai - Ben Kei

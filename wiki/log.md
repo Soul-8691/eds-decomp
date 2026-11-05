@@ -2398,3 +2398,10 @@ updated: 2026-09-29
 
 ## [2026-11-04] progress | Title screen: demo version and build name
 - src/mod_title.c: demo version v1.0.2.5 top left (demo builds only), Release or Debug top right, in the 8-pixel font. Makefile and include/global.h: MOD_DEMO. [[title-screen]], README. Built (`make demo`); not tested in an emulator; release not built.
+
+## [2026-11-04] progress | My Body as a Shield
+- src/added_effects.c: EffectMyBodyAsAShield*, sMyBodyDestroyers (the cards that can destroy a monster), AiChainMyBodyAsAShield. [[added-cards]], README, AI_IMPROVEMENTS. Built (`make demo`); not tested in an emulator; release not built.
+
+## [2026-11-04] progress | Missing lists: coded cards removed
+- card_pools/missing.txt, missing-main.txt: removed My Body as a Shield and Vampire Lord.
+- Also removed Wave-Motion Cannon, Chiron the Mage, Divine Wrath and Mask of Restrict, which have effect rows in src/added_effects.c.

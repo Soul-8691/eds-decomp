@@ -7822,6 +7822,236 @@ int AiChainDivineWrath(struct ChainEntry *entry)
 }
 #endif /* HAS_CARD_DIVINE_WRATH */
 
+#ifdef HAS_CARD_MY_BODY_AS_A_SHIELD
+/* ---- My Body as a Shield (YGOPRODeck id 69279219) -----------------------------------------------------------------
+ * Quick-Play Spell: "When your opponent activates a Spell/Trap Card or monster effect that would destroy a monster(s) on
+ * the field: Pay 1500 LP; negate the activation, and if you do, destroy it." Only from the field: the engine asks hand
+ * cards with no link to answer (CanActivateHandCard), so it must be Set first.
+ * The engine does not record what an effect will do, so sMyBodyDestroyers lists the cards whose activation can destroy
+ * a monster (from the ProjectIgnis scripts with CATEGORY_DESTROY). A link that has targets must have one on a monster
+ * (Raigeki Break on a Spell does not count); a link without any is taken at its card's word.
+ *   prepare  the opponent's listed link; 1500 LP
+ *   chainA   1500 LP (DUEL_CMD_LOSE_LP)
+ *   resolve  DUEL_CMD_NEGATE_ACTIVATION, then a Spell/Trap as by EffectNegateChainedCardResolve and a monster on the
+ *            field as by Divine Wrath
+ *   CPU      AiChainMyBodyAsAShield, from AiChainSummonTriggerResponse: the human's link that would hit a monster of its
+ *            own, with LP to spare. AiStepSetSpellTraps Sets it as any Quick-Play Spell; never flipped blindly */
+
+#define MY_BODY_COST 1500
+#define MY_BODY_AI_MIN_LP 3000
+#define MY_BODY_PLAYER_CMD(player, cmd) ((player) ? (DUEL_CMD_PLAYER | (cmd)) : (cmd))
+
+static const u16 sMyBodyDestroyers[] = {
+    CARD_RAIGEKI,
+    CARD_DARK_HOLE,
+#ifdef HAS_CARD_LIGHTNING_VORTEX
+    CARD_LIGHTNING_VORTEX,
+#endif
+#ifdef HAS_CARD_SMASHING_GROUND
+    CARD_SMASHING_GROUND,
+#endif
+    CARD_FISSURE,
+    CARD_LAST_DAY_OF_WITCH,
+    CARD_EXILE_OF_THE_WICKED,
+    CARD_TRIBUTE_TO_THE_DOOMED,
+#ifdef HAS_CARD_OFFERINGS_TO_THE_DOOMED
+    CARD_OFFERINGS_TO_THE_DOOMED,
+#endif
+    CARD_ERADICATING_AEROSOL,
+    CARD_NOBLEMAN_OF_CROSSOUT,
+    CARD_BREATH_OF_LIGHT,
+    CARD_FINAL_DESTINY,
+#ifdef HAS_CARD_DARK_WORLD_LIGHTNING
+    CARD_DARK_WORLD_LIGHTNING,
+#endif
+    CARD_WARRIOR_ELIMINATION,
+#ifdef HAS_CARD_MAGICAL_MARIONETTE
+    CARD_MAGICAL_MARIONETTE,
+#endif
+#ifdef HAS_CARD_DECK_DEVASTATION_VIRUS
+    CARD_DECK_DEVASTATION_VIRUS,
+#endif
+    CARD_ANTI_RAIGEKI,
+    CARD_EARTHSHAKER,
+    CARD_TRAP_HOLE,
+#ifdef HAS_CARD_BOTTOMLESS_TRAP_HOLE
+    CARD_BOTTOMLESS_TRAP_HOLE,
+#endif
+    CARD_ACID_TRAP_HOLE,
+    CARD_MIRROR_FORCE,
+#ifdef HAS_CARD_TORRENTIAL_TRIBUTE
+    CARD_TORRENTIAL_TRIBUTE,
+#endif
+#ifdef HAS_CARD_SAKURETSU_ARMOR
+    CARD_SAKURETSU_ARMOR,
+#endif
+    CARD_WIDESPREAD_RUIN,
+#ifdef HAS_CARD_NEEDLE_CEILING
+    CARD_NEEDLE_CEILING,
+#endif
+    CARD_EATGABOON,
+    CARD_HOUSE_OF_ADHESIVE_TAPE,
+    CARD_TWO_PRONGED_ATTACK,
+#ifdef HAS_CARD_RAIGEKI_BREAK
+    CARD_RAIGEKI_BREAK,
+#endif
+#ifdef HAS_CARD_BLAST_WITH_CHAIN
+    CARD_BLAST_WITH_CHAIN,
+#endif
+#ifdef HAS_CARD_SWARM_OF_SCARABS
+    CARD_SWARM_OF_SCARABS,
+#endif
+#ifdef HAS_CARD_4_STARRED_LADYBUG_OF_DOOM
+    CARD_4_STARRED_LADYBUG_OF_DOOM,
+#endif
+    CARD_BARREL_DRAGON,
+    CARD_BLAST_JUGGLER,
+#ifdef HAS_CARD_BLOWBACK_DRAGON
+    CARD_BLOWBACK_DRAGON,
+#endif
+#ifdef HAS_CARD_CRIMSON_NINJA
+    CARD_CRIMSON_NINJA,
+#endif
+#ifdef HAS_CARD_DARK_DUST_SPIRIT
+    CARD_DARK_DUST_SPIRIT,
+#endif
+#ifdef HAS_CARD_DARK_MASTER_ZORC
+    CARD_DARK_MASTER_ZORC,
+#endif
+    CARD_DRAGON_PIPER,
+    CARD_DRAGON_SEEKER,
+    CARD_DREAM_CLOWN,
+#ifdef HAS_CARD_EXILED_FORCE
+    CARD_EXILED_FORCE,
+#endif
+#ifdef HAS_CARD_FREED_THE_BRAVE_WANDERER
+    CARD_FREED_THE_BRAVE_WANDERER,
+#endif
+#ifdef HAS_CARD_GATLING_DRAGON
+    CARD_GATLING_DRAGON,
+#endif
+#ifdef HAS_CARD_GRANMARG_THE_ROCK_MONARCH
+    CARD_GRANMARG_THE_ROCK_MONARCH,
+#endif
+    CARD_JIGEN_BAKUDAN,
+#ifdef HAS_CARD_JOWGEN_THE_SPIRITUALIST
+    CARD_JOWGEN_THE_SPIRITUALIST,
+#endif
+    CARD_MAN_EATER_BUG,
+#ifdef HAS_CARD_MEDUSA_WORM
+    CARD_MEDUSA_WORM,
+#endif
+#ifdef HAS_CARD_NEWDORIA
+    CARD_NEWDORIA,
+#endif
+#ifdef HAS_CARD_NIGHT_ASSAILANT
+    CARD_NIGHT_ASSAILANT,
+#endif
+#ifdef HAS_CARD_OLD_VINDICTIVE_MAGICIAN
+    CARD_OLD_VINDICTIVE_MAGICIAN,
+#endif
+    CARD_OBELISK_THE_TORMENTOR,
+    CARD_THE_WINGED_DRAGON_OF_RA,
+#ifdef HAS_CARD_ROULETTE_BARREL
+    CARD_ROULETTE_BARREL,
+#endif
+#ifdef HAS_CARD_RYU_KOKKI
+    CARD_RYU_KOKKI,
+#endif
+#ifdef HAS_CARD_SASUKE_SAMURAI_4
+    CARD_SASUKE_SAMURAI_4,
+#endif
+#ifdef HAS_CARD_THE_LAST_WARRIOR_FROM_ANOTHER_PLANET
+    CARD_THE_LAST_WARRIOR_FROM_ANOTHER_PLANET,
+#endif
+    CARD_TIME_WIZARD,
+#ifdef HAS_CARD_TRIBE_INFECTING_VIRUS
+    CARD_TRIBE_INFECTING_VIRUS,
+#endif
+#ifdef HAS_CARD_YOMI_SHIP
+    CARD_YOMI_SHIP,
+#endif
+#ifdef HAS_CARD_ZABORG_THE_THUNDER_MONARCH
+    CARD_ZABORG_THE_THUNDER_MONARCH,
+#endif
+};
+
+static int MyBodyListsCard(struct ChainEntry *link)
+{
+    u16 number = CardNumberOfId(link->card);
+    u32 i;
+
+    for (i = 0; i < ARRAY_COUNT(sMyBodyDestroyers); i++) {
+        if (sMyBodyDestroyers[i] == number)
+            return 1;
+    }
+    return 0;
+}
+
+/* side: only that player's monsters count; -1: either player's. */
+static int MyBodyHitsMonster(struct ChainEntry *link, int side)
+{
+    int i;
+
+    if (!MyBodyListsCard(link))
+        return 0;
+    if (link->numTargets == 0)
+        return side < 0 || CountMonsters(side) > 0;
+    for (i = 0; i < link->numTargets; i++) {
+        int player = DUEL_LOC_PLAYER(link->targets[i]);
+        int zone = DUEL_LOC_ZONE(link->targets[i]);
+
+        if (zone <= ZONE_MONSTER_4 && (side < 0 || side == player)
+            && DUEL_CARD_ID(&ZoneOf(player, zone)->card) != 0)
+            return 1;
+    }
+    return 0;
+}
+
+int EffectMyBodyAsAShieldPrepare(struct ChainEntry *card, struct ChainEntry *chainLink, u16 fromHand)
+{
+    if (fromHand || chainLink == NULL || chainLink->player == card->player)
+        return 0;
+    if ((int)gDuelPlayers[card->player & 1].lifePoints < MY_BODY_COST)
+        return 0;
+    if (chainLink->negated || (chainLink->kind != CHAIN_KIND_SPELL_TRAP && chainLink->kind != CHAIN_KIND_MONSTER))
+        return 0;
+    return MyBodyHitsMonster(chainLink, -1);
+}
+
+int EffectMyBodyAsAShieldChainA(struct ChainEntry *link, struct ChainEntry *prevLink)
+{
+    (void)prevLink;
+    DuelCmd_Push(MY_BODY_PLAYER_CMD(link->player, DUEL_CMD_LOSE_LP), MY_BODY_COST, 1, 0);
+    return 1;
+}
+
+int EffectMyBodyAsAShieldResolve(struct ChainEntry *link, struct ChainEntry *chainedTo)
+{
+    if (link->negated || chainedTo == NULL)
+        return EFFECT_STEP_DONE;
+    DuelCmd_Push(MY_BODY_PLAYER_CMD(link->player, DUEL_CMD_NEGATE_ACTIVATION), 1, 0, 0);
+    if (chainedTo->kind == CHAIN_KIND_SPELL_TRAP) {
+        DuelCmd_Push(MY_BODY_PLAYER_CMD(chainedTo->player, DUEL_CMD_SET_SPELL_TRAP_DISABLED), chainedTo->zone, 1, 0);
+    } else if (chainedTo->zone <= ZONE_MONSTER_4
+               && DUEL_CARD_ID(&ZoneOf(chainedTo->player, chainedTo->zone)->card) == (chainedTo->card & CARD_ID_MASK)) {
+        DestroyFieldCard(chainedTo->player, chainedTo->zone, 1);
+    }
+    return EFFECT_STEP_DONE;
+}
+
+static int AiChainMyBodyAsAShield(struct ChainEntry *entry)
+{
+    if (entry->player != AI_HUMAN || (int)gDuelPlayers[AI_PLAYER].lifePoints <= MY_BODY_AI_MIN_LP)
+        return 0;
+    if (entry->kind != CHAIN_KIND_SPELL_TRAP && entry->kind != CHAIN_KIND_MONSTER)
+        return 0;
+    if (!MyBodyHitsMonster(entry, AI_PLAYER))
+        return 0;
+    return AiChainSetCard(entry, CARD_MY_BODY_AS_A_SHIELD);
+}
+#endif /* HAS_CARD_MY_BODY_AS_A_SHIELD */
+
 #ifdef HAS_CARD_BLAST_WITH_CHAIN
 /* ---- Blast with Chain ---------------------------------------------------------------------------------------------
  * "Target 1 face-up monster you control; equip this card to that target. It gains 500 ATK. If this card is destroyed
@@ -9931,6 +10161,10 @@ int AiChainSummonTriggerResponse(struct ChainEntry *entry)
     struct ChainEntry ref;
     int zone;
 
+#ifdef HAS_CARD_MY_BODY_AS_A_SHIELD
+    if (AiChainMyBodyAsAShield(entry))
+        return 1;
+#endif
     if (entry->player != AI_HUMAN || (entry->event != RESPONSE_SUMMONED && entry->event != RESPONSE_FLIP_SUMMONED
                                       && entry->event != RESPONSE_SPECIAL_SUMMONED))
         return 0;
@@ -11849,6 +12083,10 @@ int AiShouldActivateAddedCard(struct ChainEntry *entry)
     case CARD_DIVINE_WRATH:                     /* only chained (AiChainDivineWrath), not flipped blindly */
         return 0;
 #endif
+#ifdef HAS_CARD_MY_BODY_AS_A_SHIELD
+    case CARD_MY_BODY_AS_A_SHIELD:              /* only chained (AiChainMyBodyAsAShield), not flipped blindly */
+        return 0;
+#endif
 #ifdef HAS_CARD_ROYAL_OPPRESSION
     case CARD_ROYAL_OPPRESSION: {
         int summonPlayer = DUEL_LOC_PLAYER(entry->loc0);
@@ -12669,6 +12907,16 @@ const struct CardEffect gAddedCardEffects[] = {
         NULL,
         EffectDivineWrathPrepare,
         EffectDivineWrathChainA,
+        NULL,
+    },
+#endif
+#ifdef HAS_CARD_MY_BODY_AS_A_SHIELD
+    {
+        CARD_MY_BODY_AS_A_SHIELD, 0,
+        EffectMyBodyAsAShieldResolve,
+        NULL,
+        EffectMyBodyAsAShieldPrepare,
+        EffectMyBodyAsAShieldChainA,
         NULL,
     },
 #endif

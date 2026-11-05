@@ -3,7 +3,6 @@ Reckless Greed
 Rescue Cat
 Manju of the Ten Thousand Hands
 Skill Drain
-Wave-Motion Cannon
 Des Wombat
 Fusilier Dragon, the Dual-Mode Beast
 Desert Sunlight
@@ -14,12 +13,10 @@ Drop Off
 Reload
 Book of Taiyou
 Sasuke Samurai #4
-Vampire Lord
 Gravekeeper's Guard
 Necrovalley
 A Feather of the Phoenix
 Reflect Bounder
-My Body as a Shield
 Granmarg the Rock Monarch
 Sacred Phoenix of Nephthys
 Byser Shock
@@ -78,7 +75,6 @@ Jowgen the Spiritualist
 Homunculus the Alchemic Being
 Curse of Royal
 Contract with the Dark Master
-Chiron the Mage
 Anti-Spell Fragrance
 Wild Nature's Release
 Twin-Headed Behemoth
@@ -98,7 +94,6 @@ Legendary Jujitsu Master
 Horus the Black Flame Dragon LV8
 Fear from the Dark
 Element Saurus
-Divine Wrath
 D.D. Crazy Beast
 Card of Safe Return
 Terrorking Archfiend
@@ -156,7 +151,6 @@ Offerings to the Doomed
 Neko Mane King
 Mystic Swordsman LV6
 Mystic Swordsman LV4
-Mask of Restrict
 Malice Doll of Demise
 Malice Dispersion
 Magic Reflector
