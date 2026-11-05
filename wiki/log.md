@@ -2456,3 +2456,6 @@ updated: 2026-09-29
 
 ## [2026-11-05] progress | Karma Cut
 - src/added_effects.c: EffectKarmaCut* (Raigeki Break's shape; banish the target, then its name from the Graveyard), the row. README (165), [[added-cards]]. Built (`make demo`); not tested in an emulator.
+
+## [2026-11-05] progress | Draining Shield
+- src/added_effects.c: EffectDrainingShieldPrepare / Resolve (negate the attack, gain its ATK), the row. new_cards.txt: moved above ------. README (166), [[added-cards]]. Built (`make demo`); not tested in an emulator.

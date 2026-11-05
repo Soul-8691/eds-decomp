@@ -994,6 +994,39 @@ int EffectRaigekiBreakResolve(struct ChainEntry *link, struct ChainEntry *chaine
 }
 #endif /* HAS_CARD_RAIGEKI_BREAK */
 
+#ifdef HAS_CARD_DRAINING_SHIELD
+/* ---- Draining Shield ----------------------------------------------------------------------------------------------
+ * "When an opponent's monster declares an attack: Target the attacking monster; negate that attack, and if you do,
+ * gain LP equal to that target's ATK." Normal Trap in the RESPONSE_ATTACK_DECLARED window (loc0 the attacker), as
+ * the engine's key 1214 (Magic Cylinder: DUEL_CMD_NEGATE_ATTACK) and Enchanted Javelin (GainLifePoints of its ATK).
+ * The CPU activates it against every attack (AiShouldActivateAddedCard's default). */
+int EffectDrainingShieldPrepare(struct ChainEntry *card, struct ChainEntry *chainLink, u16 fromHand)
+{
+    int player = DUEL_LOC_PLAYER(card->loc0), zone = DUEL_LOC_ZONE(card->loc0);
+
+    return !fromHand && card->event == RESPONSE_ATTACK_DECLARED && player != (card->player & 1)
+           && zone <= ZONE_MONSTER_4 && DUEL_CARD_ID(&ZoneOf(player, zone)->card) != 0;
+}
+
+int EffectDrainingShieldResolve(struct ChainEntry *link, struct ChainEntry *chainedTo)
+{
+    int player = DUEL_LOC_PLAYER(link->loc0), zone = DUEL_LOC_ZONE(link->loc0);
+    struct DuelZone *z;
+    u32 atk;
+
+    (void)chainedTo;
+    if (link->negated || zone > ZONE_MONSTER_4)
+        return EFFECT_STEP_DONE;
+    z = ZoneOf(player, zone);
+    if (DUEL_CARD_ID(&z->card) == 0 || !z->isFaceUp)
+        return EFFECT_STEP_DONE;
+    atk = GetZoneCardAtk(player, zone);
+    DuelCmd_Push(player ? DUEL_CMD_PLAYER | DUEL_CMD_NEGATE_ATTACK : DUEL_CMD_NEGATE_ATTACK, zone, 0, 0);
+    GainLifePoints(link->player, atk);
+    return EFFECT_STEP_DONE;
+}
+#endif /* HAS_CARD_DRAINING_SHIELD */
+
 #ifdef HAS_CARD_KARMA_CUT
 /* ---- Karma Cut ----------------------------------------------------------------------------------------------------
  * "Discard 1 card, then target 1 face-up monster your opponent controls; banish that target, then banish all cards
@@ -14246,6 +14279,16 @@ const struct CardEffect gAddedCardEffects[] = {
         EffectTrapDustshootResolve,
         NULL,
         EffectTrapDustshootPrepare,
+        NULL,
+        NULL,
+    },
+#endif
+#ifdef HAS_CARD_DRAINING_SHIELD
+    {
+        CARD_DRAINING_SHIELD, 0,
+        EffectDrainingShieldResolve,
+        NULL,
+        EffectDrainingShieldPrepare,
         NULL,
         NULL,
     },

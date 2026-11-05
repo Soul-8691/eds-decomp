@@ -2024,6 +2024,17 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
   - **Deck:** `DUEL_CMD_SEND_DECK_CARD_TO_GRAVEYARD` for `deck[0]` and `deck[1]` (the top is index 0).
 - Checked in the source and the build; not tested in an emulator.
 
+### Draining Shield (2026-11-05)
+- Normal Trap (`assets/new_cards/cards.json`): "When an opponent's monster declares an attack: Target the attacking
+  monster; negate that attack, and if you do, gain LP equal to that target's ATK."
+- Its own row in the `RESPONSE_ATTACK_DECLARED` window, where loc0 is the attacker.
+  - `EffectDrainingShieldPrepare`: the opponent's attacker is still there.
+  - `EffectDrainingShieldResolve`: if the attacker is still face-up, `DUEL_CMD_NEGATE_ATTACK` (as key 1214, Magic
+    Cylinder) and `GainLifePoints` of its ATK (as Enchanted Javelin).
+- The CPU activates it against every attack (`AiShouldActivateAddedCard`'s default).
+- Moved above `------` in `new_cards.txt` (into the demo). It wasn't in `card_pools/missing*.txt`.
+- Checked in the source and the build; not tested in an emulator.
+
 ### Karma Cut (2026-11-05)
 - Normal Trap (`assets/new_cards/cards.json`): "Discard 1 card, then target 1 face-up monster your opponent controls;
   banish that target, then banish all cards with the same name as that monster from your opponent's Graveyard."

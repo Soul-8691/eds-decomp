@@ -1140,6 +1140,7 @@ enum CardNumber {
     CARD_GRANMARG_THE_ROCK_MONARCH = 842,                 /* id 983, added card */
     CARD_CURSED_SEAL_OF_THE_FORBIDDEN_SPELL = 843,        /* id 984, added card */
     CARD_KARMA_CUT = 846,                                 /* id 985, added card */
+    CARD_DRAINING_SHIELD = 847,                           /* id 986, added card */
     CARD_MAGIC_CYLINDER = 1214,                           /* id 899, added card */
     CARD_SOUL_EXCHANGE = 1220,                            /* id 947, added card */
     CARD_BIG_BANG_SHOT = 1313,                            /* id 975, added card */
