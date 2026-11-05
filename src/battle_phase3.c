@@ -967,7 +967,11 @@ int DuelPhase_End(void)
     default:
         if (CountActiveCardsOnField(0, CARD_1427) <= 0 && CountActiveCardsOnField(1, CARD_1427) <= 0) {
             if (END_PLAYERS[player].handCount > 6)
+#ifdef HAS_CARD_SILLVA_WARLORD_OF_DARK_WORLD
+                ModPostHandLimitDiscard(player, END_PLAYERS[player].handCount - 6);  /* not a card effect's discard */
+#else
                 DuelPrompt_PostDiscard(player, END_PLAYERS[player].handCount - 6, 0, 0);
+#endif
         }
         return 1;
     }

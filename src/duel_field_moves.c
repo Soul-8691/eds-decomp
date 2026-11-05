@@ -651,6 +651,11 @@ void DiscardHandCard(int player, int handIdx, u16 byOpponentEffect, u16 compactH
         QueueNightAssailantTrigger(player, id);
         break;
 #endif
+#ifdef HAS_CARD_SILLVA_WARLORD_OF_DARK_WORLD
+    case CARD_SILLVA_WARLORD_OF_DARK_WORLD: /* added card: any effect's discard (src/added_effects.c) */
+        QueueSillvaTrigger(player, id, byOpponentEffect);
+        break;
+#endif
 #ifdef HAS_CARD_GOLDD_WU_LORD_OF_DARK_WORLD
     case CARD_GOLDD_WU_LORD_OF_DARK_WORLD:  /* added card: discarded by the opponent's effect (src/added_effects.c) */
         if (byOpponentEffect != 0)

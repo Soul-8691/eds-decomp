@@ -162,6 +162,8 @@ void OnFieldCardTargeted(struct ChainEntry *link, int player, int zone);
 int IsMetamorphosisFusion(u16 id, int level);
 void QueueNightAssailantTrigger(int player, u16 id);
 void QueueGolddTrigger(int player, u16 id);       /* added card: Goldd, Wu-Lord of Dark World */
+void QueueSillvaTrigger(int player, u16 id, u16 byOpponentEffect);  /* added card: Sillva, Warlord of Dark World */
+void ModPostHandLimitDiscard(int player, int count);    /* the End Phase's hand-size discard (src/added_effects.c) */
 /* Face-up copies of Kycoo the Ghost Destroyer (CARD_1511 effect key and/or CARD_KYCOO_THE_GHOST_DESTROYER). */
 int CountActiveKycooOnField(int player);
 /* Blade Knight (added card): id or card-number match (src/added_effects.c). */

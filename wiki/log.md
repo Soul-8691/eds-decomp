@@ -2502,3 +2502,9 @@ updated: 2026-09-29
   bitmap), data/mod_preduel_data.s (`.rodata.added`), a Makefile rule, units.txt.
 - Pages: [[yugi-kaiba-opponent]], README.
 - Fix: no white flash (darkened before loading, no forced blank); the box fill (colour 31) black.
+
+## [2026-11-05] progress | Sillva, Warlord of Dark World
+- `QueueSillvaTrigger` / `EffectSillvaPrepare` / `EffectSillvaResolve` (src/added_effects.c), the `DiscardHandCard`
+  case (duel_field_moves.c); the End Phase hand-size discard goes through `ModPostHandLimitDiscard`
+  (battle_phase3.c) so it does not trigger it. Demo list: 173 cards.
+- Pages: [[added-cards]], README.

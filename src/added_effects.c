@@ -114,6 +114,8 @@ struct ModDuelState {
     u16 limiterRemovalTurn;     /* Limiter Removal: gDuel.turnCount of the turn it resolves (End Phase destroy) */
     u16 aiPriorityDrawDone;     /* AiTryPlayCpuPriorityDrawSpells: turn/phase marker once Pot/Graceful are tried */
     u8 vampireLordPending[2];   /* Vampire Lord: per owner, copies to Special Summon in their next Standby Phase */
+    u8 handLimitDiscard;        /* the End Phase's hand-size discard is under way (ModPostHandLimitDiscard) */
+    u8 sillvaByOpponent;        /* Sillva, Warlord of Dark World: bit player, its last discard was by the opponent */
 };
 extern struct ModDuelState gModDuel;
 /* gModDuel (0x0202FF04, symbols.ld) must end before gScratchBuffer (0x02030000). */
@@ -10070,6 +10072,8 @@ int ModStandbyStep(int player)
 {
     int done;
 
+    gModDuel.handLimitDiscard = 0;  /* the last End Phase's hand-size discard is over */
+
 #ifdef HAS_CARD_DIFFERENT_DIMENSION_CAPSULE
     DifferentDimensionCapsuleStandbyStep(player);
 #endif
@@ -11303,6 +11307,116 @@ int EffectGranmargChainB(struct ChainEntry *link, struct ChainEntry *prevLink)
     return 0;
 }
 #endif /* HAS_CARD_GRANMARG_THE_ROCK_MONARCH || HAS_CARD_DARK_WORLD_LIGHTNING */
+
+#ifdef HAS_CARD_SILLVA_WARLORD_OF_DARK_WORLD
+/* ---- Sillva, Warlord of Dark World --------------------------------------------------------------------------------
+ * "If this card is discarded to the Graveyard by a card effect: Special Summon it from the Graveyard, then, if this card
+ * was discarded from your hand to your Graveyard by an opponent's card effect, your opponent returns exactly 2 cards
+ * from their hand to the bottom of their Deck, in any order."
+ *   trigger  DiscardHandCard (duel_field_moves.c): any discard but the End Phase's hand-size one (ModPostHandLimitDiscard
+ *            sets gModDuel.handLimitDiscard for it, ModStandbyStep clears it); Goldd's off-field RESPONSE_DISCARDED
+ *            trigger. Whether an opponent's effect discarded it goes in gModDuel.sillvaByOpponent (bit per player).
+ *   resolve  Goldd's summon from the Graveyard (position chosen); then, after an opponent's discard, the opponent returns
+ *            2 hand cards (as many as they have, up to 2) to the bottom of the Deck, one at a time: the human picks each
+ *            with the cursor (Yado Karu's pick), the CPU returns its weakest (lowest-ATK monster, else its last card) */
+#define SILLVA_RETURN_COUNT 2
+
+static const u8 sStrSillvaReturn[] = "Select a card in your hand to return to the bottom of your Deck.";
+
+void ModPostHandLimitDiscard(int player, int count)
+{
+    gModDuel.handLimitDiscard = 1;
+    DuelPrompt_PostDiscard(player, count, 0, 0);
+}
+
+void QueueSillvaTrigger(int player, u16 id, u16 byOpponentEffect)
+{
+    if (gModDuel.handLimitDiscard)
+        return;                 /* the hand-size discard is not a card effect */
+    if (byOpponentEffect)
+        gModDuel.sillvaByOpponent |= 1 << (player & 1);
+    else
+        gModDuel.sillvaByOpponent &= ~(1 << (player & 1));
+    Chain_AddPending(TRIGGER_PLAYER(player & 1) | TRIGGER_ZONE(0x1F & player) | TRIGGER_EVENT(RESPONSE_DISCARDED)
+                         | TRIGGER_KIND(CHAIN_KIND_OFF_FIELD) | (id & CARD_ID_MASK),
+                     0);
+}
+
+int EffectSillvaPrepare(struct ChainEntry *card, struct ChainEntry *chainLink, u16 fromHand)
+{
+    return card->event == RESPONSE_DISCARDED && CountFreeMonsterZones(card->player) > 0
+           && CanSpecialSummon(card->player);
+}
+
+/* The CPU's card to give back: its lowest-ATK monster, else its last card. */
+static int SillvaCpuReturnPick(void)
+{
+    struct DuelPlayer *p = &gDuelPlayers[AI_PLAYER];
+    int i, best = p->handCount - 1;
+    u32 bestAtk = 0xFFFFFFFF;
+
+    for (i = 0; i < p->handCount; i++) {
+        u32 stats = gCardStats[DUEL_CARD_ID(&p->hand[i]) & CARD_ID_MASK];
+        u32 atk = (stats & CARD_STATS_ATK_MASK) >> CARD_STATS_ATK_SHIFT;
+
+        if (CARD_STATS_TYPE(stats) <= CARD_TYPE_REPTILE && atk < bestAtk) {
+            best = i;
+            bestAtk = atk;
+        }
+    }
+    return best;
+}
+
+int EffectSillvaResolve(struct ChainEntry *link, struct ChainEntry *chainedTo)
+{
+    struct DuelPlayer *p = &gDuelPlayers[link->player & 1];
+    int opponent = 1 - (link->player & 1);
+    int i;
+
+    (void)chainedTo;
+    if (link->negated)
+        return EFFECT_STEP_DONE;
+    switch (gChain.effectStep) {
+    case EFFECT_STEP_START:
+        if (CountFreeMonsterZones(link->player) == 0 || !CanSpecialSummon(link->player))
+            return EFFECT_STEP_DONE;
+        for (i = 0; i < p->graveCount; i++) {
+            if (DUEL_CARD_ID(&p->graveyard[i]) == (link->card & CARD_ID_MASK)) {
+                CopyDuelCard(&gChain.effectCard, &p->graveyard[i]);
+                DuelCmd_Push(link->player ? DUEL_CMD_PLAYER | DUEL_CMD_REMOVE_CARD_FROM_GRAVEYARD
+                                          : DUEL_CMD_REMOVE_CARD_FROM_GRAVEYARD,
+                             ((u16 *)&gChain.effectCard)[0], ((u16 *)&gChain.effectCard)[1], 0);
+                return EFFECT_STEP_2;
+            }
+        }
+        return EFFECT_STEP_DONE;    /* no longer in the Graveyard */
+    case EFFECT_STEP_2:
+        QueueSpecialSummonChoosePosition(link->player, &gChain.effectCard, 1, 0);
+        if (!(gModDuel.sillvaByOpponent & (1 << (link->player & 1))))
+            return EFFECT_STEP_DONE;
+        gChain.effectCounter = 0;
+        return EFFECT_STEP_3;
+    case EFFECT_STEP_3:             /* one card per pass: the return command runs in between */
+        if (gChain.effectCounter >= SILLVA_RETURN_COUNT || gDuelPlayers[opponent & 1].handCount == 0)
+            return EFFECT_STEP_DONE;
+        if (opponent) {
+            ReturnHandCardToDeck(opponent, SillvaCpuReturnPick(), 0);
+            gChain.effectCounter++;
+            return EFFECT_STEP_3;
+        }
+        TextBoxOpen(TEXTBOX_POS(6, 2), TEXTBOX_SIZE(18, 7), TEXTBOX_FLAGS_DEFAULT, sStrSillvaReturn);
+        return EFFECT_STEP_4;
+    case EFFECT_STEP_4:
+        if (DuelCursor_PickTarget(PICK_HAND)) {
+            ReturnHandCardToDeck(0, gDuelScreen.selIndex, 0);
+            gChain.effectCounter++;
+            return EFFECT_STEP_3;
+        }
+        return EFFECT_STEP_4;
+    }
+    return EFFECT_STEP_DONE;
+}
+#endif /* HAS_CARD_SILLVA_WARLORD_OF_DARK_WORLD */
 
 #ifdef HAS_CARD_GOLDD_WU_LORD_OF_DARK_WORLD
 /* ---- Goldd, Wu-Lord of Dark World ---------------------------------------------------------------------------------
@@ -13640,6 +13754,16 @@ const struct CardEffect gAddedCardEffects[] = {
         EffectThestalosResolve,
         NULL,
         NULL,
+        NULL,
+        NULL,
+    },
+#endif
+#ifdef HAS_CARD_SILLVA_WARLORD_OF_DARK_WORLD
+    {
+        CARD_SILLVA_WARLORD_OF_DARK_WORLD, 0,
+        EffectSillvaResolve,
+        NULL,
+        EffectSillvaPrepare,
         NULL,
         NULL,
     },

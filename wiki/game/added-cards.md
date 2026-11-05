@@ -2024,6 +2024,26 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
   - **Deck:** `DUEL_CMD_SEND_DECK_CARD_TO_GRAVEYARD` for `deck[0]` and `deck[1]` (the top is index 0).
 - Checked in the source and the build; not tested in an emulator.
 
+### Sillva, Warlord of Dark World (2026-11-05)
+- Effect Monster (Level 5, DARK Fiend, 2300/1400; `assets/new_cards/cards.json`): "If this card is discarded to the
+  Graveyard by a card effect: Special Summon it from the Graveyard, then, if this card was discarded from your hand to
+  your Graveyard by an opponent's card effect, your opponent returns exactly 2 cards from their hand to the bottom of
+  their Deck, in any order."
+- **Trigger.** `DiscardHandCard` (`duel_field_moves.c`) calls `QueueSillvaTrigger` on every discard (costs included),
+  Goldd's off-field `RESPONSE_DISCARDED` trigger. `byOpponentEffect` is kept in `gModDuel.sillvaByOpponent` (bit per
+  player) for the resolve.
+- **Not the hand-size discard.** The End Phase's discard down to 6 (`battle_phase3.c`) is not a card effect: it now
+  posts its prompt through `ModPostHandLimitDiscard`, which sets `gModDuel.handLimitDiscard`; `QueueSillvaTrigger`
+  skips while it is set, and `ModStandbyStep` clears it. (The hook is in the size-limited `.text`, a call for a call.)
+- **Resolve** (`EffectSillvaResolve`): Goldd's summon from the Graveyard (position chosen). Then, only after an
+  opponent's discard, the opponent returns 2 hand cards to the bottom of the Deck, one per step (the command runs in
+  between). The human picks each with the cursor after a message box (Yado Karu's pick, `PICK_HAND`); the CPU returns
+  its lowest-ATK monster, else its last card. With fewer than 2 cards in hand, all of them go (hypothesis on the
+  ruling: "exactly 2" with 1 card left).
+- **Not asked.** The trigger is mandatory and always activates.
+- Moved above `------` in `new_cards.txt` (into the demo). It wasn't in `card_pools/missing*.txt`.
+- Checked in the source and the build; not tested in an emulator.
+
 ### Goldd, Wu-Lord of Dark World (2026-11-05)
 - Effect Monster (Level 5, DARK Fiend, 2300/1400; `assets/new_cards/cards.json`): "If this card is discarded to the
   Graveyard by a card effect: If it was discarded from your hand to your Graveyard by an opponent's card effect, you can
