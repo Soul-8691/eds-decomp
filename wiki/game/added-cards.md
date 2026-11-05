@@ -2024,6 +2024,19 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
   - **Deck:** `DUEL_CMD_SEND_DECK_CARD_TO_GRAVEYARD` for `deck[0]` and `deck[1]` (the top is index 0).
 - Checked in the source and the build; not tested in an emulator.
 
+### Karma Cut (2026-11-05)
+- Normal Trap (`assets/new_cards/cards.json`): "Discard 1 card, then target 1 face-up monster your opponent controls;
+  banish that target, then banish all cards with the same name as that monster from your opponent's Graveyard."
+- Built like Raigeki Break.
+  - Prepare: not as a response, a card to discard, and a target.
+  - ChainA: discard 1 card (`DuelPrompt_PostDiscardCost`).
+  - ChainB: the human picks the opponent's face-up monster (`EffectKarmaCutCheck`); the CPU takes the highest ATK.
+  - Resolve: `BanishFieldCard`, then `DUEL_CMD_BANISH_GRAVEYARD_CARD` for each card of that player's Graveyard with
+    the same name (`IsSameCardName`).
+- The CPU activates it in its usual Trap windows, as Raigeki Break.
+- It wasn't in `card_pools/missing*.txt`.
+- Checked in the source and the build; not tested in an emulator.
+
 ### Cursed Seal of the Forbidden Spell (2026-11-05)
 - Counter Trap (`assets/new_cards/cards.json`): "When a Spell Card is activated: Discard 1 Spell; negate the activation,
   and if you do, destroy it, and if you do that, your opponent cannot activate Spell Cards with that name for the rest of

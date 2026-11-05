@@ -2453,3 +2453,6 @@ updated: 2026-09-29
 
 ## [2026-11-05] progress | CPU's Sonic Bird / Senju search: no Yes/No
 - Reported: the CPU's Sonic Bird asked the human whether to add the card. EffectAddRitualCardToHandResolve (effect_resolve6.c) opened the Yes/No for both players; the CPU's now skips it and picks with AiPickRitualSearch (src/added_effects.c: the Ritual Spell whose monster it holds, or the Ritual Monster whose Spell it holds, else the first). AI_IMPROVEMENTS. Built (`make demo`); not tested in an emulator.
+
+## [2026-11-05] progress | Karma Cut
+- src/added_effects.c: EffectKarmaCut* (Raigeki Break's shape; banish the target, then its name from the Graveyard), the row. README (165), [[added-cards]]. Built (`make demo`); not tested in an emulator.

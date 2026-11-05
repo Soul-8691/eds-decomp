@@ -994,6 +994,115 @@ int EffectRaigekiBreakResolve(struct ChainEntry *link, struct ChainEntry *chaine
 }
 #endif /* HAS_CARD_RAIGEKI_BREAK */
 
+#ifdef HAS_CARD_KARMA_CUT
+/* ---- Karma Cut ----------------------------------------------------------------------------------------------------
+ * "Discard 1 card, then target 1 face-up monster your opponent controls; banish that target, then banish all cards
+ * with the same name as that monster from your opponent's Graveyard." Normal Trap, as Raigeki Break:
+ *   prepare  not as a response (chainLink NULL), a card to discard, a target
+ *   chainA   discard 1 card (DuelPrompt_PostDiscardCost)
+ *   chainB   the human picks the opponent's face-up monster; the CPU takes the one with the highest ATK
+ *   resolve  BanishFieldCard on the target, then DUEL_CMD_BANISH_GRAVEYARD_CARD for each card of the opponent's
+ *            Graveyard with its name (IsSameCardName) */
+static const u8 sStrKarmaCutPick[] = "Select a face-up monster your opponent controls.";
+
+u16 EffectKarmaCutCheck(struct ChainEntry *card, u16 pos)
+{
+    int player = DUEL_LOC_PLAYER(pos), zone = DUEL_LOC_ZONE(pos);
+    struct DuelZone *z;
+
+    if (zone > ZONE_MONSTER_4 || player == (card->player & 1))
+        return 0;
+    z = ZoneOf(player, zone);
+    return DUEL_CARD_ID(&z->card) != 0 && z->isFaceUp && CanCardTargetZone(card->card, player, zone);
+}
+
+static int KarmaCutHasTarget(struct ChainEntry *card)
+{
+    int zone, opponent = 1 - (card->player & 1);
+
+    for (zone = ZONE_MONSTER_0; zone <= ZONE_MONSTER_4; zone++) {
+        if (EffectKarmaCutCheck(card, DUEL_LOC(opponent, zone)))
+            return 1;
+    }
+    return 0;
+}
+
+int EffectKarmaCutPrepare(struct ChainEntry *card, struct ChainEntry *chainLink, u16 fromHand)
+{
+    return chainLink == NULL && gDuelPlayers[card->player & 1].handCount >= 1 + fromHand && KarmaCutHasTarget(card);
+}
+
+int EffectKarmaCutChainA(struct ChainEntry *link, struct ChainEntry *prevLink)
+{
+    (void)prevLink;
+    DuelPrompt_PostDiscardCost(link->player, 1, 0, 0);
+    return 1;
+}
+
+int EffectKarmaCutChainB(struct ChainEntry *link, struct ChainEntry *prevLink)
+{
+    int opponent = 1 - (link->player & 1), zone;
+
+    (void)prevLink;
+    if (link->player) {                 /* the CPU: the highest ATK */
+        int best = -1;
+        u32 bestAtk = 0;
+
+        link->numTargets = 0;
+        for (zone = ZONE_MONSTER_0; zone <= ZONE_MONSTER_4; zone++) {
+            if (EffectKarmaCutCheck(link, DUEL_LOC(opponent, zone))
+                && (best < 0 || GetZoneCardAtk(opponent, zone) > bestAtk)) {
+                best = zone;
+                bestAtk = GetZoneCardAtk(opponent, zone);
+            }
+        }
+        if (best >= 0)
+            TryAddEffectTarget(link, opponent, best);
+        return 1;
+    }
+    if (gChain.targetStep == 0) {
+        link->numTargets = 0;
+        TextBoxOpen(TEXTBOX_POS(6, 2), TEXTBOX_SIZE(18, 7), TEXTBOX_FLAGS_DEFAULT, sStrKarmaCutPick);
+        gChain.targetStep++;
+        return 0;
+    }
+    if (DuelCursor_PickTarget(PICK_PLAYER1(PICK_FACE_UP_MONSTER | PICK_ATTACK_POSITION | PICK_DEFENSE_POSITION))) {
+        int pickPlayer = gDuelScreen.selPlayer, pickZone = gDuelScreen.selArea + gDuelScreen.selIndex;
+
+        if (EffectKarmaCutCheck(link, DUEL_LOC(pickPlayer, pickZone)) && TryAddEffectTarget(link, pickPlayer, pickZone))
+            return 1;
+        PlaySE(SE_ERROR);
+    }
+    return 0;
+}
+
+int EffectKarmaCutResolve(struct ChainEntry *link, struct ChainEntry *chainedTo)
+{
+    int player, zone, i;
+    u16 id;
+    struct DuelPlayer *p;
+
+    (void)chainedTo;
+    if (link->negated || link->numTargets != 1)
+        return EFFECT_STEP_DONE;
+    player = DUEL_LOC_PLAYER(link->targets[0]);
+    zone = DUEL_LOC_ZONE(link->targets[0]);
+    if (zone > ZONE_MONSTER_4 || !ZoneOf(player, zone)->isFaceUp)
+        return EFFECT_STEP_DONE;
+    id = DUEL_CARD_ID(&ZoneOf(player, zone)->card);
+    if (id == 0)
+        return EFFECT_STEP_DONE;
+    BanishFieldCard(player, zone, 0);
+    p = &gDuelPlayers[player & 1];
+    for (i = 0; i < p->graveCount; i++) {
+        if (IsSameCardName(DUEL_CARD_ID(&p->graveyard[i]), id))
+            DuelCmd_Push(player ? DUEL_CMD_PLAYER | DUEL_CMD_BANISH_GRAVEYARD_CARD : DUEL_CMD_BANISH_GRAVEYARD_CARD,
+                         ((u16 *)&p->graveyard[i])[0], ((u16 *)&p->graveyard[i])[1], 0);
+    }
+    return EFFECT_STEP_DONE;
+}
+#endif /* HAS_CARD_KARMA_CUT */
+
 #ifdef HAS_CARD_DEKOICHI_THE_BATTLECHANTED_LOCOMOTIVE
 /* ---- Dekoichi the Battlechanted Locomotive --------------------------------------------------------------------
  * "FLIP: Draw 1 card, then draw 1 more card for each 'Bokoichi the Freightening Car' you control."
@@ -14139,6 +14248,16 @@ const struct CardEffect gAddedCardEffects[] = {
         EffectTrapDustshootPrepare,
         NULL,
         NULL,
+    },
+#endif
+#ifdef HAS_CARD_KARMA_CUT
+    {
+        CARD_KARMA_CUT, 0,
+        EffectKarmaCutResolve,
+        EffectKarmaCutCheck,
+        EffectKarmaCutPrepare,
+        EffectKarmaCutChainA,
+        EffectKarmaCutChainB,
     },
 #endif
 #ifdef HAS_CARD_RAIGEKI_BREAK
