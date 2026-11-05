@@ -2024,6 +2024,24 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
   - **Deck:** `DUEL_CMD_SEND_DECK_CARD_TO_GRAVEYARD` for `deck[0]` and `deck[1]` (the top is index 0).
 - Checked in the source and the build; not tested in an emulator.
 
+### Nightmare Wheel (2026-11-05)
+- Continuous Trap (`assets/new_cards/cards.json`): "Activate this card by targeting 1 monster your opponent controls; it
+  cannot attack or change its battle position. When it leaves the field, destroy this card. Once per turn, during your
+  Standby Phase: Inflict 500 damage to your opponent. That monster must be on the field to activate and to resolve this
+  effect."
+- Not an engine key: key 1244 is a Spellbinding Circle with -700 ATK (Shadow Spell), and key 1417 is Mask of Dispel.
+- **Activation.** Spellbinding Circle's: the opponent's monster (`EffectOpponentMonsterCheck` / `ChainB`), linked to it
+  by `EffectSpellbindingCircleResolve` (a `ZONE_LINK_CONTINUOUS` link).
+- **The lock.** `CountZoneLinksFromCard` (`duel_piles.c`) counts its link as a Spellbinding Circle's. So every Circle
+  test of "cannot attack / change position" holds it: `card_menu_input.c`, `card_command_menu.c`, and the CPU's in
+  `ai_picks.c` and `ai_steps.c`.
+- **Leaving.** `DestroyLinkedCards` (`duel_send_to_grave.c`) destroys it when its monster leaves, as key 1244.
+- **Damage.** `NightmareWheelStandbyStep`, the new part 2 of `ModStandbyStep` (Mirage of Nightmare's parts are now 3-4):
+  in its controller's Standby Phase, each face-up, not disabled Nightmare Wheel whose monster is still linked deals 500.
+  It always does; the human isn't asked.
+- Moved above `------` in `new_cards.txt` (into the demo); removed from `card_pools/missing.txt` and `missing-main.txt`.
+- Checked in the source and the build; not tested in an emulator.
+
 ### Dimension Wall (2026-11-05)
 - Normal Trap (`assets/new_cards/cards.json`): "Activate only when an opponent's monster declares an attack. Instead
   of you, your opponent takes the Battle Damage you would have taken from this battle."

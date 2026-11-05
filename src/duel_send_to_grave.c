@@ -489,6 +489,9 @@ void DestroyLinkedCards(int player, int zone, u16 destroyed)
                     destroy = destroyed;
                 break;
             case CARD_1244:
+#ifdef HAS_CARD_NIGHTMARE_WHEEL
+            case CARD_NIGHTMARE_WHEEL:      /* added: destroyed when its monster leaves (src/added_effects.c) */
+#endif
                 if (!ZONE(linkPlayer, linkZone)->isDisabled)
                     destroy = 1;
                 break;

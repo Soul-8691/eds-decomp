@@ -644,6 +644,11 @@ int CountZoneLinksFromCard(int player, int zone, u16 cardNo)
             case ZONE_LINK_EQUIP_ATK_200:
                 if (CARD_NUMBER(id) == cardNo)
                     count++;
+#ifdef HAS_CARD_NIGHTMARE_WHEEL
+                /* added: Nightmare Wheel's lock is a Spellbinding Circle's (src/added_effects.c) */
+                else if (cardNo == CARD_SPELLBINDING_CIRCLE && CARD_NUMBER(id) == CARD_NIGHTMARE_WHEEL)
+                    count++;
+#endif
                 break;
             case ZONE_LINK_CARD_EFFECT:
                 if (CARD_NUMBER(link) == cardNo)

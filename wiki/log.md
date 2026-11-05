@@ -2465,3 +2465,6 @@ updated: 2026-09-29
 
 ## [2026-11-05] progress | NEW_CARDS.md: seven more pictures
 - cards/: Old Vindictive Magician, Swarm of Locusts, Granmarg the Rock Monarch, Cursed Seal of the Forbidden Spell, Karma Cut, Draining Shield, Dimension Wall captured (tools/card_screenshots.lua). NEW_CARDS.md regenerated (167 cards).
+
+## [2026-11-05] progress | Nightmare Wheel
+- src/added_effects.c: the row (Spellbinding Circle's handlers), NightmareWheelStandbyStep (ModStandbyStep part 2; Mirage's parts now 3-4). src/duel_piles.c: CountZoneLinksFromCard counts its link as Spellbinding Circle's. src/duel_send_to_grave.c: DestroyLinkedCards destroys it as key 1244. new_cards.txt (moved above ------), card_pools/missing*.txt, README (168), [[added-cards]]. Built (`make demo`); not tested in an emulator.

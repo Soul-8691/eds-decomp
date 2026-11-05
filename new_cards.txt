@@ -165,6 +165,7 @@ Cursed Seal of the Forbidden Spell
 Karma Cut
 Draining Shield
 Dimension Wall
+Nightmare Wheel
 ------
 The Rock Spirit
 D.D. Designator
@@ -179,7 +180,6 @@ Silpheed
 Steamroid
 Gravekeeper's Guard
 Necrovalley
-Nightmare Wheel
 Nightmare's Steelcage
 Lava Golem
 Barrel Behind the Door

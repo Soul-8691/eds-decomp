@@ -9970,6 +9970,38 @@ static int MirageDrawStep(int player)
 /* DuelPhase_Standby (duel_phases.c) runs this after Sinister Serpent's step, each frame until it returns 1: Vampire
  * Lord's summon, Treeborn Frog's, then Mirage of Nightmare's discard and draw (gModDuel.standbyPart; gDuel.phaseSubStep restarts for
  * each part). */
+#ifdef HAS_CARD_NIGHTMARE_WHEEL
+/* ---- Nightmare Wheel ----------------------------------------------------------------------------------------------
+ * "Activate this card by targeting 1 monster your opponent controls; it cannot attack or change its battle position.
+ * When it leaves the field, destroy this card. Once per turn, during your Standby Phase: Inflict 500 damage to your
+ * opponent. That monster must be on the field to activate and to resolve this effect." Continuous Trap.
+ *   activation  Spellbinding Circle's: the opponent's monster (EffectOpponentMonsterCheck / ChainB), linked to this card
+ *               (EffectSpellbindingCircleResolve: a ZONE_LINK_CONTINUOUS link)
+ *   lock        CountZoneLinksFromCard (duel_piles.c) counts its link as a Spellbinding Circle's, so every "cannot
+ *               attack / change position" test of the Circle (card_menu_input.c, card_command_menu.c, the CPU's in
+ *               ai_picks.c and ai_steps.c) holds it too
+ *   leaving     DestroyLinkedCards (duel_send_to_grave.c) destroys it when the monster leaves, as key 1244 (Shadow Spell)
+ *   damage      NightmareWheelStandbyStep (ModStandbyStep): in its controller's Standby Phase, each face-up, not
+ *               disabled Nightmare Wheel with its monster still linked deals 500 (always: the human is not asked) */
+#define NIGHTMARE_WHEEL_DAMAGE 500
+
+static int NightmareWheelStandbyStep(int player)
+{
+    int zone;
+
+    for (zone = ZONE_SPELL_0; zone <= ZONE_SPELL_4; zone++) {
+        struct DuelZone *z = ZoneOf(player, zone);
+
+        if (z->isFaceUp && !z->isDisabled && CardNumberOfId(DUEL_CARD_ID(&z->card)) == CARD_NIGHTMARE_WHEEL
+            && FindMonsterWithLinkTo(player, zone) != 0xFFFF) {
+            ShowCardEffect(player, DUEL_CARD_ID(&z->card));
+            LoseLifePoints(1 - player, NIGHTMARE_WHEEL_DAMAGE);
+        }
+    }
+    return 1;
+}
+#endif /* HAS_CARD_NIGHTMARE_WHEEL */
+
 int ModStandbyStep(int player)
 {
     int done;
@@ -9987,11 +10019,18 @@ int ModStandbyStep(int player)
     case 1:
         done = TreebornFrogStandbyStep(player);
         break;
-#ifdef HAS_CARD_MIRAGE_OF_NIGHTMARE
     case 2:
+#ifdef HAS_CARD_NIGHTMARE_WHEEL
+        done = NightmareWheelStandbyStep(player);
+#else
+        done = 1;
+#endif
+        break;
+#ifdef HAS_CARD_MIRAGE_OF_NIGHTMARE
+    case 3:
         done = MirageDiscardStep(player);
         break;
-    case 3:
+    case 4:
         done = MirageDrawStep(player);
         break;
 #endif
@@ -14353,6 +14392,16 @@ const struct CardEffect gAddedCardEffects[] = {
         EffectDrainingShieldPrepare,
         NULL,
         NULL,
+    },
+#endif
+#ifdef HAS_CARD_NIGHTMARE_WHEEL
+    {
+        CARD_NIGHTMARE_WHEEL, 0,
+        (int (*)(struct ChainEntry *, struct ChainEntry *))EffectSpellbindingCircleResolve,
+        (u16 (*)(struct ChainEntry *, u16))EffectOpponentMonsterCheck,
+        NULL,
+        NULL,
+        (int (*)(struct ChainEntry *, struct ChainEntry *))EffectOpponentMonsterChainB,
     },
 #endif
 #ifdef HAS_CARD_KARMA_CUT
