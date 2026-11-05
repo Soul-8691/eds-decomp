@@ -10358,6 +10358,9 @@ static int AiHasSummonTrigger(u16 number)
 #ifdef HAS_CARD_ZABORG_THE_THUNDER_MONARCH
     case CARD_ZABORG_THE_THUNDER_MONARCH:
 #endif
+#ifdef HAS_CARD_GRANMARG_THE_ROCK_MONARCH
+    case CARD_GRANMARG_THE_ROCK_MONARCH:
+#endif
 #ifdef HAS_CARD_MOBIUS_THE_FROST_MONARCH
     case CARD_MOBIUS_THE_FROST_MONARCH:
 #endif
@@ -10807,6 +10810,71 @@ int EffectMobiusResolve(struct ChainEntry *link, struct ChainEntry *chainedTo)
     return EFFECT_STEP_DONE;
 }
 #endif /* HAS_CARD_MOBIUS_THE_FROST_MONARCH */
+
+#ifdef HAS_CARD_GRANMARG_THE_ROCK_MONARCH
+/* ---- Granmarg the Rock Monarch ------------------------------------------------------------------------------------
+ * "If this card is Tribute Summoned: Target 1 Set card on the field; destroy that target."
+ *   trigger   the two Normal Summon paths (summon_checks.c) queue its RESPONSE_SUMMONED trigger as Mobius's, only when
+ *             a Set card can be targeted (CanActivateEffectInZone); it is Level 6, so that summon is a Tribute Summon
+ *   target    a face-down card in a monster, Spell/Trap or Field zone of either side (EffectGranmargCheck). The
+ *             human picks it with the cursor; the CPU takes the human's Set Spell/Trap, else the human's face-down
+ *             monster, else its own (the effect is mandatory)
+ *   resolve   Man-Eater Bug's destroy (EffectDestroyTargetResolve) */
+static const u8 sStrGranmargPick[] = "Select a Set card to destroy.";
+
+static int GranmargSetCardAt(struct ChainEntry *card, int player, int zone)
+{
+    struct DuelZone *z;
+
+    if (zone > ZONE_FIELD)
+        return 0;
+    z = ZoneOf(player, zone);
+    return DUEL_CARD_ID(&z->card) != 0 && !z->isFaceUp && CanCardTargetZone(card->card, player, zone);
+}
+
+u16 EffectGranmargCheck(struct ChainEntry *card, u16 pos)
+{
+    return GranmargSetCardAt(card, DUEL_LOC_PLAYER(pos), DUEL_LOC_ZONE(pos));
+}
+
+int EffectGranmargChainB(struct ChainEntry *link, struct ChainEntry *prevLink)
+{
+    static const u8 sOrder[4][3] = {    /* side (0 the opponent), first zone, last zone */
+        { 0, ZONE_SPELL_0, ZONE_FIELD }, { 0, ZONE_MONSTER_0, ZONE_MONSTER_4 },
+        { 1, ZONE_SPELL_0, ZONE_FIELD }, { 1, ZONE_MONSTER_0, ZONE_MONSTER_4 },
+    };
+    int i, zone;
+
+    (void)prevLink;
+    if (link->player) {                 /* the CPU */
+        for (i = 0; i < 4; i++) {
+            int side = sOrder[i][0] ? AI_PLAYER : AI_HUMAN;
+
+            for (zone = sOrder[i][1]; zone <= sOrder[i][2]; zone++) {
+                if (GranmargSetCardAt(link, side, zone)) {
+                    link->numTargets = 1;
+                    link->targets[0] = DUEL_LOC(side, zone);
+                    return 1;
+                }
+            }
+        }
+        return 1;
+    }
+    if (gChain.targetStep == 0) {
+        TextBoxOpen(TEXTBOX_POS(6, 2), TEXTBOX_SIZE(18, 7), TEXTBOX_FLAGS_DEFAULT, sStrGranmargPick);
+        link->numTargets = 0;
+        gChain.targetStep++;
+        return 0;
+    }
+    if (DuelCursor_PickTarget(PICK_BOTH_SIDES(PICK_FACE_DOWN_MONSTER | PICK_ATTACK_POSITION | PICK_DEFENSE_POSITION
+                                              | PICK_FACE_DOWN_SPELL_TRAP))
+        && GranmargSetCardAt(link, gDuelScreen.selPlayer, gDuelScreen.selArea + gDuelScreen.selIndex)) {
+        TryAddEffectTarget(link, gDuelScreen.selPlayer, gDuelScreen.selArea + gDuelScreen.selIndex);
+        return 1;
+    }
+    return 0;
+}
+#endif /* HAS_CARD_GRANMARG_THE_ROCK_MONARCH */
 
 #ifdef HAS_CARD_KING_TIGER_WANGHU
 /* ---- King Tiger Wanghu --------------------------------------------------------------------------------------------
@@ -12908,6 +12976,16 @@ const struct CardEffect gAddedCardEffects[] = {
         NULL,
         NULL,
         NULL,
+    },
+#endif
+#ifdef HAS_CARD_GRANMARG_THE_ROCK_MONARCH
+    {
+        CARD_GRANMARG_THE_ROCK_MONARCH, 0,
+        (int (*)(struct ChainEntry *, struct ChainEntry *))EffectDestroyTargetResolve,
+        EffectGranmargCheck,
+        NULL,
+        NULL,
+        EffectGranmargChainB,
     },
 #endif
 #ifdef HAS_CARD_ZABORG_THE_THUNDER_MONARCH

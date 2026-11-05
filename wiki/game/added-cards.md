@@ -2024,6 +2024,18 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
   - **Deck:** `DUEL_CMD_SEND_DECK_CARD_TO_GRAVEYARD` for `deck[0]` and `deck[1]` (the top is index 0).
 - Checked in the source and the build; not tested in an emulator.
 
+### Granmarg the Rock Monarch (2026-11-05)
+- Effect Monster (Level 6, EARTH Rock, 2400/1000; `assets/new_cards/cards.json`): "If this card is Tribute Summoned:
+  Target 1 Set card on the field; destroy that target."
+- The two Normal Summon paths (`summon_checks.c`) queue its `RESPONSE_SUMMONED` trigger as Mobius's, only when a Set
+  card can be targeted (`CanActivateEffectInZone`). It's Level 6, so that summon is a Tribute Summon.
+- Target: `EffectGranmargCheck` takes a face-down card in a monster, Spell/Trap or Field zone of either side. With
+  `EffectGranmargChainB`, the human picks it with the cursor. The CPU takes the human's Set Spell/Trap, else the
+  human's face-down monster, else one of its own, since the effect is mandatory. Destroy: `EffectDestroyTargetResolve`.
+- In `AiHasSummonTrigger`. My Body as a Shield and Stardust Dragon already listed it.
+- Removed from `card_pools/missing.txt` and `missing-main.txt`.
+- Checked in the source and the build; not tested in an emulator.
+
 ### Swarm of Locusts (2026-11-05)
 - Effect Monster (Level 3, EARTH Insect, 1000/500; `assets/new_cards/cards.json`): "Once per turn: You can change this
   card to face-down Defense Position. When this card is Flip Summoned: Target 1 Spell/Trap Card your opponent controls;

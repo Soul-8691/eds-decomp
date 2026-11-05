@@ -2444,3 +2444,6 @@ updated: 2026-09-29
 
 ## [2026-11-05] progress | Swarm of Locusts
 - src/added_effects.c: IsSwarmOfLocusts in the Golem Sentry handlers (Dust Tornado's target, MST's destroy), the row, the CPU policy, the family's case lists and guards. src/card_command_menu.c, src/duel_cmd_turn.c. card_pools/missing*.txt, README (162), AI_IMPROVEMENTS, [[added-cards]]. Built (`make demo`); not tested in an emulator.
+
+## [2026-11-05] progress | Granmarg the Rock Monarch
+- src/added_effects.c: EffectGranmargCheck / ChainB, the row (EffectDestroyTargetResolve), AiHasSummonTrigger. src/summon_checks.c: its trigger in both Normal Summon paths (Mobius-style, only with a target). card_pools/missing*.txt, README (163), [[added-cards]]. Built (`make demo`); not tested in an emulator.

@@ -673,6 +673,15 @@ int ExecuteSummonAction(void)
             t = (gSummonAction.zone << 16) | SUMMONED_TRIGGER_BITS;
             Chain_AddPending(a | t | gSummonAction.cardId, gSummonAction.player | (gSummonAction.zone << 8));
             break;
+#ifdef HAS_CARD_GRANMARG_THE_ROCK_MONARCH
+        case CARD_GRANMARG_THE_ROCK_MONARCH:    /* added card: only if a Set card can be targeted */
+            if (CanActivateEffectInZone(gSummonAction.player, gSummonAction.zone, RESPONSE_SUMMONED)) {
+                a = gSummonAction.player << 31;
+                t = (gSummonAction.zone << 16) | SUMMONED_TRIGGER_BITS;
+                Chain_AddPending(a | t | gSummonAction.cardId, gSummonAction.player | (gSummonAction.zone << 8));
+            }
+            break;
+#endif
 #ifdef HAS_CARD_MOBIUS_THE_FROST_MONARCH
         case CARD_MOBIUS_THE_FROST_MONARCH:     /* optional: only if a Spell/Trap is on the field */
             if (CanActivateEffectInZone(gSummonAction.player, gSummonAction.zone, RESPONSE_SUMMONED)) {
@@ -821,6 +830,15 @@ int ExecuteSummonActionAskPosition(void)
             t = (gSummonAction.zone << 16) | SUMMONED_TRIGGER_BITS;
             Chain_AddPending(a | t | gSummonAction.cardId, gSummonAction.player | (gSummonAction.zone << 8));
             break;
+#ifdef HAS_CARD_GRANMARG_THE_ROCK_MONARCH
+        case CARD_GRANMARG_THE_ROCK_MONARCH:    /* added card: only if a Set card can be targeted */
+            if (CanActivateEffectInZone(gSummonAction.player, gSummonAction.zone, RESPONSE_SUMMONED)) {
+                a = gSummonAction.player << 31;
+                t = (gSummonAction.zone << 16) | SUMMONED_TRIGGER_BITS;
+                Chain_AddPending(a | t | gSummonAction.cardId, gSummonAction.player | (gSummonAction.zone << 8));
+            }
+            break;
+#endif
 #ifdef HAS_CARD_MOBIUS_THE_FROST_MONARCH
         case CARD_MOBIUS_THE_FROST_MONARCH:     /* optional: only if a Spell/Trap is on the field */
             if (CanActivateEffectInZone(gSummonAction.player, gSummonAction.zone, RESPONSE_SUMMONED)) {
