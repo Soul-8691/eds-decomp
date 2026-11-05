@@ -2471,3 +2471,6 @@ updated: 2026-09-29
 
 ## [2026-11-05] progress | Nightmare's Steelcage
 - tools/newcards.py: ENGINE_NUMBERS "Nightmare's Steelcage" = 1230 (no attacks for either player, destroyed after the opponent's 2nd turn). src/added_effects.c: AiWantsSteelcage. new_cards.txt (moved above ------), README (169), AI_IMPROVEMENTS, [[added-cards]]. Built (`make demo`); not tested in an emulator.
+
+## [2026-11-05] setup | ADDING_NEW_CARDS.md
+- New repo-root guide: the card lists and tools/newcards.py, engine keys (ENGINE_NUMBERS), gAddedCardEffects rows and their handlers, reusable handlers, triggers and where to queue them, rule hooks, new mechanics, the CPU's hooks, a toolbox of effect functions, and the checklist. Linked from the README.

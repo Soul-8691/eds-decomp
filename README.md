@@ -286,7 +286,7 @@ testing decks.
 ## The new cards
 
 The demo build adds **169** cards, listed in alphabetical order above `------` in
-[`new_cards.txt`](new_cards.txt). **[NEW_CARDS.md](NEW_CARDS.md)** shows each of them in Deck Edit's Card View.
+[`new_cards.txt`](new_cards.txt). **[NEW_CARDS.md](NEW_CARDS.md)** shows each of them in Deck Edit's Card View. **[ADDING_NEW_CARDS.md](ADDING_NEW_CARDS.md)** explains how to add and code more.
 
 <table>
 <tr>
