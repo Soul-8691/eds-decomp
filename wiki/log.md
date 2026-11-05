@@ -2411,3 +2411,6 @@ updated: 2026-09-29
 
 ## [2026-11-04] progress | Des Lacooda
 - src/added_effects.c: IsDesLacooda in the Golem Sentry handlers, gAddedCardEffects row, CPU policy. src/card_command_menu.c, src/duel_cmd_turn.c, src/summon_action.c (guard). card_pools/missing*.txt, README, AI_IMPROVEMENTS, [[added-cards]]. Built (`make demo`); not tested in an emulator; release not built.
+
+## [2026-11-04] progress | PACKS.md and CARD_PRICES.md regenerated
+- tools/packs_md.py and tools/cardprices.py --md, from the demo build's card list. The ROM's pack and price data was already current (the demo build regenerates it).

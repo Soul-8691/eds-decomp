@@ -17,12 +17,12 @@ The DP the card password machine charges, per format, from the format's deck usa
 | [Fiber](#fiber) | 132 |
 | [Yata](#yata) | 132 |
 | [Scientist](#scientist) | 88 |
-| [Vampire](#vampire) | 110 |
-| [Chaos](#chaos) | 137 |
-| [Warrior](#warrior) | 180 |
-| [Goat](#goat) | 252 |
+| [Vampire](#vampire) | 111 |
+| [Chaos](#chaos) | 138 |
+| [Warrior](#warrior) | 182 |
+| [Goat](#goat) | 256 |
 | [Cyber](#cyber) | 139 |
-| [Reaper](#reaper) | 207 |
+| [Reaper](#reaper) | 210 |
 
 ## Yugi-Kaiba
 
@@ -1042,6 +1042,7 @@ The DP the card password machine charges, per format, from the format's deck usa
 | Swords of Revealing Light | 318 | Limited |
 | Trap Dustshoot | 318 |  |
 | Upstart Goblin | 318 | Limited |
+| Vampire Lord | 318 | Limited |
 | Dark Balter the Terrible | 289 |  |
 | Ryu Senshi | 289 |  |
 | Thousand-Eyes Restrict | 289 |  |
@@ -1193,6 +1194,7 @@ The DP the card password machine charges, per format, from the format's deck usa
 | Soul Release | 231 |  |
 | Spear Dragon | 231 |  |
 | The Shallow Grave | 231 |  |
+| Vampire Lord | 231 | Limited |
 | Giltia the D. Knight | 225 |  |
 | Reaper on the Nightmare | 224 |  |
 | Axe of Despair | 220 |  |
@@ -1325,6 +1327,7 @@ The DP the card password machine charges, per format, from the format's deck usa
 | Divine Wrath | 272 |  |
 | Gyaku-Gire Panda | 272 |  |
 | Magic Drain | 272 |  |
+| Vampire Lord | 272 | Limited |
 | Widespread Ruin | 272 |  |
 | Fiend Skull Dragon | 269 |  |
 | Abyss Soldier | 260 |  |
@@ -1385,6 +1388,7 @@ The DP the card password machine charges, per format, from the format's deck usa
 | Flame Ghost | 217 |  |
 | Marauding Captain | 217 | Semi-Limited |
 | Axe of Despair | 211 |  |
+| Big Bang Shot | 211 |  |
 | Buster Blader | 211 |  |
 | Chain Energy | 211 |  |
 | Cyber-Stein | 211 |  |
@@ -1560,7 +1564,9 @@ The DP the card password machine charges, per format, from the format's deck usa
 | Mage Power | 219 | Limited |
 | Soul Release | 219 |  |
 | Nobleman of Extermination | 217 |  |
+| Big Bang Shot | 216 |  |
 | Chain Energy | 216 |  |
+| My Body as a Shield | 216 |  |
 | Twin-Headed Thunder Dragon | 216 |  |
 | Bazoo the Soul-Eater | 215 |  |
 | Toon Table of Contents | 215 |  |
@@ -1570,6 +1576,7 @@ The DP the card password machine charges, per format, from the format's deck usa
 | Time Seal | 213 |  |
 | Cannon Soldier | 212 |  |
 | Soul Exchange | 212 |  |
+| Vampire Lord | 212 | Semi-Limited |
 | Golem Sentry | 211 |  |
 | Megamorph | 211 |  |
 | Pyramid Turtle | 211 |  |
@@ -1599,6 +1606,7 @@ The DP the card password machine charges, per format, from the format's deck usa
 | Acid Trap Hole | 203 |  |
 | B. Skull Dragon | 203 |  |
 | Charubin the Fire Knight | 203 |  |
+| Des Lacooda | 203 |  |
 | Electric Snake | 203 |  |
 | Exchange | 203 |  |
 | Final Attack Orders | 203 |  |
@@ -1954,6 +1962,7 @@ The DP the card password machine charges, per format, from the format's deck usa
 | Milus Radiant | 231 |  |
 | Nobleman of Extermination | 231 |  |
 | Ojama Trio | 231 |  |
+| Vampire Lord | 231 |  |
 | Apprentice Magician | 227 |  |
 | Dark Magician of Chaos | 227 | Limited |
 | Goblin Attack Force | 227 |  |
@@ -1964,12 +1973,14 @@ The DP the card password machine charges, per format, from the format's deck usa
 | Cannon Soldier | 222 |  |
 | Cyber Blader | 222 |  |
 | Mask of Darkness | 222 |  |
+| My Body as a Shield | 222 |  |
 | Sand Moth | 222 |  |
 | Sasuke Samurai | 222 |  |
 | Secret Barrel | 222 |  |
 | Seven Tools of the Bandit | 222 |  |
 | Dragoness the Wicked Knight | 221 |  |
 | Dark Flare Knight | 218 |  |
+| Des Lacooda | 218 |  |
 | Flying Kamakiri #1 | 218 |  |
 | Goblin Elite Attack Force | 218 |  |
 | Big Shield Gardna | 213 |  |
