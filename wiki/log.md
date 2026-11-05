@@ -865,3 +865,6 @@ updated: 2026-09-29
   `tools/dr python3 tools/check_all.py -j 8` (112/112).
 - Pages: [[toolchain]], [[agbcc]], [[rom-free-workflow]], [[decomp-workflow]], [[decomp-permuter]], [[m2c]],
   [[objdiff]], [[matching-tricks]], [[overview]], [[index]].
+
+## [2026-11-05] query | Bust-up portrait colour budget
+- [[scene-sets]]: added a colour budget section (BG and OBJ palette limits, measured index use).

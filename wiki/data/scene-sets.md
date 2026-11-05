@@ -4,7 +4,7 @@ type: data
 status: solid
 confidence: high
 sources: [rom-analysis]
-updated: 2026-10-02
+updated: 2026-11-05
 ---
 # Scene sets
 
@@ -55,6 +55,19 @@ Each set is one contiguous slot: `LZSS bitmap | pad | bgPal[256] | (objPal[256] 
 - **BG palette.** Entries 16–255 come from the set. Entries 0–15 come from the dialogue text palette.
 - **OBJ tiles.** The 0x2000-byte sheet is 16 rows of 16 tiles. Each 0x200-byte row goes to `0x06014000 + row * 0x400`, so the sprites use 2D mapping. The OAM templates address a tile as `row << 4 | column`.
 - **OBJ palette bank.** Each tile's 16-colour bank comes from the set's animation templates (attr2 bits 12–15). The extracted `sprites.png` shows each tile in that bank, but the build stores only `value & 15`.
+
+## Colour budget
+Mode 4 has one 256-colour BG palette, so a portrait has no 16-colour BG banks. **Verified** from the loaders in `src/bustup_scene.c` and by counting indices in the extracted PNGs (2026-11-05).
+
+| Range | Holds | Available to the portrait |
+|---|---|---|
+| BG 0–15 | Dialogue text palette, loaded last | No. Only stray pixels in sets 11, 20 and 29 use them (indices 0 and 14) |
+| BG 16–31 | The scene set's own entries, also used by the dialogue box bitmap | Shared. Sets 5–30 use 15–16 of them |
+| BG 32–255 | The scene set's own entries | Yes, 224 colours for the portrait alone |
+| OBJ 16 banks × 16 | The scene set's OBJ palette, for eyes and mouths | Each bank has 15 colours plus transparent. Sets 22 and 26 use 1 bank, sets 25 and 28 use 3, the rest of 5–30 use 2 |
+
+- Sets 5–30 use 235–239 of the 240 indices from 16 up, so the art fills nearly the whole budget.
+- `Bustup_LoadSceneSet` does not load the box palette, so the box takes its colours from the scene set. Most sets match the box palette at entries 16–30. Sets 7, 9 and 10 hold a different, darker ramp at 16–31, so the box should look darker in those scenes (inferred from the palettes, not checked in an emulator).
 
 ## Animation
 - `anim` points to a NULL-terminated list of tracks. `AnimBlockInit` makes one sprite group per track, `AnimStateTick` steps it and `OamListAddSpriteGroup` draws it.
