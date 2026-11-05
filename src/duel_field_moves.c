@@ -651,6 +651,12 @@ void DiscardHandCard(int player, int handIdx, u16 byOpponentEffect, u16 compactH
         QueueNightAssailantTrigger(player, id);
         break;
 #endif
+#ifdef HAS_CARD_GOLDD_WU_LORD_OF_DARK_WORLD
+    case CARD_GOLDD_WU_LORD_OF_DARK_WORLD:  /* added card: discarded by the opponent's effect (src/added_effects.c) */
+        if (byOpponentEffect != 0)
+            QueueGolddTrigger(player, id);
+        break;
+#endif
 #ifdef HAS_CARD_MANTICORE_OF_DARKNESS
     case CARD_MANTICORE_OF_DARKNESS:
         ManticoreSentToGraveyard(player, CARD_MANTICORE_OF_DARKNESS);

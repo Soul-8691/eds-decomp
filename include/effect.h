@@ -161,6 +161,7 @@ void OnFieldCardTargeted(struct ChainEntry *link, int player, int zone);
 /* Metamorphosis (src/added_effects.c): a Fusion Monster of the given Level. */
 int IsMetamorphosisFusion(u16 id, int level);
 void QueueNightAssailantTrigger(int player, u16 id);
+void QueueGolddTrigger(int player, u16 id);       /* added card: Goldd, Wu-Lord of Dark World */
 /* Face-up copies of Kycoo the Ghost Destroyer (CARD_1511 effect key and/or CARD_KYCOO_THE_GHOST_DESTROYER). */
 int CountActiveKycooOnField(int player);
 /* Blade Knight (added card): id or card-number match (src/added_effects.c). */

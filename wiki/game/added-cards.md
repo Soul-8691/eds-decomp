@@ -2024,6 +2024,24 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
   - **Deck:** `DUEL_CMD_SEND_DECK_CARD_TO_GRAVEYARD` for `deck[0]` and `deck[1]` (the top is index 0).
 - Checked in the source and the build; not tested in an emulator.
 
+### Goldd, Wu-Lord of Dark World (2026-11-05)
+- Effect Monster (Level 5, DARK Fiend, 2300/1400; `assets/new_cards/cards.json`): "If this card is discarded to the
+  Graveyard by a card effect: If it was discarded from your hand to your Graveyard by an opponent's card effect, you can
+  target up to 2 cards your opponent controls; Special Summon this card from the Graveyard, then destroy those targets
+  (if any)." This fetched text only acts on the opponent's discard.
+- **Trigger.** `DiscardHandCard` (`duel_field_moves.c`) calls `QueueGolddTrigger` when `byOpponentEffect` is set: an
+  off-field `RESPONSE_DISCARDED` trigger, as Night Assailant's.
+- **Targets** (`EffectGolddChainB`): up to 2 of the opponent's cards, monsters or Spell/Trap/Field. The human picks
+  them with the cursor and presses B to stop early. The CPU takes the human's strongest monsters, then their Spell/Trap
+  cards. As the engine's target steps: a message box that A closes, then the cursor picks, and B ends them. The prompt
+  says to press A first; B while the box is still up does nothing (it looked like a freeze).
+- **Resolve** (`EffectGolddResolve`): it leaves the Graveyard and is Special Summoned in the chosen position, then the
+  targets still there are destroyed. Nothing is destroyed if it can't be summoned.
+- **Not asked.** The human isn't asked whether to use it ("you can"): the trigger always activates. B at once picks no
+  targets.
+- Moved above `------` in `new_cards.txt` (into the demo). It wasn't in `card_pools/missing*.txt`.
+- Checked in the source and the build; not tested in an emulator.
+
 ### Dark World Lightning (2026-11-05)
 - Normal Spell (`assets/new_cards/cards.json`): "Target 1 Set card on the field; destroy that target, then discard 1
   card."

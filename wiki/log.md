@@ -2484,3 +2484,12 @@ updated: 2026-09-29
 
 ## [2026-11-05] progress | Dark World Lightning
 - src/added_effects.c: EffectDarkWorldLightningPrepare / Resolve, with Granmarg's Set-card target (its block now under GRANMARG || DARK_WORLD_LIGHTNING), the row, AiWantsSpell. README (171), [[added-cards]]. Built (`make demo`); not tested in an emulator.
+
+## [2026-11-05] progress | Goldd, Wu-Lord of Dark World
+- src/added_effects.c: QueueGolddTrigger, EffectGolddPrepare / ChainB / Resolve, the row. src/duel_field_moves.c: DiscardHandCard queues it when discarded by the opponent's effect. include/effect.h. new_cards.txt (moved above ------), README (172), [[added-cards]]. Built (`make demo`); not tested in an emulator.
+
+## [2026-11-05] progress | Goldd: no freeze on B
+- Reported: the game froze after B in Goldd's target pick (a second Goldd in the same chain). EffectGolddChainB returned on B with its message box still open; a message box only closes on A, and the chain waited for it. The picks now run in the box's input callback (GolddPickInput, TEXTBOX_MENU_CUSTOM, as the Synchro picks), which closes the box on B or the 2nd pick; chainB returns once the box is gone (gModDuel.golddLink holds the link). Built (`make demo`); not tested in an emulator.
+
+## [2026-11-05] progress | Goldd: back to the engine's prompt, then pick
+- The custom text-box input (previous entry) took no input in the chain build (reported: stuck at the prompt). EffectGolddChainB is again the engine's pattern (EffectTrapTargetChainB: a message box closed with A, then the cursor; Chain_Build does not run while the box is open), and the prompt now says to press A first: the reported freeze was most likely B pressed while the box, which only A closes, was still up (the old prompt said "B: done"). B during the picks ends them. Built (`make demo`); not tested in an emulator.

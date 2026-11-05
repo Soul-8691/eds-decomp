@@ -11304,6 +11304,140 @@ int EffectGranmargChainB(struct ChainEntry *link, struct ChainEntry *prevLink)
 }
 #endif /* HAS_CARD_GRANMARG_THE_ROCK_MONARCH || HAS_CARD_DARK_WORLD_LIGHTNING */
 
+#ifdef HAS_CARD_GOLDD_WU_LORD_OF_DARK_WORLD
+/* ---- Goldd, Wu-Lord of Dark World ---------------------------------------------------------------------------------
+ * "If this card is discarded to the Graveyard by a card effect: If it was discarded from your hand to your Graveyard by
+ * an opponent's card effect, you can target up to 2 cards your opponent controls; Special Summon this card from the
+ * Graveyard, then destroy those targets (if any)." (The fetched text only acts on the opponent's discard.)
+ *   trigger  DiscardHandCard (duel_field_moves.c) queues it when byOpponentEffect is set: an off-field
+ *            RESPONSE_DISCARDED trigger, its zone field the player (as Night Assailant's)
+ *   chainB   up to 2 of the opponent's cards (monsters and Spell/Trap zones, CanCardTargetZone): the human picks with
+ *            the cursor, B to stop early; the CPU takes the human's strongest monsters, then their Spell/Trap cards
+ *   resolve  Goldd leaves the Graveyard and is Special Summoned (position chosen), then the targets still there are
+ *            destroyed (nothing is destroyed if it cannot be summoned) */
+#define GOLDD_MAX_TARGETS 2
+
+static const u8 sStrGolddPick[] = "Press A, then select up to 2 cards your opponent controls. B when done.";
+
+void QueueGolddTrigger(int player, u16 id)
+{
+    Chain_AddPending(TRIGGER_PLAYER(player & 1) | TRIGGER_ZONE(0x1F & player) | TRIGGER_EVENT(RESPONSE_DISCARDED)
+                         | TRIGGER_KIND(CHAIN_KIND_OFF_FIELD) | (id & CARD_ID_MASK),
+                     0);
+}
+
+static int GolddTargetAt(struct ChainEntry *link, int player, int zone)
+{
+    int i;
+
+    if (player == (link->player & 1) || zone > ZONE_FIELD || DUEL_CARD_ID(&ZoneOf(player, zone)->card) == 0
+        || !CanCardTargetZone(link->card, player, zone))
+        return 0;
+    for (i = 0; i < link->numTargets; i++) {
+        if (link->targets[i] == DUEL_LOC(player, zone))
+            return 0;           /* already picked */
+    }
+    return 1;
+}
+
+int EffectGolddPrepare(struct ChainEntry *card, struct ChainEntry *chainLink, u16 fromHand)
+{
+    return card->event == RESPONSE_DISCARDED && CountFreeMonsterZones(card->player) > 0
+           && CanSpecialSummon(card->player);
+}
+
+int EffectGolddChainB(struct ChainEntry *link, struct ChainEntry *prevLink)
+{
+    int opponent = 1 - (link->player & 1), zone, n;
+
+    (void)prevLink;
+    if (link->player) {                 /* the CPU: the strongest monsters, then Spell/Trap cards */
+        link->numTargets = 0;
+        for (n = 0; n < GOLDD_MAX_TARGETS; n++) {
+            int best = -1;
+            u32 bestAtk = 0;
+
+            for (zone = ZONE_MONSTER_0; zone <= ZONE_MONSTER_4; zone++) {
+                if (GolddTargetAt(link, opponent, zone) && (best < 0 || GetZoneCardAtk(opponent, zone) > bestAtk)) {
+                    best = zone;
+                    bestAtk = GetZoneCardAtk(opponent, zone);
+                }
+            }
+            for (zone = ZONE_SPELL_0; best < 0 && zone <= ZONE_FIELD; zone++) {
+                if (GolddTargetAt(link, opponent, zone))
+                    best = zone;
+            }
+            if (best < 0)
+                break;
+            link->targets[link->numTargets++] = DUEL_LOC(opponent, best);
+        }
+        return 1;
+    }
+    /* As the engine's own target steps (EffectTrapTargetChainB, ...): a message box (A closes it), then the cursor
+     * picks. Chain_Build is not called while the box is open, so B only counts once the box is closed. */
+    if (gChain.targetStep == 0) {
+        link->numTargets = 0;
+        TextBoxOpen(TEXTBOX_POS(6, 2), TEXTBOX_SIZE(18, 7), TEXTBOX_FLAGS_DEFAULT, sStrGolddPick);
+        gChain.targetStep++;
+        return 0;
+    }
+    if (gMain.newKeys & B_BUTTON) {
+        PlaySE(SE_CANCEL);
+        return 1;                       /* fewer targets (or none) */
+    }
+    if (DuelCursor_PickTarget(PICK_PLAYER1(PICK_ANY_MONSTER | PICK_ANY_SPELL_TRAP))) {
+        int pickPlayer = gDuelScreen.selPlayer, pickZone = gDuelScreen.selArea + gDuelScreen.selIndex;
+
+        if (GolddTargetAt(link, pickPlayer, pickZone)) {
+            link->targets[link->numTargets++] = DUEL_LOC(pickPlayer, pickZone);
+            PlaySE(SE_CONFIRM);
+            return link->numTargets >= GOLDD_MAX_TARGETS;
+        }
+        PlaySE(SE_ERROR);
+    }
+    return 0;
+}
+
+int EffectGolddResolve(struct ChainEntry *link, struct ChainEntry *chainedTo)
+{
+    struct DuelPlayer *p = &gDuelPlayers[link->player & 1];
+    int i;
+
+    (void)chainedTo;
+    if (link->negated)
+        return EFFECT_STEP_DONE;
+    switch (gChain.effectStep) {
+    case EFFECT_STEP_START:
+        if (CountFreeMonsterZones(link->player) == 0 || !CanSpecialSummon(link->player))
+            return EFFECT_STEP_DONE;
+        for (i = 0; i < p->graveCount; i++) {
+            if (DUEL_CARD_ID(&p->graveyard[i]) == (link->card & CARD_ID_MASK)) {
+                CopyDuelCard(&gChain.effectCard, &p->graveyard[i]);
+                DuelCmd_Push(link->player ? DUEL_CMD_PLAYER | DUEL_CMD_REMOVE_CARD_FROM_GRAVEYARD
+                                          : DUEL_CMD_REMOVE_CARD_FROM_GRAVEYARD,
+                             ((u16 *)&gChain.effectCard)[0], ((u16 *)&gChain.effectCard)[1], 0);
+                return EFFECT_STEP_2;
+            }
+        }
+        return EFFECT_STEP_DONE;    /* no longer in the Graveyard */
+    case EFFECT_STEP_2:
+        QueueSpecialSummonChoosePosition(link->player, &gChain.effectCard, 1, 0);
+        return EFFECT_STEP_3;
+    case EFFECT_STEP_3:
+        for (i = 0; i < link->numTargets; i++) {
+            int player = DUEL_LOC_PLAYER(link->targets[i]), zone = DUEL_LOC_ZONE(link->targets[i]);
+
+            if (zone <= ZONE_FIELD && DUEL_CARD_ID(&ZoneOf(player, zone)->card) != 0) {
+                DestroyFieldCard(player, zone, 1);
+                OnCardDestroyedByEffect(link->player, player, zone);
+            }
+        }
+        return EFFECT_STEP_DONE;
+    }
+    return EFFECT_STEP_DONE;
+}
+#endif /* HAS_CARD_GOLDD_WU_LORD_OF_DARK_WORLD */
+
 #ifdef HAS_CARD_DARK_WORLD_LIGHTNING
 /* ---- Dark World Lightning -----------------------------------------------------------------------------------------
  * "Target 1 Set card on the field; destroy that target, then discard 1 card." Normal Spell.
@@ -13508,6 +13642,16 @@ const struct CardEffect gAddedCardEffects[] = {
         NULL,
         NULL,
         NULL,
+    },
+#endif
+#ifdef HAS_CARD_GOLDD_WU_LORD_OF_DARK_WORLD
+    {
+        CARD_GOLDD_WU_LORD_OF_DARK_WORLD, 0,
+        EffectGolddResolve,
+        NULL,
+        EffectGolddPrepare,
+        NULL,
+        EffectGolddChainB,
     },
 #endif
 #ifdef HAS_CARD_DARK_WORLD_LIGHTNING
