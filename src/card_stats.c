@@ -600,6 +600,9 @@ void GetZoneCardStats(int player, int zone, struct ZoneCardStats *out)
                     equipAtk += CountSpellTrapsFiltered(sourcePlayer, 0, 0, 1) * 500;
                     equipDef += CountSpellTrapsFiltered(sourcePlayer, 0, 0, 1) * 500;
                     break;
+                case CARD_1313:     /* added: key 1313 is Big Bang Shot's (tools/newcards.py) */
+                    equipAtk += 400;
+                    break;
                 case CARD_1540:
                     if (GetCardNumberSym(out->id) == CARD_1339)
                         equipAtk += 300;

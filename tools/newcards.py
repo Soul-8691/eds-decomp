@@ -88,6 +88,8 @@ ENGINE_NUMBERS = {
                                     # position for that turn and re-arms it (DuelCmd_TurnStart)
     'United We Stand': 1449,        # key 1449: an Equip (EffectEquipResolve and the equip target rules), +800 ATK/DEF
                                     # per face-up monster of the equip card's controller (CalcZoneCardStats)
+    'Big Bang Shot': 1313,          # key 1313: an Equip (EffectEquipResolve and the equip target rules) that gives piercing
+                                    # (CalcBattle); +400 ATK (CalcZoneCardStats) and the banish (BigBangShotLeaves) are added
     'Mage Power': 1450,             # key 1450: an Equip, +500 ATK/DEF per Spell/Trap of the equip card's controller,
                                     # itself included (CalcZoneCardStats; changed to count the Field Spell too)
     'Gearfried the Iron Knight': 1351,  # key 1351: EquipCard destroys an Equip put on it (and the monster too for

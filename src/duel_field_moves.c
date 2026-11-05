@@ -273,12 +273,15 @@ void SendBattleDestroyedCardToGraveyard(int defender, int player, int zone, u16 
 /* Banish the card in (player, zone) (DUEL_CMD_BANISH, or DUEL_CMD_BANISH_FLAGGED, which also sets card bit
  * 20, when flagged); nothing for an empty zone. A monster's linked cards are destroyed, a banished
  * Prohibition lifts its prohibition, and a face-up Field Magic resets the field background. */
+void BigBangShotLeaves(int player, int zone);   /* mod: src/added_effects.c */
+
 void BanishFieldCard(int player, int zone, u16 flagged)
 {
     u32 id = DUEL_CARD_ID(ZONE(player, zone));
 
     if (id == 0)
         return;
+    BigBangShotLeaves(player, zone);    /* added: src/added_effects.c */
     if (flagged != 0)
         DuelCmd_Push(PLAYER_CMD(player, DUEL_CMD_BANISH_FLAGGED), zone, 1, 0);
     else
@@ -310,6 +313,7 @@ void ReturnFieldCardToHand(int player, int zone, u16 cmdArg)
 
     if (id == 0)
         return;
+    BigBangShotLeaves(player, zone);    /* added: src/added_effects.c */
     if (IS_TOKEN_NUMBER(CARD_NUMBER(id)))
         DestroyFieldCard(player, zone, 1);
     else
@@ -345,6 +349,7 @@ void ReturnFieldCardToDeck(int player, int zone)
 
     if (id == 0)
         return;
+    BigBangShotLeaves(player, zone);    /* added: src/added_effects.c */
     if (IS_TOKEN_NUMBER(CARD_NUMBER(id)))
         DestroyFieldCard(player, zone, 1);
     else

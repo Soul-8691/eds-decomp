@@ -2405,3 +2405,6 @@ updated: 2026-09-29
 ## [2026-11-04] progress | Missing lists: coded cards removed
 - card_pools/missing.txt, missing-main.txt: removed My Body as a Shield and Vampire Lord.
 - Also removed Wave-Motion Cannon, Chiron the Mage, Divine Wrath and Mask of Restrict, which have effect rows in src/added_effects.c.
+
+## [2026-11-04] progress | Big Bang Shot
+- Engine key 1313 (tools/newcards.py); +400 ATK in src/card_stats.c; BigBangShotLeaves and BigBangShotMonsterLeaving in src/added_effects.c, with hooks in src/duel_send_to_grave.c and src/duel_field_moves.c; Tailor of the Fickle in src/effect_checks.c. new_cards.txt, card_pools/missing*.txt, README, [[added-cards]]. Built (`make demo`); not tested in an emulator; release not built.

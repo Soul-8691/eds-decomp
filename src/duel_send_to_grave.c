@@ -154,6 +154,9 @@ void ManticoreSentToGraveyard(int player, u16 number); /* mod: src/added_effects
 #endif
 void BlastWithChainEquipDestroyed(int player, int zone);
 
+void BigBangShotLeaves(int player, int zone);   /* mod: src/added_effects.c */
+void BigBangShotMonsterLeaving(int player, int zone, u16 destroyed);
+
 void SendFieldCardToGrave(int player, int zone, u16 destroyed, u16 runTriggers)
 {
     int side = player & 1;
@@ -166,6 +169,7 @@ void SendFieldCardToGrave(int player, int zone, u16 destroyed, u16 runTriggers)
 
     if (id == 0)
         return;
+    BigBangShotLeaves(player, zone);    /* added: src/added_effects.c */
     card = &gDuelPlayers[player & 1].zones[zone].card;
     if (runTriggers != 0) {
         switch (CARD_NUMBER(id)) {
@@ -452,6 +456,7 @@ void DestroyLinkedCards(int player, int zone, u16 destroyed)
     int i;
     int z;
 
+    BigBangShotMonsterLeaving(player, zone, destroyed);     /* added: src/added_effects.c */
     for (i = 0; i < ZONE(player, zone)->numLinks; i++) {
         int side = player & 1;
         struct DuelZone *zp = ZONE_OF_SIDE(side, zone);

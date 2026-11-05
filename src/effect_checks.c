@@ -456,6 +456,7 @@ int EffectTailorOfTheFickleCheck(struct ChainEntry *card, u16 pos)
                 case CARD_1419:
                 case CARD_1420:
                 case CARD_1422:
+                case CARD_1313:     /* added: Big Bang Shot */
                 case CARD_1448 ... CARD_1450:
                 case CARD_1540:
                 case CARD_1548:

@@ -2024,6 +2024,20 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
   - **Deck:** `DUEL_CMD_SEND_DECK_CARD_TO_GRAVEYARD` for `deck[0]` and `deck[1]` (the top is index 0).
 - Checked in the source and the build; not tested in an emulator.
 
+### Big Bang Shot (2026-11-04)
+- Equip Spell (`assets/new_cards/cards.json`, from YGOPRODeck): "The equipped monster gains 400 ATK. If the equipped
+  monster attacks a Defense Position monster, inflict piercing battle damage to your opponent. When this card leaves
+  the field, banish the equipped monster."
+- **The engine already has part of it** as effect key 1313 (no EDS card): `ENGINE_NUMBERS` gives the card that number. The
+  key has the activation (`EffectEquipResolve`), the equip target rules and the piercing (`CalcBattle`).
+- **Added:** +400 ATK in `CalcZoneCardStats`, and Tailor of the Fickle can move it (`effect_checks.c`).
+- **The banish.** `BigBangShotLeaves` runs first in `SendFieldCardToGrave`, `BanishFieldCard`, `ReturnFieldCardToHand` and
+  `ReturnFieldCardToDeck`: it takes the equip link off and banishes the monster (`BanishFieldCard`). When the monster
+  leaves first, `BigBangShotMonsterLeaving` (`DestroyLinkedCards`) takes the link off before destroying the Equip, so
+  nothing is banished. A disabled copy doesn't banish.
+- CPU: it plays it as any added Equip (`AiPlaysEquip`). It doesn't weigh the banish.
+- Checked in the source and the build; not tested in an emulator.
+
 ### My Body as a Shield (2026-11-04)
 - Quick-Play Spell (`assets/new_cards/cards.json`, from YGOPRODeck): "When your opponent activates a Spell/Trap Card or
   monster effect that would destroy a monster(s) on the field: Pay 1500 LP; negate the activation, and if you do, destroy

@@ -8052,6 +8052,53 @@ static int AiChainMyBodyAsAShield(struct ChainEntry *entry)
 }
 #endif /* HAS_CARD_MY_BODY_AS_A_SHIELD */
 
+/* ---- Big Bang Shot (engine key 1313, tools/newcards.py) -----------------------------------------------------------
+ * Equip Spell: "The equipped monster gains 400 ATK. If the equipped monster attacks a Defense Position monster, inflict
+ * piercing battle damage to your opponent. When this card leaves the field, banish the equipped monster."
+ * The key already has the activation, the equip target rules and the piercing (CalcBattle). +400 ATK is in
+ * CalcZoneCardStats. The rest is here, by CARD_1313, so these need no HAS_CARD test (without the card nothing has it):
+ *   BigBangShotLeaves         first thing in the four ways a card leaves the field (SendFieldCardToGrave, BanishFieldCard,
+ *                             ReturnFieldCardToHand, ReturnFieldCardToDeck): banish the monster it equips
+ *   BigBangShotMonsterLeaving DestroyLinkedCards: the monster is leaving first, so the Equip only goes with it. It takes
+ *                             the link off before destroying the Equip, so BigBangShotLeaves finds no monster.
+ * A disabled copy (Imperial Order) does not banish. */
+
+void BigBangShotLeaves(int player, int zone)
+{
+    struct DuelZone *z = ZoneOf(player, zone);
+    u16 monster;
+
+    if (CardNumberOfId(DUEL_CARD_ID(&z->card)) != CARD_1313 || z->isDisabled)
+        return;
+    monster = FindMonsterWithLinkTo(player, zone);
+    if (monster == 0xFFFF)
+        return;
+    RemoveZoneLink(monster, DUEL_LOC(player, zone), ZONE_LINK_EQUIP);
+    BanishFieldCard(DUEL_LOC_PLAYER(monster), DUEL_LOC_ZONE(monster), 0);
+}
+
+void BigBangShotMonsterLeaving(int player, int zone, u16 destroyed)
+{
+    struct DuelZone *z = ZoneOf(player, zone);
+    int i = 0;
+
+    if (zone > ZONE_MONSTER_4)
+        return;
+    while (i < z->numLinks) {
+        u16 equip = z->links[i];
+        int equipPlayer = DUEL_LOC_PLAYER(equip);
+        int equipZone = DUEL_LOC_ZONE(equip);
+
+        if (z->linkKinds[i] == ZONE_LINK_EQUIP
+            && CardNumberOfId(DUEL_CARD_ID(&ZoneOf(equipPlayer, equipZone)->card)) == CARD_1313) {
+            RemoveZoneLinkAt(player, zone, i);
+            DestroyFieldCard(equipPlayer, equipZone, destroyed != 0);
+        } else {
+            i++;
+        }
+    }
+}
+
 #ifdef HAS_CARD_BLAST_WITH_CHAIN
 /* ---- Blast with Chain ---------------------------------------------------------------------------------------------
  * "Target 1 face-up monster you control; equip this card to that target. It gains 500 ATK. If this card is destroyed
