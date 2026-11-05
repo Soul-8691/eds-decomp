@@ -971,7 +971,9 @@ u16 CardListView_InitScreen(void)
             CardListView_DrawSelectedInfo();
             CardListView_DrawSelectedCursorFrame();
             gMain.bgVofs[1] = -(gCardListView.cursorRow * 16);
-            gCardListView.button = CARDLIST_BUTTON_CARD_VIEW;
+            /* changed: a pick list (Decide enabled) starts on Decide, not Card View; also after a Card View */
+            gCardListView.button = (gCardListView.buttonMask >> CARDLIST_BUTTON_DECIDE) & 1 ? CARDLIST_BUTTON_DECIDE
+                                                                                         : CARDLIST_BUTTON_CARD_VIEW;
             gCardListView.buttonMask |= 1 << CARDLIST_BUTTON_CARD_VIEW;
         } else {
             TextCanvasInit(32, 9);

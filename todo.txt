@@ -13,4 +13,3 @@ Spell pack
 Trap pack
 Custom formats
 Fix quirks with new cards
-Make summon instead of info be first in summon list
