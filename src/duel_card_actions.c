@@ -200,6 +200,7 @@ void ShowRevealedCard(int player, u16 cardId)
 
 /* Lose amount LP (DUEL_CMD_LOSE_LP, animated) and open a RESPONSE_LP_CHANGE window; nothing for 0. */
 int ModTakesNoDamage(int player);       /* added: Hallowed Life Barrier (src/added_effects.c) */
+int ModRedirectBattleDamage(int player, int amount, u16 attackerLoc, u16 defenderLoc);    /* added: Dimension Wall */
 int ModTakesNoEffectDamage(int player); /* added: Hallowed Life Barrier, Pikeru's Circle, Des Wombat */
 
 void LoseLifePoints(int player, int amount)
@@ -226,6 +227,8 @@ void InflictBattleDamage(int player, int amount, u16 attackerLoc, u16 defenderLo
     int goblins = CountActiveCardsOnField(1 - player, cardNo = CARD_ROBBIN_GOBLIN);
 
     if (ModTakesNoDamage(player))   /* added: no damage this turn (Hallowed Life Barrier) */
+        return;
+    if (ModRedirectBattleDamage(player, amount, attackerLoc, defenderLoc))  /* added: Dimension Wall */
         return;
     if (amount != 0) {
         DuelCmd_Push(PLAYER_CMD(player, DUEL_CMD_LOSE_LP), amount, 1, 0);

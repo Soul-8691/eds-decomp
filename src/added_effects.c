@@ -70,6 +70,7 @@ int IsTributeLockActive(void)
  * DuelPhase_Init clears it with ModDuelInit. A `static` variable here would go to .bss, which the linker puts at
  * 0x02000000, over gTextCanvas: keep such state in this block. */
 struct ModDuelState {
+    u8 dimensionWall;           /* Dimension Wall: bit per player, battle damage goes to the opponent this attack */
     u8 sealedCount[2];          /* Cursed Seal of the Forbidden Spell: [player] names sealed (sealedNumbers) */
     u16 sealedNumbers[2][4];    /* [player]: Spell card numbers that player may no longer activate this Duel */
     u16 junkNegateId;           /* Junk Synchron: the card ID being revived (its effects negated on arrival), 0 none */
@@ -994,6 +995,40 @@ int EffectRaigekiBreakResolve(struct ChainEntry *link, struct ChainEntry *chaine
 }
 #endif /* HAS_CARD_RAIGEKI_BREAK */
 
+/* ---- Dimension Wall -----------------------------------------------------------------------------------------------
+ * "Activate only when an opponent's monster declares an attack. Instead of you, your opponent takes the Battle Damage
+ * you would have taken from this battle." Normal Trap in the RESPONSE_ATTACK_DECLARED window (as Draining Shield's).
+ * The resolve marks its player (gModDuel.dimensionWall); InflictBattleDamage (duel_card_actions.c) asks
+ * ModRedirectBattleDamage, which deals that player's battle damage to the opponent instead; ModEndAttack clears the
+ * mark when the attack is over. The CPU activates it against an attack that would deal it battle damage
+ * (AiShouldActivateAddedCard: direct, or into its weaker face-up Attack Position monster).
+ * ModRedirectBattleDamage is always compiled (InflictBattleDamage calls it). */
+int ModRedirectBattleDamage(int player, int amount, u16 attackerLoc, u16 defenderLoc)
+{
+    if (!(gModDuel.dimensionWall & (1 << (player & 1))))
+        return 0;
+    InflictBattleDamage(1 - player, amount, attackerLoc, defenderLoc);
+    return 1;
+}
+
+#ifdef HAS_CARD_DIMENSION_WALL
+int EffectDimensionWallPrepare(struct ChainEntry *card, struct ChainEntry *chainLink, u16 fromHand)
+{
+    int player = DUEL_LOC_PLAYER(card->loc0), zone = DUEL_LOC_ZONE(card->loc0);
+
+    return !fromHand && card->event == RESPONSE_ATTACK_DECLARED && player != (card->player & 1)
+           && zone <= ZONE_MONSTER_4 && DUEL_CARD_ID(&ZoneOf(player, zone)->card) != 0;
+}
+
+int EffectDimensionWallResolve(struct ChainEntry *link, struct ChainEntry *chainedTo)
+{
+    (void)chainedTo;
+    if (!link->negated)
+        gModDuel.dimensionWall |= 1 << (link->player & 1);
+    return EFFECT_STEP_DONE;
+}
+#endif /* HAS_CARD_DIMENSION_WALL */
+
 #ifdef HAS_CARD_DRAINING_SHIELD
 /* ---- Draining Shield ----------------------------------------------------------------------------------------------
  * "When an opponent's monster declares an attack: Target the attacking monster; negate that attack, and if you do,
@@ -1482,6 +1517,7 @@ void ModDuelInit(void)
     ModSynchroReset();                      /* src/mod_synchro.c */
     gModDuel.sealedCount[0] = 0;
     gModDuel.sealedCount[1] = 0;
+    gModDuel.dimensionWall = 0;
     gModDuel.junkNegateId = 0;
     gModDuel.quillboltId = 0;
     MemClear16(gModDuel.quillboltIds, sizeof(gModDuel.quillboltIds));
@@ -7661,6 +7697,8 @@ void ModEndAttack(int player)
     u16 id = DUEL_CARD_ID(&z->card);
 #endif
 
+    gModDuel.dimensionWall = 0;             /* Dimension Wall lasts for this battle only */
+
 #ifdef HAS_CARD_EXARION_UNIVERSE
     gModDuel.exarionPierce = 0;
 #endif
@@ -13101,6 +13139,20 @@ int AiShouldActivateAddedCard(struct ChainEntry *entry)
     case CARD_PIKERUS_CIRCLE_OF_ENCHANTMENT:    /* only chained to burn (AiChainPikerusCircle) */
         return 0;
 #endif
+#ifdef HAS_CARD_DIMENSION_WALL
+    case CARD_DIMENSION_WALL: {                 /* against an attack that would deal the CPU battle damage */
+        struct DuelZone *def;
+        int atk;
+
+        if (entry->event != RESPONSE_ATTACK_DECLARED || gDuel.turnPlayer != AI_HUMAN)
+            return 0;
+        atk = GetZoneCardAtk(AI_HUMAN, gBattle.atkSlot);
+        if (gBattle.direct || DUEL_CARD_ID(&ZoneOf(AI_PLAYER, gBattle.defSlot)->card) == 0)
+            return atk > 0;
+        def = ZoneOf(AI_PLAYER, gBattle.defSlot);
+        return !def->isDefense && def->isFaceUp && atk > (int)GetZoneCardAtk(AI_PLAYER, gBattle.defSlot);
+    }
+#endif
 #ifdef HAS_CARD_HALLOWED_LIFE_BARRIER
     case CARD_HALLOWED_LIFE_BARRIER: {          /* against an attack that hurts */
         int damage;
@@ -14279,6 +14331,16 @@ const struct CardEffect gAddedCardEffects[] = {
         EffectTrapDustshootResolve,
         NULL,
         EffectTrapDustshootPrepare,
+        NULL,
+        NULL,
+    },
+#endif
+#ifdef HAS_CARD_DIMENSION_WALL
+    {
+        CARD_DIMENSION_WALL, 0,
+        EffectDimensionWallResolve,
+        NULL,
+        EffectDimensionWallPrepare,
         NULL,
         NULL,
     },

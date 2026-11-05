@@ -2459,3 +2459,6 @@ updated: 2026-09-29
 
 ## [2026-11-05] progress | Draining Shield
 - src/added_effects.c: EffectDrainingShieldPrepare / Resolve (negate the attack, gain its ATK), the row. new_cards.txt: moved above ------. README (166), [[added-cards]]. Built (`make demo`); not tested in an emulator.
+
+## [2026-11-05] progress | Dimension Wall
+- src/added_effects.c: EffectDimensionWall*, ModRedirectBattleDamage, gModDuel.dimensionWall (cleared in ModEndAttack and at duel start), the CPU policy, the row. src/duel_card_actions.c: InflictBattleDamage asks ModRedirectBattleDamage. README (167), AI_IMPROVEMENTS, [[added-cards]]. Built (`make demo`); not tested in an emulator.

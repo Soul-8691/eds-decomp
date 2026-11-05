@@ -2024,6 +2024,18 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
   - **Deck:** `DUEL_CMD_SEND_DECK_CARD_TO_GRAVEYARD` for `deck[0]` and `deck[1]` (the top is index 0).
 - Checked in the source and the build; not tested in an emulator.
 
+### Dimension Wall (2026-11-05)
+- Normal Trap (`assets/new_cards/cards.json`): "Activate only when an opponent's monster declares an attack. Instead
+  of you, your opponent takes the Battle Damage you would have taken from this battle."
+- `EffectDimensionWallPrepare`: the `RESPONSE_ATTACK_DECLARED` window, as Draining Shield's.
+- `EffectDimensionWallResolve`: marks its player in `gModDuel.dimensionWall`. `InflictBattleDamage`
+  (`duel_card_actions.c`) asks `ModRedirectBattleDamage`, which deals that player's battle damage to the opponent
+  instead (with its battle-damage response). `ModEndAttack` clears the mark when the attack is over.
+- CPU: `AiShouldActivateAddedCard` activates it against an attack that would deal the CPU battle damage: a direct
+  attack, or one into its weaker face-up Attack Position monster.
+- It was already above `------` in `new_cards.txt`, and wasn't in `card_pools/missing*.txt`.
+- Checked in the source and the build; not tested in an emulator.
+
 ### Draining Shield (2026-11-05)
 - Normal Trap (`assets/new_cards/cards.json`): "When an opponent's monster declares an attack: Target the attacking
   monster; negate that attack, and if you do, gain LP equal to that target's ATK."
