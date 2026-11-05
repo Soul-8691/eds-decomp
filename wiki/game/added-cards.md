@@ -2024,6 +2024,17 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
   - **Deck:** `DUEL_CMD_SEND_DECK_CARD_TO_GRAVEYARD` for `deck[0]` and `deck[1]` (the top is index 0).
 - Checked in the source and the build; not tested in an emulator.
 
+### Des Lacooda (2026-11-04)
+- Effect Monster (Level 3, EARTH Zombie, 500/600; `assets/new_cards/cards.json`, from YGOPRODeck): "Once per turn: You can
+  change this card to face-down Defense Position. When this card is Flip Summoned: Draw 1 card."
+- It shares Golem Sentry's row handlers (`EffectGolemSentry*`), told apart by `IsDesLacooda`: the face-down change is the
+  same, and its Flip Summon trigger takes no target and draws (`DrawCards`). `AddedCardsSummoned` queues the trigger only for
+  `SUMMON_ACTION_FLIP`, so being flipped by an attack or an effect doesn't draw.
+- Listed with the family in `ModCanActivateMonsterEffect`, `CanActivateMonsterEffect` (`card_command_menu.c`) and
+  `DuelCmd_TurnStart` (`duel_cmd_turn.c`, which re-arms the once-per-turn flag).
+- CPU: it always uses the face-down effect in the Main Phase when the menu allows.
+- Checked in the source and the build; not tested in an emulator.
+
 ### Big Bang Shot (2026-11-04)
 - Equip Spell (`assets/new_cards/cards.json`, from YGOPRODeck): "The equipped monster gains 400 ATK. If the equipped
   monster attacks a Defense Position monster, inflict piercing battle damage to your opponent. When this card leaves

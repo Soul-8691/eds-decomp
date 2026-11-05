@@ -2408,3 +2408,6 @@ updated: 2026-09-29
 
 ## [2026-11-04] progress | Big Bang Shot
 - Engine key 1313 (tools/newcards.py); +400 ATK in src/card_stats.c; BigBangShotLeaves and BigBangShotMonsterLeaving in src/added_effects.c, with hooks in src/duel_send_to_grave.c and src/duel_field_moves.c; Tailor of the Fickle in src/effect_checks.c. new_cards.txt, card_pools/missing*.txt, README, [[added-cards]]. Built (`make demo`); not tested in an emulator; release not built.
+
+## [2026-11-04] progress | Des Lacooda
+- src/added_effects.c: IsDesLacooda in the Golem Sentry handlers, gAddedCardEffects row, CPU policy. src/card_command_menu.c, src/duel_cmd_turn.c, src/summon_action.c (guard). card_pools/missing*.txt, README, AI_IMPROVEMENTS, [[added-cards]]. Built (`make demo`); not tested in an emulator; release not built.

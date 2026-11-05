@@ -541,6 +541,9 @@ int CanActivateMonsterEffect(u16 id, int player, int zone)
 #ifdef HAS_CARD_GUARDIAN_SPHINX
     case CARD_GUARDIAN_SPHINX:                              /* added card (src/added_effects.c) */
 #endif
+#ifdef HAS_CARD_DES_LACOODA
+    case CARD_DES_LACOODA:                                  /* added card (src/added_effects.c) */
+#endif
 #ifdef HAS_CARD_STEALTH_BIRD
     case CARD_STEALTH_BIRD:                                 /* added card (src/added_effects.c) */
 #endif

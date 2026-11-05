@@ -174,6 +174,9 @@ void DuelCmd_TurnStart(void)
 #ifdef HAS_CARD_GUARDIAN_SPHINX
                 case CARD_GUARDIAN_SPHINX:                               /* added card: face-down once per turn */
 #endif
+#ifdef HAS_CARD_DES_LACOODA
+                case CARD_DES_LACOODA:                                   /* added card: face-down once per turn */
+#endif
 #ifdef HAS_CARD_STEALTH_BIRD
                 case CARD_STEALTH_BIRD:                                  /* added card: face-down once per turn */
 #endif
