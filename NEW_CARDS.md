@@ -1,6 +1,6 @@
 # New cards
 
-The 160 cards added in the demo card list (the repo-root `new_cards.txt`, above `------`), as the game shows them in Deck Edit's Card View. The screenshots are taken by [`tools/card_screenshots.lua`](tools/card_screenshots.lua) in mGBA.
+The 167 cards added in the demo card list (the repo-root `new_cards.txt`, above `------`), as the game shows them in Deck Edit's Card View. The screenshots are taken by [`tools/card_screenshots.lua`](tools/card_screenshots.lua) in mGBA.
 
 <table>
 <tr>
@@ -122,5 +122,11 @@ The 160 cards added in the demo card list (the repo-root `new_cards.txt`, above 
 </tr>
 <tr>
 <td align="center"><img src="cards/Junk%20Synchron.png" alt="Junk Synchron" width="240"></td><td align="center"><img src="cards/Quillbolt%20Hedgehog.png" alt="Quillbolt Hedgehog" width="240"></td><td align="center"><img src="cards/Junk%20Warrior.png" alt="Junk Warrior" width="240"></td><td align="center"><img src="cards/Stardust%20Dragon.png" alt="Stardust Dragon" width="240"></td>
+</tr>
+<tr>
+<td align="center"><img src="cards/Old%20Vindictive%20Magician.png" alt="Old Vindictive Magician" width="240"></td><td align="center"><img src="cards/Swarm%20of%20Locusts.png" alt="Swarm of Locusts" width="240"></td><td align="center"><img src="cards/Granmarg%20the%20Rock%20Monarch.png" alt="Granmarg the Rock Monarch" width="240"></td><td align="center"><img src="cards/Cursed%20Seal%20of%20the%20Forbidden%20Spell.png" alt="Cursed Seal of the Forbidden Spell" width="240"></td>
+</tr>
+<tr>
+<td align="center"><img src="cards/Karma%20Cut.png" alt="Karma Cut" width="240"></td><td align="center"><img src="cards/Draining%20Shield.png" alt="Draining Shield" width="240"></td><td align="center"><img src="cards/Dimension%20Wall.png" alt="Dimension Wall" width="240"></td><td></td>
 </tr>
 </table>
