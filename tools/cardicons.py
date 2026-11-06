@@ -34,10 +34,12 @@ data/mod_field_icons_data.s), for BG2 in 256-colour mode:
             bytes): pose 0 is the 15x16 at (8, 7), poses 1-2 squeeze it into their narrower window
   +0x7980   the miniatures: 15x16 bytes per card ID (CARD_ID_COUNT of them), row-major, palette entries
             192-255 (the sprites take them 64 lower: OBJ palettes 8-11); an ID without a card is all 0
-  then, from the next multiple of 4: Deck Edit's ring art, 160 bytes per card ID: the card's own 16-colour
-            palette (16 BGR555, entry 0 transparent) and four 4bpp tiles (2 rows of 2, row-major) of a 16x16
-            sprite holding the 15x16 window art at (0, 0) (the ring frames' window is x 8-22, y 7-22),
-            resampled from the 72x80 art (its centre 72x76) and quantised to 15 colours for that card alone
+  then, from the next multiple of 4: Deck Edit's ring art, 160 bytes per card ID in two arrays: first every
+            card ID's own 16-colour palette (16 BGR555, entry 0 transparent; 32 bytes each), then every card ID's
+            four 4bpp tiles (2 rows of 2, row-major; 128 bytes each) of a 16x16 sprite holding the 15x16 window art
+            at (0, 0) (the ring frames' window is x 8-22, y 7-22), resampled from the 72x80 art (its centre 72x76)
+            and quantised to 15 colours for that card alone. Two arrays rather than one entry per card, so Hex
+            Maniac Advance can show them as two inline tables (tools/hma_toml.py)
   then the Synchro Monster frames (gCardTypeEx, src/mod_synchro.c), 1 KiB each: the BG frame upright and
             sideways, then the sprite frame in poses 0-2. The icon is card_icons/synchro_monster.png (silver): its
             pixels whose colour is not gCardIconPal's at that index (the silver) take the nearest colour of the
@@ -327,7 +329,8 @@ def pose_map(img):
 
 
 DE_W, DE_H = 15, 16                # the ring frames' window (x 8-22, y 7-22 of the 32x32 frame)
-DE_SIZE = 32 + 4 * 32
+DE_PALETTE_SIZE = 32
+DE_SIZE = DE_PALETTE_SIZE + 4 * 32
 DE_COLORS = 15
 WX_DE = area_weights(A.ART_W, DE_W)
 WY_DE = area_weights(76, DE_H)              # the centre 76 rows: 72x76 is the window's 15:16
@@ -515,8 +518,11 @@ def main():
                 minis[cid * MINI_W * MINI_H + k] = ART_PALETTE_ENTRY + cache[g]
         blob += minis
         blob += bytes(-len(blob) % 4)
-        for cid in range(count):
-            blob += deck_edit.get(cid, bytes(DE_SIZE))
+        entries = [deck_edit.get(cid, bytes(DE_SIZE)) for cid in range(count)]
+        for e in entries:                   # every palette, then every image
+            blob += e[:DE_PALETTE_SIZE]
+        for e in entries:
+            blob += e[DE_PALETTE_SIZE:]
         # the Synchro frames: BG upright and sideways, then the sprite poses 0-2 (art palette 64 lower for OBJ)
         # then the Xyz frames the same way
         for extra in (synchro_poses, xyz_poses, link_poses):

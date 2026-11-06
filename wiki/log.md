@@ -2636,3 +2636,20 @@ updated: 2026-09-29
 ## [2026-11-06] setup | Hex Maniac Advance metadata for the demo
 - New tools/hma_toml.py (run by the Makefile's ROM rule for `make demo` only): eds_demo.toml from baserom.toml, anchors and matched words moved through the source (data labels, config/assets.tsv, config/functions.tsv) to eds_demo.sym's addresses, card counts and card lists for the demo, DefaultHash recomputed. eds_demo.toml is git-ignored.
 - Pages: [[hma-toml]] (new).
+
+## [2026-11-06] setup | HMA metadata: the field card icons
+- tools/hma_toml.py `EXTRA_ANCHORS`: graphics.palettes.cardicons (`ucp4`), graphics.cardicons.<kind> ([`ucs4x4x4|graphics.palettes.cardicons`]4, 7 kinds) and graphics.cardicons.thickpile, by symbol.
+- Pages: [[hma-toml]].
+
+## [2026-11-06] setup | HMA metadata: the card art icons
+- tools/hma_toml.py: graphics.cards.icons, every card's 16x16 art icon with its own palette (Deck Edit's ring art in gModFieldIconData), [palette`ucp4` icon`ucs4x2x2|graphics.cards.icons`]cardnumbers; the generic frame icons of the previous entry are taken out.
+- Pages: [[hma-toml]].
+
+## [2026-11-06] setup | HMA metadata: card icons as two interleaved tables
+- tools/hma_toml.py: graphics.cards.icons.palettes ([palette`ucp4` skipimage""128]) and graphics.cards.icons ([icon`ucs4x2x2|graphics.cards.icons.palettes` skippalette""32], 0x20 later); the self-referencing table was dropped by HMA, a hand-made Blue-Eyes pair worked. Overlap may be refused by HMA (open question on the page).
+- Pages: [[hma-toml]].
+
+## [2026-11-06] progress | Ring art as two arrays; HMA card icon tables
+- tools/cardicons.py writes Deck Edit's ring art as every palette, then every image (was one 160-byte entry per card); src/mod_field_icons.c `ModDeckRingArt` reads `DATA_DECK_EDIT` / `DATA_DECK_EDIT_IMAGES`. Same size; checked by decoding icons from the demo ROM.
+- tools/hma_toml.py: graphics.cards.icons.palettes [`ucp4`]cardnumbers and graphics.cards.icons [`ucs4x2x2|graphics.cards.icons.palettes`]cardnumbers (HMA-CE's inline image tables).
+- Pages: [[hma-toml]], [[card-icons]], [[deck-edit-card-art]].

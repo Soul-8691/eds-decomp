@@ -86,7 +86,9 @@ art. `make` builds the game's data with it (`--data`, below); `make card-icons` 
   only palettes 0 and 1). `LoadDuelUiGfx` at the end restores the duel's tiles as before.
 - **Deck Edit.** The ring of card frames left of the list gets the art too: a 16x16 affine sprite per frame with
   the card's own 15 colours (OBJ palettes 11-15); see [[deck-edit-card-art]]. Data: 160 bytes per card ID after the
-  miniatures (from the next multiple of 4): the palette, then 2x2 tiles with the 15x16 art at (0, 0).
+  miniatures (from the next multiple of 4), as two arrays since 2026-11-06: every card ID's palette (32 bytes),
+  then every card ID's 2x2 tiles (128 bytes, the 15x16 art at (0, 0); `DATA_DECK_EDIT_IMAGES`). Before, each card's
+  palette and tiles were one 160-byte entry; split so Hex Maniac Advance can show them as two tables ([[hma-toml]]).
 - Built, not tested in an emulator.
 
 Related: [[added-cards]].

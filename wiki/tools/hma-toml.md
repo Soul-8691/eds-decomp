@@ -30,6 +30,23 @@ original ROM (repo root). Without `baserom.toml` it does nothing. `eds_demo.toml
     CARD_ID_COUNT (Length 2). Functions rewritten without the constant (Deck Edit's and Card Trading's list
     builders now walk `gCardIdsByName`) are left out and listed in a comment at the top of the file.
   - Constants in data (the pack rarity weights) move like anchors.
+- **Added anchors** (`EXTRA_ANCHORS`, by symbol plus an offset, so they follow the `.sym` and the card count):
+  - `graphics.cards.icons.palettes` (``[`ucp4`]cardnumbers``) and `graphics.cards.icons`
+    (``[`ucs4x2x2|graphics.cards.icons.palettes`]cardnumbers``): every card's own art icon, the art Deck Edit's
+    ring shows. `gModFieldIconData`'s `DATA_DECK_EDIT` block (`tools/cardicons.py`, `src/mod_field_icons.c`), at
+    0x7980 + 15 * 16 * CARD_ID_COUNT rounded up to 4: every card ID's 16-colour palette (0x20 bytes, entry 0
+    transparent), then every card ID's 16x16 4bpp image (2x2 row-major tiles, 0x80 bytes) at + CARD_ID_COUNT * 0x20.
+    These are HMA-CE's inline image tables (`ArrayRun.TryParseInlineImageTable`, `InlineSpriteTableRun` /
+    `InlinePaletteTableRun`): a row is one bare `` `ucs` `` / `` `ucp` `` format and nothing else, the same form
+    as `graphics.cards.images` / `graphics.cards.palettes`; the palette hint names the palettes table and HMA uses
+    its row of the same index. Checked by decoding Blue-Eyes, Dark Magician and Proxy Dragon from the demo ROM.
+    - History (2026-11-06): the data used to be one 160-byte entry per card (palette, then tiles). In HMA, neither
+      one table with named inline fields (the general table parser takes backtick formats only behind pointers)
+      nor two tables over the same rows (an anchor clears every run it overlaps, `ClearFormat`) worked; a
+      hand-made pair for Blue-Eyes did. So `tools/cardicons.py` now writes the two arrays and `ModDeckRingArt`
+      reads them (`DATA_DECK_EDIT_IMAGES`); the data's size is the same.
+  - Not added: the field icons' 15x16 miniatures (8bpp and untiled, which HMA's sprite formats can't show). The
+    original generic frame icons were in a first version and taken out (not the card art).
 - **Lists.** `cardnumbers` (by card ID) is cut or grown to CARD_ID_COUNT and `cardinternalnumbers` (by card number)
   gets the added cards, both with their in-game names from `build/new_cards.tsv`. The other lists are kept.
 - **DefaultHash** is recomputed for every changed format and list with HMA's `StoredList.GenerateHash` (SHA-256 of

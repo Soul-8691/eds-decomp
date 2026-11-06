@@ -43,8 +43,8 @@ Answered: yes, over the ring of card frames left of the list. Built in `src/mod_
   averaged to the 15x16 window), the k-th drawn frame in OBJ palette 11 + k.
 - **Tiles:** five 2x2-tile blocks, blank in all four sheets and outside every sprite Deck Edit draws and every
   run-time write: (22, 12), (22, 14), (8, 20), (8, 22), (16, 13). Rewritten every frame with the palette, so
-  reloads need nothing. Each card's entry in the data (`tools/cardicons.py`) is 160 bytes: palette, then 2x2 tiles
-  with the 15x16 art at (0, 0).
+  reloads need nothing. The data (`tools/cardicons.py`) holds 160 bytes per card: since 2026-11-06 as two arrays,
+  every palette, then every card's 2x2 tiles with the 15x16 art at (0, 0) (see [[card-icons]]).
 
 ## Bug: art beside "SideDeck" (2026-10-29): fixed
 The user saw a garbled 16x16 sprite right of the dim "SideDeck" label (eds-34.png). mGBA's sprite viewer

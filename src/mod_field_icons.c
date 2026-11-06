@@ -467,8 +467,12 @@ void ModChainIconBuild(u32 row, u16 id)
  * without art (a plain card's first, the one nearest an end of the ring), and a Synchro or Xyz frame left without
  * art borrows a drawn palette of its own kind (those five entries are the same for every card of a kind). Only on
  * another screen's sheets, or with six Synchro/Xyz frames of which one kind has no art, does a frame stay purple. */
-#define DE_ENTRY_SIZE           (32 + 4 * 32)   /* palette, then 2 rows of 2 4bpp tiles */
+#define DE_PALETTE_SIZE         32              /* a card's 16 colours */
+#define DE_IMAGE_SIZE           (4 * 32)        /* its 2 rows of 2 4bpp tiles */
+#define DE_ENTRY_SIZE           (DE_PALETTE_SIZE + DE_IMAGE_SIZE)
+/* Two arrays (tools/cardicons.py): every card ID's palette, then every card ID's image. */
 #define DATA_DECK_EDIT          ((DATA_MINIS + CARD_ID_COUNT * MINI_W * MINI_H + 3) & ~3)
+#define DATA_DECK_EDIT_IMAGES   (DATA_DECK_EDIT + CARD_ID_COUNT * DE_PALETTE_SIZE)
 #define DE_RING_SLOTS           6
 #define DE_ART_SPRITES          5
 #define DE_PALETTE_FIRST        11
@@ -569,10 +573,11 @@ void ModDeckRingArt(u32 slot, u16 *frame, void *list)
     gModDeckRing.drawn = k + 1;
     gModDeckRing.kind[k] = DE_KIND(id);
     block = sDeckRingBlocks[k];
-    entry = gModFieldIconData + DATA_DECK_EDIT + id * DE_ENTRY_SIZE;
-    CopyDoubleWords((void *)(OBJ_PLTT + (DE_PALETTE_FIRST + k) * 32), entry, 32);
+    entry = gModFieldIconData + DATA_DECK_EDIT + id * DE_PALETTE_SIZE;
+    CopyDoubleWords((void *)(OBJ_PLTT + (DE_PALETTE_FIRST + k) * 32), entry, DE_PALETTE_SIZE);
+    entry = gModFieldIconData + DATA_DECK_EDIT_IMAGES + id * DE_IMAGE_SIZE;
     for (r = 0; r < 2; r++)
-        CopyDoubleWords((void *)OBJ_TILE8_ADDR(block + r * 32), entry + 32 + r * 2 * TILE4_SIZE, 2 * TILE4_SIZE);
+        CopyDoubleWords((void *)OBJ_TILE8_ADDR(block + r * 32), entry + r * 2 * TILE4_SIZE, 2 * TILE4_SIZE);
     if (IS_EXTRA_NON_FUSION(id))    /* the Fusion frame's tiles in the art's palette: silver or black (cardicons.py) */
         frame[2] = (frame[2] & 0x0FFF) | (DE_PALETTE_FIRST + k) << 12;
     e = (u16 *)OamListAlloc(DE_ART_LAYER, list);
