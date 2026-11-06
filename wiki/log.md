@@ -2550,3 +2550,7 @@ updated: 2026-09-29
 - include/save.h: `DECK_MIN_CARDS` 0 in make (was 1), so `Campaign_StartDay` and `LinkBattle_Init` accept an empty deck; release unchanged (40).
 - src/mod_recipes.c: against Debug, the player's pick accepts an empty or unused recipe slot and B on an empty built deck.
 - Pages: [[added-cards]], [[yugi-kaiba-opponent]], [[release-build]].
+
+## [2026-11-06] progress | Necro Fusion
+- src/added_effects.c: `NecroFusionRecipe` / `NecroFusionMaterials` / `NecroFusionTarget`, `EffectNecroFusionPrepare` / `Resolve`, the list case, the CPU case and the row; new_cards.txt: moved above `------`.
+- Pages: [[added-cards]].

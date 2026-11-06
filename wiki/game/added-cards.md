@@ -2024,6 +2024,23 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
   - **Deck:** `DUEL_CMD_SEND_DECK_CARD_TO_GRAVEYARD` for `deck[0]` and `deck[1]` (the top is index 0).
 - Checked in the source and the build; not tested in an emulator.
 
+### Necro Fusion (2026-11-06)
+- Normal Trap (`assets/new_cards/cards.json`): "Fusion Summon 1 Fusion Monster from your Extra Deck, by banishing
+  Fusion Materials listed on it from your GY face-down, but it cannot attack this turn."
+- **Prepare.** A free monster zone and a Fusion Monster (not a Synchro) in the Fusion Deck that may be Special
+  Summoned, whose materials are all in the player's Graveyard (`NecroFusionMaterials`: the added recipes, then the
+  ROM's `gFusionRecipes2` / `gFusionRecipes3`; each material a different card, alternate art counted as the original;
+  no Fusion substitute, as only the listed materials count).
+- **Resolve.** The human picks the Fusion Monster from the list (`CollectEffectTargets` case, as Hex-Sealed Fusion),
+  the CPU the highest ATK. The materials go face down to the banished pile (`TakeGraveyardCardAt`,
+  `AddCardToBanishedFaceDown`, no animation), it leaves the Fusion Deck and is Special Summoned (position chosen,
+  Polymerization's `ZONE_STATUS_UNK14` flag), then `DUEL_CMD_SET_CANNOT_ATTACK` locks it until its controller's next
+  turn (`UpdateMonstersAtTurnStart`). With two copies of that Fusion Monster on the field, the lock goes on the first
+  unlocked one.
+- **CPU.** `AiShouldActivateAddedCard`: whenever it can.
+- Moved above `------` in `new_cards.txt`; it wasn't in `card_pools/missing*.txt`. All far code.
+- Checked in the source and the build; not tested in an emulator.
+
 ### Archfiend's Call (2026-11-05)
 - Synchro Monster (Level 6, DARK Fiend, 2500/1200; `assets/new_cards/cards.json`): "1 Tuner + 1+ non-Tuner monsters.
   This card's name becomes "Summoned Skull" on the field, but is still treated as an "Archfiend" card. Your opponent

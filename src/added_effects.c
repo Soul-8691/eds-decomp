@@ -5919,6 +5919,188 @@ int EffectHexSealedFusionResolve(struct ChainEntry *link, struct ChainEntry *cha
 }
 #endif /* HAS_CARD_THE_DARK_HEX_SEALED_FUSION */
 
+#ifdef HAS_CARD_NECRO_FUSION
+/* ---- Necro Fusion -------------------------------------------------------------------------------------------------
+ * Normal Trap: "Fusion Summon 1 Fusion Monster from your Extra Deck, by banishing Fusion Materials listed on it from
+ * your GY face-down, but it cannot attack this turn."
+ *   prepare  a free monster zone, and a Fusion Monster (not a Synchro) in the Fusion Deck that may be Special Summoned
+ *            and whose materials are all in the player's Graveyard (NecroFusionMaterials: the ROM's recipes and the
+ *            added ones, each material a different card, alternate art counted as the original; no substitute, as
+ *            only the listed materials count)
+ *   resolve  the player picks the Fusion Monster (the CPU: the highest ATK) from the list (CollectEffectTargets), its
+ *            materials leave the Graveyard face down to the banished pile (TakeGraveyardCardAt,
+ *            AddCardToBanishedFaceDown), it leaves the Fusion Deck and is Special Summoned in the position the player
+ *            picks with Polymerization's summon flag (ZONE_STATUS_UNK14), then it cannot attack
+ *            (DUEL_CMD_SET_CANNOT_ATTACK; the lock ends at its controller's next turn, UpdateMonstersAtTurnStart)
+ *   CPU      AiShouldActivateAddedCard: whenever it can */
+static const u8 sStrNecroFusionSelect[] = "Select a Fusion Monster to Fusion Summon.";
+
+static const struct FusionRecipe *ModFusionRecipeOf(u16 fusionNum);
+
+/* The card number of `id`, alternate art counted as the original. */
+static u16 NecroFusionNumber(u16 id)
+{
+    u16 n = CARD_NUMBER(id & CARD_ID_MASK);
+
+    return n >= CARD_NUMBER_ALT_ART ? n - CARD_NUMBER_ALT_ART : n;
+}
+
+/* The materials of Fusion monster number `fusionNum` into mats[] (an added recipe, else the ROM's): 2 or 3, 0 for
+ * none. */
+static int NecroFusionRecipe(u16 fusionNum, u16 *mats)
+{
+    const struct FusionRecipe *recipe = ModFusionRecipeOf(fusionNum);
+    u32 i;
+
+    if (recipe == NULL) {
+        for (i = 0; i <= FUSION_RECIPES2_LAST; i++) {
+            if (gFusionRecipes2[i].result == fusionNum) {
+                recipe = &gFusionRecipes2[i];
+                break;
+            }
+        }
+    }
+    if (recipe == NULL) {
+        for (i = 0; i <= FUSION_RECIPES3_LAST; i++) {
+            if (gFusionRecipes3[i].result == fusionNum) {
+                recipe = &gFusionRecipes3[i];
+                break;
+            }
+        }
+    }
+    if (recipe == NULL)
+        return 0;
+    mats[0] = recipe->materials[0];
+    mats[1] = recipe->materials[1];
+    mats[2] = recipe->materials[2];
+    return mats[2] != 0 ? 3 : 2;
+}
+
+/* The Graveyard indexes of `player` that hold Fusion monster `fusionId`'s materials, idx[i] for material i (each a
+ * different card). The material count, 0 if they are not all there. */
+static int NecroFusionMaterials(int player, u16 fusionId, u8 *idx)
+{
+    struct DuelPlayer *p = &gDuelPlayers[player & 1];
+    u16 mats[3];
+    int n = NecroFusionRecipe(NecroFusionNumber(fusionId), mats);
+    int i, g, k;
+
+    for (i = 0; i < n; i++) {
+        for (g = 0; g < p->graveCount; g++) {
+            if (NecroFusionNumber(DUEL_CARD_ID(&p->graveyard[g])) != mats[i])
+                continue;
+            for (k = 0; k < i && idx[k] != g; k++)
+                ;
+            if (k == i)
+                break;
+        }
+        if (g >= p->graveCount)
+            return 0;
+        idx[i] = g;
+    }
+    return n;
+}
+
+/* CollectEffectTargets' filter: a Fusion Monster (not a Synchro) that may be Special Summoned and whose materials are
+ * in the Graveyard of player `param`. */
+static int NecroFusionTarget(u16 id, int param)
+{
+    u32 stats = gCardStats[id & CARD_ID_MASK];
+    u8 idx[3];
+
+    return CARD_STATS_TYPE(stats) <= CARD_TYPE_REPTILE && CARD_STATS_KIND(stats) == CARD_KIND_FUSION
+           && !IS_SYNCHRO_CARD(id) && !IsCannotSpecialSummon(id & CARD_ID_MASK)
+           && NecroFusionMaterials(param, id, idx) != 0;
+}
+
+int EffectNecroFusionPrepare(struct ChainEntry *card, struct ChainEntry *chainLink, u16 fromHand)
+{
+    struct DuelPlayer *p = &gDuelPlayers[card->player & 1];
+    int i;
+
+    if (fromHand || CountFreeMonsterZones(card->player) == 0 || !CanSpecialSummon(card->player))
+        return 0;
+    for (i = 0; i < p->fusionCount; i++) {
+        if (NecroFusionTarget(DUEL_CARD_ID(&p->fusionDeck[i]), card->player & 1))
+            return 1;
+    }
+    return 0;
+}
+
+int EffectNecroFusionResolve(struct ChainEntry *link, struct ChainEntry *chainedTo)
+{
+    struct DuelCard *picked;
+    struct DuelCard taken;
+    u8 idx[3];
+    int n, i, j, zone;
+
+    (void)chainedTo;
+    if (link->negated)
+        return EFFECT_STEP_DONE;
+    switch (gChain.effectStep) {
+    case EFFECT_STEP_START:
+        if (!EffectNecroFusionPrepare(link, NULL, 0)
+            || CollectEffectTargets(link->player, CARD_NECRO_FUSION, link->player & 1) == 0)
+            return EFFECT_STEP_DONE;
+        if (link->player) {
+            int best = 0;
+
+            for (i = 1; i < gCardListView.count; i++) {
+                if (CARD_STATS_ATK(gCardStats[gCardListView.cards[i] & CARD_ID_MASK])
+                    > CARD_STATS_ATK(gCardStats[gCardListView.cards[best] & CARD_ID_MASK]))
+                    best = i;
+            }
+            gCardListView.cursorRow = 0;
+            gCardListView.top = best;
+            return EFFECT_STEP_3;
+        }
+        TextBoxOpen(TEXTBOX_POS(5, 2), TEXTBOX_SIZE(20, 9), TEXTBOX_FLAGS_DEFAULT, sStrNecroFusionSelect);
+        return EFFECT_STEP_2;
+    case EFFECT_STEP_2:
+        CardListView_Open(link->player, -1, CARD_NECRO_FUSION, link->player & 1);
+        return EFFECT_STEP_3;
+    case EFFECT_STEP_3:
+        picked = (struct DuelCard *)&gCardListView.cards[gCardListView.cursorRow + gCardListView.top];
+        n = NecroFusionMaterials(link->player, DUEL_CARD_ID(picked), idx);
+        if (n == 0 || CountFreeMonsterZones(link->player) == 0)
+            return EFFECT_STEP_DONE;
+        for (i = 0; i < n; i++) {           /* the highest index first, so the others stay in place */
+            for (j = i + 1; j < n; j++) {
+                if (idx[j] > idx[i]) {
+                    u8 t = idx[i];
+
+                    idx[i] = idx[j];
+                    idx[j] = t;
+                }
+            }
+            if (TakeGraveyardCardAt(link->player & 1, idx[i], &taken))
+                AddCardToBanishedFaceDown(&taken);
+        }
+        DrawAllAreaTiles();
+        CopyDuelCard(&gChain.effectCard, picked);
+        DuelCmd_Push(link->player ? DUEL_CMD_PLAYER | DUEL_CMD_REMOVE_CARD_FROM_FUSION_DECK
+                                  : DUEL_CMD_REMOVE_CARD_FROM_FUSION_DECK,
+                     ((u16 *)picked)[0], ((u16 *)picked)[1], 0);
+        return EFFECT_STEP_4;
+    case EFFECT_STEP_4:
+        QueueSpecialSummonChoosePosition(link->player, &gChain.effectCard, 1, ZONE_STATUS_UNK14);
+        return EFFECT_STEP_5;
+    case EFFECT_STEP_5:                     /* summoned: it cannot attack this turn */
+        for (zone = ZONE_MONSTER_0; zone <= ZONE_MONSTER_4; zone++) {
+            struct DuelZone *z = ZoneOf(link->player, zone);
+
+            if (DUEL_CARD_ID(&z->card) == DUEL_CARD_ID(&gChain.effectCard) && !z->cannotAttack) {
+                DuelCmd_Push(link->player ? DUEL_CMD_PLAYER | DUEL_CMD_SET_CANNOT_ATTACK : DUEL_CMD_SET_CANNOT_ATTACK,
+                             zone, 1, 0);
+                break;
+            }
+        }
+        return EFFECT_STEP_END;
+    }
+    return EFFECT_STEP_DONE;
+}
+#endif /* HAS_CARD_NECRO_FUSION */
+
 /* CanMonsterAttack (card_menu_input.c): 1 if the monster in (player, zone) may not attack now because it cannot
  * attack directly and the opponent has no monster: Zombyra the Dark, and a monster Magical Scientist summoned. */
 int ModCannotAttackDirectly(int player, int zone)
@@ -8186,6 +8368,11 @@ void ModCollectEffectTargets(int player, u16 cardNumber, int param)
 #ifdef HAS_CARD_MAGICAL_SCIENTIST
     case CARD_MAGICAL_SCIENTIST:            /* the Fusion Deck's Level 6 or lower Fusion Monsters */
         ModAddPileTargets(p->fusionDeck, p->fusionCount, CARDLIST_SRC_FUSION_DECK, IsScientistFusion, 0);
+        break;
+#endif
+#ifdef HAS_CARD_NECRO_FUSION
+    case CARD_NECRO_FUSION:                 /* the Fusion Monsters whose materials are in the Graveyard (param: player) */
+        ModAddPileTargets(p->fusionDeck, p->fusionCount, CARDLIST_SRC_FUSION_DECK, NecroFusionTarget, param);
         break;
 #endif
 #ifdef HAS_CARD_THE_DARK_HEX_SEALED_FUSION
@@ -14525,6 +14712,10 @@ int AiShouldActivateAddedCard(struct ChainEntry *entry)
                && (entry->event == RESPONSE_ATTACK_DECLARED || entry->event == RESPONSE_SUMMONED
                    || entry->event == RESPONSE_FLIP_SUMMONED || entry->event == RESPONSE_SPECIAL_SUMMONED);
 #endif
+#ifdef HAS_CARD_NECRO_FUSION
+    case CARD_NECRO_FUSION:                     /* a Fusion Monster from the Graveyard: whenever it can */
+        return 1;
+#endif
 #ifdef HAS_CARD_RETURN_FROM_THE_DIFFERENT_DIMENSION
     case CARD_RETURN_FROM_THE_DIFFERENT_DIMENSION:     /* two or more monsters back, with LP to spare */
         return CountDimensionReturns(AI_PLAYER) >= 2 && CountFreeMonsterZones(AI_PLAYER) >= 2
@@ -14947,6 +15138,16 @@ const struct CardEffect gAddedCardEffects[] = {
         EffectReasoningResolve,
         NULL,
         EffectReasoningPrepare,
+        NULL,
+        NULL,
+    },
+#endif
+#ifdef HAS_CARD_NECRO_FUSION
+    {
+        CARD_NECRO_FUSION, 0,
+        EffectNecroFusionResolve,
+        NULL,
+        EffectNecroFusionPrepare,
         NULL,
         NULL,
     },
