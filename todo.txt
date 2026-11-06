@@ -16,3 +16,4 @@ Custom formats
 Fix quirks with new cards
 Pre-duel images and QR codes
 Test
+Chaos Return format
