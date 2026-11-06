@@ -320,6 +320,9 @@ u16 IsFusionSubstitute(u16 cardNumber)
     case CARD_BEASTKING_OF_THE_SWAMPS:
     case CARD_VERSAGO_THE_DESTROYER:
     case CARD_MYSTICAL_SHEEP_1:
+#ifdef HAS_CARD_THE_DARK_HEX_SEALED_FUSION
+    case CARD_THE_DARK_HEX_SEALED_FUSION:   /* added card (src/added_effects.c) */
+#endif
         return 1;
     default:
         return 0;

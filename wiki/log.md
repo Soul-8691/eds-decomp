@@ -2515,3 +2515,7 @@ updated: 2026-09-29
 ## [2026-11-05] progress | Yugi-Kaiba pre-duel screen: formatlibrary.com QR code
 - yugi-kaiba.svg (QR, decoded: https://formatlibrary.com/formats/yugi-kaiba) drawn in the dialogue box with a note to trust it only if it leads to formatlibrary.com. tools/preduel_image.py (SVG -> module rows, format-bit check), src/mod_preduel.c (`DrawQrCode`), Makefile.
 - Pages: [[yugi-kaiba-opponent]].
+
+## [2026-11-05] progress | The Dark - Hex-Sealed Fusion
+- src/added_effects.c: `HexSealedRecipe` / `HexSealedMaterials` / `HexSealedFusionTarget`, `EffectHexSealedFusionPrepare` / `Resolve`, the `ModCollectEffectTargets` case, the CPU policy and the `gAddedCardEffects` row. Hooks: effect_fusion.c (`IsFusionSubstitute`), card_command_menu.c (ACTIVATE).
+- Pages: [[added-cards]].

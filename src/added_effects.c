@@ -5712,6 +5712,169 @@ void EndPhase_ReturnMagicalScientist(void)
 }
 #endif /* HAS_CARD_MAGICAL_SCIENTIST */
 
+#ifdef HAS_CARD_THE_DARK_HEX_SEALED_FUSION
+/* ---- The Dark - Hex-Sealed Fusion ---------------------------------------------------------------------------------
+ * "You can substitute this card for any 1 Fusion Material Monster, but the other Fusion Material Monster(s) must be
+ * correct. You can Tribute Fusion Material Monsters on the field, including this face-up card; Special Summon 1
+ * corresponding DARK Fusion Monster from your Extra Deck."
+ *   substitute  IsFusionSubstitute (effect_fusion.c), as Goddess with the Third Eye: Polymerization may use it for one
+ *               material of the ROM's recipes (the added recipes take no substitute)
+ *   ACTIVATE    the card menu in the Main Phase (card_command_menu.c, CanActivateEffectInZone), as Magical Scientist
+ *   prepare     face up in a monster zone, and a DARK Fusion Monster in the Fusion Deck whose ROM recipe the player's
+ *               monsters complete with this card standing in for one material (HexSealedMaterials)
+ *   resolve     the player picks the Fusion Monster (the CPU: the highest ATK) from the list (ModCollectEffectTargets),
+ *               its materials are Tributed (this card and the first matching monsters; the Tributes happen here,
+ *               not as a cost), and it is Special Summoned from the Fusion Deck in the position the player picks
+ *   CPU         AiWantsMonsterEffect: whenever it can */
+#define HEX_PARAM(player, zone) (((player) & 1) << 8 | (zone))
+
+static const u8 sStrHexSealedSelect[] = "Select a DARK Fusion Monster to Special Summon.";
+
+/* The materials of the ROM's recipe for Fusion monster number `fusionNum` into mats[]: 2 or 3, 0 if it has none. */
+static int HexSealedRecipe(u16 fusionNum, u16 *mats)
+{
+    u32 i;
+
+    for (i = 0; i <= FUSION_RECIPES2_LAST; i++) {
+        if (gFusionRecipes2[i].result == fusionNum) {
+            mats[0] = gFusionRecipes2[i].materials[0];
+            mats[1] = gFusionRecipes2[i].materials[1];
+            return 2;
+        }
+    }
+    for (i = 0; i <= FUSION_RECIPES3_LAST; i++) {
+        if (gFusionRecipes3[i].result == fusionNum) {
+            mats[0] = gFusionRecipes3[i].materials[0];
+            mats[1] = gFusionRecipes3[i].materials[1];
+            mats[2] = gFusionRecipes3[i].materials[2];
+            return 3;
+        }
+    }
+    return 0;
+}
+
+/* The card number of `id`, alternate art counted as the original. */
+static u16 HexSealedNumber(u16 id)
+{
+    u16 n = CARD_NUMBER(id & CARD_ID_MASK);
+
+    return n >= CARD_NUMBER_ALT_ART ? n - CARD_NUMBER_ALT_ART : n;
+}
+
+/* The monster zones of `player` that make Fusion monster `fusionId`'s recipe with Hex-Sealed (in hexZone) standing in
+ * for one material: zones[i] for material i (one of them hexZone). The material count, 0 if they are not there. */
+static int HexSealedMaterials(int player, int hexZone, u16 fusionId, u8 *zones)
+{
+    u16 mats[3];
+    int n = HexSealedRecipe(HexSealedNumber(fusionId), mats);
+    int sub, i, zone;
+    u32 used;
+
+    for (sub = 0; sub < n; sub++) {
+        used = 1 << hexZone;
+        zones[sub] = hexZone;
+        for (i = 0; i < n; i++) {
+            if (i == sub)
+                continue;
+            for (zone = ZONE_MONSTER_0; zone <= ZONE_MONSTER_4; zone++) {
+                u16 id = DUEL_CARD_ID(&ZoneOf(player, zone)->card);
+
+                if (id != 0 && !(used & (1 << zone)) && HexSealedNumber(id) == mats[i])
+                    break;
+            }
+            if (zone > ZONE_MONSTER_4)
+                break;
+            used |= 1 << zone;
+            zones[i] = zone;
+        }
+        if (i == n)
+            return n;
+    }
+    return 0;
+}
+
+/* ModCollectEffectTargets' filter: a DARK Fusion Monster (not a Synchro) that may be Special Summoned and whose
+ * materials are there (param: HEX_PARAM of the Hex-Sealed card). */
+static int HexSealedFusionTarget(u16 id, int param)
+{
+    u32 stats = gCardStats[id & CARD_ID_MASK];
+    u8 zones[3];
+
+    return CARD_STATS_TYPE(stats) <= CARD_TYPE_REPTILE && CARD_STATS_KIND(stats) == CARD_KIND_FUSION
+           && !IS_SYNCHRO_CARD(id) && CARD_STATS_ATTR(stats) == ATTRIBUTE_DARK
+           && !IsCannotSpecialSummon(id & CARD_ID_MASK)
+           && HexSealedMaterials(param >> 8, param & 0xFF, id, zones) != 0;
+}
+
+int EffectHexSealedFusionPrepare(struct ChainEntry *card, struct ChainEntry *chainLink, u16 fromHand)
+{
+    struct DuelPlayer *p = &gDuelPlayers[card->player & 1];
+    struct DuelZone *z;
+    int i;
+
+    if (fromHand || card->event != RESPONSE_NONE || card->zone > ZONE_MONSTER_4 || !CanSpecialSummon(card->player))
+        return 0;
+    z = ZoneOf(card->player, card->zone);
+    if (!z->isFaceUp || DUEL_CARD_ID(&z->card) != (card->card & CARD_ID_MASK))
+        return 0;
+    for (i = 0; i < p->fusionCount; i++) {
+        if (HexSealedFusionTarget(DUEL_CARD_ID(&p->fusionDeck[i]), HEX_PARAM(card->player, card->zone)))
+            return 1;
+    }
+    return 0;
+}
+
+int EffectHexSealedFusionResolve(struct ChainEntry *link, struct ChainEntry *chainedTo)
+{
+    struct DuelCard *picked;
+    u8 zones[3];
+    int n, i;
+
+    if (link->negated)
+        return EFFECT_STEP_DONE;
+    switch (gChain.effectStep) {
+    case EFFECT_STEP_START:
+        if (!EffectHexSealedFusionPrepare(link, NULL, 0)
+            || CollectEffectTargets(link->player, CARD_THE_DARK_HEX_SEALED_FUSION, HEX_PARAM(link->player, link->zone))
+                   == 0)
+            return EFFECT_STEP_DONE;
+        if (link->player) {
+            int best = 0;
+
+            for (i = 1; i < gCardListView.count; i++) {
+                if (CARD_STATS_ATK(gCardStats[gCardListView.cards[i] & CARD_ID_MASK])
+                    > CARD_STATS_ATK(gCardStats[gCardListView.cards[best] & CARD_ID_MASK]))
+                    best = i;
+            }
+            gCardListView.cursorRow = 0;
+            gCardListView.top = best;
+            return EFFECT_STEP_3;
+        }
+        TextBoxOpen(TEXTBOX_POS(5, 2), TEXTBOX_SIZE(20, 9), TEXTBOX_FLAGS_DEFAULT, sStrHexSealedSelect);
+        return EFFECT_STEP_2;
+    case EFFECT_STEP_2:
+        CardListView_Open(link->player, -1, CARD_THE_DARK_HEX_SEALED_FUSION, HEX_PARAM(link->player, link->zone));
+        return EFFECT_STEP_3;
+    case EFFECT_STEP_3:
+        picked = (struct DuelCard *)&gCardListView.cards[gCardListView.cursorRow + gCardListView.top];
+        n = HexSealedMaterials(link->player, link->zone, DUEL_CARD_ID(picked), zones);
+        if (n == 0)
+            return EFFECT_STEP_DONE;
+        for (i = 0; i < n; i++)
+            TributeMonster(link->player, zones[i]);
+        DuelCmd_Push(link->player ? DUEL_CMD_PLAYER | DUEL_CMD_REMOVE_CARD_FROM_FUSION_DECK
+                                  : DUEL_CMD_REMOVE_CARD_FROM_FUSION_DECK,
+                     ((u16 *)picked)[0], ((u16 *)picked)[1], 0);
+        return EFFECT_STEP_4;
+    case EFFECT_STEP_4:
+        picked = (struct DuelCard *)&gCardListView.cards[gCardListView.cursorRow + gCardListView.top];
+        QueueSpecialSummonChoosePosition(link->player, picked, 1, 0);
+        return EFFECT_STEP_END;
+    }
+    return EFFECT_STEP_DONE;
+}
+#endif /* HAS_CARD_THE_DARK_HEX_SEALED_FUSION */
+
 /* CanMonsterAttack (card_menu_input.c): 1 if the monster in (player, zone) may not attack now because it cannot
  * attack directly and the opponent has no monster: Zombyra the Dark, and a monster Magical Scientist summoned. */
 int ModCannotAttackDirectly(int player, int zone)
@@ -7972,6 +8135,11 @@ void ModCollectEffectTargets(int player, u16 cardNumber, int param)
 #ifdef HAS_CARD_MAGICAL_SCIENTIST
     case CARD_MAGICAL_SCIENTIST:            /* the Fusion Deck's Level 6 or lower Fusion Monsters */
         ModAddPileTargets(p->fusionDeck, p->fusionCount, CARDLIST_SRC_FUSION_DECK, IsScientistFusion, 0);
+        break;
+#endif
+#ifdef HAS_CARD_THE_DARK_HEX_SEALED_FUSION
+    case CARD_THE_DARK_HEX_SEALED_FUSION:   /* the DARK Fusion Monsters its materials make (param: HEX_PARAM) */
+        ModAddPileTargets(p->fusionDeck, p->fusionCount, CARDLIST_SRC_FUSION_DECK, HexSealedFusionTarget, param);
         break;
 #endif
 #ifdef HAS_CARD_JUNK_SYNCHRON
@@ -11951,6 +12119,10 @@ static int AiWantsMonsterEffect(u16 number, int zone)
     case CARD_MAGICAL_SCIENTIST:                /* AiUseMagicalScientist decides */
         return 0;
 #endif
+#ifdef HAS_CARD_THE_DARK_HEX_SEALED_FUSION
+    case CARD_THE_DARK_HEX_SEALED_FUSION:       /* a Fusion Monster for its materials: whenever it can */
+        return 1;
+#endif
 #ifdef HAS_CARD_HYSTERIC_FAIRY
     case CARD_HYSTERIC_FAIRY:                   /* two Tributes for 1000 LP is never worth it */
         return 0;
@@ -14295,6 +14467,16 @@ const struct CardEffect gAddedCardEffects[] = {
         EffectPhoenixWingWindBlastPrepare,
         EffectPhoenixWingWindBlastChainA,
         EffectPhoenixWingWindBlastChainB,
+    },
+#endif
+#ifdef HAS_CARD_THE_DARK_HEX_SEALED_FUSION
+    {
+        CARD_THE_DARK_HEX_SEALED_FUSION, 0,
+        EffectHexSealedFusionResolve,
+        NULL,
+        EffectHexSealedFusionPrepare,
+        NULL,
+        NULL,
     },
 #endif
 #ifdef HAS_CARD_MAGICAL_SCIENTIST

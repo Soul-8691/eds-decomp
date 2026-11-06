@@ -2024,6 +2024,26 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
   - **Deck:** `DUEL_CMD_SEND_DECK_CARD_TO_GRAVEYARD` for `deck[0]` and `deck[1]` (the top is index 0).
 - Checked in the source and the build; not tested in an emulator.
 
+### The Dark - Hex-Sealed Fusion (2026-11-05)
+- Effect Monster (Level 3, DARK Rock, 1000/1600; YGOPRODeck): "You can substitute this card for any 1 Fusion Material
+  Monster, but the other Fusion Material Monster(s) must be correct. You can Tribute Fusion Material Monsters on the
+  field, including this face-up card; Special Summon 1 corresponding DARK Fusion Monster from your Extra Deck."
+- **Substitute.** A case in `IsFusionSubstitute` (`effect_fusion.c`, size-limited `.text`, one case label), so
+  Polymerization treats it as Goddess with the Third Eye does: one material of a ROM recipe, at most one substitute.
+  The added recipes (Cyber Twin / Cyber End Dragon) take no substitute, as their text says.
+- **ACTIVATE.** The card menu in the Main Phase (`card_command_menu.c`, `CanActivateEffectInZone`), as Magical
+  Scientist. `EffectHexSealedFusionPrepare`: face up in a monster zone, and a DARK Fusion Monster (not a Synchro) in
+  the Fusion Deck whose ROM recipe (`gFusionRecipes2` / `gFusionRecipes3`) the player's monsters complete with this
+  card standing in for one material (`HexSealedMaterials`; alternate art counts as the original).
+- **Resolve** (`EffectHexSealedFusionResolve`): the list of such Fusion Monsters (`ModCollectEffectTargets`, its
+  zone passed as the list's param); the CPU takes the highest ATK. The materials (this card and the first matching
+  monsters) are Tributed (`TributeMonster`), the Fusion Monster leaves the Fusion Deck and is Special Summoned in the
+  chosen position. The Tributes happen at resolution, not as a cost.
+- **CPU.** `AiWantsMonsterEffect`: always, when it can.
+- It was already above `------` in `new_cards.txt` (added there by the user with the other Archfiend cards). It
+  wasn't in `card_pools/missing*.txt`.
+- Checked in the source and the build; not tested in an emulator.
+
 ### Sillva, Warlord of Dark World (2026-11-05)
 - Effect Monster (Level 5, DARK Fiend, 2300/1400; `assets/new_cards/cards.json`): "If this card is discarded to the
   Graveyard by a card effect: Special Summon it from the Graveyard, then, if this card was discarded from your hand to
