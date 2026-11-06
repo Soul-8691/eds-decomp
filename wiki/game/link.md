@@ -44,7 +44,9 @@ emulator**.
   `gCardFrameLinkGfx` in `gModLinkFrame` (EWRAM 0x02034000, inside `gBustupBitmapBuffer`, used only by the dialogue
   scenes and the pre-duel picture) with its 8 arrows painted around the art window (x 16-87, y 32-111 of the
   104x144 frame), red (palette entry 1, unused by the frame) where it points, the frame's dark blue (entry 3)
-  where it doesn't. Rebuilt on every call. Checked with a render of the painted frame; not tested in an emulator.
+  where it doesn't. Rebuilt on every call. Checked in Card View screenshots. It also paints over the frame's
+  ":" (pixels 62,129 and 62,131) that the DEF label hides on other frames.
+- White ATK text on the blue frame, and no stars or DEF on the duel's big card (`DrawCardInfo`): see [[xyz]].
 - Field: orange arrow sprites on the edges of every face-up Link Monster for its markers (turned around for the
   opponent's), OBJ tiles 0x3EA-0x3EC (up, left, up-left, flipped for the rest), OBJ palette 12 entry 4.
 - Info bar: a Link Monster's DEF reads "-".

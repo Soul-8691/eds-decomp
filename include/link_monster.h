@@ -57,6 +57,10 @@ int ModLinkMenuRun(u32 link, int start);
 int AiTryLinkSummon(void);
 /* ModFusionKindFrame (src/mod_xyz.c): the Link frame with Link Monster `id`'s arrows painted on (a RAM copy). */
 const u8 *ModLinkFrame(u16 id);
+/* DrawCardInfo (card_canvas.c): the ATK/DEF digit palette, with white text for an Xyz or Link Monster. */
+const void *ModCardStatPal(u16 id);
+/* CardDetail_DrawSprites (title_menu.c): OBJ palette 3's text colour for the card shown (white on Xyz/Link). */
+void ModCardViewStatColor(u16 id);
 /* ModDrawDuelHud: the arrows of every face-up Link Monster, and the zone pick's marker. */
 void ModDrawLinkArrows(void);
 

@@ -2603,3 +2603,8 @@ updated: 2026-09-29
 - README: a Highlights row and a "Synchro, Xyz and Link" section (how each works, the cards so far, the Extra Monster Zones, what's not in yet); the demo count is 186.
 - NEW_CARDS.md regenerated (186 cards) with 13 new Card View screenshots (tools/card_screenshots.lua in mGBA, on a scratch copy of the ROM and save).
 - tools/gen_new_cards_md.py: file names as the screenshot script writes them (":" becomes "_", e.g. "Number 39_ Utopia.png").
+
+## [2026-11-06] progress | White ATK/DEF text on Xyz and Link card previews
+- src/mod_link.c `ModCardStatPal` / `ModCardViewStatColor`; hooks in title_menu.c (`CardDetail_DrawSprites`) and card_canvas.c (`DrawCardInfo`: the palette, and no stars/DEF for a Link Monster); `ModLinkFrame` paints over the frame's ":" under the missing DEF. Demo `.text` ends at 0x0807F470.
+- Card View screenshots of the five Xyz/Link cards retaken (NEW_CARDS.md unchanged).
+- Pages: [[xyz]], [[link]].

@@ -32,6 +32,10 @@ three test cards in `src/added_effects.c`. Built (`make demo`); **not tested in 
   (`DATA_XYZ` in `src/mod_field_icons.c`).
 - **Deck Edit ring:** the frame drawn in the card's art palette as for Synchros, with black colours (`DE_XYZ_FRAME`).
 - **Card View:** the type line reads "[Warrior/Xyz/Effect]". The star row shows the Rank (EDS has no Rank-star art).
+- **White ATK/DEF (2026-11-06):** the label and digits are entry 8 of `gCardStatDigitsPal` (black), unreadable on the
+  black frame. Card View sets OBJ palette 3's entry 8 to white each frame for an Xyz or Link card
+  (`ModCardViewStatColor`, from `CardDetail_DrawSprites`); the duel's big card (`DrawCardInfo`, card_canvas.c) takes
+  its palette from `ModCardStatPal` (a white-text copy in gModLink). Checked with Card View screenshots.
 - **Info bar:** an Xyz Monster's bar shows "MAT" right of its name and the material count under it
   (`src/mod_info_bar.c`, cells 0x10 and 0x30). `TextCellsPutString` / `TextCellsPutNumber` set `textMapReset`, which
   resets the cell map after the upload; `TextCellsLoadIcon` clears it so the type and attribute icons keep their

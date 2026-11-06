@@ -99,6 +99,7 @@ struct ModLink {
     u8 restrictMask;                /* ModSummonRestrictZones: the next summon only to these Main zones */
     u8 pad[1];
     u32 proxy[2];                   /* Proxy Dragon's state (src/added_effects.c, ModLinkProxyState) */
+    u16 statPal[16];                /* gCardStatDigitsPal with white text (ModCardStatPal) */
     u32 link;                       /* the card word of the Link Monster being summoned */
     u16 summoningId;
     u16 pad2;
@@ -717,7 +718,38 @@ const u8 *ModLinkFrame(u16 id)
     ((u16 *)(pack + 8))[ARROW_LIT] = 0x001F;            /* red */
     for (bit = 0; bit < 8; bit++)
         PaintArrow(pack, bit, (markers & (1 << bit)) ? ARROW_LIT : ARROW_UNLIT);
+    /* the frame's ":" where the DEF label would hide it (a Link Monster has no DEF): the box colour beside it */
+    *FramePixel(pack, 62, 129) = *FramePixel(pack, 63, 129);
+    *FramePixel(pack, 62, 131) = *FramePixel(pack, 63, 131);
     return pack;
+}
+
+/* ---- White text on the dark frames ----
+ * The ATK/DEF labels and digits are drawn in entry 8 of gCardStatDigitsPal (black), which can't be read on the
+ * black Xyz frame or the blue Link frame. Card View (CardDetail_DrawSprites, title_menu.c) sets OBJ palette 3's
+ * entry each frame (ModCardViewStatColor); the duel's big card (DrawCardInfo, card_canvas.c) takes its palette from
+ * ModCardStatPal, a copy with white text for those two. */
+#define STAT_TEXT_COLOR     8
+#define STAT_TEXT_WHITE     0x7FFF
+
+static int DarkFrame(u16 id)
+{
+    return IS_XYZ_CARD(id) || IS_LINK_CARD(id);
+}
+
+const void *ModCardStatPal(u16 id)
+{
+    if (!DarkFrame(id))
+        return gCardStatDigitsPal;
+    CopyDoubleWords(gModLink.statPal, gCardStatDigitsPal, sizeof(gModLink.statPal));
+    gModLink.statPal[STAT_TEXT_COLOR] = STAT_TEXT_WHITE;
+    return gModLink.statPal;
+}
+
+void ModCardViewStatColor(u16 id)
+{
+    ((vu16 *)(OBJ_PLTT + 3 * 32))[STAT_TEXT_COLOR] =
+        DarkFrame(id) ? STAT_TEXT_WHITE : ((const u16 *)gCardStatDigitsPal)[STAT_TEXT_COLOR];
 }
 
 /* ---- The Link Summon ---- */

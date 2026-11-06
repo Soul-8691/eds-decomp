@@ -676,6 +676,8 @@ void CardDetail_DrawDef(void)
  * switch reads the card through an int local, so its zero-extending load is not shared with the u16 load of
  * the card-number check.
  */
+void ModCardViewStatColor(u16 id);  /* mod: src/mod_link.c */
+
 void CardDetail_DrawSprites(void)
 {
     int x;
@@ -745,6 +747,7 @@ void CardDetail_DrawSprites(void)
     case CARD_TYPE_TICKET:
         break;
     default:
+        ModCardViewStatColor(gCardDetail.cardId);  /* added: white ATK/DEF on the Xyz and Link frames */
         if (IS_LINK_CARD(gCardDetail.cardId))   /* added: a Link Monster has no Level (its rating is in the type line) */
             level = 0;
         for (i = 0; i < level; i++) {

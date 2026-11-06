@@ -308,6 +308,8 @@ static inline int CardLevelCached(u16 id, u32 stats)
     }
     return level;
 }
+const void *ModCardStatPal(u16 id);   /* mod: src/mod_link.c */
+
 void DrawCardInfo(u16 id)
 {
     int starRow;
@@ -320,6 +322,7 @@ void DrawCardInfo(u16 id)
     /* FAKEMATCH: sub pinned to r2, as in the ROM. */
     register int sub asm("r2");
     u32 stats = CARD_STATS_WORD(id);
+    const void *statPal = ModCardStatPal(id);  /* changed: white ATK/DEF on the Xyz and Link frames (mod_link.c) */
     switch ((int)CARD_STATS_TYPE(stats)) {
     case CARD_TYPE_TRAP:
         DrawCardImageIcon16(0x0006004E, 0x70, (const u16 *)0x086366A8, (const void *)0x08636348);
@@ -335,6 +338,8 @@ void DrawCardInfo(u16 id)
     stats = CARD_STATS_WORD(id);
     if (CARD_STATS_TYPE(stats) <= CARD_TYPE_REPTILE) {
         lvl = CardLevelCached(id, stats);
+        if (IS_LINK_CARD(id))       /* added: a Link Monster has no Level and no DEF */
+            lvl = 0;
         i = 0;
         if (i >= lvl)
             goto stars_done;
@@ -350,21 +355,23 @@ void DrawCardInfo(u16 id)
             i++;
         } while (i < lvl);
     stars_done:
-        DrawCardImageTile(0x0076003F, 0x90, (const u16 *)0x0863856C, (const void *)gCardStatDigitsPal);
-        DrawCardImageTile(0x00760047, 0x90, (const u16 *)0x0863858C, (const void *)gCardStatDigitsPal);
+        DrawCardImageTile(0x0076003F, 0x90, (const u16 *)0x0863856C, statPal);
+        DrawCardImageTile(0x00760047, 0x90, (const u16 *)0x0863858C, statPal);
         v = GetCardAtk10(id);
         x = 0x57;
         do {
-            DrawCardImageTile(0x760000 | x, 0x90, (const u16 *)(gCardStatDigitsGfx + v % 10 * 32), (const void *)gCardStatDigitsPal);
+            DrawCardImageTile(0x760000 | x, 0x90, (const u16 *)(gCardStatDigitsGfx + v % 10 * 32), statPal);
             v = v / 10;
             x -= 4;
         } while (v != 0);
-        DrawCardImageTile(0x007E003F, 0x90, (const u16 *)0x086385AC, (const void *)gCardStatDigitsPal);
-        DrawCardImageTile(0x007E0047, 0x90, (const u16 *)0x086385CC, (const void *)gCardStatDigitsPal);
+        if (IS_LINK_CARD(id))
+            return;
+        DrawCardImageTile(0x007E003F, 0x90, (const u16 *)0x086385AC, statPal);
+        DrawCardImageTile(0x007E0047, 0x90, (const u16 *)0x086385CC, statPal);
         v = GetCardDef10(id);
         x = 0x57;
         do {
-            DrawCardImageTile(0x7E0000 | x, 0x90, (const u16 *)(gCardStatDigitsGfx + v % 10 * 32), (const void *)gCardStatDigitsPal);
+            DrawCardImageTile(0x7E0000 | x, 0x90, (const u16 *)(gCardStatDigitsGfx + v % 10 * 32), statPal);
             v = v / 10;
             x -= 4;
         } while (v != 0);
