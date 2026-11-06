@@ -1,12 +1,12 @@
 /*
- * mod_preduel: a picture before the duel for the format opponents that have one (Yugi-Kaiba: yugi-kaiba.png), with no
- * dialogue. Not part of the original ROM.
+ * mod_preduel: a picture before the duel for the format opponents that have one (Yugi-Kaiba, Critter, Treasure,
+ * Imperial and Android: duelists/<format>.png), with no dialogue. Not part of the original ROM.
  *   CB_ModPreDuelImage  Campaign_SelectOpponent (campaign_steps.c) sub-step 6, where these opponents used to skip
  *                       the pre-duel dialogue: returns 1 at once for an opponent with no picture and for the later
  *                       duels of a match. Otherwise the bustup screen's layout in Mode 4, page 0: the picture in rows
  *                       0-95 over the empty dialogue box (gDialogueBoxGfx[1], as Bustup_LoadScene), a fade in from
  *                       black, A, B or START, a fade out to black, then 1. No dialogue, no BGM change.
- * QR code: a picture's data may hold one (Yugi-Kaiba's: yugi-kaiba.svg, formatlibrary.com's page for the format). It
+ * QR code: a picture's data may hold one (duelists/<format>.svg, formatlibrary.com's page for the format). It
  * goes on a white square at the left of the box, 2 px a module, with a note at its right (sStrQrNote, in the bustup's
  * 8x10 Latin font, DrawGlyph8bpp) to trust it only if it leads to formatlibrary.com. Both are drawn into the decoded
  * box bitmap before it is copied to VRAM.
@@ -25,12 +25,14 @@
 #include "bustup.h"             /* gBustupBitmapBuffer, gBustupBoxBitmap */
 #include "sound.h"              /* PlaySE */
 #include "constants/sound.h"
-#include "constants/game.h"     /* DUELIST_TRISTAN */
+#include "constants/game.h"     /* DUELIST_* */
 #include "bustup.h"             /* DrawGlyph8bpp */
 
 extern const u16 *const gDialogueBoxGfx[];      /* 0x08139F5C: LZSS dialogue box bitmaps */
 extern const u16 gDialogueBoxPalette[];         /* 0x0874E104: box palette (the box uses colours 16-31) */
-extern const u8 gModPreDuelYugiKaiba[];         /* data/mod_preduel_data.s */
+/* data/mod_preduel_data.s */
+extern const u8 gModPreDuelYugiKaiba[], gModPreDuelCritter[], gModPreDuelTreasure[], gModPreDuelImperial[],
+    gModPreDuelAndroid[];
 
 int ModOpponentFormat(u16 duelist);             /* src/mod_opponents.c */
 
@@ -77,8 +79,16 @@ static const u8 *PreDuelImage(u16 duelist)
     if (ModOpponentFormat(duelist) < 0)
         return NULL;
     switch (duelist) {
-    case DUELIST_TRISTAN:               /* Yugi-Kaiba */
+    case DUELIST_TRISTAN:               /* the format opponents' slots (src/mod_opponents.c) */
         return gModPreDuelYugiKaiba;
+    case DUELIST_REX:
+        return gModPreDuelCritter;
+    case DUELIST_ESPA_ROBA:
+        return gModPreDuelTreasure;
+    case DUELIST_MAKO:
+        return gModPreDuelImperial;
+    case DUELIST_MAI:
+        return gModPreDuelAndroid;
     }
     return NULL;
 }

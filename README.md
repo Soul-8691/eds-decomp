@@ -85,7 +85,8 @@ release to unlock the next one (every format is open in the debug build).
   letter, one Type, one Attribute, and ATK, DEF and Level ranges. Magic and Trap lists get the letter only. Sorting by
   Type or Attribute is now alphabetical.
 - **No dialogue.** Duelists don't talk before or after a duel, and a New Game goes straight to picking your starter
-  deck, without Tea's intro. Yugi-Kaiba shows a picture before the duel instead (press A to go on).
+  deck, without Tea's intro. The Yugi-Kaiba, Critter, Treasure, Imperial and Android opponents show a picture before the duel instead, with a QR
+  code to the format's page on formatlibrary.com (press A to go on).
 
 <img src="screenshots/placeholders/format-check.svg" width="240" alt="Placeholder: the format check warning">
 

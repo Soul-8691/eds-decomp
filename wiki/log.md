@@ -2541,3 +2541,7 @@ updated: 2026-09-29
 ## [2026-11-05] progress | Archfiend's Call
 - src/added_effects.c: `ModFieldCardId`, `ModCannotBeTargeted`, `ArchfiendsCallSentToGrave`, `EffectArchfiendsCallPrepare` / `Resolve`, the list case and row; src/mod_synchro.c `ModWasSynchroSummonedId`. Hooks: card_list_viewer.c (`CanCardTargetZone`), duel_send_to_grave.c, duel_field_moves.c (battle), effect_fusion.c (three name reads).
 - Pages: [[added-cards]].
+
+## [2026-11-06] progress | Pre-duel pictures for five formats
+- The pictures and QR codes moved to duelists/<format>.png / .svg; the Makefile builds them with one pattern rule (PREDUEL_NAMES), data/mod_preduel_data.s holds five, src/mod_preduel.c `PreDuelImage` maps Yugi-Kaiba, Critter, Treasure, Imperial and Android. All five QR codes decoded to their formatlibrary.com/formats/<format> pages.
+- Pages: [[yugi-kaiba-opponent]], README.

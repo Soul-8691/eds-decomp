@@ -218,25 +218,29 @@ whose name plates and portraits are BG images (`Record_DrawPage`).
   holds Simon's first-meeting gift (every missing card), which therefore no longer happens.
 - **Pre-duel picture (2026-11-05).** Instead of returning there, `Campaign_SelectOpponent` goes to an added sub-step 6,
   `CB_ModPreDuelImage` (src/mod_preduel.c, far code), which returns 1 at once for an opponent without a picture and
-  for the later duels of a match. Yugi-Kaiba (the Tristan slot) has one, `yugi-kaiba.png` in the repository root:
+  for the later duels of a match. Five format opponents have one (2026-11-06), from `duelists/<format>.png` and
+  `duelists/<format>.svg`: Yugi-Kaiba (Tristan's slot), Critter (Rex), Treasure (Espa Roba), Imperial (Mako) and
+  Android (Mai) (`PreDuelImage`); each picture is
   shown in the bustup screen's layout (Mode 4 page 0, the picture in rows 0-95 over the empty dialogue box,
   `gDialogueBoxGfx[1]`), faded in from black (the load runs under full darkening, no forced blank, which flashed white), with no text; A, B or START plays the confirm sound and fades out.
   - **Palette.** BG colours 0-31 are the box palette's (`gDialogueBoxPalette`; the box bitmap uses 16-31, its fill colour 31 set to black as in the scene
     sets' palettes: the box palette's own is dark grey), so a
     picture has the other 224 colours, 32-255. `tools/preduel_image.py` takes a 240x96 indexed or RGB PNG with up to
     224 colours (an indexed one already in 32-255 keeps its indices; otherwise the colours are renumbered from 32) and
-    writes the 224 colours plus the LZSS bitmap (`gModPreDuelYugiKaiba`, data/mod_preduel_data.s, `.rodata.added`).
-    The current picture has 64 colours (12 KB of data).
-  - **QR code (2026-11-05).** `yugi-kaiba.svg` (from the user) is a 29x29 QR code for
-    https://formatlibrary.com/formats/yugi-kaiba (decoded from the SVG's modules: byte mode after an ECI header, EC
-    level and mask from BCH-checked format bits). `tools/preduel_image.py` reads its `<rect>` modules (173 + 57n
+    writes the 224 colours plus the LZSS bitmap (`gModPreDuelYugiKaiba`, `gModPreDuelCritter`, `gModPreDuelTreasure`,
+    `gModPreDuelImperial`, `gModPreDuelAndroid`; data/mod_preduel_data.s, `.rodata.added`). The Makefile builds
+    `build/assets/preduel_<name>.bin` with one pattern rule for `PREDUEL_NAMES`. The pictures have 187-224 colours,
+    about 15 KB of data each.
+  - **QR code (2026-11-05).** Each `duelists/<format>.svg` (from the user) is a 29x29 QR code for
+    https://formatlibrary.com/formats/<format> (all five decoded from the SVGs' modules: yugi-kaiba, critter,
+    treasure, imperial, android; byte mode after an ECI header, EC level and mask from BCH-checked format bits). `tools/preduel_image.py` reads its `<rect>` modules (173 + 57n
     viewBox units), redraws the three finder patterns (paths in the SVG) and checks the format bits; the data gains
     `qrSize` and 32 row bitmasks before the LZSS bitmap. `DrawQrCode` (src/mod_preduel.c) puts it on a 64x64 white
     square at the box's left (2 px a module, 3 px border) and the note beside it in the 8x10 Latin font
     (`DrawGlyph8bpp`, white = BG colour 1): "Scan for formatlibrary.com, a site about retro Yu-Gi-Oh! formats. Do not
     trust this code unless it leads to formatlibrary.com."
-  - **Adding one** for another format opponent: a PNG, a Makefile rule and an `.incbin` like Yugi-Kaiba's, and a
-    case in `PreDuelImage`.
+  - **Adding one** for another format opponent: `duelists/<name>.png` and `.svg`, the name in the Makefile's
+    `PREDUEL_NAMES`, an `.incbin` in data/mod_preduel_data.s, and a case in `PreDuelImage`.
 - **After the duel.** `Campaign_ShowDuelResult` returns without the result text.
 - **In a match.** Between duels it goes straight to the Side Deck swap.
 

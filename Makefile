@@ -227,11 +227,14 @@ build/src/mod_field_icons.o: $(NEWCARDS_GEN) $(FIELD_ICONS)
 build/data/mod_field_icons_data.o: $(NEWCARDS_GEN) $(FIELD_ICONS)
 
 # The pre-duel pictures and their QR codes (tools/preduel_image.py; src/mod_preduel.c), for data/mod_preduel_data.s.
-PREDUEL_YUGI_KAIBA := build/assets/preduel_yugi_kaiba.bin
-$(PREDUEL_YUGI_KAIBA): yugi-kaiba.png yugi-kaiba.svg tools/preduel_image.py tools/assets.py tools/assetfmt/gfx_scenes.py
+# One per format opponent with a picture: duelists/<name>.png (240x96, up to 224 colours) and duelists/<name>.svg
+# (its formatlibrary.com QR code); the names match data/mod_preduel_data.s.
+PREDUEL_NAMES := yugi-kaiba critter treasure imperial android
+PREDUEL_BINS := $(PREDUEL_NAMES:%=build/assets/preduel_%.bin)
+build/assets/preduel_%.bin: duelists/%.png duelists/%.svg tools/preduel_image.py tools/assets.py tools/assetfmt/gfx_scenes.py
 	@mkdir -p $(@D)
-	$(PYTHON) tools/preduel_image.py yugi-kaiba.png $@ yugi-kaiba.svg
-build/data/mod_preduel_data.o: $(PREDUEL_YUGI_KAIBA)
+	$(PYTHON) tools/preduel_image.py duelists/$*.png $@ duelists/$*.svg
+build/data/mod_preduel_data.o: $(PREDUEL_BINS)
 
 build/data/%.o: data/%.s $(ASSETS_BUILT) $(NEWCARDS_BUILT)
 	@mkdir -p $(@D)
