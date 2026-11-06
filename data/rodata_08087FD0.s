@@ -1951,3 +1951,8 @@ gCardTypeEx:
 	.global gCardFrameSynchroGfx
 gCardFrameSynchroGfx:
 	.incbin "build/assets/synchro_frame.bin"
+@ Added: the Xyz Monster frame, the Fusion frame recoloured black (tools/synchro_frame.py xyz).
+	.balign 4
+	.global gCardFrameXyzGfx
+gCardFrameXyzGfx:
+	.incbin "build/assets/xyz_frame.bin"

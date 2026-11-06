@@ -84,6 +84,9 @@ Campaign duelists in Yak's YGO Hack use a much stronger opponent AI than vanilla
 - It Synchro Summons when it can gain ATK by it (the Synchro Monster stronger than its strongest material), and Special
   Summons Quillbolt Hedgehog from its Graveyard first when it controls a Tuner.
 - Its Stardust Dragon negates your cards and effects that would destroy one of its cards.
+- It Xyz Summons when the Xyz Monster has more ATK than its strongest material, using its weakest fitting monsters.
+  Its Number 17: Leviathan Dragon detaches for +500 ATK whenever it can, and its Number 39: Utopia negates your
+  attacks.
 - Its Swarm of Locusts turns face-down in the Main Phase while you have a Spell or Trap, so its next Flip Summon destroys one.
 - Its Des Lacooda uses its once-per-turn face-down effect in the Main Phase, so its next Flip Summon draws a card.
 - Its Stealth Bird uses its once-per-turn face-down effect in the Main Phase whenever the menu allows (including while manual position changes are locked); its FLIP burn still triggers on Flip Summon and battle flips.

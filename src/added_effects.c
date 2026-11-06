@@ -42,6 +42,7 @@
 #include "duel_screen.h"            /* DuelCursor_PickTarget, gDuelScreen */
 #include "duel_flow.h"              /* gDuelCtrl.isLinkDuel */
 #include "synchro.h"                /* the Synchro Summon (src/mod_synchro.c) */
+#include "xyz.h"                    /* the Xyz Summon and Xyz Materials (src/mod_xyz.c) */
 
 #ifdef HAS_CARD_MASK_OF_RESTRICT
 int IsTributeLockActive(void)
@@ -1622,6 +1623,7 @@ void ModDuelInit(void)
     gModDuel.scientistReturn = 0;
     gModDuel.aiScientistTurn = 0;
     ModSynchroReset();                      /* src/mod_synchro.c */
+    ModXyzReset();                          /* src/mod_xyz.c */
     gModDuel.sealedCount[0] = 0;
     gModDuel.sealedCount[1] = 0;
     gModDuel.dimensionWall = 0;
@@ -2624,6 +2626,10 @@ int ModCanActivateMonsterEffect(u16 id, int player, int zone)
     if (CardNumberOfId(id) == CARD_BRIONAC_DRAGON_OF_THE_ICE_BARRIER)
         return CanActivateEffectInZone(player, zone, 0);
 #endif
+#ifdef HAS_CARD_NUMBER_17_LEVIATHAN_DRAGON
+    if (CardNumberOfId(id) == CARD_NUMBER_17_LEVIATHAN_DRAGON)
+        return CanActivateEffectInZone(player, zone, 0);
+#endif
     return 0;
 }
 
@@ -2917,6 +2923,169 @@ int EffectBrionacResolve(struct ChainEntry *link, struct ChainEntry *chainedTo)
     return EFFECT_STEP_DONE;
 }
 #endif /* HAS_CARD_BRIONAC_DRAGON_OF_THE_ICE_BARRIER */
+
+#ifdef HAS_CARD_NUMBER_17_LEVIATHAN_DRAGON
+/* ---- Number 17: Leviathan Dragon ----------------------------------------------------------------------------------
+ * Xyz Monster: "2 Level 3 monsters. Once per turn: You can detach 1 Xyz Material from this card; this card gains 500
+ * ATK. If this card has no Xyz Material, it cannot attack your opponent directly."
+ *   ACTIVATE  the card menu in the Main Phase (ModCanActivateMonsterEffect, as Chiron the Mage), once per turn
+ *             (ModXyzMarkEffectUsed, src/mod_xyz.c, marked in chainA)
+ *   resolve   detach 1 (XyzDetachBegin: the human's pick from a list when the materials differ), then +500 ATK as a
+ *             ZONE_LINK_ATK_BONUS link (lasts while it is face up). The detach is done here, not as the cost.
+ *   no direct attack  ModCannotAttackDirectly (CanMonsterAttack, also the CPU's) while it has no material
+ *   CPU       AiWantsMonsterEffect: whenever it can */
+static int LeviathanReady(struct ChainEntry *card)
+{
+    struct DuelZone *z;
+
+    if (card->zone > ZONE_MONSTER_4)
+        return 0;
+    z = ZoneOf(card->player, card->zone);
+    return z->isFaceUp && DUEL_CARD_ID(&z->card) == (card->card & CARD_ID_MASK)
+           && XyzMaterialCount(card->player, card->zone) > 0;
+}
+
+int EffectLeviathanDragonPrepare(struct ChainEntry *card, struct ChainEntry *chainLink, u16 fromHand)
+{
+    (void)chainLink;
+    return !fromHand && card->event == RESPONSE_NONE && LeviathanReady(card)
+           && !ModXyzEffectUsed(card->player, card->zone);
+}
+
+int EffectLeviathanDragonChainA(struct ChainEntry *link, struct ChainEntry *prevLink)
+{
+    (void)prevLink;
+    ModXyzMarkEffectUsed(link->player, link->zone);
+    return 1;
+}
+
+int EffectLeviathanDragonResolve(struct ChainEntry *link, struct ChainEntry *chainedTo)
+{
+    (void)chainedTo;
+    if (link->negated)
+        return EFFECT_STEP_DONE;
+    switch (gChain.effectStep) {
+    case EFFECT_STEP_START:
+        if (!LeviathanReady(link))
+            return EFFECT_STEP_DONE;
+        switch (XyzDetachBegin(link->player, link->zone)) {
+        case 0:
+            return EFFECT_STEP_DONE;
+        case 2:
+            return EFFECT_STEP_2;           /* the human's list is open */
+        }
+        break;
+    case EFFECT_STEP_2:
+        XyzDetachPicked(link->player, link->zone);
+        break;
+    default:
+        return EFFECT_STEP_DONE;
+    }
+    QueueAddZoneLink(link->player, 500, DUEL_LOC(link->player, link->zone), ZONE_LINK_ATK_BONUS);
+    return EFFECT_STEP_DONE;
+}
+#endif /* HAS_CARD_NUMBER_17_LEVIATHAN_DRAGON */
+
+#ifdef HAS_CARD_NUMBER_39_UTOPIA
+/* ---- Number 39: Utopia --------------------------------------------------------------------------------------------
+ * Xyz Monster: "2 Level 4 monsters. When a monster declares an attack: You can detach 1 material from this card; negate
+ * the attack. If this card is targeted for an attack, while it has no material: Destroy this card."
+ *   trigger   ModAttackDeclaredTriggers (battle_phase1.c, Chaos King's hook) queues it for every face-up Utopia with a
+ *             material when any monster declares an attack (loc0: the attacker); the CPU's only against the human's
+ *             attacks. The same hook destroys a Utopia with no material that is the attack's target.
+ *   resolve   the human is asked (Yes/No); detach 1 (XyzDetachBegin, a list when the materials differ), then the
+ *             attack is negated (DUEL_CMD_NEGATE_ATTACK, as Draining Shield). The detach is done here, not as the
+ *             cost. */
+static const u8 sStrUtopiaAsk[] = "Detach 1 material from Number 39: Utopia to negate the attack?";
+
+static int UtopiaReady(struct ChainEntry *card)
+{
+    struct DuelZone *z;
+
+    if (card->zone > ZONE_MONSTER_4)
+        return 0;
+    z = ZoneOf(card->player, card->zone);
+    return z->isFaceUp && DUEL_CARD_ID(&z->card) == (card->card & CARD_ID_MASK)
+           && XyzMaterialCount(card->player, card->zone) > 0;
+}
+
+int EffectUtopiaPrepare(struct ChainEntry *card, struct ChainEntry *chainLink, u16 fromHand)
+{
+    (void)chainLink;
+    return !fromHand && card->event == RESPONSE_ATTACK_DECLARED && UtopiaReady(card);
+}
+
+static void UtopiaNegate(struct ChainEntry *link)
+{
+    int player = DUEL_LOC_PLAYER(link->loc0), zone = DUEL_LOC_ZONE(link->loc0);
+
+    if (zone <= ZONE_MONSTER_4 && DUEL_CARD_ID(&ZoneOf(player, zone)->card) != 0)
+        DuelCmd_Push(player ? DUEL_CMD_PLAYER | DUEL_CMD_NEGATE_ATTACK : DUEL_CMD_NEGATE_ATTACK, zone, 0, 0);
+}
+
+int EffectUtopiaResolve(struct ChainEntry *link, struct ChainEntry *chainedTo)
+{
+    (void)chainedTo;
+    if (link->negated)
+        return EFFECT_STEP_DONE;
+    switch (gChain.effectStep) {
+    case EFFECT_STEP_START:
+        if (!UtopiaReady(link))
+            return EFFECT_STEP_DONE;
+        if (link->player == 0) {
+            TextBoxOpen(TEXTBOX_POS(6, 2), TEXTBOX_SIZE(18, 7), TEXTBOX_FLAGS_DEFAULT, sStrUtopiaAsk);
+            TextBoxSetMenu(TEXTBOX_MENU_YES_NO, NULL, NULL);
+            return EFFECT_STEP_2;
+        }
+        /* fall through: the CPU always */
+    case EFFECT_STEP_2:
+        if (link->player == 0 && gTextBox.result == 0)
+            return EFFECT_STEP_DONE;
+        switch (XyzDetachBegin(link->player, link->zone)) {
+        case 0:
+            return EFFECT_STEP_DONE;
+        case 2:
+            return EFFECT_STEP_3;           /* the human's list is open */
+        }
+        break;
+    case EFFECT_STEP_3:
+        XyzDetachPicked(link->player, link->zone);
+        break;
+    default:
+        return EFFECT_STEP_DONE;
+    }
+    UtopiaNegate(link);
+    return EFFECT_STEP_DONE;
+}
+
+/* ModAttackDeclaredTriggers: the Utopias that answer the attack of (player, zone), and the attack's target. */
+static void UtopiaAttackDeclared(int player, int zone)
+{
+    int side, z;
+
+    for (side = 0; side <= 1; side++) {
+        if (side == 1 && player == 1)
+            continue;               /* the CPU does not negate its own attacks */
+        for (z = ZONE_MONSTER_0; z <= ZONE_MONSTER_4; z++) {
+            struct DuelZone *u = ZoneOf(side, z);
+            u16 id = DUEL_CARD_ID(&u->card);
+
+            if (id != 0 && u->isFaceUp && CARD_NUMBER(id) == CARD_NUMBER_39_UTOPIA && XyzMaterialCount(side, z) > 0)
+                Chain_AddPending(TRIGGER_PLAYER(side) | TRIGGER_ZONE(z) | TRIGGER_KIND(CHAIN_KIND_MONSTER)
+                                     | TRIGGER_EVENT(RESPONSE_ATTACK_DECLARED) | id,
+                                 DUEL_LOC(player, zone));
+        }
+    }
+    if (gBattle.defSlot <= ZONE_MONSTER_4) {
+        struct DuelZone *t = ZoneOf(1 - player, gBattle.defSlot);
+        u16 id = DUEL_CARD_ID(&t->card);
+
+        if (id != 0 && t->isFaceUp && CARD_NUMBER(id) == CARD_NUMBER_39_UTOPIA
+            && XyzMaterialCount(1 - player, gBattle.defSlot) == 0)
+            DestroyFieldCard(1 - player, gBattle.defSlot, 1);
+    }
+}
+#endif /* HAS_CARD_NUMBER_39_UTOPIA */
 
 #ifdef HAS_CARD_BRAIN_CONTROL
 /* ---- Brain Control -------------------------------------------------------------------------------------------------
@@ -3411,6 +3580,8 @@ static void QueueShippingTriggers(int player);              /* below */
 void AddedCardsSummoned(int player, int zone, u16 id, int kind, int faceUp)
 {
     int synchroSummoned = ModSynchroArrived(player, zone, id);     /* src/mod_synchro.c: marks a Synchro Summon */
+
+    ModXyzArrived(player, zone, id);        /* src/mod_xyz.c: an Xyz Summon's materials attach */
 
     SynchroCardsArrived(player, zone, id);
 #ifdef HAS_CARD_SHIPPING_ARCHFIEND
@@ -5869,7 +6040,7 @@ static int IsScientistFusion(u16 id, int param)
     u32 stats = gCardStats[id & CARD_ID_MASK];
 
     return CARD_STATS_TYPE(stats) <= CARD_TYPE_REPTILE && CARD_STATS_KIND(stats) == CARD_KIND_FUSION
-           && !IS_SYNCHRO_CARD(id)
+           && !IS_EXTRA_NON_FUSION(id)
            && (int)CARD_STATS_LEVEL(stats) <= SCIENTIST_MAX_LEVEL && !IsCannotSpecialSummon(id & CARD_ID_MASK);
 }
 
@@ -6071,7 +6242,7 @@ static int HexSealedFusionTarget(u16 id, int param)
     u8 zones[3];
 
     return CARD_STATS_TYPE(stats) <= CARD_TYPE_REPTILE && CARD_STATS_KIND(stats) == CARD_KIND_FUSION
-           && !IS_SYNCHRO_CARD(id) && CARD_STATS_ATTR(stats) == ATTRIBUTE_DARK
+           && !IS_EXTRA_NON_FUSION(id) && CARD_STATS_ATTR(stats) == ATTRIBUTE_DARK
            && !IsCannotSpecialSummon(id & CARD_ID_MASK)
            && HexSealedMaterials(param >> 8, param & 0xFF, id, zones) != 0;
 }
@@ -6235,7 +6406,7 @@ static int NecroFusionTarget(u16 id, int param)
     u8 idx[3];
 
     return CARD_STATS_TYPE(stats) <= CARD_TYPE_REPTILE && CARD_STATS_KIND(stats) == CARD_KIND_FUSION
-           && !IS_SYNCHRO_CARD(id) && !IsCannotSpecialSummon(id & CARD_ID_MASK)
+           && !IS_EXTRA_NON_FUSION(id) && !IsCannotSpecialSummon(id & CARD_ID_MASK)
            && NecroFusionMaterials(param, id, idx) != 0;
 }
 
@@ -6337,6 +6508,10 @@ int ModCannotAttackDirectly(int player, int zone)
         return 0;
 #ifdef HAS_CARD_ZOMBYRA_THE_DARK
     if (CARD_NUMBER(id) == CARD_ZOMBYRA_THE_DARK)
+        return 1;
+#endif
+#ifdef HAS_CARD_NUMBER_17_LEVIATHAN_DRAGON
+    if (CARD_NUMBER(id) == CARD_NUMBER_17_LEVIATHAN_DRAGON && XyzMaterialCount(player, zone) == 0)
         return 1;
 #endif
 #ifdef HAS_CARD_MAGICAL_SCIENTIST
@@ -8616,9 +8791,16 @@ void ModCollectEffectTargets(int player, u16 cardNumber, int param)
         ModAddPileTargets(p->hand, p->handCount, CARDLIST_SRC_HAND, IsTypeId, CARD_TYPE_MAGIC);
         break;
 #endif
-    case CARD_LIST_KEY_SYNCHRO:             /* the Extra Deck's Synchro Monsters that can be summoned now */
+    case CARD_LIST_KEY_SYNCHRO:             /* the Extra Deck's Synchro and Xyz Monsters that can be summoned now */
         ModAddPileTargets(p->fusionDeck, p->fusionCount, CARDLIST_SRC_FUSION_DECK, ModSynchroListAccepts, player);
         break;
+    case CARD_LIST_KEY_XYZ_MATERIALS: {     /* one Xyz Monster's materials (the detach pick, src/mod_xyz.c) */
+        int n;
+        const struct DuelCard *view = ModXyzMaterialView(&n);
+
+        ModAddPileTargets(view, n, CARDLIST_SRC_GRAVEYARD, IsMonsterId, 0);
+        break;
+    }
 #ifdef HAS_CARD_VAMPIRE_LORD
     case CARD_VAMPIRE_LORD:                 /* the Deck's cards of the declared type (param) */
         ModAddPileTargets(p->deck, p->deckCount, CARDLIST_SRC_DECK, VampireLordTypeMatches, param);
@@ -12346,17 +12528,28 @@ int EffectArchfiendsCallResolve(struct ChainEntry *link, struct ChainEntry *chai
  *            GetZoneCardStats (card_stats.c, at its very end: the current values) swaps their ATK and DEF while it is
  *            still that turn's Battle Phase (chaosKingTurn) and the monster is the same one */
 static const u8 sStrChaosKingAsk[] = "Switch the ATK and DEF of your opponent's face-up monsters?";
+#endif /* HAS_CARD_CHAOS_KING_ARCHFIEND (continued below) */
 
+/* BattleStage_RespondToAttack (battle_phase1.c): the attack of (player, zone) is declared (Chaos King Archfiend,
+ * Number 39: Utopia). */
 void ModAttackDeclaredTriggers(int player, int zone)
 {
     struct DuelZone *z = ZoneOf(player, zone);
     u16 id = DUEL_CARD_ID(&z->card);
 
+#ifdef HAS_CARD_CHAOS_KING_ARCHFIEND
     if (zone <= ZONE_MONSTER_4 && id != 0 && z->isFaceUp && CARD_NUMBER(id) == CARD_CHAOS_KING_ARCHFIEND)
         Chain_AddPending(TRIGGER_PLAYER(player & 1) | TRIGGER_ZONE(zone) | TRIGGER_KIND(CHAIN_KIND_MONSTER)
                              | TRIGGER_EVENT(RESPONSE_ATTACK_DECLARED) | id,
                          DUEL_LOC(player, zone));
+#endif
+#ifdef HAS_CARD_NUMBER_39_UTOPIA
+    if (zone <= ZONE_MONSTER_4)
+        UtopiaAttackDeclared(player & 1, zone);
+#endif
 }
+
+#ifdef HAS_CARD_CHAOS_KING_ARCHFIEND
 
 void ModChaosKingSwap(int player, int zone, struct ZoneCardStats *out)
 {
@@ -13227,6 +13420,10 @@ static int AiWantsMonsterEffect(u16 number, int zone)
 #ifdef HAS_CARD_CHIRON_THE_MAGE
     case CARD_CHIRON_THE_MAGE:
         return FindMagicInHand(AI_PLAYER) >= 0 && CountSpellTrapCards(AI_HUMAN) > 0;
+#endif
+#ifdef HAS_CARD_NUMBER_17_LEVIATHAN_DRAGON
+    case CARD_NUMBER_17_LEVIATHAN_DRAGON:           /* +500 ATK: whenever it can */
+        return 1;
 #endif
 #ifdef HAS_CARD_BRIONAC_DRAGON_OF_THE_ICE_BARRIER
     case CARD_BRIONAC_DRAGON_OF_THE_ICE_BARRIER:    /* a card in hand to spare and a human card worth bouncing */
@@ -14716,6 +14913,8 @@ int AiPlayAddedCards(void)
 #endif
     if (AiTrySynchroSummon())               /* src/mod_synchro.c */
         return 1;
+    if (AiTryXyzSummon())                   /* src/mod_xyz.c */
+        return 1;
     /* the card-menu effects of face-up added monsters */
     for (zone = ZONE_MONSTER_0; zone <= ZONE_MONSTER_4; zone++) {
         struct DuelZone *z = ZoneOf(AI_PLAYER, zone);
@@ -15246,6 +15445,26 @@ const struct CardEffect gAddedCardEffects[] = {
         EffectAbyssSoldierPrepare,
         EffectAbyssSoldierChainA,
         EffectAbyssSoldierChainB,
+    },
+#endif
+#ifdef HAS_CARD_NUMBER_17_LEVIATHAN_DRAGON
+    {
+        CARD_NUMBER_17_LEVIATHAN_DRAGON, 0,
+        EffectLeviathanDragonResolve,
+        NULL,
+        EffectLeviathanDragonPrepare,
+        EffectLeviathanDragonChainA,
+        NULL,
+    },
+#endif
+#ifdef HAS_CARD_NUMBER_39_UTOPIA
+    {
+        CARD_NUMBER_39_UTOPIA, 0,
+        EffectUtopiaResolve,
+        NULL,
+        EffectUtopiaPrepare,
+        NULL,
+        NULL,
     },
 #endif
 #ifdef HAS_CARD_BRIONAC_DRAGON_OF_THE_ICE_BARRIER

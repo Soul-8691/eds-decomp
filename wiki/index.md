@@ -30,6 +30,7 @@ Start with [[overview]]. The decompilation is 100% matched since 2026-10-02: all
 - [[best-of-3-matches]]: every Campaign duel is a best-of-3 match; the CPU keeps its deck for the match, and the side-deck swaps are undone afterwards.
 - [[deck-recipes]]: the added main-menu item that stores 60 deck recipes in SRAM and switches between them through the trunk.
 - [[synchro]]: Synchro Summoning (mod): gCardTypeEx (Synchro, Tuner, the races EDS lacks), the white frame, the Fusion Deck pile's Special Summon, the CPU's Synchro Summons, and the four test cards.
+- [[xyz]]: Xyz Summoning (mod): gCardTypeEx kind Xyz (Rank in the Level field), Xyz Materials kept by zone serial and sent to the Graveyard through ClearZone, the black frame, the shared Extra Deck summon, the CPU, and Gem-Knight Pearl, Utopia and Leviathan Dragon.
 - [[added-cards]]: cards added beyond the original 820 from the text list `config/new_cards.txt`: workflow, capacity, YGOPRODeck data, moved tables, RAM and pointer fix-ups.
 - [[cards]]: card model (1-based alphabetical IDs vs. classic "card numbers", kinds, types).
 - [[sound-engine]]: custom Konami driver (PSG + 6 PCM voices, ARM mixer); samples, wave-RAM patterns, noise presets, pitch table. *verified data*

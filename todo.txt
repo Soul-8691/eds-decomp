@@ -18,6 +18,5 @@ Pre-duel images and QR codes
 Test
 Chaos Return format
 HMA prototype
-XYZ
 Make the chain hold more than 3 targets
 Shift the size-limited area

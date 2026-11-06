@@ -82,6 +82,9 @@ extern const u8 gCardTypeEx[];
 
 #define CARD_TYPE_EX(id)        (gCardTypeEx[(id) & CARD_ID_MASK])
 #define IS_SYNCHRO_CARD(id)     ((CARD_TYPE_EX(id) & CARD_TYPE_EX_KIND_MASK) == CARD_KIND_EX_SYNCHRO)
+#define IS_XYZ_CARD(id)         ((CARD_TYPE_EX(id) & CARD_TYPE_EX_KIND_MASK) == CARD_KIND_EX_XYZ)
+/* A kind FUSION card that is not a Fusion Monster (a Synchro or an Xyz): Fusion-only effects skip it. */
+#define IS_EXTRA_NON_FUSION(id) ((CARD_TYPE_EX(id) & CARD_TYPE_EX_KIND_MASK) != CARD_KIND_EX_NONE)
 #define IS_TUNER_CARD(id)       ((CARD_TYPE_EX(id) & CARD_TYPE_EX_TUNER) != 0)
 #define IS_EFFECT_CARD_EX(id)   ((CARD_TYPE_EX(id) & CARD_TYPE_EX_EFFECT) != 0)
 #define CARD_RACE_EX(id)        (CARD_TYPE_EX(id) >> CARD_TYPE_EX_RACE_SHIFT)
@@ -138,6 +141,10 @@ extern const u8 gCardFrameRitualGfx[];  /* 0x0862C828: ritual (blue); also Obeli
 extern const u8 gCardFrameMagicGfx[];   /* 0x0862EEC0: Magic (type 22) */
 extern const u8 gCardFrameTrapGfx[];    /* 0x08631558: Trap (type 21) */
 extern const u8 gCardFrameSynchroGfx[]; /* added: Synchro Monster (the Fusion frame made white, tools/synchro_frame.py) */
+extern const u8 gCardFrameXyzGfx[];     /* added: Xyz Monster (the Fusion frame made black, tools/synchro_frame.py xyz) */
+/* Added: the frame of a kind FUSION card: Fusion, Synchro or Xyz (src/mod_xyz.c, far code; card_detail.c,
+ * card_canvas.c and duel_card_anim.c call it). */
+const u8 *ModFusionKindFrame(u16 id);
 extern const u8 gCardFrameTicketGfx[];  /* 0x08633BF0: Ticket (type 23) */
 
 /*

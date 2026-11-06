@@ -45,6 +45,7 @@ GEN_TSV = 'build/new_cards.tsv'
 COUNT_H = 'build/include/card_count.h'
 COUNT_INC = 'build/include/card_count.inc'
 SYNCHRO_H = 'build/include/synchro_rules.h'
+XYZ_H = 'build/include/xyz_rules.h'
 CARDS_H = 'include/constants/cards.h'
 API = 'https://db.ygoprodeck.com/api/v7/cardinfo.php?'
 
@@ -123,6 +124,7 @@ EXTRA_RACES = {
 # gCardTypeEx, one byte per card ID (0 for the original cards): bits 0-1 the extended kind (enum CardKindEx), bit 2
 # has an effect, bit 3 Tuner, bits 4-7 the extended race (EXTRA_RACES; 0 = the stats word's type).
 KIND_EX_SYNCHRO = 1
+KIND_EX_XYZ = 2
 TYPE_EX_EFFECT = 0x04
 TYPE_EX_TUNER = 0x08
 ATTRIBUTES = {'LIGHT': 1, 'DARK': 2, 'WATER': 3, 'FIRE': 4, 'EARTH': 5, 'WIND': 6}
@@ -387,10 +389,11 @@ def stats_word(c):
     if race not in MONSTER_TYPES or c.get('attribute') not in ATTRIBUTES:
         fail(f'{c["name"]}: a {c["race"]}/{c.get("attribute")} {c["type"]} cannot be shown in EDS (no such '
              f'monster type or attribute)')
-    if any(k in c['type'] for k in ('Link', 'XYZ', 'Pendulum')) or not 1 <= (c['level'] or 0) <= 12:
+    # An Xyz Monster's Rank (YGOPRODeck's level) goes in the Level field.
+    if any(k in c['type'] for k in ('Link', 'Pendulum')) or not 1 <= (c['level'] or 0) <= 12:
         fail(f'{c["name"]}: {c["type"]} cards do not exist in EDS')
-    # Synchro Monsters are Extra Deck monsters: kind FUSION in the stats word (gCardTypeEx tells them apart).
-    kind = (2 if 'Fusion' in c['type'] or 'Synchro' in c['type'] else 3 if 'Ritual' in c['type']
+    # Synchro and Xyz Monsters are Extra Deck monsters: kind FUSION in the stats word (gCardTypeEx tells them apart).
+    kind = (2 if any(k in c['type'] for k in ('Fusion', 'Synchro', 'XYZ')) else 3 if 'Ritual' in c['type']
             else 0 if c['type'].startswith('Normal') else 1)
     atk, dfn = max(c['atk'] or 0, 0), max(c['def'] or 0, 0)
     if atk % 10 or dfn % 10 or atk > 5110 or dfn > 5110:
@@ -403,12 +406,12 @@ def type_ex(c):
     """gCardTypeEx byte of an added card (0 for Spells, Traps and plain monsters)."""
     if c['type'] in ('Spell Card', 'Trap Card', 'Token'):
         return 0
-    b = KIND_EX_SYNCHRO if 'Synchro' in c['type'] else 0
+    b = KIND_EX_SYNCHRO if 'Synchro' in c['type'] else KIND_EX_XYZ if 'XYZ' in c['type'] else 0
     if 'Tuner' in c['type']:
         b |= TYPE_EX_TUNER
     # Effect: YGOPRODeck says "Effect" for most; Tuners are "Tuner Monster" ("Normal Tuner Monster" without), and an
     # Extra Deck monster's text has its effect after the materials line.
-    extra = 'Synchro' in c['type'] or 'Fusion' in c['type']
+    extra = any(k in c['type'] for k in ('Synchro', 'Fusion', 'XYZ'))
     if ('Effect' in c['type'] or c['type'] in ('Tuner Monster', 'Synchro Tuner Monster')
             or (extra and len(c['desc'].strip().splitlines()) > 1)):
         b |= TYPE_EX_EFFECT
@@ -439,6 +442,26 @@ def synchro_tuner(c, numbers):
     if not re.match(r'\s*1 Tuner \+ 1(?:\+| or more) non-Tuner monsters', c['desc']):
         print(f'newcards: warning: {c["name"]}: Synchro Materials read as "1 Tuner + 1+ non-Tuner monsters"')
     return 0
+
+
+def xyz_rule(c):
+    """An Xyz Monster's materials from the first line of its text: (count, or more, Level, type, attribute), the type
+    an EDS monster type and the attribute an EDS attribute, 0 for any. '2 Level 4 monsters', '2+ Level 4 monsters',
+    '3 Level 4 Warrior monsters', '2 Level 4 LIGHT monsters'."""
+    m = re.match(r'\s*(\d+)(\+| or more)? Level (\d+) (?:([A-Za-z -]+?)(?:-Type)? )?monsters', c['desc'])
+    if not m:
+        print(f'newcards: warning: {c["name"]}: Xyz Materials read as "2 Level {c["level"]} monsters"')
+        return 2, 0, c['level'], 0, 0
+    kind, typ, attr = m.group(4), 0, 0
+    if kind:
+        race = EXTRA_RACES[kind][1] if kind in EXTRA_RACES else kind
+        if kind in ATTRIBUTES:
+            attr = ATTRIBUTES[kind]
+        elif race in MONSTER_TYPES:
+            typ = MONSTER_TYPES[race]
+        else:
+            fail(f'{c["name"]}: its Xyz Materials "{kind}" are not a monster Type or Attribute')
+    return int(m.group(1)), 1 if m.group(2) else 0, int(m.group(3)), typ, attr
 
 
 def bcd(passcode):
@@ -581,6 +604,12 @@ def cmd_build():
                      '/* { Synchro card number, Tuner card number (0: any Tuner; 0x8000 | type: a Tuner of that '
                      'Type) } */\n'
                      '#define SYNCHRO_RULES { ' + ''.join(f'{{ {s}, {t} }}, ' for s, t in rules) + '{ 0, 0 } }\n')
+    # The Xyz Monsters' material rules for src/mod_xyz.c.
+    xyz = [(c['number'],) + xyz_rule(c) for c in new if 'XYZ' in c['type']]
+    write_if_changed(XYZ_H, f'/* {note} */\n#define XYZ_RULE_COUNT {len(xyz)}\n'
+                     '/* { Xyz card number, material count, 1: or more, Level, type (0 any), attribute (0 any) } */\n'
+                     '#define XYZ_RULES { ' + ''.join('{ %d, %d, %d, %d, %d, %d }, ' % r for r in xyz)
+                     + '{ 0, 0, 0, 0, 0, 0 } }\n')
     write_if_changed(COUNT_INC, f'@ {note}\n\t.set CARD_ID_COUNT_ADDED, {len(new)}\n'
                                 f'\t.set CARD_ID_COUNT, {total}\n')
     write_if_changed(GEN_TSV, 'id\tnumber\tpasscode\tname\tgame_name\n' + ''.join(

@@ -2562,3 +2562,15 @@ updated: 2026-09-29
 ## [2026-11-06] progress | Brionac, Dragon of the Ice Barrier
 - src/added_effects.c: `EffectBrionacPrepare` / `Check` / `ChainA` / `Resolve`, `ModCanActivateMonsterEffect` case, CPU case, row; `gModDuelExtra.brionacTurn` / `brionacSerial`; new_cards.txt: moved above `------`.
 - Pages: [[added-cards]].
+
+## [2026-11-06] progress | Xyz Summoning
+- New src/mod_xyz.c (far code, gModXyz at EWRAM 0x0202D500), include/xyz.h; tools/newcards.py (XYZ Monster, `CARD_KIND_EX_XYZ`, build/include/xyz_rules.h); tools/synchro_frame.py `xyz` mode (gCardFrameXyzGfx); tools/cardicons.py (card_icons/xyz_monster.png, DE_XYZ_FRAME).
+- Size-limited hooks: `ClearZone` (duel_card_lists.c) calls `ModXyzZoneCleared`; the frame picks of card_detail.c, card_canvas.c and duel_card_anim.c call `ModFusionKindFrame`. battle_phase1.c's attack-declared hook `#ifdef` also takes Utopia. Demo `.text` ends at 0x0807F3B4.
+- src/mod_synchro.c: the shared Extra Deck list and `SYNCHRO_STEP_XYZ`; src/added_effects.c: Leviathan Dragon, Utopia, `AiTryXyzSummon` call, the material list key, `IS_EXTRA_NON_FUSION` for the Fusion-only targets; src/mod_field_icons.c, src/mod_info_bar.c.
+- `make release` does not link: Chaos King Archfiend, Shipping Archfiend and Archfiend's Call are missing from config/new_cards.txt while their hooks are unconditional (not from this change).
+- Pages: [[xyz]] (new), [[synchro]], [[added-cards]].
+
+## [2026-11-06] progress | Xyz fixes: Deck Edit ring flash, info bar icon colours
+- src/mod_field_icons.c: `ModDeckRingBegin(slots)` picks the ring frame without art (plain cards first); a Synchro/Xyz frame without art borrows a palette of its kind. deck_edit_widgets.c passes `slots` (size-limited, one register move).
+- src/mod_info_bar.c: clears `gDuelScreen.textMapReset` after the "MAT" label, so the type/attribute icons keep their palettes.
+- Pages: [[xyz]].

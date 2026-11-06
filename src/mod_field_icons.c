@@ -82,6 +82,10 @@ extern const u8 gModFieldIconData[];            /* tools/cardicons.py --data */
 /* Then Deck Edit's ring art (DATA_DECK_EDIT), then the Synchro Monster frames (tools/cardicons.py): BG upright and
  * sideways, then the sprite poses 0-2, 1 KiB each. */
 #define DATA_SYNCHRO            ((((DATA_MINIS + CARD_ID_COUNT * 15 * 16 + 3) & ~3)) + CARD_ID_COUNT * (32 + 4 * 32))
+/* Then the Xyz Monster frames, the same 5 (black). */
+#define DATA_XYZ                (DATA_SYNCHRO + 5 * FRAME_SIZE)
+/* The Synchro or Xyz frames of card `id`, or 0 for the type's own. */
+#define DATA_EXTRA(id)          (IS_SYNCHRO_CARD(id) ? DATA_SYNCHRO : IS_XYZ_CARD(id) ? DATA_XYZ : 0)
 #define POSE_MAP_SIZE           80              /* x0, width, y0, height, the art column of each column (32), the
                                                    art row of each row (32) */
 #define SPRITE_POSES            3
@@ -154,8 +158,8 @@ u16 ModFieldCardTile(u32 player, u32 place, u16 id, u32 sideways)
     u32 i, j;
 
     sideways = sideways ? 1 : 0;
-    if (IS_SYNCHRO_CARD(id))        /* the silver frame (gCardTypeEx) */
-        CopyDoubleWords(cell, gModFieldIconData + DATA_SYNCHRO + sideways * FRAME_SIZE, FRAME_SIZE);
+    if (DATA_EXTRA(id))             /* the silver or black frame (gCardTypeEx) */
+        CopyDoubleWords(cell, gModFieldIconData + DATA_EXTRA(id) + sideways * FRAME_SIZE, FRAME_SIZE);
     else
         CopyDoubleWords(cell, gModFieldIconData + DATA_FRAMES + (type * 2 + sideways) * FRAME_SIZE, FRAME_SIZE);
     id &= CARD_ID_MASK;
@@ -222,8 +226,8 @@ static void BuildCardSprite(u32 slot, u16 id, u32 type, u32 pose)
     const u8 *mini;
     u32 x0 = map[0], w = map[1], y0 = map[2], h = map[3], r, c;
 
-    if (IS_SYNCHRO_CARD(id))        /* the silver frame (gCardTypeEx) */
-        CopyDoubleWords(dst, gModFieldIconData + DATA_SYNCHRO + (2 + pose) * FRAME_SIZE, FRAME_SIZE);
+    if (DATA_EXTRA(id))             /* the silver or black frame (gCardTypeEx) */
+        CopyDoubleWords(dst, gModFieldIconData + DATA_EXTRA(id) + (2 + pose) * FRAME_SIZE, FRAME_SIZE);
     else
         CopyDoubleWords(dst, gModFieldIconData + DATA_OBJ_FRAMES + (type * SPRITE_POSES + pose) * FRAME_SIZE,
                         FRAME_SIZE);
@@ -416,8 +420,8 @@ void ModChainIconBuild(u32 row, u16 id)
 {
     u32 tile = ModChainIconTile(row);
     u32 type = (GetCardIconObjTile(id) - 0x80) / 0x40;
-    const u8 *frame = IS_SYNCHRO_CARD(id) ? gModFieldIconData + DATA_SYNCHRO + 2 * FRAME_SIZE
-                                          : gModFieldIconData + DATA_OBJ_FRAMES + type * SPRITE_POSES * FRAME_SIZE;
+    const u8 *frame = DATA_EXTRA(id) ? gModFieldIconData + DATA_EXTRA(id) + 2 * FRAME_SIZE
+                                     : gModFieldIconData + DATA_OBJ_FRAMES + type * SPRITE_POSES * FRAME_SIZE;
     const u8 *mini;
     u32 r, i, j;
 
@@ -453,9 +457,12 @@ void ModChainIconBuild(u32 row, u16 id)
  * screen that reloads the sheets or the palette needs nothing more. A screen with other sheets in the top half (the
  * list filter) gets no art: sDeckRingCheck compares a tile of each top sheet first. The cards come from
  * DeckEdit_InitFrameSlot and DeckEdit_ScrollFrameSlots (ModDeckRingSetCard), by ring slot.
- * A Synchro Monster's frame (GetCardFrameIndex gives the Fusion frame) is drawn in its art's palette, whose entries
- * 1, 4, 10, 12 and 15 (the ones the Fusion frame's tiles use) hold the frame in silver; without art (no block free,
- * or another screen's sheets) it stays purple. */
+ * A Synchro or Xyz Monster's frame (GetCardFrameIndex gives the Fusion frame) is drawn in its art's palette, whose
+ * entries 1, 4, 10, 12 and 15 (the ones the Fusion frame's tiles use) hold the frame in silver or black. Up to 6
+ * frames show while the ring scrolls, but only 5 palettes are free: ModDeckRingBegin picks the frame that goes
+ * without art (a plain card's first, the one nearest an end of the ring), and a Synchro or Xyz frame left without
+ * art borrows a drawn palette of its own kind (those five entries are the same for every card of a kind). Only on
+ * another screen's sheets, or with six Synchro/Xyz frames of which one kind has no art, does a frame stay purple. */
 #define DE_ENTRY_SIZE           (32 + 4 * 32)   /* palette, then 2 rows of 2 4bpp tiles */
 #define DATA_DECK_EDIT          ((DATA_MINIS + CARD_ID_COUNT * MINI_W * MINI_H + 3) & ~3)
 #define DE_RING_SLOTS           6
@@ -473,7 +480,9 @@ struct OamListEntry *OamListAlloc(u8 layer, struct OamList *list);
 struct ModDeckRing {
     u16 card[DE_RING_SLOTS];        /* the card of each ring slot (0: none) */
     u8 drawn;                       /* art sprites added this frame; DE_ART_SPRITES: none allowed */
-    u8 pad;
+    u8 skip;                        /* the ring slot that gets no art this frame (0xFF: none) */
+    u8 kind[DE_ART_SPRITES];        /* the enum CardKindEx of each art palette drawn this frame */
+    u8 pad[3];
 };
 extern struct ModDeckRing gModDeckRing;     /* EWRAM 0x0202F360, symbols.ld */
 
@@ -487,21 +496,48 @@ void ModDeckRingSetCard(u32 slot, u16 id)
         gModDeckRing.card[slot] = id;
 }
 
-/* DeckEdit_DrawFrameSlots, first: the art only over Deck Edit's own sheets (a tile of each top-half sheet as
- * loaded by DeckEdit_InitListView: gDeckEditObjTiles at column 0, gDeckEditCardStackObjTiles at column 16). */
-void ModDeckRingBegin(void)
+#define DE_KIND(id)             (CARD_TYPE_EX(id) & CARD_TYPE_EX_KIND_MASK)
+#define DE_SLOT_LIVE(slots, i)  ((slots)[(i) * 16 + 8] != 0)   /* as DeckEdit_DrawFrameSlots tests */
+#define DE_SLOT_POS(slots, i)   ((slots)[(i) * 16 + 4])        /* its place on the ring, 0-6 */
+
+/* DeckEdit_DrawFrameSlots, first (slots: the six ring slots of 16 bytes): the art only over Deck Edit's own sheets
+ * (a tile of each top-half sheet as loaded by DeckEdit_InitListView: gDeckEditObjTiles at column 0,
+ * gDeckEditCardStackObjTiles at column 16); with six live frames, the one that goes without art. */
+void ModDeckRingBegin(const u8 *slots)
 {
     const u32 *a = (const u32 *)OBJ_VRAM0, *b = (const u32 *)(OBJ_VRAM0 + 16 * 32);
     const u32 *sa = (const u32 *)gDeckEditObjTiles, *sb = (const u32 *)gDeckEditCardStackObjTiles;
-    u32 i;
+    u32 i, live = 0;
+    int best = -1, bestScore = -1;
 
     gModDeckRing.drawn = 0;
+    gModDeckRing.skip = 0xFF;
     for (i = 0; i < 8; i++) {
         if (a[i] != sa[i] || b[i] != sb[i]) {
             gModDeckRing.drawn = DE_ART_SPRITES;
+            for (i = 0; i < DE_ART_SPRITES; i++)
+                gModDeckRing.kind[i] = 0xFF;    /* nothing to borrow: no palette was loaded */
             return;
         }
     }
+    for (i = 0; i < DE_RING_SLOTS; i++)
+        live += DE_SLOT_LIVE(slots, i);
+    if (live <= DE_ART_SPRITES)
+        return;
+    for (i = 0; i < DE_RING_SLOTS; i++) {
+        int pos, score;
+
+        if (!DE_SLOT_LIVE(slots, i))
+            continue;
+        pos = DE_SLOT_POS(slots, i);
+        score = (pos < 3 ? 3 - pos : pos - 3)                       /* nearer an end of the ring */
+                + (DE_KIND(gModDeckRing.card[i]) == CARD_KIND_EX_NONE ? 16 : 0);    /* a plain card first */
+        if (score > bestScore) {
+            best = i;
+            bestScore = score;
+        }
+    }
+    gModDeckRing.skip = best;
 }
 
 /* After ring slot `slot`'s frame sprite `frame` (its OamList entry) was added: its art sprite. */
@@ -512,15 +548,28 @@ void ModDeckRingArt(u32 slot, u16 *frame, void *list)
     const u8 *entry;
     u16 *e;
 
-    if (slot >= DE_RING_SLOTS || k >= DE_ART_SPRITES || id == 0 || id >= CARD_ID_COUNT)
+    if (slot >= DE_RING_SLOTS || id == 0 || id >= CARD_ID_COUNT)
         return;
+    if (k >= DE_ART_SPRITES || slot == gModDeckRing.skip) {
+        /* no art: a Synchro or Xyz frame borrows a drawn palette of its own kind, if there is one */
+        if (IS_EXTRA_NON_FUSION(id) && k <= DE_ART_SPRITES) {
+            for (r = 0; r < k; r++) {
+                if (gModDeckRing.kind[r] == DE_KIND(id)) {
+                    frame[2] = (frame[2] & 0x0FFF) | (DE_PALETTE_FIRST + r) << 12;
+                    break;
+                }
+            }
+        }
+        return;
+    }
     gModDeckRing.drawn = k + 1;
+    gModDeckRing.kind[k] = DE_KIND(id);
     block = sDeckRingBlocks[k];
     entry = gModFieldIconData + DATA_DECK_EDIT + id * DE_ENTRY_SIZE;
     CopyDoubleWords((void *)(OBJ_PLTT + (DE_PALETTE_FIRST + k) * 32), entry, 32);
     for (r = 0; r < 2; r++)
         CopyDoubleWords((void *)OBJ_TILE8_ADDR(block + r * 32), entry + 32 + r * 2 * TILE4_SIZE, 2 * TILE4_SIZE);
-    if (IS_SYNCHRO_CARD(id))        /* the Fusion frame's tiles in the art's palette: silver (tools/cardicons.py) */
+    if (IS_EXTRA_NON_FUSION(id))    /* the Fusion frame's tiles in the art's palette: silver or black (cardicons.py) */
         frame[2] = (frame[2] & 0x0FFF) | (DE_PALETTE_FIRST + k) << 12;
     e = (u16 *)OamListAlloc(DE_ART_LAYER, list);
     e[0] = (frame[0] & ~(ATTR0_SHAPE_MASK | 0xFF)) | ((frame[0] + 7) & 0xFF);     /* square */

@@ -1155,6 +1155,9 @@ enum CardNumber {
     CARD_NECRO_FUSION = 859,                              /* id 999, added card */
     CARD_MALEVOLENT_CATASTROPHE = 860,                    /* id 1000, added card */
     CARD_BRIONAC_DRAGON_OF_THE_ICE_BARRIER = 861,         /* id 1001, added card */
+    CARD_GEM_KNIGHT_PEARL = 862,                          /* id 1002, added card */
+    CARD_NUMBER_39_UTOPIA = 863,                          /* id 1003, added card */
+    CARD_NUMBER_17_LEVIATHAN_DRAGON = 864,                /* id 1004, added card */
     CARD_MAGIC_CYLINDER = 1214,                           /* id 899, added card */
     CARD_SOUL_EXCHANGE = 1220,                            /* id 947, added card */
     CARD_NIGHTMARES_STEELCAGE = 1230,                     /* id 989, added card */

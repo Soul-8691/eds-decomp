@@ -81,6 +81,10 @@ release to unlock the next one (every format is open in the debug build).
   add up exactly. The first four: Junk Synchron, Quillbolt Hedgehog (Special Summoned from your Graveyard pile's menu),
   Junk Warrior and Stardust Dragon. Psychic, Wyrm, Cyberse, Illusion and Creator God monsters can be added too; they
   use the closest existing type icon for now.
+- **Xyz Summoning.** Xyz Monsters (black frame) are in the Fusion Deck too, and the same Special Summon command lists
+  them: pick the Xyz Monster, then its materials (face-up monsters of the right Level). The materials stay under it
+  (the info bar shows "MAT" and the count) and go to the Graveyard when it leaves the field. The first three: Gem-Knight
+  Pearl, Number 39: Utopia and Number 17: Leviathan Dragon. An Xyz Monster's stars show its Rank.
 - **List Filter.** After choosing a card category and sort order, a new page narrows the list by the name's first
   letter, one Type, one Attribute, and ATK, DEF and Level ranges. Magic and Trap lists get the letter only. Sorting by
   Type or Attribute is now alphabetical.

@@ -97,7 +97,12 @@ These add small hooks to original units in the size-limited area: `card_canvas.c
 `duel_card_anim.c`, `title_menu.c`, `card_menu_input.c`, `duel_cmd_queue.c`, `duel_setup.c`, `effect_activation.c`,
 `battle_phase3.c` and `summon_action.c`. The demo's `.text` grew from 0x7f1ac to about 0x7f300.
 
-Related: [[added-cards]], [[deck-edit-filter-c]].
+Related: [[added-cards]], [[deck-edit-filter-c]], [[xyz]].
+
+## Xyz (2026-11-06)
+- The Fusion Deck pile's Special Summon now lists the Xyz Monsters too (`ModSynchroListAccepts`,
+  `ModSynchroAvailable`); an Xyz pick runs `ModXyzMenuRun` (`SYNCHRO_STEP_XYZ`). An Xyz Monster is never Synchro
+  Material (`FaceUpMonster`). Card View's type line gets "/Xyz". See [[xyz]].
 
 ## Typed Tuner rules (2026-11-05)
 - "1 <Type>-Type Tuner + 1 or more non-Tuner monsters" (Chaos King Archfiend): `tools/newcards.py` writes the

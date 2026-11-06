@@ -356,7 +356,7 @@ u8 GetCardFrameIndex(u16 id)
  * slot pointers: one shared pointer would change the register allocation. */
 /* Mod (src/mod_field_icons.c): the card art over the ring's frames. */
 void ModDeckRingSetCard(u32 slot, u16 id);
-void ModDeckRingBegin(void);
+void ModDeckRingBegin(const u8 *slots);
 void ModDeckRingArt(u32 slot, u16 *frame, void *list);
 
 void DeckEdit_ScrollFrameSlots(u8 dir, u16 newCardId, u8 unusedCount, u8 *ring, u8 *affines)
@@ -436,7 +436,7 @@ void DeckEdit_ScrollFrameSlots(u8 dir, u16 newCardId, u8 unusedCount, u8 *ring, 
 void DeckEdit_DrawFrameSlots(u8 *slots, int oamList)
 {
     u8 i;
-    ModDeckRingBegin();     /* added */
+    ModDeckRingBegin(slots);    /* added */
     for (i = 0; i <= 5; i++) {
         u8 *slot = (u8 *)(i * 16 + (u32)slots);
         if (slot[8] != 0) {

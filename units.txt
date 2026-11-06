@@ -150,6 +150,8 @@ mod_list_filter
 @farcode mod_list_filter
 mod_synchro
 @farcode mod_synchro
+mod_xyz
+@farcode mod_xyz
 mod_preduel
 @farcode mod_preduel
 mod_field_icons_data
@@ -186,6 +188,7 @@ rodata_08087FD0
 @rodata mod_info_bar
 @rodata mod_list_filter
 @rodata mod_synchro
+@rodata mod_xyz
 @rodata mod_preduel
 @rodata card_list_viewer
 mod_format_pack_roulettes

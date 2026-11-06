@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
-"""The Synchro Monster card frame (gCardFrameSynchroGfx): the Fusion frame with its purple made white.
+"""The Synchro and Xyz Monster card frames (gCardFrameSynchroGfx, gCardFrameXyzGfx): the Fusion frame with its
+purple made white, or black (xyz).
 
   python3 tools/synchro_frame.py build/assets/synchro_frame.bin
+  python3 tools/synchro_frame.py build/assets/xyz_frame.bin xyz
 
 Reads the Fusion frame's image pack (gCardFrameFusionGfx in data/rodata_08087FD0.s, from the extracted asset bank)
 and writes the same pack with its palette changed: every purple colour (red and blue both clearly above green)
@@ -35,12 +37,22 @@ def whiten(c):
     return grey | grey << 5 | min(31, grey + 1) << 10    # a touch of blue keeps it from looking yellowish
 
 
+def blacken(c):
+    """A purple colour as a dark grey of a quarter of its brightness (the Xyz frame's black, still shaded)."""
+    r, g, b = c & 31, (c >> 5) & 31, (c >> 10) & 31
+    if min(r, b) - g < 3:
+        return c                # not purple
+    grey = (r + g + b) // 12 + 1
+    return grey | grey << 5 | grey << 10
+
+
 def main():
-    if len(sys.argv) != 2:
+    if len(sys.argv) not in (2, 3) or (len(sys.argv) == 3 and sys.argv[2] != 'xyz'):
         sys.exit(__doc__)
+    recolour = blacken if len(sys.argv) == 3 else whiten
     pack = fusion_frame()
     pal = struct.unpack_from(f'<{COLORS}H', pack, PALETTE_AT)
-    struct.pack_into(f'<{COLORS}H', pack, PALETTE_AT, *[whiten(c) for c in pal])
+    struct.pack_into(f'<{COLORS}H', pack, PALETTE_AT, *[recolour(c) for c in pal])
     data = bytes(pack)
     try:
         if open(sys.argv[1], 'rb').read() == data:

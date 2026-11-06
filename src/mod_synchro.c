@@ -37,6 +37,7 @@
 #include "summon.h"                 /* QueueSpecialSummonChoosePosition, CanSpecialSummon */
 #include "synchro.h"
 #include "synchro_rules.h"          /* SYNCHRO_RULES (build/include, tools/newcards.py) */
+#include "xyz.h"                    /* the Xyz Summon (src/mod_xyz.c) shares the Extra Deck command and list */
 #include "text_box.h"               /* TextBoxOpen, TextBoxSetMenu, gTextBox */
 #include "util.h"                   /* StrCopy, StrCat, StrCatNumber, MemClear16 */
 #include "gba.h"                    /* B_BUTTON */
@@ -56,6 +57,7 @@ enum SynchroStep {
     SYNCHRO_STEP_PICK_TUNER,        /* the Tuner prompt is open */
     SYNCHRO_STEP_PICK_MATERIALS,    /* the non-Tuner prompt with the star gauge is open */
     SYNCHRO_STEP_SUMMON,
+    SYNCHRO_STEP_XYZ,               /* an Xyz Monster was picked: ModXyzMenuRun runs */
 };
 
 /* gModSynchro (EWRAM 0x0202FE00, symbols.ld). */
@@ -91,13 +93,14 @@ static u32 LevelOf(u16 id)
     return CARD_STATS_LEVEL(gCardStats[id & CARD_ID_MASK]);
 }
 
-/* The face-up monster in (player, zone), or 0. */
+/* The face-up monster in (player, zone), or 0. An Xyz Monster has no Level, so it is never Synchro Material. */
 static u16 FaceUpMonster(int player, int zone)
 {
     struct DuelZone *z = ZoneOf(player, zone);
     u16 id = DUEL_CARD_ID(&z->card);
 
-    if (id == 0 || !z->isFaceUp || CARD_STATS_TYPE(gCardStats[id & CARD_ID_MASK]) > CARD_TYPE_REPTILE)
+    if (id == 0 || !z->isFaceUp || CARD_STATS_TYPE(gCardStats[id & CARD_ID_MASK]) > CARD_TYPE_REPTILE
+        || IS_XYZ_CARD(id))
         return 0;
     return id;
 }
@@ -183,7 +186,7 @@ static int CanSynchroSummon(int player, u16 synchroId)
 
 int ModSynchroListAccepts(u16 id, int player)
 {
-    return CanSynchroSummon(player, id);
+    return CanSynchroSummon(player, id) || ModXyzCanSummon(player, id);
 }
 
 int ModSynchroAvailable(int player)
@@ -195,7 +198,8 @@ int ModSynchroAvailable(int player)
         || !CanSpecialSummon(player))
         return 0;
     for (i = 0; i < p->fusionCount; i++) {
-        if (CanSynchroSummon(player, DUEL_CARD_ID(&p->fusionDeck[i])))
+        if (CanSynchroSummon(player, DUEL_CARD_ID(&p->fusionDeck[i]))
+            || ModXyzCanSummon(player, DUEL_CARD_ID(&p->fusionDeck[i])))
             return 1;
     }
     return 0;
@@ -292,6 +296,12 @@ void ModSynchroMenuRun(void)
     case SYNCHRO_STEP_PICK_SYNCHRO:
         s->synchro = gCardListView.cards[gCardListView.cursorRow + gCardListView.top];
         synchroId = DUEL_CARD_ID((struct DuelCard *)&s->synchro);
+        if (IS_XYZ_CARD(synchroId)) {
+            s->step = SYNCHRO_STEP_XYZ;
+            if (!ModXyzMenuRun(s->synchro, 1))
+                return;
+            break;
+        }
         for (zone = 0; zone < MONSTER_ZONES; zone++) {
             if (TunerFits(0, zone, synchroId)) {
                 tuners++;
@@ -334,6 +344,10 @@ void ModSynchroMenuRun(void)
         PerformSynchroSummon(0, s->tunerZone, s->materials);
         s->step = SYNCHRO_STEP_SUMMON;
         return;
+    case SYNCHRO_STEP_XYZ:
+        if (!ModXyzMenuRun(s->synchro, 0))
+            return;
+        break;
     }
     s->step = SYNCHRO_STEP_START;
     gDuel.cardMenu.confirmed = 0;
@@ -470,6 +484,8 @@ void ModCardTypeLine(u16 cardId, char *buf)
     StrCat(buf, ModCardRaceName(cardId));
     if (IS_SYNCHRO_CARD(cardId))
         StrCat(buf, "/Synchro");
+    else if (IS_XYZ_CARD(cardId))
+        StrCat(buf, "/Xyz");
     else if (kind == CARD_KIND_FUSION)
         StrCat(buf, "/Fusion");
     else if (kind == CARD_KIND_RITUAL)

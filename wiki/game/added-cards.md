@@ -2024,6 +2024,16 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
   - **Deck:** `DUEL_CMD_SEND_DECK_CARD_TO_GRAVEYARD` for `deck[0]` and `deck[1]` (the top is index 0).
 - Checked in the source and the build; not tested in an emulator.
 
+### Xyz test cards: Gem-Knight Pearl, Number 39: Utopia, Number 17: Leviathan Dragon (2026-11-06)
+- The first Xyz Monsters; the mechanic is on [[xyz]]. All three are in `new_cards.txt` above `------` and at the end
+  of `config/new_cards.txt`; none was in `card_pools/missing*.txt`.
+- **Gem-Knight Pearl** (Rank 4 EARTH Rock, 2600/1900): "2 Level 4 monsters", no effect.
+- **Number 17: Leviathan Dragon** (Rank 3 WATER Dragon, 2000/0): once per turn, detach 1 for +500 ATK; no direct
+  attack with no material.
+- **Number 39: Utopia** (Rank 4 LIGHT Warrior, 2500/2000): when a monster declares an attack, detach 1 to negate it;
+  destroyed when attacked with no material.
+- Checked in the source and the build; not tested in an emulator.
+
 ### Brionac, Dragon of the Ice Barrier (2026-11-06)
 - Synchro Monster (Level 6, WATER Sea Serpent, 2300/1400; `assets/new_cards/cards.json`): "1 Tuner + 1+ non-Tuner
   monsters. You can discard any number of cards to the GY, then target the same number of cards your opponent

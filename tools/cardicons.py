@@ -42,6 +42,7 @@ data/mod_field_icons_data.s), for BG2 in 256-colour mode:
             sideways, then the sprite frame in poses 0-2. The icon is card_icons/synchro_monster.png (silver): its
             pixels whose colour is not gCardIconPal's at that index (the silver) take the nearest colour of the
             shared art palette, which is made to hold them (entries 192-255 for BG, 128-191 for the sprites)
+  then the Xyz Monster frames the same way (card_icons/xyz_monster.png, black; src/mod_xyz.c)
 """
 import os
 import struct
@@ -60,7 +61,8 @@ NAMES = 'build/assets/newcards__names.bin'
 ID_TO_NUMBER = 'build/assets/newcards__id_to_number.bin'
 TYPE_EX = 'build/assets/newcards__type_ex.bin'
 SYNCHRO_ICON = 'synchro_monster'
-SYNCHRO_BASE = 'fusion_monster'     # the icon the Synchro one is drawn from (same shape and window)
+XYZ_ICON = 'xyz_monster'
+SYNCHRO_BASE = 'fusion_monster'     # the icon the Synchro and Xyz ones are drawn from (same shape and window)
 SYNCHRO_WEIGHT = 1 << 20            # the silver's weight in the art palette's histogram: it must get its own colours
 
 ICON = 32
@@ -100,6 +102,8 @@ def icon_type(stats, type_ex=0):
     kind_type = (stats >> 20) & 0x1F
     if type_ex & 3 == 1:
         return SYNCHRO_ICON
+    if type_ex & 3 == 2:
+        return XYZ_ICON
     if kind_type == CARD_TYPE_MAGIC:
         return 'spell_card'
     if kind_type == CARD_TYPE_TRAP:
@@ -121,12 +125,12 @@ def rom_icon(bank, name, pose=0):
     return bytes(img)
 
 
-def synchro_icon(bank, icon_pal):
-    """The Synchro icon: (32x32 indices, {pixel: RGB}) where the pixels in the dict are drawn in the shared art
-    palette instead (the silver). From card_icons/synchro_monster.png: a pixel whose PNG colour differs from
-    gCardIconPal's at its index is silver. Poses 1-2 (the game's narrower frames) are SYNCHRO_BASE's, with the same
-    indices recoloured from that PNG's palette."""
-    path = f'{ICON_DIR}/{SYNCHRO_ICON}.png'
+def synchro_icon(bank, icon_pal, name=SYNCHRO_ICON):
+    """The Synchro (or Xyz: `name`) icon: (32x32 indices, {pixel: RGB}) where the pixels in the dict are drawn in
+    the shared art palette instead (the silver, or the black). From card_icons/<name>.png: a pixel whose PNG colour
+    differs from gCardIconPal's at its index is drawn that way. Poses 1-2 (the game's narrower frames) are
+    SYNCHRO_BASE's, with the same indices recoloured from that PNG's palette."""
+    path = f'{ICON_DIR}/{name}.png'
     w, h, px, plte = A.png_read(open(path, 'rb').read())
     if (w, h) != (ICON, ICON):
         sys.exit(f'cardicons: {path} must be {ICON}x{ICON}')
@@ -381,15 +385,17 @@ def quantise_card(pixels, colors=DE_COLORS):
 # channels): 1 the light grey and 15 the black stay, the purple 4 and 10 and the dark 12 become greys.
 DE_SYNCHRO_FRAME = {1: (26, 26, 26), 4: (28, 28, 29), 10: (18, 18, 19), 12: (4, 4, 5), 15: (1, 0, 0)}
 DE_SYNCHRO_ART = [i for i in range(1, 16) if i not in DE_SYNCHRO_FRAME]
+# An Xyz Monster's: the same entries in black (the light grey 1 stays).
+DE_XYZ_FRAME = {1: (26, 26, 26), 4: (6, 6, 7), 10: (3, 3, 4), 12: (1, 1, 2), 15: (0, 0, 0)}
 
 
-def deck_edit_entry(px, pal, synchro=False):
+def deck_edit_entry(px, pal, synchro=False, frame=DE_SYNCHRO_FRAME):
     """A card's Deck Edit ring entry: its 16-colour palette and the four 4bpp tiles of the window art (for a
-    Synchro Monster, 10 art colours around the silver frame colours, DE_SYNCHRO_FRAME)."""
+    Synchro or Xyz Monster, 10 art colours around the frame colours `frame`, DE_SYNCHRO_FRAME or DE_XYZ_FRAME)."""
     if synchro:
         palette, index = quantise_card(window_art(px, pal), len(DE_SYNCHRO_ART))
         entries = [0] * 16
-        for i, (r, g, b) in DE_SYNCHRO_FRAME.items():
+        for i, (r, g, b) in frame.items():
             entries[i] = r | g << 5 | b << 10
         for n, c in enumerate(palette):
             entries[DE_SYNCHRO_ART[n]] = (c[0] >> 3) | (c[1] >> 3) << 5 | (c[2] >> 3) << 10
@@ -446,6 +452,8 @@ def main():
     icons = load_icons(bank)
     synchro_poses, silver = synchro_icon(bank, icon_pal)
     icons[SYNCHRO_ICON] = synchro_poses[0][0]
+    xyz_poses, black = synchro_icon(bank, icon_pal, XYZ_ICON)
+    icons[XYZ_ICON] = xyz_poses[0][0]
     type_ex = open(TYPE_EX, 'rb').read() if os.path.exists(TYPE_EX) else b''
     art, art_pal = open(ART_GFX, 'rb').read(), open(ART_PAL, 'rb').read()
     stats = open(STATS, 'rb').read()
@@ -464,17 +472,19 @@ def main():
         pal = [A.bgr555_to_rgb(v & 0x7FFF) for v in struct.unpack_from('<64H', art_pal, cid * 0x80)]
         mini = miniature(px, pal)
         if data_out:
-            deck_edit[cid] = deck_edit_entry(px, pal, cid < len(type_ex) and type_ex[cid] & 3 == 1)
+            kind_ex = type_ex[cid] & 3 if cid < len(type_ex) else 0
+            deck_edit[cid] = deck_edit_entry(px, pal, kind_ex in (1, 2),
+                                             DE_XYZ_FRAME if kind_ex == 2 else DE_SYNCHRO_FRAME)
         for c in mini:
             g = gba(c)
             hist[g] = hist.get(g, 0) + 1
         name = names[cid * NAME_SIZE:(cid + 1) * NAME_SIZE].split(b'\0')[0].decode('latin-1')
         cards.append((cid, number, icon_type(struct.unpack_from('<I', stats, cid * 4)[0],
                                              type_ex[cid] if cid < len(type_ex) else 0), name, mini))
-    for c in silver:
+    for c in silver + black:
         hist[c] = hist.get(c, 0) + SYNCHRO_WEIGHT
     palette = kmeans(hist, median_cut(hist, COLORS))
-    silver_entry = {c: nearest(c, palette) for c in silver}
+    silver_entry = {c: nearest(c, palette) for c in silver + black}
 
     if data_out:
         blob = bytearray(struct.pack('<64H', *((c[0] >> 3) | (c[1] >> 3) << 5 | (c[2] >> 3) << 10 for c in palette)))
@@ -501,12 +511,14 @@ def main():
         for cid in range(count):
             blob += deck_edit.get(cid, bytes(DE_SIZE))
         # the Synchro frames: BG upright and sideways, then the sprite poses 0-2 (art palette 64 lower for OBJ)
-        img, over = synchro_poses[0]
-        bg = {i: ART_PALETTE_ENTRY + silver_entry[c] for i, c in over.items()}
-        blob += tiles8(img, art=bg) + tiles8(rotate_cw(img), art=rotate_cw_map(bg))
-        for img, over in synchro_poses:
-            blob += tiles8(img, OBJ_ICON_PALETTE_ENTRY,
-                           {i: ART_PALETTE_ENTRY - 64 + silver_entry[c] for i, c in over.items()})
+        # then the Xyz frames the same way
+        for extra in (synchro_poses, xyz_poses):
+            img, over = extra[0]
+            bg = {i: ART_PALETTE_ENTRY + silver_entry[c] for i, c in over.items()}
+            blob += tiles8(img, art=bg) + tiles8(rotate_cw(img), art=rotate_cw_map(bg))
+            for img, over in extra:
+                blob += tiles8(img, OBJ_ICON_PALETTE_ENTRY,
+                               {i: ART_PALETTE_ENTRY - 64 + silver_entry[c] for i, c in over.items()})
         os.makedirs(os.path.dirname(data_out) or '.', exist_ok=True)
         open(data_out, 'wb').write(bytes(blob))
         print(f'cardicons: {len(cards)} miniatures, {len(hist)} source colours -> {COLORS}, in {data_out}')
@@ -521,8 +533,8 @@ def main():
     index = ['id\tnumber\ticon\tname']
     for k, (cid, number, kind, name, mini) in enumerate(cards):
         img = bytearray(icons[kind])
-        if kind == SYNCHRO_ICON:
-            for i, c in synchro_poses[0][1].items():
+        if kind in (SYNCHRO_ICON, XYZ_ICON):
+            for i, c in (synchro_poses if kind == SYNCHRO_ICON else xyz_poses)[0][1].items():
                 img[i] = ART_PALETTE_BASE + silver_entry[c]
         for y in range(MINI_H):
             for x in range(MINI_W):

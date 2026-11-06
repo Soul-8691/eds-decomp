@@ -192,9 +192,15 @@ build/src/mod_decks.o build/src/mod_opponents.o: $(TESTDECK_GEN) $(NEWCARDS_GEN)
 SYNCHRO_FRAME := build/assets/synchro_frame.bin
 $(SYNCHRO_FRAME): $(ASSETS_BUILT) tools/synchro_frame.py
 	$(PYTHON) tools/synchro_frame.py $@
-build/data/rodata_08087FD0.o: $(SYNCHRO_FRAME)
+# The Xyz Monster frame: the same, recoloured black.
+XYZ_FRAME := build/assets/xyz_frame.bin
+$(XYZ_FRAME): $(ASSETS_BUILT) tools/synchro_frame.py
+	$(PYTHON) tools/synchro_frame.py $@ xyz
+build/data/rodata_08087FD0.o: $(SYNCHRO_FRAME) $(XYZ_FRAME)
 # src/mod_synchro.c reads build/include/synchro_rules.h, which tools/newcards.py writes.
 build/src/mod_synchro.o: $(NEWCARDS_BUILT)
+# src/mod_xyz.c reads build/include/xyz_rules.h, which tools/newcards.py writes.
+build/src/mod_xyz.o: $(NEWCARDS_BUILT)
 
 # Password-machine card prices from the Yugi-Kaiba usage statistics (src/mod_dp.c).
 PRICES_GEN := build/include/card_prices.h

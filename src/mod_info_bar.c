@@ -13,6 +13,14 @@
 #include "constants/duel.h"         /* enum DuelArea */
 #include "duel.h"                   /* gDuelPlayers, gDuelZones, IsHandRevealed */
 #include "duel_screen.h"            /* gDuelScreen, DuelInfo_*, TextCellsClear, DuelCursor_GetCardId */
+#include "card_data.h"              /* IS_XYZ_CARD */
+#include "xyz.h"                    /* XyzMaterialCount */
+
+/* An Xyz Monster's material count: "MAT" right of its name (cells 0x10-0x12: the name ends by 0x0E), the count
+ * under it (row 1), clear of the type icons (0x13-0x16). */
+#define XYZ_LABEL_CELL          0x10
+#define XYZ_COUNT_CELL          0x30
+static const u8 sStrXyzMaterials[] = "MAT";
 
 /* Info bar labels (rodata_08080A20.s) */
 extern const u8 gStrMyFusionDeck[];         /* "My Fusion Deck:" */
@@ -62,8 +70,16 @@ void DuelScreen_DrawCursorInfo(void)
     TextCellsClear();
     switch (area) {
     case DUEL_AREA_MONSTER:
-        if (cardId && ZoneCardShown(player, index))
+        if (cardId && ZoneCardShown(player, index)) {
             DuelInfo_DrawMonsterZone(player, area + index);
+            if (IS_XYZ_CARD(cardId) && gDuelZones[player & 1].zones[index].isFaceUp) {
+                TextCellsPutString(XYZ_LABEL_CELL, sStrXyzMaterials, 7);
+                TextCellsPutNumber(XYZ_COUNT_CELL, XyzMaterialCount(player, index), 7, 2);
+                /* Both set textMapReset, which would reset the cell map after the upload and lose the palettes
+                 * the type and attribute icons patched in (TextCellsLoadIcon clears it for that reason). */
+                gDuelScreen.textMapReset = 0;
+            }
+        }
         break;
     case DUEL_AREA_SPELL_TRAP:
         /* selIndex counts within the spell/trap row (zone 5 + selIndex) */

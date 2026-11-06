@@ -12,3 +12,4 @@ Toon Table of Contents: "Select a monster"
 Synchro: Can be summoned from GY even if not properly summoned before
 Stardust Dragon: No choice to summon from GY; always does
 Shipping Archfiend: Might cause text to look glitchy during chain
+XYZ: The original cards' Level checks read the stats word and see the Rank as a Level

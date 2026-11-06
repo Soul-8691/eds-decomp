@@ -365,9 +365,13 @@ void LoadPlayerDeckFromSave(void)
     }
 }
 
-/* Clear the 0x94-byte zone `zone` of `player` (card, flags and links). */
+void ModXyzZoneCleared(int player, int zone);   /* mod: src/mod_xyz.c */
+
+/* Clear the 0x94-byte zone `zone` of `player` (card, flags and links). Added: an Xyz Monster's materials go to the
+ * Graveyard first. */
 void ClearZone(int player, int zone)
 {
+    ModXyzZoneCleared(player, zone);
     MemClear16(&PLAYER(player).zones[zone], DUEL_ZONE_SIZE);
 }
 

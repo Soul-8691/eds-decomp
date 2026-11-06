@@ -122,11 +122,13 @@ enum CardFrame {
 #define CARD_TYPE_EX_TUNER          0x08        /* a Tuner monster */
 #define CARD_TYPE_EX_RACE_SHIFT     4           /* bits 4-7: enum RaceEx */
 
-/* The extended kind. A Synchro Monster is an Extra Deck monster: its stats word says CARD_KIND_FUSION, so the
- * engine keeps it in the Fusion Deck (the Extra Deck), and this tells it apart from a Fusion Monster. */
+/* The extended kind. Synchro and Xyz Monsters are Extra Deck monsters: their stats word says CARD_KIND_FUSION, so
+ * the engine keeps them in the Fusion Deck (the Extra Deck), and this tells them apart from a Fusion Monster. An Xyz
+ * Monster's stats Level is its Rank. */
 enum CardKindEx {
     CARD_KIND_EX_NONE = 0,
     CARD_KIND_EX_SYNCHRO = 1,
+    CARD_KIND_EX_XYZ = 2,
 };
 
 /* Races EDS lacks. The stats word keeps the closest EDS type (its icon until these get their own, and what the
