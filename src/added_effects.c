@@ -136,6 +136,10 @@ struct ModDuelExtra {
     u8 chaosKingPlayer;
     u16 chaosKingTurn;
     u16 chaosKingSerial[5];
+    /* Brionac, Dragon of the Ice Barrier: [player] gDuel.turnCount + 1 of the turn its effect was used, and the
+     * serial of that copy's zone */
+    u16 brionacTurn[2];
+    u16 brionacSerial[2];
 };
 extern struct ModDuelExtra gModDuelExtra;
 STATIC_ASSERT(sizeof(struct ModDuelExtra) <= 0x0202FF00 - 0x0202FEB0, ModDuelExtraFits);
@@ -1652,6 +1656,7 @@ void ModDuelInit(void)
     MemClear16(gModDuelExtra.turn, sizeof(gModDuelExtra.turn));
     gModDuelExtra.chaosKingMask = 0;
     gModDuelExtra.chaosKingTurn = 0;
+    gModDuelExtra.brionacTurn[0] = gModDuelExtra.brionacTurn[1] = 0;
 #ifdef HAS_CARD_INJECTION_FAIRY_LILY
     InjectionFairyLilyResetBattle();
 #endif
@@ -2615,6 +2620,10 @@ int ModCanActivateMonsterEffect(u16 id, int player, int zone)
     if (CardNumberOfId(id) == CARD_CHIRON_THE_MAGE)
         return CanActivateEffectInZone(player, zone, 0);
 #endif
+#ifdef HAS_CARD_BRIONAC_DRAGON_OF_THE_ICE_BARRIER
+    if (CardNumberOfId(id) == CARD_BRIONAC_DRAGON_OF_THE_ICE_BARRIER)
+        return CanActivateEffectInZone(player, zone, 0);
+#endif
     return 0;
 }
 
@@ -2706,6 +2715,208 @@ int EffectChironTheMageResolve(struct ChainEntry *link, struct ChainEntry *chain
     return EffectDestroyTargetResolve(link);
 }
 #endif /* HAS_CARD_CHIRON_THE_MAGE */
+
+#ifdef HAS_CARD_BRIONAC_DRAGON_OF_THE_ICE_BARRIER
+/* ---- Brionac, Dragon of the Ice Barrier ---------------------------------------------------------------------------
+ * Synchro Monster: "1 Tuner + 1+ non-Tuner monsters. You can discard any number of cards to the GY, then target the
+ * same number of cards your opponent controls; return those cards to the hand. You can only use this effect of
+ * "Brionac, Dragon of the Ice Barrier" once per turn."
+ *   ACTIVATE  the card menu in the Main Phase (ModCanActivateMonsterEffect, as Chiron the Mage), once per turn per
+ *             player: gModDuelExtra.brionacTurn / brionacSerial (the zone's serial, so a new copy is a new card; no
+ *             change to the turn-start code in size-limited .text)
+ *   chainA    the targets first, then the cost: the human picks up to 3 of the opponent's cards with the cursor (a link
+ *             holds 3 targets; at most one per discardable card), START ends the picks after the first, B starts
+ *             again; then discards that many (DuelPrompt_PostDiscardCost). The CPU takes the human's strongest monsters,
+ *             then the human's Spells/Traps, as many as its hand less one (at least one), and discards its weakest
+ *             monsters, else its last cards (DiscardHandCard)
+ *   resolve   each target still holding a card returns to its owner's hand (ReturnFieldCardToHand), one per step */
+static const u8 sStrBrionacPick[] = "Select up to 3 of your opponent's cards to return to the hand. START: done.";
+
+#define BRIONAC_MAX     3
+#define BRIONAC_PICK    (PICK_PLAYER1(PICK_ANY_MONSTER | PICK_ANY_SPELL_TRAP))
+
+static int IsBrionacTarget(struct ChainEntry *card, int player, int zone)
+{
+    if (zone > ZONE_FIELD || player == (card->player & 1))
+        return 0;
+    return DUEL_CARD_ID(&ZoneOf(player, zone)->card) != 0 && CanCardTargetZone(card->card, player, zone);
+}
+
+static int CountBrionacTargets(struct ChainEntry *card, int onlyPlayer)
+{
+    int player, zone, n = 0;
+
+    for (player = 0; player <= 1; player++) {
+        if (onlyPlayer >= 0 && player != onlyPlayer)
+            continue;
+        for (zone = 0; zone <= ZONE_FIELD; zone++)
+            n += IsBrionacTarget(card, player, zone);
+    }
+    return n;
+}
+
+static int BrionacUsed(int player, int zone)
+{
+    return gModDuelExtra.brionacTurn[player & 1] == gDuel.turnCount + 1
+           && gModDuelExtra.brionacSerial[player & 1] == ZoneOf(player, zone)->serial;
+}
+
+/* How many cards the link may still pick: one per hand card, at most BRIONAC_MAX and the cards there are. */
+static int BrionacPickLimit(struct ChainEntry *link)
+{
+    int n = gDuelPlayers[link->player & 1].handCount;
+    int targets = CountBrionacTargets(link, -1);
+
+    if (n > BRIONAC_MAX)
+        n = BRIONAC_MAX;
+    return n < targets ? n : targets;
+}
+
+int EffectBrionacPrepare(struct ChainEntry *card, struct ChainEntry *chainLink, u16 fromHand)
+{
+    struct DuelZone *z;
+
+    (void)chainLink;
+    if (fromHand || card->event != RESPONSE_NONE || card->zone > ZONE_MONSTER_4)
+        return 0;
+    z = ZoneOf(card->player, card->zone);
+    if (!z->isFaceUp || DUEL_CARD_ID(&z->card) != (card->card & CARD_ID_MASK) || BrionacUsed(card->player, card->zone))
+        return 0;
+    return gDuelPlayers[card->player & 1].handCount > 0 && CountBrionacTargets(card, -1) > 0;
+}
+
+u16 EffectBrionacCheck(struct ChainEntry *card, u16 pos)
+{
+    return IsBrionacTarget(card, (u8)pos, pos >> 8);
+}
+
+static int BrionacPicked(struct ChainEntry *link, int player, int zone)
+{
+    int i;
+
+    for (i = 0; i < link->numTargets; i++) {
+        if (link->targets[i] == DUEL_LOC(player, zone))
+            return 1;
+    }
+    return 0;
+}
+
+/* The CPU's hand card to discard: its lowest-ATK monster, else its last card. */
+static int BrionacCpuDiscard(void)
+{
+    struct DuelPlayer *p = &gDuelPlayers[1];
+    int i, best = p->handCount - 1;
+    u32 bestAtk = 0xFFFFFFFF;
+
+    for (i = 0; i < p->handCount; i++) {
+        u32 stats = gCardStats[DUEL_CARD_ID(&p->hand[i]) & CARD_ID_MASK];
+
+        if (CARD_STATS_TYPE(stats) <= CARD_TYPE_REPTILE && CARD_STATS_ATK(stats) < bestAtk) {
+            best = i;
+            bestAtk = CARD_STATS_ATK(stats);
+        }
+    }
+    return best;
+}
+
+static void BrionacPayCost(struct ChainEntry *link)
+{
+    int i;
+
+    gModDuelExtra.brionacTurn[link->player & 1] = gDuel.turnCount + 1;
+    gModDuelExtra.brionacSerial[link->player & 1] = ZoneOf(link->player, link->zone)->serial;
+    if (link->player) {
+        for (i = 0; i < link->numTargets && gDuelPlayers[1].handCount > 0; i++)
+            DiscardHandCard(1, BrionacCpuDiscard(), 0, 1);
+    } else {
+        DuelPrompt_PostDiscardCost(0, link->numTargets, 0, 0);
+    }
+}
+
+int EffectBrionacChainA(struct ChainEntry *link, struct ChainEntry *prevLink)
+{
+    int player, zone, limit;
+
+    (void)prevLink;
+    if (link->player) {
+        int hand = gDuelPlayers[1].handCount;
+        int n = hand > 1 ? hand - 1 : 1;
+
+        if (n > BRIONAC_MAX)
+            n = BRIONAC_MAX;
+        link->numTargets = 0;
+        while (link->numTargets < n) {
+            zone = CountMonsters(0) > 0 ? AiFindStrongestMonster(0, -1, 1, 1) : -1;
+            /* AiFindStrongestMonster may name a picked one again: then the first free one */
+            if (zone < 0 || !IsBrionacTarget(link, 0, zone) || BrionacPicked(link, 0, zone)) {
+                for (zone = 0; zone <= ZONE_FIELD; zone++) {
+                    if (IsBrionacTarget(link, 0, zone) && !BrionacPicked(link, 0, zone))
+                        break;
+                }
+            }
+            if (zone > ZONE_FIELD || !TryAddEffectTarget(link, 0, zone))
+                break;
+        }
+        if (link->numTargets > 0)
+            BrionacPayCost(link);
+        return 1;
+    }
+    limit = BrionacPickLimit(link);
+    switch (gChain.costStep) {
+    case 0:
+        link->numTargets = 0;
+        if (limit == 0)
+            return 1;
+        TextBoxOpen(TEXTBOX_POS(6, 2), TEXTBOX_SIZE(18, 7), TEXTBOX_FLAGS_DEFAULT, sStrBrionacPick);
+        gChain.costStep++;
+        return 0;
+    default:
+        if (gMain.newKeys & B_BUTTON) {
+            gChain.costStep = 0;
+            return 0;
+        }
+        if ((gMain.newKeys & START_BUTTON) && link->numTargets > 0) {
+            PlaySE(SE_CONFIRM);
+            BrionacPayCost(link);
+            return 1;
+        }
+        if (DuelCursor_PickTarget(BRIONAC_PICK) != 0) {
+            player = gDuelScreen.selPlayer;
+            zone = gDuelScreen.selArea + gDuelScreen.selIndex;
+            if (IsBrionacTarget(link, player, zone) && !BrionacPicked(link, player, zone)
+                && TryAddEffectTarget(link, player, zone)) {
+                if (link->numTargets >= limit) {
+                    BrionacPayCost(link);
+                    return 1;
+                }
+                return 0;
+            }
+            PlaySE(SE_ERROR);
+        }
+        return 0;
+    }
+}
+
+int EffectBrionacResolve(struct ChainEntry *link, struct ChainEntry *chainedTo)
+{
+    (void)chainedTo;
+    if (link->negated)
+        return EFFECT_STEP_DONE;
+    if (gChain.effectStep == EFFECT_STEP_START)
+        gChain.effectSubStep = 0;
+    while (gChain.effectSubStep < link->numTargets) {
+        int player = (u8)link->targets[gChain.effectSubStep];
+        int zone = link->targets[gChain.effectSubStep] >> 8;
+
+        gChain.effectSubStep++;
+        if (DUEL_CARD_ID(&ZoneOf(player, zone)->card) != 0) {
+            ReturnFieldCardToHand(player, zone, 0);
+            return EFFECT_STEP_2;
+        }
+    }
+    return EFFECT_STEP_DONE;
+}
+#endif /* HAS_CARD_BRIONAC_DRAGON_OF_THE_ICE_BARRIER */
 
 #ifdef HAS_CARD_BRAIN_CONTROL
 /* ---- Brain Control -------------------------------------------------------------------------------------------------
@@ -13017,6 +13228,11 @@ static int AiWantsMonsterEffect(u16 number, int zone)
     case CARD_CHIRON_THE_MAGE:
         return FindMagicInHand(AI_PLAYER) >= 0 && CountSpellTrapCards(AI_HUMAN) > 0;
 #endif
+#ifdef HAS_CARD_BRIONAC_DRAGON_OF_THE_ICE_BARRIER
+    case CARD_BRIONAC_DRAGON_OF_THE_ICE_BARRIER:    /* a card in hand to spare and a human card worth bouncing */
+        return gDuelPlayers[AI_PLAYER].handCount > 0
+               && (CountMonsters(AI_HUMAN) > 0 || CountSpellTrapCards(AI_HUMAN) > 0);
+#endif
 #ifdef HAS_CARD_THOUSAND_EYES_RESTRICT
     case CARD_THOUSAND_EYES_RESTRICT:
         return AiOpponentHasFaceUpMonsterAtLeast(AI_META_CONTROL_ATK);
@@ -15030,6 +15246,16 @@ const struct CardEffect gAddedCardEffects[] = {
         EffectAbyssSoldierPrepare,
         EffectAbyssSoldierChainA,
         EffectAbyssSoldierChainB,
+    },
+#endif
+#ifdef HAS_CARD_BRIONAC_DRAGON_OF_THE_ICE_BARRIER
+    {
+        CARD_BRIONAC_DRAGON_OF_THE_ICE_BARRIER, 0,
+        EffectBrionacResolve,
+        EffectBrionacCheck,
+        EffectBrionacPrepare,
+        EffectBrionacChainA,
+        NULL,
     },
 #endif
 #ifdef HAS_CARD_CHIRON_THE_MAGE

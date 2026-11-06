@@ -2558,3 +2558,7 @@ updated: 2026-09-29
 ## [2026-11-06] progress | Malevolent Catastrophe
 - src/added_effects.c: `EffectMalevolentCatastrophePrepare`, the row (Heavy Storm's resolve), `sCardDestroyers`, the CPU case; new_cards.txt: moved above `------`.
 - Pages: [[added-cards]].
+
+## [2026-11-06] progress | Brionac, Dragon of the Ice Barrier
+- src/added_effects.c: `EffectBrionacPrepare` / `Check` / `ChainA` / `Resolve`, `ModCanActivateMonsterEffect` case, CPU case, row; `gModDuelExtra.brionacTurn` / `brionacSerial`; new_cards.txt: moved above `------`.
+- Pages: [[added-cards]].

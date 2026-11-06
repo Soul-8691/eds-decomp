@@ -2024,6 +2024,26 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
   - **Deck:** `DUEL_CMD_SEND_DECK_CARD_TO_GRAVEYARD` for `deck[0]` and `deck[1]` (the top is index 0).
 - Checked in the source and the build; not tested in an emulator.
 
+### Brionac, Dragon of the Ice Barrier (2026-11-06)
+- Synchro Monster (Level 6, WATER Sea Serpent, 2300/1400; `assets/new_cards/cards.json`): "1 Tuner + 1+ non-Tuner
+  monsters. You can discard any number of cards to the GY, then target the same number of cards your opponent
+  controls; return those cards to the hand. You can only use this effect of "Brionac, Dragon of the Ice Barrier" once
+  per turn." The generic Synchro rule (any Tuner).
+- **Activation.** ACTIVATE on its card menu in the Main Phase (`ModCanActivateMonsterEffect`, as Chiron the Mage; no
+  change to `card_command_menu.c`).
+- **Once per turn** per player: `gModDuelExtra.brionacTurn` / `brionacSerial` (the turn, and the zone serial of the
+  copy that used it), so the size-limited turn-start code (`duel_cmd_turn.c`) is untouched. A second copy can use
+  its own effect the same turn, but after that the first copy could use its effect again.
+- **ChainA: targets, then the cost.** A chain link holds at most 3 targets, so up to 3 cards (and no more than the hand
+  holds). The human picks the opponent's cards with the cursor (B starts again, START ends after the first), and the
+  last pick, or START, posts the discard of that many (`DuelPrompt_PostDiscardCost`). The CPU takes the human's
+  strongest monsters, then other cards, one fewer than its hand (at least one, at most 3), and discards its
+  lowest-ATK monsters, else its last cards.
+- **Resolve.** Each target still holding a card returns to its owner's hand (`ReturnFieldCardToHand`), one per step.
+- **CPU** (`AiWantsMonsterEffect`): with a card in hand and a human card on the field.
+- Moved above `------` in `new_cards.txt`; it wasn't in `card_pools/missing*.txt`. All far code.
+- Checked in the source and the build; not tested in an emulator.
+
 ### Malevolent Catastrophe (2026-11-06)
 - Normal Trap (`assets/new_cards/cards.json`): "When an opponent's monster declares an attack: Destroy all Spell and
   Trap Cards on the field."
