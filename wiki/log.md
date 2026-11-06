@@ -2632,3 +2632,7 @@ updated: 2026-09-29
 ## [2026-11-06] progress | CPU: Kycoo attacks first when it would deal damage
 - ai_picks.c `AiChooseAttack` (size-limited, one call) asks `ModAiOrderAttackers` (src/added_effects.c) after sorting: a Kycoo (the added card or key 1511's) whose plan deals battle damage (direct, or damage > 0) moves to the front; one that would deal none moves to the back. Demo `.text` ends at 0x0807F478.
 - AI_IMPROVEMENTS.md.
+
+## [2026-11-06] setup | Hex Maniac Advance metadata for the demo
+- New tools/hma_toml.py (run by the Makefile's ROM rule for `make demo` only): eds_demo.toml from baserom.toml, anchors and matched words moved through the source (data labels, config/assets.tsv, config/functions.tsv) to eds_demo.sym's addresses, card counts and card lists for the demo, DefaultHash recomputed. eds_demo.toml is git-ignored.
+- Pages: [[hma-toml]] (new).
