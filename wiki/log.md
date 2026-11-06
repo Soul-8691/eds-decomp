@@ -2608,3 +2608,15 @@ updated: 2026-09-29
 - src/mod_link.c `ModCardStatPal` / `ModCardViewStatColor`; hooks in title_menu.c (`CardDetail_DrawSprites`) and card_canvas.c (`DrawCardInfo`: the palette, and no stars/DEF for a Link Monster); `ModLinkFrame` paints over the frame's ":" under the missing DEF. Demo `.text` ends at 0x0807F470.
 - Card View screenshots of the five Xyz/Link cards retaken (NEW_CARDS.md unchanged).
 - Pages: [[xyz]], [[link]].
+
+## [2026-11-06] progress | White life points
+- src/mod_duel_hud.c: OBJ palette 14's entry 1 (the LP digits' only colour, black in gDuelDigitsPal) is white.
+- Pages: [[duel-hud]].
+
+## [2026-11-06] progress | Black life points and labels
+- src/mod_duel_hud.c: the corner LP digits and the "PLAYER"/"OPPONENT" labels are black (replaces the previous entry's white).
+- Pages: [[duel-hud]].
+
+## [2026-11-06] progress | Life points: white labels, black digits
+- src/mod_duel_hud.c: back to the first look: "PLAYER"/"OPPONENT" white, the LP digits in the sheet's black (replaces the two previous entries).
+- Pages: [[duel-hud]].

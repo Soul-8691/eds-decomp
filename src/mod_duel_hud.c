@@ -5,7 +5,7 @@
  * now gModDuelFieldImage (tools/duel_board.py): two Extra Monster Zones at its edges and one phase panel between them.
  *   ModDrawDuelHud  every frame the field shows (DrawFieldOverlay -> ModDrawCounterBadges, src/mod_field_icons.c):
  *                   - the life points as sprites fixed to the screen: "PLAYER" and yours at the bottom left (above the
- *                     info bar), "OPPONENT" and theirs at the top right, on a transparent background;
+ *                     info bar), "OPPONENT" and theirs at the top right (white labels, black digits) on a transparent background;
  *                   - over the phase panel (it scrolls with the board): the turn player's name (row 19) and the
  *                     phase letters D S M B M E (row 20), the current phase highlighted.
  * The sprites' tiles are OBJ tiles 0x3C4-0x3E9 (below the Spell Counter badges' 0x3F0) and their colours OBJ palettes
@@ -113,7 +113,7 @@ void ModDrawDuelHudPanel(void)
     CopyDoubleWords((void *)panelPal, gPhaseIndicatorPal, 32);
     CopyDoubleWords((void *)lpPal, gDuelDigitsPal, 32);
     panelPal[COLOR_TURN] = 0x2482;                  /* dark navy */
-    lpPal[COLOR_LABEL] = 0x7FFF;                    /* white */
+    lpPal[COLOR_LABEL] = 0x7FFF;                    /* the labels white; the digits keep the sheet's black */
 
     /* the life points, fixed to the screen corners, on a transparent background */
     RenderLabel(TILE_PLAYER, sStrPlayer, COLOR_LABEL, 0);

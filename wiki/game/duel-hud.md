@@ -33,14 +33,14 @@ Added on 2026-11-06. None of this is in the original game. Built (`make demo`); 
   i.e. `DrawFieldOverlay`, while the field shows):
   - **Life points**, fixed to the screen: "PLAYER" and your LP at the bottom left (x 4, y 128-143, above the info
     bar), "OPPONENT" and theirs at the top right (right edge x 236, y 0-15). White bold 8x8 font
-    (`RenderBoldGlyphTile`) and the game's LP digits (`gDuelDigitsGfx`), on a transparent background. They read
+    (`RenderBoldGlyphTile`) and the game's LP digits (`gDuelDigitsGfx`, black), on a transparent background. They read
     `gDuelPlayers[].lifePoints` every frame, so they count along with an LP change.
   - **Phase panel contents**, scrolling with the board (from `GetAreaX/Y` of player 0's monster zone 2): the turn
     player's name ("PLAYER" / "OPPONENT", dark navy) on row 19 and the six phase letters D S M B M E
     (`gPhaseIndicatorGfx`) on row 20, the current phase highlighted. Not drawn while the panel is scrolled off
     screen.
   - OBJ tiles 0x3C4-0x3E9 (below the Spell Counter badges' 0x3F0), OBJ palettes 13 (the phase letters'; entry 15
-    the turn name) and 14 (the digits'; 14 the labels' white). Written every frame, as the chain list and the
+    the turn name) and 14 (the digits', which keep their black; entry 14 the labels' white). Written every frame, as the chain list and the
     battle screens reuse OBJ VRAM. Sprite priority 1, as the badges.
 - **Original functions changed** (size-limited `.text`; all three got smaller): `DrawLifePoints` and
   `DrawPhaseIndicator` (duel_info_bar.c) draw nothing; `DuelScreen_Init` (duel_field_screen.c) loads
