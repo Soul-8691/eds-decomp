@@ -2620,3 +2620,7 @@ updated: 2026-09-29
 ## [2026-11-06] progress | Life points: white labels, black digits
 - src/mod_duel_hud.c: back to the first look: "PLAYER"/"OPPONENT" white, the LP digits in the sheet's black (replaces the two previous entries).
 - Pages: [[duel-hud]].
+
+## [2026-11-06] progress | HUD sprites dim with the board
+- src/mod_duel_hud.c `DimHudPalettes`: the phase panel, life points, badges and Link arrows darken by gMain.brightness like the BG layers (DuelFieldDim's BLDCNT leaves OBJ out), so they no longer stay bright when the screen darkens.
+- Pages: [[duel-hud]].

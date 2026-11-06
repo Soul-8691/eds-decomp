@@ -19,6 +19,7 @@
 #include "util.h"                   /* CopyDoubleWords */
 #include "constants/duel.h"         /* DUEL_AREA_MONSTER */
 #include "duel.h"                   /* gDuel, gDuelPlayers */
+#include "main.h"                   /* gMain.brightness */
 #include "link_monster.h"           /* ModDrawLinkArrows */
 
 extern const u8 gDuelDigitsGfx[];           /* the LP digits: colour set 0 is tiles 0-9 */
@@ -97,10 +98,44 @@ static void AddLifePoints(int x, int right, int y, u32 lp)
         AddSprite(((u32)y << 16) | x, SPRITE_SHAPE_8x8, PAL_LP << 12 | PRIORITY | (TILE_DIGITS + digits[i]));
 }
 
+/* The board's sprite palettes (12: the Spell Counter badges and the Link arrows; 13: the phase panel; 14: the life
+ * points) dimmed with the board. DuelFieldDim / DuelFieldFadeToBlack (duel_field_screen.c) darken the BG layers
+ * with the brightness effect (BLDCNT 0x27E7: BG0-2 and the backdrop, not OBJ) by gMain.brightness / 16; these
+ * sprites stand for what used to be board tiles, so they get the same darkening in their colours, or they would
+ * stay bright over a dark board. */
+#define DIM_FIRST_PALETTE       12
+#define DIM_LAST_PALETTE        14
+
+static void DimHudPalettes(void)
+{
+    u32 evy = gMain.brightness, i;
+    vu16 *pal = (vu16 *)(OBJ_PLTT + DIM_FIRST_PALETTE * 32);
+
+    if (evy == 0)
+        return;
+    if (evy > 16)
+        evy = 16;
+    for (i = 1; i < (DIM_LAST_PALETTE - DIM_FIRST_PALETTE + 1) * 16; i++) {
+        u32 c, r, g, b;
+
+        if (i >= 5 && i < 16)
+            continue;       /* palette 12: only entries 1-4 are written again every frame (badges, arrows) */
+        c = pal[i];
+        r = c & 31;
+        g = (c >> 5) & 31;
+        b = (c >> 10) & 31;
+        r -= r * evy / 16;
+        g -= g * evy / 16;
+        b -= b * evy / 16;
+        pal[i] = r | g << 5 | b << 10;
+    }
+}
+
 void ModDrawDuelHud(void)
 {
     ModDrawLinkArrows();                            /* src/mod_link.c */
     ModDrawDuelHudPanel();
+    DimHudPalettes();
 }
 
 void ModDrawDuelHudPanel(void)

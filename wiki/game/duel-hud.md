@@ -48,6 +48,11 @@ Added on 2026-11-06. None of this is in the original game. Built (`make demo`); 
   shows the +/- amount by the new LP spots (x `player * 0x88 + 8`, y `0x6C - player * 0x5A`: above yours, under
   the opponent's). Demo `.text` now ends at 0x0807F34C.
 
+- **Dimmed with the board (2026-11-06 fix):** `DuelFieldDim` and the fades to black darken only the BG layers
+  (BLDCNT 0x27E7, not OBJ), so these sprites stayed bright over a dark board (the phase letters seemed to flash on a
+  different background). `ModDrawDuelHud` now darkens OBJ palettes 13-14 and palette 12's entries 1-4 (the badges and
+  the Link arrows) by `gMain.brightness` / 16, the same formula, after writing them each frame.
+
 > [!question] To check in an emulator
 > Whether the corner LP overlap other sprites (the hand strips, the phase banners) or the text boxes (the sprites
 > are priority 1, behind a priority-0 BG), and whether OBJ palettes 13-14 are free on every duel screen.
