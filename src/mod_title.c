@@ -21,7 +21,7 @@
 #include "sprite.h"
 #include "text.h"
 
-#define DEMO_VERSION    "v1.0.2.5"
+#define DEMO_VERSION    "v1.0.2.6"
 
 extern const u8 gMainMenuObjPal[];
 
