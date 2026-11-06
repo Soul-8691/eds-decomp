@@ -84,6 +84,9 @@ Campaign duelists in Yak's YGO Hack use a much stronger opponent AI than vanilla
 - It Synchro Summons when it can gain ATK by it (the Synchro Monster stronger than its strongest material), and Special
   Summons Quillbolt Hedgehog from its Graveyard first when it controls a Tuner.
 - Its Stardust Dragon negates your cards and effects that would destroy one of its cards.
+- It Link Summons when the Link Monster has more ATK than its strongest material, into an Extra Monster Zone when it
+  can. Its Link Spider summons its strongest Normal Monster, and its Proxy Dragon always saves its card by
+  destroying its weakest monster it points to.
 - It Xyz Summons when the Xyz Monster has more ATK than its strongest material, using its weakest fitting monsters.
   Its Number 17: Leviathan Dragon detaches for +500 ATK whenever it can, and its Number 39: Utopia negates your
   attacks.

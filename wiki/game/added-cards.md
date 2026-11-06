@@ -2024,6 +2024,15 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
   - **Deck:** `DUEL_CMD_SEND_DECK_CARD_TO_GRAVEYARD` for `deck[0]` and `deck[1]` (the top is index 0).
 - Checked in the source and the build; not tested in an emulator.
 
+### Link test cards: Link Spider, Proxy Dragon (2026-11-06)
+- The first Link Monsters; the mechanic is on [[link]]. Both are above `------` in `new_cards.txt` and at the end of
+  `config/new_cards.txt`; neither was in `card_pools/missing*.txt`.
+- **Link Spider** (Link-1 EARTH Cyberse, 1000, Bottom): once per turn, Special Summon a Level 4 or lower Normal
+  Monster from the hand to the zone it points to.
+- **Proxy Dragon** (Link-2 LIGHT Cyberse, 1400, Left and Right): destroy a monster it points to instead of a card
+  of yours (card effect or battle); the human is asked.
+- Checked in the source and the build; not tested in an emulator.
+
 ### Xyz test cards: Gem-Knight Pearl, Number 39: Utopia, Number 17: Leviathan Dragon (2026-11-06)
 - The first Xyz Monsters; the mechanic is on [[xyz]]. All three are in `new_cards.txt` above `------` and at the end
   of `config/new_cards.txt`; none was in `card_pools/missing*.txt`.

@@ -454,20 +454,25 @@ s32 GetHandCardX(u32 player, u32 index, u32 count)
     return x;
 }
 
-/* X pixel of zone (area + index) of a player; the hand area is spread over the hand size. */
+s32 ModZoneFieldX(u32 player, u32 zone);   /* mod: src/mod_link.c (a record standing in an Extra Monster Zone) */
+s32 ModZoneFieldY(u32 player, u32 zone);
+
+/* X pixel of zone (area + index) of a player; the hand area is spread over the hand size. Changed: through
+ * ModZoneFieldX, so a monster standing in an Extra Monster Zone is found there. */
 s32 GetAreaX(int player, int area, int index)
 {
-    s32 x = gDuelZonePositions[player][area + index].x;
+    s32 x = ModZoneFieldX(player, area + index);
     if (area == DUEL_AREA_HAND)
         x = GetHandCardX(player, index, gDuelPlayers[player & 1].handCount);
     return x;
 }
 
-/* Y pixel of a zone; the monster area is first mapped through GetZoneArea(index). */
+/* Y pixel of a zone; the monster area is first mapped through GetZoneArea(index). Changed: a monster zone through
+ * ModZoneFieldY (its Extra Monster Zone, src/mod_link.c). */
 s32 GetAreaY(u32 player, int area, int index)
 {
     if (area == DUEL_AREA_MONSTER)
-        area = GetZoneArea(index);
+        return ModZoneFieldY(player, index) - gDuelScreen.scroll;
     return gDuelZonePositions[player][area].y - gDuelScreen.scroll;
 }
 

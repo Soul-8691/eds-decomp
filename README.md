@@ -84,6 +84,10 @@ release to unlock the next one (every format is open in the debug build).
 - **Duel screen.** Your life points are at the bottom left of the screen and your opponent's at the top right,
   under "PLAYER" and "OPPONENT". The middle of the board has one shared phase panel (whose turn it is, and
   D S M B M E with the current phase lit) between two Extra Monster Zones, which are only drawn for now.
+- **Link Summoning and zones.** You now choose the Monster Zone for every monster you summon (Control Pad, then A).
+  Link Monsters (blue frame, arrows on the field) are Link Summoned from the Fusion Deck's Special Summon command:
+  pick the materials, then an Extra Monster Zone or a zone one of your Link Monsters points to. A player can have
+  one monster in an Extra Monster Zone and at most 5 monsters in all. The first two: Link Spider and Proxy Dragon.
 - **Xyz Summoning.** Xyz Monsters (black frame) are in the Fusion Deck too, and the same Special Summon command lists
   them: pick the Xyz Monster, then its materials (face-up monsters of the right Level). The materials stay under it
   (the info bar shows "MAT" and the count) and go to the Graveyard when it leaves the field. The first three: Gem-Knight

@@ -82,10 +82,11 @@ extern const u8 gModFieldIconData[];            /* tools/cardicons.py --data */
 /* Then Deck Edit's ring art (DATA_DECK_EDIT), then the Synchro Monster frames (tools/cardicons.py): BG upright and
  * sideways, then the sprite poses 0-2, 1 KiB each. */
 #define DATA_SYNCHRO            ((((DATA_MINIS + CARD_ID_COUNT * 15 * 16 + 3) & ~3)) + CARD_ID_COUNT * (32 + 4 * 32))
-/* Then the Xyz Monster frames, the same 5 (black). */
+/* Then the Xyz Monster frames, the same 5 (black), then the Link Monster frames (blue). */
 #define DATA_XYZ                (DATA_SYNCHRO + 5 * FRAME_SIZE)
-/* The Synchro or Xyz frames of card `id`, or 0 for the type's own. */
-#define DATA_EXTRA(id)          (IS_SYNCHRO_CARD(id) ? DATA_SYNCHRO : IS_XYZ_CARD(id) ? DATA_XYZ : 0)
+#define DATA_LINK               (DATA_XYZ + 5 * FRAME_SIZE)
+/* The Synchro, Xyz or Link frames of card `id`, or 0 for the type's own. */
+#define DATA_EXTRA(id)          (IS_SYNCHRO_CARD(id) ? DATA_SYNCHRO : IS_XYZ_CARD(id) ? DATA_XYZ                                  : IS_LINK_CARD(id) ? DATA_LINK : 0)
 #define POSE_MAP_SIZE           80              /* x0, width, y0, height, the art column of each column (32), the
                                                    art row of each row (32) */
 #define SPRITE_POSES            3

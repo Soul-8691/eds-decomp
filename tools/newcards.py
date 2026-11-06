@@ -46,6 +46,7 @@ COUNT_H = 'build/include/card_count.h'
 COUNT_INC = 'build/include/card_count.inc'
 SYNCHRO_H = 'build/include/synchro_rules.h'
 XYZ_H = 'build/include/xyz_rules.h'
+LINK_H = 'build/include/link_rules.h'
 CARDS_H = 'include/constants/cards.h'
 API = 'https://db.ygoprodeck.com/api/v7/cardinfo.php?'
 
@@ -125,6 +126,10 @@ EXTRA_RACES = {
 # has an effect, bit 3 Tuner, bits 4-7 the extended race (EXTRA_RACES; 0 = the stats word's type).
 KIND_EX_SYNCHRO = 1
 KIND_EX_XYZ = 2
+KIND_EX_LINK = 3
+# Link Arrows: gCardLinkMarkers, one byte per card ID (src/mod_link.c), from YGOPRODeck's linkmarkers.
+LINK_MARKER_BITS = {'Top-Left': 0x01, 'Top': 0x02, 'Top-Right': 0x04, 'Left': 0x08, 'Right': 0x10,
+                    'Bottom-Left': 0x20, 'Bottom': 0x40, 'Bottom-Right': 0x80}
 TYPE_EX_EFFECT = 0x04
 TYPE_EX_TUNER = 0x08
 ATTRIBUTES = {'LIGHT': 1, 'DARK': 2, 'WATER': 3, 'FIRE': 4, 'EARTH': 5, 'WIND': 6}
@@ -338,6 +343,9 @@ def fetch(names, cache, force_art=False):
         cache[n] = {'name': n, 'passcode': passcode, 'type': c['type'], 'race': c['race'],
                     'attribute': c.get('attribute'), 'level': c.get('level', 0), 'atk': c.get('atk', 0),
                     'def': c.get('def', 0), 'desc': c['desc']}
+        if 'Link' in c['type']:
+            cache[n]['linkval'] = c.get('linkval', 0)
+            cache[n]['linkmarkers'] = c.get('linkmarkers', [])
         image = next((i for i in c['card_images'] if i['id'] == c['id']), c['card_images'][0])
         jpg = f'{DIR}/cropped/{passcode}.jpg'
         if not os.path.exists(jpg):
@@ -389,16 +397,20 @@ def stats_word(c):
     if race not in MONSTER_TYPES or c.get('attribute') not in ATTRIBUTES:
         fail(f'{c["name"]}: a {c["race"]}/{c.get("attribute")} {c["type"]} cannot be shown in EDS (no such '
              f'monster type or attribute)')
-    # An Xyz Monster's Rank (YGOPRODeck's level) goes in the Level field.
-    if any(k in c['type'] for k in ('Link', 'Pendulum')) or not 1 <= (c['level'] or 0) <= 12:
+    # An Xyz Monster's Rank (YGOPRODeck's level) and a Link Monster's Link Rating go in the Level field; a Link
+    # Monster has no DEF.
+    if 'Link' in c['type']:
+        c = dict(c, level=c.get('linkval') or 0, **{'def': 0})
+    if 'Pendulum' in c['type'] or not 1 <= (c['level'] or 0) <= 12:
         fail(f'{c["name"]}: {c["type"]} cards do not exist in EDS')
-    # Synchro and Xyz Monsters are Extra Deck monsters: kind FUSION in the stats word (gCardTypeEx tells them apart).
-    kind = (2 if any(k in c['type'] for k in ('Fusion', 'Synchro', 'XYZ')) else 3 if 'Ritual' in c['type']
+    # Synchro, Xyz and Link Monsters are Extra Deck monsters: kind FUSION in the stats word (gCardTypeEx tells them
+    # apart).
+    kind = (2 if any(k in c['type'] for k in ('Fusion', 'Synchro', 'XYZ', 'Link')) else 3 if 'Ritual' in c['type']
             else 0 if c['type'].startswith('Normal') else 1)
     atk, dfn = max(c['atk'] or 0, 0), max(c['def'] or 0, 0)
     if atk % 10 or dfn % 10 or atk > 5110 or dfn > 5110:
         fail(f'{c["name"]}: ATK/DEF {atk}/{dfn} cannot be stored (multiples of 10 up to 5110)')
-    return (ATTRIBUTES[c['attribute']] << 29 | c['level'] << 25 | MONSTER_TYPES[c['race']] << 20 | kind << 18
+    return (ATTRIBUTES[c['attribute']] << 29 | c['level'] << 25 | MONSTER_TYPES[race] << 20 | kind << 18
             | (atk // 10) << 9 | dfn // 10)
 
 
@@ -406,12 +418,13 @@ def type_ex(c):
     """gCardTypeEx byte of an added card (0 for Spells, Traps and plain monsters)."""
     if c['type'] in ('Spell Card', 'Trap Card', 'Token'):
         return 0
-    b = KIND_EX_SYNCHRO if 'Synchro' in c['type'] else KIND_EX_XYZ if 'XYZ' in c['type'] else 0
+    b = (KIND_EX_SYNCHRO if 'Synchro' in c['type'] else KIND_EX_XYZ if 'XYZ' in c['type']
+         else KIND_EX_LINK if 'Link' in c['type'] else 0)
     if 'Tuner' in c['type']:
         b |= TYPE_EX_TUNER
     # Effect: YGOPRODeck says "Effect" for most; Tuners are "Tuner Monster" ("Normal Tuner Monster" without), and an
     # Extra Deck monster's text has its effect after the materials line.
-    extra = any(k in c['type'] for k in ('Synchro', 'Fusion', 'XYZ'))
+    extra = any(k in c['type'] for k in ('Synchro', 'Fusion', 'XYZ', 'Link'))
     if ('Effect' in c['type'] or c['type'] in ('Tuner Monster', 'Synchro Tuner Monster')
             or (extra and len(c['desc'].strip().splitlines()) > 1)):
         b |= TYPE_EX_EFFECT
@@ -464,6 +477,50 @@ def xyz_rule(c):
     return int(m.group(1)), 1 if m.group(2) else 0, int(m.group(3)), typ, attr
 
 
+def link_markers(c):
+    """gCardLinkMarkers byte of a card (0 for all but Link Monsters)."""
+    if 'Link' not in c['type']:
+        return 0
+    b = 0
+    for m in c.get('linkmarkers') or []:
+        if m not in LINK_MARKER_BITS:
+            fail(f'{c["name"]}: unknown Link Arrow "{m}"')
+        b |= LINK_MARKER_BITS[m]
+    return b
+
+
+# Link material kinds (src/mod_link.c): any monster, a Normal / Effect Monster, a Type, an Attribute, a Level.
+LINK_MAT_ANY, LINK_MAT_NORMAL, LINK_MAT_EFFECT, LINK_MAT_TYPE, LINK_MAT_ATTRIBUTE, LINK_MAT_LEVEL = range(6)
+
+
+def link_rule(c):
+    """A Link Monster's materials from the first line of its text: (count, or more, kind, value). '1 Normal
+    Monster', '2 monsters', '2+ Effect Monsters', '1 Level 1 monster', '2 Cyberse monsters', '2 LIGHT monsters'."""
+    first = c['desc'].strip().splitlines()[0]
+    m = re.match(r'\s*(\d+)(\+| or more)? (.*?)\s*[Mm]onsters?\s*$', first)
+    if not m or ',' in first:
+        print(f'newcards: warning: {c["name"]}: Link Materials read as "2 monsters" (from "{first}")')
+        return 2, 0, LINK_MAT_ANY, 0
+    count, more, what = int(m.group(1)), 1 if m.group(2) else 0, m.group(3).strip()
+    what = re.sub(r'-Type$', '', what)
+    lv = re.match(r'Level (\d+)$', what)
+    if not what:
+        return count, more, LINK_MAT_ANY, 0
+    if what == 'Normal':
+        return count, more, LINK_MAT_NORMAL, 0
+    if what == 'Effect':
+        return count, more, LINK_MAT_EFFECT, 0
+    if lv:
+        return count, more, LINK_MAT_LEVEL, int(lv.group(1))
+    if what in ATTRIBUTES:
+        return count, more, LINK_MAT_ATTRIBUTE, ATTRIBUTES[what]
+    race = EXTRA_RACES[what][1] if what in EXTRA_RACES else what
+    if race in MONSTER_TYPES:
+        return count, more, LINK_MAT_TYPE, MONSTER_TYPES[race]
+    print(f'newcards: warning: {c["name"]}: Link Materials read as "{count} monsters" (from "{first}")')
+    return count, more, LINK_MAT_ANY, 0
+
+
 def bcd(passcode):
     return bytes(int(passcode[i]) << 4 | int(passcode[i + 1]) for i in range(0, 8, 2))
 
@@ -504,7 +561,8 @@ def update_cards_h(new):
 def cmd_build():
     rows = load_list()
     cache = load_cache()
-    missing = [n for n, _ in rows if n not in cache]
+    # (a Link Monster cached before its Link Rating and Arrows were kept is fetched again)
+    missing = [n for n, _ in rows if n not in cache or ('Link' in cache[n]['type'] and 'linkval' not in cache[n])]
     if missing:
         fetch(missing, cache)
     make_art([cache[n] for n, _ in rows])
@@ -543,6 +601,7 @@ def cmd_build():
     _, art = read_old('art', 1)
     stats, _ = read_old('stats.csv', 4)
     types_ex = [0] * OLD_COUNT
+    markers = [0] * OLD_COUNT
     i2n, _ = read_old('id_to_number.json', 2)
     pws, _ = read_old('passwords.csv', 4)
     keys, _ = read_old('sort_keys.json', 2)
@@ -562,6 +621,7 @@ def cmd_build():
         pals.append(struct.pack('<64H', *[A.rgb_to_bgr555(p) for p in (plte + [(0, 0, 0)] * 64)[:64]]))
         stats.append(struct.pack('<I', stats_word(c)))
         types_ex.append(type_ex(c))
+        markers.append(link_markers(c))
         i2n.append(struct.pack('<H', c['number']))
         pws.append(bytes([0xFF] * 4) if c['type'] == 'Token' else bcd(c['passcode']))   # tokens: no password
         keys.append(struct.pack('<H', next_key))
@@ -585,6 +645,7 @@ def cmd_build():
         'sort_keys': pad4(b''.join(keys)),
         'name_order': pad4(struct.pack(f'<{len(order)}H', *order)),
         'type_ex': pad4(bytes(types_ex)),
+        'link_markers': pad4(bytes(markers)),
     }
     for name, data in out.items():
         write_if_changed(f'{OUT}/newcards__{name}.bin', data)
@@ -604,6 +665,13 @@ def cmd_build():
                      '/* { Synchro card number, Tuner card number (0: any Tuner; 0x8000 | type: a Tuner of that '
                      'Type) } */\n'
                      '#define SYNCHRO_RULES { ' + ''.join(f'{{ {s}, {t} }}, ' for s, t in rules) + '{ 0, 0 } }\n')
+    # The Link Monsters' material rules for src/mod_link.c.
+    links = [(c['number'],) + link_rule(c) for c in new if 'Link' in c['type']]
+    write_if_changed(LINK_H, f'/* {note} */\n#define LINK_RULE_COUNT {len(links)}\n'
+                     '/* { Link card number, material count, 1: or more, kind (0 any, 1 Normal, 2 Effect, 3 Type, '
+                     '4 Attribute, 5 Level), its value } */\n'
+                     '#define LINK_RULES { ' + ''.join('{ %d, %d, %d, %d, %d }, ' % r for r in links)
+                     + '{ 0, 0, 0, 0, 0 } }\n')
     # The Xyz Monsters' material rules for src/mod_xyz.c.
     xyz = [(c['number'],) + xyz_rule(c) for c in new if 'XYZ' in c['type']]
     write_if_changed(XYZ_H, f'/* {note} */\n#define XYZ_RULE_COUNT {len(xyz)}\n'

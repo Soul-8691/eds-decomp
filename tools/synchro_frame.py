@@ -4,6 +4,7 @@ purple made white, or black (xyz).
 
   python3 tools/synchro_frame.py build/assets/synchro_frame.bin
   python3 tools/synchro_frame.py build/assets/xyz_frame.bin xyz
+  python3 tools/synchro_frame.py build/assets/link_frame.bin link   (dark blue: Link Monsters)
 
 Reads the Fusion frame's image pack (gCardFrameFusionGfx in data/rodata_08087FD0.s, from the extracted asset bank)
 and writes the same pack with its palette changed: every purple colour (red and blue both clearly above green)
@@ -46,10 +47,20 @@ def blacken(c):
     return grey | grey << 5 | grey << 10
 
 
+def blue(c):
+    """A purple colour as a dark blue of about its brightness (the Link frame)."""
+    r, g, b = c & 31, (c >> 5) & 31, (c >> 10) & 31
+    if min(r, b) - g < 3:
+        return c                # not purple
+    v = (r + g + b) // 3
+    return (v // 4) | (v // 3 + 1) << 5 | min(31, v + 4) << 10
+
+
 def main():
-    if len(sys.argv) not in (2, 3) or (len(sys.argv) == 3 and sys.argv[2] != 'xyz'):
+    modes = {'xyz': blacken, 'link': blue}
+    if len(sys.argv) not in (2, 3) or (len(sys.argv) == 3 and sys.argv[2] not in modes):
         sys.exit(__doc__)
-    recolour = blacken if len(sys.argv) == 3 else whiten
+    recolour = modes[sys.argv[2]] if len(sys.argv) == 3 else whiten
     pack = fusion_frame()
     pal = struct.unpack_from(f'<{COLORS}H', pack, PALETTE_AT)
     struct.pack_into(f'<{COLORS}H', pack, PALETTE_AT, *[recolour(c) for c in pal])

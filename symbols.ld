@@ -44,6 +44,8 @@ gModDeckRing = 0x0202F360;
 gModMatch = 0x0202D400;
 /* Mod: the Xyz Materials and the Xyz Summon state of src/mod_xyz.c (at most 0x200 bytes, after gModMatch). */
 gModXyz = 0x0202D500;
+/* Mod: the Extra Monster Zones, the zone pick and the Link Summon state of src/mod_link.c (at most 0x100 bytes). */
+gModLink = 0x0202D700;
 gTextCanvas = 0x02000000;
 gSaveData = 0x02011C20;
 gSaveDataSignature = 0x02013D86;

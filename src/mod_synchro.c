@@ -38,6 +38,7 @@
 #include "synchro.h"
 #include "synchro_rules.h"          /* SYNCHRO_RULES (build/include, tools/newcards.py) */
 #include "xyz.h"                    /* the Xyz Summon (src/mod_xyz.c) shares the Extra Deck command and list */
+#include "link_monster.h"           /* and the Link Summon (src/mod_link.c) */
 #include "text_box.h"               /* TextBoxOpen, TextBoxSetMenu, gTextBox */
 #include "util.h"                   /* StrCopy, StrCat, StrCatNumber, MemClear16 */
 #include "gba.h"                    /* B_BUTTON */
@@ -58,6 +59,7 @@ enum SynchroStep {
     SYNCHRO_STEP_PICK_MATERIALS,    /* the non-Tuner prompt with the star gauge is open */
     SYNCHRO_STEP_SUMMON,
     SYNCHRO_STEP_XYZ,               /* an Xyz Monster was picked: ModXyzMenuRun runs */
+    SYNCHRO_STEP_LINK,              /* a Link Monster was picked: ModLinkMenuRun runs */
 };
 
 /* gModSynchro (EWRAM 0x0202FE00, symbols.ld). */
@@ -100,7 +102,7 @@ static u16 FaceUpMonster(int player, int zone)
     u16 id = DUEL_CARD_ID(&z->card);
 
     if (id == 0 || !z->isFaceUp || CARD_STATS_TYPE(gCardStats[id & CARD_ID_MASK]) > CARD_TYPE_REPTILE
-        || IS_XYZ_CARD(id))
+        || IS_XYZ_CARD(id) || IS_LINK_CARD(id))
         return 0;
     return id;
 }
@@ -186,7 +188,7 @@ static int CanSynchroSummon(int player, u16 synchroId)
 
 int ModSynchroListAccepts(u16 id, int player)
 {
-    return CanSynchroSummon(player, id) || ModXyzCanSummon(player, id);
+    return CanSynchroSummon(player, id) || ModXyzCanSummon(player, id) || ModLinkCanSummon(player, id);
 }
 
 int ModSynchroAvailable(int player)
@@ -199,7 +201,8 @@ int ModSynchroAvailable(int player)
         return 0;
     for (i = 0; i < p->fusionCount; i++) {
         if (CanSynchroSummon(player, DUEL_CARD_ID(&p->fusionDeck[i]))
-            || ModXyzCanSummon(player, DUEL_CARD_ID(&p->fusionDeck[i])))
+            || ModXyzCanSummon(player, DUEL_CARD_ID(&p->fusionDeck[i]))
+            || ModLinkCanSummon(player, DUEL_CARD_ID(&p->fusionDeck[i])))
             return 1;
     }
     return 0;
@@ -302,6 +305,12 @@ void ModSynchroMenuRun(void)
                 return;
             break;
         }
+        if (IS_LINK_CARD(synchroId)) {
+            s->step = SYNCHRO_STEP_LINK;
+            if (!ModLinkMenuRun(s->synchro, 1))
+                return;
+            break;
+        }
         for (zone = 0; zone < MONSTER_ZONES; zone++) {
             if (TunerFits(0, zone, synchroId)) {
                 tuners++;
@@ -346,6 +355,10 @@ void ModSynchroMenuRun(void)
         return;
     case SYNCHRO_STEP_XYZ:
         if (!ModXyzMenuRun(s->synchro, 0))
+            return;
+        break;
+    case SYNCHRO_STEP_LINK:
+        if (!ModLinkMenuRun(s->synchro, 0))
             return;
         break;
     }
@@ -486,6 +499,10 @@ void ModCardTypeLine(u16 cardId, char *buf)
         StrCat(buf, "/Synchro");
     else if (IS_XYZ_CARD(cardId))
         StrCat(buf, "/Xyz");
+    else if (IS_LINK_CARD(cardId)) {
+        StrCat(buf, "/Link-");                  /* the Link Rating (the stats Level) */
+        StrCatNumber(buf, LINK_RATING(cardId));
+    }
     else if (kind == CARD_KIND_FUSION)
         StrCat(buf, "/Fusion");
     else if (kind == CARD_KIND_RITUAL)

@@ -4,6 +4,7 @@ New cards (WCT06)
 New cards (anime duelists)
 New cards (custom formats)
 New cards (modern)
+New cards (Link)
 OCG format duelists
 OCG packs
 Anime duelists
@@ -20,3 +21,4 @@ Chaos Return format
 HMA prototype
 Make the chain hold more than 3 targets
 Shift the size-limited area
+Add zone pointing to card images

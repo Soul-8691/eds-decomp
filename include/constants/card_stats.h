@@ -129,7 +129,18 @@ enum CardKindEx {
     CARD_KIND_EX_NONE = 0,
     CARD_KIND_EX_SYNCHRO = 1,
     CARD_KIND_EX_XYZ = 2,
+    CARD_KIND_EX_LINK = 3,          /* the stats Level is the Link Rating, DEF 0; gCardLinkMarkers has its arrows */
 };
+
+/* gCardLinkMarkers bits (a Link Monster's arrows, as printed: Top is toward the opponent). */
+#define LINK_MARKER_TOP_LEFT        0x01
+#define LINK_MARKER_TOP             0x02
+#define LINK_MARKER_TOP_RIGHT       0x04
+#define LINK_MARKER_LEFT            0x08
+#define LINK_MARKER_RIGHT           0x10
+#define LINK_MARKER_BOTTOM_LEFT     0x20
+#define LINK_MARKER_BOTTOM          0x40
+#define LINK_MARKER_BOTTOM_RIGHT    0x80
 
 /* Races EDS lacks. The stats word keeps the closest EDS type (its icon until these get their own, and what the
  * engine's monster checks see); this is the real race. Same order as EXTRA_RACES in tools/newcards.py. */

@@ -82,12 +82,18 @@ void DestroyFaceUpCardsByNumber(int player, u16 cardNo)
  * card is shown (cmd 0x74) and the others of the group in zones 5-9 are destroyed without effects. */
 void VampireLordFieldDestroyed(int player, int zone);   /* mod: src/added_effects.c */
 
+int ModProxyDestroyIntercept(int player, int zone, u16 withEffects);    /* mod: src/added_effects.c */
+
 void DestroyFieldCard(int player, int zone, u16 withEffects)
 {
     u32 id;
     u16 cardId;
     int i;
 
+#ifdef HAS_CARD_PROXY_DRAGON
+    if (ModProxyDestroyIntercept(player, zone, withEffects))   /* added: Proxy Dragon destroys another instead */
+        return;
+#endif
     id = DUEL_CARD_ID(ZONE(player, zone));
     cardId = id;
 

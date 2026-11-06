@@ -21,6 +21,8 @@
 #define XYZ_LABEL_CELL          0x10
 #define XYZ_COUNT_CELL          0x30
 static const u8 sStrXyzMaterials[] = "MAT";
+#define LINK_DEF_CELL           0x39
+static const u8 sStrNoDef[] = "    -";
 
 /* Info bar labels (rodata_08080A20.s) */
 extern const u8 gStrMyFusionDeck[];         /* "My Fusion Deck:" */
@@ -72,6 +74,11 @@ void DuelScreen_DrawCursorInfo(void)
     case DUEL_AREA_MONSTER:
         if (cardId && ZoneCardShown(player, index)) {
             DuelInfo_DrawMonsterZone(player, area + index);
+            if (IS_LINK_CARD(cardId) && gDuelZones[player & 1].zones[index].isFaceUp) {
+                /* a Link Monster has no DEF: "-" over its number (DuelInfo_DrawMonsterZone's cells 0x39-0x3D) */
+                TextCellsPutString(LINK_DEF_CELL, sStrNoDef, 7);
+                gDuelScreen.textMapReset = 0;
+            }
             if (IS_XYZ_CARD(cardId) && gDuelZones[player & 1].zones[index].isFaceUp) {
                 TextCellsPutString(XYZ_LABEL_CELL, sStrXyzMaterials, 7);
                 TextCellsPutNumber(XYZ_COUNT_CELL, XyzMaterialCount(player, index), 7, 2);

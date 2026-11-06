@@ -200,11 +200,17 @@ $(XYZ_FRAME): $(ASSETS_BUILT) tools/synchro_frame.py
 DUEL_BOARD := build/assets/duel_board.bin
 $(DUEL_BOARD): $(ASSETS_BUILT) tools/duel_board.py
 	$(PYTHON) tools/duel_board.py $@
-build/data/rodata_08087FD0.o: $(SYNCHRO_FRAME) $(XYZ_FRAME) $(DUEL_BOARD)
+# The Link Monster frame: dark blue.
+LINK_FRAME := build/assets/link_frame.bin
+$(LINK_FRAME): $(ASSETS_BUILT) tools/synchro_frame.py
+	$(PYTHON) tools/synchro_frame.py $@ link
+build/data/rodata_08087FD0.o: $(SYNCHRO_FRAME) $(XYZ_FRAME) $(DUEL_BOARD) $(LINK_FRAME)
 # src/mod_synchro.c reads build/include/synchro_rules.h, which tools/newcards.py writes.
 build/src/mod_synchro.o: $(NEWCARDS_BUILT)
 # src/mod_xyz.c reads build/include/xyz_rules.h, which tools/newcards.py writes.
 build/src/mod_xyz.o: $(NEWCARDS_BUILT)
+# src/mod_link.c reads build/include/link_rules.h, which tools/newcards.py writes.
+build/src/mod_link.o: $(NEWCARDS_BUILT)
 
 # Password-machine card prices from the Yugi-Kaiba usage statistics (src/mod_dp.c).
 PRICES_GEN := build/include/card_prices.h

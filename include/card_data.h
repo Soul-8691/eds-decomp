@@ -83,6 +83,11 @@ extern const u8 gCardTypeEx[];
 #define CARD_TYPE_EX(id)        (gCardTypeEx[(id) & CARD_ID_MASK])
 #define IS_SYNCHRO_CARD(id)     ((CARD_TYPE_EX(id) & CARD_TYPE_EX_KIND_MASK) == CARD_KIND_EX_SYNCHRO)
 #define IS_XYZ_CARD(id)         ((CARD_TYPE_EX(id) & CARD_TYPE_EX_KIND_MASK) == CARD_KIND_EX_XYZ)
+#define IS_LINK_CARD(id)        ((CARD_TYPE_EX(id) & CARD_TYPE_EX_KIND_MASK) == CARD_KIND_EX_LINK)
+/* Added: a Link Monster's arrows (LINK_MARKER_* bits), after gCardTypeEx; its Link Rating is the stats Level. */
+extern const u8 gCardLinkMarkers[];
+#define LINK_MARKERS(id)        (gCardLinkMarkers[(id) & CARD_ID_MASK])
+#define LINK_RATING(id)         CARD_STATS_LEVEL(gCardStats[(id) & CARD_ID_MASK])
 /* A kind FUSION card that is not a Fusion Monster (a Synchro or an Xyz): Fusion-only effects skip it. */
 #define IS_EXTRA_NON_FUSION(id) ((CARD_TYPE_EX(id) & CARD_TYPE_EX_KIND_MASK) != CARD_KIND_EX_NONE)
 #define IS_TUNER_CARD(id)       ((CARD_TYPE_EX(id) & CARD_TYPE_EX_TUNER) != 0)
@@ -142,6 +147,7 @@ extern const u8 gCardFrameMagicGfx[];   /* 0x0862EEC0: Magic (type 22) */
 extern const u8 gCardFrameTrapGfx[];    /* 0x08631558: Trap (type 21) */
 extern const u8 gCardFrameSynchroGfx[]; /* added: Synchro Monster (the Fusion frame made white, tools/synchro_frame.py) */
 extern const u8 gCardFrameXyzGfx[];     /* added: Xyz Monster (the Fusion frame made black, tools/synchro_frame.py xyz) */
+extern const u8 gCardFrameLinkGfx[];    /* added: Link Monster (the Fusion frame made dark blue, synchro_frame.py link) */
 /* Added: the frame of a kind FUSION card: Fusion, Synchro or Xyz (src/mod_xyz.c, far code; card_detail.c,
  * card_canvas.c and duel_card_anim.c call it). */
 const u8 *ModFusionKindFrame(u16 id);

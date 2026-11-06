@@ -65,7 +65,7 @@ void DuelCmd_ChangePosition(void)
     struct DuelZonesPlayer *zones = &gDuelZones[player];
     struct DuelZone *zone = &zones->zones[slot];
 
-    if (DUEL_CARD_ID(zone) == 0) {
+    if (DUEL_CARD_ID(zone) == 0 || IS_LINK_CARD(DUEL_CARD_ID(zone))) {  /* added: a Link Monster stays in Attack */
         gDuelCmd.running = 0;
         return;
     }
@@ -110,7 +110,8 @@ void DuelCmd_FlipCard(void)
     struct DuelZone *zone = (struct DuelZone *)((u8 *)zones + offset);
 
     offset += player * 0xD64;
-    if (DUEL_CARD_ID((u8 *)gDuelZones + offset) == 0) {
+    if (DUEL_CARD_ID((u8 *)gDuelZones + offset) == 0
+        || IS_LINK_CARD(DUEL_CARD_ID((u8 *)gDuelZones + offset))) {   /* added: a Link Monster is never face-down */
         gDuelCmd.running = 0;
         return;
     }

@@ -749,6 +749,8 @@ u16 CardMenu_GetMonsterCommands(u16 id, int player, int zone)
             if (FinalAttackOrdersActive())
                 flags &= (u16)~(CARDMENU_MASK_DEF_POS | CARDMENU_MASK_ATK_POS | CARDMENU_MASK_FLIP);
 #endif
+            if (IS_LINK_CARD(cardId))   /* added: a Link Monster never changes its position */
+                flags &= (u16)~(CARDMENU_MASK_DEF_POS | CARDMENU_MASK_ATK_POS | CARDMENU_MASK_FLIP);
         }
         {
             int side = player & 1;

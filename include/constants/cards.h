@@ -1158,6 +1158,8 @@ enum CardNumber {
     CARD_GEM_KNIGHT_PEARL = 862,                          /* id 1002, added card */
     CARD_NUMBER_39_UTOPIA = 863,                          /* id 1003, added card */
     CARD_NUMBER_17_LEVIATHAN_DRAGON = 864,                /* id 1004, added card */
+    CARD_LINK_SPIDER = 865,                               /* id 1005, added card */
+    CARD_PROXY_DRAGON = 866,                              /* id 1006, added card */
     CARD_MAGIC_CYLINDER = 1214,                           /* id 899, added card */
     CARD_SOUL_EXCHANGE = 1220,                            /* id 947, added card */
     CARD_NIGHTMARES_STEELCAGE = 1230,                     /* id 989, added card */

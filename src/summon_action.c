@@ -321,8 +321,8 @@ u16 SummonStep_SpecialChoosePosition(void)
     struct DuelCard copy;
     switch (action->step) {
     case CHOOSE_POSITION_STEP_ASK:
-        if (action->player) {
-            gTextBox.result = AiShouldSetMonster(action->cardId, action->isFaceUp);
+        if (action->player || IS_LINK_CARD(action->cardId)) {     /* changed: a Link Monster is not asked */
+            gTextBox.result = ModSummonDefenseChoice(action->player, action->cardId, action->isFaceUp);
         } else {
             /* Text box at cell (7, 2), 15 x 3 cells; the draw/input callbacks are in summon_checks.c. */
             TextBoxOpen(0x207, 0x30F, TEXTBOX_FLAGS_DEFAULT, gStrSelectDisplayPosition);
@@ -463,12 +463,17 @@ u16 SummonStep_SpecialFromHand(void)
  * FAKEMATCH: the initialized u16 copy of the card ID below (savedId) preserves the original r8-to-r2
  * transfer. Its input is a 12-bit card id, so narrowing is lossless.
  */
+u16 ModSummonZoneStep(void);         /* mod: src/mod_link.c (the zone pick; Link Monsters in Attack Position) */
+u16 ModSummonDefenseChoice(int player, u16 cardId, int faceUp);
+
 u16 SummonAction_Update(void)
 {
     int flags = SUMMON_FLAGS(&gSummonAction);
     if (flags & SUMMON_FLAG_ACTIVE) {
         /* A summon of player 1 that was mirrored over the link runs on the partner; wait for its answer. */
         if (!(SUMMON_FLAG_LINKED & flags) || !gSummonAction.player) {
+            if (!ModSummonZoneStep())   /* added: the human picks the Monster Zone first */
+                return 1;
             switch (SUMMON_FLAGS_KIND(flags)) {
             case SUMMON_ACTION_NORMAL: if (!ExecuteSummonActionU16()) return 1; break;
             case SUMMON_ACTION_NORMAL_CHOOSE_POSITION: if (!ExecuteSummonActionAskPositionU16()) return 1; break;

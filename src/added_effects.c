@@ -43,6 +43,7 @@
 #include "duel_flow.h"              /* gDuelCtrl.isLinkDuel */
 #include "synchro.h"                /* the Synchro Summon (src/mod_synchro.c) */
 #include "xyz.h"                    /* the Xyz Summon and Xyz Materials (src/mod_xyz.c) */
+#include "link_monster.h"           /* Link Monsters and the Extra Monster Zones (src/mod_link.c) */
 
 #ifdef HAS_CARD_MASK_OF_RESTRICT
 int IsTributeLockActive(void)
@@ -1624,6 +1625,7 @@ void ModDuelInit(void)
     gModDuel.aiScientistTurn = 0;
     ModSynchroReset();                      /* src/mod_synchro.c */
     ModXyzReset();                          /* src/mod_xyz.c */
+    ModLinkReset();                         /* src/mod_link.c */
     gModDuel.sealedCount[0] = 0;
     gModDuel.sealedCount[1] = 0;
     gModDuel.dimensionWall = 0;
@@ -2630,6 +2632,10 @@ int ModCanActivateMonsterEffect(u16 id, int player, int zone)
     if (CardNumberOfId(id) == CARD_NUMBER_17_LEVIATHAN_DRAGON)
         return CanActivateEffectInZone(player, zone, 0);
 #endif
+#ifdef HAS_CARD_LINK_SPIDER
+    if (CardNumberOfId(id) == CARD_LINK_SPIDER)
+        return CanActivateEffectInZone(player, zone, 0);
+#endif
     return 0;
 }
 
@@ -3086,6 +3092,291 @@ static void UtopiaAttackDeclared(int player, int zone)
     }
 }
 #endif /* HAS_CARD_NUMBER_39_UTOPIA */
+
+#ifdef HAS_CARD_LINK_SPIDER
+/* ---- Link Spider --------------------------------------------------------------------------------------------------
+ * Link Monster (Link-1, Bottom): "1 Normal Monster. Once per turn: You can Special Summon 1 Level 4 or lower Normal
+ * Monster from your hand to your zone this card points to."
+ *   ACTIVATE  the card menu in the Main Phase (ModCanActivateMonsterEffect), once per turn (ModXyzEffectUsed, by
+ *             zone serial), with such a monster in the hand and a free zone it points to
+ *   resolve   the human picks the hand card from the list (CollectEffectTargets), the CPU its strongest; it is
+ *             Special Summoned face-up Attack (QueueSpecialSummonFromHand) to a zone Link Spider points to
+ *             (ModSummonRestrictZones: the zone pick offers only those)
+ *   CPU       AiWantsMonsterEffect: whenever it can */
+static const u8 sStrLinkSpiderSelect[] = "Select a Level 4 or lower Normal Monster to Special Summon.";
+
+static int IsLinkSpiderTargetId(u16 id, int param)
+{
+    u32 stats = gCardStats[id & CARD_ID_MASK];
+
+    (void)param;
+    return CARD_STATS_TYPE(stats) <= CARD_TYPE_REPTILE && CARD_STATS_KIND(stats) == CARD_KIND_NORMAL
+           && !IS_EFFECT_CARD_EX(id) && CARD_STATS_LEVEL(stats) <= 4 && !IsCannotSpecialSummon(id & CARD_ID_MASK);
+}
+
+static int LinkSpiderReady(struct ChainEntry *card)
+{
+    struct DuelPlayer *p = &gDuelPlayers[card->player & 1];
+    struct DuelZone *z;
+    int i;
+
+    if (card->zone > ZONE_MONSTER_4)
+        return 0;
+    z = ZoneOf(card->player, card->zone);
+    if (!z->isFaceUp || DUEL_CARD_ID(&z->card) != (card->card & CARD_ID_MASK)
+        || ModLinkPointedFreeZones(card->player, card->zone) == 0 || !CanSpecialSummon(card->player))
+        return 0;
+    for (i = 0; i < p->handCount; i++) {
+        if (IsLinkSpiderTargetId(DUEL_CARD_ID(&p->hand[i]), 0))
+            return 1;
+    }
+    return 0;
+}
+
+int EffectLinkSpiderPrepare(struct ChainEntry *card, struct ChainEntry *chainLink, u16 fromHand)
+{
+    (void)chainLink;
+    return !fromHand && card->event == RESPONSE_NONE && LinkSpiderReady(card)
+           && !ModXyzEffectUsed(card->player, card->zone);
+}
+
+int EffectLinkSpiderChainA(struct ChainEntry *link, struct ChainEntry *prevLink)
+{
+    (void)prevLink;
+    ModXyzMarkEffectUsed(link->player, link->zone);
+    return 1;
+}
+
+int EffectLinkSpiderResolve(struct ChainEntry *link, struct ChainEntry *chainedTo)
+{
+    struct DuelPlayer *p = &gDuelPlayers[link->player & 1];
+    u32 picked;
+    int i, best;
+
+    (void)chainedTo;
+    if (link->negated)
+        return EFFECT_STEP_DONE;
+    switch (gChain.effectStep) {
+    case EFFECT_STEP_START:
+        if (!LinkSpiderReady(link) || CollectEffectTargets(link->player, CARD_LINK_SPIDER, 0) == 0)
+            return EFFECT_STEP_DONE;
+        if (link->player) {
+            best = 0;
+            for (i = 1; i < gCardListView.count; i++) {
+                if (CARD_STATS_ATK(gCardStats[gCardListView.cards[i] & CARD_ID_MASK])
+                    > CARD_STATS_ATK(gCardStats[gCardListView.cards[best] & CARD_ID_MASK]))
+                    best = i;
+            }
+            gCardListView.cursorRow = 0;
+            gCardListView.top = best;
+            return EFFECT_STEP_3;
+        }
+        TextBoxOpen(TEXTBOX_POS(5, 2), TEXTBOX_SIZE(20, 9), TEXTBOX_FLAGS_DEFAULT, sStrLinkSpiderSelect);
+        return EFFECT_STEP_2;
+    case EFFECT_STEP_2:
+        CardListView_Open(link->player, CARDLIST_AREA_EFFECT_TARGETS, CARD_LINK_SPIDER, 0);
+        return EFFECT_STEP_3;
+    case EFFECT_STEP_3: {
+        u32 zones = ModLinkPointedFreeZones(link->player, link->zone);
+        int zone;
+
+        picked = gCardListView.cards[gCardListView.cursorRow + gCardListView.top];
+        for (i = 0; i < p->handCount && *(u32 *)&p->hand[i] != picked; i++)
+            ;
+        if (i >= p->handCount || zones == 0)
+            return EFFECT_STEP_DONE;
+        for (zone = 0; !(zones & (1 << zone)); zone++)
+            ;
+        ModSummonRestrictZones(zones);
+        QueueSpecialSummonFromHand(link->player, i, zone, 0, 1);
+        return EFFECT_STEP_END;
+    }
+    }
+    return EFFECT_STEP_DONE;
+}
+#endif /* HAS_CARD_LINK_SPIDER */
+
+#ifdef HAS_CARD_PROXY_DRAGON
+/* ---- Proxy Dragon -------------------------------------------------------------------------------------------------
+ * Link Monster (Link-2, Left and Right): "2 monsters. If a card(s) you control would be destroyed by battle or card
+ * effect, you can destroy 1 of your monsters this card points to, instead."
+ *   by card effect  DestroyFieldCard (duel_field_moves.c) asks ModProxyDestroyIntercept first: when a face-up Proxy
+ *                   Dragon of the card's controller points to another monster of theirs, the CPU destroys its
+ *                   weakest such monster instead; the human gets PROMPT_MOD_REPLACE_DESTROY (duel_prompts.c):
+ *                   Yes/No, then the monster with the cursor when there are more, and the prompt destroys that one,
+ *                   or the card on No. Only one prompt can wait at a time: while one does, others destroy as usual.
+ *   by battle       BattleStage_DestroyMonsters (battle_phase2.c, before the destroyed monsters leave) asks
+ *                   ModProxyBattle for each side: the same choice; the replacement clears the side's destroyed
+ *                   flag, so the battle damage stays and the monster does not leave.
+ *   gModProxy.reentry keeps the replacement's own destruction from asking again. */
+struct ModProxyState {
+    u8 reentry;
+    u8 battleAsked;                 /* bit side: asked in this battle (battleKey) */
+    u8 battleSide;                  /* the side the battle prompt is for, 0xFF none */
+    u8 pad;
+    u32 battleKey;                  /* the battle's zone serials and turn */
+};
+void *ModLinkProxyState(void);     /* src/mod_link.c: 8 bytes of gModLink */
+static struct ModProxyState *ProxyState(void)
+{
+    return (struct ModProxyState *)ModLinkProxyState();
+}
+#define MOD_PROXY (*ProxyState())
+
+static const u8 sStrProxyAsk[] = "Destroy a monster Proxy Dragon points to instead?";
+static const u8 sStrProxyPick[] = "Select the monster to destroy instead.";
+
+/* The monsters of `player` a face-up Proxy Dragon of theirs points to, other than (player, except), as a zone mask. */
+static u32 ProxyTargets(int player, int except)
+{
+    u32 mask = 0;
+    int zone, i;
+
+    for (zone = ZONE_MONSTER_0; zone <= ZONE_MONSTER_4; zone++) {
+        struct DuelZone *z = ZoneOf(player, zone);
+        u8 pointed[8];
+        int n;
+
+        if (DUEL_CARD_ID(&z->card) == 0 || !z->isFaceUp || CARD_NUMBER(DUEL_CARD_ID(&z->card)) != CARD_PROXY_DRAGON)
+            continue;
+        n = ModLinkPointedMonsters(player, zone, pointed);
+        for (i = 0; i < n; i++) {
+            if (pointed[i] / 5 == (player & 1) && pointed[i] % 5 != except)
+                mask |= 1 << (pointed[i] % 5);
+        }
+    }
+    return mask;
+}
+
+/* The weakest monster of `player` in `mask`. */
+static int ProxyWeakest(int player, u32 mask)
+{
+    int zone, best = -1;
+
+    for (zone = ZONE_MONSTER_0; zone <= ZONE_MONSTER_4; zone++) {
+        if ((mask & (1 << zone)) && (best < 0 || GetZoneCardAtk(player, zone) < GetZoneCardAtk(player, best)))
+            best = zone;
+    }
+    return best;
+}
+
+static void ProxyDestroy(int player, int zone)
+{
+    MOD_PROXY.reentry = 1;
+    ShowCardEffect(player, gCardNumberToId[CARD_PROXY_DRAGON]);
+    DestroyFieldCard(player, zone, 1);
+    MOD_PROXY.reentry = 0;
+}
+
+int ModProxyDestroyIntercept(int player, int zone, u16 withEffects)
+{
+    u32 targets;
+
+    if (MOD_PROXY.reentry || zone > ZONE_SPELL_4 + 1 || DUEL_CARD_ID(&ZoneOf(player, zone)->card) == 0)
+        return 0;
+    targets = ProxyTargets(player, zone);
+    if (targets == 0)
+        return 0;
+    if (player & 1) {
+        ProxyDestroy(player, ProxyWeakest(player, targets));
+        return 1;
+    }
+    if (gDuel.promptActive || gDuelCtrl.isLinkDuel)
+        return 0;
+    DuelPrompt_Post(0, PROMPT_MOD_REPLACE_DESTROY, zone | (withEffects ? 0x100 : 0), 0);
+    return 1;
+}
+
+/* PROMPT_MOD_REPLACE_DESTROY (player 0): promptArgs[0] = the zone about to be destroyed (bit 8: with effects; bit 9:
+ * by battle: then the battle's destroyed flag is cleared instead of destroying on No... see ModProxyBattle). */
+u32 ModPromptReplaceDestroy(void)
+{
+    int zone = gDuel.promptArgs[0] & 0xFF, battle = (gDuel.promptArgs[0] & 0x200) != 0;
+    u32 targets = ProxyTargets(0, zone);
+
+    switch (gDuel.promptStep) {
+    case 0:
+        gDuel.promptResult = 0;
+        TextBoxOpen(TEXTBOX_POS(5, 2), TEXTBOX_SIZE(20, 5), TEXTBOX_FLAGS_DEFAULT, sStrProxyAsk);
+        TextBoxSetMenu(TEXTBOX_MENU_YES_NO, NULL, NULL);
+        gDuel.promptStep++;
+        return 0;
+    case 1:
+        if (gTextBox.result == 0 || targets == 0) {
+            if (!battle) {
+                MOD_PROXY.reentry = 1;
+                DestroyFieldCard(0, zone, (gDuel.promptArgs[0] & 0x100) != 0);
+                MOD_PROXY.reentry = 0;
+            }
+            return 1;
+        }
+        if ((targets & (targets - 1)) == 0) {
+            gDuel.promptResult = 1;             /* replaced */
+            ProxyDestroy(0, ProxyWeakest(0, targets));
+            return 1;
+        }
+        TextBoxOpen(TEXTBOX_POS(5, 2), TEXTBOX_SIZE(20, 5), TEXTBOX_FLAGS_DEFAULT, sStrProxyPick);
+        gDuel.promptStep++;
+        return 0;
+    case 2:
+        if (DuelCursor_PickTarget(PICK_FACE_UP_MONSTER | PICK_ATTACK_POSITION | PICK_DEFENSE_POSITION)) {
+            int pick = gDuelScreen.selIndex;
+
+            if (gDuelScreen.selArea == DUEL_AREA_MONSTER && gDuelScreen.selPlayer == 0 && pick <= ZONE_MONSTER_4
+                && (targets & (1 << pick))) {
+                PlaySE(SE_CONFIRM);
+                gDuel.promptResult = 1;
+                ProxyDestroy(0, pick);
+                return 1;
+            }
+            PlaySE(SE_ERROR);
+        }
+        return 0;
+    }
+    return 1;
+}
+
+int ModProxyBattle(int player)
+{
+    u32 key = gBattle.zoneSerialSnapshot[0] | (u32)gBattle.zoneSerialSnapshot[1] << 16;
+    int s;
+
+    key ^= gDuel.turnCount << 8;
+    if (key != MOD_PROXY.battleKey) {
+        MOD_PROXY.battleKey = key;
+        MOD_PROXY.battleAsked = 0;
+        MOD_PROXY.battleSide = 0xFF;
+    }
+    if (MOD_PROXY.battleSide != 0xFF) {         /* the human's answer */
+        if (gDuel.promptResult)
+            gBattle.side[MOD_PROXY.battleSide].destroyed = 0;
+        MOD_PROXY.battleSide = 0xFF;
+    }
+    for (s = 0; s <= 1; s++) {
+        int side = s ? 1 - player : player;
+        int zone = s ? gBattle.defSlot : gBattle.atkSlot;
+        u32 targets;
+
+        if (!gBattle.side[side].destroyed || (MOD_PROXY.battleAsked & (1 << side)) || zone > ZONE_MONSTER_4)
+            continue;
+        MOD_PROXY.battleAsked |= 1 << side;
+        targets = ProxyTargets(side, zone);
+        if (targets == 0)
+            continue;
+        if (side & 1) {
+            gBattle.side[side].destroyed = 0;
+            ProxyDestroy(side, ProxyWeakest(side, targets));
+            continue;
+        }
+        if (gDuelCtrl.isLinkDuel)
+            continue;
+        MOD_PROXY.battleSide = side;
+        DuelPrompt_Post(0, PROMPT_MOD_REPLACE_DESTROY, zone | 0x200, 0);
+        return 1;                               /* wait for the prompt */
+    }
+    return 0;
+}
+#endif /* HAS_CARD_PROXY_DRAGON */
 
 #ifdef HAS_CARD_BRAIN_CONTROL
 /* ---- Brain Control -------------------------------------------------------------------------------------------------
@@ -3582,6 +3873,7 @@ void AddedCardsSummoned(int player, int zone, u16 id, int kind, int faceUp)
     int synchroSummoned = ModSynchroArrived(player, zone, id);     /* src/mod_synchro.c: marks a Synchro Summon */
 
     ModXyzArrived(player, zone, id);        /* src/mod_xyz.c: an Xyz Summon's materials attach */
+    ModLinkArrived(player, zone, id);       /* src/mod_link.c: a summon to an Extra Monster Zone stands there */
 
     SynchroCardsArrived(player, zone, id);
 #ifdef HAS_CARD_SHIPPING_ARCHFIEND
@@ -8794,6 +9086,11 @@ void ModCollectEffectTargets(int player, u16 cardNumber, int param)
     case CARD_LIST_KEY_SYNCHRO:             /* the Extra Deck's Synchro and Xyz Monsters that can be summoned now */
         ModAddPileTargets(p->fusionDeck, p->fusionCount, CARDLIST_SRC_FUSION_DECK, ModSynchroListAccepts, player);
         break;
+#ifdef HAS_CARD_LINK_SPIDER
+    case CARD_LINK_SPIDER:                  /* the hand's Level 4 or lower Normal Monsters */
+        ModAddPileTargets(p->hand, p->handCount, CARDLIST_SRC_HAND, IsLinkSpiderTargetId, 0);
+        break;
+#endif
     case CARD_LIST_KEY_XYZ_MATERIALS: {     /* one Xyz Monster's materials (the detach pick, src/mod_xyz.c) */
         int n;
         const struct DuelCard *view = ModXyzMaterialView(&n);
@@ -13425,6 +13722,10 @@ static int AiWantsMonsterEffect(u16 number, int zone)
     case CARD_NUMBER_17_LEVIATHAN_DRAGON:           /* +500 ATK: whenever it can */
         return 1;
 #endif
+#ifdef HAS_CARD_LINK_SPIDER
+    case CARD_LINK_SPIDER:                          /* a Normal Monster from the hand: whenever it can */
+        return 1;
+#endif
 #ifdef HAS_CARD_BRIONAC_DRAGON_OF_THE_ICE_BARRIER
     case CARD_BRIONAC_DRAGON_OF_THE_ICE_BARRIER:    /* a card in hand to spare and a human card worth bouncing */
         return gDuelPlayers[AI_PLAYER].handCount > 0
@@ -14915,6 +15216,8 @@ int AiPlayAddedCards(void)
         return 1;
     if (AiTryXyzSummon())                   /* src/mod_xyz.c */
         return 1;
+    if (AiTryLinkSummon())                  /* src/mod_link.c */
+        return 1;
     /* the card-menu effects of face-up added monsters */
     for (zone = ZONE_MONSTER_0; zone <= ZONE_MONSTER_4; zone++) {
         struct DuelZone *z = ZoneOf(AI_PLAYER, zone);
@@ -15445,6 +15748,16 @@ const struct CardEffect gAddedCardEffects[] = {
         EffectAbyssSoldierPrepare,
         EffectAbyssSoldierChainA,
         EffectAbyssSoldierChainB,
+    },
+#endif
+#ifdef HAS_CARD_LINK_SPIDER
+    {
+        CARD_LINK_SPIDER, 0,
+        EffectLinkSpiderResolve,
+        NULL,
+        EffectLinkSpiderPrepare,
+        EffectLinkSpiderChainA,
+        NULL,
     },
 #endif
 #ifdef HAS_CARD_NUMBER_17_LEVIATHAN_DRAGON

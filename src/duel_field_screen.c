@@ -261,14 +261,17 @@ u16 ModFieldCardTile(u32 player, u32 place, u16 id, u32 sideways);
 #define MOD_PLACE_GRAVEYARD     11
 #define MOD_PLACE_BANISHED      12
 
-/* Redraw the board tile block of zone (player, zone): an empty zone clears it (and draws the 2x2 empty marker for monster zones), otherwise a card back/face tile block. */
+s32 ModZoneFieldX(u32 player, u32 zone);   /* mod: src/mod_link.c (a record standing in an Extra Monster Zone) */
+s32 ModZoneFieldY(u32 player, u32 zone);
+
+/* Redraw the board tile block of zone (player, zone): an empty zone clears it (and draws the 2x2 empty marker for monster zones), otherwise a card back/face tile block. Changed: at the zone's place from ModZoneFieldX/Y (its Extra Monster Zone, src/mod_link.c). */
 void DrawZoneTiles(u32 player, u32 zone)
 {
     struct DuelZonesPlayer *playerZones = &gDuelZones[1 & player];
     struct DuelZone *zonePtr = &playerZones->zones[zone];
     u16 id = (*(u32 *)zonePtr << 20) >> 20;
-    s32 x = gDuelZonePositions[player][zone].x / 8;
-    s32 y = gDuelZonePositions[player][zone].y / 8;
+    s32 x = ModZoneFieldX(player, zone) / 8;
+    s32 y = ModZoneFieldY(player, zone) / 8;
     u16 baseTile;
     u16 *map;
     u16 markerX;
@@ -299,7 +302,7 @@ void DrawZoneTiles(u32 player, u32 zone)
 
 void ClearZoneTiles(u32 player, u32 area)
 {
-    ClearTileBlock4x4Int(gDuelZonePositions[player][area].x / 8, gDuelZonePositions[player][area].y / 8);
+    ClearTileBlock4x4Int(ModZoneFieldX(player, area) / 8, ModZoneFieldY(player, area) / 8);
 }
 /* Redraw the board tile block for one area of `player`: the zone rows (MONSTER/SPELL_TRAP/FIELD with
  * `index`), the fusion deck and deck piles (thick above 5 cards), the top card of the graveyard and

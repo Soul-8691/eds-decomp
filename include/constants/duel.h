@@ -268,6 +268,7 @@ enum DuelPromptKind {
     PROMPT_CONFIRM_SPECIAL_SUMMON = 18,
     PROMPT_CONFIRM_GRAVEYARD_SUMMON = 19,
     PROMPT_SELECT_OWN_REPLACEMENT_TARGET = 20,
+    PROMPT_MOD_REPLACE_DESTROY = 21,        /* added: Proxy Dragon's "destroy instead" (src/added_effects.c) */
 };
 
 /* gSummonAction.kind: the summon/set action that SummonAction_Update runs. */

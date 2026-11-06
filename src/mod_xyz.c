@@ -39,6 +39,7 @@
 #include "main.h"                   /* gMain.newKeys */
 #include "xyz.h"
 #include "xyz_rules.h"              /* XYZ_RULES (build/include, tools/newcards.py) */
+#include "link_monster.h"           /* ModLinkZoneCleared */
 
 void BigBangShotLeaves(int player, int zone);   /* src/added_effects.c */
 
@@ -122,7 +123,8 @@ static int MaterialFits(int player, int zone, const u16 *rule)
     if (id == 0 || !z->isFaceUp)
         return 0;
     stats = gCardStats[id & CARD_ID_MASK];
-    if (CARD_STATS_TYPE(stats) > CARD_TYPE_REPTILE || IS_XYZ_CARD(id) || IS_TOKEN_NUMBER(gCardIdToNumber[id & CARD_ID_MASK]))
+    if (CARD_STATS_TYPE(stats) > CARD_TYPE_REPTILE || IS_XYZ_CARD(id) || IS_LINK_CARD(id)
+        || IS_TOKEN_NUMBER(gCardIdToNumber[id & CARD_ID_MASK]))
         return 0;
     if (CARD_STATS_LEVEL(stats) != rule[3])
         return 0;
@@ -227,6 +229,8 @@ int XyzMaterialCount(int player, int zone)
 void ModXyzZoneCleared(int player, int zone)
 {
     int serial = XyzSerial(player, zone), i;
+
+    ModLinkZoneCleared(player, zone);       /* its Extra Monster Zone is free again */
 
     if (serial < 0)
         return;
@@ -482,6 +486,8 @@ const u8 *ModFusionKindFrame(u16 id)
         return gCardFrameSynchroGfx;
     if (IS_XYZ_CARD(id))
         return gCardFrameXyzGfx;
+    if (IS_LINK_CARD(id))
+        return gCardFrameLinkGfx;
     return gCardFrameFusionGfx;
 }
 

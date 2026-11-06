@@ -19,6 +19,7 @@
 #include "util.h"                   /* CopyDoubleWords */
 #include "constants/duel.h"         /* DUEL_AREA_MONSTER */
 #include "duel.h"                   /* gDuel, gDuelPlayers */
+#include "link_monster.h"           /* ModDrawLinkArrows */
 
 extern const u8 gDuelDigitsGfx[];           /* the LP digits: colour set 0 is tiles 0-9 */
 extern const u8 gDuelDigitsPal[];
@@ -50,6 +51,8 @@ s32 GetAreaY(u32 player, int area, int index);
 
 static const u8 sStrPlayer[] = "PLAYER";
 static const u8 sStrOpponent[] = "OPPONENT";
+
+void ModDrawDuelHudPanel(void);
 
 static u16 *ObjTile(u32 tile)
 {
@@ -95,6 +98,12 @@ static void AddLifePoints(int x, int right, int y, u32 lp)
 }
 
 void ModDrawDuelHud(void)
+{
+    ModDrawLinkArrows();                            /* src/mod_link.c */
+    ModDrawDuelHudPanel();
+}
+
+void ModDrawDuelHudPanel(void)
 {
     vu16 *panelPal = (vu16 *)(OBJ_PLTT + PAL_PANEL * 32), *lpPal = (vu16 *)(OBJ_PLTT + PAL_LP * 32);
     const u8 *turnName = gDuel.turnPlayer == 0 ? sStrPlayer : sStrOpponent;

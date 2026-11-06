@@ -154,6 +154,8 @@ mod_xyz
 @farcode mod_xyz
 mod_duel_hud
 @farcode mod_duel_hud
+mod_link
+@farcode mod_link
 mod_preduel
 @farcode mod_preduel
 mod_field_icons_data
@@ -192,6 +194,7 @@ rodata_08087FD0
 @rodata mod_synchro
 @rodata mod_xyz
 @rodata mod_duel_hud
+@rodata mod_link
 @rodata mod_preduel
 @rodata card_list_viewer
 mod_format_pack_roulettes

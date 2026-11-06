@@ -394,6 +394,8 @@ u32 DuelPrompt_SelectOpponentReplacementTarget(int unusedPlayer, u32 currentSlot
  * promptArgs[0], promptArgs[1]). A prompt received from the partner (linked, for player 0 here) sends its
  * 16-byte result back. An unknown kind returns 0 and leaves the prompt active.
  */
+u32 ModPromptReplaceDestroy(void);  /* mod: src/added_effects.c */
+
 u32 DuelPrompt_Run(void)
 {
     u16 done;
@@ -465,6 +467,9 @@ u32 DuelPrompt_Run(void)
             break;
         case PROMPT_SELECT_OWN_REPLACEMENT_TARGET:
             done = DuelPrompt_SelectOwnReplacementTarget(gDuel.promptPlayer, gDuel.promptArgs[0]);
+            break;
+        case PROMPT_MOD_REPLACE_DESTROY:    /* added: Proxy Dragon (src/added_effects.c) */
+            done = ModPromptReplaceDestroy();
             break;
         default:
             return 0;

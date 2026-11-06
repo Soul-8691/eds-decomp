@@ -2579,3 +2579,18 @@ updated: 2026-09-29
 - New tools/duel_board.py (gModDuelFieldImage: the boxes out, Extra Monster Zone frames at the edges, a 10x4 phase panel) and src/mod_duel_hud.c (`ModDrawDuelHud`: LP sprites at the screen corners, the turn player's name and the phase letters over the panel), called from `ModDrawCounterBadges`.
 - Size-limited: `DrawLifePoints` / `DrawPhaseIndicator` (duel_info_bar.c) draw nothing; `DuelScreen_Init` loads the new board and drops the "LP" label cells; `DuelCmd_ChangeLifePoints` moves the +/- amount. Demo `.text` ends at 0x0807F34C.
 - Pages: [[duel-hud]] (new).
+
+## [2026-11-06] progress | Link Monsters, usable Extra Monster Zones, the Monster Zone pick
+- New src/mod_link.c (gModLink at EWRAM 0x0202D700), include/link_monster.h; tools/newcards.py (Link Monster, linkval/linkmarkers, gCardLinkMarkers, build/include/link_rules.h; the stand-in race fix), tools/synchro_frame.py `link`, tools/cardicons.py (card_icons/link_monster.png).
+- Size-limited hooks: card_canvas.c, duel_field_screen.c, summon_action.c, duel_cmd_field.c, card_command_menu.c, duel_field_moves.c, battle_phase2.c, duel_prompts.c (PROMPT_MOD_REPLACE_DESTROY), title_menu.c. Demo `.text` ends at 0x0807F440.
+- Test cards Link Spider and Proxy Dragon (src/added_effects.c).
+- include/link.h (the link cable header) was overwritten by mistake and restored from git; the new header is include/link_monster.h.
+- Pages: [[link]] (new), [[added-cards]].
+
+## [2026-11-06] progress | Extra Monster Zones count as columns 1 and 5
+- src/mod_link.c: `sEmzGridX` {0, 4}; `EmzRecord` picks the record of a monster going to an EMZ so its own arrows don't point at its own (blocked) Main column (Link Spider pointed at itself).
+- Pages: [[link]].
+
+## [2026-11-06] progress | EMZs use Main zones 1 and 5; arrows at columns 2 and 4
+- src/mod_link.c: `EmzRecordOf` (left EMZ = Main zone 1's record, right = zone 5's, mirrored for the opponent; the zone must be free); `sEmzGridX` back to {1, 3}. Replaces the previous entry's change.
+- Pages: [[link]].

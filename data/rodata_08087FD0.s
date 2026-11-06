@@ -1946,6 +1946,10 @@ gCardIdsByName:
 	.global gCardTypeEx
 gCardTypeEx:
 	.incbin "build/assets/newcards__type_ex.bin"
+@ Added: the Link Arrows of every card ID (0 but for Link Monsters; bits TL T TR L R BL B BR, src/mod_link.c).
+	.global gCardLinkMarkers
+gCardLinkMarkers:
+	.incbin "build/assets/newcards__link_markers.bin"
 @ Added: the Synchro Monster frame, the Fusion frame recoloured white (tools/synchro_frame.py).
 	.balign 4
 	.global gCardFrameSynchroGfx
@@ -1956,6 +1960,11 @@ gCardFrameSynchroGfx:
 	.global gCardFrameXyzGfx
 gCardFrameXyzGfx:
 	.incbin "build/assets/xyz_frame.bin"
+@ Added: the Link Monster frame, the Fusion frame recoloured dark blue (tools/synchro_frame.py link).
+	.balign 4
+	.global gCardFrameLinkGfx
+gCardFrameLinkGfx:
+	.incbin "build/assets/link_frame.bin"
 @ Added: the duel board with Extra Monster Zones and the shared phase panel (tools/duel_board.py).
 	.balign 4
 	.global gModDuelFieldImage

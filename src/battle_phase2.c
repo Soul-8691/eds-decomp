@@ -443,6 +443,7 @@ struct BattleZoneCopies {
  * r5 to 1 - player.
  */
 void RyuKokkiAfterBattle(int player);   /* mod: src/added_effects.c */
+int ModProxyBattle(int player);         /* mod: src/added_effects.c */
 void HydrogeddonAfterBattle(int player);
 
 int BattleStage_DestroyMonsters(int player)
@@ -503,6 +504,10 @@ int BattleStage_DestroyMonsters(int player)
             }
         }
     }
+#endif
+#ifdef HAS_CARD_PROXY_DRAGON
+    if (ModProxyBattle(player))     /* added: Proxy Dragon may save a destroyed monster (waits for the prompt) */
+        return 0;
 #endif
 #ifdef HAS_CARD_DARK_MAGICIAN_OF_CHAOS
     /* Added: Dark Magician of Chaos in the battle: the monsters it destroys are banished, and so is it when it is

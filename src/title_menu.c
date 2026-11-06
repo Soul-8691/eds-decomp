@@ -745,6 +745,8 @@ void CardDetail_DrawSprites(void)
     case CARD_TYPE_TICKET:
         break;
     default:
+        if (IS_LINK_CARD(gCardDetail.cardId))   /* added: a Link Monster has no Level (its rating is in the type line) */
+            level = 0;
         for (i = 0; i < level; i++) {
             if (level <= 9)
                 AddSprite((x + 0x54 - i * 8) | (0x26 << 16), SPRITE_SHAPE_8x8, OBJ_STAR);
@@ -759,7 +761,8 @@ void CardDetail_DrawSprites(void)
             if (attr <= ATTRIBUTE_WIND)
                 AddSprite((x + 0x4C) | (0x16 << 16), SPRITE_SHAPE_16x16, OBJ_TYPE_ICON);
         CardDetail_DrawAtk();
-        CardDetail_DrawDef();
+        if (!IS_LINK_CARD(gCardDetail.cardId))  /* added: and no DEF */
+            CardDetail_DrawDef();
         break;
     }
 }
