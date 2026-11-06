@@ -2508,3 +2508,6 @@ updated: 2026-09-29
   case (duel_field_moves.c); the End Phase hand-size discard goes through `ModPostHandLimitDiscard`
   (battle_phase3.c) so it does not trigger it. Demo list: 173 cards.
 - Pages: [[added-cards]], README.
+
+## [2026-11-05] progress | PACKS.md regenerated
+- tools/packs_md.py: the pull rates and prices with the cards coded since 2026-11-04 (e.g. the Yata TCG pack's pool 19 -> 21 cards).
