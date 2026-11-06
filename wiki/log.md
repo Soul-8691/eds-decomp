@@ -2545,3 +2545,8 @@ updated: 2026-09-29
 ## [2026-11-06] progress | Pre-duel pictures for five formats
 - The pictures and QR codes moved to duelists/<format>.png / .svg; the Makefile builds them with one pattern rule (PREDUEL_NAMES), data/mod_preduel_data.s holds five, src/mod_preduel.c `PreDuelImage` maps Yugi-Kaiba, Critter, Treasure, Imperial and Android. All five QR codes decoded to their formatlibrary.com/formats/<format> pages.
 - Pages: [[yugi-kaiba-opponent]], README.
+
+## [2026-11-06] progress | Empty decks can duel (testing build, Debug)
+- include/save.h: `DECK_MIN_CARDS` 0 in make (was 1), so `Campaign_StartDay` and `LinkBattle_Init` accept an empty deck; release unchanged (40).
+- src/mod_recipes.c: against Debug, the player's pick accepts an empty or unused recipe slot and B on an empty built deck.
+- Pages: [[added-cards]], [[yugi-kaiba-opponent]], [[release-build]].

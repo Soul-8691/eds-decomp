@@ -198,7 +198,7 @@ it. You can remove 1 Spell Counter from this card; target 1 Spell/Trap on the fi
     beside them (`sRedDeckSide`, `sJoeyDeckSide`, `sBakuraDeckSide`): Chaos Turbo (`sRedStarterDeck`: Tea and Simon)
     40 + 15, Warrior (`sJoeyDeck`: Joey and Pegasus) 40 + 1, Goat Control (`sBakuraDeck`: Bakura and Grandpa) 40 + 15
     (its 12 commented-out Fusion Monsters are back). The deck guards list the added cards of all three parts.
-- **Other rules.** Decks of fewer than 40 cards may duel (`DECK_MIN_CARDS` 1), and the human player cannot deck
+- **Other rules.** Decks of fewer than 40 cards, even empty ones, may duel (`DECK_MIN_CARDS` 0), and the human player cannot deck
   out outside Link Battles (`DuelCmd_DrawCards`).
 
 ### No 3-copy limit (2026-10-25)

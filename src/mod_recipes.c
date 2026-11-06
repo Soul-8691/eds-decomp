@@ -1319,13 +1319,7 @@ static int HandleInput(void)
             PlaySE(SE_CANCEL);
             return 1;
         }
-        if (keys & A_BUTTON) {
-            if (!s->sizes[n][3] || s->sizes[n][0] == 0) {
-                AppendStr(StatusRecipe(n), sStrIsEmpty);
-                PlaySE(SE_ERROR);
-                Render();
-                return 0;
-            }
+        if (keys & A_BUTTON) {      /* an empty slot too: against Debug the player may duel with no cards */
             SwitchTo(n);            /* into the temporary collection: no mark, no save */
             FinishPlayerPick();
             PlaySE(SE_CONFIRM);
@@ -1336,7 +1330,7 @@ static int HandleInput(void)
         /* building the player's own deck against Debug, or the opponent's deck: the list and the actions work on it,
          * as in Deck Recipes */
         if (keys & B_BUTTON) {
-            if (gSaveData.deckSize == 0) {
+            if (gSaveData.deckSize == 0 && !s->pickPlayer) {   /* the player's own deck may be empty */
                 AppendStr(AppendOwner(s->status, 1), sStrBuildEmpty);
                 PlaySE(SE_ERROR);
                 Render();

@@ -26,7 +26,7 @@ updated: 2026-10-26
 | Deck out (`CanDeckOut`, duel_cmd_deck.c) | off in every duel except Link Battle | normal rules; neither side vs Debug |
 | New game trunk (`BuildStarterDeck`, title_screen.c) | `GiveStartingTrunk`: 8 of every card | none (the starter deck only) |
 | Red starter deck (`BuildModStarterDeck`) | empty (build from trunk) | Soul Control (El Duelista DEX) |
-| `DECK_MIN_CARDS` (save.h) | 1 | 40 |
+| `DECK_MIN_CARDS` (save.h) | 0 | 40 |
 | `CARD_COPY_LIMIT_NONE` (save.h) | 99 (no copy limit) | 3 |
 | Format opponents (`ModIsOpponentUnlocked`, mod_opponents.c) | all open | Yugi-Kaiba open; each next one after 10 wins (`sWinsToUnlockNext`) |
 | Deck builder banlist (`GetBanlistCopyLimit`, mod_banlists.c) | ignored (no limits, no card pool) | the Banlists menu's list and pool |

@@ -280,7 +280,8 @@ testing decks.
 - **Your collection is safe.** Your own cards, decks and banlist come back unchanged either way. They stay saved while
   you build, so a reset loses nothing.
 - **Your deck against Debug.** You first pick your own deck the same way (a recipe, or one you build from 8 of every card
-  with no limits), then Debug's. Your cards and decks aren't touched, and your pick is used for the whole match.
+  with no limits), then Debug's. Your cards and decks aren't touched, and your pick is used for the whole match. Your
+  deck may be empty (an empty recipe slot, or B in the deck builder with no cards): the duel starts with no cards.
 - **Debug's rules.** Debug's duels use debug mode's rules: its hand is shown face up, you can read its face-down cards
   (info bar and Card View), you can open its main and fusion deck piles in order, and neither side can deck out.
 
@@ -390,7 +391,7 @@ See `CLAUDE.md` and the `wiki/` for details on the decompilation and the hack.
 
 **Deck rules**
 
-- Decks can be under 40 cards, can hold any number of copies of a card, and ignore banlists.
+- Decks can be under 40 cards, even empty, can hold any number of copies of a card, and ignore banlists.
 - Switching banlists skips the 40-card Main Deck check.
 
 **Duels**

@@ -27,7 +27,7 @@ enum SavedDeckCapacity {
 #if MOD_RELEASE
     DECK_MIN_CARDS = 40,        /* a smaller deck cannot duel (text 401: LinkBattle_Init, Campaign_StartDay) */
 #else
-    DECK_MIN_CARDS = 1,         /* lowered for testing (make, not make release) so decks under 40 cards can duel */
+    DECK_MIN_CARDS = 0,         /* lowered for testing (make, not make release): any deck can duel, even an empty one */
 #endif
 };
 

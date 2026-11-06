@@ -131,7 +131,10 @@ Always open, with no format check:
   - **The player's deck against Debug (2026-10-30).** Before Debug's deck, the player picks their own the same way
     (`ModOpponentPicksPlayerDeck`; `pickPlayer` in `gDeckRecipes`).
     - **Picking your deck.** The scene's start calls `ModRecipeBuildBegin(8, 99)`. A on a recipe loads it into
-      that temporary collection (`SwitchTo`, no mark, no save). SELECT builds a deck (`playerBuilding`). B goes back
+      that temporary collection (`SwitchTo`, no mark, no save). An empty or unused slot is accepted too, and so is B
+      on an empty built deck (2026-11-06): the player may duel Debug with no cards (draws stop at the empty deck,
+      `CanDeckOut` 0). Debug's own deck must still have a card. In make release the day still starts only with a
+      40-card saved deck (`Campaign_StartDay`). SELECT builds a deck (`playerBuilding`). B goes back
       to the opponent select (`ModRecipeBuildEnd`). Every line says "Your deck" here, never "Debug's".
     - **Picking Debug's deck.** `FinishPlayerPick` stashes the player's lists in `gModPlayerDeckStash` (EWRAM
       0x0202F500, a `RecipeSlot`), empties the decks and starts the scene over ("Now pick Debug's deck.").
