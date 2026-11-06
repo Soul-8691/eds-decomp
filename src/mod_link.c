@@ -17,7 +17,7 @@
  * are mirrored, and its arrows are turned around.
  *
  * Zone pick. ModSummonZoneStep (SummonAction_Update, before the kind's step machine) lets the human choose the
- * Monster Zone of every summon but a Flip Summon (a free one, or a Tribute's), plus a free EMZ for an Extra Deck
+ * Monster Zone of every summon but a Flip Summon (a free one; a Tribute Summon: one of its Tributes'), plus a free EMZ for an Extra Deck
  * monster (Master Rule 5); a Link Monster only goes to an EMZ or a zone one of its controller's Link Monsters points
  * to. The CPU keeps the engine's zone (a Link Monster: an EMZ if free, else a pointed zone). A Link Monster is always
  * face-up Attack Position (also ModSummonDefenseChoice).
@@ -416,8 +416,16 @@ static int BuildCandidates(struct SummonAction *a)
         if (a->hasTribute2 && a->tribute2Player == player)
             tributes |= 1 << a->tribute2Zone;
     }
+    if (tributes != 0) {            /* a Tribute Summon goes to one of the Tributes' zones only */
+        for (zone = 0; zone < MONSTER_ZONES; zone++) {
+            if (tributes & (1 << zone))
+                gModLink.cands[n++] = zone;
+        }
+        gModLink.restrictMask = 0;
+        return n;
+    }
     for (zone = 0; zone < MONSTER_ZONES; zone++) {
-        int ok = RecordFree(player, zone) || (tributes & (1 << zone));
+        int ok = RecordFree(player, zone);
 
         if (ok && link)
             ok = (PointedZones(player, -1, 0) & (1 << zone)) != 0;

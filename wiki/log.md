@@ -2624,3 +2624,7 @@ updated: 2026-09-29
 ## [2026-11-06] progress | HUD sprites dim with the board
 - src/mod_duel_hud.c `DimHudPalettes`: the phase panel, life points, badges and Link arrows darken by gMain.brightness like the BG layers (DuelFieldDim's BLDCNT leaves OBJ out), so they no longer stay bright when the screen darkens.
 - Pages: [[duel-hud]].
+
+## [2026-11-06] progress | Tribute Summons go to a Tribute's zone
+- src/mod_link.c `BuildCandidates`: a summon with Tributes offers only the Tributes' zones (no other free zone, no EMZ).
+- Pages: [[link]].

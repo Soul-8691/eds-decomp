@@ -64,8 +64,8 @@ emulator**.
 ## The zone pick (every summon)
 - `ModSummonZoneStep`, called by `SummonAction_Update` (summon_action.c) before the kind's step machine:
   the human picks the Monster Zone of every summon but a Flip Summon, with the Control Pad and A over a marker
-  (the "can attack" marker sprite), in a text box. Places: free Main zones (and the Tributes' zones of a Tribute
-  Summon); a free EMZ for an Extra Deck monster; for a Link Monster only an EMZ or a pointed zone.
+  (the "can attack" marker sprite), in a text box. Places: free Main zones; for a Tribute Summon only the
+  Tributes' zones (2026-11-06: picking another free zone was possible); a free EMZ for an Extra Deck monster; for a Link Monster only an EMZ or a pointed zone.
 - No prompt with one place; the CPU and Link Battles keep the engine's zone (a CPU Link Monster: an EMZ first).
 - `ModSummonSetZone` (the Link Summon) and `ModSummonRestrictZones` (Link Spider) steer it.
 - A Link Monster is always face-up Attack Position: forced in the step, and the position question of
