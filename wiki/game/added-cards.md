@@ -2024,6 +2024,31 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
   - **Deck:** `DUEL_CMD_SEND_DECK_CARD_TO_GRAVEYARD` for `deck[0]` and `deck[1]` (the top is index 0).
 - Checked in the source and the build; not tested in an emulator.
 
+### Archfiend's Call (2026-11-05)
+- Synchro Monster (Level 6, DARK Fiend, 2500/1200; `assets/new_cards/cards.json`): "1 Tuner + 1+ non-Tuner monsters.
+  This card's name becomes "Summoned Skull" on the field, but is still treated as an "Archfiend" card. Your opponent
+  cannot target any "Summoned Skull" you control with card effects. If this Synchro Summoned card you control is sent
+  to your GY by an opponent's card: You can Special Summon 1 "Summoned Skull" from your hand, Deck, or GY."
+- **Name.** `ModFieldCardId` reads its ID as Summoned Skull's on the field where a name matters so far: the Fusion
+  recipes (`FindFusionMaterialSlot`'s field scan, Polymerization's material record and its pick, `effect_fusion.c`,
+  size-limited `.text`; so B. Skull Dragon can use it), The Dark - Hex-Sealed Fusion's materials, and its own
+  protection. Other name checks (e.g. `CountFaceUpMonstersByNumber(.., CARD_SUMMONED_SKULL)`) still see its own name.
+- **Protection.** `CanCardTargetZone` (`card_list_viewer.c`, far code) asks `ModCannotBeTargeted`: a face-up "Summoned
+  Skull" of a player with a face-up Archfiend's Call cannot be targeted while the link being built
+  (`gChain.links[buildIndex]`) is the opponent's; outside chain building (activation checks), while it is the
+  opponent's turn (hypothesis-level approximation: an opponent's response on your turn can pass its activation check,
+  then find no target).
+- **Float.** `SendFieldCardToGrave` (`duel_send_to_grave.c`) and `SendBattleDestroyedCardToGraveyard`
+  (`duel_field_moves.c`) call `ArchfiendsCallSentToGrave`. It needs the Synchro Summon mark
+  (`ModWasSynchroSummonedId`, new in `mod_synchro.c`: by card ID, as the battle's copy may be gone from the zone) and
+  an opponent's card: destroyed in battle, or sent while an opponent's chain link resolves (`gChain.resolving`, its
+  last link's player). It queues an off-field `RESPONSE_MONSTER_TO_GRAVE` trigger. Resolve: the human is asked
+  (Yes/No), then picks a Summoned Skull from the hand, Deck or Graveyard in the list (Skilled Dark Magician's steps:
+  removed from its pile, Special Summoned in the chosen position, the Deck shuffled); the CPU always, its Graveyard's
+  first, else its Deck's, else its hand's.
+- It was already above `------` in `new_cards.txt`; it wasn't in `card_pools/missing*.txt`.
+- Checked in the source and the build; not tested in an emulator.
+
 ### Plaguespreader Zombie (2026-11-05)
 - Tuner Monster (Level 2, DARK Zombie, 400/200; `assets/new_cards/cards.json`): "If this card is in your GY: You can
   place 1 card from your hand on the top of the Deck; Special Summon this card, but banish it when it leaves the

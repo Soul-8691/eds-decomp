@@ -5745,6 +5745,17 @@ void EndPhase_ReturnMagicalScientist(void)
 }
 #endif /* HAS_CARD_MAGICAL_SCIENTIST */
 
+/* A field card's ID as its name reads on the field: Archfiend's Call is "Summoned Skull" there (src/added_effects.c;
+ * effect_fusion.c and The Dark - Hex-Sealed Fusion ask it). Any other ID is itself. */
+u16 ModFieldCardId(u16 id)
+{
+#ifdef HAS_CARD_ARCHFIENDS_CALL
+    if ((id & CARD_ID_MASK) != 0 && CARD_NUMBER(id & CARD_ID_MASK) == CARD_ARCHFIENDS_CALL)
+        return gCardNumberToId[CARD_SUMMONED_SKULL];
+#endif
+    return id;
+}
+
 #ifdef HAS_CARD_THE_DARK_HEX_SEALED_FUSION
 /* ---- The Dark - Hex-Sealed Fusion ---------------------------------------------------------------------------------
  * "You can substitute this card for any 1 Fusion Material Monster, but the other Fusion Material Monster(s) must be
@@ -5812,7 +5823,7 @@ static int HexSealedMaterials(int player, int hexZone, u16 fusionId, u8 *zones)
             for (zone = ZONE_MONSTER_0; zone <= ZONE_MONSTER_4; zone++) {
                 u16 id = DUEL_CARD_ID(&ZoneOf(player, zone)->card);
 
-                if (id != 0 && !(used & (1 << zone)) && HexSealedNumber(id) == mats[i])
+                if (id != 0 && !(used & (1 << zone)) && HexSealedNumber(ModFieldCardId(id)) == mats[i])
                     break;
             }
             if (zone > ZONE_MONSTER_4)
@@ -8114,6 +8125,13 @@ void ModCollectEffectTargets(int player, u16 cardNumber, int param)
     struct DuelPlayer *o = &gDuelPlayers[(1 - player) & 1];
 
     switch (cardNumber) {
+#ifdef HAS_CARD_ARCHFIENDS_CALL
+    case CARD_ARCHFIENDS_CALL:              /* Summoned Skull in the hand, then the Deck, then the Graveyard */
+        ModAddPileTargets(p->hand, p->handCount, CARDLIST_SRC_HAND, IsNumberId, CARD_SUMMONED_SKULL);
+        ModAddPileTargets(p->deck, p->deckCount, CARDLIST_SRC_DECK, IsNumberId, CARD_SUMMONED_SKULL);
+        ModAddPileTargets(p->graveyard, p->graveCount, CARDLIST_SRC_GRAVEYARD, IsNumberId, CARD_SUMMONED_SKULL);
+        break;
+#endif
 #ifdef HAS_CARD_SKILLED_DARK_MAGICIAN
     case CARD_SKILLED_DARK_MAGICIAN:        /* Dark Magician in the hand, then the Deck, then the Graveyard */
         ModAddPileTargets(p->hand, p->handCount, CARDLIST_SRC_HAND, IsNumberId, CARD_DARK_MAGICIAN);
@@ -11776,6 +11794,129 @@ int EffectSillvaResolve(struct ChainEntry *link, struct ChainEntry *chainedTo)
 }
 #endif /* HAS_CARD_SILLVA_WARLORD_OF_DARK_WORLD */
 
+#ifdef HAS_CARD_ARCHFIENDS_CALL
+/* ---- Archfiend's Call ---------------------------------------------------------------------------------------------
+ * "1 Tuner + 1+ non-Tuner monsters. This card's name becomes "Summoned Skull" on the field, but is still treated as an
+ * "Archfiend" card. Your opponent cannot target any "Summoned Skull" you control with card effects. If this Synchro
+ * Summoned card you control is sent to your GY by an opponent's card: You can Special Summon 1 "Summoned Skull" from
+ * your hand, Deck, or GY."
+ *   name     ModFieldCardId: on the field its card ID reads as Summoned Skull's where a name matters here: the
+ *            Fusion recipes (FindFusionMaterialSlot, Polymerization's material record and pick, effect_fusion.c;
+ *            The Dark - Hex-Sealed Fusion's HexSealedMaterials) and its own targeting protection
+ *   protect  CanCardTargetZone (card_list_viewer.c) asks ModCannotBeTargeted: a face-up "Summoned Skull" of a player
+ *            with a face-up Archfiend's Call, while the link being built (gChain.links[buildIndex]) is the
+ *            opponent's; outside chain building, while it is the opponent's turn
+ *   float    SendFieldCardToGrave (duel_send_to_grave.c) during an opponent's resolving chain link, and
+ *            SendBattleDestroyedCardToGraveyard (duel_field_moves.c: a battle is always with an opponent's card),
+ *            call ArchfiendsCallSentToGrave: a Synchro Summoned one (ModWasSynchroSummonedId) queues its off-field
+ *            RESPONSE_MONSTER_TO_GRAVE trigger. Resolve: the human is asked (Yes/No), then picks a Summoned Skull from
+ *            the hand, Deck or Graveyard (Skilled Dark Magician's list and steps); the CPU always, its Graveyard's
+ *            first, else its Deck's, else its hand's */
+static const u8 sStrArchfiendsCallAsk[] = "Special Summon a Summoned Skull from your hand, Deck, or Graveyard?";
+
+void ArchfiendsCallSentToGrave(int player, int zone, u16 id, int byBattle)
+{
+    id &= CARD_ID_MASK;
+    if (zone > ZONE_MONSTER_4 || CARD_NUMBER(id) != CARD_ARCHFIENDS_CALL || !ModWasSynchroSummonedId(player, zone, id))
+        return;
+    if (!byBattle && (!gChain.resolving || gChain.linkCount == 0
+                      || (gChain.links[gChain.linkCount - 1].player & 1) == (player & 1)))
+        return;
+    Chain_AddPending(TRIGGER_PLAYER(player & 1) | TRIGGER_ZONE(0x1F & player) | TRIGGER_EVENT(RESPONSE_MONSTER_TO_GRAVE)
+                         | TRIGGER_KIND(CHAIN_KIND_OFF_FIELD) | id,
+                     0);
+}
+
+int ModCannotBeTargeted(u16 cardId, int player, int zone)
+{
+    int p = player & 1, targeter;
+    struct DuelZone *z;
+
+    (void)cardId;
+    if (zone > ZONE_MONSTER_4)
+        return 0;
+    z = ZoneOf(p, zone);
+    if (!z->isFaceUp || CARD_NUMBER(ModFieldCardId(DUEL_CARD_ID(&z->card))) != CARD_SUMMONED_SKULL
+        || CountFaceUpMonstersByNumber(p, CARD_ARCHFIENDS_CALL) == 0)
+        return 0;
+    targeter = gChain.building ? gChain.links[gChain.buildIndex].player & 1 : gDuel.turnPlayer & 1;
+    return targeter != p;
+}
+
+int EffectArchfiendsCallPrepare(struct ChainEntry *card, struct ChainEntry *chainLink, u16 fromHand)
+{
+    return card->event == RESPONSE_MONSTER_TO_GRAVE && CountFreeMonsterZones(card->player) > 0
+           && CanSpecialSummon(card->player) && CollectEffectTargetsInt(card->player, CARD_ARCHFIENDS_CALL, 0) > 0;
+}
+
+int EffectArchfiendsCallResolve(struct ChainEntry *link, struct ChainEntry *chainedTo)
+{
+    int count, i;
+
+    (void)chainedTo;
+    if (link->negated)
+        return EFFECT_STEP_DONE;
+    switch (gChain.effectStep) {
+    case EFFECT_STEP_START:
+        count = CollectEffectTargetsInt(link->player, CARD_ARCHFIENDS_CALL, 0);
+        if (count == 0 || CountFreeMonsterZones(link->player) == 0)
+            return EFFECT_STEP_DONE;
+        if (link->player) {
+            int pick = 0;
+
+            for (i = 0; i < count; i++) {
+                if (gCardListView.sources[i] == CARDLIST_SRC_GRAVEYARD) {
+                    pick = i;
+                    break;
+                }
+                if (gCardListView.sources[i] == CARDLIST_SRC_DECK && gCardListView.sources[pick] == CARDLIST_SRC_HAND)
+                    pick = i;
+            }
+            gCardListView.cursorRow = 0;
+            gCardListView.top = pick;
+            return EFFECT_STEP_3;
+        }
+        TextBoxOpen(TEXTBOX_POS(6, 2), TEXTBOX_SIZE(18, 7), TEXTBOX_FLAGS_DEFAULT, sStrArchfiendsCallAsk);
+        TextBoxSetMenu(TEXTBOX_MENU_YES_NO, NULL, NULL);
+        return EFFECT_STEP_2;
+    case EFFECT_STEP_2:
+        if (gTextBox.result == 0)
+            return EFFECT_STEP_DONE;
+        CardListView_Open(link->player, CARDLIST_AREA_EFFECT_TARGETS, CARD_ARCHFIENDS_CALL, 0);
+        return EFFECT_STEP_3;
+    case EFFECT_STEP_3: {
+        u16 *picked = (u16 *)&gCardListView.cards[gCardListView.cursorRow + gCardListView.top];
+        u16 cmd;
+
+        switch (gCardListView.sources[gCardListView.cursorRow + gCardListView.top]) {
+        case CARDLIST_SRC_DECK:
+            cmd = DUEL_CMD_REMOVE_CARD_FROM_DECK;
+            break;
+        case CARDLIST_SRC_HAND:
+            cmd = DUEL_CMD_REMOVE_CARD_FROM_HAND;
+            break;
+        default:
+            cmd = DUEL_CMD_REMOVE_CARD_FROM_GRAVEYARD;
+            break;
+        }
+        DuelCmd_Push(link->player ? DUEL_CMD_PLAYER | cmd : cmd, picked[0], picked[1], 0);
+        if (cmd == DUEL_CMD_REMOVE_CARD_FROM_HAND)
+            DuelCmd_Push(link->player ? DUEL_CMD_PLAYER | DUEL_CMD_COMPACT_HAND : DUEL_CMD_COMPACT_HAND, 0, 0, 0);
+        return EFFECT_STEP_4;
+    }
+    case EFFECT_STEP_4:
+        QueueSpecialSummonChoosePosition(link->player,
+            (struct DuelCard *)&gCardListView.cards[gCardListView.top + gCardListView.cursorRow], 1, 0);
+        return EFFECT_STEP_5;
+    case EFFECT_STEP_5:
+        if (gCardListView.sources[gCardListView.top + gCardListView.cursorRow] == CARDLIST_SRC_DECK)
+            DuelCmd_Push(link->player ? DUEL_CMD_PLAYER | DUEL_CMD_SHUFFLE_DECK : DUEL_CMD_SHUFFLE_DECK, 0, 0, 0);
+        return EFFECT_STEP_END;
+    }
+    return EFFECT_STEP_DONE;
+}
+#endif /* HAS_CARD_ARCHFIENDS_CALL */
+
 #ifdef HAS_CARD_CHAOS_KING_ARCHFIEND
 /* ---- Chaos King Archfiend -----------------------------------------------------------------------------------------
  * "1 Fiend-Type Tuner + 1 or more non-Tuner monsters. When this card declares an attack: You can switch the current
@@ -14520,6 +14661,16 @@ const struct CardEffect gAddedCardEffects[] = {
         EffectThestalosResolve,
         NULL,
         NULL,
+        NULL,
+        NULL,
+    },
+#endif
+#ifdef HAS_CARD_ARCHFIENDS_CALL
+    {
+        CARD_ARCHFIENDS_CALL, 0,
+        EffectArchfiendsCallResolve,
+        NULL,
+        EffectArchfiendsCallPrepare,
         NULL,
         NULL,
     },

@@ -219,6 +219,9 @@ void SendFieldCardToGrave(int player, int zone, u16 destroyed, u16 runTriggers)
     if (destroyed && zone <= ZONE_MONSTER_4 && !z->isFaceUp && z->isDefense && CARD_NUMBER(id) == CARD_SAND_MOTH)
         SandMothDestroyed(ZONE_CARD(z)->owner, id);     /* its owner's Graveyard, as Sangan's trigger */
 #endif
+#ifdef HAS_CARD_ARCHFIENDS_CALL
+    ArchfiendsCallSentToGrave(player, zone, id, 0);    /* added: its float (src/added_effects.c) */
+#endif
 #ifdef HAS_CARD_OJAMA_TOKEN
     /* added: Ojama Token's 300 damage to its controller (src/added_effects.c) */
     if (destroyed && zone <= ZONE_MONSTER_4 && CARD_NUMBER(id) == CARD_OJAMA_TOKEN)

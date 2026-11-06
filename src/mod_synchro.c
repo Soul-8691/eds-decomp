@@ -417,6 +417,13 @@ int ModSynchroArrived(int player, int zone, u16 id)
     return 1;
 }
 
+int ModWasSynchroSummonedId(int player, int zone, u16 id)
+{
+    if (zone >= MONSTER_ZONES || (id & CARD_ID_MASK) == 0)
+        return 0;
+    return gModSynchro.summonedIds[(player & 1) * MONSTER_ZONES + zone] == (id & CARD_ID_MASK);
+}
+
 int ModWasSynchroSummoned(int player, int zone)
 {
     u16 id;

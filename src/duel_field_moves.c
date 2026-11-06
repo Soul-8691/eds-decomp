@@ -190,6 +190,9 @@ void SendBattleDestroyedCardToGraveyard(int defender, int player, int zone, u16 
     DuelCmd_Push(PLAYER_CMD(player, DUEL_CMD_ADD_CARD_TO_GRAVEYARD), card[0], card[1], 0);
     if (CARD_STATS_TYPE(CARD_STATS(((struct DuelCard *)card)->id)) <= CARD_TYPE_REPTILE)
         gDuelPlayers[player & 1].monsterSentToGraveThisTurn = 1;
+#ifdef HAS_CARD_ARCHFIENDS_CALL
+    ArchfiendsCallSentToGrave(player, zone, ((struct DuelCard *)card)->id, 1);   /* added: its float */
+#endif
     word = CARD_WORD(card);
     dispatchId = CARD_ID(word);
 #ifdef HAS_CARD_DARK_RULER_HA_DES

@@ -24,6 +24,8 @@ void ModSynchroMenuRun(void);
 int AiTrySynchroSummon(void);
 /* 1 if the monster in (player, zone) was Synchro Summoned (Junk Warrior's trigger, the revival rule). */
 int ModWasSynchroSummoned(int player, int zone);
+/* 1 if card `id` was Synchro Summoned into (player, zone): the zone need not still hold it (a battle's copy). */
+int ModWasSynchroSummonedId(int player, int zone, u16 id);
 /* Duel start (ModDuelReset, src/added_effects.c): clear the Synchro state. */
 void ModSynchroReset(void);
 /* AddedCardsSummoned: `id` arrived in (player, zone); 1 if it was being Synchro Summoned (now marked). */

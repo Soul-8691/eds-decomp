@@ -172,6 +172,10 @@ struct ZoneCardStats;
 void ModShippingStats(int player, int zone, struct ZoneCardStats *out);
 /* Chaos King Archfiend (src/added_effects.c): its attack trigger, and its ATK/DEF switch in GetZoneCardStats. */
 void ModAttackDeclaredTriggers(int player, int zone);
+/* Archfiend's Call (src/added_effects.c): its name on the field, its targeting protection and its float. */
+u16 ModFieldCardId(u16 id);
+int ModCannotBeTargeted(u16 cardId, int player, int zone);
+void ArchfiendsCallSentToGrave(int player, int zone, u16 id, int byBattle);
 void ModChaosKingSwap(int player, int zone, struct ZoneCardStats *out);
 /* Face-up copies of Kycoo the Ghost Destroyer (CARD_1511 effect key and/or CARD_KYCOO_THE_GHOST_DESTROYER). */
 int CountActiveKycooOnField(int player);

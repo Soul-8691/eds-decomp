@@ -2537,3 +2537,7 @@ updated: 2026-09-29
 
 ## [2026-11-05] progress | Fix: Plaguespreader / Quillbolt not banished on leaving
 - The banish mark is now checked for battle destruction (`ModBattleDestroyedBanished` in `SendBattleDestroyedCardToGraveyard`) and Fusion Material (`SendFusionMaterialToGrave`); a zone's mark is cleared when another monster arrives. Pages: [[added-cards]].
+
+## [2026-11-05] progress | Archfiend's Call
+- src/added_effects.c: `ModFieldCardId`, `ModCannotBeTargeted`, `ArchfiendsCallSentToGrave`, `EffectArchfiendsCallPrepare` / `Resolve`, the list case and row; src/mod_synchro.c `ModWasSynchroSummonedId`. Hooks: card_list_viewer.c (`CanCardTargetZone`), duel_send_to_grave.c, duel_field_moves.c (battle), effect_fusion.c (three name reads).
+- Pages: [[added-cards]].

@@ -482,6 +482,9 @@ u16 FindFusionMaterialSlot(int player, u16 cardNumber, u16 excludeA, u16 exclude
     for (i = 0; i < MONSTER_ZONE_COUNT; i++) {
         struct DuelZone *zone = ZONE_AT(player & 1, i);
         id = CARD_ID(CARD_WORD(zone->card));
+#ifdef HAS_CARD_ARCHFIENDS_CALL
+        id = ModFieldCardId(id);    /* added: Archfiend's Call is "Summoned Skull" on the field */
+#endif
 
         if (id != 0) {
             if (CARD_NUMBER(id) == cardNumber || CARD_NUMBER(id) == cardNumber + CARD_NUMBER_ALT_ART) {
@@ -836,6 +839,9 @@ int EffectPolymerizationResolve(struct ChainEntry *link, int chainedTo)
                     } while (0);
                 if (gChain.fusionMaterialSlots[i] & FUSION_SLOT_FIELD)
                     cardId = CARD_ID(ZONE_WORD(1 & link->player, gChain.fusionMaterialSlots[i] & 0xFF));
+#ifdef HAS_CARD_ARCHFIENDS_CALL
+                cardId = ModFieldCardId(cardId);    /* added: Archfiend's Call */
+#endif
                 gChain.fusionMaterials[i] = cardId;
             }
         }
@@ -854,6 +860,9 @@ int EffectPolymerizationResolve(struct ChainEntry *link, int chainedTo)
             break;
         case DUEL_AREA_MONSTER:
             pickedId = CARD_ID(ZONE_WORD(link->player, gDuelScreen.selIndex));
+#ifdef HAS_CARD_ARCHFIENDS_CALL
+            pickedId = ModFieldCardId(pickedId);    /* added: Archfiend's Call */
+#endif
             break;
         default:
             pickedId = 0;

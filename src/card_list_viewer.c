@@ -410,6 +410,10 @@ u16 CanCardTargetZone(u16 cardId, int player, int zone)
         && GetFaceUpFieldMagicNumber() == CARD_UMI && CARD_TYPE(cardId) == CARD_TYPE_MAGIC
         && CARD_SUBTYPE(cardId) != SPELL_EQUIP)
         ok = 0;
+#ifdef HAS_CARD_ARCHFIENDS_CALL
+    if (ModCannotBeTargeted(cardId, player, zone))  /* added: Archfiend's Call (src/added_effects.c) */
+        ok = 0;
+#endif
     return ok;
 }
 
