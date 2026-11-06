@@ -281,6 +281,10 @@ void GetZoneCardStats(int player, int zone, struct ZoneCardStats *out)
         }
     }
 
+#ifdef HAS_CARD_SHIPPING_ARCHFIEND
+    ModShippingStats(player, zone, out);    /* added: Shipping Archfiend's declared Type/Attribute */
+#endif
+
     /* 3. The zone's links. value = high byte of linkKinds[i]; links[i] is a DUEL_LOC for the zone kinds. */
     for (i = 0; i < ZONE_AT(player & 1, zone)->numLinks; i++) {
         u16 link = ZONE_AT(player & 1, zone)->links[i];

@@ -2519,3 +2519,7 @@ updated: 2026-09-29
 ## [2026-11-05] progress | The Dark - Hex-Sealed Fusion
 - src/added_effects.c: `HexSealedRecipe` / `HexSealedMaterials` / `HexSealedFusionTarget`, `EffectHexSealedFusionPrepare` / `Resolve`, the `ModCollectEffectTargets` case, the CPU policy and the `gAddedCardEffects` row. Hooks: effect_fusion.c (`IsFusionSubstitute`), card_command_menu.c (ACTIVATE).
 - Pages: [[added-cards]].
+
+## [2026-11-05] progress | Shipping Archfiend
+- src/added_effects.c: both effects (`EffectShippingArchfiendPrepare` / `ChainB` / `Resolve`, `QueueShippingTriggers` in `AddedCardsSummoned`, `ModShippingType` / `Attribute` / `Stats`), new `gModShipping` (0x0202FEB0, symbols.ld). Hooks: card_stats.c, duel_stat_queries.c, card_command_menu.c. mod_synchro.c's size assert tightened to 0xB0.
+- Pages: [[added-cards]].

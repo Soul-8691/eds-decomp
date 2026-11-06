@@ -108,6 +108,11 @@ u32 GetZoneCardDef(u32 player, u32 slot)
  * newer than that, unless the equip is disabled, card 1537 is active on either field, or equip magic is
  * negated (gDuel +0x1ACD bits 0-1). Same rules as the type pass of GetZoneCardStats.
  */
+#ifdef HAS_CARD_SHIPPING_ARCHFIEND
+u32 ModShippingType(int player, int zone, u32 type);            /* added: src/added_effects.c */
+u32 ModShippingAttribute(int player, int zone, u32 attribute);
+#endif
+
 u32 GetZoneCardType(s32 player, s32 slot)
 {
     u32 playerOffset;
@@ -192,6 +197,9 @@ u32 GetZoneCardType(s32 player, s32 slot)
                 type = CARD_TYPE_DRAGON;
         }
     }
+#ifdef HAS_CARD_SHIPPING_ARCHFIEND
+    type = ModShippingType(player, slot, type);     /* added: Shipping Archfiend (src/added_effects.c) */
+#endif
     return type;
 }
 
@@ -247,6 +255,9 @@ u32 GetZoneCardAttribute(s32 player, s32 slot)
                 attribute = equip->declaredValue;
         }
     }
+#ifdef HAS_CARD_SHIPPING_ARCHFIEND
+    attribute = ModShippingAttribute(player, slot, attribute);  /* added: Shipping Archfiend (src/added_effects.c) */
+#endif
     return attribute;
 }
 

@@ -2024,6 +2024,35 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
   - **Deck:** `DUEL_CMD_SEND_DECK_CARD_TO_GRAVEYARD` for `deck[0]` and `deck[1]` (the top is index 0).
 - Checked in the source and the build; not tested in an emulator.
 
+### Shipping Archfiend (2026-11-05)
+- Tuner Monster (Level 3, WIND Fiend, 0/0; `assets/new_cards/cards.json`): "You can target any number of face-up
+  monsters on the field, and declare 1 Type or Attribute; they become that Type or Attribute. If a monster(s) is
+  Special Summoned to your opponent's field, while this card is in your Monster Zone (except during the Damage Step):
+  You can target 1 monster on each field with the same Type and Attribute from each other; return them to the hand.
+  You can only use each effect of "Shipping Archfiend" once per turn."
+- **One effect row**, `link->event` tells the effects apart. Once per turn each, per player
+  (`gModShipping.turn[player][effect]`).
+- **Effect 1** (ACTIVATE on the card menu, `card_command_menu.c`): the human picks face-up monsters with the cursor,
+  any number (a bitmask in `gModShipping.picks`, since a chain link holds 3 targets), B when done. At resolution:
+  "Declare a Type? (No: declare an Attribute)" (Yes/No), then the engine's Type or Attribute prompt (DNA Surgery's
+  `PROMPT_SELECT_TYPE` / `PROMPT_SELECT_ATTRIBUTE`). Each picked monster still face up keeps the value
+  (`gModShipping.type` / `attr`, per zone) while its `DuelZone.serial` is the one recorded, i.e. until it leaves
+  the field (or turns face down). Equips that no longer fit are checked (`DestroyInvalidEquips`). The CPU doesn't use
+  it.
+- **Override hooks** (size-limited `.text`, one call each): `GetZoneCardStats` (`card_stats.c`, after DNA Surgery),
+  `GetZoneCardType` and `GetZoneCardAttribute` (`duel_stat_queries.c`) ask `ModShippingType` /
+  `ModShippingAttribute`. A later DNA Surgery does not take precedence over it (hypothesis-level simplification).
+- **Effect 2** (trigger): `AddedCardsSummoned` queues it (`QueueShippingTriggers`, `RESPONSE_SPECIAL_SUMMONED`) for
+  each face-up Shipping Archfiend on the other side of any Special Summon. Prepare: a face-up monster on each field
+  with the same Type and Attribute (`ShippingPairAt`, after the overrides). The human picks one, then its partner on
+  the other field (B: none); the CPU returns the human's strongest such monster with its own weakest partner. Both
+  return to the hand if they still match. The Damage Step exception is not modelled.
+- **RAM.** `gModDuel` had no room left (its `STATIC_ASSERT` failed), so the state is `gModShipping` at 0x0202FEB0
+  (`symbols.ld`), between `gModSynchro` (0xA2 bytes used; its assert is now 0xB0) and `gInjectionFairyLily`
+  (0x0202FF00). Reset in `ModDuelInit` (which now also clears `handLimitDiscard`).
+- It was already above `------` in `new_cards.txt`; it wasn't in `card_pools/missing*.txt`.
+- Checked in the source and the build; not tested in an emulator.
+
 ### The Dark - Hex-Sealed Fusion (2026-11-05)
 - Effect Monster (Level 3, DARK Rock, 1000/1600; YGOPRODeck): "You can substitute this card for any 1 Fusion Material
   Monster, but the other Fusion Material Monster(s) must be correct. You can Tribute Fusion Material Monsters on the

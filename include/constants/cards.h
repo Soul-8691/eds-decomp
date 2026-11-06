@@ -1147,10 +1147,10 @@ enum CardNumber {
     CARD_DARK_WORLD_LIGHTNING = 851,                      /* id 991, added card */
     CARD_GOLDD_WU_LORD_OF_DARK_WORLD = 852,               /* id 992, added card */
     CARD_SILLVA_WARLORD_OF_DARK_WORLD = 853,              /* id 993, added card */
-    CARD_SHIPPING_ARCHFIEND = 854,                        /* id 994, added card */
-    CARD_PLAGUESPREADER_ZOMBIE = 855,                     /* id 995, added card */
-    CARD_ARCHFIENDS_ORIGIN = 856,                         /* id 996, added card */
-    CARD_THE_DARK_HEX_SEALED_FUSION = 857,                /* id 997, added card */
+    CARD_THE_DARK_HEX_SEALED_FUSION = 854,                /* id 994, added card */
+    CARD_SHIPPING_ARCHFIEND = 855,                        /* id 995, added card */
+    CARD_PLAGUESPREADER_ZOMBIE = 856,                     /* id 996, added card */
+    CARD_ARCHFIENDS_ORIGIN = 857,                         /* id 997, added card */
     CARD_ARCHFIEND_CAVALRY = 858,                         /* id 998, added card */
     CARD_INFERNITY_ARCHFIEND = 859,                       /* id 999, added card */
     CARD_SKILLED_RED_MAGICIAN = 860,                      /* id 1000, added card */

@@ -11,3 +11,4 @@ Fairy Box: ATK is 0 for only one battle, not entire Battle Phase
 Toon Table of Contents: "Select a monster"
 Synchro: Can be summoned from GY even if not properly summoned before
 Stardust Dragon: No choice to summon from GY; always does
+Shipping Archfiend: Might cause text to look glitchy during chain

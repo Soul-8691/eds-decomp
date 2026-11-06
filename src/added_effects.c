@@ -121,6 +121,19 @@ extern struct ModDuelState gModDuel;
 /* gModDuel (0x0202FF04, symbols.ld) must end before gScratchBuffer (0x02030000). */
 STATIC_ASSERT(sizeof(struct ModDuelState) <= 0x02030000 - 0x0202FF04, ModDuelStateFits);
 
+/* Shipping Archfiend's state (gModShipping, 0x0202FEB0 in symbols.ld: after gModSynchro, before gInjectionFairyLily at
+ * 0x0202FF00), reset by ModDuelInit. gModDuel has no room left. */
+struct ModShipping {
+    u8 type[10];                /* [player * 5 + zone] declared enum CardType, 0 none ... */
+    u8 attr[10];                /* ... declared enum CardAttribute, 0 none ... */
+    u16 serial[10];             /* ... for the monster with this DuelZone.serial (another one there is not it) */
+    u16 picks[2];               /* [player] the monsters its first effect picked (bit player * 5 + zone) */
+    u16 turn[2][2];             /* [player][effect] gDuel.turnCount + 1 of the turn it was used */
+    u8 declareType;             /* the resolving first effect declares a Type (else an Attribute) */
+};
+extern struct ModShipping gModShipping;
+STATIC_ASSERT(sizeof(struct ModShipping) <= 0x0202FF00 - 0x0202FEB0, ModShippingFits);
+
 static inline struct DuelZone *ZoneOf(int player, int zone)
 {
     return &gDuelPlayers[player & 1].zones[zone];
@@ -1611,6 +1624,11 @@ void ModDuelInit(void)
     gModDuel.ddSurvivorPending[1] = 0;
     gModDuel.limiterRemovalTurn = 0;
     gModDuel.aiPriorityDrawDone = 0;
+    gModDuel.handLimitDiscard = 0;
+    MemClear16(gModShipping.type, sizeof(gModShipping.type));
+    MemClear16(gModShipping.attr, sizeof(gModShipping.attr));
+    gModShipping.picks[0] = gModShipping.picks[1] = 0;
+    MemClear16(gModShipping.turn, sizeof(gModShipping.turn));
 #ifdef HAS_CARD_INJECTION_FAIRY_LILY
     InjectionFairyLilyResetBattle();
 #endif
@@ -3152,12 +3170,19 @@ static void ApprenticeMagicianPlaceCounter(int player, u16 id)
 void SandMothSummoned(int player, int zone, u16 id);     /* below */
 #endif
 void SynchroCardsArrived(int player, int zone, u16 id);     /* below (the Synchro test cards) */
+#ifdef HAS_CARD_SHIPPING_ARCHFIEND
+static void QueueShippingTriggers(int player);              /* below */
+#endif
 
 void AddedCardsSummoned(int player, int zone, u16 id, int kind, int faceUp)
 {
     int synchroSummoned = ModSynchroArrived(player, zone, id);     /* src/mod_synchro.c: marks a Synchro Summon */
 
     SynchroCardsArrived(player, zone, id);
+#ifdef HAS_CARD_SHIPPING_ARCHFIEND
+    if (kind >= SUMMON_ACTION_SPECIAL)
+        QueueShippingTriggers(player);
+#endif
 #ifdef HAS_CARD_JUNK_SYNCHRON
     if (((const u16 *)CARD_ID_TO_NUMBER_ADDR)[id & CARD_ID_MASK] == CARD_JUNK_SYNCHRON && faceUp
         && (kind == SUMMON_ACTION_NORMAL || kind == SUMMON_ACTION_NORMAL_CHOOSE_POSITION))
@@ -11586,6 +11611,290 @@ int EffectSillvaResolve(struct ChainEntry *link, struct ChainEntry *chainedTo)
 }
 #endif /* HAS_CARD_SILLVA_WARLORD_OF_DARK_WORLD */
 
+#ifdef HAS_CARD_SHIPPING_ARCHFIEND
+/* ---- Shipping Archfiend -------------------------------------------------------------------------------------------
+ * "You can target any number of face-up monsters on the field, and declare 1 Type or Attribute; they become that Type
+ * or Attribute. If a monster(s) is Special Summoned to your opponent's field, while this card is in your Monster Zone
+ * (except during the Damage Step): You can target 1 monster on each field with the same Type and Attribute from each
+ * other; return them to the hand. You can only use each effect of "Shipping Archfiend" once per turn."
+ * One effect row; link->event tells the two apart. Once per turn each, per player (gModShipping.turn[player][n]:
+ * gDuel.turnCount + 1 of the turn it was activated).
+ *   1 (ACTIVATE, card_command_menu.c; RESPONSE_NONE)
+ *     chainB   the human picks face-up monsters with the cursor (any number, so a bitmask in
+ *              gModShipping.picks[player], bit player * 5 + zone, not link->targets), B when done
+ *     resolve  "Declare a Type? (No: an Attribute)", then the engine's Type or Attribute prompt; each picked monster
+ *              still face up gets the value in gModShipping.type / shippingAttr (bit as above), kept while
+ *              the zone's serial is the one recorded (shippingSerial): until it leaves the field
+ *     override GetZoneCardStats (card_stats.c, after DNA Surgery), GetZoneCardType and GetZoneCardAttribute
+ *              (duel_stat_queries.c) ask ModShippingType / ModShippingAttribute
+ *     CPU      never (AiWantsMonsterEffect)
+ *   2 (trigger; RESPONSE_SPECIAL_SUMMONED) AddedCardsSummoned queues it for each face-up Shipping Archfiend on the
+ *     other side of a Special Summon (QueueShippingTriggers)
+ *     prepare  a face-up monster on each field with the same Type and Attribute (ShippingPairAt)
+ *     chainB   the human picks one, then its partner on the other field (B: none); the CPU returns the human's
+ *              strongest such monster with its own weakest partner
+ *     resolve  both return to the hand if they still match */
+#define SHIPPING_BIT(player, zone) (((player) & 1) * 5 + (zone))
+
+static const u8 sStrShippingPick[] = "Press A, then select face-up monsters to change. B when done.";
+static const u8 sStrShippingDeclare[] = "Declare a Type? (No: declare an Attribute)";
+static const u8 sStrShippingPair[] =
+    "Press A, then select 1 monster on each field with the same Type and Attribute. B: none.";
+
+/* 1 if the override recorded for (player, zone) is for the monster there now. */
+static int ShippingOverrideLive(int player, int zone)
+{
+    struct DuelZone *z;
+    int bit;
+
+    if (zone > ZONE_MONSTER_4)
+        return 0;
+    z = ZoneOf(player, zone);
+    bit = SHIPPING_BIT(player, zone);
+    return DUEL_CARD_ID(&z->card) != 0 && z->isFaceUp && z->serial == gModShipping.serial[bit];
+}
+
+u32 ModShippingType(int player, int zone, u32 type)
+{
+    if (ShippingOverrideLive(player, zone) && gModShipping.type[SHIPPING_BIT(player, zone)] != 0)
+        return gModShipping.type[SHIPPING_BIT(player, zone)];
+    return type;
+}
+
+u32 ModShippingAttribute(int player, int zone, u32 attribute)
+{
+    if (ShippingOverrideLive(player, zone) && gModShipping.attr[SHIPPING_BIT(player, zone)] != 0)
+        return gModShipping.attr[SHIPPING_BIT(player, zone)];
+    return attribute;
+}
+
+void ModShippingStats(int player, int zone, struct ZoneCardStats *out)
+{
+    out->type = ModShippingType(player, zone, out->type);
+    out->attribute = ModShippingAttribute(player, zone, out->attribute);
+}
+
+static int ShippingFaceUpMonster(int player, int zone)
+{
+    struct DuelZone *z = ZoneOf(player, zone);
+
+    return zone <= ZONE_MONSTER_4 && DUEL_CARD_ID(&z->card) != 0 && z->isFaceUp;
+}
+
+/* 1 if the face-up monsters (p0, z0) and (p1, z1), on different fields, share their Type and Attribute. */
+static int ShippingPairAt(int p0, int z0, int p1, int z1)
+{
+    return (p0 & 1) != (p1 & 1) && ShippingFaceUpMonster(p0, z0) && ShippingFaceUpMonster(p1, z1)
+           && GetZoneCardType(p0, z0) == GetZoneCardType(p1, z1)
+           && GetZoneCardAttribute(p0, z0) == GetZoneCardAttribute(p1, z1);
+}
+
+/* 1 if the face-up monster (player, zone) has a partner on the other field. */
+static int ShippingHasPartner(int player, int zone)
+{
+    int z;
+
+    for (z = ZONE_MONSTER_0; z <= ZONE_MONSTER_4; z++) {
+        if (ShippingPairAt(player, zone, 1 - player, z))
+            return 1;
+    }
+    return 0;
+}
+
+static int ShippingAnyPair(void)
+{
+    int z;
+
+    for (z = ZONE_MONSTER_0; z <= ZONE_MONSTER_4; z++) {
+        if (ShippingHasPartner(0, z))
+            return 1;
+    }
+    return 0;
+}
+
+/* AddedCardsSummoned: a monster was Special Summoned to `player`'s field. */
+static void QueueShippingTriggers(int player)
+{
+    int other = 1 - (player & 1), zone;
+
+    for (zone = ZONE_MONSTER_0; zone <= ZONE_MONSTER_4; zone++) {
+        struct DuelZone *z = ZoneOf(other, zone);
+        u16 id = DUEL_CARD_ID(&z->card);
+
+        if (id != 0 && z->isFaceUp && CARD_NUMBER(id) == CARD_SHIPPING_ARCHFIEND)
+            Chain_AddPending(TRIGGER_PLAYER(other) | TRIGGER_ZONE(zone) | TRIGGER_KIND(CHAIN_KIND_MONSTER)
+                                 | TRIGGER_EVENT(RESPONSE_SPECIAL_SUMMONED) | id,
+                             DUEL_LOC(other, zone));
+    }
+}
+
+int EffectShippingArchfiendPrepare(struct ChainEntry *card, struct ChainEntry *chainLink, u16 fromHand)
+{
+    int player = card->player & 1, zone;
+
+    if (fromHand || card->zone > ZONE_MONSTER_4 || !ShippingFaceUpMonster(player, card->zone)
+        || DUEL_CARD_ID(&ZoneOf(player, card->zone)->card) != (card->card & CARD_ID_MASK))
+        return 0;
+    if (card->event == RESPONSE_NONE) {
+        if (gModShipping.turn[player][0] == gDuel.turnCount + 1)
+            return 0;
+        for (zone = ZONE_MONSTER_0; zone <= ZONE_MONSTER_4; zone++) {
+            if (ShippingFaceUpMonster(0, zone) || ShippingFaceUpMonster(1, zone))
+                return 1;
+        }
+        return 0;
+    }
+    if (card->event == RESPONSE_SPECIAL_SUMMONED)
+        return gModShipping.turn[player][1] != gDuel.turnCount + 1 && ShippingAnyPair();
+    return 0;
+}
+
+/* The CPU's pair: the human's strongest monster with a partner, and its own weakest partner for it. */
+static void ShippingCpuPair(struct ChainEntry *link)
+{
+    int zone, z, best = -1, partner = -1;
+
+    for (zone = ZONE_MONSTER_0; zone <= ZONE_MONSTER_4; zone++) {
+        if (ShippingHasPartner(AI_HUMAN, zone)
+            && (best < 0 || GetZoneCardAtk(AI_HUMAN, zone) > GetZoneCardAtk(AI_HUMAN, best)))
+            best = zone;
+    }
+    if (best < 0)
+        return;
+    for (z = ZONE_MONSTER_0; z <= ZONE_MONSTER_4; z++) {
+        if (ShippingPairAt(AI_HUMAN, best, AI_PLAYER, z)
+            && (partner < 0 || GetZoneCardAtk(AI_PLAYER, z) < GetZoneCardAtk(AI_PLAYER, partner)))
+            partner = z;
+    }
+    link->targets[0] = DUEL_LOC(AI_PLAYER, partner);
+    link->targets[1] = DUEL_LOC(AI_HUMAN, best);
+    link->numTargets = 2;
+}
+
+int EffectShippingArchfiendChainB(struct ChainEntry *link, struct ChainEntry *prevLink)
+{
+    int player = link->player & 1;
+
+    (void)prevLink;
+    if (link->event == RESPONSE_SPECIAL_SUMMONED) {
+        if (gChain.targetStep == 0) {
+            link->numTargets = 0;
+            gModShipping.turn[player][1] = gDuel.turnCount + 1;
+            if (player) {
+                ShippingCpuPair(link);
+                return 1;
+            }
+            TextBoxOpen(TEXTBOX_POS(6, 2), TEXTBOX_SIZE(18, 7), TEXTBOX_FLAGS_DEFAULT, sStrShippingPair);
+            gChain.targetStep++;
+            return 0;
+        }
+        if (gMain.newKeys & B_BUTTON) {
+            link->numTargets = 0;
+            return 1;
+        }
+        if (DuelCursor_PickTarget(PICK_BOTH_SIDES(PICK_FACE_UP_MONSTER_ANY))) {
+            int p = gDuelScreen.selPlayer, z = gDuelScreen.selArea + gDuelScreen.selIndex;
+            int ok;
+
+            if (link->numTargets == 0)
+                ok = ShippingFaceUpMonster(p, z) && ShippingHasPartner(p, z);
+            else
+                ok = ShippingPairAt(DUEL_LOC_PLAYER(link->targets[0]), DUEL_LOC_ZONE(link->targets[0]), p, z);
+            if (ok) {
+                link->targets[link->numTargets++] = DUEL_LOC(p, z);
+                PlaySE(SE_CONFIRM);
+                return link->numTargets >= 2;
+            }
+            PlaySE(SE_ERROR);
+        }
+        return 0;
+    }
+    /* effect 1 */
+    if (gChain.targetStep == 0) {
+        link->numTargets = 0;
+        gModShipping.picks[player] = 0;
+        gModShipping.turn[player][0] = gDuel.turnCount + 1;
+        if (player)
+            return 1;                   /* the CPU does not use it (AiWantsMonsterEffect) */
+        TextBoxOpen(TEXTBOX_POS(6, 2), TEXTBOX_SIZE(18, 7), TEXTBOX_FLAGS_DEFAULT, sStrShippingPick);
+        gChain.targetStep++;
+        return 0;
+    }
+    if (gMain.newKeys & B_BUTTON)
+        return 1;
+    if (DuelCursor_PickTarget(PICK_BOTH_SIDES(PICK_FACE_UP_MONSTER_ANY))) {
+        int p = gDuelScreen.selPlayer, z = gDuelScreen.selArea + gDuelScreen.selIndex;
+
+        if (ShippingFaceUpMonster(p, z) && !(gModShipping.picks[player] & (1 << SHIPPING_BIT(p, z)))) {
+            gModShipping.picks[player] |= 1 << SHIPPING_BIT(p, z);
+            PlaySE(SE_CONFIRM);
+        } else {
+            PlaySE(SE_ERROR);
+        }
+    }
+    return 0;
+}
+
+int EffectShippingArchfiendResolve(struct ChainEntry *link, struct ChainEntry *chainedTo)
+{
+    int player = link->player & 1, p, zone, value;
+
+    (void)chainedTo;
+    if (link->negated)
+        return EFFECT_STEP_DONE;
+    if (link->event == RESPONSE_SPECIAL_SUMMONED) {
+        int p0, z0, p1, z1;
+
+        if (link->numTargets != 2)
+            return EFFECT_STEP_DONE;
+        p0 = DUEL_LOC_PLAYER(link->targets[0]);
+        z0 = DUEL_LOC_ZONE(link->targets[0]);
+        p1 = DUEL_LOC_PLAYER(link->targets[1]);
+        z1 = DUEL_LOC_ZONE(link->targets[1]);
+        if (ShippingPairAt(p0, z0, p1, z1)) {
+            ReturnFieldCardToHand(p0, z0, 0);
+            ReturnFieldCardToHand(p1, z1, 0);
+        }
+        return EFFECT_STEP_DONE;
+    }
+    switch (gChain.effectStep) {
+    case EFFECT_STEP_START:
+        if (gModShipping.picks[player] == 0)
+            return EFFECT_STEP_DONE;
+        TextBoxOpen(TEXTBOX_POS(6, 2), TEXTBOX_SIZE(18, 7), TEXTBOX_FLAGS_DEFAULT, sStrShippingDeclare);
+        TextBoxSetMenu(TEXTBOX_MENU_YES_NO, NULL, NULL);
+        return EFFECT_STEP_2;
+    case EFFECT_STEP_2:
+        gModShipping.declareType = gTextBox.result != 0;
+        DuelPrompt_Post(player, gModShipping.declareType ? PROMPT_SELECT_TYPE : PROMPT_SELECT_ATTRIBUTE, 0, 0);
+        return EFFECT_STEP_3;
+    case EFFECT_STEP_3:
+        value = gDuel.promptResult + 1;     /* enum CardType / CardAttribute */
+        for (p = 0; p <= 1; p++) {
+            for (zone = ZONE_MONSTER_0; zone <= ZONE_MONSTER_4; zone++) {
+                int bit = SHIPPING_BIT(p, zone);
+
+                if (!(gModShipping.picks[player] & (1 << bit)) || !ShippingFaceUpMonster(p, zone))
+                    continue;
+                if (!ShippingOverrideLive(p, zone)) {
+                    gModShipping.type[bit] = 0;
+                    gModShipping.attr[bit] = 0;
+                    gModShipping.serial[bit] = ZoneOf(p, zone)->serial;
+                }
+                if (gModShipping.declareType)
+                    gModShipping.type[bit] = value;
+                else
+                    gModShipping.attr[bit] = value;
+                DestroyInvalidEquips(p, zone);
+            }
+        }
+        gModShipping.picks[player] = 0;
+        return EFFECT_STEP_DONE;
+    }
+    return EFFECT_STEP_DONE;
+}
+#endif /* HAS_CARD_SHIPPING_ARCHFIEND */
+
 #ifdef HAS_CARD_GOLDD_WU_LORD_OF_DARK_WORLD
 /* ---- Goldd, Wu-Lord of Dark World ---------------------------------------------------------------------------------
  * "If this card is discarded to the Graveyard by a card effect: If it was discarded from your hand to your Graveyard by
@@ -12122,6 +12431,10 @@ static int AiWantsMonsterEffect(u16 number, int zone)
 #ifdef HAS_CARD_THE_DARK_HEX_SEALED_FUSION
     case CARD_THE_DARK_HEX_SEALED_FUSION:       /* a Fusion Monster for its materials: whenever it can */
         return 1;
+#endif
+#ifdef HAS_CARD_SHIPPING_ARCHFIEND
+    case CARD_SHIPPING_ARCHFIEND:               /* its Type/Attribute change: never (its trigger is automatic) */
+        return 0;
 #endif
 #ifdef HAS_CARD_HYSTERIC_FAIRY
     case CARD_HYSTERIC_FAIRY:                   /* two Tributes for 1000 LP is never worth it */
@@ -13928,6 +14241,16 @@ const struct CardEffect gAddedCardEffects[] = {
         NULL,
         NULL,
         NULL,
+    },
+#endif
+#ifdef HAS_CARD_SHIPPING_ARCHFIEND
+    {
+        CARD_SHIPPING_ARCHFIEND, 0,
+        EffectShippingArchfiendResolve,
+        NULL,
+        EffectShippingArchfiendPrepare,
+        NULL,
+        EffectShippingArchfiendChainB,
     },
 #endif
 #ifdef HAS_CARD_SILLVA_WARLORD_OF_DARK_WORLD

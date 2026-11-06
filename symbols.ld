@@ -14,6 +14,8 @@ gInjectionFairyLily = 0x0202FF00;
 gModDuel = 0x0202FF04;
 /* Mod: the Synchro Summon state of src/mod_synchro.c (at most 0x100 bytes, before gInjectionFairyLily). */
 gModSynchro = 0x0202FE00;
+/* Mod: Shipping Archfiend's declared Types/Attributes (src/added_effects.c), after gModSynchro (0xB0 bytes). */
+gModShipping = 0x0202FEB0;
 /* Mod: Solomon's deck, the recipe the player picked (src/mod_decks.c; free RAM after gModDeckRing). */
 gModOpponentRecipe = 0x0202F400;
 /* Mod: the player's deck against Debug while Debug's is picked (src/mod_recipes.c; after gModOpponentRecipe). */

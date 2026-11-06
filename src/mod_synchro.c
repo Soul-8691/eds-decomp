@@ -72,7 +72,7 @@ struct ModSynchro {
     u16 summonedIds[2 * MONSTER_ZONES];     /* [player * 5 + zone]: the Synchro Summoned monster there */
 };
 extern struct ModSynchro gModSynchro;
-STATIC_ASSERT(sizeof(struct ModSynchro) <= 0x100, ModSynchroFits);
+STATIC_ASSERT(sizeof(struct ModSynchro) <= 0xB0, ModSynchroFits);    /* gModShipping follows at 0x0202FEB0 */
 
 static const u16 sRules[][2] = SYNCHRO_RULES;
 

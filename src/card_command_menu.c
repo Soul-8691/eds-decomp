@@ -556,6 +556,9 @@ int CanActivateMonsterEffect(u16 id, int player, int zone)
 #ifdef HAS_CARD_THE_DARK_HEX_SEALED_FUSION
     case CARD_THE_DARK_HEX_SEALED_FUSION:                   /* added card (src/added_effects.c) */
 #endif
+#ifdef HAS_CARD_SHIPPING_ARCHFIEND
+    case CARD_SHIPPING_ARCHFIEND:                           /* added card (src/added_effects.c) */
+#endif
         return CanActivateEffectInZone(player, zone, 0);
 
 #ifdef HAS_CARD_HYSTERIC_FAIRY
