@@ -1,0 +1,4208 @@
+[General]
+ApplicationVersion = '''0.5.7.1'''
+FreeSpaceSearch = '''000200'''
+FreeSpaceBuffer = '''040'''
+NextExportID = '''0'''
+ShowRawIVByteForTrainer = False
+
+#################################
+[[NamedAnchors]]
+Name = '''graphics.cards.images'''
+Address = 0x2A6500
+Format = '''[`ucs6x9x10|graphics.cards.palettes`]cardnumbers'''
+DefaultHash = '''E818D4DF'''
+
+[[NamedAnchors]]
+Name = '''graphics.cards.palettes'''
+Address = 0x608360
+Format = '''[`ucp6`]cardnumbers'''
+DefaultHash = '''15316515'''
+
+[[NamedAnchors]]
+Name = '''data.cards.stats'''
+Address = 0x621DE0
+Format = '''[cardstats::|t|defn::::.|atk::::.|type:types|race::.races|stars::|attribute:.attributes]cardnumbers'''
+DefaultHash = '''C1044DB6'''
+
+[[NamedAnchors]]
+Name = '''data.cards.ritual'''
+Address = 0x19A990
+Format = '''[ritualcards::|t|summoncard::::::.cardinternalnumbers|activator::::::.cardinternalnumbers|level:::]16'''
+DefaultHash = '''4E33ED76'''
+
+[[NamedAnchors]]
+Name = '''data.cards.fusion'''
+Address = 0x19A7C8
+Format = '''[fusor:cardinternalnumbers fusee1:cardinternalnumbers fusee2:cardinternalnumbers fusee3:cardinternalnumbers]56'''
+DefaultHash = '''1ABA2874'''
+
+[[NamedAnchors]]
+Name = '''data.cards.internalnumbers'''
+Address = 0x623DF4
+Format = '''[index:cardnumbers]1921'''
+DefaultHash = '''0AD84200'''
+
+[[NamedAnchors]]
+Name = '''data.cards.numbers'''
+Address = 0x622AB4
+Format = '''[index:cardinternalnumbers]821'''
+DefaultHash = '''855905BA'''
+
+[[NamedAnchors]]
+Name = '''data.cards.passwords'''
+Address = 0x623120
+Format = '''[password::|h]cardnumbers'''
+DefaultHash = '''16BCB701'''
+
+[[NamedAnchors]]
+Name = '''data.decks.initial.pool1.cards'''
+Address = 0x198634
+Format = '''[card:cardinternalnumbers]11'''
+DefaultHash = '''502C5460'''
+
+[[NamedAnchors]]
+Name = '''data.decks.initial.pool2.cards'''
+Address = 0x19864A
+Format = '''[card:cardinternalnumbers]2'''
+DefaultHash = '''17B37518'''
+
+[[NamedAnchors]]
+Name = '''data.decks.initial.pool3.cards'''
+Address = 0x19864E
+Format = '''[card:cardinternalnumbers]3'''
+DefaultHash = '''A09F6AC3'''
+
+[[NamedAnchors]]
+Name = '''data.decks.initial.pool4.cards'''
+Address = 0x198654
+Format = '''[card:cardinternalnumbers]3'''
+DefaultHash = '''A09F6AC3'''
+
+[[NamedAnchors]]
+Name = '''data.decks.initial.pool5.cards'''
+Address = 0x19865A
+Format = '''[card:cardinternalnumbers]2'''
+DefaultHash = '''17B37518'''
+
+[[NamedAnchors]]
+Name = '''data.decks.initial.pool6.cards'''
+Address = 0x19865E
+Format = '''[card:cardinternalnumbers]13'''
+DefaultHash = '''2F4FEFA4'''
+
+[[NamedAnchors]]
+Name = '''data.decks.initial.pool7.cards'''
+Address = 0x198678
+Format = '''[card:cardinternalnumbers]13'''
+DefaultHash = '''2F4FEFA4'''
+
+[[NamedAnchors]]
+Name = '''data.decks.initial.pool8.cards'''
+Address = 0x198692
+Format = '''[card:cardinternalnumbers]13'''
+DefaultHash = '''2F4FEFA4'''
+
+[[NamedAnchors]]
+Name = '''data.decks.initial.pool9.cards'''
+Address = 0x1986AC
+Format = '''[card:cardinternalnumbers]57'''
+DefaultHash = '''697EFEA4'''
+
+[[NamedAnchors]]
+Name = '''data.decks.initial.pool10.cards'''
+Address = 0x19871E
+Format = '''[card:cardinternalnumbers]12'''
+DefaultHash = '''8D1DB63E'''
+
+[[NamedAnchors]]
+Name = '''data.decks.initial.pool11.cards'''
+Address = 0x198736
+Format = '''[card:cardinternalnumbers]7'''
+DefaultHash = '''7BE83AB5'''
+
+[[NamedAnchors]]
+Name = '''data.decks.all'''
+Address = 0x19DC74
+Format = '''[offset<[card:cardinternalnumbers]/total> total. padding:.]duelists'''
+DefaultHash = '''F8F3FA7D'''
+
+[[NamedAnchors]]
+Name = '''data.specialpacks.weeklygiftpacka.cards.normal'''
+Address = 0x1A52C0
+Format = '''[card:cardinternalnumbers]/cardamount'''
+DefaultHash = '''469338ED'''
+
+[[NamedAnchors]]
+Name = '''data.specialpacks.weeklygiftpacka.cards.secret'''
+Address = 0x1A52C6
+Format = '''[card:cardinternalnumbers]/cardamount'''
+DefaultHash = '''469338ED'''
+
+[[NamedAnchors]]
+Name = '''data.specialpacks.weeklygiftpacka.cards.ultra'''
+Address = 0x1A52F0
+Format = '''[card:cardinternalnumbers]/cardamount'''
+DefaultHash = '''469338ED'''
+
+[[NamedAnchors]]
+Name = '''data.specialpacks.weeklygiftpacka.cards.super'''
+Address = 0x1A5312
+Format = '''[card:cardinternalnumbers]/cardamount'''
+DefaultHash = '''469338ED'''
+
+[[NamedAnchors]]
+Name = '''data.specialpacks.weeklygiftpacka.cards.rare'''
+Address = 0x1A5330
+Format = '''[card:cardinternalnumbers]/cardamount'''
+DefaultHash = '''469338ED'''
+
+[[NamedAnchors]]
+Name = '''data.specialpacks.weeklygiftpacka.cards.common'''
+Address = 0x1A5344
+Format = '''[card:cardinternalnumbers]/cardamount'''
+DefaultHash = '''469338ED'''
+
+[[NamedAnchors]]
+Name = '''data.specialpacks.weeklygiftpackb.cards.normal'''
+Address = 0x1A54D0
+Format = '''[card:cardinternalnumbers]/cardamount'''
+DefaultHash = '''469338ED'''
+
+[[NamedAnchors]]
+Name = '''data.specialpacks.weeklygiftpackb.cards.secret'''
+Address = 0x1A54D2
+Format = '''[card:cardinternalnumbers]/cardamount'''
+DefaultHash = '''469338ED'''
+
+[[NamedAnchors]]
+Name = '''data.specialpacks.weeklygiftpackb.cards.ultra'''
+Address = 0x1A54D6
+Format = '''[card:cardinternalnumbers]/cardamount'''
+DefaultHash = '''469338ED'''
+
+[[NamedAnchors]]
+Name = '''data.specialpacks.weeklygiftpackb.cards.super'''
+Address = 0x1A54E6
+Format = '''[card:cardinternalnumbers]/cardamount'''
+DefaultHash = '''469338ED'''
+
+[[NamedAnchors]]
+Name = '''data.specialpacks.weeklygiftpackb.cards.rare'''
+Address = 0x1A54EE
+Format = '''[card:cardinternalnumbers]/cardamount'''
+DefaultHash = '''469338ED'''
+
+[[NamedAnchors]]
+Name = '''data.specialpacks.weeklygiftpackb.cards.common'''
+Address = 0x1A5516
+Format = '''[card:cardinternalnumbers]/cardamount'''
+DefaultHash = '''469338ED'''
+
+[[NamedAnchors]]
+Name = '''data.specialpacks.magazine.cards.normal'''
+Address = 0x1A5428
+Format = '''[card:cardinternalnumbers]/cardamount'''
+DefaultHash = '''469338ED'''
+
+[[NamedAnchors]]
+Name = '''data.specialpacks.magazine.cards.secret'''
+Address = 0x1A542A
+Format = '''[card:cardinternalnumbers]/cardamount'''
+DefaultHash = '''469338ED'''
+
+[[NamedAnchors]]
+Name = '''data.specialpacks.magazine.cards.ultra'''
+Address = 0x1A543E
+Format = '''[card:cardinternalnumbers]/cardamount'''
+DefaultHash = '''469338ED'''
+
+[[NamedAnchors]]
+Name = '''data.specialpacks.magazine.cards.super'''
+Address = 0x1A544C
+Format = '''[card:cardinternalnumbers]/cardamount'''
+DefaultHash = '''469338ED'''
+
+[[NamedAnchors]]
+Name = '''data.specialpacks.magazine.cards.rare'''
+Address = 0x1A5456
+Format = '''[card:cardinternalnumbers]/cardamount'''
+DefaultHash = '''469338ED'''
+
+[[NamedAnchors]]
+Name = '''data.specialpacks.magazine.cards.common'''
+Address = 0x1A545C
+Format = '''[card:cardinternalnumbers]/cardamount'''
+DefaultHash = '''469338ED'''
+
+[[NamedAnchors]]
+Name = '''data.specialpacks.grandpa.cards.secret'''
+Address = 0x1A5578
+Format = '''[card:cardinternalnumbers]/cardamount'''
+DefaultHash = '''469338ED'''
+
+[[NamedAnchors]]
+Name = '''data.specialpacks.grandpa.cards.common'''
+Address = 0x1A557A
+Format = '''[card:cardinternalnumbers]/cardamount'''
+DefaultHash = '''469338ED'''
+
+[[NamedAnchors]]
+Name = '''data.cards.effects'''
+Address = 0x19A9D4
+Format = '''[card:cardinternalnumbers padding: routine1::|h routine2::|h routine3::|h routine4::|h routine5::|h]426'''
+DefaultHash = '''38671A33'''
+
+[[NamedAnchors]]
+Name = '''graphics.palettes.packs'''
+Address = 0x63CC7C
+Format = '''`ucp4:0123456789ABCDEF`'''
+DefaultHash = '''ED942E20'''
+
+[[NamedAnchors]]
+Name = '''graphics.packs.darkmagician'''
+Address = 0x64073C
+Format = '''`ucs8x7x14|graphics.palettes.packs`'''
+DefaultHash = '''CBE407BA'''
+
+[[NamedAnchors]]
+Name = '''graphics.packs.mysticalelf'''
+Address = 0x641FBC
+Format = '''`ucs8x7x14|graphics.palettes.packs`'''
+DefaultHash = '''CBE407BA'''
+
+[[NamedAnchors]]
+Name = '''graphics.packs.redeyesbdragon'''
+Address = 0x64383C
+Format = '''`ucs8x7x14|graphics.palettes.packs`'''
+DefaultHash = '''CBE407BA'''
+
+[[NamedAnchors]]
+Name = '''graphics.packs.geminielf'''
+Address = 0x6450BC
+Format = '''`ucs8x7x14|graphics.palettes.packs`'''
+DefaultHash = '''CBE407BA'''
+
+[[NamedAnchors]]
+Name = '''graphics.packs.gateguardian'''
+Address = 0x64693C
+Format = '''`ucs8x7x14|graphics.palettes.packs`'''
+DefaultHash = '''CBE407BA'''
+
+[[NamedAnchors]]
+Name = '''graphics.packs.greatmoth'''
+Address = 0x6481BC
+Format = '''`ucs8x7x14|graphics.palettes.packs`'''
+DefaultHash = '''CBE407BA'''
+
+[[NamedAnchors]]
+Name = '''graphics.packs.launcherspider'''
+Address = 0x649A3C
+Format = '''`ucs8x7x14|graphics.palettes.packs`'''
+DefaultHash = '''CBE407BA'''
+
+[[NamedAnchors]]
+Name = '''graphics.packs.blueeyeswhitedragon'''
+Address = 0x64B2BC
+Format = '''`ucs8x7x14|graphics.palettes.packs`'''
+DefaultHash = '''CBE407BA'''
+
+[[NamedAnchors]]
+Name = '''graphics.packs.exodia'''
+Address = 0x64CB3C
+Format = '''`ucs8x7x14|graphics.palettes.packs`'''
+DefaultHash = '''CBE407BA'''
+
+[[NamedAnchors]]
+Name = '''graphics.packs.blackskulldragon'''
+Address = 0x64E3BC
+Format = '''`ucs8x7x14|graphics.palettes.packs`'''
+DefaultHash = '''CBE407BA'''
+
+[[NamedAnchors]]
+Name = '''graphics.packs.barreldragon'''
+Address = 0x64FC3C
+Format = '''`ucs8x7x14|graphics.palettes.packs`'''
+DefaultHash = '''CBE407BA'''
+
+[[NamedAnchors]]
+Name = '''graphics.packs.relinquished'''
+Address = 0x6514BC
+Format = '''`ucs8x7x14|graphics.palettes.packs`'''
+DefaultHash = '''CBE407BA'''
+
+[[NamedAnchors]]
+Name = '''graphics.packs.blueeyestoondragon'''
+Address = 0x652D3C
+Format = '''`ucs8x7x14|graphics.palettes.packs`'''
+DefaultHash = '''CBE407BA'''
+
+[[NamedAnchors]]
+Name = '''graphics.packs.busterblader'''
+Address = 0x6545BC
+Format = '''`ucs8x7x14|graphics.palettes.packs`'''
+DefaultHash = '''CBE407BA'''
+
+[[NamedAnchors]]
+Name = '''graphics.packs.thelegendaryfisherman'''
+Address = 0x655E3C
+Format = '''`ucs8x7x14|graphics.palettes.packs`'''
+DefaultHash = '''CBE407BA'''
+
+[[NamedAnchors]]
+Name = '''graphics.packs.themaskedbeast'''
+Address = 0x6576BC
+Format = '''`ucs8x7x14|graphics.palettes.packs`'''
+DefaultHash = '''CBE407BA'''
+
+[[NamedAnchors]]
+Name = '''graphics.packs.final'''
+Address = 0x658F3C
+Format = '''`ucs8x7x14|graphics.palettes.packs`'''
+DefaultHash = '''CBE407BA'''
+
+[[NamedAnchors]]
+Name = '''graphics.packs.blueeyesultimatedragon'''
+Address = 0x65A7BC
+Format = '''`ucs8x7x14|graphics.palettes.packs`'''
+DefaultHash = '''CBE407BA'''
+
+[[NamedAnchors]]
+Name = '''graphics.packs.darkmagiciangirl'''
+Address = 0x65C03C
+Format = '''`ucs8x7x14|graphics.palettes.packs`'''
+DefaultHash = '''CBE407BA'''
+
+[[NamedAnchors]]
+Name = '''graphics.packs.redeyesblackdragon'''
+Address = 0x65D8BC
+Format = '''`ucs8x7x14|graphics.palettes.packs`'''
+DefaultHash = '''CBE407BA'''
+
+[[NamedAnchors]]
+Name = '''graphics.packs.gracefulcharity'''
+Address = 0x65F13C
+Format = '''`ucs8x7x14|graphics.palettes.packs`'''
+DefaultHash = '''CBE407BA'''
+
+[[NamedAnchors]]
+Name = '''graphics.packs.blacklustersoldier'''
+Address = 0x6609BC
+Format = '''`ucs8x7x14|graphics.palettes.packs`'''
+DefaultHash = '''CBE407BA'''
+
+[[NamedAnchors]]
+Name = '''graphics.packs.judgeman'''
+Address = 0x66223C
+Format = '''`ucs8x7x14|graphics.palettes.packs`'''
+DefaultHash = '''CBE407BA'''
+
+[[NamedAnchors]]
+Name = '''graphics.packs.tigeraxe'''
+Address = 0x663ABC
+Format = '''`ucs8x7x14|graphics.palettes.packs`'''
+DefaultHash = '''CBE407BA'''
+
+[[NamedAnchors]]
+Name = '''graphics.packs.cyberharpie'''
+Address = 0x66533C
+Format = '''`ucs8x7x14|graphics.palettes.packs`'''
+DefaultHash = '''CBE407BA'''
+
+[[NamedAnchors]]
+Name = '''graphics.packs.bluemillenniumpuzzle'''
+Address = 0x666BBC
+Format = '''`ucs8x7x14|graphics.palettes.packs`'''
+DefaultHash = '''CBE407BA'''
+
+[[NamedAnchors]]
+Name = '''graphics.packs.greenmillenniumpuzzle'''
+Address = 0x66843C
+Format = '''`ucs8x7x14|graphics.palettes.packs`'''
+DefaultHash = '''CBE407BA'''
+
+[[NamedAnchors]]
+Name = '''graphics.packs.eyeofwdjat'''
+Address = 0x669CBC
+Format = '''`ucs8x7x14|graphics.palettes.packs`'''
+DefaultHash = '''CBE407BA'''
+
+[[NamedAnchors]]
+Name = '''graphics.packs.garoozis'''
+Address = 0x66B53C
+Format = '''`ucs8x7x14|graphics.palettes.packs`'''
+DefaultHash = '''CBE407BA'''
+
+[[NamedAnchors]]
+Name = '''graphics.packs.battleox'''
+Address = 0x66CDBC
+Format = '''`ucs8x7x14|graphics.palettes.packs`'''
+DefaultHash = '''CBE407BA'''
+
+[[NamedAnchors]]
+Name = '''graphics.packs.yellowmillenniumpuzzle'''
+Address = 0x66E63C
+Format = '''`ucs8x7x14|graphics.palettes.packs`'''
+DefaultHash = '''CBE407BA'''
+
+[[NamedAnchors]]
+Name = '''graphics.palettes.titlescreen.logo'''
+Address = 0x7BDAB0
+Format = '''`ucp4:01234567`'''
+DefaultHash = '''B0E09578'''
+
+[[NamedAnchors]]
+Name = '''graphics.titlescreen.gamelogo'''
+Address = 0x7BDBB8
+Format = '''`ucs8x15x10|graphics.palettes.titlescreen.logo`'''
+DefaultHash = '''496646AC'''
+
+[[NamedAnchors]]
+Name = '''graphics.titlescreen.background'''
+Address = 0x67E00C
+Format = '''`ucs4x5x3|graphics.palettes.titlescreen.background`'''
+DefaultHash = '''9857FAA4'''
+
+[[NamedAnchors]]
+Name = '''graphics.palettes.titlescreen.background'''
+Address = 0x67DFD4
+Format = '''`ucp4`'''
+DefaultHash = '''37B1CAEE'''
+
+[[NamedAnchors]]
+Name = '''graphics.titlescreen.medal'''
+Address = 0x7C0D04
+Format = '''`ucs4x16x7|graphics.palettes.titlescreen.medal`'''
+DefaultHash = '''CB5AE429'''
+
+[[NamedAnchors]]
+Name = '''graphics.palettes.titlescreen.medal'''
+Address = 0x7C0CDC
+Format = '''`ucp4`'''
+DefaultHash = '''37B1CAEE'''
+
+[[NamedAnchors]]
+Name = '''data.decks.initial.pool1.stats'''
+Address = 0x198748
+Format = '''[stats::|t|total::::|padding:|black::|red:::|green::|padding::::]1'''
+DefaultHash = '''3C07A614'''
+
+[[NamedAnchors]]
+Name = '''data.decks.initial.pool2.stats'''
+Address = 0x198750
+Format = '''[stats::|t|total::::|padding:|black::|red:::|green::|padding::::]1'''
+DefaultHash = '''3C07A614'''
+
+[[NamedAnchors]]
+Name = '''data.decks.initial.pool3.stats'''
+Address = 0x198758
+Format = '''[stats::|t|total::::|padding:|black::|red:::|green::|padding::::]1'''
+DefaultHash = '''3C07A614'''
+
+[[NamedAnchors]]
+Name = '''data.decks.initial.pool4.stats'''
+Address = 0x198760
+Format = '''[stats::|t|total::::|padding:|black::|red:::|green::|padding::::]1'''
+DefaultHash = '''3C07A614'''
+
+[[NamedAnchors]]
+Name = '''data.decks.initial.pool5.stats'''
+Address = 0x198768
+Format = '''[stats::|t|total::::|padding:|black::|red:::|green::|padding::::]1'''
+DefaultHash = '''3C07A614'''
+
+[[NamedAnchors]]
+Name = '''data.decks.initial.pool6.stats'''
+Address = 0x198770
+Format = '''[stats::|t|total::::|padding:|black::|red:::|green::|padding::::]1'''
+DefaultHash = '''3C07A614'''
+
+[[NamedAnchors]]
+Name = '''data.decks.initial.pool7.stats'''
+Address = 0x198778
+Format = '''[stats::|t|total::::|padding:|black::|red:::|green::|padding::::]1'''
+DefaultHash = '''3C07A614'''
+
+[[NamedAnchors]]
+Name = '''data.decks.initial.pool8.stats'''
+Address = 0x198780
+Format = '''[stats::|t|total::::|padding:|black::|red:::|green::|padding::::]1'''
+DefaultHash = '''3C07A614'''
+
+[[NamedAnchors]]
+Name = '''data.decks.initial.pool9.stats'''
+Address = 0x198788
+Format = '''[stats::|t|total::::|padding:|black::|red:::|green::|padding::::]1'''
+DefaultHash = '''3C07A614'''
+
+[[NamedAnchors]]
+Name = '''data.decks.initial.pool10.stats'''
+Address = 0x198790
+Format = '''[stats::|t|total::::|padding:|black::|red:::|green::|padding::::]1'''
+DefaultHash = '''3C07A614'''
+
+[[NamedAnchors]]
+Name = '''data.decks.initial.pool11.stats'''
+Address = 0x198798
+Format = '''[stats::|t|total::::|padding:|black::|red:::|green::|padding::::]1'''
+DefaultHash = '''3C07A614'''
+
+[[NamedAnchors]]
+Name = '''data.packs.geminielf.pointers'''
+Address = 0x1A4F0C
+Format = '''[pack<[card:cardinternalnumbers]/cardamount> cardamount. padding:.]rarities'''
+DefaultHash = '''370D7472'''
+
+[[NamedAnchors]]
+Name = '''data.packs.launcherspider.pointers'''
+Address = 0x1A4948
+Format = '''[pack<[card:cardinternalnumbers]/cardamount> cardamount. padding:.]rarities'''
+DefaultHash = '''370D7472'''
+
+[[NamedAnchors]]
+Name = '''data.packs.darkmagician.pointers'''
+Address = 0x1A457C
+Format = '''[pack<[card:cardinternalnumbers]/cardamount> cardamount. padding:.]rarities'''
+DefaultHash = '''370D7472'''
+
+[[NamedAnchors]]
+Name = '''data.packs.mysticalelf.pointers'''
+Address = 0x1A460C
+Format = '''[pack<[card:cardinternalnumbers]/cardamount> cardamount. padding:.]rarities'''
+DefaultHash = '''370D7472'''
+
+[[NamedAnchors]]
+Name = '''data.packs.redeyesblackdragon.pointers'''
+Address = 0x1A46B0
+Format = '''[pack<[card:cardinternalnumbers]/cardamount> cardamount. padding:.]rarities'''
+DefaultHash = '''370D7472'''
+
+[[NamedAnchors]]
+Name = '''data.packs.judgeman.pointers'''
+Address = 0x1A4DF4
+Format = '''[pack<[card:cardinternalnumbers]/cardamount> cardamount. padding:.]rarities'''
+DefaultHash = '''370D7472'''
+
+[[NamedAnchors]]
+Name = '''data.packs.blueeyeswhitedragon.pointers'''
+Address = 0x1A4A04
+Format = '''[pack<[card:cardinternalnumbers]/cardamount> cardamount. padding:.]rarities'''
+DefaultHash = '''370D7472'''
+
+[[NamedAnchors]]
+Name = '''data.packs.exodia.pointers'''
+Address = 0x1A4AC8
+Format = '''[pack<[card:cardinternalnumbers]/cardamount> cardamount. padding:.]rarities'''
+DefaultHash = '''370D7472'''
+
+[[NamedAnchors]]
+Name = '''data.packs.tigeraxe.pointers'''
+Address = 0x1A4E74
+Format = '''[pack<[card:cardinternalnumbers]/cardamount> cardamount. padding:.]rarities'''
+DefaultHash = '''370D7472'''
+
+[[NamedAnchors]]
+Name = '''data.packs.cyberharpie.pointers'''
+Address = 0x1A4754
+Format = '''[pack<[card:cardinternalnumbers]/cardamount> cardamount. padding:.]rarities'''
+DefaultHash = '''370D7472'''
+
+[[NamedAnchors]]
+Name = '''data.packs.gateguardian.pointers'''
+Address = 0x1A47F8
+Format = '''[pack<[card:cardinternalnumbers]/cardamount> cardamount. padding:.]rarities'''
+DefaultHash = '''370D7472'''
+
+[[NamedAnchors]]
+Name = '''data.packs.garoozis.pointers'''
+Address = 0x1A515C
+Format = '''[pack<[card:cardinternalnumbers]/cardamount> cardamount. padding:.]rarities'''
+DefaultHash = '''370D7472'''
+
+[[NamedAnchors]]
+Name = '''data.packs.greatmoth.pointers'''
+Address = 0x1A48A0
+Format = '''[pack<[card:cardinternalnumbers]/cardamount> cardamount. padding:.]rarities'''
+DefaultHash = '''370D7472'''
+
+[[NamedAnchors]]
+Name = '''data.packs.relinquished.pointers'''
+Address = 0x1A4B6C
+Format = '''[pack<[card:cardinternalnumbers]/cardamount> cardamount. padding:.]rarities'''
+DefaultHash = '''370D7472'''
+
+[[NamedAnchors]]
+Name = '''data.packs.blueeyestoondragon.pointers'''
+Address = 0x1A4C14
+Format = '''[pack<[card:cardinternalnumbers]/cardamount> cardamount. padding:.]rarities'''
+DefaultHash = '''370D7472'''
+
+[[NamedAnchors]]
+Name = '''data.packs.battleox.pointers'''
+Address = 0x1A51F0
+Format = '''[pack<[card:cardinternalnumbers]/cardamount> cardamount. padding:.]rarities'''
+DefaultHash = '''370D7472'''
+
+[[NamedAnchors]]
+Name = '''data.packs.blueeyesultimatedragon.pointers'''
+Address = 0x1A4D10
+Format = '''[pack<[card:cardinternalnumbers]/cardamount> cardamount. padding:.]rarities'''
+DefaultHash = '''370D7472'''
+
+[[NamedAnchors]]
+Name = '''data.packs.blacklustersoldier.pointers'''
+Address = 0x1A4D70
+Format = '''[pack<[card:cardinternalnumbers]/cardamount> cardamount. padding:.]rarities'''
+DefaultHash = '''370D7472'''
+
+[[NamedAnchors]]
+Name = '''data.packs.bluemillenniumpuzzle.pointers'''
+Address = 0x1A4F94
+Format = '''[pack<[card:cardinternalnumbers]/cardamount> cardamount. padding:.]rarities'''
+DefaultHash = '''370D7472'''
+
+[[NamedAnchors]]
+Name = '''data.packs.eyeofwdjat.pointers'''
+Address = 0x1A50BC
+Format = '''[pack<[card:cardinternalnumbers]/cardamount> cardamount. padding:.]rarities'''
+DefaultHash = '''370D7472'''
+
+[[NamedAnchors]]
+Name = '''data.packs.busterblader.pointers'''
+Address = 0x1A4CBC
+Format = '''[pack<[card:cardinternalnumbers]/cardamount> cardamount. padding:.]rarities'''
+DefaultHash = '''370D7472'''
+
+[[NamedAnchors]]
+Name = '''data.packs.greenmillenniumpuzzle.pointers'''
+Address = 0x1A5018
+Format = '''[pack<[card:cardinternalnumbers]/cardamount> cardamount. padding:.]rarities'''
+DefaultHash = '''370D7472'''
+
+[[NamedAnchors]]
+Name = '''data.packs.yellowmillenniumpuzzle.pointers'''
+Address = 0x1A5280
+Format = '''[pack<[card:cardinternalnumbers]/cardamount> cardamount. padding:.]rarities'''
+DefaultHash = '''370D7472'''
+
+[[NamedAnchors]]
+Name = '''data.specialpacks.grandpa.pointers'''
+Address = 0x1A5598
+Format = '''[pack<[card:cardinternalnumbers]/cardamount> cardamount. padding:.]rarities'''
+DefaultHash = '''370D7472'''
+
+[[NamedAnchors]]
+Name = '''data.specialpacks.magazine.pointers'''
+Address = 0x1A5490
+Format = '''[pack<[card:cardinternalnumbers]/cardamount> cardamount. padding:.]rarities'''
+DefaultHash = '''370D7472'''
+
+[[NamedAnchors]]
+Name = '''data.specialpacks.weeklygiftpacka.pointers'''
+Address = 0x1A53E8
+Format = '''[pack<[card:cardinternalnumbers]/cardamount> cardamount. padding:.]rarities'''
+DefaultHash = '''370D7472'''
+
+[[NamedAnchors]]
+Name = '''data.specialpacks.weeklygiftpackb.pointers'''
+Address = 0x1A5538
+Format = '''[pack<[card:cardinternalnumbers]/cardamount> cardamount. padding:.]rarities'''
+DefaultHash = '''370D7472'''
+
+#################################
+#################################
+[[MatchedWords]]
+Name = '''data.constants.packs.rarities.total'''
+Address = 0x062A1C
+Length = 1
+
+[[MatchedWords]]
+Name = '''data.constants.packs.rarities.one'''
+Address = 0x1A570C
+Length = 1
+
+[[MatchedWords]]
+Name = '''data.constants.packs.rarities.two'''
+Address = 0x1A5710
+Length = 1
+
+[[MatchedWords]]
+Name = '''data.constants.packs.rarities.normal'''
+Address = 0x1A5714
+Length = 1
+
+[[MatchedWords]]
+Name = '''data.constants.packs.rarities.secret'''
+Address = 0x1A5718
+Length = 1
+
+[[MatchedWords]]
+Name = '''data.constants.packs.rarities.ultra'''
+Address = 0x1A571C
+Length = 1
+
+[[MatchedWords]]
+Name = '''data.constants.packs.rarities.super'''
+Address = 0x1A5720
+Length = 1
+
+[[MatchedWords]]
+Name = '''data.constants.packs.rarities.rare'''
+Address = 0x1A5724
+Length = 1
+
+[[MatchedWords]]
+Name = '''data.constants.packs.rarities.common'''
+Address = 0x1A5728
+Length = 1
+
+[[MatchedWords]]
+Name = '''data.constants.packs.unlocks.2wins1'''
+Address = 0x063BB8
+Length = 1
+
+[[MatchedWords]]
+Name = '''data.constants.packs.unlocks.2wins2'''
+Address = 0x063BC6
+Length = 1
+
+[[MatchedWords]]
+Name = '''data.constants.packs.unlocks.2wins3'''
+Address = 0x063BD4
+Length = 1
+
+[[MatchedWords]]
+Name = '''data.constants.packs.unlocks.2wins4'''
+Address = 0x063BE2
+Length = 1
+
+[[MatchedWords]]
+Name = '''data.constants.packs.unlocks.2wins5'''
+Address = 0x063BF0
+Length = 1
+
+[[MatchedWords]]
+Name = '''data.constants.packs.unlocks.10winseach'''
+Address = 0x06400A
+Length = 1
+
+[[MatchedWords]]
+Name = '''data.constants.packs.unlocks.20wins'''
+Address = 0x06422E
+Length = 1
+
+[[MatchedWords]]
+Name = '''data.constants.packs.unlocks.10winstotal'''
+Address = 0x06412A
+Length = 1
+
+[[MatchedWords]]
+Name = '''data.constants.fusion2'''
+Address = 0x03D268
+Length = 1
+
+[[MatchedWords]]
+Name = '''data.constants.cards.limit'''
+Address = 0x007058
+Length = 1
+
+[[MatchedWords]]
+Name = '''data.constants.cards.limit'''
+Address = 0x01AE0E
+Length = 1
+
+[[MatchedWords]]
+Name = '''data.constants.cards.limit'''
+Address = 0x063D86
+Length = 1
+
+[[MatchedWords]]
+Name = '''data.constants.cards.limit'''
+Address = 0x068826
+Length = 1
+
+[[MatchedWords]]
+Name = '''data.constants.cards.limit'''
+Address = 0x068916
+Length = 1
+
+[[MatchedWords]]
+Name = '''data.constants.cards.limit'''
+Address = 0x06AB6C
+Length = 1
+
+[[MatchedWords]]
+Name = '''data.constants.cards.limit'''
+Address = 0x06D3CE
+Length = 1
+
+[[MatchedWords]]
+Name = '''data.constants.cards.limit'''
+Address = 0x06F232
+Length = 1
+
+[[MatchedWords]]
+Name = '''data.constants.cards.limit'''
+Address = 0x070C38
+Length = 1
+
+[[MatchedWords]]
+Name = '''data.constants.cards.limit'''
+Address = 0x070D9A
+Length = 1
+
+[[MatchedWords]]
+Name = '''data.constants.cards.limit'''
+Address = 0x07715E
+Length = 1
+
+[[MatchedWords]]
+Name = '''data.constants.cards.limit'''
+Address = 0x07C362
+Length = 1
+
+[[MatchedWords]]
+Name = '''data.constants.effects.limit'''
+Address = 0x047088
+Length = 2
+
+[[MatchedWords]]
+Name = '''data.constants.cards.limit2'''
+Address = 0x062BC0
+Length = 2
+
+[[MatchedWords]]
+Name = '''data.constants.cards.limit2'''
+Address = 0x062C84
+Length = 2
+
+[[MatchedWords]]
+Name = '''data.constants.cards.limit2'''
+Address = 0x062D5C
+Length = 2
+
+#################################
+#################################
+[[List]]
+Name = '''rarities'''
+DefaultHash = '''0407A3D3'''
+0 = [
+   '''Unused''',
+   '''Unused''',
+   '''Normal''',
+   '''Secret''',
+   '''Ultra''',
+   '''Super''',
+   '''Rare''',
+   '''Common''',
+]
+
+[[List]]
+Name = '''cardnumbers'''
+DefaultHash = '''8D93B1DA'''
+0 = [
+   '''None''',
+   '''7 Colored Fish''',
+   '''7 Completed''',
+   '''Acid Crawler''',
+   '''Acid Trap Hole''',
+   '''Air Eater''',
+   '''Air Marmot of Nefariousness''',
+   '''Akakieisu''',
+   '''Akihiron''',
+   '''Alligator's Sword''',
+   '''Alligator's Sword Dragon''',
+   '''Alpha The Magnet Warrior''',
+   '''Amazon of the Seas''',
+   '''Ameba''',
+   '''Amphibious Bugroth''',
+   '''Ancient Brain''',
+   '''Ancient Elf''',
+   '''Ancient Jar''',
+   '''Ancient Lizard Warrior''',
+   '''Ancient One of the Deep Forest''',
+   '''Ancient Telescope''',
+   '''Ancient Tool''',
+   '''Ansatsu''',
+   '''Anthrosaurus''',
+   '''Anti Raigeki''',
+   '''Anti-Magic Fragrance''',
+   '''Appropriate''',
+   '''Aqua Chorus''',
+   '''Aqua Dragon''',
+   '''Aqua Madoor''',
+   '''Arlownay''',
+   '''Arma Knight''',
+   '''Armaill''',
+   '''Armed Ninja''',
+   '''Armored Glass''',
+   '''Armored Lizard''',
+   '''Armored Rat''',
+   '''Armored Starfish''',
+   '''Armored Zombie''',
+   '''Axe of Despair''',
+   '''Axe Raider''',
+   '''B. Dragon Jungle King''',
+   '''B. Skull Dragon''',
+   '''Baby Dragon''',
+   '''Backup Soldier''',
+   '''Banisher of the Light''',
+   '''Barox''',
+   '''Barrel Dragon''',
+   '''Barrel Lily''',
+   '''Barrel Rock''',
+   '''Basic Insect''',
+   '''Battle Ox''',
+   '''Battle Steer''',
+   '''Battle Warrior''',
+   '''Bean Soldier''',
+   '''Beast Fangs''',
+   '''Beastking of the Swamps''',
+   '''Beastly Mirror Ritual''',
+   '''Beautiful Headhuntress''',
+   '''Beaver Warrior''',
+   '''Behegon''',
+   '''Bell of Destruction''',
+   '''Beta The Magnet Warrior''',
+   '''Bickuribox''',
+   '''Big Eye''',
+   '''Big Insect''',
+   '''Big Shield Gardna''',
+   '''Binding Chain''',
+   '''Bio Plant''',
+   '''Black Illusion Ritual''',
+   '''Black Luster Ritual''',
+   '''Black Luster Soldier''',
+   '''Black Pendant''',
+   '''Blackland Fire Dragon''',
+   '''Bladefly''',
+   '''Blast Juggler''',
+   '''Blast Sphere''',
+   '''Block Attack''',
+   '''Blue Medicine''',
+   '''Blue-Eyed Silver Zombie''',
+   '''Blue-Eyes Toon Dragon''',
+   '''Blue-Eyes Ultimate Dragon''',
+   '''Blue-Eyes White Dragon''',
+   '''Blue-Eyes White Dragon''',
+   '''Blue-Winged Crown''',
+   '''Boar Soldier''',
+   '''Bolt Escargot''',
+   '''Book of Secret Arts''',
+   '''Bottom Dweller''',
+   '''Bracchio-raidus''',
+   '''Breath of Light''',
+   '''Bright Castle''',
+   '''Burglar''',
+   '''Burning Spear''',
+   '''Buster Blader''',
+   '''Call of the Dark''',
+   '''Call of the Grave''',
+   '''Call Of The Haunted''',
+   '''Candle of Fate''',
+   '''Cannon Soldier''',
+   '''Castle of Dark Illusions''',
+   '''Castle Walls''',
+   '''Catapult Turtle''',
+   '''Ceasefire''',
+   '''Celtic Guardian''',
+   '''Celtic Guardian''',
+   '''Ceremonial Bell''',
+   '''Chain Destruction''',
+   '''Chain Energy''',
+   '''Chakra''',
+   '''Change of Heart''',
+   '''Charubin the Fire Knight''',
+   '''Chorus of Sanctuary''',
+   '''Claw Reacher''',
+   '''Clown Zombie''',
+   '''Cockroach Knight''',
+   '''Cocoon of Evolution''',
+   '''Commencement Dance''',
+   '''Confiscation''',
+   '''Cosmo Queen''',
+   '''Crab Turtle''',
+   '''Crass Clown''',
+   '''Crawling Dragon''',
+   '''Crawling Dragon''',
+   '''Crazy Fish''',
+   '''Crimson Sunbird''',
+   '''Crow Goblin''',
+   '''Crush Card''',
+   '''Curse of Dragon''',
+   '''Curse of Fiend''',
+   '''Curtain of the Dark Ones''',
+   '''Cyber Commander''',
+   '''Cyber Falcon''',
+   '''Cyber Jar''',
+   '''Cyber Saurus''',
+   '''Cyber Shield''',
+   '''Cyber Soldier''',
+   '''Cyber-Stein''',
+   '''Cyber-Tech Alligator''',
+   '''D. Human''',
+   '''Dancing Elf''',
+   '''Dark Artist''',
+   '''Dark Assailant''',
+   '''Dark Chimera''',
+   '''Dark Elf''',
+   '''Dark Energy''',
+   '''Dark Gray''',
+   '''Dark Hole''',
+   '''Dark King of the Abyss''',
+   '''Dark Magic Ritual''',
+   '''Dark Magician''',
+   '''Dark Magician''',
+   '''Dark Magician Girl''',
+   '''Dark Rabbit''',
+   '''Dark Sage''',
+   '''Dark Shade''',
+   '''Dark Witch''',
+   '''Dark Zebra''',
+   '''Dark-Eyes Illusionist''',
+   '''Darkfire Dragon''',
+   '''Darkfire Soldier''',
+   '''Darkfire Soldier''',
+   '''Darkness Approaches''',
+   '''Dark-Piercing Light''',
+   '''Darkworld Thorns''',
+   '''Deepsea Shark''',
+   '''Delinquent Duo''',
+   '''De-Spell''',
+   '''Destroyer Golem''',
+   '''Dian Keto the Cure Master''',
+   '''Dice Armadillo''',
+   '''Dimensional Warrior''',
+   '''Disk Magician''',
+   '''Dissolverock''',
+   '''DNA Surgery''',
+   '''Dokuroizo the Grim Reaper''',
+   '''Dokurorider''',
+   '''Doma The Angel of Silence''',
+   '''Doron''',
+   '''Dorover''',
+   '''Dragon Capture Jar''',
+   '''Dragon Piper''',
+   '''Dragon Seeker''',
+   '''Dragon Treasure''',
+   '''Dragon Zombie''',
+   '''Dragoness the Wicked Knight''',
+   '''Dream Clown''',
+   '''Driving Snow''',
+   '''Drooling Lizard''',
+   '''Dryad''',
+   '''Dunames Dark Witch''',
+   '''Dungeon Worm''',
+   '''Dust Tornado''',
+   '''Earthshaker''',
+   '''Eatgaboon''',
+   '''Eldeen''',
+   '''Electric Lizard''',
+   '''Electric Snake''',
+   '''Electro-Whip''',
+   '''Elegant Egotist''',
+   '''Elf's Light''',
+   '''Empress Judge''',
+   '''Enchanted Javelin''',
+   '''Enchanting Mermaid''',
+   '''Eradicating Aerosol''',
+   '''Eternal Draught''',
+   '''Eternal Rest''',
+   '''Exchange''',
+   '''Exile of the Wicked''',
+   '''Exodia the Forbidden One''',
+   '''Eyearmor''',
+   '''Fairy Dragon''',
+   '''Fairy's Hand Mirror''',
+   '''Fairywitch''',
+   '''Faith Bird''',
+   '''Fake Trap''',
+   '''Feral Imp''',
+   '''Fiend Kraken''',
+   '''Fiend Reflection''',
+   '''Fiend Reflection''',
+   '''Fiend Sword''',
+   '''Fiend's Hand''',
+   '''Fiend's Mirror''',
+   '''Final Destiny''',
+   '''Final Flame''',
+   '''Fire Kraken''',
+   '''Fire Reaper''',
+   '''Firegrass''',
+   '''Firewing Pegasus''',
+   '''Fireyarou''',
+   '''Fissure''',
+   '''Flame Cerebrus''',
+   '''Flame Champion''',
+   '''Flame Ghost''',
+   '''Flame Manipulator''',
+   '''Flame Swordsman''',
+   '''Flame Swordsman''',
+   '''Flame Viper''',
+   '''Flash Assailant''',
+   '''Flower Wolf''',
+   '''Flying Kamakiri''',
+   '''Flying Kamakiri''',
+   '''Follow Wind''',
+   '''Forced Requisition''',
+   '''Forest''',
+   '''Fortress Whale''',
+   '''Fortress Whale's Oath''',
+   '''Frenzied Panda''',
+   '''Fusion Sage''',
+   '''Fusionist''',
+   '''Gaia Power''',
+   '''Gaia the Dragon Champion''',
+   '''Gaia The Fierce Knight''',
+   '''Gaia The Fierce Knight''',
+   '''Gale Dogra''',
+   '''Gamma The Magnet Warrior''',
+   '''Ganigumo''',
+   '''Garma Sword''',
+   '''Garma Sword Oath''',
+   '''Garnecia Elefantis''',
+   '''Garoozis''',
+   '''Garvas''',
+   '''Gate Guardian''',
+   '''Gatekeeper''',
+   '''Gazelle the King of Mythical Beasts''',
+   '''Gemini Elf''',
+   '''Genin''',
+   '''Germ Infection''',
+   '''Ghoul with an Appetite''',
+   '''Giant Flea''',
+   '''Giant Germ''',
+   '''Giant Mech-Soldier''',
+   '''Giant Rat''',
+   '''Giant Red Seasnake''',
+   '''Giant Scorpion of the Tundra''',
+   '''Giant Soldier of Stone''',
+   '''Giant Trunade''',
+   '''Giant Turtle Who Feeds on Flames''',
+   '''Gift of The Mystical Elf''',
+   '''Giganto''',
+   '''Giga-tech Wolf''',
+   '''Giltia the D. Knight''',
+   '''Goblin Fan''',
+   '''Goblin's Secret Remedy''',
+   '''Goddess of Whim''',
+   '''Goddess with the Third Eye''',
+   '''Gokibore''',
+   '''Graceful Charity''',
+   '''Graceful Dice''',
+   '''Grappler''',
+   '''Gravedigger Ghoul''',
+   '''Gravekeeper's Servant''',
+   '''Graverobber''',
+   '''Graveyard and the Hand of Invitation''',
+   '''Great Bill''',
+   '''Great Mammoth of Goldfine''',
+   '''Great Moth''',
+   '''Great White''',
+   '''Green Phantom King''',
+   '''Greenkappa''',
+   '''Griffore''',
+   '''Griggle''',
+   '''Ground Attacker Bugroth''',
+   '''Gruesome Goo''',
+   '''Gryphon Wing''',
+   '''Guardian of the Labyrinth''',
+   '''Guardian of the Sea''',
+   '''Guardian of the Throne Room''',
+   '''Gust''',
+   '''Gust Fan''',
+   '''Gyakutenno Megami''',
+   '''Hamburger Recipe''',
+   '''Hane-Hane''',
+   '''Haniwa''',
+   '''Happy Lover''',
+   '''Hard Armor''',
+   '''Harpie Lady''',
+   '''Harpie Lady Sisters''',
+   '''Harpie's Brother''',
+   '''Harpie's Feather Duster''',
+   '''Harpie's Pet Dragon''',
+   '''Heavy Storm''',
+   '''Hercules Beetle''',
+   '''Hero of the East''',
+   '''Hibikime''',
+   '''High Tide Gyojin''',
+   '''Hinotama''',
+   '''Hinotama Soul''',
+   '''Hiro's Shadow Scout''',
+   '''Hitodenchak''',
+   '''Hitotsu-Me Giant''',
+   '''Holograh''',
+   '''Horn Imp''',
+   '''Horn of Heaven''',
+   '''Horn of Light''',
+   '''Horn of the Unicorn''',
+   '''Hoshiningen''',
+   '''Hourglass of Courage''',
+   '''Hourglass of Life''',
+   '''House of Adhesive Tape''',
+   '''Hungry Burger''',
+   '''Hunter Spider''',
+   '''Hyo''',
+   '''Hyosube''',
+   '''Hyozanryu''',
+   '''Ice Water''',
+   '''Ill Witch''',
+   '''Illusionist Faceless Mage''',
+   '''Imperial Order''',
+   '''Insect Armor with Laser Cannon''',
+   '''Insect Queen''',
+   '''Insect Soldiers of the Sky''',
+   '''Inspection''',
+   '''Invader from Another Dimension''',
+   '''Invader of the Throne''',
+   '''Invigoration''',
+   '''Javelin Beetle''',
+   '''Javelin Beetle Pact''',
+   '''Jellyfish''',
+   '''Jigen Bakudan''',
+   '''Jinzo''',
+   '''Jinzo''',
+   '''Jirai Gumo''',
+   '''Judge Man''',
+   '''Just Desserts''',
+   '''Kagemusha of the Blue Flame''',
+   '''Kageningen''',
+   '''Kairyu-Shin''',
+   '''Kaiser Dragon''',
+   '''Kamakiriman''',
+   '''Kaminari Attack''',
+   '''Kaminarikozou''',
+   '''Kamionwizard''',
+   '''Kanan the Swordmistress''',
+   '''Kanikabuto''',
+   '''Karate Man''',
+   '''Karbonala Warrior''',
+   '''Kattapillar''',
+   '''Kazejin''',
+   '''Key Mace''',
+   '''Killer Needle''',
+   '''King Fog''',
+   '''King of Yamimakai''',
+   '''Kiseitai''',
+   '''Kojikocy''',
+   '''Kotodama''',
+   '''Koumori Dragon''',
+   '''Krokodilus''',
+   '''Kumootoko''',
+   '''Kunai with Chain''',
+   '''Kurama''',
+   '''Kuriboh''',
+   '''Kuwagata a''',
+   '''Kwagar Hercules''',
+   '''La Jinn the Mystical Genie of the Lamp''',
+   '''Labyrinth Tank''',
+   '''Labyrinth Wall''',
+   '''Lady of Faith''',
+   '''LaLa Li-oon''',
+   '''Larvae Moth''',
+   '''Larvas''',
+   '''Laser Cannon Armor''',
+   '''Last Day of Witch''',
+   '''Last Will''',
+   '''Laughing Flower''',
+   '''Launcher Spider''',
+   '''Launcher Spider''',
+   '''Lava Battleguard''',
+   '''Left Arm of the Forbidden One''',
+   '''Left Leg of the Forbidden One''',
+   '''Legendary Sword''',
+   '''Leghul''',
+   '''Leogun''',
+   '''Lesser Dragon''',
+   '''Light of Intervention''',
+   '''Lightforce Sword''',
+   '''Liquid Beast''',
+   '''Little Chimera''',
+   '''Little D''',
+   '''Lord of D.''',
+   '''Lord of the Lamp''',
+   '''Lord of Zemia''',
+   '''Luminous Spark''',
+   '''Lunar Queen Elzaim''',
+   '''Mabarrel''',
+   '''Machine Conversion Factory''',
+   '''Machine King''',
+   '''Magic Jammer''',
+   '''Magic Thorn''',
+   '''Magical Ghost''',
+   '''Magical Hats''',
+   '''Magical Labyrinth''',
+   '''Magic-Arm Shield''',
+   '''Magician of Black Chaos''',
+   '''Magician of Faith''',
+   '''Maha Vailo''',
+   '''Maiden of the Moonlight''',
+   '''Major Riot''',
+   '''Malevolent Nuzzler''',
+   '''Mammoth Graveyard''',
+   '''Man Eater''',
+   '''Man-Eater Bug''',
+   '''Man-eating Black Shark''',
+   '''Man-Eating Plant''',
+   '''Man-Eating Treasure Chest''',
+   '''Manga Ryu-Ran''',
+   '''Marine Beast''',
+   '''Masaki the Legendary Swordsman''',
+   '''Mask of Darkness''',
+   '''Masked Sorcerer''',
+   '''Master & Expert''',
+   '''Mavelus''',
+   '''Mechanical Snail''',
+   '''Mechanical Spider''',
+   '''Mechanicalchaser''',
+   '''Meda Bat''',
+   '''Mega Thunderball''',
+   '''Megamorph''',
+   '''Megazowler''',
+   '''Meotoko''',
+   '''Mesmeric Control''',
+   '''Messenger of Peace''',
+   '''Metal Detector''',
+   '''Metal Dragon''',
+   '''Metal Fish''',
+   '''Metal Guardian''',
+   '''Metalmorph''',
+   '''Metalzoa''',
+   '''Meteor B. Dragon''',
+   '''Meteor Dragon''',
+   '''Mikazukinoyaiba''',
+   '''Millennium Golem''',
+   '''Millennium Shield''',
+   '''Milus Radiant''',
+   '''Minar''',
+   '''Minomushi Warrior''',
+   '''Mirror Force''',
+   '''Mirror Wall''',
+   '''Misairuzame''',
+   '''Molten Destruction''',
+   '''Monster Egg''',
+   '''Monster Eye''',
+   '''Monster Reborn''',
+   '''Monster Tamer''',
+   '''Monstrous Bird''',
+   '''Moon Envoy''',
+   '''Mooyan Curry''',
+   '''Morinphen''',
+   '''Morphing Jar''',
+   '''Morphing Jar''',
+   '''Mother Grizzly''',
+   '''Mountain''',
+   '''Mountain Warrior''',
+   '''Mr. Volcano''',
+   '''Muka Muka''',
+   '''Mushroom Man''',
+   '''Mushroom Man''',
+   '''Musician King''',
+   '''M-Warrior''',
+   '''M-Warrior''',
+   '''Mysterious Puppeteer''',
+   '''Mystic Horseman''',
+   '''Mystic Lamp''',
+   '''Mystic Plasma Zone''',
+   '''Mystic Probe''',
+   '''Mystic Tomato''',
+   '''Mystical Capture Chain''',
+   '''Mystical Elf''',
+   '''Mystical Moon''',
+   '''Mystical Sand''',
+   '''Mystical Sheep''',
+   '''Mystical Sheep''',
+   '''Mystical Space Typhoon''',
+   '''Needle Ball''',
+   '''Needle Worm''',
+   '''Negate Attack''',
+   '''Nekogal''',
+   '''Nekogal''',
+   '''Nemuriko''',
+   '''Neo the Magic Swordsman''',
+   '''Nimble Momonga''',
+   '''Niwatori''',
+   '''Nobleman of Crossout''',
+   '''Nobleman of Extermination''',
+   '''Novox's Prayer''',
+   '''Numinous Healer''',
+   '''Octoberser''',
+   '''Ocubeam''',
+   '''Ogre of the Black Shadow''',
+   '''One-Eyed Shield Dragon''',
+   '''Ooguchi''',
+   '''Ookazi''',
+   '''Orion the Battle King''',
+   '''Oscillo Hero''',
+   '''Oscillo Hero''',
+   '''Painful Choice''',
+   '''Pale Beast''',
+   '''Panther Warrior''',
+   '''Paralyzing Potion''',
+   '''Parasite Paracide''',
+   '''Parrot Dragon''',
+   '''Patrol Robo''',
+   '''Peacock''',
+   '''Pendulum Machine''',
+   '''Pendulum Machine''',
+   '''Penguin Knight''',
+   '''Penguin Soldier''',
+   '''Perfectly Ultimate Great Moth''',
+   '''Performance of Sword''',
+   '''Petit Angel''',
+   '''Petit Dragon''',
+   '''Petit Moth''',
+   '''Polymerization''',
+   '''Polymerization''',
+   '''Pot of Greed''',
+   '''Power of Kaishin''',
+   '''Pragtical''',
+   '''Premature Burial''',
+   '''Prevent Rat''',
+   '''Princess of Tsurugi''',
+   '''Prisman''',
+   '''Prohibition''',
+   '''Protector of the Throne''',
+   '''Psychic Kappa''',
+   '''Pumpking the King of Ghosts''',
+   '''Punished Eagle''',
+   '''Queen Bird''',
+   '''Queen of Autumn Leaves''',
+   '''Queen's Double''',
+   '''Rabid Horseman''',
+   '''Raigeki''',
+   '''Raimei''',
+   '''Rainbow Flower''',
+   '''Raise Body Heat''',
+   '''Rare Fish''',
+   '''Ray & Temperature''',
+   '''Reaper of the Cards''',
+   '''Red Archery Girl''',
+   '''Red Medicine''',
+   '''Red-Eyes B. Dragon''',
+   '''Red-Eyes Black Metal Dragon''',
+   '''Reinforcements''',
+   '''Relinquished''',
+   '''Remove Trap''',
+   '''Respect Play''',
+   '''Restructer Revolution''',
+   '''Resurrection of Chakra''',
+   '''Reverse Trap''',
+   '''Revival of Dokurorider''',
+   '''Rhaimundos of the Red Sword''',
+   '''Right Arm of the Forbidden One''',
+   '''Right Leg of the Forbidden One''',
+   '''Ring of Magnetism''',
+   '''Riryoku''',
+   '''Rising Air Current''',
+   '''Roaring Ocean Snake''',
+   '''Robbin' Goblin''',
+   '''Rock Ogre Grotto''',
+   '''Rogue Doll''',
+   '''Root Water''',
+   '''Rose Spectre of Dunn''',
+   '''Royal Decree''',
+   '''Royal Guard''',
+   '''Rude Kaiser''',
+   '''Rush Recklessly''',
+   '''Ryu-Kishin''',
+   '''Ryu-Kishin Powered''',
+   '''Ryu-Ran''',
+   '''Saber Slasher''',
+   '''Saggi the Dark Clown''',
+   '''Salamandra''',
+   '''Sand Stone''',
+   '''Sanga of the Thunder''',
+   '''Sangan''',
+   '''Sea Kamen''',
+   '''Sea King Dragon''',
+   '''Seal of the Ancients''',
+   '''Sebek's Blessing''',
+   '''Sectarian of Secrets''',
+   '''Seiyaryu''',
+   '''Sengenjin''',
+   '''Senju of the Thousand Hands''',
+   '''Serpent Night Dragon''',
+   '''Seven Tools of the Bandit''',
+   '''Shadow Ghoul''',
+   '''Shadow Specter''',
+   '''Share the Pain''',
+   '''Shield & Sword''',
+   '''Shining Fairy''',
+   '''Shovel Crusher''',
+   '''Silver Bow and Arrow''',
+   '''Silver Fang''',
+   '''Sinister Serpent''',
+   '''Skelengel''',
+   '''Skelgon''',
+   '''Skull Dice''',
+   '''Skull Guardian''',
+   '''Skull Knight''',
+   '''Skull Red Bird''',
+   '''Skull Servant''',
+   '''Skull Stalker''',
+   '''Skullbird''',
+   '''Sleeping Lion''',
+   '''Slot Machine''',
+   '''Snake Fang''',
+   '''Snakeyashi''',
+   '''Snatch Steal''',
+   '''Sogen''',
+   '''Solemn Judgment''',
+   '''Solitude''',
+   '''Solomon's Lawbook''',
+   '''Sonic Bird''',
+   '''Sonic Maid''',
+   '''Soul Hunter''',
+   '''Soul of the Pure''',
+   '''Soul Release''',
+   '''Sparks''',
+   '''Spear Cretin''',
+   '''Spellbinding Circle''',
+   '''Spike Seadra''',
+   '''Spirit of the Books''',
+   '''Spirit of the Harp''',
+   '''Stain Storm''',
+   '''Star Boy''',
+   '''Steel Ogre Grotto''',
+   '''Steel Ogre Grotto''',
+   '''Steel Scorpion''',
+   '''Steel Shell''',
+   '''Stim-Pack''',
+   '''Stone Armadiller''',
+   '''Stone Ogre Grotto''',
+   '''Stop Defense''',
+   '''Stuffed Animal''',
+   '''Succubus Knight''',
+   '''Suijin''',
+   '''Summoned Skull''',
+   '''Super War-Lion''',
+   '''Supporter in the Shadows''',
+   '''Swamp Battleguard''',
+   '''Sword Arm of Dragon''',
+   '''Sword of Dark Destruction''',
+   '''Sword of Deep-Seated''',
+   '''Sword of Dragon's Soul''',
+   '''Swords of Revealing Light''',
+   '''Swordsman from a Foreign Land''',
+   '''Swordstalker''',
+   '''Tailor of the Fickle''',
+   '''Tainted Wisdom''',
+   '''Takriminos''',
+   '''Takuhee''',
+   '''Tao the Chanter''',
+   '''Temple of Skulls''',
+   '''Tenderness''',
+   '''Terra the Terrible''',
+   '''The 13th Grave''',
+   '''The Bewitching Phantom Thief''',
+   '''The Bistro Butcher''',
+   '''The Cheerful Coffin''',
+   '''The Drdek''',
+   '''The Eye of Truth''',
+   '''The Flute of Summoning Dragon''',
+   '''The Forceful Sentry''',
+   '''The Furious Sea King''',
+   '''The Immortal of Thunder''',
+   '''The Inexperienced Spy''',
+   '''The Little Swordsman of Aile''',
+   '''The Regulation of Tribe''',
+   '''The Reliable Guardian''',
+   '''The Shallow Grave''',
+   '''The Snake Hair''',
+   '''The Stern Mystic''',
+   '''The Thing That Hides in the Mud''',
+   '''The Unhappy Maiden''',
+   '''The Wandering Doomed''',
+   '''The Wicked Worm Beast''',
+   '''Thousand Dragon''',
+   '''Thousand Dragon''',
+   '''Three-Headed Geedo''',
+   '''Three-Legged Zombies''',
+   '''Thunder Dragon''',
+   '''Tiger Axe''',
+   '''Tiger Axe''',
+   '''Time Machine''',
+   '''Time Seal''',
+   '''Time Wizard''',
+   '''Toad Master''',
+   '''Togex''',
+   '''Toll''',
+   '''Tomozaurus''',
+   '''Tongyo''',
+   '''Toon Alligator''',
+   '''Toon Mermaid''',
+   '''Toon Summoned Skull''',
+   '''Toon World''',
+   '''Torike''',
+   '''Total Defense Shogun''',
+   '''Trakadon''',
+   '''Trap Hole''',
+   '''Trap Master''',
+   '''Tremendous Fire''',
+   '''Trent''',
+   '''Trial of Nightmare''',
+   '''Tribute to The Doomed''',
+   '''Tri-Horned Dragon''',
+   '''Tripwire Beast''',
+   '''Turtle Oath''',
+   '''Turtle Tiger''',
+   '''Twin Long Rods''',
+   '''Twin-Headed Fire Dragon''',
+   '''Twin-Headed Thunder Dragon''',
+   '''Two-Headed King Rex''',
+   '''Two-Mouth Darkruler''',
+   '''Two-Pronged Attack''',
+   '''Tyhone''',
+   '''Tyhone''',
+   '''UFO Turtle''',
+   '''Ultimate Offering''',
+   '''Umi''',
+   '''Umiiruka''',
+   '''Unknown Warrior of Fiend''',
+   '''Upstart Goblin''',
+   '''Uraby''',
+   '''Ushi Oni''',
+   '''Valkyrion the Magna Warrior''',
+   '''Vermillion Sparrow''',
+   '''Versago the Destroyer''',
+   '''Vile Germs''',
+   '''Violent Rain''',
+   '''Violet Crystal''',
+   '''Vishwar Randi''',
+   '''Vorse Raider''',
+   '''Waboku''',
+   '''Wall of Illusion''',
+   '''Wall Shadow''',
+   '''War-Lion Ritual''',
+   '''Warrior Elimination''',
+   '''Warrior of Tradition''',
+   '''Wasteland''',
+   '''Water Element''',
+   '''Water Girl''',
+   '''Water Magician''',
+   '''Water Omotics''',
+   '''Waterdragon Fairy''',
+   '''Weather Control''',
+   '''Weather Report''',
+   '''Whiptail Crow''',
+   '''White Hole''',
+   '''White Magical Hat''',
+   '''Wicked Mirror''',
+   '''Widespread Ruin''',
+   '''Windstorm of Etaqua''',
+   '''Wing Egg Elf''',
+   '''Winged Cleaver''',
+   '''Winged Dragon,Guardian of the Fortress''',
+   '''Wings of Wicked Flame''',
+   '''Witch of the Black Forest''',
+   '''Witch's Apprentice''',
+   '''Witty Phantom''',
+   '''Wodan the Resident of the Forest''',
+   '''Wood Remains''',
+   '''World Suppression''',
+   '''Wow Warrior''',
+   '''Wretched Ghost of the Attic''',
+   '''Yado Karu''',
+   '''Yaiba Robo''',
+   '''Yamatano Dragon Scroll''',
+   '''Yami''',
+   '''Yaranzo''',
+   '''Zanki''',
+   '''Zera Ritual''',
+   '''Zera The Mant''',
+   '''Zoa''',
+   '''Zombie Warrior''',
+   '''Zone Eater''',
+   '''The Monarchy''',
+   '''Set Sail for the Kingdom''',
+   '''Glory of the King's Hand''',
+   '''Obelisk the Tormentor''',
+   '''Slifer the Sky Dragon''',
+   '''The Winged Dragon of Ra''',
+   '''Insect Monster Token''',
+]
+
+[[List]]
+Name = '''cardinternalnumbers'''
+DefaultHash = '''E0598595'''
+0 = [
+   '''Blue-Eyes White Dragon''',
+   '''Mystical Elf''',
+   '''Hitotsu-Me Giant''',
+   '''Baby Dragon''',
+   '''Ryu-Kishin''',
+   '''Feral Imp''',
+   '''Winged Dragon,Guardian of the Fortress 1''',
+   '''Mushroom Man''',
+   '''Shadow Specter''',
+   '''Blackland Fire Dragon''',
+   '''Sword Arm of Dragon''',
+   '''Swamp Battleguard''',
+   '''Tyhone''',
+   '''Battle Steer''',
+   '''Flame Swordsman''',
+   '''Time Wizard''',
+   '''Right Leg of the Forbidden One''',
+   '''Left Leg of the Forbidden One''',
+   '''Right Arm of the Forbidden One''',
+   '''Left Arm of the Forbidden One''',
+   '''Exodia the Forbidden One''',
+   '''Summoned Skull''',
+   '''The Wicked Worm Beast''',
+   '''Skull Servant''',
+   '''Horn Imp''',
+   '''Battle Ox''',
+   '''Beaver Warrior''',
+   '''Rock Ogre Grotto 1''',
+   '''Mountain Warrior''',
+   '''Zombie Warrior''',
+   '''Koumori Dragon''',
+   '''Two-Headed King Rex''',
+   '''Judge Man''',
+   '''Saggi the Dark Clown''',
+   '''Dark Magician''',
+   '''The Snake Hair''',
+   '''Gaia the Dragon Champion''',
+   '''Gaia The Fierce Knight''',
+   '''Curse of Dragon''',
+   '''Dragon Piper''',
+   '''Celtic Guardian''',
+   '''Illusionist Faceless Mage''',
+   '''Karbonala Warrior''',
+   '''Rogue Doll''',
+   '''Oscillo Hero 2''',
+   '''Griffore''',
+   '''Torike''',
+   '''Sangan''',
+   '''Big Insect''',
+   '''Basic Insect''',
+   '''Armored Lizard''',
+   '''Hercules Beetle''',
+   '''Killer Needle''',
+   '''Gokibore''',
+   '''Giant Flea''',
+   '''Larvae Moth''',
+   '''Great Moth''',
+   '''Kuriboh''',
+   '''Mammoth Graveyard''',
+   '''Great White''',
+   '''None''',
+   '''Harpie Lady''',
+   '''Harpie Lady Sisters''',
+   '''Tiger Axe''',
+   '''Silver Fang''',
+   '''Kojikocy''',
+   '''Perfectly Ultimate Great Moth''',
+   '''Garoozis''',
+   '''Thousand Dragon''',
+   '''Fiend Kraken''',
+   '''Jellyfish''',
+   '''Cocoon of Evolution''',
+   '''Kairyu-Shin''',
+   '''Giant Soldier of Stone''',
+   '''Man-Eating Plant''',
+   '''Krokodilus''',
+   '''Grappler''',
+   '''Axe Raider''',
+   '''Megazowler''',
+   '''Uraby''',
+   '''Crawling Dragon 2''',
+   '''Red-Eyes B. Dragon''',
+   '''Castle of Dark Illusions''',
+   '''Reaper of the Cards''',
+   '''King of Yamimakai''',
+   '''Barox''',
+   '''Dark Chimera''',
+   '''Metal Guardian''',
+   '''Catapult Turtle''',
+   '''Gyakutenno Megami''',
+   '''Mystic Horseman''',
+   '''Rabid Horseman''',
+   '''Zanki''',
+   '''Crawling Dragon''',
+   '''Crass Clown''',
+   '''Armored Zombie''',
+   '''Dragon Zombie''',
+   '''Clown Zombie''',
+   '''Pumpking the King of Ghosts''',
+   '''Battle Warrior''',
+   '''Wings of Wicked Flame''',
+   '''Mask of Darkness''',
+   '''None''',
+   '''Curtain of the Dark Ones''',
+   '''Tomozaurus''',
+   '''None''',
+   '''Kageningen''',
+   '''Graveyard and the Hand of Invitation''',
+   '''Goddess with the Third Eye''',
+   '''Hero of the East''',
+   '''Doma The Angel of Silence''',
+   '''None''',
+   '''Dark Gray''',
+   '''White Magical Hat''',
+   '''Kamionwizard''',
+   '''None''',
+   '''Spirit of the Books''',
+   '''Supporter in the Shadows''',
+   '''Trial of Nightmare''',
+   '''Dream Clown''',
+   '''Sleeping Lion''',
+   '''Yamatano Dragon Scroll''',
+   '''None''',
+   '''Ancient Tool''',
+   '''Faith Bird''',
+   '''Orion the Battle King''',
+   '''Ansatsu''',
+   '''None''',
+   '''Nemuriko''',
+   '''Weather Control''',
+   '''Octoberser''',
+   '''The 13th Grave''',
+   '''Charubin the Fire Knight''',
+   '''Mystical Capture Chain''',
+   '''Fiend's Hand''',
+   '''Witty Phantom''',
+   '''None''',
+   '''None''',
+   '''Blue-Eyed Silver Zombie''',
+   '''Toad Master''',
+   '''None''',
+   '''Flame Manipulator''',
+   '''None''',
+   '''None''',
+   '''The Bewitching Phantom Thief''',
+   '''Temple of Skulls''',
+   '''Monster Egg''',
+   '''None''',
+   '''Lord of the Lamp''',
+   '''Akihiron''',
+   '''Rhaimundos of the Red Sword''',
+   '''None''',
+   '''Dokuroizo the Grim Reaper''',
+   '''Fire Reaper''',
+   '''Larvas''',
+   '''Hard Armor''',
+   '''Firegrass''',
+   '''Man Eater''',
+   '''None''',
+   '''M-Warrior 1''',
+   '''M-Warrior 2''',
+   '''Tainted Wisdom''',
+   '''None''',
+   '''Lord of Zemia''',
+   '''None''',
+   '''Mysterious Puppeteer''',
+   '''Ancient Jar''',
+   '''Darkfire Dragon''',
+   '''Dark King of the Abyss''',
+   '''Spirit of the Harp''',
+   '''Big Eye''',
+   '''Armaill''',
+   '''None''',
+   '''None''',
+   '''Ancient Brain''',
+   '''None''',
+   '''None''',
+   '''Claw Reacher''',
+   '''None''',
+   '''Arlownay''',
+   '''Dark Shade''',
+   '''None''',
+   '''None''',
+   '''Genin''',
+   '''Eyearmor''',
+   '''Fiend Reflection 2''',
+   '''None''',
+   '''None''',
+   '''Fusionist''',
+   '''Akakieisu''',
+   '''LaLa Li-oon''',
+   '''None''',
+   '''Turtle Tiger''',
+   '''Terra the Terrible''',
+   '''Doron''',
+   '''Arma Knight''',
+   '''None''',
+   '''Happy Lover''',
+   '''Penguin Knight''',
+   '''Petit Dragon''',
+   '''Frenzied Panda''',
+   '''Air Marmot of Nefariousness''',
+   '''None''',
+   '''Mabarrel''',
+   '''Dorover''',
+   '''None''',
+   '''None''',
+   '''Petit Angel''',
+   '''Winged Cleaver''',
+   '''Hinotama Soul''',
+   '''Kaminarikozou''',
+   '''Meotoko''',
+   '''Aqua Madoor''',
+   '''Kagemusha of the Blue Flame''',
+   '''Flame Ghost''',
+   '''Dryad''',
+   '''B. Skull Dragon''',
+   '''Two-Mouth Darkruler''',
+   '''Solitude''',
+   '''Masked Sorcerer''',
+   '''Kumootoko''',
+   '''None''',
+   '''Roaring Ocean Snake''',
+   '''Trap Master''',
+   '''Fiend Sword''',
+   '''Skull Stalker''',
+   '''Hitodenchak''',
+   '''Wood Remains''',
+   '''Hourglass of Life''',
+   '''Rare Fish''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''Beautiful Headhuntress''',
+   '''Wodan the Resident of the Forest''',
+   '''Guardian of the Labyrinth''',
+   '''Haniwa''',
+   '''None''',
+   '''Vishwar Randi''',
+   '''The Drdek''',
+   '''Dark Assailant''',
+   '''Candle of Fate''',
+   '''Water Element''',
+   '''Dissolverock''',
+   '''Meda Bat''',
+   '''None''',
+   '''Root Water''',
+   '''Master & Expert''',
+   '''Water Omotics''',
+   '''Hyo''',
+   '''Enchanting Mermaid''',
+   '''Nekogal 1''',
+   '''Fairywitch''',
+   '''None''',
+   '''Prevent Rat''',
+   '''Dimensional Warrior''',
+   '''Stone Armadiller''',
+   '''Beastking of the Swamps''',
+   '''None''',
+   '''Lunar Queen Elzaim''',
+   '''Wicked Mirror''',
+   '''The Little Swordsman of Aile''',
+   '''None''',
+   '''Wing Egg Elf''',
+   '''The Furious Sea King''',
+   '''Princess of Tsurugi''',
+   '''Unknown Warrior of Fiend''',
+   '''Sectarian of Secrets''',
+   '''Versago the Destroyer''',
+   '''None''',
+   '''None''',
+   '''Mavelus''',
+   '''None''',
+   '''Green Phantom King''',
+   '''Ground Attacker Bugroth''',
+   '''Ray & Temperature''',
+   '''None''',
+   '''Petit Moth''',
+   '''King Fog''',
+   '''Protector of the Throne''',
+   '''None''',
+   '''Mystical Sheep 2''',
+   '''Holograh''',
+   '''Tao the Chanter''',
+   '''None''',
+   '''Gatekeeper''',
+   '''Ogre of the Black Shadow''',
+   '''Dark Artist''',
+   '''None''',
+   '''Moon Envoy''',
+   '''Fireyarou''',
+   '''Psychic Kappa''',
+   '''Masaki the Legendary Swordsman''',
+   '''Dragoness the Wicked Knight''',
+   '''Bio Plant''',
+   '''One-Eyed Shield Dragon''',
+   '''None''',
+   '''None''',
+   '''Sonic Maid''',
+   '''Kurama''',
+   '''Legendary Sword''',
+   '''Sword of Dark Destruction''',
+   '''Dark Energy''',
+   '''Axe of Despair''',
+   '''Laser Cannon Armor''',
+   '''Insect Armor with Laser Cannon''',
+   '''Elf's Light''',
+   '''Beast Fangs''',
+   '''Steel Shell''',
+   '''Vile Germs''',
+   '''Black Pendant''',
+   '''Silver Bow and Arrow''',
+   '''Horn of Light''',
+   '''Horn of the Unicorn''',
+   '''Dragon Treasure''',
+   '''Electro-Whip''',
+   '''Cyber Shield''',
+   '''Elegant Egotist''',
+   '''Mystical Moon''',
+   '''Stop Defense''',
+   '''Malevolent Nuzzler''',
+   '''Violet Crystal''',
+   '''Book of Secret Arts''',
+   '''Invigoration''',
+   '''Machine Conversion Factory''',
+   '''Raise Body Heat''',
+   '''Follow Wind''',
+   '''Power of Kaishin''',
+   '''Dragon Capture Jar''',
+   '''Forest''',
+   '''Wasteland''',
+   '''Mountain''',
+   '''Sogen''',
+   '''Umi''',
+   '''Yami''',
+   '''Dark Hole''',
+   '''Raigeki''',
+   '''Mooyan Curry''',
+   '''Red Medicine''',
+   '''Goblin's Secret Remedy''',
+   '''Soul of the Pure''',
+   '''Dian Keto the Cure Master''',
+   '''Sparks''',
+   '''Hinotama''',
+   '''Final Flame''',
+   '''Ookazi''',
+   '''Tremendous Fire''',
+   '''Swords of Revealing Light''',
+   '''Spellbinding Circle''',
+   '''Dark-Piercing Light''',
+   '''Yaranzo''',
+   '''Kanan the Swordmistress''',
+   '''Takriminos''',
+   '''Stuffed Animal''',
+   '''None''',
+   '''Super War-Lion''',
+   '''None''',
+   '''Seiyaryu''',
+   '''Three-Legged Zombies''',
+   '''Zera The Mant''',
+   '''None''',
+   '''Millennium Shield''',
+   '''None''',
+   '''Black Luster Soldier''',
+   '''Fiend's Mirror''',
+   '''Labyrinth Wall''',
+   '''Jirai Gumo''',
+   '''Shadow Ghoul''',
+   '''Wall Shadow''',
+   '''Labyrinth Tank''',
+   '''Sanga of the Thunder''',
+   '''Kazejin''',
+   '''Suijin''',
+   '''Gate Guardian''',
+   '''Dungeon Worm''',
+   '''Monster Tamer''',
+   '''Ryu-Kishin Powered''',
+   '''Swordstalker''',
+   '''La Jinn the Mystical Genie of the Lamp''',
+   '''Blue-Eyes Ultimate Dragon''',
+   '''Toon Alligator''',
+   '''Rude Kaiser''',
+   '''Parrot Dragon''',
+   '''Dark Rabbit''',
+   '''Bickuribox''',
+   '''Harpie's Pet Dragon''',
+   '''Mystic Lamp''',
+   '''Pendulum Machine''',
+   '''Giltia the D. Knight''',
+   '''Launcher Spider''',
+   '''Zoa''',
+   '''Metalzoa''',
+   '''Zone Eater''',
+   '''Steel Scorpion''',
+   '''Dancing Elf''',
+   '''Ocubeam''',
+   '''Leghul''',
+   '''Ooguchi''',
+   '''Swordsman from a Foreign Land''',
+   '''None''',
+   '''Ushi Oni''',
+   '''Monster Eye''',
+   '''Leogun''',
+   '''None''',
+   '''Saber Slasher''',
+   '''Yaiba Robo''',
+   '''Machine King''',
+   '''Giant Mech-Soldier''',
+   '''Metal Dragon''',
+   '''Mechanical Spider''',
+   '''None''',
+   '''Giga-tech Wolf''',
+   '''Cyber Soldier''',
+   '''Shovel Crusher''',
+   '''Mechanicalchaser''',
+   '''None''',
+   '''Blast Juggler''',
+   '''None''',
+   '''Giganto''',
+   '''Cyber-Stein''',
+   '''Cyber Commander''',
+   '''Jinzo 7''',
+   '''Dice Armadillo''',
+   '''None''',
+   '''Thunder Dragon''',
+   '''None''',
+   '''Kaiser Dragon''',
+   '''Magician of Faith''',
+   '''Goddess of Whim''',
+   '''Water Magician''',
+   '''Ice Water''',
+   '''Waterdragon Fairy''',
+   '''Ancient Elf''',
+   '''None''',
+   '''Water Girl''',
+   '''None''',
+   '''Deepsea Shark''',
+   '''Metal Fish''',
+   '''Bottom Dweller''',
+   '''7 Colored Fish''',
+   '''None''',
+   '''Aqua Dragon''',
+   '''Sea King Dragon''',
+   '''None''',
+   '''Guardian of the Sea''',
+   '''None''',
+   '''Giant Red Seasnake''',
+   '''Spike Seadra''',
+   '''None''',
+   '''None''',
+   '''Kanikabuto''',
+   '''None''',
+   '''Millennium Golem''',
+   '''Destroyer Golem''',
+   '''Barrel Rock''',
+   '''Minomushi Warrior''',
+   '''None''',
+   '''Kaminari Attack''',
+   '''Tripwire Beast''',
+   '''Bolt Escargot''',
+   '''None''',
+   '''The Immortal of Thunder''',
+   '''Electric Snake''',
+   '''None''',
+   '''Punished Eagle''',
+   '''Skull Red Bird''',
+   '''Crimson Sunbird''',
+   '''Queen Bird''',
+   '''Armed Ninja''',
+   '''Magical Ghost''',
+   '''Soul Hunter''',
+   '''Air Eater''',
+   '''Vermillion Sparrow''',
+   '''Sea Kamen''',
+   '''Sinister Serpent''',
+   '''Ganigumo''',
+   '''None''',
+   '''Insect Soldiers of the Sky''',
+   '''Cockroach Knight''',
+   '''Kuwagata a''',
+   '''Burglar''',
+   '''Pragtical''',
+   '''Garvas''',
+   '''Ameba''',
+   '''None''',
+   '''None''',
+   '''Flower Wolf''',
+   '''Rainbow Flower''',
+   '''Barrel Lily''',
+   '''Needle Ball''',
+   '''Peacock''',
+   '''Hoshiningen''',
+   '''Maha Vailo''',
+   '''None''',
+   '''Musician King''',
+   '''None''',
+   '''Yado Karu''',
+   '''Morinphen''',
+   '''Kattapillar''',
+   '''Dragon Seeker''',
+   '''Man-Eater Bug''',
+   '''D. Human''',
+   '''None''',
+   '''None''',
+   '''Prisman''',
+   '''Gale Dogra''',
+   '''Crazy Fish''',
+   '''Cyber Saurus''',
+   '''Bracchio-raidus''',
+   '''Laughing Flower''',
+   '''Bean Soldier''',
+   '''Cannon Soldier''',
+   '''Guardian of the Throne Room''',
+   '''None''',
+   '''None''',
+   '''Muka Muka''',
+   '''Sand Stone''',
+   '''None''',
+   '''Fire Kraken''',
+   '''None''',
+   '''Skullbird''',
+   '''Monstrous Bird''',
+   '''The Bistro Butcher''',
+   '''Star Boy''',
+   '''None''',
+   '''None''',
+   '''Milus Radiant''',
+   '''Togex''',
+   '''Flame Cerebrus''',
+   '''Eldeen''',
+   '''Mystical Sand''',
+   '''Gemini Elf''',
+   '''Kwagar Hercules''',
+   '''Minar''',
+   '''Kamakiriman''',
+   '''None''',
+   '''Mega Thunderball''',
+   '''Niwatori''',
+   '''None''',
+   '''Skelengel''',
+   '''Hane-Hane''',
+   '''Misairuzame''',
+   '''Tongyo''',
+   '''None''',
+   '''Skelgon''',
+   '''Wow Warrior''',
+   '''Griggle''',
+   '''None''',
+   '''None''',
+   '''Behegon''',
+   '''Dark Elf''',
+   '''None''',
+   '''Mushroom Man 2''',
+   '''Lava Battleguard''',
+   '''Tyhone 2''',
+   '''The Wandering Doomed''',
+   '''Steel Ogre Grotto 1''',
+   '''None''',
+   '''Oscillo Hero''',
+   '''Invader from Another Dimension''',
+   '''Lesser Dragon''',
+   '''Needle Worm''',
+   '''Wretched Ghost of the Attic''',
+   '''Great Mammoth of Goldfine''',
+   '''Man-eating Black Shark''',
+   '''None''',
+   '''Darkworld Thorns''',
+   '''Anthrosaurus''',
+   '''Drooling Lizard''',
+   '''Trakadon''',
+   '''B. Dragon Jungle King''',
+   '''Empress Judge''',
+   '''Little D''',
+   '''Witch of the Black Forest''',
+   '''Ancient One of the Deep Forest''',
+   '''Giant Scorpion of the Tundra''',
+   '''Crow Goblin''',
+   '''None''',
+   '''None''',
+   '''Patrol Robo''',
+   '''Takuhee''',
+   '''Dark Witch''',
+   '''Weather Report''',
+   '''Binding Chain''',
+   '''Mechanical Snail''',
+   '''Greenkappa''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''Morphing Jar''',
+   '''None''',
+   '''Giant Turtle Who Feeds on Flames''',
+   '''Rose Spectre of Dunn''',
+   '''Fiend Reflection 1''',
+   '''Ghoul with an Appetite''',
+   '''Pale Beast''',
+   '''Little Chimera''',
+   '''Violent Rain''',
+   '''Key Mace 2''',
+   '''Tenderness''',
+   '''Penguin Soldier''',
+   '''Fairy Dragon''',
+   '''None''',
+   '''Liquid Beast''',
+   '''Twin Long Rods 2''',
+   '''Great Bill''',
+   '''None''',
+   '''Bladefly''',
+   '''Electric Lizard''',
+   '''Hiro's Shadow Scout''',
+   '''Lady of Faith''',
+   '''Twin-Headed Thunder Dragon''',
+   '''Hunter Spider''',
+   '''Armored Starfish''',
+   '''Hourglass of Courage''',
+   '''Marine Beast''',
+   '''Warrior of Tradition''',
+   '''None''',
+   '''Snakeyashi''',
+   '''Succubus Knight''',
+   '''Ill Witch''',
+   '''The Thing That Hides in the Mud''',
+   '''High Tide Gyojin''',
+   '''None''',
+   '''Amazon of the Seas''',
+   '''Nekogal 2''',
+   '''Witch's Apprentice''',
+   '''Armored Rat''',
+   '''Ancient Lizard Warrior''',
+   '''Maiden of the Moonlight''',
+   '''Stone Ogre Grotto''',
+   '''None''',
+   '''None''',
+   '''Queen's Double''',
+   '''Blue-Winged Crown''',
+   '''Trent''',
+   '''Queen of Autumn Leaves''',
+   '''Amphibious Bugroth''',
+   '''Acid Crawler''',
+   '''Invader of the Throne''',
+   '''Mystical Sheep 1''',
+   '''Disk Magician''',
+   '''Flame Viper''',
+   '''Royal Guard''',
+   '''Gruesome Goo''',
+   '''Hyosube''',
+   '''None''',
+   '''Hibikime''',
+   '''Whiptail Crow''',
+   '''Kunai with Chain''',
+   '''Magical Labyrinth''',
+   '''Warrior Elimination''',
+   '''Salamandra''',
+   '''None''',
+   '''Eternal Rest''',
+   '''Megamorph''',
+   '''Metalmorph''',
+   '''None''',
+   '''Stain Storm''',
+   '''Crush Card''',
+   '''Eradicating Aerosol''',
+   '''Breath of Light''',
+   '''Eternal Draught''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''Bright Castle''',
+   '''None''',
+   '''Black Luster Ritual''',
+   '''Zera Ritual''',
+   '''Harpie's Feather Duster''',
+   '''War-Lion Ritual''',
+   '''Beastly Mirror Ritual''',
+   '''None''',
+   '''Commencement Dance''',
+   '''Hamburger Recipe''',
+   '''None''',
+   '''Novox's Prayer''',
+   '''None''',
+   '''House of Adhesive Tape''',
+   '''Eatgaboon''',
+   '''None''',
+   '''None''',
+   '''Acid Trap Hole''',
+   '''Widespread Ruin''',
+   '''Goblin Fan''',
+   '''None''',
+   '''Reverse Trap''',
+   '''Fake Trap''',
+   '''None''',
+   '''Turtle Oath''',
+   '''None''',
+   '''Resurrection of Chakra''',
+   '''None''',
+   '''Javelin Beetle Pact''',
+   '''Garma Sword Oath''',
+   '''None''',
+   '''Revival of Dokurorider''',
+   '''Fortress Whale's Oath''',
+   '''Performance of Sword''',
+   '''Hungry Burger''',
+   '''Sengenjin''',
+   '''Skull Guardian''',
+   '''Tri-Horned Dragon''',
+   '''Serpent Night Dragon''',
+   '''Skull Knight''',
+   '''Cosmo Queen''',
+   '''Chakra''',
+   '''Crab Turtle''',
+   '''Mikazukinoyaiba''',
+   '''Meteor Dragon''',
+   '''Meteor B. Dragon''',
+   '''Firewing Pegasus''',
+   '''None''',
+   '''Garma Sword''',
+   '''Javelin Beetle''',
+   '''Fortress Whale''',
+   '''Dokurorider''',
+   '''None''',
+   '''Dark Magic Ritual''',
+   '''Magician of Black Chaos''',
+   '''Slot Machine''',
+   '''None''',
+   '''Red Archery Girl''',
+   '''Ryu-Ran''',
+   '''Manga Ryu-Ran''',
+   '''Toon Mermaid''',
+   '''Toon Summoned Skull''',
+   '''Dark-Eyes Illusionist''',
+   '''Relinquished''',
+   '''Jigen Bakudan''',
+   '''None''',
+   '''None''',
+   '''Steel Ogre Grotto 2''',
+   '''Blast Sphere''',
+   '''Hyozanryu''',
+   '''Alpha The Magnet Warrior''',
+   '''None''',
+   '''None''',
+   '''Lord of D.''',
+   '''Red-Eyes Black Metal Dragon''',
+   '''Barrel Dragon''',
+   '''None''',
+   '''Panther Warrior''',
+   '''Three-Headed Geedo''',
+   '''Gazelle the King of Mythical Beasts''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''Jinzo''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''Beta The Magnet Warrior''',
+   '''None''',
+   '''None''',
+   '''Dark Magician Girl''',
+   '''Alligator's Sword''',
+   '''Insect Queen''',
+   '''Parasite Paracide''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''Blue-Eyes Toon Dragon''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''Dunames Dark Witch''',
+   '''Garnecia Elefantis''',
+   '''Total Defense Shogun''',
+   '''None''',
+   '''Cyber-Tech Alligator''',
+   '''None''',
+   '''Gamma The Magnet Warrior''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''Buster Blader''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''Alligator's Sword Dragon''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''Vorse Raider''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''Valkyrion the Magna Warrior''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''Bell of Destruction''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''Magical Hats''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''Time Machine''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''Toon World''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''Black Illusion Ritual''',
+   '''None''',
+   '''Negate Attack''',
+   '''None''',
+   '''7 Completed''',
+   '''None''',
+   '''Lightforce Sword''',
+   '''None''',
+   '''The Flute of Summoning Dragon''',
+   '''Shield & Sword''',
+   '''Graceful Charity''',
+   '''Chain Destruction''',
+   '''Mesmeric Control''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''Magic-Arm Shield''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''Fissure''',
+   '''Trap Hole''',
+   '''Polymerization''',
+   '''Remove Trap''',
+   '''Two-Pronged Attack''',
+   '''Blue Medicine''',
+   '''Raimei''',
+   '''Monster Reborn''',
+   '''De-Spell''',
+   '''Pot of Greed''',
+   '''Gravedigger Ghoul''',
+   '''Burning Spear''',
+   '''Gust Fan''',
+   '''The Inexperienced Spy''',
+   '''Reinforcements''',
+   '''Castle Walls''',
+   '''Ultimate Offering''',
+   '''Ancient Telescope''',
+   '''White Hole''',
+   '''None''',
+   '''Call of the Grave''',
+   '''Anti Raigeki''',
+   '''Tribute to The Doomed''',
+   '''Soul Release''',
+   '''The Cheerful Coffin''',
+   '''Call of the Dark''',
+   '''Change of Heart''',
+   '''Solemn Judgment''',
+   '''Magic Jammer''',
+   '''Seven Tools of the Bandit''',
+   '''Horn of Heaven''',
+   '''Just Desserts''',
+   '''Royal Decree''',
+   '''Polymerization''',
+   '''None''',
+   '''Last Day of Witch''',
+   '''Exile of the Wicked''',
+   '''Magic Thorn''',
+   '''Restructer Revolution''',
+   '''Fusion Sage''',
+   '''None''',
+   '''Sword of Deep-Seated''',
+   '''Block Attack''',
+   '''The Unhappy Maiden''',
+   '''Robbin' Goblin''',
+   '''Germ Infection''',
+   '''Paralyzing Potion''',
+   '''The Stern Mystic''',
+   '''Wall of Illusion''',
+   '''Neo the Magic Swordsman''',
+   '''None''',
+   '''Man-Eating Treasure Chest''',
+   '''None''',
+   '''Last Will''',
+   '''Waboku''',
+   '''Mirror Force''',
+   '''None''',
+   '''Ring of Magnetism''',
+   '''Share the Pain''',
+   '''Stim-Pack''',
+   '''Heavy Storm''',
+   '''Gryphon Wing''',
+   '''Gravekeeper's Servant''',
+   '''Curse of Fiend''',
+   '''Upstart Goblin''',
+   '''Toll''',
+   '''Final Destiny''',
+   '''Snatch Steal''',
+   '''Chorus of Sanctuary''',
+   '''Confiscation''',
+   '''Delinquent Duo''',
+   '''Darkness Approaches''',
+   '''Fairy's Hand Mirror''',
+   '''Tailor of the Fickle''',
+   '''Rush Recklessly''',
+   '''The Reliable Guardian''',
+   '''The Forceful Sentry''',
+   '''Chain Energy''',
+   '''Mystical Space Typhoon''',
+   '''Giant Trunade''',
+   '''Painful Choice''',
+   '''Snake Fang''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''Time Seal''',
+   '''Graverobber''',
+   '''Gift of The Mystical Elf''',
+   '''The Eye of Truth''',
+   '''Dust Tornado''',
+   '''Call Of The Haunted''',
+   '''Solomon's Lawbook''',
+   '''Earthshaker''',
+   '''Enchanted Javelin''',
+   '''Mirror Wall''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''Cyber Jar''',
+   '''Banisher of the Light''',
+   '''Giant Rat''',
+   '''Senju of the Thousand Hands''',
+   '''UFO Turtle''',
+   '''Flash Assailant''',
+   '''Karate Man''',
+   '''Dark Zebra''',
+   '''Giant Germ''',
+   '''Nimble Momonga''',
+   '''Spear Cretin''',
+   '''Shining Fairy''',
+   '''Boar Soldier''',
+   '''Mother Grizzly''',
+   '''Flying Kamakiri 1''',
+   '''Ceremonial Bell''',
+   '''Sonic Bird''',
+   '''Mystic Tomato''',
+   '''Kotodama''',
+   '''Gaia Power''',
+   '''Umiiruka''',
+   '''Molten Destruction''',
+   '''Rising Air Current''',
+   '''Luminous Spark''',
+   '''Mystic Plasma Zone''',
+   '''Messenger of Peace''',
+   '''None''',
+   '''None''',
+   '''Gust''',
+   '''Driving Snow''',
+   '''Armored Glass''',
+   '''World Suppression''',
+   '''Mystic Probe''',
+   '''Metal Detector''',
+   '''Numinous Healer''',
+   '''Appropriate''',
+   '''Forced Requisition''',
+   '''None''',
+   '''None''',
+   '''DNA Surgery''',
+   '''The Regulation of Tribe''',
+   '''Backup Soldier''',
+   '''None''',
+   '''Major Riot''',
+   '''Ceasefire''',
+   '''Light of Intervention''',
+   '''Respect Play''',
+   '''None''',
+   '''Imperial Order''',
+   '''None''',
+   '''None''',
+   '''Nobleman of Crossout''',
+   '''Nobleman of Extermination''',
+   '''The Shallow Grave''',
+   '''Premature Burial''',
+   '''Inspection''',
+   '''Prohibition''',
+   '''Morphing Jar 2''',
+   '''None''',
+   '''Flame Champion''',
+   '''Twin-Headed Fire Dragon''',
+   '''Darkfire Soldier 1''',
+   '''Mr. Volcano''',
+   '''Darkfire Soldier 2''',
+   '''Kiseitai''',
+   '''Cyber Falcon''',
+   '''None''',
+   '''Flying Kamakiri 2''',
+   '''Harpie's Brother''',
+   '''None''',
+   '''None''',
+   '''Windstorm of Etaqua''',
+   '''Aqua Chorus''',
+   '''Sebek's Blessing''',
+   '''Anti-Magic Fragrance''',
+   '''Riryoku''',
+   '''Sword of Dragon's Soul''',
+   '''Seal of the Ancients''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''Big Shield Gardna''',
+   '''Dark Sage''',
+   '''Graceful Dice''',
+   '''Skull Dice''',
+   '''Exchange''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''The Monarchy''',
+   '''Set Sail for the Kingdom''',
+   '''Glory of the King's Hand''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''Obelisk the Tormentor''',
+   '''Slifer the Sky Dragon''',
+   '''The Winged Dragon of Ra''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''Insect Monster Token''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''Blue-Eyes White Dragon''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''Flame Swordsman''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''Dark Magician''',
+   '''None''',
+   '''None''',
+   '''Gaia The Fierce Knight''',
+   '''None''',
+   '''None''',
+   '''Celtic Guardian''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''Tiger Axe''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''Thousand Dragon''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''None''',
+   '''Pendulum Machine''',
+   '''None''',
+   '''Launcher Spider''',
+]
+
+[[List]]
+Name = '''types'''
+DefaultHash = '''FCD131C5'''
+0 = [
+   '''Monster''',
+   '''Effect''',
+   '''Fusion''',
+   '''Ritual''',
+]
+
+[[List]]
+Name = '''races'''
+DefaultHash = '''4C6B66DF'''
+0 = [
+   '''None''',
+   '''Dragon''',
+   '''Zombie''',
+   '''Fiend''',
+   '''Pyro''',
+   '''Sea Serpent''',
+   '''Rock''',
+   '''Machine''',
+   '''Fish''',
+   '''Dinosaur''',
+   '''Insect''',
+   '''Beast''',
+   '''Beast-Warrior''',
+   '''Plant''',
+   '''Aqua''',
+   '''Warrior''',
+   '''Winged Beast''',
+   '''Fairy''',
+   '''Spellcaster''',
+   '''Thunder''',
+   '''Reptile''',
+   '''Trap''',
+   '''Magic''',
+   '''Ticket''',
+   '''Divine''',
+]
+
+[[List]]
+Name = '''attributes'''
+DefaultHash = '''A39664C4'''
+0 = [
+   '''None''',
+   '''LIGHT''',
+   '''DARK''',
+   '''WATER''',
+   '''FIRE''',
+   '''EARTH''',
+   '''WIND''',
+]
+
+[[List]]
+Name = '''duelists'''
+DefaultHash = '''648B7DC5'''
+0 = [
+   '''tier1.yugimuto''',
+   '''tier1.tristantaylor''',
+   '''tier1.teagardner''',
+   '''tier1.joeywheeler''',
+   '''tier1.bakuraryou''',
+   '''tier2.rexraptor''',
+   '''tier2.esparoba''',
+   '''tier2.weevilunderwood''',
+   '''tier2.makotsunami''',
+   '''tier2.maivalentine''',
+   '''tier3.rarehunter''',
+   '''tier3.arkana''',
+   '''tier3.string''',
+   '''tier3.umbraandlumis''',
+   '''tier3.marikishtar''',
+   '''tier4.setokaiba''',
+   '''tier4.ishizuishtar''',
+   '''tier4.shadi''',
+   '''tier4.yamibakura''',
+   '''tier4.yamiyugi''',
+   '''tier5.duelcomputer''',
+   '''tier5.simon''',
+   '''tier5.maximillionpegasus''',
+   '''tier5.trusdale''',
+]
+
+#################################
+#################################
+#################################
