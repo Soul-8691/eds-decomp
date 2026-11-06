@@ -2024,6 +2024,18 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
   - **Deck:** `DUEL_CMD_SEND_DECK_CARD_TO_GRAVEYARD` for `deck[0]` and `deck[1]` (the top is index 0).
 - Checked in the source and the build; not tested in an emulator.
 
+### Malevolent Catastrophe (2026-11-06)
+- Normal Trap (`assets/new_cards/cards.json`): "When an opponent's monster declares an attack: Destroy all Spell and
+  Trap Cards on the field."
+- **Prepare** (`EffectMalevolentCatastrophePrepare`): during `RESPONSE_ATTACK_DECLARED` (loc0 = the attacker, as
+  Sakuretsu Armor) when the attacker is the opponent's.
+- **Resolve.** Heavy Storm's (`EffectHeavyStormResolve`, as Gigantes): every Spell/Trap and Field zone card of both
+  sides, one per step, the opponent's first.
+- **Stardust Dragon** can negate it (added to `sCardDestroyers`).
+- **CPU** (`AiShouldActivateAddedCard`): when the human has more Spells/Traps than the CPU's others.
+- Moved above `------` in `new_cards.txt`; it wasn't in `card_pools/missing*.txt`. All far code.
+- Checked in the source and the build; not tested in an emulator.
+
 ### Necro Fusion (2026-11-06)
 - Normal Trap (`assets/new_cards/cards.json`): "Fusion Summon 1 Fusion Monster from your Extra Deck, by banishing
   Fusion Materials listed on it from your GY face-down, but it cannot attack this turn."

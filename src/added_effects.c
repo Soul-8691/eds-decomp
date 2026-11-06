@@ -810,6 +810,21 @@ int EffectSakuretsuArmorResolve(struct ChainEntry *link, struct ChainEntry *chai
 }
 #endif /* HAS_CARD_SAKURETSU_ARMOR */
 
+#ifdef HAS_CARD_MALEVOLENT_CATASTROPHE
+/* ---- Malevolent Catastrophe ---------------------------------------------------------------------------------------
+ * Normal Trap: "When an opponent's monster declares an attack: Destroy all Spells and Traps on the field."
+ *   prepare  during RESPONSE_ATTACK_DECLARED (loc0 = attacker, as Sakuretsu Armor) when the attacker is the
+ *            opponent's
+ *   resolve  Heavy Storm's (EffectHeavyStormResolve: every Spell/Trap and Field zone card of both sides, one per
+ *            step, the opponent's first)
+ *   CPU      AiShouldActivateAddedCard: when the human has more Spells/Traps than the CPU's others */
+int EffectMalevolentCatastrophePrepare(struct ChainEntry *card, struct ChainEntry *chainLink, u16 fromHand)
+{
+    (void)chainLink;
+    return !fromHand && card->event == RESPONSE_ATTACK_DECLARED && DUEL_LOC_PLAYER(card->loc0) != card->player;
+}
+#endif /* HAS_CARD_MALEVOLENT_CATASTROPHE */
+
 #ifdef HAS_CARD_D_D_WARRIOR_LADY
 /* ---- D.D. Warrior Lady ----------------------------------------------------------------------------------------
  * "After damage calculation, if this card battled an opponent's monster: You can banish that monster, also banish
@@ -9383,6 +9398,9 @@ int EffectJunkWarriorResolve(struct ChainEntry *link, struct ChainEntry *chained
 static const u16 sCardDestroyers[] = {
     CARD_MYSTICAL_SPACE_TYPHOON,
     CARD_HEAVY_STORM,
+#ifdef HAS_CARD_MALEVOLENT_CATASTROPHE
+    CARD_MALEVOLENT_CATASTROPHE,
+#endif
     CARD_HARPIES_FEATHER_DUSTER,
     CARD_DUST_TORNADO,
     CARD_GUST,
@@ -14774,6 +14792,10 @@ int AiShouldActivateAddedCard(struct ChainEntry *entry)
     case CARD_XING_ZHEN_HU:                     /* only on two of the human's Set cards */
         return CountXingTargets(entry, AI_HUMAN) >= 2;
 #endif
+#ifdef HAS_CARD_MALEVOLENT_CATASTROPHE
+    case CARD_MALEVOLENT_CATASTROPHE:           /* when the human loses more Spells/Traps than the CPU's others */
+        return CountSpellTrapCards(AI_HUMAN) > CountSpellTrapCards(AI_PLAYER) - 1;
+#endif
 #ifdef HAS_CARD_BOOK_OF_MOON
     case CARD_BOOK_OF_MOON:                     /* against the attacker (the target step takes the strongest) */
         return entry->event == RESPONSE_ATTACK_DECLARED && CountFaceUpMonsters(AI_HUMAN) > 0;
@@ -15932,6 +15954,16 @@ const struct CardEffect gAddedCardEffects[] = {
         (int (*)(struct ChainEntry *, struct ChainEntry *))EffectDarkHoleResolve,
         NULL,
         EffectTorrentialTributePrepare,
+        NULL,
+        NULL,
+    },
+#endif
+#ifdef HAS_CARD_MALEVOLENT_CATASTROPHE
+    {
+        CARD_MALEVOLENT_CATASTROPHE, 0,
+        (int (*)(struct ChainEntry *, struct ChainEntry *))EffectHeavyStormResolve,
+        NULL,
+        EffectMalevolentCatastrophePrepare,
         NULL,
         NULL,
     },
