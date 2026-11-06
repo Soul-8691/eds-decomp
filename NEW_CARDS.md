@@ -1,6 +1,6 @@
 # New cards
 
-The 167 cards added in the demo card list (the repo-root `new_cards.txt`, above `------`), as the game shows them in Deck Edit's Card View. The screenshots are taken by [`tools/card_screenshots.lua`](tools/card_screenshots.lua) in mGBA.
+The 173 cards added in the demo card list (the repo-root `new_cards.txt`, above `------`), as the game shows them in Deck Edit's Card View. The screenshots are taken by [`tools/card_screenshots.lua`](tools/card_screenshots.lua) in mGBA.
 
 <table>
 <tr>
@@ -127,6 +127,12 @@ The 167 cards added in the demo card list (the repo-root `new_cards.txt`, above 
 <td align="center"><img src="cards/Old%20Vindictive%20Magician.png" alt="Old Vindictive Magician" width="240"></td><td align="center"><img src="cards/Swarm%20of%20Locusts.png" alt="Swarm of Locusts" width="240"></td><td align="center"><img src="cards/Granmarg%20the%20Rock%20Monarch.png" alt="Granmarg the Rock Monarch" width="240"></td><td align="center"><img src="cards/Cursed%20Seal%20of%20the%20Forbidden%20Spell.png" alt="Cursed Seal of the Forbidden Spell" width="240"></td>
 </tr>
 <tr>
-<td align="center"><img src="cards/Karma%20Cut.png" alt="Karma Cut" width="240"></td><td align="center"><img src="cards/Draining%20Shield.png" alt="Draining Shield" width="240"></td><td align="center"><img src="cards/Dimension%20Wall.png" alt="Dimension Wall" width="240"></td><td></td>
+<td align="center"><img src="cards/Karma%20Cut.png" alt="Karma Cut" width="240"></td><td align="center"><img src="cards/Draining%20Shield.png" alt="Draining Shield" width="240"></td><td align="center"><img src="cards/Dimension%20Wall.png" alt="Dimension Wall" width="240"></td><td align="center"><img src="cards/Nightmare%20Wheel.png" alt="Nightmare Wheel" width="240"></td>
+</tr>
+<tr>
+<td align="center"><img src="cards/Nightmare%27s%20Steelcage.png" alt="Nightmare's Steelcage" width="240"></td><td align="center"><img src="cards/Dark%20Deal.png" alt="Dark Deal" width="240"></td><td align="center"><img src="cards/Dark%20World%20Lightning.png" alt="Dark World Lightning" width="240"></td><td align="center"><img src="cards/Goldd%2C%20Wu-Lord%20of%20Dark%20World.png" alt="Goldd, Wu-Lord of Dark World" width="240"></td>
+</tr>
+<tr>
+<td align="center"><img src="cards/Sillva%2C%20Warlord%20of%20Dark%20World.png" alt="Sillva, Warlord of Dark World" width="240"></td><td></td><td></td><td></td>
 </tr>
 </table>
