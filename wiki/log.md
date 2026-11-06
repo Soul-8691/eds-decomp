@@ -2511,3 +2511,7 @@ updated: 2026-09-29
 
 ## [2026-11-05] progress | PACKS.md regenerated
 - tools/packs_md.py: the pull rates and prices with the cards coded since 2026-11-04 (e.g. the Yata TCG pack's pool 19 -> 21 cards).
+
+## [2026-11-05] progress | Yugi-Kaiba pre-duel screen: formatlibrary.com QR code
+- yugi-kaiba.svg (QR, decoded: https://formatlibrary.com/formats/yugi-kaiba) drawn in the dialogue box with a note to trust it only if it leads to formatlibrary.com. tools/preduel_image.py (SVG -> module rows, format-bit check), src/mod_preduel.c (`DrawQrCode`), Makefile.
+- Pages: [[yugi-kaiba-opponent]].

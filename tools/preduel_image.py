@@ -1,19 +1,27 @@
 #!/usr/bin/env python3
 """A pre-duel screen picture (src/mod_preduel.c): a 240x96 PNG for the bustup portrait area, as game data.
 
-  python3 tools/preduel_image.py yugi-kaiba.png build/assets/preduel_yugi_kaiba.bin
+  python3 tools/preduel_image.py yugi-kaiba.png build/assets/preduel_yugi_kaiba.bin [yugi-kaiba.svg]
 
 The screen is the bustup screen's Mode-4 layout: the picture in rows 0-95 over the empty dialogue box (rows 96-159).
 The box uses BG colours 16-31, so the picture has the other 224: colours 32-255. The PNG may be indexed or RGB(A)
 with up to 224 colours. An indexed PNG whose pixels already use only indices 32-255 keeps them (and its palette
 there); otherwise its colours are numbered 32, 33, ... in order of first use (index order for an indexed PNG).
 
+The optional SVG is a QR code drawn in the dialogue box (src/mod_preduel.c): its dark modules as <rect> elements on a
+grid (QR_ORIGIN + QR_MODULE * n, as the formatlibrary.com QR generator writes them) and its three finder patterns,
+which are redrawn here (no <rect> may fall inside one). The format information is checked (BCH) so a misread grid
+fails the build. At most QR_MAX_SIZE modules a side.
+
 Output (4-byte aligned):
   +0x000  u16 colours[224]   BGR555, for BG palette entries 32-255 (unused ones 0)
-  +0x1C0  u32 size, LZSS stream   the 240x96 bitmap (one byte per pixel, values 32-255), the game's LZSS format
+  +0x1C0  u32 qrSize         modules per side, 0 = no QR code
+  +0x1C4  u32 qrRows[32]     row r: bit c set = dark module (r, c)
+  +0x244  u32 size, LZSS stream   the 240x96 bitmap (one byte per pixel, values 32-255), the game's LZSS format
                                   (LZSSDecompress; tools/assetfmt/gfx_scenes.py lz_encode)
 """
 import os
+import re
 import struct
 import sys
 import zlib
@@ -24,6 +32,41 @@ from assetfmt.gfx_scenes import lz_encode  # noqa: E402
 
 WIDTH, HEIGHT = 240, 96
 FIRST, COLORS = 32, 224
+QR_ORIGIN, QR_MODULE = 173, 57      # the SVG's first module and module size (viewBox units)
+QR_MAX_SIZE, QR_ROWS = 30, 32       # 30 modules at 2 px plus a 2 px border fill the box's 64 rows
+
+
+def read_qr(path):
+    """The QR matrix of the SVG as a list of rows of 0/1."""
+    s = open(path, encoding='utf-8').read()
+    rects = [tuple(map(int, m)) for m in re.findall(
+        r'<rect x="(\d+)" y="(\d+)" width="(\d+)" height="(\d+)" fill="#000000"', s)]
+    if not rects:
+        sys.exit(f'preduel_image: no dark <rect> modules in {path}')
+    n = max(max(x, y) for x, y, _, _ in rects)
+    n = (n - QR_ORIGIN) // QR_MODULE + 1
+    if (n - 17) % 4 or not 21 <= n <= QR_MAX_SIZE:
+        sys.exit(f'preduel_image: {path}: {n} modules a side is not a QR size that fits (21-{QR_MAX_SIZE})')
+    g = [[0] * n for _ in range(n)]
+    for x, y, w, h in rects:
+        if (x - QR_ORIGIN) % QR_MODULE or (y - QR_ORIGIN) % QR_MODULE or (w, h) != (QR_MODULE, QR_MODULE):
+            sys.exit(f'preduel_image: {path}: a <rect> off the {QR_MODULE}-unit grid at ({x}, {y})')
+        g[(y - QR_ORIGIN) // QR_MODULE][(x - QR_ORIGIN) // QR_MODULE] = 1
+    for r0, c0 in ((0, 0), (0, n - 7), (n - 7, 0)):
+        for r in range(7):
+            for c in range(7):
+                if g[r0 + r][c0 + c]:
+                    sys.exit(f'preduel_image: {path}: a module inside a finder pattern')
+                g[r0 + r][c0 + c] = int(r in (0, 6) or c in (0, 6) or (2 <= r <= 4 and 2 <= c <= 4))
+    bits = [g[8][c] for c in (0, 1, 2, 3, 4, 5, 7, 8)] + [g[r][8] for r in (7, 5, 4, 3, 2, 1, 0)]
+    f = int(''.join(map(str, bits)), 2) ^ 0b101010000010010
+    v = f >> 10 << 10
+    for i in range(14, 9, -1):
+        if v >> i & 1:
+            v ^= 0b10100110111 << (i - 10)
+    if (f >> 10 << 10 | v) != f:
+        sys.exit(f'preduel_image: {path}: the QR format information does not check out (grid misread?)')
+    return g
 
 
 def read_png(path):
@@ -73,8 +116,10 @@ def read_png(path):
 
 
 def main():
-    if len(sys.argv) != 3:
+    if len(sys.argv) not in (3, 4):
         sys.exit(__doc__)
+    qr = read_qr(sys.argv[3]) if len(sys.argv) == 4 else []
+    rows = [sum(bit << c for c, bit in enumerate(row)) for row in qr] + [0] * (QR_ROWS - len(qr))
     px, pal = read_png(sys.argv[1])
     colours = [0] * COLORS
     if px is not None and min(px) >= FIRST:
@@ -97,7 +142,8 @@ def main():
         for k, n in slot.items():
             colours[n - FIRST] = A.rgb_to_bgr555(rgb[k])
     stream = lz_encode(bitmap)
-    out = struct.pack(f'<{COLORS}H', *colours) + struct.pack('<I', len(stream)) + stream
+    out = (struct.pack(f'<{COLORS}H', *colours) + struct.pack(f'<I{QR_ROWS}I', len(qr), *rows)
+           + struct.pack('<I', len(stream)) + stream)
     out += b'\0' * (-len(out) % 4)
     try:
         if open(sys.argv[2], 'rb').read() == out:

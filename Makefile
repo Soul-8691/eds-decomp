@@ -226,11 +226,11 @@ $(FIELD_ICONS): $(NEWCARDS_BUILT) $(NEWCARDS_TABLES) tools/cardicons.py tools/as
 build/src/mod_field_icons.o: $(NEWCARDS_GEN) $(FIELD_ICONS)
 build/data/mod_field_icons_data.o: $(NEWCARDS_GEN) $(FIELD_ICONS)
 
-# The pre-duel pictures (tools/preduel_image.py; src/mod_preduel.c), for data/mod_preduel_data.s.
+# The pre-duel pictures and their QR codes (tools/preduel_image.py; src/mod_preduel.c), for data/mod_preduel_data.s.
 PREDUEL_YUGI_KAIBA := build/assets/preduel_yugi_kaiba.bin
-$(PREDUEL_YUGI_KAIBA): yugi-kaiba.png tools/preduel_image.py tools/assets.py tools/assetfmt/gfx_scenes.py
+$(PREDUEL_YUGI_KAIBA): yugi-kaiba.png yugi-kaiba.svg tools/preduel_image.py tools/assets.py tools/assetfmt/gfx_scenes.py
 	@mkdir -p $(@D)
-	$(PYTHON) tools/preduel_image.py $< $@
+	$(PYTHON) tools/preduel_image.py yugi-kaiba.png $@ yugi-kaiba.svg
 build/data/mod_preduel_data.o: $(PREDUEL_YUGI_KAIBA)
 
 build/data/%.o: data/%.s $(ASSETS_BUILT) $(NEWCARDS_BUILT)
