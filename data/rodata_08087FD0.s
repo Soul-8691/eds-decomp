@@ -1956,3 +1956,8 @@ gCardFrameSynchroGfx:
 	.global gCardFrameXyzGfx
 gCardFrameXyzGfx:
 	.incbin "build/assets/xyz_frame.bin"
+@ Added: the duel board with Extra Monster Zones and the shared phase panel (tools/duel_board.py).
+	.balign 4
+	.global gModDuelFieldImage
+gModDuelFieldImage:
+	.incbin "build/assets/duel_board.bin"

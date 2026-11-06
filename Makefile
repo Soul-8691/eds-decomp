@@ -196,7 +196,11 @@ $(SYNCHRO_FRAME): $(ASSETS_BUILT) tools/synchro_frame.py
 XYZ_FRAME := build/assets/xyz_frame.bin
 $(XYZ_FRAME): $(ASSETS_BUILT) tools/synchro_frame.py
 	$(PYTHON) tools/synchro_frame.py $@ xyz
-build/data/rodata_08087FD0.o: $(SYNCHRO_FRAME) $(XYZ_FRAME)
+# The duel board with Extra Monster Zones and the phase panel (tools/duel_board.py).
+DUEL_BOARD := build/assets/duel_board.bin
+$(DUEL_BOARD): $(ASSETS_BUILT) tools/duel_board.py
+	$(PYTHON) tools/duel_board.py $@
+build/data/rodata_08087FD0.o: $(SYNCHRO_FRAME) $(XYZ_FRAME) $(DUEL_BOARD)
 # src/mod_synchro.c reads build/include/synchro_rules.h, which tools/newcards.py writes.
 build/src/mod_synchro.o: $(NEWCARDS_BUILT)
 # src/mod_xyz.c reads build/include/xyz_rules.h, which tools/newcards.py writes.

@@ -803,40 +803,20 @@ void DrawBgNumber(u32 screenBlock, u32 cell, u32 colorSet, int value)
     }
 }
 
-/* Draws a player's life points in the LP box on BG2: player 0 at row 19, column 7; player 1 at row 20, column 20. */
+/* Originally drew a player's life points in the LP box on BG2 (player 0 at row 19, column 7; player 1 at row 20,
+ * column 20). Changed: the board has no LP boxes now; the life points are sprites at the screen corners, drawn each
+ * frame from gDuelPlayers (ModDrawDuelHud, src/mod_duel_hud.c). */
 void DrawLifePoints(int player, int lifePoints)
 {
-    switch (player) {
-    case 0:
-        DrawBgNumber(BG2_MAP_BLOCK, LP_CELL_PLAYER0, 0, lifePoints);
-        break;
-    case 1:
-        DrawBgNumber(BG2_MAP_BLOCK, LP_CELL_PLAYER1, 0, lifePoints);
-        break;
-    }
+    (void)player;
+    (void)lifePoints;
 }
 
-/*
- * Draws both players' phase letters D S M B M E on BG2 (player 0 at row 20, columns 6-11; player 1 at row
- * 19, columns 19-24). The letter of `phase` for `turnPlayer` uses the highlighted tile, the others the normal
- * ones.
- */
+/* Originally drew both players' phase letters D S M B M E on BG2 (player 0 at row 20, columns 6-11; player 1 at
+ * row 19, columns 19-24), the turn player's current one highlighted. Changed: one shared phase panel in the board's
+ * middle, drawn each frame as sprites (ModDrawDuelHud, src/mod_duel_hud.c). */
 void DrawPhaseIndicator(int turnPlayer, int phase)
 {
-    int player;
-    int letter;
-    for (player = 0; player <= 1; player++) {
-        u16 cell;
-        u16 firstCell = PHASE_CELL_PLAYER0;
-        if (player != 0)
-            firstCell -= PHASE_CELL_PLAYER0 - PHASE_CELL_PLAYER1;
-        cell = firstCell;
-        for (letter = 0; letter <= PHASE_LETTER_COUNT - 1; letter++) {
-            int tile = PHASE_NORMAL_TILE;
-            if (player == turnPlayer && letter == phase)
-                tile -= PHASE_HIGHLIGHT_SHIFT;
-            gMain.bgMapBuffer[BG2_MAP_BLOCK][cell] = tile + letter + PHASE_MAP_PALETTE;
-            cell++;
-        }
-    }
+    (void)turnPlayer;
+    (void)phase;
 }

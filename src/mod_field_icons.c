@@ -355,6 +355,8 @@ static void BuildCounterBadge(u32 count)
     }
 }
 
+void ModDrawDuelHud(void);         /* src/mod_duel_hud.c */
+
 void ModDrawCounterBadges(void)
 {
     vu16 *pal = (vu16 *)(OBJ_PLTT + BADGE_PALETTE * 32);
@@ -378,6 +380,7 @@ void ModDrawCounterBadges(void)
             AddSprite((y << 16) | x, SPRITE_SHAPE_8x8, BADGE_PALETTE << 12 | 1 << 10 | (BADGE_TILE + count));
         }
     }
+    ModDrawDuelHud();               /* the life points and the phase panel */
 }
 
 /* ---- The chain list ---- */

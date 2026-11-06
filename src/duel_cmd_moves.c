@@ -468,7 +468,8 @@ void DrawLpChangeAmount(u32 x, u32 y, s32 value, u32 colorSet)
 /*
  * Commands 0x42 (DUEL_CMD_GAIN_LP, gain = 1) and 0x43 (DUEL_CMD_LOSE_LP, gain = 0), arg2 = amount.
  * Step 0 loads the digits and scrolls to player 0's monster row. Step 1 shows the signed amount next to the
- * acting player's LP box for 0x5A frames. Step 2 counts the amount into the life points, 100, 10 or 1 points
+ * acting player's LP box for 0x5A frames (changed: by the life points at the screen corners, src/mod_duel_hud.c:
+ * above yours at the bottom left, under the opponent's at the top right). Step 2 counts the amount into the life points, 100, 10 or 1 points
  * per frame, taking them from arg2 and redrawing the LP box each time (a loss goes through SubtractLifePoints,
  * which stops at 0); the count sound repeats every 11 frames. Counting stops at once when the life points are
  * 0. Finally the cursor is restored.
@@ -476,8 +477,8 @@ void DrawLpChangeAmount(u32 x, u32 y, s32 value, u32 colorSet)
 void DuelCmd_ChangeLifePoints(u16 gain)
 {
     u32 player = CMD_PLAYER();
-    u32 x = player * 0x68 + 8;
-    u32 y = 0x58 - player * 24;
+    u32 x = player * 0x88 + 8;
+    u32 y = 0x6C - player * 0x5A;
     u16 se = gain ? SE_LP_GAIN : SE_LP_LOSS;
     s32 step = gDuelCmd.step;
     struct DuelPlayer *self;

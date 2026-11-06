@@ -64,7 +64,8 @@ struct MainTileView {
 #define MAIN_TILE_VIEW ((struct MainTileView *)&gMain)
 
 extern u16 gBgMap3[];                         /* 0x03001C5C: BG2 card-layer map shadow, 32 columns */
-extern u8 gDuelFieldImage[];                        /* 0x0867BB7C: the field board image loaded by DuelScreen_Init */
+/* Changed: the board with Extra Monster Zones and the phase panel (tools/duel_board.py; was gDuelFieldImage). */
+extern u8 gModDuelFieldImage[];
 extern const u32 gZoneMarkerAnimTiles[8];           /* 0x081A427C: OBJ tile of the marker animation frames */
 
 /* Matching: bg.h declares LoadBgImage4bppMap1 with u16 parameters and a u16 *pack; this unit calls it
@@ -87,12 +88,7 @@ extern int GetCardIconBgTileInt(u32 id) asm("GetCardIconBgTile");
 
 void DuelScreen_Init(void)
 {
-    s32 i;
-    /* FAKEMATCH: keep the initialized base tile in r3 during the two stores. */
-    register u16 tile asm("r3");
     struct DuelStateView *g;
-    u16 *a;
-    u16 *b;
 
     REG_DISPCNT = 0;
     gMain.vblankFlags = 0x603;
@@ -100,17 +96,9 @@ void DuelScreen_Init(void)
     DuelScreen_InitBgCnt();
     LoadDuelBgGfx();
     LoadDuelUiGfx();
-    LoadBgImage4bppMap1Wide(0, 0x60, 0x10, gDuelFieldImage);
-    i = 0;
-    a = MAIN_TILE_VIEW->unk20E6;
-    tile = 0x4280;
-    b = MAIN_TILE_VIEW->unk2140;
-    for (; i <= 1; a++, b++, i++) {
-        /* Stage the halfword sum; agbcc combines this into one store. */
-        *a = i;
-        *a += tile;
-        *b = tile + i;
-    }
+    LoadBgImage4bppMap1Wide(0, 0x60, 0x10, gModDuelFieldImage);
+    /* Changed: the two "LP" label tiles (0x4280-0x4281) the original put in the LP boxes (BG2 cells row 19, column 5
+     * and row 20, column 18; MAIN_TILE_VIEW unk20E6 / unk2140) are gone with the boxes (src/mod_duel_hud.c). */
     g = DUEL_VIEW;
     DuelScreen_LoadFieldBackground(g->fieldBackground);
     DrawLifePoints(0, g->lifePoints0);

@@ -2574,3 +2574,8 @@ updated: 2026-09-29
 - src/mod_field_icons.c: `ModDeckRingBegin(slots)` picks the ring frame without art (plain cards first); a Synchro/Xyz frame without art borrows a palette of its kind. deck_edit_widgets.c passes `slots` (size-limited, one register move).
 - src/mod_info_bar.c: clears `gDuelScreen.textMapReset` after the "MAT" label, so the type/attribute icons keep their palettes.
 - Pages: [[xyz]].
+
+## [2026-11-06] progress | Duel screen: corner life points, shared phase panel, Extra Monster Zones
+- New tools/duel_board.py (gModDuelFieldImage: the boxes out, Extra Monster Zone frames at the edges, a 10x4 phase panel) and src/mod_duel_hud.c (`ModDrawDuelHud`: LP sprites at the screen corners, the turn player's name and the phase letters over the panel), called from `ModDrawCounterBadges`.
+- Size-limited: `DrawLifePoints` / `DrawPhaseIndicator` (duel_info_bar.c) draw nothing; `DuelScreen_Init` loads the new board and drops the "LP" label cells; `DuelCmd_ChangeLifePoints` moves the +/- amount. Demo `.text` ends at 0x0807F34C.
+- Pages: [[duel-hud]] (new).
