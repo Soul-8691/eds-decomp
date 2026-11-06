@@ -107,6 +107,7 @@ void AddedCardsAfterBattle(int player);
 /* Dark Magician of Chaos (src/added_effects.c): its summon mark, its End Phase trigger, and the test of the hooks that
  * banish it instead of letting it leave the field. */
 int IsFaceUpDarkMagicianOfChaos(int player, int zone);
+int ModBattleDestroyedBanished(int player, int zone, u16 id);  /* added: Quillbolt / Plaguespreader (added_effects.c) */
 void DarkMagicianOfChaosSummoned(int player, int zone, u16 id, int kind, int faceUp);
 /* Every summon, once the monster is placed (SummonAction_Update): the added cards' summon effects (src/added_effects.c). */
 void AddedCardsSummoned(int player, int zone, u16 id, int kind, int faceUp);

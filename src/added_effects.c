@@ -8768,6 +8768,8 @@ void SynchroCardsArrived(int player, int zone, u16 id)
     if (gModDuel.quillboltId != 0 && id == gModDuel.quillboltId) {
         gModDuel.quillboltId = 0;
         gModDuel.quillboltIds[(player & 1) * 5 + zone] = id;
+    } else {
+        gModDuel.quillboltIds[(player & 1) * 5 + zone] = 0;   /* another monster here: no stale mark */
     }
 }
 
@@ -8884,7 +8886,7 @@ static int QuillboltInGraveyard(int player)
     return -1;
 }
 
-int ModQuillboltAvailable(int player)
+static int QuillboltCanActivate(int player)
 {
     return gDuel.turnPlayer == player && (gDuel.phase == PHASE_MAIN1 || gDuel.phase == PHASE_MAIN2)
            && QuillboltInGraveyard(player) >= 0 && ControlsFaceUpTuner(player)
@@ -8896,13 +8898,6 @@ static void QuillboltActivate(int player)
     u16 id = gCardNumberToId[CARD_QUILLBOLT_HEDGEHOG];
 
     Chain_AddPending(TRIGGER_PLAYER(player & 1) | TRIGGER_KIND(CHAIN_KIND_OFF_FIELD) | (id & CARD_ID_MASK), 0);
-}
-
-void ModQuillboltMenuRun(void)
-{
-    if (ModQuillboltAvailable(0))
-        QuillboltActivate(0);
-    gDuel.cardMenu.confirmed = 0;
 }
 
 int EffectQuillboltHedgehogPrepare(struct ChainEntry *card, struct ChainEntry *chainLink, u16 fromHand)
@@ -8939,24 +8934,186 @@ int EffectQuillboltHedgehogResolve(struct ChainEntry *link, struct ChainEntry *c
 
 static int AiQuillbolt(void)
 {
-    if (!ModQuillboltAvailable(AI_PLAYER))
+    if (!QuillboltCanActivate(AI_PLAYER))
         return 0;
     QuillboltActivate(AI_PLAYER);
     return 1;
 }
-#else
+#endif /* HAS_CARD_QUILLBOLT_HEDGEHOG */
+
+#ifdef HAS_CARD_PLAGUESPREADER_ZOMBIE
+/* ---- Plaguespreader Zombie ----------------------------------------------------------------------------------------
+ * "If this card is in your GY: You can place 1 card from your hand on the top of the Deck; Special Summon this card, but
+ * banish it when it leaves the field."
+ *   activation  as Quillbolt Hedgehog's: the Graveyard pile's card menu (ModQuillboltAvailable / ModQuillboltMenuRun,
+ *               which now serve both; Quillbolt first when both can) in the player's Main Phase; the CPU:
+ *               AiPlaguespreader in AiPlayAddedCards
+ *   chainA      the cost: the human picks a hand card with the cursor (after a message box A closes), the CPU its
+ *               lowest-ATK monster, else its last card; it goes on top of the Deck (ReturnHandCardToDeck, toTop 1)
+ *   resolve     still in the Graveyard with a free zone: it leaves the Graveyard and is Special Summoned (position
+ *               chosen), marked to be banished when it leaves the field (gModDuel.quillboltId, Quillbolt's mark) */
+static const u8 sStrPlaguespreaderCost[] = "Press A, then select a card in your hand to place on top of your Deck.";
+
+static int PlaguespreaderInGraveyard(int player)
+{
+    struct DuelPlayer *p = &gDuelPlayers[player & 1];
+    int i;
+
+    for (i = 0; i < p->graveCount; i++) {
+        if (CardNumberOfId(DUEL_CARD_ID(&p->graveyard[i])) == CARD_PLAGUESPREADER_ZOMBIE)
+            return i;
+    }
+    return -1;
+}
+
+static int PlaguespreaderCanActivate(int player)
+{
+    return gDuel.turnPlayer == player && (gDuel.phase == PHASE_MAIN1 || gDuel.phase == PHASE_MAIN2)
+           && PlaguespreaderInGraveyard(player) >= 0 && gDuelPlayers[player & 1].handCount > 0
+           && CountFreeMonsterZones(player) > 0 && CanSpecialSummon(player);
+}
+
+static void PlaguespreaderActivate(int player)
+{
+    u16 id = gCardNumberToId[CARD_PLAGUESPREADER_ZOMBIE];
+
+    Chain_AddPending(TRIGGER_PLAYER(player & 1) | TRIGGER_KIND(CHAIN_KIND_OFF_FIELD) | (id & CARD_ID_MASK), 0);
+}
+
+int EffectPlaguespreaderZombiePrepare(struct ChainEntry *card, struct ChainEntry *chainLink, u16 fromHand)
+{
+    return !fromHand && chainLink == NULL && PlaguespreaderInGraveyard(card->player) >= 0
+           && gDuelPlayers[card->player & 1].handCount > 0 && CountFreeMonsterZones(card->player) > 0
+           && CanSpecialSummon(card->player);
+}
+
+/* The CPU's card for the top of its Deck: its lowest-ATK monster, else its last card. */
+static int PlaguespreaderCpuPick(void)
+{
+    struct DuelPlayer *p = &gDuelPlayers[AI_PLAYER];
+    int i, best = p->handCount - 1;
+    u32 bestAtk = 0xFFFFFFFF;
+
+    for (i = 0; i < p->handCount; i++) {
+        u32 stats = gCardStats[DUEL_CARD_ID(&p->hand[i]) & CARD_ID_MASK];
+        u32 atk = (stats & CARD_STATS_ATK_MASK) >> CARD_STATS_ATK_SHIFT;
+
+        if (CARD_STATS_TYPE(stats) <= CARD_TYPE_REPTILE && atk < bestAtk) {
+            best = i;
+            bestAtk = atk;
+        }
+    }
+    return best;
+}
+
+int EffectPlaguespreaderZombieChainA(struct ChainEntry *link, struct ChainEntry *prevLink)
+{
+    (void)prevLink;
+    if (gDuelPlayers[link->player & 1].handCount == 0)
+        return 1;
+    if (link->player) {
+        ReturnHandCardToDeck(link->player, PlaguespreaderCpuPick(), 1);
+        return 1;
+    }
+    if (gChain.costStep == 0) {
+        TextBoxOpen(TEXTBOX_POS(6, 2), TEXTBOX_SIZE(18, 7), TEXTBOX_FLAGS_DEFAULT, sStrPlaguespreaderCost);
+        gChain.costStep++;
+        return 0;
+    }
+    if (DuelCursor_PickTarget(PICK_HAND)) {
+        ReturnHandCardToDeck(0, gDuelScreen.selIndex, 1);
+        PlaySE(SE_CONFIRM);
+        return 1;
+    }
+    return 0;
+}
+
+int EffectPlaguespreaderZombieResolve(struct ChainEntry *link, struct ChainEntry *chainedTo)
+{
+    struct DuelPlayer *p = &gDuelPlayers[link->player & 1];
+    int i;
+
+    (void)chainedTo;
+    if (link->negated)
+        return EFFECT_STEP_DONE;
+    switch (gChain.effectStep) {
+    case EFFECT_STEP_START:
+        i = PlaguespreaderInGraveyard(link->player);
+        if (i < 0 || CountFreeMonsterZones(link->player) == 0)
+            return EFFECT_STEP_DONE;
+        CopyDuelCard(&gChain.effectCard, &p->graveyard[i]);
+        DuelCmd_Push(link->player ? DUEL_CMD_PLAYER | DUEL_CMD_REMOVE_CARD_FROM_GRAVEYARD
+                                  : DUEL_CMD_REMOVE_CARD_FROM_GRAVEYARD,
+                     ((u16 *)&gChain.effectCard)[0], ((u16 *)&gChain.effectCard)[1], 0);
+        return EFFECT_STEP_2;
+    case EFFECT_STEP_2:
+        gModDuel.quillboltId = DUEL_CARD_ID(&gChain.effectCard);   /* banished when it leaves the field */
+        QueueSpecialSummonChoosePosition(link->player, &gChain.effectCard, 1, 0);
+        return EFFECT_STEP_END;
+    }
+    return EFFECT_STEP_DONE;
+}
+
+/* The CPU summons it as a body when it has no monster, or as Synchro Material when its Extra Deck has a Synchro
+ * Monster and it controls another monster. */
+static int AiPlaguespreader(void)
+{
+    struct DuelPlayer *p = &gDuelPlayers[AI_PLAYER];
+    int i, synchro = 0;
+
+    if (!PlaguespreaderCanActivate(AI_PLAYER))
+        return 0;
+    for (i = 0; i < p->fusionCount; i++) {
+        if (IS_SYNCHRO_CARD(DUEL_CARD_ID(&p->fusionDeck[i])))
+            synchro = 1;
+    }
+    if (CountMonsters(AI_PLAYER) != 0 && !synchro)
+        return 0;
+    PlaguespreaderActivate(AI_PLAYER);
+    return 1;
+}
+#endif /* HAS_CARD_PLAGUESPREADER_ZOMBIE */
+
+/* The Graveyard pile's card menu (card_menu_input.c, duel_cmd_queue.c): Special Summon a Graveyard monster with its
+ * own effect, Quillbolt Hedgehog's or Plaguespreader Zombie's. */
 int ModQuillboltAvailable(int player)
 {
+#ifdef HAS_CARD_QUILLBOLT_HEDGEHOG
+    if (QuillboltCanActivate(player))
+        return 1;
+#endif
+#ifdef HAS_CARD_PLAGUESPREADER_ZOMBIE
+    if (PlaguespreaderCanActivate(player))
+        return 1;
+#endif
     return 0;
 }
 
 void ModQuillboltMenuRun(void)
 {
+#ifdef HAS_CARD_QUILLBOLT_HEDGEHOG
+    if (QuillboltCanActivate(0))
+        QuillboltActivate(0);
+    else
+#endif
+#ifdef HAS_CARD_PLAGUESPREADER_ZOMBIE
+    if (PlaguespreaderCanActivate(0))
+        PlaguespreaderActivate(0);
+#endif
     gDuel.cardMenu.confirmed = 0;
 }
-#endif /* HAS_CARD_QUILLBOLT_HEDGEHOG */
 
-/* IsFaceUpDarkMagicianOfChaos: 1 if the monster in (player, zone) is a Quillbolt Hedgehog its effect summoned. */
+/* SendBattleDestroyedCardToGraveyard (duel_field_moves.c): 1 if the monster card `id` destroyed in battle in (player,
+ * zone) carries the banish-on-leave mark (Quillbolt Hedgehog, Plaguespreader Zombie): it is banished instead. The
+ * battle's copy of the card is checked, as the zone may already be empty. */
+int ModBattleDestroyedBanished(int player, int zone, u16 id)
+{
+    return zone <= ZONE_MONSTER_4 && (id & CARD_ID_MASK) != 0
+           && gModDuel.quillboltIds[(player & 1) * 5 + zone] == (id & CARD_ID_MASK);
+}
+
+/* IsFaceUpDarkMagicianOfChaos: 1 if the monster in (player, zone) is a Quillbolt Hedgehog (or Plaguespreader Zombie)
+ * its effect summoned. */
 int QuillboltBanishedOnLeave(int player, int zone)
 {
     u16 id;
@@ -13991,6 +14148,10 @@ int AiPlayAddedCards(void)
     if (AiQuillbolt())
         return 1;
 #endif
+#ifdef HAS_CARD_PLAGUESPREADER_ZOMBIE
+    if (AiPlaguespreader())
+        return 1;
+#endif
     if (AiTrySynchroSummon())               /* src/mod_synchro.c */
         return 1;
     /* the card-menu effects of face-up added monsters */
@@ -14370,6 +14531,16 @@ const struct CardEffect gAddedCardEffects[] = {
         NULL,
         EffectChaosKingArchfiendPrepare,
         NULL,
+        NULL,
+    },
+#endif
+#ifdef HAS_CARD_PLAGUESPREADER_ZOMBIE
+    {
+        CARD_PLAGUESPREADER_ZOMBIE, 0,
+        EffectPlaguespreaderZombieResolve,
+        NULL,
+        EffectPlaguespreaderZombiePrepare,
+        EffectPlaguespreaderZombieChainA,
         NULL,
     },
 #endif

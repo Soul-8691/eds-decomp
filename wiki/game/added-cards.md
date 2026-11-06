@@ -2024,6 +2024,29 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
   - **Deck:** `DUEL_CMD_SEND_DECK_CARD_TO_GRAVEYARD` for `deck[0]` and `deck[1]` (the top is index 0).
 - Checked in the source and the build; not tested in an emulator.
 
+### Plaguespreader Zombie (2026-11-05)
+- Tuner Monster (Level 2, DARK Zombie, 400/200; `assets/new_cards/cards.json`): "If this card is in your GY: You can
+  place 1 card from your hand on the top of the Deck; Special Summon this card, but banish it when it leaves the
+  field."
+- **Activation.** Quillbolt Hedgehog's: A on the Graveyard pile opens the card menu with SP SUMMON in the Main Phase.
+  `ModQuillboltAvailable` / `ModQuillboltMenuRun` (the hooks in `card_menu_input.c` and `duel_cmd_queue.c`, unchanged)
+  now serve both cards (Quillbolt first when both can); Quillbolt's own check is `QuillboltCanActivate`.
+- **Cost** (`EffectPlaguespreaderZombieChainA`): the human picks a hand card with the cursor after a message box (A),
+  the CPU its lowest-ATK monster, else its last card; it goes on top of the Deck (`ReturnHandCardToDeck`, toTop 1).
+- **Resolve.** Still in the Graveyard with a free zone: Special Summoned (position chosen) and marked with Quillbolt's
+  banish-on-leave mark (`gModDuel.quillboltId` -> `quillboltIds`, `IsFaceUpDarkMagicianOfChaos`).
+- **Fix (same day): not banished.** The user saw it go to the Graveyard. The banish-on-leave mark was only checked
+  by `IsFaceUpDarkMagicianOfChaos`'s paths (`SendFieldCardToGrave`, `TributeMonster`, `ReturnFieldCardToHand` /
+  `Deck`). Now also: destroyed in battle (`SendBattleDestroyedCardToGraveyard`, `duel_field_moves.c`, asks
+  `ModBattleDestroyedBanished` with the battle's copy of the card, beside Banisher of the Light's check) and sent as a
+  Fusion Material (`SendFusionMaterialToGrave`, `duel_send_to_grave.c`). A monster arriving in a zone without the mark
+  clears that zone's mark (`SynchroCardsArrived`), so a later copy summoned normally there is not banished. This
+  covers Quillbolt Hedgehog too; size-limited `.text`, a condition each.
+- **CPU** (`AiPlaguespreader`, in `AiPlayAddedCards` after Quillbolt): when it has no monster, or when its Extra Deck
+  holds a Synchro Monster and it controls another monster (its Synchro Summon follows).
+- It was already above `------` in `new_cards.txt`; it wasn't in `card_pools/missing*.txt`.
+- Checked in the source and the build; not tested in an emulator.
+
 ### Chaos King Archfiend (2026-11-05)
 - Synchro Monster (Level 7, DARK Fiend, 2600/2600; `assets/new_cards/cards.json`): "1 Fiend-Type Tuner + 1 or more
   non-Tuner monsters. When this card declares an attack: You can switch the current ATK and DEF of all face-up

@@ -2530,3 +2530,10 @@ updated: 2026-09-29
 
 ## [2026-11-05] progress | Synchro cards silver in Deck Edit
 - tools/cardicons.py: a Synchro card's ring art in 10 colours, the Fusion frame's entries 1, 4, 10, 12, 15 in silver; src/mod_field_icons.c `ModDeckRingArt` draws its frame in the art's palette. Pages: [[synchro]].
+
+## [2026-11-05] progress | Plaguespreader Zombie
+- src/added_effects.c: `EffectPlaguespreaderZombiePrepare` / `ChainA` / `Resolve`, `AiPlaguespreader`, row; the Graveyard menu hooks `ModQuillboltAvailable` / `ModQuillboltMenuRun` now cover both cards (`QuillboltCanActivate`).
+- Pages: [[added-cards]].
+
+## [2026-11-05] progress | Fix: Plaguespreader / Quillbolt not banished on leaving
+- The banish mark is now checked for battle destruction (`ModBattleDestroyedBanished` in `SendBattleDestroyedCardToGraveyard`) and Fusion Material (`SendFusionMaterialToGrave`); a zone's mark is cleared when another monster arrives. Pages: [[added-cards]].

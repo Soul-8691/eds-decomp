@@ -637,7 +637,11 @@ int SendFusionMaterialToGrave(int player, int zone)
     if (id != 0) {
         struct DuelCard *card = &gDuelPlayers[player & 1].zones[zone].card;
         if (CountFaceUpMonstersByNumber(0, CARD_BANISHER_OF_THE_LIGHT) > 0
-            || CountFaceUpMonstersByNumber(1, CARD_BANISHER_OF_THE_LIGHT) > 0) {
+            || CountFaceUpMonstersByNumber(1, CARD_BANISHER_OF_THE_LIGHT) > 0
+#ifdef HAS_CARD_DARK_MAGICIAN_OF_CHAOS
+            || IsFaceUpDarkMagicianOfChaos(player, zone)    /* added: DMoC, Quillbolt, Plaguespreader banished */
+#endif
+            ) {
             DuelCmd_Push(PLAYER_CMD(player, DUEL_CMD_BANISH), zone, 1, 0);
             DestroyLinkedCards(player, zone, 1);
             return; /* Matching: no value, as in TributeMonster */

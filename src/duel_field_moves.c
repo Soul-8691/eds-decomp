@@ -168,7 +168,11 @@ void SendBattleDestroyedCardToGraveyard(int defender, int player, int zone, u16 
     if (zone > ZONE_MONSTER_4)
         return;
     if (CountFaceUpMonstersByNumber(0, CARD_BANISHER_OF_THE_LIGHT) > 0
-        || CountFaceUpMonstersByNumber(1, CARD_BANISHER_OF_THE_LIGHT) > 0) {
+        || CountFaceUpMonstersByNumber(1, CARD_BANISHER_OF_THE_LIGHT) > 0
+#if defined(HAS_CARD_QUILLBOLT_HEDGEHOG) || defined(HAS_CARD_PLAGUESPREADER_ZOMBIE)
+        || ModBattleDestroyedBanished(player, zone, ((struct DuelCard *)card)->id)  /* added: banished on leaving */
+#endif
+        ) {
         BanishBattleDestroyedCard(player, zone, card);
         return;
     }
