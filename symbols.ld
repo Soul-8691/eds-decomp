@@ -46,6 +46,9 @@ gModMatch = 0x0202D400;
 gModXyz = 0x0202D500;
 /* Mod: the Extra Monster Zones, the zone pick and the Link Summon state of src/mod_link.c (at most 0x100 bytes). */
 gModLink = 0x0202D700;
+/* Mod: a Link Monster's card frame with its arrows (src/mod_link.c ModLinkFrame, 0x2698 bytes), inside
+ * gBustupBitmapBuffer (0x02031014-0x02036A14), which only the dialogue scenes and the pre-duel picture use. */
+gModLinkFrame = 0x02034000;
 gTextCanvas = 0x02000000;
 gSaveData = 0x02011C20;
 gSaveDataSignature = 0x02013D86;

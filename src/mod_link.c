@@ -633,6 +633,93 @@ void ModDrawLinkArrows(void)
     }
 }
 
+/* ---- Link Arrows on the card picture ----
+ * The card previews (LoadCardFrame in card_canvas.c, Card View in card_detail.c, the battle scene in duel_card_anim.c)
+ * all take their frame from ModFusionKindFrame (src/mod_xyz.c), which for a Link Monster returns ModLinkFrame: a copy
+ * of gCardFrameLinkGfx in gModLinkFrame (EWRAM 0x02034000, inside gBustupBitmapBuffer, which only the dialogue
+ * scenes and the pre-duel picture use) with that card's arrows painted around the art window, red where it points
+ * and dark where it does not. Rebuilt on every call (the battle scene loads its two frames one after the other).
+ * The pack: u16 colour count, the palette at +8, an 8-byte tile header, then 144 8bpp tiles of the 104x144 frame:
+ * tile rows 0-3 whole (13 tiles), rows 4-13 only columns 0-1 and 11-12 (the art window is columns 2-10), rows
+ * 14-17 whole. Palette entry 1 is unused by the frame; it becomes the arrows' red. */
+#define FRAME_PACK_SIZE     0x2698
+#define FRAME_COLORS        32
+#define FRAME_TILES_AT      (0x10 + FRAME_COLORS * 2)
+#define FRAME_W             104
+#define ART_X0              16              /* the art window: x 16-87, y 32-111 */
+#define ART_X1              87
+#define ART_Y0              32
+#define ART_Y1              111
+#define ARROW_LIT           1               /* palette entry made red */
+#define ARROW_UNLIT         3               /* the frame's dark blue */
+#define ARROW_LEN           6               /* an arrow is 6 pixels deep */
+
+extern u8 gModLinkFrame[];
+
+/* The byte of frame pixel (x, y) in the pack's tile stream, or NULL inside the art window. */
+static u8 *FramePixel(u8 *pack, int x, int y)
+{
+    int col = x / 8, row = y / 8, tile;
+
+    if (x < 0 || y < 0 || x >= FRAME_W || row > 17)
+        return NULL;
+    if (row <= 3)
+        tile = row * 13 + col;
+    else if (row <= 13) {
+        if (col >= 2 && col <= 10)
+            return NULL;
+        tile = 52 + (row - 4) * 4 + (col < 2 ? col : col - 11 + 2);
+    } else
+        tile = 92 + (row - 14) * 13 + col;
+    return pack + FRAME_TILES_AT + tile * 64 + (y % 8) * 8 + x % 8;
+}
+
+static void Plot(u8 *pack, int x, int y, u8 color)
+{
+    u8 *p = FramePixel(pack, x, y);
+
+    if (p != NULL)
+        *p = color;
+}
+
+/* One arrow (marker bit, TL T TR L R BL B BR) as a triangle pointing away from the art window. */
+static void PaintArrow(u8 *pack, int bit, u8 color)
+{
+    int cx = (ART_X0 + ART_X1 + 1) / 2, cy = (ART_Y0 + ART_Y1 + 1) / 2, k, i;
+
+    for (k = 0; k < ARROW_LEN; k++) {           /* k: distance from the art window */
+        for (i = -(ARROW_LEN - 1 - k); i < ARROW_LEN - k; i++) {
+            switch (bit) {
+            case 1: Plot(pack, cx + i, ART_Y0 - 2 - k, color); break;         /* Top */
+            case 6: Plot(pack, cx + i, ART_Y1 + 2 + k, color); break;         /* Bottom */
+            case 3: Plot(pack, ART_X0 - 2 - k, cy + i, color); break;         /* Left */
+            case 4: Plot(pack, ART_X1 + 2 + k, cy + i, color); break;         /* Right */
+            }
+        }
+        for (i = 0; i < ARROW_LEN - k; i++) {   /* the corners: right triangles */
+            switch (bit) {
+            case 0: Plot(pack, ART_X0 - 2 - k, ART_Y0 - 2 - i, color); break;  /* Top-Left */
+            case 2: Plot(pack, ART_X1 + 2 + k, ART_Y0 - 2 - i, color); break;  /* Top-Right */
+            case 5: Plot(pack, ART_X0 - 2 - k, ART_Y1 + 2 + i, color); break;  /* Bottom-Left */
+            case 7: Plot(pack, ART_X1 + 2 + k, ART_Y1 + 2 + i, color); break;  /* Bottom-Right */
+            }
+        }
+    }
+}
+
+const u8 *ModLinkFrame(u16 id)
+{
+    u8 *pack = gModLinkFrame;
+    u32 markers = LINK_MARKERS(id);
+    int bit;
+
+    CopyDoubleWords(pack, gCardFrameLinkGfx, FRAME_PACK_SIZE);
+    ((u16 *)(pack + 8))[ARROW_LIT] = 0x001F;            /* red */
+    for (bit = 0; bit < 8; bit++)
+        PaintArrow(pack, bit, (markers & (1 << bit)) ? ARROW_LIT : ARROW_UNLIT);
+    return pack;
+}
+
 /* ---- The Link Summon ---- */
 
 static const u16 *RuleOf(u16 id)

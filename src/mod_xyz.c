@@ -487,7 +487,7 @@ const u8 *ModFusionKindFrame(u16 id)
     if (IS_XYZ_CARD(id))
         return gCardFrameXyzGfx;
     if (IS_LINK_CARD(id))
-        return gCardFrameLinkGfx;
+        return ModLinkFrame(id);            /* with its arrows (src/mod_link.c) */
     return gCardFrameFusionGfx;
 }
 

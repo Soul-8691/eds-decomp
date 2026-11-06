@@ -55,6 +55,8 @@ int ModLinkCanSummon(int player, u16 linkId);
 int ModLinkMenuRun(u32 link, int start);
 /* AiPlayAddedCards: the CPU Link Summons when the Link Monster beats its strongest material. 1 if it did. */
 int AiTryLinkSummon(void);
+/* ModFusionKindFrame (src/mod_xyz.c): the Link frame with Link Monster `id`'s arrows painted on (a RAM copy). */
+const u8 *ModLinkFrame(u16 id);
 /* ModDrawDuelHud: the arrows of every face-up Link Monster, and the zone pick's marker. */
 void ModDrawLinkArrows(void);
 

@@ -38,7 +38,13 @@ emulator**.
 - Frame: the Fusion frame made dark blue (`tools/synchro_frame.py link`, `gCardFrameLinkGfx`, through
   `ModFusionKindFrame`); field icon `card_icons/link_monster.png` (blue); Deck Edit ring `DE_LINK_FRAME`.
 - Card View: "[Cyberse/Link-2/Effect]" (`ModCardTypeLine`), no stars and no DEF (`CardDetail_DrawSprites`,
-  title_menu.c). The arrows are not drawn in Card View yet.
+  title_menu.c).
+- Card previews (2026-11-06): the duel preview (`LoadCardFrame`), Card View and the battle scene all take the frame
+  from `ModFusionKindFrame`, which for a Link Monster returns `ModLinkFrame` (src/mod_link.c): a copy of
+  `gCardFrameLinkGfx` in `gModLinkFrame` (EWRAM 0x02034000, inside `gBustupBitmapBuffer`, used only by the dialogue
+  scenes and the pre-duel picture) with its 8 arrows painted around the art window (x 16-87, y 32-111 of the
+  104x144 frame), red (palette entry 1, unused by the frame) where it points, the frame's dark blue (entry 3)
+  where it doesn't. Rebuilt on every call. Checked with a render of the painted frame; not tested in an emulator.
 - Field: orange arrow sprites on the edges of every face-up Link Monster for its markers (turned around for the
   opponent's), OBJ tiles 0x3EA-0x3EC (up, left, up-left, flipped for the rest), OBJ palette 12 entry 4.
 - Info bar: a Link Monster's DEF reads "-".

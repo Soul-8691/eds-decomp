@@ -2594,3 +2594,7 @@ updated: 2026-09-29
 ## [2026-11-06] progress | EMZs use Main zones 1 and 5; arrows at columns 2 and 4
 - src/mod_link.c: `EmzRecordOf` (left EMZ = Main zone 1's record, right = zone 5's, mirrored for the opponent; the zone must be free); `sEmzGridX` back to {1, 3}. Replaces the previous entry's change.
 - Pages: [[link]].
+
+## [2026-11-06] progress | Link Arrows on the card previews
+- src/mod_link.c `ModLinkFrame` (gModLinkFrame, EWRAM 0x02034000, symbols.ld): the Link frame with the card's arrows painted on; `ModFusionKindFrame` (src/mod_xyz.c) returns it, so the duel preview, Card View and the battle scene all show them.
+- Pages: [[link]].
