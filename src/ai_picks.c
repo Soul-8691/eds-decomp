@@ -880,6 +880,8 @@ int AiCanBeatAnyMonster(int atk)
  * Panther Warrior or Insect Queen, which have attack costs), then tries them in that order: the first one
  * for which AiFindAttackTarget finds a winning plan has its plan stored in gAiWork.bestAttack (isValid
  * set). Returns 1 if there is such an attack, else 0. */
+void ModAiOrderAttackers(u16 *attackers, int count);   /* mod: src/added_effects.c */
+
 int AiChooseAttack(void)
 {
     u16 attackers[5];
@@ -932,6 +934,7 @@ int AiChooseAttack(void)
             }
         }
     } while (!sorted);
+    ModAiOrderAttackers(attackers, count);  /* added: Kycoo first when it would deal damage (added_effects.c) */
     for (i = 0; i < count; i++) {
         u16 zone = attackers[i];
 

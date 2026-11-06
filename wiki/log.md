@@ -2628,3 +2628,7 @@ updated: 2026-09-29
 ## [2026-11-06] progress | Tribute Summons go to a Tribute's zone
 - src/mod_link.c `BuildCandidates`: a summon with Tributes offers only the Tributes' zones (no other free zone, no EMZ).
 - Pages: [[link]].
+
+## [2026-11-06] progress | CPU: Kycoo attacks first when it would deal damage
+- ai_picks.c `AiChooseAttack` (size-limited, one call) asks `ModAiOrderAttackers` (src/added_effects.c) after sorting: a Kycoo (the added card or key 1511's) whose plan deals battle damage (direct, or damage > 0) moves to the front; one that would deal none moves to the back. Demo `.text` ends at 0x0807F478.
+- AI_IMPROVEMENTS.md.

@@ -7611,6 +7611,52 @@ int CountActiveKycooOnField(int player)
     return n;
 }
 
+/* AiChooseAttack (ai_picks.c), after it sorts the CPU's attackers (weakest first): a Kycoo the Ghost Destroyer (or
+ * key 1511's card) whose attack would deal battle damage (a direct attack, or a won battle against an Attack Position
+ * monster with ATK to spare) goes first, as its effect banishes the human's Graveyard monsters then; one that would
+ * deal none goes last, so the others can clear the way for a later direct attack. */
+u16 AiFindAttackTarget(int attackerZone, struct AttackPlan *plan);     /* ai_picks.c */
+
+static int IsKycooId(u16 id)
+{
+    u16 number = CardNumberOfId(id);
+
+#ifdef HAS_CARD_KYCOO_THE_GHOST_DESTROYER
+    if (number == CARD_KYCOO_THE_GHOST_DESTROYER)
+        return 1;
+#endif
+    return number == CARD_1511;
+}
+
+void ModAiOrderAttackers(u16 *attackers, int count)
+{
+    int i, j;
+
+    for (i = 0; i < count; i++) {
+        struct AttackPlan plan;
+        u16 zone = attackers[i];
+        int damaging;
+
+        if (!IsKycooId(DUEL_CARD_ID(&ZoneOf(1, zone)->card)))     /* the CPU is player 1 */
+            continue;
+        MemClear16(&plan, sizeof(plan));
+        damaging = AiFindAttackTarget(zone, &plan) && (plan.isDirect || plan.damage > 0);
+        if (damaging) {
+            for (j = i; j > 0; j--)                 /* to the front */
+                attackers[j] = attackers[j - 1];
+            attackers[0] = zone;
+            return;
+        }
+        if (i < count - 1) {                        /* to the back, once */
+            for (j = i; j < count - 1; j++)
+                attackers[j] = attackers[j + 1];
+            attackers[count - 1] = zone;
+            i--;
+            count--;                                /* don't meet it again */
+        }
+    }
+}
+
 #ifdef HAS_CARD_KYCOO_THE_GHOST_DESTROYER
 /* Optional trigger after battle damage: the opponent took damage and has a monster in the Graveyard. */
 int EffectKycooTheGhostDestroyerPrepare(struct ChainEntry *card, struct ChainEntry *chainLink, u16 fromHand)
