@@ -26,7 +26,8 @@
 |  |  |
 |---|---|
 | **15 formats** | Follows the [Format Library](https://www.formatlibrary.com/) pantheon of TCG formats from May 2002 to October 2005 (which are just historical formats). Each one is a Campaign duelist with its own card pool and decks. |
-| **New cards** | The demo adds **173** cards. See [NEW_CARDS.md](NEW_CARDS.md). |
+| **New cards** | The demo adds **186** cards. See [NEW_CARDS.md](NEW_CARDS.md). |
+| **Synchro, Xyz and Link** | Summon them from the Fusion Deck (the Extra Deck), with Tuners, Xyz Materials, Link Arrows and Extra Monster Zones, and pick the Monster Zone for every summon. A first handful of each is in. See [Synchro, Xyz and Link](#synchro-xyz-and-link). |
 | **Smarter CPU** | Opponents play much stronger than in vanilla EDS. See [AI_IMPROVEMENTS.md](AI_IMPROVEMENTS.md) and [AI_QUIRKS.md](AI_QUIRKS.md). |
 | **Best-of-3 matches** | Every Campaign duel is a match, with siding between games. |
 | **A real economy** | Earn Duelist Points, buy cards by password, and open TCG sets and usage-weighted packs. |
@@ -298,7 +299,7 @@ testing decks.
 
 ## The new cards
 
-The demo build adds **173** cards, listed in alphabetical order above `------` in
+The demo build adds **186** cards, listed above `------` in
 [`new_cards.txt`](new_cards.txt). **[NEW_CARDS.md](NEW_CARDS.md)** shows each of them in Deck Edit's Card View. **[ADDING_NEW_CARDS.md](ADDING_NEW_CARDS.md)** explains how to add and code more.
 
 <table>
@@ -335,6 +336,32 @@ The demo build adds **173** cards, listed in alphabetical order above `------` i
 See [NEW_CARDS.md](NEW_CARDS.md) for all of them.
 
 </details>
+
+### Synchro, Xyz and Link
+
+Three newer summoning mechanics are in, each with a few cards so far. In your Main Phase, press A on your Fusion Deck
+(the Extra Deck) and choose Special Summon: the list shows every Synchro, Xyz and Link Monster you can summon right now.
+
+| Mechanic | How it works here | Cards so far |
+|---|---|---|
+| **Synchro** (white frame) | 1 Tuner plus non-Tuners whose Levels add up exactly to the Synchro Monster's go to the Graveyard. | Junk Warrior, Stardust Dragon, Chaos King Archfiend, Archfiend's Call, Brionac, Dragon of the Ice Barrier; the Tuners Junk Synchron, Shipping Archfiend, Plaguespreader Zombie (and Quillbolt Hedgehog to go with them) |
+| **Xyz** (black frame) | Monsters of the right Level become its Xyz Materials and stay under it ("MAT" and a count in the info bar); effects detach them. | Gem-Knight Pearl, Number 39: Utopia, Number 17: Leviathan Dragon |
+| **Link** (blue frame, arrows) | Materials add up to its Link Rating; it goes to an Extra Monster Zone or a zone one of your Link Monsters points to. Always in Attack Position. | Link Spider, Proxy Dragon |
+
+<table>
+<tr>
+<td><img src="cards/Brionac%2C%20Dragon%20of%20the%20Ice%20Barrier.png" width="240" alt="Brionac, Dragon of the Ice Barrier"></td>
+<td><img src="cards/Number%2039_%20Utopia.png" width="240" alt="Number 39: Utopia"></td>
+<td><img src="cards/Proxy%20Dragon.png" width="240" alt="Proxy Dragon"></td>
+</tr>
+</table>
+
+- **Extra Monster Zones** sit at the two ends of the board's middle row. You can have one monster in them, and it uses
+  the Main Monster Zone at that end (zone 1 or 5), so you hold at most 5 monsters in all. For Link Arrows they count
+  as above zones 2 and 4, as in the real game.
+- **Choosing zones.** Every summon now asks which Monster Zone to use (Control Pad, then A) when more than one fits.
+- **Not yet:** Pendulum Monsters; Link Summons in Link Battles; the original game's Level-based cards still see an
+  Xyz Monster's Rank or a Link Monster's Link Rating as its Level.
 
 > [!NOTE]
 > These demo-list Fusion Monsters are **not** fully implemented yet (no fusion effects, and they do not behave like their

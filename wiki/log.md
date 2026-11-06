@@ -2598,3 +2598,8 @@ updated: 2026-09-29
 ## [2026-11-06] progress | Link Arrows on the card previews
 - src/mod_link.c `ModLinkFrame` (gModLinkFrame, EWRAM 0x02034000, symbols.ld): the Link frame with the card's arrows painted on; `ModFusionKindFrame` (src/mod_xyz.c) returns it, so the duel preview, Card View and the battle scene all show them.
 - Pages: [[link]].
+
+## [2026-11-06] progress | README and NEW_CARDS.md: Synchro, Xyz and Link
+- README: a Highlights row and a "Synchro, Xyz and Link" section (how each works, the cards so far, the Extra Monster Zones, what's not in yet); the demo count is 186.
+- NEW_CARDS.md regenerated (186 cards) with 13 new Card View screenshots (tools/card_screenshots.lua in mGBA, on a scratch copy of the ROM and save).
+- tools/gen_new_cards_md.py: file names as the screenshot script writes them (":" becomes "_", e.g. "Number 39_ Utopia.png").

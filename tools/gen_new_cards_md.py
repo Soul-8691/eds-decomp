@@ -17,8 +17,13 @@ def load_demo_cards(path: Path) -> list[str]:
     return names
 
 
+def file_name(name: str) -> str:
+    r"""The screenshot's file name, as tools/card_screenshots.lua's fileName writes it (<>:"/\|?* become _)."""
+    return "".join("_" if ch in r'<>:"/\|?*' else ch for ch in name)
+
+
 def img_cell(name: str) -> str:
-    enc = quote(name, safe="")
+    enc = quote(file_name(name), safe="")
     return (
         f'<td align="center">'
         f'<img src="cards/{enc}.png" alt="{name}" width="240"></td>'

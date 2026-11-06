@@ -1,6 +1,6 @@
 # New cards
 
-The 173 cards added in the demo card list (the repo-root `new_cards.txt`, above `------`), as the game shows them in Deck Edit's Card View. The screenshots are taken by [`tools/card_screenshots.lua`](tools/card_screenshots.lua) in mGBA.
+The 186 cards added in the demo card list (the repo-root `new_cards.txt`, above `------`), as the game shows them in Deck Edit's Card View. The screenshots are taken by [`tools/card_screenshots.lua`](tools/card_screenshots.lua) in mGBA.
 
 <table>
 <tr>
@@ -133,6 +133,15 @@ The 173 cards added in the demo card list (the repo-root `new_cards.txt`, above 
 <td align="center"><img src="cards/Nightmare%27s%20Steelcage.png" alt="Nightmare's Steelcage" width="240"></td><td align="center"><img src="cards/Dark%20Deal.png" alt="Dark Deal" width="240"></td><td align="center"><img src="cards/Dark%20World%20Lightning.png" alt="Dark World Lightning" width="240"></td><td align="center"><img src="cards/Goldd%2C%20Wu-Lord%20of%20Dark%20World.png" alt="Goldd, Wu-Lord of Dark World" width="240"></td>
 </tr>
 <tr>
-<td align="center"><img src="cards/Sillva%2C%20Warlord%20of%20Dark%20World.png" alt="Sillva, Warlord of Dark World" width="240"></td><td></td><td></td><td></td>
+<td align="center"><img src="cards/Sillva%2C%20Warlord%20of%20Dark%20World.png" alt="Sillva, Warlord of Dark World" width="240"></td><td align="center"><img src="cards/The%20Dark%20-%20Hex-Sealed%20Fusion.png" alt="The Dark - Hex-Sealed Fusion" width="240"></td><td align="center"><img src="cards/Shipping%20Archfiend.png" alt="Shipping Archfiend" width="240"></td><td align="center"><img src="cards/Chaos%20King%20Archfiend.png" alt="Chaos King Archfiend" width="240"></td>
+</tr>
+<tr>
+<td align="center"><img src="cards/Plaguespreader%20Zombie.png" alt="Plaguespreader Zombie" width="240"></td><td align="center"><img src="cards/Archfiend%27s%20Call.png" alt="Archfiend's Call" width="240"></td><td align="center"><img src="cards/Necro%20Fusion.png" alt="Necro Fusion" width="240"></td><td align="center"><img src="cards/Malevolent%20Catastrophe.png" alt="Malevolent Catastrophe" width="240"></td>
+</tr>
+<tr>
+<td align="center"><img src="cards/Brionac%2C%20Dragon%20of%20the%20Ice%20Barrier.png" alt="Brionac, Dragon of the Ice Barrier" width="240"></td><td align="center"><img src="cards/Gem-Knight%20Pearl.png" alt="Gem-Knight Pearl" width="240"></td><td align="center"><img src="cards/Number%2039_%20Utopia.png" alt="Number 39: Utopia" width="240"></td><td align="center"><img src="cards/Number%2017_%20Leviathan%20Dragon.png" alt="Number 17: Leviathan Dragon" width="240"></td>
+</tr>
+<tr>
+<td align="center"><img src="cards/Link%20Spider.png" alt="Link Spider" width="240"></td><td align="center"><img src="cards/Proxy%20Dragon.png" alt="Proxy Dragon" width="240"></td><td></td><td></td>
 </tr>
 </table>
