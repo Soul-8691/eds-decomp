@@ -173,6 +173,7 @@ Goldd, Wu-Lord of Dark World
 Sillva, Warlord of Dark World
 The Dark - Hex-Sealed Fusion
 Shipping Archfiend
+Chaos King Archfiend
 Plaguespreader Zombie
 Archfiend's Origin
 Archfiend Cavalry
@@ -184,7 +185,6 @@ Archfiend's Usurpation
 Makourai, the Lightning Strike
 Archfiend's Manifestation
 Archfiend's Call
-Chaos King Archfiend
 ------
 The Rock Spirit
 D.D. Designator
@@ -215,7 +215,6 @@ Archfiend's Usurpation
 Makourai, the Lightning Strike
 Archfiend's Manifestation
 Archfiend's Call
-Chaos King Archfiend
 Dark Balter the Terrible
 Ryu Senshi
 Gatling Dragon

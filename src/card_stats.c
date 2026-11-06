@@ -915,4 +915,7 @@ void GetZoneCardStats(int player, int zone, struct ZoneCardStats *out)
         out->atk = def;
         out->def = atk;
     }
+#ifdef HAS_CARD_CHAOS_KING_ARCHFIEND
+    ModChaosKingSwap(player, zone, out);    /* added: Chaos King Archfiend switches the current ATK and DEF */
+#endif
 }

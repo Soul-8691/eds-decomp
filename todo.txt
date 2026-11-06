@@ -15,3 +15,4 @@ Custom formats
 Fix quirks with new cards
 Pre-duel images and QR codes
 Test
+Make Synchro cards silver in deck edit

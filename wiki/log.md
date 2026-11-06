@@ -2523,3 +2523,7 @@ updated: 2026-09-29
 ## [2026-11-05] progress | Shipping Archfiend
 - src/added_effects.c: both effects (`EffectShippingArchfiendPrepare` / `ChainB` / `Resolve`, `QueueShippingTriggers` in `AddedCardsSummoned`, `ModShippingType` / `Attribute` / `Stats`), new `gModShipping` (0x0202FEB0, symbols.ld). Hooks: card_stats.c, duel_stat_queries.c, card_command_menu.c. mod_synchro.c's size assert tightened to 0xB0.
 - Pages: [[added-cards]].
+
+## [2026-11-05] progress | Chaos King Archfiend
+- src/added_effects.c: `ModAttackDeclaredTriggers`, `ModChaosKingSwap`, `EffectChaosKingArchfiendPrepare` / `Resolve`, row; `gModShipping` renamed `gModDuelExtra` (symbols.ld). Hooks: battle_phase1.c (attack declaration), card_stats.c (end of `GetZoneCardStats`). Typed Tuner rules: tools/newcards.py `synchro_tuner`, src/mod_synchro.c `TunerFits`.
+- Pages: [[added-cards]], [[synchro]].

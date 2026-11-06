@@ -2024,6 +2024,29 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
   - **Deck:** `DUEL_CMD_SEND_DECK_CARD_TO_GRAVEYARD` for `deck[0]` and `deck[1]` (the top is index 0).
 - Checked in the source and the build; not tested in an emulator.
 
+### Chaos King Archfiend (2026-11-05)
+- Synchro Monster (Level 7, DARK Fiend, 2600/2600; `assets/new_cards/cards.json`): "1 Fiend-Type Tuner + 1 or more
+  non-Tuner monsters. When this card declares an attack: You can switch the current ATK and DEF of all face-up
+  monsters your opponent controls, until the end of the Battle Phase."
+- **Typed Tuner rule.** `tools/newcards.py` (`synchro_tuner`) now reads "1 <Type>-Type Tuner + 1 or more non-Tuner
+  monsters" (and "1 or more" as well as "1+"): the rule's Tuner is `0x8000 | type` (`SYNCHRO_TUNER_TYPE`; a race EDS
+  lacks uses its closest type). `TunerFits` (`src/mod_synchro.c`) checks the Tuner's current type
+  (`GetZoneCardType`, so Shipping Archfiend's change counts). Chaos King's rule: `{ 856, 0x8003 }` (Fiend).
+- **Trigger.** `BattleStage_RespondToAttack` (`battle_phase1.c`, size-limited `.text`, one call in the step that
+  chains key 1424) asks `ModAttackDeclaredTriggers`: a face-up attacking Chaos King Archfiend queues its
+  `RESPONSE_ATTACK_DECLARED` trigger before the opponent's response window. Prepare: the opponent has a face-up
+  monster.
+- **Resolve.** The human is asked "Switch the ATK and DEF of your opponent's face-up monsters?" (Yes/No); the CPU
+  switches when the human's face-up monsters lose ATK overall. The opponent's face-up monsters are recorded in
+  `gModDuelExtra` (zone mask, zone serials, `turnCount + 1`). `GetZoneCardStats` (`card_stats.c`, its last line,
+  after Shield & Sword: the current values) calls `ModChaosKingSwap`, which swaps their ATK and DEF while it is still
+  that turn's Battle Phase and the monster is the same one. No clean-up is needed at the end of the Battle Phase.
+- **RAM.** `gModShipping` became `gModDuelExtra` (0x0202FEB0), the added cards' state that `gModDuel` has no room
+  for; Chaos King's fields follow Shipping Archfiend's.
+- It was already above `------` in `new_cards.txt`; it wasn't in `card_pools/missing*.txt`.
+- Checked in the source and the build; not tested in an emulator (in particular, that the pending trigger resolves in
+  the attack-declaration window).
+
 ### Shipping Archfiend (2026-11-05)
 - Tuner Monster (Level 3, WIND Fiend, 0/0; `assets/new_cards/cards.json`): "You can target any number of face-up
   monsters on the field, and declare 1 Type or Attribute; they become that Type or Attribute. If a monster(s) is
@@ -2031,12 +2054,12 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
   You can target 1 monster on each field with the same Type and Attribute from each other; return them to the hand.
   You can only use each effect of "Shipping Archfiend" once per turn."
 - **One effect row**, `link->event` tells the effects apart. Once per turn each, per player
-  (`gModShipping.turn[player][effect]`).
+  (`gModDuelExtra.turn[player][effect]`).
 - **Effect 1** (ACTIVATE on the card menu, `card_command_menu.c`): the human picks face-up monsters with the cursor,
-  any number (a bitmask in `gModShipping.picks`, since a chain link holds 3 targets), B when done. At resolution:
+  any number (a bitmask in `gModDuelExtra.picks`, since a chain link holds 3 targets), B when done. At resolution:
   "Declare a Type? (No: declare an Attribute)" (Yes/No), then the engine's Type or Attribute prompt (DNA Surgery's
   `PROMPT_SELECT_TYPE` / `PROMPT_SELECT_ATTRIBUTE`). Each picked monster still face up keeps the value
-  (`gModShipping.type` / `attr`, per zone) while its `DuelZone.serial` is the one recorded, i.e. until it leaves
+  (`gModDuelExtra.type` / `attr`, per zone) while its `DuelZone.serial` is the one recorded, i.e. until it leaves
   the field (or turns face down). Equips that no longer fit are checked (`DestroyInvalidEquips`). The CPU doesn't use
   it.
 - **Override hooks** (size-limited `.text`, one call each): `GetZoneCardStats` (`card_stats.c`, after DNA Surgery),
@@ -2047,7 +2070,7 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
   with the same Type and Attribute (`ShippingPairAt`, after the overrides). The human picks one, then its partner on
   the other field (B: none); the CPU returns the human's strongest such monster with its own weakest partner. Both
   return to the hand if they still match. The Damage Step exception is not modelled.
-- **RAM.** `gModDuel` had no room left (its `STATIC_ASSERT` failed), so the state is `gModShipping` at 0x0202FEB0
+- **RAM.** `gModDuel` had no room left (its `STATIC_ASSERT` failed), so the state is `gModDuelExtra` at 0x0202FEB0
   (`symbols.ld`), between `gModSynchro` (0xA2 bytes used; its assert is now 0xB0) and `gInjectionFairyLily`
   (0x0202FF00). Reset in `ModDuelInit` (which now also clears `handLimitDiscard`).
 - It was already above `------` in `new_cards.txt`; it wasn't in `card_pools/missing*.txt`.

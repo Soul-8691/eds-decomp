@@ -352,6 +352,9 @@ int BattleStage_RespondToAttack(int player)
                                          CHAIN_KIND_SPELL_TRAP << 1 | RESPONSE_ATTACK_DECLARED << 5), 0);
             gDuel.battleStep = RESPOND_STEP_FINAL_CHECK;
         } else {
+#ifdef HAS_CARD_CHAOS_KING_ARCHFIEND
+            ModAttackDeclaredTriggers(player, gBattle.atkSlot);     /* added: Chaos King Archfiend */
+#endif
             gDuel.battleStep++;
         }
         return 0;

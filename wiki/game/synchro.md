@@ -98,3 +98,8 @@ These add small hooks to original units in the size-limited area: `card_canvas.c
 `battle_phase3.c` and `summon_action.c`. The demo's `.text` grew from 0x7f1ac to about 0x7f300.
 
 Related: [[added-cards]], [[deck-edit-filter-c]].
+
+## Typed Tuner rules (2026-11-05)
+- "1 <Type>-Type Tuner + 1 or more non-Tuner monsters" (Chaos King Archfiend): `tools/newcards.py` writes the
+  rule's Tuner as `0x8000 | type`, and `TunerFits` checks the Tuner's current type (`GetZoneCardType`).
+  See [[added-cards]].

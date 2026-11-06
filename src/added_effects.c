@@ -121,18 +121,24 @@ extern struct ModDuelState gModDuel;
 /* gModDuel (0x0202FF04, symbols.ld) must end before gScratchBuffer (0x02030000). */
 STATIC_ASSERT(sizeof(struct ModDuelState) <= 0x02030000 - 0x0202FF04, ModDuelStateFits);
 
-/* Shipping Archfiend's state (gModShipping, 0x0202FEB0 in symbols.ld: after gModSynchro, before gInjectionFairyLily at
- * 0x0202FF00), reset by ModDuelInit. gModDuel has no room left. */
-struct ModShipping {
+/* Added cards' duel state that gModDuel has no room for (gModDuelExtra, 0x0202FEB0 in symbols.ld: after gModSynchro,
+ * before gInjectionFairyLily at 0x0202FF00), reset by ModDuelInit. Shipping Archfiend's first: */
+struct ModDuelExtra {
     u8 type[10];                /* [player * 5 + zone] declared enum CardType, 0 none ... */
     u8 attr[10];                /* ... declared enum CardAttribute, 0 none ... */
     u16 serial[10];             /* ... for the monster with this DuelZone.serial (another one there is not it) */
     u16 picks[2];               /* [player] the monsters its first effect picked (bit player * 5 + zone) */
     u16 turn[2][2];             /* [player][effect] gDuel.turnCount + 1 of the turn it was used */
     u8 declareType;             /* the resolving first effect declares a Type (else an Attribute) */
+    /* Chaos King Archfiend: the monsters of chaosKingPlayer (bit zone) whose ATK and DEF are switched during the
+     * Battle Phase of turn chaosKingTurn - 1, each while its zone has the serial recorded */
+    u8 chaosKingMask;
+    u8 chaosKingPlayer;
+    u16 chaosKingTurn;
+    u16 chaosKingSerial[5];
 };
-extern struct ModShipping gModShipping;
-STATIC_ASSERT(sizeof(struct ModShipping) <= 0x0202FF00 - 0x0202FEB0, ModShippingFits);
+extern struct ModDuelExtra gModDuelExtra;
+STATIC_ASSERT(sizeof(struct ModDuelExtra) <= 0x0202FF00 - 0x0202FEB0, ModDuelExtraFits);
 
 static inline struct DuelZone *ZoneOf(int player, int zone)
 {
@@ -1625,10 +1631,12 @@ void ModDuelInit(void)
     gModDuel.limiterRemovalTurn = 0;
     gModDuel.aiPriorityDrawDone = 0;
     gModDuel.handLimitDiscard = 0;
-    MemClear16(gModShipping.type, sizeof(gModShipping.type));
-    MemClear16(gModShipping.attr, sizeof(gModShipping.attr));
-    gModShipping.picks[0] = gModShipping.picks[1] = 0;
-    MemClear16(gModShipping.turn, sizeof(gModShipping.turn));
+    MemClear16(gModDuelExtra.type, sizeof(gModDuelExtra.type));
+    MemClear16(gModDuelExtra.attr, sizeof(gModDuelExtra.attr));
+    gModDuelExtra.picks[0] = gModDuelExtra.picks[1] = 0;
+    MemClear16(gModDuelExtra.turn, sizeof(gModDuelExtra.turn));
+    gModDuelExtra.chaosKingMask = 0;
+    gModDuelExtra.chaosKingTurn = 0;
 #ifdef HAS_CARD_INJECTION_FAIRY_LILY
     InjectionFairyLilyResetBattle();
 #endif
@@ -11611,19 +11619,131 @@ int EffectSillvaResolve(struct ChainEntry *link, struct ChainEntry *chainedTo)
 }
 #endif /* HAS_CARD_SILLVA_WARLORD_OF_DARK_WORLD */
 
+#ifdef HAS_CARD_CHAOS_KING_ARCHFIEND
+/* ---- Chaos King Archfiend -----------------------------------------------------------------------------------------
+ * "1 Fiend-Type Tuner + 1 or more non-Tuner monsters. When this card declares an attack: You can switch the current
+ * ATK and DEF of all face-up monsters your opponent controls, until the end of the Battle Phase."
+ *   Synchro  its rule is "a Fiend Tuner" (tools/newcards.py writes 0x8000 | the type; TunerFits in mod_synchro.c
+ *            checks the Tuner's current type, GetZoneCardType)
+ *   trigger  BattleStage_RespondToAttack (battle_phase1.c) asks ModAttackDeclaredTriggers before the opponent's
+ *            response window: a face-up attacking Chaos King Archfiend queues its RESPONSE_ATTACK_DECLARED trigger
+ *   resolve  "Switch ...?" (Yes/No) for the human; the CPU switches when it lowers the human's monsters' ATK overall.
+ *            The opponent's face-up monsters then get gModDuelExtra.chaosKingMask (bit zone) with their zone serials;
+ *            GetZoneCardStats (card_stats.c, at its very end: the current values) swaps their ATK and DEF while it is
+ *            still that turn's Battle Phase (chaosKingTurn) and the monster is the same one */
+static const u8 sStrChaosKingAsk[] = "Switch the ATK and DEF of your opponent's face-up monsters?";
+
+void ModAttackDeclaredTriggers(int player, int zone)
+{
+    struct DuelZone *z = ZoneOf(player, zone);
+    u16 id = DUEL_CARD_ID(&z->card);
+
+    if (zone <= ZONE_MONSTER_4 && id != 0 && z->isFaceUp && CARD_NUMBER(id) == CARD_CHAOS_KING_ARCHFIEND)
+        Chain_AddPending(TRIGGER_PLAYER(player & 1) | TRIGGER_ZONE(zone) | TRIGGER_KIND(CHAIN_KIND_MONSTER)
+                             | TRIGGER_EVENT(RESPONSE_ATTACK_DECLARED) | id,
+                         DUEL_LOC(player, zone));
+}
+
+void ModChaosKingSwap(int player, int zone, struct ZoneCardStats *out)
+{
+    s32 atk;
+
+    if (zone > ZONE_MONSTER_4 || (player & 1) != gModDuelExtra.chaosKingPlayer
+        || !(gModDuelExtra.chaosKingMask & (1 << zone)) || gDuel.phase != PHASE_BATTLE
+        || gModDuelExtra.chaosKingTurn != gDuel.turnCount + 1
+        || ZoneOf(player, zone)->serial != gModDuelExtra.chaosKingSerial[zone])
+        return;
+    atk = out->atk;
+    out->atk = out->def;
+    out->def = atk;
+}
+
+int EffectChaosKingArchfiendPrepare(struct ChainEntry *card, struct ChainEntry *chainLink, u16 fromHand)
+{
+    int zone;
+
+    if (fromHand || card->event != RESPONSE_ATTACK_DECLARED || card->zone > ZONE_MONSTER_4
+        || !ZoneOf(card->player, card->zone)->isFaceUp)
+        return 0;
+    for (zone = ZONE_MONSTER_0; zone <= ZONE_MONSTER_4; zone++) {
+        struct DuelZone *z = ZoneOf(1 - card->player, zone);
+
+        if (DUEL_CARD_ID(&z->card) != 0 && z->isFaceUp)
+            return 1;
+    }
+    return 0;
+}
+
+static void ChaosKingSwitch(int player)
+{
+    int opponent = 1 - (player & 1), zone;
+
+    gModDuelExtra.chaosKingMask = 0;
+    gModDuelExtra.chaosKingPlayer = opponent;
+    gModDuelExtra.chaosKingTurn = gDuel.turnCount + 1;
+    for (zone = ZONE_MONSTER_0; zone <= ZONE_MONSTER_4; zone++) {
+        struct DuelZone *z = ZoneOf(opponent, zone);
+
+        if (DUEL_CARD_ID(&z->card) != 0 && z->isFaceUp) {
+            gModDuelExtra.chaosKingMask |= 1 << zone;
+            gModDuelExtra.chaosKingSerial[zone] = z->serial;
+        }
+    }
+}
+
+/* The CPU switches when the human's face-up monsters lose ATK overall. */
+static int AiWantsChaosKingSwitch(void)
+{
+    int zone, gain = 0;
+
+    for (zone = ZONE_MONSTER_0; zone <= ZONE_MONSTER_4; zone++) {
+        struct ZoneCardStats st;
+
+        if (DUEL_CARD_ID(&ZoneOf(AI_HUMAN, zone)->card) == 0 || !ZoneOf(AI_HUMAN, zone)->isFaceUp)
+            continue;
+        GetZoneCardStats(AI_HUMAN, zone, &st);
+        gain += (int)st.atk - (int)st.def;
+    }
+    return gain > 0;
+}
+
+int EffectChaosKingArchfiendResolve(struct ChainEntry *link, struct ChainEntry *chainedTo)
+{
+    (void)chainedTo;
+    if (link->negated)
+        return EFFECT_STEP_DONE;
+    switch (gChain.effectStep) {
+    case EFFECT_STEP_START:
+        if (link->player) {
+            if (AiWantsChaosKingSwitch())
+                ChaosKingSwitch(link->player);
+            return EFFECT_STEP_DONE;
+        }
+        TextBoxOpen(TEXTBOX_POS(6, 2), TEXTBOX_SIZE(18, 7), TEXTBOX_FLAGS_DEFAULT, sStrChaosKingAsk);
+        TextBoxSetMenu(TEXTBOX_MENU_YES_NO, NULL, NULL);
+        return EFFECT_STEP_2;
+    case EFFECT_STEP_2:
+        if (gTextBox.result != 0)
+            ChaosKingSwitch(link->player);
+        return EFFECT_STEP_DONE;
+    }
+    return EFFECT_STEP_DONE;
+}
+#endif /* HAS_CARD_CHAOS_KING_ARCHFIEND */
+
 #ifdef HAS_CARD_SHIPPING_ARCHFIEND
 /* ---- Shipping Archfiend -------------------------------------------------------------------------------------------
  * "You can target any number of face-up monsters on the field, and declare 1 Type or Attribute; they become that Type
  * or Attribute. If a monster(s) is Special Summoned to your opponent's field, while this card is in your Monster Zone
  * (except during the Damage Step): You can target 1 monster on each field with the same Type and Attribute from each
  * other; return them to the hand. You can only use each effect of "Shipping Archfiend" once per turn."
- * One effect row; link->event tells the two apart. Once per turn each, per player (gModShipping.turn[player][n]:
+ * One effect row; link->event tells the two apart. Once per turn each, per player (gModDuelExtra.turn[player][n]:
  * gDuel.turnCount + 1 of the turn it was activated).
  *   1 (ACTIVATE, card_command_menu.c; RESPONSE_NONE)
  *     chainB   the human picks face-up monsters with the cursor (any number, so a bitmask in
- *              gModShipping.picks[player], bit player * 5 + zone, not link->targets), B when done
+ *              gModDuelExtra.picks[player], bit player * 5 + zone, not link->targets), B when done
  *     resolve  "Declare a Type? (No: an Attribute)", then the engine's Type or Attribute prompt; each picked monster
- *              still face up gets the value in gModShipping.type / shippingAttr (bit as above), kept while
+ *              still face up gets the value in gModDuelExtra.type / shippingAttr (bit as above), kept while
  *              the zone's serial is the one recorded (shippingSerial): until it leaves the field
  *     override GetZoneCardStats (card_stats.c, after DNA Surgery), GetZoneCardType and GetZoneCardAttribute
  *              (duel_stat_queries.c) ask ModShippingType / ModShippingAttribute
@@ -11651,20 +11771,20 @@ static int ShippingOverrideLive(int player, int zone)
         return 0;
     z = ZoneOf(player, zone);
     bit = SHIPPING_BIT(player, zone);
-    return DUEL_CARD_ID(&z->card) != 0 && z->isFaceUp && z->serial == gModShipping.serial[bit];
+    return DUEL_CARD_ID(&z->card) != 0 && z->isFaceUp && z->serial == gModDuelExtra.serial[bit];
 }
 
 u32 ModShippingType(int player, int zone, u32 type)
 {
-    if (ShippingOverrideLive(player, zone) && gModShipping.type[SHIPPING_BIT(player, zone)] != 0)
-        return gModShipping.type[SHIPPING_BIT(player, zone)];
+    if (ShippingOverrideLive(player, zone) && gModDuelExtra.type[SHIPPING_BIT(player, zone)] != 0)
+        return gModDuelExtra.type[SHIPPING_BIT(player, zone)];
     return type;
 }
 
 u32 ModShippingAttribute(int player, int zone, u32 attribute)
 {
-    if (ShippingOverrideLive(player, zone) && gModShipping.attr[SHIPPING_BIT(player, zone)] != 0)
-        return gModShipping.attr[SHIPPING_BIT(player, zone)];
+    if (ShippingOverrideLive(player, zone) && gModDuelExtra.attr[SHIPPING_BIT(player, zone)] != 0)
+        return gModDuelExtra.attr[SHIPPING_BIT(player, zone)];
     return attribute;
 }
 
@@ -11736,7 +11856,7 @@ int EffectShippingArchfiendPrepare(struct ChainEntry *card, struct ChainEntry *c
         || DUEL_CARD_ID(&ZoneOf(player, card->zone)->card) != (card->card & CARD_ID_MASK))
         return 0;
     if (card->event == RESPONSE_NONE) {
-        if (gModShipping.turn[player][0] == gDuel.turnCount + 1)
+        if (gModDuelExtra.turn[player][0] == gDuel.turnCount + 1)
             return 0;
         for (zone = ZONE_MONSTER_0; zone <= ZONE_MONSTER_4; zone++) {
             if (ShippingFaceUpMonster(0, zone) || ShippingFaceUpMonster(1, zone))
@@ -11745,7 +11865,7 @@ int EffectShippingArchfiendPrepare(struct ChainEntry *card, struct ChainEntry *c
         return 0;
     }
     if (card->event == RESPONSE_SPECIAL_SUMMONED)
-        return gModShipping.turn[player][1] != gDuel.turnCount + 1 && ShippingAnyPair();
+        return gModDuelExtra.turn[player][1] != gDuel.turnCount + 1 && ShippingAnyPair();
     return 0;
 }
 
@@ -11779,7 +11899,7 @@ int EffectShippingArchfiendChainB(struct ChainEntry *link, struct ChainEntry *pr
     if (link->event == RESPONSE_SPECIAL_SUMMONED) {
         if (gChain.targetStep == 0) {
             link->numTargets = 0;
-            gModShipping.turn[player][1] = gDuel.turnCount + 1;
+            gModDuelExtra.turn[player][1] = gDuel.turnCount + 1;
             if (player) {
                 ShippingCpuPair(link);
                 return 1;
@@ -11812,8 +11932,8 @@ int EffectShippingArchfiendChainB(struct ChainEntry *link, struct ChainEntry *pr
     /* effect 1 */
     if (gChain.targetStep == 0) {
         link->numTargets = 0;
-        gModShipping.picks[player] = 0;
-        gModShipping.turn[player][0] = gDuel.turnCount + 1;
+        gModDuelExtra.picks[player] = 0;
+        gModDuelExtra.turn[player][0] = gDuel.turnCount + 1;
         if (player)
             return 1;                   /* the CPU does not use it (AiWantsMonsterEffect) */
         TextBoxOpen(TEXTBOX_POS(6, 2), TEXTBOX_SIZE(18, 7), TEXTBOX_FLAGS_DEFAULT, sStrShippingPick);
@@ -11825,8 +11945,8 @@ int EffectShippingArchfiendChainB(struct ChainEntry *link, struct ChainEntry *pr
     if (DuelCursor_PickTarget(PICK_BOTH_SIDES(PICK_FACE_UP_MONSTER_ANY))) {
         int p = gDuelScreen.selPlayer, z = gDuelScreen.selArea + gDuelScreen.selIndex;
 
-        if (ShippingFaceUpMonster(p, z) && !(gModShipping.picks[player] & (1 << SHIPPING_BIT(p, z)))) {
-            gModShipping.picks[player] |= 1 << SHIPPING_BIT(p, z);
+        if (ShippingFaceUpMonster(p, z) && !(gModDuelExtra.picks[player] & (1 << SHIPPING_BIT(p, z)))) {
+            gModDuelExtra.picks[player] |= 1 << SHIPPING_BIT(p, z);
             PlaySE(SE_CONFIRM);
         } else {
             PlaySE(SE_ERROR);
@@ -11859,14 +11979,14 @@ int EffectShippingArchfiendResolve(struct ChainEntry *link, struct ChainEntry *c
     }
     switch (gChain.effectStep) {
     case EFFECT_STEP_START:
-        if (gModShipping.picks[player] == 0)
+        if (gModDuelExtra.picks[player] == 0)
             return EFFECT_STEP_DONE;
         TextBoxOpen(TEXTBOX_POS(6, 2), TEXTBOX_SIZE(18, 7), TEXTBOX_FLAGS_DEFAULT, sStrShippingDeclare);
         TextBoxSetMenu(TEXTBOX_MENU_YES_NO, NULL, NULL);
         return EFFECT_STEP_2;
     case EFFECT_STEP_2:
-        gModShipping.declareType = gTextBox.result != 0;
-        DuelPrompt_Post(player, gModShipping.declareType ? PROMPT_SELECT_TYPE : PROMPT_SELECT_ATTRIBUTE, 0, 0);
+        gModDuelExtra.declareType = gTextBox.result != 0;
+        DuelPrompt_Post(player, gModDuelExtra.declareType ? PROMPT_SELECT_TYPE : PROMPT_SELECT_ATTRIBUTE, 0, 0);
         return EFFECT_STEP_3;
     case EFFECT_STEP_3:
         value = gDuel.promptResult + 1;     /* enum CardType / CardAttribute */
@@ -11874,21 +11994,21 @@ int EffectShippingArchfiendResolve(struct ChainEntry *link, struct ChainEntry *c
             for (zone = ZONE_MONSTER_0; zone <= ZONE_MONSTER_4; zone++) {
                 int bit = SHIPPING_BIT(p, zone);
 
-                if (!(gModShipping.picks[player] & (1 << bit)) || !ShippingFaceUpMonster(p, zone))
+                if (!(gModDuelExtra.picks[player] & (1 << bit)) || !ShippingFaceUpMonster(p, zone))
                     continue;
                 if (!ShippingOverrideLive(p, zone)) {
-                    gModShipping.type[bit] = 0;
-                    gModShipping.attr[bit] = 0;
-                    gModShipping.serial[bit] = ZoneOf(p, zone)->serial;
+                    gModDuelExtra.type[bit] = 0;
+                    gModDuelExtra.attr[bit] = 0;
+                    gModDuelExtra.serial[bit] = ZoneOf(p, zone)->serial;
                 }
-                if (gModShipping.declareType)
-                    gModShipping.type[bit] = value;
+                if (gModDuelExtra.declareType)
+                    gModDuelExtra.type[bit] = value;
                 else
-                    gModShipping.attr[bit] = value;
+                    gModDuelExtra.attr[bit] = value;
                 DestroyInvalidEquips(p, zone);
             }
         }
-        gModShipping.picks[player] = 0;
+        gModDuelExtra.picks[player] = 0;
         return EFFECT_STEP_DONE;
     }
     return EFFECT_STEP_DONE;
@@ -14239,6 +14359,16 @@ const struct CardEffect gAddedCardEffects[] = {
         EffectThestalosResolve,
         NULL,
         NULL,
+        NULL,
+        NULL,
+    },
+#endif
+#ifdef HAS_CARD_CHAOS_KING_ARCHFIEND
+    {
+        CARD_CHAOS_KING_ARCHFIEND, 0,
+        EffectChaosKingArchfiendResolve,
+        NULL,
+        EffectChaosKingArchfiendPrepare,
         NULL,
         NULL,
     },

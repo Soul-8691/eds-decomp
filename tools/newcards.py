@@ -417,15 +417,26 @@ def type_ex(c):
     return b
 
 
+SYNCHRO_TUNER_TYPE = 0x8000     # a rule's Tuner of one Type: 0x8000 | the EDS monster type (src/mod_synchro.c)
+
+
 def synchro_tuner(c, numbers):
     """The card number a Synchro needs as its Tuner (0: any Tuner), from the first sentence of its text:
-    '"Junk Synchron" + 1+ non-Tuner monsters' names one; '1 Tuner + 1+ non-Tuner monsters' takes any."""
+    '"Junk Synchron" + 1+ non-Tuner monsters' names one; '1 Tuner + 1+ non-Tuner monsters' takes any;
+    '1 Fiend-Type Tuner + 1 or more non-Tuner monsters' takes a Tuner of that Type (SYNCHRO_TUNER_TYPE | type)."""
     m = re.match(r'\s*"([^"]+)"\s*\+', c['desc'])
     if m:
         if m.group(1) not in numbers:
             fail(f'{c["name"]}: its Synchro Material "{m.group(1)}" is not an added or original card')
         return numbers[m.group(1)]
-    if not re.match(r'\s*1 Tuner \+ 1\+ non-Tuner monsters', c['desc']):
+    m = re.match(r'\s*1 ([A-Za-z -]+?)(?:-Type)? Tuner \+ 1(?:\+| or more) non-Tuner monsters', c['desc'])
+    if m:
+        race = m.group(1)
+        race = EXTRA_RACES[race][1] if race in EXTRA_RACES else race    # the closest EDS type
+        if race not in MONSTER_TYPES:
+            fail(f'{c["name"]}: its Tuner Type "{m.group(1)}" is not a monster Type')
+        return SYNCHRO_TUNER_TYPE | MONSTER_TYPES[race]
+    if not re.match(r'\s*1 Tuner \+ 1(?:\+| or more) non-Tuner monsters', c['desc']):
         print(f'newcards: warning: {c["name"]}: Synchro Materials read as "1 Tuner + 1+ non-Tuner monsters"')
     return 0
 
@@ -567,7 +578,8 @@ def cmd_build():
     numbers.update({c['name']: c['number'] for c in new})
     rules = [(c['number'], synchro_tuner(c, numbers)) for c in new if 'Synchro' in c['type']]
     write_if_changed(SYNCHRO_H, f'/* {note} */\n#define SYNCHRO_RULE_COUNT {len(rules)}\n'
-                     '/* { Synchro card number, Tuner card number (0: any Tuner) } */\n'
+                     '/* { Synchro card number, Tuner card number (0: any Tuner; 0x8000 | type: a Tuner of that '
+                     'Type) } */\n'
                      '#define SYNCHRO_RULES { ' + ''.join(f'{{ {s}, {t} }}, ' for s, t in rules) + '{ 0, 0 } }\n')
     write_if_changed(COUNT_INC, f'@ {note}\n\t.set CARD_ID_COUNT_ADDED, {len(new)}\n'
                                 f'\t.set CARD_ID_COUNT, {total}\n')

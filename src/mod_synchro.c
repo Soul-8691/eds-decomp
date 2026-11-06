@@ -72,9 +72,10 @@ struct ModSynchro {
     u16 summonedIds[2 * MONSTER_ZONES];     /* [player * 5 + zone]: the Synchro Summoned monster there */
 };
 extern struct ModSynchro gModSynchro;
-STATIC_ASSERT(sizeof(struct ModSynchro) <= 0xB0, ModSynchroFits);    /* gModShipping follows at 0x0202FEB0 */
+STATIC_ASSERT(sizeof(struct ModSynchro) <= 0xB0, ModSynchroFits);    /* gModDuelExtra follows at 0x0202FEB0 */
 
 static const u16 sRules[][2] = SYNCHRO_RULES;
+#define SYNCHRO_TUNER_TYPE 0x8000      /* a rule's Tuner: 0x8000 | enum CardType ("1 Fiend-Type Tuner") */
 
 static inline struct DuelZone *ZoneOf(int player, int zone)
 {
@@ -157,8 +158,12 @@ static int TunerFits(int player, int zone, u16 synchroId)
 
     if (tuner == 0 || !IS_TUNER_CARD(tuner) || rule < 0)
         return 0;
-    if (rule != 0 && gCardIdToNumber[tuner & CARD_ID_MASK] != rule)
+    if (rule & SYNCHRO_TUNER_TYPE) {
+        if (GetZoneCardType(player, zone) != (u32)(rule & ~SYNCHRO_TUNER_TYPE))
+            return 0;   /* "1 <Type> Tuner": the Tuner's current type */
+    } else if (rule != 0 && gCardIdToNumber[tuner & CARD_ID_MASK] != rule) {
         return 0;
+    }
     return LevelsReachable(player, NonTunerMask(player, zone), (int)LevelOf(synchroId) - (int)LevelOf(tuner));
 }
 
