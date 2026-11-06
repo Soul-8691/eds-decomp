@@ -176,15 +176,6 @@ Shipping Archfiend
 Chaos King Archfiend
 Plaguespreader Zombie
 Archfiend's Call
-Archfiend's Origin
-Archfiend Cavalry
-Infernity Archfiend
-Skilled Red Magician
-Archfiend Palabyrinth
-Archfiend Playtime
-Archfiend's Usurpation
-Makourai, the Lightning Strike
-Archfiend's Manifestation
 ------
 Necro Fusion
 Crush Card Virus
@@ -205,6 +196,15 @@ Deck Devastation Virus
 Mind Crush
 Cyber Phoenix
 Rush Recklessly
+Archfiend's Origin
+Archfiend Cavalry
+Infernity Archfiend
+Skilled Red Magician
+Archfiend Palabyrinth
+Archfiend Playtime
+Archfiend's Usurpation
+Makourai, the Lightning Strike
+Archfiend's Manifestation
 The Rock Spirit
 D.D. Designator
 Reflect Bounder
@@ -238,15 +238,6 @@ Retaliating "C"
 Bystial Baldrake
 Bystial Druiswurm
 ******
-Archfiend's Origin
-Archfiend Cavalry
-Infernity Archfiend
-Skilled Red Magician
-Archfiend Palabyrinth
-Archfiend Playtime
-Archfiend's Usurpation
-Makourai, the Lightning Strike
-Archfiend's Manifestation
 Fiend Skull Dragon
 Dark Balter the Terrible
 Ryu Senshi
