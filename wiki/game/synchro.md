@@ -103,3 +103,12 @@ Related: [[added-cards]], [[deck-edit-filter-c]].
 - "1 <Type>-Type Tuner + 1 or more non-Tuner monsters" (Chaos King Archfiend): `tools/newcards.py` writes the
   rule's Tuner as `0x8000 | type`, and `TunerFits` checks the Tuner's current type (`GetZoneCardType`).
   See [[added-cards]].
+
+## Deck Edit ring frame (2026-11-05)
+- Deck Edit's ring draws the Fusion frame for a Synchro (`GetCardFrameIndex`: kind FUSION), a 32x32 sprite of
+  `gDeckEditCardFrameObjTiles` in OBJ palette 6, whose tiles use entries 1, 4, 10, 12 and 15. No 4x4 tile block is
+  free for a frame of its own, and palette 6 has no spare entries, so the frame takes the card's art palette instead:
+  `tools/cardicons.py` (`deck_edit_entry`, `DE_SYNCHRO_FRAME`) quantises a Synchro card's ring art to the other ten
+  entries and puts the frame colours in silver at those five; `ModDeckRingArt` (`src/mod_field_icons.c`) gives the
+  frame sprite the art's palette bank (11 + k). With no art drawn (all five art slots used, or another screen's
+  sheets) the frame stays purple. Checked with a render of the built data; not tested in an emulator.

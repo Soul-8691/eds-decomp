@@ -2527,3 +2527,6 @@ updated: 2026-09-29
 ## [2026-11-05] progress | Chaos King Archfiend
 - src/added_effects.c: `ModAttackDeclaredTriggers`, `ModChaosKingSwap`, `EffectChaosKingArchfiendPrepare` / `Resolve`, row; `gModShipping` renamed `gModDuelExtra` (symbols.ld). Hooks: battle_phase1.c (attack declaration), card_stats.c (end of `GetZoneCardStats`). Typed Tuner rules: tools/newcards.py `synchro_tuner`, src/mod_synchro.c `TunerFits`.
 - Pages: [[added-cards]], [[synchro]].
+
+## [2026-11-05] progress | Synchro cards silver in Deck Edit
+- tools/cardicons.py: a Synchro card's ring art in 10 colours, the Fusion frame's entries 1, 4, 10, 12, 15 in silver; src/mod_field_icons.c `ModDeckRingArt` draws its frame in the art's palette. Pages: [[synchro]].

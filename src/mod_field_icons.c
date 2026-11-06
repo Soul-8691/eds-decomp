@@ -452,7 +452,10 @@ void ModChainIconBuild(u32 row, u16 id)
  * questions/deck-edit-card-art). Both are written again each frame, so a
  * screen that reloads the sheets or the palette needs nothing more. A screen with other sheets in the top half (the
  * list filter) gets no art: sDeckRingCheck compares a tile of each top sheet first. The cards come from
- * DeckEdit_InitFrameSlot and DeckEdit_ScrollFrameSlots (ModDeckRingSetCard), by ring slot. */
+ * DeckEdit_InitFrameSlot and DeckEdit_ScrollFrameSlots (ModDeckRingSetCard), by ring slot.
+ * A Synchro Monster's frame (GetCardFrameIndex gives the Fusion frame) is drawn in its art's palette, whose entries
+ * 1, 4, 10, 12 and 15 (the ones the Fusion frame's tiles use) hold the frame in silver; without art (no block free,
+ * or another screen's sheets) it stays purple. */
 #define DE_ENTRY_SIZE           (32 + 4 * 32)   /* palette, then 2 rows of 2 4bpp tiles */
 #define DATA_DECK_EDIT          ((DATA_MINIS + CARD_ID_COUNT * MINI_W * MINI_H + 3) & ~3)
 #define DE_RING_SLOTS           6
@@ -517,6 +520,8 @@ void ModDeckRingArt(u32 slot, u16 *frame, void *list)
     CopyDoubleWords((void *)(OBJ_PLTT + (DE_PALETTE_FIRST + k) * 32), entry, 32);
     for (r = 0; r < 2; r++)
         CopyDoubleWords((void *)OBJ_TILE8_ADDR(block + r * 32), entry + 32 + r * 2 * TILE4_SIZE, 2 * TILE4_SIZE);
+    if (IS_SYNCHRO_CARD(id))        /* the Fusion frame's tiles in the art's palette: silver (tools/cardicons.py) */
+        frame[2] = (frame[2] & 0x0FFF) | (DE_PALETTE_FIRST + k) << 12;
     e = (u16 *)OamListAlloc(DE_ART_LAYER, list);
     e[0] = (frame[0] & ~(ATTR0_SHAPE_MASK | 0xFF)) | ((frame[0] + 7) & 0xFF);     /* square */
     e[1] = (frame[1] & ~(ATTR1_SIZE_MASK | 0x1FF)) | ATTR1_SIZE_16 | ((frame[1] + 8) & 0x1FF);

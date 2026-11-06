@@ -354,16 +354,16 @@ def window_art(px, pal):
     return out
 
 
-def quantise_card(pixels):
-    """A card's own palette of up to 15 colours (median cut, then a few k-means passes) and each pixel's index
-    in it (1-15; entry 0 stays transparent)."""
+def quantise_card(pixels, colors=DE_COLORS):
+    """A card's own palette of up to `colors` colours (median cut, then a few k-means passes) and each pixel's
+    index in it (1-colors; entry 0 stays transparent)."""
     hist = {}
     for c in pixels:
         hist[c] = hist.get(c, 0) + 1
-    if len(hist) <= DE_COLORS:
+    if len(hist) <= colors:
         palette = list(hist)
     else:
-        palette = median_cut(hist, DE_COLORS)
+        palette = median_cut(hist, colors)
         items = list(hist.items())
         for _ in range(4):
             groups = [[] for _ in palette]
@@ -375,11 +375,30 @@ def quantise_card(pixels):
     return palette, index
 
 
-def deck_edit_entry(px, pal):
-    """A card's Deck Edit ring entry: its 16-colour palette and the four 4bpp tiles of the window art."""
-    palette, index = quantise_card(window_art(px, pal))
-    out = bytearray(struct.pack('<16H', 0, *((c[0] >> 3) | (c[1] >> 3) << 5 | (c[2] >> 3) << 10 for c in palette),
-                                *([0] * (DE_COLORS - len(palette)))))
+# A Synchro Monster's ring frame (src/mod_field_icons.c ModDeckRingArt) is the Fusion frame's tiles drawn with the
+# card's own art palette: the Fusion frame (gDeckEditCardFrameObjTiles, OBJ palette 6) uses entries 1, 4, 10, 12 and
+# 15, so a Synchro card's art keeps to the other ten entries and those five hold the frame in silver (BGR555 5-bit
+# channels): 1 the light grey and 15 the black stay, the purple 4 and 10 and the dark 12 become greys.
+DE_SYNCHRO_FRAME = {1: (26, 26, 26), 4: (28, 28, 29), 10: (18, 18, 19), 12: (4, 4, 5), 15: (1, 0, 0)}
+DE_SYNCHRO_ART = [i for i in range(1, 16) if i not in DE_SYNCHRO_FRAME]
+
+
+def deck_edit_entry(px, pal, synchro=False):
+    """A card's Deck Edit ring entry: its 16-colour palette and the four 4bpp tiles of the window art (for a
+    Synchro Monster, 10 art colours around the silver frame colours, DE_SYNCHRO_FRAME)."""
+    if synchro:
+        palette, index = quantise_card(window_art(px, pal), len(DE_SYNCHRO_ART))
+        entries = [0] * 16
+        for i, (r, g, b) in DE_SYNCHRO_FRAME.items():
+            entries[i] = r | g << 5 | b << 10
+        for n, c in enumerate(palette):
+            entries[DE_SYNCHRO_ART[n]] = (c[0] >> 3) | (c[1] >> 3) << 5 | (c[2] >> 3) << 10
+        index = [DE_SYNCHRO_ART[i - 1] for i in index]
+        out = bytearray(struct.pack('<16H', *entries))
+    else:
+        palette, index = quantise_card(window_art(px, pal))
+        out = bytearray(struct.pack('<16H', 0, *((c[0] >> 3) | (c[1] >> 3) << 5 | (c[2] >> 3) << 10
+                                                 for c in palette), *([0] * (DE_COLORS - len(palette)))))
     img = bytearray(16 * 16)
     for y in range(DE_H):
         for x in range(DE_W):
@@ -445,7 +464,7 @@ def main():
         pal = [A.bgr555_to_rgb(v & 0x7FFF) for v in struct.unpack_from('<64H', art_pal, cid * 0x80)]
         mini = miniature(px, pal)
         if data_out:
-            deck_edit[cid] = deck_edit_entry(px, pal)
+            deck_edit[cid] = deck_edit_entry(px, pal, cid < len(type_ex) and type_ex[cid] & 3 == 1)
         for c in mini:
             g = gba(c)
             hist[g] = hist.get(g, 0) + 1
