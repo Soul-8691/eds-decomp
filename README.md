@@ -79,9 +79,8 @@ release to unlock the next one (every format is open in the debug build).
   at the top left.
 - **Synchro Summoning.** Tuners and Synchro Monsters (white frame), in the Fusion Deck. In your Main Phase, press A on
   your Fusion Deck and choose Special Summon: pick the Synchro Monster, then its Tuner and non-Tuners, whose Levels must
-  add up exactly. The first four: Junk Synchron, Quillbolt Hedgehog (Special Summoned from your Graveyard pile's menu),
-  Junk Warrior and Stardust Dragon. Psychic, Wyrm, Cyberse, Illusion and Creator God monsters can be added too; they
-  use the closest existing type icon for now.
+  add up exactly. The first three: Junk Synchron, Junk Warrior and Stardust Dragon. Psychic, Wyrm, Cyberse, Illusion and
+  Creator God monsters can be added too; they use the closest existing type icon for now.
 - **Duel screen.** Your life points are at the bottom left of the screen and your opponent's at the top right,
   under "PLAYER" and "OPPONENT". The middle of the board has one shared phase panel (whose turn it is, and
   D S M B M E with the current phase lit) between two Extra Monster Zones, which are only drawn for now.
@@ -344,7 +343,7 @@ Three newer summoning mechanics are in, each with a few cards so far. In your Ma
 
 | Mechanic | How it works here | Cards so far |
 |---|---|---|
-| **Synchro** (white frame) | 1 Tuner plus non-Tuners whose Levels add up exactly to the Synchro Monster's go to the Graveyard. | Junk Warrior, Stardust Dragon, Chaos King Archfiend, Archfiend's Call, Brionac, Dragon of the Ice Barrier; the Tuners Junk Synchron, Shipping Archfiend, Plaguespreader Zombie (and Quillbolt Hedgehog to go with them) |
+| **Synchro** (white frame) | 1 Tuner plus non-Tuners whose Levels add up exactly to the Synchro Monster's go to the Graveyard. | Junk Warrior, Stardust Dragon, Chaos King Archfiend, Archfiend's Call, Brionac, Dragon of the Ice Barrier; the Tuners Junk Synchron, Shipping Archfiend, Plaguespreader Zombie |
 | **Xyz** (black frame) | Monsters of the right Level become its Xyz Materials and stay under it ("MAT" and a count in the info bar); effects detach them. | Gem-Knight Pearl, Number 39: Utopia, Number 17: Leviathan Dragon |
 | **Link** (blue frame, arrows) | Materials add up to its Link Rating; it goes to an Extra Monster Zone or a zone one of your Link Monsters points to. Always in Attack Position. | Link Spider, Proxy Dragon |
 
