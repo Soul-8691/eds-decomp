@@ -2756,3 +2756,6 @@ updated: 2026-09-29
 ## [2026-11-07] progress | HMA TOML: the opponents table (portrait cards)
 - tools/hma_toml.py: data.opponents (sOpponents: kind, order, format, name, portrait card), text.opponents.*, lists opponents and opponentkinds; header guide. Checked by decoding the rows.
 - Pages: [[hma-toml]].
+
+## [2026-11-07] progress | ADDING_NEW_CARDS.md brought up to date
+- The leftover cards list, overlaps.txt, demo_cards.txt, make demo's blank slots and CARD_ID_LAST_REAL, Xyz and Link kinds, the Xyz/Link summon triggers and examples, the HMA TOML, the gallery steps, the current .text end.

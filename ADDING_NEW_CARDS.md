@@ -22,10 +22,17 @@ almost all card code lives, and the cards already in it are the best examples to
 
 | File | What it is |
 |---|---|
-| `config/new_cards.txt` | The full list (`make`, `make release`). One English card name per line. |
+| `config/new_cards.txt` | The full list (`make`, `make release`). One English card name per line (`name \| shorter in-game name` for a name over 41 characters). |
 | `new_cards.txt` | The demo list (`make demo`, `make release-demo`): only the lines **above `------`** are built. |
+| `config/leftover_cards.txt` | The cards of the engine's **leftover effects** (`number \| name`), added to **every** build after the list's cards, each at its own card number (see Level 0). Don't put these in the lists. |
+| `overlaps.txt` | Leftover cards that stay in the lists at a free number because `src/added_effects.c` has code of its own for them (to be merged later). |
+| `demo_cards.txt` | Generated: every card the demo build adds, alphabetical (`tools/gen_new_cards_md.py`). Don't edit it. |
 
-Add the name to both. The order in the demo list is the order of the added card IDs (821, 822, ...).
+Add a new card's name to both lists. The added card IDs are, in order: the list's cards (821, 822, ...), then the
+leftover cards, then, in `make demo` only, **blank slots** up to 615 added cards (`NEWCARDS_PAD_TO`: no name, stats
+or art, left out of every card list, for filling in later in Hex Maniac Advance). Inserting or removing a line
+changes the IDs after it, so a save made with another list shows other cards. The capacity is 615 added cards
+(`python3 tools/newcards.py capacity`).
 
 On the next build, `tools/newcards.py`:
 
@@ -35,7 +42,9 @@ On the next build, `tools/newcards.py`:
 - gives it a card number and writes `CARD_<NAME>` into `include/constants/cards.h` and `HAS_CARD_<NAME>` into
   `build/include/card_count.h`.
 
-Wrap every piece of code for a card in `#ifdef HAS_CARD_<NAME>`, so a list without that card still builds.
+Wrap every piece of code for a card in `#ifdef HAS_CARD_<NAME>`, so a list without that card still builds. Code
+that walks every card ID stops at `CARD_ID_LAST_REAL` (`include/card_data.h`), not `CARD_ID_LAST`, so it skips the
+blank slots; the debug builds' starting trunk (`GiveStartingTrunk`) gives 8 copies of every real card.
 
 Things `newcards.py` lets you control:
 
@@ -46,20 +55,34 @@ Things `newcards.py` lets you control:
 | `SUBTYPE_OVERRIDES` | Change a Spell/Trap's subtype (Blast with Chain is an Equip Trap). |
 | `EXTRA_RACES` | Races EDS lacks (Psychic, Wyrm, ...): stored as the closest EDS race plus `gCardTypeEx`. |
 
-The card's type comes from YGOPRODeck: Normal/Effect/Fusion/Ritual monster, Synchro and Tuner (`gCardTypeEx`, see
-[wiki/game/synchro.md](wiki/game/synchro.md)), Spell/Trap with its subtype. A Synchro's Tuner rule is read from its
-text into `build/include/synchro_rules.h`.
+The card's type comes from YGOPRODeck: Normal/Effect/Fusion/Ritual monster, Spell/Trap with its subtype, and the
+Extra Deck kinds the engine lacks, kept in `gCardTypeEx` (the stats word stores them as Fusion):
+
+| Kind | Read from the card's text | Docs |
+|---|---|---|
+| Synchro (and Tuners) | the Tuner rule -> `build/include/synchro_rules.h` | [wiki/game/synchro.md](wiki/game/synchro.md) |
+| Xyz (Rank in the Level field) | the materials (count, Level, Type/Attribute) -> `build/include/xyz_rules.h` | [wiki/game/xyz.md](wiki/game/xyz.md) |
+| Link (Link Rating in the Level field, DEF 0) | the materials -> `build/include/link_rules.h`; the Link Arrows -> `gCardLinkMarkers` | [wiki/game/link.md](wiki/game/link.md) |
+
+Pendulum cards, and monsters with a Type or Attribute EDS can't show, stop the build.
 
 ---
 
 ## 2. Level 0: cards that need no code
 
 - **Normal monsters**, and effect monsters whose effect you leave out, work as soon as they are in the list.
-- **Engine keys.** The original game has code for many cards that are not in it ("no EDS card" in
-  `include/constants/cards.h`, `CARD_1xxx`). If one of them is your card, add it to `ENGINE_NUMBERS` and the card
-  gets that number and all of its behaviour. Examples: United We Stand (1449), Mage Power (1450), Big Bang Shot (1313,
-  plus added code), Nightmare's Steelcage (1230), Magic Cylinder (1214).
-  To find one: `grep -rn "CARD_1xxx" src/` and read what each place does with it. Check every use: some keys look
+- **Leftover effects (engine keys).** The original game has code for about 150 cards that are not in it ("no EDS
+  card" in `include/constants/cards.h`, `CARD_1xxx`; the inventory is `LEFTOVER_EFFECTS.md` on the `binary` branch).
+  - If the leftover code is all your card needs, add `number | name` to **`config/leftover_cards.txt`** and nothing
+    else: every build adds the card at that number, so the original code plays it (Magic Cylinder 1214, United We
+    Stand 1449, Mage Power 1450, Nightmare's Steelcage 1230, Fire Princess 1434, ...). The file lists every working one
+    already; the ones left out are noted at its top.
+  - If the card needs added code on top of the leftover code, put it in the lists and give it the key in
+    `ENGINE_NUMBERS` (`tools/newcards.py`); then `config/leftover_cards.txt` skips it (Big Bang Shot is listed at 1313,
+    so Fairy Meteor Crush's 1313 is skipped).
+  - A listed card that has its own code at a free number although the engine has a key for it is an overlap
+    (`overlaps.txt`): at the key both would run, so don't move it there without merging the two.
+  To check a key: `grep -rn "CARD_1xxx" src/` and read what each place does with it. Check every use: some keys look
   right and are not (1244 is Shadow Spell, not Nightmare Wheel).
 - **Copying an original card.** If your card is an existing card with a small difference, look for where the original
   card's number is handled (`grep -rn CARD_<ORIGINAL> src/`) and add yours next to it.
@@ -161,7 +184,7 @@ Where to queue it (most likely first):
 |---|---|
 | Summoned (Normal / Flip / Special) | `AddedCardsSummoned` (`src/added_effects.c`): `kind` is the summon kind, `faceUp` its position. Junk Synchron, Marauding Captain, Golem Sentry. |
 | Tribute / Normal Summoned (engine list) | The two Normal Summon paths in `src/summon_checks.c` (Zaborg, Mobius, Granmarg). |
-| Synchro Summoned | `AddedCardsSummoned`, with the result of `ModSynchroArrived` (Junk Warrior). |
+| Synchro / Xyz / Link Summoned | `AddedCardsSummoned`: `ModSynchroArrived` returns whether it was a Synchro Summon (Junk Warrior); `ModXyzArrived` attaches an Xyz Summon's materials and `ModLinkArrived` stands a monster in its Extra Monster Zone there, so a trigger for those goes after them. |
 | Your Standby Phase | `ModStandbyStep` (a part of its switch, `gModDuel.standbyPart`): Vampire Lord, Treeborn Frog, Nightmare Wheel. |
 | End Phase | The `EndPhase_*` calls in `DuelPhase_End` (`src/battle_phase3.c`): Stardust Dragon, Limiter Removal. |
 | Destroyed by battle | `SendBattleDestroyedCardToGraveyard` (`src/duel_field_moves.c`), `src/battle_phase2.c`. |
@@ -200,7 +223,7 @@ in `src/added_effects.c`, so the original files only get one call each.
 
 ## 6. Level 4: new mechanics
 
-Something the engine has no idea of (Synchro Summoning, new races) needs:
+Something the engine has no idea of (Synchro, Xyz and Link Summoning, the Extra Monster Zones, new races) needs:
 
 - **Data:** new card types go in `gCardTypeEx` (`tools/newcards.py`, `include/card_data.h`); the packed stats word has
   no free bits.
@@ -210,10 +233,17 @@ Something the engine has no idea of (Synchro Summoning, new races) needs:
   `src/duel_cmd_queue.c`), the card list (`CardListView_Open`) and the text box (`TextBoxOpen`, `TextBoxSetMenu`) rather
   than drawing new screens.
 
-See [wiki/game/synchro.md](wiki/game/synchro.md) for a full example.
+Full examples: Synchro ([wiki/game/synchro.md](wiki/game/synchro.md), `src/mod_synchro.c`), Xyz with its materials
+(`src/mod_xyz.c`, [wiki/game/xyz.md](wiki/game/xyz.md)), Link with the Extra Monster Zones, the Link Arrows and the
+zone pick for every summon (`src/mod_link.c`, [wiki/game/link.md](wiki/game/link.md)).
+
+**Data for Hex Maniac Advance.** `make demo` and `make release-demo` write a TOML next to the ROM
+(`tools/hma_toml.py`, [wiki/tools/hma-toml.md](wiki/tools/hma-toml.md)). A new data table that people may want to edit
+goes in its `mod_anchors` (found by its symbol, so it follows every build) with a line in its header guide; keep
+the data in a layout HMA can show (one array per kind of data, images as plain or tiled pixels).
 
 **Size limit.** The release build's `.text` must end at or before `0x08080A20`
-(`grep '^\.text ' build/eds.map`). Code in `src/added_effects.c` and other `@farcode` units does not count; every line
+(`grep '^\.text ' build/eds.map`; the demo build's ends at 0x0807F31C as of 2026-11-07). Code in `src/added_effects.c` and other `@farcode` units does not count; every line
 added to an **original** unit does. Keep hooks in original files to one call or one `case` label.
 
 ---
@@ -294,11 +324,14 @@ For the opponent's side, OR `DUEL_CMD_PLAYER` into the command (`player ? DUEL_C
 
 ## 9. Checklist
 
-1. Name in `config/new_cards.txt` and above `------` in `new_cards.txt`.
+1. Name in `config/new_cards.txt` and above `------` in `new_cards.txt` (or, for a working leftover effect, only
+   `number | name` in `config/leftover_cards.txt`).
 2. Code under `#ifdef HAS_CARD_<NAME>`: the row in `gAddedCardEffects`, handlers, hooks, CPU policy.
 3. `make -j8 demo` (and `make release` now and then for the size limit).
 4. Remove the name from every `card_pools/missing*.txt`.
 5. Docs: a section in `wiki/game/added-cards.md`, `wiki/log.md`, the card count in `README.md`, CPU behaviour in
    `AI_IMPROVEMENTS.md`; run `PYTHONUTF8=1 python3 scripts/wiki_lint.py`.
-6. `NEW_CARDS.md`: capture the picture (`tools/card_screenshots.lua` in mGBA with `cards/_capture_only.txt`), then
-   `python3 tools/gen_new_cards_md.py`.
+6. `NEW_CARDS.md`: after `make demo`, `python3 tools/gen_new_cards_md.py` rewrites `demo_cards.txt` and
+   `NEW_CARDS.md` and lists the cards without a screenshot. Put those names in `cards/_capture_only.txt`, run
+   `tools/card_screenshots.lua` in mGBA on `eds_demo.gba` (it reads the cards and their IDs from
+   `build/new_cards.tsv`), delete the capture file and run the generator again.
