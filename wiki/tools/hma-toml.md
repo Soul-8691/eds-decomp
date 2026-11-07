@@ -83,6 +83,14 @@ original ROM (repo root). Without `baserom.toml` it does nothing. `eds_demo.toml
     resolve, check, prepare, chainA, chainB; 24 bytes a row), one row per added card with an effect row plus the
     0xFFFF terminator (127 rows now). `FindCardEffect` (effect_hooks.c) searches it after `gCardEffects`, so a row's
     card number gives that card the five handlers.
+  - Extended card data (by the `.sym`, one byte per card ID, `]cardnumbers`): `data.cards.typeex` is `gCardTypeEx`
+    as an HMA bit tuple, ``[typeex.|t|kind:cardkindsex|effect.|tuner.|race::racesex]`` (bits 0-1 the kind: none,
+    Synchro, Xyz, Link, which the stats word stores as Fusion; bit 2 effect; bit 3 Tuner; bits 4-7 a race EDS lacks,
+    0 = the stats word's), with the new lists `cardkindsex` and `racesex`; `data.cards.linkmarkers` is
+    `gCardLinkMarkers`, one bit per Link Arrow (top-left, top, top-right, left, right, bottom-left, bottom,
+    bottom-right). HMA's tuple widths: `.` 1 bit, `:` 2 bits, from bit 0 (as baserom.toml's `data.cards.stats`).
+    Checked: Stardust Dragon Synchro, Junk Synchron Tuner, Utopia Xyz, Link Spider Link/Cyberse with the bottom
+    arrow, Proxy Dragon left and right.
   - Opponents (`src/mod_opponents.c` `sOpponents`, by the ELF): `data.opponents`
     (``[kind.opponentkinds order. format.formats unused. name<> portrait:cardinternalnumbers padding:]opponents``,
     12 bytes a row, one per duelist ID 0-24): kind (hidden, format, deck), unlock order, format (banlist), the name

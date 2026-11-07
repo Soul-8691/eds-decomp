@@ -98,6 +98,10 @@ ADDED_GUIDE = [
     ('graphics.cards.icons', "every card's art icon (Deck Edit's ring): .palettes, .images (16x16 4bpp)", USED),
     ('graphics.cards.fieldicons', "the field icons: .artpalette (64 shared colours), .miniatures (each card's "
                                   "16x16 8bpp miniature)", USED),
+    ('data.cards.typeex', "each card ID's extended type (gCardTypeEx): kind (none, Synchro, Xyz, Link; the stats "
+                          "word stores those as Fusion), effect, Tuner, and race (a race EDS lacks: Psychic, Wyrm, "
+                          "Cyberse, Illusion, Creator-God, Divine-Beast; statstype = the stats word's)", USED),
+    ('data.cards.linkmarkers', "each card ID's Link Arrows (gCardLinkMarkers): top-left ... bottom-right", USED),
     ('data.cards.addedeffects', "the added cards' effect rows (gAddedCardEffects): card, then the resolve, check, "
                                 "prepare, chainA, chainB handlers; searched after data.cards.effects; last row 0xFFFF",
      USED),
@@ -143,6 +147,8 @@ ADDED_LISTS_GUIDE = [
                 'data.opponents)', USED),
     ('opponents', 'the duelist IDs 0-24 with the opponent each is in this build (indexes data.opponents)', USED),
     ('opponentkinds', 'hidden, format, deck (data.opponents\' kind)', USED),
+    ('cardkindsex', 'none, synchro, xyz, link (data.cards.typeex\'s kind)', USED),
+    ('racesex', 'statstype and the races EDS lacks (data.cards.typeex\'s race)', USED),
 ]
 
 # What baserom.toml (the original game) brings, what this script does to it, and whether the mod still uses it.
@@ -385,6 +391,24 @@ def mod_anchors(elf, rom, rom_sym):
                                          'portrait:cardinternalnumbers padding:]opponents')
     else:
         report.append('no sOpponents in the ELF: the opponents table is left out')
+
+    # The extended card data by card ID (tools/newcards.py, data/rodata_08087FD0.s), one byte each:
+    #   gCardTypeEx: bits 0-1 the Extra Deck kind the stats word stores as Fusion (enum CardKindEx), bit 2 has an
+    #   effect, bit 3 Tuner, bits 4-7 a race EDS lacks (enum RaceEx; 0 = the stats word's type);
+    #   gCardLinkMarkers: a Link Monster's arrows, bits TL, T, TR, L, R, BL, B, BR.
+    type_ex = rom_sym.get('gCardTypeEx')
+    if type_ex:
+        lists.append(('cardkindsex', ['none', 'synchro', 'xyz', 'link']))
+        lists.append(('racesex', ['statstype', 'psychic', 'wyrm', 'cyberse', 'illusion', 'creatorgod',
+                                  'divinebeast']))
+        anchors.append(('data.cards.typeex', type_ex[0] - ROM_BASE,
+                        '[typeex.|t|kind:cardkindsex|effect.|tuner.|race::racesex]cardnumbers'))
+    else:
+        report.append('no gCardTypeEx in the .sym: the extended card types are left out')
+    markers = rom_sym.get('gCardLinkMarkers')
+    if markers:
+        anchors.append(('data.cards.linkmarkers', markers[0] - ROM_BASE,
+                        '[arrows.|t|topleft.|top.|topright.|left.|right.|bottomleft.|bottom.|bottomright.]cardnumbers'))
 
     # The added cards' effect rows (src/added_effects.c gAddedCardEffects): struct CardEffect, 24 bytes, as
     # baserom.toml's data.cards.effects (gCardEffects), which FindCardEffect searches first; the last row is the

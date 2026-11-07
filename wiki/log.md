@@ -2759,3 +2759,7 @@ updated: 2026-09-29
 
 ## [2026-11-07] progress | ADDING_NEW_CARDS.md brought up to date
 - The leftover cards list, overlaps.txt, demo_cards.txt, make demo's blank slots and CARD_ID_LAST_REAL, Xyz and Link kinds, the Xyz/Link summon triggers and examples, the HMA TOML, the gallery steps, the current .text end.
+
+## [2026-11-07] progress | HMA TOML: gCardTypeEx and gCardLinkMarkers
+- tools/hma_toml.py: data.cards.typeex (bit tuple: kind, effect, Tuner, race; lists cardkindsex, racesex) and data.cards.linkmarkers (one bit per arrow); header guide. Checked on five added cards.
+- Pages: [[hma-toml]].
