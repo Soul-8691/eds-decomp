@@ -822,315 +822,418 @@ Forbidden cards (limit 0) are omitted. Lower usage ⇒ higher weight ⇒ more co
 
 ### Pharaoh's Servant
 
-- **Type:** TCG · **Format:** Imperial · **Cards in pool:** 62 · **Weight sum:** 365750
+- **Type:** TCG · **Format:** Imperial · **Cards in pool:** 88 · **Weight sum:** 563350
 
 | Card | Weight | Pull % |
 |---|---:|---:|
-| 4-Starred Ladybug of Doom | 10000 | 2.7341 |
-| 7 Completed | 10000 | 2.7341 |
-| Armored Glass | 10000 | 2.7341 |
-| Cold Wave | 10000 | 2.7341 |
-| Cyber Falcon | 10000 | 2.7341 |
-| DNA Surgery | 10000 | 2.7341 |
-| Darkfire Soldier #1 | 10000 | 2.7341 |
-| Darkfire Soldier #2 | 10000 | 2.7341 |
-| Driving Snow | 10000 | 2.7341 |
-| Earthshaker | 10000 | 2.7341 |
-| Enchanted Javelin | 10000 | 2.7341 |
-| Flame Champion | 10000 | 2.7341 |
-| Flying Kamakiri #2 | 10000 | 2.7341 |
-| Gift of The Mystical Elf | 10000 | 2.7341 |
-| Gust | 10000 | 2.7341 |
-| Inspection | 10000 | 2.7341 |
-| Kiseitai | 10000 | 2.7341 |
-| Light of Intervention | 10000 | 2.7341 |
-| Major Riot | 10000 | 2.7341 |
-| Metal Detector | 10000 | 2.7341 |
-| Mr. Volcano | 10000 | 2.7341 |
-| Mystic Probe | 10000 | 2.7341 |
-| Respect Play | 10000 | 2.7341 |
-| Solemn Wishes | 10000 | 2.7341 |
-| Solomon's Lawbook | 10000 | 2.7341 |
-| Steel Ogre Grotto #2 | 10000 | 2.7341 |
-| The Eye of Truth | 10000 | 2.7341 |
-| The Regulation of Tribe | 10000 | 2.7341 |
-| Thousand-Eyes Idol | 10000 | 2.7341 |
-| Three-Headed Geedo | 10000 | 2.7341 |
-| Time Seal | 10000 | 2.7341 |
-| Twin-Headed Fire Dragon | 10000 | 2.7341 |
-| World Suppression | 10000 | 2.7341 |
-| Numinous Healer | 7000 | 1.9139 |
-| Appropriate | 2500 | 0.6835 |
-| Forced Requisition | 2500 | 0.6835 |
-| Gravity Bind | 2500 | 0.6835 |
-| Lightforce Sword | 2500 | 0.6835 |
-| Magic Drain | 2500 | 0.6835 |
-| Morphing Jar #2 | 2500 | 0.6835 |
-| Nobleman of Extermination | 2500 | 0.6835 |
-| Prohibition | 2500 | 0.6835 |
-| The Shallow Grave | 2500 | 0.6835 |
-| Backup Soldier | 600 | 0.1640 |
-| Dust Tornado | 600 | 0.1640 |
-| Gearfried the Iron Knight | 600 | 0.1640 |
-| Graverobber | 600 | 0.1640 |
-| Limiter Removal | 600 | 0.1640 |
-| Magical Hats | 600 | 0.1640 |
-| Mirror Wall | 600 | 0.1640 |
-| Nobleman of Crossout | 600 | 0.1640 |
-| Parasite Paracide | 600 | 0.1640 |
-| Buster Blader | 100 | 0.0273 |
-| Call Of The Haunted | 100 | 0.0273 |
-| Ceasefire | 100 | 0.0273 |
-| Chain Destruction | 100 | 0.0273 |
-| Goblin Attack Force | 100 | 0.0273 |
-| Premature Burial | 100 | 0.0273 |
-| The Fiend Megacyber | 100 | 0.0273 |
-| Thousand-Eyes Restrict | 100 | 0.0273 |
-| Imperial Order | 25 | 0.0068 |
-| Jinzo | 25 | 0.0068 |
+| 4-Starred Ladybug of Doom | 10000 | 1.7751 |
+| 7 Completed | 10000 | 1.7751 |
+| Armored Glass | 10000 | 1.7751 |
+| Attack and Receive | 10000 | 1.7751 |
+| Bite Shoes | 10000 | 1.7751 |
+| Bombardment Beetle | 10000 | 1.7751 |
+| Bubonic Vermin | 10000 | 1.7751 |
+| Burning Land | 10000 | 1.7751 |
+| Cold Wave | 10000 | 1.7751 |
+| Cyber Falcon | 10000 | 1.7751 |
+| DNA Surgery | 10000 | 1.7751 |
+| Darkfire Soldier #1 | 10000 | 1.7751 |
+| Darkfire Soldier #2 | 10000 | 1.7751 |
+| Deepsea Warrior | 10000 | 1.7751 |
+| Drill Bug | 10000 | 1.7751 |
+| Driving Snow | 10000 | 1.7751 |
+| Earthshaker | 10000 | 1.7751 |
+| Enchanted Javelin | 10000 | 1.7751 |
+| Flame Champion | 10000 | 1.7751 |
+| Flying Kamakiri #2 | 10000 | 1.7751 |
+| Gamble | 10000 | 1.7751 |
+| Gift of The Mystical Elf | 10000 | 1.7751 |
+| Gradius | 10000 | 1.7751 |
+| Ground Collapse | 10000 | 1.7751 |
+| Gust | 10000 | 1.7751 |
+| Infinite Dismissal | 10000 | 1.7751 |
+| Insect Barrier | 10000 | 1.7751 |
+| Inspection | 10000 | 1.7751 |
+| Invitation to a Dark Sleep | 10000 | 1.7751 |
+| Kiseitai | 10000 | 1.7751 |
+| Light of Intervention | 10000 | 1.7751 |
+| Major Riot | 10000 | 1.7751 |
+| Metal Detector | 10000 | 1.7751 |
+| Minor Goblin Official | 10000 | 1.7751 |
+| Mr. Volcano | 10000 | 1.7751 |
+| Mystic Probe | 10000 | 1.7751 |
+| Rain of Mercy | 10000 | 1.7751 |
+| Respect Play | 10000 | 1.7751 |
+| Shadow of Eyes | 10000 | 1.7751 |
+| Solemn Wishes | 10000 | 1.7751 |
+| Solomon's Lawbook | 10000 | 1.7751 |
+| Steel Ogre Grotto #2 | 10000 | 1.7751 |
+| Sword Hunter | 10000 | 1.7751 |
+| The Eye of Truth | 10000 | 1.7751 |
+| The Regulation of Tribe | 10000 | 1.7751 |
+| Thousand-Eyes Idol | 10000 | 1.7751 |
+| Three-Headed Geedo | 10000 | 1.7751 |
+| Time Seal | 10000 | 1.7751 |
+| Twin-Headed Fire Dragon | 10000 | 1.7751 |
+| Type Zero Magic Crusher | 10000 | 1.7751 |
+| World Suppression | 10000 | 1.7751 |
+| Numinous Healer | 7000 | 1.2426 |
+| Appropriate | 2500 | 0.4438 |
+| Forced Requisition | 2500 | 0.4438 |
+| Gravity Bind | 2500 | 0.4438 |
+| Hayabusa Knight | 2500 | 0.4438 |
+| Lightforce Sword | 2500 | 0.4438 |
+| Mad Sword Beast | 2500 | 0.4438 |
+| Magic Drain | 2500 | 0.4438 |
+| Michizure | 2500 | 0.4438 |
+| Monster Recovery | 2500 | 0.4438 |
+| Morphing Jar #2 | 2500 | 0.4438 |
+| Nobleman of Extermination | 2500 | 0.4438 |
+| Prohibition | 2500 | 0.4438 |
+| Shift | 2500 | 0.4438 |
+| Skull Invitation | 2500 | 0.4438 |
+| The Shallow Grave | 2500 | 0.4438 |
+| Vampire Baby | 2500 | 0.4438 |
+| Backup Soldier | 600 | 0.1065 |
+| Dust Tornado | 600 | 0.1065 |
+| Gearfried the Iron Knight | 600 | 0.1065 |
+| Graverobber | 600 | 0.1065 |
+| Limiter Removal | 600 | 0.1065 |
+| Magical Hats | 600 | 0.1065 |
+| Mirror Wall | 600 | 0.1065 |
+| Nobleman of Crossout | 600 | 0.1065 |
+| Parasite Paracide | 600 | 0.1065 |
+| Buster Blader | 100 | 0.0178 |
+| Call Of The Haunted | 100 | 0.0178 |
+| Ceasefire | 100 | 0.0178 |
+| Chain Destruction | 100 | 0.0178 |
+| Goblin Attack Force | 100 | 0.0178 |
+| Premature Burial | 100 | 0.0178 |
+| The Fiend Megacyber | 100 | 0.0178 |
+| The Legendary Fisherman | 100 | 0.0178 |
+| Thousand-Eyes Restrict | 100 | 0.0178 |
+| Imperial Order | 25 | 0.0044 |
+| Jinzo | 25 | 0.0044 |
 
 ### Imperial
 
-- **Type:** Usage · **Format:** Imperial · **Cards in pool:** 105 · **Weight sum:** 109272
+- **Type:** Usage · **Format:** Imperial · **Cards in pool:** 106 · **Weight sum:** 109562
 
 | Card | Weight | Pull % |
 |---|---:|---:|
-| Aqua Madoor | 2900 | 2.6539 |
-| Exchange | 2900 | 2.6539 |
-| Kuriboh | 2900 | 2.6539 |
-| Mask of Darkness | 2900 | 2.6539 |
-| Megamorph | 2900 | 2.6539 |
-| Nimble Momonga | 2900 | 2.6539 |
-| Reinforcements | 2900 | 2.6539 |
-| Seven Tools of the Bandit | 2900 | 2.6539 |
-| Soul Exchange | 2900 | 2.6539 |
-| Thunder Dragon | 2900 | 2.6539 |
-| Backup Soldier | 2484 | 2.2732 |
-| Acid Trap Hole | 2227 | 2.0380 |
-| Magic Drain | 2227 | 2.0380 |
-| Tribute to The Doomed | 2227 | 2.0380 |
-| White Magical Hat | 2227 | 2.0380 |
-| Exodia the Forbidden One | 1911 | 1.7488 |
-| Giant Germ | 1911 | 1.7488 |
-| Graverobber | 1911 | 1.7488 |
-| Last Will | 1911 | 1.7488 |
-| Left Arm of the Forbidden One | 1911 | 1.7488 |
-| Left Leg of the Forbidden One | 1911 | 1.7488 |
-| Magic Jammer | 1911 | 1.7488 |
-| Morphing Jar #2 | 1911 | 1.7488 |
-| Right Arm of the Forbidden One | 1911 | 1.7488 |
-| Right Leg of the Forbidden One | 1911 | 1.7488 |
-| Black Illusion Ritual | 1717 | 1.5713 |
-| Masked Sorcerer | 1717 | 1.5713 |
-| Relinquished | 1717 | 1.5713 |
-| Senju of the Thousand Hands | 1717 | 1.5713 |
-| Sonic Bird | 1717 | 1.5713 |
-| Upstart Goblin | 1478 | 1.3526 |
-| 4-Starred Ladybug of Doom | 1396 | 1.2775 |
-| Waboku | 1330 | 1.2171 |
-| Giant Soldier of Stone | 1274 | 1.1659 |
-| Card Destruction | 1149 | 1.0515 |
-| Time Seal | 1037 | 0.9490 |
-| Goblin Attack Force | 1015 | 0.9289 |
-| Giant Trunade | 995 | 0.9106 |
-| The Fiend Megacyber | 976 | 0.8932 |
-| Banisher of the Light | 887 | 0.8117 |
-| Solemn Judgment | 833 | 0.7623 |
-| Cannon Soldier | 791 | 0.7239 |
-| Fissure | 769 | 0.7037 |
-| Trap Hole | 769 | 0.7037 |
-| Dust Tornado | 749 | 0.6854 |
-| Magician of Faith | 749 | 0.6854 |
-| Man-Eater Bug | 749 | 0.6854 |
-| Mechanicalchaser | 749 | 0.6854 |
-| Mystic Tomato | 743 | 0.6800 |
-| Painful Choice | 726 | 0.6644 |
-| Empress Judge | 710 | 0.6498 |
-| Fusionist | 710 | 0.6498 |
-| Giltia the D. Knight | 710 | 0.6498 |
-| Rabid Horseman | 710 | 0.6498 |
-| Heavy Storm | 666 | 0.6095 |
-| Nobleman of Crossout | 650 | 0.5948 |
-| Sangan | 650 | 0.5948 |
-| Swords of Revealing Light | 640 | 0.5857 |
-| Cyber Jar | 599 | 0.5482 |
-| Ceasefire | 574 | 0.5253 |
-| Morphing Jar | 568 | 0.5198 |
-| Premature Burial | 562 | 0.5143 |
-| Change of Heart | 522 | 0.4777 |
-| Confiscation | 522 | 0.4777 |
-| Dark Hole | 522 | 0.4777 |
-| Delinquent Duo | 522 | 0.4777 |
-| Jinzo | 522 | 0.4777 |
-| Mirror Force | 522 | 0.4777 |
-| Monster Reborn | 522 | 0.4777 |
-| Pot of Greed | 522 | 0.4777 |
-| Raigeki | 522 | 0.4777 |
-| Snatch Steal | 522 | 0.4777 |
-| The Forceful Sentry | 522 | 0.4777 |
-| Witch of the Black Forest | 522 | 0.4777 |
-| Gaia the Dragon Champion | 462 | 0.4228 |
-| Bickuribox | 413 | 0.3780 |
-| Skull Knight | 413 | 0.3780 |
-| Charubin the Fire Knight | 378 | 0.3459 |
-| Flame Ghost | 378 | 0.3459 |
-| Cyber Saurus | 353 | 0.3230 |
-| Flame Swordsman | 332 | 0.3038 |
-| Gravity Bind | 290 | 0.2654 |
-| Light of Intervention | 290 | 0.2654 |
-| Prohibition | 290 | 0.2654 |
-| Robbin' Goblin | 290 | 0.2654 |
-| Kwagar Hercules | 279 | 0.2553 |
-| Metal Dragon | 279 | 0.2553 |
-| Deepsea Shark | 270 | 0.2471 |
-| Punished Eagle | 270 | 0.2471 |
-| Roaring Ocean Snake | 270 | 0.2471 |
-| Dragoness the Wicked Knight | 262 | 0.2398 |
-| Thousand Dragon | 262 | 0.2398 |
-| Musician King | 255 | 0.2334 |
-| Warrior of Tradition | 248 | 0.2270 |
-| Twin-Headed Thunder Dragon | 236 | 0.2160 |
-| Darkfire Dragon | 227 | 0.2077 |
-| Labyrinth Tank | 227 | 0.2077 |
-| B. Skull Dragon | 222 | 0.2032 |
-| Thousand-Eyes Restrict | 222 | 0.2032 |
-| Rush Recklessly | 171 | 0.1565 |
-| Limiter Removal | 127 | 0.1162 |
-| Solemn Wishes | 114 | 0.1043 |
-| Mystical Space Typhoon | 74 | 0.0677 |
-| Call Of The Haunted | 52 | 0.0476 |
-| Imperial Order | 52 | 0.0476 |
+| Aqua Madoor | 2900 | 2.6469 |
+| Exchange | 2900 | 2.6469 |
+| Kuriboh | 2900 | 2.6469 |
+| Mask of Darkness | 2900 | 2.6469 |
+| Megamorph | 2900 | 2.6469 |
+| Nimble Momonga | 2900 | 2.6469 |
+| Reinforcements | 2900 | 2.6469 |
+| Seven Tools of the Bandit | 2900 | 2.6469 |
+| Soul Exchange | 2900 | 2.6469 |
+| Thunder Dragon | 2900 | 2.6469 |
+| Backup Soldier | 2484 | 2.2672 |
+| Acid Trap Hole | 2227 | 2.0326 |
+| Magic Drain | 2227 | 2.0326 |
+| Tribute to The Doomed | 2227 | 2.0326 |
+| White Magical Hat | 2227 | 2.0326 |
+| Exodia the Forbidden One | 1911 | 1.7442 |
+| Giant Germ | 1911 | 1.7442 |
+| Graverobber | 1911 | 1.7442 |
+| Last Will | 1911 | 1.7442 |
+| Left Arm of the Forbidden One | 1911 | 1.7442 |
+| Left Leg of the Forbidden One | 1911 | 1.7442 |
+| Magic Jammer | 1911 | 1.7442 |
+| Morphing Jar #2 | 1911 | 1.7442 |
+| Right Arm of the Forbidden One | 1911 | 1.7442 |
+| Right Leg of the Forbidden One | 1911 | 1.7442 |
+| Black Illusion Ritual | 1717 | 1.5671 |
+| Masked Sorcerer | 1717 | 1.5671 |
+| Relinquished | 1717 | 1.5671 |
+| Senju of the Thousand Hands | 1717 | 1.5671 |
+| Sonic Bird | 1717 | 1.5671 |
+| Upstart Goblin | 1478 | 1.3490 |
+| 4-Starred Ladybug of Doom | 1396 | 1.2742 |
+| Waboku | 1330 | 1.2139 |
+| Giant Soldier of Stone | 1274 | 1.1628 |
+| Card Destruction | 1149 | 1.0487 |
+| Time Seal | 1037 | 0.9465 |
+| Goblin Attack Force | 1015 | 0.9264 |
+| Giant Trunade | 995 | 0.9082 |
+| The Fiend Megacyber | 976 | 0.8908 |
+| Banisher of the Light | 887 | 0.8096 |
+| Solemn Judgment | 833 | 0.7603 |
+| Cannon Soldier | 791 | 0.7220 |
+| Fissure | 769 | 0.7019 |
+| Trap Hole | 769 | 0.7019 |
+| Dust Tornado | 749 | 0.6836 |
+| Magician of Faith | 749 | 0.6836 |
+| Man-Eater Bug | 749 | 0.6836 |
+| Mechanicalchaser | 749 | 0.6836 |
+| Mystic Tomato | 743 | 0.6782 |
+| Painful Choice | 726 | 0.6626 |
+| Empress Judge | 710 | 0.6480 |
+| Fusionist | 710 | 0.6480 |
+| Giltia the D. Knight | 710 | 0.6480 |
+| Rabid Horseman | 710 | 0.6480 |
+| Heavy Storm | 666 | 0.6079 |
+| Nobleman of Crossout | 650 | 0.5933 |
+| Sangan | 650 | 0.5933 |
+| Swords of Revealing Light | 640 | 0.5841 |
+| Cyber Jar | 599 | 0.5467 |
+| Ceasefire | 574 | 0.5239 |
+| Morphing Jar | 568 | 0.5184 |
+| Premature Burial | 562 | 0.5130 |
+| Change of Heart | 522 | 0.4764 |
+| Confiscation | 522 | 0.4764 |
+| Dark Hole | 522 | 0.4764 |
+| Delinquent Duo | 522 | 0.4764 |
+| Jinzo | 522 | 0.4764 |
+| Mirror Force | 522 | 0.4764 |
+| Monster Reborn | 522 | 0.4764 |
+| Pot of Greed | 522 | 0.4764 |
+| Raigeki | 522 | 0.4764 |
+| Snatch Steal | 522 | 0.4764 |
+| The Forceful Sentry | 522 | 0.4764 |
+| Witch of the Black Forest | 522 | 0.4764 |
+| Gaia the Dragon Champion | 462 | 0.4217 |
+| Bickuribox | 413 | 0.3770 |
+| Skull Knight | 413 | 0.3770 |
+| Charubin the Fire Knight | 378 | 0.3450 |
+| Flame Ghost | 378 | 0.3450 |
+| Cyber Saurus | 353 | 0.3222 |
+| Flame Swordsman | 332 | 0.3030 |
+| Gravity Bind | 290 | 0.2647 |
+| Light of Intervention | 290 | 0.2647 |
+| Prohibition | 290 | 0.2647 |
+| Robbin' Goblin | 290 | 0.2647 |
+| Type Zero Magic Crusher | 290 | 0.2647 |
+| Kwagar Hercules | 279 | 0.2547 |
+| Metal Dragon | 279 | 0.2547 |
+| Deepsea Shark | 270 | 0.2464 |
+| Punished Eagle | 270 | 0.2464 |
+| Roaring Ocean Snake | 270 | 0.2464 |
+| Dragoness the Wicked Knight | 262 | 0.2391 |
+| Thousand Dragon | 262 | 0.2391 |
+| Musician King | 255 | 0.2327 |
+| Warrior of Tradition | 248 | 0.2264 |
+| Twin-Headed Thunder Dragon | 236 | 0.2154 |
+| Darkfire Dragon | 227 | 0.2072 |
+| Labyrinth Tank | 227 | 0.2072 |
+| B. Skull Dragon | 222 | 0.2026 |
+| Thousand-Eyes Restrict | 222 | 0.2026 |
+| Rush Recklessly | 171 | 0.1561 |
+| Limiter Removal | 127 | 0.1159 |
+| Solemn Wishes | 114 | 0.1041 |
+| Mystical Space Typhoon | 74 | 0.0675 |
+| Call Of The Haunted | 52 | 0.0475 |
+| Imperial Order | 52 | 0.0475 |
 
 ### Labyrinth of Nightmare
 
-- **Type:** TCG · **Format:** Android · **Cards in pool:** 15 · **Weight sum:** 44850
+- **Type:** TCG · **Format:** Android · **Cards in pool:** 86 · **Weight sum:** 542050
 
 | Card | Weight | Pull % |
 |---|---:|---:|
-| Fairy Box | 10000 | 22.2965 |
-| Hysteric Fairy | 10000 | 22.2965 |
-| Skull Lair | 10000 | 22.2965 |
-| Zombyra the Dark | 10000 | 22.2965 |
-| Gilasaurus | 2500 | 5.5741 |
-| Bazoo the Soul-Eater | 600 | 1.3378 |
-| Jar of Greed | 600 | 1.3378 |
-| Kycoo the Ghost Destroyer | 600 | 1.3378 |
-| Mage Power | 100 | 0.2230 |
-| Mask of Restrict | 100 | 0.2230 |
-| The Last Warrior from Another Planet | 100 | 0.2230 |
-| Torrential Tribute | 100 | 0.2230 |
-| United We Stand | 100 | 0.2230 |
-| Gemini Elf | 25 | 0.0557 |
-| Magic Cylinder | 25 | 0.0557 |
+| Amazoness Archer | 10000 | 1.8448 |
+| Aqua Spirit | 10000 | 1.8448 |
+| Bait Doll | 10000 | 1.8448 |
+| Blind Destruction | 10000 | 1.8448 |
+| Chosen One | 10000 | 1.8448 |
+| Collected Power | 10000 | 1.8448 |
+| Crimson Sentry | 10000 | 1.8448 |
+| Cure Mermaid | 10000 | 1.8448 |
+| Curse of the Masked Beast | 10000 | 1.8448 |
+| Cyclon Laser | 10000 | 1.8448 |
+| Dancing Fairy | 10000 | 1.8448 |
+| Deal of Phantom | 10000 | 1.8448 |
+| Dragonic Attack | 10000 | 1.8448 |
+| Dreamsprite | 10000 | 1.8448 |
+| Ekibyo Drakmord | 10000 | 1.8448 |
+| Fairy Box | 10000 | 1.8448 |
+| Fairy Guardian | 10000 | 1.8448 |
+| Fire Sorcerer | 10000 | 1.8448 |
+| Fusion Gate | 10000 | 1.8448 |
+| Garuda the Wind Spirit | 10000 | 1.8448 |
+| Grand Tiki Elder | 10000 | 1.8448 |
+| Graverobber's Retribution | 10000 | 1.8448 |
+| Humanoid Slime | 10000 | 1.8448 |
+| Humanoid Worm Drake | 10000 | 1.8448 |
+| Hysteric Fairy | 10000 | 1.8448 |
+| Jam Defender | 10000 | 1.8448 |
+| Lady Assailant of Flames | 10000 | 1.8448 |
+| Lady Panther | 10000 | 1.8448 |
+| Maryokutai | 10000 | 1.8448 |
+| Mask of Weakness | 10000 | 1.8448 |
+| Melchid the Four-Face Beast | 10000 | 1.8448 |
+| Miracle Dig | 10000 | 1.8448 |
+| Offerings to the Doomed | 10000 | 1.8448 |
+| Scroll of Bewitchment | 10000 | 1.8448 |
+| Skull Lair | 10000 | 1.8448 |
+| Soul of Purity and Light | 10000 | 1.8448 |
+| Spirit Elimination | 10000 | 1.8448 |
+| Spirit of Flames | 10000 | 1.8448 |
+| St. Joan | 10000 | 1.8448 |
+| Summoner of Illusions | 10000 | 1.8448 |
+| Supply | 10000 | 1.8448 |
+| The Dark Door | 10000 | 1.8448 |
+| The Emperor's Holiday | 10000 | 1.8448 |
+| The Forgiving Maiden | 10000 | 1.8448 |
+| The Rock Spirit | 10000 | 1.8448 |
+| The Unfriendly Amazon | 10000 | 1.8448 |
+| Tornado Wall | 10000 | 1.8448 |
+| Vengeful Bog Spirit | 10000 | 1.8448 |
+| Worm Drake | 10000 | 1.8448 |
+| Zombyra the Dark | 10000 | 1.8448 |
+| Destruction Punch | 2500 | 0.4612 |
+| Gilasaurus | 2500 | 0.4612 |
+| Infinite Cards | 2500 | 0.4612 |
+| Jam Breeding Machine | 2500 | 0.4612 |
+| Jowgen the Spiritualist | 2500 | 0.4612 |
+| Mask of Brutality | 2500 | 0.4612 |
+| Nuvia the Wicked | 2500 | 0.4612 |
+| Spirit Message "A" | 2500 | 0.4612 |
+| Spirit Message "I" | 2500 | 0.4612 |
+| Spirit Message "L" | 2500 | 0.4612 |
+| Spirit Message "N" | 2500 | 0.4612 |
+| Spirit of the Breeze | 2500 | 0.4612 |
+| Spiritualism | 2500 | 0.4612 |
+| Tornado Bird | 2500 | 0.4612 |
+| Bazoo the Soul-Eater | 600 | 0.1107 |
+| Dark Spirit of the Silent | 600 | 0.1107 |
+| De-Fusion | 600 | 0.1107 |
+| Fire Princess | 600 | 0.1107 |
+| Jar of Greed | 600 | 0.1107 |
+| Kycoo the Ghost Destroyer | 600 | 0.1107 |
+| Mask of Dispel | 600 | 0.1107 |
+| Mask of the Accursed | 600 | 0.1107 |
+| Revival Jam | 600 | 0.1107 |
+| Riryoku Field | 600 | 0.1107 |
+| Card of Safe Return | 100 | 0.0184 |
+| Dark Necrofear | 100 | 0.0184 |
+| Destiny Board | 100 | 0.0184 |
+| Mage Power | 100 | 0.0184 |
+| Mask of Restrict | 100 | 0.0184 |
+| Royal Command | 100 | 0.0184 |
+| The Last Warrior from Another Planet | 100 | 0.0184 |
+| The Masked Beast | 100 | 0.0184 |
+| Torrential Tribute | 100 | 0.0184 |
+| United We Stand | 100 | 0.0184 |
+| Gemini Elf | 25 | 0.0046 |
+| Magic Cylinder | 25 | 0.0046 |
 
 ### Android
 
-- **Type:** Usage · **Format:** Android · **Cards in pool:** 102 · **Weight sum:** 107089
+- **Type:** Usage · **Format:** Android · **Cards in pool:** 107 · **Weight sum:** 113607
 
 | Card | Weight | Pull % |
 |---|---:|---:|
-| Axe of Despair | 2791 | 2.6062 |
-| Castle of Dark Illusions | 2791 | 2.6062 |
-| Dark Elf | 2791 | 2.6062 |
-| Fake Trap | 2791 | 2.6062 |
-| Firegrass | 2791 | 2.6062 |
-| Giant Germ | 2791 | 2.6062 |
-| Giant Soldier of Stone | 2791 | 2.6062 |
-| Giant Trunade | 2791 | 2.6062 |
-| La Jinn the Mystical Genie of the Lamp | 2791 | 2.6062 |
-| Megamorph | 2791 | 2.6062 |
-| Soul Release | 2791 | 2.6062 |
-| Summoned Skull | 2791 | 2.6062 |
-| The Fiend Megacyber | 2791 | 2.6062 |
-| Thunder Dragon | 2791 | 2.6062 |
-| Banisher of the Light | 2144 | 2.0021 |
-| Kuriboh | 2144 | 2.0021 |
-| Nobleman of Extermination | 2144 | 2.0021 |
-| Goblin Attack Force | 1841 | 1.7191 |
-| Jirai Gumo | 1841 | 1.7191 |
-| Magic Drain | 1841 | 1.7191 |
-| Nimble Momonga | 1841 | 1.7191 |
-| Waboku | 1841 | 1.7191 |
-| White Magical Hat | 1841 | 1.7191 |
-| Man-Eater Bug | 1523 | 1.4222 |
-| Mask of Darkness | 1523 | 1.4222 |
-| Seven Tools of the Bandit | 1523 | 1.4222 |
-| Mage Power | 1424 | 1.3297 |
-| Upstart Goblin | 1424 | 1.3297 |
-| Zombyra the Dark | 1424 | 1.3297 |
-| Exchange | 1346 | 1.2569 |
-| United We Stand | 1229 | 1.1476 |
-| Masked Sorcerer | 1144 | 1.0683 |
-| Penguin Knight | 1144 | 1.0683 |
-| 4-Starred Ladybug of Doom | 1109 | 1.0356 |
-| Time Seal | 1049 | 0.9796 |
-| Card Destruction | 1024 | 0.9562 |
-| Solemn Judgment | 980 | 0.9151 |
-| Cannon Soldier | 943 | 0.8806 |
-| Dust Tornado | 805 | 0.7517 |
-| Magic Cylinder | 805 | 0.7517 |
-| Magician of Faith | 780 | 0.7284 |
-| Swords of Revealing Light | 780 | 0.7284 |
-| Trap Hole | 780 | 0.7284 |
-| Jar of Greed | 764 | 0.7134 |
-| Fissure | 757 | 0.7069 |
-| Mystic Tomato | 757 | 0.7069 |
-| Bazoo the Soul-Eater | 750 | 0.7004 |
-| Gemini Elf | 750 | 0.7004 |
-| Torrential Tribute | 750 | 0.7004 |
-| Kycoo the Ghost Destroyer | 743 | 0.6938 |
-| Ceasefire | 737 | 0.6882 |
-| Flame Ghost | 682 | 0.6369 |
-| Flower Wolf | 682 | 0.6369 |
-| Giltia the D. Knight | 682 | 0.6369 |
-| Karbonala Warrior | 682 | 0.6369 |
-| Punished Eagle | 682 | 0.6369 |
-| Cyber Jar | 662 | 0.6182 |
-| Heavy Storm | 650 | 0.6070 |
-| Nobleman of Crossout | 650 | 0.6070 |
-| Premature Burial | 650 | 0.6070 |
-| Morphing Jar | 629 | 0.5874 |
-| Painful Choice | 530 | 0.4949 |
-| Snatch Steal | 526 | 0.4912 |
-| Change of Heart | 522 | 0.4874 |
-| Confiscation | 522 | 0.4874 |
-| Dark Hole | 522 | 0.4874 |
-| Delinquent Duo | 522 | 0.4874 |
-| Jinzo | 522 | 0.4874 |
-| Mirror Force | 522 | 0.4874 |
-| Monster Reborn | 522 | 0.4874 |
-| Pot of Greed | 522 | 0.4874 |
-| Raigeki | 522 | 0.4874 |
-| Sangan | 522 | 0.4874 |
-| The Forceful Sentry | 522 | 0.4874 |
-| Witch of the Black Forest | 522 | 0.4874 |
-| Kwagar Hercules | 520 | 0.4856 |
-| Cyber Saurus | 444 | 0.4146 |
-| Kaminari Attack | 444 | 0.4146 |
-| Labyrinth Tank | 444 | 0.4146 |
-| Skull Knight | 444 | 0.4146 |
-| Charubin the Fire Knight | 397 | 0.3707 |
-| Metal Dragon | 397 | 0.3707 |
-| Thousand Dragon | 397 | 0.3707 |
-| Bickuribox | 364 | 0.3399 |
-| Musician King | 339 | 0.3166 |
-| Fusionist | 320 | 0.2988 |
-| Warrior of Tradition | 320 | 0.2988 |
-| Dragoness the Wicked Knight | 304 | 0.2839 |
-| Twin-Headed Thunder Dragon | 304 | 0.2839 |
-| Darkfire Dragon | 290 | 0.2708 |
-| Mirror Wall | 279 | 0.2605 |
-| Flame Swordsman | 260 | 0.2428 |
-| Gaia the Dragon Champion | 252 | 0.2353 |
-| Thousand-Eyes Restrict | 245 | 0.2288 |
-| B. Skull Dragon | 239 | 0.2232 |
-| The Last Warrior from Another Planet | 223 | 0.2082 |
-| Fairy Box | 184 | 0.1718 |
-| Solemn Wishes | 134 | 0.1251 |
-| Skull Lair | 77 | 0.0719 |
-| Mystical Space Typhoon | 74 | 0.0691 |
-| Call Of The Haunted | 52 | 0.0486 |
-| Imperial Order | 52 | 0.0486 |
+| Axe of Despair | 2791 | 2.4567 |
+| Castle of Dark Illusions | 2791 | 2.4567 |
+| Dark Elf | 2791 | 2.4567 |
+| Dark Necrofear | 2791 | 2.4567 |
+| Fake Trap | 2791 | 2.4567 |
+| Firegrass | 2791 | 2.4567 |
+| Giant Germ | 2791 | 2.4567 |
+| Giant Soldier of Stone | 2791 | 2.4567 |
+| Giant Trunade | 2791 | 2.4567 |
+| Hayabusa Knight | 2791 | 2.4567 |
+| La Jinn the Mystical Genie of the Lamp | 2791 | 2.4567 |
+| Megamorph | 2791 | 2.4567 |
+| Soul Release | 2791 | 2.4567 |
+| Summoned Skull | 2791 | 2.4567 |
+| The Fiend Megacyber | 2791 | 2.4567 |
+| Thunder Dragon | 2791 | 2.4567 |
+| Banisher of the Light | 2144 | 1.8872 |
+| Kuriboh | 2144 | 1.8872 |
+| Nobleman of Extermination | 2144 | 1.8872 |
+| Goblin Attack Force | 1841 | 1.6205 |
+| Jirai Gumo | 1841 | 1.6205 |
+| Magic Drain | 1841 | 1.6205 |
+| Nimble Momonga | 1841 | 1.6205 |
+| Waboku | 1841 | 1.6205 |
+| White Magical Hat | 1841 | 1.6205 |
+| Man-Eater Bug | 1523 | 1.3406 |
+| Mask of Darkness | 1523 | 1.3406 |
+| Seven Tools of the Bandit | 1523 | 1.3406 |
+| Mage Power | 1424 | 1.2534 |
+| Upstart Goblin | 1424 | 1.2534 |
+| Zombyra the Dark | 1424 | 1.2534 |
+| Exchange | 1346 | 1.1848 |
+| United We Stand | 1229 | 1.0818 |
+| Masked Sorcerer | 1144 | 1.0070 |
+| Penguin Knight | 1144 | 1.0070 |
+| 4-Starred Ladybug of Doom | 1109 | 0.9762 |
+| Time Seal | 1049 | 0.9234 |
+| Card Destruction | 1024 | 0.9014 |
+| Solemn Judgment | 980 | 0.8626 |
+| Cannon Soldier | 943 | 0.8301 |
+| Dust Tornado | 805 | 0.7086 |
+| Magic Cylinder | 805 | 0.7086 |
+| Magician of Faith | 780 | 0.6866 |
+| Swords of Revealing Light | 780 | 0.6866 |
+| Trap Hole | 780 | 0.6866 |
+| Jar of Greed | 764 | 0.6725 |
+| Fissure | 757 | 0.6663 |
+| Mystic Tomato | 757 | 0.6663 |
+| Bazoo the Soul-Eater | 750 | 0.6602 |
+| Gemini Elf | 750 | 0.6602 |
+| Torrential Tribute | 750 | 0.6602 |
+| Kycoo the Ghost Destroyer | 743 | 0.6540 |
+| Ceasefire | 737 | 0.6487 |
+| Flame Ghost | 682 | 0.6003 |
+| Flower Wolf | 682 | 0.6003 |
+| Giltia the D. Knight | 682 | 0.6003 |
+| Karbonala Warrior | 682 | 0.6003 |
+| Punished Eagle | 682 | 0.6003 |
+| Cyber Jar | 662 | 0.5827 |
+| Heavy Storm | 650 | 0.5721 |
+| Nobleman of Crossout | 650 | 0.5721 |
+| Premature Burial | 650 | 0.5721 |
+| Morphing Jar | 629 | 0.5537 |
+| Painful Choice | 530 | 0.4665 |
+| Snatch Steal | 526 | 0.4630 |
+| Change of Heart | 522 | 0.4595 |
+| Confiscation | 522 | 0.4595 |
+| Dark Hole | 522 | 0.4595 |
+| Delinquent Duo | 522 | 0.4595 |
+| Jinzo | 522 | 0.4595 |
+| Mirror Force | 522 | 0.4595 |
+| Monster Reborn | 522 | 0.4595 |
+| Pot of Greed | 522 | 0.4595 |
+| Raigeki | 522 | 0.4595 |
+| Sangan | 522 | 0.4595 |
+| The Forceful Sentry | 522 | 0.4595 |
+| Witch of the Black Forest | 522 | 0.4595 |
+| Kwagar Hercules | 520 | 0.4577 |
+| Cyber Saurus | 444 | 0.3908 |
+| Kaminari Attack | 444 | 0.3908 |
+| Labyrinth Tank | 444 | 0.3908 |
+| Skull Knight | 444 | 0.3908 |
+| Charubin the Fire Knight | 397 | 0.3495 |
+| Humanoid Worm Drake | 397 | 0.3495 |
+| Metal Dragon | 397 | 0.3495 |
+| Thousand Dragon | 397 | 0.3495 |
+| Bickuribox | 364 | 0.3204 |
+| Musician King | 339 | 0.2984 |
+| Fusionist | 320 | 0.2817 |
+| Warrior of Tradition | 320 | 0.2817 |
+| Dragoness the Wicked Knight | 304 | 0.2676 |
+| Twin-Headed Thunder Dragon | 304 | 0.2676 |
+| Darkfire Dragon | 290 | 0.2553 |
+| Mirror Wall | 279 | 0.2456 |
+| Royal Command | 279 | 0.2456 |
+| Flame Swordsman | 260 | 0.2289 |
+| St. Joan | 260 | 0.2289 |
+| Gaia the Dragon Champion | 252 | 0.2218 |
+| Thousand-Eyes Restrict | 245 | 0.2157 |
+| B. Skull Dragon | 239 | 0.2104 |
+| The Last Warrior from Another Planet | 223 | 0.1963 |
+| Fairy Box | 184 | 0.1620 |
+| Solemn Wishes | 134 | 0.1180 |
+| Skull Lair | 77 | 0.0678 |
+| Mystical Space Typhoon | 74 | 0.0651 |
+| Call Of The Haunted | 52 | 0.0458 |
+| Imperial Order | 52 | 0.0458 |
 
 ### Starter Deck- Joey
 
@@ -1246,115 +1349,120 @@ Forbidden cards (limit 0) are omitted. Lower usage ⇒ higher weight ⇒ more co
 
 ### Joey-Pegasus
 
-- **Type:** Usage · **Format:** Joey-Pegasus · **Cards in pool:** 105 · **Weight sum:** 93826
+- **Type:** Usage · **Format:** Joey-Pegasus · **Cards in pool:** 110 · **Weight sum:** 99032
 
 | Card | Weight | Pull % |
 |---|---:|---:|
-| Armed Ninja | 2144 | 2.2851 |
-| Axe of Despair | 2144 | 2.2851 |
-| Cold Wave | 2144 | 2.2851 |
-| Giant Germ | 2144 | 2.2851 |
-| Giant Rat | 2144 | 2.2851 |
-| Giant Trunade | 2144 | 2.2851 |
-| Guardian Sphinx | 2144 | 2.2851 |
-| Kotodama | 2144 | 2.2851 |
-| Last Will | 2144 | 2.2851 |
-| Magic Drain | 2144 | 2.2851 |
-| Penguin Knight | 2144 | 2.2851 |
-| Reinforcement of the Army | 2144 | 2.2851 |
-| Summoned Skull | 2144 | 2.2851 |
-| White Magical Hat | 2144 | 2.2851 |
-| Backup Soldier | 1841 | 1.9621 |
-| Exchange | 1654 | 1.7628 |
-| Kuriboh | 1654 | 1.7628 |
-| Masked Sorcerer | 1654 | 1.7628 |
-| Nimble Momonga | 1654 | 1.7628 |
-| Seven Tools of the Bandit | 1654 | 1.7628 |
-| Thunder Dragon | 1654 | 1.7628 |
-| Card Destruction | 1424 | 1.5177 |
-| Exodia the Forbidden One | 1424 | 1.5177 |
-| Left Arm of the Forbidden One | 1424 | 1.5177 |
-| Left Leg of the Forbidden One | 1424 | 1.5177 |
-| Right Arm of the Forbidden One | 1424 | 1.5177 |
-| Right Leg of the Forbidden One | 1424 | 1.5177 |
-| Swords of Revealing Light | 1424 | 1.5177 |
-| Time Seal | 1183 | 1.2608 |
-| Man-Eater Bug | 1109 | 1.1820 |
-| United We Stand | 1109 | 1.1820 |
-| Waboku | 1001 | 1.0669 |
-| Cannon Soldier | 961 | 1.0242 |
-| Mage Power | 961 | 1.0242 |
-| Trap Hole | 961 | 1.0242 |
-| Upstart Goblin | 961 | 1.0242 |
-| Dust Tornado | 926 | 0.9869 |
-| Solemn Judgment | 926 | 0.9869 |
-| Fissure | 824 | 0.8782 |
-| Ceasefire | 805 | 0.8580 |
-| Jar of Greed | 805 | 0.8580 |
-| Magic Cylinder | 805 | 0.8580 |
-| Cyber Jar | 757 | 0.8068 |
-| Torrential Tribute | 757 | 0.8068 |
-| Bazoo the Soul-Eater | 743 | 0.7919 |
-| Gemini Elf | 743 | 0.7919 |
-| Kycoo the Ghost Destroyer | 743 | 0.7919 |
-| Magician of Faith | 743 | 0.7919 |
-| Mystic Tomato | 743 | 0.7919 |
-| Morphing Jar | 688 | 0.7333 |
-| Nobleman of Crossout | 662 | 0.7056 |
-| Graceful Charity | 650 | 0.6928 |
-| Heavy Storm | 562 | 0.5990 |
-| Painful Choice | 530 | 0.5649 |
-| Premature Burial | 530 | 0.5649 |
-| Change of Heart | 522 | 0.5563 |
-| Confiscation | 522 | 0.5563 |
-| Dark Hole | 522 | 0.5563 |
-| Delinquent Duo | 522 | 0.5563 |
-| Harpie's Feather Duster | 522 | 0.5563 |
-| Jinzo | 522 | 0.5563 |
-| Mirror Force | 522 | 0.5563 |
-| Monster Reborn | 522 | 0.5563 |
-| Pot of Greed | 522 | 0.5563 |
-| Raigeki | 522 | 0.5563 |
-| Sangan | 522 | 0.5563 |
-| Sinister Serpent | 522 | 0.5563 |
-| Snatch Steal | 522 | 0.5563 |
-| The Forceful Sentry | 522 | 0.5563 |
-| Witch of the Black Forest | 522 | 0.5563 |
-| Bickuribox | 520 | 0.5542 |
-| Charubin the Fire Knight | 520 | 0.5542 |
-| Dark Balter the Terrible | 520 | 0.5542 |
-| Empress Judge | 520 | 0.5542 |
-| Fiend Skull Dragon | 520 | 0.5542 |
-| Flame Ghost | 520 | 0.5542 |
-| Flower Wolf | 520 | 0.5542 |
-| Giltia the D. Knight | 520 | 0.5542 |
-| Kaminari Attack | 520 | 0.5542 |
-| Roaring Ocean Snake | 520 | 0.5542 |
-| Ryu Senshi | 520 | 0.5542 |
-| Twin-Headed Thunder Dragon | 520 | 0.5542 |
-| Warrior of Tradition | 520 | 0.5542 |
-| Cyber Saurus | 397 | 0.4231 |
-| Dragoness the Wicked Knight | 397 | 0.4231 |
-| Metal Dragon | 397 | 0.4231 |
-| Musician King | 397 | 0.4231 |
-| Skull Knight | 397 | 0.4231 |
-| Darkfire Dragon | 339 | 0.3613 |
-| Fusionist | 339 | 0.3613 |
-| Labyrinth Tank | 339 | 0.3613 |
-| Thousand-Eyes Restrict | 279 | 0.2974 |
-| Flame Swordsman | 245 | 0.2611 |
-| Gaia the Dragon Champion | 245 | 0.2611 |
-| B. Skull Dragon | 223 | 0.2377 |
-| Rush Recklessly | 214 | 0.2281 |
-| Solemn Wishes | 214 | 0.2281 |
-| The Last Warrior from Another Planet | 206 | 0.2196 |
-| Mirror Wall | 165 | 0.1759 |
-| Limiter Removal | 142 | 0.1513 |
-| Scapegoat | 104 | 0.1108 |
-| Skull Lair | 82 | 0.0874 |
-| Mystical Space Typhoon | 74 | 0.0789 |
-| Call Of The Haunted | 52 | 0.0554 |
-| Imperial Order | 52 | 0.0554 |
+| Armed Ninja | 2144 | 2.1650 |
+| Axe of Despair | 2144 | 2.1650 |
+| Cold Wave | 2144 | 2.1650 |
+| Giant Germ | 2144 | 2.1650 |
+| Giant Rat | 2144 | 2.1650 |
+| Giant Trunade | 2144 | 2.1650 |
+| Guardian Sphinx | 2144 | 2.1650 |
+| Hayabusa Knight | 2144 | 2.1650 |
+| Jowgen the Spiritualist | 2144 | 2.1650 |
+| Kotodama | 2144 | 2.1650 |
+| Last Will | 2144 | 2.1650 |
+| Magic Drain | 2144 | 2.1650 |
+| Penguin Knight | 2144 | 2.1650 |
+| Reinforcement of the Army | 2144 | 2.1650 |
+| Summoned Skull | 2144 | 2.1650 |
+| White Magical Hat | 2144 | 2.1650 |
+| Backup Soldier | 1841 | 1.8590 |
+| Exchange | 1654 | 1.6702 |
+| Kuriboh | 1654 | 1.6702 |
+| Masked Sorcerer | 1654 | 1.6702 |
+| Nimble Momonga | 1654 | 1.6702 |
+| Seven Tools of the Bandit | 1654 | 1.6702 |
+| Thunder Dragon | 1654 | 1.6702 |
+| Card Destruction | 1424 | 1.4379 |
+| Exodia the Forbidden One | 1424 | 1.4379 |
+| Left Arm of the Forbidden One | 1424 | 1.4379 |
+| Left Leg of the Forbidden One | 1424 | 1.4379 |
+| Right Arm of the Forbidden One | 1424 | 1.4379 |
+| Right Leg of the Forbidden One | 1424 | 1.4379 |
+| Swords of Revealing Light | 1424 | 1.4379 |
+| Time Seal | 1183 | 1.1946 |
+| Man-Eater Bug | 1109 | 1.1198 |
+| United We Stand | 1109 | 1.1198 |
+| Waboku | 1001 | 1.0108 |
+| Cannon Soldier | 961 | 0.9704 |
+| Mage Power | 961 | 0.9704 |
+| Trap Hole | 961 | 0.9704 |
+| Upstart Goblin | 961 | 0.9704 |
+| Dust Tornado | 926 | 0.9351 |
+| Solemn Judgment | 926 | 0.9351 |
+| Fissure | 824 | 0.8321 |
+| Ceasefire | 805 | 0.8129 |
+| Jar of Greed | 805 | 0.8129 |
+| Magic Cylinder | 805 | 0.8129 |
+| Cyber Jar | 757 | 0.7644 |
+| Torrential Tribute | 757 | 0.7644 |
+| Bazoo the Soul-Eater | 743 | 0.7503 |
+| Gemini Elf | 743 | 0.7503 |
+| Kycoo the Ghost Destroyer | 743 | 0.7503 |
+| Magician of Faith | 743 | 0.7503 |
+| Mystic Tomato | 743 | 0.7503 |
+| Morphing Jar | 688 | 0.6947 |
+| Nobleman of Crossout | 662 | 0.6685 |
+| Graceful Charity | 650 | 0.6564 |
+| Heavy Storm | 562 | 0.5675 |
+| Painful Choice | 530 | 0.5352 |
+| Premature Burial | 530 | 0.5352 |
+| Change of Heart | 522 | 0.5271 |
+| Confiscation | 522 | 0.5271 |
+| Dark Hole | 522 | 0.5271 |
+| Delinquent Duo | 522 | 0.5271 |
+| Harpie's Feather Duster | 522 | 0.5271 |
+| Jinzo | 522 | 0.5271 |
+| Mirror Force | 522 | 0.5271 |
+| Monster Reborn | 522 | 0.5271 |
+| Pot of Greed | 522 | 0.5271 |
+| Raigeki | 522 | 0.5271 |
+| Sangan | 522 | 0.5271 |
+| Sinister Serpent | 522 | 0.5271 |
+| Snatch Steal | 522 | 0.5271 |
+| The Forceful Sentry | 522 | 0.5271 |
+| Witch of the Black Forest | 522 | 0.5271 |
+| Bickuribox | 520 | 0.5251 |
+| Charubin the Fire Knight | 520 | 0.5251 |
+| Dark Balter the Terrible | 520 | 0.5251 |
+| Empress Judge | 520 | 0.5251 |
+| Fiend Skull Dragon | 520 | 0.5251 |
+| Flame Ghost | 520 | 0.5251 |
+| Flower Wolf | 520 | 0.5251 |
+| Giltia the D. Knight | 520 | 0.5251 |
+| Humanoid Worm Drake | 520 | 0.5251 |
+| Kaminari Attack | 520 | 0.5251 |
+| Roaring Ocean Snake | 520 | 0.5251 |
+| Ryu Senshi | 520 | 0.5251 |
+| Twin-Headed Thunder Dragon | 520 | 0.5251 |
+| Warrior of Tradition | 520 | 0.5251 |
+| Cyber Saurus | 397 | 0.4009 |
+| Dragoness the Wicked Knight | 397 | 0.4009 |
+| Metal Dragon | 397 | 0.4009 |
+| Musician King | 397 | 0.4009 |
+| Skull Knight | 397 | 0.4009 |
+| Darkfire Dragon | 339 | 0.3423 |
+| Fusionist | 339 | 0.3423 |
+| Labyrinth Tank | 339 | 0.3423 |
+| Thousand-Eyes Restrict | 279 | 0.2817 |
+| Flame Swordsman | 245 | 0.2474 |
+| Gaia the Dragon Champion | 245 | 0.2474 |
+| St. Joan | 233 | 0.2353 |
+| B. Skull Dragon | 223 | 0.2252 |
+| Rush Recklessly | 214 | 0.2161 |
+| Solemn Wishes | 214 | 0.2161 |
+| The Last Warrior from Another Planet | 206 | 0.2080 |
+| Mirror Wall | 165 | 0.1666 |
+| Offerings to the Doomed | 165 | 0.1666 |
+| Limiter Removal | 142 | 0.1434 |
+| Scapegoat | 104 | 0.1050 |
+| Skull Lair | 82 | 0.0828 |
+| Mystical Space Typhoon | 74 | 0.0747 |
+| Call Of The Haunted | 52 | 0.0525 |
+| Imperial Order | 52 | 0.0525 |
 
 ### Legacy of Darkness
 
@@ -1384,142 +1492,153 @@ Forbidden cards (limit 0) are omitted. Lower usage ⇒ higher weight ⇒ more co
 
 ### Fiber
 
-- **Type:** Usage · **Format:** Fiber · **Cards in pool:** 132 · **Weight sum:** 201621
+- **Type:** Usage · **Format:** Fiber · **Cards in pool:** 143 · **Weight sum:** 233899
 
 | Card | Weight | Pull % |
 |---|---:|---:|
-| Black Illusion Ritual | 5162 | 2.5602 |
-| Bottomless Trap Hole | 5162 | 2.5602 |
-| Don Zaloog | 5162 | 2.5602 |
-| Flash Assailant | 5162 | 2.5602 |
-| Flying Kamakiri #1 | 5162 | 2.5602 |
-| Jirai Gumo | 5162 | 2.5602 |
-| Man-Eater Bug | 5162 | 2.5602 |
-| Megamorph | 5162 | 2.5602 |
-| Metalmorph | 5162 | 2.5602 |
-| Nobleman of Extermination | 5162 | 2.5602 |
-| Relinquished | 5162 | 2.5602 |
-| Senju of the Thousand Hands | 5162 | 2.5602 |
-| Sonic Bird | 5162 | 2.5602 |
-| Summoned Skull | 5162 | 2.5602 |
-| Giant Trunade | 3941 | 1.9547 |
-| Graverobber | 3941 | 1.9547 |
-| Kuriboh | 3941 | 1.9547 |
-| Mask of Darkness | 3941 | 1.9547 |
-| Princess of Tsurugi | 3941 | 1.9547 |
-| White Magical Hat | 3941 | 1.9547 |
-| Acid Trap Hole | 3369 | 1.6710 |
-| Last Will | 3369 | 1.6710 |
-| Nimble Momonga | 3369 | 1.6710 |
-| Soul Exchange | 3369 | 1.6710 |
-| Magic Drain | 3016 | 1.4959 |
-| Exchange | 2768 | 1.3729 |
-| Blast with Chain | 2314 | 1.1477 |
-| Gearfried the Iron Knight | 2314 | 1.1477 |
-| Tribute to The Doomed | 2314 | 1.1477 |
-| Electric Snake | 2213 | 1.0976 |
-| The Fiend Megacyber | 2213 | 1.0976 |
-| Waboku | 2213 | 1.0976 |
-| Giant Germ | 2127 | 1.0549 |
-| Magic Jammer | 1927 | 0.9558 |
-| Seven Tools of the Bandit | 1874 | 0.9295 |
-| Swords of Revealing Light | 1827 | 0.9062 |
-| Thunder Dragon | 1827 | 0.9062 |
-| Zombyra the Dark | 1827 | 0.9062 |
-| Reinforcement of the Army | 1763 | 0.8744 |
-| Goblin Attack Force | 1743 | 0.8645 |
-| 4-Starred Ladybug of Doom | 1612 | 0.7995 |
-| Solemn Judgment | 1612 | 0.7995 |
-| Airknight Parshath | 1469 | 0.7286 |
-| Dark Ruler Ha Des | 1431 | 0.7097 |
-| Mage Power | 1365 | 0.6770 |
-| Giant Rat | 1284 | 0.6368 |
-| Giltia the D. Knight | 1278 | 0.6339 |
-| Time Seal | 1273 | 0.6314 |
-| Cannon Soldier | 1220 | 0.6051 |
-| Spear Dragon | 1201 | 0.5957 |
-| United We Stand | 1192 | 0.5912 |
-| Upstart Goblin | 1142 | 0.5664 |
-| Card Destruction | 1064 | 0.5277 |
-| Punished Eagle | 971 | 0.4816 |
-| Jar of Greed | 904 | 0.4484 |
-| Fissure | 839 | 0.4161 |
-| Asura Priest | 831 | 0.4122 |
-| Ceasefire | 829 | 0.4112 |
-| Trap Hole | 829 | 0.4112 |
-| Empress Judge | 828 | 0.4107 |
-| Flower Wolf | 828 | 0.4107 |
-| Kwagar Hercules | 828 | 0.4107 |
-| Creature Swap | 826 | 0.4097 |
-| Dust Tornado | 822 | 0.4077 |
-| Gemini Elf | 792 | 0.3928 |
-| Magician of Faith | 792 | 0.3928 |
-| Kycoo the Ghost Destroyer | 784 | 0.3888 |
-| Bazoo the Soul-Eater | 779 | 0.3864 |
-| Mystic Tomato | 762 | 0.3779 |
-| Torrential Tribute | 743 | 0.3685 |
-| Magic Cylinder | 683 | 0.3388 |
-| Cyber Jar | 672 | 0.3333 |
-| Morphing Jar | 669 | 0.3318 |
-| Nobleman of Crossout | 663 | 0.3288 |
-| Graceful Charity | 650 | 0.3224 |
-| Metal Dragon | 630 | 0.3125 |
-| Premature Burial | 586 | 0.2906 |
-| Heavy Storm | 571 | 0.2832 |
-| Charubin the Fire Knight | 563 | 0.2792 |
-| Cyber Saurus | 563 | 0.2792 |
-| Warrior of Tradition | 563 | 0.2792 |
-| Yata-Garasu | 543 | 0.2693 |
-| Bickuribox | 537 | 0.2663 |
-| Skull Knight | 537 | 0.2663 |
-| Painful Choice | 534 | 0.2649 |
-| Jinzo | 529 | 0.2624 |
-| Sinister Serpent | 529 | 0.2624 |
-| Confiscation | 526 | 0.2609 |
-| Delinquent Duo | 525 | 0.2604 |
-| Injection Fairy Lily | 525 | 0.2604 |
-| Change of Heart | 523 | 0.2594 |
-| Exiled Force | 523 | 0.2594 |
-| Fiber Jar | 523 | 0.2594 |
-| Harpie's Feather Duster | 523 | 0.2594 |
-| Monster Reborn | 523 | 0.2594 |
-| Snatch Steal | 523 | 0.2594 |
-| Dark Hole | 522 | 0.2589 |
-| Mirror Force | 522 | 0.2589 |
-| Pot of Greed | 522 | 0.2589 |
-| Raigeki | 522 | 0.2589 |
-| Sangan | 522 | 0.2589 |
-| The Forceful Sentry | 522 | 0.2589 |
-| Witch of the Black Forest | 522 | 0.2589 |
-| Graceful Dice | 516 | 0.2559 |
-| Gravity Bind | 516 | 0.2559 |
-| Mirror Wall | 516 | 0.2559 |
-| Rush Recklessly | 516 | 0.2559 |
-| Flame Swordsman | 497 | 0.2465 |
-| Flame Ghost | 480 | 0.2381 |
-| Fusionist | 410 | 0.2034 |
-| Thousand Dragon | 386 | 0.1914 |
-| Gaia the Dragon Champion | 356 | 0.1766 |
-| Roaring Ocean Snake | 356 | 0.1766 |
-| Solemn Wishes | 336 | 0.1666 |
-| Musician King | 321 | 0.1592 |
-| Labyrinth Tank | 310 | 0.1538 |
-| Darkfire Dragon | 293 | 0.1453 |
-| Fiend Skull Dragon | 256 | 0.1270 |
-| Dark Balter the Terrible | 250 | 0.1240 |
-| Dragoness the Wicked Knight | 250 | 0.1240 |
-| B. Skull Dragon | 249 | 0.1235 |
-| Ryu Senshi | 234 | 0.1161 |
-| Twin-Headed Thunder Dragon | 234 | 0.1161 |
-| Chain Energy | 221 | 0.1096 |
-| The Last Warrior from Another Planet | 210 | 0.1042 |
-| Thousand-Eyes Restrict | 207 | 0.1027 |
-| Limiter Removal | 141 | 0.0699 |
-| Skull Lair | 110 | 0.0546 |
-| Scapegoat | 82 | 0.0407 |
-| Mystical Space Typhoon | 74 | 0.0367 |
-| Call Of The Haunted | 52 | 0.0258 |
-| Imperial Order | 52 | 0.0258 |
+| Black Illusion Ritual | 5162 | 2.2069 |
+| Bottomless Trap Hole | 5162 | 2.2069 |
+| Don Zaloog | 5162 | 2.2069 |
+| Ekibyo Drakmord | 5162 | 2.2069 |
+| Flash Assailant | 5162 | 2.2069 |
+| Flying Kamakiri #1 | 5162 | 2.2069 |
+| Jirai Gumo | 5162 | 2.2069 |
+| Man-Eater Bug | 5162 | 2.2069 |
+| Megamorph | 5162 | 2.2069 |
+| Metalmorph | 5162 | 2.2069 |
+| Nobleman of Extermination | 5162 | 2.2069 |
+| Relinquished | 5162 | 2.2069 |
+| Senju of the Thousand Hands | 5162 | 2.2069 |
+| Sonic Bird | 5162 | 2.2069 |
+| Summoned Skull | 5162 | 2.2069 |
+| Cure Mermaid | 3941 | 1.6849 |
+| Dark Necrofear | 3941 | 1.6849 |
+| Giant Trunade | 3941 | 1.6849 |
+| Graverobber | 3941 | 1.6849 |
+| Jowgen the Spiritualist | 3941 | 1.6849 |
+| Kuriboh | 3941 | 1.6849 |
+| Mad Sword Beast | 3941 | 1.6849 |
+| Mask of Darkness | 3941 | 1.6849 |
+| Princess of Tsurugi | 3941 | 1.6849 |
+| The Rock Spirit | 3941 | 1.6849 |
+| White Magical Hat | 3941 | 1.6849 |
+| Acid Trap Hole | 3369 | 1.4404 |
+| Hayabusa Knight | 3369 | 1.4404 |
+| Last Will | 3369 | 1.4404 |
+| Nimble Momonga | 3369 | 1.4404 |
+| Soul Exchange | 3369 | 1.4404 |
+| Magic Drain | 3016 | 1.2894 |
+| Amazoness Archer | 2768 | 1.1834 |
+| Exchange | 2768 | 1.1834 |
+| Blast with Chain | 2314 | 0.9893 |
+| Gearfried the Iron Knight | 2314 | 0.9893 |
+| Tribute to The Doomed | 2314 | 0.9893 |
+| Electric Snake | 2213 | 0.9461 |
+| The Fiend Megacyber | 2213 | 0.9461 |
+| Waboku | 2213 | 0.9461 |
+| Giant Germ | 2127 | 0.9094 |
+| Magic Jammer | 1927 | 0.8239 |
+| Seven Tools of the Bandit | 1874 | 0.8012 |
+| Swords of Revealing Light | 1827 | 0.7811 |
+| Thunder Dragon | 1827 | 0.7811 |
+| Zombyra the Dark | 1827 | 0.7811 |
+| Reinforcement of the Army | 1763 | 0.7537 |
+| Goblin Attack Force | 1743 | 0.7452 |
+| 4-Starred Ladybug of Doom | 1612 | 0.6892 |
+| Solemn Judgment | 1612 | 0.6892 |
+| Airknight Parshath | 1469 | 0.6280 |
+| Dark Ruler Ha Des | 1431 | 0.6118 |
+| Mage Power | 1365 | 0.5836 |
+| Giant Rat | 1284 | 0.5490 |
+| Giltia the D. Knight | 1278 | 0.5464 |
+| Time Seal | 1273 | 0.5443 |
+| Cannon Soldier | 1220 | 0.5216 |
+| Spear Dragon | 1201 | 0.5135 |
+| United We Stand | 1192 | 0.5096 |
+| Upstart Goblin | 1142 | 0.4882 |
+| Card Destruction | 1064 | 0.4549 |
+| Punished Eagle | 971 | 0.4151 |
+| Jar of Greed | 904 | 0.3865 |
+| Fissure | 839 | 0.3587 |
+| Asura Priest | 831 | 0.3553 |
+| Ceasefire | 829 | 0.3544 |
+| Trap Hole | 829 | 0.3544 |
+| Empress Judge | 828 | 0.3540 |
+| Flower Wolf | 828 | 0.3540 |
+| Kwagar Hercules | 828 | 0.3540 |
+| Creature Swap | 826 | 0.3531 |
+| Dust Tornado | 822 | 0.3514 |
+| Gemini Elf | 792 | 0.3386 |
+| Magician of Faith | 792 | 0.3386 |
+| Kycoo the Ghost Destroyer | 784 | 0.3352 |
+| Bazoo the Soul-Eater | 779 | 0.3330 |
+| Mystic Tomato | 762 | 0.3258 |
+| Torrential Tribute | 743 | 0.3177 |
+| Magic Cylinder | 683 | 0.2920 |
+| Cyber Jar | 672 | 0.2873 |
+| Morphing Jar | 669 | 0.2860 |
+| Nobleman of Crossout | 663 | 0.2835 |
+| Graceful Charity | 650 | 0.2779 |
+| Metal Dragon | 630 | 0.2693 |
+| Premature Burial | 586 | 0.2505 |
+| Heavy Storm | 571 | 0.2441 |
+| Charubin the Fire Knight | 563 | 0.2407 |
+| Cyber Saurus | 563 | 0.2407 |
+| Warrior of Tradition | 563 | 0.2407 |
+| Yata-Garasu | 543 | 0.2322 |
+| Bickuribox | 537 | 0.2296 |
+| Skull Knight | 537 | 0.2296 |
+| St. Joan | 537 | 0.2296 |
+| Painful Choice | 534 | 0.2283 |
+| Jinzo | 529 | 0.2262 |
+| Sinister Serpent | 529 | 0.2262 |
+| Confiscation | 526 | 0.2249 |
+| Delinquent Duo | 525 | 0.2245 |
+| Injection Fairy Lily | 525 | 0.2245 |
+| Change of Heart | 523 | 0.2236 |
+| Exiled Force | 523 | 0.2236 |
+| Fiber Jar | 523 | 0.2236 |
+| Harpie's Feather Duster | 523 | 0.2236 |
+| Monster Reborn | 523 | 0.2236 |
+| Snatch Steal | 523 | 0.2236 |
+| Dark Hole | 522 | 0.2232 |
+| Mirror Force | 522 | 0.2232 |
+| Pot of Greed | 522 | 0.2232 |
+| Raigeki | 522 | 0.2232 |
+| Sangan | 522 | 0.2232 |
+| The Forceful Sentry | 522 | 0.2232 |
+| Witch of the Black Forest | 522 | 0.2232 |
+| Blind Destruction | 516 | 0.2206 |
+| Graceful Dice | 516 | 0.2206 |
+| Gravity Bind | 516 | 0.2206 |
+| Mirror Wall | 516 | 0.2206 |
+| Rush Recklessly | 516 | 0.2206 |
+| Flame Swordsman | 497 | 0.2125 |
+| Flame Ghost | 480 | 0.2052 |
+| Fusionist | 410 | 0.1753 |
+| Thousand Dragon | 386 | 0.1650 |
+| Gaia the Dragon Champion | 356 | 0.1522 |
+| Roaring Ocean Snake | 356 | 0.1522 |
+| Solemn Wishes | 336 | 0.1437 |
+| Musician King | 321 | 0.1372 |
+| Labyrinth Tank | 310 | 0.1325 |
+| Darkfire Dragon | 293 | 0.1253 |
+| Fiend Skull Dragon | 256 | 0.1094 |
+| Dark Balter the Terrible | 250 | 0.1069 |
+| Dragoness the Wicked Knight | 250 | 0.1069 |
+| B. Skull Dragon | 249 | 0.1065 |
+| Ryu Senshi | 234 | 0.1000 |
+| Twin-Headed Thunder Dragon | 234 | 0.1000 |
+| Chain Energy | 221 | 0.0945 |
+| Offerings to the Doomed | 221 | 0.0945 |
+| The Last Warrior from Another Planet | 210 | 0.0898 |
+| Thousand-Eyes Restrict | 207 | 0.0885 |
+| Limiter Removal | 141 | 0.0603 |
+| Skull Lair | 110 | 0.0470 |
+| Scapegoat | 82 | 0.0351 |
+| Mystical Space Typhoon | 74 | 0.0316 |
+| Call Of The Haunted | 52 | 0.0222 |
+| Imperial Order | 52 | 0.0222 |
 
 ### Pharaonic Guardian
 
@@ -1551,143 +1670,146 @@ Forbidden cards (limit 0) are omitted. Lower usage ⇒ higher weight ⇒ more co
 
 ### Yata
 
-- **Type:** Usage · **Format:** Yata · **Cards in pool:** 133 · **Weight sum:** 149950
+- **Type:** Usage · **Format:** Yata · **Cards in pool:** 136 · **Weight sum:** 154170
 
 | Card | Weight | Pull % |
 |---|---:|---:|
-| Cold Wave | 3681 | 2.4548 |
-| Graverobber | 3681 | 2.4548 |
-| Just Desserts | 3681 | 2.4548 |
-| Last Will | 3681 | 2.4548 |
-| Magic Drain | 3681 | 2.4548 |
-| Mask of Darkness | 3681 | 2.4548 |
-| Masked Sorcerer | 3681 | 2.4548 |
-| Morphing Jar #2 | 3148 | 2.0994 |
-| Book of Life | 2819 | 1.8800 |
-| Giant Trunade | 2819 | 1.8800 |
-| Magic Jammer | 2819 | 1.8800 |
-| Princess of Tsurugi | 2819 | 1.8800 |
-| Waboku | 2819 | 1.8800 |
-| Barrel Dragon | 2415 | 1.6105 |
-| Giant Rat | 2415 | 1.6105 |
-| Kuriboh | 2415 | 1.6105 |
-| Marauding Captain | 2415 | 1.6105 |
-| Mechanicalchaser | 2415 | 1.6105 |
-| Pyramid Turtle | 2415 | 1.6105 |
-| Reasoning | 2415 | 1.6105 |
-| Spear Dragon | 2415 | 1.6105 |
-| United We Stand | 2415 | 1.6105 |
-| White Magical Hat | 2415 | 1.6105 |
-| Giant Germ | 2165 | 1.4438 |
-| Nimble Momonga | 2165 | 1.4438 |
-| Guardian Sphinx | 1991 | 1.3278 |
-| Card Destruction | 1859 | 1.2397 |
-| Goblin Attack Force | 1755 | 1.1704 |
-| Sasuke Samurai | 1755 | 1.1704 |
-| Seven Tools of the Bandit | 1755 | 1.1704 |
-| Blast with Chain | 1670 | 1.1137 |
-| Gearfried the Iron Knight | 1670 | 1.1137 |
-| Raigeki Break | 1599 | 1.0664 |
-| Solemn Judgment | 1599 | 1.0664 |
-| Time Seal | 1599 | 1.0664 |
-| Trap Dustshoot | 1599 | 1.0664 |
-| 4-Starred Ladybug of Doom | 1538 | 1.0257 |
-| Cannon Soldier | 1485 | 0.9903 |
-| Trap Hole | 1485 | 0.9903 |
-| Metamorphosis | 1438 | 0.9590 |
-| Upstart Goblin | 1438 | 0.9590 |
-| Airknight Parshath | 1396 | 0.9310 |
-| Electric Snake | 1359 | 0.9063 |
-| Swords of Revealing Light | 1325 | 0.8836 |
-| Jar of Greed | 1217 | 0.8116 |
-| Dark Ruler Ha Des | 1174 | 0.7829 |
-| Newdoria | 1174 | 0.7829 |
-| Asura Priest | 1136 | 0.7576 |
-| King Tiger Wanghu | 1073 | 0.7156 |
-| Bazoo the Soul-Eater | 1059 | 0.7062 |
-| Kycoo the Ghost Destroyer | 1059 | 0.7062 |
-| Creature Swap | 1016 | 0.6776 |
-| Fissure | 999 | 0.6662 |
-| Cyber Jar | 943 | 0.6289 |
-| Warrior of Tradition | 906 | 0.6042 |
-| Dust Tornado | 897 | 0.5982 |
-| Gravekeeper's Spy | 883 | 0.5889 |
-| Zombyra the Dark | 859 | 0.5729 |
-| Magician of Faith | 848 | 0.5655 |
-| Magic Cylinder | 842 | 0.5615 |
-| Reinforcement of the Army | 827 | 0.5515 |
-| Don Zaloog | 822 | 0.5482 |
-| Gemini Elf | 822 | 0.5482 |
-| Morphing Jar | 812 | 0.5415 |
-| Mystic Tomato | 808 | 0.5388 |
-| Spirit Reaper | 779 | 0.5195 |
-| Torrential Tribute | 750 | 0.5002 |
-| Ceasefire | 701 | 0.4675 |
-| Premature Burial | 701 | 0.4675 |
-| Punished Eagle | 689 | 0.4595 |
-| Nobleman of Crossout | 653 | 0.4355 |
-| Fusionist | 588 | 0.3921 |
-| Skull Knight | 588 | 0.3921 |
-| Painful Choice | 575 | 0.3835 |
-| Yata-Garasu | 575 | 0.3835 |
-| Sinister Serpent | 560 | 0.3735 |
-| Fiber Jar | 549 | 0.3661 |
-| Injection Fairy Lily | 547 | 0.3648 |
-| Heavy Storm | 539 | 0.3595 |
-| Confiscation | 530 | 0.3535 |
-| Delinquent Duo | 528 | 0.3521 |
-| Exiled Force | 528 | 0.3521 |
-| Sangan | 528 | 0.3521 |
-| Jinzo | 526 | 0.3508 |
-| Monster Reborn | 526 | 0.3508 |
-| Metal Dragon | 525 | 0.3501 |
-| Thousand Dragon | 525 | 0.3501 |
-| Bell of Destruction | 522 | 0.3481 |
-| Change of Heart | 522 | 0.3481 |
-| Dark Hole | 522 | 0.3481 |
-| Graceful Charity | 522 | 0.3481 |
-| Harpie's Feather Duster | 522 | 0.3481 |
-| Mirror Force | 522 | 0.3481 |
-| Pot of Greed | 522 | 0.3481 |
-| Raigeki | 522 | 0.3481 |
-| Snatch Steal | 522 | 0.3481 |
-| The Forceful Sentry | 522 | 0.3481 |
-| Witch of the Black Forest | 522 | 0.3481 |
-| Flower Wolf | 481 | 0.3208 |
-| Giltia the D. Knight | 481 | 0.3208 |
-| Charubin the Fire Knight | 448 | 0.2988 |
-| Flame Ghost | 422 | 0.2814 |
-| Labyrinth Tank | 422 | 0.2814 |
-| Karbonala Warrior | 401 | 0.2674 |
-| Cyber Saurus | 383 | 0.2554 |
-| Forced Requisition | 368 | 0.2454 |
-| Mirror Wall | 368 | 0.2454 |
-| Musician King | 368 | 0.2454 |
-| Empress Judge | 354 | 0.2361 |
-| Flame Swordsman | 354 | 0.2361 |
-| Roaring Ocean Snake | 354 | 0.2361 |
-| Bickuribox | 343 | 0.2287 |
-| Twin-Headed Thunder Dragon | 281 | 0.1874 |
-| Gaia the Dragon Champion | 271 | 0.1807 |
-| Darkfire Dragon | 258 | 0.1721 |
-| Dragoness the Wicked Knight | 244 | 0.1627 |
-| Limiter Removal | 241 | 0.1607 |
-| B. Skull Dragon | 227 | 0.1514 |
-| Nightmare Wheel | 216 | 0.1440 |
-| The Last Warrior from Another Planet | 212 | 0.1414 |
-| Reaper on the Nightmare | 208 | 0.1387 |
-| Fiend Skull Dragon | 192 | 0.1280 |
-| Dark Balter the Terrible | 188 | 0.1254 |
-| Chain Energy | 185 | 0.1234 |
-| Ryu Senshi | 183 | 0.1220 |
-| Thousand-Eyes Restrict | 179 | 0.1194 |
-| Solemn Wishes | 153 | 0.1020 |
-| Book of Moon | 107 | 0.0714 |
-| Scapegoat | 94 | 0.0627 |
-| Mystical Space Typhoon | 74 | 0.0493 |
-| Call Of The Haunted | 53 | 0.0353 |
-| Imperial Order | 52 | 0.0347 |
-| Mirage of Nightmare | 52 | 0.0347 |
+| Cold Wave | 3681 | 2.3876 |
+| Graverobber | 3681 | 2.3876 |
+| Just Desserts | 3681 | 2.3876 |
+| Last Will | 3681 | 2.3876 |
+| Magic Drain | 3681 | 2.3876 |
+| Mask of Darkness | 3681 | 2.3876 |
+| Masked Sorcerer | 3681 | 2.3876 |
+| Morphing Jar #2 | 3148 | 2.0419 |
+| Book of Life | 2819 | 1.8285 |
+| Giant Trunade | 2819 | 1.8285 |
+| Magic Jammer | 2819 | 1.8285 |
+| Princess of Tsurugi | 2819 | 1.8285 |
+| Waboku | 2819 | 1.8285 |
+| Amazoness Archer | 2415 | 1.5665 |
+| Barrel Dragon | 2415 | 1.5665 |
+| Giant Rat | 2415 | 1.5665 |
+| Kuriboh | 2415 | 1.5665 |
+| Marauding Captain | 2415 | 1.5665 |
+| Mechanicalchaser | 2415 | 1.5665 |
+| Pyramid Turtle | 2415 | 1.5665 |
+| Reasoning | 2415 | 1.5665 |
+| Spear Dragon | 2415 | 1.5665 |
+| United We Stand | 2415 | 1.5665 |
+| White Magical Hat | 2415 | 1.5665 |
+| Giant Germ | 2165 | 1.4043 |
+| Nimble Momonga | 2165 | 1.4043 |
+| Guardian Sphinx | 1991 | 1.2914 |
+| Card Destruction | 1859 | 1.2058 |
+| Goblin Attack Force | 1755 | 1.1384 |
+| Sasuke Samurai | 1755 | 1.1384 |
+| Seven Tools of the Bandit | 1755 | 1.1384 |
+| Blast with Chain | 1670 | 1.0832 |
+| Gearfried the Iron Knight | 1670 | 1.0832 |
+| Raigeki Break | 1599 | 1.0372 |
+| Solemn Judgment | 1599 | 1.0372 |
+| Time Seal | 1599 | 1.0372 |
+| Trap Dustshoot | 1599 | 1.0372 |
+| 4-Starred Ladybug of Doom | 1538 | 0.9976 |
+| Cure Mermaid | 1538 | 0.9976 |
+| Cannon Soldier | 1485 | 0.9632 |
+| Trap Hole | 1485 | 0.9632 |
+| Metamorphosis | 1438 | 0.9327 |
+| Upstart Goblin | 1438 | 0.9327 |
+| Airknight Parshath | 1396 | 0.9055 |
+| Electric Snake | 1359 | 0.8815 |
+| Swords of Revealing Light | 1325 | 0.8594 |
+| Jar of Greed | 1217 | 0.7894 |
+| Dark Ruler Ha Des | 1174 | 0.7615 |
+| Newdoria | 1174 | 0.7615 |
+| Asura Priest | 1136 | 0.7368 |
+| King Tiger Wanghu | 1073 | 0.6960 |
+| Bazoo the Soul-Eater | 1059 | 0.6869 |
+| Kycoo the Ghost Destroyer | 1059 | 0.6869 |
+| Creature Swap | 1016 | 0.6590 |
+| Fissure | 999 | 0.6480 |
+| Cyber Jar | 943 | 0.6117 |
+| Warrior of Tradition | 906 | 0.5877 |
+| Dust Tornado | 897 | 0.5818 |
+| Gravekeeper's Spy | 883 | 0.5727 |
+| Zombyra the Dark | 859 | 0.5572 |
+| Magician of Faith | 848 | 0.5500 |
+| Magic Cylinder | 842 | 0.5462 |
+| Reinforcement of the Army | 827 | 0.5364 |
+| Don Zaloog | 822 | 0.5332 |
+| Gemini Elf | 822 | 0.5332 |
+| Morphing Jar | 812 | 0.5267 |
+| Mystic Tomato | 808 | 0.5241 |
+| Spirit Reaper | 779 | 0.5053 |
+| Torrential Tribute | 750 | 0.4865 |
+| Ceasefire | 701 | 0.4547 |
+| Premature Burial | 701 | 0.4547 |
+| Punished Eagle | 689 | 0.4469 |
+| Nobleman of Crossout | 653 | 0.4236 |
+| Fusionist | 588 | 0.3814 |
+| Skull Knight | 588 | 0.3814 |
+| Painful Choice | 575 | 0.3730 |
+| Yata-Garasu | 575 | 0.3730 |
+| Sinister Serpent | 560 | 0.3632 |
+| Fiber Jar | 549 | 0.3561 |
+| Injection Fairy Lily | 547 | 0.3548 |
+| Heavy Storm | 539 | 0.3496 |
+| Confiscation | 530 | 0.3438 |
+| Delinquent Duo | 528 | 0.3425 |
+| Exiled Force | 528 | 0.3425 |
+| Sangan | 528 | 0.3425 |
+| Jinzo | 526 | 0.3412 |
+| Monster Reborn | 526 | 0.3412 |
+| Metal Dragon | 525 | 0.3405 |
+| Thousand Dragon | 525 | 0.3405 |
+| Bell of Destruction | 522 | 0.3386 |
+| Change of Heart | 522 | 0.3386 |
+| Dark Hole | 522 | 0.3386 |
+| Graceful Charity | 522 | 0.3386 |
+| Harpie's Feather Duster | 522 | 0.3386 |
+| Mirror Force | 522 | 0.3386 |
+| Pot of Greed | 522 | 0.3386 |
+| Raigeki | 522 | 0.3386 |
+| Snatch Steal | 522 | 0.3386 |
+| The Forceful Sentry | 522 | 0.3386 |
+| Witch of the Black Forest | 522 | 0.3386 |
+| Flower Wolf | 481 | 0.3120 |
+| Giltia the D. Knight | 481 | 0.3120 |
+| Charubin the Fire Knight | 448 | 0.2906 |
+| Flame Ghost | 422 | 0.2737 |
+| Labyrinth Tank | 422 | 0.2737 |
+| Karbonala Warrior | 401 | 0.2601 |
+| Cyber Saurus | 383 | 0.2484 |
+| Forced Requisition | 368 | 0.2387 |
+| Mirror Wall | 368 | 0.2387 |
+| Musician King | 368 | 0.2387 |
+| Empress Judge | 354 | 0.2296 |
+| Flame Swordsman | 354 | 0.2296 |
+| Roaring Ocean Snake | 354 | 0.2296 |
+| Bickuribox | 343 | 0.2225 |
+| Twin-Headed Thunder Dragon | 281 | 0.1823 |
+| Gaia the Dragon Champion | 271 | 0.1758 |
+| St. Joan | 267 | 0.1732 |
+| Darkfire Dragon | 258 | 0.1673 |
+| Dragoness the Wicked Knight | 244 | 0.1583 |
+| Limiter Removal | 241 | 0.1563 |
+| B. Skull Dragon | 227 | 0.1472 |
+| Nightmare Wheel | 216 | 0.1401 |
+| The Last Warrior from Another Planet | 212 | 0.1375 |
+| Reaper on the Nightmare | 208 | 0.1349 |
+| Fiend Skull Dragon | 192 | 0.1245 |
+| Dark Balter the Terrible | 188 | 0.1219 |
+| Chain Energy | 185 | 0.1200 |
+| Ryu Senshi | 183 | 0.1187 |
+| Thousand-Eyes Restrict | 179 | 0.1161 |
+| Solemn Wishes | 153 | 0.0992 |
+| Book of Moon | 107 | 0.0694 |
+| Scapegoat | 94 | 0.0610 |
+| Mystical Space Typhoon | 74 | 0.0480 |
+| Call Of The Haunted | 53 | 0.0344 |
+| Imperial Order | 52 | 0.0337 |
+| Mirage of Nightmare | 52 | 0.0337 |
 
 ### Magician's Force
 
@@ -1716,326 +1838,338 @@ Forbidden cards (limit 0) are omitted. Lower usage ⇒ higher weight ⇒ more co
 
 ### Scientist
 
-- **Type:** Usage · **Format:** Scientist · **Cards in pool:** 88 · **Weight sum:** 70179
+- **Type:** Usage · **Format:** Scientist · **Cards in pool:** 92 · **Weight sum:** 74955
 
 | Card | Weight | Pull % |
 |---|---:|---:|
-| Apprentice Magician | 1804 | 2.5706 |
-| Asura Priest | 1804 | 2.5706 |
-| Dark Magician | 1804 | 2.5706 |
-| Dark Ruler Ha Des | 1804 | 2.5706 |
-| Don Zaloog | 1804 | 2.5706 |
-| Kycoo the Ghost Destroyer | 1804 | 2.5706 |
-| Nimble Momonga | 1804 | 2.5706 |
-| Sasuke Samurai | 1804 | 2.5706 |
-| Skilled Dark Magician | 1804 | 2.5706 |
-| Spell Canceller | 1804 | 2.5706 |
-| Waboku | 1804 | 2.5706 |
-| Creature Swap | 1552 | 2.2115 |
-| Reinforcement of the Army | 1552 | 2.2115 |
-| Airknight Parshath | 1396 | 1.9892 |
-| Goblin Attack Force | 1396 | 1.9892 |
-| Jar of Greed | 1396 | 1.9892 |
-| Cannon Soldier | 1205 | 1.7170 |
-| Fissure | 1205 | 1.7170 |
-| Giant Trunade | 1205 | 1.7170 |
-| Raigeki Break | 1205 | 1.7170 |
-| Reasoning | 1205 | 1.7170 |
-| Swords of Revealing Light | 1205 | 1.7170 |
-| Upstart Goblin | 1205 | 1.7170 |
-| Gilasaurus | 1087 | 1.5489 |
-| Magician of Faith | 1087 | 1.5489 |
-| Newdoria | 1087 | 1.5489 |
-| Gravekeeper's Spy | 1005 | 1.4321 |
-| Metamorphosis | 1005 | 1.4321 |
-| Trap Dustshoot | 1005 | 1.4321 |
-| Cyber Jar | 943 | 1.3437 |
-| Dust Tornado | 943 | 1.3437 |
-| Last Will | 943 | 1.3437 |
-| Spirit Reaper | 943 | 1.3437 |
-| Catapult Turtle | 893 | 1.2725 |
-| King Tiger Wanghu | 893 | 1.2725 |
-| Mystic Tomato | 819 | 1.1670 |
-| Nobleman of Crossout | 778 | 1.1086 |
-| Torrential Tribute | 765 | 1.0901 |
-| Card Destruction | 743 | 1.0587 |
-| Ceasefire | 743 | 1.0587 |
-| Magical Scientist | 743 | 1.0587 |
-| Premature Burial | 650 | 0.9262 |
-| Heavy Storm | 618 | 0.8806 |
-| Yata-Garasu | 618 | 0.8806 |
-| Injection Fairy Lily | 592 | 0.8436 |
-| The Forceful Sentry | 592 | 0.8436 |
-| Confiscation | 571 | 0.8136 |
-| Delinquent Duo | 571 | 0.8136 |
-| Exiled Force | 571 | 0.8136 |
-| Jinzo | 571 | 0.8136 |
-| Sinister Serpent | 571 | 0.8136 |
-| Breaker the Magical Warrior | 552 | 0.7866 |
-| Fiber Jar | 536 | 0.7638 |
-| Mirror Force | 536 | 0.7638 |
-| Monster Reborn | 536 | 0.7638 |
-| Tribe-Infecting Virus | 536 | 0.7638 |
-| Bell of Destruction | 522 | 0.7438 |
-| Change of Heart | 522 | 0.7438 |
-| Dark Hole | 522 | 0.7438 |
-| Graceful Charity | 522 | 0.7438 |
-| Harpie's Feather Duster | 522 | 0.7438 |
-| Painful Choice | 522 | 0.7438 |
-| Pot of Greed | 522 | 0.7438 |
-| Raigeki | 522 | 0.7438 |
-| Sangan | 522 | 0.7438 |
-| Snatch Steal | 522 | 0.7438 |
-| Witch of the Black Forest | 522 | 0.7438 |
-| Dark Paladin | 435 | 0.6198 |
-| Reaper on the Nightmare | 435 | 0.6198 |
-| The Last Warrior from Another Planet | 435 | 0.6198 |
-| Darkfire Dragon | 218 | 0.3106 |
-| Dragoness the Wicked Knight | 196 | 0.2793 |
-| Mask of Restrict | 180 | 0.2565 |
-| Empress Judge | 174 | 0.2479 |
-| Fiend Skull Dragon | 174 | 0.2479 |
-| Punished Eagle | 174 | 0.2479 |
-| Roaring Ocean Snake | 174 | 0.2479 |
-| Dark Balter the Terrible | 168 | 0.2394 |
-| Ryu Senshi | 168 | 0.2394 |
-| Thousand-Eyes Restrict | 168 | 0.2394 |
-| Royal Decree | 139 | 0.1981 |
-| Scapegoat | 139 | 0.1981 |
-| Poison of the Old Man | 120 | 0.1710 |
-| Book of Moon | 89 | 0.1268 |
-| Mystical Space Typhoon | 74 | 0.1054 |
-| Mirage of Nightmare | 55 | 0.0784 |
-| Call Of The Haunted | 53 | 0.0755 |
-| Imperial Order | 52 | 0.0741 |
+| Amazoness Archer | 1804 | 2.4068 |
+| Apprentice Magician | 1804 | 2.4068 |
+| Asura Priest | 1804 | 2.4068 |
+| Dark Magician | 1804 | 2.4068 |
+| Dark Ruler Ha Des | 1804 | 2.4068 |
+| Don Zaloog | 1804 | 2.4068 |
+| Kycoo the Ghost Destroyer | 1804 | 2.4068 |
+| Nimble Momonga | 1804 | 2.4068 |
+| Sasuke Samurai | 1804 | 2.4068 |
+| Skilled Dark Magician | 1804 | 2.4068 |
+| Spell Canceller | 1804 | 2.4068 |
+| Waboku | 1804 | 2.4068 |
+| Creature Swap | 1552 | 2.0706 |
+| Reinforcement of the Army | 1552 | 2.0706 |
+| Airknight Parshath | 1396 | 1.8625 |
+| Goblin Attack Force | 1396 | 1.8625 |
+| Jar of Greed | 1396 | 1.8625 |
+| Jowgen the Spiritualist | 1396 | 1.8625 |
+| Spiritualism | 1396 | 1.8625 |
+| Cannon Soldier | 1205 | 1.6076 |
+| Fissure | 1205 | 1.6076 |
+| Giant Trunade | 1205 | 1.6076 |
+| Raigeki Break | 1205 | 1.6076 |
+| Reasoning | 1205 | 1.6076 |
+| Swords of Revealing Light | 1205 | 1.6076 |
+| Upstart Goblin | 1205 | 1.6076 |
+| Gilasaurus | 1087 | 1.4502 |
+| Magician of Faith | 1087 | 1.4502 |
+| Newdoria | 1087 | 1.4502 |
+| Gravekeeper's Spy | 1005 | 1.3408 |
+| Metamorphosis | 1005 | 1.3408 |
+| Trap Dustshoot | 1005 | 1.3408 |
+| Cyber Jar | 943 | 1.2581 |
+| Dust Tornado | 943 | 1.2581 |
+| Last Will | 943 | 1.2581 |
+| Spirit Reaper | 943 | 1.2581 |
+| Catapult Turtle | 893 | 1.1914 |
+| King Tiger Wanghu | 893 | 1.1914 |
+| Mystic Tomato | 819 | 1.0927 |
+| Nobleman of Crossout | 778 | 1.0380 |
+| Torrential Tribute | 765 | 1.0206 |
+| Card Destruction | 743 | 0.9913 |
+| Ceasefire | 743 | 0.9913 |
+| Magical Scientist | 743 | 0.9913 |
+| Premature Burial | 650 | 0.8672 |
+| Heavy Storm | 618 | 0.8245 |
+| Yata-Garasu | 618 | 0.8245 |
+| Injection Fairy Lily | 592 | 0.7898 |
+| The Forceful Sentry | 592 | 0.7898 |
+| Confiscation | 571 | 0.7618 |
+| Delinquent Duo | 571 | 0.7618 |
+| Exiled Force | 571 | 0.7618 |
+| Jinzo | 571 | 0.7618 |
+| Sinister Serpent | 571 | 0.7618 |
+| Breaker the Magical Warrior | 552 | 0.7364 |
+| Fiber Jar | 536 | 0.7151 |
+| Mirror Force | 536 | 0.7151 |
+| Monster Reborn | 536 | 0.7151 |
+| Tribe-Infecting Virus | 536 | 0.7151 |
+| Bell of Destruction | 522 | 0.6964 |
+| Change of Heart | 522 | 0.6964 |
+| Dark Hole | 522 | 0.6964 |
+| Graceful Charity | 522 | 0.6964 |
+| Harpie's Feather Duster | 522 | 0.6964 |
+| Painful Choice | 522 | 0.6964 |
+| Pot of Greed | 522 | 0.6964 |
+| Raigeki | 522 | 0.6964 |
+| Sangan | 522 | 0.6964 |
+| Snatch Steal | 522 | 0.6964 |
+| Witch of the Black Forest | 522 | 0.6964 |
+| Dark Paladin | 435 | 0.5803 |
+| Reaper on the Nightmare | 435 | 0.5803 |
+| The Last Warrior from Another Planet | 435 | 0.5803 |
+| Darkfire Dragon | 218 | 0.2908 |
+| Dragoness the Wicked Knight | 196 | 0.2615 |
+| Mask of Restrict | 180 | 0.2401 |
+| Offerings to the Doomed | 180 | 0.2401 |
+| Empress Judge | 174 | 0.2321 |
+| Fiend Skull Dragon | 174 | 0.2321 |
+| Punished Eagle | 174 | 0.2321 |
+| Roaring Ocean Snake | 174 | 0.2321 |
+| Dark Balter the Terrible | 168 | 0.2241 |
+| Ryu Senshi | 168 | 0.2241 |
+| Thousand-Eyes Restrict | 168 | 0.2241 |
+| Royal Decree | 139 | 0.1854 |
+| Scapegoat | 139 | 0.1854 |
+| Poison of the Old Man | 120 | 0.1601 |
+| Book of Moon | 89 | 0.1187 |
+| Mystical Space Typhoon | 74 | 0.0987 |
+| Mirage of Nightmare | 55 | 0.0734 |
+| Call Of The Haunted | 53 | 0.0707 |
+| Imperial Order | 52 | 0.0694 |
 
 ### Dark Crisis
 
-- **Type:** TCG · **Format:** Vampire · **Cards in pool:** 9 · **Weight sum:** 53725
+- **Type:** TCG · **Format:** Vampire · **Cards in pool:** 10 · **Weight sum:** 53825
 
 | Card | Weight | Pull % |
 |---|---:|---:|
-| Final Attack Orders | 10000 | 18.6133 |
-| Gyaku-Gire Panda | 10000 | 18.6133 |
-| Ojama Trio | 10000 | 18.6133 |
-| Sakuretsu Armor | 10000 | 18.6133 |
-| Token Thanksgiving | 10000 | 18.6133 |
-| Tsukuyomi | 2500 | 4.6533 |
-| D.D. Warrior Lady | 600 | 1.1168 |
-| Dark Flare Knight | 600 | 1.1168 |
-| Vampire Lord | 25 | 0.0465 |
+| Final Attack Orders | 10000 | 18.5787 |
+| Gyaku-Gire Panda | 10000 | 18.5787 |
+| Ojama Trio | 10000 | 18.5787 |
+| Sakuretsu Armor | 10000 | 18.5787 |
+| Token Thanksgiving | 10000 | 18.5787 |
+| Tsukuyomi | 2500 | 4.6447 |
+| D.D. Warrior Lady | 600 | 1.1147 |
+| Dark Flare Knight | 600 | 1.1147 |
+| Interdimensional Matter Transporter | 100 | 0.1858 |
+| Vampire Lord | 25 | 0.0464 |
 
 ### Vampire
 
-- **Type:** Usage · **Format:** Vampire · **Cards in pool:** 111 · **Weight sum:** 122928
+- **Type:** Usage · **Format:** Vampire · **Cards in pool:** 114 · **Weight sum:** 127168
 
 | Card | Weight | Pull % |
 |---|---:|---:|
-| Book of Life | 2305 | 1.8751 |
-| Bottomless Trap Hole | 2305 | 1.8751 |
-| Cannon Soldier | 2305 | 1.8751 |
-| Catapult Turtle | 2305 | 1.8751 |
-| Cipher Soldier | 2305 | 1.8751 |
-| Cold Wave | 2305 | 1.8751 |
-| Dark Scorpion - Cliff the Trap Remover | 2305 | 1.8751 |
-| Des Koala | 2305 | 1.8751 |
-| Electric Snake | 2305 | 1.8751 |
-| Gemini Elf | 2305 | 1.8751 |
-| Goblin Attack Force | 2305 | 1.8751 |
-| Guardian Sphinx | 2305 | 1.8751 |
-| Gyaku-Gire Panda | 2305 | 1.8751 |
-| Last Will | 2305 | 1.8751 |
-| Masked Sorcerer | 2305 | 1.8751 |
-| Mother Grizzly | 2305 | 1.8751 |
-| Ojama Trio | 2305 | 1.8751 |
-| Pyramid Turtle | 2305 | 1.8751 |
-| Raigeki Break | 2305 | 1.8751 |
-| Secret Barrel | 2305 | 1.8751 |
-| Spirit Reaper | 2305 | 1.8751 |
-| Summoned Skull | 2305 | 1.8751 |
-| Time Seal | 2305 | 1.8751 |
-| Waboku | 2305 | 1.8751 |
-| White Magical Hat | 2305 | 1.8751 |
-| Creature Swap | 1978 | 1.6091 |
-| Marauding Captain | 1978 | 1.6091 |
-| Morphing Jar | 1978 | 1.6091 |
-| Giant Trunade | 1776 | 1.4447 |
-| Jar of Greed | 1776 | 1.4447 |
-| Just Desserts | 1776 | 1.4447 |
-| Kycoo the Ghost Destroyer | 1776 | 1.4447 |
-| Solemn Judgment | 1776 | 1.4447 |
-| Trap Hole | 1776 | 1.4447 |
-| Dark Ruler Ha Des | 1528 | 1.2430 |
-| Mage Power | 1528 | 1.2430 |
-| Swords of Revealing Light | 1528 | 1.2430 |
-| Trap Dustshoot | 1528 | 1.2430 |
-| Upstart Goblin | 1528 | 1.2430 |
-| Vampire Lord | 1528 | 1.2430 |
-| Mystic Tomato | 1375 | 1.1185 |
-| The Little Swordsman of Aile | 1375 | 1.1185 |
-| Metamorphosis | 1268 | 1.0315 |
-| Card Destruction | 1187 | 0.9656 |
-| Magic Cylinder | 1187 | 0.9656 |
-| Dust Tornado | 1123 | 0.9135 |
-| Sasuke Samurai | 1123 | 0.9135 |
-| Cyber Jar | 1027 | 0.8354 |
-| King Tiger Wanghu | 1027 | 0.8354 |
-| Magician of Faith | 990 | 0.8053 |
-| Sakuretsu Armor | 903 | 0.7346 |
-| Ceasefire | 860 | 0.6996 |
-| Don Zaloog | 860 | 0.6996 |
-| Gravekeeper's Spy | 860 | 0.6996 |
-| Zombyra the Dark | 841 | 0.6841 |
-| D.D. Warrior Lady | 766 | 0.6231 |
-| Torrential Tribute | 743 | 0.6044 |
-| Premature Burial | 681 | 0.5540 |
-| Reinforcement of the Army | 681 | 0.5540 |
-| Nobleman of Crossout | 670 | 0.5450 |
-| Painful Choice | 610 | 0.4962 |
-| Yata-Garasu | 584 | 0.4751 |
-| Injection Fairy Lily | 563 | 0.4580 |
-| Empress Judge | 560 | 0.4556 |
-| Giltia the D. Knight | 560 | 0.4556 |
-| Skull Knight | 560 | 0.4556 |
-| Heavy Storm | 554 | 0.4507 |
-| Delinquent Duo | 545 | 0.4433 |
-| Fiber Jar | 545 | 0.4433 |
-| Jinzo | 545 | 0.4433 |
-| Magical Scientist | 537 | 0.4368 |
-| Sinister Serpent | 537 | 0.4368 |
-| Tribe-Infecting Virus | 537 | 0.4368 |
-| Bell of Destruction | 529 | 0.4303 |
-| Confiscation | 529 | 0.4303 |
-| Exiled Force | 529 | 0.4303 |
-| Snatch Steal | 529 | 0.4303 |
-| Breaker the Magical Warrior | 522 | 0.4246 |
-| Change of Heart | 522 | 0.4246 |
-| Dark Hole | 522 | 0.4246 |
-| Graceful Charity | 522 | 0.4246 |
-| Harpie's Feather Duster | 522 | 0.4246 |
-| Mirror Force | 522 | 0.4246 |
-| Monster Reborn | 522 | 0.4246 |
-| Pot of Greed | 522 | 0.4246 |
-| Raigeki | 522 | 0.4246 |
-| Sangan | 522 | 0.4246 |
-| The Forceful Sentry | 522 | 0.4246 |
-| Witch of the Black Forest | 522 | 0.4246 |
-| B. Skull Dragon | 427 | 0.3474 |
-| Flame Ghost | 427 | 0.3474 |
-| Twin-Headed Thunder Dragon | 427 | 0.3474 |
-| Punished Eagle | 365 | 0.2969 |
-| Roaring Ocean Snake | 250 | 0.2034 |
-| The Last Warrior from Another Planet | 250 | 0.2034 |
-| Darkfire Dragon | 239 | 0.1944 |
-| Dragoness the Wicked Knight | 239 | 0.1944 |
-| Reaper on the Nightmare | 208 | 0.1692 |
-| Dark Flare Knight | 177 | 0.1440 |
-| Fiend Skull Dragon | 171 | 0.1391 |
-| Dark Balter the Terrible | 168 | 0.1367 |
-| Ryu Senshi | 168 | 0.1367 |
-| Thousand-Eyes Restrict | 168 | 0.1367 |
-| Poison of the Old Man | 152 | 0.1236 |
-| Scapegoat | 126 | 0.1025 |
-| Book of Moon | 95 | 0.0773 |
-| Royal Decree | 92 | 0.0748 |
-| Mystical Space Typhoon | 74 | 0.0602 |
-| Call Of The Haunted | 53 | 0.0431 |
-| Mirage of Nightmare | 53 | 0.0431 |
-| Imperial Order | 52 | 0.0423 |
+| Book of Life | 2305 | 1.8126 |
+| Bottomless Trap Hole | 2305 | 1.8126 |
+| Cannon Soldier | 2305 | 1.8126 |
+| Catapult Turtle | 2305 | 1.8126 |
+| Cipher Soldier | 2305 | 1.8126 |
+| Cold Wave | 2305 | 1.8126 |
+| Dark Scorpion - Cliff the Trap Remover | 2305 | 1.8126 |
+| Des Koala | 2305 | 1.8126 |
+| Electric Snake | 2305 | 1.8126 |
+| Gemini Elf | 2305 | 1.8126 |
+| Goblin Attack Force | 2305 | 1.8126 |
+| Guardian Sphinx | 2305 | 1.8126 |
+| Gyaku-Gire Panda | 2305 | 1.8126 |
+| Last Will | 2305 | 1.8126 |
+| Masked Sorcerer | 2305 | 1.8126 |
+| Mother Grizzly | 2305 | 1.8126 |
+| Ojama Trio | 2305 | 1.8126 |
+| Pyramid Turtle | 2305 | 1.8126 |
+| Raigeki Break | 2305 | 1.8126 |
+| Secret Barrel | 2305 | 1.8126 |
+| Slate Warrior | 2305 | 1.8126 |
+| Spirit Reaper | 2305 | 1.8126 |
+| Summoned Skull | 2305 | 1.8126 |
+| Time Seal | 2305 | 1.8126 |
+| Waboku | 2305 | 1.8126 |
+| White Magical Hat | 2305 | 1.8126 |
+| Creature Swap | 1978 | 1.5554 |
+| Marauding Captain | 1978 | 1.5554 |
+| Morphing Jar | 1978 | 1.5554 |
+| Giant Trunade | 1776 | 1.3966 |
+| Jar of Greed | 1776 | 1.3966 |
+| Just Desserts | 1776 | 1.3966 |
+| Kycoo the Ghost Destroyer | 1776 | 1.3966 |
+| Solemn Judgment | 1776 | 1.3966 |
+| Trap Hole | 1776 | 1.3966 |
+| Dark Ruler Ha Des | 1528 | 1.2016 |
+| Mage Power | 1528 | 1.2016 |
+| Swords of Revealing Light | 1528 | 1.2016 |
+| Trap Dustshoot | 1528 | 1.2016 |
+| Upstart Goblin | 1528 | 1.2016 |
+| Vampire Lord | 1528 | 1.2016 |
+| Amazoness Archer | 1375 | 1.0812 |
+| Mystic Tomato | 1375 | 1.0812 |
+| The Little Swordsman of Aile | 1375 | 1.0812 |
+| Metamorphosis | 1268 | 0.9971 |
+| Card Destruction | 1187 | 0.9334 |
+| Magic Cylinder | 1187 | 0.9334 |
+| Dust Tornado | 1123 | 0.8831 |
+| Sasuke Samurai | 1123 | 0.8831 |
+| Cyber Jar | 1027 | 0.8076 |
+| King Tiger Wanghu | 1027 | 0.8076 |
+| Magician of Faith | 990 | 0.7785 |
+| Sakuretsu Armor | 903 | 0.7101 |
+| Ceasefire | 860 | 0.6763 |
+| Don Zaloog | 860 | 0.6763 |
+| Gravekeeper's Spy | 860 | 0.6763 |
+| Zombyra the Dark | 841 | 0.6613 |
+| D.D. Warrior Lady | 766 | 0.6024 |
+| Torrential Tribute | 743 | 0.5843 |
+| Premature Burial | 681 | 0.5355 |
+| Reinforcement of the Army | 681 | 0.5355 |
+| Nobleman of Crossout | 670 | 0.5269 |
+| Painful Choice | 610 | 0.4797 |
+| Yata-Garasu | 584 | 0.4592 |
+| Injection Fairy Lily | 563 | 0.4427 |
+| Empress Judge | 560 | 0.4404 |
+| Giltia the D. Knight | 560 | 0.4404 |
+| Skull Knight | 560 | 0.4404 |
+| St. Joan | 560 | 0.4404 |
+| Heavy Storm | 554 | 0.4356 |
+| Delinquent Duo | 545 | 0.4286 |
+| Fiber Jar | 545 | 0.4286 |
+| Jinzo | 545 | 0.4286 |
+| Magical Scientist | 537 | 0.4223 |
+| Sinister Serpent | 537 | 0.4223 |
+| Tribe-Infecting Virus | 537 | 0.4223 |
+| Bell of Destruction | 529 | 0.4160 |
+| Confiscation | 529 | 0.4160 |
+| Exiled Force | 529 | 0.4160 |
+| Snatch Steal | 529 | 0.4160 |
+| Breaker the Magical Warrior | 522 | 0.4105 |
+| Change of Heart | 522 | 0.4105 |
+| Dark Hole | 522 | 0.4105 |
+| Graceful Charity | 522 | 0.4105 |
+| Harpie's Feather Duster | 522 | 0.4105 |
+| Mirror Force | 522 | 0.4105 |
+| Monster Reborn | 522 | 0.4105 |
+| Pot of Greed | 522 | 0.4105 |
+| Raigeki | 522 | 0.4105 |
+| Sangan | 522 | 0.4105 |
+| The Forceful Sentry | 522 | 0.4105 |
+| Witch of the Black Forest | 522 | 0.4105 |
+| B. Skull Dragon | 427 | 0.3358 |
+| Flame Ghost | 427 | 0.3358 |
+| Twin-Headed Thunder Dragon | 427 | 0.3358 |
+| Punished Eagle | 365 | 0.2870 |
+| Roaring Ocean Snake | 250 | 0.1966 |
+| The Last Warrior from Another Planet | 250 | 0.1966 |
+| Darkfire Dragon | 239 | 0.1879 |
+| Dragoness the Wicked Knight | 239 | 0.1879 |
+| Reaper on the Nightmare | 208 | 0.1636 |
+| Dark Flare Knight | 177 | 0.1392 |
+| Fiend Skull Dragon | 171 | 0.1345 |
+| Dark Balter the Terrible | 168 | 0.1321 |
+| Ryu Senshi | 168 | 0.1321 |
+| Thousand-Eyes Restrict | 168 | 0.1321 |
+| Poison of the Old Man | 152 | 0.1195 |
+| Scapegoat | 126 | 0.0991 |
+| Book of Moon | 95 | 0.0747 |
+| Royal Decree | 92 | 0.0723 |
+| Mystical Space Typhoon | 74 | 0.0582 |
+| Call Of The Haunted | 53 | 0.0417 |
+| Mirage of Nightmare | 53 | 0.0417 |
+| Imperial Order | 52 | 0.0409 |
 
 ### Starter Deck- Yugi Evolution
 
-- **Type:** TCG · **Format:** Chaos · **Cards in pool:** 44 · **Weight sum:** 411300
+- **Type:** TCG · **Format:** Chaos · **Cards in pool:** 45 · **Weight sum:** 421300
 
 | Card | Weight | Pull % |
 |---|---:|---:|
-| Axe of Despair | 10000 | 2.4313 |
-| Backup Soldier | 10000 | 2.4313 |
-| Beaver Warrior | 10000 | 2.4313 |
-| Card Destruction | 10000 | 2.4313 |
-| Celtic Guardian | 10000 | 2.4313 |
-| Change of Heart | 10000 | 2.4313 |
-| Dark Hole | 10000 | 2.4313 |
-| Dian Keto the Cure Master | 10000 | 2.4313 |
-| Feral Imp | 10000 | 2.4313 |
-| Fissure | 10000 | 2.4313 |
-| Gaia The Fierce Knight | 10000 | 2.4313 |
-| Gazelle the King of Mythical Beasts | 10000 | 2.4313 |
-| Giant Rat | 10000 | 2.4313 |
-| Giant Soldier of Stone | 10000 | 2.4313 |
-| Great White | 10000 | 2.4313 |
-| Kuriboh | 10000 | 2.4313 |
-| Last Will | 10000 | 2.4313 |
-| Magic Jammer | 10000 | 2.4313 |
-| Malevolent Nuzzler | 10000 | 2.4313 |
-| Man-Eater Bug | 10000 | 2.4313 |
-| Monster Reborn | 10000 | 2.4313 |
-| Mystic Plasma Zone | 10000 | 2.4313 |
-| Mystical Elf | 10000 | 2.4313 |
-| Mystical Space Typhoon | 10000 | 2.4313 |
-| Neo the Magic Swordsman | 10000 | 2.4313 |
-| Pot of Greed | 10000 | 2.4313 |
-| Raigeki Break | 10000 | 2.4313 |
-| Remove Trap | 10000 | 2.4313 |
-| Sangan | 10000 | 2.4313 |
-| Seven Tools of the Bandit | 10000 | 2.4313 |
-| Sonic Bird | 10000 | 2.4313 |
-| Spellbinding Circle | 10000 | 2.4313 |
-| Summoned Skull | 10000 | 2.4313 |
-| Swords of Revealing Light | 10000 | 2.4313 |
-| The Eye of Truth | 10000 | 2.4313 |
-| The Reliable Guardian | 10000 | 2.4313 |
-| Trap Hole | 10000 | 2.4313 |
-| Waboku | 10000 | 2.4313 |
-| Wall of Illusion | 10000 | 2.4313 |
-| Winged Dragon,Guardian of the Fortress #1 | 10000 | 2.4313 |
-| Zombyra the Dark | 10000 | 2.4313 |
-| Black Luster Ritual | 600 | 0.1459 |
-| Dark Magician | 600 | 0.1459 |
-| Black Luster Soldier | 100 | 0.0243 |
+| Axe of Despair | 10000 | 2.3736 |
+| Backup Soldier | 10000 | 2.3736 |
+| Beaver Warrior | 10000 | 2.3736 |
+| Card Destruction | 10000 | 2.3736 |
+| Celtic Guardian | 10000 | 2.3736 |
+| Change of Heart | 10000 | 2.3736 |
+| Dark Hole | 10000 | 2.3736 |
+| Dian Keto the Cure Master | 10000 | 2.3736 |
+| Feral Imp | 10000 | 2.3736 |
+| Fissure | 10000 | 2.3736 |
+| Gaia The Fierce Knight | 10000 | 2.3736 |
+| Gazelle the King of Mythical Beasts | 10000 | 2.3736 |
+| Giant Rat | 10000 | 2.3736 |
+| Giant Soldier of Stone | 10000 | 2.3736 |
+| Great White | 10000 | 2.3736 |
+| Kuriboh | 10000 | 2.3736 |
+| Last Will | 10000 | 2.3736 |
+| Magic Jammer | 10000 | 2.3736 |
+| Malevolent Nuzzler | 10000 | 2.3736 |
+| Man-Eater Bug | 10000 | 2.3736 |
+| Monster Reborn | 10000 | 2.3736 |
+| Mystic Plasma Zone | 10000 | 2.3736 |
+| Mystical Elf | 10000 | 2.3736 |
+| Mystical Space Typhoon | 10000 | 2.3736 |
+| Neo the Magic Swordsman | 10000 | 2.3736 |
+| Pot of Greed | 10000 | 2.3736 |
+| Raigeki Break | 10000 | 2.3736 |
+| Remove Trap | 10000 | 2.3736 |
+| Sangan | 10000 | 2.3736 |
+| Seven Tools of the Bandit | 10000 | 2.3736 |
+| Shift | 10000 | 2.3736 |
+| Sonic Bird | 10000 | 2.3736 |
+| Spellbinding Circle | 10000 | 2.3736 |
+| Summoned Skull | 10000 | 2.3736 |
+| Swords of Revealing Light | 10000 | 2.3736 |
+| The Eye of Truth | 10000 | 2.3736 |
+| The Reliable Guardian | 10000 | 2.3736 |
+| Trap Hole | 10000 | 2.3736 |
+| Waboku | 10000 | 2.3736 |
+| Wall of Illusion | 10000 | 2.3736 |
+| Winged Dragon,Guardian of the Fortress #1 | 10000 | 2.3736 |
+| Zombyra the Dark | 10000 | 2.3736 |
+| Black Luster Ritual | 600 | 0.1424 |
+| Dark Magician | 600 | 0.1424 |
+| Black Luster Soldier | 100 | 0.0237 |
 
 ### Starter Deck- Kaiba Evolution
 
-- **Type:** TCG · **Format:** Chaos · **Cards in pool:** 36 · **Weight sum:** 360000
+- **Type:** TCG · **Format:** Chaos · **Cards in pool:** 39 · **Weight sum:** 380600
 
 | Card | Weight | Pull % |
 |---|---:|---:|
-| Battle Ox | 10000 | 2.7778 |
-| Change of Heart | 10000 | 2.7778 |
-| De-Spell | 10000 | 2.7778 |
-| Dust Tornado | 10000 | 2.7778 |
-| Fissure | 10000 | 2.7778 |
-| Gift of The Mystical Elf | 10000 | 2.7778 |
-| Hane-Hane | 10000 | 2.7778 |
-| Hyozanryu | 10000 | 2.7778 |
-| Jar of Greed | 10000 | 2.7778 |
-| Just Desserts | 10000 | 2.7778 |
-| Kojikocy | 10000 | 2.7778 |
-| Koumori Dragon | 10000 | 2.7778 |
-| La Jinn the Mystical Genie of the Lamp | 10000 | 2.7778 |
-| Light of Intervention | 10000 | 2.7778 |
-| Lord of D. | 10000 | 2.7778 |
-| Megamorph | 10000 | 2.7778 |
-| Monster Reborn | 10000 | 2.7778 |
-| Mountain | 10000 | 2.7778 |
-| Mysterious Puppeteer | 10000 | 2.7778 |
-| Mystic Horseman | 10000 | 2.7778 |
-| Mystic Tomato | 10000 | 2.7778 |
-| Nobleman of Crossout | 10000 | 2.7778 |
-| Ookazi | 10000 | 2.7778 |
-| Premature Burial | 10000 | 2.7778 |
-| Rogue Doll | 10000 | 2.7778 |
-| Rush Recklessly | 10000 | 2.7778 |
-| Ryu-Kishin Powered | 10000 | 2.7778 |
-| Skull Red Bird | 10000 | 2.7778 |
-| Soul Exchange | 10000 | 2.7778 |
-| The Flute of Summoning Dragon | 10000 | 2.7778 |
-| The Inexperienced Spy | 10000 | 2.7778 |
-| Trap Hole | 10000 | 2.7778 |
-| Trap Master | 10000 | 2.7778 |
-| Tribute to The Doomed | 10000 | 2.7778 |
-| Uraby | 10000 | 2.7778 |
-| Witch of the Black Forest | 10000 | 2.7778 |
+| Battle Ox | 10000 | 2.6274 |
+| Change of Heart | 10000 | 2.6274 |
+| De-Spell | 10000 | 2.6274 |
+| Dust Tornado | 10000 | 2.6274 |
+| Fissure | 10000 | 2.6274 |
+| Gift of The Mystical Elf | 10000 | 2.6274 |
+| Hane-Hane | 10000 | 2.6274 |
+| Hyozanryu | 10000 | 2.6274 |
+| Jar of Greed | 10000 | 2.6274 |
+| Just Desserts | 10000 | 2.6274 |
+| Kojikocy | 10000 | 2.6274 |
+| Koumori Dragon | 10000 | 2.6274 |
+| La Jinn the Mystical Genie of the Lamp | 10000 | 2.6274 |
+| Light of Intervention | 10000 | 2.6274 |
+| Lord of D. | 10000 | 2.6274 |
+| Mad Sword Beast | 10000 | 2.6274 |
+| Megamorph | 10000 | 2.6274 |
+| Monster Reborn | 10000 | 2.6274 |
+| Mountain | 10000 | 2.6274 |
+| Mysterious Puppeteer | 10000 | 2.6274 |
+| Mystic Horseman | 10000 | 2.6274 |
+| Mystic Tomato | 10000 | 2.6274 |
+| Nobleman of Crossout | 10000 | 2.6274 |
+| Ookazi | 10000 | 2.6274 |
+| Premature Burial | 10000 | 2.6274 |
+| Riryoku Field | 10000 | 2.6274 |
+| Rogue Doll | 10000 | 2.6274 |
+| Rush Recklessly | 10000 | 2.6274 |
+| Ryu-Kishin Powered | 10000 | 2.6274 |
+| Skull Red Bird | 10000 | 2.6274 |
+| Soul Exchange | 10000 | 2.6274 |
+| The Flute of Summoning Dragon | 10000 | 2.6274 |
+| The Inexperienced Spy | 10000 | 2.6274 |
+| Trap Hole | 10000 | 2.6274 |
+| Trap Master | 10000 | 2.6274 |
+| Tribute to The Doomed | 10000 | 2.6274 |
+| Uraby | 10000 | 2.6274 |
+| Witch of the Black Forest | 10000 | 2.6274 |
+| Shadow Spell | 600 | 0.1576 |
 
 ### Invasion of Chaos
 
@@ -2061,149 +2195,152 @@ Forbidden cards (limit 0) are omitted. Lower usage ⇒ higher weight ⇒ more co
 
 ### Chaos
 
-- **Type:** Usage · **Format:** Chaos · **Cards in pool:** 139 · **Weight sum:** 177536
+- **Type:** Usage · **Format:** Chaos · **Cards in pool:** 142 · **Weight sum:** 185261
 
 | Card | Weight | Pull % |
 |---|---:|---:|
-| Catapult Turtle | 3840 | 2.1629 |
-| Dark Ruler Ha Des | 3840 | 2.1629 |
-| Electric Snake | 3840 | 2.1629 |
-| Gigantes | 3840 | 2.1629 |
-| Goblin Attack Force | 3840 | 2.1629 |
-| Hysteric Fairy | 3840 | 2.1629 |
-| Kuriboh | 3840 | 2.1629 |
-| Magical Merchant | 3840 | 2.1629 |
-| Pyramid Turtle | 3840 | 2.1629 |
-| Return from the Different Dimension | 3840 | 2.1629 |
-| Spell Canceller | 3840 | 2.1629 |
-| White Magical Hat | 3840 | 2.1629 |
-| Zaborg the Thunder Monarch | 3840 | 2.1629 |
-| Axe of Despair | 2939 | 1.6554 |
-| Black Illusion Ritual | 2939 | 1.6554 |
-| Cursed Seal of the Forbidden Spell | 2939 | 1.6554 |
-| Jar of Greed | 2939 | 1.6554 |
-| Magic Jammer | 2939 | 1.6554 |
-| Masked Sorcerer | 2939 | 1.6554 |
-| Relinquished | 2939 | 1.6554 |
-| Giant Trunade | 2517 | 1.4177 |
-| Roulette Barrel | 2517 | 1.4177 |
-| Soul Release | 2517 | 1.4177 |
-| Spear Dragon | 2517 | 1.4177 |
-| The Shallow Grave | 2517 | 1.4177 |
-| Vampire Lord | 2517 | 1.4177 |
-| Time Seal | 2257 | 1.2713 |
-| 4-Starred Ladybug of Doom | 2074 | 1.1682 |
-| Dimension Fusion | 2074 | 1.1682 |
-| Mystic Tomato | 2074 | 1.1682 |
-| Berserk Gorilla | 1937 | 1.0910 |
-| Cipher Soldier | 1937 | 1.0910 |
-| Sasuke Samurai | 1937 | 1.0910 |
-| Skilled Dark Magician | 1937 | 1.0910 |
-| Airknight Parshath | 1828 | 1.0297 |
-| Exchange | 1828 | 1.0297 |
-| Bottomless Trap Hole | 1739 | 0.9795 |
-| Don Zaloog | 1739 | 0.9795 |
-| King Tiger Wanghu | 1739 | 0.9795 |
-| Creature Swap | 1665 | 0.9378 |
-| Thunder Nyan Nyan | 1665 | 0.9378 |
-| Metamorphosis | 1601 | 0.9018 |
-| Cold Wave | 1546 | 0.8708 |
-| Tsukuyomi | 1497 | 0.8432 |
-| Dust Tornado | 1453 | 0.8184 |
-| Spirit Reaper | 1453 | 0.8184 |
-| Chaos Sorcerer | 1415 | 0.7970 |
-| Solemn Judgment | 1415 | 0.7970 |
-| Dark Magician of Chaos | 1379 | 0.7767 |
-| Swords of Revealing Light | 1379 | 0.7767 |
-| Waboku | 1379 | 0.7767 |
-| Sakuretsu Armor | 1318 | 0.7424 |
-| Asura Priest | 1266 | 0.7131 |
-| Ceasefire | 1221 | 0.6877 |
-| Zombyra the Dark | 1221 | 0.6877 |
-| Magic Cylinder | 1115 | 0.6280 |
-| Morphing Jar | 1115 | 0.6280 |
-| Raigeki Break | 1074 | 0.6049 |
-| Reinforcement of the Army | 1056 | 0.5948 |
-| Thunder Dragon | 1039 | 0.5852 |
-| Upstart Goblin | 979 | 0.5514 |
-| Trap Dustshoot | 971 | 0.5469 |
-| Deepsea Shark | 946 | 0.5328 |
-| Cyber Jar | 874 | 0.4923 |
-| Gravekeeper's Spy | 864 | 0.4867 |
-| Torrential Tribute | 789 | 0.4444 |
-| D.D. Warrior Lady | 778 | 0.4382 |
-| Magician of Faith | 778 | 0.4382 |
-| Kycoo the Ghost Destroyer | 771 | 0.4343 |
-| Exiled Force | 761 | 0.4286 |
-| Card Destruction | 752 | 0.4236 |
-| Yata-Garasu | 727 | 0.4095 |
-| Bickuribox | 720 | 0.4056 |
-| Labyrinth Tank | 720 | 0.4056 |
-| Metal Dragon | 720 | 0.4056 |
-| Warrior of Tradition | 720 | 0.4056 |
-| Injection Fairy Lily | 698 | 0.3932 |
-| Nobleman of Crossout | 698 | 0.3932 |
-| Magical Scientist | 634 | 0.3571 |
-| Jinzo | 630 | 0.3549 |
-| Flame Swordsman | 614 | 0.3458 |
-| Skull Knight | 614 | 0.3458 |
-| Premature Burial | 610 | 0.3436 |
-| Heavy Storm | 599 | 0.3374 |
-| Fiber Jar | 580 | 0.3267 |
-| Sinister Serpent | 553 | 0.3115 |
-| Punished Eagle | 548 | 0.3087 |
-| Confiscation | 540 | 0.3042 |
-| Sangan | 540 | 0.3042 |
-| Breaker the Magical Warrior | 538 | 0.3030 |
-| Delinquent Duo | 538 | 0.3030 |
-| Mirror Force | 533 | 0.3002 |
-| Snatch Steal | 531 | 0.2991 |
-| Dark Hole | 529 | 0.2980 |
-| Painful Choice | 529 | 0.2980 |
-| Tribe-Infecting Virus | 529 | 0.2980 |
-| The Forceful Sentry | 527 | 0.2968 |
-| Harpie's Feather Duster | 525 | 0.2957 |
-| Witch of the Black Forest | 525 | 0.2957 |
-| Bell of Destruction | 524 | 0.2952 |
-| Black Luster Soldier - Envoy of Beginning | 524 | 0.2952 |
-| Change of Heart | 524 | 0.2952 |
-| Chaos Emperor Dragon - Envoy of the End | 524 | 0.2952 |
-| Graceful Charity | 522 | 0.2940 |
-| Monster Reborn | 522 | 0.2940 |
-| Pot of Greed | 522 | 0.2940 |
-| Raigeki | 522 | 0.2940 |
-| Dark Paladin | 502 | 0.2828 |
-| Empress Judge | 502 | 0.2828 |
-| Karbonala Warrior | 502 | 0.2828 |
-| B. Skull Dragon | 400 | 0.2253 |
-| Fusionist | 400 | 0.2253 |
-| Twin-Headed Thunder Dragon | 400 | 0.2253 |
-| Gaia the Dragon Champion | 384 | 0.2163 |
-| Musician King | 384 | 0.2163 |
-| The Last Warrior from Another Planet | 384 | 0.2163 |
-| Dragoness the Wicked Knight | 357 | 0.2011 |
-| Flame Ghost | 357 | 0.2011 |
-| Darkfire Dragon | 320 | 0.1802 |
-| Enemy Controller | 293 | 0.1650 |
-| Reaper on the Nightmare | 278 | 0.1566 |
-| Giltia the D. Knight | 274 | 0.1543 |
-| Emergency Provisions | 251 | 0.1414 |
-| Prohibition | 225 | 0.1267 |
-| Roaring Ocean Snake | 225 | 0.1267 |
-| Royal Oppression | 225 | 0.1267 |
-| Dark Flare Knight | 188 | 0.1059 |
-| Fiend Skull Dragon | 178 | 0.1003 |
-| Ryu Senshi | 174 | 0.0980 |
-| Dark Balter the Terrible | 173 | 0.0974 |
-| Thousand-Eyes Restrict | 173 | 0.0974 |
-| Book of Moon | 166 | 0.0935 |
-| Poison of the Old Man | 145 | 0.0817 |
-| Royal Decree | 129 | 0.0727 |
-| Scapegoat | 129 | 0.0727 |
-| Mystical Space Typhoon | 74 | 0.0417 |
-| Call Of The Haunted | 55 | 0.0310 |
-| Mirage of Nightmare | 54 | 0.0304 |
-| Imperial Order | 52 | 0.0293 |
+| Amazoness Archer | 3840 | 2.0728 |
+| Catapult Turtle | 3840 | 2.0728 |
+| Dark Ruler Ha Des | 3840 | 2.0728 |
+| Electric Snake | 3840 | 2.0728 |
+| Gigantes | 3840 | 2.0728 |
+| Goblin Attack Force | 3840 | 2.0728 |
+| Hysteric Fairy | 3840 | 2.0728 |
+| Kuriboh | 3840 | 2.0728 |
+| Magical Merchant | 3840 | 2.0728 |
+| Pyramid Turtle | 3840 | 2.0728 |
+| Return from the Different Dimension | 3840 | 2.0728 |
+| Spell Canceller | 3840 | 2.0728 |
+| White Magical Hat | 3840 | 2.0728 |
+| Zaborg the Thunder Monarch | 3840 | 2.0728 |
+| Axe of Despair | 2939 | 1.5864 |
+| Black Illusion Ritual | 2939 | 1.5864 |
+| Cursed Seal of the Forbidden Spell | 2939 | 1.5864 |
+| Jar of Greed | 2939 | 1.5864 |
+| Magic Jammer | 2939 | 1.5864 |
+| Masked Sorcerer | 2939 | 1.5864 |
+| Relinquished | 2939 | 1.5864 |
+| Spiritualism | 2939 | 1.5864 |
+| Giant Trunade | 2517 | 1.3586 |
+| Roulette Barrel | 2517 | 1.3586 |
+| Soul Release | 2517 | 1.3586 |
+| Spear Dragon | 2517 | 1.3586 |
+| The Shallow Grave | 2517 | 1.3586 |
+| Vampire Lord | 2517 | 1.3586 |
+| Time Seal | 2257 | 1.2183 |
+| 4-Starred Ladybug of Doom | 2074 | 1.1195 |
+| Dimension Fusion | 2074 | 1.1195 |
+| Mystic Tomato | 2074 | 1.1195 |
+| Berserk Gorilla | 1937 | 1.0456 |
+| Cipher Soldier | 1937 | 1.0456 |
+| Sasuke Samurai | 1937 | 1.0456 |
+| Skilled Dark Magician | 1937 | 1.0456 |
+| Airknight Parshath | 1828 | 0.9867 |
+| Exchange | 1828 | 0.9867 |
+| Bottomless Trap Hole | 1739 | 0.9387 |
+| Don Zaloog | 1739 | 0.9387 |
+| King Tiger Wanghu | 1739 | 0.9387 |
+| Creature Swap | 1665 | 0.8987 |
+| Thunder Nyan Nyan | 1665 | 0.8987 |
+| Metamorphosis | 1601 | 0.8642 |
+| Cold Wave | 1546 | 0.8345 |
+| Tsukuyomi | 1497 | 0.8080 |
+| Dust Tornado | 1453 | 0.7843 |
+| Spirit Reaper | 1453 | 0.7843 |
+| Chaos Sorcerer | 1415 | 0.7638 |
+| Solemn Judgment | 1415 | 0.7638 |
+| Dark Magician of Chaos | 1379 | 0.7444 |
+| Swords of Revealing Light | 1379 | 0.7444 |
+| Waboku | 1379 | 0.7444 |
+| Sakuretsu Armor | 1318 | 0.7114 |
+| Asura Priest | 1266 | 0.6834 |
+| Ceasefire | 1221 | 0.6591 |
+| Zombyra the Dark | 1221 | 0.6591 |
+| Magic Cylinder | 1115 | 0.6019 |
+| Morphing Jar | 1115 | 0.6019 |
+| Raigeki Break | 1074 | 0.5797 |
+| Reinforcement of the Army | 1056 | 0.5700 |
+| Thunder Dragon | 1039 | 0.5608 |
+| Upstart Goblin | 979 | 0.5284 |
+| Trap Dustshoot | 971 | 0.5241 |
+| Deepsea Shark | 946 | 0.5106 |
+| St. Joan | 946 | 0.5106 |
+| Cyber Jar | 874 | 0.4718 |
+| Gravekeeper's Spy | 864 | 0.4664 |
+| Torrential Tribute | 789 | 0.4259 |
+| D.D. Warrior Lady | 778 | 0.4199 |
+| Magician of Faith | 778 | 0.4199 |
+| Kycoo the Ghost Destroyer | 771 | 0.4162 |
+| Exiled Force | 761 | 0.4108 |
+| Card Destruction | 752 | 0.4059 |
+| Yata-Garasu | 727 | 0.3924 |
+| Bickuribox | 720 | 0.3886 |
+| Labyrinth Tank | 720 | 0.3886 |
+| Metal Dragon | 720 | 0.3886 |
+| Warrior of Tradition | 720 | 0.3886 |
+| Injection Fairy Lily | 698 | 0.3768 |
+| Nobleman of Crossout | 698 | 0.3768 |
+| Magical Scientist | 634 | 0.3422 |
+| Jinzo | 630 | 0.3401 |
+| Flame Swordsman | 614 | 0.3314 |
+| Skull Knight | 614 | 0.3314 |
+| Premature Burial | 610 | 0.3293 |
+| Heavy Storm | 599 | 0.3233 |
+| Fiber Jar | 580 | 0.3131 |
+| Sinister Serpent | 553 | 0.2985 |
+| Punished Eagle | 548 | 0.2958 |
+| Confiscation | 540 | 0.2915 |
+| Sangan | 540 | 0.2915 |
+| Breaker the Magical Warrior | 538 | 0.2904 |
+| Delinquent Duo | 538 | 0.2904 |
+| Mirror Force | 533 | 0.2877 |
+| Snatch Steal | 531 | 0.2866 |
+| Dark Hole | 529 | 0.2855 |
+| Painful Choice | 529 | 0.2855 |
+| Tribe-Infecting Virus | 529 | 0.2855 |
+| The Forceful Sentry | 527 | 0.2845 |
+| Harpie's Feather Duster | 525 | 0.2834 |
+| Witch of the Black Forest | 525 | 0.2834 |
+| Bell of Destruction | 524 | 0.2828 |
+| Black Luster Soldier - Envoy of Beginning | 524 | 0.2828 |
+| Change of Heart | 524 | 0.2828 |
+| Chaos Emperor Dragon - Envoy of the End | 524 | 0.2828 |
+| Graceful Charity | 522 | 0.2818 |
+| Monster Reborn | 522 | 0.2818 |
+| Pot of Greed | 522 | 0.2818 |
+| Raigeki | 522 | 0.2818 |
+| Dark Paladin | 502 | 0.2710 |
+| Empress Judge | 502 | 0.2710 |
+| Karbonala Warrior | 502 | 0.2710 |
+| B. Skull Dragon | 400 | 0.2159 |
+| Fusionist | 400 | 0.2159 |
+| Twin-Headed Thunder Dragon | 400 | 0.2159 |
+| Gaia the Dragon Champion | 384 | 0.2073 |
+| Musician King | 384 | 0.2073 |
+| The Last Warrior from Another Planet | 384 | 0.2073 |
+| Dragoness the Wicked Knight | 357 | 0.1927 |
+| Flame Ghost | 357 | 0.1927 |
+| Darkfire Dragon | 320 | 0.1727 |
+| Enemy Controller | 293 | 0.1582 |
+| Reaper on the Nightmare | 278 | 0.1501 |
+| Giltia the D. Knight | 274 | 0.1479 |
+| Emergency Provisions | 251 | 0.1355 |
+| Prohibition | 225 | 0.1215 |
+| Roaring Ocean Snake | 225 | 0.1215 |
+| Royal Oppression | 225 | 0.1215 |
+| Dark Flare Knight | 188 | 0.1015 |
+| Fiend Skull Dragon | 178 | 0.0961 |
+| Ryu Senshi | 174 | 0.0939 |
+| Dark Balter the Terrible | 173 | 0.0934 |
+| Thousand-Eyes Restrict | 173 | 0.0934 |
+| Book of Moon | 166 | 0.0896 |
+| Poison of the Old Man | 145 | 0.0783 |
+| Royal Decree | 129 | 0.0696 |
+| Scapegoat | 129 | 0.0696 |
+| Mystical Space Typhoon | 74 | 0.0399 |
+| Call Of The Haunted | 55 | 0.0297 |
+| Mirage of Nightmare | 54 | 0.0291 |
+| Imperial Order | 52 | 0.0281 |
 
 ### Ancient Sanctuary
 
@@ -2236,194 +2373,245 @@ Forbidden cards (limit 0) are omitted. Lower usage ⇒ higher weight ⇒ more co
 
 ### Dark Beginning 1
 
-- **Type:** TCG · **Format:** Warrior · **Cards in pool:** 184 · **Weight sum:** 1337200
+- **Type:** TCG · **Format:** Warrior · **Cards in pool:** 235 · **Weight sum:** 1815300
 
 | Card | Weight | Pull % |
 |---|---:|---:|
-| 4-Starred Ladybug of Doom | 10000 | 0.7478 |
-| Ameba | 10000 | 0.7478 |
-| Aqua Madoor | 10000 | 0.7478 |
-| Armed Ninja | 10000 | 0.7478 |
-| Armored Lizard | 10000 | 0.7478 |
-| Armored Zombie | 10000 | 0.7478 |
-| Backup Soldier | 10000 | 0.7478 |
-| Banisher of the Light | 10000 | 0.7478 |
-| Beaver Warrior | 10000 | 0.7478 |
-| Big Eye | 10000 | 0.7478 |
-| Blast Juggler | 10000 | 0.7478 |
-| Celtic Guardian | 10000 | 0.7478 |
-| Ceremonial Bell | 10000 | 0.7478 |
-| Chain Destruction | 10000 | 0.7478 |
-| Chain Energy | 10000 | 0.7478 |
-| Chorus of Sanctuary | 10000 | 0.7478 |
-| Cocoon of Evolution | 10000 | 0.7478 |
-| Confiscation | 10000 | 0.7478 |
-| Curse of Dragon | 10000 | 0.7478 |
-| DNA Surgery | 10000 | 0.7478 |
-| Dark King of the Abyss | 10000 | 0.7478 |
-| Dragon Capture Jar | 10000 | 0.7478 |
-| Electric Snake | 10000 | 0.7478 |
-| Elegant Egotist | 10000 | 0.7478 |
-| Enchanted Javelin | 10000 | 0.7478 |
-| Eternal Rest | 10000 | 0.7478 |
-| Fairy Box | 10000 | 0.7478 |
-| Fairy's Hand Mirror | 10000 | 0.7478 |
-| Fake Trap | 10000 | 0.7478 |
-| Feral Imp | 10000 | 0.7478 |
-| Final Destiny | 10000 | 0.7478 |
-| Flame Manipulator | 10000 | 0.7478 |
-| Flash Assailant | 10000 | 0.7478 |
-| Flying Kamakiri #1 | 10000 | 0.7478 |
-| Forced Requisition | 10000 | 0.7478 |
-| Gaia Power | 10000 | 0.7478 |
-| Giant Germ | 10000 | 0.7478 |
-| Giant Soldier of Stone | 10000 | 0.7478 |
-| Gift of The Mystical Elf | 10000 | 0.7478 |
-| Gravekeeper's Servant | 10000 | 0.7478 |
-| Graverobber | 10000 | 0.7478 |
-| Gravity Bind | 10000 | 0.7478 |
-| Griggle | 10000 | 0.7478 |
-| Hane-Hane | 10000 | 0.7478 |
-| Harpie Lady | 10000 | 0.7478 |
-| Harpie Lady Sisters | 10000 | 0.7478 |
-| Hinotama | 10000 | 0.7478 |
-| Hiro's Shadow Scout | 10000 | 0.7478 |
-| Hitotsu-Me Giant | 10000 | 0.7478 |
-| Horn of Light | 10000 | 0.7478 |
-| Horn of the Unicorn | 10000 | 0.7478 |
-| Hyozanryu | 10000 | 0.7478 |
-| Hysteric Fairy | 10000 | 0.7478 |
-| Invader of the Throne | 10000 | 0.7478 |
-| Jinzo #7 | 10000 | 0.7478 |
-| Karate Man | 10000 | 0.7478 |
-| Kazejin | 10000 | 0.7478 |
-| Kiseitai | 10000 | 0.7478 |
-| Kojikocy | 10000 | 0.7478 |
-| Kotodama | 10000 | 0.7478 |
-| Labyrinth Wall | 10000 | 0.7478 |
-| Larvae Moth | 10000 | 0.7478 |
-| Left Arm of the Forbidden One | 10000 | 0.7478 |
-| Left Leg of the Forbidden One | 10000 | 0.7478 |
-| Light of Intervention | 10000 | 0.7478 |
-| Lightforce Sword | 10000 | 0.7478 |
-| Luminous Spark | 10000 | 0.7478 |
-| Maha Vailo | 10000 | 0.7478 |
-| Malevolent Nuzzler | 10000 | 0.7478 |
-| Mammoth Graveyard | 10000 | 0.7478 |
-| Manga Ryu-Ran | 10000 | 0.7478 |
-| Masaki the Legendary Swordsman | 10000 | 0.7478 |
-| Mask of Darkness | 10000 | 0.7478 |
-| Mask of Restrict | 10000 | 0.7478 |
-| Masked Sorcerer | 10000 | 0.7478 |
-| Messenger of Peace | 10000 | 0.7478 |
-| Minar | 10000 | 0.7478 |
-| Mirror Wall | 10000 | 0.7478 |
-| Molten Destruction | 10000 | 0.7478 |
-| Mother Grizzly | 10000 | 0.7478 |
-| Mystic Lamp | 10000 | 0.7478 |
-| Mystic Plasma Zone | 10000 | 0.7478 |
-| Mystical Elf | 10000 | 0.7478 |
-| Nobleman of Extermination | 10000 | 0.7478 |
-| Numinous Healer | 10000 | 0.7478 |
-| Painful Choice | 10000 | 0.7478 |
-| Parasite Paracide | 10000 | 0.7478 |
-| Penguin Knight | 10000 | 0.7478 |
-| Petit Moth | 10000 | 0.7478 |
-| Polymerization | 10000 | 0.7478 |
-| Polymerization | 10000 | 0.7478 |
-| Reaper of the Cards | 10000 | 0.7478 |
-| Red Archery Girl | 10000 | 0.7478 |
-| Red Medicine | 10000 | 0.7478 |
-| Respect Play | 10000 | 0.7478 |
-| Right Arm of the Forbidden One | 10000 | 0.7478 |
-| Right Leg of the Forbidden One | 10000 | 0.7478 |
-| Rising Air Current | 10000 | 0.7478 |
-| Rush Recklessly | 10000 | 0.7478 |
-| Sanga of the Thunder | 10000 | 0.7478 |
-| Senju of the Thousand Hands | 10000 | 0.7478 |
-| Silver Fang | 10000 | 0.7478 |
-| Skull Servant | 10000 | 0.7478 |
-| Slot Machine | 10000 | 0.7478 |
-| Solemn Wishes | 10000 | 0.7478 |
-| Sonic Bird | 10000 | 0.7478 |
-| Soul Release | 10000 | 0.7478 |
-| Stop Defense | 10000 | 0.7478 |
-| Suijin | 10000 | 0.7478 |
-| Tailor of the Fickle | 10000 | 0.7478 |
-| The Cheerful Coffin | 10000 | 0.7478 |
-| The Eye of Truth | 10000 | 0.7478 |
-| The Reliable Guardian | 10000 | 0.7478 |
-| The Shallow Grave | 10000 | 0.7478 |
-| Thousand-Eyes Idol | 10000 | 0.7478 |
-| Time Seal | 10000 | 0.7478 |
-| Toll | 10000 | 0.7478 |
-| Toon Mermaid | 10000 | 0.7478 |
-| Toon World | 10000 | 0.7478 |
-| UFO Turtle | 10000 | 0.7478 |
-| Umi  | 10000 | 0.7478 |
-| Umiiruka | 10000 | 0.7478 |
-| Upstart Goblin | 10000 | 0.7478 |
-| Uraby | 10000 | 0.7478 |
-| White Magical Hat | 10000 | 0.7478 |
-| Winged Dragon,Guardian of the Fortress #1 | 10000 | 0.7478 |
-| Axe of Despair | 2500 | 0.1870 |
-| Black Pendant | 2500 | 0.1870 |
-| Cyber Jar | 2500 | 0.1870 |
-| Dust Tornado | 2500 | 0.1870 |
-| Fissure | 2500 | 0.1870 |
-| Flame Swordsman | 2500 | 0.1870 |
-| Gaia The Fierce Knight | 2500 | 0.1870 |
-| Gaia the Dragon Champion | 2500 | 0.1870 |
-| Gearfried the Iron Knight | 2500 | 0.1870 |
-| Giant Rat | 2500 | 0.1870 |
-| Giant Trunade | 2500 | 0.1870 |
-| Jar of Greed | 2500 | 0.1870 |
-| Limiter Removal | 2500 | 0.1870 |
-| Magic Drain | 2500 | 0.1870 |
-| Magical Hats | 2500 | 0.1870 |
-| Magician of Faith | 2500 | 0.1870 |
-| Man-Eater Bug | 2500 | 0.1870 |
-| Morphing Jar #2 | 2500 | 0.1870 |
-| Mystic Tomato | 2500 | 0.1870 |
-| Nimble Momonga | 2500 | 0.1870 |
-| Spellbinding Circle | 2500 | 0.1870 |
-| The Fiend Megacyber | 2500 | 0.1870 |
-| The Forceful Sentry | 2500 | 0.1870 |
-| Toon Summoned Skull | 2500 | 0.1870 |
-| Trap Hole | 2500 | 0.1870 |
-| Tribute to The Doomed | 2500 | 0.1870 |
-| B. Skull Dragon | 600 | 0.0449 |
-| Blue-Eyes Toon Dragon | 600 | 0.0449 |
-| Buster Blader | 600 | 0.0449 |
-| Call Of The Haunted | 600 | 0.0449 |
-| Ceasefire | 600 | 0.0449 |
-| Dark Hole | 600 | 0.0449 |
-| Delinquent Duo | 600 | 0.0449 |
-| Exchange | 600 | 0.0449 |
-| Goblin Attack Force | 600 | 0.0449 |
-| Megamorph | 600 | 0.0449 |
-| Mystical Space Typhoon | 600 | 0.0449 |
-| Nobleman of Crossout | 600 | 0.0449 |
-| Pot of Greed | 600 | 0.0449 |
-| Premature Burial | 600 | 0.0449 |
-| Red-Eyes B. Dragon | 600 | 0.0449 |
-| Relinquished | 600 | 0.0449 |
-| Summoned Skull | 600 | 0.0449 |
-| Swords of Revealing Light | 600 | 0.0449 |
-| Big Shield Gardna | 100 | 0.0075 |
-| Change of Heart | 100 | 0.0075 |
-| Dark Magician | 100 | 0.0075 |
-| Dark Sage | 100 | 0.0075 |
-| Exodia the Forbidden One | 100 | 0.0075 |
-| Imperial Order | 100 | 0.0075 |
-| Jinzo | 100 | 0.0075 |
-| Mage Power | 100 | 0.0075 |
-| Monster Reborn | 100 | 0.0075 |
-| Raigeki | 100 | 0.0075 |
-| Snatch Steal | 100 | 0.0075 |
-| Thousand-Eyes Restrict | 100 | 0.0075 |
-| Torrential Tribute | 100 | 0.0075 |
-| United We Stand | 100 | 0.0075 |
+| 4-Starred Ladybug of Doom | 10000 | 0.5509 |
+| Amazoness Archer | 10000 | 0.5509 |
+| Ameba | 10000 | 0.5509 |
+| Aqua Madoor | 10000 | 0.5509 |
+| Armed Ninja | 10000 | 0.5509 |
+| Armored Lizard | 10000 | 0.5509 |
+| Armored Zombie | 10000 | 0.5509 |
+| Attack and Receive | 10000 | 0.5509 |
+| Backup Soldier | 10000 | 0.5509 |
+| Banisher of the Light | 10000 | 0.5509 |
+| Beaver Warrior | 10000 | 0.5509 |
+| Big Eye | 10000 | 0.5509 |
+| Blast Juggler | 10000 | 0.5509 |
+| Bombardment Beetle | 10000 | 0.5509 |
+| Bubonic Vermin | 10000 | 0.5509 |
+| Burning Land | 10000 | 0.5509 |
+| Card of Safe Return | 10000 | 0.5509 |
+| Celtic Guardian | 10000 | 0.5509 |
+| Ceremonial Bell | 10000 | 0.5509 |
+| Chain Destruction | 10000 | 0.5509 |
+| Chain Energy | 10000 | 0.5509 |
+| Chorus of Sanctuary | 10000 | 0.5509 |
+| Chosen One | 10000 | 0.5509 |
+| Cocoon of Evolution | 10000 | 0.5509 |
+| Confiscation | 10000 | 0.5509 |
+| Cure Mermaid | 10000 | 0.5509 |
+| Curse of Dragon | 10000 | 0.5509 |
+| Curse of the Masked Beast | 10000 | 0.5509 |
+| DNA Surgery | 10000 | 0.5509 |
+| Dancing Fairy | 10000 | 0.5509 |
+| Dark King of the Abyss | 10000 | 0.5509 |
+| Darklord Marie | 10000 | 0.5509 |
+| Deepsea Warrior | 10000 | 0.5509 |
+| Dragon Capture Jar | 10000 | 0.5509 |
+| Drill Bug | 10000 | 0.5509 |
+| Electric Snake | 10000 | 0.5509 |
+| Elegant Egotist | 10000 | 0.5509 |
+| Enchanted Javelin | 10000 | 0.5509 |
+| Eternal Rest | 10000 | 0.5509 |
+| Fairy Box | 10000 | 0.5509 |
+| Fairy's Hand Mirror | 10000 | 0.5509 |
+| Fake Trap | 10000 | 0.5509 |
+| Feral Imp | 10000 | 0.5509 |
+| Final Destiny | 10000 | 0.5509 |
+| Fire Princess | 10000 | 0.5509 |
+| Flame Manipulator | 10000 | 0.5509 |
+| Flash Assailant | 10000 | 0.5509 |
+| Flying Kamakiri #1 | 10000 | 0.5509 |
+| Forced Requisition | 10000 | 0.5509 |
+| Gaia Power | 10000 | 0.5509 |
+| Gamble | 10000 | 0.5509 |
+| Giant Germ | 10000 | 0.5509 |
+| Giant Soldier of Stone | 10000 | 0.5509 |
+| Gift of The Mystical Elf | 10000 | 0.5509 |
+| Gradius | 10000 | 0.5509 |
+| Grand Tiki Elder | 10000 | 0.5509 |
+| Gravekeeper's Servant | 10000 | 0.5509 |
+| Graverobber | 10000 | 0.5509 |
+| Gravity Bind | 10000 | 0.5509 |
+| Griggle | 10000 | 0.5509 |
+| Ground Collapse | 10000 | 0.5509 |
+| Hane-Hane | 10000 | 0.5509 |
+| Harpie Lady | 10000 | 0.5509 |
+| Harpie Lady Sisters | 10000 | 0.5509 |
+| Hinotama | 10000 | 0.5509 |
+| Hiro's Shadow Scout | 10000 | 0.5509 |
+| Hitotsu-Me Giant | 10000 | 0.5509 |
+| Horn of Light | 10000 | 0.5509 |
+| Horn of the Unicorn | 10000 | 0.5509 |
+| Humanoid Slime | 10000 | 0.5509 |
+| Humanoid Worm Drake | 10000 | 0.5509 |
+| Hyozanryu | 10000 | 0.5509 |
+| Hysteric Fairy | 10000 | 0.5509 |
+| Infinite Cards | 10000 | 0.5509 |
+| Infinite Dismissal | 10000 | 0.5509 |
+| Insect Barrier | 10000 | 0.5509 |
+| Invader of the Throne | 10000 | 0.5509 |
+| Jam Breeding Machine | 10000 | 0.5509 |
+| Jam Defender | 10000 | 0.5509 |
+| Jinzo #7 | 10000 | 0.5509 |
+| Karate Man | 10000 | 0.5509 |
+| Kazejin | 10000 | 0.5509 |
+| Kiseitai | 10000 | 0.5509 |
+| Kojikocy | 10000 | 0.5509 |
+| Kotodama | 10000 | 0.5509 |
+| Labyrinth Wall | 10000 | 0.5509 |
+| Larvae Moth | 10000 | 0.5509 |
+| Left Arm of the Forbidden One | 10000 | 0.5509 |
+| Left Leg of the Forbidden One | 10000 | 0.5509 |
+| Light of Intervention | 10000 | 0.5509 |
+| Lightforce Sword | 10000 | 0.5509 |
+| Luminous Spark | 10000 | 0.5509 |
+| Maha Vailo | 10000 | 0.5509 |
+| Malevolent Nuzzler | 10000 | 0.5509 |
+| Mammoth Graveyard | 10000 | 0.5509 |
+| Manga Ryu-Ran | 10000 | 0.5509 |
+| Masaki the Legendary Swordsman | 10000 | 0.5509 |
+| Mask of Brutality | 10000 | 0.5509 |
+| Mask of Darkness | 10000 | 0.5509 |
+| Mask of Dispel | 10000 | 0.5509 |
+| Mask of Restrict | 10000 | 0.5509 |
+| Mask of Weakness | 10000 | 0.5509 |
+| Mask of the Accursed | 10000 | 0.5509 |
+| Masked Sorcerer | 10000 | 0.5509 |
+| Melchid the Four-Face Beast | 10000 | 0.5509 |
+| Messenger of Peace | 10000 | 0.5509 |
+| Minar | 10000 | 0.5509 |
+| Minor Goblin Official | 10000 | 0.5509 |
+| Mirror Wall | 10000 | 0.5509 |
+| Molten Destruction | 10000 | 0.5509 |
+| Monster Recovery | 10000 | 0.5509 |
+| Mother Grizzly | 10000 | 0.5509 |
+| Mystic Lamp | 10000 | 0.5509 |
+| Mystic Plasma Zone | 10000 | 0.5509 |
+| Mystical Elf | 10000 | 0.5509 |
+| Nobleman of Extermination | 10000 | 0.5509 |
+| Numinous Healer | 10000 | 0.5509 |
+| Nuvia the Wicked | 10000 | 0.5509 |
+| Painful Choice | 10000 | 0.5509 |
+| Parasite Paracide | 10000 | 0.5509 |
+| Penguin Knight | 10000 | 0.5509 |
+| Petit Moth | 10000 | 0.5509 |
+| Polymerization | 10000 | 0.5509 |
+| Polymerization | 10000 | 0.5509 |
+| Rain of Mercy | 10000 | 0.5509 |
+| Reaper of the Cards | 10000 | 0.5509 |
+| Red Archery Girl | 10000 | 0.5509 |
+| Red Medicine | 10000 | 0.5509 |
+| Respect Play | 10000 | 0.5509 |
+| Revival Jam | 10000 | 0.5509 |
+| Right Arm of the Forbidden One | 10000 | 0.5509 |
+| Right Leg of the Forbidden One | 10000 | 0.5509 |
+| Rising Air Current | 10000 | 0.5509 |
+| Rush Recklessly | 10000 | 0.5509 |
+| Sanga of the Thunder | 10000 | 0.5509 |
+| Scroll of Bewitchment | 10000 | 0.5509 |
+| Senju of the Thousand Hands | 10000 | 0.5509 |
+| Shadow of Eyes | 10000 | 0.5509 |
+| Shift | 10000 | 0.5509 |
+| Silver Fang | 10000 | 0.5509 |
+| Skull Invitation | 10000 | 0.5509 |
+| Skull Servant | 10000 | 0.5509 |
+| Slot Machine | 10000 | 0.5509 |
+| Solemn Wishes | 10000 | 0.5509 |
+| Sonic Bird | 10000 | 0.5509 |
+| Soul Release | 10000 | 0.5509 |
+| Spirit of the Breeze | 10000 | 0.5509 |
+| St. Joan | 10000 | 0.5509 |
+| Stop Defense | 10000 | 0.5509 |
+| Suijin | 10000 | 0.5509 |
+| Sword Hunter | 10000 | 0.5509 |
+| Tailor of the Fickle | 10000 | 0.5509 |
+| The Cheerful Coffin | 10000 | 0.5509 |
+| The Eye of Truth | 10000 | 0.5509 |
+| The Forgiving Maiden | 10000 | 0.5509 |
+| The Reliable Guardian | 10000 | 0.5509 |
+| The Shallow Grave | 10000 | 0.5509 |
+| Thousand-Eyes Idol | 10000 | 0.5509 |
+| Time Seal | 10000 | 0.5509 |
+| Toll | 10000 | 0.5509 |
+| Toon Mermaid | 10000 | 0.5509 |
+| Toon World | 10000 | 0.5509 |
+| Tornado Wall | 10000 | 0.5509 |
+| Type Zero Magic Crusher | 10000 | 0.5509 |
+| UFO Turtle | 10000 | 0.5509 |
+| Umi  | 10000 | 0.5509 |
+| Umiiruka | 10000 | 0.5509 |
+| Upstart Goblin | 10000 | 0.5509 |
+| Uraby | 10000 | 0.5509 |
+| Vampire Baby | 10000 | 0.5509 |
+| White Magical Hat | 10000 | 0.5509 |
+| Winged Dragon,Guardian of the Fortress #1 | 10000 | 0.5509 |
+| Worm Drake | 10000 | 0.5509 |
+| Axe of Despair | 2500 | 0.1377 |
+| Black Pendant | 2500 | 0.1377 |
+| Cyber Jar | 2500 | 0.1377 |
+| Dust Tornado | 2500 | 0.1377 |
+| Fissure | 2500 | 0.1377 |
+| Flame Swordsman | 2500 | 0.1377 |
+| Gaia The Fierce Knight | 2500 | 0.1377 |
+| Gaia the Dragon Champion | 2500 | 0.1377 |
+| Gearfried the Iron Knight | 2500 | 0.1377 |
+| Giant Rat | 2500 | 0.1377 |
+| Giant Trunade | 2500 | 0.1377 |
+| Hayabusa Knight | 2500 | 0.1377 |
+| Jar of Greed | 2500 | 0.1377 |
+| Limiter Removal | 2500 | 0.1377 |
+| Mad Sword Beast | 2500 | 0.1377 |
+| Magic Drain | 2500 | 0.1377 |
+| Magical Hats | 2500 | 0.1377 |
+| Magician of Faith | 2500 | 0.1377 |
+| Man-Eater Bug | 2500 | 0.1377 |
+| Morphing Jar #2 | 2500 | 0.1377 |
+| Mystic Tomato | 2500 | 0.1377 |
+| Nimble Momonga | 2500 | 0.1377 |
+| Spellbinding Circle | 2500 | 0.1377 |
+| The Fiend Megacyber | 2500 | 0.1377 |
+| The Forceful Sentry | 2500 | 0.1377 |
+| The Legendary Fisherman | 2500 | 0.1377 |
+| Toon Summoned Skull | 2500 | 0.1377 |
+| Trap Hole | 2500 | 0.1377 |
+| Tribute to The Doomed | 2500 | 0.1377 |
+| B. Skull Dragon | 600 | 0.0331 |
+| Blue-Eyes Toon Dragon | 600 | 0.0331 |
+| Buster Blader | 600 | 0.0331 |
+| Call Of The Haunted | 600 | 0.0331 |
+| Ceasefire | 600 | 0.0331 |
+| Dark Hole | 600 | 0.0331 |
+| Delinquent Duo | 600 | 0.0331 |
+| Exchange | 600 | 0.0331 |
+| Goblin Attack Force | 600 | 0.0331 |
+| Megamorph | 600 | 0.0331 |
+| Mystical Space Typhoon | 600 | 0.0331 |
+| Nobleman of Crossout | 600 | 0.0331 |
+| Pot of Greed | 600 | 0.0331 |
+| Premature Burial | 600 | 0.0331 |
+| Red-Eyes B. Dragon | 600 | 0.0331 |
+| Relinquished | 600 | 0.0331 |
+| Summoned Skull | 600 | 0.0331 |
+| Swords of Revealing Light | 600 | 0.0331 |
+| The Masked Beast | 600 | 0.0331 |
+| Big Shield Gardna | 100 | 0.0055 |
+| Change of Heart | 100 | 0.0055 |
+| Dark Magician | 100 | 0.0055 |
+| Dark Sage | 100 | 0.0055 |
+| Exodia the Forbidden One | 100 | 0.0055 |
+| Imperial Order | 100 | 0.0055 |
+| Jinzo | 100 | 0.0055 |
+| Mage Power | 100 | 0.0055 |
+| Monster Reborn | 100 | 0.0055 |
+| Raigeki | 100 | 0.0055 |
+| Snatch Steal | 100 | 0.0055 |
+| Thousand-Eyes Restrict | 100 | 0.0055 |
+| Torrential Tribute | 100 | 0.0055 |
+| United We Stand | 100 | 0.0055 |
 
 ### Rise of Destiny
 
@@ -2441,291 +2629,302 @@ Forbidden cards (limit 0) are omitted. Lower usage ⇒ higher weight ⇒ more co
 
 ### Structure Deck- Dragon's Roar
 
-- **Type:** TCG · **Format:** Warrior · **Cards in pool:** 12 · **Weight sum:** 120000
+- **Type:** TCG · **Format:** Warrior · **Cards in pool:** 13 · **Weight sum:** 130000
 
 | Card | Weight | Pull % |
 |---|---:|---:|
-| Call Of The Haunted | 10000 | 8.3333 |
-| Ceasefire | 10000 | 8.3333 |
-| Creature Swap | 10000 | 8.3333 |
-| Heavy Storm | 10000 | 8.3333 |
-| Masked Dragon | 10000 | 8.3333 |
-| Mystical Space Typhoon | 10000 | 8.3333 |
-| Nobleman of Crossout | 10000 | 8.3333 |
-| Pot of Greed | 10000 | 8.3333 |
-| Premature Burial | 10000 | 8.3333 |
-| Red-Eyes B. Dragon | 10000 | 8.3333 |
-| Snatch Steal | 10000 | 8.3333 |
-| Swords of Revealing Light | 10000 | 8.3333 |
+| Call Of The Haunted | 10000 | 7.6923 |
+| Ceasefire | 10000 | 7.6923 |
+| Creature Swap | 10000 | 7.6923 |
+| Heavy Storm | 10000 | 7.6923 |
+| Interdimensional Matter Transporter | 10000 | 7.6923 |
+| Masked Dragon | 10000 | 7.6923 |
+| Mystical Space Typhoon | 10000 | 7.6923 |
+| Nobleman of Crossout | 10000 | 7.6923 |
+| Pot of Greed | 10000 | 7.6923 |
+| Premature Burial | 10000 | 7.6923 |
+| Red-Eyes B. Dragon | 10000 | 7.6923 |
+| Snatch Steal | 10000 | 7.6923 |
+| Swords of Revealing Light | 10000 | 7.6923 |
 
 ### Structure Deck- Zombie Madness
 
-- **Type:** TCG · **Format:** Warrior · **Cards in pool:** 16 · **Weight sum:** 160000
+- **Type:** TCG · **Format:** Warrior · **Cards in pool:** 17 · **Weight sum:** 170000
 
 | Card | Weight | Pull % |
 |---|---:|---:|
-| Book of Life | 10000 | 6.2500 |
-| Compulsory Evacuation Device | 10000 | 6.2500 |
-| Creature Swap | 10000 | 6.2500 |
-| Dust Tornado | 10000 | 6.2500 |
-| Giant Trunade | 10000 | 6.2500 |
-| Heavy Storm | 10000 | 6.2500 |
-| Magic Jammer | 10000 | 6.2500 |
-| Mystical Space Typhoon | 10000 | 6.2500 |
-| Nobleman of Crossout | 10000 | 6.2500 |
-| Pot of Greed | 10000 | 6.2500 |
-| Pyramid Turtle | 10000 | 6.2500 |
-| Ryu Kokki | 10000 | 6.2500 |
-| Snatch Steal | 10000 | 6.2500 |
-| Spirit Reaper | 10000 | 6.2500 |
-| Torrential Tribute | 10000 | 6.2500 |
-| Vampire Lord | 10000 | 6.2500 |
+| Book of Life | 10000 | 5.8824 |
+| Card of Safe Return | 10000 | 5.8824 |
+| Compulsory Evacuation Device | 10000 | 5.8824 |
+| Creature Swap | 10000 | 5.8824 |
+| Dust Tornado | 10000 | 5.8824 |
+| Giant Trunade | 10000 | 5.8824 |
+| Heavy Storm | 10000 | 5.8824 |
+| Magic Jammer | 10000 | 5.8824 |
+| Mystical Space Typhoon | 10000 | 5.8824 |
+| Nobleman of Crossout | 10000 | 5.8824 |
+| Pot of Greed | 10000 | 5.8824 |
+| Pyramid Turtle | 10000 | 5.8824 |
+| Ryu Kokki | 10000 | 5.8824 |
+| Snatch Steal | 10000 | 5.8824 |
+| Spirit Reaper | 10000 | 5.8824 |
+| Torrential Tribute | 10000 | 5.8824 |
+| Vampire Lord | 10000 | 5.8824 |
 
 ### Warrior
 
-- **Type:** Usage · **Format:** Warrior · **Cards in pool:** 184 · **Weight sum:** 255456
+- **Type:** Usage · **Format:** Warrior · **Cards in pool:** 191 · **Weight sum:** 275667
 
 | Card | Weight | Pull % |
 |---|---:|---:|
-| Axe of Despair | 3644 | 1.4265 |
-| Big Bang Shot | 3644 | 1.4265 |
-| Buster Blader | 3644 | 1.4265 |
-| Cyber-Stein | 3644 | 1.4265 |
-| Different Dimension Capsule | 3644 | 1.4265 |
-| Exile of the Wicked | 3644 | 1.4265 |
-| Gaia Power | 3644 | 1.4265 |
-| Greenkappa | 3644 | 1.4265 |
-| Mother Grizzly | 3644 | 1.4265 |
-| Night Assailant | 3644 | 1.4265 |
-| Princess of Tsurugi | 3644 | 1.4265 |
-| Pyramid Turtle | 3644 | 1.4265 |
-| Seven Tools of the Bandit | 3644 | 1.4265 |
-| Soul Exchange | 3644 | 1.4265 |
-| Stealth Bird | 3644 | 1.4265 |
-| The Fiend Megacyber | 3644 | 1.4265 |
-| Windstorm of Etaqua | 3644 | 1.4265 |
-| Marauding Captain | 3117 | 1.2202 |
-| Big Shield Gardna | 2791 | 1.0926 |
-| Blast with Chain | 2791 | 1.0926 |
-| Chain Disappearance | 2791 | 1.0926 |
-| Cursed Seal of the Forbidden Spell | 2791 | 1.0926 |
-| Dark Magician | 2791 | 1.0926 |
-| Dark Scorpion - Cliff the Trap Remover | 2791 | 1.0926 |
-| Des Koala | 2791 | 1.0926 |
-| Exchange | 2791 | 1.0926 |
-| Gearfried the Iron Knight | 2791 | 1.0926 |
-| Magical Merchant | 2791 | 1.0926 |
-| Newdoria | 2791 | 1.0926 |
-| Nimble Momonga | 2791 | 1.0926 |
-| Nobleman of Extermination | 2791 | 1.0926 |
-| Trap Hole | 2791 | 1.0926 |
-| Apprentice Magician | 2391 | 0.9360 |
-| Magic Jammer | 2391 | 0.9360 |
-| Mystic Tomato | 2391 | 0.9360 |
-| Sasuke Samurai | 2391 | 0.9360 |
-| Spear Dragon | 2391 | 0.9360 |
-| Spell Canceller | 2391 | 0.9360 |
-| Cannon Soldier | 2144 | 0.8393 |
-| Gilasaurus | 2144 | 0.8393 |
-| Goblin Attack Force | 2144 | 0.8393 |
-| Just Desserts | 2144 | 0.8393 |
-| Kuriboh | 2144 | 0.8393 |
-| Last Will | 2144 | 0.8393 |
-| Mask of Darkness | 2144 | 0.8393 |
-| Masked Sorcerer | 2144 | 0.8393 |
-| Mystic Plasma Zone | 2144 | 0.8393 |
-| Ojama Trio | 2144 | 0.8393 |
-| Secret Barrel | 2144 | 0.8393 |
-| Waboku | 2144 | 0.8393 |
-| Abyss Soldier | 1971 | 0.7716 |
-| Catapult Turtle | 1971 | 0.7716 |
-| Compulsory Evacuation Device | 1971 | 0.7716 |
-| Gigantes | 1971 | 0.7716 |
-| Sacred Crane | 1971 | 0.7716 |
-| Skilled Dark Magician | 1971 | 0.7716 |
-| Swarm of Locusts | 1971 | 0.7716 |
-| Token Thanksgiving | 1971 | 0.7716 |
-| Dekoichi the Battlechanted Locomotive | 1841 | 0.7207 |
-| Dimension Fusion | 1841 | 0.7207 |
-| Divine Wrath | 1841 | 0.7207 |
-| Gyaku-Gire Panda | 1841 | 0.7207 |
-| Magic Drain | 1841 | 0.7207 |
-| Vampire Lord | 1841 | 0.7207 |
-| Widespread Ruin | 1841 | 0.7207 |
-| Giant Rat | 1738 | 0.6804 |
-| Hallowed Life Barrier | 1738 | 0.6804 |
-| Zaborg the Thunder Monarch | 1738 | 0.6804 |
-| Reasoning | 1583 | 0.6197 |
-| Monster Gate | 1523 | 0.5962 |
-| Monster Reincarnation | 1523 | 0.5962 |
-| Pikeru's Circle of Enchantment | 1523 | 0.5962 |
-| Return from the Different Dimension | 1424 | 0.5574 |
-| Tsukuyomi | 1424 | 0.5574 |
-| Jar of Greed | 1383 | 0.5414 |
-| Chaos Sorcerer | 1346 | 0.5269 |
-| Spirit Reaper | 1346 | 0.5269 |
-| D.D. Assailant | 1313 | 0.5140 |
-| Asura Priest | 1283 | 0.5022 |
-| Ninja Grandmaster Sasuke | 1283 | 0.5022 |
-| Zombyra the Dark | 1283 | 0.5022 |
-| Berserk Gorilla | 1255 | 0.4913 |
-| Giant Trunade | 1205 | 0.4717 |
-| Metamorphosis | 1205 | 0.4717 |
-| Raigeki Break | 1163 | 0.4553 |
-| Gravekeeper's Spy | 1144 | 0.4478 |
-| Solemn Judgment | 1144 | 0.4478 |
-| Trap Dustshoot | 1144 | 0.4478 |
-| Cyber Jar | 1109 | 0.4341 |
-| King Tiger Wanghu | 1063 | 0.4161 |
-| Airknight Parshath | 1049 | 0.4106 |
-| Bottomless Trap Hole | 1049 | 0.4106 |
-| Don Zaloog | 1049 | 0.4106 |
-| Mystic Swordsman LV2 | 1012 | 0.3962 |
-| Morphing Jar | 990 | 0.3875 |
-| Magician of Faith | 980 | 0.3836 |
-| Upstart Goblin | 961 | 0.3762 |
-| Creature Swap | 947 | 0.3707 |
-| Blade Knight | 934 | 0.3656 |
-| Card Destruction | 934 | 0.3656 |
-| Kycoo the Ghost Destroyer | 903 | 0.3535 |
-| Cyber Saurus | 897 | 0.3511 |
-| Fusionist | 897 | 0.3511 |
-| Gaia the Dragon Champion | 897 | 0.3511 |
-| Labyrinth Tank | 897 | 0.3511 |
-| Rabid Horseman | 897 | 0.3511 |
-| Mobius the Frost Monarch | 896 | 0.3507 |
-| Smashing Ground | 896 | 0.3507 |
-| Cipher Soldier | 869 | 0.3402 |
-| Dust Tornado | 857 | 0.3355 |
-| Sakuretsu Armor | 857 | 0.3355 |
-| Ceasefire | 851 | 0.3331 |
-| Injection Fairy Lily | 835 | 0.3269 |
-| Magic Cylinder | 819 | 0.3206 |
-| D.D. Warrior Lady | 815 | 0.3190 |
-| Dark Magician of Chaos | 805 | 0.3151 |
-| Reinforcement of the Army | 805 | 0.3151 |
-| Dark Paladin | 682 | 0.2670 |
-| Nobleman of Crossout | 681 | 0.2666 |
-| Swords of Revealing Light | 662 | 0.2591 |
-| Fiber Jar | 639 | 0.2501 |
-| Sinister Serpent | 634 | 0.2482 |
-| Exiled Force | 624 | 0.2443 |
-| Jinzo | 603 | 0.2360 |
-| Magical Scientist | 595 | 0.2329 |
-| Charubin the Fire Knight | 582 | 0.2278 |
-| Black Luster Soldier - Envoy of Beginning | 565 | 0.2212 |
-| Painful Choice | 556 | 0.2177 |
-| Confiscation | 550 | 0.2153 |
-| Tribe-Infecting Virus | 548 | 0.2145 |
-| The Forceful Sentry | 545 | 0.2133 |
-| Breaker the Magical Warrior | 542 | 0.2122 |
-| Torrential Tribute | 542 | 0.2122 |
-| Premature Burial | 540 | 0.2114 |
-| Snatch Steal | 535 | 0.2094 |
-| Change of Heart | 533 | 0.2086 |
-| Bell of Destruction | 528 | 0.2067 |
-| Heavy Storm | 526 | 0.2059 |
-| Pot of Greed | 522 | 0.2043 |
-| Flame Swordsman | 520 | 0.2036 |
-| Karbonala Warrior | 520 | 0.2036 |
-| Empress Judge | 477 | 0.1867 |
-| Musician King | 418 | 0.1636 |
-| Punished Eagle | 418 | 0.1636 |
-| Twin-Headed Thunder Dragon | 397 | 0.1554 |
-| Chain Energy | 364 | 0.1425 |
-| Fairy Box | 364 | 0.1425 |
-| Light of Intervention | 364 | 0.1425 |
-| Mask of Restrict | 364 | 0.1425 |
-| Mirror Wall | 364 | 0.1425 |
-| Prohibition | 364 | 0.1425 |
-| Robbin' Goblin | 364 | 0.1425 |
-| Flame Ghost | 311 | 0.1217 |
-| Final Attack Orders | 279 | 0.1092 |
-| Poison of the Old Man | 279 | 0.1092 |
-| Royal Oppression | 279 | 0.1092 |
-| Master of Oz | 273 | 0.1069 |
-| Roaring Ocean Snake | 269 | 0.1053 |
-| Giltia the D. Knight | 260 | 0.1018 |
-| Gravity Bind | 239 | 0.0936 |
-| Messenger of Peace | 239 | 0.0936 |
-| Wave-Motion Cannon | 239 | 0.0936 |
-| The Last Warrior from Another Planet | 236 | 0.0924 |
-| Dragoness the Wicked Knight | 228 | 0.0893 |
-| Level Limit - Area B | 214 | 0.0838 |
-| Ojama King | 212 | 0.0830 |
-| Darkfire Dragon | 210 | 0.0822 |
-| Dark Flare Knight | 201 | 0.0787 |
-| Reaper on the Nightmare | 197 | 0.0771 |
-| Xing Zhen Hu | 197 | 0.0771 |
-| Fiend Skull Dragon | 187 | 0.0732 |
-| Dark Blade the Dragon Knight | 179 | 0.0701 |
-| Thousand-Eyes Restrict | 179 | 0.0701 |
-| Ryu Senshi | 177 | 0.0693 |
-| Dark Balter the Terrible | 176 | 0.0689 |
-| Mystik Wok | 122 | 0.0478 |
-| Enemy Controller | 120 | 0.0470 |
-| Royal Decree | 114 | 0.0446 |
-| Emergency Provisions | 109 | 0.0427 |
-| Scapegoat | 89 | 0.0348 |
-| Book of Moon | 86 | 0.0337 |
-| Mirage of Nightmare | 67 | 0.0262 |
-| Call Of The Haunted | 55 | 0.0215 |
-| Mystical Space Typhoon | 53 | 0.0207 |
+| Axe of Despair | 3644 | 1.3219 |
+| Big Bang Shot | 3644 | 1.3219 |
+| Buster Blader | 3644 | 1.3219 |
+| Cyber-Stein | 3644 | 1.3219 |
+| Different Dimension Capsule | 3644 | 1.3219 |
+| Ekibyo Drakmord | 3644 | 1.3219 |
+| Exile of the Wicked | 3644 | 1.3219 |
+| Fusion Gate | 3644 | 1.3219 |
+| Gaia Power | 3644 | 1.3219 |
+| Greenkappa | 3644 | 1.3219 |
+| Jowgen the Spiritualist | 3644 | 1.3219 |
+| Mother Grizzly | 3644 | 1.3219 |
+| Night Assailant | 3644 | 1.3219 |
+| Princess of Tsurugi | 3644 | 1.3219 |
+| Pyramid Turtle | 3644 | 1.3219 |
+| Revival Jam | 3644 | 1.3219 |
+| Seven Tools of the Bandit | 3644 | 1.3219 |
+| Slate Warrior | 3644 | 1.3219 |
+| Soul Exchange | 3644 | 1.3219 |
+| Stealth Bird | 3644 | 1.3219 |
+| The Fiend Megacyber | 3644 | 1.3219 |
+| Windstorm of Etaqua | 3644 | 1.3219 |
+| Marauding Captain | 3117 | 1.1307 |
+| Big Shield Gardna | 2791 | 1.0125 |
+| Blast with Chain | 2791 | 1.0125 |
+| Chain Disappearance | 2791 | 1.0125 |
+| Cursed Seal of the Forbidden Spell | 2791 | 1.0125 |
+| Dark Magician | 2791 | 1.0125 |
+| Dark Scorpion - Cliff the Trap Remover | 2791 | 1.0125 |
+| Des Koala | 2791 | 1.0125 |
+| Exchange | 2791 | 1.0125 |
+| Gearfried the Iron Knight | 2791 | 1.0125 |
+| Magical Merchant | 2791 | 1.0125 |
+| Newdoria | 2791 | 1.0125 |
+| Nimble Momonga | 2791 | 1.0125 |
+| Nobleman of Extermination | 2791 | 1.0125 |
+| Trap Hole | 2791 | 1.0125 |
+| Apprentice Magician | 2391 | 0.8674 |
+| Magic Jammer | 2391 | 0.8674 |
+| Mystic Tomato | 2391 | 0.8674 |
+| Sasuke Samurai | 2391 | 0.8674 |
+| Spear Dragon | 2391 | 0.8674 |
+| Spell Canceller | 2391 | 0.8674 |
+| Cannon Soldier | 2144 | 0.7777 |
+| Gilasaurus | 2144 | 0.7777 |
+| Goblin Attack Force | 2144 | 0.7777 |
+| Just Desserts | 2144 | 0.7777 |
+| Kuriboh | 2144 | 0.7777 |
+| Last Will | 2144 | 0.7777 |
+| Mask of Darkness | 2144 | 0.7777 |
+| Masked Sorcerer | 2144 | 0.7777 |
+| Mystic Plasma Zone | 2144 | 0.7777 |
+| Ojama Trio | 2144 | 0.7777 |
+| Secret Barrel | 2144 | 0.7777 |
+| Waboku | 2144 | 0.7777 |
+| Abyss Soldier | 1971 | 0.7150 |
+| Catapult Turtle | 1971 | 0.7150 |
+| Compulsory Evacuation Device | 1971 | 0.7150 |
+| Gigantes | 1971 | 0.7150 |
+| Sacred Crane | 1971 | 0.7150 |
+| Skilled Dark Magician | 1971 | 0.7150 |
+| Swarm of Locusts | 1971 | 0.7150 |
+| Token Thanksgiving | 1971 | 0.7150 |
+| Dekoichi the Battlechanted Locomotive | 1841 | 0.6678 |
+| Dimension Fusion | 1841 | 0.6678 |
+| Divine Wrath | 1841 | 0.6678 |
+| Gyaku-Gire Panda | 1841 | 0.6678 |
+| Magic Drain | 1841 | 0.6678 |
+| Vampire Lord | 1841 | 0.6678 |
+| Widespread Ruin | 1841 | 0.6678 |
+| Giant Rat | 1738 | 0.6305 |
+| Hallowed Life Barrier | 1738 | 0.6305 |
+| Zaborg the Thunder Monarch | 1738 | 0.6305 |
+| Reasoning | 1583 | 0.5742 |
+| Monster Gate | 1523 | 0.5525 |
+| Monster Reincarnation | 1523 | 0.5525 |
+| Pikeru's Circle of Enchantment | 1523 | 0.5525 |
+| Amazoness Archer | 1471 | 0.5336 |
+| Return from the Different Dimension | 1424 | 0.5166 |
+| Tsukuyomi | 1424 | 0.5166 |
+| Jar of Greed | 1383 | 0.5017 |
+| Chaos Sorcerer | 1346 | 0.4883 |
+| Spirit Reaper | 1346 | 0.4883 |
+| D.D. Assailant | 1313 | 0.4763 |
+| Asura Priest | 1283 | 0.4654 |
+| Ninja Grandmaster Sasuke | 1283 | 0.4654 |
+| Zombyra the Dark | 1283 | 0.4654 |
+| Berserk Gorilla | 1255 | 0.4553 |
+| Giant Trunade | 1205 | 0.4371 |
+| Metamorphosis | 1205 | 0.4371 |
+| Raigeki Break | 1163 | 0.4219 |
+| Gravekeeper's Spy | 1144 | 0.4150 |
+| Solemn Judgment | 1144 | 0.4150 |
+| Trap Dustshoot | 1144 | 0.4150 |
+| Cyber Jar | 1109 | 0.4023 |
+| King Tiger Wanghu | 1063 | 0.3856 |
+| Airknight Parshath | 1049 | 0.3805 |
+| Bottomless Trap Hole | 1049 | 0.3805 |
+| Don Zaloog | 1049 | 0.3805 |
+| Mystic Swordsman LV2 | 1012 | 0.3671 |
+| Morphing Jar | 990 | 0.3591 |
+| Magician of Faith | 980 | 0.3555 |
+| Upstart Goblin | 961 | 0.3486 |
+| Creature Swap | 947 | 0.3435 |
+| Blade Knight | 934 | 0.3388 |
+| Card Destruction | 934 | 0.3388 |
+| Kycoo the Ghost Destroyer | 903 | 0.3276 |
+| Cyber Saurus | 897 | 0.3254 |
+| Fusionist | 897 | 0.3254 |
+| Gaia the Dragon Champion | 897 | 0.3254 |
+| Labyrinth Tank | 897 | 0.3254 |
+| Rabid Horseman | 897 | 0.3254 |
+| Mobius the Frost Monarch | 896 | 0.3250 |
+| Smashing Ground | 896 | 0.3250 |
+| Cipher Soldier | 869 | 0.3152 |
+| Dust Tornado | 857 | 0.3109 |
+| Sakuretsu Armor | 857 | 0.3109 |
+| Ceasefire | 851 | 0.3087 |
+| Injection Fairy Lily | 835 | 0.3029 |
+| Magic Cylinder | 819 | 0.2971 |
+| D.D. Warrior Lady | 815 | 0.2956 |
+| Dark Magician of Chaos | 805 | 0.2920 |
+| Reinforcement of the Army | 805 | 0.2920 |
+| Dark Paladin | 682 | 0.2474 |
+| Nobleman of Crossout | 681 | 0.2470 |
+| Swords of Revealing Light | 662 | 0.2401 |
+| Fiber Jar | 639 | 0.2318 |
+| Sinister Serpent | 634 | 0.2300 |
+| Exiled Force | 624 | 0.2264 |
+| Jinzo | 603 | 0.2187 |
+| Magical Scientist | 595 | 0.2158 |
+| Charubin the Fire Knight | 582 | 0.2111 |
+| Black Luster Soldier - Envoy of Beginning | 565 | 0.2050 |
+| Painful Choice | 556 | 0.2017 |
+| Confiscation | 550 | 0.1995 |
+| Tribe-Infecting Virus | 548 | 0.1988 |
+| The Forceful Sentry | 545 | 0.1977 |
+| Breaker the Magical Warrior | 542 | 0.1966 |
+| Torrential Tribute | 542 | 0.1966 |
+| Premature Burial | 540 | 0.1959 |
+| Snatch Steal | 535 | 0.1941 |
+| Change of Heart | 533 | 0.1933 |
+| Bell of Destruction | 528 | 0.1915 |
+| Heavy Storm | 526 | 0.1908 |
+| Pot of Greed | 522 | 0.1894 |
+| Flame Swordsman | 520 | 0.1886 |
+| Karbonala Warrior | 520 | 0.1886 |
+| St. Joan | 520 | 0.1886 |
+| Empress Judge | 477 | 0.1730 |
+| Musician King | 418 | 0.1516 |
+| Punished Eagle | 418 | 0.1516 |
+| Twin-Headed Thunder Dragon | 397 | 0.1440 |
+| Chain Energy | 364 | 0.1320 |
+| Fairy Box | 364 | 0.1320 |
+| Light of Intervention | 364 | 0.1320 |
+| Mask of Restrict | 364 | 0.1320 |
+| Mirror Wall | 364 | 0.1320 |
+| Prohibition | 364 | 0.1320 |
+| Robbin' Goblin | 364 | 0.1320 |
+| Flame Ghost | 311 | 0.1128 |
+| Final Attack Orders | 279 | 0.1012 |
+| Poison of the Old Man | 279 | 0.1012 |
+| Royal Oppression | 279 | 0.1012 |
+| Master of Oz | 273 | 0.0990 |
+| Roaring Ocean Snake | 269 | 0.0976 |
+| Giltia the D. Knight | 260 | 0.0943 |
+| Gravity Bind | 239 | 0.0867 |
+| Messenger of Peace | 239 | 0.0867 |
+| Wave-Motion Cannon | 239 | 0.0867 |
+| The Last Warrior from Another Planet | 236 | 0.0856 |
+| Dragoness the Wicked Knight | 228 | 0.0827 |
+| Level Limit - Area B | 214 | 0.0776 |
+| Ojama King | 212 | 0.0769 |
+| Darkfire Dragon | 210 | 0.0762 |
+| Dark Flare Knight | 201 | 0.0729 |
+| Reaper on the Nightmare | 197 | 0.0715 |
+| Xing Zhen Hu | 197 | 0.0715 |
+| Fiend Skull Dragon | 187 | 0.0678 |
+| Dark Blade the Dragon Knight | 179 | 0.0649 |
+| Thousand-Eyes Restrict | 179 | 0.0649 |
+| Ryu Senshi | 177 | 0.0642 |
+| Dark Balter the Terrible | 176 | 0.0638 |
+| Mystik Wok | 122 | 0.0443 |
+| Enemy Controller | 120 | 0.0435 |
+| Royal Decree | 114 | 0.0414 |
+| Emergency Provisions | 109 | 0.0395 |
+| Scapegoat | 89 | 0.0323 |
+| Book of Moon | 86 | 0.0312 |
+| Mirage of Nightmare | 67 | 0.0243 |
+| Call Of The Haunted | 55 | 0.0200 |
+| Mystical Space Typhoon | 53 | 0.0192 |
 
 ### Flaming Eternity
 
-- **Type:** TCG · **Format:** Goat · **Cards in pool:** 8 · **Weight sum:** 20060
+- **Type:** TCG · **Format:** Goat · **Cards in pool:** 9 · **Weight sum:** 30060
 
 | Card | Weight | Pull % |
 |---|---:|---:|
-| Golem Sentry | 10000 | 49.8504 |
-| Threatening Roar | 10000 | 49.8504 |
-| Chiron the Mage | 10 | 0.0499 |
-| Gatling Dragon | 10 | 0.0499 |
-| Granmarg the Rock Monarch | 10 | 0.0499 |
-| King Dragun | 10 | 0.0499 |
-| Lightning Vortex | 10 | 0.0499 |
-| Phoenix Wing Wind Blast | 10 | 0.0499 |
+| Golem Sentry | 10000 | 33.2668 |
+| The Dark - Hex-Sealed Fusion | 10000 | 33.2668 |
+| Threatening Roar | 10000 | 33.2668 |
+| Chiron the Mage | 10 | 0.0333 |
+| Gatling Dragon | 10 | 0.0333 |
+| Granmarg the Rock Monarch | 10 | 0.0333 |
+| King Dragun | 10 | 0.0333 |
+| Lightning Vortex | 10 | 0.0333 |
+| Phoenix Wing Wind Blast | 10 | 0.0333 |
 
 ### Dark Revelation Volume 1
 
-- **Type:** TCG · **Format:** Goat · **Cards in pool:** 33 · **Weight sum:** 211600
+- **Type:** TCG · **Format:** Goat · **Cards in pool:** 34 · **Weight sum:** 211700
 
 | Card | Weight | Pull % |
 |---|---:|---:|
-| Apprentice Magician | 10000 | 4.7259 |
-| Different Dimension Capsule | 10000 | 4.7259 |
-| Final Attack Orders | 10000 | 4.7259 |
-| Gravekeeper's Spy | 10000 | 4.7259 |
-| Gyaku-Gire Panda | 10000 | 4.7259 |
-| Magical Merchant | 10000 | 4.7259 |
-| Metamorphosis | 10000 | 4.7259 |
-| My Body as a Shield | 10000 | 4.7259 |
-| Ojama Trio | 10000 | 4.7259 |
-| Old Vindictive Magician | 10000 | 4.7259 |
-| Poison of the Old Man | 10000 | 4.7259 |
-| Raigeki Break | 10000 | 4.7259 |
-| Reasoning | 10000 | 4.7259 |
-| Roulette Barrel | 10000 | 4.7259 |
-| Sakuretsu Armor | 10000 | 4.7259 |
-| Secret Barrel | 10000 | 4.7259 |
-| Token Thanksgiving | 10000 | 4.7259 |
-| Tsukuyomi | 10000 | 4.7259 |
-| Wave-Motion Cannon | 10000 | 4.7259 |
-| Big Bang Shot | 2500 | 1.1815 |
-| Des Koala | 2500 | 1.1815 |
-| Magical Scientist | 2500 | 1.1815 |
-| Newdoria | 2500 | 1.1815 |
-| Reaper on the Nightmare | 2500 | 1.1815 |
-| Skilled Dark Magician | 2500 | 1.1815 |
-| Spirit Reaper | 2500 | 1.1815 |
-| Tribe-Infecting Virus | 2500 | 1.1815 |
-| D.D. Warrior Lady | 600 | 0.2836 |
-| Dark Flare Knight | 600 | 0.2836 |
-| Breaker the Magical Warrior | 100 | 0.0473 |
-| Dark Paladin | 100 | 0.0473 |
-| Nightmare Wheel | 100 | 0.0473 |
-| Spell Canceller | 100 | 0.0473 |
+| Apprentice Magician | 10000 | 4.7237 |
+| Different Dimension Capsule | 10000 | 4.7237 |
+| Final Attack Orders | 10000 | 4.7237 |
+| Gravekeeper's Spy | 10000 | 4.7237 |
+| Gyaku-Gire Panda | 10000 | 4.7237 |
+| Magical Merchant | 10000 | 4.7237 |
+| Metamorphosis | 10000 | 4.7237 |
+| My Body as a Shield | 10000 | 4.7237 |
+| Ojama Trio | 10000 | 4.7237 |
+| Old Vindictive Magician | 10000 | 4.7237 |
+| Poison of the Old Man | 10000 | 4.7237 |
+| Raigeki Break | 10000 | 4.7237 |
+| Reasoning | 10000 | 4.7237 |
+| Roulette Barrel | 10000 | 4.7237 |
+| Sakuretsu Armor | 10000 | 4.7237 |
+| Secret Barrel | 10000 | 4.7237 |
+| Token Thanksgiving | 10000 | 4.7237 |
+| Tsukuyomi | 10000 | 4.7237 |
+| Wave-Motion Cannon | 10000 | 4.7237 |
+| Big Bang Shot | 2500 | 1.1809 |
+| Des Koala | 2500 | 1.1809 |
+| Magical Scientist | 2500 | 1.1809 |
+| Newdoria | 2500 | 1.1809 |
+| Reaper on the Nightmare | 2500 | 1.1809 |
+| Skilled Dark Magician | 2500 | 1.1809 |
+| Spirit Reaper | 2500 | 1.1809 |
+| Tribe-Infecting Virus | 2500 | 1.1809 |
+| D.D. Warrior Lady | 600 | 0.2834 |
+| Dark Flare Knight | 600 | 0.2834 |
+| Breaker the Magical Warrior | 100 | 0.0472 |
+| Dark Paladin | 100 | 0.0472 |
+| Interdimensional Matter Transporter | 100 | 0.0472 |
+| Nightmare Wheel | 100 | 0.0472 |
+| Spell Canceller | 100 | 0.0472 |
 
 ### Structure Deck- Blaze of Destruction
 
@@ -2751,26 +2950,27 @@ Forbidden cards (limit 0) are omitted. Lower usage ⇒ higher weight ⇒ more co
 
 ### Structure Deck- Fury from the Deep
 
-- **Type:** TCG · **Format:** Goat · **Cards in pool:** 16 · **Weight sum:** 160000
+- **Type:** TCG · **Format:** Goat · **Cards in pool:** 17 · **Weight sum:** 170000
 
 | Card | Weight | Pull % |
 |---|---:|---:|
-| 7 Colored Fish | 10000 | 6.2500 |
-| Call Of The Haunted | 10000 | 6.2500 |
-| Creature Swap | 10000 | 6.2500 |
-| Dust Tornado | 10000 | 6.2500 |
-| Gravity Bind | 10000 | 6.2500 |
-| Heavy Storm | 10000 | 6.2500 |
-| Mobius the Frost Monarch | 10000 | 6.2500 |
-| Mother Grizzly | 10000 | 6.2500 |
-| Mystical Space Typhoon | 10000 | 6.2500 |
-| Pot of Greed | 10000 | 6.2500 |
-| Premature Burial | 10000 | 6.2500 |
-| Snatch Steal | 10000 | 6.2500 |
-| Star Boy | 10000 | 6.2500 |
-| Torrential Tribute | 10000 | 6.2500 |
-| Tribe-Infecting Virus | 10000 | 6.2500 |
-| Xing Zhen Hu | 10000 | 6.2500 |
+| 7 Colored Fish | 10000 | 5.8824 |
+| Call Of The Haunted | 10000 | 5.8824 |
+| Creature Swap | 10000 | 5.8824 |
+| Dust Tornado | 10000 | 5.8824 |
+| Gravity Bind | 10000 | 5.8824 |
+| Heavy Storm | 10000 | 5.8824 |
+| Mobius the Frost Monarch | 10000 | 5.8824 |
+| Mother Grizzly | 10000 | 5.8824 |
+| Mystical Space Typhoon | 10000 | 5.8824 |
+| Pot of Greed | 10000 | 5.8824 |
+| Premature Burial | 10000 | 5.8824 |
+| Snatch Steal | 10000 | 5.8824 |
+| Star Boy | 10000 | 5.8824 |
+| Tornado Wall | 10000 | 5.8824 |
+| Torrential Tribute | 10000 | 5.8824 |
+| Tribe-Infecting Virus | 10000 | 5.8824 |
+| Xing Zhen Hu | 10000 | 5.8824 |
 
 ### The Lost Millennium
 
@@ -2784,124 +2984,153 @@ Forbidden cards (limit 0) are omitted. Lower usage ⇒ higher weight ⇒ more co
 
 ### Dark Beginning 2
 
-- **Type:** TCG · **Format:** Goat · **Cards in pool:** 114 · **Weight sum:** 737900
+- **Type:** TCG · **Format:** Goat · **Cards in pool:** 143 · **Weight sum:** 960700
 
 | Card | Weight | Pull % |
 |---|---:|---:|
-| Asura Priest | 10000 | 1.3552 |
-| Axe Raider | 10000 | 1.3552 |
-| Baby Dragon | 10000 | 1.3552 |
-| Battle Steer | 10000 | 1.3552 |
-| Black Illusion Ritual | 10000 | 1.3552 |
-| Blackland Fire Dragon | 10000 | 1.3552 |
-| Bladefly | 10000 | 1.3552 |
-| Block Attack | 10000 | 1.3552 |
-| Book of Moon | 10000 | 1.3552 |
-| Bottomless Trap Hole | 10000 | 1.3552 |
-| Crass Clown | 10000 | 1.3552 |
-| Dark-Piercing Light | 10000 | 1.3552 |
-| Dragon Piper | 10000 | 1.3552 |
-| Dragon Seeker | 10000 | 1.3552 |
-| Dream Clown | 10000 | 1.3552 |
-| Exiled Force | 10000 | 1.3552 |
-| Fusion Sage | 10000 | 1.3552 |
-| Gazelle the King of Mythical Beasts | 10000 | 1.3552 |
-| Gemini Elf | 10000 | 1.3552 |
-| Gilasaurus | 10000 | 1.3552 |
-| Goddess with the Third Eye | 10000 | 1.3552 |
-| Great Moth | 10000 | 1.3552 |
-| Greenkappa | 10000 | 1.3552 |
-| Hoshiningen | 10000 | 1.3552 |
-| Illusionist Faceless Mage | 10000 | 1.3552 |
-| Jirai Gumo | 10000 | 1.3552 |
-| King Tiger Wanghu | 10000 | 1.3552 |
-| King of Yamimakai | 10000 | 1.3552 |
-| Launcher Spider | 10000 | 1.3552 |
-| Little Chimera | 10000 | 1.3552 |
-| Lord of the Lamp | 10000 | 1.3552 |
-| Machine King | 10000 | 1.3552 |
-| Mechanicalchaser | 10000 | 1.3552 |
-| Milus Radiant | 10000 | 1.3552 |
-| Mirage of Nightmare | 10000 | 1.3552 |
-| Muka Muka | 10000 | 1.3552 |
-| Mystic Horseman | 10000 | 1.3552 |
-| Needle Worm | 10000 | 1.3552 |
-| Princess of Tsurugi | 10000 | 1.3552 |
-| Rabid Horseman | 10000 | 1.3552 |
-| Restructer Revolution | 10000 | 1.3552 |
-| Robbin' Goblin | 10000 | 1.3552 |
-| Ryu-Kishin Powered | 10000 | 1.3552 |
-| Saggi the Dark Clown | 10000 | 1.3552 |
-| Shadow Ghoul | 10000 | 1.3552 |
-| Share the Pain | 10000 | 1.3552 |
-| Shield & Sword | 10000 | 1.3552 |
-| Skull Lair | 10000 | 1.3552 |
-| Soul of the Pure | 10000 | 1.3552 |
-| Star Boy | 10000 | 1.3552 |
-| Swarm of Locusts | 10000 | 1.3552 |
-| The Bistro Butcher | 10000 | 1.3552 |
-| The Immortal of Thunder | 10000 | 1.3552 |
-| The Unhappy Maiden | 10000 | 1.3552 |
-| The Wicked Worm Beast | 10000 | 1.3552 |
-| Thousand Dragon | 10000 | 1.3552 |
-| Thunder Dragon | 10000 | 1.3552 |
-| Tiger Axe | 10000 | 1.3552 |
-| Toon Cannon Soldier | 10000 | 1.3552 |
-| Toon Table of Contents | 10000 | 1.3552 |
-| Trap Dustshoot | 10000 | 1.3552 |
-| Tremendous Fire | 10000 | 1.3552 |
-| Twin-Headed Thunder Dragon | 10000 | 1.3552 |
-| Two-Headed King Rex | 10000 | 1.3552 |
-| Witch's Apprentice | 10000 | 1.3552 |
-| Yata-Garasu | 10000 | 1.3552 |
-| Zombyra the Dark | 10000 | 1.3552 |
-| Bazoo the Soul-Eater | 2500 | 0.3388 |
-| Blast with Chain | 2500 | 0.3388 |
-| Cyber-Stein | 2500 | 0.3388 |
-| Dark Balter the Terrible | 2500 | 0.3388 |
-| Emergency Provisions | 2500 | 0.3388 |
-| Fiber Jar | 2500 | 0.3388 |
-| Fiend Skull Dragon | 2500 | 0.3388 |
-| Graceful Charity | 2500 | 0.3388 |
-| Horn of Heaven | 2500 | 0.3388 |
-| Kuriboh | 2500 | 0.3388 |
-| Kycoo the Ghost Destroyer | 2500 | 0.3388 |
-| Marauding Captain | 2500 | 0.3388 |
-| Morphing Jar | 2500 | 0.3388 |
-| Penguin Soldier | 2500 | 0.3388 |
-| Pyramid Turtle | 2500 | 0.3388 |
-| Reinforcement of the Army | 2500 | 0.3388 |
-| Ring of Magnetism | 2500 | 0.3388 |
-| Royal Oppression | 2500 | 0.3388 |
-| Ryu Senshi | 2500 | 0.3388 |
-| Sangan | 2500 | 0.3388 |
-| Sasuke Samurai | 2500 | 0.3388 |
-| Thunder Nyan Nyan | 2500 | 0.3388 |
-| Witch of the Black Forest | 2500 | 0.3388 |
-| Airknight Parshath | 600 | 0.0813 |
-| Book of Life | 600 | 0.0813 |
-| Cannon Soldier | 600 | 0.0813 |
-| Catapult Turtle | 600 | 0.0813 |
-| Creature Swap | 600 | 0.0813 |
-| Don Zaloog | 600 | 0.0813 |
-| Heavy Storm | 600 | 0.0813 |
-| Magic Jammer | 600 | 0.0813 |
-| Mirror Force | 600 | 0.0813 |
-| Royal Decree | 600 | 0.0813 |
-| Seven Tools of the Bandit | 600 | 0.0813 |
-| Solemn Judgment | 600 | 0.0813 |
-| Spear Dragon | 600 | 0.0813 |
-| The Last Warrior from Another Planet | 600 | 0.0813 |
-| Time Wizard | 600 | 0.0813 |
-| Total Defense Shogun | 600 | 0.0813 |
-| Barrel Dragon | 100 | 0.0136 |
-| Blade Knight | 100 | 0.0136 |
-| Dark Ruler Ha Des | 100 | 0.0136 |
-| Guardian Sphinx | 100 | 0.0136 |
-| Injection Fairy Lily | 100 | 0.0136 |
-| Insect Queen | 100 | 0.0136 |
-| Perfectly Ultimate Great Moth | 100 | 0.0136 |
-| Vampire Lord | 100 | 0.0136 |
+| Aqua Spirit | 10000 | 1.0409 |
+| Asura Priest | 10000 | 1.0409 |
+| Axe Raider | 10000 | 1.0409 |
+| Baby Dragon | 10000 | 1.0409 |
+| Battle Steer | 10000 | 1.0409 |
+| Black Illusion Ritual | 10000 | 1.0409 |
+| Blackland Fire Dragon | 10000 | 1.0409 |
+| Bladefly | 10000 | 1.0409 |
+| Blind Destruction | 10000 | 1.0409 |
+| Block Attack | 10000 | 1.0409 |
+| Book of Moon | 10000 | 1.0409 |
+| Bottomless Trap Hole | 10000 | 1.0409 |
+| Crass Clown | 10000 | 1.0409 |
+| Cyclon Laser | 10000 | 1.0409 |
+| Dark Spirit of the Silent | 10000 | 1.0409 |
+| Dark-Piercing Light | 10000 | 1.0409 |
+| De-Fusion | 10000 | 1.0409 |
+| Destiny Board | 10000 | 1.0409 |
+| Destruction Punch | 10000 | 1.0409 |
+| Dragon Piper | 10000 | 1.0409 |
+| Dragon Seeker | 10000 | 1.0409 |
+| Dream Clown | 10000 | 1.0409 |
+| Ekibyo Drakmord | 10000 | 1.0409 |
+| Exiled Force | 10000 | 1.0409 |
+| Fusion Sage | 10000 | 1.0409 |
+| Gazelle the King of Mythical Beasts | 10000 | 1.0409 |
+| Gemini Elf | 10000 | 1.0409 |
+| Gilasaurus | 10000 | 1.0409 |
+| Goddess with the Third Eye | 10000 | 1.0409 |
+| Graverobber's Retribution | 10000 | 1.0409 |
+| Great Moth | 10000 | 1.0409 |
+| Greenkappa | 10000 | 1.0409 |
+| Hoshiningen | 10000 | 1.0409 |
+| Illusionist Faceless Mage | 10000 | 1.0409 |
+| Jirai Gumo | 10000 | 1.0409 |
+| King Tiger Wanghu | 10000 | 1.0409 |
+| King of Yamimakai | 10000 | 1.0409 |
+| Launcher Spider | 10000 | 1.0409 |
+| Little Chimera | 10000 | 1.0409 |
+| Lord of the Lamp | 10000 | 1.0409 |
+| Machine King | 10000 | 1.0409 |
+| Maryokutai | 10000 | 1.0409 |
+| Mechanicalchaser | 10000 | 1.0409 |
+| Milus Radiant | 10000 | 1.0409 |
+| Miracle Dig | 10000 | 1.0409 |
+| Mirage of Nightmare | 10000 | 1.0409 |
+| Muka Muka | 10000 | 1.0409 |
+| Mystic Horseman | 10000 | 1.0409 |
+| Needle Worm | 10000 | 1.0409 |
+| Princess of Tsurugi | 10000 | 1.0409 |
+| Rabid Horseman | 10000 | 1.0409 |
+| Restructer Revolution | 10000 | 1.0409 |
+| Robbin' Goblin | 10000 | 1.0409 |
+| Ryu-Kishin Powered | 10000 | 1.0409 |
+| Saggi the Dark Clown | 10000 | 1.0409 |
+| Shadow Ghoul | 10000 | 1.0409 |
+| Share the Pain | 10000 | 1.0409 |
+| Shield & Sword | 10000 | 1.0409 |
+| Skull Lair | 10000 | 1.0409 |
+| Soul of Purity and Light | 10000 | 1.0409 |
+| Soul of the Pure | 10000 | 1.0409 |
+| Spirit Message "A" | 10000 | 1.0409 |
+| Spirit Message "I" | 10000 | 1.0409 |
+| Spirit Message "L" | 10000 | 1.0409 |
+| Spirit Message "N" | 10000 | 1.0409 |
+| Star Boy | 10000 | 1.0409 |
+| Swarm of Locusts | 10000 | 1.0409 |
+| The Bistro Butcher | 10000 | 1.0409 |
+| The Dark Door | 10000 | 1.0409 |
+| The Emperor's Holiday | 10000 | 1.0409 |
+| The Immortal of Thunder | 10000 | 1.0409 |
+| The Rock Spirit | 10000 | 1.0409 |
+| The Unhappy Maiden | 10000 | 1.0409 |
+| The Wicked Worm Beast | 10000 | 1.0409 |
+| Thousand Dragon | 10000 | 1.0409 |
+| Thunder Dragon | 10000 | 1.0409 |
+| Tiger Axe | 10000 | 1.0409 |
+| Toon Cannon Soldier | 10000 | 1.0409 |
+| Toon Table of Contents | 10000 | 1.0409 |
+| Tornado Bird | 10000 | 1.0409 |
+| Trap Dustshoot | 10000 | 1.0409 |
+| Tremendous Fire | 10000 | 1.0409 |
+| Twin-Headed Thunder Dragon | 10000 | 1.0409 |
+| Two-Headed King Rex | 10000 | 1.0409 |
+| Vengeful Bog Spirit | 10000 | 1.0409 |
+| Witch's Apprentice | 10000 | 1.0409 |
+| Yata-Garasu | 10000 | 1.0409 |
+| Zombyra the Dark | 10000 | 1.0409 |
+| Bazoo the Soul-Eater | 2500 | 0.2602 |
+| Blast with Chain | 2500 | 0.2602 |
+| Cyber-Stein | 2500 | 0.2602 |
+| Dark Balter the Terrible | 2500 | 0.2602 |
+| Emergency Provisions | 2500 | 0.2602 |
+| Fiber Jar | 2500 | 0.2602 |
+| Fiend Skull Dragon | 2500 | 0.2602 |
+| Fusion Gate | 2500 | 0.2602 |
+| Graceful Charity | 2500 | 0.2602 |
+| Horn of Heaven | 2500 | 0.2602 |
+| Jowgen the Spiritualist | 2500 | 0.2602 |
+| Kuriboh | 2500 | 0.2602 |
+| Kycoo the Ghost Destroyer | 2500 | 0.2602 |
+| Marauding Captain | 2500 | 0.2602 |
+| Morphing Jar | 2500 | 0.2602 |
+| Penguin Soldier | 2500 | 0.2602 |
+| Pyramid Turtle | 2500 | 0.2602 |
+| Reinforcement of the Army | 2500 | 0.2602 |
+| Ring of Magnetism | 2500 | 0.2602 |
+| Riryoku Field | 2500 | 0.2602 |
+| Royal Command | 2500 | 0.2602 |
+| Royal Oppression | 2500 | 0.2602 |
+| Ryu Senshi | 2500 | 0.2602 |
+| Sangan | 2500 | 0.2602 |
+| Sasuke Samurai | 2500 | 0.2602 |
+| Spiritualism | 2500 | 0.2602 |
+| Thunder Nyan Nyan | 2500 | 0.2602 |
+| Witch of the Black Forest | 2500 | 0.2602 |
+| Airknight Parshath | 600 | 0.0625 |
+| Book of Life | 600 | 0.0625 |
+| Cannon Soldier | 600 | 0.0625 |
+| Catapult Turtle | 600 | 0.0625 |
+| Creature Swap | 600 | 0.0625 |
+| Don Zaloog | 600 | 0.0625 |
+| Heavy Storm | 600 | 0.0625 |
+| Magic Jammer | 600 | 0.0625 |
+| Mirror Force | 600 | 0.0625 |
+| Royal Decree | 600 | 0.0625 |
+| Seven Tools of the Bandit | 600 | 0.0625 |
+| Solemn Judgment | 600 | 0.0625 |
+| Spear Dragon | 600 | 0.0625 |
+| The Last Warrior from Another Planet | 600 | 0.0625 |
+| Time Wizard | 600 | 0.0625 |
+| Total Defense Shogun | 600 | 0.0625 |
+| Barrel Dragon | 100 | 0.0104 |
+| Blade Knight | 100 | 0.0104 |
+| Dark Necrofear | 100 | 0.0104 |
+| Dark Ruler Ha Des | 100 | 0.0104 |
+| Guardian Sphinx | 100 | 0.0104 |
+| Injection Fairy Lily | 100 | 0.0104 |
+| Insect Queen | 100 | 0.0104 |
+| Obnoxious Celtic Guard | 100 | 0.0104 |
+| Perfectly Ultimate Great Moth | 100 | 0.0104 |
+| Swift Gaia the Fierce Knight | 100 | 0.0104 |
+| Vampire Lord | 100 | 0.0104 |
 
 ### Dark Revelation Volume 2
 
@@ -2934,295 +3163,318 @@ Forbidden cards (limit 0) are omitted. Lower usage ⇒ higher weight ⇒ more co
 
 ### Structure Deck- Warrior's Triumph
 
-- **Type:** TCG · **Format:** Goat · **Cards in pool:** 17 · **Weight sum:** 170000
+- **Type:** TCG · **Format:** Goat · **Cards in pool:** 19 · **Weight sum:** 190000
 
 | Card | Weight | Pull % |
 |---|---:|---:|
-| Blast with Chain | 10000 | 5.8824 |
-| Call Of The Haunted | 10000 | 5.8824 |
-| D.D. Warrior Lady | 10000 | 5.8824 |
-| Exiled Force | 10000 | 5.8824 |
-| Gearfried the Iron Knight | 10000 | 5.8824 |
-| Giant Trunade | 10000 | 5.8824 |
-| Goblin Attack Force | 10000 | 5.8824 |
-| Heavy Storm | 10000 | 5.8824 |
-| Lightning Vortex | 10000 | 5.8824 |
-| Magic Jammer | 10000 | 5.8824 |
-| Marauding Captain | 10000 | 5.8824 |
-| Mystic Swordsman LV2 | 10000 | 5.8824 |
-| Mystical Space Typhoon | 10000 | 5.8824 |
-| Ninja Grandmaster Sasuke | 10000 | 5.8824 |
-| Reinforcement of the Army | 10000 | 5.8824 |
-| Royal Decree | 10000 | 5.8824 |
-| Snatch Steal | 10000 | 5.8824 |
+| Blast with Chain | 10000 | 5.2632 |
+| Call Of The Haunted | 10000 | 5.2632 |
+| D.D. Warrior Lady | 10000 | 5.2632 |
+| Exiled Force | 10000 | 5.2632 |
+| Gearfried the Iron Knight | 10000 | 5.2632 |
+| Giant Trunade | 10000 | 5.2632 |
+| Goblin Attack Force | 10000 | 5.2632 |
+| Heavy Storm | 10000 | 5.2632 |
+| Lightning Vortex | 10000 | 5.2632 |
+| Magic Jammer | 10000 | 5.2632 |
+| Marauding Captain | 10000 | 5.2632 |
+| Mystic Swordsman LV2 | 10000 | 5.2632 |
+| Mystical Space Typhoon | 10000 | 5.2632 |
+| Ninja Grandmaster Sasuke | 10000 | 5.2632 |
+| Obnoxious Celtic Guard | 10000 | 5.2632 |
+| Reinforcement of the Army | 10000 | 5.2632 |
+| Royal Decree | 10000 | 5.2632 |
+| Snatch Steal | 10000 | 5.2632 |
+| Swift Gaia the Fierce Knight | 10000 | 5.2632 |
 
 ### Goat
 
-- **Type:** Usage · **Format:** Goat · **Cards in pool:** 261 · **Weight sum:** 836365
+- **Type:** Usage · **Format:** Goat · **Cards in pool:** 282 · **Weight sum:** 968934
 
 | Card | Weight | Pull % |
 |---|---:|---:|
-| Backup Soldier | 13242 | 1.5833 |
-| Catapult Turtle | 13242 | 1.5833 |
-| Dark Magician | 13242 | 1.5833 |
-| Dark Ruler Ha Des | 13242 | 1.5833 |
-| Dragon Zombie | 13242 | 1.5833 |
-| Gaia Power | 13242 | 1.5833 |
-| Giant Germ | 13242 | 1.5833 |
-| Graverobber | 13242 | 1.5833 |
-| Hiro's Shadow Scout | 13242 | 1.5833 |
-| Kuwagata a | 13242 | 1.5833 |
-| Lightforce Sword | 13242 | 1.5833 |
-| Minar | 13242 | 1.5833 |
-| Restructer Revolution | 13242 | 1.5833 |
-| Sonic Bird | 13242 | 1.5833 |
-| Thunder Nyan Nyan | 13242 | 1.5833 |
-| Two-Pronged Attack | 13242 | 1.5833 |
-| Giant Soldier of Stone | 10065 | 1.2034 |
-| Gilasaurus | 10065 | 1.2034 |
-| Guardian Sphinx | 10065 | 1.2034 |
-| Mother Grizzly | 10065 | 1.2034 |
-| Pikeru's Circle of Enchantment | 10065 | 1.2034 |
-| The Fiend Megacyber | 10065 | 1.2034 |
-| Different Dimension Capsule | 8576 | 1.0254 |
-| Dream Clown | 8576 | 1.0254 |
-| Exodia the Forbidden One | 8576 | 1.0254 |
-| Left Arm of the Forbidden One | 8576 | 1.0254 |
-| Left Leg of the Forbidden One | 8576 | 1.0254 |
-| Right Arm of the Forbidden One | 8576 | 1.0254 |
-| Right Leg of the Forbidden One | 8576 | 1.0254 |
-| The Little Swordsman of Aile | 8576 | 1.0254 |
-| The Wicked Worm Beast | 8576 | 1.0254 |
-| Windstorm of Etaqua | 8576 | 1.0254 |
-| D.D. Survivor | 7657 | 0.9155 |
-| Spear Dragon | 7657 | 0.9155 |
-| Time Wizard | 7657 | 0.9155 |
-| Marauding Captain | 7310 | 0.8740 |
-| Axe of Despair | 7013 | 0.8385 |
-| Black Pendant | 7013 | 0.8385 |
-| Morphing Jar #2 | 7013 | 0.8385 |
-| The Shallow Grave | 7013 | 0.8385 |
-| Trap Hole | 7013 | 0.8385 |
-| Acid Trap Hole | 6528 | 0.7805 |
-| Des Lacooda | 6528 | 0.7805 |
-| Exchange | 6528 | 0.7805 |
-| Nimble Momonga | 6528 | 0.7805 |
-| Trap Master | 6528 | 0.7805 |
-| Tribute to The Doomed | 6528 | 0.7805 |
-| Electric Snake | 6145 | 0.7347 |
-| Penguin Soldier | 6145 | 0.7347 |
-| Shield & Sword | 6145 | 0.7347 |
-| Stealth Bird | 6145 | 0.7347 |
-| Banisher of the Light | 5832 | 0.6973 |
-| Fake Trap | 5569 | 0.6659 |
-| Old Vindictive Magician | 5569 | 0.6659 |
-| Thestalos the Firestorm Monarch | 5569 | 0.6659 |
-| Blast with Chain | 5344 | 0.6390 |
-| Divine Wrath | 5344 | 0.6390 |
-| Gearfried the Iron Knight | 5344 | 0.6390 |
-| Senju of the Thousand Hands | 5149 | 0.6156 |
-| Swarm of Locusts | 4686 | 0.5603 |
-| Book of Life | 4345 | 0.5195 |
-| Granmarg the Rock Monarch | 4345 | 0.5195 |
-| Greenkappa | 4345 | 0.5195 |
-| Jirai Gumo | 4345 | 0.5195 |
-| Black Illusion Ritual | 4250 | 0.5082 |
-| Magic Drain | 4250 | 0.5082 |
-| Relinquished | 4250 | 0.5082 |
-| Ryu Kokki | 4250 | 0.5082 |
-| Chain Disappearance | 4079 | 0.4877 |
-| Cold Wave | 4003 | 0.4786 |
-| Megamorph | 3864 | 0.4620 |
-| Golem Sentry | 3801 | 0.4545 |
-| Pyramid Turtle | 3741 | 0.4473 |
-| Toon Cannon Soldier | 3741 | 0.4473 |
-| Vampire Lord | 3712 | 0.4438 |
-| Soul Exchange | 3685 | 0.4406 |
-| Cannon Soldier | 3631 | 0.4341 |
-| Milus Radiant | 3532 | 0.4223 |
-| Time Seal | 3532 | 0.4223 |
-| Toon Table of Contents | 3401 | 0.4066 |
-| Bazoo the Soul-Eater | 3360 | 0.4017 |
-| Big Bang Shot | 3322 | 0.3972 |
-| Flower Wolf | 3308 | 0.3955 |
-| Nobleman of Extermination | 3216 | 0.3845 |
-| Apprentice Magician | 3091 | 0.3696 |
-| Chiron the Mage | 3091 | 0.3696 |
-| Soul Release | 3091 | 0.3696 |
-| Mage Power | 3062 | 0.3661 |
-| Token Thanksgiving | 3008 | 0.3597 |
-| Roulette Barrel | 2887 | 0.3452 |
-| Newdoria | 2864 | 0.3424 |
-| Waboku | 2864 | 0.3424 |
-| Hallowed Life Barrier | 2843 | 0.3399 |
-| Big Shield Gardna | 2822 | 0.3374 |
-| Gigantes | 2822 | 0.3374 |
-| Cursed Seal of the Forbidden Spell | 2801 | 0.3349 |
-| Monster Reincarnation | 2801 | 0.3349 |
-| Hysteric Fairy | 2724 | 0.3257 |
-| Des Koala | 2706 | 0.3235 |
-| Goblin Attack Force | 2688 | 0.3214 |
-| Mask of Darkness | 2688 | 0.3214 |
-| Dark Mimic LV1 | 2671 | 0.3194 |
-| Sacred Crane | 2671 | 0.3194 |
-| Dimension Fusion | 2638 | 0.3154 |
-| Last Will | 2638 | 0.3154 |
-| Magic Jammer | 2591 | 0.3098 |
-| Monster Gate | 2547 | 0.3045 |
-| Reasoning | 2547 | 0.3045 |
-| Kaminari Attack | 2510 | 0.3001 |
-| Seven Tools of the Bandit | 2372 | 0.2836 |
-| Spell Canceller | 2217 | 0.2651 |
-| Rabid Horseman | 2136 | 0.2554 |
-| Just Desserts | 2101 | 0.2512 |
-| Return from the Different Dimension | 2101 | 0.2512 |
-| Ojama Trio | 2053 | 0.2455 |
-| Magical Merchant | 2010 | 0.2403 |
-| Secret Barrel | 1993 | 0.2383 |
-| Skilled Dark Magician | 1987 | 0.2376 |
-| Giant Rat | 1981 | 0.2369 |
-| Bottomless Trap Hole | 1933 | 0.2311 |
-| Cyber-Stein | 1933 | 0.2311 |
-| Gyaku-Gire Panda | 1888 | 0.2257 |
-| Airknight Parshath | 1870 | 0.2236 |
-| Compulsory Evacuation Device | 1865 | 0.2230 |
-| Des Wombat | 1861 | 0.2225 |
-| Abyss Soldier | 1810 | 0.2164 |
-| D.D. Assailant | 1810 | 0.2164 |
-| Mystic Tomato | 1798 | 0.2150 |
-| Threatening Roar | 1775 | 0.2122 |
-| Kwagar Hercules | 1743 | 0.2084 |
-| Dark Scorpion - Cliff the Trap Remover | 1706 | 0.2040 |
-| Kuriboh | 1706 | 0.2040 |
-| Zaborg the Thunder Monarch | 1648 | 0.1970 |
-| United We Stand | 1600 | 0.1913 |
-| Widespread Ruin | 1580 | 0.1889 |
-| Brain Control | 1537 | 0.1838 |
-| Giant Trunade | 1494 | 0.1786 |
-| Berserk Gorilla | 1473 | 0.1761 |
-| Empress Judge | 1446 | 0.1729 |
-| Phoenix Wing Wind Blast | 1434 | 0.1715 |
-| Magic Cylinder | 1379 | 0.1649 |
-| Spirit Reaper | 1355 | 0.1620 |
-| King Tiger Wanghu | 1334 | 0.1595 |
-| Smashing Ground | 1327 | 0.1587 |
-| Ultimate Offering | 1324 | 0.1583 |
-| Dark Magician of Chaos | 1316 | 0.1573 |
-| Creature Swap | 1264 | 0.1511 |
-| Don Zaloog | 1230 | 0.1471 |
-| Ninja Grandmaster Sasuke | 1220 | 0.1459 |
-| Skull Knight | 1193 | 0.1426 |
-| Warrior of Tradition | 1193 | 0.1426 |
-| Ceasefire | 1161 | 0.1388 |
-| Deepsea Shark | 1159 | 0.1386 |
-| Metal Dragon | 1159 | 0.1386 |
-| Cipher Soldier | 1154 | 0.1380 |
-| Metamorphosis | 1151 | 0.1376 |
-| Mystic Swordsman LV2 | 1115 | 0.1333 |
-| Gaia the Dragon Champion | 1099 | 0.1314 |
-| Lightning Vortex | 1098 | 0.1313 |
-| Injection Fairy Lily | 1089 | 0.1302 |
-| Labyrinth Tank | 1073 | 0.1283 |
-| Blade Knight | 1068 | 0.1277 |
-| Cyber Jar | 1056 | 0.1263 |
-| Asura Priest | 1051 | 0.1257 |
-| Raigeki Break | 1032 | 0.1234 |
-| Rush Recklessly | 1006 | 0.1203 |
-| Jar of Greed | 997 | 0.1192 |
-| Zombyra the Dark | 996 | 0.1191 |
-| Mobius the Frost Monarch | 964 | 0.1153 |
-| Jinzo | 961 | 0.1149 |
-| Thunder Dragon | 940 | 0.1124 |
-| Reinforcement of the Army | 938 | 0.1122 |
-| Dekoichi the Battlechanted Locomotive | 927 | 0.1108 |
-| Night Assailant | 925 | 0.1106 |
-| Morphing Jar | 914 | 0.1093 |
-| Solemn Judgment | 910 | 0.1088 |
-| Dust Tornado | 903 | 0.1080 |
-| Kycoo the Ghost Destroyer | 888 | 0.1062 |
-| Tsukuyomi | 884 | 0.1057 |
-| Chaos Sorcerer | 883 | 0.1056 |
-| Gravekeeper's Spy | 880 | 0.1052 |
-| Mind Control | 854 | 0.1021 |
-| Upstart Goblin | 847 | 0.1013 |
-| Flame Swordsman | 836 | 0.1000 |
-| Musician King | 836 | 0.1000 |
-| Magician of Faith | 832 | 0.0995 |
-| Trap Dustshoot | 829 | 0.0991 |
-| Sakuretsu Armor | 823 | 0.0984 |
-| Fusionist | 789 | 0.0943 |
-| Mask of Restrict | 765 | 0.0915 |
-| Mirror Wall | 765 | 0.0915 |
-| Bickuribox | 744 | 0.0890 |
-| Card Destruction | 738 | 0.0882 |
-| Cyber Saurus | 737 | 0.0881 |
-| Swords of Revealing Light | 713 | 0.0852 |
-| Exiled Force | 704 | 0.0842 |
-| Robbin' Goblin | 701 | 0.0838 |
-| Solemn Wishes | 701 | 0.0838 |
-| Dark Paladin | 690 | 0.0825 |
-| Roaring Ocean Snake | 680 | 0.0813 |
-| D.D. Warrior Lady | 679 | 0.0812 |
-| Premature Burial | 663 | 0.0793 |
-| Nobleman of Crossout | 662 | 0.0792 |
-| Charubin the Fire Knight | 657 | 0.0786 |
-| Toon World | 652 | 0.0780 |
-| Thousand Dragon | 640 | 0.0765 |
-| B. Skull Dragon | 636 | 0.0760 |
-| Karbonala Warrior | 628 | 0.0751 |
-| Final Attack Orders | 614 | 0.0734 |
-| Limiter Removal | 614 | 0.0734 |
-| Sinister Serpent | 603 | 0.0721 |
-| Prohibition | 583 | 0.0697 |
-| Sangan | 572 | 0.0684 |
-| Torrential Tribute | 557 | 0.0666 |
-| Light of Intervention | 556 | 0.0665 |
-| Tribe-Infecting Virus | 544 | 0.0650 |
-| Black Luster Soldier - Envoy of Beginning | 543 | 0.0649 |
-| Delinquent Duo | 537 | 0.0642 |
-| Skull Lair | 534 | 0.0638 |
-| Breaker the Magical Warrior | 532 | 0.0636 |
-| Mirror Force | 529 | 0.0632 |
-| Bell of Destruction | 526 | 0.0629 |
-| Snatch Steal | 526 | 0.0629 |
-| Heavy Storm | 524 | 0.0627 |
-| Graceful Charity | 522 | 0.0624 |
-| Pot of Greed | 522 | 0.0624 |
-| Emergency Provisions | 475 | 0.0568 |
-| Dark Flare Knight | 424 | 0.0507 |
-| Giltia the D. Knight | 419 | 0.0501 |
-| Royal Oppression | 358 | 0.0428 |
-| Poison of the Old Man | 344 | 0.0411 |
-| My Body as a Shield | 332 | 0.0397 |
-| Twin-Headed Thunder Dragon | 330 | 0.0395 |
-| Chain Energy | 328 | 0.0392 |
-| Flame Ghost | 276 | 0.0330 |
-| Messenger of Peace | 270 | 0.0323 |
-| Wave-Motion Cannon | 257 | 0.0307 |
-| Enemy Controller | 241 | 0.0288 |
-| Nightmare Wheel | 239 | 0.0286 |
-| Master of Oz | 203 | 0.0243 |
-| Dragoness the Wicked Knight | 202 | 0.0242 |
-| Ojama King | 194 | 0.0232 |
-| King Dragun | 191 | 0.0228 |
-| The Last Warrior from Another Planet | 191 | 0.0228 |
-| Darkfire Dragon | 187 | 0.0224 |
-| Fiend Skull Dragon | 185 | 0.0221 |
-| Gravity Bind | 184 | 0.0220 |
-| Reaper on the Nightmare | 184 | 0.0220 |
-| Dark Blade the Dragon Knight | 183 | 0.0219 |
-| Gatling Dragon | 179 | 0.0214 |
-| Ryu Senshi | 178 | 0.0213 |
-| Dark Balter the Terrible | 175 | 0.0209 |
-| Thousand-Eyes Restrict | 173 | 0.0207 |
-| Level Limit - Area B | 167 | 0.0200 |
-| Xing Zhen Hu | 144 | 0.0172 |
-| Royal Decree | 128 | 0.0153 |
-| Scapegoat | 110 | 0.0132 |
-| Mystik Wok | 96 | 0.0115 |
-| Book of Moon | 83 | 0.0099 |
-| Call Of The Haunted | 70 | 0.0084 |
-| Mystical Space Typhoon | 53 | 0.0063 |
+| Aqua Spirit | 13242 | 1.3667 |
+| Backup Soldier | 13242 | 1.3667 |
+| Catapult Turtle | 13242 | 1.3667 |
+| Dark Magician | 13242 | 1.3667 |
+| Dark Necrofear | 13242 | 1.3667 |
+| Dark Ruler Ha Des | 13242 | 1.3667 |
+| Dragon Zombie | 13242 | 1.3667 |
+| Ekibyo Drakmord | 13242 | 1.3667 |
+| Fire Princess | 13242 | 1.3667 |
+| Gaia Power | 13242 | 1.3667 |
+| Giant Germ | 13242 | 1.3667 |
+| Graverobber | 13242 | 1.3667 |
+| Hiro's Shadow Scout | 13242 | 1.3667 |
+| Interdimensional Matter Transporter | 13242 | 1.3667 |
+| Kuwagata a | 13242 | 1.3667 |
+| Lightforce Sword | 13242 | 1.3667 |
+| Mask of Brutality | 13242 | 1.3667 |
+| Minar | 13242 | 1.3667 |
+| Restructer Revolution | 13242 | 1.3667 |
+| Sonic Bird | 13242 | 1.3667 |
+| The Forgiving Maiden | 13242 | 1.3667 |
+| Thunder Nyan Nyan | 13242 | 1.3667 |
+| Two-Pronged Attack | 13242 | 1.3667 |
+| Giant Soldier of Stone | 10065 | 1.0388 |
+| Gilasaurus | 10065 | 1.0388 |
+| Guardian Sphinx | 10065 | 1.0388 |
+| Mother Grizzly | 10065 | 1.0388 |
+| Pikeru's Circle of Enchantment | 10065 | 1.0388 |
+| Slate Warrior | 10065 | 1.0388 |
+| The Fiend Megacyber | 10065 | 1.0388 |
+| Different Dimension Capsule | 8576 | 0.8851 |
+| Dream Clown | 8576 | 0.8851 |
+| Exodia the Forbidden One | 8576 | 0.8851 |
+| Left Arm of the Forbidden One | 8576 | 0.8851 |
+| Left Leg of the Forbidden One | 8576 | 0.8851 |
+| Right Arm of the Forbidden One | 8576 | 0.8851 |
+| Right Leg of the Forbidden One | 8576 | 0.8851 |
+| The Little Swordsman of Aile | 8576 | 0.8851 |
+| The Wicked Worm Beast | 8576 | 0.8851 |
+| Windstorm of Etaqua | 8576 | 0.8851 |
+| D.D. Survivor | 7657 | 0.7902 |
+| Spear Dragon | 7657 | 0.7902 |
+| Time Wizard | 7657 | 0.7902 |
+| Marauding Captain | 7310 | 0.7544 |
+| Axe of Despair | 7013 | 0.7238 |
+| Black Pendant | 7013 | 0.7238 |
+| Morphing Jar #2 | 7013 | 0.7238 |
+| Summoner of Illusions | 7013 | 0.7238 |
+| The Shallow Grave | 7013 | 0.7238 |
+| Trap Hole | 7013 | 0.7238 |
+| Acid Trap Hole | 6528 | 0.6737 |
+| Des Lacooda | 6528 | 0.6737 |
+| Exchange | 6528 | 0.6737 |
+| Nimble Momonga | 6528 | 0.6737 |
+| Trap Master | 6528 | 0.6737 |
+| Tribute to The Doomed | 6528 | 0.6737 |
+| Electric Snake | 6145 | 0.6342 |
+| Penguin Soldier | 6145 | 0.6342 |
+| Shield & Sword | 6145 | 0.6342 |
+| Stealth Bird | 6145 | 0.6342 |
+| Banisher of the Light | 5832 | 0.6019 |
+| The Rock Spirit | 5832 | 0.6019 |
+| Fake Trap | 5569 | 0.5748 |
+| Old Vindictive Magician | 5569 | 0.5748 |
+| Thestalos the Firestorm Monarch | 5569 | 0.5748 |
+| Blast with Chain | 5344 | 0.5515 |
+| Divine Wrath | 5344 | 0.5515 |
+| Gearfried the Iron Knight | 5344 | 0.5515 |
+| Senju of the Thousand Hands | 5149 | 0.5314 |
+| Swift Gaia the Fierce Knight | 4824 | 0.4979 |
+| Swarm of Locusts | 4686 | 0.4836 |
+| Book of Life | 4345 | 0.4484 |
+| Granmarg the Rock Monarch | 4345 | 0.4484 |
+| Greenkappa | 4345 | 0.4484 |
+| Jirai Gumo | 4345 | 0.4484 |
+| Black Illusion Ritual | 4250 | 0.4386 |
+| Magic Drain | 4250 | 0.4386 |
+| Relinquished | 4250 | 0.4386 |
+| Ryu Kokki | 4250 | 0.4386 |
+| Chain Disappearance | 4079 | 0.4210 |
+| Cold Wave | 4003 | 0.4131 |
+| Megamorph | 3864 | 0.3988 |
+| Golem Sentry | 3801 | 0.3923 |
+| Pyramid Turtle | 3741 | 0.3861 |
+| Toon Cannon Soldier | 3741 | 0.3861 |
+| Vampire Lord | 3712 | 0.3831 |
+| Soul Exchange | 3685 | 0.3803 |
+| Cannon Soldier | 3631 | 0.3747 |
+| Milus Radiant | 3532 | 0.3645 |
+| Time Seal | 3532 | 0.3645 |
+| Toon Table of Contents | 3401 | 0.3510 |
+| Bazoo the Soul-Eater | 3360 | 0.3468 |
+| Big Bang Shot | 3322 | 0.3429 |
+| Flower Wolf | 3308 | 0.3414 |
+| Nobleman of Extermination | 3216 | 0.3319 |
+| Apprentice Magician | 3091 | 0.3190 |
+| Chiron the Mage | 3091 | 0.3190 |
+| Soul Release | 3091 | 0.3190 |
+| Mage Power | 3062 | 0.3160 |
+| Token Thanksgiving | 3008 | 0.3104 |
+| Roulette Barrel | 2887 | 0.2980 |
+| Newdoria | 2864 | 0.2956 |
+| Waboku | 2864 | 0.2956 |
+| Hallowed Life Barrier | 2843 | 0.2934 |
+| Big Shield Gardna | 2822 | 0.2912 |
+| Gigantes | 2822 | 0.2912 |
+| Cursed Seal of the Forbidden Spell | 2801 | 0.2891 |
+| Monster Reincarnation | 2801 | 0.2891 |
+| Hysteric Fairy | 2724 | 0.2811 |
+| Des Koala | 2706 | 0.2793 |
+| Goblin Attack Force | 2688 | 0.2774 |
+| Mask of Darkness | 2688 | 0.2774 |
+| Dark Mimic LV1 | 2671 | 0.2757 |
+| Sacred Crane | 2671 | 0.2757 |
+| Dimension Fusion | 2638 | 0.2723 |
+| Last Will | 2638 | 0.2723 |
+| Magic Jammer | 2591 | 0.2674 |
+| Monster Gate | 2547 | 0.2629 |
+| Reasoning | 2547 | 0.2629 |
+| Kaminari Attack | 2510 | 0.2590 |
+| Seven Tools of the Bandit | 2372 | 0.2448 |
+| Spell Canceller | 2217 | 0.2288 |
+| Rabid Horseman | 2136 | 0.2204 |
+| Just Desserts | 2101 | 0.2168 |
+| Return from the Different Dimension | 2101 | 0.2168 |
+| Ojama Trio | 2053 | 0.2119 |
+| Jowgen the Spiritualist | 2028 | 0.2093 |
+| Magical Merchant | 2010 | 0.2074 |
+| Secret Barrel | 1993 | 0.2057 |
+| Skilled Dark Magician | 1987 | 0.2051 |
+| Giant Rat | 1981 | 0.2045 |
+| Bottomless Trap Hole | 1933 | 0.1995 |
+| Cyber-Stein | 1933 | 0.1995 |
+| Gyaku-Gire Panda | 1888 | 0.1949 |
+| Airknight Parshath | 1870 | 0.1930 |
+| Compulsory Evacuation Device | 1865 | 0.1925 |
+| Des Wombat | 1861 | 0.1921 |
+| Abyss Soldier | 1810 | 0.1868 |
+| D.D. Assailant | 1810 | 0.1868 |
+| Mystic Tomato | 1798 | 0.1856 |
+| Threatening Roar | 1775 | 0.1832 |
+| Kwagar Hercules | 1743 | 0.1799 |
+| Dark Scorpion - Cliff the Trap Remover | 1706 | 0.1761 |
+| Kuriboh | 1706 | 0.1761 |
+| Amazoness Archer | 1693 | 0.1747 |
+| Zaborg the Thunder Monarch | 1648 | 0.1701 |
+| United We Stand | 1600 | 0.1651 |
+| Widespread Ruin | 1580 | 0.1631 |
+| Brain Control | 1537 | 0.1586 |
+| Giant Trunade | 1494 | 0.1542 |
+| Berserk Gorilla | 1473 | 0.1520 |
+| Empress Judge | 1446 | 0.1492 |
+| Phoenix Wing Wind Blast | 1434 | 0.1480 |
+| Magic Cylinder | 1379 | 0.1423 |
+| Spirit Reaper | 1355 | 0.1398 |
+| King Tiger Wanghu | 1334 | 0.1377 |
+| Smashing Ground | 1327 | 0.1370 |
+| Card of Safe Return | 1324 | 0.1366 |
+| Spirit Message "A" | 1324 | 0.1366 |
+| Spirit Message "L" | 1324 | 0.1366 |
+| Spirit Message "N" | 1324 | 0.1366 |
+| Ultimate Offering | 1324 | 0.1366 |
+| Dark Magician of Chaos | 1316 | 0.1358 |
+| Creature Swap | 1264 | 0.1305 |
+| Don Zaloog | 1230 | 0.1269 |
+| Ninja Grandmaster Sasuke | 1220 | 0.1259 |
+| Skull Knight | 1193 | 0.1231 |
+| Warrior of Tradition | 1193 | 0.1231 |
+| Ceasefire | 1161 | 0.1198 |
+| Deepsea Shark | 1159 | 0.1196 |
+| Metal Dragon | 1159 | 0.1196 |
+| Cipher Soldier | 1154 | 0.1191 |
+| Metamorphosis | 1151 | 0.1188 |
+| Mystic Swordsman LV2 | 1115 | 0.1151 |
+| Gaia the Dragon Champion | 1099 | 0.1134 |
+| Lightning Vortex | 1098 | 0.1133 |
+| Injection Fairy Lily | 1089 | 0.1124 |
+| Humanoid Worm Drake | 1073 | 0.1107 |
+| Labyrinth Tank | 1073 | 0.1107 |
+| Blade Knight | 1068 | 0.1102 |
+| Cyber Jar | 1056 | 0.1090 |
+| Asura Priest | 1051 | 0.1085 |
+| Raigeki Break | 1032 | 0.1065 |
+| Rush Recklessly | 1006 | 0.1038 |
+| Jar of Greed | 997 | 0.1029 |
+| Zombyra the Dark | 996 | 0.1028 |
+| Mobius the Frost Monarch | 964 | 0.0995 |
+| Jinzo | 961 | 0.0992 |
+| Thunder Dragon | 940 | 0.0970 |
+| Reinforcement of the Army | 938 | 0.0968 |
+| Dekoichi the Battlechanted Locomotive | 927 | 0.0957 |
+| Night Assailant | 925 | 0.0955 |
+| Morphing Jar | 914 | 0.0943 |
+| Solemn Judgment | 910 | 0.0939 |
+| Dust Tornado | 903 | 0.0932 |
+| Kycoo the Ghost Destroyer | 888 | 0.0916 |
+| Tsukuyomi | 884 | 0.0912 |
+| Chaos Sorcerer | 883 | 0.0911 |
+| Gravekeeper's Spy | 880 | 0.0908 |
+| Offerings to the Doomed | 857 | 0.0884 |
+| Mind Control | 854 | 0.0881 |
+| Upstart Goblin | 847 | 0.0874 |
+| Flame Swordsman | 836 | 0.0863 |
+| Musician King | 836 | 0.0863 |
+| Magician of Faith | 832 | 0.0859 |
+| Trap Dustshoot | 829 | 0.0856 |
+| Sakuretsu Armor | 823 | 0.0849 |
+| Fusionist | 789 | 0.0814 |
+| Mask of Restrict | 765 | 0.0790 |
+| Mirror Wall | 765 | 0.0790 |
+| Bickuribox | 744 | 0.0768 |
+| Card Destruction | 738 | 0.0762 |
+| Cyber Saurus | 737 | 0.0761 |
+| Swords of Revealing Light | 713 | 0.0736 |
+| St. Joan | 712 | 0.0735 |
+| Exiled Force | 704 | 0.0727 |
+| Robbin' Goblin | 701 | 0.0723 |
+| Solemn Wishes | 701 | 0.0723 |
+| Dark Paladin | 690 | 0.0712 |
+| Roaring Ocean Snake | 680 | 0.0702 |
+| D.D. Warrior Lady | 679 | 0.0701 |
+| Premature Burial | 663 | 0.0684 |
+| Nobleman of Crossout | 662 | 0.0683 |
+| Charubin the Fire Knight | 657 | 0.0678 |
+| Toon World | 652 | 0.0673 |
+| Thousand Dragon | 640 | 0.0661 |
+| B. Skull Dragon | 636 | 0.0656 |
+| Karbonala Warrior | 628 | 0.0648 |
+| Final Attack Orders | 614 | 0.0634 |
+| Limiter Removal | 614 | 0.0634 |
+| Sinister Serpent | 603 | 0.0622 |
+| Prohibition | 583 | 0.0602 |
+| Sangan | 572 | 0.0590 |
+| Torrential Tribute | 557 | 0.0575 |
+| Light of Intervention | 556 | 0.0574 |
+| Tribe-Infecting Virus | 544 | 0.0561 |
+| Black Luster Soldier - Envoy of Beginning | 543 | 0.0560 |
+| Delinquent Duo | 537 | 0.0554 |
+| Skull Lair | 534 | 0.0551 |
+| Breaker the Magical Warrior | 532 | 0.0549 |
+| Mirror Force | 529 | 0.0546 |
+| Bell of Destruction | 526 | 0.0543 |
+| Snatch Steal | 526 | 0.0543 |
+| Heavy Storm | 524 | 0.0541 |
+| Graceful Charity | 522 | 0.0539 |
+| Pot of Greed | 522 | 0.0539 |
+| Royal Command | 482 | 0.0497 |
+| Emergency Provisions | 475 | 0.0490 |
+| Dark Flare Knight | 424 | 0.0438 |
+| Giltia the D. Knight | 419 | 0.0432 |
+| Royal Oppression | 358 | 0.0369 |
+| Poison of the Old Man | 344 | 0.0355 |
+| My Body as a Shield | 332 | 0.0343 |
+| Twin-Headed Thunder Dragon | 330 | 0.0341 |
+| Chain Energy | 328 | 0.0339 |
+| Flame Ghost | 276 | 0.0285 |
+| Messenger of Peace | 270 | 0.0279 |
+| Wave-Motion Cannon | 257 | 0.0265 |
+| Enemy Controller | 241 | 0.0249 |
+| Nightmare Wheel | 239 | 0.0247 |
+| Master of Oz | 203 | 0.0210 |
+| Dragoness the Wicked Knight | 202 | 0.0208 |
+| Ojama King | 194 | 0.0200 |
+| King Dragun | 191 | 0.0197 |
+| The Last Warrior from Another Planet | 191 | 0.0197 |
+| Darkfire Dragon | 187 | 0.0193 |
+| Fiend Skull Dragon | 185 | 0.0191 |
+| Gravity Bind | 184 | 0.0190 |
+| Reaper on the Nightmare | 184 | 0.0190 |
+| Dark Blade the Dragon Knight | 183 | 0.0189 |
+| Gatling Dragon | 179 | 0.0185 |
+| Ryu Senshi | 178 | 0.0184 |
+| Dark Balter the Terrible | 175 | 0.0181 |
+| Thousand-Eyes Restrict | 173 | 0.0179 |
+| Level Limit - Area B | 167 | 0.0172 |
+| Xing Zhen Hu | 144 | 0.0149 |
+| Royal Decree | 128 | 0.0132 |
+| Scapegoat | 110 | 0.0114 |
+| Mystik Wok | 96 | 0.0099 |
+| Book of Moon | 83 | 0.0086 |
+| Call Of The Haunted | 70 | 0.0072 |
+| Mystical Space Typhoon | 53 | 0.0055 |
 
 ### Cybernetic Revolution
 
@@ -3239,150 +3491,152 @@ Forbidden cards (limit 0) are omitted. Lower usage ⇒ higher weight ⇒ more co
 
 ### Cyber
 
-- **Type:** Usage · **Format:** Cyber · **Cards in pool:** 140 · **Weight sum:** 159026
+- **Type:** Usage · **Format:** Cyber · **Cards in pool:** 142 · **Weight sum:** 164290
 
 | Card | Weight | Pull % |
 |---|---:|---:|
-| Apprentice Magician | 2978 | 1.8726 |
-| Cannon Soldier | 2978 | 1.8726 |
-| Dark Scorpion - Cliff the Trap Remover | 2978 | 1.8726 |
-| Different Dimension Capsule | 2978 | 1.8726 |
-| Greenkappa | 2978 | 1.8726 |
-| Return from the Different Dimension | 2978 | 1.8726 |
-| Sasuke Samurai | 2978 | 1.8726 |
-| Soul Exchange | 2978 | 1.8726 |
-| Stealth Bird | 2978 | 1.8726 |
-| Thestalos the Firestorm Monarch | 2978 | 1.8726 |
-| Thunder Dragon | 2978 | 1.8726 |
-| Upstart Goblin | 2550 | 1.6035 |
-| Des Wombat | 2286 | 1.4375 |
-| Electric Snake | 2286 | 1.4375 |
-| Jar of Greed | 2286 | 1.4375 |
-| Monster Gate | 2286 | 1.4375 |
-| Monster Reincarnation | 2286 | 1.4375 |
-| Raigeki Break | 2286 | 1.4375 |
-| Reasoning | 2286 | 1.4375 |
-| Sacred Crane | 2286 | 1.4375 |
-| Abyss Soldier | 1962 | 1.2338 |
-| Card Destruction | 1962 | 1.2338 |
-| Chain Disappearance | 1962 | 1.2338 |
-| Giant Rat | 1962 | 1.2338 |
-| Gyaku-Gire Panda | 1962 | 1.2338 |
-| Spell Canceller | 1962 | 1.2338 |
-| Token Thanksgiving | 1962 | 1.2338 |
-| Widespread Ruin | 1962 | 1.2338 |
-| Blade Knight | 1761 | 1.1074 |
-| Des Koala | 1761 | 1.1074 |
-| Just Desserts | 1761 | 1.1074 |
-| Magical Merchant | 1761 | 1.1074 |
-| Nimble Momonga | 1761 | 1.1074 |
-| Ojama Trio | 1761 | 1.1074 |
-| Secret Barrel | 1761 | 1.1074 |
-| Big Shield Gardna | 1621 | 1.0193 |
-| Chiron the Mage | 1621 | 1.0193 |
-| Cursed Seal of the Forbidden Spell | 1621 | 1.0193 |
-| Megamorph | 1621 | 1.0193 |
-| Ninja Grandmaster Sasuke | 1621 | 1.0193 |
-| Dark Magician of Chaos | 1516 | 0.9533 |
-| Don Zaloog | 1516 | 0.9533 |
-| United We Stand | 1516 | 0.9533 |
-| Airknight Parshath | 1364 | 0.8577 |
-| D.D. Assailant | 1364 | 0.8577 |
-| Dekoichi the Battlechanted Locomotive | 1364 | 0.8577 |
-| Kycoo the Ghost Destroyer | 1364 | 0.8577 |
-| Solemn Judgment | 1364 | 0.8577 |
-| Waboku | 1364 | 0.8577 |
-| Cipher Soldier | 1307 | 0.8219 |
-| Reinforcement of the Army | 1307 | 0.8219 |
-| Smashing Ground | 1307 | 0.8219 |
-| Cold Wave | 1258 | 0.7911 |
-| Creature Swap | 1236 | 0.7772 |
-| Giant Trunade | 1215 | 0.7640 |
-| Mystic Swordsman LV2 | 1215 | 0.7640 |
-| Asura Priest | 1114 | 0.7005 |
-| Gravekeeper's Spy | 1114 | 0.7005 |
-| Mind Control | 1114 | 0.7005 |
-| Chaos Sorcerer | 1087 | 0.6835 |
-| Injection Fairy Lily | 1087 | 0.6835 |
-| Magic Cylinder | 1087 | 0.6835 |
-| Mystic Tomato | 1063 | 0.6684 |
-| Bottomless Trap Hole | 1040 | 0.6540 |
-| Zaborg the Thunder Monarch | 1040 | 0.6540 |
-| Cyber Jar | 1019 | 0.6408 |
-| Exarion Universe | 1019 | 0.6408 |
-| Tsukuyomi | 1019 | 0.6408 |
-| Dust Tornado | 1000 | 0.6288 |
-| Last Will | 1000 | 0.6288 |
-| King Tiger Wanghu | 966 | 0.6074 |
-| Kuriboh | 966 | 0.6074 |
-| Metamorphosis | 950 | 0.5974 |
-| Brain Control | 909 | 0.5716 |
-| Threatening Roar | 885 | 0.5565 |
-| Sakuretsu Armor | 874 | 0.5496 |
-| Cyber-Stein | 863 | 0.5427 |
-| Spirit Reaper | 863 | 0.5427 |
-| Ceasefire | 853 | 0.5364 |
-| Trap Dustshoot | 853 | 0.5364 |
-| Mobius the Frost Monarch | 844 | 0.5307 |
-| Morphing Jar | 826 | 0.5194 |
-| Magician of Faith | 809 | 0.5087 |
-| Cyber Dragon | 787 | 0.4949 |
-| Swords of Revealing Light | 761 | 0.4785 |
-| Karbonala Warrior | 729 | 0.4584 |
-| Roaring Ocean Snake | 729 | 0.4584 |
-| Twin-Headed Thunder Dragon | 729 | 0.4584 |
-| Lightning Vortex | 713 | 0.4484 |
-| Nobleman of Crossout | 665 | 0.4182 |
-| Sinister Serpent | 665 | 0.4182 |
-| Jinzo | 655 | 0.4119 |
-| Exiled Force | 613 | 0.3855 |
-| D.D. Warrior Lady | 592 | 0.3723 |
-| Sangan | 580 | 0.3647 |
-| Tribe-Infecting Virus | 580 | 0.3647 |
-| Flame Ghost | 556 | 0.3496 |
-| Fusionist | 556 | 0.3496 |
-| Giltia the D. Knight | 556 | 0.3496 |
-| Breaker the Magical Warrior | 554 | 0.3484 |
-| Premature Burial | 550 | 0.3459 |
-| Black Luster Soldier - Envoy of Beginning | 545 | 0.3427 |
-| Delinquent Duo | 541 | 0.3402 |
-| Bell of Destruction | 529 | 0.3327 |
-| Snatch Steal | 529 | 0.3327 |
-| Torrential Tribute | 529 | 0.3327 |
-| Mirror Force | 525 | 0.3301 |
-| Graceful Charity | 522 | 0.3282 |
-| Heavy Storm | 522 | 0.3282 |
-| Pot of Greed | 522 | 0.3282 |
-| Gaia the Dragon Champion | 341 | 0.2144 |
-| Dark Flare Knight | 297 | 0.1868 |
-| Xing Zhen Hu | 297 | 0.1868 |
-| Dragoness the Wicked Knight | 228 | 0.1434 |
-| Poison of the Old Man | 228 | 0.1434 |
-| Darkfire Dragon | 207 | 0.1302 |
-| Ojama King | 204 | 0.1283 |
-| Master of Oz | 201 | 0.1264 |
-| Cyber End Dragon | 181 | 0.1138 |
-| King Dragun | 177 | 0.1113 |
-| Ryu Senshi | 177 | 0.1113 |
-| The Last Warrior from Another Planet | 177 | 0.1113 |
-| Dark Blade the Dragon Knight | 176 | 0.1107 |
-| Reaper on the Nightmare | 174 | 0.1094 |
-| Cyber Twin Dragon | 171 | 0.1075 |
-| Fiend Skull Dragon | 171 | 0.1075 |
-| Gatling Dragon | 171 | 0.1075 |
-| Dark Balter the Terrible | 170 | 0.1069 |
-| Thousand-Eyes Restrict | 170 | 0.1069 |
-| Wave-Motion Cannon | 162 | 0.1019 |
-| Enemy Controller | 151 | 0.0950 |
-| Level Limit - Area B | 151 | 0.0950 |
-| Gravity Bind | 139 | 0.0874 |
-| Limiter Removal | 117 | 0.0736 |
-| Mystik Wok | 104 | 0.0654 |
-| Scapegoat | 100 | 0.0629 |
-| Royal Decree | 93 | 0.0585 |
-| Book of Moon | 80 | 0.0503 |
-| Call Of The Haunted | 59 | 0.0371 |
-| Mystical Space Typhoon | 53 | 0.0333 |
+| Amazoness Archer | 2978 | 1.8126 |
+| Apprentice Magician | 2978 | 1.8126 |
+| Cannon Soldier | 2978 | 1.8126 |
+| Dark Scorpion - Cliff the Trap Remover | 2978 | 1.8126 |
+| Different Dimension Capsule | 2978 | 1.8126 |
+| Greenkappa | 2978 | 1.8126 |
+| Return from the Different Dimension | 2978 | 1.8126 |
+| Sasuke Samurai | 2978 | 1.8126 |
+| Soul Exchange | 2978 | 1.8126 |
+| Stealth Bird | 2978 | 1.8126 |
+| Thestalos the Firestorm Monarch | 2978 | 1.8126 |
+| Thunder Dragon | 2978 | 1.8126 |
+| Upstart Goblin | 2550 | 1.5521 |
+| Des Wombat | 2286 | 1.3914 |
+| Electric Snake | 2286 | 1.3914 |
+| Jar of Greed | 2286 | 1.3914 |
+| Jowgen the Spiritualist | 2286 | 1.3914 |
+| Monster Gate | 2286 | 1.3914 |
+| Monster Reincarnation | 2286 | 1.3914 |
+| Raigeki Break | 2286 | 1.3914 |
+| Reasoning | 2286 | 1.3914 |
+| Sacred Crane | 2286 | 1.3914 |
+| Abyss Soldier | 1962 | 1.1942 |
+| Card Destruction | 1962 | 1.1942 |
+| Chain Disappearance | 1962 | 1.1942 |
+| Giant Rat | 1962 | 1.1942 |
+| Gyaku-Gire Panda | 1962 | 1.1942 |
+| Spell Canceller | 1962 | 1.1942 |
+| Token Thanksgiving | 1962 | 1.1942 |
+| Widespread Ruin | 1962 | 1.1942 |
+| Blade Knight | 1761 | 1.0719 |
+| Des Koala | 1761 | 1.0719 |
+| Just Desserts | 1761 | 1.0719 |
+| Magical Merchant | 1761 | 1.0719 |
+| Nimble Momonga | 1761 | 1.0719 |
+| Ojama Trio | 1761 | 1.0719 |
+| Secret Barrel | 1761 | 1.0719 |
+| Big Shield Gardna | 1621 | 0.9867 |
+| Chiron the Mage | 1621 | 0.9867 |
+| Cursed Seal of the Forbidden Spell | 1621 | 0.9867 |
+| Megamorph | 1621 | 0.9867 |
+| Ninja Grandmaster Sasuke | 1621 | 0.9867 |
+| Dark Magician of Chaos | 1516 | 0.9228 |
+| Don Zaloog | 1516 | 0.9228 |
+| United We Stand | 1516 | 0.9228 |
+| Airknight Parshath | 1364 | 0.8302 |
+| D.D. Assailant | 1364 | 0.8302 |
+| Dekoichi the Battlechanted Locomotive | 1364 | 0.8302 |
+| Kycoo the Ghost Destroyer | 1364 | 0.8302 |
+| Solemn Judgment | 1364 | 0.8302 |
+| Waboku | 1364 | 0.8302 |
+| Cipher Soldier | 1307 | 0.7955 |
+| Reinforcement of the Army | 1307 | 0.7955 |
+| Smashing Ground | 1307 | 0.7955 |
+| Cold Wave | 1258 | 0.7657 |
+| Creature Swap | 1236 | 0.7523 |
+| Giant Trunade | 1215 | 0.7395 |
+| Mystic Swordsman LV2 | 1215 | 0.7395 |
+| Asura Priest | 1114 | 0.6781 |
+| Gravekeeper's Spy | 1114 | 0.6781 |
+| Mind Control | 1114 | 0.6781 |
+| Chaos Sorcerer | 1087 | 0.6616 |
+| Injection Fairy Lily | 1087 | 0.6616 |
+| Magic Cylinder | 1087 | 0.6616 |
+| Mystic Tomato | 1063 | 0.6470 |
+| Bottomless Trap Hole | 1040 | 0.6330 |
+| Zaborg the Thunder Monarch | 1040 | 0.6330 |
+| Cyber Jar | 1019 | 0.6202 |
+| Exarion Universe | 1019 | 0.6202 |
+| Tsukuyomi | 1019 | 0.6202 |
+| Dust Tornado | 1000 | 0.6087 |
+| Last Will | 1000 | 0.6087 |
+| King Tiger Wanghu | 966 | 0.5880 |
+| Kuriboh | 966 | 0.5880 |
+| Metamorphosis | 950 | 0.5782 |
+| Brain Control | 909 | 0.5533 |
+| Threatening Roar | 885 | 0.5387 |
+| Sakuretsu Armor | 874 | 0.5320 |
+| Cyber-Stein | 863 | 0.5253 |
+| Spirit Reaper | 863 | 0.5253 |
+| Ceasefire | 853 | 0.5192 |
+| Trap Dustshoot | 853 | 0.5192 |
+| Mobius the Frost Monarch | 844 | 0.5137 |
+| Morphing Jar | 826 | 0.5028 |
+| Magician of Faith | 809 | 0.4924 |
+| Cyber Dragon | 787 | 0.4790 |
+| Swords of Revealing Light | 761 | 0.4632 |
+| Karbonala Warrior | 729 | 0.4437 |
+| Roaring Ocean Snake | 729 | 0.4437 |
+| Twin-Headed Thunder Dragon | 729 | 0.4437 |
+| Lightning Vortex | 713 | 0.4340 |
+| Nobleman of Crossout | 665 | 0.4048 |
+| Sinister Serpent | 665 | 0.4048 |
+| Jinzo | 655 | 0.3987 |
+| Exiled Force | 613 | 0.3731 |
+| D.D. Warrior Lady | 592 | 0.3603 |
+| Sangan | 580 | 0.3530 |
+| Tribe-Infecting Virus | 580 | 0.3530 |
+| Flame Ghost | 556 | 0.3384 |
+| Fusionist | 556 | 0.3384 |
+| Giltia the D. Knight | 556 | 0.3384 |
+| Breaker the Magical Warrior | 554 | 0.3372 |
+| Premature Burial | 550 | 0.3348 |
+| Black Luster Soldier - Envoy of Beginning | 545 | 0.3317 |
+| Delinquent Duo | 541 | 0.3293 |
+| Bell of Destruction | 529 | 0.3220 |
+| Snatch Steal | 529 | 0.3220 |
+| Torrential Tribute | 529 | 0.3220 |
+| Mirror Force | 525 | 0.3196 |
+| Graceful Charity | 522 | 0.3177 |
+| Heavy Storm | 522 | 0.3177 |
+| Pot of Greed | 522 | 0.3177 |
+| Gaia the Dragon Champion | 341 | 0.2076 |
+| Dark Flare Knight | 297 | 0.1808 |
+| Xing Zhen Hu | 297 | 0.1808 |
+| Dragoness the Wicked Knight | 228 | 0.1388 |
+| Poison of the Old Man | 228 | 0.1388 |
+| Darkfire Dragon | 207 | 0.1260 |
+| Ojama King | 204 | 0.1242 |
+| Master of Oz | 201 | 0.1223 |
+| Cyber End Dragon | 181 | 0.1102 |
+| King Dragun | 177 | 0.1077 |
+| Ryu Senshi | 177 | 0.1077 |
+| The Last Warrior from Another Planet | 177 | 0.1077 |
+| Dark Blade the Dragon Knight | 176 | 0.1071 |
+| Reaper on the Nightmare | 174 | 0.1059 |
+| Cyber Twin Dragon | 171 | 0.1041 |
+| Fiend Skull Dragon | 171 | 0.1041 |
+| Gatling Dragon | 171 | 0.1041 |
+| Dark Balter the Terrible | 170 | 0.1035 |
+| Thousand-Eyes Restrict | 170 | 0.1035 |
+| Wave-Motion Cannon | 162 | 0.0986 |
+| Enemy Controller | 151 | 0.0919 |
+| Level Limit - Area B | 151 | 0.0919 |
+| Gravity Bind | 139 | 0.0846 |
+| Limiter Removal | 117 | 0.0712 |
+| Mystik Wok | 104 | 0.0633 |
+| Scapegoat | 100 | 0.0609 |
+| Royal Decree | 93 | 0.0566 |
+| Book of Moon | 80 | 0.0487 |
+| Call Of The Haunted | 59 | 0.0359 |
+| Mystical Space Typhoon | 53 | 0.0323 |
 
 ### Elemental Energy
 
@@ -3400,29 +3654,30 @@ Forbidden cards (limit 0) are omitted. Lower usage ⇒ higher weight ⇒ more co
 
 ### Structure Deck- Spellcaster's Judgment
 
-- **Type:** TCG · **Format:** Reaper · **Cards in pool:** 19 · **Weight sum:** 190000
+- **Type:** TCG · **Format:** Reaper · **Cards in pool:** 20 · **Weight sum:** 200000
 
 | Card | Weight | Pull % |
 |---|---:|---:|
-| Apprentice Magician | 10000 | 5.2632 |
-| Breaker the Magical Warrior | 10000 | 5.2632 |
-| Call Of The Haunted | 10000 | 5.2632 |
-| Chaos Sorcerer | 10000 | 5.2632 |
-| Dark Magician | 10000 | 5.2632 |
-| Divine Wrath | 10000 | 5.2632 |
-| Gemini Elf | 10000 | 5.2632 |
-| Heavy Storm | 10000 | 5.2632 |
-| Lightning Vortex | 10000 | 5.2632 |
-| Mage Power | 10000 | 5.2632 |
-| Magic Cylinder | 10000 | 5.2632 |
-| Magician of Faith | 10000 | 5.2632 |
-| Mystical Space Typhoon | 10000 | 5.2632 |
-| Nightmare's Steelcage | 10000 | 5.2632 |
-| Nobleman of Crossout | 10000 | 5.2632 |
-| Premature Burial | 10000 | 5.2632 |
-| Skilled Dark Magician | 10000 | 5.2632 |
-| Swords of Revealing Light | 10000 | 5.2632 |
-| Tsukuyomi | 10000 | 5.2632 |
+| Apprentice Magician | 10000 | 5.0000 |
+| Breaker the Magical Warrior | 10000 | 5.0000 |
+| Call Of The Haunted | 10000 | 5.0000 |
+| Chaos Sorcerer | 10000 | 5.0000 |
+| Dark Magician | 10000 | 5.0000 |
+| Divine Wrath | 10000 | 5.0000 |
+| Gemini Elf | 10000 | 5.0000 |
+| Heavy Storm | 10000 | 5.0000 |
+| Lightning Vortex | 10000 | 5.0000 |
+| Mage Power | 10000 | 5.0000 |
+| Magic Cylinder | 10000 | 5.0000 |
+| Magician of Faith | 10000 | 5.0000 |
+| Mystic Box | 10000 | 5.0000 |
+| Mystical Space Typhoon | 10000 | 5.0000 |
+| Nightmare's Steelcage | 10000 | 5.0000 |
+| Nobleman of Crossout | 10000 | 5.0000 |
+| Premature Burial | 10000 | 5.0000 |
+| Skilled Dark Magician | 10000 | 5.0000 |
+| Swords of Revealing Light | 10000 | 5.0000 |
+| Tsukuyomi | 10000 | 5.0000 |
 
 ### Shadow of Infinity
 
@@ -3466,235 +3721,244 @@ Forbidden cards (limit 0) are omitted. Lower usage ⇒ higher weight ⇒ more co
 
 ### Reaper
 
-- **Type:** Usage · **Format:** Reaper · **Cards in pool:** 223 · **Weight sum:** 413648
+- **Type:** Usage · **Format:** Reaper · **Cards in pool:** 232 · **Weight sum:** 437871
 
 | Card | Weight | Pull % |
 |---|---:|---:|
-| Acid Trap Hole | 5422 | 1.3108 |
-| Asura Priest | 5422 | 1.3108 |
-| Dark Deal | 5422 | 1.3108 |
-| Dark World Lightning | 5422 | 1.3108 |
-| De-Spell | 5422 | 1.3108 |
-| Dimension Wall | 5422 | 1.3108 |
-| Draining Shield | 5422 | 1.3108 |
-| Giant Germ | 5422 | 1.3108 |
-| Karma Cut | 5422 | 1.3108 |
-| Magic Drain | 5422 | 1.3108 |
-| Marauding Captain | 5422 | 1.3108 |
-| Masked Dragon | 5422 | 1.3108 |
-| Reasoning | 5422 | 1.3108 |
-| Remove Trap | 5422 | 1.3108 |
-| Rising Air Current | 5422 | 1.3108 |
-| Roulette Barrel | 5422 | 1.3108 |
-| Sacred Crane | 5422 | 1.3108 |
-| Time Wizard | 5422 | 1.3108 |
-| UFO Turtle | 5422 | 1.3108 |
-| Abyss Soldier | 4629 | 1.1191 |
-| Black Illusion Ritual | 4138 | 1.0004 |
-| Blast with Chain | 4138 | 1.0004 |
-| Dimension Fusion | 4138 | 1.0004 |
-| Divine Wrath | 4138 | 1.0004 |
-| Electric Snake | 4138 | 1.0004 |
-| Fissure | 4138 | 1.0004 |
-| Nightmare's Steelcage | 4138 | 1.0004 |
-| Princess of Tsurugi | 4138 | 1.0004 |
-| Relinquished | 4138 | 1.0004 |
-| Time Seal | 4138 | 1.0004 |
-| Warrior Elimination | 4138 | 1.0004 |
-| Big Shield Gardna | 3537 | 0.8551 |
-| Granmarg the Rock Monarch | 3537 | 0.8551 |
-| Mage Power | 3537 | 0.8551 |
-| Magic Jammer | 3537 | 0.8551 |
-| Mind Control | 3537 | 0.8551 |
-| Nimble Momonga | 3537 | 0.8551 |
-| Skelengel | 3537 | 0.8551 |
-| The Wicked Worm Beast | 3537 | 0.8551 |
-| Tribute to The Doomed | 3537 | 0.8551 |
-| Des Lacooda | 3165 | 0.7651 |
-| Flying Kamakiri #1 | 3165 | 0.7651 |
-| Goblin Elite Attack Force | 3165 | 0.7651 |
-| Cannon Soldier | 2905 | 0.7023 |
-| Mask of Darkness | 2905 | 0.7023 |
-| Old Vindictive Magician | 2905 | 0.7023 |
-| Sand Moth | 2905 | 0.7023 |
-| Sasuke Samurai | 2905 | 0.7023 |
-| Secret Barrel | 2905 | 0.7023 |
-| Seven Tools of the Bandit | 2905 | 0.7023 |
-| Swarm of Locusts | 2905 | 0.7023 |
-| Apprentice Magician | 2709 | 0.6549 |
-| Dark Magician of Chaos | 2709 | 0.6549 |
-| Goblin Attack Force | 2709 | 0.6549 |
-| Thunder Dragon | 2709 | 0.6549 |
-| Berserk Gorilla | 2555 | 0.6177 |
-| Book of Life | 2555 | 0.6177 |
-| Exarion Universe | 2555 | 0.6177 |
-| Hallowed Life Barrier | 2555 | 0.6177 |
-| Just Desserts | 2555 | 0.6177 |
-| Megamorph | 2555 | 0.6177 |
-| Milus Radiant | 2555 | 0.6177 |
-| Nobleman of Extermination | 2555 | 0.6177 |
-| Ojama Trio | 2555 | 0.6177 |
-| Sillva, Warlord of Dark World | 2555 | 0.6177 |
-| Vampire Lord | 2555 | 0.6177 |
-| Upstart Goblin | 2488 | 0.6015 |
-| Gigantes | 2428 | 0.5870 |
-| Jar of Greed | 2428 | 0.5870 |
-| Pyramid Turtle | 2428 | 0.5870 |
-| Ryu Kokki | 2428 | 0.5870 |
-| Skilled Dark Magician | 2428 | 0.5870 |
-| Compulsory Evacuation Device | 2322 | 0.5613 |
-| Cursed Seal of the Forbidden Spell | 2322 | 0.5613 |
-| Gyaku-Gire Panda | 2322 | 0.5613 |
-| Airknight Parshath | 2231 | 0.5393 |
-| Chiron the Mage | 2231 | 0.5393 |
-| Dark Mimic LV1 | 2231 | 0.5393 |
-| Cold Wave | 2152 | 0.5202 |
-| Des Koala | 2152 | 0.5202 |
-| Spell Canceller | 2152 | 0.5202 |
-| Zombyra the Dark | 2082 | 0.5033 |
-| Blade Knight | 2021 | 0.4886 |
-| Mother Grizzly | 1965 | 0.4750 |
-| Phoenix Wing Wind Blast | 1965 | 0.4750 |
-| Chain Disappearance | 1915 | 0.4630 |
-| Hydrogeddon | 1915 | 0.4630 |
-| Dark Scorpion - Cliff the Trap Remover | 1869 | 0.4518 |
-| Goldd, Wu-Lord of Dark World | 1869 | 0.4518 |
-| Giant Rat | 1827 | 0.4417 |
-| Trap Hole | 1827 | 0.4417 |
-| Drillroid | 1789 | 0.4325 |
-| Stealth Bird | 1789 | 0.4325 |
-| Des Wombat | 1720 | 0.4158 |
-| Newdoria | 1689 | 0.4083 |
-| Night Assailant | 1607 | 0.3885 |
-| Ninja Grandmaster Sasuke | 1607 | 0.3885 |
-| United We Stand | 1607 | 0.3885 |
-| Bazoo the Soul-Eater | 1560 | 0.3771 |
-| Soul Exchange | 1539 | 0.3721 |
-| Card Destruction | 1480 | 0.3578 |
-| Kuriboh | 1480 | 0.3578 |
-| Gravekeeper's Spy | 1429 | 0.3455 |
-| Waboku | 1429 | 0.3455 |
-| Magical Merchant | 1385 | 0.3348 |
-| Raigeki Break | 1385 | 0.3348 |
-| Pot of Avarice | 1371 | 0.3314 |
-| Dark Ruler Ha Des | 1345 | 0.3252 |
-| B. Skull Dragon | 1343 | 0.3247 |
-| Cyber Saurus | 1343 | 0.3247 |
-| Deepsea Shark | 1343 | 0.3247 |
-| Labyrinth Tank | 1343 | 0.3247 |
-| Musician King | 1343 | 0.3247 |
-| D.D. Survivor | 1320 | 0.3191 |
-| Return from the Different Dimension | 1309 | 0.3165 |
-| Thestalos the Firestorm Monarch | 1277 | 0.3087 |
-| Cipher Soldier | 1229 | 0.2971 |
-| King Tiger Wanghu | 1229 | 0.2971 |
-| Injection Fairy Lily | 1220 | 0.2949 |
-| Magic Cylinder | 1220 | 0.2949 |
-| Last Will | 1195 | 0.2889 |
-| Giant Trunade | 1165 | 0.2816 |
-| Dekoichi the Battlechanted Locomotive | 1158 | 0.2799 |
-| Treeborn Frog | 1151 | 0.2783 |
-| Cyber-Stein | 1131 | 0.2734 |
-| Lightning Vortex | 1131 | 0.2734 |
-| Chaos Sorcerer | 1118 | 0.2703 |
-| Solemn Judgment | 1095 | 0.2647 |
-| Widespread Ruin | 1084 | 0.2621 |
-| Trap Dustshoot | 1068 | 0.2582 |
-| Brain Control | 1063 | 0.2570 |
-| Zaborg the Thunder Monarch | 1063 | 0.2570 |
-| D.D. Assailant | 1058 | 0.2558 |
-| Don Zaloog | 1058 | 0.2558 |
-| Bottomless Trap Hole | 1039 | 0.2512 |
-| Bickuribox | 1021 | 0.2468 |
-| Charubin the Fire Knight | 1021 | 0.2468 |
-| Roaring Ocean Snake | 1021 | 0.2468 |
-| Mystic Tomato | 989 | 0.2391 |
-| Creature Swap | 980 | 0.2369 |
-| Threatening Roar | 978 | 0.2364 |
-| Ceasefire | 944 | 0.2282 |
-| Mystic Swordsman LV2 | 932 | 0.2253 |
-| Kycoo the Ghost Destroyer | 920 | 0.2224 |
-| Cyber Jar | 917 | 0.2217 |
-| Metamorphosis | 917 | 0.2217 |
-| Morphing Jar | 909 | 0.2198 |
-| Smashing Ground | 896 | 0.2166 |
-| Dark Paladin | 870 | 0.2103 |
-| Gaia the Dragon Champion | 870 | 0.2103 |
-| Sakuretsu Armor | 840 | 0.2031 |
-| Mobius the Frost Monarch | 831 | 0.2009 |
-| Dust Tornado | 820 | 0.1982 |
-| Swords of Revealing Light | 813 | 0.1965 |
-| Reinforcement of the Army | 791 | 0.1912 |
-| Cyber Dragon | 789 | 0.1907 |
-| Spirit Reaper | 780 | 0.1886 |
-| Tsukuyomi | 780 | 0.1886 |
-| Flame Swordsman | 777 | 0.1878 |
-| Kaminari Attack | 777 | 0.1878 |
-| Karbonala Warrior | 777 | 0.1878 |
-| Jinzo | 734 | 0.1774 |
-| Magician of Faith | 731 | 0.1767 |
-| Empress Judge | 711 | 0.1719 |
-| Giltia the D. Knight | 662 | 0.1600 |
-| Exiled Force | 580 | 0.1402 |
-| Confiscation | 568 | 0.1373 |
-| D.D. Warrior Lady | 568 | 0.1373 |
-| Flame Ghost | 565 | 0.1366 |
-| Premature Burial | 553 | 0.1337 |
-| Nobleman of Crossout | 546 | 0.1320 |
-| Light of Intervention | 542 | 0.1310 |
-| Mirror Wall | 542 | 0.1310 |
-| Royal Oppression | 542 | 0.1310 |
-| Skull Lair | 542 | 0.1310 |
-| Warrior of Tradition | 542 | 0.1310 |
-| Breaker the Magical Warrior | 535 | 0.1293 |
-| Sangan | 535 | 0.1293 |
-| Torrential Tribute | 531 | 0.1284 |
-| Snatch Steal | 530 | 0.1281 |
-| Dark Hole | 526 | 0.1272 |
-| Heavy Storm | 526 | 0.1272 |
-| Fusionist | 504 | 0.1218 |
-| Emergency Provisions | 462 | 0.1117 |
-| Twin-Headed Thunder Dragon | 431 | 0.1042 |
-| Chain Energy | 413 | 0.0998 |
-| Robbin' Goblin | 413 | 0.0998 |
-| Rush Recklessly | 413 | 0.0998 |
-| Poison of the Old Man | 353 | 0.0853 |
-| Nightmare Wheel | 316 | 0.0764 |
-| Dark Flare Knight | 313 | 0.0757 |
-| Dragoness the Wicked Knight | 297 | 0.0718 |
-| Cyber Blader | 292 | 0.0706 |
-| My Body as a Shield | 290 | 0.0701 |
-| Darkfire Dragon | 288 | 0.0696 |
-| Master of Oz | 276 | 0.0667 |
-| Prohibition | 270 | 0.0653 |
-| Mystik Wok | 232 | 0.0561 |
-| Ojama King | 224 | 0.0542 |
-| Blue-Eyes Ultimate Dragon | 222 | 0.0537 |
-| Dark Blade the Dragon Knight | 222 | 0.0537 |
-| King Dragun | 214 | 0.0517 |
-| Reaper on the Nightmare | 213 | 0.0515 |
-| Fiend Skull Dragon | 209 | 0.0505 |
-| The Last Warrior from Another Planet | 206 | 0.0498 |
-| Messenger of Peace | 202 | 0.0488 |
-| Gatling Dragon | 199 | 0.0481 |
-| Ryu Senshi | 199 | 0.0481 |
-| Dark Balter the Terrible | 198 | 0.0479 |
-| Cyber End Dragon | 191 | 0.0462 |
-| Cyber Twin Dragon | 191 | 0.0462 |
-| Gravity Bind | 164 | 0.0396 |
-| Limiter Removal | 160 | 0.0387 |
-| Mask of Restrict | 148 | 0.0358 |
-| Wave-Motion Cannon | 146 | 0.0353 |
-| Level Limit - Area B | 145 | 0.0351 |
-| Thousand-Eyes Restrict | 127 | 0.0307 |
-| Royal Decree | 110 | 0.0266 |
-| Enemy Controller | 100 | 0.0242 |
-| Scapegoat | 71 | 0.0172 |
-| Call Of The Haunted | 62 | 0.0150 |
-| Book of Moon | 60 | 0.0145 |
-| Mystical Space Typhoon | 52 | 0.0126 |
+| Acid Trap Hole | 5422 | 1.2383 |
+| Asura Priest | 5422 | 1.2383 |
+| Bait Doll | 5422 | 1.2383 |
+| Dark Deal | 5422 | 1.2383 |
+| Dark Necrofear | 5422 | 1.2383 |
+| Dark World Lightning | 5422 | 1.2383 |
+| De-Spell | 5422 | 1.2383 |
+| Dimension Wall | 5422 | 1.2383 |
+| Draining Shield | 5422 | 1.2383 |
+| Giant Germ | 5422 | 1.2383 |
+| Karma Cut | 5422 | 1.2383 |
+| Magic Drain | 5422 | 1.2383 |
+| Marauding Captain | 5422 | 1.2383 |
+| Masked Dragon | 5422 | 1.2383 |
+| Reasoning | 5422 | 1.2383 |
+| Remove Trap | 5422 | 1.2383 |
+| Rising Air Current | 5422 | 1.2383 |
+| Roulette Barrel | 5422 | 1.2383 |
+| Sacred Crane | 5422 | 1.2383 |
+| Time Wizard | 5422 | 1.2383 |
+| UFO Turtle | 5422 | 1.2383 |
+| Abyss Soldier | 4629 | 1.0572 |
+| Amazoness Archer | 4138 | 0.9450 |
+| Black Illusion Ritual | 4138 | 0.9450 |
+| Blast with Chain | 4138 | 0.9450 |
+| Dimension Fusion | 4138 | 0.9450 |
+| Divine Wrath | 4138 | 0.9450 |
+| Electric Snake | 4138 | 0.9450 |
+| Fissure | 4138 | 0.9450 |
+| Nightmare's Steelcage | 4138 | 0.9450 |
+| Princess of Tsurugi | 4138 | 0.9450 |
+| Relinquished | 4138 | 0.9450 |
+| Time Seal | 4138 | 0.9450 |
+| Warrior Elimination | 4138 | 0.9450 |
+| Aqua Spirit | 3537 | 0.8078 |
+| Big Shield Gardna | 3537 | 0.8078 |
+| Granmarg the Rock Monarch | 3537 | 0.8078 |
+| Mage Power | 3537 | 0.8078 |
+| Magic Jammer | 3537 | 0.8078 |
+| Mind Control | 3537 | 0.8078 |
+| Nimble Momonga | 3537 | 0.8078 |
+| Skelengel | 3537 | 0.8078 |
+| The Wicked Worm Beast | 3537 | 0.8078 |
+| Tribute to The Doomed | 3537 | 0.8078 |
+| Des Lacooda | 3165 | 0.7228 |
+| Flying Kamakiri #1 | 3165 | 0.7228 |
+| Goblin Elite Attack Force | 3165 | 0.7228 |
+| Slate Warrior | 3165 | 0.7228 |
+| Cannon Soldier | 2905 | 0.6634 |
+| Mask of Darkness | 2905 | 0.6634 |
+| Old Vindictive Magician | 2905 | 0.6634 |
+| Sand Moth | 2905 | 0.6634 |
+| Sasuke Samurai | 2905 | 0.6634 |
+| Secret Barrel | 2905 | 0.6634 |
+| Seven Tools of the Bandit | 2905 | 0.6634 |
+| Swarm of Locusts | 2905 | 0.6634 |
+| Apprentice Magician | 2709 | 0.6187 |
+| Dark Magician of Chaos | 2709 | 0.6187 |
+| Goblin Attack Force | 2709 | 0.6187 |
+| Thunder Dragon | 2709 | 0.6187 |
+| Berserk Gorilla | 2555 | 0.5835 |
+| Book of Life | 2555 | 0.5835 |
+| Exarion Universe | 2555 | 0.5835 |
+| Hallowed Life Barrier | 2555 | 0.5835 |
+| Just Desserts | 2555 | 0.5835 |
+| Megamorph | 2555 | 0.5835 |
+| Milus Radiant | 2555 | 0.5835 |
+| Nobleman of Extermination | 2555 | 0.5835 |
+| Ojama Trio | 2555 | 0.5835 |
+| Sillva, Warlord of Dark World | 2555 | 0.5835 |
+| Vampire Lord | 2555 | 0.5835 |
+| Upstart Goblin | 2488 | 0.5682 |
+| Gigantes | 2428 | 0.5545 |
+| Jar of Greed | 2428 | 0.5545 |
+| Pyramid Turtle | 2428 | 0.5545 |
+| Ryu Kokki | 2428 | 0.5545 |
+| Skilled Dark Magician | 2428 | 0.5545 |
+| Compulsory Evacuation Device | 2322 | 0.5303 |
+| Cursed Seal of the Forbidden Spell | 2322 | 0.5303 |
+| Gyaku-Gire Panda | 2322 | 0.5303 |
+| Airknight Parshath | 2231 | 0.5095 |
+| Chiron the Mage | 2231 | 0.5095 |
+| Dark Mimic LV1 | 2231 | 0.5095 |
+| Cold Wave | 2152 | 0.4915 |
+| Des Koala | 2152 | 0.4915 |
+| Spell Canceller | 2152 | 0.4915 |
+| Zombyra the Dark | 2082 | 0.4755 |
+| Blade Knight | 2021 | 0.4616 |
+| Mother Grizzly | 1965 | 0.4488 |
+| Phoenix Wing Wind Blast | 1965 | 0.4488 |
+| Chain Disappearance | 1915 | 0.4373 |
+| Hydrogeddon | 1915 | 0.4373 |
+| Dark Scorpion - Cliff the Trap Remover | 1869 | 0.4268 |
+| Goldd, Wu-Lord of Dark World | 1869 | 0.4268 |
+| Giant Rat | 1827 | 0.4172 |
+| Trap Hole | 1827 | 0.4172 |
+| Drillroid | 1789 | 0.4086 |
+| Stealth Bird | 1789 | 0.4086 |
+| Des Wombat | 1720 | 0.3928 |
+| Newdoria | 1689 | 0.3857 |
+| Night Assailant | 1607 | 0.3670 |
+| Ninja Grandmaster Sasuke | 1607 | 0.3670 |
+| United We Stand | 1607 | 0.3670 |
+| Bazoo the Soul-Eater | 1560 | 0.3563 |
+| Soul Exchange | 1539 | 0.3515 |
+| Card Destruction | 1480 | 0.3380 |
+| Kuriboh | 1480 | 0.3380 |
+| Gravekeeper's Spy | 1429 | 0.3264 |
+| Waboku | 1429 | 0.3264 |
+| Magical Merchant | 1385 | 0.3163 |
+| Raigeki Break | 1385 | 0.3163 |
+| Pot of Avarice | 1371 | 0.3131 |
+| Dark Ruler Ha Des | 1345 | 0.3072 |
+| B. Skull Dragon | 1343 | 0.3067 |
+| Cyber Saurus | 1343 | 0.3067 |
+| Deepsea Shark | 1343 | 0.3067 |
+| Labyrinth Tank | 1343 | 0.3067 |
+| Musician King | 1343 | 0.3067 |
+| D.D. Survivor | 1320 | 0.3015 |
+| Return from the Different Dimension | 1309 | 0.2989 |
+| Thestalos the Firestorm Monarch | 1277 | 0.2916 |
+| Cipher Soldier | 1229 | 0.2807 |
+| King Tiger Wanghu | 1229 | 0.2807 |
+| Injection Fairy Lily | 1220 | 0.2786 |
+| Magic Cylinder | 1220 | 0.2786 |
+| Last Will | 1195 | 0.2729 |
+| Giant Trunade | 1165 | 0.2661 |
+| Dekoichi the Battlechanted Locomotive | 1158 | 0.2645 |
+| Treeborn Frog | 1151 | 0.2629 |
+| Cyber-Stein | 1131 | 0.2583 |
+| Lightning Vortex | 1131 | 0.2583 |
+| Chaos Sorcerer | 1118 | 0.2553 |
+| Solemn Judgment | 1095 | 0.2501 |
+| Widespread Ruin | 1084 | 0.2476 |
+| Trap Dustshoot | 1068 | 0.2439 |
+| Brain Control | 1063 | 0.2428 |
+| Zaborg the Thunder Monarch | 1063 | 0.2428 |
+| D.D. Assailant | 1058 | 0.2416 |
+| Don Zaloog | 1058 | 0.2416 |
+| Bottomless Trap Hole | 1039 | 0.2373 |
+| Bickuribox | 1021 | 0.2332 |
+| Charubin the Fire Knight | 1021 | 0.2332 |
+| Humanoid Worm Drake | 1021 | 0.2332 |
+| Roaring Ocean Snake | 1021 | 0.2332 |
+| Mystic Tomato | 989 | 0.2259 |
+| Creature Swap | 980 | 0.2238 |
+| Threatening Roar | 978 | 0.2234 |
+| Ceasefire | 944 | 0.2156 |
+| Mystic Swordsman LV2 | 932 | 0.2128 |
+| Kycoo the Ghost Destroyer | 920 | 0.2101 |
+| Cyber Jar | 917 | 0.2094 |
+| Metamorphosis | 917 | 0.2094 |
+| Morphing Jar | 909 | 0.2076 |
+| Smashing Ground | 896 | 0.2046 |
+| Dark Paladin | 870 | 0.1987 |
+| Gaia the Dragon Champion | 870 | 0.1987 |
+| Sakuretsu Armor | 840 | 0.1918 |
+| Mobius the Frost Monarch | 831 | 0.1898 |
+| Dust Tornado | 820 | 0.1873 |
+| Swords of Revealing Light | 813 | 0.1857 |
+| Reinforcement of the Army | 791 | 0.1806 |
+| Cyber Dragon | 789 | 0.1802 |
+| Spirit Reaper | 780 | 0.1781 |
+| Tsukuyomi | 780 | 0.1781 |
+| Flame Swordsman | 777 | 0.1774 |
+| Kaminari Attack | 777 | 0.1774 |
+| Karbonala Warrior | 777 | 0.1774 |
+| Jinzo | 734 | 0.1676 |
+| Magician of Faith | 731 | 0.1669 |
+| Empress Judge | 711 | 0.1624 |
+| Giltia the D. Knight | 662 | 0.1512 |
+| St. Joan | 623 | 0.1423 |
+| Exiled Force | 580 | 0.1325 |
+| Confiscation | 568 | 0.1297 |
+| D.D. Warrior Lady | 568 | 0.1297 |
+| Flame Ghost | 565 | 0.1290 |
+| Premature Burial | 553 | 0.1263 |
+| Nobleman of Crossout | 546 | 0.1247 |
+| Light of Intervention | 542 | 0.1238 |
+| Mirror Wall | 542 | 0.1238 |
+| Royal Command | 542 | 0.1238 |
+| Royal Oppression | 542 | 0.1238 |
+| Skull Lair | 542 | 0.1238 |
+| Warrior of Tradition | 542 | 0.1238 |
+| Breaker the Magical Warrior | 535 | 0.1222 |
+| Sangan | 535 | 0.1222 |
+| Torrential Tribute | 531 | 0.1213 |
+| Snatch Steal | 530 | 0.1210 |
+| Dark Hole | 526 | 0.1201 |
+| Heavy Storm | 526 | 0.1201 |
+| Fusionist | 504 | 0.1151 |
+| Emergency Provisions | 462 | 0.1055 |
+| Twin-Headed Thunder Dragon | 431 | 0.0984 |
+| Chain Energy | 413 | 0.0943 |
+| Robbin' Goblin | 413 | 0.0943 |
+| Rush Recklessly | 413 | 0.0943 |
+| Offerings to the Doomed | 353 | 0.0806 |
+| Poison of the Old Man | 353 | 0.0806 |
+| Nightmare Wheel | 316 | 0.0722 |
+| Dark Flare Knight | 313 | 0.0715 |
+| Dragoness the Wicked Knight | 297 | 0.0678 |
+| Cyber Blader | 292 | 0.0667 |
+| My Body as a Shield | 290 | 0.0662 |
+| Darkfire Dragon | 288 | 0.0658 |
+| Master of Oz | 276 | 0.0630 |
+| Prohibition | 270 | 0.0617 |
+| Mystik Wok | 232 | 0.0530 |
+| Ojama King | 224 | 0.0512 |
+| Blue-Eyes Ultimate Dragon | 222 | 0.0507 |
+| Dark Blade the Dragon Knight | 222 | 0.0507 |
+| King Dragun | 214 | 0.0489 |
+| Reaper on the Nightmare | 213 | 0.0486 |
+| Fiend Skull Dragon | 209 | 0.0477 |
+| The Last Warrior from Another Planet | 206 | 0.0470 |
+| Messenger of Peace | 202 | 0.0461 |
+| Gatling Dragon | 199 | 0.0454 |
+| Ryu Senshi | 199 | 0.0454 |
+| Dark Balter the Terrible | 198 | 0.0452 |
+| Cyber End Dragon | 191 | 0.0436 |
+| Cyber Twin Dragon | 191 | 0.0436 |
+| Gravity Bind | 164 | 0.0375 |
+| Limiter Removal | 160 | 0.0365 |
+| Mask of Restrict | 148 | 0.0338 |
+| Wave-Motion Cannon | 146 | 0.0333 |
+| Level Limit - Area B | 145 | 0.0331 |
+| Thousand-Eyes Restrict | 127 | 0.0290 |
+| Royal Decree | 110 | 0.0251 |
+| Enemy Controller | 100 | 0.0228 |
+| Scapegoat | 71 | 0.0162 |
+| Call Of The Haunted | 62 | 0.0142 |
+| Book of Moon | 60 | 0.0137 |
+| Mystical Space Typhoon | 52 | 0.0119 |
 
-_1206 card names in JSON/usage had no ROM match (omitted from pools)._
+_1099 card names in JSON/usage had no ROM match (omitted from pools)._
 
 <!-- /pack-chances -->
 
@@ -3713,18 +3977,18 @@ Same formula as `tools/cardprices.py` / `src/mod_dp.c`. Each table lists only ca
 | [Yugi-Kaiba](#yugi-kaiba) | 75 |
 | [Critter](#critter) | 88 |
 | [Treasure](#treasure) | 84 |
-| [Imperial](#imperial) | 105 |
-| [Android](#android) | 102 |
-| [Joey-Pegasus](#joey-pegasus) | 105 |
-| [Fiber](#fiber) | 132 |
-| [Yata](#yata) | 133 |
-| [Scientist](#scientist) | 88 |
-| [Vampire](#vampire) | 111 |
-| [Chaos](#chaos) | 139 |
-| [Warrior](#warrior) | 184 |
-| [Goat](#goat) | 261 |
-| [Cyber](#cyber) | 140 |
-| [Reaper](#reaper) | 223 |
+| [Imperial](#imperial) | 106 |
+| [Android](#android) | 107 |
+| [Joey-Pegasus](#joey-pegasus) | 110 |
+| [Fiber](#fiber) | 143 |
+| [Yata](#yata) | 136 |
+| [Scientist](#scientist) | 92 |
+| [Vampire](#vampire) | 114 |
+| [Chaos](#chaos) | 142 |
+| [Warrior](#warrior) | 191 |
+| [Goat](#goat) | 282 |
+| [Cyber](#cyber) | 142 |
+| [Reaper](#reaper) | 232 |
 
 ### Yugi-Kaiba
 
@@ -4085,6 +4349,7 @@ Same formula as `tools/cardprices.py` / `src/mod_dp.c`. Each table lists only ca
 | Seven Tools of the Bandit | 220 |  |
 | Soul Exchange | 220 |  |
 | Thunder Dragon | 220 |  |
+| Type Zero Magic Crusher | 220 |  |
 | Flame Swordsman | 213 |  |
 | Cyber Saurus | 211 |  |
 | Charubin the Fire Knight | 209 |  |
@@ -4168,17 +4433,21 @@ Same formula as `tools/cardprices.py` / `src/mod_dp.c`. Each table lists only ca
 | Thousand-Eyes Restrict | 232 |  |
 | Gaia the Dragon Champion | 229 |  |
 | Flame Swordsman | 227 |  |
+| St. Joan | 227 |  |
 | Axe of Despair | 222 |  |
 | Castle of Dark Illusions | 222 |  |
 | Dark Elf | 222 |  |
+| Dark Necrofear | 222 |  |
 | Fake Trap | 222 |  |
 | Firegrass | 222 |  |
 | Giant Germ | 222 |  |
 | Giant Soldier of Stone | 222 |  |
 | Giant Trunade | 222 |  |
+| Hayabusa Knight | 222 |  |
 | La Jinn the Mystical Genie of the Lamp | 222 |  |
 | Megamorph | 222 |  |
 | Mirror Wall | 222 |  |
+| Royal Command | 222 |  |
 | Soul Release | 222 |  |
 | Summoned Skull | 222 |  |
 | The Fiend Megacyber | 222 |  |
@@ -4191,6 +4460,7 @@ Same formula as `tools/cardprices.py` / `src/mod_dp.c`. Each table lists only ca
 | Musician King | 212 |  |
 | Bickuribox | 210 |  |
 | Charubin the Fire Knight | 207 |  |
+| Humanoid Worm Drake | 207 |  |
 | Metal Dragon | 207 |  |
 | Thousand Dragon | 207 |  |
 | Cyber Saurus | 205 |  |
@@ -4268,6 +4538,7 @@ Same formula as `tools/cardprices.py` / `src/mod_dp.c`. Each table lists only ca
 | Masked Sorcerer | 293 |  |
 | Mirror Wall | 293 |  |
 | Nimble Momonga | 293 |  |
+| Offerings to the Doomed | 293 |  |
 | Seven Tools of the Bandit | 293 |  |
 | Thunder Dragon | 293 |  |
 | Backup Soldier | 269 | Semi-Limited |
@@ -4279,6 +4550,8 @@ Same formula as `tools/cardprices.py` / `src/mod_dp.c`. Each table lists only ca
 | Giant Rat | 244 |  |
 | Giant Trunade | 244 |  |
 | Guardian Sphinx | 244 |  |
+| Hayabusa Knight | 244 |  |
+| Jowgen the Spiritualist | 244 |  |
 | Kotodama | 244 |  |
 | Last Will | 244 |  |
 | Magic Drain | 244 |  |
@@ -4289,6 +4562,7 @@ Same formula as `tools/cardprices.py` / `src/mod_dp.c`. Each table lists only ca
 | Summoned Skull | 244 |  |
 | White Magical Hat | 244 |  |
 | B. Skull Dragon | 239 |  |
+| St. Joan | 234 |  |
 | Flame Swordsman | 230 |  |
 | Gaia the Dragon Champion | 230 |  |
 | Thousand-Eyes Restrict | 220 |  |
@@ -4308,6 +4582,7 @@ Same formula as `tools/cardprices.py` / `src/mod_dp.c`. Each table lists only ca
 | Flame Ghost | 200 |  |
 | Flower Wolf | 200 |  |
 | Giltia the D. Knight | 200 |  |
+| Humanoid Worm Drake | 200 |  |
 | Kaminari Attack | 200 |  |
 | Roaring Ocean Snake | 200 |  |
 | Ryu Senshi | 200 |  |
@@ -4388,6 +4663,7 @@ Same formula as `tools/cardprices.py` / `src/mod_dp.c`. Each table lists only ca
 | Giant Germ | 250 |  |
 | Chain Energy | 245 |  |
 | Electric Snake | 245 |  |
+| Offerings to the Doomed | 245 |  |
 | The Fiend Megacyber | 245 |  |
 | Waboku | 245 |  |
 | Blast with Chain | 240 |  |
@@ -4399,30 +4675,39 @@ Same formula as `tools/cardprices.py` / `src/mod_dp.c`. Each table lists only ca
 | Dark Balter the Terrible | 232 |  |
 | Dragoness the Wicked Knight | 232 |  |
 | Fiend Skull Dragon | 230 |  |
+| Amazoness Archer | 225 |  |
 | Exchange | 225 |  |
 | Darkfire Dragon | 221 |  |
 | Magic Drain | 220 |  |
 | Labyrinth Tank | 218 |  |
 | Musician King | 217 |  |
 | Acid Trap Hole | 215 |  |
+| Hayabusa Knight | 215 |  |
 | Last Will | 215 |  |
 | Nimble Momonga | 215 |  |
 | Solemn Wishes | 215 |  |
 | Soul Exchange | 215 |  |
 | Gaia the Dragon Champion | 213 |  |
 | Roaring Ocean Snake | 213 |  |
+| Cure Mermaid | 210 |  |
+| Dark Necrofear | 210 |  |
 | Giant Trunade | 210 |  |
 | Graverobber | 210 |  |
+| Jowgen the Spiritualist | 210 |  |
 | Kuriboh | 210 |  |
+| Mad Sword Beast | 210 |  |
 | Mask of Darkness | 210 |  |
 | Princess of Tsurugi | 210 |  |
+| The Rock Spirit | 210 |  |
 | Thousand Dragon | 210 |  |
 | White Magical Hat | 210 |  |
 | Fusionist | 209 |  |
 | Flame Ghost | 206 |  |
 | Black Illusion Ritual | 205 |  |
+| Blind Destruction | 205 |  |
 | Bottomless Trap Hole | 205 |  |
 | Don Zaloog | 205 |  |
+| Ekibyo Drakmord | 205 |  |
 | Flame Swordsman | 205 |  |
 | Flash Assailant | 205 |  |
 | Flying Kamakiri #1 | 205 |  |
@@ -4443,6 +4728,7 @@ Same formula as `tools/cardprices.py` / `src/mod_dp.c`. Each table lists only ca
 | Charubin the Fire Knight | 204 |  |
 | Cyber Saurus | 204 |  |
 | Skull Knight | 204 |  |
+| St. Joan | 204 |  |
 | Warrior of Tradition | 204 |  |
 | Metal Dragon | 203 |  |
 | Empress Judge | 201 |  |
@@ -4517,6 +4803,7 @@ Same formula as `tools/cardprices.py` / `src/mod_dp.c`. Each table lists only ca
 | Cannon Soldier | 330 |  |
 | Trap Hole | 330 |  |
 | 4-Starred Ladybug of Doom | 319 |  |
+| Cure Mermaid | 319 |  |
 | Solemn Wishes | 319 |  |
 | Raigeki Break | 307 |  |
 | Solemn Judgment | 307 |  |
@@ -4540,6 +4827,7 @@ Same formula as `tools/cardprices.py` / `src/mod_dp.c`. Each table lists only ca
 | Nightmare Wheel | 247 |  |
 | Nimble Momonga | 247 |  |
 | B. Skull Dragon | 241 |  |
+| Amazoness Archer | 235 |  |
 | Barrel Dragon | 235 |  |
 | Giant Rat | 235 |  |
 | Kuriboh | 235 |  |
@@ -4553,6 +4841,7 @@ Same formula as `tools/cardprices.py` / `src/mod_dp.c`. Each table lists only ca
 | White Magical Hat | 235 |  |
 | Dragoness the Wicked Knight | 234 |  |
 | Darkfire Dragon | 229 |  |
+| St. Joan | 226 |  |
 | Gaia the Dragon Champion | 225 |  |
 | Book of Life | 223 |  |
 | Giant Trunade | 223 |  |
@@ -4653,8 +4942,10 @@ Same formula as `tools/cardprices.py` / `src/mod_dp.c`. Each table lists only ca
 | Airknight Parshath | 348 |  |
 | Goblin Attack Force | 348 |  |
 | Jar of Greed | 348 |  |
+| Jowgen the Spiritualist | 348 |  |
 | Royal Decree | 348 |  |
 | Scapegoat | 348 |  |
+| Spiritualism | 348 |  |
 | Creature Swap | 309 | Semi-Limited |
 | Reinforcement of the Army | 309 | Semi-Limited |
 | Dark Balter the Terrible | 286 |  |
@@ -4664,6 +4955,7 @@ Same formula as `tools/cardprices.py` / `src/mod_dp.c`. Each table lists only ca
 | Fiend Skull Dragon | 278 |  |
 | Punished Eagle | 278 |  |
 | Roaring Ocean Snake | 278 |  |
+| Amazoness Archer | 270 |  |
 | Apprentice Magician | 270 |  |
 | Asura Priest | 270 |  |
 | Dark Magician | 270 |  |
@@ -4672,6 +4964,7 @@ Same formula as `tools/cardprices.py` / `src/mod_dp.c`. Each table lists only ca
 | Kycoo the Ghost Destroyer | 270 |  |
 | Mask of Restrict | 270 |  |
 | Nimble Momonga | 270 |  |
+| Offerings to the Doomed | 270 |  |
 | Sasuke Samurai | 270 |  |
 | Skilled Dark Magician | 270 |  |
 | Spell Canceller | 270 |  |
@@ -4737,6 +5030,7 @@ Same formula as `tools/cardprices.py` / `src/mod_dp.c`. Each table lists only ca
 | Magic Cylinder | 440 | Limited |
 | Metamorphosis | 399 |  |
 | Scapegoat | 399 |  |
+| Amazoness Archer | 358 |  |
 | Mystic Tomato | 358 |  |
 | The Little Swordsman of Aile | 358 |  |
 | Dark Ruler Ha Des | 318 |  |
@@ -4781,6 +5075,7 @@ Same formula as `tools/cardprices.py` / `src/mod_dp.c`. Each table lists only ca
 | Pyramid Turtle | 237 |  |
 | Raigeki Break | 237 |  |
 | Secret Barrel | 237 |  |
+| Slate Warrior | 237 |  |
 | Spirit Reaper | 237 |  |
 | Summoned Skull | 237 |  |
 | Time Seal | 237 |  |
@@ -4797,6 +5092,7 @@ Same formula as `tools/cardprices.py` / `src/mod_dp.c`. Each table lists only ca
 | Empress Judge | 200 |  |
 | Giltia the D. Knight | 200 |  |
 | Skull Knight | 200 |  |
+| St. Joan | 200 |  |
 
 ### Chaos
 
@@ -4908,9 +5204,11 @@ Same formula as `tools/cardprices.py` / `src/mod_dp.c`. Each table lists only ca
 | Magic Jammer | 220 |  |
 | Masked Sorcerer | 220 |  |
 | Relinquished | 220 |  |
+| Spiritualism | 220 |  |
 | Darkfire Dragon | 216 |  |
 | Dragoness the Wicked Knight | 212 |  |
 | Flame Ghost | 212 |  |
+| Amazoness Archer | 210 |  |
 | Catapult Turtle | 210 |  |
 | Dark Ruler Ha Des | 210 |  |
 | Electric Snake | 210 |  |
@@ -4941,6 +5239,7 @@ Same formula as `tools/cardprices.py` / `src/mod_dp.c`. Each table lists only ca
 | Metal Dragon | 201 |  |
 | Warrior of Tradition | 201 |  |
 | Deepsea Shark | 200 |  |
+| St. Joan | 200 |  |
 
 ### Warrior
 
@@ -5015,6 +5314,7 @@ Same formula as `tools/cardprices.py` / `src/mod_dp.c`. Each table lists only ca
 | Jar of Greed | 358 |  |
 | Return from the Different Dimension | 346 |  |
 | Tsukuyomi | 346 |  |
+| Amazoness Archer | 334 |  |
 | Monster Gate | 322 |  |
 | Monster Reincarnation | 322 |  |
 | Pikeru's Circle of Enchantment | 322 |  |
@@ -5099,10 +5399,13 @@ Same formula as `tools/cardprices.py` / `src/mod_dp.c`. Each table lists only ca
 | Chain Energy | 211 |  |
 | Cyber-Stein | 211 |  |
 | Different Dimension Capsule | 211 |  |
+| Ekibyo Drakmord | 211 |  |
 | Exile of the Wicked | 211 |  |
 | Fairy Box | 211 |  |
+| Fusion Gate | 211 |  |
 | Gaia Power | 211 |  |
 | Greenkappa | 211 |  |
+| Jowgen the Spiritualist | 211 |  |
 | Light of Intervention | 211 |  |
 | Mask of Restrict | 211 |  |
 | Mirror Wall | 211 |  |
@@ -5111,8 +5414,10 @@ Same formula as `tools/cardprices.py` / `src/mod_dp.c`. Each table lists only ca
 | Princess of Tsurugi | 211 |  |
 | Prohibition | 211 |  |
 | Pyramid Turtle | 211 |  |
+| Revival Jam | 211 |  |
 | Robbin' Goblin | 211 |  |
 | Seven Tools of the Bandit | 211 |  |
+| Slate Warrior | 211 |  |
 | Soul Exchange | 211 |  |
 | Stealth Bird | 211 |  |
 | The Fiend Megacyber | 211 |  |
@@ -5123,6 +5428,7 @@ Same formula as `tools/cardprices.py` / `src/mod_dp.c`. Each table lists only ca
 | Empress Judge | 205 |  |
 | Flame Swordsman | 204 |  |
 | Karbonala Warrior | 204 |  |
+| St. Joan | 204 |  |
 | Charubin the Fire Knight | 202 |  |
 | Dark Paladin | 201 |  |
 | Cyber Saurus | 200 |  |
@@ -5207,6 +5513,7 @@ Same formula as `tools/cardprices.py` / `src/mod_dp.c`. Each table lists only ca
 | United We Stand | 307 | Limited |
 | Zaborg the Thunder Monarch | 299 |  |
 | Level Limit - Area B | 296 | Semi-Limited |
+| Amazoness Archer | 292 |  |
 | Dark Scorpion - Cliff the Trap Remover | 290 |  |
 | Kuriboh | 290 |  |
 | Thousand-Eyes Restrict | 286 |  |
@@ -5236,6 +5543,7 @@ Same formula as `tools/cardprices.py` / `src/mod_dp.c`. Each table lists only ca
 | Skilled Dark Magician | 260 |  |
 | Magical Merchant | 258 |  |
 | Dragoness the Wicked Knight | 257 |  |
+| Jowgen the Spiritualist | 257 |  |
 | Master of Oz | 256 |  |
 | Ojama Trio | 255 |  |
 | Just Desserts | 252 |  |
@@ -5302,7 +5610,9 @@ Same formula as `tools/cardprices.py` / `src/mod_dp.c`. Each table lists only ca
 | Relinquished | 208 |  |
 | Ryu Kokki | 208 |  |
 | Emergency Provisions | 206 | Semi-Limited |
+| Royal Command | 206 |  |
 | Swarm of Locusts | 206 |  |
+| Swift Gaia the Fierce Knight | 206 |  |
 | Blast with Chain | 205 |  |
 | Divine Wrath | 205 |  |
 | Gearfried the Iron Knight | 205 |  |
@@ -5313,6 +5623,7 @@ Same formula as `tools/cardprices.py` / `src/mod_dp.c`. Each table lists only ca
 | Light of Intervention | 204 |  |
 | Old Vindictive Magician | 204 |  |
 | Prohibition | 204 |  |
+| The Rock Spirit | 204 |  |
 | Thestalos the Firestorm Monarch | 204 |  |
 | Acid Trap Hole | 203 |  |
 | B. Skull Dragon | 203 |  |
@@ -5346,6 +5657,8 @@ Same formula as `tools/cardprices.py` / `src/mod_dp.c`. Each table lists only ca
 | Robbin' Goblin | 202 |  |
 | Solemn Wishes | 202 |  |
 | Spear Dragon | 202 |  |
+| St. Joan | 202 |  |
+| Summoner of Illusions | 202 |  |
 | The Shallow Grave | 202 |  |
 | Time Wizard | 202 |  |
 | Trap Hole | 202 |  |
@@ -5358,41 +5671,55 @@ Same formula as `tools/cardprices.py` / `src/mod_dp.c`. Each table lists only ca
 | Giant Soldier of Stone | 201 |  |
 | Gilasaurus | 201 |  |
 | Guardian Sphinx | 201 |  |
+| Humanoid Worm Drake | 201 |  |
 | Labyrinth Tank | 201 |  |
 | Left Arm of the Forbidden One | 201 | Limited |
 | Left Leg of the Forbidden One | 201 | Limited |
 | Metal Dragon | 201 |  |
 | Mother Grizzly | 201 |  |
 | Musician King | 201 |  |
+| Offerings to the Doomed | 201 |  |
 | Pikeru's Circle of Enchantment | 201 |  |
 | Right Arm of the Forbidden One | 201 | Limited |
 | Right Leg of the Forbidden One | 201 | Limited |
 | Rush Recklessly | 201 |  |
 | Skull Knight | 201 |  |
+| Slate Warrior | 201 |  |
 | The Fiend Megacyber | 201 |  |
 | The Little Swordsman of Aile | 201 |  |
 | The Wicked Worm Beast | 201 |  |
 | Warrior of Tradition | 201 |  |
 | Windstorm of Etaqua | 201 |  |
+| Aqua Spirit | 200 |  |
 | Backup Soldier | 200 |  |
+| Card of Safe Return | 200 |  |
 | Catapult Turtle | 200 |  |
 | Dark Magician | 200 |  |
+| Dark Necrofear | 200 |  |
 | Dark Ruler Ha Des | 200 |  |
 | Dragon Zombie | 200 |  |
+| Ekibyo Drakmord | 200 |  |
 | Empress Judge | 200 |  |
+| Fire Princess | 200 |  |
 | Flower Wolf | 200 |  |
 | Gaia Power | 200 |  |
 | Giant Germ | 200 |  |
 | Graverobber | 200 |  |
 | Hiro's Shadow Scout | 200 |  |
+| Interdimensional Matter Transporter | 200 |  |
 | Kaminari Attack | 200 |  |
 | Kuwagata a | 200 |  |
 | Kwagar Hercules | 200 |  |
 | Lightforce Sword | 200 |  |
+| Mask of Brutality | 200 |  |
 | Minar | 200 |  |
 | Rabid Horseman | 200 |  |
 | Restructer Revolution | 200 |  |
 | Sonic Bird | 200 |  |
+| Spirit Message "A" | 200 |  |
+| Spirit Message "L" | 200 |  |
+| Spirit Message "N" | 200 |  |
+| The Forgiving Maiden | 200 |  |
 | Thunder Nyan Nyan | 200 |  |
 | Two-Pronged Attack | 200 |  |
 | Ultimate Offering | 200 |  |
@@ -5514,6 +5841,7 @@ Same formula as `tools/cardprices.py` / `src/mod_dp.c`. Each table lists only ca
 | Dragoness the Wicked Knight | 239 |  |
 | Electric Snake | 239 |  |
 | Jar of Greed | 239 |  |
+| Jowgen the Spiritualist | 239 |  |
 | Monster Gate | 239 |  |
 | Monster Reincarnation | 239 |  |
 | Poison of the Old Man | 239 |  |
@@ -5521,6 +5849,7 @@ Same formula as `tools/cardprices.py` / `src/mod_dp.c`. Each table lists only ca
 | Reasoning | 239 |  |
 | Sacred Crane | 239 |  |
 | Upstart Goblin | 229 | Semi-Limited |
+| Amazoness Archer | 219 |  |
 | Apprentice Magician | 219 |  |
 | Cannon Soldier | 219 |  |
 | Dark Flare Knight | 219 |  |
@@ -5701,16 +6030,20 @@ Same formula as `tools/cardprices.py` / `src/mod_dp.c`. Each table lists only ca
 | Flying Kamakiri #1 | 218 |  |
 | Goblin Elite Attack Force | 218 |  |
 | Nightmare Wheel | 218 |  |
+| Slate Warrior | 218 |  |
+| Aqua Spirit | 213 |  |
 | Big Shield Gardna | 213 |  |
 | Granmarg the Rock Monarch | 213 |  |
 | Mage Power | 213 | Limited |
 | Magic Jammer | 213 |  |
 | Mind Control | 213 |  |
 | Nimble Momonga | 213 |  |
+| Offerings to the Doomed | 213 |  |
 | Poison of the Old Man | 213 |  |
 | Skelengel | 213 |  |
 | The Wicked Worm Beast | 213 |  |
 | Tribute to The Doomed | 213 |  |
+| Amazoness Archer | 209 |  |
 | Black Illusion Ritual | 209 |  |
 | Blast with Chain | 209 |  |
 | Chain Energy | 209 |  |
@@ -5731,7 +6064,9 @@ Same formula as `tools/cardprices.py` / `src/mod_dp.c`. Each table lists only ca
 | Fusionist | 205 |  |
 | Acid Trap Hole | 204 |  |
 | Asura Priest | 204 |  |
+| Bait Doll | 204 |  |
 | Dark Deal | 204 |  |
+| Dark Necrofear | 204 |  |
 | Dark World Lightning | 204 |  |
 | De-Spell | 204 |  |
 | Dimension Wall | 204 |  |
@@ -5748,12 +6083,14 @@ Same formula as `tools/cardprices.py` / `src/mod_dp.c`. Each table lists only ca
 | Remove Trap | 204 |  |
 | Rising Air Current | 204 |  |
 | Roulette Barrel | 204 |  |
+| Royal Command | 204 |  |
 | Royal Oppression | 204 |  |
 | Sacred Crane | 204 |  |
 | Skull Lair | 204 |  |
 | Time Wizard | 204 |  |
 | UFO Turtle | 204 |  |
 | Warrior of Tradition | 204 |  |
+| St. Joan | 203 |  |
 | Empress Judge | 202 |  |
 | Giltia the D. Knight | 202 |  |
 | Dark Paladin | 201 |  |
@@ -5766,6 +6103,7 @@ Same formula as `tools/cardprices.py` / `src/mod_dp.c`. Each table lists only ca
 | Charubin the Fire Knight | 200 |  |
 | Cyber Saurus | 200 |  |
 | Deepsea Shark | 200 |  |
+| Humanoid Worm Drake | 200 |  |
 | Labyrinth Tank | 200 |  |
 | Musician King | 200 |  |
 | Roaring Ocean Snake | 200 |  |

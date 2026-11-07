@@ -2675,3 +2675,6 @@ updated: 2026-09-29
 - tools/newcards.py `NEWCARDS_LEFTOVERS` / `load_leftovers`: appended after the list's cards at their own card numbers, skipping listed names and numbers a listed card took; Makefile passes it for make demo (RELEASE=0).
 - Result: 120 leftover cards (IDs 1007-1126), 309 blank slots (1127-1435); CARD_ID_COUNT_REAL 1127.
 - Pages: [[added-cards]]; README.
+
+## [2026-11-06] progress | PACKS.md regenerated with the leftover effect cards
+- PACKS.md: `tools/packs_md.py` on the make demo tables; the TCG and usage pools now take in the leftover cards (e.g. Android TCG 15 -> 86 cards, Warrior TCG 184 -> 235), prices section refreshed; kept CRLF.
