@@ -20,7 +20,12 @@ source of this repo, and where that thing is in the demo ROM:
                 longer has the constant (rewritten without it) is left out, listed in a comment. Data constants
                 (in a data label) move like anchors. The original instruction comes from baserom.gba (read only).
   Added         anchors baserom.toml lacks, by symbol (EXTRA_ANCHORS): field miniature palette + ucs8 sprites,
-                Deck Edit ring art (graphics.cards.icons*).
+                Deck Edit ring art (graphics.cards.icons*). And the mod's own tables (mod_anchors), by the ELF's
+                symbols (static ones too: build/eds.elf's .symtab): the format packs (data.packs.format.*: each
+                pack's pool of card and weight, the 8192-entry roulette the pulls read, flags, format, release date,
+                portrait, name; list formatpacks), the card prices (data.prices.cards: per format, card and DP; list
+                formats), every deck of src/mod_decks.c (data.decks.mod.<deck>: main + Fusion, side, DeckList) and
+                the debug deck recipes (data.decks.recipes: name, DeckList, side, side count).
   Lists         cardnumbers (by card ID) and cardinternalnumbers (by card number) get the added cards
                 (build/new_cards.tsv: their in-game names at their IDs and numbers); the other lists are kept.
   DefaultHash   recomputed (HMA's StoredList.GenerateHash) for every format and list this changes.
@@ -91,6 +96,135 @@ def gen_hash(items, seed=0xCAFEBABE):
             continue
         h ^= struct.unpack('<I', hashlib.sha256(item.encode('utf-8')).digest()[:4])[0]
     return '%08X' % h
+
+
+# ---- the mod's tables, by the ELF's symbols ----
+
+def elf_symbols(path):
+    """{name: (address, size)} of every data symbol in the ELF's .symtab, the static ones too, keyed also as
+    'file.o:name' for the static ones (their file is the STT_FILE symbol before them)."""
+    data = open(path, 'rb').read()
+    shoff, = struct.unpack_from('<I', data, 0x20)
+    shentsize, shnum = struct.unpack_from('<HH', data, 0x2E)
+    sections = [struct.unpack_from('<IIIIIIIIII', data, shoff + i * shentsize) for i in range(shnum)]
+    out = {}
+    for sh in sections:
+        if sh[1] != 2:                      # SHT_SYMTAB
+            continue
+        strtab = sections[sh[6]]
+        def name_at(off, base=strtab[4]):
+            end = data.index(b'\0', base + off)
+            return data[base + off:end].decode('latin-1')
+        current = ''
+        for i in range(sh[5] // 16):
+            st_name, value, size, info, _, shndx = struct.unpack_from('<IIIBBH', data, sh[4] + i * 16)
+            kind, bind = info & 0xF, info >> 4
+            name = name_at(st_name)
+            if kind == 4:                   # STT_FILE
+                current = os.path.basename(name)
+            elif kind == 1 and size:        # STT_OBJECT
+                out.setdefault(name, (value, size))
+                if bind == 0:
+                    out[f'{current}:{name}'] = (value, size)
+    return out
+
+
+def c_string(rom, address):
+    off = address - ROM_BASE
+    return rom[off:rom.index(b'\0', off)].decode('latin-1')
+
+
+def anchor_id(text):
+    """An HMA anchor name part: lower case letters and digits."""
+    return re.sub(r'[^a-z0-9]', '', text.lower())
+
+
+def mod_anchors(elf, rom):
+    """([(name, address, format)], [(list name, items)], [report]) for the mod's tables."""
+    anchors, lists, report = [], [], []
+
+    def sym(name, unit=None):
+        return elf.get(f'{unit}:{name}') if unit else elf.get(name)
+
+    def add(name, s, fmt):
+        anchors.append((name, s[0] - ROM_BASE, fmt))
+
+    def word(address):
+        return struct.unpack_from('<I', rom, address - ROM_BASE)[0]
+
+    # Format packs (src/mod_format_packs.c, build/include/format_pack_data.h): the shop's TCG and usage packs.
+    pools = sym('sFormatPackPools', 'mod_format_packs.o')
+    names = sym('sFormatPackNames', 'mod_format_packs.o')
+    if pools and names:
+        count = pools[1] // 8
+        packs = [c_string(rom, word(names[0] + 4 * i)) for i in range(count)]
+        lists.append(('formatpacks', packs))
+        add('data.packs.format.pools', pools,
+            '[pool<[card:cardinternalnumbers weight:]/count> count: unused:]formatpacks')
+        add('data.packs.format.names', names, '[name<>]formatpacks')
+        for i in range(count):
+            p = word(names[0] + 4 * i)
+            anchors.append((f'text.packs.format.pack{i}', p - ROM_BASE, '`asc`%d' % (len(packs[i]) + 1)))
+        roulettes = sym('sFormatPackRoulettes', 'mod_format_packs.o')
+        m = re.search(r'#define FORMAT_PACK_ROULETTE_SIZE (\d+)',
+                      open('build/include/format_pack_data.h', encoding='utf-8').read())
+        if roulettes and m:
+            per = int(m.group(1))       # (gFormatPackRouletteBlob is an assembly label: no size)
+            add('data.packs.format.roulettes', roulettes, f'[roulette<[card:cardinternalnumbers]{per}>]formatpacks')
+        for field_name, symbol, fmt in (('flags', 'sFormatPackFlags', '[usage.]formatpacks'),
+                                        ('formats', 'sFormatPackFormatIndex', '[format.formats]formatpacks'),
+                                        ('releasedates', 'sFormatPackReleaseDate', '[yyyymmdd::]formatpacks'),
+                                        ('portraits', 'sFormatPackPortraitNumber',
+                                         '[card:cardinternalnumbers]formatpacks')):
+            s = sym(symbol, 'mod_format_packs.o')
+            if s:
+                add(f'data.packs.format.{field_name}', s, fmt)
+    else:
+        report.append('no sFormatPackPools / sFormatPackNames in the ELF: the format packs are left out')
+
+    # Card prices (src/mod_dp.c, build/include/card_prices.h): per format, { card number, DP }.
+    costs = sym('sFormatCardCosts', 'mod_dp.o')
+    if costs:
+        text = open('build/include/card_prices.h', encoding='utf-8').read()
+        formats = re.findall(r'/\* (.+?) \*/\s*static const struct CardCost sCardCosts\d+', text)
+        if len(formats) != costs[1] // 8:
+            formats = [f'Format {i}' for i in range(costs[1] // 8)]
+        lists.append(('formats', formats))
+        add('data.prices.cards', costs, '[costs<[card:cardinternalnumbers price:]/count> count: unused:]formats')
+    else:
+        report.append('no sFormatCardCosts in the ELF: the card prices are left out')
+
+    # Decks (src/mod_decks.c): every DeckList (main deck + Fusion Deck, card numbers), its side deck.
+    decks = sorted(k.split(':', 1)[1] for k in elf if k.startswith('mod_decks.o:') and k.endswith('List'))
+    deck_names = {}
+    for list_sym in decks:
+        base = list_sym[:-4]
+        s = sym(list_sym, 'mod_decks.o')
+        if s[1] != 8:
+            continue
+        name = 'data.decks.mod.' + anchor_id(base[1:])
+        cards = word(s[0])
+        main = next((elf[k] for k in elf if k.startswith('mod_decks.o:') and elf[k][0] == cards), None)
+        if main is None:
+            report.append(f'deck {list_sym}: its card array is not a symbol, left out')
+            continue
+        deck_names[s[0]] = name
+        add(name + '.main', main, '[card:cardinternalnumbers]%d' % (main[1] // 2))
+        add(name, s, '[cards<> count: unused:]1')
+        for side_sym in (base + 'Side', base.replace('StarterDeck', 'Deck') + 'Side'):
+            side = sym(side_sym, 'mod_decks.o')
+            if side:
+                add(name + '.side', side, '[card:cardinternalnumbers]%d' % (side[1] // 2))
+                break
+    recipes = sym('sRecipePresets', 'mod_decks.o')
+    if recipes:
+        add('data.decks.recipes', recipes, '[name<> list<> side<> sidecount::]%d' % (recipes[1] // 16))
+        for i in range(recipes[1] // 16):
+            p = word(recipes[0] + 16 * i)
+            if p:
+                n = c_string(rom, p)
+                anchors.append((f'text.decks.recipes.recipe{i}', p - ROM_BASE, '`asc`%d' % (len(n) + 1)))
+    return anchors, lists, report
 
 
 # ---- inputs ----
@@ -300,6 +434,7 @@ def main():
     ap.add_argument('--base', default='baserom.toml')
     ap.add_argument('--baserom', default='baserom.gba')
     ap.add_argument('--out', default=None)
+    ap.add_argument('--elf', default='build/eds.elf')
     a = ap.parse_args()
     if not os.path.exists(a.base):
         print(f'hma_toml: no {a.base}; skipped')
@@ -373,8 +508,27 @@ def main():
         extra.append(('[[NamedAnchors]]', ['[[NamedAnchors]]', f"Name = '''{name}'''",
                                            f'Address = 0x{sym[symbol][0] - ROM_BASE + offset(count):06X}',
                                            f"Format = '''{fmt}'''", f"DefaultHash = '''{gen_hash([fmt])}'''", '']))
+    mod_lists = []
+    if os.path.exists(a.elf):
+        anchors, mod_lists, mod_report = mod_anchors(elf_symbols(a.elf), new_rom)
+        report.extend(mod_report)
+        for name, address, fmt in anchors:
+            if name in names:
+                continue
+            names.add(name)
+            extra.append(('[[NamedAnchors]]', ['[[NamedAnchors]]', f"Name = '''{name}'''", f'Address = 0x{address:06X}',
+                                               f"Format = '''{fmt}'''", f"DefaultHash = '''{gen_hash([fmt])}'''", '']))
+    else:
+        report.append(f'no {a.elf}: the mod tables (packs, prices, decks) are left out')
     last = max(i for i, (header, _) in enumerate(keep) if header == '[[NamedAnchors]]')
     keep[last + 1:last + 1] = extra
+    list_names = {field(lines, 'Name') for header, lines in keep if header == '[[List]]'}
+    for list_name, items in mod_lists:
+        if list_name in list_names:
+            continue
+        lines = ['[[List]]', f"Name = '''{list_name}'''", "DefaultHash = ''''''", '0 = [', ']', '']
+        set_list_items(lines, items)
+        keep.append(('[[List]]', lines))
 
     text = []
     for header, lines in keep:

@@ -52,6 +52,28 @@ original ROM (repo root). Without `baserom.toml` it does nothing. `eds_demo.toml
     (``[`ucs8x2x2|graphics.cards.fieldicons.artpalette`]cardnumbers``): 256-byte GBA 8bpp 2×2 tiles per card;
     art indices **0–63** (HMA `SpriteTool.Render`), **0xFF** padding. In-game, `ModFieldIconMiniColor` adds
     `ART_PALETTE_ENTRY`.
+- **The mod's tables** (`mod_anchors`): found by the ELF's symbol table (`build/eds.elf` `.symtab`, read by the
+  script itself; the static symbols too, keyed by their object file, e.g. `mod_dp.o:sFormatCardCosts`), so the
+  addresses follow every build:
+  - Format packs (`src/mod_format_packs.c`, `build/include/format_pack_data.h`), indexed by the new list
+    `formatpacks` (the 50 pack names): `data.packs.format.pools`
+    (``[pool<[card:cardinternalnumbers weight:]/count> count: unused:]formatpacks``, the pool and weights the
+    tables of PACKS.md show), `data.packs.format.roulettes` (``[roulette<[card:cardinternalnumbers]8192>]...``: what
+    a pull actually reads, 8192 card numbers per pack, built from the weights by `tools/format_packs.py`; editing a
+    pool's weights in HMA does not change the roulette), `.names` (pointers to the `` `asc` `` strings
+    `text.packs.format.pack<i>`), `.flags` (1 = usage pack), `.formats` (an index of the `formats` list),
+    `.releasedates` (yyyymmdd), `.portraits` (the cover card).
+  - Card prices (`src/mod_dp.c`, `build/include/card_prices.h`): `data.prices.cards`
+    (``[costs<[card:cardinternalnumbers price:]/count> count: unused:]formats``), the DP of a password per format;
+    the new list `formats` holds the 15 formats in banlist order.
+  - Decks (`src/mod_decks.c`): for every `DeckList` built in, `data.decks.mod.<deck>` (``[cards<> count: unused:]1``)
+    with its card array `data.decks.mod.<deck>.main` (main + Fusion Deck, card numbers) and `.side`; the format
+    opponents' decks, the duelist decks and the Test Duel deck. `data.decks.recipes`
+    (``[name<> list<> side<> sidecount::]45``) is the debug menu's deck recipes (`GetRecipePreset`; empty in the
+    release), pointing at those decks and at their names `text.decks.recipes.recipe<i>` (`` `asc` ``); its last
+    row is the terminator.
+  - Lengths are fixed per build (the TOML is written again each `make demo`): a deck or pool made longer in HMA
+    needs its count field changed too.
 - **Lists.** `cardnumbers` (by card ID) is cut or grown to CARD_ID_COUNT and `cardinternalnumbers` (by card number)
   gets the added cards, both with their in-game names from `build/new_cards.tsv` (a blank slot: `Blank <id>`). The
   other lists are kept.
@@ -68,4 +90,8 @@ original ROM (repo root). Without `baserom.toml` it does nothing. `eds_demo.toml
 - HMA's metadata parser cuts every line at `#`, so the header comments are fine (no card name holds a `#`).
 - With the blank slots (2026-11-06): 1436 card IDs, the limits found as 1435/1436 or 1006/1007; the same 7
   Deck Edit / Card Trading sites left out.
+- The mod tables (2026-11-06): decoded from the demo ROM at the TOML's addresses: pool 0 (126 cards, 1/600,
+  2/10000, ...), the pack names, roulette 0 (0x4000 bytes per pack), the dates and portraits, the Yugi-Kaiba price
+  table (75 cards, 0/223, 1/451, ...), Joey's DeckList pointing at its 41-card main deck, the 44 recipes (every
+  DeckList and side they point to is anchored); no two anchors share an address.
 - Not opened in HMA yet.

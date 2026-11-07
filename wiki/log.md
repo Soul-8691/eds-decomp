@@ -2683,3 +2683,7 @@ updated: 2026-09-29
 - new_cards.txt (14) and config/new_cards.txt (33): the leftover effect cards removed, except the 17 with mod effect code at a free number, listed in overlaps.txt (new) for later un-duplication.
 - Makefile: NEWCARDS_LEFTOVERS for every profile (make, make release, make demo, make release-demo); blank slots still make demo only.
 - Pages: [[added-cards]]; README; config/leftover_cards.txt header.
+
+## [2026-11-06] progress | HMA TOML: format packs, card prices, mod decks, debug recipes
+- tools/hma_toml.py: reads build/eds.elf's symbols (statics too); new anchors data.packs.format.* (pools, roulettes, names, flags, formats, release dates, portraits), data.prices.cards, data.decks.mod.<deck>(.main/.side), data.decks.recipes, the name strings; new lists formatpacks and formats. Checked by decoding them from eds_demo.gba.
+- Pages: [[hma-toml]].
