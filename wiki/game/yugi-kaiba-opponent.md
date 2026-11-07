@@ -232,13 +232,21 @@ whose name plates and portraits are BG images (`Record_DrawPage`).
     224 colours (an indexed one already in 32-255 keeps its indices; otherwise the colours are renumbered from 32) and
     writes the 224 colours plus the LZSS bitmap (`gModPreDuelYugiKaiba`, `gModPreDuelCritter`, `gModPreDuelTreasure`,
     `gModPreDuelImperial`, `gModPreDuelAndroid`; data/mod_preduel_data.s, `.rodata.added`). The Makefile builds
-    `build/assets/preduel_<name>.bin` with one pattern rule for `PREDUEL_NAMES`. The pictures have 187-224 colours,
-    about 15 KB of data each.
+    `build/assets/preduel_<name>.bin` with one pattern rule for `PREDUEL_NAMES`. The pictures have 187-224 colours.
+  - **Layout for Hex Maniac Advance (2026-11-06).** The data is now laid out so HMA can show and edit it
+    ([[hma-toml]]): the 224 colours (+0x000), `qrSize` (+0x1C0), a 16-colour QR palette (+0x1C4, white/black, for
+    HMA only), the QR code as a 32x32 4bpp sprite (+0x1E4, 4x4 tiles, pixel (c, r) = module (r, c)), then the picture
+    uncompressed as 30x12 8bpp tiles (+0x3E4), each pixel its colour - 32 (HMA indexes the palette from 0). It was
+    the game's LZSS bitmap (linear, with a size word; HMA reads neither linear bitmaps nor this LZSS) and 32 row
+    bitmasks. `UntilePicture` (src/mod_preduel.c) turns the tiles into the Mode 4 bitmap (adding 32) in
+    `gBustupBitmapBuffer` and `QrModule` reads a module from the sprite. 24,036 bytes per picture (about 15 KB
+    before). Checked by rendering the picture and QR code from the demo ROM at the TOML's anchors: the same as
+    `duelists/yugi-kaiba.png`, and a 29x29 QR code.
   - **QR code (2026-11-05).** Each `duelists/<format>.svg` (from the user) is a 29x29 QR code for
     https://formatlibrary.com/formats/<format> (all five decoded from the SVGs' modules: yugi-kaiba, critter,
     treasure, imperial, android; byte mode after an ECI header, EC level and mask from BCH-checked format bits). `tools/preduel_image.py` reads its `<rect>` modules (173 + 57n
     viewBox units), redraws the three finder patterns (paths in the SVG) and checks the format bits; the data gains
-    `qrSize` and 32 row bitmasks before the LZSS bitmap. `DrawQrCode` (src/mod_preduel.c) puts it on a 64x64 white
+    `qrSize` and the QR code (now a 4bpp sprite, see the layout above). `DrawQrCode` (src/mod_preduel.c) puts it on a 64x64 white
     square at the box's left (2 px a module, 3 px border) and the note beside it in the 8x10 Latin font
     (`DrawGlyph8bpp`, white = BG colour 1): "Scan for formatlibrary.com, a site about retro Yu-Gi-Oh! formats. Do not
     trust this code unless it leads to formatlibrary.com."

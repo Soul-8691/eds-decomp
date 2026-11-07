@@ -13,12 +13,15 @@ grid (QR_ORIGIN + QR_MODULE * n, as the formatlibrary.com QR generator writes th
 which are redrawn here (no <rect> may fall inside one). The format information is checked (BCH) so a misread grid
 fails the build. At most QR_MAX_SIZE modules a side.
 
-Output (4-byte aligned):
-  +0x000  u16 colours[224]   BGR555, for BG palette entries 32-255 (unused ones 0)
+Output (4-byte aligned), laid out so Hex Maniac Advance can show and edit it (tools/hma_toml.py):
+  +0x000  u16 colours[224]   BGR555, for BG palette entries 32-255 (unused ones 0); HMA `ucp4:0123456789ABCD`
   +0x1C0  u32 qrSize         modules per side, 0 = no QR code
-  +0x1C4  u32 qrRows[32]     row r: bit c set = dark module (r, c)
-  +0x244  u32 size, LZSS stream   the 240x96 bitmap (one byte per pixel, values 32-255), the game's LZSS format
-                                  (LZSSDecompress; tools/assetfmt/gfx_scenes.py lz_encode)
+  +0x1C4  u16 qrColours[16]  the QR sprite's palette: 0 white, 1 black (only for HMA; the game draws its own)
+  +0x1E4  u8 qr[512]         the QR code as a 32x32 4bpp sprite (4x4 tiles, row-major; pixel (c, r) = module
+                             (r, c), 1 = dark); HMA `ucs4x4x4`
+  +0x3E4  u8 picture[23040]  the 240x96 picture as 8bpp tiles (30x12, row-major), each pixel its colour - 32 (0-223:
+                             HMA indexes the palette from 0); HMA `ucs8x30x12`. src/mod_preduel.c turns it back into
+                             the Mode 4 bitmap (colours 32-255).
 """
 import os
 import re
@@ -28,12 +31,26 @@ import zlib
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import assets as A  # noqa: E402  (png_read, rgb_to_bgr555)
-from assetfmt.gfx_scenes import lz_encode  # noqa: E402
 
 WIDTH, HEIGHT = 240, 96
 FIRST, COLORS = 32, 224
 QR_ORIGIN, QR_MODULE = 173, 57      # the SVG's first module and module size (viewBox units)
 QR_MAX_SIZE, QR_ROWS = 30, 32       # 30 modules at 2 px plus a 2 px border fill the box's 64 rows
+QR_PALETTE = [0x7FFF, 0x0000] + [0] * 14
+
+
+def tiles(pixels, width, height, bpp):
+    """Row-major pixels as GBA tiles (row-major tiles), 4 or 8 bits per pixel."""
+    out = bytearray()
+    for ty in range(height // 8):
+        for tx in range(width // 8):
+            for y in range(8):
+                row = pixels[(ty * 8 + y) * width + tx * 8:(ty * 8 + y) * width + tx * 8 + 8]
+                if bpp == 8:
+                    out += bytes(row)
+                else:
+                    out += bytes(row[i] | row[i + 1] << 4 for i in range(0, 8, 2))
+    return bytes(out)
 
 
 def read_qr(path):
@@ -119,7 +136,7 @@ def main():
     if len(sys.argv) not in (3, 4):
         sys.exit(__doc__)
     qr = read_qr(sys.argv[3]) if len(sys.argv) == 4 else []
-    rows = [sum(bit << c for c, bit in enumerate(row)) for row in qr] + [0] * (QR_ROWS - len(qr))
+    qr_pixels = [qr[r][c] if r < len(qr) and c < len(qr) else 0 for r in range(QR_ROWS) for c in range(QR_ROWS)]
     px, pal = read_png(sys.argv[1])
     colours = [0] * COLORS
     if px is not None and min(px) >= FIRST:
@@ -141,9 +158,8 @@ def main():
         bitmap = bytes(slot[k] for k in source)
         for k, n in slot.items():
             colours[n - FIRST] = A.rgb_to_bgr555(rgb[k])
-    stream = lz_encode(bitmap)
-    out = (struct.pack(f'<{COLORS}H', *colours) + struct.pack(f'<I{QR_ROWS}I', len(qr), *rows)
-           + struct.pack('<I', len(stream)) + stream)
+    out = (struct.pack(f'<{COLORS}H', *colours) + struct.pack('<I', len(qr)) + struct.pack('<16H', *QR_PALETTE)
+           + tiles(qr_pixels, QR_ROWS, QR_ROWS, 4) + tiles([p - FIRST for p in bitmap], WIDTH, HEIGHT, 8))
     out += b'\0' * (-len(out) % 4)
     try:
         if open(sys.argv[2], 'rb').read() == out:

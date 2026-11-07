@@ -1,5 +1,5 @@
-@ The pre-duel pictures (src/mod_preduel.c): each the 224 colours of BG palette entries 32-255, the QR code's
-@ module rows, then the LZSS 240x96 bitmap, built by tools/preduel_image.py from duelists/<name>.png and
+@ The pre-duel pictures (src/mod_preduel.c): each the 224 colours of BG palette entries 32-255, the QR code (size,
+@ palette, 4bpp sprite), then the 240x96 picture as 8bpp tiles, built by tools/preduel_image.py from duelists/<name>.png and
 @ duelists/<name>.svg (Makefile: PREDUEL_NAMES). Not part of the original ROM; .rodata.added (units.txt).
 
 	.section .rodata

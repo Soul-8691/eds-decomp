@@ -25,7 +25,8 @@ source of this repo, and where that thing is in the demo ROM:
                 pack's pool of card and weight, the 8192-entry roulette the pulls read, flags, format, release date,
                 portrait, name; list formatpacks), the card prices (data.prices.cards: per format, card and DP; list
                 formats), every deck of src/mod_decks.c (data.decks.mod.<deck>: main + Fusion, side, DeckList) and
-                the debug deck recipes (data.decks.recipes: name, DeckList, side, side count).
+                the debug deck recipes (data.decks.recipes: name, DeckList, side, side count), and the pre-duel
+                pictures (graphics.preduel.<format>: palette, QR code sprite and palette, 8bpp picture).
   Lists         cardnumbers (by card ID) and cardinternalnumbers (by card number) get the added cards
                 (build/new_cards.tsv: their in-game names at their IDs and numbers); the other lists are kept.
   DefaultHash   recomputed (HMA's StoredList.GenerateHash) for every format and list this changes.
@@ -139,7 +140,7 @@ def anchor_id(text):
     return re.sub(r'[^a-z0-9]', '', text.lower())
 
 
-def mod_anchors(elf, rom):
+def mod_anchors(elf, rom, rom_sym):
     """([(name, address, format)], [(list name, items)], [report]) for the mod's tables."""
     anchors, lists, report = [], [], []
 
@@ -224,6 +225,23 @@ def mod_anchors(elf, rom):
             if p:
                 n = c_string(rom, p)
                 anchors.append((f'text.decks.recipes.recipe{i}', p - ROM_BASE, '`asc`%d' % (len(n) + 1)))
+
+    # The pre-duel pictures (src/mod_preduel.c, data/mod_preduel_data.s, layout in tools/preduel_image.py): the
+    # picture's 224 colours, the QR code's size, palette and 4bpp sprite, the picture's 8bpp tiles (colour - 32).
+    labels = re.findall(r'^(gModPreDuel\w+):', open('data/mod_preduel_data.s', encoding='utf-8').read(), re.M)
+    for label in labels:
+        if label not in rom_sym:
+            report.append(f'pre-duel picture {label}: not in the .sym, left out')
+            continue
+        base = rom_sym[label][0] - ROM_BASE
+        name = 'graphics.preduel.' + anchor_id(label[len('gModPreDuel'):])
+        anchors += [
+            (name + '.palette', base, '`ucp4:0123456789ABCD`'),
+            (f'data.preduel.{anchor_id(label[len("gModPreDuel"):])}.qrsize', base + 0x1C0, '[modules::]1'),
+            (name + '.qr.palette', base + 0x1C4, '`ucp4`'),
+            (name + '.qr', base + 0x1E4, f'`ucs4x4x4|{name}.qr.palette`'),
+            (name, base + 0x3E4, f'`ucs8x30x12|{name}.palette`'),
+        ]
     return anchors, lists, report
 
 
@@ -510,7 +528,7 @@ def main():
                                            f"Format = '''{fmt}'''", f"DefaultHash = '''{gen_hash([fmt])}'''", '']))
     mod_lists = []
     if os.path.exists(a.elf):
-        anchors, mod_lists, mod_report = mod_anchors(elf_symbols(a.elf), new_rom)
+        anchors, mod_lists, mod_report = mod_anchors(elf_symbols(a.elf), new_rom, sym)
         report.extend(mod_report)
         for name, address, fmt in anchors:
             if name in names:

@@ -11,7 +11,9 @@
  * 8x10 Latin font, DrawGlyph8bpp) to trust it only if it leads to formatlibrary.com. Both are drawn into the decoded
  * box bitmap before it is copied to VRAM.
  * Palette: the box palette's colours 0-31 (the box uses 16-31; its fill, 31, made black as the scenes have it), then the picture's 224 colours, 32-255. The picture is
- * built by tools/preduel_image.py into data/mod_preduel_data.s (layout in the tool's docstring). Its buffers are the
+ * built by tools/preduel_image.py into data/mod_preduel_data.s (layout in the tool's docstring: the picture as 8bpp
+ * tiles, colour - 32, and the QR code as a 4bpp sprite, so Hex Maniac Advance can show them; PreDuelLoad turns the
+ * tiles into the Mode 4 bitmap). Its buffers are the
  * bustup's (gBustupBitmapBuffer, gBustupBoxBitmap), free while no dialogue runs.
  * Like the other mod units, this one is @farcode and @rodata in units.txt.
  */
@@ -39,9 +41,11 @@ int ModOpponentFormat(u16 duelist);             /* src/mod_opponents.c */
 #define IMAGE_FIRST_COLOR   32
 #define IMAGE_COLORS        224
 #define QR_SIZE_OFFSET      (IMAGE_COLORS * 2)
-#define QR_ROWS_OFFSET      (QR_SIZE_OFFSET + 4)
-#define QR_ROWS             32
-#define IMAGE_LZ_OFFSET     (QR_ROWS_OFFSET + QR_ROWS * 4)
+#define QR_SPRITE_OFFSET    (QR_SIZE_OFFSET + 4 + 16 * 2)   /* after the size and the QR sprite's palette */
+#define QR_ROWS             32                              /* the sprite: 32x32, 4x4 4bpp tiles */
+#define IMAGE_TILES_OFFSET  (QR_SPRITE_OFFSET + QR_ROWS * QR_ROWS / 2)
+#define IMAGE_WIDTH         240
+#define IMAGE_HEIGHT        96
 #define BOX_WIDTH           240
 #define BOX_HEIGHT          64
 #define QR_X                6                   /* the white square: x 6-69, the box's full height */
@@ -103,6 +107,33 @@ static u32 ReadU32(const u8 *p)
     return p[0] | p[1] << 8 | p[2] << 16 | p[3] << 24;
 }
 
+/* 1 if QR module (r, c) is dark: pixel (c, r) of the 4bpp sprite. */
+static u32 QrModule(const u8 *image, u32 r, u32 c)
+{
+    u8 b = image[QR_SPRITE_OFFSET + ((r / 8) * (QR_ROWS / 8) + c / 8) * 32 + (r % 8) * 4 + (c % 8) / 2];
+
+    return (c & 1 ? b >> 4 : b & 15) != 0;
+}
+
+/* The picture's 8bpp tiles (colour - 32) as the Mode 4 bitmap (colours 32-255). */
+static void UntilePicture(const u8 *tiles, u8 *bitmap)
+{
+    u32 x, y;
+
+    for (y = 0; y < IMAGE_HEIGHT; y++) {
+        const u8 *row = tiles + ((y / 8) * (IMAGE_WIDTH / 8)) * 64 + (y % 8) * 8;
+
+        for (x = 0; x < IMAGE_WIDTH; x += 8) {
+            const u8 *src = row + (x / 8) * 64;
+            u8 *dest = bitmap + y * IMAGE_WIDTH + x;
+            u32 i;
+
+            for (i = 0; i < 8; i++)
+                dest[i] = src[i] + IMAGE_FIRST_COLOR;
+        }
+    }
+}
+
 /* The QR code (if any) and its note into the decoded box bitmap (BOX_WIDTH x BOX_HEIGHT, one byte per pixel). */
 static void DrawQrCode(const u8 *image, u8 *box)
 {
@@ -119,10 +150,8 @@ static void DrawQrCode(const u8 *image, u8 *box)
             box[y * BOX_WIDTH + QR_X + x] = COLOR_WHITE;
     }
     for (r = 0; r < size; r++) {
-        u32 bits = ReadU32(image + QR_ROWS_OFFSET + r * 4);
-
         for (c = 0; c < size; c++) {
-            if (bits & (1u << c)) {
+            if (QrModule(image, r, c)) {
                 u8 *px = &box[(border + r * QR_MODULE) * BOX_WIDTH + QR_X + border + c * QR_MODULE];
 
                 px[0] = px[1] = px[BOX_WIDTH] = px[BOX_WIDTH + 1] = COLOR_DARK;
@@ -140,7 +169,7 @@ static void DrawQrCode(const u8 *image, u8 *box)
 static void PreDuelLoad(const u8 *image)
 {
     SetBrightnessBlack();       /* first, and no forced blank (it shows white): the old screen stays, darkened */
-    LzDecompress(image + IMAGE_LZ_OFFSET, gBustupBitmapBuffer);
+    UntilePicture(image + IMAGE_TILES_OFFSET, gBustupBitmapBuffer);
     CpuSet(gBustupBitmapBuffer, (void *)VRAM, IMAGE_BYTES / 2);
     LzDecompress((const u8 *)gDialogueBoxGfx[1], gBustupBoxBitmap);
     DrawQrCode(image, gBustupBoxBitmap);

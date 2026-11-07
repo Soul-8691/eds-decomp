@@ -2687,3 +2687,9 @@ updated: 2026-09-29
 ## [2026-11-06] progress | HMA TOML: format packs, card prices, mod decks, debug recipes
 - tools/hma_toml.py: reads build/eds.elf's symbols (statics too); new anchors data.packs.format.* (pools, roulettes, names, flags, formats, release dates, portraits), data.prices.cards, data.decks.mod.<deck>(.main/.side), data.decks.recipes, the name strings; new lists formatpacks and formats. Checked by decoding them from eds_demo.gba.
 - Pages: [[hma-toml]].
+
+## [2026-11-06] progress | Pre-duel pictures in the HMA TOML (new data layout)
+- tools/preduel_image.py: palette, qrSize, QR palette, QR as a 32x32 4bpp sprite, picture as uncompressed 30x12 8bpp tiles (colour - 32); was LZSS linear bitmap + row bitmasks.
+- src/mod_preduel.c: UntilePicture (tiles -> Mode 4 bitmap, +32), QrModule (reads the sprite); data/mod_preduel_data.s comment.
+- tools/hma_toml.py: graphics.preduel.<format>(.palette/.qr/.qr.palette), data.preduel.<format>.qrsize. Checked by rendering from eds_demo.gba.
+- Pages: [[yugi-kaiba-opponent]], [[hma-toml]].

@@ -72,6 +72,12 @@ original ROM (repo root). Without `baserom.toml` it does nothing. `eds_demo.toml
     (``[name<> list<> side<> sidecount::]45``) is the debug menu's deck recipes (`GetRecipePreset`; empty in the
     release), pointing at those decks and at their names `text.decks.recipes.recipe<i>` (`` `asc` ``); its last
     row is the terminator.
+  - Pre-duel pictures (`data/mod_preduel_data.s`, by the `.sym`; layout in `tools/preduel_image.py`), for each
+    `gModPreDuel<Format>`: `graphics.preduel.<format>.palette` (`` `ucp4:0123456789ABCD` ``, the 224 colours of BG
+    entries 32-255), `data.preduel.<format>.qrsize`, `graphics.preduel.<format>.qr.palette` (`` `ucp4` ``) and
+    `.qr` (`` `ucs4x4x4|...qr.palette` ``, the QR code, 1 = dark module), and `graphics.preduel.<format>`
+    (`` `ucs8x30x12|...palette` ``, the 240x96 picture). An edited picture keeps 224 colours; an edited QR code must
+    stay at its module count (`qrsize`), drawn from the top left.
   - Lengths are fixed per build (the TOML is written again each `make demo`): a deck or pool made longer in HMA
     needs its count field changed too.
 - **Lists.** `cardnumbers` (by card ID) is cut or grown to CARD_ID_COUNT and `cardinternalnumbers` (by card number)
