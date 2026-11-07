@@ -32,7 +32,7 @@ original ROM (repo root). Without `baserom.toml` it does nothing. `eds_demo.toml
     builders now walk `gCardIdsByName`) are left out and listed in a comment at the top of the file.
   - Constants in data (the pack rarity weights) move like anchors.
 - **Added anchors** (`EXTRA_ANCHORS`, by symbol plus an offset, so they follow the `.sym` and the card count):
-  - `graphics.cards.icons.palettes` (``[`ucp4`]cardnumbers``) and `graphics.cards.icons`
+  - `graphics.cards.icons.palettes` (``[`ucp4`]cardnumbers``) and `graphics.cards.icons.images`
     (``[`ucs4x2x2|graphics.cards.icons.palettes`]cardnumbers``): every card's own art icon, the art Deck Edit's
     ring shows. `gModFieldIconData`'s `DATA_DECK_EDIT` block (`tools/cardicons.py`, `src/mod_field_icons.c`), at
     after 0x7980 + 256 * CARD_ID_COUNT (rounded up to 4): every card ID's 16-colour palette (0x20 bytes, entry 0
@@ -67,7 +67,7 @@ original ROM (repo root). Without `baserom.toml` it does nothing. `eds_demo.toml
     (``[costs<[card:cardinternalnumbers price:]/count> count: unused:]formats``), the DP of a password per format;
     the new list `formats` holds the 15 formats in banlist order.
   - Decks (`src/mod_decks.c`): for every `DeckList` built in, `data.decks.mod.<deck>` (``[cards<> count: unused:]1``)
-    with its card array `data.decks.mod.<deck>.main` (main + Fusion Deck, card numbers) and `.side`; the format
+    (now `data.decks.mod.<deck>.list`) with its card array `data.decks.mod.<deck>.main` (main + Fusion Deck, card numbers) and `.side`; the format
     opponents' decks, the duelist decks and the Test Duel deck. `data.decks.recipes`
     (``[name<> list<> side<> sidecount::]45``) is the debug menu's deck recipes (`GetRecipePreset`; empty in the
     release), pointing at those decks and at their names `text.decks.recipes.recipe<i>` (`` `asc` ``); its last
@@ -75,10 +75,10 @@ original ROM (repo root). Without `baserom.toml` it does nothing. `eds_demo.toml
   - Pre-duel pictures (`data/mod_preduel_data.s`, by the `.sym`; layout in `tools/preduel_image.py`), for each
     `gModPreDuel<Format>`: `graphics.preduel.<format>.palette` (`` `ucp4:0123456789ABCD` ``, the 224 colours of BG
     entries 32-255), `data.preduel.<format>.qrsize`, `graphics.preduel.<format>.qr.palette` (`` `ucp4` ``) and
-    `.qr` (`` `ucs4x4x4|...qr.palette` ``, the QR code, 1 = dark module), and `graphics.preduel.<format>`
+    `.qr.image` (`` `ucs4x4x4|...qr.palette` ``, the QR code, 1 = dark module), and `graphics.preduel.<format>.picture`
     (`` `ucs8x30x12|...palette` ``, the 240x96 picture). An edited picture keeps 224 colours; an edited QR code must
     stay at its module count (`qrsize`), drawn from the top left.
-  - Added effect rows (`src/added_effects.c`, by the `.sym`): `data.cards.effects.added` is `gAddedCardEffects`
+  - Added effect rows (`src/added_effects.c`, by the `.sym`): `data.cards.addedeffects` is `gAddedCardEffects`
     in baserom.toml's `data.cards.effects` format (``[card:cardinternalnumbers padding: routine1::|h ... routine5::|h]``,
     resolve, check, prepare, chainA, chainB; 24 bytes a row), one row per added card with an effect row plus the
     0xFFFF terminator (127 rows now). `FindCardEffect` (effect_hooks.c) searches it after `gCardEffects`, so a row's
@@ -90,6 +90,23 @@ original ROM (repo root). Without `baserom.toml` it does nothing. `eds_demo.toml
     (Length 1, 14 of them) are `sWinsToUnlockNext` (src/mod_opponents.c, 20 each): the wins against the format before
     it that open that format, and with it its TCG packs; named from the table's comments. They only take effect in
     `make release`: make and make demo open every format and pack. Checked in the demo ROM: 10, and 20 each.
+  - **Leaf names only (2026-11-06):** HMA's Goto menu shows an anchor `a.b` but not the anchors under it (`a.b.c`),
+    so no added anchor name is also the start of another: the pictures are `.picture`, the QR sprites `.qr.image`,
+    the DeckLists `.list`, the icon images `graphics.cards.icons.images`, and the added effect rows
+    `data.cards.addedeffects` (baserom.toml's `data.cards.effects` is itself an anchor). Checked by listing every
+    anchor name of eds_demo.toml that starts another: none.
+  - **The header guide (2026-11-06):** the top of each TOML lists, in two sections, what baserom.toml brings (the
+    original game: anchors, MatchedWords, lists, and what the script changes in them) and what the mod adds; each
+    group with its entry count and whether the game uses it in that build (release or debug, from
+    `build/include/mod_config.h`). From the code: unused are the original starter-deck pools (`BuildModStarterDeck`
+    replaces all three), the title logo and its palette (`ModTitle_Load`), Yugi's deck (hidden duelist); mostly
+    unused the original opponent decks (every format opponent has a mod deck; Solomon and Debug fall back to theirs
+    without a picked recipe); partly used the original boosters, their covers and rarity odds (not in the shop,
+    `ModPackList_AddUnlockedPacks` lists only format packs; still the Campaign event rewards, `gMain.rewardPack`)
+    and the original pack-unlock wins (`IsCampaignLevel2Unlocked` etc.: Records pages, the "new packs" notice);
+    debug-only the recipes, the Test Duel deck, and the Tea / Joey / Bakura decks (hidden duelists, reachable through
+    the recipes); release-only the mod's unlock wins. The texts are `VANILLA_GUIDE` / `ADDED_GUIDE` (and the WORDS and
+    LISTS variants) in the script.
   - The ELF is `build/eds.elf`, which every build shares: the script uses it only when its global symbols sit at
     the `.sym`'s addresses (else, e.g. after a `make release-demo`, it reports that and leaves the ELF-only tables out;
     run inside `make demo` the two always match).
@@ -97,8 +114,8 @@ original ROM (repo root). Without `baserom.toml` it does nothing. `eds_demo.toml
     needs its count field changed too.
 - **Which builds:** `make demo` writes `eds_demo.toml` and `make release-demo` `eds_release_demo.toml` (the
   Makefile's ROM rule, for the demo card list either way). The release-demo one is where the unlock MatchedWords
-  take effect (make demo opens every format and pack); it has no blank card slots and no debug recipes (left out of
-  the release), so their anchors are absent.
+  take effect (make demo opens every format and pack); it has no blank card slots (so 1127 card IDs) and one deck fewer; the recipe table is still in the ROM
+  (`data.decks.recipes`) but unused there (`GetRecipePreset` returns 0 in the release).
 - **Lists.** `cardnumbers` (by card ID) is cut or grown to CARD_ID_COUNT and `cardinternalnumbers` (by card number)
   gets the added cards, both with their in-game names from `build/new_cards.tsv` (a blank slot: `Blank <id>`). The
   other lists are kept.

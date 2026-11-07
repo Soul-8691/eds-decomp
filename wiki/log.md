@@ -2720,3 +2720,11 @@ updated: 2026-09-29
 ## [2026-11-06] progress | HMA TOML for make release-demo too
 - Makefile: tools/hma_toml.py runs for every demo-profile ROM (make demo -> eds_demo.toml, make release-demo -> eds_release_demo.toml); .gitignore; the TOML header and the script's docstring.
 - Pages: [[hma-toml]].
+
+## [2026-11-06] progress | HMA TOML: leaf anchor names (Goto menu)
+- tools/hma_toml.py: graphics.preduel.<f>.picture / .qr.image, data.decks.mod.<deck>.list, graphics.cards.icons.images, data.cards.addedeffects, so no anchor is also a parent of others (HMA's Goto menu hid the children).
+- Pages: [[hma-toml]].
+
+## [2026-11-06] progress | HMA TOML header: vanilla and mod sections, with used / unused
+- tools/hma_toml.py: the header guide now has the original game's anchors, MatchedWords and lists (VANILLA_*_GUIDE) separate from the mod's (ADDED_*_GUIDE), entry counts, and each group's status in that build (release/debug from mod_config.h), read from the code.
+- Pages: [[hma-toml]].

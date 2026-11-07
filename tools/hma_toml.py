@@ -83,45 +83,137 @@ EXTRA_ANCHORS = [
     ('graphics.cards.fieldicons.miniatures', 'gModFieldIconData', lambda _c: FIELD_ICON_MINIS,
      '[`ucs8x2x2|graphics.cards.fieldicons.artpalette`]cardnumbers'),
     ('graphics.cards.icons.palettes', 'gModFieldIconData', icon_palettes, '[`ucp4`]cardnumbers'),
-    ('graphics.cards.icons', 'gModFieldIconData', lambda count: icon_palettes(count) + count * ICON_PALETTE_SIZE,
+    ('graphics.cards.icons.images', 'gModFieldIconData', lambda count: icon_palettes(count) + count * ICON_PALETTE_SIZE,
      '[`ucs4x2x2|graphics.cards.icons.palettes`]cardnumbers'),
 ]
 
 
-# The header's guide to the added anchors and lists: (anchor name or prefix, what it is). Keep it in step with
-# EXTRA_ANCHORS and mod_anchors.
+# The header's guide: (anchor name or prefix, what it is, whether the game uses it). Keep it in step with
+# EXTRA_ANCHORS, mod_anchors and baserom.toml. The status is a string, or (release build, debug build) when it differs
+# (make release / release-demo vs make / make demo: build/include/mod_config.h MOD_RELEASE); a more specific prefix
+# comes before a general one. No anchor name may also be the start of another (a.b and a.b.c): HMA's Goto menu then
+# shows a.b but not a.b.*, so every anchor is a leaf (.picture, .list, .images, .image).
+USED, UNUSED = 'used', 'UNUSED'
 ADDED_GUIDE = [
-    ('graphics.cards.icons', "every card's art icon (Deck Edit's ring): .palettes, then the 16x16 4bpp images"),
+    ('graphics.cards.icons', "every card's art icon (Deck Edit's ring): .palettes, .images (16x16 4bpp)", USED),
     ('graphics.cards.fieldicons', "the field icons: .artpalette (64 shared colours), .miniatures (each card's "
-                                  "16x16 8bpp miniature)"),
-    ('data.cards.effects.added', "the added cards' effect rows (gAddedCardEffects): card, then the resolve, check, "
-                                 "prepare, chainA, chainB handlers; searched after data.cards.effects; last row 0xFFFF"),
+                                  "16x16 8bpp miniature)", USED),
+    ('data.cards.addedeffects', "the added cards' effect rows (gAddedCardEffects): card, then the resolve, check, "
+                                "prepare, chainA, chainB handlers; searched after data.cards.effects; last row 0xFFFF",
+     USED),
     ('data.packs.format.pools', "the shop's TCG and usage format packs: each pack's cards and pull weights (all a "
-                                "pull reads; chance = weight / total)"),
+                                "pull reads; chance = weight / total)", USED),
     ('data.packs.format', "per format pack: .names, .flags (1 = usage pack), .formats, .releasedates (yyyymmdd), "
-                          ".portraits (cover card)"),
-    ('text.packs.format', 'the format pack names (ASCII)'),
-    ('data.prices.cards', "the DP to buy a card by password, per format: card and price"),
-    ('data.decks.mod', "the mod's decks (format opponents, duelists, Test Duel): <deck> is the DeckList (cards, "
-                       "count), <deck>.main the main + Fusion Deck, <deck>.side the Side Deck"),
-    ('data.decks.recipes', "the debug menu's deck recipes: name, DeckList, Side Deck, side count (empty in the "
-                           "release); last row the terminator"),
-    ('text.decks.recipes', 'the deck recipe names (ASCII)'),
-    ('graphics.preduel', "the pre-duel pictures per format: <format> the 240x96 picture, .palette its 224 colours, "
-                         ".qr the QR code (1 = dark module), .qr.palette"),
-    ('data.preduel', 'per pre-duel picture: .qrsize, the QR code modules a side (0 = none)'),
+                          ".portraits (cover card)", USED),
+    ('text.packs.format', 'the format pack names (ASCII)', USED),
+    ('data.prices.cards', "the DP to buy a card by password, per format: card and price", USED),
+    ('data.decks.mod.yugideck', "Yugi's deck (30 7 Colored Fish)", 'UNUSED (Yugi is a hidden duelist)'),
+    ('data.decks.mod.testdeck', "the Test Duel's deck (test.ydk)", (UNUSED, 'used (the Test Duel, debug builds only)')),
+    ('data.decks.mod.reddeck', "Tea's deck (LR-Chaos Turbo)",
+     (UNUSED, 'debug recipe only (Tea is a hidden duelist)')),
+    ('data.decks.mod.joeydeck', "Joey's deck (sdlkilla-Warrior)",
+     (UNUSED, 'debug recipe only (Joey is a hidden duelist)')),
+    ('data.decks.mod.bakuradeck', "Bakura's deck (geistD-Goat Control)",
+     (UNUSED, 'debug recipe only (Bakura is a hidden duelist)')),
+    ('data.decks.mod', "the format opponents' decks (data.decks.mod.<format><deck>): .list the DeckList (cards, "
+                       "count), .main the main + Fusion Deck, .side the Side Deck",
+     ('used (the format opponents)', 'used (the format opponents, and the debug recipes)')),
+    ('data.decks.recipes', "the debug menu's deck recipes: name, DeckList, Side Deck, side count; last row the "
+                           "terminator", (UNUSED + ' (GetRecipePreset returns 0 in the release)', USED)),
+    ('text.decks.recipes', 'the deck recipe names (ASCII)', (UNUSED, USED)),
+    ('graphics.preduel', "the pre-duel pictures per format: <format>.picture the 240x96 picture, .palette its 224 "
+                         "colours, .qr.image the QR code (1 = dark module), .qr.palette", USED),
+    ('data.preduel', 'per pre-duel picture: .qrsize, the QR code modules a side (0 = none)', USED),
 ]
 # MatchedWords the mod adds (same guide).
 ADDED_WORDS_GUIDE = [
-    ('data.constants.packs.format.usagewins', "wins against a format that open its usage pack (make release; make "
-                                              "and make demo open every pack)"),
+    ('data.constants.packs.format.usagewins', "wins against a format that open its usage pack",
+     (USED, UNUSED + ' (debug builds open every pack)')),
     ('data.constants.formats.unlock', "per format: wins against the format before it that open it, and with it its "
-                                      "TCG packs (make release; make and make demo open every format)"),
+                                      "TCG packs", (USED, UNUSED + ' (debug builds open every format)')),
 ]
 ADDED_LISTS_GUIDE = [
-    ('formatpacks', 'the 50 format pack names (indexes data.packs.format.*)'),
-    ('formats', 'the 15 Campaign formats in banlist order (indexes data.prices.cards, data.packs.format.formats)'),
+    ('formatpacks', 'the 50 format pack names (indexes data.packs.format.*)', USED),
+    ('formats', 'the 15 Campaign formats in banlist order (indexes data.prices.cards, data.packs.format.formats)',
+     USED),
 ]
+
+# What baserom.toml (the original game) brings, what this script does to it, and whether the mod still uses it.
+VANILLA_GUIDE = [
+    ('graphics.cards.images', "every card's 72x80 art, by card ID, with graphics.cards.palettes (moved to the end of "
+                              "the ROM with the added cards; one row per card ID)", USED),
+    ('graphics.cards.palettes', "the card art palettes, by card ID (moved, one row per card ID)", USED),
+    ('data.cards.stats', "every card's stats word (ATK, DEF, kind, type, Level, attribute), by card ID (moved)", USED),
+    ('data.cards.passwords', "every card's password (BCD), by card ID (moved; FFFFFFFF = none)", USED),
+    ('data.cards.numbers', "card ID -> card number (moved; one row per card ID)", USED),
+    ('data.cards.internalnumbers', "card number -> card ID (one row per card number in use)", USED),
+    ('data.cards.effects', "the original effect table: card number or effect key, then the resolve, check, prepare, "
+                           "chainA, chainB handlers (the added cards' rows: data.cards.addedeffects)", USED),
+    ('data.cards.fusion', "the Fusion recipes", USED),
+    ('data.cards.ritual', "the Ritual recipes", USED),
+    ('data.decks.all', "every original duelist's deck (pointer, count), by the duelists list",
+     'mostly UNUSED (every format opponent plays a data.decks.mod deck; only Solomon and Debug fall back to theirs '
+     'until a recipe is picked)'),
+    ('data.decks.initial', "the original starter deck's pools: .cards and .stats per pool",
+     'UNUSED (the three starter decks are the mod\'s: BuildModStarterDeck)'),
+    ('data.packs', "the original Campaign booster packs: per pack, a card list per rarity (by the rarities list)",
+     'partly used (not in the shop, which lists only the format packs; still the Campaign event reward packs)'),
+    ('data.specialpacks', "the special packs (Weekly Yu-Gi-Oh! A and B, the magazine, the Grandpa Cup prize): their "
+                          "cards per rarity", 'used (Campaign event and magazine rewards)'),
+    ('graphics.packs', "the original booster pack covers, with graphics.palettes.packs",
+     'partly used (only the reward packs\' openings)'),
+    ('graphics.palettes.packs', "the pack covers' palette", 'partly used (as graphics.packs)'),
+    ('graphics.titlescreen.gamelogo', "the title screen's game logo",
+     'UNUSED (ModTitle_Load hides it: the title is "Yak\'s YGO Hack")'),
+    ('graphics.titlescreen', "the title screen: .background, .medal, with graphics.palettes.titlescreen.*", USED),
+    ('graphics.palettes.titlescreen.logo', "the game logo's palette", UNUSED + ' (as the logo)'),
+    ('graphics.palettes.titlescreen', "the title screen palettes", USED),
+]
+VANILLA_WORDS_GUIDE = [
+    ('data.constants.packs.rarities', "the original packs' rarity odds (.total and each rarity's weight)",
+     'partly used (the reward packs)'),
+    ('data.constants.packs.unlocks', "the wins that unlock the original Campaign packs",
+     ('partly used (no longer the shop; still the Records pages and the "new packs" notice)',
+      'partly used (no longer the shop; the "new packs" notice)')),
+    ('data.constants.fusion2', "a Fusion constant of the original", USED),
+    ('data.constants.cards.limit2', "the card ID count in GeneratePackCards (random pack cards): the last real card",
+     USED),
+    ('data.constants.cards.limit', "the card ID count limits in the code: now the build's count (or the last real "
+                                   "card's, before make demo's blank slots); sites whose code no longer holds it are "
+                                   "listed below", 'used (two sites are debug screens: DebugCardDetail_Browse, '
+                                                   'DebugGetAllCards)'),
+    ('data.constants.effects.limit', "the original effect table's row count", USED),
+]
+VANILLA_LISTS_GUIDE = [
+    ('cardnumbers', "card names by card ID: the original cards, then the added ones (and make demo's blank slots, "
+                    "'Blank <id>')", USED),
+    ('cardinternalnumbers', "card names by card number, with the added cards at their numbers", USED),
+    ('rarities', "the pack rarities", USED),
+    ('types', "the card types", USED),
+    ('races', "the monster types", USED),
+    ('attributes', "the attributes", USED),
+    ('duelists', "the original duelists", USED),
+]
+GUIDE_RELEASE = False       # set by main from build/include/mod_config.h
+
+
+def guide_lines(entries, names, suffix=''):
+    """'#   prefix(.*) [N] (status): what' for each (prefix, what, status) that names hold, wrapped at 118 columns."""
+    import textwrap
+    out = []
+    taken = set()
+    for prefix, what, status in entries:
+        hits = [n for n in names if (n == prefix or n.startswith(prefix + '.')) and n not in taken]
+        if not hits:
+            continue
+        taken.update(hits)
+        if isinstance(status, tuple):
+            status = status[0] if GUIDE_RELEASE else status[1]
+        star = '.*' if any(n != prefix for n in hits) else ''
+        count = f' [{len(hits)}]' if len(hits) > 1 else ''
+        out += textwrap.wrap(f'{prefix}{star}{count}{suffix} -- {status}: {what}', 112, initial_indent='#   ',
+                             subsequent_indent='#       ')
+    return out
 
 
 def gen_hash(items, seed=0xCAFEBABE):
@@ -242,7 +334,7 @@ def mod_anchors(elf, rom, rom_sym):
             continue
         deck_names[s[0]] = name
         add(name + '.main', main, '[card:cardinternalnumbers]%d' % (main[1] // 2))
-        add(name, s, '[cards<> count: unused:]1')
+        add(name + '.list', s, '[cards<> count: unused:]1')
         for side_sym in (base + 'Side', base.replace('StarterDeck', 'Deck') + 'Side'):
             side = sym(side_sym, 'mod_decks.o')
             if side:
@@ -262,7 +354,7 @@ def mod_anchors(elf, rom, rom_sym):
     # 0xFFFF terminator.
     effects = rom_sym.get('gAddedCardEffects')
     if effects:
-        anchors.append(('data.cards.effects.added', effects[0] - ROM_BASE,
+        anchors.append(('data.cards.addedeffects', effects[0] - ROM_BASE,
                         '[card:cardinternalnumbers padding: routine1::|h routine2::|h routine3::|h routine4::|h '
                         'routine5::|h]%d' % (effects[1] // 24)))
     else:
@@ -298,8 +390,8 @@ def mod_anchors(elf, rom, rom_sym):
             (name + '.palette', base, '`ucp4:0123456789ABCD`'),
             (f'data.preduel.{anchor_id(label[len("gModPreDuel"):])}.qrsize', base + 0x1C0, '[modules::]1'),
             (name + '.qr.palette', base + 0x1C4, '`ucp4`'),
-            (name + '.qr', base + 0x1E4, f'`ucs4x4x4|{name}.qr.palette`'),
-            (name, base + 0x3E4, f'`ucs8x30x12|{name}.palette`'),
+            (name + '.qr.image', base + 0x1E4, f'`ucs4x4x4|{name}.qr.palette`'),
+            (name + '.picture', base + 0x3E4, f'`ucs8x30x12|{name}.palette`'),
         ]
     return anchors, lists, report, words
 
@@ -632,25 +724,39 @@ def main():
             % (os.path.basename(a.rom), count, numbers - 1),
             '# it is written again by every build of that ROM (`make demo`: eds_demo.toml, `make release-demo`: '
             'eds_release_demo.toml).']
-    # A guide to what this file adds to baserom.toml (only the groups present in this build).
-    added = [lines[1][len("Name = '''"):-3] for header, lines in extra]
-    guide = []
-    for prefix, what in ADDED_GUIDE:
-        hits = [n for n in added if n == prefix or n.startswith(prefix + '.')]
-        if hits:
-            guide.append(f'#   {prefix}{".*" if any(n != prefix for n in hits) else ""}: {what}')
-    for prefix, what in ADDED_WORDS_GUIDE:
-        hits = [n for n, _, _ in mod_words if n == prefix or n.startswith(prefix + '.')]
-        if hits:
-            guide.append(f'#   {prefix}{".*" if any(n != prefix for n in hits) else ""} (MatchedWords): {what}')
-    for list_name, what in ADDED_LISTS_GUIDE:
-        if list_name in {n for n, _ in mod_lists}:
-            guide.append(f'#   list {list_name}: {what}')
-    if guide:
-        head.append('#')
-        head.append('# Added by this mod (not in baserom.toml), by name; the anchors follow every build:')
-        head.extend(guide)
-        head.append('#')
+    # A guide to the file (only the groups present in this build): first what baserom.toml (the original game)
+    # brings, then what the mod adds. [N] is how many entries a group has.
+    added = {lines[1][len("Name = '''"):-3] for header, lines in extra}
+    added_words = {n for n, _, _ in mod_words}
+    added_lists = {n for n, _ in mod_lists}
+    base_anchors = [field(lines, 'Name') for header, lines in keep
+                    if header == '[[NamedAnchors]]' and field(lines, 'Name') not in added]
+    base_words = [field(lines, 'Name') for header, lines in keep
+                  if header == '[[MatchedWords]]' and field(lines, 'Name') not in added_words]
+    base_lists = [field(lines, 'Name') for header, lines in keep
+                  if header == '[[List]]' and field(lines, 'Name') not in added_lists]
+    global GUIDE_RELEASE
+    GUIDE_RELEASE = bool(re.search(r'#define MOD_RELEASE 1', open('build/include/mod_config.h').read())) \
+        if os.path.exists('build/include/mod_config.h') else False
+    head += ['#', '# Each entry: name -- whether the game uses it in this build (%s build) : what it is. [N] = entries.'
+             % ('release' if GUIDE_RELEASE else 'debug'),
+             '#', '# The original game (from baserom.toml). The card tables that moved, their lengths and the card lists',
+             '# follow this build; everything else is at its original address:',
+             '#  NamedAnchors (Goto menu):']
+    head += guide_lines(VANILLA_GUIDE, base_anchors)
+    head.append('#  MatchedWords (constants in the code and data):')
+    head += guide_lines(VANILLA_WORDS_GUIDE, base_words)
+    head.append('#  Lists (the names of table rows and enum values):')
+    head += guide_lines(VANILLA_LISTS_GUIDE, base_lists)
+    mod = (guide_lines(ADDED_GUIDE, sorted(added)), guide_lines(ADDED_WORDS_GUIDE, sorted(added_words)),
+           guide_lines(ADDED_LISTS_GUIDE, sorted(added_lists)))
+    if any(mod):
+        head += ['#', "# Added by Yak's YGO Hack (not in baserom.toml); by symbol, so they follow every build:"]
+        for title, lines_ in zip(('#  NamedAnchors (Goto menu):', '#  MatchedWords:', '#  Lists:'), mod):
+            if lines_:
+                head.append(title)
+                head += lines_
+    head.append('#')
     if dropped:
         head.append('# MatchedWords left out (their code no longer holds the constant):')
         head.extend(dropped)
