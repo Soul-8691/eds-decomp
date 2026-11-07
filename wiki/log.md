@@ -2728,3 +2728,8 @@ updated: 2026-09-29
 ## [2026-11-06] progress | HMA TOML header: vanilla and mod sections, with used / unused
 - tools/hma_toml.py: the header guide now has the original game's anchors, MatchedWords and lists (VANILLA_*_GUIDE) separate from the mod's (ADDED_*_GUIDE), entry counts, and each group's status in that build (release/debug from mod_config.h), read from the code.
 - Pages: [[hma-toml]].
+
+## [2026-11-06] progress | Campaign reward packs: a random unlocked TCG format pack
+- src/booster_get_pack.c GetRewardPack: gMain.rewardPack = ModRewardPack(packId); src/mod_format_packs.c ModRewardPack (random unlocked TCG format pack, picked on the reward's first frame); include/format_packs.h. Covers the event rewards and the magazine deliveries. .text +4 (0x0807F494).
+- tools/hma_toml.py guide: the original packs, special packs, covers and rarity odds now UNUSED.
+- Pages: [[pack-shop]].

@@ -75,3 +75,16 @@ Related: [[booster-packs]], [[booster-get-pack-c]], [[main-menu]], [[deck-recipe
   theirs and could not be pulled, and a pool edited in Hex Maniac Advance changed nothing. Removed with
   `data/mod_format_pack_roulettes.s` and `tools/check_roulette.py`; the pool is now all a pull reads
   ([[hma-toml]]: `data.packs.format.pools`).
+
+## Campaign reward packs (2026-11-06)
+- Every pack a Campaign reward opens goes through `GetRewardPack(packId)` (booster_get_pack.c): the event
+  rewards (`gMain.rewardPack`: Duelist Pack, Grandpa Cup prize, Rare Selections, Limited Collection, Vol.
+  4/5, ...) and the Weekly Yu-Gi-Oh! A/B and magazine deliveries (`Campaign_DeliverMagazines`). It now
+  stores `ModRewardPack(packId)` (src/mod_format_packs.c): for an original pack, a random TCG format pack
+  (not a usage pack) the player has unlocked (`ModIsFormatPackUnlocked`: its format open; every pack in
+  debug builds), picked on the reward's first frame (`seqIndex1` and `seqState1` 0) and kept in
+  `gMain.rewardPack` for the frames after. 0 (the free pick from the shop list) and format packs pass
+  unchanged; with no TCG pack open the original pack stays (cannot happen in practice: Yugi-Kaiba's
+  sets are open from the start). `GeneratePackCards` already sends a format pack ID to
+  `ModGenerateFormatPackCards`. The hook is one call in a size-limited unit (`.text` +4 bytes, ends at
+  0x0807F494). The original boosters, special packs, their covers and rarity odds are now unused.

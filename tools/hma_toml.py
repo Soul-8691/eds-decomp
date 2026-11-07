@@ -157,12 +157,12 @@ VANILLA_GUIDE = [
     ('data.decks.initial', "the original starter deck's pools: .cards and .stats per pool",
      'UNUSED (the three starter decks are the mod\'s: BuildModStarterDeck)'),
     ('data.packs', "the original Campaign booster packs: per pack, a card list per rarity (by the rarities list)",
-     'partly used (not in the shop, which lists only the format packs; still the Campaign event reward packs)'),
+     'UNUSED (not in the shop, and Campaign rewards open format packs: ModRewardPack)'),
     ('data.specialpacks', "the special packs (Weekly Yu-Gi-Oh! A and B, the magazine, the Grandpa Cup prize): their "
-                          "cards per rarity", 'used (Campaign event and magazine rewards)'),
+                          "cards per rarity", 'UNUSED (not in the shop, and Campaign rewards open format packs: ModRewardPack)'),
     ('graphics.packs', "the original booster pack covers, with graphics.palettes.packs",
-     'partly used (only the reward packs\' openings)'),
-    ('graphics.palettes.packs', "the pack covers' palette", 'partly used (as graphics.packs)'),
+     'UNUSED (as data.packs)'),
+    ('graphics.palettes.packs', "the pack covers' palette", 'UNUSED (as data.packs)'),
     ('graphics.titlescreen.gamelogo', "the title screen's game logo",
      'UNUSED (ModTitle_Load hides it: the title is "Yak\'s YGO Hack")'),
     ('graphics.titlescreen', "the title screen: .background, .medal, with graphics.palettes.titlescreen.*", USED),
@@ -171,7 +171,7 @@ VANILLA_GUIDE = [
 ]
 VANILLA_WORDS_GUIDE = [
     ('data.constants.packs.rarities', "the original packs' rarity odds (.total and each rarity's weight)",
-     'partly used (the reward packs)'),
+     'UNUSED (as data.packs)'),
     ('data.constants.packs.unlocks', "the wins that unlock the original Campaign packs",
      ('partly used (no longer the shop; still the Records pages and the "new packs" notice)',
       'partly used (no longer the shop; the "new packs" notice)')),

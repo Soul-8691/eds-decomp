@@ -157,9 +157,10 @@ u32 CB_GetPack(void) {
     return 1;
 }
 
-/* As CB_GetPack, but first stores the given pack in gMain.rewardPack (a reward pack skips the list). */
+/* As CB_GetPack, but first stores the given pack in gMain.rewardPack (a reward pack skips the list).
+ * Changed: an original pack becomes a random unlocked TCG format pack (ModRewardPack, src/mod_format_packs.c). */
 u32 GetRewardPack(u32 packId) {
-    gMain.rewardPack = packId;
+    gMain.rewardPack = ModRewardPack(packId);
     if (gGetPackSteps[gMain.seqIndex1] != 0) {
         if (gGetPackSteps[gMain.seqIndex1]()) {
             gMain.seqIndex1++;

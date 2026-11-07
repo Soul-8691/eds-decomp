@@ -11,6 +11,7 @@
 #include "format_packs.h"
 #include "format_pack_data.h"
 #include "util.h"
+#include "main.h"                 /* gMain: seqIndex1, seqState1, rewardPack (ModRewardPack) */
 
 extern int ModPackShopIsOpen(void);
 extern int ModIsFormatUnlocked(int order);
@@ -390,6 +391,29 @@ static u16 WeightedPick(const struct FormatPackPool *pool, u32 r)
         r -= pool->entries[i].weight;
     }
     return pool->entries[i].number;
+}
+
+/* The pack a Campaign reward opens (GetRewardPack, booster_get_pack.c; every frame of the reward): for an original
+ * pack (the event rewards: Duelist Pack, Grandpa Cup prize, Limited Collection, ...; the Weekly Yu-Gi-Oh! and magazine
+ * deliveries), a random TCG format pack (not a usage pack) the player has unlocked. It is picked on the reward's
+ * first frame (step 0, state 0) and kept in gMain.rewardPack for the rest. 0 (the shop's list) and format packs stay;
+ * with no TCG pack unlocked the original pack stays. */
+u32 ModRewardPack(u32 packId)
+{
+    u8 open[FORMAT_PACK_COUNT];
+    int fi, n = 0;
+
+    if (packId == 0 || FormatPackIndexFromId(packId) >= 0)
+        return packId;
+    if (!(gMain.seqIndex1 == 0 && gMain.seqState1 == 0) && FormatPackIndexFromId(gMain.rewardPack) >= 0)
+        return gMain.rewardPack;                        /* the pick of this reward */
+    for (fi = 0; fi < FORMAT_PACK_COUNT; fi++) {
+        if (!(sFormatPackFlags[fi] & FORMAT_PACK_FLAG_USAGE) && ModIsFormatPackUnlocked(fi))
+            open[n++] = fi;
+    }
+    if (n == 0)
+        return packId;
+    return FORMAT_PACK_ID_FIRST + open[RandomBelow(n)];
 }
 
 int ModGenerateFormatPackCards(u16 *cardNumbers, u16 packId)

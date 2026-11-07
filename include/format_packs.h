@@ -23,6 +23,9 @@ int ModFormatPackLoadCoverGfx(u16 slot, u16 packId);
 /* Usage-table DP for one card in format order (BANLISTS index); 0 if that format's table has no row. */
 u32 GetCardUsagePriceInFormat(int formatOrder, u16 cardNumber);
 int ModGenerateFormatPackCards(u16 *cardNumbers, u16 packId);
+/* GetRewardPack (booster_get_pack.c): the pack a Campaign reward opens instead of an original pack (events, the
+ * magazines): a random TCG format pack the player has unlocked, picked on the reward's first frame and kept. */
+u32 ModRewardPack(u32 packId);
 /* Pack reveal: rainbow name colour (palette 15) for this card number in the opened pack. */
 int ModPackOpenCardNameShines(u16 cardNumber);
 int ModPackShopIsOpen(void);
