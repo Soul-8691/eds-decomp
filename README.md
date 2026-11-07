@@ -26,7 +26,7 @@
 |  |  |
 |---|---|
 | **15 formats** | Follows the [Format Library](https://www.formatlibrary.com/) pantheon of TCG formats from May 2002 to October 2005 (which are just historical formats). Each one is a Campaign duelist with its own card pool and decks. |
-| **New cards** | The demo adds **186** cards. See [NEW_CARDS.md](NEW_CARDS.md). |
+| **New cards** | The demo adds **306** cards. See [NEW_CARDS.md](NEW_CARDS.md). |
 | **Synchro, Xyz and Link** | Summon them from the Fusion Deck (the Extra Deck), with Tuners, Xyz Materials, Link Arrows and Extra Monster Zones, and pick the Monster Zone for every summon. A first handful of each is in. See [Synchro, Xyz and Link](#synchro-xyz-and-link). |
 | **Smarter CPU** | Opponents play much stronger than in vanilla EDS. See [AI_IMPROVEMENTS.md](AI_IMPROVEMENTS.md) and [AI_QUIRKS.md](AI_QUIRKS.md). |
 | **Best-of-3 matches** | Every Campaign duel is a match, with siding between games. |
@@ -298,8 +298,10 @@ testing decks.
 
 ## The new cards
 
-The demo build adds **186** cards, listed above `------` in
-[`new_cards.txt`](new_cards.txt). **[NEW_CARDS.md](NEW_CARDS.md)** shows each of them in Deck Edit's Card View. **[ADDING_NEW_CARDS.md](ADDING_NEW_CARDS.md)** explains how to add and code more.
+The demo build adds **306** cards: the 173 listed above `------` in [`new_cards.txt`](new_cards.txt), and 133
+cards of the engine's leftover effects ([`config/leftover_cards.txt`](config/leftover_cards.txt)). All of them are in
+[`demo_cards.txt`](demo_cards.txt), in alphabetical order. **[NEW_CARDS.md](NEW_CARDS.md)** shows each of them in
+Deck Edit's Card View. **[ADDING_NEW_CARDS.md](ADDING_NEW_CARDS.md)** explains how to add and code more.
 
 <table>
 <tr>
@@ -385,9 +387,10 @@ Three newer summoning mechanics are in, each with a few cards so far. In your Ma
   working effect code (`config/leftover_cards.txt`) at its own card number, with its YGOPRODeck stats, text and art,
   so the original code plays it untouched. The card lists hold only the other cards, apart from 17 leftovers the mod
   wrote effect code for at a free number, which stay there until the two are merged (`overlaps.txt`).
-- **Gallery screenshots.** [NEW_CARDS.md](NEW_CARDS.md) is taken by `tools/card_screenshots.lua` in mGBA (optional
-  `cards/_capture_only.txt` for new entries only), and `tools/gen_new_cards_md.py` refreshes the gallery. Reorder
-  `new_cards.txt` only together with **`make demo`**, so card IDs stay in sync before re-running the script.
+- **Gallery screenshots.** After `make demo`, `tools/gen_new_cards_md.py` writes [`demo_cards.txt`](demo_cards.txt)
+  (every card the build adds, alphabetical, from `build/new_cards.tsv`) and [NEW_CARDS.md](NEW_CARDS.md) from it, and
+  lists the cards with no screenshot yet. `tools/card_screenshots.lua` in mGBA takes them (the cards and their IDs
+  from `build/new_cards.tsv`; optional `cards/_capture_only.txt`, one name per line, for only those).
 
 ## Planned
 

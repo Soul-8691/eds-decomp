@@ -2746,3 +2746,9 @@ updated: 2026-09-29
 ## [2026-11-06] progress | Records portraits: the centre of the opponent's card art
 - src/mod_opponents.c: OpponentArtCardId, DrawRecordArtPortrait (art rows 28-51 at 2/3 into 48 x 16, 15 most used colours) in ModRecordDrawPage; Solomon keeps his face. Far code only.
 - Pages: [[main-menu-c]].
+
+## [2026-11-06] progress | demo_cards.txt and a 306-card NEW_CARDS.md
+- tools/gen_new_cards_md.py: demo_cards.txt (alphabetical, from build/new_cards.tsv) and NEW_CARDS.md from it; lists cards without a screenshot.
+- tools/card_screenshots.lua: cards and IDs from build/new_cards.tsv; card ID count includes the blank slots.
+- cards/: 120 new screenshots (the leftover effect cards); README counts (306).
+- Pages: [[added-cards]].

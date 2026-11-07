@@ -6,9 +6,10 @@ mGBA script: a Card View screenshot of every coded new card, saved as cards/<car
   (the -C overrides switch off frame pacing so the run is not held to 60 fps; the Lua API has no speed control)
 
 Use a ROM built from the repo-root new_cards.txt (make demo, make release-demo, or a Demo patch) with a save that
-can open Deck Edit: the cards are the lines above "------", and they get card IDs 821, 822, ... in that order
-(tools/newcards.py). Each ID's name in the ROM (gCardNames) is checked against the list first, so another card
-pool stops the script. After reordering new_cards.txt, rebuild the ROM before capturing.
+can open Deck Edit. The cards and their card IDs come from build/new_cards.tsv, which tools/newcards.py writes for
+that build: the list's cards above "------" (IDs 821, 822, ...), then the leftover effect cards
+(config/leftover_cards.txt); make demo's blank slots (no name) are skipped. Each ID's name in the ROM (gCardNames)
+is checked first, so a ROM from another build stops the script: rebuild the ROM before capturing.
 
 Optional cards/_capture_only.txt (one display name per line, before "|"): capture only those entries, then run
 tools/gen_new_cards_md.py to refresh NEW_CARDS.md.
@@ -84,31 +85,33 @@ if next(mainMenuCallbacks) == nil then
 end
 local function inMainMenu(cb) return mainMenuCallbacks[cb] == true end
 
--- [(name, game name)] above the ------ line, as tools/newcards.py load_list reads them.
+-- [(name, game name, card ID)] of the build's added cards, from build/new_cards.tsv (id, number, passcode, name,
+-- game name; a blank slot has no name), and the number of added card IDs (blank slots included).
 local function loadCards()
-    local f = io.open(root .. "/new_cards.txt", "r")
+    local f = io.open(root .. "/build/new_cards.tsv", "r")
     if not f then
         return nil
     end
-    local cards = {}
+    local cards, ids, first = {}, 0, true
     for line in f:lines() do
-        line = trim(line:gsub("\r", ""))
-        if line:sub(1, 6) == "------" then
-            break
-        end
-        if line ~= "" and line:sub(1, 1) ~= "#" then
-            local name, gameName = line:match("^(.-)%s*|%s*(.-)$")
-            if not name then
-                name, gameName = line, line
+        line = line:gsub("\r", "")
+        if first then
+            first = false
+        elseif line ~= "" then
+            local id, _, _, name, gameName = line:match("^(%d+)\t([^\t]*)\t([^\t]*)\t([^\t]*)\t?([^\t]*)$")
+            if id then
+                ids = ids + 1
+                if name ~= "" then
+                    if gameName == "" then
+                        gameName = name
+                    end
+                    cards[#cards + 1] = { name = name, gameName = gameName, id = tonumber(id) }
+                end
             end
-            if gameName == "" then
-                gameName = name
-            end
-            cards[#cards + 1] = { name = name, gameName = gameName, id = FIRST_ADDED_ID + #cards }
         end
     end
     f:close()
-    return cards
+    return cards, ids
 end
 
 local function romCardName(id)
@@ -121,15 +124,15 @@ local function fileName(name)
     return (name:gsub('[<>:"/\\|%?%*]', "_")) .. ".png"
 end
 
-local allDemoCards = loadCards()
+local allDemoCards, addedIds = loadCards()
 if not allDemoCards then
-    log("cannot read " .. root .. "/new_cards.txt")
+    log("cannot read " .. root .. "/build/new_cards.tsv (build the ROM first)")
     return
 end
 local demoCardCount = #allDemoCards
 local cards = allDemoCards
 
--- Optional cards/_capture_only.txt: one display name per line (from new_cards.txt, before |).
+-- Optional cards/_capture_only.txt: one card name per line (as in demo_cards.txt, before |).
 -- When present, only those cards are captured (for new entries without re-shooting the whole list).
 local function loadCaptureOnly()
     local f = io.open(outDir .. "/_capture_only.txt", "r")
@@ -160,7 +163,7 @@ if captureOnly then
 end
 
 log(#cards .. " cards to capture")
-local cardIdCount = FIRST_ADDED_ID + demoCardCount
+local cardIdCount = FIRST_ADDED_ID + addedIds         -- CARD_ID_COUNT: the Deck Edit list rows' trunk length
 local listRowSize = (cardIdCount + 80 + 15) * 2
 
 local function callback() return emu:read32(MAIN_CALLBACK) end
@@ -234,8 +237,8 @@ local function onFrame()
         for k, c in ipairs(cards) do
             local inRom = romCardName(c.id)
             if inRom ~= c.gameName then
-                stop(string.format("card ID %d is \"%s\" in this ROM, but new_cards.txt entry \"%s\" expects \"%s\": "
-                    .. "load a ROM built from new_cards.txt (make demo)", c.id, inRom, c.name, c.gameName))
+                stop(string.format("card ID %d is \"%s\" in this ROM, but build/new_cards.tsv's \"%s\" expects \"%s\": "
+                    .. "load the ROM of the last build (make demo)", c.id, inRom, c.name, c.gameName))
                 return
             end
         end

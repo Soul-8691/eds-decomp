@@ -2499,6 +2499,12 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
 - **"Once per turn"** is read as per copy: two copies destroyed before the same Standby Phase both come back.
 - Moved above `------` in `new_cards.txt` (demo list 153): ID 973, number 829. No other card's ID moved (`cards.h` gains one line). `cards/Vampire Lord.png`
   and `NEW_CARDS.md` still need a gallery run (`tools/card_screenshots.lua`, `tools/gen_new_cards_md.py`).
+- **Gallery (2026-11-06):** `tools/gen_new_cards_md.py` now writes the repo-root `demo_cards.txt` (every card the demo
+  build adds, list and leftover cards, alphabetical, from `build/new_cards.tsv`; not the blank slots) and builds
+  NEW_CARDS.md from it (306 cards). `tools/card_screenshots.lua` reads the cards and their IDs from
+  `build/new_cards.tsv` (the leftover cards come after the list's, so IDs no longer follow new_cards.txt alone) and
+  the card ID count from it too (the blank slots are in the Deck Edit list rows). The 120 leftover cards without a
+  screenshot were captured with `cards/_capture_only.txt` in 11.5 s.
 - Checked in the source and the builds (`make`, `make release`, `make demo`); not tested in an emulator.
 
 ### Dark Scorpion - Cliff the Trap Remover (2026-10-30)
