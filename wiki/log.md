@@ -2716,3 +2716,7 @@ updated: 2026-09-29
 - src/mod_format_packs.c: gModUsagePackWins[1] (FORMAT_PACK_USAGE_WINS as data, read by ModIsFormatPackUnlocked); src/mod_opponents.c sWinsToUnlockNext comment.
 - tools/hma_toml.py: MatchedWords data.constants.packs.format.usagewins and data.constants.formats.unlock.<format> (14), with a header guide (ADDED_WORDS_GUIDE). Checked: 10 and 20 each.
 - Pages: [[hma-toml]].
+
+## [2026-11-06] progress | HMA TOML for make release-demo too
+- Makefile: tools/hma_toml.py runs for every demo-profile ROM (make demo -> eds_demo.toml, make release-demo -> eds_release_demo.toml); .gitignore; the TOML header and the script's docstring.
+- Pages: [[hma-toml]].

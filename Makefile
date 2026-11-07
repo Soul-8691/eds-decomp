@@ -109,7 +109,7 @@ syms: $(SYM)
 $(ROM): $(ELF) $(SYM)
 	$(OBJCOPY) -O binary -j .text -j .rodata -j .text.added -j .rodata.pinned -j .rodata.added -j .data --gap-fill 0 $< $@
 	$(PYTHON) tools/fixptrs.py $< $@
-	$(if $(and $(filter demo,$(NEWCARDS_PROFILE)),$(filter 0,$(RELEASE))),$(PYTHON) tools/hma_toml.py --rom $@ --sym $(SYM))
+	$(if $(filter demo,$(NEWCARDS_PROFILE)),$(PYTHON) tools/hma_toml.py --rom $@ --sym $(SYM))
 
 # Regenerated on every run, because the object list depends on which src/ files exist and on ASM_UNITS.
 build/ld_script.ld: units.txt tools/mkld.py $(OBJS) FORCE

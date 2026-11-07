@@ -95,6 +95,10 @@ original ROM (repo root). Without `baserom.toml` it does nothing. `eds_demo.toml
     run inside `make demo` the two always match).
   - Lengths are fixed per build (the TOML is written again each `make demo`): a deck or pool made longer in HMA
     needs its count field changed too.
+- **Which builds:** `make demo` writes `eds_demo.toml` and `make release-demo` `eds_release_demo.toml` (the
+  Makefile's ROM rule, for the demo card list either way). The release-demo one is where the unlock MatchedWords
+  take effect (make demo opens every format and pack); it has no blank card slots and no debug recipes (left out of
+  the release), so their anchors are absent.
 - **Lists.** `cardnumbers` (by card ID) is cut or grown to CARD_ID_COUNT and `cardinternalnumbers` (by card number)
   gets the added cards, both with their in-game names from `build/new_cards.tsv` (a blank slot: `Blank <id>`). The
   other lists are kept.
