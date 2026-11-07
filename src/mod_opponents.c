@@ -793,29 +793,42 @@ static void PutPortraitPixel(int x, int y, u32 c)
     }
 }
 
-/* Copy the portrait of slot srcSlot of the original page srcPage (its bitmap and palette, gOpponentSelectPageBgs) into
- * the portrait of `slot`: the same circle, pixel for pixel, each colour the nearest of this page's (PortraitColor). */
+/* Copy the portrait of slot srcSlot of the original page srcPage (its copy in gModDuelistPortraits, cut from
+ * gOpponentSelectPageBgs) into the portrait of `slot`: the same circle, pixel for pixel, each colour the nearest of
+ * this page's (PortraitColor). */
+/* The original duelists' portraits, cut out of the page pictures (data/mod_duelist_portraits.s,
+ * tools/duelist_portraits.py): per original page and slot (page * 5 + slot), 256 colours and a 56 x 56 8bpp image
+ * (7 x 7 tiles, row-major) around the portrait's centre, so Hex Maniac Advance can show and edit them
+ * (graphics.duelists.<duelist>.portrait). */
+extern const u8 gModDuelistPortraits[];
+#define DUELIST_PORTRAIT_BOX        56
+#define DUELIST_PORTRAIT_ENTRY      (256 * 2 + DUELIST_PORTRAIT_BOX * DUELIST_PORTRAIT_BOX)
+
+/* Pixel (x, y) of a portrait copy's 56 x 56 image (its colour index in the copy's palette). */
+static u32 DuelistPortraitPixel(const u8 *entry, int x, int y)
+{
+    return entry[256 * 2 + ((y >> 3) * (DUELIST_PORTRAIT_BOX / 8) + (x >> 3)) * 64 + (y & 7) * 8 + (x & 7)];
+}
+
 static void DrawSlotPortrait(int slot, int srcPage, int srcSlot, u8 *used)
 {
-    const u16 *srcPal = gOpponentSelectPageBgs[srcPage].pal;
-    const u8 *src = gOpponentSelectPageBgs[srcPage].bitmap;
+    const u8 *entry = gModDuelistPortraits + (srcPage * 5 + srcSlot) * DUELIST_PORTRAIT_ENTRY;
+    const u16 *srcPal = (const u16 *)entry;
     u8 map[256], mapped[256];
     int i, x, y, freeIndex = 1;
     int cx = gOpponentSelectSlotPos[slot].x + PORTRAIT_DX, cy = gOpponentSelectSlotPos[slot].y + PORTRAIT_DY;
-    int sx = gOpponentSelectSlotPos[srcSlot].x + PORTRAIT_DX, sy = gOpponentSelectSlotPos[srcSlot].y + PORTRAIT_DY;
 
     for (i = 0; i < 256; i++)
         mapped[i] = 0;
     for (y = cy - 24; y <= cy + 24; y++) {
         for (x = cx - 24; x <= cx + 24; x++) {
             int dx = 2 * (x - cx) + 1, dy = 2 * (y - cy) + 1;
-            int ux = sx + (x - cx), uy = sy + (y - cy);
+            int bx = x - cx + DUELIST_PORTRAIT_BOX / 2, by = y - cy + DUELIST_PORTRAIT_BOX / 2;
             u32 s;
 
-            if (dx * dx + dy * dy > PORTRAIT_D2 || x < 0 || x >= 240 || y < 0 || y >= 160 || ux < 0 || ux >= 240
-                || uy < 0 || uy >= 160)
+            if (dx * dx + dy * dy > PORTRAIT_D2 || x < 0 || x >= 240 || y < 0 || y >= 160)
                 continue;
-            s = src[uy * 240 + ux];
+            s = DuelistPortraitPixel(entry, bx, by);
             if (!mapped[s]) {
                 map[s] = PortraitColor(srcPal[s], used, &freeIndex);
                 mapped[s] = 1;
@@ -947,7 +960,7 @@ void ModOpponentSelectPortraits(int page)
         u16 duelist = ModPageDuelist(page, slot);
         const struct ModOpponent *o = Opponent(duelist);
 
-        if (o->portrait == 0 || !ModIsOpponentUnlocked(duelist))
+        if (!ModIsOpponentUnlocked(duelist))
             continue;
         if (!scanned) {
             for (i = 0; i < 256; i++)
@@ -956,7 +969,9 @@ void ModOpponentSelectPortraits(int page)
                 used[bitmap[i]] = 1;
             scanned = 1;
         }
-        if (PORTRAIT_IS_SLOT(o->portrait))
+        if (o->portrait == 0)               /* the page's own portrait, from its copy (so an edit of it shows) */
+            DrawSlotPortrait(slot, page, slot, used);
+        else if (PORTRAIT_IS_SLOT(o->portrait))
             DrawSlotPortrait(slot, o->portrait >> 4 & 7, o->portrait & 7, used);
         else {
             u16 cardId = PortraitCardId(o->portrait);

@@ -161,6 +161,7 @@ mod_preduel
 mod_field_icons_data
 mod_preduel_data
 mod_record_names
+mod_duelist_portraits
 # An original unit moved out of the game's code to give the hooks of the added cards room before the pinned data
 # at 0x08080A20 (its functions are reached through bl and symbols; fixptrs.py fixes its pointers in the tables).
 @farcode dice_scene
@@ -172,6 +173,7 @@ mod_record_names
 @rodata.added mod_field_icons_data
 @rodata.added mod_preduel_data
 @rodata.added mod_record_names
+@rodata.added mod_duelist_portraits
 @libs
 veneer
 rodata_08080A20

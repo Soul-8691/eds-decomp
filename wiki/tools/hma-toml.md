@@ -83,6 +83,22 @@ original ROM (repo root). Without `baserom.toml` it does nothing. `eds_demo.toml
     resolve, check, prepare, chainA, chainB; 24 bytes a row), one row per added card with an effect row plus the
     0xFFFF terminator (127 rows now). `FindCardEffect` (effect_hooks.c) searches it after `gCardEffects`, so a row's
     card number gives that card the five handlers.
+  - Original duelist portraits: `graphics.duelists.<duelist>.portrait` (`` `ucs8x7x7|...portraitpalette` ``, 56 x 56)
+    and `.portraitpalette` (`` `ucp4:0123456789ABCDEF` ``, the page's 256 colours). The originals are round portraits
+    drawn into the 5 opponent-select page pictures (240 x 160 linear 8bpp, which HMA can't show), so
+    `tools/duelist_portraits.py` cuts each (a 56 x 56 box around slot position + (31, 33)) from
+    `assets/gfx/mode4_bitmaps` into `gModDuelistPortraits` (`data/mod_duelist_portraits.s`, 25 entries by original
+    page * 5 + slot, 3648 bytes each), and the game draws every portrait it copies from there (`DrawSlotPortrait`;
+    an opponent with portrait 0 now also draws its page's own portrait from the copy), so an HMA edit shows. Checked
+    by rendering Yugi's and Solomon's from the anchors.
+  - Original duelist faces (by the `.sym`'s `gRecordPortraitImages`, original data in bank B): for duelist IDs
+    1-24, `graphics.duelists.<duelist>.face` (`` `ucs4x6x2|...palette` ``, 48 x 16) and `.palette` (`` `ucp4` ``).
+    Each is a 4bpp image pack whose 12 tiles are stored in row-major order with no deduplication (checked for all 24),
+    so the pack's palette (+8) and tiles (after the tile-count header) are a plain HMA palette and sprite; a pack with
+    14 or 15 colours has its tile count inside the 16-colour palette's span (colours no pixel uses). The 25th entry
+    (the "???" face) is deduplicated and left out. Listed with the original game in the header guide
+    (`VANILLA_ADDED_PREFIXES`); mostly unused now (the Records screen draws card art), except Solomon's face.
+    Checked by rendering Yugi, Joey, Kaiba and Grandpa from the anchors.
   - Extended card data (by the `.sym`, one byte per card ID, `]cardnumbers`): `data.cards.typeex` is `gCardTypeEx`
     as an HMA bit tuple, ``[typeex.|t|kind:cardkindsex|effect.|tuner.|race::racesex]`` (bits 0-1 the kind: none,
     Synchro, Xyz, Link, which the stats word stores as Fusion; bit 2 effect; bit 3 Tuner; bits 4-7 a race EDS lacks,
@@ -139,6 +155,13 @@ original ROM (repo root). Without `baserom.toml` it does nothing. `eds_demo.toml
   Makefile's ROM rule, for the demo card list either way). The release-demo one is where the unlock MatchedWords
   take effect (make demo opens every format and pack); it has no blank card slots (so 1127 card IDs) and one deck fewer; the recipe table is still in the ROM
   (`data.decks.recipes`) but unused there (`GetRecipePreset` returns 0 in the release).
+- **The original duelists in `cardinternalnumbers` (2026-11-07):** after the last card (index 2389, the alternate
+  arts from 2000) and a gap, the 24 original duelists at `PORTRAIT_FROM_SLOT(page, slot)` = `0x8000 | page << 4 |
+  slot` of their original opponent-select slot (`gOpponentSelectDuelists`): "Duelist - Yugi Muto" = 32768 ...
+  "Duelist - Trusdale (Grandpa)" = 32835. These are the values `data.opponents`' portrait takes for an original
+  portrait, so its card picker names them (Solomon's 0x8043 reads "Duelist - Trusdale (Grandpa)"). The gap is HMA's
+  sparse list form (`set_list_items` writes `N = [ ... ]` blocks; the hash rotates over the gaps, as
+  `StoredList.GenerateHash` does).
 - **Lists.** `cardnumbers` (by card ID) is cut or grown to CARD_ID_COUNT and `cardinternalnumbers` (by card number)
   gets the added cards, both with their in-game names from `build/new_cards.tsv` (a blank slot: `Blank <id>`). The
   other lists are kept.

@@ -196,7 +196,19 @@ VANILLA_GUIDE = [
     ('graphics.titlescreen', "the title screen: .background, .medal, with graphics.palettes.titlescreen.*", USED),
     ('graphics.palettes.titlescreen.logo', "the game logo's palette", UNUSED + ' (as the logo)'),
     ('graphics.palettes.titlescreen', "the title screen palettes", USED),
+    ('graphics.duelists.grandpa', "Solomon's (Grandpa's) face (.face 48 x 16, .palette) and opponent-select "
+                                  "portrait (.portrait 56 x 56, .portraitpalette)",
+     'used (Solomon has no card art: his portrait on the opponent select, his face on the Records screen)'),
+    ('graphics.duelists.duelcomputer', "the Duel Computer's face and portrait",
+     (UNUSED + ' (hidden duelist)', 'used only without a Test Duel portrait card')),
+    ('graphics.duelists', "the original duelists by duelist: .face (48 x 16, 4bpp) and .palette, the Records "
+                          "screen's (original data); .portrait (56 x 56, 8bpp) and .portraitpalette, the opponent "
+                          "select's round portrait, cut from the page pictures (the mod's copy, which the game draws "
+                          "from: data.opponents' portrait 0x8000 | page << 4 | slot names one)",
+     'UNUSED unless an opponent uses it (the format opponents show card art; the other duelists are hidden)'),
 ]
+# Anchors this script adds that are original game data (listed with the original game in the header guide).
+VANILLA_ADDED_PREFIXES = ('graphics.duelists.',)
 VANILLA_WORDS_GUIDE = [
     ('data.constants.packs.rarities', "the original packs' rarity odds (.total and each rarity's weight)",
      'UNUSED (as data.packs)'),
@@ -220,7 +232,10 @@ VANILLA_WORDS_GUIDE = [
 VANILLA_LISTS_GUIDE = [
     ('cardnumbers', "card names by card ID: the original cards, then the added ones (and make demo's blank slots, "
                     "'Blank <id>')", USED),
-    ('cardinternalnumbers', "card names by card number, with the added cards at their numbers", USED),
+    ('cardinternalnumbers', "card names by card number, with the added cards at their numbers; then, after a gap, "
+                            "the original duelists at 0x8000 | page << 4 | slot of their original opponent-select "
+                            "slot (32768 'Duelist - Yugi Muto' ... 32835 'Duelist - Trusdale (Grandpa)'), the "
+                            "values data.opponents' portrait takes for an original portrait", USED),
     ('rarities', "the pack rarities", USED),
     ('types', "the card types", USED),
     ('races', "the monster types", USED),
@@ -250,6 +265,19 @@ def guide_lines(entries, names, suffix=''):
         out += textwrap.wrap(f'{prefix}{star}{count}{suffix} -- {status}: {what}', 112, initial_indent='#   ',
                              subsequent_indent='#       ')
     return out
+
+
+# The original duelists by duelist ID 1-24 (enum DuelistId, include/constants/game.h; their names as the Records
+# screen's name plates spell them). cardinternalnumbers gets them after a gap, at PORTRAIT_FROM_SLOT(page, slot) =
+# 0x8000 | page << 4 | slot of their original opponent-select page and slot (gOpponentSelectDuelists): the values
+# data.opponents' portrait takes for "that original page's portrait" (src/mod_opponents.c), so its picker names them.
+PORTRAIT_FROM_SLOT_BASE = 0x8000
+ORIGINAL_DUELISTS = [
+    'Yugi Muto', 'Tea Gardner', 'Joey Wheeler', 'Tristan Taylor', 'Bakura', 'Rex Raptor', 'Espa Roba',
+    'Weevil Underwood', 'Mako Tsunami', 'Mai Valentine', 'Rare Hunter', 'Arkana', 'Strings', 'Umbra & Lumis',
+    'Marik Ishtar', 'Seto Kaiba', 'Ishizu Ishtar', 'Shadi', 'Yami Bakura', 'Yami Yugi', 'Duel Computer', 'Simon',
+    'Pegasus', 'Trusdale (Grandpa)',
+]
 
 
 def gen_hash(items, seed=0xCAFEBABE):
@@ -302,6 +330,18 @@ def c_string(rom, address):
 def anchor_id(text):
     """An HMA anchor name part: lower case letters and digits."""
     return re.sub(r'[^a-z0-9]', '', text.lower())
+
+
+def original_slots(rom_sym, rom):
+    """{(page, slot): duelist ID} of the original opponent select (gOpponentSelectDuelists, page * 5 + slot)."""
+    s = rom_sym.get('gOpponentSelectDuelists')
+    if not s:
+        return {}
+    ids = struct.unpack_from('<25H', rom, s[0] - ROM_BASE)
+    return {(i // 5, i % 5): d for i, d in enumerate(ids) if 0 < d <= len(ORIGINAL_DUELISTS)}
+
+
+DUELIST_PORTRAIT_ENTRY = 256 * 2 + 56 * 56     # data/mod_duelist_portraits.s (tools/duelist_portraits.py)
 
 
 def mod_anchors(elf, rom, rom_sym):
@@ -427,6 +467,45 @@ def mod_anchors(elf, rom, rom_sym):
     if markers:
         anchors.append(('data.cards.linkmarkers', markers[0] - ROM_BASE,
                         '[arrows.|t|topleft.|top.|topright.|left.|right.|bottomleft.|bottom.|bottomright.]cardnumbers'))
+
+    # The original duelists' faces (main_menu.c gRecordPortraitImages, bank B 0x087E795C-0x087EA718): one 4bpp image
+    # pack per duelist ID 1-24 {u16 colours x4, colours, u16 tiles x4, tiles, u16 cells x4, cells}, 48 x 16 pixels as 12
+    # tiles in row-major order, so the palette and the tiles are an HMA palette and sprite as they stand (a pack with
+    # 14 or 15 colours has the tile count after them, inside the 16-colour palette's span; unused colours). The 25th
+    # entry, the "???" face, has deduplicated tiles and is left out.
+    faces = rom_sym.get('gRecordPortraitImages')
+    if faces:
+        ids = {int(v): n for n, v in re.findall(r'DUELIST_(\w+) = (\d+)',
+                                                open('include/constants/game.h', encoding='utf-8').read())}
+        for i in range(24):
+            p = word(faces[0] + 4 * i) - ROM_BASE
+            colours = struct.unpack_from('<H', rom, p)[0]
+            tiles_at = p + 8 + 2 * colours
+            tiles, cells_n = struct.unpack_from('<H', rom, tiles_at)[0], None
+            cells_at = tiles_at + 8 + 32 * tiles
+            cells = [struct.unpack_from('<HH', rom, cells_at + 8 + 4 * k)
+                     for k in range(struct.unpack_from('<H', rom, cells_at)[0])]
+            if tiles != 12 or cells != [((k % 6) | (k // 6) << 8, k) for k in range(12)]:
+                report.append(f'duelist face {i + 1}: not 12 plain tiles, left out')
+                continue
+            name = 'graphics.duelists.' + anchor_id(ids.get(i + 1, f'duelist{i + 1}'))
+            anchors += [(name + '.palette', p + 8, '`ucp4`'),
+                        (name + '.face', tiles_at + 8, f'`ucs4x6x2|{name}.palette`')]
+    else:
+        report.append('no gRecordPortraitImages in the .sym: the duelist faces are left out')
+    # Their opponent-select portraits: the mod's copies of the circles in the page pictures (gModDuelistPortraits,
+    # tools/duelist_portraits.py), per original page and slot: 256 colours, then 56 x 56 pixels as 7 x 7 8bpp tiles.
+    portraits = rom_sym.get('gModDuelistPortraits')
+    if portraits:
+        ids = {int(v): n for n, v in re.findall(r'DUELIST_(\w+) = (\d+)',
+                                                open('include/constants/game.h', encoding='utf-8').read())}
+        for (page, slot), d in sorted(original_slots(rom_sym, rom).items()):
+            at = portraits[0] - ROM_BASE + (page * 5 + slot) * DUELIST_PORTRAIT_ENTRY
+            name = 'graphics.duelists.' + anchor_id(ids.get(d, f'duelist{d}'))
+            anchors += [(name + '.portraitpalette', at, '`ucp4:0123456789ABCDEF`'),
+                        (name + '.portrait', at + 512, f'`ucs8x7x7|{name}.portraitpalette`')]
+    else:
+        report.append('no gModDuelistPortraits in the .sym: the duelist portraits are left out')
 
     # The added cards' effect rows (src/added_effects.c gAddedCardEffects): struct CardEffect, 24 bytes, as
     # baserom.toml's data.cards.effects (gCardEffects), which FindCardEffect searches first; the last row is the
@@ -594,8 +673,24 @@ def list_items(lines):
 
 
 def set_list_items(lines, items):
+    """Write a list's items; None items are gaps (HMA's sparse form: an `N = [ ... ]` block, or `N = '''x'''`,
+    per run of items, as StoredList.AppendContents writes them)."""
     _, start, end = list_items(lines)
-    lines[start + 1:end] = ["   '''%s'''," % s.replace("'''", "'") for s in items]
+    out, i = [], 0
+    while i < len(items):
+        if items[i] is None:
+            i += 1
+            continue
+        j = i
+        while j < len(items) and items[j] is not None:
+            j += 1
+        run = ["'''%s'''" % s.replace("'''", "'") for s in items[i:j]]
+        if len(run) == 1 and i:
+            out.append(f'{i} = {run[0]}')
+        else:
+            out += [f'{i} = ['] + [f'   {r},' for r in run] + [']']
+        i = j
+    lines[start:end + 1] = out
     set_field(lines, 'DefaultHash', "'''%s'''" % gen_hash(items))
 
 
@@ -741,6 +836,11 @@ def main():
                     while len(items) <= number:
                         items.append('None')
                     items[number] = game_name
+                # then, after a gap, the original duelists at 0x8000 | page << 4 | slot (PORTRAIT_FROM_SLOT)
+                for (page, slot), d in original_slots(sym, new_rom).items():
+                    index = PORTRAIT_FROM_SLOT_BASE | page << 4 | slot
+                    items += [None] * (index + 1 - len(items))
+                    items[index] = f'Duelist - {ORIGINAL_DUELISTS[d - 1]}'
                 set_list_items(lines, items)
         keep.append((header, lines))
 
@@ -810,6 +910,8 @@ def main():
     added_lists = {n for n, _ in mod_lists}
     base_anchors = [field(lines, 'Name') for header, lines in keep
                     if header == '[[NamedAnchors]]' and field(lines, 'Name') not in added]
+    base_anchors += sorted(n for n in added if n.startswith(VANILLA_ADDED_PREFIXES))
+    added = {n for n in added if not n.startswith(VANILLA_ADDED_PREFIXES)}
     base_words = [field(lines, 'Name') for header, lines in keep
                   if header == '[[MatchedWords]]' and field(lines, 'Name') not in added_words]
     base_lists = [field(lines, 'Name') for header, lines in keep

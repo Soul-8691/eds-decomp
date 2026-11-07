@@ -2767,3 +2767,16 @@ updated: 2026-09-29
 ## [2026-11-07] setup | make release-demo-extra
 - Makefile: release-demo-extra (RELEASE=1, demo list, NEWCARDS_EXTRA=1: the blank card slots up to 615) -> eds_release_demo_extra.gba and .toml; clean; .gitignore; README, CLAUDE.md build list; tools/hma_toml.py header; tools/card_screenshots.lua reads its .sym too.
 - Pages: [[release-build]], [[hma-toml]].
+
+## [2026-11-07] progress | HMA TOML: the original duelist faces
+- tools/hma_toml.py: graphics.duelists.<duelist>.face / .palette for duelist IDs 1-24 (gRecordPortraitImages' packs as plain sprites), in the guide's original-game section with their use. Checked by rendering four.
+- Pages: [[hma-toml]].
+
+## [2026-11-07] progress | HMA TOML: the original duelists at the end of cardinternalnumbers
+- tools/hma_toml.py: after the last card and a gap of None, 'Duelist - <name>' at 2400 + duelist ID (2401-2424).
+- Pages: [[hma-toml]].
+
+## [2026-11-07] progress | Original duelist portraits in the HMA TOML; duelists at 0x8000 in cardinternalnumbers
+- tools/duelist_portraits.py + data/mod_duelist_portraits.s (units.txt, Makefile): the opponent-select portraits cut from the page pictures as 56 x 56 8bpp tiled copies with their palettes; src/mod_opponents.c DrawSlotPortrait draws from them (portrait 0 too).
+- tools/hma_toml.py: graphics.duelists.<duelist>.portrait / .portraitpalette (faces kept); cardinternalnumbers' duelists moved to 0x8000 | page << 4 | slot (sparse list writing).
+- Pages: [[hma-toml]].

@@ -261,6 +261,13 @@ build/assets/record_names.bin: tools/record_names.py tools/assets.py src/mod_opp
 	$(PYTHON) tools/record_names.py $@
 build/data/mod_record_names.o: build/assets/record_names.bin
 
+# The original duelists' opponent-select portraits as tiled images of their own (tools/duelist_portraits.py;
+# src/mod_opponents.c DrawSlotPortrait), cut from the page pictures of assets/gfx/mode4_bitmaps.
+build/assets/duelist_portraits.bin: tools/duelist_portraits.py tools/assets.py $(ASSETS_BUILT)
+	@mkdir -p $(@D)
+	$(PYTHON) tools/duelist_portraits.py $@
+build/data/mod_duelist_portraits.o: build/assets/duelist_portraits.bin
+
 # The pre-duel pictures and their QR codes (tools/preduel_image.py; src/mod_preduel.c), for data/mod_preduel_data.s.
 # One per format opponent with a picture: duelists/<name>.png (240x96, up to 224 colours) and duelists/<name>.svg
 # (its formatlibrary.com QR code); the names match data/mod_preduel_data.s.
