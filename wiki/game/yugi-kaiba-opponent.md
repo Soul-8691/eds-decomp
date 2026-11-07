@@ -283,3 +283,32 @@ whose name plates and portraits are BG images (`Record_DrawPage`).
 - **Rewards** are still those of the format opponents (see Rewards above).
 
 Related: [[banlists-menu]], [[campaign-select-c]], [[campaign-steps-c]].
+
+## Pre-duel screens for every opponent (2026-11-07)
+
+- Every opponent now has one (`gModPreDuelTable` and `gModPreDuelText` by duelist ID, built by
+  `tools/preduel_text.py` from `duelists/preduel_text.txt`): the 15 formats, Solomon and Debug (after their Deck
+  Recipe: `campaign_steps.c` goes from the recipe step to `SELECT_STEP_PRE_DUEL_IMAGE`, +0x30 bytes of `.text`)
+  and the Test Duel.
+- **Picture:** the five page-1 formats keep theirs (`duelists/<name>.png`); the others show their slot duelist's
+  scene from the original pre-duel dialogue, as `Bustup_LoadSceneSet` loads it (the scene set `GetSceneSet` gives:
+  240x96 bitmap, colours 16-255 with the box's 16-31, OBJ colours and the eye sprite sheet) and with the set's
+  animation tracks, so the eyes blink (`Bustup_TickBlink`, `AnimStateTick`, `AnimBlockDraw` every frame;
+  `Bustup_InitState` first). The bitmap and sheet are LZSS in the ROM, which Hex Maniac Advance can't read, so the
+  game draws from uncompressed copies (`gModPreDuelScenes` in `data/mod_preduel_data.s`, reserved per opponent by
+  `tools/preduel_text.py` and filled after linking by `tools/preduel_scenes.py`: 256 BG colours, 30 x 12 8bpp
+  tiles, 256 OBJ colours, the 0x2000-byte sheet). (A first version drew the opponent-select portrait and the
+  Records eyes instead; replaced.)
+- **QR code:** its own `duelists/<name>.svg` (page 1), else Yugi-Kaiba's formatlibrary.com code.
+- **Text:** each opponent's own, all naming Format Library: 5 lines of up to 38 characters, drawn inside the box's
+  border (x 24-216; measured on the box bitmap: plain fill from x 23 to 216 on the text rows); the first version drew from x 4 of the
+  box (`DrawPreDuelText`); the lines start with 15 spaces where the QR code is, so with the QR pointer set to 0
+  the text can use the whole box. The old fixed note (`sStrQrNote`) is gone.
+- All of it is editable in Hex Maniac Advance ([[hma-toml]]): `data.preduel.text` (line1-line5),
+  `data.preduel.table` (picture, qr), `graphics.duelists.<duelist>.portrait` and `.face`, and the pictures.
+- Previewed offline (Joey-Pegasus: Weevil's portrait and eyes, Yugi-Kaiba's code, the text); not yet seen on screen.
+- **Every opponent has a scene copy (2026-11-07):** the five page-1 formats too (Tristan, Rex, Espa Roba, Mako, Mai;
+  18 copies in all). The game shows the picture when `data.preduel.table`'s picture is set, else the scene, so
+  setting a picture to null in Hex Maniac Advance (type `<null>` in that cell) switches that opponent to its
+  original dialogue scene with blinking eyes; its QR code and text stay. Typing the picture anchor back
+  (e.g. `<graphics.preduel.yugikaiba.palette>`, the start of its picture data) undoes it.

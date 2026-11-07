@@ -2785,3 +2785,18 @@ updated: 2026-09-29
 - data/mod_record_faces.s (gModRecordFaces), tools/record_faces.py (fills it in the linked ROM; Makefile ROM rule), src/mod_opponents.c RecordFace / DrawRecordFace (replaces the run-time DrawRecordArtPortrait); units.txt.
 - tools/hma_toml.py: graphics.opponents.<name>.face / .facepalette (16 in the demo). Checked by rendering three.
 - Pages: [[hma-toml]], [[main-menu-c]].
+
+## [2026-11-07] progress | Pre-duel screens for every opponent, editable text, portraits and eyes
+- duelists/preduel_text.txt + tools/preduel_text.py (gModPreDuelTable, gModPreDuelText in data/mod_preduel_data.s; Makefile); src/mod_preduel.c: table lookup, DrawDuelistPicture (portrait + eyes at 3x), DrawPreDuelText (from x 4), QR from the table; src/mod_opponents.c ModDuelistPortrait; src/campaign_steps.c: Solomon/Debug go to the pre-duel screen after their recipe (.text +0x30, 0x0807F34C).
+- tools/hma_toml.py: data.preduel.table, data.preduel.text; guide (duelist portraits/eyes now used here).
+- Pages: [[yugi-kaiba-opponent]], [[hma-toml]].
+
+## [2026-11-07] progress | Pre-duel screens: the original dialogue scenes with blinking eyes; text inside the box
+- tools/preduel_scenes.py (post-link, Makefile ROM rule): uncompressed copies of the opponents' scene sets (bitmap tiles, palettes, eye sheet) in gModPreDuelScenes (reserved by tools/preduel_text.py); src/mod_preduel.c LoadScene / TickScene (Bustup_InitState, AnimBlockInit, Bustup_TickBlink, AnimBlockDraw) replace the portrait + eyes picture; src/mod_opponents.c ModDuelistPortrait removed.
+- Text drawn from x 24 to 216 (the box's border, measured on the box bitmap); duelists/preduel_text.txt rewrapped (10 spaces + 28 characters).
+- tools/hma_toml.py: data.preduel.table gets scene; graphics.duelists.<duelist>.scene / .scenepalette / .eyes / .eyespalette.
+- Pages: [[yugi-kaiba-opponent]], [[hma-toml]].
+
+## [2026-11-07] progress | Scene copies for the five page-1 opponents too
+- tools/preduel_text.py: every opponent gets a gModPreDuelScenes entry (18); src/mod_preduel.c comment. HMA: a null picture in data.preduel.table switches to the scene.
+- Pages: [[yugi-kaiba-opponent]].

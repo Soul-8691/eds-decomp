@@ -1,0 +1,134 @@
+# The text of the pre-duel screen (src/mod_preduel.c), per opponent, built by tools/preduel_text.py; Hex Maniac
+# Advance can edit it afterwards (data.preduel.text). A section is [name], the opponent's name in
+# src/mod_opponents.c in lower case with - for spaces; then up to 5 lines of up to 38 characters, drawn inside the
+# dialogue box's border (from x 24) in the bustup screen's font. The QR code covers the first 10 characters, so
+# those lines start with 10 spaces and have 28 characters left; to drop the QR code (Hex Maniac Advance:
+# data.preduel.table's qr to 0), remove the spaces too. An opponent with duelists/<name>.png and .svg has its own
+# picture and QR code; the others show their duelist's scene from the original pre-duel dialogue (eyes blinking)
+# and Yugi-Kaiba's QR code (formatlibrary.com).
+
+[yugi-kaiba]
+          Scan for formatlibrary.com,
+          a site about retro Yu-Gi-Oh!
+          formats. Do not trust this
+          code unless it leads to
+          formatlibrary.com.
+
+[critter]
+          Critter format: scan to see
+          its decks and banlist on
+          Format Library. Do not trust
+          this code unless it leads to
+          formatlibrary.com.
+
+[treasure]
+          Treasure format: scan to see
+          its decks and banlist on
+          Format Library. Do not trust
+          this code unless it leads to
+          formatlibrary.com.
+
+[imperial]
+          Imperial format: scan to see
+          its decks and banlist on
+          Format Library. Do not trust
+          this code unless it leads to
+          formatlibrary.com.
+
+[android]
+          Android format: scan to see
+          its decks and banlist on
+          Format Library. Do not trust
+          this code unless it leads to
+          formatlibrary.com.
+
+[joey-pegasus]
+          Next: Joey-Pegasus format.
+          See its decks and banlist
+          on formatlibrary.com. Trust
+          this code only if it leads
+          to formatlibrary.com.
+
+[fiber]
+          Next: the Fiber format.
+          See its decks and banlist
+          on formatlibrary.com. Trust
+          this code only if it leads
+          to formatlibrary.com.
+
+[yata]
+          Next: the Yata format.
+          See its decks and banlist
+          on formatlibrary.com. Trust
+          this code only if it leads
+          to formatlibrary.com.
+
+[scientist]
+          Next: the Scientist format.
+          See its decks and banlist
+          on formatlibrary.com. Trust
+          this code only if it leads
+          to formatlibrary.com.
+
+[vampire]
+          Next: the Vampire format.
+          See its decks and banlist
+          on formatlibrary.com. Trust
+          this code only if it leads
+          to formatlibrary.com.
+
+[chaos]
+          Next: the Chaos format.
+          See its decks and banlist
+          on formatlibrary.com. Trust
+          this code only if it leads
+          to formatlibrary.com.
+
+[warrior]
+          Next: the Warrior format.
+          See its decks and banlist
+          on formatlibrary.com. Trust
+          this code only if it leads
+          to formatlibrary.com.
+
+[goat]
+          Next: the Goat format.
+          See its decks and banlist
+          on formatlibrary.com. Trust
+          this code only if it leads
+          to formatlibrary.com.
+
+[cyber]
+          Next: the Cyber format.
+          See its decks and banlist
+          on formatlibrary.com. Trust
+          this code only if it leads
+          to formatlibrary.com.
+
+[reaper]
+          Next: the Reaper format.
+          See its decks and banlist
+          on formatlibrary.com. Trust
+          this code only if it leads
+          to formatlibrary.com.
+
+[solomon]
+          Solomon plays a Deck Recipe.
+          Find retro decks to build
+          on formatlibrary.com. Trust
+          this code only if it leads
+          to formatlibrary.com.
+
+[debug]
+          Debug: a Deck Recipe duel.
+          Find retro decks to try
+          on formatlibrary.com. Trust
+          this code only if it leads
+          to formatlibrary.com.
+
+[test-duel]
+          Test Duel: your test deck.
+          Find retro decks to test
+          on formatlibrary.com. Trust
+          this code only if it leads
+          to formatlibrary.com.

@@ -83,6 +83,14 @@ original ROM (repo root). Without `baserom.toml` it does nothing. `eds_demo.toml
     resolve, check, prepare, chainA, chainB; 24 bytes a row), one row per added card with an effect row plus the
     0xFFFF terminator (127 rows now). `FindCardEffect` (effect_hooks.c) searches it after `gCardEffects`, so a row's
     card number gives that card the five handlers.
+  - Pre-duel screens (by the `.sym`, by duelist ID, `]opponents`): `data.preduel.table` (``[picture<> qr<> scene<>]``:
+    the picture data, or 0; the data whose QR code it shows, or 0 for none; the scene copy for an opponent with no
+    picture) and `data.preduel.text` (``[line1`asc`48 ... line5`asc`48]``, up to 38 characters a line inside the box's
+    border). The scene copies are `graphics.duelists.<duelist>.scene` (`` `ucs8x30x12|...scenepalette` ``) and
+    `.scenepalette` (`` `ucp4:0123456789ABCDEF` ``), and the eye sprites `.eyes` (`` `ucs4x16x16|...eyespalette` ``,
+    the OBJ sheet) with `.eyespalette` (`` `ucp4` ``, the OBJ palette bank the sheet uses, from the extracted
+    `sprites.png`). Edits show on the pre-duel screen; the eyes keep the scene set's animation tracks.
+    Source: `duelists/preduel_text.txt` ([[yugi-kaiba-opponent]]).
   - Opponent faces on the Records screen (by the `.sym`'s `gModRecordFaces`, `data/mod_record_faces.s`): for each
     opponent with a card art portrait (the 15 formats and Debug; the Test Duel when its portrait is a card),
     `graphics.opponents.<name>.face` (`` `ucs4x6x2|...facepalette` ``, 48 x 16) and `.facepalette` (`` `ucp4` ``,

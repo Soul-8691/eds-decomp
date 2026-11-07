@@ -173,7 +173,9 @@ u16 Campaign_SelectOpponent(void)
     case SELECT_STEP_OPPONENT_RECIPE:       /* added: Solomon's deck */
         switch (CB_OpponentRecipes()) {
         case 1:
-            return 1;
+            gMain.subStep = SELECT_STEP_PRE_DUEL_IMAGE;     /* then the pre-duel screen (src/mod_preduel.c) */
+            RESET_SEQ_STATE();
+            return 0;
         case 2:
             gMain.subStep = 0;
             RESET_SEQ_STATE();

@@ -24,3 +24,22 @@ gModPreDuelImperial:
 gModPreDuelAndroid:
 	.incbin "build/assets/preduel_android.bin"
 	.balign 4
+
+@ By duelist ID (tools/preduel_text.py, from duelists/preduel_text.txt): { picture, qr, scene } (src/mod_preduel.c
+@ struct PreDuelEntry), then the text, 5 lines of 48 bytes each.
+	.balign 4
+	.global gModPreDuelTable
+gModPreDuelTable:
+	.include "build/assets/preduel_table.inc"
+	.global gModPreDuelText
+gModPreDuelText:
+	.incbin "build/assets/preduel_text.bin"
+	.balign 4
+
+@ The original pre-duel dialogue's scenes of the opponents without a picture (src/mod_preduel.c), each 256 BG
+@ colours, the 240x96 bitmap as 8bpp tiles (30 x 12), 256 OBJ colours and the 0x2000-byte eye tile sheet: zeros
+@ here, filled in the linked ROM by tools/preduel_scenes.py from the scene sets (gSceneSets).
+	.global gModPreDuelScenes
+gModPreDuelScenes:
+	.space PREDUEL_SCENE_COUNT * PREDUEL_SCENE_ENTRY
+	.balign 4

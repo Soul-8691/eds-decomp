@@ -142,6 +142,11 @@ ADDED_GUIDE = [
     ('text.decks.recipes', 'the deck recipe names (ASCII)', (UNUSED, USED)),
     ('graphics.preduel', "the pre-duel pictures per format: <format>.picture the 240x96 picture, .palette its 224 "
                          "colours, .qr.image the QR code (1 = dark module), .qr.palette", USED),
+    ('data.preduel.table', "the pre-duel screen per opponent (by duelist, list opponents): picture (its own "
+                           "picture's data, or 0), qr (the data whose QR code it shows, or 0: none), scene (with no "
+                           "picture: its duelist's scene copy, graphics.duelists.<duelist>.scene / .eyes)", USED),
+    ('data.preduel.text', "the pre-duel screen's text per opponent: line1-line5, up to 38 characters each inside "
+                          "the box's border (10 spaces where the QR code is)", USED),
     ('data.preduel', 'per pre-duel picture: .qrsize, the QR code modules a side (0 = none)', USED),
     ('data.opponents', "the opponents by duelist ID (list opponents): kind (hidden, format, deck), unlock order, format, "
                        ".name, and .portrait: the card whose art the opponent select and the Records screen show (0: "
@@ -208,8 +213,12 @@ VANILLA_GUIDE = [
     ('graphics.duelists', "the original duelists by duelist: .face (48 x 16, 4bpp) and .palette, the Records "
                           "screen's (original data); .portrait (56 x 56, 8bpp) and .portraitpalette, the opponent "
                           "select's round portrait, cut from the page pictures (the mod's copy, which the game draws "
-                          "from: data.opponents' portrait 0x8000 | page << 4 | slot names one)",
-     'UNUSED unless an opponent uses it (the format opponents show card art; the other duelists are hidden)'),
+                          "from: data.opponents' portrait 0x8000 | page << 4 | slot names one); for the opponents "
+                          "without a pre-duel picture, .scene (240 x 96, 8bpp) with .scenepalette and .eyes (the "
+                          "blinking eye sprites, 16 x 16 4bpp tiles) with .eyespalette: the original pre-duel "
+                          "dialogue's scene, the mod's uncompressed copy (tools/preduel_scenes.py) the pre-duel "
+                          "screen draws", 'used: .scene / .eyes on the pre-duel screens; .face / .portrait only '
+                                      'for an opponent with no card art (Solomon)'),
 ]
 # Anchors this script adds that are original game data (listed with the original game in the header guide).
 VANILLA_ADDED_PREFIXES = ('graphics.duelists.',)
@@ -334,6 +343,16 @@ def c_string(rom, address):
 def anchor_id(text):
     """An HMA anchor name part: lower case letters and digits."""
     return re.sub(r'[^a-z0-9]', '', text.lower())
+
+
+def eyes_bank(scene_set):
+    """The OBJ palette bank of a scene set's eye sprites (its extracted sprites.png: colour index // 16), or 0."""
+    try:
+        w, h, px, pal = __import__('assets').png_read(open(f'assets/gfx/scenes/set{scene_set:02d}/sprites.png',
+                                                            'rb').read())
+        return max(px) // 16
+    except (OSError, ValueError):
+        return 0
 
 
 def original_slots(rom_sym, rom):
@@ -551,9 +570,35 @@ def mod_anchors(elf, rom, rom_sym):
             what = anchor_id(opens[k]) if k < len(opens) else f'format{k + 1}'
             words.append((f'data.constants.formats.unlock.{what}', unlock[0] - ROM_BASE + k, 1))
 
+    # The pre-duel screens by duelist ID (src/mod_preduel.c, tools/preduel_text.py): { picture, qr } pointers and
+    # 5 lines of 48 ASCII bytes of text.
+    table, text = rom_sym.get('gModPreDuelTable'), rom_sym.get('gModPreDuelText')
+    if table and text:
+        anchors.append(('data.preduel.table', table[0] - ROM_BASE, '[picture<> qr<> scene<>]opponents'))
+        # the scene copies (tools/preduel_scenes.py), named by the duelist whose scene it is
+        from preduel_scenes import scene_set_of
+        ids = {int(v): n for n, v in re.findall(r'DUELIST_(\w+) = (\d+)',
+                                                open('include/constants/game.h', encoding='utf-8').read())}
+        for duelist in range(table[1] // 12 if table[1] else 25):
+            scene = word(table[0] + 12 * duelist + 8)
+            if not scene:
+                continue
+            at = scene - ROM_BASE
+            name = 'graphics.duelists.' + anchor_id(ids.get(duelist, f'duelist{duelist}'))
+            bank = eyes_bank(scene_set_of(duelist))
+            anchors += [(name + '.scenepalette', at, '`ucp4:0123456789ABCDEF`'),
+                        (name + '.scene', at + 512, f'`ucs8x30x12|{name}.scenepalette`'),
+                        (name + '.eyespalette', at + 512 + 240 * 96 + 32 * bank, '`ucp4`'),
+                        (name + '.eyes', at + 512 + 240 * 96 + 512, f'`ucs4x16x16|{name}.eyespalette`')]
+        anchors.append(('data.preduel.text', text[0] - ROM_BASE,
+                        '[' + ' '.join(f'line{k}`asc`48' for k in range(1, 6)) + ']opponents'))
+    else:
+        report.append('no gModPreDuelTable / gModPreDuelText in the .sym: the pre-duel text is left out')
+
     # The pre-duel pictures (src/mod_preduel.c, data/mod_preduel_data.s, layout in tools/preduel_image.py): the
     # picture's 224 colours, the QR code's size, palette and 4bpp sprite, the picture's 8bpp tiles (colour - 32).
-    labels = re.findall(r'^(gModPreDuel\w+):', open('data/mod_preduel_data.s', encoding='utf-8').read(), re.M)
+    labels = [l for l in re.findall(r'^(gModPreDuel\w+):', open('data/mod_preduel_data.s', encoding='utf-8').read(),
+                                    re.M) if l not in ('gModPreDuelTable', 'gModPreDuelText')]     # (not pictures)
     for label in labels:
         if label not in rom_sym:
             report.append(f'pre-duel picture {label}: not in the .sym, left out')

@@ -115,6 +115,7 @@ $(ROM): $(ELF) $(SYM)
 	$(OBJCOPY) -O binary -j .text -j .rodata -j .text.added -j .rodata.pinned -j .rodata.added -j .data --gap-fill 0 $< $@
 	$(PYTHON) tools/fixptrs.py $< $@
 	$(PYTHON) tools/record_faces.py $@ $(SYM) $<
+	$(PYTHON) tools/preduel_scenes.py $@ $(SYM)
 	$(if $(filter demo,$(NEWCARDS_PROFILE)),$(PYTHON) tools/hma_toml.py --rom $@ --sym $(SYM))
 
 # Regenerated on every run, because the object list depends on which src/ files exist and on ASM_UNITS.
@@ -277,7 +278,13 @@ PREDUEL_BINS := $(PREDUEL_NAMES:%=build/assets/preduel_%.bin)
 build/assets/preduel_%.bin: duelists/%.png duelists/%.svg tools/preduel_image.py tools/assets.py tools/assetfmt/gfx_scenes.py
 	@mkdir -p $(@D)
 	$(PYTHON) tools/preduel_image.py duelists/$*.png $@ duelists/$*.svg
-build/data/mod_preduel_data.o: $(PREDUEL_BINS)
+# The pre-duel screens' text and picture table (tools/preduel_text.py, from duelists/preduel_text.txt).
+PREDUEL_TEXT := build/assets/preduel_text.bin build/assets/preduel_table.inc
+build/assets/preduel_text.bin: duelists/preduel_text.txt tools/preduel_text.py src/mod_opponents.c Makefile $(wildcard duelists/*.svg)
+	@mkdir -p $(@D)
+	$(PYTHON) tools/preduel_text.py $(PREDUEL_TEXT)
+build/assets/preduel_table.inc: build/assets/preduel_text.bin ;
+build/data/mod_preduel_data.o: $(PREDUEL_BINS) $(PREDUEL_TEXT)
 
 build/data/%.o: data/%.s $(ASSETS_BUILT) $(NEWCARDS_BUILT)
 	@mkdir -p $(@D)
