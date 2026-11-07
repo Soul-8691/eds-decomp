@@ -19,8 +19,10 @@ source of this repo, and where that thing is in the demo ROM:
                 for the card count limits a literal holding the demo's value (Length 2). A site whose function no
                 longer has the constant (rewritten without it) is left out, listed in a comment. Data constants
                 (in a data label) move like anchors. The original instruction comes from baserom.gba (read only).
-  Added         anchors baserom.toml lacks, by symbol (EXTRA_ANCHORS): field miniature palette + ucs8 sprites,
-                Deck Edit ring art (graphics.cards.icons*). And the mod's own tables (mod_anchors), by the ELF's
+  Added         anchors baserom.toml lacks, by symbol (EXTRA_ANCHORS): the card names and descriptions
+                (data.cards.names / .descriptions, ASCII slots by card ID) and the name order Deck Edit lists
+                (data.cards.nameorder), field miniature palette + ucs8 sprites, Deck Edit ring art
+                (graphics.cards.icons*). And the mod's own tables (mod_anchors), by the ELF's
                 symbols (static ones too: build/eds.elf's .symtab): the format packs (data.packs.format.*: each
                 pack's pool of card and weight, which is all a pull reads, flags, format, release date,
                 portrait, name; list formatpacks), the card prices (data.prices.cards: per format, card and DP; list
@@ -79,6 +81,13 @@ def field_mini_artpalette(_count):
 
 
 EXTRA_ANCHORS = [
+    # The card text, by card ID (slot 0 empty; wiki data/card-name-table.md, data/card-descriptions.md): NUL-padded
+    # ASCII in fixed slots, as HMA-CE's inline ascii fields. A name over 41 characters does not fit a Deck Edit row.
+    ('data.cards.names', 'gCardNames', lambda _c: 0, '[name`asc`%d]cardnumbers' % 0x40),
+    ('data.cards.descriptions', 'gCardDescriptions', lambda _c: 0, '[description`asc`%d]cardnumbers' % 0x1E0),
+    # The card IDs in name order, 0-terminated: the lists Deck Edit, the Trunk and Card Trading walk (tools/newcards.py
+    # name_order: the original and added cards sorted by name, then IDs 814-820; make demo's blank slots are not in it).
+    ('data.cards.nameorder', 'gCardIdsByName', lambda _c: 0, '[card:cardnumbers]!0000'),
     ('graphics.cards.fieldicons.artpalette', 'gModFieldIconData', field_mini_artpalette, '`ucp4:0123`'),
     ('graphics.cards.fieldicons.miniatures', 'gModFieldIconData', lambda _c: FIELD_ICON_MINIS,
      '[`ucs8x2x2|graphics.cards.fieldicons.artpalette`]cardnumbers'),
@@ -95,7 +104,13 @@ EXTRA_ANCHORS = [
 # shows a.b but not a.b.*, so every anchor is a leaf (.picture, .list, .images, .image).
 USED, UNUSED = 'used', 'UNUSED'
 ADDED_GUIDE = [
-    ('graphics.cards.icons', "every card's art icon (Deck Edit's ring): .palettes, .images (16x16 4bpp)", USED),
+    ('data.cards.names', "every card's name (gCardNames: ASCII, 64 bytes; at most 41 characters fit a Deck Edit "
+                         "row), by card ID", USED),
+    ('data.cards.descriptions', "every card's lore/effect text (gCardDescriptions: ASCII, 480 bytes, no line breaks), "
+                                "by card ID", USED),
+    ('data.cards.nameorder', "the card IDs in name order, 0-terminated (gCardIdsByName): what Deck Edit, the Trunk and "
+                             "Card Trading list (make demo's blank slots are left out until filled in)", USED),
+    ('graphics.cards.icons',"every card's art icon (Deck Edit's ring): .palettes, .images (16x16 4bpp)", USED),
     ('graphics.cards.fieldicons', "the field icons: .artpalette (64 shared colours), .miniatures (each card's "
                                   "16x16 8bpp miniature)", USED),
     ('data.cards.typeex', "each card ID's extended type (gCardTypeEx): kind (none, Synchro, Xyz, Link; the stats "
