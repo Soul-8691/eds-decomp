@@ -2678,3 +2678,8 @@ updated: 2026-09-29
 
 ## [2026-11-06] progress | PACKS.md regenerated with the leftover effect cards
 - PACKS.md: `tools/packs_md.py` on the make demo tables; the TCG and usage pools now take in the leftover cards (e.g. Android TCG 15 -> 86 cards, Warrior TCG 184 -> 235), prices section refreshed; kept CRLF.
+
+## [2026-11-06] progress | Leftover cards out of the card lists; every build adds them
+- new_cards.txt (14) and config/new_cards.txt (33): the leftover effect cards removed, except the 17 with mod effect code at a free number, listed in overlaps.txt (new) for later un-duplication.
+- Makefile: NEWCARDS_LEFTOVERS for every profile (make, make release, make demo, make release-demo); blank slots still make demo only.
+- Pages: [[added-cards]]; README; config/leftover_cards.txt header.

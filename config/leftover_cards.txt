@@ -1,7 +1,8 @@
 # The leftover card effects of EDS (LEFTOVER_EFFECTS.md on the binary branch): card numbers the duel engine has
-# effect code for, but no card. `make demo` (tools/newcards.py NEWCARDS_LEFTOVERS) adds each card below at its own
-# card number, with its YGOPRODeck stats, text and art, after the demo's added cards and before the blank slots, so
-# the original effect code plays it. A card already in the card list is skipped (it keeps its place there), as is
+# effect code for, but no card. Every build (tools/newcards.py NEWCARDS_LEFTOVERS) adds each card below at its own
+# card number, with its YGOPRODeck stats, text and art, after the list's added cards (and before make demo's blank
+# slots), so the original effect code plays it. The ones with mod effect code of their own stay in the card lists at
+# a free number for now (overlaps.txt). A card already in the card list is skipped (it keeps its place there), as is
 # one whose number a listed card took (1313: Big Bang Shot, tools/newcards.py ENGINE_NUMBERS).
 # Format: card number | YGOPRODeck name [| shorter in-game name]
 #

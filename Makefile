@@ -160,13 +160,14 @@ build/assets/%.bin: ;
 # include/constants/cards.h, only when they change; the empty rule makes make look at them again afterwards.
 # NEWCARDS_PROFILE=full (default) uses config/new_cards.txt; demo uses repo-root new_cards.txt above ------.
 NEWCARDS_PROFILE ?= full
+# Every build: the leftover effect cards after the list's cards, at their own card numbers (tools/newcards.py
+# NEWCARDS_LEFTOVERS; the cards with mod effect code of their own stay in the lists, overlaps.txt).
+NEWCARDS_LEFTOVERS := config/leftover_cards.txt
 ifeq ($(NEWCARDS_PROFILE),demo)
 CARD_LIST      := new_cards.txt
 ifeq ($(RELEASE),0)
 # make demo: blank card slots after the demo's cards until 615 are added (tools/newcards.py NEWCARDS_PAD_TO)
 NEWCARDS_PAD   := 615
-# and before them, the leftover effect cards at their own card numbers (tools/newcards.py NEWCARDS_LEFTOVERS)
-NEWCARDS_LEFTOVERS := config/leftover_cards.txt
 NEWCARDS_BUILT := build/assets/.newcards-demo-padded
 else
 NEWCARDS_BUILT := build/assets/.newcards-demo

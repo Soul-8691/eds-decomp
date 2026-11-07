@@ -1,0 +1,22 @@
+# Leftover effect cards that are still in the card lists (new_cards.txt, config/new_cards.txt) at a free card
+# number, because the mod has effect code of its own for them. At their engine number (config/leftover_cards.txt)
+# the original effect code would run as well, so they stay where they are until the two are un-duplicated.
+# Format: engine card number | name | where the mod code is
+
+1221 | Card Destruction | added_effects.c (effect row, AI)
+1245 | Scapegoat | added_effects.c, ai_deck.c, ai_steps.c
+1253 | Cipher Soldier | added_effects.c (battle rule)
+1305 | Solemn Wishes | added_effects.c (draw rule, effect row)
+1312 | Cold Wave | added_effects.c (effect row), card_command_menu.c
+1314 | Limiter Removal | added_effects.c (effect row, AI), card_stats.c, effect_activation.c
+1321 | Magic Drain | added_effects.c (effect row, AI)
+1323 | Gravity Bind | added_effects.c (effect row, AI), card_menu_input.c
+1338 | 4-Starred Ladybug of Doom | added_effects.c (effect row, AI), card_detail.c
+1418 | Mask of Restrict | added_effects.c, ai_strategy.c, duel_ritual.c
+1425 | Torrential Tribute | added_effects.c
+1442 | Hysteric Fairy | added_effects.c (effect row, AI), card_command_menu.c
+1447 | Jar of Greed | added_effects.c (effect row)
+1511 | Kycoo the Ghost Destroyer | added_effects.c, battle_phase2.c, effect_target_collect.c, effect.h
+1523 | Zombyra the Dark | added_effects.c (battle rules)
+1526 | The Last Warrior from Another Planet | added_effects.c
+1532 | Skull Lair | added_effects.c, card_command_menu.c, effect_activation.c, effect_targets2.c, effect_target_collect.c

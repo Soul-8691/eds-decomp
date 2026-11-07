@@ -3,7 +3,6 @@ Abyss Soldier
 Airknight Parshath
 Apprentice Magician
 Asura Priest
-Bazoo the Soul-Eater
 Berserk Gorilla
 Black Luster Soldier - Envoy of the Beginning | Black Luster Soldier - Envoy of Beginning
 Blade Knight
@@ -49,15 +48,11 @@ Emergency Provisions
 Enemy Controller
 Exarion Universe
 Exiled Force
-Fairy Box
 Fiber Jar
 Fiend Skull Dragon
 Final Attack Orders
 Gatling Dragon
-Gearfried the Iron Knight
 Gigantes
-Gilasaurus
-Goblin Attack Force
 Goblin Elite Attack Force
 Golem Sentry
 Gravekeeper's Spy
@@ -75,8 +70,6 @@ Kycoo the Ghost Destroyer
 Level Limit - Area B
 Lightning Vortex
 Limiter Removal
-Mage Power
-Magic Cylinder
 Magic Drain
 Magical Merchant
 Magical Scientist
@@ -124,16 +117,12 @@ Skilled Dark Magician
 Skull Lair
 Smashing Ground
 Solemn Wishes
-Soul Exchange
 Spear Dragon
 Spell Canceller
 Spirit Reaper
 Stealth Bird
-The Fiend Megacyber
 The Last Warrior from Another Planet
 Thestalos the Firestorm Monarch
-Thousand-Eyes Idol
-Thousand-Eyes Restrict
 Threatening Roar
 Thunder Nyan Nyan
 Token Thanksgiving
@@ -144,7 +133,6 @@ Trap Dustshoot
 Treeborn Frog
 Tribe-Infecting Virus
 Tsukuyomi
-United We Stand
 Wave-Motion Cannon
 Xing Zhen Hu
 Yata-Garasu
@@ -166,7 +154,6 @@ Karma Cut
 Draining Shield
 Dimension Wall
 Nightmare Wheel
-Nightmare's Steelcage
 Dark Deal
 Dark World Lightning
 Goldd, Wu-Lord of Dark World
@@ -216,7 +203,6 @@ Archfiend Playtime
 Archfiend's Usurpation
 Makourai, the Lightning Strike
 Archfiend's Manifestation
-The Rock Spirit
 D.D. Designator
 Reflect Bounder
 Yomi Ship

@@ -53,7 +53,6 @@ Level Limit - Area B
 Secret Barrel
 Gyaku-Gire Panda
 Brain Control
-Magic Cylinder
 Ojama Trio
 Threatening Roar
 Zaborg the Thunder Monarch
@@ -62,13 +61,10 @@ D.D. Assailant
 Gravity Bind
 Compulsory Evacuation Device
 Abyss Soldier
-United We Stand
 Bottomless Trap Hole
-Jowgen the Spiritualist
 Skilled Dark Magician
 Dark Scorpion - Cliff the Trap Remover
 Monster Gate
-Amazoness Archer
 Reasoning
 Nightmare Wheel
 Airknight Parshath
@@ -79,7 +75,6 @@ Spell Canceller
 Sacred Crane
 Wave-Motion Cannon
 Gigantes
-Goblin Attack Force
 Des Koala
 Reckless Greed
 Cursed Seal of the Forbidden Spell
@@ -100,11 +95,9 @@ Newdoria
 Apprentice Magician
 Manju of the Ten Thousand Hands
 Hysteric Fairy
-Soul Exchange
 Desert Sunlight
 Barrel Behind the Door
 Monster Reincarnation
-Bazoo the Soul-Eater
 Royal Oppression
 Roulette Barrel
 Poison of the Old Man
@@ -116,7 +109,6 @@ My Body as a Shield
 Golem Sentry
 Blowback Dragon
 Big Bang Shot
-Mage Power
 Drop Off
 Spell Reproduction
 Vampire Lord
@@ -134,9 +126,7 @@ Book of Life
 Protector of the Sanctuary
 Giant Orc
 Wall of Revealing Light
-Royal Command
 Reflect Bounder
-Gearfried the Iron Knight
 Toon Cannon Soldier
 Swarm of Locusts
 Granmarg the Rock Monarch
@@ -161,13 +151,11 @@ Royal Magical Library
 Iron Blacksmith Kotetsu
 Convulsion of Nature
 Archfiend's Oath
-The Rock Spirit
 Spell Shield Type-8
 Solemn Wishes
 Regenerating Mummy
 D.D. Designator
 Archfiend Soldier
-Swift Gaia the Fierce Knight
 Smoke Grenade of the Thief
 Skilled White Magician
 Final Attack Orders
@@ -200,17 +188,14 @@ Last Turn
 Good Goblin Housekeeping
 Different Dimension Capsule
 Armed Samurai - Ben Kei
-Summoner of Illusions
 Spear Dragon
 Serial Spell
 Reversal Quiz
 Rare Metal Dragon
 Pitch-Black Warwolf
-Offerings to the Doomed
 Elephant Statue of Disaster
 Dark Master - Zorc
 The Creator
-Slate Warrior
 Homunculus the Alchemic Being
 Gravekeeper's Watcher
 D.D. Survivor
@@ -230,23 +215,18 @@ Pikeru's Circle of Enchantment
 Nightmare Penguin
 Meteor of Destruction
 Medusa Worm
-Mask of Brutality
 Magic Reflector
 Mad Dog of Darkness
 Horus the Black Flame Dragon LV8
-Gilasaurus
 Fear from the Dark
 Element Saurus
 Ectoplasmer
 D.D. Crazy Beast
-Card of Safe Return
 Trap of Board Eraser
 Thunder Nyan Nyan
-The Fiend Megacyber
 The End of Anubis
 Terrorking Archfiend
 Spring of Rebirth
-Spirit Message "A"
 Sonic Duck
 Needle Burrower
 Mystical Shine Ball
@@ -255,7 +235,6 @@ Luster Dragon
 Lightning Blade
 Kaiser Colosseum
 Judgment of Anubis
-Interdimensional Matter Transporter
 Infernalqueen Archfiend
 Guardian Sphinx
 Guardian Kay'est
@@ -267,9 +246,6 @@ Array of Revealing Light
 Yomi Ship
 Tyrant Dragon
 Twin Swords of Flashing Light - Tryce
-The Forgiving Maiden
-Spirit Message "N"
-Spirit Message "L"
 Spellbook Organization
 Shadowslayer
 Rock Bombardment
@@ -281,24 +257,19 @@ Malice Dispersion
 Magical Marionette
 Gear Golem the Moving Fortress
 Freed the Brave Wanderer
-Fire Princess
 Fengsheng Mirror
 Falling Down
 Embodiment of Apophis
 Elemental Mistress Doriado
-Ekibyo Drakmord
 Disturbance Strategy
 Different Dimension Dragon
 Despair from the Dark
 Dark Ruler Ha Des
-Dark Necrofear
 Crimson Ninja
 Chain Burst
 Bubble Crash
 Autonomous Action Unit
-Aqua Spirit
 Sheep Token
-Thousand-Eyes Restrict
 Dark Balter the Terrible
 Ryu Senshi
 Gatling Dragon
@@ -313,15 +284,12 @@ Dark Flare Knight
 Dark Paladin
 Elemental HERO Flame Wingman
 Super Roboyarou
-St. Joan
 Sanwitch
-Thousand-Eyes Idol
 Fiber Jar
 Yata-Garasu
 Magical Scientist
 Chaos Emperor Dragon - Envoy of the End
 Cyber Dragon
-Fairy Box
 Super Robolady
 4-Starred Ladybug of Doom
 Treeborn Frog
@@ -343,7 +311,6 @@ Dark World Lightning
 Dark Deal
 Exarion Universe
 Steamroid
-Nightmare's Steelcage
 Cyber Twin Dragon
 Cyber End Dragon
 Mirage of Nightmare
