@@ -95,9 +95,10 @@ release to unlock the next one (every format is open in the debug build).
 - **List Filter.** After choosing a card category and sort order, a new page narrows the list by the name's first
   letter, one Type, one Attribute, and ATK, DEF and Level ranges. Magic and Trap lists get the letter only. Sorting by
   Type or Attribute is now alphabetical.
-- **No dialogue.** Duelists don't talk before or after a duel, and a New Game goes straight to picking your starter
-  deck, without Tea's intro. The Yugi-Kaiba, Critter, Treasure, Imperial and Android opponents show a picture before the duel instead, with a QR
-  code to the format's page on formatlibrary.com (press A to go on).
+- **Pre-duel screen.** Campaign opponents (and Solomon and Debug after you pick their deck) get a pre-duel screen
+  instead of vanilla dialogue: custom text in the dialogue box, a Format Library QR code, and either a format picture
+  (Yugi-Kaiba through Android) or the opponent's original bust-up scene with blinking eyes. Press **A** to continue. A
+  New Game skips Tea's intro, and there is no post-duel dialogue.
 
 <img src="screenshots/placeholders/format-check.svg" width="240" alt="Placeholder: the format check warning">
 
@@ -176,9 +177,9 @@ new banlist, counting its limits and card pool. If they can't, the switch is ref
 
 - Only cards in the ROM are in each pool, pull rates follow listed rarities, and the cover art is the pool's rarest card.
   Per-pack weights and pull percentages are in [PACKS.md](PACKS.md).
-- **Campaign wins** against format duelists (not Solomon or Debug) use this same unlocked list: pick **one free pack**
-  after the duel. When a win opens new packs (a usage pack at 10 wins in that format, or TCG sets when the next format
-  unlocks at 20 wins), the game shows the **"new packs are available"** message before the list.
+- **Campaign wins** against format duelists (not Solomon or Debug) reward **one random unlocked TCG format pack** (not a
+  usage pack), chosen when the reward starts. When a win opens new packs (a usage pack at 10 wins in that format, or TCG
+  sets when the next format unlocks at 20 wins), the game shows the **"new packs are available"** message before the list.
 
 ### Usage stats and Mobius
 
@@ -245,6 +246,8 @@ See Mobius's README for chart semantics and options.
   Spells/Traps, the Field zone, the top card of each Graveyard and banished pile), in your hand, in the card menu, in the
   chain list, when reordering cards, and while cards move, flip or change position. Deck Edit's column of cards beside
   the list shows each card's art too.
+- **Spell Counters.** Monsters that use Spell Counters (for example Breaker the Magical Warrior) show a small badge on
+  the field while they have counters.
 - **Settings.** Open them from the main menu, or press **L** during a duel; leaving with **B** returns to the duel when
   you opened them with L. The choice is saved. Pick one duel speed:
 
@@ -407,21 +410,29 @@ is never included.
 make setup                     # once: baserom.gba in repo root or your ROM in roms/, then extract assets
 make -j$(nproc)                # eds.gba: the debug/testing build (config/new_cards.txt)
 make -j$(nproc) release        # eds_release.gba: the release build
-make -j$(nproc) demo           # eds_demo.gba: debug build, cards in new_cards.txt above ------
+make -j$(nproc) demo           # eds_demo.gba: debug build, demo card pool (+ blank slots to 615 added cards)
 make -j$(nproc) release-demo   # eds_release_demo.gba: release build, same demo card pool
-make -j$(nproc) release-demo-extra  # eds_release_demo_extra.gba: as release-demo, plus blank card slots and an HMA TOML
+make -j$(nproc) release-demo-extra  # eds_release_demo_extra.gba: as release-demo, plus blank card slots to 615
+make card-icons                # optional: PNG previews of in-duel card miniatures (needs a built ROM)
 ```
 
 You need `make`, `cpp`, `python3` and `binutils-arm-none-eabi`, plus network access the first time new cards are fetched.
 See `CLAUDE.md` and the `wiki/` for details on the decompilation and the hack.
 
+Every **demo-profile** link (`make demo`, `make release-demo`, or `make release-demo-extra`) also runs
+`tools/hma_toml.py` and writes a matching `.toml` next to the ROM if repo-root **`baserom.toml`** exists (export it from
+your vanilla USA ROM in [Hex Maniac Advance](https://github.com/haven1433/HexManiacAdvance); it is not committed). The
+`.toml` files are git-ignored. They label mod data in that build (added card tables, format pack pools and weights, deck
+lists, pre-duel screens, Deck Edit ring art, in-duel card miniatures, and more). See
+[wiki/tools/hma-toml.md](wiki/tools/hma-toml.md).
+
 | Target | Rules | Card list |
 |---|---|---|
-| `make` | Debug/testing (`MOD_RELEASE` 0) | Every name in `config/new_cards.txt` |
-| `make release` | Release | Every name in `config/new_cards.txt` |
-| `make demo` | Debug/testing (`MOD_RELEASE` 0) | The coded block at the top of `new_cards.txt` |
-| `make release-demo` | Release | The coded block at the top of `new_cards.txt` |
-| `make release-demo-extra` | Release | As `make release-demo`, plus blank card slots up to 615 added cards and `eds_release_demo_extra.toml` for Hex Maniac Advance |
+| `make` | Debug/testing (`MOD_RELEASE` 0) | Every name in `config/new_cards.txt` (**319**), plus engine leftovers |
+| `make release` | Release | Same as `make` |
+| `make demo` | Debug/testing (`MOD_RELEASE` 0) | The coded block at the top of `new_cards.txt`, plus leftovers; **blank card slots to 615**; **`eds_demo.toml`** when `baserom.toml` exists |
+| `make release-demo` | Release | Same card pool as `make demo` (without the blank slots); **`eds_release_demo.toml`** when `baserom.toml` exists |
+| `make release-demo-extra` | Release | As `make release-demo`, plus blank slots to 615; **`eds_release_demo_extra.toml`** when `baserom.toml` exists |
 
 <details>
 <summary>Debug mode (testing builds only, not in the release)</summary>

@@ -87,7 +87,7 @@ compare: $(ROM)
 	@echo "$(SHA1)  $(ROM)" | sha1sum -c - || { [ ! -e baserom.gba ] || $(PYTHON) tools/romdiff.py $(ROM) baserom.gba $(MAP); exit 1; }
 
 # Check your ROM and extract the game's data into assets/ (never committed).
-# Field card icons with a 17x17 miniature of each card's art, and their shared 64-colour palette
+# Field card icons: 15x16 GBA-tiled miniatures per card and a shared 64-colour palette
 # (tools/cardicons.py; card_icons/*.png over build/assets): build/card_icons/. Needs a built tree.
 card-icons: $(ROM)
 	$(PYTHON) tools/cardicons.py build/card_icons
