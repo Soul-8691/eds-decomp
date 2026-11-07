@@ -25,6 +25,8 @@
  * 0-1, so a cleared cell stays empty.
  * A cell is the frame of the card's type and pose (the card_icons PNGs, entries 32-47: BG palette 2) with the 15x16
  * miniature (entries 192-255: BG palettes 12-15, which the duel leaves free) over its black window (x 8-22, y 7-22), or turned clockwise
+ * The miniature is stored as GBA 8bpp 2x2 tiles (16x16); bytes 0xFF pad, 0-63 index the shared palette (ModFieldIconMiniColor).
+ * Reads use MiniByte (tile-major), matching tools/cardicons.py.
  * with the frame for a sideways (defense) card. The data is gModFieldIconData (tools/cardicons.py --data,
  * data/mod_field_icons_data.s). The battle scene reuses this VRAM and palette, and DuelScreen_Init redraws all.
  * The sprites: the OBJ icon tiles 0x80-0x1FF (six types x four poses, 4bpp) become the six plain icons in pose 0
@@ -78,10 +80,11 @@ extern const u8 gModFieldIconData[];            /* tools/cardicons.py --data */
 #define DATA_FRAMES             0x0080          /* 6 types x 2 poses x 1 KiB */
 #define DATA_OBJ_FRAMES         0x3080          /* 6 types x 3 poses x 1 KiB */
 #define DATA_POSE_MAPS          0x7880          /* 3 poses x POSE_MAP_SIZE */
-#define DATA_MINIS              0x7980          /* 15x16 bytes per card ID */
+#define DATA_MINIS              0x7980          /* 256 B/card: 4x64 B GBA tiles; sample with MiniByte */
 /* Then Deck Edit's ring art (DATA_DECK_EDIT), then the Synchro Monster frames (tools/cardicons.py): BG upright and
  * sideways, then the sprite poses 0-2, 1 KiB each. */
-#define DATA_SYNCHRO            ((((DATA_MINIS + CARD_ID_COUNT * 15 * 16 + 3) & ~3)) + CARD_ID_COUNT * (32 + 4 * 32))
+#define MINI_STRIDE             256             /* 2x2 x 64-byte 8bpp tiles */
+#define DATA_SYNCHRO            ((((DATA_MINIS + CARD_ID_COUNT * MINI_STRIDE + 3) & ~3)) + CARD_ID_COUNT * (32 + 4 * 32))
 /* Then the Xyz Monster frames, the same 5 (black), then the Link Monster frames (blue). */
 #define DATA_XYZ                (DATA_SYNCHRO + 5 * FRAME_SIZE)
 #define DATA_LINK               (DATA_XYZ + 5 * FRAME_SIZE)
@@ -148,6 +151,22 @@ static void PutCellPixel(u8 *cell, u32 x, u32 y, u32 color)
         *p = (*p & 0xFF00) | color;
 }
 
+/* gModFieldIconData miniature byte: 0xFF padding; 0-63 index into the 64 shared colours (DATA_PALETTE). */
+static u32 ModFieldIconMiniColor(u32 b)
+{
+    if (b > 63)
+        return 0;
+    return ART_PALETTE_ENTRY + b;
+}
+
+/* Column i, row j of the 16x16 miniature (15x16 used); `mini` is four 8x8 tiles in GBA order (tools/cardicons.py). */
+static u32 MiniByte(const u8 *mini, u32 i, u32 j)
+{
+    u32 t = (j >> 3) * 2 + (i >> 3);
+
+    return mini[t * 64 + (j & 7) * 8 + (i & 7)];
+}
+
 /* Build the cell of face-up card `id` at place `place` (a zone 0-10, 11 the Graveyard, 12 the banished pile) of
  * `player`, sideways for a defense-position card, and return its first tile for FillTileBlock4x4. */
 u16 ModFieldCardTile(u32 player, u32 place, u16 id, u32 sideways)
@@ -166,10 +185,10 @@ u16 ModFieldCardTile(u32 player, u32 place, u16 id, u32 sideways)
     id &= CARD_ID_MASK;
     if (id == 0 || id >= CARD_ID_COUNT)
         return tile;
-    mini = gModFieldIconData + DATA_MINIS + id * (MINI_W * MINI_H);
+    mini = gModFieldIconData + DATA_MINIS + id * MINI_STRIDE;
     for (j = 0; j < MINI_H; j++) {
         for (i = 0; i < MINI_W; i++) {
-            u32 color = mini[j * MINI_W + i];
+            u32 color = ModFieldIconMiniColor(MiniByte(mini, i, j));
 
             if (color == 0)
                 continue;
@@ -234,10 +253,10 @@ static void BuildCardSprite(u32 slot, u16 id, u32 type, u32 pose)
                         FRAME_SIZE);
     if (id >= CARD_ID_COUNT)
         return;
-    mini = gModFieldIconData + DATA_MINIS + id * (MINI_W * MINI_H);
+    mini = gModFieldIconData + DATA_MINIS + id * MINI_STRIDE;
     for (r = 0; r < h; r++) {
         for (c = 0; c < w; c++) {
-            u32 color = mini[map[4 + 32 + r] * MINI_W + map[4 + c]];
+            u32 color = ModFieldIconMiniColor(MiniByte(mini, map[4 + c], map[4 + 32 + r]));
 
             if (color != 0)
                 PutCellPixel(dst, x0 + c, y0 + r, color - OBJ_ART_SHIFT);
@@ -434,10 +453,10 @@ void ModChainIconBuild(u32 row, u16 id)
     id &= CARD_ID_MASK;
     if (id == 0 || id >= CARD_ID_COUNT)
         return;
-    mini = gModFieldIconData + DATA_MINIS + id * (MINI_W * MINI_H);
+    mini = gModFieldIconData + DATA_MINIS + id * MINI_STRIDE;
     for (j = 0; j < MINI_H; j++) {
         for (i = 0; i < MINI_W; i++) {
-            u32 color = mini[j * MINI_W + i];
+            u32 color = ModFieldIconMiniColor(MiniByte(mini, i, j));
 
             if (color != 0)
                 PutSprite2dPixel(tile, MINI_X + i, MINI_Y + j, color - OBJ_ART_SHIFT);
@@ -471,7 +490,7 @@ void ModChainIconBuild(u32 row, u16 id)
 #define DE_IMAGE_SIZE           (4 * 32)        /* its 2 rows of 2 4bpp tiles */
 #define DE_ENTRY_SIZE           (DE_PALETTE_SIZE + DE_IMAGE_SIZE)
 /* Two arrays (tools/cardicons.py): every card ID's palette, then every card ID's image. */
-#define DATA_DECK_EDIT          ((DATA_MINIS + CARD_ID_COUNT * MINI_W * MINI_H + 3) & ~3)
+#define DATA_DECK_EDIT          ((DATA_MINIS + CARD_ID_COUNT * MINI_STRIDE + 3) & ~3)
 #define DATA_DECK_EDIT_IMAGES   (DATA_DECK_EDIT + CARD_ID_COUNT * DE_PALETTE_SIZE)
 #define DE_RING_SLOTS           6
 #define DE_ART_SPRITES          5

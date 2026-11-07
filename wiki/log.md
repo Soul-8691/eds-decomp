@@ -2653,3 +2653,12 @@ updated: 2026-09-29
 - tools/cardicons.py writes Deck Edit's ring art as every palette, then every image (was one 160-byte entry per card); src/mod_field_icons.c `ModDeckRingArt` reads `DATA_DECK_EDIT` / `DATA_DECK_EDIT_IMAGES`. Same size; checked by decoding icons from the demo ROM.
 - tools/hma_toml.py: graphics.cards.icons.palettes [`ucp4`]cardnumbers and graphics.cards.icons [`ucs4x2x2|graphics.cards.icons.palettes`]cardnumbers (HMA-CE's inline image tables).
 - Pages: [[hma-toml]], [[card-icons]], [[deck-edit-card-art]].
+
+## [2026-11-07] progress | Field miniatures: GBA-tiled blob + HMA ucs8x2x2
+- tools/cardicons.py: per-card miniatures as 256 bytes (8bpp 2×2 tiles, palette-relative 1–64; `ModFieldIconMiniColor`); src/mod_field_icons.c reads `MINI_STRIDE` 256 and row-major 16-wide indexing.
+- tools/hma_toml.py: `graphics.cards.fieldicons.artpalette` [`ucp4:0123`]4 and `graphics.cards.fieldicons.miniatures` [`ucs8x2x2|graphics.cards.fieldicons.artpalette`]cardnumbers; `icon_palettes` offset uses 256 * CARD_ID_COUNT.
+- Pages: [[hma-toml]], [[card-icons]], [[index]].
+
+## [2026-11-07] progress | HMA field icon palette anchor + index bytes
+- tools/hma_toml.py: `graphics.cards.fieldicons.artpalette` is `` `ucp4:0123` `` (single 128-byte run), not ``[`ucp4:0123`]4``. Miniature bytes 0–63 / 0xFF pad (`tools/cardicons.py`, `ModFieldIconMiniColor`).
+- Pages: [[hma-toml]], [[card-icons]].

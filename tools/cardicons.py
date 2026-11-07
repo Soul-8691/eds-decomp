@@ -32,8 +32,8 @@ data/mod_field_icons_data.s), for BG2 in 256-colour mode:
   +0x7880   the miniature's place in each sprite pose 0-2: 80 bytes each, x0, width, y0, height, then the art
             column for each of the `width` columns (32 bytes) and the art row for each of the `height` rows (32
             bytes): pose 0 is the 15x16 at (8, 7), poses 1-2 squeeze it into their narrower window
-  +0x7980   the miniatures: 15x16 bytes per card ID (CARD_ID_COUNT of them), row-major, palette entries
-            192-255 (the sprites take them 64 lower: OBJ palettes 8-11); an ID without a card is all 0
+  +0x7980   the miniatures: 256 bytes per card ID (CARD_ID_COUNT), four 8x8 tiles in GBA order (16x16 bitmap). Visible
+            art is 15x16 at top-left; unused pixels 0xFF. MiniByte(i,j). Art bytes 0-63 index DATA_PALETTE; HMA ucs8x2x2
   then, from the next multiple of 4: Deck Edit's ring art, 160 bytes per card ID in two arrays: first every
             card ID's own 16-colour palette (16 BGR555, entry 0 transparent; 32 bytes each), then every card ID's
             four 4bpp tiles (2 rows of 2, row-major; 128 bytes each) of a 16x16 sprite holding the 15x16 window art
@@ -443,6 +443,32 @@ def tiles8(img, entry=ICON_PALETTE_ENTRY, art=None):
     return bytes(out)
 
 
+def tiles8_16(img16):
+    """16x16 row-major pixel indices as four 8x8 8bpp GBA tiles (2x2, row-major). `img16` is 256 bytes."""
+    out = bytearray()
+    for t in range(4):
+        tx, ty = t % 2, t // 2
+        for y in range(8):
+            for x in range(8):
+                out.append(img16[(ty * 8 + y) * 16 + tx * 8 + x])
+    return bytes(out)
+
+
+MINI_PAD = 0xFF                # transparent padding; 0-63 index the shared palette (HMA ucs8 + ucp4:0123)
+
+
+def miniature_tiles8(mini_rgb, palette, cache):
+    """Same art as `miniature`; 2x2 GBA 8bpp tiles. Art bytes 0-63, else MINI_PAD (HMA and ModFieldIconMiniColor)."""
+    img = bytearray(MINI_PAD for _ in range(256))
+    for y in range(MINI_H):
+        for x in range(MINI_W):
+            g = gba(mini_rgb[y * MINI_W + x])
+            if g not in cache:
+                cache[g] = nearest(g, palette)
+            img[y * 16 + x] = cache[g]
+    return tiles8_16(img)
+
+
 def rotate_cw_map(over):
     """rotate_cw for a {pixel: value} override map."""
     return {(i % ICON) * ICON + ICON - 1 - i // ICON: v for i, v in over.items()}
@@ -508,14 +534,11 @@ def main():
             blob += pose_map(img)
         blob += bytes(0x7980 - len(blob))
         assert len(blob) == 0x7980
-        minis = bytearray(count * MINI_W * MINI_H)
-        cache = {}
+        minis = bytearray(count * 256)
+        mini_cache = {}
         for cid, _, _, _, mini in cards:
-            for k, c in enumerate(mini):
-                g = gba(c)
-                if g not in cache:
-                    cache[g] = nearest(g, palette)
-                minis[cid * MINI_W * MINI_H + k] = ART_PALETTE_ENTRY + cache[g]
+            t = miniature_tiles8(mini, palette, mini_cache)
+            minis[cid * 256:(cid + 1) * 256] = t
         blob += minis
         blob += bytes(-len(blob) % 4)
         entries = [deck_edit.get(cid, bytes(DE_SIZE)) for cid in range(count)]

@@ -19,7 +19,8 @@ source of this repo, and where that thing is in the demo ROM:
                 for the card count limits a literal holding the demo's value (Length 2). A site whose function no
                 longer has the constant (rewritten without it) is left out, listed in a comment. Data constants
                 (in a data label) move like anchors. The original instruction comes from baserom.gba (read only).
-  Added         anchors baserom.toml lacks, by symbol (EXTRA_ANCHORS): every card's art icon (Deck Edit's ring art).
+  Added         anchors baserom.toml lacks, by symbol (EXTRA_ANCHORS): field miniature palette + ucs8 sprites,
+                Deck Edit ring art (graphics.cards.icons*).
   Lists         cardnumbers (by card ID) and cardinternalnumbers (by card number) get the added cards
                 (build/new_cards.tsv: their in-game names at their IDs and numbers); the other lists are kept.
   DefaultHash   recomputed (HMA's StoredList.GenerateHash) for every format and list this changes.
@@ -50,22 +51,31 @@ CARD_LIMIT_WORDS = ('data.constants.cards.limit', 'data.constants.cards.limit2')
 # Anchors baserom.toml doesn't have, added by symbol (their addresses come from the .sym): (name, symbol, offset
 # from it given the card count, format), in HMA's formats as baserom.toml uses them.
 #   Every card's own art icon, Deck Edit's ring art (tools/cardicons.py; gModFieldIconData's DATA_DECK_EDIT block in
-#   src/mod_field_icons.c), after the field icons' palette, frames, pose maps and per-card 15x16 miniatures (those are
-#   8bpp and untiled, which HMA's sprite formats can't show): two arrays by card ID, every 16-colour palette (0x20
+#   src/mod_field_icons.c), after the field icons' palette, frames, pose maps and per-card miniature sprites
+#   (ucs8x2x2 at DATA_MINIS, palette-relative 1-64 in graphics.cards.fieldicons.artpalette): two arrays by card ID,
+#   every 16-colour palette (0x20
 #   bytes, entry 0 transparent) then every 16x16 4bpp image (2x2 row-major tiles, 0x80 bytes). They are HMA-CE's
 #   inline image tables (ArrayRun.TryParseInlineImageTable: a row is one bare `ucp`/`ucs` format and nothing
 #   else), as graphics.cards.images / graphics.cards.palettes; the images' palette hint is the palettes table, whose
 #   row of the same index HMA uses.
 FIELD_ICON_MINIS = 0x7980
-MINI_SIZE = 15 * 16
+MINI_STRIDE = 256             # 8bpp 2x2 tiles (tools/cardicons.py, src/mod_field_icons.c)
 ICON_PALETTE_SIZE = 0x20
 
 
 def icon_palettes(count):
-    return (FIELD_ICON_MINIS + count * MINI_SIZE + 3) & ~3
+    return (FIELD_ICON_MINIS + count * MINI_STRIDE + 3) & ~3
+
+
+def field_mini_artpalette(_count):
+    """The 64 shared BGR555 colours at DATA_PALETTE (one ucp4:0123 run, 128 bytes; not a multi-row table)."""
+    return 0
 
 
 EXTRA_ANCHORS = [
+    ('graphics.cards.fieldicons.artpalette', 'gModFieldIconData', field_mini_artpalette, '`ucp4:0123`'),
+    ('graphics.cards.fieldicons.miniatures', 'gModFieldIconData', lambda _c: FIELD_ICON_MINIS,
+     '[`ucs8x2x2|graphics.cards.fieldicons.artpalette`]cardnumbers'),
     ('graphics.cards.icons.palettes', 'gModFieldIconData', icon_palettes, '[`ucp4`]cardnumbers'),
     ('graphics.cards.icons', 'gModFieldIconData', lambda count: icon_palettes(count) + count * ICON_PALETTE_SIZE,
      '[`ucs4x2x2|graphics.cards.icons.palettes`]cardnumbers'),

@@ -4,7 +4,7 @@ type: tool
 status: draft
 confidence: medium
 sources: [rom-analysis]
-updated: 2026-11-06
+updated: 2026-11-07
 ---
 # Hex Maniac Advance metadata for the demo
 
@@ -34,7 +34,7 @@ original ROM (repo root). Without `baserom.toml` it does nothing. `eds_demo.toml
   - `graphics.cards.icons.palettes` (``[`ucp4`]cardnumbers``) and `graphics.cards.icons`
     (``[`ucs4x2x2|graphics.cards.icons.palettes`]cardnumbers``): every card's own art icon, the art Deck Edit's
     ring shows. `gModFieldIconData`'s `DATA_DECK_EDIT` block (`tools/cardicons.py`, `src/mod_field_icons.c`), at
-    0x7980 + 15 * 16 * CARD_ID_COUNT rounded up to 4: every card ID's 16-colour palette (0x20 bytes, entry 0
+    after 0x7980 + 256 * CARD_ID_COUNT (rounded up to 4): every card ID's 16-colour palette (0x20 bytes, entry 0
     transparent), then every card ID's 16x16 4bpp image (2x2 row-major tiles, 0x80 bytes) at + CARD_ID_COUNT * 0x20.
     These are HMA-CE's inline image tables (`ArrayRun.TryParseInlineImageTable`, `InlineSpriteTableRun` /
     `InlinePaletteTableRun`): a row is one bare `` `ucs` `` / `` `ucp` `` format and nothing else, the same form
@@ -45,15 +45,19 @@ original ROM (repo root). Without `baserom.toml` it does nothing. `eds_demo.toml
       nor two tables over the same rows (an anchor clears every run it overlaps, `ClearFormat`) worked; a
       hand-made pair for Blue-Eyes did. So `tools/cardicons.py` now writes the two arrays and `ModDeckRingArt`
       reads them (`DATA_DECK_EDIT_IMAGES`); the data's size is the same.
-  - Not added: the field icons' 15x16 miniatures (8bpp and untiled, which HMA's sprite formats can't show). The
-    original generic frame icons were in a first version and taken out (not the card art).
+  - `graphics.cards.fieldicons.artpalette` (`` `ucp4:0123` ``): the 64 BGR555 colours at `gModFieldIconData` +0
+    (`DATA_PALETTE`, 128 bytes, one palette run — not ``[`ucp4:0123`]4``, which would be four table rows).
+    `graphics.cards.fieldicons.miniatures`
+    (``[`ucs8x2x2|graphics.cards.fieldicons.artpalette`]cardnumbers``): 256-byte GBA 8bpp 2×2 tiles per card;
+    art indices **0–63** (HMA `SpriteTool.Render`), **0xFF** padding. In-game, `ModFieldIconMiniColor` adds
+    `ART_PALETTE_ENTRY`.
 - **Lists.** `cardnumbers` (by card ID) is cut or grown to CARD_ID_COUNT and `cardinternalnumbers` (by card number)
   gets the added cards, both with their in-game names from `build/new_cards.tsv`. The other lists are kept.
 - **DefaultHash** is recomputed for every changed format and list with HMA's `StoredList.GenerateHash` (SHA-256 of
   each item, folded into a rotating seed 0xCAFEBABE; checked against three of `baserom.toml`'s hashes). HMA keeps an
   entry whose hash doesn't match its own reference as a user edit.
 
-## Checked (2026-11-06)
+## Checked (2026-11-06; field miniatures format 2026-11-07)
 - Five anchors moved (the card images, palettes, stats, ID-to-number table, passwords); every other anchor kept its
   address, and the data there is the same as the original's but for tables the mod changes (the effect table's
   function pointers, two starter-deck stats).

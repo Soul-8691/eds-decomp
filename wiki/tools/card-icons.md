@@ -4,7 +4,7 @@ type: tool
 status: draft
 confidence: high
 sources: [rom-analysis]
-updated: 2026-10-30
+updated: 2026-11-07
 ---
 
 # Card icons with art
@@ -43,8 +43,9 @@ art. `make` builds the game's data with it (`--data`, below); `make card-icons` 
   0x1D8-0x22F, 0x28E-0x2FF. Called from `DrawZoneTiles` (face up) and `DrawAreaTiles` (Graveyard, banished).
 - **Redraws.** The battle scene clears char blocks 1-2 and BG palettes 4-15; every way back (`DuelScreen_Init`,
   from the battle scene, card detail and card list) reloads and redraws.
-- **Data.** `build/assets/field_icons.bin` (grows with `CARD_ID_COUNT`: palette, BG/OBJ frames, pose maps, 15×16
-  miniatures per card ID, then Deck Edit ring entries) through `data/mod_field_icons_data.s` (`gModFieldIconData`,
+- **Data.** `build/assets/field_icons.bin` (grows with `CARD_ID_COUNT`: palette, BG/OBJ frames, pose maps, 256-byte
+  miniature sprites per card ID—8bpp 2×2 GBA tiles for a 16×16 image; visible art remains 15×16 with padding—then
+  Deck Edit ring entries) through `data/mod_field_icons_data.s` (`gModFieldIconData`,
   @rodata). The Makefile rebuilds it when `newcards__*.bin` changes, not only the newcards stamp.
 - **Stale blob / profile switch.** `gModFieldIconData` must match the built card pool (`make` vs `make demo`:
   different `CARD_ID_COUNT` and `field_icons.bin` size). If the blob lags the card tables, or `mod_field_icons.o`
@@ -75,8 +76,9 @@ art. `make` builds the game's data with it (`--data`, below); `make card-icons` 
   - **Colours.** OBJ palette 1 (`gCardIconPal`) as entries 16-31 for the frames; the art palette in OBJ palettes
     8-11 (entries 128-191: the duel uses 0-6 and 15). `AddAffineSprite` switches on the exact shape, so the
     256-colour bit is set in the entry it added.
-  - **Data.** `field_icons.bin` grew to 359,697 bytes: sprite frames (6 types x 3 poses) at +0x3080, pose maps at
-    +0x7880, miniatures at +0x7980. Checked offline by rebuilding sprites from it.
+  - **Data.** `field_icons.bin`: sprite frames (6 types x 3 poses) at +0x3080, pose maps at +0x7880, miniatures at
+    +0x7980 (256 bytes/card: GBA 2×2 tiles; indices 0–63, pad 0xFF; game adds `ART_PALETTE_ENTRY`; HMA `ucs8x2x2` + `` `ucp4:0123` ``).
+    Checked offline by rebuilding sprites from it.
 - **Chain list.** `ChainListScreen_Run` clears the OBJ tiles (`UnloadDuelUiGfx`: 2D mapping, 32 tiles a row) and
   fills the header (tile rows 0-1) and the four links' 32x4-tile blocks (rows 2-17). Each link's card now gets a
   256-colour 32x32 icon with its art in tile rows 18-21 (card k at columns 8k-8k+7: `ModChainIconBuild`, frame
