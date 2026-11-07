@@ -68,7 +68,7 @@ end
 -- eds_release_demo.sym next to the script's repo, else the fallback. Pressing A until some other value showed up
 -- started a Campaign duel when the build had moved it.
 local mainMenuCallbacks = {}
-for _, symName in ipairs({ "eds_demo.sym", "eds_release_demo.sym" }) do
+for _, symName in ipairs({ "eds_demo.sym", "eds_release_demo.sym", "eds_release_demo_extra.sym" }) do
     local f = io.open(root .. "/" .. symName, "r")
     if f then
         for line in f:lines() do

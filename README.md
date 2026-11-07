@@ -409,6 +409,7 @@ make -j$(nproc)                # eds.gba: the debug/testing build (config/new_ca
 make -j$(nproc) release        # eds_release.gba: the release build
 make -j$(nproc) demo           # eds_demo.gba: debug build, cards in new_cards.txt above ------
 make -j$(nproc) release-demo   # eds_release_demo.gba: release build, same demo card pool
+make -j$(nproc) release-demo-extra  # eds_release_demo_extra.gba: as release-demo, plus blank card slots and an HMA TOML
 ```
 
 You need `make`, `cpp`, `python3` and `binutils-arm-none-eabi`, plus network access the first time new cards are fetched.
@@ -420,6 +421,7 @@ See `CLAUDE.md` and the `wiki/` for details on the decompilation and the hack.
 | `make release` | Release | Every name in `config/new_cards.txt` |
 | `make demo` | Debug/testing (`MOD_RELEASE` 0) | The coded block at the top of `new_cards.txt` |
 | `make release-demo` | Release | The coded block at the top of `new_cards.txt` |
+| `make release-demo-extra` | Release | As `make release-demo`, plus blank card slots up to 615 added cards and `eds_release_demo_extra.toml` for Hex Maniac Advance |
 
 <details>
 <summary>Debug mode (testing builds only, not in the release)</summary>

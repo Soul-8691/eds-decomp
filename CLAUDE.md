@@ -14,6 +14,7 @@ make -j$(nproc)                             # full build; installs tools/agbcc f
 make -j$(nproc) release                     # eds_release.gba: the player build (wiki/tools/release-build.md)
 make -j$(nproc) demo                        # eds_demo.gba: debug build (RELEASE=0), demo card list only
 make -j$(nproc) release-demo                # eds_release_demo.gba: release build, demo card list only
+make -j$(nproc) release-demo-extra          # eds_release_demo_extra.gba: release-demo + blank card slots + HMA TOML
 make -j$(nproc) compare                     # SHA-1 check: fails now that cards are added (wiki/game/added-cards.md)
 # Added cards: config/new_cards.txt (full); demo uses repo-root new_cards.txt above ------ (tools/newcards.py).
 # Test Duel (make only): its deck is TEST_YDK (default /mnt/c/ProjectIgnis/deck/test.ydk), read by tools/testdeck.py.

@@ -50,6 +50,7 @@ The added-card list is repo-root `new_cards.txt` only **above** the `------` sep
 |---|---|---|
 | `make demo` | 0 (same rules as `eds.gba` / plain `make`) | `eds_demo.gba` |
 | `make release-demo` | 1 (same rules as `eds_release.gba`) | `eds_release_demo.gba` |
+| `make release-demo-extra` | 1 | `eds_release_demo_extra.gba` and `.toml`: as release-demo, plus make demo's blank card slots (up to 615 added cards; `NEWCARDS_EXTRA=1`) and the Hex Maniac Advance metadata ([[hma-toml]]) |
 
 The Makefile sets `NEWCARDS_PROFILE=demo` and passes
 `NEW_CARDS_LIST=new_cards.txt` to `tools/newcards.py`. Switching between a full and demo build re-runs the card

@@ -134,7 +134,8 @@ original ROM (repo root). Without `baserom.toml` it does nothing. `eds_demo.toml
     run inside `make demo` the two always match).
   - Lengths are fixed per build (the TOML is written again each `make demo`): a deck or pool made longer in HMA
     needs its count field changed too.
-- **Which builds:** `make demo` writes `eds_demo.toml` and `make release-demo` `eds_release_demo.toml` (the
+- **Which builds:** `make demo` writes `eds_demo.toml`, `make release-demo` `eds_release_demo.toml` and
+  `make release-demo-extra` `eds_release_demo_extra.toml` (release rules with the blank card slots) (the
   Makefile's ROM rule, for the demo card list either way). The release-demo one is where the unlock MatchedWords
   take effect (make demo opens every format and pack); it has no blank card slots (so 1127 card IDs) and one deck fewer; the recipe table is still in the ROM
   (`data.decks.recipes`) but unused there (`GetRecipePreset` returns 0 in the release).

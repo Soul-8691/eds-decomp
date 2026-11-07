@@ -2763,3 +2763,7 @@ updated: 2026-09-29
 ## [2026-11-07] progress | HMA TOML: gCardTypeEx and gCardLinkMarkers
 - tools/hma_toml.py: data.cards.typeex (bit tuple: kind, effect, Tuner, race; lists cardkindsex, racesex) and data.cards.linkmarkers (one bit per arrow); header guide. Checked on five added cards.
 - Pages: [[hma-toml]].
+
+## [2026-11-07] setup | make release-demo-extra
+- Makefile: release-demo-extra (RELEASE=1, demo list, NEWCARDS_EXTRA=1: the blank card slots up to 615) -> eds_release_demo_extra.gba and .toml; clean; .gitignore; README, CLAUDE.md build list; tools/hma_toml.py header; tools/card_screenshots.lua reads its .sym too.
+- Pages: [[release-build]], [[hma-toml]].

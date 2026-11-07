@@ -54,7 +54,7 @@ UNITS    := $(shell sed -e 's/\#.*//' -e '/^[[:space:]]*$$/d' -e '/^@/d' units.t
 unit_obj  = $(if $(and $(wildcard src/$(1).c),$(if $(filter $(1),$(ASM_UNITS)),,y)),build/src/$(1).o,$(if $(wildcard src/$(1).s),build/srcasm/$(1).o,$(if $(wildcard asm/$(1).s),build/asm/$(1).o,build/data/$(1).o)))
 OBJS     := $(foreach u,$(UNITS),$(call unit_obj,$(u)))
 
-.PHONY: all release demo release-demo compare clean tidy objdiff-report setup agbcc card-icons syms FORCE
+.PHONY: all release demo release-demo release-demo-extra compare clean tidy objdiff-report setup agbcc card-icons syms FORCE
 .SECONDARY:
 .DELETE_ON_ERROR:
 
@@ -70,6 +70,11 @@ demo:
 # Release rules with the demo card pool only (not the same as `make demo`).
 release-demo:
 	$(MAKE) RELEASE=1 NEWCARDS_PROFILE=demo ROM=eds_release_demo.gba all
+
+# As release-demo, plus make demo's blank card slots (up to 615 added cards, for filling in with Hex Maniac Advance)
+# and its HMA metadata: eds_release_demo_extra.gba and eds_release_demo_extra.toml.
+release-demo-extra:
+	$(MAKE) RELEASE=1 NEWCARDS_PROFILE=demo NEWCARDS_EXTRA=1 ROM=eds_release_demo_extra.gba all
 
 # MOD_RELEASE and MOD_DEMO for the C code, rewritten only when they change (so a switch rebuilds what includes it).
 MOD_CONFIG := build/include/mod_config.h
@@ -101,8 +106,8 @@ $(CC1_INSTALLED):
 	chmod +x $(AGBCC_DIR)/bin/*
 
 clean:
-	rm -rf build eds.gba eds_release.gba eds_demo.gba eds_release_demo.gba
-	rm -f eds.sym eds_release.sym eds_demo.sym eds_release_demo.sym
+	rm -rf build eds.gba eds_release.gba eds_demo.gba eds_release_demo.gba eds_release_demo_extra.gba
+	rm -f eds.sym eds_release.sym eds_demo.sym eds_release_demo.sym eds_release_demo_extra.sym
 
 syms: $(SYM)
 
@@ -165,8 +170,9 @@ NEWCARDS_PROFILE ?= full
 NEWCARDS_LEFTOVERS := config/leftover_cards.txt
 ifeq ($(NEWCARDS_PROFILE),demo)
 CARD_LIST      := new_cards.txt
-ifeq ($(RELEASE),0)
-# make demo: blank card slots after the demo's cards until 615 are added (tools/newcards.py NEWCARDS_PAD_TO)
+ifneq ($(RELEASE)$(NEWCARDS_EXTRA),1)
+# make demo and make release-demo-extra (NEWCARDS_EXTRA=1): blank card slots after the demo's cards until 615 are
+# added (tools/newcards.py NEWCARDS_PAD_TO)
 NEWCARDS_PAD   := 615
 NEWCARDS_BUILT := build/assets/.newcards-demo-padded
 else
