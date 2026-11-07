@@ -332,12 +332,12 @@ static const struct DeckList sRedDeckList = { sRedStarterDeck, ARRAY_COUNT(sRedS
 #endif
 
 
-/* Tristan Taylor: one of three decks at weighted random, per duel (GetOpponentDeckOverride): Soul Control 50%,
+/* The Yugi-Kaiba format opponent (Tristan's slot, DUELIST_TRISTAN): one of three decks at weighted random, per duel (GetOpponentDeckOverride): Soul Control 50%,
  * Vanilla Beat 30%, Stall Mill 20% (El Duelista DEX-Soul Control.ydk, ellietincan-Vanilla Beat.ydk,
  * DK-ZERO-Stall Mill.ydk; main and extra decks, the side decks after each). */
 #if defined(HAS_CARD_SOUL_EXCHANGE)
-#define MOD_TRISTAN_SOUL_CONTROL 1
-static const u16 sTristanSoulControl[] = {
+#define MOD_YUGI_KAIBA_SOUL_CONTROL 1
+static const u16 sYugiKaibaSoulControl[] = {
     /* Monsters (20) */
     X3(CARD_MAN_EATER_BUG),
     CARD_TRAP_MASTER,
@@ -371,12 +371,12 @@ static const u16 sTristanSoulControl[] = {
     CARD_KARBONALA_WARRIOR,
     X3(CARD_METAL_DRAGON),
 };
-STATIC_ASSERT(ARRAY_COUNT(sTristanSoulControl) == 40 + 15, TristanSoulControlSize);
+STATIC_ASSERT(ARRAY_COUNT(sYugiKaibaSoulControl) == 40 + 15, YugiKaibaSoulControlSize);
 #endif
-#ifdef MOD_TRISTAN_SOUL_CONTROL
-static const struct DeckList sTristanSoulControlList = { sTristanSoulControl, ARRAY_COUNT(sTristanSoulControl), 0 };
+#ifdef MOD_YUGI_KAIBA_SOUL_CONTROL
+static const struct DeckList sYugiKaibaSoulControlList = { sYugiKaibaSoulControl, ARRAY_COUNT(sYugiKaibaSoulControl), 0 };
 /* El Duelista DEX-Soul Control.ydk's Side Deck (15). */
-static const u16 sTristanSoulControlSide[] = {
+static const u16 sYugiKaibaSoulControlSide[] = {
     X2(CARD_HANE_HANE),
     CARD_TRAP_MASTER,
     CARD_WALL_OF_ILLUSION,
@@ -388,11 +388,11 @@ static const u16 sTristanSoulControlSide[] = {
     CARD_ULTIMATE_OFFERING,
     X2(CARD_WABOKU),
 };
-STATIC_ASSERT(ARRAY_COUNT(sTristanSoulControlSide) == 15, TristanSoulControlSideSize);
+STATIC_ASSERT(ARRAY_COUNT(sYugiKaibaSoulControlSide) == 15, YugiKaibaSoulControlSideSize);
 #endif
 #if 1
-#define MOD_TRISTAN_VANILLA_BEAT 1
-static const u16 sTristanVanillaBeat[] = {
+#define MOD_YUGI_KAIBA_VANILLA_BEAT 1
+static const u16 sYugiKaibaVanillaBeat[] = {
     /* Monsters (20) */
     X3(CARD_MAN_EATER_BUG),
     X3(CARD_TRAP_MASTER),
@@ -421,12 +421,12 @@ static const u16 sTristanVanillaBeat[] = {
     X3(CARD_KARBONALA_WARRIOR),
     X3(CARD_METAL_DRAGON),
 };
-STATIC_ASSERT(ARRAY_COUNT(sTristanVanillaBeat) == 40 + 15, TristanVanillaBeatSize);
+STATIC_ASSERT(ARRAY_COUNT(sYugiKaibaVanillaBeat) == 40 + 15, YugiKaibaVanillaBeatSize);
 #endif
-#ifdef MOD_TRISTAN_VANILLA_BEAT
-static const struct DeckList sTristanVanillaBeatList = { sTristanVanillaBeat, ARRAY_COUNT(sTristanVanillaBeat), 0 };
+#ifdef MOD_YUGI_KAIBA_VANILLA_BEAT
+static const struct DeckList sYugiKaibaVanillaBeatList = { sYugiKaibaVanillaBeat, ARRAY_COUNT(sYugiKaibaVanillaBeat), 0 };
 /* ellietincan-Vanilla Beat.ydk's Side Deck (15). */
-static const u16 sTristanVanillaBeatSide[] = {
+static const u16 sYugiKaibaVanillaBeatSide[] = {
     X3(CARD_WALL_OF_ILLUSION),
     X3(CARD_AQUA_MADOOR),
     CARD_JUDGE_MAN,
@@ -435,12 +435,12 @@ static const u16 sTristanVanillaBeatSide[] = {
     X2(CARD_DE_SPELL),
     X3(CARD_SOUL_EXCHANGE),
 };
-STATIC_ASSERT(ARRAY_COUNT(sTristanVanillaBeatSide) == 15, TristanVanillaBeatSideSize);
+STATIC_ASSERT(ARRAY_COUNT(sYugiKaibaVanillaBeatSide) == 15, YugiKaibaVanillaBeatSideSize);
 #endif
 #if defined(HAS_CARD_CARD_DESTRUCTION) \
     && defined(HAS_CARD_SOUL_EXCHANGE)
-#define MOD_TRISTAN_STALL_MILL 1
-static const u16 sTristanStallMill[] = {
+#define MOD_YUGI_KAIBA_STALL_MILL 1
+static const u16 sYugiKaibaStallMill[] = {
     /* Monsters (21) */
     X3(CARD_GYAKUTENNO_MEGAMI),
     X3(CARD_GIANT_SOLDIER_OF_STONE),
@@ -470,12 +470,12 @@ static const u16 sTristanStallMill[] = {
     X3(CARD_FLOWER_WOLF),
     X3(CARD_FLAME_GHOST),
 };
-STATIC_ASSERT(ARRAY_COUNT(sTristanStallMill) == 43 + 15, TristanStallMillSize);
+STATIC_ASSERT(ARRAY_COUNT(sYugiKaibaStallMill) == 43 + 15, YugiKaibaStallMillSize);
 #endif
-#ifdef MOD_TRISTAN_STALL_MILL
-static const struct DeckList sTristanStallMillList = { sTristanStallMill, ARRAY_COUNT(sTristanStallMill), 0 };
+#ifdef MOD_YUGI_KAIBA_STALL_MILL
+static const struct DeckList sYugiKaibaStallMillList = { sYugiKaibaStallMill, ARRAY_COUNT(sYugiKaibaStallMill), 0 };
 /* DK-ZERO-Stall Mill.ydk's Side Deck (15). */
-static const u16 sTristanStallMillSide[] = {
+static const u16 sYugiKaibaStallMillSide[] = {
     X3(CARD_LA_JINN_THE_MYSTICAL_GENIE_OF_THE_LAMP),
     X3(CARD_BATTLE_OX),
     X3(CARD_NEO_THE_MAGIC_SWORDSMAN),
@@ -483,23 +483,23 @@ static const u16 sTristanStallMillSide[] = {
     X2(CARD_THE_WICKED_WORM_BEAST),
     CARD_CARD_DESTRUCTION,
 };
-STATIC_ASSERT(ARRAY_COUNT(sTristanStallMillSide) == 15, TristanStallMillSideSize);
+STATIC_ASSERT(ARRAY_COUNT(sYugiKaibaStallMillSide) == 15, YugiKaibaStallMillSideSize);
 #endif
 
-#if defined(MOD_TRISTAN_SOUL_CONTROL) && defined(MOD_TRISTAN_VANILLA_BEAT) && defined(MOD_TRISTAN_STALL_MILL)
-#define MOD_TRISTAN_DECKS 1
+#if defined(MOD_YUGI_KAIBA_SOUL_CONTROL) && defined(MOD_YUGI_KAIBA_VANILLA_BEAT) && defined(MOD_YUGI_KAIBA_STALL_MILL)
+#define MOD_YUGI_KAIBA_DECKS 1
 
-/* Tristan's deck for this duel: Soul Control 5 in 10, Vanilla Beat 3 in 10, Stall Mill 2 in 10. LoadOpponentDeck
+/* The Yugi-Kaiba deck for this duel: Soul Control 5 in 10, Vanilla Beat 3 in 10, Stall Mill 2 in 10. LoadOpponentDeck
  * asks once per duel. */
-static const struct DeckList *TristanDeck(void)
+static const struct DeckList *YugiKaibaDeck(void)
 {
     u32 roll = (u32)Random() % 10;
 
     if (roll < 5)
-        return &sTristanSoulControlList;
+        return &sYugiKaibaSoulControlList;
     if (roll < 8)
-        return &sTristanVanillaBeatList;
-    return &sTristanStallMillList;
+        return &sYugiKaibaVanillaBeatList;
+    return &sYugiKaibaStallMillList;
 }
 #endif
 
@@ -3699,9 +3699,9 @@ static const struct DeckList *PickOpponentDeckOverride(int opponent)
     case DUELIST_TEA:
         return &sRedDeckList;
 #endif
-#ifdef MOD_TRISTAN_DECKS
+#ifdef MOD_YUGI_KAIBA_DECKS
     case DUELIST_TRISTAN:
-        return TristanDeck();
+        return YugiKaibaDeck();
 #endif
 #ifdef MOD_FIBER_DECKS
     case DUELIST_RARE_HUNTER:           /* the Fiber format opponent */
@@ -3838,14 +3838,14 @@ static const char sNameReaperChaosControl[] = "jcvd93-Chaos Control";
 static const char sNameReaperTomatoControl[] = "Roland Gress-Tomato Control";
 
 static const struct RecipePreset sRecipePresets[] = {
-#ifdef MOD_TRISTAN_SOUL_CONTROL
-    { sNameSoulControl, &sTristanSoulControlList, sTristanSoulControlSide, ARRAY_COUNT(sTristanSoulControlSide) },
+#ifdef MOD_YUGI_KAIBA_SOUL_CONTROL
+    { sNameSoulControl, &sYugiKaibaSoulControlList, sYugiKaibaSoulControlSide, ARRAY_COUNT(sYugiKaibaSoulControlSide) },
 #endif
-#ifdef MOD_TRISTAN_VANILLA_BEAT
-    { sNameVanillaBeat, &sTristanVanillaBeatList, sTristanVanillaBeatSide, ARRAY_COUNT(sTristanVanillaBeatSide) },
+#ifdef MOD_YUGI_KAIBA_VANILLA_BEAT
+    { sNameVanillaBeat, &sYugiKaibaVanillaBeatList, sYugiKaibaVanillaBeatSide, ARRAY_COUNT(sYugiKaibaVanillaBeatSide) },
 #endif
-#ifdef MOD_TRISTAN_STALL_MILL
-    { sNameStallMill, &sTristanStallMillList, sTristanStallMillSide, ARRAY_COUNT(sTristanStallMillSide) },
+#ifdef MOD_YUGI_KAIBA_STALL_MILL
+    { sNameStallMill, &sYugiKaibaStallMillList, sYugiKaibaStallMillSide, ARRAY_COUNT(sYugiKaibaStallMillSide) },
 #endif
 #ifdef MOD_CRITTER_MASKED_CONTROL
     { sNameMaskedControl, &sCritterMaskedControlList, sCritterMaskedControlSide, ARRAY_COUNT(sCritterMaskedControlSide) },
@@ -4029,25 +4029,25 @@ int BuildModStarterDeck(int choice)
 #endif
 
     switch (choice) {
-#ifdef MOD_TRISTAN_SOUL_CONTROL
+#ifdef MOD_YUGI_KAIBA_SOUL_CONTROL
     case STARTER_DECK_RED:
-        list = &sTristanSoulControlList;
-        side = sTristanSoulControlSide;
-        sideCount = ARRAY_COUNT(sTristanSoulControlSide);
+        list = &sYugiKaibaSoulControlList;
+        side = sYugiKaibaSoulControlSide;
+        sideCount = ARRAY_COUNT(sYugiKaibaSoulControlSide);
         break;
 #endif
-#ifdef MOD_TRISTAN_VANILLA_BEAT
+#ifdef MOD_YUGI_KAIBA_VANILLA_BEAT
     case STARTER_DECK_GREEN:
-        list = &sTristanVanillaBeatList;
-        side = sTristanVanillaBeatSide;
-        sideCount = ARRAY_COUNT(sTristanVanillaBeatSide);
+        list = &sYugiKaibaVanillaBeatList;
+        side = sYugiKaibaVanillaBeatSide;
+        sideCount = ARRAY_COUNT(sYugiKaibaVanillaBeatSide);
         break;
 #endif
-#ifdef MOD_TRISTAN_STALL_MILL
+#ifdef MOD_YUGI_KAIBA_STALL_MILL
     case STARTER_DECK_BLACK:
-        list = &sTristanStallMillList;
-        side = sTristanStallMillSide;
-        sideCount = ARRAY_COUNT(sTristanStallMillSide);
+        list = &sYugiKaibaStallMillList;
+        side = sYugiKaibaStallMillSide;
+        sideCount = ARRAY_COUNT(sYugiKaibaStallMillSide);
         break;
 #endif
     }

@@ -2707,3 +2707,7 @@ updated: 2026-09-29
 ## [2026-11-06] progress | HMA TOML header: a guide to the added anchors and lists
 - tools/hma_toml.py: ADDED_GUIDE / ADDED_LISTS_GUIDE, written as comments at the top of eds_demo.toml (only the groups present).
 - Pages: [[hma-toml]].
+
+## [2026-11-06] progress | Yugi-Kaiba deck symbols renamed from Tristan
+- src/mod_decks.c: sTristan{SoulControl,VanillaBeat,StallMill}(List/Side) -> sYugiKaiba*, TristanDeck -> YugiKaibaDeck, MOD_TRISTAN_* -> MOD_YUGI_KAIBA_*; the HMA anchors are now data.decks.mod.yugikaiba{soulcontrol,vanillabeat,stallmill}.
+- Pages: [[added-cards]].

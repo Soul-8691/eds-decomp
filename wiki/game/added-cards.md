@@ -194,7 +194,7 @@ it. You can remove 1 Spell Counter from this card; target 1 Spell/Trap on the fi
   - **Yugi Muto:** a competitive 40-card deck (`GetOpponentDeckOverride`): Jinzo, Summoned Skull, Vorse Raider,
     floaters and searchers, the limited staples, Mystical Space Typhoon, Trap Hole.
   - **Tea (`DUELIST_TEA`):** the Red starter deck's LR-Chaos Turbo list (`sRedDeckList`).
-  - **Tristan (`DUELIST_TRISTAN`), weighted random per duel:** `TristanDeck` rolls `Random() % 10` when
+  - **Yugi-Kaiba (`DUELIST_TRISTAN`'s slot), weighted random per duel:** `YugiKaibaDeck` (the `sYugiKaiba*` decks; HMA `data.decks.mod.yugikaiba*`) rolls `Random() % 10` when
     `LoadOpponentDeck` (its only caller, once per duel) asks. Soul Control 5 in 10 (`El Duelista DEX-Soul
     Control.ydk`), Vanilla Beat 3 in 10 (`ellietincan-Vanilla Beat.ydk`), Stall Mill 2 in 10 (`DK-ZERO-Stall
     Mill.ydk`, 43 cards). Main decks only. All counts are within `gCardCopyLimits`; verified from
