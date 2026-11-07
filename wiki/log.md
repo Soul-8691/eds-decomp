@@ -2742,3 +2742,7 @@ updated: 2026-09-29
 - src/mod_opponents.c: ModRecordDuelist, ModRecordHasNextPage, ModRecordDrawPage (format opponents 5 a page, then Solomon / Debug / Test Duel); src/main_menu.c: Record_HasNextPage, Record_DrawPage and Record_DrawResultMarkers use them (.text -0x178, ends 0x0807F31C).
 - tools/record_names.py + data/mod_record_names.s (units.txt @rodata.added, Makefile): the name plates in the original font (letters cut from the original plates; F and - added).
 - tools/hma_toml.py guide: 2wins no longer the Records pages. Pages: [[main-menu-c]], [[hma-toml]].
+
+## [2026-11-06] progress | Records portraits: the centre of the opponent's card art
+- src/mod_opponents.c: OpponentArtCardId, DrawRecordArtPortrait (art rows 28-51 at 2/3 into 48 x 16, 15 most used colours) in ModRecordDrawPage; Solomon keeps his face. Far code only.
+- Pages: [[main-menu-c]].

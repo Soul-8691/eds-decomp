@@ -155,6 +155,13 @@ Related: [[campaign-select-c]], [[collection-c]], [[ram-map]], [[main-menu]], [[
   `tools/record_names.py`: the first original plate with its name painted out and each opponent's name in
   the original 5-pixel font, its letters cut from the five original plate images `gRecordPageNameImages`,
   bank B 0x087E6610-0x087E743C; F and - drawn to match; a long name such as JOEY-PEGASUS starts further left
-  so that no pixel touches the plate's edge), and each row's portrait (the slot duelist's own face) and
+  so that no pixel touches the plate's edge), and each row's portrait and
   wins, draws and losses, or "???" for a locked opponent. `Record_DrawResultMarkers` reads the same rows.
 - Size: the size-limited `.text` shrank by 0x178 bytes (ends at 0x0807F31C). Not yet checked on screen.
+- Portraits (2026-11-06): an opponent whose opponent-select portrait is card art (the format opponents, Debug,
+  the Test Duel; `OpponentArtCardId`) gets the centre of that art: `DrawRecordArtPortrait` samples its full width
+  and rows 28-51 (72 x 24) into the 48 x 16 portrait (an art pixel every 1.5 screen pixels), takes the 15 art
+  colours the strip uses most into entries 1-15 of the row's palette bank (5 + row, + 5 in half 1), maps the
+  others to the nearest, and writes the 6 x 2 tiles and map cells the face images use. Solomon keeps his face
+  (`PORTRAIT_FROM_SLOT`), a locked opponent the "???" image. Previewed offline with the same sampling (La Jinn,
+  Sangan, Confiscation, Imperial Order, Jinzo); not yet checked on screen.

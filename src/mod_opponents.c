@@ -51,6 +51,7 @@
 #include "sprite.h"             /* AddSprite, AddAffineSprite */
 #include "bg.h"                 /* FillMapRect, LoadBgImage4bppToMap (ModRecordDrawPage) */
 #include "main_menu.h"          /* Record_DrawNumber */
+#include "util.h"               /* MemCopy16 (DrawRecordArtPortrait) */
 
 /* The opponent select's page pictures (campaign_select.c). */
 extern struct Mode4Bitmap gOpponentSelectPageBgs[5];
@@ -354,6 +355,8 @@ extern const u16 gRecordUnknownPortraitImage[];
 static const u8 sRecordDeckPage[] = { DUELIST_GRANDPA, DUELIST_PEGASUS, DUELIST_DUEL_COMPUTER };
 
 static u16 FormatDuelist(int order);
+static void DrawRecordArtPortrait(int half, int row, u16 tileBase, u16 id);
+static u16 OpponentArtCardId(u16 duelist);
 
 /* The duelist of Records row `row` of `page`, 0 for an empty row. */
 u16 ModRecordDuelist(int page, int row)
@@ -401,8 +404,11 @@ void ModRecordDrawPage(int page, int half)
         }
         if (!MOD_RELEASE || IsOpponentUnlocked(duelist))
             portrait = gRecordPortraitImages[duelist - 1];
-        LoadBgImage4bppToMap(half + 1, (u16)(row * 3 + 4) * 32 + 4, (row + 5 + half * 5) * 16,
-                             tileBase + 0xE0 + row * 12, portrait);
+        if (portrait != gRecordUnknownPortraitImage && OpponentArtCardId(duelist) != 0)
+            DrawRecordArtPortrait(half, row, tileBase, OpponentArtCardId(duelist));    /* its card art */
+        else
+            LoadBgImage4bppToMap(half + 1, (u16)(row * 3 + 4) * 32 + 4, (row + 5 + half * 5) * 16,
+                                 tileBase + 0xE0 + row * 12, portrait);
         if (portrait == gRecordUnknownPortraitImage) {
             FillMapRect(half + 1, row * 0x60 + 0x63, 8, 1);        /* no name either */
             continue;
@@ -842,6 +848,91 @@ static void DrawArtPortrait(int slot, u16 id, u8 *used)
             ay = ay < 0 ? 0 : ay > 79 ? 79 : ay;
             PutPortraitPixel(x, y, map[ArtPixel(id, ax, ay)]);
         }
+    }
+}
+
+/* The card ID of the art an opponent's portrait shows (the format opponents, Debug, the Test Duel), or 0 for one with
+ * a duelist's own portrait (PORTRAIT_FROM_SLOT, e.g. Solomon) or none. */
+static u16 OpponentArtCardId(u16 duelist)
+{
+    const struct ModOpponent *o = Opponent(duelist);
+
+    if (o->portrait == 0 || PORTRAIT_IS_SLOT(o->portrait))
+        return 0;
+    return PortraitCardId(o->portrait);
+}
+
+/* The Records screen's portrait: 48 x 16 pixels (6 x 2 tiles of BG1, map cell (4, row * 3 + 4)), its own palette
+ * bank (5 + row, + 5 in half 1) and tiles (tileBase + 0xE0 + row * 12), as the duelists' face images use. */
+#define RECORD_PORTRAIT_W       48
+#define RECORD_PORTRAIT_H       16
+#define RECORD_ART_Y0           28      /* the art's centre rows 28-51: its full width at 2/3 (72 x 24 -> 48 x 16) */
+
+/* Record row `row`'s portrait from the centre of card art `id`: its full width and the 24 rows around its middle,
+ * scaled to 48 x 16 (an art pixel every 1.5 screen pixels). Colour: the 15 art colours the strip uses most (entries
+ * 1-15 of the row's palette bank), every other colour the nearest of them. */
+static void DrawRecordArtPortrait(int half, int row, u16 tileBase, u16 id)
+{
+    const u16 *artPal = (const u16 *)(CARD_ART_PALETTES_ADDR + id * CARD_ART_PALETTE_SIZE);
+    u16 *bgPal = (u16 *)(BG_PLTT + (row + 5 + half * 5) * 32);
+    u8 strip[RECORD_PORTRAIT_W * RECORD_PORTRAIT_H];
+    u8 tiles[6 * 2 * 32];
+    u16 count[64];
+    u8 pick[15], map[64];
+    u16 tile = tileBase + 0xE0 + row * 12;
+    int i, j, x, y, n = 0;
+
+    for (i = 0; i < 64; i++)
+        count[i] = 0;
+    for (y = 0; y < RECORD_PORTRAIT_H; y++) {
+        for (x = 0; x < RECORD_PORTRAIT_W; x++) {
+            u8 c = ArtPixel(id, x * 3 / 2, RECORD_ART_Y0 + y * 3 / 2);
+
+            strip[y * RECORD_PORTRAIT_W + x] = c;
+            count[c]++;
+        }
+    }
+    for (n = 0; n < 15; n++) {              /* the most used colours, most first */
+        int best = -1;
+
+        for (i = 0; i < 64; i++) {
+            if (count[i] != 0 && (best < 0 || count[i] > count[best]))
+                best = i;
+        }
+        if (best < 0)
+            break;
+        pick[n] = best;
+        count[best] = 0;
+    }
+    for (i = 0; i < 64; i++) {              /* every art colour -> the nearest picked one (entry 1 + its index) */
+        u32 bestDist = 0xFFFFFFFF;
+
+        map[i] = 1;
+        for (j = 0; j < n; j++) {
+            u32 d = ColorDist(artPal[i], artPal[pick[j]]);
+
+            if (d < bestDist) {
+                bestDist = d;
+                map[i] = 1 + j;
+            }
+        }
+    }
+    for (j = 0; j < n; j++)
+        bgPal[1 + j] = artPal[pick[j]] & 0x7FFF;
+    for (i = 0; i < 6 * 2 * 32; i++)        /* 6 x 2 4bpp tiles, row-major */
+        tiles[i] = 0;
+    for (y = 0; y < RECORD_PORTRAIT_H; y++) {
+        for (x = 0; x < RECORD_PORTRAIT_W; x++) {
+            u8 c = map[strip[y * RECORD_PORTRAIT_W + x]];
+            u8 *b = &tiles[((y >> 3) * 6 + (x >> 3)) * 32 + (y & 7) * 4 + ((x & 7) >> 1)];
+
+            *b |= (x & 1) ? c << 4 : c;
+        }
+    }
+    MemCopy16((void *)(VRAM + 0x4000 + tile * 32), tiles, sizeof(tiles));
+    for (y = 0; y < 2; y++) {
+        for (x = 0; x < 6; x++)
+            gMain.bgMapBuffer[half + 1][(row * 3 + 4 + y) * 32 + 4 + x] = (tile + y * 6 + x) | (row + 5 + half * 5) << 12;
     }
 }
 
