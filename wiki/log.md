@@ -2733,3 +2733,12 @@ updated: 2026-09-29
 - src/booster_get_pack.c GetRewardPack: gMain.rewardPack = ModRewardPack(packId); src/mod_format_packs.c ModRewardPack (random unlocked TCG format pack, picked on the reward's first frame); include/format_packs.h. Covers the event rewards and the magazine deliveries. .text +4 (0x0807F494).
 - tools/hma_toml.py guide: the original packs, special packs, covers and rarity odds now UNUSED.
 - Pages: [[pack-shop]].
+
+## [2026-11-06] query | What the original pack-unlock wins still do
+- The "new packs" notice (unlockNotices bit 1, Campaign_RecordDuelResult) follows ModCountUnlockedFormatPacks: the mod's usagewins / formats.unlock.*. The original IsPackUnlocked constants (10winseach, 20wins, 10winstotal) are unused (PackList_AddUnlockedPacks has no caller). The 2wins constants (IsCampaignLevel2Unlocked: duelists 1-5) never pass with four of them hidden, so the campaign level stays 1: no "New Duelists" notice (text 350) and, in the release, no Records page 2.
+- tools/hma_toml.py guide corrected ('a.b*' prefixes). Pages: [[hma-toml]].
+
+## [2026-11-06] progress | Records screen: format pages, unlocked by 20 wins against Android / Vampire
+- src/mod_opponents.c: ModRecordDuelist, ModRecordHasNextPage, ModRecordDrawPage (format opponents 5 a page, then Solomon / Debug / Test Duel); src/main_menu.c: Record_HasNextPage, Record_DrawPage and Record_DrawResultMarkers use them (.text -0x178, ends 0x0807F31C).
+- tools/record_names.py + data/mod_record_names.s (units.txt @rodata.added, Makefile): the name plates in the original font (letters cut from the original plates; F and - added).
+- tools/hma_toml.py guide: 2wins no longer the Records pages. Pages: [[main-menu-c]], [[hma-toml]].

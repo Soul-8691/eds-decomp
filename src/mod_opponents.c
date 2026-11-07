@@ -49,6 +49,8 @@
 #include "duel_flow.h"          /* gDuelCtrl.isLinkDuel, gPulseScaleCurve */
 #include "constants/duel.h"     /* enum CardMenuCommand, enum DuelPhase */
 #include "sprite.h"             /* AddSprite, AddAffineSprite */
+#include "bg.h"                 /* FillMapRect, LoadBgImage4bppToMap (ModRecordDrawPage) */
+#include "main_menu.h"          /* Record_DrawNumber */
 
 /* The opponent select's page pictures (campaign_select.c). */
 extern struct Mode4Bitmap gOpponentSelectPageBgs[5];
@@ -334,6 +336,81 @@ static u16 FormatDuelist(int order)
             return d;
     }
     return DUELIST_TRISTAN;
+}
+
+/* ---- The Records screen (main_menu.c) ----------------------------------------------------------------------------
+ * Its pages follow the opponent select: the format opponents in unlock order, 5 a page (pages 0-2), then the deck
+ * opponents (page 3: Solomon, Debug and, in make / make demo, the Test Duel). Page 1 opens when the 6th format does
+ * (20 wins against Android), page 2 with the 11th (20 wins against Vampire), page 3 with page 2; make and make demo
+ * open every page. The name plates are gModRecordNames (tools/record_names.py); the portraits stay the duelists'
+ * own (gRecordPortraitImages), and a locked opponent shows "???" as before. */
+#define RECORD_FORMAT_PAGES     3
+#define RECORD_ROWS             5
+#define RECORD_LAST_PAGE        3
+extern const u8 gModRecordNames[];                      /* data/mod_record_names.s: u32 offsets[4], then packs */
+extern const u16 *const gRecordPortraitImages[25];      /* index duelistId - 1 */
+extern const u16 gRecordRows5Image[], gRecordRows4Image[];
+extern const u16 gRecordUnknownPortraitImage[];
+static const u8 sRecordDeckPage[] = { DUELIST_GRANDPA, DUELIST_PEGASUS, DUELIST_DUEL_COMPUTER };
+
+static u16 FormatDuelist(int order);
+
+/* The duelist of Records row `row` of `page`, 0 for an empty row. */
+u16 ModRecordDuelist(int page, int row)
+{
+    if (page < RECORD_FORMAT_PAGES)
+        return row < RECORD_ROWS ? FormatDuelist(page * RECORD_ROWS + row) : 0;
+    if (page == RECORD_LAST_PAGE && row < (int)ARRAY_COUNT(sRecordDeckPage)
+        && sOpponents[sRecordDeckPage[row]].kind != KIND_HIDDEN)
+        return sRecordDeckPage[row];
+    return 0;
+}
+
+/* Whether the Records page after `page` is open. */
+u16 ModRecordHasNextPage(int page)
+{
+#if !MOD_RELEASE
+    return page < RECORD_LAST_PAGE;         /* make (testing): every page */
+#endif
+    if (page < RECORD_FORMAT_PAGES - 1)
+        return ModIsOpponentUnlocked(FormatDuelist((page + 1) * RECORD_ROWS));
+    return page == RECORD_FORMAT_PAGES - 1; /* the deck opponents' page */
+}
+
+/* Record_DrawPage: `page` into BG half `half`, as the original (main_menu.c) but with this build's rows: the row
+ * frames (5, or the 4-row frame for the deck page, its unused rows cleared), the page's name plates, and each row's
+ * portrait and wins, draws and losses, or "???" for a locked opponent. */
+void ModRecordDrawPage(int page, int half)
+{
+    u16 tileBase = half * 0xC0;
+    int row, rows = page < RECORD_FORMAT_PAGES ? RECORD_ROWS : RECORD_ROWS - 1;
+
+    FillMapRect(half + 1, 0, 0x20, 0x20);
+    FillMapRect(half + 3, 0, 0x20, 0x20);
+    LoadBgImage4bppToMap(half + 3, 0x63, 0x30, tileBase + 0xA0,
+                         rows == RECORD_ROWS ? gRecordRows5Image : gRecordRows4Image);
+    LoadBgImage4bppToMap(half + 1, 0x63, 0x40, tileBase + 0xC0,
+                         (const u16 *)(gModRecordNames + ((const u32 *)gModRecordNames)[page]));
+    for (row = 0; row < rows; row++) {
+        u16 duelist = ModRecordDuelist(page, row);
+        const u16 *portrait = gRecordUnknownPortraitImage;
+
+        if (duelist == 0) {
+            FillMapRect(half + 3, (row * 3 + 3) * 32, 0x20, 3);     /* no frame for an empty row */
+            continue;
+        }
+        if (!MOD_RELEASE || IsOpponentUnlocked(duelist))
+            portrait = gRecordPortraitImages[duelist - 1];
+        LoadBgImage4bppToMap(half + 1, (u16)(row * 3 + 4) * 32 + 4, (row + 5 + half * 5) * 16,
+                             tileBase + 0xE0 + row * 12, portrait);
+        if (portrait == gRecordUnknownPortraitImage) {
+            FillMapRect(half + 1, row * 0x60 + 0x63, 8, 1);        /* no name either */
+            continue;
+        }
+        Record_DrawNumber(half + 1, 0xD, row * 3 + 5, gSaveData.duelRecords[duelist].wins);
+        Record_DrawNumber(half + 1, 0x13, row * 3 + 5, gSaveData.duelRecords[duelist].draws);
+        Record_DrawNumber(half + 1, 0x19, row * 3 + 5, gSaveData.duelRecords[duelist].losses);
+    }
 }
 
 /* Wins against the format opponent at `order` in the unlock order. */

@@ -172,9 +172,14 @@ VANILLA_GUIDE = [
 VANILLA_WORDS_GUIDE = [
     ('data.constants.packs.rarities', "the original packs' rarity odds (.total and each rarity's weight)",
      'UNUSED (as data.packs)'),
-    ('data.constants.packs.unlocks', "the wins that unlock the original Campaign packs",
-     ('partly used (no longer the shop; still the Records pages and the "new packs" notice)',
-      'partly used (no longer the shop; the "new packs" notice)')),
+    ('data.constants.packs.unlocks.2wins*', "IsCampaignLevel2Unlocked: more than this many wins against each of "
+                                            "duelists 1-5 (Yugi, Tea, Joey, Tristan, Bakura) raise the campaign level: "
+                                            "the original pack unlocks and the \"New Duelists\" notice (text 350); the "
+                                            "Records pages now follow the formats (ModRecordHasNextPage)",
+     'effectively UNUSED (four of those duelists are hidden, so it never passes)'),
+    ('data.constants.packs.unlocks', "IsPackUnlocked: the wins that unlock the original Campaign packs",
+     'UNUSED (only the original pack list reads it, and nothing shows that list; the "new packs" notice follows the '
+     'format packs: data.constants.packs.format.usagewins, data.constants.formats.unlock.*)'),
     ('data.constants.fusion2', "a Fusion constant of the original", USED),
     ('data.constants.cards.limit2', "the card ID count in GeneratePackCards (random pack cards): the last real card",
      USED),
@@ -203,13 +208,16 @@ def guide_lines(entries, names, suffix=''):
     out = []
     taken = set()
     for prefix, what, status in entries:
-        hits = [n for n in names if (n == prefix or n.startswith(prefix + '.')) and n not in taken]
+        if prefix.endswith('*'):        # 'a.b*': every name that starts with a.b
+            hits = [n for n in names if n.startswith(prefix[:-1]) and n not in taken]
+        else:
+            hits = [n for n in names if (n == prefix or n.startswith(prefix + '.')) and n not in taken]
         if not hits:
             continue
         taken.update(hits)
         if isinstance(status, tuple):
             status = status[0] if GUIDE_RELEASE else status[1]
-        star = '.*' if any(n != prefix for n in hits) else ''
+        star = '' if prefix.endswith('*') else '.*' if any(n != prefix for n in hits) else ''
         count = f' [{len(hits)}]' if len(hits) > 1 else ''
         out += textwrap.wrap(f'{prefix}{star}{count}{suffix} -- {status}: {what}', 112, initial_indent='#   ',
                              subsequent_indent='#       ')

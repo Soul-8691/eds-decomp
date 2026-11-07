@@ -523,24 +523,16 @@ u16 Record_HasPrevPage(void)
     return 0;
 }
 
-/* Returns whether the page after the shown one is unlocked: the same campaign-level tests that open the
- * opponent-select pages. The last page (4) has no next page. */
+/* Returns whether the page after the shown one is unlocked. Changed: this build's pages (the format opponents in
+ * unlock order, then the deck opponents) open as ModRecordHasNextPage (src/mod_opponents.c) says; originally the
+ * campaign-level tests that opened the opponent-select pages. */
+u16 ModRecordHasNextPage(int page);
+u16 ModRecordDuelist(int page, int row);
+void ModRecordDrawPage(int page, int half);
+
 u16 Record_HasNextPage(void)
 {
-#if !MOD_RELEASE
-    return gRecordScreen.page < 4;      /* mod: make (testing): every page */
-#endif
-    switch (gRecordScreen.page) {
-    case 0:
-        return IsCampaignLevel2Unlocked();
-    case 1:
-        return IsCampaignLevel3Unlocked();
-    case 2:
-        return IsCampaignLevel4Unlocked();
-    case 3:
-        return IsCampaignLevel5Unlocked();
-    }
-    return 0;
+    return ModRecordHasNextPage(gRecordScreen.page);
 }
 
 /* Draws the left (x = 0x10) and right (x = 0xE0) page arrows at y = 0x20 when there is a page that way;
@@ -567,11 +559,14 @@ void Record_DrawResultMarkers(void)
 
     if (gRecordScreen.scrollDir)
         return;
-    rowCount = (gRecordScreen.page <= 3) ? 5 : 4;
+    rowCount = 5;
     frame = (gMain.frameCounter >> 3) & 7;
     for (i = 0; i < rowCount; i++) {
-        diff = gSaveData.duelRecords[gRecordScreen.page * 5 + i + 1].wins
-             - gSaveData.duelRecords[gRecordScreen.page * 5 + i + 1].losses;
+        u16 duelist = ModRecordDuelist(gRecordScreen.page, i);     /* changed: this build's rows */
+
+        if (duelist == 0)
+            continue;
+        diff = gSaveData.duelRecords[duelist].wins - gSaveData.duelRecords[duelist].losses;
         /* column = -1 (WIN), 0 (DRAW) or 1 (LOSE) */
         column = diff < 0;
         if (diff > 0)
@@ -604,44 +599,14 @@ void Record_DrawNumber(s32 screenblock, s32 tileX, s32 tileY, s32 value)
 }
 
 /*
- * Draws `page` into BG half `half` (screenblock 1 + half of BG1 and 3 + half of BG2): clears both maps, puts
- * the 5- or 4-row WIN/DRAW/LOSE frame on BG2 and the page's column of name plates on BG1, then for each row
- * (3 map rows from row 3) the portrait and the wins/draws/losses (3 digits) of duelist page * 5 + row + 1
- * if it is unlocked, else the "???" portrait and no name. Each half has its own tiles (from half * 0xC0)
- * and each portrait its own palette (bank 5 + row, + 5 in half 1).
+ * Draws `page` into BG half `half` (screenblock 1 + half of BG1 and 3 + half of BG2). Changed: ModRecordDrawPage
+ * (src/mod_opponents.c) draws this build's rows (the format opponents in unlock order, then the deck opponents) and
+ * name plates; originally the 5- or 4-row frame, the page's name plates and duelist page * 5 + row + 1 on each row
+ * (portrait and wins/draws/losses if unlocked, else the "???" portrait and no name).
  */
 void Record_DrawPage(s32 page, s32 half)
 {
-    u16 tileBase = half * 0xC0;
-    s32 row, rowCount;
-
-    FillMapRect(half + 1, 0, 0x20, 0x20);
-    FillMapRect(half + 3, 0, 0x20, 0x20);
-    /* Matching: the ternary must already have the parameter's type (a conversion around it makes agbcc
-     * evaluate it into a pseudo instead of storing each arm straight into the stack slot), and the map row
-     * in `(u16)(row * 3 + 4) * 32 + 4` below is truncated to 16 bits. */
-    LoadBgImage4bppToMapWide(half + 3, 0x63, 0x30, tileBase + 0xA0,
-                             (page <= 3) ? gRecordRows5Image : gRecordRows4Image);
-    LoadBgImage4bppToMapWide(half + 1, 0x63, 0x40, tileBase + 0xC0, gRecordPageNameImages[page]);
-    rowCount = 4;
-    if (page <= 3)
-        rowCount = 5;
-    for (row = 0; row < rowCount; row++) {
-        u16 index = page * 5 + row;     /* duelistId - 1 */
-
-        /* name on map row row * 3 + 3, portrait from cell (4, row * 3 + 4), numbers on map row row * 3 + 5 */
-        if (!MOD_RELEASE || IsOpponentUnlockedInt(index + 1)) {    /* mod: make (testing) shows every duelist */
-            LoadBgImage4bppToMapWide(half + 1, (u16)(row * 3 + 4) * 32 + 4, (row + 5 + half * 5) * 16,
-                                     tileBase + 0xE0 + row * 12, gRecordPortraitImages[index]);
-            Record_DrawNumber(half + 1, 0xD, row * 3 + 5, gSaveData.duelRecords[index + 1].wins);
-            Record_DrawNumber(half + 1, 0x13, row * 3 + 5, gSaveData.duelRecords[index + 1].draws);
-            Record_DrawNumber(half + 1, 0x19, row * 3 + 5, gSaveData.duelRecords[index + 1].losses);
-        } else {
-            LoadBgImage4bppToMapWide(half + 1, (u16)(row * 3 + 4) * 32 + 4, (row + 5 + half * 5) * 16,
-                                     tileBase + 0xE0 + row * 12, gRecordUnknownPortraitImage);
-            FillMapRect(half + 1, row * 0x60 + 0x63, 8, 1);    /* the name: 8 x 1 cells at (3, row * 3 + 3) */
-        }
-    }
+    ModRecordDrawPage(page, half);      /* changed: this build's rows and name plates (src/mod_opponents.c) */
 }
 
 /* ---- Date helpers (Calendar, Campaign) ---- */

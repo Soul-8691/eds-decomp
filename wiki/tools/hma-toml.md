@@ -103,7 +103,13 @@ original ROM (repo root). Without `baserom.toml` it does nothing. `eds_demo.toml
     unused the original opponent decks (every format opponent has a mod deck; Solomon and Debug fall back to theirs
     without a picked recipe); partly used the original boosters, their covers and rarity odds (not in the shop,
     `ModPackList_AddUnlockedPacks` lists only format packs; still the Campaign event rewards, `gMain.rewardPack`)
-    and the original pack-unlock wins (`IsCampaignLevel2Unlocked` etc.: Records pages, the "new packs" notice);
+    (correction, 2026-11-06: the original pack-unlock wins are unused: `unlocks.10winseach`, `.20wins` and
+    `.10winstotal` are in `IsPackUnlocked`, read only by the original pack list `PackList_AddUnlockedPacks`, which
+    nothing calls; `unlocks.2wins1`-`5` are in `IsCampaignLevel2Unlocked`, "more than 1 win against each of duelists
+    1-5", which can never pass with Yugi, Tea, Joey and Bakura hidden (the Records pages no longer use it:
+    `ModRecordHasNextPage`, [[main-menu-c]]). The "new packs" notice, `unlockNotices` bit 1
+    in `Campaign_RecordDuelResult`, compares `ModCountUnlockedFormatPacks` before and after a duel, so it follows the
+    mod's usagewins and formats.unlock.*);
     debug-only the recipes, the Test Duel deck, and the Tea / Joey / Bakura decks (hidden duelists, reachable through
     the recipes); release-only the mod's unlock wins. The texts are `VANILLA_GUIDE` / `ADDED_GUIDE` (and the WORDS and
     LISTS variants) in the script.

@@ -140,3 +140,21 @@ All four match in ordinary C (no FAKEMATCH comments in the final source). Workin
 - The counters reuse `Record_DrawResultMarkers`'s view: `WF3F88Save.rec[k + 1].wins/.draws/.losses`, drawn in the ROM's order wins, draws, losses.
 
 Related: [[campaign-select-c]], [[collection-c]], [[ram-map]], [[main-menu]], [[decomp-permuter]].
+
+## Records screen in this build (2026-11-06)
+- The pages follow the opponent select (src/mod_opponents.c): pages 0-2 are the format opponents in unlock
+  order, 5 a page (Yugi-Kaiba to Android, Joey-Pegasus to Vampire, Chaos to Reaper), page 3 the deck
+  opponents (Solomon, Debug, and the Test Duel in make / make demo). `ModRecordDuelist(page, row)` gives each
+  row's duelist (0: an empty row); originally duelist page * 5 + row + 1.
+- `Record_HasNextPage` returns `ModRecordHasNextPage(page)`: page 1 opens with the 6th format (20 wins
+  against Android, sWinsToUnlockNext), page 2 with the 11th (20 wins against Vampire), page 3 with page 2;
+  make and make demo open every page. Originally `IsCampaignLevel2-5Unlocked`, which needed wins against
+  duelists 1-5 (four of them hidden in this build), so the release never showed page 2.
+- `Record_DrawPage` calls `ModRecordDrawPage` (far code): the 5-row frame (the 4-row one for the deck page,
+  its unused rows cleared), the name plates `gModRecordNames` (`data/mod_record_names.s`, built by
+  `tools/record_names.py`: the first original plate with its name painted out and each opponent's name in
+  the original 5-pixel font, its letters cut from the five original plate images `gRecordPageNameImages`,
+  bank B 0x087E6610-0x087E743C; F and - drawn to match; a long name such as JOEY-PEGASUS starts further left
+  so that no pixel touches the plate's edge), and each row's portrait (the slot duelist's own face) and
+  wins, draws and losses, or "???" for a locked opponent. `Record_DrawResultMarkers` reads the same rows.
+- Size: the size-limited `.text` shrank by 0x178 bytes (ends at 0x0807F31C). Not yet checked on screen.

@@ -248,6 +248,13 @@ $(FIELD_ICONS): $(NEWCARDS_BUILT) $(NEWCARDS_TABLES) tools/cardicons.py tools/as
 build/src/mod_field_icons.o: $(NEWCARDS_GEN) $(FIELD_ICONS)
 build/data/mod_field_icons_data.o: $(NEWCARDS_GEN) $(FIELD_ICONS)
 
+# The Records screen's name plates (tools/record_names.py; src/mod_opponents.c ModRecordDrawPage), from the original
+# plates of assets/gfx/bank_b and the opponents' names in src/mod_opponents.c.
+build/assets/record_names.bin: tools/record_names.py tools/assets.py src/mod_opponents.c $(ASSETS_BUILT)
+	@mkdir -p $(@D)
+	$(PYTHON) tools/record_names.py $@
+build/data/mod_record_names.o: build/assets/record_names.bin
+
 # The pre-duel pictures and their QR codes (tools/preduel_image.py; src/mod_preduel.c), for data/mod_preduel_data.s.
 # One per format opponent with a picture: duelists/<name>.png (240x96, up to 224 colours) and duelists/<name>.svg
 # (its formatlibrary.com QR code); the names match data/mod_preduel_data.s.
