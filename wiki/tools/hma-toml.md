@@ -58,9 +58,9 @@ original ROM (repo root). Without `baserom.toml` it does nothing. `eds_demo.toml
   - Format packs (`src/mod_format_packs.c`, `build/include/format_pack_data.h`), indexed by the new list
     `formatpacks` (the 50 pack names): `data.packs.format.pools`
     (``[pool<[card:cardinternalnumbers weight:]/count> count: unused:]formatpacks``, the pool and weights the
-    tables of PACKS.md show), `data.packs.format.roulettes` (``[roulette<[card:cardinternalnumbers]8192>]...``: what
-    a pull actually reads, 8192 card numbers per pack, built from the weights by `tools/format_packs.py`; editing a
-    pool's weights in HMA does not change the roulette), `.names` (pointers to the `` `asc` `` strings
+    tables of PACKS.md show, and all a pull reads: a weight edited in HMA is that card's new pull weight; a pool
+    can be made shorter or, with room or a repoint, longer through its `count`), `.names` (pointers to the
+    `` `asc` `` strings
     `text.packs.format.pack<i>`), `.flags` (1 = usage pack), `.formats` (an index of the `formats` list),
     `.releasedates` (yyyymmdd), `.portraits` (the cover card).
   - Card prices (`src/mod_dp.c`, `build/include/card_prices.h`): `data.prices.cards`
@@ -97,7 +97,7 @@ original ROM (repo root). Without `baserom.toml` it does nothing. `eds_demo.toml
 - With the blank slots (2026-11-06): 1436 card IDs, the limits found as 1435/1436 or 1006/1007; the same 7
   Deck Edit / Card Trading sites left out.
 - The mod tables (2026-11-06): decoded from the demo ROM at the TOML's addresses: pool 0 (126 cards, 1/600,
-  2/10000, ...), the pack names, roulette 0 (0x4000 bytes per pack), the dates and portraits, the Yugi-Kaiba price
+  2/10000, ...), the pack names, the dates and portraits, the Yugi-Kaiba price
   table (75 cards, 0/223, 1/451, ...), Joey's DeckList pointing at its 41-card main deck, the 44 recipes (every
   DeckList and side they point to is anchored); no two anchors share an address.
 - Not opened in HMA yet.

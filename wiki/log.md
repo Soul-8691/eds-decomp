@@ -2693,3 +2693,9 @@ updated: 2026-09-29
 - src/mod_preduel.c: UntilePicture (tiles -> Mode 4 bitmap, +32), QrModule (reads the sprite); data/mod_preduel_data.s comment.
 - tools/hma_toml.py: graphics.preduel.<format>(.palette/.qr/.qr.palette), data.preduel.<format>.qrsize. Checked by rendering from eds_demo.gba.
 - Pages: [[yugi-kaiba-opponent]], [[hma-toml]].
+
+## [2026-11-06] progress | Format packs: weighted picks from the pool, no roulette
+- src/mod_format_packs.c: WeightedPick over sFormatPackPools (RandomBelow(total)); the 8192-entry roulettes removed (58 pool cards in 11 packs could never be pulled).
+- tools/format_packs.py (no build_roulette, roulette blob or FORMAT_PACK_ROULETTE_SIZE), Makefile, units.txt, tools/mkld.py comment; deleted data/mod_format_pack_roulettes.s and tools/check_roulette.py. ROM 800 KB smaller.
+- tools/hma_toml.py: no roulettes anchor; tools/packs_md.py and PACKS.md: how pulls work.
+- Pages: [[pack-shop]], [[hma-toml]].

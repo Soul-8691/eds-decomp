@@ -22,7 +22,7 @@ source of this repo, and where that thing is in the demo ROM:
   Added         anchors baserom.toml lacks, by symbol (EXTRA_ANCHORS): field miniature palette + ucs8 sprites,
                 Deck Edit ring art (graphics.cards.icons*). And the mod's own tables (mod_anchors), by the ELF's
                 symbols (static ones too: build/eds.elf's .symtab): the format packs (data.packs.format.*: each
-                pack's pool of card and weight, the 8192-entry roulette the pulls read, flags, format, release date,
+                pack's pool of card and weight, which is all a pull reads, flags, format, release date,
                 portrait, name; list formatpacks), the card prices (data.prices.cards: per format, card and DP; list
                 formats), every deck of src/mod_decks.c (data.decks.mod.<deck>: main + Fusion, side, DeckList) and
                 the debug deck recipes (data.decks.recipes: name, DeckList, side, side count), and the pre-duel
@@ -166,12 +166,6 @@ def mod_anchors(elf, rom, rom_sym):
         for i in range(count):
             p = word(names[0] + 4 * i)
             anchors.append((f'text.packs.format.pack{i}', p - ROM_BASE, '`asc`%d' % (len(packs[i]) + 1)))
-        roulettes = sym('sFormatPackRoulettes', 'mod_format_packs.o')
-        m = re.search(r'#define FORMAT_PACK_ROULETTE_SIZE (\d+)',
-                      open('build/include/format_pack_data.h', encoding='utf-8').read())
-        if roulettes and m:
-            per = int(m.group(1))       # (gFormatPackRouletteBlob is an assembly label: no size)
-            add('data.packs.format.roulettes', roulettes, f'[roulette<[card:cardinternalnumbers]{per}>]formatpacks')
         for field_name, symbol, fmt in (('flags', 'sFormatPackFlags', '[usage.]formatpacks'),
                                         ('formats', 'sFormatPackFormatIndex', '[format.formats]formatpacks'),
                                         ('releasedates', 'sFormatPackReleaseDate', '[yyyymmdd::]formatpacks'),

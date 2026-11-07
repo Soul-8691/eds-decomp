@@ -8,11 +8,9 @@ each format's real sets in release order, then that format's usage pack (LOB / Y
 Usage packs list only cards present in usage/<stem>.json (weighted like cardprices.py), not the full card pool.
 Format event dates come from packs/formats.json field \"date\".
 """
-import bisect
 import glob
 import json
 import os
-import random
 import re
 import struct
 import sys
@@ -23,8 +21,6 @@ from cardprices import BASE, EXTRA_DIVISOR, LIMIT_FACTOR, share  # noqa: E402
 
 FORMAT_PACK_ID_FIRST = 601
 VANILLA_PACK_INFO_COUNT = 23
-# 50 packs × ROULETTE_SIZE × 2 bytes (mod_format_pack_roulettes in .rodata.added after gCardIdsByName).
-ROULETTE_SIZE = 8192
 WEIGHT_SCALE = 10000
 # Usage-pack pull weight ∝ 1/share^POWER (before banlist limits). 1.0 = full inverse usage;
 # lower values flatten pulls so staples (high usage) show up more and the tail repeats less.
@@ -333,27 +329,8 @@ def pack_display_name(path):
     return base
 
 
-def build_roulette(entries, seed):
-    numbers = [n for n, _ in entries]
-    cum = []
-    total = 0
-    for _, weight in entries:
-        total += weight
-        cum.append(total)
-    rng = random.Random(seed)
-    table = []
-    for _ in range(ROULETTE_SIZE):
-        r = rng.randrange(total)
-        idx = bisect.bisect_right(cum, r)
-        if idx >= len(numbers):
-            idx = len(numbers) - 1
-        table.append(numbers[idx])
-    return table
-
-
 def main():
     out = sys.argv[1]
-    bin_out = os.path.join(os.path.dirname(os.path.dirname(out)), 'assets', 'format_pack_roulettes.bin')
     lookup = banlist.card_lookup()
     missing = []
     fusion_numbers = load_fusion_card_numbers()
@@ -409,7 +386,6 @@ def main():
         f'#define FORMAT_PACK_COUNT {len(pack_specs)}',
         f'#define FORMAT_PACK_ID_FIRST {FORMAT_PACK_ID_FIRST}',
         f'#define VANILLA_PACK_INFO_COUNT {VANILLA_PACK_INFO_COUNT}',
-        f'#define FORMAT_PACK_ROULETTE_SIZE {ROULETTE_SIZE}',
         f'#define FORMAT_EVENT_COUNT {len(banlist.BANLISTS)}',
         f'#define FORMAT_PACK_FLAG_USAGE {FORMAT_PACK_FLAG_USAGE}',
         f'#define FORMAT_PACK_USAGE_WINS {FORMAT_PACK_USAGE_WINS}',
@@ -428,8 +404,6 @@ def main():
     format_indices = []
     release_dates = []
     pool_lines = []
-    roulette_ptrs = []
-    roulette_blob = bytearray()
     names = []
 
     usage_portraits = []
@@ -456,13 +430,11 @@ def main():
                 if w is not None:
                     w = usage_pack_entry_weight(number, w, fusion_numbers)
                     entries.append((number, w))
-            seed = stem
             portrait_nums.append(usage_portraits[spec['format_index']])
             label = f'{display} usage'
         else:
             flags.append(0)
             entries = pack_entries_tcg(spec['path'], lookup, missing)
-            seed = os.path.basename(spec['path'])
             portrait_nums.append(portrait_number(entries))
             label = f'{display} ({len(entries)} ROM cards)'
 
@@ -472,18 +444,7 @@ def main():
             chunk = entries[j:j + 6]
             lines.append('    ' + ', '.join(f'{{ {n}, {w} }}' for n, w in chunk) + ',')
         lines.append('};')
-        roulette = build_roulette(entries, seed)
-        for n in roulette:
-            roulette_blob += struct.pack('<H', n)
         pool_lines.append(f'    {{ sFormatPackPool{i}, {len(entries)} }},')
-        roulette_ptrs.append(f'    &gFormatPackRouletteBlob[{i} * FORMAT_PACK_ROULETTE_SIZE],')
-
-    os.makedirs(os.path.dirname(bin_out), exist_ok=True)
-    try:
-        if open(bin_out, 'rb').read() != roulette_blob:
-            open(bin_out, 'wb').write(roulette_blob)
-    except FileNotFoundError:
-        open(bin_out, 'wb').write(roulette_blob)
 
     lines.append('static const u8 sFormatPackFlags[FORMAT_PACK_COUNT] = {')
     lines.append('    ' + ', '.join(str(f) for f in flags) + ',')
@@ -503,14 +464,6 @@ def main():
     lines.append('};')
     lines.append('')
 
-    lines.append(
-        'extern const u16 gFormatPackRouletteBlob[FORMAT_PACK_COUNT * FORMAT_PACK_ROULETTE_SIZE];'
-    )
-    lines.append('')
-    lines.append('static const u16 *const sFormatPackRoulettes[FORMAT_PACK_COUNT] = {')
-    lines.extend(roulette_ptrs)
-    lines.append('};')
-    lines.append('')
 
     lines.append('static const struct FormatPackPool {')
     lines.append('    const struct FormatPackEntry *entries;')

@@ -64,3 +64,14 @@ format opponent opens at 20 wins against the previous format; usage-weighted pac
 `unlockNotices` bit 1 is set and `Campaign_GiveRewards` shows dialogue 351 before the free pick-a-pack list.
 
 Related: [[booster-packs]], [[booster-get-pack-c]], [[main-menu]], [[deck-recipes]].
+
+## Format pack pulls (2026-11-06)
+- `ModGenerateFormatPackCards` (src/mod_format_packs.c) makes five weighted picks straight from the pack's pool
+  (`sFormatPackPools`: card number and weight, `tools/format_packs.py`): `RandomBelow(total of the weights)`,
+  then `WeightedPick` walks the pool to the card where the running sum passes it, so a card's chance is
+  exactly weight / total (as PACKS.md lists). A card already in the pack is re-rolled (up to 64 times).
+- It used to read a precomputed 8192-entry roulette per pack (`gFormatPackRouletteBlob`, 800 KB), filled
+  by 8192 seeded random draws: 58 of the 3557 pool cards (11 packs, the lowest weights) never landed in
+  theirs and could not be pulled, and a pool edited in Hex Maniac Advance changed nothing. Removed with
+  `data/mod_format_pack_roulettes.s` and `tools/check_roulette.py`; the pool is now all a pull reads
+  ([[hma-toml]]: `data.packs.format.pools`).

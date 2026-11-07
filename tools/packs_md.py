@@ -5,7 +5,7 @@
   python3 tools/pack_prices_md.py [PACKS.md]    # after usage/*.json or banlist edits
   python3 tools/packs_md.py [PACKS.md]          # both sections
 
-Pull math matches tools/format_packs.py and src/mod_format_packs.c (weighted pool, 8192-entry roulette).
+Pull math matches tools/format_packs.py and src/mod_format_packs.c (a weighted pick from the pool).
 """
 from __future__ import annotations
 
@@ -69,8 +69,9 @@ def static_intro() -> list[str]:
         '## How pulls work',
         '',
         'Each opened pack gives **five cards**. For format packs (IDs 601+), `ModGenerateFormatPackCards` '
-        '(`src/mod_format_packs.c`) picks five **independent** indices into a fixed **8192-entry roulette** '
-        '(built at compile time with a per-pool seed). Each index maps to one card number; weights match the tables below. '
+        '(`src/mod_format_packs.c`) makes five **independent** weighted picks from the pack\'s pool: a random number '
+        'below the sum of the weights, then the card where the running sum passes it, so each card\'s chance is exactly '
+        'the table\'s. The pool in the ROM is all a pull reads (Hex Maniac Advance: `data.packs.format.pools`). '
         'The same card is not duplicated in one pack (up to 64 re-rolls per slot). A final shuffle permutes the five slots.',
         '',
         '**Single-card probability** (what the tables list): `weight / sum(weights)` for that pack\'s pool. '
@@ -156,8 +157,7 @@ def pack_chances_section() -> list[str]:
         '',
         '## Pack pull rates',
         '',
-        f'{len(pack_specs)} format packs (TCG sets interleaved with usage packs per Campaign format). '
-        f'Roulette size: {fp.ROULETTE_SIZE} entries per pool.',
+        f'{len(pack_specs)} format packs (TCG sets interleaved with usage packs per Campaign format).',
         '',
     ]
     if missing:

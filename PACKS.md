@@ -49,7 +49,7 @@ Forbidden cards (limit 0) are omitted. Lower usage ⇒ higher weight ⇒ more co
 
 ## Pack pull rates
 
-50 format packs (TCG sets interleaved with usage packs per Campaign format). Roulette size: 8192 entries per pool.
+50 format packs (TCG sets interleaved with usage packs per Campaign format).
 
 ### Legend of Blue Eyes White Dragon
 

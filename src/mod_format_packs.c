@@ -360,7 +360,7 @@ static int CardAlreadyPicked(const u16 *cardNumbers, int count, u16 number)
     return 0;
 }
 
-/* Random() is 15-bit (see sprite.c); widen before % FORMAT_PACK_ROULETTE_SIZE. */
+/* Random() is 15-bit (see sprite.c); widened to 30 bits for n above 0x8000. */
 static u32 RandomBelow(u32 n)
 {
     u32 r;
@@ -373,18 +373,33 @@ static u32 RandomBelow(u32 n)
     return r % n;
 }
 
+/* The pool entry where the running sum of the weights passes r (0 <= r < the total): each card's chance is
+ * weight / total. The pool (data.packs.format.pools in Hex Maniac Advance) is all a pull reads. */
+static u16 WeightedPick(const struct FormatPackPool *pool, u32 r)
+{
+    int i;
+
+    for (i = 0; i < pool->count - 1; i++) {
+        if (r < pool->entries[i].weight)
+            break;
+        r -= pool->entries[i].weight;
+    }
+    return pool->entries[i].number;
+}
+
 int ModGenerateFormatPackCards(u16 *cardNumbers, u16 packId)
 {
     int fi = FormatPackIndexFromId(packId);
     const struct FormatPackPool *pool;
-    const u16 *roulette;
+    u32 total = 0;
     int i;
 
     if (fi < 0)
         return -1;
     pool = &sFormatPackPools[fi];
-    roulette = sFormatPackRoulettes[fi];
-    if (pool->count == 0 || roulette == NULL)
+    for (i = 0; i < pool->count; i++)
+        total += pool->entries[i].weight;
+    if (total == 0)
         return -1;
     gPackOpenWork.openPackId = packId;
     for (i = 0; i < 5; i++) {
@@ -392,7 +407,7 @@ int ModGenerateFormatPackCards(u16 *cardNumbers, u16 packId)
         int tries;
 
         for (tries = 0; tries < 64; tries++) {
-            n = roulette[RandomBelow(FORMAT_PACK_ROULETTE_SIZE)];
+            n = WeightedPick(pool, RandomBelow(total));
             if (!CardAlreadyPicked(cardNumbers, i, n))
                 break;
         }

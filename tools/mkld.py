@@ -71,7 +71,7 @@ SECTIONS
 
     .rodata.pinned 0x08623DF4 : {{ *(.rodata.pinned) }} =0
 
-    /* @rodata.added: gModFieldIconData, gFormatPackRouletteBlob, ... after gCardIdsByName. */
+    /* @rodata.added: gModFieldIconData, the pre-duel pictures, ... after gCardIdsByName. */
     .rodata.added :
     {{
 {chr(10).join(rodata_added_ld)}

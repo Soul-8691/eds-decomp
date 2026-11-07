@@ -2,7 +2,7 @@
 # (first that exists). "@libs" = libgcc/libc; "@rodata <unit>" places that unit's
 # .rodata at that point of the .rodata section instead of next to its .text; "@farcode <unit>" puts that
 # unit's .text in .text.added (after main .rodata, before gCardNumberToId); "@rodata.added <unit>" puts
-# gModFieldIconData and gFormatPackRouletteBlob after gCardIdsByName in .rodata.pinned (tools/mkld.py).
+# gModFieldIconData and the pre-duel pictures after gCardIdsByName in .rodata.pinned (tools/mkld.py).
 crt0
 bustup_scene
 bustup_runner
@@ -170,7 +170,6 @@ mod_preduel_data
 @farcode card_list_viewer
 @rodata.added mod_field_icons_data
 @rodata.added mod_preduel_data
-@rodata.added mod_format_pack_roulettes
 @libs
 veneer
 rodata_08080A20
@@ -197,4 +196,3 @@ rodata_08087FD0
 @rodata mod_link
 @rodata mod_preduel
 @rodata card_list_viewer
-mod_format_pack_roulettes
