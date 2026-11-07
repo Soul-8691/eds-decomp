@@ -66,6 +66,12 @@
 #
 # Added by Yak's YGO Hack (not in baserom.toml); by symbol, so they follow every build:
 #  NamedAnchors (Goto menu):
+#   data.cards.names -- used: every card's name (gCardNames: ASCII, 64 bytes; at most 41 characters fit a Deck
+#       Edit row), by card ID
+#   data.cards.descriptions -- used: every card's lore/effect text (gCardDescriptions: ASCII, 480 bytes, no line
+#       breaks), by card ID
+#   data.cards.nameorder -- used: the card IDs in name order, 0-terminated (gCardIdsByName): what Deck Edit, the
+#       Trunk and Card Trading list (make demo's blank slots are left out until filled in)
 #   graphics.cards.icons.* [2] -- used: every card's art icon (Deck Edit's ring): .palettes, .images (16x16
 #       4bpp)
 #   graphics.cards.fieldicons.* [2] -- used: the field icons: .artpalette (64 shared colours), .miniatures (each
@@ -833,6 +839,24 @@ DefaultHash = '''370D7472'''
 #################################
 #################################
 [[NamedAnchors]]
+Name = '''data.cards.names'''
+Address = 0x22C720
+Format = '''[name`asc`64]cardnumbers'''
+DefaultHash = '''116B7DD5'''
+
+[[NamedAnchors]]
+Name = '''data.cards.descriptions'''
+Address = 0x800000
+Format = '''[description`asc`480]cardnumbers'''
+DefaultHash = '''32EFA8F3'''
+
+[[NamedAnchors]]
+Name = '''data.cards.nameorder'''
+Address = 0xEC3E54
+Format = '''[card:cardnumbers]!0000'''
+DefaultHash = '''1221BEB2'''
+
+[[NamedAnchors]]
 Name = '''graphics.cards.fieldicons.artpalette'''
 Address = 0xECD694
 Format = '''`ucp4:0123`'''
@@ -1201,8 +1225,8 @@ DefaultHash = '''40D80AA0'''
 [[NamedAnchors]]
 Name = '''data.decks.mod.androidtomatocontrol.main'''
 Address = 0x24833E
-Format = '''[card:cardinternalnumbers]55'''
-DefaultHash = '''E9E0AD0D'''
+Format = '''[card:cardinternalnumbers|data.cards.passwords]55'''
+DefaultHash = '''CF3DDEB1'''
 
 [[NamedAnchors]]
 Name = '''data.decks.mod.androidtomatocontrol.list'''
@@ -1213,14 +1237,14 @@ DefaultHash = '''E988BC23'''
 [[NamedAnchors]]
 Name = '''data.decks.mod.androidtomatocontrol.side'''
 Address = 0x2483B4
-Format = '''[card:cardinternalnumbers]15'''
-DefaultHash = '''3B438E3D'''
+Format = '''[card:cardinternalnumbers|data.cards.passwords]15'''
+DefaultHash = '''FBA39364'''
 
 [[NamedAnchors]]
 Name = '''data.decks.mod.androidvanillabeat.main'''
 Address = 0x2483D2
-Format = '''[card:cardinternalnumbers]55'''
-DefaultHash = '''E9E0AD0D'''
+Format = '''[card:cardinternalnumbers|data.cards.passwords]55'''
+DefaultHash = '''CF3DDEB1'''
 
 [[NamedAnchors]]
 Name = '''data.decks.mod.androidvanillabeat.list'''
@@ -1231,14 +1255,14 @@ DefaultHash = '''E988BC23'''
 [[NamedAnchors]]
 Name = '''data.decks.mod.androidvanillabeat.side'''
 Address = 0x248448
-Format = '''[card:cardinternalnumbers]15'''
-DefaultHash = '''3B438E3D'''
+Format = '''[card:cardinternalnumbers|data.cards.passwords]15'''
+DefaultHash = '''FBA39364'''
 
 [[NamedAnchors]]
 Name = '''data.decks.mod.bakuradeck.main'''
 Address = 0x247C60
-Format = '''[card:cardinternalnumbers]55'''
-DefaultHash = '''E9E0AD0D'''
+Format = '''[card:cardinternalnumbers|data.cards.passwords]55'''
+DefaultHash = '''CF3DDEB1'''
 
 [[NamedAnchors]]
 Name = '''data.decks.mod.bakuradeck.list'''
@@ -1249,14 +1273,14 @@ DefaultHash = '''E988BC23'''
 [[NamedAnchors]]
 Name = '''data.decks.mod.bakuradeck.side'''
 Address = 0x247CCE
-Format = '''[card:cardinternalnumbers]15'''
-DefaultHash = '''3B438E3D'''
+Format = '''[card:cardinternalnumbers|data.cards.passwords]15'''
+DefaultHash = '''FBA39364'''
 
 [[NamedAnchors]]
 Name = '''data.decks.mod.chaoscontrol.main'''
 Address = 0x248B0E
-Format = '''[card:cardinternalnumbers]55'''
-DefaultHash = '''E9E0AD0D'''
+Format = '''[card:cardinternalnumbers|data.cards.passwords]55'''
+DefaultHash = '''CF3DDEB1'''
 
 [[NamedAnchors]]
 Name = '''data.decks.mod.chaoscontrol.list'''
@@ -1267,14 +1291,14 @@ DefaultHash = '''E988BC23'''
 [[NamedAnchors]]
 Name = '''data.decks.mod.chaoscontrol.side'''
 Address = 0x248B84
-Format = '''[card:cardinternalnumbers]15'''
-DefaultHash = '''3B438E3D'''
+Format = '''[card:cardinternalnumbers|data.cards.passwords]15'''
+DefaultHash = '''FBA39364'''
 
 [[NamedAnchors]]
 Name = '''data.decks.mod.chaoswarrior.main'''
 Address = 0x248BA2
-Format = '''[card:cardinternalnumbers]55'''
-DefaultHash = '''E9E0AD0D'''
+Format = '''[card:cardinternalnumbers|data.cards.passwords]55'''
+DefaultHash = '''CF3DDEB1'''
 
 [[NamedAnchors]]
 Name = '''data.decks.mod.chaoswarrior.list'''
@@ -1285,14 +1309,14 @@ DefaultHash = '''E988BC23'''
 [[NamedAnchors]]
 Name = '''data.decks.mod.chaoswarrior.side'''
 Address = 0x248C18
-Format = '''[card:cardinternalnumbers]15'''
-DefaultHash = '''3B438E3D'''
+Format = '''[card:cardinternalnumbers|data.cards.passwords]15'''
+DefaultHash = '''FBA39364'''
 
 [[NamedAnchors]]
 Name = '''data.decks.mod.crittermaskedcontrol.main'''
 Address = 0x247F4E
-Format = '''[card:cardinternalnumbers]55'''
-DefaultHash = '''E9E0AD0D'''
+Format = '''[card:cardinternalnumbers|data.cards.passwords]55'''
+DefaultHash = '''CF3DDEB1'''
 
 [[NamedAnchors]]
 Name = '''data.decks.mod.crittermaskedcontrol.list'''
@@ -1303,14 +1327,14 @@ DefaultHash = '''E988BC23'''
 [[NamedAnchors]]
 Name = '''data.decks.mod.crittermaskedcontrol.side'''
 Address = 0x247FC4
-Format = '''[card:cardinternalnumbers]15'''
-DefaultHash = '''3B438E3D'''
+Format = '''[card:cardinternalnumbers|data.cards.passwords]15'''
+DefaultHash = '''FBA39364'''
 
 [[NamedAnchors]]
 Name = '''data.decks.mod.crittermukamukaturbo.main'''
 Address = 0x247FE2
-Format = '''[card:cardinternalnumbers]55'''
-DefaultHash = '''E9E0AD0D'''
+Format = '''[card:cardinternalnumbers|data.cards.passwords]55'''
+DefaultHash = '''CF3DDEB1'''
 
 [[NamedAnchors]]
 Name = '''data.decks.mod.crittermukamukaturbo.list'''
@@ -1321,14 +1345,14 @@ DefaultHash = '''E988BC23'''
 [[NamedAnchors]]
 Name = '''data.decks.mod.crittermukamukaturbo.side'''
 Address = 0x248058
-Format = '''[card:cardinternalnumbers]15'''
-DefaultHash = '''3B438E3D'''
+Format = '''[card:cardinternalnumbers|data.cards.passwords]15'''
+DefaultHash = '''FBA39364'''
 
 [[NamedAnchors]]
 Name = '''data.decks.mod.cyberbrianlonggoatcontrol.main'''
 Address = 0x2490D6
-Format = '''[card:cardinternalnumbers]55'''
-DefaultHash = '''E9E0AD0D'''
+Format = '''[card:cardinternalnumbers|data.cards.passwords]55'''
+DefaultHash = '''CF3DDEB1'''
 
 [[NamedAnchors]]
 Name = '''data.decks.mod.cyberbrianlonggoatcontrol.list'''
@@ -1339,14 +1363,14 @@ DefaultHash = '''E988BC23'''
 [[NamedAnchors]]
 Name = '''data.decks.mod.cyberbrianlonggoatcontrol.side'''
 Address = 0x24914C
-Format = '''[card:cardinternalnumbers]15'''
-DefaultHash = '''3B438E3D'''
+Format = '''[card:cardinternalnumbers|data.cards.passwords]15'''
+DefaultHash = '''FBA39364'''
 
 [[NamedAnchors]]
 Name = '''data.decks.mod.cybersteinmonarch.main'''
 Address = 0x24916A
-Format = '''[card:cardinternalnumbers]55'''
-DefaultHash = '''E9E0AD0D'''
+Format = '''[card:cardinternalnumbers|data.cards.passwords]55'''
+DefaultHash = '''CF3DDEB1'''
 
 [[NamedAnchors]]
 Name = '''data.decks.mod.cybersteinmonarch.list'''
@@ -1357,14 +1381,14 @@ DefaultHash = '''E988BC23'''
 [[NamedAnchors]]
 Name = '''data.decks.mod.cybersteinmonarch.side'''
 Address = 0x2491E0
-Format = '''[card:cardinternalnumbers]15'''
-DefaultHash = '''3B438E3D'''
+Format = '''[card:cardinternalnumbers|data.cards.passwords]15'''
+DefaultHash = '''FBA39364'''
 
 [[NamedAnchors]]
 Name = '''data.decks.mod.fiberrecruitercontrol.main'''
 Address = 0x24861A
-Format = '''[card:cardinternalnumbers]40'''
-DefaultHash = '''4D8E12C1'''
+Format = '''[card:cardinternalnumbers|data.cards.passwords]40'''
+DefaultHash = '''E96B6DE7'''
 
 [[NamedAnchors]]
 Name = '''data.decks.mod.fiberrecruitercontrol.list'''
@@ -1375,14 +1399,14 @@ DefaultHash = '''E988BC23'''
 [[NamedAnchors]]
 Name = '''data.decks.mod.fiberrecruitercontrol.side'''
 Address = 0x248674
-Format = '''[card:cardinternalnumbers]14'''
-DefaultHash = '''6C5B8DE6'''
+Format = '''[card:cardinternalnumbers|data.cards.passwords]14'''
+DefaultHash = '''53A5F2BA'''
 
 [[NamedAnchors]]
 Name = '''data.decks.mod.fibertomatocontrol.main'''
 Address = 0x24858A
-Format = '''[card:cardinternalnumbers]53'''
-DefaultHash = '''ABBD2F6A'''
+Format = '''[card:cardinternalnumbers|data.cards.passwords]53'''
+DefaultHash = '''C4C856E2'''
 
 [[NamedAnchors]]
 Name = '''data.decks.mod.fibertomatocontrol.list'''
@@ -1393,14 +1417,14 @@ DefaultHash = '''E988BC23'''
 [[NamedAnchors]]
 Name = '''data.decks.mod.fibertomatocontrol.side'''
 Address = 0x2485FC
-Format = '''[card:cardinternalnumbers]15'''
-DefaultHash = '''3B438E3D'''
+Format = '''[card:cardinternalnumbers|data.cards.passwords]15'''
+DefaultHash = '''FBA39364'''
 
 [[NamedAnchors]]
 Name = '''data.decks.mod.goatchaoscontrol.main'''
 Address = 0x248E86
-Format = '''[card:cardinternalnumbers]55'''
-DefaultHash = '''E9E0AD0D'''
+Format = '''[card:cardinternalnumbers|data.cards.passwords]55'''
+DefaultHash = '''CF3DDEB1'''
 
 [[NamedAnchors]]
 Name = '''data.decks.mod.goatchaoscontrol.list'''
@@ -1411,14 +1435,14 @@ DefaultHash = '''E988BC23'''
 [[NamedAnchors]]
 Name = '''data.decks.mod.goatchaoscontrol.side'''
 Address = 0x248EFC
-Format = '''[card:cardinternalnumbers]15'''
-DefaultHash = '''3B438E3D'''
+Format = '''[card:cardinternalnumbers|data.cards.passwords]15'''
+DefaultHash = '''FBA39364'''
 
 [[NamedAnchors]]
 Name = '''data.decks.mod.goatchaosreturn.main'''
 Address = 0x248FAE
-Format = '''[card:cardinternalnumbers]55'''
-DefaultHash = '''E9E0AD0D'''
+Format = '''[card:cardinternalnumbers|data.cards.passwords]55'''
+DefaultHash = '''CF3DDEB1'''
 
 [[NamedAnchors]]
 Name = '''data.decks.mod.goatchaosreturn.list'''
@@ -1429,14 +1453,14 @@ DefaultHash = '''E988BC23'''
 [[NamedAnchors]]
 Name = '''data.decks.mod.goatchaosreturn.side'''
 Address = 0x249024
-Format = '''[card:cardinternalnumbers]15'''
-DefaultHash = '''3B438E3D'''
+Format = '''[card:cardinternalnumbers|data.cards.passwords]15'''
+DefaultHash = '''FBA39364'''
 
 [[NamedAnchors]]
 Name = '''data.decks.mod.goatpandaburn.main'''
 Address = 0x248F1A
-Format = '''[card:cardinternalnumbers]55'''
-DefaultHash = '''E9E0AD0D'''
+Format = '''[card:cardinternalnumbers|data.cards.passwords]55'''
+DefaultHash = '''CF3DDEB1'''
 
 [[NamedAnchors]]
 Name = '''data.decks.mod.goatpandaburn.list'''
@@ -1447,14 +1471,14 @@ DefaultHash = '''E988BC23'''
 [[NamedAnchors]]
 Name = '''data.decks.mod.goatpandaburn.side'''
 Address = 0x248F90
-Format = '''[card:cardinternalnumbers]15'''
-DefaultHash = '''3B438E3D'''
+Format = '''[card:cardinternalnumbers|data.cards.passwords]15'''
+DefaultHash = '''FBA39364'''
 
 [[NamedAnchors]]
 Name = '''data.decks.mod.goatreasoninggateturbo.main'''
 Address = 0x249042
-Format = '''[card:cardinternalnumbers]55'''
-DefaultHash = '''E9E0AD0D'''
+Format = '''[card:cardinternalnumbers|data.cards.passwords]55'''
+DefaultHash = '''CF3DDEB1'''
 
 [[NamedAnchors]]
 Name = '''data.decks.mod.goatreasoninggateturbo.list'''
@@ -1465,14 +1489,14 @@ DefaultHash = '''E988BC23'''
 [[NamedAnchors]]
 Name = '''data.decks.mod.goatreasoninggateturbo.side'''
 Address = 0x2490B8
-Format = '''[card:cardinternalnumbers]15'''
-DefaultHash = '''3B438E3D'''
+Format = '''[card:cardinternalnumbers|data.cards.passwords]15'''
+DefaultHash = '''FBA39364'''
 
 [[NamedAnchors]]
 Name = '''data.decks.mod.imperialrelinquished.main'''
 Address = 0x2482AA
-Format = '''[card:cardinternalnumbers]55'''
-DefaultHash = '''E9E0AD0D'''
+Format = '''[card:cardinternalnumbers|data.cards.passwords]55'''
+DefaultHash = '''CF3DDEB1'''
 
 [[NamedAnchors]]
 Name = '''data.decks.mod.imperialrelinquished.list'''
@@ -1483,14 +1507,14 @@ DefaultHash = '''E988BC23'''
 [[NamedAnchors]]
 Name = '''data.decks.mod.imperialrelinquished.side'''
 Address = 0x248320
-Format = '''[card:cardinternalnumbers]15'''
-DefaultHash = '''3B438E3D'''
+Format = '''[card:cardinternalnumbers|data.cards.passwords]15'''
+DefaultHash = '''FBA39364'''
 
 [[NamedAnchors]]
 Name = '''data.decks.mod.imperialtomatocontrol.main'''
 Address = 0x248216
-Format = '''[card:cardinternalnumbers]55'''
-DefaultHash = '''E9E0AD0D'''
+Format = '''[card:cardinternalnumbers|data.cards.passwords]55'''
+DefaultHash = '''CF3DDEB1'''
 
 [[NamedAnchors]]
 Name = '''data.decks.mod.imperialtomatocontrol.list'''
@@ -1501,14 +1525,14 @@ DefaultHash = '''E988BC23'''
 [[NamedAnchors]]
 Name = '''data.decks.mod.imperialtomatocontrol.side'''
 Address = 0x24828C
-Format = '''[card:cardinternalnumbers]15'''
-DefaultHash = '''3B438E3D'''
+Format = '''[card:cardinternalnumbers|data.cards.passwords]15'''
+DefaultHash = '''FBA39364'''
 
 [[NamedAnchors]]
 Name = '''data.decks.mod.joeydeck.main'''
 Address = 0x247BE8
-Format = '''[card:cardinternalnumbers]41'''
-DefaultHash = '''44377024'''
+Format = '''[card:cardinternalnumbers|data.cards.passwords]41'''
+DefaultHash = '''D9F9E690'''
 
 [[NamedAnchors]]
 Name = '''data.decks.mod.joeydeck.list'''
@@ -1519,14 +1543,14 @@ DefaultHash = '''E988BC23'''
 [[NamedAnchors]]
 Name = '''data.decks.mod.joeydeck.side'''
 Address = 0x247C3A
-Format = '''[card:cardinternalnumbers]15'''
-DefaultHash = '''3B438E3D'''
+Format = '''[card:cardinternalnumbers|data.cards.passwords]15'''
+DefaultHash = '''FBA39364'''
 
 [[NamedAnchors]]
 Name = '''data.decks.mod.joeypegasustomatocontrol.main'''
 Address = 0x248466
-Format = '''[card:cardinternalnumbers]55'''
-DefaultHash = '''E9E0AD0D'''
+Format = '''[card:cardinternalnumbers|data.cards.passwords]55'''
+DefaultHash = '''CF3DDEB1'''
 
 [[NamedAnchors]]
 Name = '''data.decks.mod.joeypegasustomatocontrol.list'''
@@ -1537,14 +1561,14 @@ DefaultHash = '''E988BC23'''
 [[NamedAnchors]]
 Name = '''data.decks.mod.joeypegasustomatocontrol.side'''
 Address = 0x2484DC
-Format = '''[card:cardinternalnumbers]15'''
-DefaultHash = '''3B438E3D'''
+Format = '''[card:cardinternalnumbers|data.cards.passwords]15'''
+DefaultHash = '''FBA39364'''
 
 [[NamedAnchors]]
 Name = '''data.decks.mod.joeypegasusvanillabeat.main'''
 Address = 0x2484FA
-Format = '''[card:cardinternalnumbers]52'''
-DefaultHash = '''F61142C8'''
+Format = '''[card:cardinternalnumbers|data.cards.passwords]52'''
+DefaultHash = '''25F713D1'''
 
 [[NamedAnchors]]
 Name = '''data.decks.mod.joeypegasusvanillabeat.list'''
@@ -1555,14 +1579,14 @@ DefaultHash = '''E988BC23'''
 [[NamedAnchors]]
 Name = '''data.decks.mod.joeypegasusvanillabeat.side'''
 Address = 0x24856C
-Format = '''[card:cardinternalnumbers]15'''
-DefaultHash = '''3B438E3D'''
+Format = '''[card:cardinternalnumbers|data.cards.passwords]15'''
+DefaultHash = '''FBA39364'''
 
 [[NamedAnchors]]
 Name = '''data.decks.mod.reaperbazooreturn.main'''
 Address = 0x249326
-Format = '''[card:cardinternalnumbers]55'''
-DefaultHash = '''E9E0AD0D'''
+Format = '''[card:cardinternalnumbers|data.cards.passwords]55'''
+DefaultHash = '''CF3DDEB1'''
 
 [[NamedAnchors]]
 Name = '''data.decks.mod.reaperbazooreturn.list'''
@@ -1573,14 +1597,14 @@ DefaultHash = '''E988BC23'''
 [[NamedAnchors]]
 Name = '''data.decks.mod.reaperbazooreturn.side'''
 Address = 0x24939C
-Format = '''[card:cardinternalnumbers]15'''
-DefaultHash = '''3B438E3D'''
+Format = '''[card:cardinternalnumbers|data.cards.passwords]15'''
+DefaultHash = '''FBA39364'''
 
 [[NamedAnchors]]
 Name = '''data.decks.mod.reaperchaoscontrol.main'''
 Address = 0x2493BA
-Format = '''[card:cardinternalnumbers]55'''
-DefaultHash = '''E9E0AD0D'''
+Format = '''[card:cardinternalnumbers|data.cards.passwords]55'''
+DefaultHash = '''CF3DDEB1'''
 
 [[NamedAnchors]]
 Name = '''data.decks.mod.reaperchaoscontrol.list'''
@@ -1591,14 +1615,14 @@ DefaultHash = '''E988BC23'''
 [[NamedAnchors]]
 Name = '''data.decks.mod.reaperchaoscontrol.side'''
 Address = 0x249430
-Format = '''[card:cardinternalnumbers]15'''
-DefaultHash = '''3B438E3D'''
+Format = '''[card:cardinternalnumbers|data.cards.passwords]15'''
+DefaultHash = '''FBA39364'''
 
 [[NamedAnchors]]
 Name = '''data.decks.mod.reapersteinmonarch.main'''
 Address = 0x2491FE
-Format = '''[card:cardinternalnumbers]55'''
-DefaultHash = '''E9E0AD0D'''
+Format = '''[card:cardinternalnumbers|data.cards.passwords]55'''
+DefaultHash = '''CF3DDEB1'''
 
 [[NamedAnchors]]
 Name = '''data.decks.mod.reapersteinmonarch.list'''
@@ -1609,14 +1633,14 @@ DefaultHash = '''E988BC23'''
 [[NamedAnchors]]
 Name = '''data.decks.mod.reapersteinmonarch.side'''
 Address = 0x249274
-Format = '''[card:cardinternalnumbers]15'''
-DefaultHash = '''3B438E3D'''
+Format = '''[card:cardinternalnumbers|data.cards.passwords]15'''
+DefaultHash = '''FBA39364'''
 
 [[NamedAnchors]]
 Name = '''data.decks.mod.reapertomatocontrol.main'''
 Address = 0x24944E
-Format = '''[card:cardinternalnumbers]40'''
-DefaultHash = '''4D8E12C1'''
+Format = '''[card:cardinternalnumbers|data.cards.passwords]40'''
+DefaultHash = '''E96B6DE7'''
 
 [[NamedAnchors]]
 Name = '''data.decks.mod.reapertomatocontrol.list'''
@@ -1627,14 +1651,14 @@ DefaultHash = '''E988BC23'''
 [[NamedAnchors]]
 Name = '''data.decks.mod.reapertomatocontrol.side'''
 Address = 0x2494A8
-Format = '''[card:cardinternalnumbers]15'''
-DefaultHash = '''3B438E3D'''
+Format = '''[card:cardinternalnumbers|data.cards.passwords]15'''
+DefaultHash = '''FBA39364'''
 
 [[NamedAnchors]]
 Name = '''data.decks.mod.reaperwarrior.main'''
 Address = 0x249292
-Format = '''[card:cardinternalnumbers]54'''
-DefaultHash = '''435453EE'''
+Format = '''[card:cardinternalnumbers|data.cards.passwords]54'''
+DefaultHash = '''FB9A60FF'''
 
 [[NamedAnchors]]
 Name = '''data.decks.mod.reaperwarrior.list'''
@@ -1645,14 +1669,14 @@ DefaultHash = '''E988BC23'''
 [[NamedAnchors]]
 Name = '''data.decks.mod.reaperwarrior.side'''
 Address = 0x249308
-Format = '''[card:cardinternalnumbers]15'''
-DefaultHash = '''3B438E3D'''
+Format = '''[card:cardinternalnumbers|data.cards.passwords]15'''
+DefaultHash = '''FBA39364'''
 
 [[NamedAnchors]]
 Name = '''data.decks.mod.reddeck.main'''
 Address = 0x247CF4
-Format = '''[card:cardinternalnumbers]55'''
-DefaultHash = '''E9E0AD0D'''
+Format = '''[card:cardinternalnumbers|data.cards.passwords]55'''
+DefaultHash = '''CF3DDEB1'''
 
 [[NamedAnchors]]
 Name = '''data.decks.mod.reddeck.list'''
@@ -1663,14 +1687,14 @@ DefaultHash = '''E988BC23'''
 [[NamedAnchors]]
 Name = '''data.decks.mod.reddeck.side'''
 Address = 0x247D62
-Format = '''[card:cardinternalnumbers]15'''
-DefaultHash = '''3B438E3D'''
+Format = '''[card:cardinternalnumbers|data.cards.passwords]15'''
+DefaultHash = '''FBA39364'''
 
 [[NamedAnchors]]
 Name = '''data.decks.mod.scientistftk.main'''
 Address = 0x2488C2
-Format = '''[card:cardinternalnumbers]53'''
-DefaultHash = '''ABBD2F6A'''
+Format = '''[card:cardinternalnumbers|data.cards.passwords]53'''
+DefaultHash = '''C4C856E2'''
 
 [[NamedAnchors]]
 Name = '''data.decks.mod.scientistftk.list'''
@@ -1681,14 +1705,14 @@ DefaultHash = '''E988BC23'''
 [[NamedAnchors]]
 Name = '''data.decks.mod.scientistftk.side'''
 Address = 0x248934
-Format = '''[card:cardinternalnumbers]15'''
-DefaultHash = '''3B438E3D'''
+Format = '''[card:cardinternalnumbers|data.cards.passwords]15'''
+DefaultHash = '''FBA39364'''
 
 [[NamedAnchors]]
 Name = '''data.decks.mod.scientisttomatocontrol.main'''
 Address = 0x24882E
-Format = '''[card:cardinternalnumbers]55'''
-DefaultHash = '''E9E0AD0D'''
+Format = '''[card:cardinternalnumbers|data.cards.passwords]55'''
+DefaultHash = '''CF3DDEB1'''
 
 [[NamedAnchors]]
 Name = '''data.decks.mod.scientisttomatocontrol.list'''
@@ -1699,14 +1723,14 @@ DefaultHash = '''E988BC23'''
 [[NamedAnchors]]
 Name = '''data.decks.mod.scientisttomatocontrol.side'''
 Address = 0x2488A4
-Format = '''[card:cardinternalnumbers]15'''
-DefaultHash = '''3B438E3D'''
+Format = '''[card:cardinternalnumbers|data.cards.passwords]15'''
+DefaultHash = '''FBA39364'''
 
 [[NamedAnchors]]
 Name = '''data.decks.mod.treasuregermburn.main'''
 Address = 0x24819E
-Format = '''[card:cardinternalnumbers]40'''
-DefaultHash = '''4D8E12C1'''
+Format = '''[card:cardinternalnumbers|data.cards.passwords]40'''
+DefaultHash = '''E96B6DE7'''
 
 [[NamedAnchors]]
 Name = '''data.decks.mod.treasuregermburn.list'''
@@ -1717,14 +1741,14 @@ DefaultHash = '''E988BC23'''
 [[NamedAnchors]]
 Name = '''data.decks.mod.treasuregermburn.side'''
 Address = 0x2481F8
-Format = '''[card:cardinternalnumbers]15'''
-DefaultHash = '''3B438E3D'''
+Format = '''[card:cardinternalnumbers|data.cards.passwords]15'''
+DefaultHash = '''FBA39364'''
 
 [[NamedAnchors]]
 Name = '''data.decks.mod.treasurerecruitercontrol.main'''
 Address = 0x24810A
-Format = '''[card:cardinternalnumbers]55'''
-DefaultHash = '''E9E0AD0D'''
+Format = '''[card:cardinternalnumbers|data.cards.passwords]55'''
+DefaultHash = '''CF3DDEB1'''
 
 [[NamedAnchors]]
 Name = '''data.decks.mod.treasurerecruitercontrol.list'''
@@ -1735,14 +1759,14 @@ DefaultHash = '''E988BC23'''
 [[NamedAnchors]]
 Name = '''data.decks.mod.treasurerecruitercontrol.side'''
 Address = 0x248180
-Format = '''[card:cardinternalnumbers]15'''
-DefaultHash = '''3B438E3D'''
+Format = '''[card:cardinternalnumbers|data.cards.passwords]15'''
+DefaultHash = '''FBA39364'''
 
 [[NamedAnchors]]
 Name = '''data.decks.mod.treasuretomatocontrol.main'''
 Address = 0x248076
-Format = '''[card:cardinternalnumbers]55'''
-DefaultHash = '''E9E0AD0D'''
+Format = '''[card:cardinternalnumbers|data.cards.passwords]55'''
+DefaultHash = '''CF3DDEB1'''
 
 [[NamedAnchors]]
 Name = '''data.decks.mod.treasuretomatocontrol.list'''
@@ -1753,14 +1777,14 @@ DefaultHash = '''E988BC23'''
 [[NamedAnchors]]
 Name = '''data.decks.mod.treasuretomatocontrol.side'''
 Address = 0x2480EC
-Format = '''[card:cardinternalnumbers]15'''
-DefaultHash = '''3B438E3D'''
+Format = '''[card:cardinternalnumbers|data.cards.passwords]15'''
+DefaultHash = '''FBA39364'''
 
 [[NamedAnchors]]
 Name = '''data.decks.mod.vampirescientistftk.main'''
 Address = 0x2489E6
-Format = '''[card:cardinternalnumbers]55'''
-DefaultHash = '''E9E0AD0D'''
+Format = '''[card:cardinternalnumbers|data.cards.passwords]55'''
+DefaultHash = '''CF3DDEB1'''
 
 [[NamedAnchors]]
 Name = '''data.decks.mod.vampirescientistftk.list'''
@@ -1771,14 +1795,14 @@ DefaultHash = '''E988BC23'''
 [[NamedAnchors]]
 Name = '''data.decks.mod.vampirescientistftk.side'''
 Address = 0x248A5C
-Format = '''[card:cardinternalnumbers]15'''
-DefaultHash = '''3B438E3D'''
+Format = '''[card:cardinternalnumbers|data.cards.passwords]15'''
+DefaultHash = '''FBA39364'''
 
 [[NamedAnchors]]
 Name = '''data.decks.mod.vampirewarriorcontrol.main'''
 Address = 0x248952
-Format = '''[card:cardinternalnumbers]55'''
-DefaultHash = '''E9E0AD0D'''
+Format = '''[card:cardinternalnumbers|data.cards.passwords]55'''
+DefaultHash = '''CF3DDEB1'''
 
 [[NamedAnchors]]
 Name = '''data.decks.mod.vampirewarriorcontrol.list'''
@@ -1789,14 +1813,14 @@ DefaultHash = '''E988BC23'''
 [[NamedAnchors]]
 Name = '''data.decks.mod.vampirewarriorcontrol.side'''
 Address = 0x2489C8
-Format = '''[card:cardinternalnumbers]15'''
-DefaultHash = '''3B438E3D'''
+Format = '''[card:cardinternalnumbers|data.cards.passwords]15'''
+DefaultHash = '''FBA39364'''
 
 [[NamedAnchors]]
 Name = '''data.decks.mod.vampirewarriortomatocontrol.main'''
 Address = 0x248A7A
-Format = '''[card:cardinternalnumbers]55'''
-DefaultHash = '''E9E0AD0D'''
+Format = '''[card:cardinternalnumbers|data.cards.passwords]55'''
+DefaultHash = '''CF3DDEB1'''
 
 [[NamedAnchors]]
 Name = '''data.decks.mod.vampirewarriortomatocontrol.list'''
@@ -1807,14 +1831,14 @@ DefaultHash = '''E988BC23'''
 [[NamedAnchors]]
 Name = '''data.decks.mod.vampirewarriortomatocontrol.side'''
 Address = 0x248AF0
-Format = '''[card:cardinternalnumbers]15'''
-DefaultHash = '''3B438E3D'''
+Format = '''[card:cardinternalnumbers|data.cards.passwords]15'''
+DefaultHash = '''FBA39364'''
 
 [[NamedAnchors]]
 Name = '''data.decks.mod.warriorchaosreturn.main'''
 Address = 0x248DF2
-Format = '''[card:cardinternalnumbers]55'''
-DefaultHash = '''E9E0AD0D'''
+Format = '''[card:cardinternalnumbers|data.cards.passwords]55'''
+DefaultHash = '''CF3DDEB1'''
 
 [[NamedAnchors]]
 Name = '''data.decks.mod.warriorchaosreturn.list'''
@@ -1825,14 +1849,14 @@ DefaultHash = '''E988BC23'''
 [[NamedAnchors]]
 Name = '''data.decks.mod.warriorchaosreturn.side'''
 Address = 0x248E68
-Format = '''[card:cardinternalnumbers]15'''
-DefaultHash = '''3B438E3D'''
+Format = '''[card:cardinternalnumbers|data.cards.passwords]15'''
+DefaultHash = '''FBA39364'''
 
 [[NamedAnchors]]
 Name = '''data.decks.mod.warriorgoatcontrol.main'''
 Address = 0x248C36
-Format = '''[card:cardinternalnumbers]54'''
-DefaultHash = '''435453EE'''
+Format = '''[card:cardinternalnumbers|data.cards.passwords]54'''
+DefaultHash = '''FB9A60FF'''
 
 [[NamedAnchors]]
 Name = '''data.decks.mod.warriorgoatcontrol.list'''
@@ -1843,14 +1867,14 @@ DefaultHash = '''E988BC23'''
 [[NamedAnchors]]
 Name = '''data.decks.mod.warriorgoatcontrol.side'''
 Address = 0x248CAC
-Format = '''[card:cardinternalnumbers]15'''
-DefaultHash = '''3B438E3D'''
+Format = '''[card:cardinternalnumbers|data.cards.passwords]15'''
+DefaultHash = '''FBA39364'''
 
 [[NamedAnchors]]
 Name = '''data.decks.mod.warriorwarriorcontrol.main'''
 Address = 0x248D5E
-Format = '''[card:cardinternalnumbers]55'''
-DefaultHash = '''E9E0AD0D'''
+Format = '''[card:cardinternalnumbers|data.cards.passwords]55'''
+DefaultHash = '''CF3DDEB1'''
 
 [[NamedAnchors]]
 Name = '''data.decks.mod.warriorwarriorcontrol.list'''
@@ -1861,14 +1885,14 @@ DefaultHash = '''E988BC23'''
 [[NamedAnchors]]
 Name = '''data.decks.mod.warriorwarriorcontrol.side'''
 Address = 0x248DD4
-Format = '''[card:cardinternalnumbers]15'''
-DefaultHash = '''3B438E3D'''
+Format = '''[card:cardinternalnumbers|data.cards.passwords]15'''
+DefaultHash = '''FBA39364'''
 
 [[NamedAnchors]]
 Name = '''data.decks.mod.warriorwarrior.main'''
 Address = 0x248CCA
-Format = '''[card:cardinternalnumbers]55'''
-DefaultHash = '''E9E0AD0D'''
+Format = '''[card:cardinternalnumbers|data.cards.passwords]55'''
+DefaultHash = '''CF3DDEB1'''
 
 [[NamedAnchors]]
 Name = '''data.decks.mod.warriorwarrior.list'''
@@ -1879,14 +1903,14 @@ DefaultHash = '''E988BC23'''
 [[NamedAnchors]]
 Name = '''data.decks.mod.warriorwarrior.side'''
 Address = 0x248D40
-Format = '''[card:cardinternalnumbers]15'''
-DefaultHash = '''3B438E3D'''
+Format = '''[card:cardinternalnumbers|data.cards.passwords]15'''
+DefaultHash = '''FBA39364'''
 
 [[NamedAnchors]]
 Name = '''data.decks.mod.yatagearfried.main'''
 Address = 0x2487B4
-Format = '''[card:cardinternalnumbers]42'''
-DefaultHash = '''D43FA47B'''
+Format = '''[card:cardinternalnumbers|data.cards.passwords]42'''
+DefaultHash = '''E5FEA8A5'''
 
 [[NamedAnchors]]
 Name = '''data.decks.mod.yatagearfried.list'''
@@ -1897,14 +1921,14 @@ DefaultHash = '''E988BC23'''
 [[NamedAnchors]]
 Name = '''data.decks.mod.yatagearfried.side'''
 Address = 0x248810
-Format = '''[card:cardinternalnumbers]15'''
-DefaultHash = '''3B438E3D'''
+Format = '''[card:cardinternalnumbers|data.cards.passwords]15'''
+DefaultHash = '''FBA39364'''
 
 [[NamedAnchors]]
 Name = '''data.decks.mod.yatatomatocontrol.main'''
 Address = 0x248690
-Format = '''[card:cardinternalnumbers]55'''
-DefaultHash = '''E9E0AD0D'''
+Format = '''[card:cardinternalnumbers|data.cards.passwords]55'''
+DefaultHash = '''CF3DDEB1'''
 
 [[NamedAnchors]]
 Name = '''data.decks.mod.yatatomatocontrol.list'''
@@ -1915,14 +1939,14 @@ DefaultHash = '''E988BC23'''
 [[NamedAnchors]]
 Name = '''data.decks.mod.yatatomatocontrol.side'''
 Address = 0x248708
-Format = '''[card:cardinternalnumbers]15'''
-DefaultHash = '''3B438E3D'''
+Format = '''[card:cardinternalnumbers|data.cards.passwords]15'''
+DefaultHash = '''FBA39364'''
 
 [[NamedAnchors]]
 Name = '''data.decks.mod.yatawarriortomatocontrol.main'''
 Address = 0x248726
-Format = '''[card:cardinternalnumbers]52'''
-DefaultHash = '''F61142C8'''
+Format = '''[card:cardinternalnumbers|data.cards.passwords]52'''
+DefaultHash = '''25F713D1'''
 
 [[NamedAnchors]]
 Name = '''data.decks.mod.yatawarriortomatocontrol.list'''
@@ -1933,14 +1957,14 @@ DefaultHash = '''E988BC23'''
 [[NamedAnchors]]
 Name = '''data.decks.mod.yatawarriortomatocontrol.side'''
 Address = 0x248798
-Format = '''[card:cardinternalnumbers]14'''
-DefaultHash = '''6C5B8DE6'''
+Format = '''[card:cardinternalnumbers|data.cards.passwords]14'''
+DefaultHash = '''53A5F2BA'''
 
 [[NamedAnchors]]
 Name = '''data.decks.mod.yugideck.main'''
 Address = 0x247BA4
-Format = '''[card:cardinternalnumbers]30'''
-DefaultHash = '''0A004730'''
+Format = '''[card:cardinternalnumbers|data.cards.passwords]30'''
+DefaultHash = '''7BB13BE2'''
 
 [[NamedAnchors]]
 Name = '''data.decks.mod.yugideck.list'''
@@ -1951,8 +1975,8 @@ DefaultHash = '''E988BC23'''
 [[NamedAnchors]]
 Name = '''data.decks.mod.yugikaibasoulcontrol.main'''
 Address = 0x247D88
-Format = '''[card:cardinternalnumbers]55'''
-DefaultHash = '''E9E0AD0D'''
+Format = '''[card:cardinternalnumbers|data.cards.passwords]55'''
+DefaultHash = '''CF3DDEB1'''
 
 [[NamedAnchors]]
 Name = '''data.decks.mod.yugikaibasoulcontrol.list'''
@@ -1963,14 +1987,14 @@ DefaultHash = '''E988BC23'''
 [[NamedAnchors]]
 Name = '''data.decks.mod.yugikaibasoulcontrol.side'''
 Address = 0x247E00
-Format = '''[card:cardinternalnumbers]15'''
-DefaultHash = '''3B438E3D'''
+Format = '''[card:cardinternalnumbers|data.cards.passwords]15'''
+DefaultHash = '''FBA39364'''
 
 [[NamedAnchors]]
 Name = '''data.decks.mod.yugikaibastallmill.main'''
 Address = 0x247EB2
-Format = '''[card:cardinternalnumbers]58'''
-DefaultHash = '''302117DC'''
+Format = '''[card:cardinternalnumbers|data.cards.passwords]58'''
+DefaultHash = '''B3F4689E'''
 
 [[NamedAnchors]]
 Name = '''data.decks.mod.yugikaibastallmill.list'''
@@ -1981,14 +2005,14 @@ DefaultHash = '''E988BC23'''
 [[NamedAnchors]]
 Name = '''data.decks.mod.yugikaibastallmill.side'''
 Address = 0x247F30
-Format = '''[card:cardinternalnumbers]15'''
-DefaultHash = '''3B438E3D'''
+Format = '''[card:cardinternalnumbers|data.cards.passwords]15'''
+DefaultHash = '''FBA39364'''
 
 [[NamedAnchors]]
 Name = '''data.decks.mod.yugikaibavanillabeat.main'''
 Address = 0x247E1E
-Format = '''[card:cardinternalnumbers]55'''
-DefaultHash = '''E9E0AD0D'''
+Format = '''[card:cardinternalnumbers|data.cards.passwords]55'''
+DefaultHash = '''CF3DDEB1'''
 
 [[NamedAnchors]]
 Name = '''data.decks.mod.yugikaibavanillabeat.list'''
@@ -1999,8 +2023,8 @@ DefaultHash = '''E988BC23'''
 [[NamedAnchors]]
 Name = '''data.decks.mod.yugikaibavanillabeat.side'''
 Address = 0x247E94
-Format = '''[card:cardinternalnumbers]15'''
-DefaultHash = '''3B438E3D'''
+Format = '''[card:cardinternalnumbers|data.cards.passwords]15'''
+DefaultHash = '''FBA39364'''
 
 [[NamedAnchors]]
 Name = '''data.decks.recipes'''
