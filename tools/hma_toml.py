@@ -160,6 +160,9 @@ ADDED_GUIDE = [
 ]
 # MatchedWords the mod adds (same guide).
 ADDED_WORDS_GUIDE = [
+    ('data.constants.preduel.qrsquare', "the pre-duel screens' white square behind the QR code: 1 on (dark modules "
+                                        "on white), 0 off (no square: the box and its decorated border show, the "
+                                        "modules drawn white)", USED),
     ('data.constants.packs.format.usagewins', "wins against a format that open its usage pack",
      (USED, UNUSED + ' (debug builds open every pack)')),
     ('data.constants.formats.unlock', "per format: wins against the format before it that open it, and with it its "
@@ -559,6 +562,9 @@ def mod_anchors(elf, rom, rom_sym):
     usage_wins = rom_sym.get('gModUsagePackWins')
     if usage_wins:
         words.append(('data.constants.packs.format.usagewins', usage_wins[0] - ROM_BASE, 1))
+    qr_square = rom_sym.get('gModPreDuelQrSquare')
+    if qr_square:
+        words.append(('data.constants.preduel.qrsquare', qr_square[0] - ROM_BASE, 1))
     else:
         report.append('no gModUsagePackWins in the .sym: the usage pack wins are left out')
     unlock = sym('sWinsToUnlockNext', 'mod_opponents.o')

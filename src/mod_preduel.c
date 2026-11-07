@@ -138,15 +138,21 @@ static void UntilePicture(const u8 *tiles, u8 *bitmap, u8 add)
 }
 
 /* The QR code of `image` (if it has one) into the decoded box bitmap (BOX_WIDTH x BOX_HEIGHT, a byte a pixel). */
+/* The white square behind the QR code: 1 draws it (dark modules on white), 0 leaves it out (the box shows as it is,
+ * its decorated border included, and only the modules are drawn, in white so they show on the dark box: an inverted
+ * code). A byte of data, so Hex Maniac Advance can switch it (MatchedWord data.constants.preduel.qrsquare). */
+const u8 gModPreDuelQrSquare[1] = { 1 };
+
 static void DrawQrCode(const u8 *image, u8 *box)
 {
     u32 size = ReadU32(image + QR_SIZE_OFFSET);
     u32 border, r, c, x, y;
+    u8 module = gModPreDuelQrSquare[0] ? COLOR_DARK : COLOR_WHITE;
 
     if (size == 0)
         return;
     border = (BOX_HEIGHT - size * QR_MODULE) / 2;
-    for (y = 0; y < BOX_HEIGHT; y++) {
+    for (y = 0; gModPreDuelQrSquare[0] && y < BOX_HEIGHT; y++) {
         for (x = 0; x < BOX_HEIGHT; x++)
             box[y * BOX_WIDTH + QR_X + x] = COLOR_WHITE;
     }
@@ -155,7 +161,7 @@ static void DrawQrCode(const u8 *image, u8 *box)
             if (QrModule(image, r, c)) {
                 u8 *px = &box[(border + r * QR_MODULE) * BOX_WIDTH + QR_X + border + c * QR_MODULE];
 
-                px[0] = px[1] = px[BOX_WIDTH] = px[BOX_WIDTH + 1] = COLOR_DARK;
+                px[0] = px[1] = px[BOX_WIDTH] = px[BOX_WIDTH + 1] = module;
             }
         }
     }

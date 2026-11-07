@@ -312,3 +312,7 @@ Related: [[banlists-menu]], [[campaign-select-c]], [[campaign-steps-c]].
   setting a picture to null in Hex Maniac Advance (type `<null>` in that cell) switches that opponent to its
   original dialogue scene with blinking eyes; its QR code and text stay. Typing the picture anchor back
   (e.g. `<graphics.preduel.yugikaiba.palette>`, the start of its picture data) undoes it.
+- **QR square toggle (2026-11-07):** `gModPreDuelQrSquare` (src/mod_preduel.c; HMA MatchedWord
+  `data.constants.preduel.qrsquare`, 1 byte): 1 (default) draws the 64 x 64 white square and dark modules (a 3 px,
+  1.5-module margin around a 29-module code); 0 draws no square, so the box and its decorated left border show, and
+  only the modules, in white (an inverted code; not tested with a scanner).

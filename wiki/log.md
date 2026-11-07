@@ -2800,3 +2800,7 @@ updated: 2026-09-29
 ## [2026-11-07] progress | Scene copies for the five page-1 opponents too
 - tools/preduel_text.py: every opponent gets a gModPreDuelScenes entry (18); src/mod_preduel.c comment. HMA: a null picture in data.preduel.table switches to the scene.
 - Pages: [[yugi-kaiba-opponent]].
+
+## [2026-11-07] progress | Pre-duel QR square toggle
+- src/mod_preduel.c gModPreDuelQrSquare (1 = white square, 0 = none: the box border shows, white modules); tools/hma_toml.py MatchedWord data.constants.preduel.qrsquare.
+- Pages: [[yugi-kaiba-opponent]].

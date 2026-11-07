@@ -130,6 +130,8 @@
 #       the portrait card's art when the ROM is built (tools/record_faces.py), so a new portrait card in
 #       data.opponents needs a new face too (or a rebuild)
 #  MatchedWords:
+#   data.constants.preduel.qrsquare -- used: the pre-duel screens' white square behind the QR code: 1 on (dark
+#       modules on white), 0 off (no square: the box and its decorated border show, the modules drawn white)
 #   data.constants.packs.format.usagewins -- used: wins against a format that open its usage pack
 #   data.constants.formats.unlock.* [14] -- used: per format: wins against the format before it that open it,
 #       and with it its TCG packs
@@ -3978,6 +3980,11 @@ Length = 2
 [[MatchedWords]]
 Name = '''data.constants.packs.format.usagewins'''
 Address = 0x24E255
+Length = 1
+
+[[MatchedWords]]
+Name = '''data.constants.preduel.qrsquare'''
+Address = 0x25692B
 Length = 1
 
 [[MatchedWords]]
