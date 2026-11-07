@@ -890,7 +890,7 @@ void InitSaveData(void) {
 /* Debug "Get all card": give 3 copies of every card id 1..CARD_ID_LAST (skipping ids whose key is in 0x780..0x7CF). */
 void DebugGetAllCards(void) {
     s32 id;
-    for (id = 1; id <= CARD_ID_LAST; ) {
+    for (id = 1; id <= CARD_ID_LAST_REAL; ) {     /* changed: not the demo's blank slots */
         u16 k = *(const u16 *)((const u8 *)gCardIdToNumber + ((id & CARD_ID_MASK) << 1)) - 0x780;
         s32 next = id + 1;
         if (k > 0x4F) {

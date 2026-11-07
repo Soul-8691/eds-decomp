@@ -381,7 +381,9 @@ Three newer summoning mechanics are in, each with a few cards so far. In your Ma
   Soul Exchange, Fairy Box and Thousand-Eyes Restrict. Those reuse that existing code instead of being written from
   scratch. The full inventory (157 unused card numbers and what each handler does) is in
   [LEFTOVER_EFFECTS.md](https://github.com/Soul-8691/eds-decomp/blob/binary/LEFTOVER_EFFECTS.md) on the
-  [`binary`](https://github.com/Soul-8691/eds-decomp/tree/binary) branch.
+  [`binary`](https://github.com/Soul-8691/eds-decomp/tree/binary) branch. The debug build (`make demo`) also adds
+  every leftover with working effect code that isn't in the card list yet (`config/leftover_cards.txt`, 120 cards)
+  at its own card number, with its YGOPRODeck stats, text and art, so the original code plays it untouched.
 - **Gallery screenshots.** [NEW_CARDS.md](NEW_CARDS.md) is taken by `tools/card_screenshots.lua` in mGBA (optional
   `cards/_capture_only.txt` for new entries only), and `tools/gen_new_cards_md.py` refreshes the gallery. Reorder
   `new_cards.txt` only together with **`make demo`**, so card IDs stay in sync before re-running the script.

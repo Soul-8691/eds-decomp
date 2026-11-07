@@ -27,7 +27,8 @@ original ROM (repo root). Without `baserom.toml` it does nothing. `eds_demo.toml
   - A changed one: the same opcode bits and immediate (any register), the closest to the old offset.
   - The card count limits (`data.constants.cards.limit`, `.limit2`): the original forms (`movs #0xCD; lsls #2` =
     820, or a literal 821) can't hold the demo's values, so the script finds the literal holding CARD_ID_COUNT - 1 or
-    CARD_ID_COUNT (Length 2). Functions rewritten without the constant (Deck Edit's and Card Trading's list
+    CARD_ID_COUNT (Length 2), or else CARD_ID_COUNT_REAL - 1 / CARD_ID_COUNT_REAL (the code that stops before
+    `make demo`'s blank slots, `CARD_ID_LAST_REAL`). Functions rewritten without the constant (Deck Edit's and Card Trading's list
     builders now walk `gCardIdsByName`) are left out and listed in a comment at the top of the file.
   - Constants in data (the pack rarity weights) move like anchors.
 - **Added anchors** (`EXTRA_ANCHORS`, by symbol plus an offset, so they follow the `.sym` and the card count):
@@ -52,7 +53,8 @@ original ROM (repo root). Without `baserom.toml` it does nothing. `eds_demo.toml
     art indices **0–63** (HMA `SpriteTool.Render`), **0xFF** padding. In-game, `ModFieldIconMiniColor` adds
     `ART_PALETTE_ENTRY`.
 - **Lists.** `cardnumbers` (by card ID) is cut or grown to CARD_ID_COUNT and `cardinternalnumbers` (by card number)
-  gets the added cards, both with their in-game names from `build/new_cards.tsv`. The other lists are kept.
+  gets the added cards, both with their in-game names from `build/new_cards.tsv` (a blank slot: `Blank <id>`). The
+  other lists are kept.
 - **DefaultHash** is recomputed for every changed format and list with HMA's `StoredList.GenerateHash` (SHA-256 of
   each item, folded into a rotating seed 0xCAFEBABE; checked against three of `baserom.toml`'s hashes). HMA keeps an
   entry whose hash doesn't match its own reference as a user edit.
@@ -64,4 +66,6 @@ original ROM (repo root). Without `baserom.toml` it does nothing. `eds_demo.toml
 - Every kept MatchedWord reads the expected value in the demo ROM (the limits 1006 / 1007, the pack and Fusion
   constants unchanged); 7 card-limit sites were left out.
 - HMA's metadata parser cuts every line at `#`, so the header comments are fine (no card name holds a `#`).
+- With the blank slots (2026-11-06): 1436 card IDs, the limits found as 1435/1436 or 1006/1007; the same 7
+  Deck Edit / Card Trading sites left out.
 - Not opened in HMA yet.

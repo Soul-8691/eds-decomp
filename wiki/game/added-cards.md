@@ -27,6 +27,24 @@ Edit `config/new_cards.txt` and run `make`. That is the whole workflow:
 - **Capacity:** `python3 tools/newcards.py capacity`; 615 cards with the current data. The limit is the free card
   numbers (below). The name bank would allow 821 cards and the 0x7FF ID mask 1227. RAM checks are compile-time
   asserts in `include/deck_edit.h`. The whole of `missing.txt` (291 cards, ROM 13.9 MB) was built as a test.
+- **Leftover effect cards (`make demo` only):** after the demo list's cards come the cards of
+  `config/leftover_cards.txt` (`NEWCARDS_LEFTOVERS`): the leftover effect keys of the engine (LEFTOVER_EFFECTS.md on
+  the `binary` branch) whose code works, each at its own card number (1211-1552), so the original effect code and
+  the number tests in the duel code play it; stats, text and art come from YGOPRODeck as for any added card. Also
+  kept: the monsters those effects name with no code of their own (Fusion materials and results, The Masked Beast,
+  Des Gardius's Tributes, Gradius). Left out: 230, the alias numbers 1210/1249, the buggy 1318 and the partial
+  1421/1422. A card already in the list is skipped, and so is one whose number a listed card took (1313: Big Bang
+  Shot). Now 120 cards, IDs 1007-1126; they are real cards (in the lists, the debug trunk's 8 copies, packs).
+- **Blank slots (`make demo` only):** with `RELEASE=0` and the demo list, the Makefile passes
+  `NEWCARDS_PAD_TO=615`, and `tools/newcards.py` adds blank card IDs after the real cards until 615 are added
+  (now IDs 1127-1435), for filling in later, e.g. in Hex Maniac Advance ([[hma-toml]]). Each takes a free card
+  number and nothing else: no name, text, stats, art or password (FF FF FF FF), kind 0. They are left out of
+  `gCardIdsByName` (so Deck Edit, the Trunk and Card Trading don't list them) and of `cards.h`.
+  `card_count.h` also defines `CARD_ID_COUNT_REAL` (the IDs up to the last real card; `CARD_ID_LAST_REAL` in
+  `include/card_data.h`, equal to `CARD_ID_LAST` without padding), and the code that walks card IDs stops there:
+  the debug starting trunk (`GiveStartingTrunk`, so no 8 copies of each blank), "get all cards"
+  (`DebugGetAllCards`), Simon's gift (`GiveMissingCards`), the collection check (`IsCardCollectionComplete`), random
+  pack cards (`booster_pack.c`) and the debug Card View. `make release` and `make release-demo` have no blank slots.
 
 ## How it works (`tools/newcards.py build`, run by `make`)
 - **Data:** for each name not yet in `assets/new_cards/cards.json`, the build asks the YGOPRODeck API

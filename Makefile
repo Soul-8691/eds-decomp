@@ -162,14 +162,22 @@ build/assets/%.bin: ;
 NEWCARDS_PROFILE ?= full
 ifeq ($(NEWCARDS_PROFILE),demo)
 CARD_LIST      := new_cards.txt
+ifeq ($(RELEASE),0)
+# make demo: blank card slots after the demo's cards until 615 are added (tools/newcards.py NEWCARDS_PAD_TO)
+NEWCARDS_PAD   := 615
+# and before them, the leftover effect cards at their own card numbers (tools/newcards.py NEWCARDS_LEFTOVERS)
+NEWCARDS_LEFTOVERS := config/leftover_cards.txt
+NEWCARDS_BUILT := build/assets/.newcards-demo-padded
+else
 NEWCARDS_BUILT := build/assets/.newcards-demo
+endif
 else
 CARD_LIST      := config/new_cards.txt
 NEWCARDS_BUILT := build/assets/.newcards-full
 endif
 NEWCARDS_GEN   := build/include/card_count.h build/include/card_count.inc include/constants/cards.h
-$(NEWCARDS_BUILT): $(ASSETS_BUILT) $(CARD_LIST) tools/newcards.py $(wildcard assets/new_cards/art/*.png)
-	NEW_CARDS_LIST=$(CARD_LIST) NEWCARDS_STAMP=$(NEWCARDS_BUILT) $(PYTHON) tools/newcards.py build
+$(NEWCARDS_BUILT): $(ASSETS_BUILT) $(CARD_LIST) $(NEWCARDS_LEFTOVERS) tools/newcards.py $(wildcard assets/new_cards/art/*.png)
+	NEW_CARDS_LIST=$(CARD_LIST) NEWCARDS_STAMP=$(NEWCARDS_BUILT) NEWCARDS_PAD_TO=$(NEWCARDS_PAD) NEWCARDS_LEFTOVERS=$(NEWCARDS_LEFTOVERS) $(PYTHON) tools/newcards.py build
 $(NEWCARDS_GEN): $(NEWCARDS_BUILT) ;
 
 # The Deck Edit banlists (banlists/*_ban.json) that src/mod_banlists.c offers.

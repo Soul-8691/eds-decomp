@@ -4003,7 +4003,7 @@ void GiveStartingTrunk(void)
 {
     u32 id, k;
 
-    for (id = 1; id <= CARD_ID_LAST; id++) {
+    for (id = 1; id <= CARD_ID_LAST_REAL; id++) {   /* not the demo's blank slots */
         u16 number = gCardIdToNumber[id];
         if (number == 0xFFFF || (u16)(number - CARD_NUMBER_TOKEN_FIRST) < CARD_NUMBER_TOKEN_END - CARD_NUMBER_TOKEN_FIRST)
             continue;

@@ -148,6 +148,12 @@ def card_count():
     return ORIGINAL_CARD_IDS + int(re.search(r'CARD_ID_COUNT_ADDED (\d+)', text).group(1))
 
 
+def real_card_count():
+    """CARD_ID_COUNT_REAL: the card IDs up to the last real card (make demo's blank slots follow them)."""
+    m = re.search(r'CARD_ID_COUNT_REAL (\d+)', open('build/include/card_count.h').read())
+    return int(m.group(1)) if m else card_count()
+
+
 def added_cards():
     """(id, number, in-game name) of the added cards."""
     out = []
@@ -155,7 +161,7 @@ def added_cards():
     for line in lines[1:]:
         p = line.split('\t')
         if len(p) >= 5:
-            out.append((int(p[0]), int(p[1]), p[4] or p[3]))
+            out.append((int(p[0]), int(p[1]), p[4] or p[3] or f'Blank {p[0]}'))     # make demo's blank slots
     return out
 
 
@@ -310,11 +316,15 @@ def main():
 
     # MatchedWords: the card count limits go from 820/821 to CARD_ID_COUNT - 1 / CARD_ID_COUNT
     limit_delta = count - ORIGINAL_CARD_IDS
+    real_delta = real_card_count() - ORIGINAL_CARD_IDS
     keep = []
     for header, lines in blocks:
         if header == '[[MatchedWords]]':
             name, addr, length = field(lines, 'Name'), int(field(lines, 'Address'), 16), int(field(lines, 'Length'))
             new, info = mover.move_word(name, addr, length, limit_delta)
+            if new is None and name in CARD_LIMIT_WORDS and real_delta != limit_delta:
+                # the code that stops at the last real card (CARD_ID_LAST_REAL: not the blank slots)
+                new, info = mover.move_word(name, addr, length, real_delta)
             if new is None:
                 dropped.append(f'#   {name} at 0x{addr:06X}: {info}')
                 continue

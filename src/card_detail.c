@@ -50,7 +50,7 @@ extern const s16 gCardDetailWaveTable[24][16];
 #define IS_TOKEN(id) \
     ((u16)(CARD_NUMBER(id) - CARD_NUMBER_TOKEN_FIRST) < CARD_NUMBER_TOKEN_END - CARD_NUMBER_TOKEN_FIRST)
 
-#define LAST_CARD_ID            (CARD_ID_COUNT - 1)     /* 920 */
+#define LAST_CARD_ID            CARD_ID_LAST_REAL       /* changed: not the demo's blank slots */
 #define DEBUG_FIRST_CARD_ID     800                     /* World Suppression */
 #define DESCRIPTION_VIEW_HEIGHT 0x70                    /* visible lines of the description (BG3) */
 

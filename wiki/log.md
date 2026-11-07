@@ -2662,3 +2662,16 @@ updated: 2026-09-29
 ## [2026-11-07] progress | HMA field icon palette anchor + index bytes
 - tools/hma_toml.py: `graphics.cards.fieldicons.artpalette` is `` `ucp4:0123` `` (single 128-byte run), not ``[`ucp4:0123`]4``. Miniature bytes 0–63 / 0xFF pad (`tools/cardicons.py`, `ModFieldIconMiniColor`).
 - Pages: [[hma-toml]], [[card-icons]].
+
+## [2026-11-06] progress | make demo: blank card slots up to 615 added
+- tools/newcards.py: `NEWCARDS_PAD_TO` adds blank card IDs (free card number, all else zero, password FF) after the real cards; not in gCardIdsByName or cards.h; `CARD_ID_COUNT_REAL` in card_count.h.
+- Makefile: `make demo` (RELEASE=0, demo list) passes NEWCARDS_PAD_TO=615 (stamp .newcards-demo-padded).
+- include/card_data.h `CARD_ID_LAST_REAL`; GiveStartingTrunk, DebugGetAllCards, GiveMissingCards, IsCardCollectionComplete, booster_pack.c random IDs, card_detail.c stop at it (no debug copies of blank slots).
+- tools/hma_toml.py: blank slots named `Blank <id>` in the lists; card-limit MatchedWords also matched at CARD_ID_COUNT_REAL.
+- Pages: [[added-cards]], [[hma-toml]].
+
+## [2026-11-06] progress | make demo: the leftover effect cards at their own numbers
+- config/leftover_cards.txt (new): 151 leftover card numbers with working code (LEFTOVER_EFFECTS.md, binary branch) plus the monsters they name; not 230, 1210, 1249, 1318, 1421, 1422.
+- tools/newcards.py `NEWCARDS_LEFTOVERS` / `load_leftovers`: appended after the list's cards at their own card numbers, skipping listed names and numbers a listed card took; Makefile passes it for make demo (RELEASE=0).
+- Result: 120 leftover cards (IDs 1007-1126), 309 blank slots (1127-1435); CARD_ID_COUNT_REAL 1127.
+- Pages: [[added-cards]]; README.

@@ -415,7 +415,7 @@ void GiveMissingCards(void)
 {
     int id;
 
-    for (id = 1; id <= CARD_ID_COUNT - 1; id++) {
+    for (id = 1; id <= CARD_ID_LAST_REAL; id++) {     /* changed: not the demo's blank slots */
         if (CARD_NUMBER(id) < 0xFFFF && gSaveData.trunk[id].count == 0)
             AddCardToTrunk(id);
     }

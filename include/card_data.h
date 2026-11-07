@@ -27,6 +27,14 @@
  * (CARD_ID_COUNT_ORIGINAL and CARD_ID_COUNT_ADDED are in global.h). */
 #define CARD_ID_COUNT               (CARD_ID_COUNT_ORIGINAL + CARD_ID_COUNT_ADDED)
 #define CARD_ID_LAST                (CARD_ID_COUNT - 1)
+/* The card IDs up to the last real card. `make demo` adds blank slots after them until 615 cards are added
+ * (tools/newcards.py NEWCARDS_PAD_TO: no name, stats or art, left out of gCardIdsByName); the code that walks card
+ * IDs itself (the debug trunk and "get all cards", Simon's gift, the collection check, random packs, the debug Card
+ * View) stops at CARD_ID_LAST_REAL. Without blank slots it is CARD_ID_LAST. */
+#ifndef CARD_ID_COUNT_REAL
+#define CARD_ID_COUNT_REAL          CARD_ID_COUNT
+#endif
+#define CARD_ID_LAST_REAL           (CARD_ID_COUNT_REAL - 1)
 #define CARD_ID_MASK                0x7FF       /* applied by every table reader */
 
 /* Card numbers */

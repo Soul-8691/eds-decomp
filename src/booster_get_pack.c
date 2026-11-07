@@ -235,7 +235,7 @@ u16 IsCardCollectionComplete(void)
     s32 id;
     u16 key = gCardIdToNumber_821[0];       /* the padding entry, read once as the gate value (as the ROM does) */
 
-    for (id = 1; id <= CARD_ID_LAST; id++) {
+    for (id = 1; id <= CARD_ID_LAST_REAL; id++) {     /* changed: not the demo's blank slots */
         if (key <= 0x77F) {
             total++;
             if (gSaveData.trunk[id].count != 0 || GetTrunkDeckCopies(id) != 0 || GetTrunkSideCopies(id) != 0)

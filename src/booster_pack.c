@@ -226,7 +226,7 @@ u16 PickPackSlotCard(struct PackSlots *pack, int slot)
             retry = 1;                                                               \
             do {                                                                     \
                 valid = 0;                                                           \
-                cardId = Random() % CARD_ID_COUNT;                                   \
+                cardId = Random() % CARD_ID_COUNT_REAL;     /* not blank slots */  \
                 if ((u16)(CARD_NUMBER(cardId) - CARD_NUMBER_TOKEN_FIRST) > (CARD_NUMBER_TOKEN_END - CARD_NUMBER_TOKEN_FIRST - 1) TYPECHECK) { \
                     int j;                                                           \
                     valid = 1;                                                       \

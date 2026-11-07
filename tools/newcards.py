@@ -216,6 +216,30 @@ def load_list():
     return rows
 
 
+def load_leftovers(rows):
+    """NEWCARDS_LEFTOVERS (make demo): [(name, game name, card number)] of the leftover effect cards
+    (config/leftover_cards.txt: "number | name [| game name]") that are not in the card list already."""
+    path = os.environ.get('NEWCARDS_LEFTOVERS', '')
+    if not path:
+        return []
+    listed = {n.lower() for n, _ in rows}
+    out = []
+    for n, line in enumerate(open(path, encoding='utf-8'), 1):
+        line = line.strip()
+        if not line or line.startswith('#'):
+            continue
+        parts = [s.strip() for s in line.split('|')]
+        number, name = int(parts[0]), parts[1]
+        game_name = parts[2] if len(parts) > 2 and parts[2] else name
+        if name.lower() in listed:
+            continue
+        if len(game_name) > MAX_NAME:
+            sys.exit(f'{path}: line {n}: "{game_name}" is longer than {MAX_NAME} characters')
+        listed.add(name.lower())
+        out.append((name, game_name, number))
+    return out
+
+
 def write_if_changed(path, data):
     if isinstance(data, str):
         data = data.encode()
@@ -560,12 +584,14 @@ def update_cards_h(new):
 
 def cmd_build():
     rows = load_list()
+    leftovers = load_leftovers(rows)
     cache = load_cache()
     # (a Link Monster cached before its Link Rating and Arrows were kept is fetched again)
     missing = [n for n, _ in rows if n not in cache or ('Link' in cache[n]['type'] and 'linkval' not in cache[n])]
+    missing += [n for n, _, _ in leftovers if n not in cache]
     if missing:
         fetch(missing, cache)
-    make_art([cache[n] for n, _ in rows])
+    make_art([cache[n] for n, _ in rows] + [cache[n] for n, _, _ in leftovers])
     numbers = free_numbers()
     cap = min(len(numbers), MAX_IDS - OLD_COUNT)
     n2i_old = struct.unpack('<2048H', open(f'{IN}/cards__number_to_id.json.bin', 'rb').read())
@@ -594,6 +620,28 @@ def cmd_build():
             number = next(free)
         c.update(id=OLD_COUNT + k, number=number, name=name, game_name=game_name)
         new.append(c)
+    # NEWCARDS_LEFTOVERS (make demo): the leftover effect cards after the listed ones, each at its own card number
+    # (the engine's effect key), so the original effect code plays them.
+    used = {c['number'] for c in new}
+    for name, game_name, number in leftovers:
+        if n2i_old[number]:
+            fail(f'{name}: card number {number} already has a card')
+        if number in used:
+            continue        # a listed card took the number (Big Bang Shot: 1313's piercing Equip)
+        used.add(number)
+        c = dict(cache[name])
+        c.update(id=OLD_COUNT + len(new), number=number, name=name, game_name=game_name, leftover=True)
+        new.append(c)
+    if len(new) > cap:
+        fail(f'{len(new)} cards with the leftover effect cards, but only {cap} fit')
+    real = list(new)
+    # NEWCARDS_PAD_TO (make demo): blank slots after the real cards until that many cards are added (at most the
+    # capacity), for filling in later (e.g. in Hex Maniac Advance). Each takes a free card number; everything else is
+    # zero (no name, text, stats or art; no password). They are left out of gCardIdsByName (the Deck Edit, Trunk and
+    # Card Trading lists) and of cards.h, and the code that walks card IDs stops at CARD_ID_LAST_REAL.
+    pad_to = min(int(os.environ.get('NEWCARDS_PAD_TO', '0') or 0), cap)
+    while len(new) < pad_to:
+        new.append({'id': OLD_COUNT + len(new), 'number': next(free), 'name': '', 'game_name': '', 'blank': True})
     total = OLD_COUNT + len(new)
 
     names, _ = read_old('names.json', NAME_SIZE)
@@ -612,6 +660,20 @@ def cmd_build():
     next_key = max(struct.unpack('<H', k)[0] for k in keys[1:]) + 1
 
     for c in new:
+        if c.get('blank'):
+            names.append(bytes(NAME_SIZE))
+            descs.append(bytes(DESC_SIZE))
+            gfx.append(bytes(ART_SIZE))
+            pals.append(bytes(PAL_SIZE))
+            stats.append(bytes(4))
+            types_ex.append(0)
+            markers.append(0)
+            i2n.append(struct.pack('<H', c['number']))
+            pws.append(bytes([0xFF] * 4))
+            keys.append(struct.pack('<H', next_key))
+            next_key += 1
+            n2i[c['number']] = c['id']
+            continue
         names.append(A.field_bytes(c['game_name'], NAME_SIZE))
         descs.append(A.field_bytes(clean_text(c['desc']), DESC_SIZE))
         w, h, px, plte = A.png_read(open(f'{DIR}/art/{c["passcode"]}.png', 'rb').read())
@@ -629,8 +691,8 @@ def cmd_build():
         n2i[c['number']] = c['id']
 
     all_names = [A.dec(n.split(b'\0')[0]) for n in names]
-    order = sorted(list(range(1, FIRST_APPENDED)) + list(range(OLD_COUNT, total)),
-                   key=lambda i: (name_key(all_names[i]), i))
+    order = sorted(list(range(1, FIRST_APPENDED)) + list(range(OLD_COUNT, OLD_COUNT + len(real))),
+                   key=lambda i: (name_key(all_names[i]), i))     # (not the blank slots)
     order += list(range(FIRST_APPENDED, OLD_COUNT)) + [0]
 
     out = {
@@ -650,30 +712,32 @@ def cmd_build():
     for name, data in out.items():
         write_if_changed(f'{OUT}/newcards__{name}.bin', data)
     note = f'Generated by tools/newcards.py from {LIST}. Do not edit.'
-    syms = update_cards_h(new)
+    syms = update_cards_h(real)
     # HAS_CARD_<NAME> for every added card, so code for one card (src/added_effects.c) can be left out when the
     # card is not in the list. mod_decks.c also uses HAS_CARD_* for cards that exist in cards.h but are not in the
     # added-card list (base-game numbers re-used by the mod); define those too so format decks are not dropped.
     write_if_changed(COUNT_H, f'/* {note} */\n#define CARD_ID_COUNT_ADDED {len(new)}\n'
+                     f'/* card IDs up to the last real card (the blank slots of NEWCARDS_PAD_TO follow) */\n'
+                     f'#define CARD_ID_COUNT_REAL {OLD_COUNT + len(real)}\n'
                      + ''.join(f'#define HAS_{s} 1\n' for s in sorted(syms))
                      + in_game_has_defines(syms))
     # The Synchro Monsters and their Tuner (card number, 0 = any Tuner) for src/mod_synchro.c.
     numbers = {A.dec(names[i].split(b'\0')[0]): struct.unpack('<H', i2n[i])[0] for i in range(1, total)}
-    numbers.update({c['name']: c['number'] for c in new})
-    rules = [(c['number'], synchro_tuner(c, numbers)) for c in new if 'Synchro' in c['type']]
+    numbers.update({c['name']: c['number'] for c in real})
+    rules = [(c['number'], synchro_tuner(c, numbers)) for c in real if 'Synchro' in c['type']]
     write_if_changed(SYNCHRO_H, f'/* {note} */\n#define SYNCHRO_RULE_COUNT {len(rules)}\n'
                      '/* { Synchro card number, Tuner card number (0: any Tuner; 0x8000 | type: a Tuner of that '
                      'Type) } */\n'
                      '#define SYNCHRO_RULES { ' + ''.join(f'{{ {s}, {t} }}, ' for s, t in rules) + '{ 0, 0 } }\n')
     # The Link Monsters' material rules for src/mod_link.c.
-    links = [(c['number'],) + link_rule(c) for c in new if 'Link' in c['type']]
+    links = [(c['number'],) + link_rule(c) for c in real if 'Link' in c['type']]
     write_if_changed(LINK_H, f'/* {note} */\n#define LINK_RULE_COUNT {len(links)}\n'
                      '/* { Link card number, material count, 1: or more, kind (0 any, 1 Normal, 2 Effect, 3 Type, '
                      '4 Attribute, 5 Level), its value } */\n'
                      '#define LINK_RULES { ' + ''.join('{ %d, %d, %d, %d, %d }, ' % r for r in links)
                      + '{ 0, 0, 0, 0, 0 } }\n')
     # The Xyz Monsters' material rules for src/mod_xyz.c.
-    xyz = [(c['number'],) + xyz_rule(c) for c in new if 'XYZ' in c['type']]
+    xyz = [(c['number'],) + xyz_rule(c) for c in real if 'XYZ' in c['type']]
     write_if_changed(XYZ_H, f'/* {note} */\n#define XYZ_RULE_COUNT {len(xyz)}\n'
                      '/* { Xyz card number, material count, 1: or more, Level, type (0 any), attribute (0 any) } */\n'
                      '#define XYZ_RULES { ' + ''.join('{ %d, %d, %d, %d, %d, %d }, ' % r for r in xyz)
@@ -681,7 +745,7 @@ def cmd_build():
     write_if_changed(COUNT_INC, f'@ {note}\n\t.set CARD_ID_COUNT_ADDED, {len(new)}\n'
                                 f'\t.set CARD_ID_COUNT, {total}\n')
     write_if_changed(GEN_TSV, 'id\tnumber\tpasscode\tname\tgame_name\n' + ''.join(
-        f'{c["id"]}\t{c["number"]}\t{c["passcode"]}\t{c["name"]}\t{c["game_name"]}\n' for c in new))
+        f'{c["id"]}\t{c["number"]}\t{c.get("passcode", "")}\t{c["name"]}\t{c["game_name"]}\n' for c in new))
     stamp = f'{total}\n{os.path.abspath(LIST)}\n'
     stamp_path = os.environ.get('NEWCARDS_STAMP', f'{OUT}/.newcards')
     with open(stamp_path, 'w') as f:    # always: make compares its time (what depends on it must rebuild)

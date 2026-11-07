@@ -1,0 +1,162 @@
+# The leftover card effects of EDS (LEFTOVER_EFFECTS.md on the binary branch): card numbers the duel engine has
+# effect code for, but no card. `make demo` (tools/newcards.py NEWCARDS_LEFTOVERS) adds each card below at its own
+# card number, with its YGOPRODeck stats, text and art, after the demo's added cards and before the blank slots, so
+# the original effect code plays it. A card already in the card list is skipped (it keeps its place there), as is
+# one whose number a listed card took (1313: Big Bang Shot, tools/newcards.py ENGINE_NUMBERS).
+# Format: card number | YGOPRODeck name [| shorter in-game name]
+#
+# Left out: 230 (no effect code, card unknown), 1210 and 1249 (Dark Magician / Harpie Lady alias numbers with no card
+# of their own), 1318 Insect Imitation (ROM bug: works for one zone only), 1421 Return of the Doomed and 1422
+# Lightning Blade (partly coded). Kept although they have no effect code: the monsters the working effects name
+# (Fusion materials and results, the ritual monster, Des Gardius's Tributes, Cyclon Laser's Gradius).
+1211 | Thousand Knives
+1212 | Dark Magic Curtain
+1213 | Mystic Box
+1214 | Magic Cylinder
+1220 | Soul Exchange
+1221 | Card Destruction
+1230 | Nightmare's Steelcage
+1231 | Rocket Warrior
+1232 | Multiply
+1240 | Berfomet
+1241 | Chimera the Flying Mythical Beast
+1242 | Archfiend of Gilfer
+1243 | Ancient Lamp
+1244 | Shadow Spell
+1245 | Scapegoat
+1246 | Copycat
+1247 | Mystical Refpanel
+1248 | Makiu, the Magical Mist
+1250 | Swift Gaia the Fierce Knight
+1251 | Obnoxious Celtic Guard
+1252 | Fairy King Truesdale
+1253 | Cipher Soldier
+1254 | Slate Warrior
+1255 | Electromagnetic Bagworm
+1256 | Rigorous Reaver
+1257 | Masked Beast Des Gardius
+1258 | The Mask of Remnants
+1301 | Michizure
+1302 | Minor Goblin Official
+1303 | Gamble
+1304 | Attack and Receive
+1305 | Solemn Wishes
+1306 | Skull Invitation
+1307 | Bubonic Vermin
+1311 | Burning Land
+1312 | Cold Wave
+1313 | Fairy Meteor Crush
+1314 | Limiter Removal
+1315 | Rain of Mercy
+1316 | Monster Recovery
+1317 | Shift
+1319 | Interdimensional Matter Transporter
+1320 | Ground Collapse
+1321 | Magic Drain
+1322 | Infinite Dismissal
+1323 | Gravity Bind
+1324 | Type Zero Magic Crusher
+1325 | Shadow of Eyes
+1326 | The Legendary Fisherman
+1327 | Sword Hunter
+1328 | Drill Bug
+1329 | Deepsea Warrior
+1330 | Bite Shoes
+1332 | Invitation to a Dark Sleep
+1333 | Thousand-Eyes Idol
+1334 | Thousand-Eyes Restrict
+1336 | Hayabusa Knight
+1337 | Bombardment Beetle
+1338 | 4-Starred Ladybug of Doom
+1339 | Gradius
+1340 | Vampire Baby
+1341 | Mad Sword Beast
+1344 | Goblin Attack Force
+1350 | The Fiend Megacyber
+1351 | Gearfried the Iron Knight
+1352 | Insect Barrier
+1402 | Humanoid Slime
+1403 | Worm Drake
+1404 | Humanoid Worm Drake
+1405 | Revival Jam
+1410 | Grand Tiki Elder
+1411 | The Masked Beast
+1412 | Melchid the Four-Face Beast
+1413 | Nuvia the Wicked
+1414 | Chosen One
+1415 | Mask of Weakness
+1416 | Curse of the Masked Beast
+1417 | Mask of Dispel
+1418 | Mask of Restrict
+1419 | Mask of the Accursed
+1420 | Mask of Brutality
+1423 | Tornado Wall
+1424 | Fairy Box
+1425 | Torrential Tribute
+1426 | Jam Breeding Machine
+1427 | Infinite Cards
+1428 | Jam Defender
+1429 | Card of Safe Return
+1430 | Lady Panther
+1431 | The Unfriendly Amazon
+1432 | Amazoness Archer
+1433 | Crimson Sentry
+1434 | Fire Princess
+1435 | Lady Assailant of Flames
+1436 | Fire Sorcerer
+1437 | Spirit of the Breeze
+1438 | Dancing Fairy
+1439 | Fairy Guardian
+1441 | Cure Mermaid
+1442 | Hysteric Fairy
+1444 | The Forgiving Maiden
+1445 | St. Joan
+1446 | Darklord Marie
+1447 | Jar of Greed
+1448 | Scroll of Bewitchment
+1449 | United We Stand
+1450 | Mage Power
+1451 | Offerings to the Doomed
+1510 | Jowgen the Spiritualist
+1511 | Kycoo the Ghost Destroyer
+1512 | Summoner of Illusions
+1513 | Bazoo the Soul-Eater
+1514 | Dark Necrofear
+1515 | Soul of Purity and Light
+1516 | Spirit of Flames
+1517 | Aqua Spirit
+1518 | The Rock Spirit
+1519 | Garuda the Wind Spirit
+1520 | Gilasaurus
+1521 | Tornado Bird
+1522 | Dreamsprite
+1523 | Zombyra the Dark
+1524 | Supply
+1525 | Maryokutai
+1526 | The Last Warrior from Another Planet
+1527 | Collected Power
+1528 | Destiny Board
+1529 | Dark Spirit of the Silent
+1530 | Royal Command
+1531 | Riryoku Field
+1532 | Skull Lair
+1533 | Graverobber's Retribution
+1534 | Deal of Phantom
+1535 | Destruction Punch
+1536 | Blind Destruction
+1537 | The Emperor's Holiday
+1538 | The Dark Door
+1539 | Spiritualism
+1540 | Cyclon Laser
+1541 | Spirit Message "I"
+1542 | Spirit Message "N"
+1543 | Spirit Message "A"
+1544 | Spirit Message "L"
+1545 | Bait Doll
+1546 | De-Fusion
+1547 | Fusion Gate
+1548 | Ekibyo Drakmord
+1549 | Miracle Dig
+1550 | Dragonic Attack
+1551 | Spirit Elimination
+1552 | Vengeful Bog Spirit
