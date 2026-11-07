@@ -83,6 +83,14 @@ original ROM (repo root). Without `baserom.toml` it does nothing. `eds_demo.toml
     resolve, check, prepare, chainA, chainB; 24 bytes a row), one row per added card with an effect row plus the
     0xFFFF terminator (127 rows now). `FindCardEffect` (effect_hooks.c) searches it after `gCardEffects`, so a row's
     card number gives that card the five handlers.
+  - Opponents (`src/mod_opponents.c` `sOpponents`, by the ELF): `data.opponents`
+    (``[kind.opponentkinds order. format.formats unused. name<> portrait:cardinternalnumbers padding:]opponents``,
+    12 bytes a row, one per duelist ID 0-24): kind (hidden, format, deck), unlock order, format (banlist), the name
+    (`text.opponents.<name>`, ASCII), and the portrait: the card whose art the opponent select
+    (`ModOpponentSelectPortraits`) and the Records screen (`DrawRecordArtPortrait`) draw for that opponent; 0 keeps
+    the original page's portrait, `0x8000 | page << 4 | slot` takes an original page's (Solomon: 0x8043). New lists:
+    `opponents` (duelist IDs with this build's opponent, e.g. "tristan - Yugi-Kaiba"; baserom.toml's `duelists` is in
+    another order) and `opponentkinds`. Checked: La Jinn for Yugi-Kaiba, Sangan for Critter, Fiber Jar for Fiber.
   - Pack unlock wins (MatchedWords, after baserom.toml's): `data.constants.packs.format.usagewins` (Length 1) is
     `gModUsagePackWins[0]` (src/mod_format_packs.c, 10 = `FORMAT_PACK_USAGE_WINS` of tools/format_packs.py): the wins
     against a format that open its usage pack. It is a byte of data so it exists in every build (`ModIsFormatPackUnlocked`

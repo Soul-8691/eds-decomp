@@ -2752,3 +2752,7 @@ updated: 2026-09-29
 - tools/card_screenshots.lua: cards and IDs from build/new_cards.tsv; card ID count includes the blank slots.
 - cards/: 120 new screenshots (the leftover effect cards); README counts (306).
 - Pages: [[added-cards]].
+
+## [2026-11-07] progress | HMA TOML: the opponents table (portrait cards)
+- tools/hma_toml.py: data.opponents (sOpponents: kind, order, format, name, portrait card), text.opponents.*, lists opponents and opponentkinds; header guide. Checked by decoding the rows.
+- Pages: [[hma-toml]].

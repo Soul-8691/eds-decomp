@@ -124,6 +124,11 @@ ADDED_GUIDE = [
     ('graphics.preduel', "the pre-duel pictures per format: <format>.picture the 240x96 picture, .palette its 224 "
                          "colours, .qr.image the QR code (1 = dark module), .qr.palette", USED),
     ('data.preduel', 'per pre-duel picture: .qrsize, the QR code modules a side (0 = none)', USED),
+    ('data.opponents', "the opponents by duelist ID (list opponents): kind (hidden, format, deck), unlock order, format, "
+                       ".name, and .portrait: the card whose art the opponent select and the Records screen show (0: "
+                       "the original portrait; 0x8000 | page << 4 | slot: an original page's portrait, e.g. Solomon)",
+     USED),
+    ('text.opponents', 'the opponent names (ASCII)', USED),
 ]
 # MatchedWords the mod adds (same guide).
 ADDED_WORDS_GUIDE = [
@@ -134,8 +139,10 @@ ADDED_WORDS_GUIDE = [
 ]
 ADDED_LISTS_GUIDE = [
     ('formatpacks', 'the 50 format pack names (indexes data.packs.format.*)', USED),
-    ('formats', 'the 15 Campaign formats in banlist order (indexes data.prices.cards, data.packs.format.formats)',
-     USED),
+    ('formats', 'the 15 Campaign formats in banlist order (indexes data.prices.cards, data.packs.format.formats, '
+                'data.opponents)', USED),
+    ('opponents', 'the duelist IDs 0-24 with the opponent each is in this build (indexes data.opponents)', USED),
+    ('opponentkinds', 'hidden, format, deck (data.opponents\' kind)', USED),
 ]
 
 # What baserom.toml (the original game) brings, what this script does to it, and whether the mod still uses it.
@@ -356,6 +363,28 @@ def mod_anchors(elf, rom, rom_sym):
             if p:
                 n = c_string(rom, p)
                 anchors.append((f'text.decks.recipes.recipe{i}', p - ROM_BASE, '`asc`%d' % (len(n) + 1)))
+
+    # The opponents (src/mod_opponents.c sOpponents, struct ModOpponent, 12 bytes, by duelist ID): kind, unlock
+    # order, banlist (format), name, and the portrait: the card whose art the opponent select and the Records screen
+    # draw (a card number; 0 = the original page's portrait; 0x8000 | page << 4 | slot = an original page's portrait).
+    opponents = sym('sOpponents', 'mod_opponents.o')
+    if opponents:
+        ids = {int(v): n for n, v in re.findall(r'DUELIST_(\w+) = (\d+)',
+                                                open('include/constants/game.h', encoding='utf-8').read())}
+        labels, seen = [], set()
+        for i in range(opponents[1] // 12):
+            p = word(opponents[0] + 12 * i + 4)
+            name = c_string(rom, p) if p else ''
+            labels.append(ids.get(i, 'none').lower() + (f' - {name}' if name else ''))
+            if p and p not in seen:
+                seen.add(p)
+                anchors.append((f'text.opponents.{anchor_id(name)}', p - ROM_BASE, '`asc`%d' % (len(name) + 1)))
+        lists.append(('opponents', labels))
+        lists.append(('opponentkinds', ['hidden', 'format', 'deck']))
+        add('data.opponents', opponents, '[kind.opponentkinds order. format.formats unused. name<> '
+                                         'portrait:cardinternalnumbers padding:]opponents')
+    else:
+        report.append('no sOpponents in the ELF: the opponents table is left out')
 
     # The added cards' effect rows (src/added_effects.c gAddedCardEffects): struct CardEffect, 24 bytes, as
     # baserom.toml's data.cards.effects (gCardEffects), which FindCardEffect searches first; the last row is the
