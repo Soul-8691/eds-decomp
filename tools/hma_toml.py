@@ -354,12 +354,15 @@ def mod_anchors(elf, rom, rom_sym):
             report.append(f'deck {list_sym}: its card array is not a symbol, left out')
             continue
         deck_names[s[0]] = name
-        add(name + '.main', main, '[card:cardinternalnumbers]%d' % (main[1] // 2))
+        # `|data.cards.passwords` lets HMA's "Import .ydk" (right-click a card) resolve .ydk passwords. Into .main
+        # it writes the Main Deck then the Fusion Deck, resizes the array and sets the DeckList's count (.list);
+        # .side is fixed-size (its count is ARRAY_COUNT in the code), so only its slots are filled.
+        add(name + '.main', main, '[card:cardinternalnumbers|data.cards.passwords]%d' % (main[1] // 2))
         add(name + '.list', s, '[cards<> count: unused:]1')
         for side_sym in (base + 'Side', base.replace('StarterDeck', 'Deck') + 'Side'):
             side = sym(side_sym, 'mod_decks.o')
             if side:
-                add(name + '.side', side, '[card:cardinternalnumbers]%d' % (side[1] // 2))
+                add(name + '.side', side, '[card:cardinternalnumbers|data.cards.passwords]%d' % (side[1] // 2))
                 break
     recipes = sym('sRecipePresets', 'mod_decks.o')
     if recipes:
