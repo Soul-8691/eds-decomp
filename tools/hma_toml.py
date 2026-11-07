@@ -148,6 +148,10 @@ ADDED_GUIDE = [
                        "the original portrait; 0x8000 | page << 4 | slot: an original page's portrait, e.g. Solomon)",
      USED),
     ('text.opponents', 'the opponent names (ASCII)', USED),
+    ('graphics.opponents', "the Records screen's face of each opponent with a card art portrait (format "
+                           "opponents, Debug, Test Duel): .face (48 x 16, 4bpp) and .facepalette (entries 1-15). "
+                           "Made from the portrait card's art when the ROM is built (tools/record_faces.py), so a "
+                           "new portrait card in data.opponents needs a new face too (or a rebuild)", USED),
 ]
 # MatchedWords the mod adds (same guide).
 ADDED_WORDS_GUIDE = [
@@ -342,6 +346,7 @@ def original_slots(rom_sym, rom):
 
 
 DUELIST_PORTRAIT_ENTRY = 256 * 2 + 56 * 56     # data/mod_duelist_portraits.s (tools/duelist_portraits.py)
+RECORD_FACE_SIZE = 16 * 2 + 6 * 2 * 32          # data/mod_record_faces.s (tools/record_faces.py)
 
 
 def mod_anchors(elf, rom, rom_sym):
@@ -447,6 +452,17 @@ def mod_anchors(elf, rom, rom_sym):
         lists.append(('opponentkinds', ['hidden', 'format', 'deck']))
         add('data.opponents', opponents, '[kind.opponentkinds order. format.formats unused. name<> '
                                          'portrait:cardinternalnumbers padding:]opponents')
+        # Their Records faces (gModRecordFaces, by duelist ID; filled after linking by tools/record_faces.py from the
+        # portrait card's art): u16 colours[16], then 48 x 16 pixels as 6 x 2 4bpp tiles. Only the filled ones.
+        faces = rom_sym.get('gModRecordFaces')
+        for i in range(opponents[1] // 12 if faces else 0):
+            at = faces[0] - ROM_BASE + i * RECORD_FACE_SIZE
+            p = word(opponents[0] + 12 * i + 4)
+            if not p or not any(rom[at:at + RECORD_FACE_SIZE]):
+                continue
+            name = 'graphics.opponents.' + anchor_id(c_string(rom, p))
+            anchors += [(name + '.facepalette', at, '`ucp4`'),
+                        (name + '.face', at + 32, f'`ucs4x6x2|{name}.facepalette`')]
     else:
         report.append('no sOpponents in the ELF: the opponents table is left out')
 

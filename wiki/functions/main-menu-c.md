@@ -165,3 +165,7 @@ Related: [[campaign-select-c]], [[collection-c]], [[ram-map]], [[main-menu]], [[
   others to the nearest, and writes the 6 x 2 tiles and map cells the face images use. Solomon keeps his face
   (`PORTRAIT_FROM_SLOT`), a locked opponent the "???" image. Previewed offline with the same sampling (La Jinn,
   Sangan, Confiscation, Imperial Order, Jinzo); not yet checked on screen.
+- Faces as data (2026-11-07): the card art faces are no longer computed on the Records screen. `gModRecordFaces`
+  (`data/mod_record_faces.s`, 25 entries by duelist ID, 16 colours + 6 x 2 4bpp tiles) is filled after linking by
+  `tools/record_faces.py` with the same sampling, and `DrawRecordFace` copies an entry (an empty one: the original
+  face), so Hex Maniac Advance can edit them ([[hma-toml]]: `graphics.opponents.<name>.face`).

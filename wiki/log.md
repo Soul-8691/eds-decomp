@@ -2780,3 +2780,8 @@ updated: 2026-09-29
 - tools/duelist_portraits.py + data/mod_duelist_portraits.s (units.txt, Makefile): the opponent-select portraits cut from the page pictures as 56 x 56 8bpp tiled copies with their palettes; src/mod_opponents.c DrawSlotPortrait draws from them (portrait 0 too).
 - tools/hma_toml.py: graphics.duelists.<duelist>.portrait / .portraitpalette (faces kept); cardinternalnumbers' duelists moved to 0x8000 | page << 4 | slot (sparse list writing).
 - Pages: [[hma-toml]].
+
+## [2026-11-07] progress | Editable format opponent faces (Records screen)
+- data/mod_record_faces.s (gModRecordFaces), tools/record_faces.py (fills it in the linked ROM; Makefile ROM rule), src/mod_opponents.c RecordFace / DrawRecordFace (replaces the run-time DrawRecordArtPortrait); units.txt.
+- tools/hma_toml.py: graphics.opponents.<name>.face / .facepalette (16 in the demo). Checked by rendering three.
+- Pages: [[hma-toml]], [[main-menu-c]].

@@ -83,6 +83,15 @@ original ROM (repo root). Without `baserom.toml` it does nothing. `eds_demo.toml
     resolve, check, prepare, chainA, chainB; 24 bytes a row), one row per added card with an effect row plus the
     0xFFFF terminator (127 rows now). `FindCardEffect` (effect_hooks.c) searches it after `gCardEffects`, so a row's
     card number gives that card the five handlers.
+  - Opponent faces on the Records screen (by the `.sym`'s `gModRecordFaces`, `data/mod_record_faces.s`): for each
+    opponent with a card art portrait (the 15 formats and Debug; the Test Duel when its portrait is a card),
+    `graphics.opponents.<name>.face` (`` `ucs4x6x2|...facepalette` ``, 48 x 16) and `.facepalette` (`` `ucp4` ``,
+    entries 1-15). The table is zeros in the source; `tools/record_faces.py` fills it in the linked ROM (the
+    Makefile's ROM rule, after fixptrs and before the TOML) from each opponent's portrait card and that ROM's card
+    art, with the sampling the game used to do at run time (art rows 28-51 at 2/3, the 15 most used colours).
+    `ModRecordDrawPage` now copies the face (`DrawRecordFace`); a zero entry draws the duelist's original face. A new
+    portrait card set in HMA does not redraw the face: edit it too, or rebuild. Checked by rendering Critter
+    (Sangan), Android (Jinzo) and Reaper (Spirit Reaper) from the anchors.
   - Original duelist portraits: `graphics.duelists.<duelist>.portrait` (`` `ucs8x7x7|...portraitpalette` ``, 56 x 56)
     and `.portraitpalette` (`` `ucp4:0123456789ABCDEF` ``, the page's 256 colours). The originals are round portraits
     drawn into the 5 opponent-select page pictures (240 x 160 linear 8bpp, which HMA can't show), so
