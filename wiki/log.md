@@ -2699,3 +2699,11 @@ updated: 2026-09-29
 - tools/format_packs.py (no build_roulette, roulette blob or FORMAT_PACK_ROULETTE_SIZE), Makefile, units.txt, tools/mkld.py comment; deleted data/mod_format_pack_roulettes.s and tools/check_roulette.py. ROM 800 KB smaller.
 - tools/hma_toml.py: no roulettes anchor; tools/packs_md.py and PACKS.md: how pulls work.
 - Pages: [[pack-shop]], [[hma-toml]].
+
+## [2026-11-06] progress | HMA TOML: gAddedCardEffects
+- tools/hma_toml.py: data.cards.effects.added (gAddedCardEffects, data.cards.effects's format, rows = size / 24); the ELF is used only when it matches the ROM's .sym (build/eds.elf is shared with make release-demo). Rows checked: handlers resolve to the Effect* symbols, last row 0xFFFF.
+- Pages: [[hma-toml]].
+
+## [2026-11-06] progress | HMA TOML header: a guide to the added anchors and lists
+- tools/hma_toml.py: ADDED_GUIDE / ADDED_LISTS_GUIDE, written as comments at the top of eds_demo.toml (only the groups present).
+- Pages: [[hma-toml]].

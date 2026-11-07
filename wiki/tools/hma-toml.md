@@ -78,6 +78,14 @@ original ROM (repo root). Without `baserom.toml` it does nothing. `eds_demo.toml
     `.qr` (`` `ucs4x4x4|...qr.palette` ``, the QR code, 1 = dark module), and `graphics.preduel.<format>`
     (`` `ucs8x30x12|...palette` ``, the 240x96 picture). An edited picture keeps 224 colours; an edited QR code must
     stay at its module count (`qrsize`), drawn from the top left.
+  - Added effect rows (`src/added_effects.c`, by the `.sym`): `data.cards.effects.added` is `gAddedCardEffects`
+    in baserom.toml's `data.cards.effects` format (``[card:cardinternalnumbers padding: routine1::|h ... routine5::|h]``,
+    resolve, check, prepare, chainA, chainB; 24 bytes a row), one row per added card with an effect row plus the
+    0xFFFF terminator (127 rows now). `FindCardEffect` (effect_hooks.c) searches it after `gCardEffects`, so a row's
+    card number gives that card the five handlers.
+  - The ELF is `build/eds.elf`, which every build shares: the script uses it only when its global symbols sit at
+    the `.sym`'s addresses (else, e.g. after a `make release-demo`, it reports that and leaves the ELF-only tables out;
+    run inside `make demo` the two always match).
   - Lengths are fixed per build (the TOML is written again each `make demo`): a deck or pool made longer in HMA
     needs its count field changed too.
 - **Lists.** `cardnumbers` (by card ID) is cut or grown to CARD_ID_COUNT and `cardinternalnumbers` (by card number)

@@ -88,6 +88,35 @@ EXTRA_ANCHORS = [
 ]
 
 
+# The header's guide to the added anchors and lists: (anchor name or prefix, what it is). Keep it in step with
+# EXTRA_ANCHORS and mod_anchors.
+ADDED_GUIDE = [
+    ('graphics.cards.icons', "every card's art icon (Deck Edit's ring): .palettes, then the 16x16 4bpp images"),
+    ('graphics.cards.fieldicons', "the field icons: .artpalette (64 shared colours), .miniatures (each card's "
+                                  "16x16 8bpp miniature)"),
+    ('data.cards.effects.added', "the added cards' effect rows (gAddedCardEffects): card, then the resolve, check, "
+                                 "prepare, chainA, chainB handlers; searched after data.cards.effects; last row 0xFFFF"),
+    ('data.packs.format.pools', "the shop's TCG and usage format packs: each pack's cards and pull weights (all a "
+                                "pull reads; chance = weight / total)"),
+    ('data.packs.format', "per format pack: .names, .flags (1 = usage pack), .formats, .releasedates (yyyymmdd), "
+                          ".portraits (cover card)"),
+    ('text.packs.format', 'the format pack names (ASCII)'),
+    ('data.prices.cards', "the DP to buy a card by password, per format: card and price"),
+    ('data.decks.mod', "the mod's decks (format opponents, duelists, Test Duel): <deck> is the DeckList (cards, "
+                       "count), <deck>.main the main + Fusion Deck, <deck>.side the Side Deck"),
+    ('data.decks.recipes', "the debug menu's deck recipes: name, DeckList, Side Deck, side count (empty in the "
+                           "release); last row the terminator"),
+    ('text.decks.recipes', 'the deck recipe names (ASCII)'),
+    ('graphics.preduel', "the pre-duel pictures per format: <format> the 240x96 picture, .palette its 224 colours, "
+                         ".qr the QR code (1 = dark module), .qr.palette"),
+    ('data.preduel', 'per pre-duel picture: .qrsize, the QR code modules a side (0 = none)'),
+]
+ADDED_LISTS_GUIDE = [
+    ('formatpacks', 'the 50 format pack names (indexes data.packs.format.*)'),
+    ('formats', 'the 15 Campaign formats in banlist order (indexes data.prices.cards, data.packs.format.formats)'),
+]
+
+
 def gen_hash(items, seed=0xCAFEBABE):
     """HMA's StoredList.GenerateHash (src/HexManiac.Core/Models/StoredMetadata.cs)."""
     h = seed
@@ -219,6 +248,17 @@ def mod_anchors(elf, rom, rom_sym):
             if p:
                 n = c_string(rom, p)
                 anchors.append((f'text.decks.recipes.recipe{i}', p - ROM_BASE, '`asc`%d' % (len(n) + 1)))
+
+    # The added cards' effect rows (src/added_effects.c gAddedCardEffects): struct CardEffect, 24 bytes, as
+    # baserom.toml's data.cards.effects (gCardEffects), which FindCardEffect searches first; the last row is the
+    # 0xFFFF terminator.
+    effects = rom_sym.get('gAddedCardEffects')
+    if effects:
+        anchors.append(('data.cards.effects.added', effects[0] - ROM_BASE,
+                        '[card:cardinternalnumbers padding: routine1::|h routine2::|h routine3::|h routine4::|h '
+                        'routine5::|h]%d' % (effects[1] // 24)))
+    else:
+        report.append('no gAddedCardEffects in the .sym: the added effect rows are left out')
 
     # The pre-duel pictures (src/mod_preduel.c, data/mod_preduel_data.s, layout in tools/preduel_image.py): the
     # picture's 224 colours, the QR code's size, palette and 4bpp sprite, the picture's 8bpp tiles (colour - 32).
@@ -521,17 +561,28 @@ def main():
                                            f'Address = 0x{sym[symbol][0] - ROM_BASE + offset(count):06X}',
                                            f"Format = '''{fmt}'''", f"DefaultHash = '''{gen_hash([fmt])}'''", '']))
     mod_lists = []
-    if os.path.exists(a.elf):
-        anchors, mod_lists, mod_report = mod_anchors(elf_symbols(a.elf), new_rom, sym)
+    elf = elf_symbols(a.elf) if os.path.exists(a.elf) else {}
+    # build/eds.elf is shared by every build (make, make release, make release-demo): use it only when it is this
+    # ROM's (every global data symbol of the .sym at the same address).
+    local = {k.split(':', 1)[1] for k in elf if ':' in k}     # (static names can repeat across files)
+    stale = [k for k, (address, _) in elf.items()
+             if ':' not in k and k not in local and k in sym and sym[k][0] != address]
+    if elf and stale:
+        report.append(f'{a.elf} is not the ELF of {a.rom} (another build since; e.g. {stale[0]}): the mod tables '
+                      f'(packs, prices, decks, recipes) are left out until the next `make demo`')
+        elf = {}
+    elif not elf:
+        report.append(f'no {a.elf}: the mod tables (packs, prices, decks, recipes) are left out')
+    # (the tables found by the .sym, the added effect rows and the pre-duel pictures, are there either way)
+    anchors, mod_lists, mod_report = mod_anchors(elf, new_rom, sym)
+    if elf:
         report.extend(mod_report)
-        for name, address, fmt in anchors:
-            if name in names:
-                continue
-            names.add(name)
-            extra.append(('[[NamedAnchors]]', ['[[NamedAnchors]]', f"Name = '''{name}'''", f'Address = 0x{address:06X}',
-                                               f"Format = '''{fmt}'''", f"DefaultHash = '''{gen_hash([fmt])}'''", '']))
-    else:
-        report.append(f'no {a.elf}: the mod tables (packs, prices, decks) are left out')
+    for name, address, fmt in anchors:
+        if name in names:
+            continue
+        names.add(name)
+        extra.append(('[[NamedAnchors]]', ['[[NamedAnchors]]', f"Name = '''{name}'''", f'Address = 0x{address:06X}',
+                                           f"Format = '''{fmt}'''", f"DefaultHash = '''{gen_hash([fmt])}'''", '']))
     last = max(i for i, (header, _) in enumerate(keep) if header == '[[NamedAnchors]]')
     keep[last + 1:last + 1] = extra
     list_names = {field(lines, 'Name') for header, lines in keep if header == '[[List]]'}
@@ -548,6 +599,21 @@ def main():
     head = ['# Generated by tools/hma_toml.py from baserom.toml for %s (%d card IDs, card numbers 0-%d). Do not edit;'
             % (os.path.basename(a.rom), count, numbers - 1),
             '# it is written again by every `make demo`.']
+    # A guide to what this file adds to baserom.toml (only the groups present in this build).
+    added = [lines[1][len("Name = '''"):-3] for header, lines in extra]
+    guide = []
+    for prefix, what in ADDED_GUIDE:
+        hits = [n for n in added if n == prefix or n.startswith(prefix + '.')]
+        if hits:
+            guide.append(f'#   {prefix}{".*" if any(n != prefix for n in hits) else ""}: {what}')
+    for list_name, what in ADDED_LISTS_GUIDE:
+        if list_name in {n for n, _ in mod_lists}:
+            guide.append(f'#   list {list_name}: {what}')
+    if guide:
+        head.append('#')
+        head.append('# Added by this mod (not in baserom.toml), by name; the anchors follow every build:')
+        head.extend(guide)
+        head.append('#')
     if dropped:
         head.append('# MatchedWords left out (their code no longer holds the constant):')
         head.extend(dropped)
