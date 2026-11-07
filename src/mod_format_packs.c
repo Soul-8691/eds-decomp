@@ -220,6 +220,11 @@ void ModPackShopList_SyncSceneWork(void)
         gSceneWork.packRows[i] = gModPackList.rows[i];
 }
 
+/* Wins against a format that open its usage pack (FORMAT_PACK_USAGE_WINS, tools/format_packs.py). A byte of data
+ * rather than an immediate, so Hex Maniac Advance can change it in any build (MatchedWord
+ * data.constants.packs.format.usagewins, tools/hma_toml.py). */
+const u8 gModUsagePackWins[1] = { FORMAT_PACK_USAGE_WINS };
+
 static int ModIsFormatPackUnlocked(int fi)
 {
     u8 fmt;
@@ -229,7 +234,7 @@ static int ModIsFormatPackUnlocked(int fi)
 #endif
     fmt = sFormatPackFormatIndex[fi];
     if (sFormatPackFlags[fi] & FORMAT_PACK_FLAG_USAGE)
-        return ModFormatWins(fmt) >= FORMAT_PACK_USAGE_WINS;
+        return ModFormatWins(fmt) >= gModUsagePackWins[0];
     /* TCG sets: only when their campaign format is unlocked (e.g. Metal Raiders with Critter, not Yugi-Kaiba). */
     return ModIsFormatUnlocked(fmt);
 }

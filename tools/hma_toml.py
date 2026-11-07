@@ -111,6 +111,13 @@ ADDED_GUIDE = [
                          ".qr the QR code (1 = dark module), .qr.palette"),
     ('data.preduel', 'per pre-duel picture: .qrsize, the QR code modules a side (0 = none)'),
 ]
+# MatchedWords the mod adds (same guide).
+ADDED_WORDS_GUIDE = [
+    ('data.constants.packs.format.usagewins', "wins against a format that open its usage pack (make release; make "
+                                              "and make demo open every pack)"),
+    ('data.constants.formats.unlock', "per format: wins against the format before it that open it, and with it its "
+                                      "TCG packs (make release; make and make demo open every format)"),
+]
 ADDED_LISTS_GUIDE = [
     ('formatpacks', 'the 50 format pack names (indexes data.packs.format.*)'),
     ('formats', 'the 15 Campaign formats in banlist order (indexes data.prices.cards, data.packs.format.formats)'),
@@ -170,8 +177,9 @@ def anchor_id(text):
 
 
 def mod_anchors(elf, rom, rom_sym):
-    """([(name, address, format)], [(list name, items)], [report]) for the mod's tables."""
-    anchors, lists, report = [], [], []
+    """([(name, address, format)], [(list name, items)], [report], [(matched word name, address, length)]) for the
+    mod's tables."""
+    anchors, lists, report, words = [], [], [], []
 
     def sym(name, unit=None):
         return elf.get(f'{unit}:{name}') if unit else elf.get(name)
@@ -260,6 +268,23 @@ def mod_anchors(elf, rom, rom_sym):
     else:
         report.append('no gAddedCardEffects in the .sym: the added effect rows are left out')
 
+    # The wins that unlock packs: a usage pack opens at gModUsagePackWins[0] wins against its format
+    # (src/mod_format_packs.c), a TCG pack with its format, which opens at sWinsToUnlockNext[k] wins against the format
+    # before it (src/mod_opponents.c; named by the format it opens, from the table's comments).
+    usage_wins = rom_sym.get('gModUsagePackWins')
+    if usage_wins:
+        words.append(('data.constants.packs.format.usagewins', usage_wins[0] - ROM_BASE, 1))
+    else:
+        report.append('no gModUsagePackWins in the .sym: the usage pack wins are left out')
+    unlock = sym('sWinsToUnlockNext', 'mod_opponents.o')
+    if unlock:
+        src = open('src/mod_opponents.c', encoding='utf-8').read()
+        table = src[src.index('sWinsToUnlockNext[FORMAT_COUNT - 1] = {'):]
+        opens = re.findall(r'/\*\s*[^*]*?->\s*([^*]+?)\s*\*/', table[:table.index('};')])
+        for k in range(unlock[1]):
+            what = anchor_id(opens[k]) if k < len(opens) else f'format{k + 1}'
+            words.append((f'data.constants.formats.unlock.{what}', unlock[0] - ROM_BASE + k, 1))
+
     # The pre-duel pictures (src/mod_preduel.c, data/mod_preduel_data.s, layout in tools/preduel_image.py): the
     # picture's 224 colours, the QR code's size, palette and 4bpp sprite, the picture's 8bpp tiles (colour - 32).
     labels = re.findall(r'^(gModPreDuel\w+):', open('data/mod_preduel_data.s', encoding='utf-8').read(), re.M)
@@ -276,7 +301,7 @@ def mod_anchors(elf, rom, rom_sym):
             (name + '.qr', base + 0x1E4, f'`ucs4x4x4|{name}.qr.palette`'),
             (name, base + 0x3E4, f'`ucs8x30x12|{name}.palette`'),
         ]
-    return anchors, lists, report
+    return anchors, lists, report, words
 
 
 # ---- inputs ----
@@ -574,7 +599,7 @@ def main():
     elif not elf:
         report.append(f'no {a.elf}: the mod tables (packs, prices, decks, recipes) are left out')
     # (the tables found by the .sym, the added effect rows and the pre-duel pictures, are there either way)
-    anchors, mod_lists, mod_report = mod_anchors(elf, new_rom, sym)
+    anchors, mod_lists, mod_report, mod_words = mod_anchors(elf, new_rom, sym)
     if elf:
         report.extend(mod_report)
     for name, address, fmt in anchors:
@@ -585,6 +610,13 @@ def main():
                                            f"Format = '''{fmt}'''", f"DefaultHash = '''{gen_hash([fmt])}'''", '']))
     last = max(i for i, (header, _) in enumerate(keep) if header == '[[NamedAnchors]]')
     keep[last + 1:last + 1] = extra
+    # the mod's MatchedWords, after the last of baserom.toml's
+    word_names = {field(lines, 'Name') for header, lines in keep if header == '[[MatchedWords]]'}
+    new_words = [('[[MatchedWords]]', ['[[MatchedWords]]', f"Name = '''{name}'''", f'Address = 0x{address:06X}',
+                                       f'Length = {length}', ''])
+                 for name, address, length in mod_words if name not in word_names]
+    last = max(i for i, (header, _) in enumerate(keep) if header == '[[MatchedWords]]')
+    keep[last + 1:last + 1] = new_words
     list_names = {field(lines, 'Name') for header, lines in keep if header == '[[List]]'}
     for list_name, items in mod_lists:
         if list_name in list_names:
@@ -606,6 +638,10 @@ def main():
         hits = [n for n in added if n == prefix or n.startswith(prefix + '.')]
         if hits:
             guide.append(f'#   {prefix}{".*" if any(n != prefix for n in hits) else ""}: {what}')
+    for prefix, what in ADDED_WORDS_GUIDE:
+        hits = [n for n, _, _ in mod_words if n == prefix or n.startswith(prefix + '.')]
+        if hits:
+            guide.append(f'#   {prefix}{".*" if any(n != prefix for n in hits) else ""} (MatchedWords): {what}')
     for list_name, what in ADDED_LISTS_GUIDE:
         if list_name in {n for n, _ in mod_lists}:
             guide.append(f'#   list {list_name}: {what}')

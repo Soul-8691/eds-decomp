@@ -83,6 +83,13 @@ original ROM (repo root). Without `baserom.toml` it does nothing. `eds_demo.toml
     resolve, check, prepare, chainA, chainB; 24 bytes a row), one row per added card with an effect row plus the
     0xFFFF terminator (127 rows now). `FindCardEffect` (effect_hooks.c) searches it after `gCardEffects`, so a row's
     card number gives that card the five handlers.
+  - Pack unlock wins (MatchedWords, after baserom.toml's): `data.constants.packs.format.usagewins` (Length 1) is
+    `gModUsagePackWins[0]` (src/mod_format_packs.c, 10 = `FORMAT_PACK_USAGE_WINS` of tools/format_packs.py): the wins
+    against a format that open its usage pack. It is a byte of data so it exists in every build (`ModIsFormatPackUnlocked`
+    is `return 1` in make / make demo, and an immediate in the release). `data.constants.formats.unlock.<format>`
+    (Length 1, 14 of them) are `sWinsToUnlockNext` (src/mod_opponents.c, 20 each): the wins against the format before
+    it that open that format, and with it its TCG packs; named from the table's comments. They only take effect in
+    `make release`: make and make demo open every format and pack. Checked in the demo ROM: 10, and 20 each.
   - The ELF is `build/eds.elf`, which every build shares: the script uses it only when its global symbols sit at
     the `.sym`'s addresses (else, e.g. after a `make release-demo`, it reports that and leaves the ELF-only tables out;
     run inside `make demo` the two always match).

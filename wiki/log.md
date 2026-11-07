@@ -2711,3 +2711,8 @@ updated: 2026-09-29
 ## [2026-11-06] progress | Yugi-Kaiba deck symbols renamed from Tristan
 - src/mod_decks.c: sTristan{SoulControl,VanillaBeat,StallMill}(List/Side) -> sYugiKaiba*, TristanDeck -> YugiKaibaDeck, MOD_TRISTAN_* -> MOD_YUGI_KAIBA_*; the HMA anchors are now data.decks.mod.yugikaiba{soulcontrol,vanillabeat,stallmill}.
 - Pages: [[added-cards]].
+
+## [2026-11-06] progress | HMA TOML: the wins that unlock format and usage packs
+- src/mod_format_packs.c: gModUsagePackWins[1] (FORMAT_PACK_USAGE_WINS as data, read by ModIsFormatPackUnlocked); src/mod_opponents.c sWinsToUnlockNext comment.
+- tools/hma_toml.py: MatchedWords data.constants.packs.format.usagewins and data.constants.formats.unlock.<format> (14), with a header guide (ADDED_WORDS_GUIDE). Checked: 10 and 20 each.
+- Pages: [[hma-toml]].

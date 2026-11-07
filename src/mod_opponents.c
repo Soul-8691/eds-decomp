@@ -226,7 +226,9 @@ static const struct ModOpponent sOpponents[] = {
 #endif
 };
 
-/* Wins against format k (in unlock order) that open format k + 1 (make release; with make every format is open). */
+/* Wins against format k (in unlock order) that open format k + 1 (make release; with make every format is open), and
+ * with it format k + 1's TCG packs (src/mod_format_packs.c). Hex Maniac Advance: the MatchedWords
+ * data.constants.formats.unlock.<format k + 1> (tools/hma_toml.py reads the names from the comments below). */
 static const u8 sWinsToUnlockNext[FORMAT_COUNT - 1] = {
     20,     /* Yugi-Kaiba   -> Critter */
     20,     /* Critter      -> Treasure */
