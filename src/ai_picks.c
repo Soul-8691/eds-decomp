@@ -696,6 +696,9 @@ int AiPickOpponentHandCard(void)
  *  - Attack Position target: compared by ATK. Beating it sets wins, targetDestroyed and damage = difference;
  *    losing sets attackerDestroyed and a negative damage; a tie destroys both and leaves damage 0. */
 int AiDestroysBeforeDamage(int attackerZone, int targetZone);     /* added: src/added_effects.c */
+#ifdef HAS_CARD_ALLY_OF_JUSTICE_CATASTOR
+int AiCatastorDestroysNonDark(int attackerZone, int targetZone);  /* added: src/added_effects.c */
+#endif
 #ifdef HAS_CARD_D_D_WARRIOR_LADY
 int AiDDWarriorLadyBanishTrade(int attackerZone, int targetZone, struct AttackPlan *plan);
 #endif
@@ -722,6 +725,13 @@ void AiEvalAttack(int attackerZone, int targetZone, struct AttackPlan *plan)
     /* added: Ninja Grandmaster Sasuke, Mystic Swordsman LV2 and Sasuke Samurai destroy their target before the
      * Damage Step (src/added_effects.c), whatever its DEF */
     if (AiDestroysBeforeDamage(attackerZone, targetZone)) {
+        plan->wins = 1;
+        plan->targetDestroyed = 1;
+        return;
+    }
+#endif
+#ifdef HAS_CARD_ALLY_OF_JUSTICE_CATASTOR
+    if (AiCatastorDestroysNonDark(attackerZone, targetZone)) {
         plan->wins = 1;
         plan->targetDestroyed = 1;
         return;

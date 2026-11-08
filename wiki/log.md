@@ -2807,3 +2807,6 @@ updated: 2026-09-29
 
 ## [2026-11-07] progress | Ojama Token battle-destroy damage
 - src/duel_field_moves.c `SendBattleDestroyedCardToGraveyard` calls `OjamaTokenDestroyed` (the hook lived only in `SendFieldCardToGrave`). [[added-cards]].
+
+## [2026-11-07] progress | Ally of Justice Catastor
+- Synchro in demo/full lists; `CatastorStartOfDamageStep` / `AiCatastorDestroysNonDark` (start of Damage Step, face-up non-DARK); battle_phase1.c, ai_picks.c. [[added-cards]].

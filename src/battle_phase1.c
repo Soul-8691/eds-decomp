@@ -611,6 +611,9 @@ struct LinkCardPromptByte {
  *           the attacker into a free zone of the defender, make it the target, flip it, CalcBattle
  */
 int DrillroidBeforeDamageCalc(int player);  /* mod: src/added_effects.c */
+#ifdef HAS_CARD_ALLY_OF_JUSTICE_CATASTOR
+int CatastorStartOfDamageStep(int player); /* mod: src/added_effects.c */
+#endif
 #ifdef HAS_CARD_EXARION_UNIVERSE
 void ExarionUniverseResetBattle(void);
 int ExarionUniverseDamageStep(int player);
@@ -682,6 +685,10 @@ int BattleStage_DamageCalc(int player)
 #endif
 #ifdef HAS_CARD_INJECTION_FAIRY_LILY
         if (InjectionFairyLilyDamageStep(player))   /* added card: its prompt or payment first */
+            return 0;
+#endif
+#ifdef HAS_CARD_ALLY_OF_JUSTICE_CATASTOR
+        if (CatastorStartOfDamageStep(player))      /* added card: destroys a face-up non-DARK battle target */
             return 0;
 #endif
 #ifdef HAS_CARD_DRILLROID

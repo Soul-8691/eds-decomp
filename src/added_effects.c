@@ -12406,6 +12406,87 @@ int DrillroidBeforeDamageCalc(int player)
 }
 #endif /* HAS_CARD_DRILLROID */
 
+#ifdef HAS_CARD_ALLY_OF_JUSTICE_CATASTOR
+/* ---- Ally of Justice Catastor -------------------------------------------------------------------------------------
+ * "1 Tuner + 1+ non-Tuner monsters" (Synchro). "At the start of the Damage Step, if this card battles a face-up
+ * non-DARK monster: Destroy that monster." No effect row: BattleStage_DamageCalc (battle_phase1.c) calls this at the
+ * start of DAMAGE_STEP_CALC. The non-DARK monster is destroyed by this card's effect (destroyed-by-opponent,
+ * DestroyFieldCard, OnCardDestroyedByEffect); CalcBattle runs with the destroyed and damage fields cleared, then the
+ * battle goes on at BATTLE_STAGE_FLIP_EFFECT as for Drillroid (no battle damage between them). Works whether Catastor
+ * is attacking or defending. */
+static int CatastorFaceUpNonDarkMonster(struct DuelZone *z)
+{
+    u16 id = DUEL_CARD_ID(&z->card);
+    u32 stats;
+
+    if (id == 0 || !z->isFaceUp)
+        return 0;
+    stats = gCardStats[id & CARD_ID_MASK];
+    if (CARD_STATS_TYPE(stats) > CARD_TYPE_REPTILE)
+        return 0;
+    return (int)CARD_STATS_ATTR(stats) != ATTRIBUTE_DARK;
+}
+
+int CatastorStartOfDamageStep(int attackingPlayer)
+{
+    struct DuelZone *attacker;
+    struct DuelZone *defender;
+    int defendingPlayer;
+    u16 catastorId;
+    int catastorPlayer;
+    int victimPlayer;
+    int victimZone;
+
+    if (gBattle.direct)
+        return 0;
+    defendingPlayer = 1 - attackingPlayer;
+    attacker = ZoneOf(attackingPlayer, gBattle.atkSlot);
+    defender = ZoneOf(defendingPlayer, gBattle.defSlot);
+    catastorId = 0;
+    victimPlayer = 0;
+    victimZone = 0;
+    if (attacker->isFaceUp && CardNumberOfId(DUEL_CARD_ID(&attacker->card)) == CARD_ALLY_OF_JUSTICE_CATASTOR
+        && CatastorFaceUpNonDarkMonster(defender)) {
+        catastorId = DUEL_CARD_ID(&attacker->card);
+        catastorPlayer = attackingPlayer;
+        victimPlayer = defendingPlayer;
+        victimZone = gBattle.defSlot;
+    } else if (defender->isFaceUp && CardNumberOfId(DUEL_CARD_ID(&defender->card)) == CARD_ALLY_OF_JUSTICE_CATASTOR
+               && CatastorFaceUpNonDarkMonster(attacker)) {
+        catastorId = DUEL_CARD_ID(&defender->card);
+        catastorPlayer = defendingPlayer;
+        victimPlayer = attackingPlayer;
+        victimZone = gBattle.atkSlot;
+    } else
+        return 0;
+    CalcBattle(attackingPlayer, 0);
+    gBattle.side[0].destroyed = 0;
+    gBattle.side[1].destroyed = 0;
+    gBattle.side[0].damage = 0;
+    gBattle.side[1].damage = 0;
+    ShowCardEffect(catastorPlayer, catastorId);
+    DuelCmd_Push(victimPlayer ? DUEL_CMD_PLAYER | DUEL_CMD_SET_DESTROYED_BY_OPPONENT_FLAG
+                              : DUEL_CMD_SET_DESTROYED_BY_OPPONENT_FLAG, victimZone, 1, 0);
+    DestroyFieldCard(victimPlayer, victimZone, 1);
+    OnCardDestroyedByEffect(catastorPlayer, victimPlayer, victimZone);
+    gDuel.battleStage = BATTLE_STAGE_FLIP_EFFECT;
+    gDuel.battleStep = 0;
+    return 1;
+}
+
+/* AiEvalAttack (ai_picks.c): the CPU's Catastor destroys a face-up non-DARK target at the Damage Step. */
+int AiCatastorDestroysNonDark(int attackerZone, int targetZone)
+{
+    struct DuelZone *attacker = ZoneOf(1, attackerZone);
+    struct DuelZone *target = ZoneOf(0, targetZone);
+    u16 id = DUEL_CARD_ID(&attacker->card);
+
+    if (id == 0 || !attacker->isFaceUp || CardNumberOfId(id) != CARD_ALLY_OF_JUSTICE_CATASTOR)
+        return 0;
+    return CatastorFaceUpNonDarkMonster(target);
+}
+#endif /* HAS_CARD_ALLY_OF_JUSTICE_CATASTOR */
+
 #ifdef HAS_CARD_HYDROGEDDON
 /* ---- Hydrogeddon --------------------------------------------------------------------------------------------------
  * "When this card destroys an opponent's monster by battle and sends it to the GY: You can Special Summon 1

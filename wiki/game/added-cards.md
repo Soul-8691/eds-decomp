@@ -2086,6 +2086,17 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
 - Moved above `------` in `new_cards.txt`; it wasn't in `card_pools/missing*.txt`. All far code.
 - Checked in the source and the build; not tested in an emulator.
 
+### Ally of Justice Catastor (2026-11-07)
+- Synchro Monster (Level 5 DARK Machine): "1 Tuner + 1 or more non-Tuner monsters. At the start of the Damage Step,
+  if this card battles a face-up non-DARK monster: Destroy that monster." No `gAddedCardEffects` row (continuous battle
+  rule, like Drillroid).
+- `CatastorStartOfDamageStep` in `battle_phase1.c` at `DAMAGE_STEP_CALC` (before Drillroid): whether Catastor is the
+  attacker or defender, the face-up non-DARK monster is destroyed by effect (`DestroyFieldCard`,
+  `OnCardDestroyedByEffect`); no battle damage between them (`BATTLE_STAGE_FLIP_EFFECT`, as Drillroid).
+- **CPU** `AiCatastorDestroysNonDark` in `AiEvalAttack`: a face-up non-DARK target is treated as destroyed at the
+  Damage Step.
+- In `new_cards.txt` (demo) and `config/new_cards.txt`. Checked in the source and the build; not tested in an emulator.
+
 ### Malevolent Catastrophe (2026-11-06)
 - Normal Trap (`assets/new_cards/cards.json`): "When an opponent's monster declares an attack: Destroy all Spell and
   Trap Cards on the field."
