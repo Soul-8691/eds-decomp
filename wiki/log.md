@@ -2841,3 +2841,12 @@ updated: 2026-09-29
 - gModTitleFlamePriority (BG1CNT priority, default 1; 3 = behind the coin and copyright), HMA MatchedWord
   data.constants.title.flamepriority. src/mod_title.c, tools/hma_toml.py.
 - Pages: [[title-screen]].
+
+## [2026-11-08] progress | Deck Edit: the Empty Main/Side label redrawn
+- tools/mod_deck_edit_label.py builds the label from the original command labels (pill, Main, Side, E, t, p,
+  m from n, y from u + g's tail, a drawn /) instead of an 8x8 font over the Exit pill (Exit showed through).
+- Pages: [[deck-edit-list-c]].
+
+## [2026-11-08] progress | Deck Edit label: tighter Empty, Main/Side
+- tools/mod_deck_edit_label.py: the letters of Empty set without gaps, the / narrower and without spaces.
+- Pages: [[deck-edit-list-c]].

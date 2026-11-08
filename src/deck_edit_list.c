@@ -96,6 +96,7 @@ struct CommandMenuWordView {
 };
 extern struct CommandMenuWordView gDeckEditMenuWord asm("gDeckEdit");
 extern const u8 gDeckEditCommandLabelGfx[][0x400];
+extern const u8 gModDeckEditEmptyMainSideLabelGfx[0x400];
 extern const u8 gDeckEditSwapLabelGfx[];
 extern const u8 gDeckEditDecideLabelGfx[];
 struct MenuOpenView {       /* gDeckEdit.menuOpen at +0x1C48 */
@@ -356,7 +357,11 @@ void DeckEdit_CommandLabelVBlank(void)
     st = &gDeckEditMenuWord;
     switch (st->menuVariant) {
     default:
-        src = LABEL_TILES + st->u.w.choice * 0x400;
+        if (st->u.w.choice == 6) {
+            src = gModDeckEditEmptyMainSideLabelGfx;
+        } else {
+            src = LABEL_TILES + st->u.w.choice * 0x400;
+        }
         break;
     case 1:
         switch (st->u.w.choice) {

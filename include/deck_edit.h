@@ -76,7 +76,7 @@ enum DeckEditCommand {
     DECKEDIT_CMD_TO_SIDE_DECK = 3,  /* 'Select A Swapping Card' in the side-deck swap */
     DECKEDIT_CMD_LIST_FILTER = 4,
     DECKEDIT_CMD_STATISTICS = 5,
-    DECKEDIT_CMD_EXIT = 6,          /* 'Decide' in the two pickers */
+    DECKEDIT_CMD_EXIT = 6,          /* 'Empty Main/Side' in Deck Edit (mod); 'Decide' in the two pickers */
 };
 
 /* Command-bar variant (gDeckEdit.menuVariant): selects the special labels drawn by DeckEdit_CommandLabelVBlank. */
@@ -524,6 +524,10 @@ void ListRefine_Update(void);                       /* the page's input */
 void ListRefine_ApplyToList(u8 list, u16 *cards);   /* drop the cards of a filtered row that fail the page's fields */
 u32 ModCompareCardsByType(int a, int b);            /* 1 if a's Type group is first, then by card name */
 u32 ModCompareCardsByAttribute(int a, int b);       /* 1 if a's Attribute group is first, then by card name */
+
+/* Deck Edit command bar (src/mod_deck_edit.c). */
+void ModDeckEditEmptyMainAndSide(void);             /* main/fusion/side copies back to trunk; refresh lists */
+extern const u8 gModDeckEditEmptyMainSideLabelGfx[0x400];
 
 /* Statistics screen (gDeckStatsSteps). */
 u16 DeckStats_ClearState(void);                     /* step 0: clear the sub-screen fields */

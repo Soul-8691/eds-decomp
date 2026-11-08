@@ -644,9 +644,11 @@ error_sound:
                         FadeStartWide(0, 0x180, 0, PSTATE + 0x618);
                         goto confirm_sound;
                     case DECKEDIT_CMD_EXIT:
+                        if (gDeckEdit.cardMove.step != CARD_MOVE_IDLE)
+                            goto error_sound;
+                        ModDeckEditEmptyMainAndSide();
                         gDeckEdit.commandMenu.anim = CMDMENU_CLOSE;
-                        FadeStartWide(0, 0x180, 0, PSTATE + 0x618);
-                        gDeckEdit.exitMode = DECKEDIT_EXIT_LEAVE;
+                        goto draw_frame;
 confirm_sound:
                         PlaySE(SE_CONFIRM);
                         goto draw_frame;

@@ -39,6 +39,20 @@ updated: 2026-10-02
 - `0x0201E140` u16 list-row positions (`E140[cursor]`), `0x0201EFB8` / `0x0201EFC0` = `+0x1498` / `+0x14A0` of the state (declared through the struct), `0x0201F73C` u8 second selector **= `state+0x1C1C` (the same cursor byte)**, `0x0201E160` scroll scratch buffer, `gMain+0x414` callback slot (`DeckEdit_CommandLabelVBlank` / `DeckEdit_CommandWindowVBlank`).
 - **Scroll views** (`DeckEdit_ScrollListUp` / `DeckEdit_ScrollListDown`): `struct ScrollSt` (asm `gDeckEdit`) adds `+0x63A` / `+0x63E` u16 scroll rows, `+0x640` map scratch, `+0x1BB5` / `+0x1BB6` / `+0x1BB7` flag bytes and names `+0x14A0` `arr14A0`. `gUnk_0201EFB4` is `state+0x1494` (the `cnt1494[2][3]` counters), `gDeckEditListRow` is `state+0x14A0` (`arr14A0`), and `gDeckEditListRowRedrawY` / `gDeckEditCursorRowRedrawY` are `s16[]` arrays (`[0..3]` / `[0..1]`) of scroll deltas (indices 0/2/4/6 and 0/2 bytes are all used).
 
+## Mod: the "Empty Main/Side" label
+
+- In Deck Edit (menu variant 0) `DeckEdit_CommandLabelVBlank` loads `gModDeckEditEmptyMainSideLabelGfx` for command 6
+  in place of the Exit label (`data/mod_deck_edit_data.s`, built by `tools/mod_deck_edit_label.py`; the action is
+  `ModDeckEditEmptyMainAndSide`, src/mod_deck_edit.c).
+- The command labels (0x086EF3B0, 0x400-byte blocks of 2 x 16 4bpp tiles, 128 x 16) are pre-drawn pills with
+  anti-aliased, shaded lettering (OBJ palette 0 of `gDeckEditObjPal`). The label is put together from the original
+  ones so it matches: the pill from "Select A Swapping Card"'s ends, narrowed around the text with its notch kept
+  at columns 62-65; "Main" and "Side" whole from "To Main Deck" / "To Side Deck"; E and t from "Exit"; p from
+  "Swapping"; m from the n of "Main" (its arch twice); y from the u of "Trunk" with the g's tail; the / drawn in
+  the stems' colours (5 edge, 2 core, A shadow), 4 columns wide. The composed letters are set tight (no blank
+  columns of their own) and without gaps, as in the original lettering: "Empty Main/Side". The first version drew a plain 8 x 8 font over the Exit pill, so
+  Exit's shaded letters showed through and the text ran past the pill (2026-11-08).
+
 ## Matching tricks (old_agbcc)
 
 - **Bitfield access style depends on the container type and on the struct alignment** (structs are 4-aligned): with `u32` bitfields of the first word of `Slide`, reads of fields inside one byte come out as `ldrb` + `lsl 29; lsr 29` (QImode), the stores as `movs #8; negs; ands; strb` and a byte store; with `u8` bitfields the **tests against constants** come out as `movs #7; ands` / `(f & 0x60) == 0x40`. `StepSlide` matched only with **both views of the same record**: `struct Slide` (u32 bitfields, for the `switch`, the arithmetic and the stores) and `struct SlideA` (u8 bitfields, `PA(p)->dir != 0`, `PA(p)->phase != 2`, for the compares).

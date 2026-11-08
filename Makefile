@@ -269,6 +269,12 @@ build/assets/title_images.bin: tools/title_images.py tools/assets.py title/yaks_
 	$(PYTHON) tools/title_images.py $@
 build/data/mod_title_data.o: build/assets/title_images.bin
 
+# Deck Edit command bar: "Empty Main/Side" label tiles (tools/mod_deck_edit_label.py).
+build/assets/mod_deck_edit_empty_label.bin: tools/mod_deck_edit_label.py $(ASSETS_BUILT)
+	@mkdir -p $(@D)
+	$(PYTHON) tools/mod_deck_edit_label.py
+build/data/mod_deck_edit_data.o: build/assets/mod_deck_edit_empty_label.bin
+
 # The original duelists' opponent-select portraits as tiled images of their own (tools/duelist_portraits.py;
 # src/mod_opponents.c DrawSlotPortrait), cut from the page pictures of assets/gfx/mode4_bitmaps.
 build/assets/duelist_portraits.bin: tools/duelist_portraits.py tools/assets.py $(ASSETS_BUILT)
