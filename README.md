@@ -92,9 +92,6 @@ release to unlock the next one (every format is open in the debug build).
   them: pick the Xyz Monster, then its materials (face-up monsters of the right Level). The materials stay under it
   (the info bar shows "MAT" and the count) and go to the Graveyard when it leaves the field. The first three: Gem-Knight
   Pearl, Number 39: Utopia and Number 17: Leviathan Dragon. An Xyz Monster's stars show its Rank.
-- **List Filter.** After choosing a card category and sort order, a new page narrows the list by the name's first
-  letter, one Type, one Attribute, and ATK, DEF and Level ranges. Magic and Trap lists get the letter only. Sorting by
-  Type or Attribute is now alphabetical.
 - **Pre-duel screen.** Campaign opponents (and Solomon and Debug after you pick their deck) get a pre-duel screen
   instead of vanilla dialogue: custom text in the dialogue box, a Format Library QR code, and either a format picture
   (Yugi-Kaiba through Android) or the opponent's original bust-up scene with blinking eyes. Press **A** to continue. A
@@ -147,6 +144,9 @@ new banlist, counting its limits and card pool. If they can't, the switch is ref
 
 ### Deck Edit
 
+- **List Filter.** After you choose a card category and sort order, a new page narrows the list by the name's first
+  letter, one Type, one Attribute, and ATK, DEF and Level ranges. Magic and Trap lists get the letter only. Sorting by
+  Type or Attribute is now alphabetical.
 - **Empty Main/Side.** In Deck Edit, the bottom command that vanilla calls **Exit** is **Empty Main/Side**: every card in
   your Main Deck, Side Deck and Fusion Deck goes back to the trunk, and you stay in Deck Edit.
 
