@@ -2870,6 +2870,10 @@ updated: 2026-09-29
   back in a circular arrow; "Mulligan" in the labels' white-with-shadow style), data/mod_mulligan_data.s;
   LoadDuelUiGfx calls ModLoadMulliganMenuGfx after loading the sheets. README.md.
 
+## [2026-11-08] progress | Mulligan: in-duel only (deck-select sampling removed)
+- Removed starter deck SELECT and Deck Recipes SELECT/START sample hands; dropped `ModStarterDeckForMulligan`,
+  `gModMulligan` EWRAM, and deck-select APIs from src/mod_mulligan.c. README.md.
+
 ## [2026-11-08] progress | Mulligan next to Draw, no START wait
 - DuelPhase_Opening back to the original (no wait for START after the deal; the openingActive flag and
   ModOpeningMulliganRun removed). ModMulliganAvailable: allowed in the duel, turnCount <= 1 and the human's

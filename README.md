@@ -305,9 +305,8 @@ testing decks.
   deck may be empty (an empty recipe slot, or B in the deck builder with no cards): the duel starts with no cards.
 - **Debug's rules.** Debug's duels use debug mode's rules: its hand is shown face up, you can read its face-down cards
   (info bar and Card View), you can open its main and fusion deck piles in order, and neither side can deck out.
-- **Mulligan.** On the recipe picker, **START** or **SELECT** (see on-screen hint) shuffles a sample five-card hand into
-  the status line (press again as often as you like). In the duel, in your first Draw Phase, open your **Main Deck**:
-  it offers **Mulligan** (a circular-arrow icon; as often as you like) next to **Draw**, until you draw.
+- **Mulligan.** In your first Draw Phase, open your **Main Deck** and choose **Mulligan** as often as you like until you
+  **Draw**.
 
 ## The new cards
 
@@ -468,9 +467,7 @@ lists, pre-duel screens, Deck Edit ring art, in-duel card miniatures, and more).
   View.
 - You can open your deck pile from the command menu (Draw / Surrender / Card View), and the opponent's main or fusion
   deck pile with **Card View** (draw order on the main deck; works even when their deck is empty).
-- After the opening draw, open your Main Deck and choose **Draw** to shuffle and draw five again (unlimited). **START**
-  begins the duel. On **New Game** starter deck select and in **Deck Recipes**, **SELECT** / **START** roll a sample
-  opening hand into the status line without changing your saved deck.
+- **Mulligan** in every duel (see [Mulligan](#mulligan)).
 
 **Menus**
 

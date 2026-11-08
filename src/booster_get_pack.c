@@ -26,7 +26,6 @@
 #include "sprite.h"                 /* AddSprite */
 
 #include "format_packs.h"
-#include "mod_mulligan.h"
 #include "booster.h"                /* struct PackOpenWork, PackListWork, StarterDeckSelectWork, PackInfo,
                                      * gPackOpenWork, gPackInfo, and the prototypes of the functions
                                      * defined here (plus GetPack_InitScene and the card_canvas.c helpers) */
@@ -555,7 +554,6 @@ void StarterDeckSelect_ClearWork(void) {
     vu16 zero = 0;
     vu32 *dma = (vu32 *)0x040000D4;
 
-    ModMulliganWorkClear();
     dma[0] = (u32)&zero;
     dma[1] = (u32)&gSceneWork;
     dma[2] = 0x81004038;
@@ -615,13 +613,6 @@ u16 StarterDeckSelect_Init(void) {
 u16 StarterDeckSelect_HandleInput(void) {
     StarterDeckSelect_DrawCursor();
     if (gStarterDeckSelectWork.slideFrames == 0) {
-#if !MOD_RELEASE
-        if (ModMulliganAllowedOnDeckSelect() && (gMain.newKeys & SELECT_BUTTON)) {
-            ModMulliganDeckSelectRollStarter(gStarterDeckSelectWork.choice);
-            PlaySE(SE_CONFIRM);
-            return 0;
-        }
-#endif
         if (gMain.newKeys & A_BUTTON) {
             PlaySE(SE_CONFIRM);
             return 1;
