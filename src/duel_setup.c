@@ -31,6 +31,7 @@
 #include "duel_screen.h"            /* gDuelScreen, ChainListScreen_*, DuelCursor_PickTarget */
 #include "duel_scenes.h"            /* gDuelScene */
 #include "text_box.h"               /* gTextBox, TextBoxOpen, TextBoxSetMenu */
+#include "mod_duel_speed.h"         /* ModDuelSkipResponsesActive */
 #include "card_list_view.h"         /* gCardListView, CardListView_Open */
 #include "card_menu.h"              /* CardMenu_Update, CardMenu_PlaySpellTrapFromHand */
 #include "summon.h"                 /* gSummonAction */
@@ -596,6 +597,8 @@ s32 Chain_AskResponse(struct ChainEntry *link, u32 player)
             gChainAlias.askStep = nextStep;
             return 0;
         }
+        if (ModDuelSkipResponsesActive())
+            return 1;
         card = link->card;
         if (CARD_TYPE_C(card) <= CARD_TYPE_REPTILE)
             FormatStr((char *)text, gStrChainPromptEffect, CARD_NAME_C(card));

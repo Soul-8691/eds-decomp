@@ -5,6 +5,8 @@
 
 /* Duel fast-forward (hold B, gDuelScreen.fast, or Settings speed mode). */
 int ModDuelFastForwardActive(void);
+/* Hold R during duel: skip event-response and chain-to Yes/No prompts (src/mod_settings.c). */
+int ModDuelSkipResponsesActive(void);
 /* Extra timer skip when fast-forward is active (7 normally, 14 when Super). */
 int ModDuelFastTimerSkip(int base);
 /* Animation step jump when fast-forward is active (4 normally, 8 when Super). */

@@ -40,6 +40,7 @@
 #include "effect.h"                 /* GetCardSpellSpeed, CanActivateEffect, FindCardEffect, gCardEffects */
 #include "text_box.h"               /* gTextBox, TextBoxOpen, TextBoxSetMenu */
 #include "util.h"                   /* StrCopy, StrCat, FormatStr, FormatInt */
+#include "mod_duel_speed.h"         /* ModDuelSkipResponsesActive */
 
 /* ---- Local views kept for matching (build/readability/HEADERS.md, "Keeping a deliberate local view") ---- */
 
@@ -590,6 +591,8 @@ int EventResponse_Run(void)
             else
                 next = EVRESP_CPU_SEARCH;
             gRunChain.askStep = next;
+        } else if (ModDuelSkipResponsesActive()) {
+            gRunChain.askStep = EVRESP_NEXT_PLAYER;
         } else {
             EventResponse_BuildPromptText(&gRunChain.responseEntry, text);
             TextBoxOpen(QUESTION_BOX_POS, QUESTION_BOX_SIZE, TEXTBOX_FLAGS_DEFAULT, text);

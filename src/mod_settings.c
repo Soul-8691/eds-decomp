@@ -1,7 +1,8 @@
 /*
  * mod_settings: Settings, the main menu's eleventh item (duel speed: DEFAULT / ALWAYS / SUPER). Not part of the
  * original ROM. The choice is stored in gSaveData.options bits 2-3 (src/save.h). L during a duel opens the same
- * screen inside the duel loop (ModDuelSettingsRun) and B goes back to the duel.
+ * screen inside the duel loop (ModDuelSettingsRun) and B goes back to the duel. Hold R during a duel to skip
+ * event-response and chain-to Yes/No prompts without opening them (ModDuelSkipResponsesActive).
  */
 
 #include "global.h"
@@ -65,6 +66,11 @@ int ModDuelFastForwardActive(void)
     if (mode == MOD_SPEED_SUPER || mode == MOD_SPEED_ALWAYS)
         return 1;
     return (gMain.heldKeys & B_BUTTON) || gDuelScreen.fast != 0;
+}
+
+int ModDuelSkipResponsesActive(void)
+{
+    return (gMain.heldKeys & R_BUTTON) != 0;
 }
 
 int ModDuelFastTimerSkip(int base)
