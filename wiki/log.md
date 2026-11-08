@@ -2815,3 +2815,24 @@ updated: 2026-09-29
 - tools/hma_toml.py: data.duel.backgrounds (list fieldbackgrounds), graphics.duel.backgrounds.<name>.image / .palette (9 packs), graphics.duel.board.palette / .tiles; guide entries (the backgrounds with the original game).
 - Noted: with Ally of Justice Catastor the real card count is 1128 (141 x 8), which GeneratePackCards now builds as movs + lsls, so the three data.constants.cards.limit2 MatchedWords are left out (no literal to match).
 - Pages: [[hma-toml]].
+
+## [2026-11-08] progress | Title screen: plain, editable images; the title text as one pre-scaled image
+- title/yaks_ygo_hack.png (240 x 32, made from BuildMenuLabelEx ported to Python), tools/title_images.py + data/mod_title_data.s (units.txt, Makefile): text, flame (8bpp, colours 16-143), coin, copyright in plain layouts.
+- src/mod_title.c: ModTitle_Load (BG0 text, BG1 256-colour flames, BG2 coin), ModTitle_LoadCopyright, gModTitleVersion / Release / Debug strings; no affine sprites or BuildMenuLabelEx. src/title_screen.c: the flame / coin / copyright pack loads replaced (.text -0x10).
+- tools/hma_toml.py: graphics.title.*, text.title.*, ANCHOR_FIXES (graphics.titlescreen.background), guide.
+- Checked with mGBA screenshots. Pages: [[title-screen]], [[hma-toml]].
+
+## [2026-11-08] progress | Title flame wave toggle
+- src/mod_title.c gModTitleFlameWave + ModTitle_LoadWave (title_screen.c calls it instead of copying the wave table); tools/hma_toml.py MatchedWord data.constants.title.flamewave. Checked in mGBA with 0.
+- Pages: [[title-screen]].
+
+## [2026-11-08] progress | Title text and flame images at 240 x 160
+- title/yaks_ygo_hack.png and the flame image full-screen (tools/title_images.py); src/mod_title.c LoadScreenImage / PoolAdd (distinct tiles only, 644 for both; defaults 158), copyright and coin tiles moved; tools/hma_toml.py ucs8x30x20. Checked in mGBA.
+- Pages: [[title-screen]].
+
+## [2026-11-08] progress | Title: the flames take palette entries 0-127, the text is 4bpp
+- The flame image holds BG palette entries 0-127 (entry 0: the backdrop); "Yak's YGO Hack" is a 4bpp image
+  on BG0 (now 16-colour) in BG palette 8; separate tile pools (text from charblock 1's start, the flames above
+  the fixed 4bpp tiles then in the text's leftover room). src/mod_title.c, tools/title_images.py,
+  tools/hma_toml.py. Checked in mGBA.
+- Pages: [[title-screen]], [[hma-toml]].

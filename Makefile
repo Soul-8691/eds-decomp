@@ -263,6 +263,12 @@ build/assets/record_names.bin: tools/record_names.py tools/assets.py src/mod_opp
 	$(PYTHON) tools/record_names.py $@
 build/data/mod_record_names.o: build/assets/record_names.bin
 
+# The title screen's images in plain layouts (tools/title_images.py; src/mod_title.c).
+build/assets/title_images.bin: tools/title_images.py tools/assets.py title/yaks_ygo_hack.png $(ASSETS_BUILT)
+	@mkdir -p $(@D)
+	$(PYTHON) tools/title_images.py $@
+build/data/mod_title_data.o: build/assets/title_images.bin
+
 # The original duelists' opponent-select portraits as tiled images of their own (tools/duelist_portraits.py;
 # src/mod_opponents.c DrawSlotPortrait), cut from the page pictures of assets/gfx/mode4_bitmaps.
 build/assets/duelist_portraits.bin: tools/duelist_portraits.py tools/assets.py $(ASSETS_BUILT)

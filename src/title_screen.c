@@ -26,6 +26,8 @@ int BuildModStarterDeck(int choice);
 void DeckRecipes_OnNewGame(void);
 /* Mod (src/mod_title.c): "Yak's YGO Hack" instead of the logo. */
 void ModTitle_Load(void);
+void ModTitle_LoadCopyright(void);
+void ModTitle_LoadWave(void);
 void ModTitle_Draw(void);
 /* Added: every card x8 in the trunk at the start of a new game (src/mod_decks.c). */
 void GiveStartingTrunk(void);
@@ -529,7 +531,7 @@ void Title_DrawMenu(void)
 {
     s32 option;
 
-    ModTitle_Draw();    /* added: the title text (src/mod_title.c) */
+    ModTitle_Draw();    /* added: the version and build lines (src/mod_title.c) */
     for (option = 0; option <= 1; option++) {
         s32 x = 0x18 + option * 0x70;
         s32 t = option * 0x80 + 0x200;
@@ -581,9 +583,9 @@ void Title_LoadGraphics(void)
     *(s16 *)BG_PLTT = 0; /* black backdrop */
     /* mapOffset 0x400 * n + cell addresses gMain.bgMapBuffer[n]: BG1, BG2 and BG3 */
     LoadBgImage(0x20, 0x10, 0x10, gTitleLogoImage);
-    ModTitle_Load();    /* added: the logo hidden, "Yak's YGO Hack" built (src/mod_title.c) */
-    LoadBgImage4bpp(0x409, 0xA0, 0x2B8, gTitleFlameImage);
-    LoadBgImage4bpp(0x809, 0xB0, 0x310, gTitleCoinImage);
+    /* changed: the logo hidden, "Yak's YGO Hack", the flames (256-colour) and the coin from plain images
+     * (src/mod_title.c), in place of the flames' and coin's packs (gTitleFlameImage, gTitleCoinImage) */
+    ModTitle_Load();
     LoadBgImage4bpp(0xC00, 0xC0, 0x388, gTitleGridImage);
     /* Map entries 0xC388-0xC397: palette 12, the grid's tiles 0x388-0x397 in a 4x4 block.
      * Plain constants: postreload move2add turns the reloads into the ROM's `adds r1, #1` chain.
@@ -622,7 +624,7 @@ void Title_LoadGraphics(void)
         b = (b >> 1) & 0x7C00;
         ((u16 *)(BG_PLTT + 0x180))[i] = r | g | b;
     }
-    MemCopy16(gMain.hblankScroll, gTitleLogoWave, 0x20);
+    ModTitle_LoadWave();    /* changed: the wave table, or none when switched off (src/mod_title.c) */
     gMain.vblankCallback = Title_VBlank;
     SET_HBLANK_HANDLER(Title_HBlank);
     ENABLE_HBLANK_INTR();
@@ -699,7 +701,7 @@ u16 Title_FadeIn(void)
             SET_HBLANK_HANDLER(NULL);
             DISABLE_HBLANK_INTR();
             REG_DISPCNT |= DISPCNT_BG0_ON | DISPCNT_BG3_ON | DISPCNT_OBJ_ON;
-            LoadBgImage4bpp(0xA20, 0x90, 0x284, gTitleCopyrightImage); /* BG2 map, row 17 */
+            ModTitle_LoadCopyright();   /* changed: BG2 map row 17, from a plain image (was gTitleCopyrightImage) */
             Title_DrawMenu();
             gMain.seqState0++;
         }

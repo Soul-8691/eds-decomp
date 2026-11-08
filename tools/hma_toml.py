@@ -111,6 +111,13 @@ ADDED_GUIDE = [
     ('data.cards.nameorder', "the card IDs in name order, 0-terminated (gCardIdsByName): what Deck Edit, the Trunk and "
                              "Card Trading list (make demo's blank slots are left out until filled in)", USED),
     ('graphics.cards.icons',"every card's art icon (Deck Edit's ring): .palettes, .images (16x16 4bpp)", USED),
+    ('graphics.title', "the title screen's images (tools/title_images.py), each .image and .palette: text (BG0, the "
+                       "whole screen, 240 x 160, 4bpp, BG palette 8: \"Yak's YGO Hack\" at y 40), flame (BG1, the "
+                       "whole screen, 240 x 160, 8bpp, 128 colours: BG palette entries 0-127, entry 0 the screen's "
+                       "backdrop; the flames at x 72), coin (96 x 96, 4bpp), copyright (224 x 16, 4bpp). The game "
+                       "loads their distinct 8x8 tiles: the whole text, and at least 308 for the flames", USED),
+    ('text.title', "the title's small lines: .version (make demo / release-demo), .release, .debug (ASCII, at most "
+                   "15 characters)", USED),
     ('graphics.duel.board', "the mod's duel board (gModDuelFieldImage, tools/duel_board.py: the Extra Monster Zones "
                             "and the phase panel): .tiles (its deduplicated 4bpp tiles; one tile can be used by many "
                             "cells, whose list is not anchored) and .palette", USED),
@@ -163,6 +170,8 @@ ADDED_GUIDE = [
 ]
 # MatchedWords the mod adds (same guide).
 ADDED_WORDS_GUIDE = [
+    ('data.constants.title.flamewave', "the title's flames during the fade-in: 1 wave (the original), 0 stay still",
+     USED),
     ('data.constants.preduel.qrsquare', "the pre-duel screens' white square behind the QR code: 1 on (dark modules "
                                         "on white), 0 off (no square: the box and its decorated border show, the "
                                         "modules drawn white)", USED),
@@ -207,9 +216,13 @@ VANILLA_GUIDE = [
     ('graphics.packs', "the original booster pack covers, with graphics.palettes.packs",
      'UNUSED (as data.packs)'),
     ('graphics.palettes.packs', "the pack covers' palette", 'UNUSED (as data.packs)'),
+    ('graphics.titlescreen.medal', "the title screen's coin (inside its pack)",
+     'UNUSED (the title draws graphics.title.coin)'),
+    ('graphics.palettes.titlescreen.medal', "the coin's palette", 'UNUSED (as the coin)'),
     ('graphics.titlescreen.gamelogo', "the title screen's game logo",
      'UNUSED (ModTitle_Load hides it: the title is "Yak\'s YGO Hack")'),
-    ('graphics.titlescreen', "the title screen: .background, .medal, with graphics.palettes.titlescreen.*", USED),
+    ('graphics.titlescreen', "the title screen's background grid (.background, 4 x 4 tiles; its address and size "
+                             "corrected here), with graphics.palettes.titlescreen.*", USED),
     ('graphics.palettes.titlescreen.logo', "the game logo's palette", UNUSED + ' (as the logo)'),
     ('graphics.palettes.titlescreen', "the title screen palettes", USED),
     ('data.duel.backgrounds', "the duel field's background texture per field (list fieldbackgrounds: the normal "
@@ -368,6 +381,19 @@ def eyes_bank(scene_set):
     except (OSError, ValueError):
         return 0
 
+
+# The title screen's images (tools/title_images.py): (name, colours stored, palette format, sprite format).
+TITLE_IMAGES = [
+    ('text', 16, '`ucp4`', 'ucs4x30x20'),
+    ('flame', 128, '`ucp4:01234567`', 'ucs8x30x20'),
+    ('coin', 16, '`ucp4`', 'ucs4x12x12'),
+    ('copyright', 16, '`ucp4`', 'ucs4x28x2'),
+]
+# baserom.toml anchors this script corrects: (name, address, format).
+ANCHOR_FIXES = {
+    # the grid's pack (0x0867DFCC): 16 colours at +8, its 16 tiles (4 x 4, plain) after the tile count, at +0x30
+    'graphics.titlescreen.background': (0x67DFFC, '`ucs4x4x4|graphics.palettes.titlescreen.background`'),
+}
 
 # The field backgrounds by index (GetFieldMagicIndex, duel_card_lists.c): (list name, anchor name).
 FIELD_BACKGROUNDS = [
@@ -600,6 +626,21 @@ def mod_anchors(elf, rom, rom_sym):
         anchors += [('graphics.duel.board.palette', p + 8, '`ucp4`'),
                     ('graphics.duel.board.tiles', tiles_at + 8, f'`uct4x{tiles}|graphics.duel.board.palette`')]
 
+    # The title screen (src/mod_title.c, tools/title_images.py): gModTitleImages, u32 offsets[4], then each image's
+    # colours and its tiles in row-major order; and the small lines' strings.
+    images = rom_sym.get('gModTitleImages')
+    if images:
+        base = images[0] - ROM_BASE
+        offs = struct.unpack_from('<4I', rom, base)
+        for (name, colours, palfmt, sprite), off in zip(TITLE_IMAGES, offs):
+            n = f'graphics.title.{name}'
+            anchors += [(n + '.palette', base + off, palfmt),
+                        (n + '.image', base + off + colours * 2, f'`{sprite}|{n}.palette`')]
+    for label, name in (('gModTitleVersion', 'version'), ('gModTitleRelease', 'release'), ('gModTitleDebug', 'debug')):
+        s = rom_sym.get(label)
+        if s:
+            anchors.append((f'text.title.{name}', s[0] - ROM_BASE, '`asc`16'))
+
     # The added cards' effect rows (src/added_effects.c gAddedCardEffects): struct CardEffect, 24 bytes, as
     # baserom.toml's data.cards.effects (gCardEffects), which FindCardEffect searches first; the last row is the
     # 0xFFFF terminator.
@@ -617,6 +658,9 @@ def mod_anchors(elf, rom, rom_sym):
     usage_wins = rom_sym.get('gModUsagePackWins')
     if usage_wins:
         words.append(('data.constants.packs.format.usagewins', usage_wins[0] - ROM_BASE, 1))
+    flame_wave = rom_sym.get('gModTitleFlameWave')
+    if flame_wave:
+        words.append(('data.constants.title.flamewave', flame_wave[0] - ROM_BASE, 1))
     qr_square = rom_sym.get('gModPreDuelQrSquare')
     if qr_square:
         words.append(('data.constants.preduel.qrsquare', qr_square[0] - ROM_BASE, 1))
@@ -933,6 +977,11 @@ def main():
         elif header == '[[NamedAnchors]]':
             name, addr, fmt = field(lines, 'Name'), int(field(lines, 'Address'), 16), field(lines, 'Format')
             new = mover.move_data(addr)
+            if name in ANCHOR_FIXES:
+                new, fixed_fmt = ANCHOR_FIXES[name]
+                set_field(lines, 'Format', "'''%s'''" % fixed_fmt)
+                set_field(lines, 'DefaultHash', "'''%s'''" % gen_hash([fixed_fmt]))
+                fmt = fixed_fmt
             if new is None:
                 report.append(f'anchor {name} (0x{addr:06X}): not found, kept')
             else:

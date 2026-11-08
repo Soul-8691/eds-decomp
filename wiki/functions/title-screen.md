@@ -42,4 +42,53 @@ Hypothesis: step 5 (`0x0800553C`) is the attract/intro animation that plays betw
 Related: [[program-flow]], [[license-sequence]], [[main-menu]], [[save-game]].
 
 > [!note] Mod change: version and build lines (2026-11-04)
-> `src/mod_title.c` draws two lines in the 8-pixel font: the demo version top left (`DEMO_VERSION`, only with `MOD_DEMO`: `make demo`, `make release-demo`) and `Release` or `Debug` top right (`MOD_RELEASE`). OBJ tiles 64-79, OBJ palette 15. `MOD_DEMO` comes from the Makefile through `build/include/mod_config.h`. Built; not tested in an emulator.
+> `src/mod_title.c` draws two lines in the 8-pixel font: the demo version top left (`gModTitleVersion`, only with `MOD_DEMO`: `make demo`, `make release-demo`) and `Release` or `Debug` top right (`gModTitleRelease` / `gModTitleDebug`, by `MOD_RELEASE`; all three strings are data, 16 bytes each, HMA `text.title.*`). OBJ tiles 64-79, OBJ palette 15. `MOD_DEMO` comes from the Makefile through `build/include/mod_config.h`. Built; not tested in an emulator.
+
+## The mod's title images (2026-11-08)
+
+- **Plain images instead of packs.** The original title loads image packs (deduplicated tiles and a cell list),
+  which Hex Maniac Advance can't show. `tools/title_images.py` writes plain copies (`gModTitleImages`,
+  `data/mod_title_data.s`: u32 offsets[4], then each image's colours and its tiles in row-major order) and
+  `src/mod_title.c` draws them: `ModTitle_Load` (in `Title_LoadGraphics`, in place of the flame and coin packs'
+  `LoadBgImage4bpp` calls) and `ModTitle_LoadCopyright` (at the white flash, in place of the copyright pack). The
+  grid (BG3) stays the original's, already a plain 4 x 4-tile pack.
+- **"Yak's YGO Hack"** is one 240 x 32 image, `title/yaks_ygo_hack.png`, at its final size: the 2x scaling is in the
+  image, not the code. It was made once by running `BuildMenuLabelEx` (src/mod_recipes.c: the main menu sheet's
+  highlighted letters and the drawn Y, G, O, H, ') in Python on the ROM's `gMainMenuObjGfx` / `gMainMenuObjPal`,
+  doubled and cropped to the 240 pixels the sprites showed. It is drawn on BG0 (the original logo's 8bpp layer, map
+  rows 5-8, tiles 0x10-0x87, palette entries 0-15) instead of four affine 32 x 16 sprites; the label is no longer
+  built at run time. (A GBA sprite is at most 64 x 64, so one image on a background is the single-picture form.)
+- **The flames** are 8bpp now: BG1 is set to 256-colour in `ModTitle_Load` (the title only; the main menu sets its
+  own BG1CNT), tiles 0x90-0x11F (8bpp), colours in palette entries 16-143. The 15 original colours are 16-30; up
+  to 128 colours can be used. A full 256 is not possible: the coin, grid and copyright layers need their 4bpp
+  palettes (banks 9, 11, 12) and BG0 the text's 0-15.
+- **The coin** moved to 4bpp tiles 0x2C0-0x34F (12 x 12 with its blank tiles; the copyright line is 0x284-0x2BB).
+- Hex Maniac Advance ([[hma-toml]]): `graphics.title.text`, `.flame`, `.coin`, `.copyright` (each `.image` and
+  `.palette`), `text.title.version` / `.release` / `.debug`, and the original grid `graphics.titlescreen.background`
+  (its baserom.toml address and size corrected: tiles at 0x0867DFFC, 4 x 4).
+- Checked in mGBA (screenshots without input): the title with the text, coin, copyright, grid and the two lines;
+  the flames waving over the coin in the fade-in. `.text` 0x10 bytes smaller (0x0807F33C).
+- **Flame wave toggle:** `gModTitleFlameWave` (src/mod_title.c; HMA MatchedWord `data.constants.title.flamewave`,
+  1 byte). `Title_LoadGraphics` now calls `ModTitle_LoadWave` instead of copying `gTitleLogoWave` to
+  `gMain.hblankScroll`: 1 (default) copies the wave, 0 zeros the table, so `Title_HBlank` leaves the flames still.
+  Checked in mGBA with the byte set to 0 (straight flames in the fade-in). `.text` -0x14 (0x0807F328).
+- **Full-screen text and flame images (2026-11-08):** both are now 240 x 160 (the whole of BG0 and of BG1), so
+  anything can be drawn anywhere: `title/yaks_ygo_hack.png` has the text at y 40, the flame image the flames at
+  x 72, y 0. Two full-screen 8bpp images (600 tiles each, 75 KB) don't fit in the title's background VRAM, so
+  `LoadScreenImage` loads only their distinct tiles (`PoolAdd`: a blank tile is tile 0, a tile equal to one
+  loaded before shares it; a hash then a word compare) into 8bpp tiles 0x10-0x15F and 0x1CC-0x3FF, 644 in all
+  for both images (past that a tile shows blank). The defaults use 158 (text 74, flames 84). The copyright line
+  and the coin moved to 4bpp tiles 0x2C0-0x2F7 and 0x2F8-0x387, next to the grid (0x388-0x397). The pool's
+  bookkeeping is in `gBustupBitmapBuffer` (free on the title). HMA: `graphics.title.text.image` and
+  `graphics.title.flame.image` are `ucs8x30x20`. Checked in mGBA (the same title and fade-in as before).
+- **Palette order and 4bpp text (2026-11-08):** the flame image now holds BG palette entries 0-127 (128 colours;
+  entry 0 is the screen's backdrop, and the flames' 15 original colours keep their indices 1-15, so a pixel's value
+  is its palette entry). The text moved behind them: BG0 is set to 16-colour in `ModTitle_Load`
+  (`REG_BG0CNT &= ~BGCNT_256COLOR`), the image is 4bpp (`ucs4x30x20`) in BG palette 8 (entries 128-143). Each image
+  has its own tile pool (`PoolStart` / `PoolAdd`, bookkeeping still in `gBustupBitmapBuffer`). Charblock 1 bytes:
+  0x0000-0x003F tile 0 (blank); the text's 4bpp tiles from 0x0040 (4bpp tile numbers reach only 0x8000: room for
+  the whole text, 600 tiles, as distinct tiles); 0x5800-0x72FF the copyright, coin and grid; the flames' 8bpp tiles
+  from 0x7300 to 0xBFFF (0x06010000, the end of BG VRAM), then down from 0x5800 to the text's end. So the flames get
+  at least 308 distinct tiles (more when the text uses fewer). HMA: `graphics.title.flame.palette` is
+  `` `ucp4:01234567` `` (128 colours). Checked in mGBA (screenshots at frames 660 and 1200: the same as before).
+  `.text` unchanged (0x0807F328).

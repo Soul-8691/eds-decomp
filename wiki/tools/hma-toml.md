@@ -83,6 +83,10 @@ original ROM (repo root). Without `baserom.toml` it does nothing. `eds_demo.toml
     resolve, check, prepare, chainA, chainB; 24 bytes a row), one row per added card with an effect row plus the
     0xFFFF terminator (127 rows now). `FindCardEffect` (effect_hooks.c) searches it after `gCardEffects`, so a row's
     card number gives that card the five handlers.
+  - Title screen (by the `.sym`): `graphics.title.text` / `.flame` / `.coin` / `.copyright`, each `.image` and
+    `.palette` (`gModTitleImages`, `tools/title_images.py`; [[title-screen]]: text `ucs4x30x20`, 4bpp, BG palette 8;
+    flame `ucs8x30x20` with a 128-colour palette, BG entries 0-127), `text.title.version` / `.release` /
+    `.debug` (`` `asc`16 ``), and the corrected original grid anchor (`ANCHOR_FIXES`).
   - Duel backgrounds (by the `.sym`): `data.duel.backgrounds` (``[background<>]fieldbackgrounds``) is
     `gFieldBackgroundImages` (original data at 0x08086550), the BG0 texture per field: the normal field, then the 14
     Field Spells in `GetFieldMagicIndex`'s order (new list `fieldbackgrounds`). Its 15 pointers lead to 9 image packs,
