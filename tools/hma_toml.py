@@ -111,6 +111,9 @@ ADDED_GUIDE = [
     ('data.cards.nameorder', "the card IDs in name order, 0-terminated (gCardIdsByName): what Deck Edit, the Trunk and "
                              "Card Trading list (make demo's blank slots are left out until filled in)", USED),
     ('graphics.cards.icons',"every card's art icon (Deck Edit's ring): .palettes, .images (16x16 4bpp)", USED),
+    ('graphics.duel.board', "the mod's duel board (gModDuelFieldImage, tools/duel_board.py: the Extra Monster Zones "
+                            "and the phase panel): .tiles (its deduplicated 4bpp tiles; one tile can be used by many "
+                            "cells, whose list is not anchored) and .palette", USED),
     ('graphics.cards.fieldicons', "the field icons: .artpalette (64 shared colours), .miniatures (each card's "
                                   "16x16 8bpp miniature)", USED),
     ('data.cards.typeex', "each card ID's extended type (gCardTypeEx): kind (none, Synchro, Xyz, Link; the stats "
@@ -174,6 +177,7 @@ ADDED_LISTS_GUIDE = [
                 'data.opponents)', USED),
     ('opponents', 'the duelist IDs 0-24 with the opponent each is in this build (indexes data.opponents)', USED),
     ('opponentkinds', 'hidden, format, deck (data.opponents\' kind)', USED),
+    ('fieldbackgrounds', 'the normal field and the 14 Field Spells (indexes data.duel.backgrounds)', USED),
     ('cardkindsex', 'none, synchro, xyz, link (data.cards.typeex\'s kind)', USED),
     ('racesex', 'statstype and the races EDS lacks (data.cards.typeex\'s race)', USED),
 ]
@@ -208,6 +212,13 @@ VANILLA_GUIDE = [
     ('graphics.titlescreen', "the title screen: .background, .medal, with graphics.palettes.titlescreen.*", USED),
     ('graphics.palettes.titlescreen.logo', "the game logo's palette", UNUSED + ' (as the logo)'),
     ('graphics.palettes.titlescreen', "the title screen palettes", USED),
+    ('data.duel.backgrounds', "the duel field's background texture per field (list fieldbackgrounds: the normal "
+                              "field, then the Field Spells by GetFieldMagicIndex): a pointer to one of "
+                              "graphics.duel.backgrounds.* (several share one: Mountain uses Wasteland's, Gaia Power "
+                              "Forest's, Umiiruka Umi's, Luminous Spark Chorus of Sanctuary's, Mystic Plasma Zone "
+                              "Yami's)", USED),
+    ('graphics.duel.backgrounds', "the field background textures: .image (32 x 32, 4bpp, tiled across the board's "
+                                  "BG0) and .palette, named after the first field that uses each", USED),
     ('graphics.duelists.grandpa', "Solomon's (Grandpa's) face (.face 48 x 16, .palette) and opponent-select "
                                   "portrait (.portrait 56 x 56, .portraitpalette)",
      'used (Solomon has no card art: his portrait on the opponent select, his face on the Records screen)'),
@@ -224,7 +235,7 @@ VANILLA_GUIDE = [
                                       'for an opponent with no card art (Solomon)'),
 ]
 # Anchors this script adds that are original game data (listed with the original game in the header guide).
-VANILLA_ADDED_PREFIXES = ('graphics.duelists.',)
+VANILLA_ADDED_PREFIXES = ('graphics.duelists.', 'graphics.duel.backgrounds.', 'data.duel.backgrounds')
 VANILLA_WORDS_GUIDE = [
     ('data.constants.packs.rarities', "the original packs' rarity odds (.total and each rarity's weight)",
      'UNUSED (as data.packs)'),
@@ -356,6 +367,16 @@ def eyes_bank(scene_set):
         return max(px) // 16
     except (OSError, ValueError):
         return 0
+
+
+# The field backgrounds by index (GetFieldMagicIndex, duel_card_lists.c): (list name, anchor name).
+FIELD_BACKGROUNDS = [
+    ('Normal field', 'normal'), ('Forest', 'forest'), ('Wasteland', 'wasteland'), ('Mountain', 'mountain'),
+    ('Sogen', 'sogen'), ('Umi', 'umi'), ('Yami', 'yami'), ('Chorus of Sanctuary', 'chorusofsanctuary'),
+    ('Gaia Power', 'gaiapower'), ('Umiiruka', 'umiiruka'), ('Molten Destruction', 'moltendestruction'),
+    ('Rising Air Current', 'risingaircurrent'), ('Luminous Spark', 'luminousspark'),
+    ('Mystic Plasma Zone', 'mysticplasmazone'), ('Fusion Gate', 'fusiongate'),
+]
 
 
 def original_slots(rom_sym, rom):
@@ -544,6 +565,40 @@ def mod_anchors(elf, rom, rom_sym):
                         (name + '.portrait', at + 512, f'`ucs8x7x7|{name}.portraitpalette`')]
     else:
         report.append('no gModDuelistPortraits in the .sym: the duelist portraits are left out')
+
+    # The duel's field backgrounds (duel_info_bar.c gFieldBackgroundImages: 15 pointers, GetFieldMagicIndex's order),
+    # 4bpp image packs whose 16 tiles are a 32 x 32 texture in row-major order (checked), so each pack's palette
+    # (+8) and tiles (after the tile-count header, +48) are a plain HMA palette and sprite; several indices share a
+    # pack, which is named after the first. Original data. The mod's duel board (gModDuelFieldImage,
+    # tools/duel_board.py) is a pack with deduplicated tiles and a cell list: its palette and tiles are anchored
+    # (editing a tile changes every cell that uses it), the cell list is not.
+    backgrounds = rom_sym.get('gFieldBackgroundImages')
+    if backgrounds:
+        lists.append(('fieldbackgrounds', [n for n, _ in FIELD_BACKGROUNDS]))
+        anchors.append(('data.duel.backgrounds', backgrounds[0] - ROM_BASE, '[background<>]fieldbackgrounds'))
+        seen = set()
+        for i, (_, name) in enumerate(FIELD_BACKGROUNDS):
+            p = word(backgrounds[0] + 4 * i) - ROM_BASE
+            if p in seen:
+                continue
+            seen.add(p)
+            colours, tiles = struct.unpack_from('<H', rom, p)[0], None
+            tiles_at = p + 8 + 2 * colours
+            tiles = struct.unpack_from('<H', rom, tiles_at)[0]
+            if colours != 16 or tiles != 16:
+                report.append(f'field background {name}: not 16 colours and 16 plain tiles, left out')
+                continue
+            base = f'graphics.duel.backgrounds.{name}'
+            anchors += [(base + '.palette', p + 8, '`ucp4`'),
+                        (base + '.image', tiles_at + 8, f'`ucs4x4x4|{base}.palette`')]
+    board = rom_sym.get('gModDuelFieldImage')
+    if board:
+        p = board[0] - ROM_BASE
+        colours = struct.unpack_from('<H', rom, p)[0]
+        tiles_at = p + 8 + 2 * colours
+        tiles = struct.unpack_from('<H', rom, tiles_at)[0]
+        anchors += [('graphics.duel.board.palette', p + 8, '`ucp4`'),
+                    ('graphics.duel.board.tiles', tiles_at + 8, f'`uct4x{tiles}|graphics.duel.board.palette`')]
 
     # The added cards' effect rows (src/added_effects.c gAddedCardEffects): struct CardEffect, 24 bytes, as
     # baserom.toml's data.cards.effects (gCardEffects), which FindCardEffect searches first; the last row is the

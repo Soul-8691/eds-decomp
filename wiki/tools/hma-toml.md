@@ -83,6 +83,16 @@ original ROM (repo root). Without `baserom.toml` it does nothing. `eds_demo.toml
     resolve, check, prepare, chainA, chainB; 24 bytes a row), one row per added card with an effect row plus the
     0xFFFF terminator (127 rows now). `FindCardEffect` (effect_hooks.c) searches it after `gCardEffects`, so a row's
     card number gives that card the five handlers.
+  - Duel backgrounds (by the `.sym`): `data.duel.backgrounds` (``[background<>]fieldbackgrounds``) is
+    `gFieldBackgroundImages` (original data at 0x08086550), the BG0 texture per field: the normal field, then the 14
+    Field Spells in `GetFieldMagicIndex`'s order (new list `fieldbackgrounds`). Its 15 pointers lead to 9 image packs,
+    each 16 colours and 16 tiles in row-major order (checked), anchored as `graphics.duel.backgrounds.<name>.image`
+    (`` `ucs4x4x4|...palette` ``, 32 x 32) and `.palette`, named after the first field that uses it (Mountain shares
+    Wasteland's, Gaia Power Forest's, Umiiruka Umi's, Luminous Spark Chorus of Sanctuary's, Mystic Plasma Zone
+    Yami's); repointing an entry gives a field another texture. Listed with the original game. The mod's board
+    (`gModDuelFieldImage`, `tools/duel_board.py`) is a pack with deduplicated tiles and a cell list, which HMA can't
+    show as a picture: `graphics.duel.board.palette` (`` `ucp4` ``) and `.tiles` (`` `uct4x<n>|...palette` ``, 73
+    tiles now) are anchored, the cell list is not. Checked by rendering five textures.
   - Pre-duel screens (by the `.sym`, by duelist ID, `]opponents`): `data.preduel.table` (``[picture<> qr<> scene<>]``:
     the picture data, or 0; the data whose QR code it shows, or 0 for none; the scene copy for an opponent with no
     picture) and `data.preduel.text` (``[line1`asc`48 ... line5`asc`48]``, up to 38 characters a line inside the box's

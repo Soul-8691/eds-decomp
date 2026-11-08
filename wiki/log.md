@@ -2810,3 +2810,8 @@ updated: 2026-09-29
 
 ## [2026-11-07] progress | Ally of Justice Catastor
 - Synchro in demo/full lists; `CatastorStartOfDamageStep` / `AiCatastorDestroysNonDark` (start of Damage Step, face-up non-DARK); battle_phase1.c, ai_picks.c. [[added-cards]].
+
+## [2026-11-08] progress | HMA TOML: duel backgrounds and the duel board's tiles
+- tools/hma_toml.py: data.duel.backgrounds (list fieldbackgrounds), graphics.duel.backgrounds.<name>.image / .palette (9 packs), graphics.duel.board.palette / .tiles; guide entries (the backgrounds with the original game).
+- Noted: with Ally of Justice Catastor the real card count is 1128 (141 x 8), which GeneratePackCards now builds as movs + lsls, so the three data.constants.cards.limit2 MatchedWords are left out (no literal to match).
+- Pages: [[hma-toml]].
