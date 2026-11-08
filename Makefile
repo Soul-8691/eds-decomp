@@ -136,7 +136,7 @@ OBJDIFF_OBJS  := $(foreach u,$(OBJDIFF_UNITS),build/objdiff/target/$(u).o $(if $
 objdiff.json: units.txt tools/mkobjdiff.py FORCE
 	$(PYTHON) tools/mkobjdiff.py > $@
 
-objdiff-report: objdiff.json $(OBJDIFF_OBJS) $(patsubst src/%.s,build/srcasm/%.o,$(wildcard src/*.s src/sdk/*.s)) build/src/sdk/agb_sram.o
+objdiff-report: objdiff.json $(OBJDIFF_OBJS) $(patsubst src/%.s,build/srcasm/%.o,$(wildcard src/*.s src/sdk/*.s))
 	objdiff-cli report generate -p . -o build/report.json
 	$(PYTHON) tools/mkobjdiff.py --summary build/report.json
 	$(PYTHON) tools/check_report.py build/report.json
