@@ -172,6 +172,8 @@ ADDED_GUIDE = [
 ADDED_WORDS_GUIDE = [
     ('data.constants.title.flamewave', "the title's flames during the fade-in: 1 wave (the original), 0 stay still",
      USED),
+    ('data.constants.title.flamepriority', "the title's flames' layer priority (BG1, 0 front to 3 back): 1 in front "
+                                          "of the coin and the copyright line (the original), 3 behind them", USED),
     ('data.constants.preduel.qrsquare', "the pre-duel screens' white square behind the QR code: 1 on (dark modules "
                                         "on white), 0 off (no square: the box and its decorated border show, the "
                                         "modules drawn white)", USED),
@@ -661,6 +663,9 @@ def mod_anchors(elf, rom, rom_sym):
     flame_wave = rom_sym.get('gModTitleFlameWave')
     if flame_wave:
         words.append(('data.constants.title.flamewave', flame_wave[0] - ROM_BASE, 1))
+    flame_priority = rom_sym.get('gModTitleFlamePriority')
+    if flame_priority:
+        words.append(('data.constants.title.flamepriority', flame_priority[0] - ROM_BASE, 1))
     qr_square = rom_sym.get('gModPreDuelQrSquare')
     if qr_square:
         words.append(('data.constants.preduel.qrsquare', qr_square[0] - ROM_BASE, 1))

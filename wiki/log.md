@@ -2836,3 +2836,8 @@ updated: 2026-09-29
   the fixed 4bpp tiles then in the text's leftover room). src/mod_title.c, tools/title_images.py,
   tools/hma_toml.py. Checked in mGBA.
 - Pages: [[title-screen]], [[hma-toml]].
+
+## [2026-11-08] progress | Title: flame priority byte
+- gModTitleFlamePriority (BG1CNT priority, default 1; 3 = behind the coin and copyright), HMA MatchedWord
+  data.constants.title.flamepriority. src/mod_title.c, tools/hma_toml.py.
+- Pages: [[title-screen]].

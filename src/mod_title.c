@@ -43,6 +43,10 @@ const char gModTitleDebug[16] = "Debug";
 /* The flames' wave during the fade-in (Title_HBlank shifts BG1 by gMain.hblankScroll): 1 waves, 0 keeps them still.
  * A byte of data, so Hex Maniac Advance can switch it (MatchedWord data.constants.title.flamewave). */
 const u8 gModTitleFlameWave[1] = { 1 };
+/* The flames' layer priority (BG1CNT bits 0-1, 0 front to 3 back; MatchedWord data.constants.title.flamepriority).
+ * 1, the original, is in front of the coin and the copyright line (BG2, priority 2); 3 puts the flames behind them
+ * (still in front of the grid, BG3: at equal priority the lower BG is in front). */
+const u8 gModTitleFlamePriority[1] = { 1 };
 
 extern const u16 gTitleLogoWave[];      /* 0x08198830: 16 BG1 HOFS values */
 
@@ -216,7 +220,7 @@ void ModTitle_Load(void)
     textEnd = (pool->next + 63) & ~63;
     /* the flames on BG1, now 256-colour: its colours in entries 0-127 (0: the backdrop), its tiles above the
      * fixed 4bpp ones, then in the room the text left */
-    REG_BG1CNT |= BGCNT_256COLOR;
+    REG_BG1CNT = (REG_BG1CNT & ~3) | BGCNT_256COLOR | (gModTitleFlamePriority[0] & 3);
     img = Image(IMAGE_FLAME);
     MemCopy16((void *)BG_PLTT, img, FLAME_COLORS * 2);
     MemClear16(gMain.bgMapBuffer[1], sizeof(gMain.bgMapBuffer[1]));

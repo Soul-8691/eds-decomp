@@ -92,3 +92,7 @@ Related: [[program-flow]], [[license-sequence]], [[main-menu]], [[save-game]].
   at least 308 distinct tiles (more when the text uses fewer). HMA: `graphics.title.flame.palette` is
   `` `ucp4:01234567` `` (128 colours). Checked in mGBA (screenshots at frames 660 and 1200: the same as before).
   `.text` unchanged (0x0807F328).
+- **Flame priority byte:** `gModTitleFlamePriority` (src/mod_title.c; HMA MatchedWord
+  `data.constants.title.flamepriority`, 1 byte). `ModTitle_Load` writes its low 2 bits into BG1CNT's priority:
+  1 (default, the original) puts the flames in front of the coin and copyright line (BG2, priority 2); 3 puts them
+  behind those (still in front of the grid, BG3, since at equal priority the lower BG wins); 0 in front of the text.
