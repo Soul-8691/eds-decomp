@@ -8579,9 +8579,11 @@ int EffectSecretBarrelResolve(struct ChainEntry *link, struct ChainEntry *chaine
 
 #ifdef HAS_CARD_OJAMA_TOKEN
 /* ---- Ojama Token --------------------------------------------------------------------------------------------------
- * "When this Token is destroyed, inflict 300 points of damage to its controller." SendFieldCardToGrave
- * (duel_send_to_grave.c) calls this when the token is destroyed (battle or effect); banish instead of destroy
- * (Banisher of the Light, and the like) does not run it. */
+ * "When this Token is destroyed, inflict 300 points of damage to its controller."
+ *   effect destruction   SendFieldCardToGrave (duel_send_to_grave.c)
+ *   battle destruction   SendBattleDestroyedCardToGraveyard (duel_field_moves.c)
+ * Banish instead of destroy (Banisher of the Light, and the like) does not run it; Tributing does not count as
+ * destroyed. */
 #define OJAMA_TOKEN_DAMAGE 300
 
 void OjamaTokenDestroyed(int player)

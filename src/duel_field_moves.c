@@ -29,6 +29,9 @@ void ShowActivatedCardInt(int player, int cardId) asm("ShowActivatedCard");
 #ifdef HAS_CARD_D_D_SURVIVOR
 void DDSurvivorBanished(u16 cardId, int owner, int faceUp);     /* mod: src/added_effects.c */
 #endif
+#ifdef HAS_CARD_OJAMA_TOKEN
+void OjamaTokenDestroyed(int player);                           /* mod: src/added_effects.c */
+#endif
 
 /* Command id for DuelCmd_Push: DUEL_CMD_PLAYER (bit 15) marks a command of player 1. */
 #define PLAYER_CMD(player, cmd) ((player) ? (DUEL_CMD_PLAYER | (cmd)) : (cmd))
@@ -194,6 +197,10 @@ void SendBattleDestroyedCardToGraveyard(int defender, int player, int zone, u16 
     }
     ((struct DuelCardStatusBytes *)card)->destroyedInBattle = 1;
     DuelCmd_Push(PLAYER_CMD(player, DUEL_CMD_ADD_CARD_TO_GRAVEYARD), card[0], card[1], 0);
+#ifdef HAS_CARD_OJAMA_TOKEN
+    if (CARD_NUMBER(cardId) == CARD_OJAMA_TOKEN)
+        OjamaTokenDestroyed(owner);
+#endif
     if (CARD_STATS_TYPE(CARD_STATS(((struct DuelCard *)card)->id)) <= CARD_TYPE_REPTILE)
         gDuelPlayers[player & 1].monsterSentToGraveThisTurn = 1;
 #ifdef HAS_CARD_ARCHFIENDS_CALL

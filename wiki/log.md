@@ -2804,3 +2804,6 @@ updated: 2026-09-29
 ## [2026-11-07] progress | Pre-duel QR square toggle
 - src/mod_preduel.c gModPreDuelQrSquare (1 = white square, 0 = none: the box border shows, white modules); tools/hma_toml.py MatchedWord data.constants.preduel.qrsquare.
 - Pages: [[yugi-kaiba-opponent]].
+
+## [2026-11-07] progress | Ojama Token battle-destroy damage
+- src/duel_field_moves.c `SendBattleDestroyedCardToGraveyard` calls `OjamaTokenDestroyed` (the hook lived only in `SendFieldCardToGrave`). [[added-cards]].

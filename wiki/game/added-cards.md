@@ -2885,9 +2885,9 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
   monster zones. `EffectOjamaTrioResolve`: three `DUEL_CMD_SUMMON_TOKEN` on the opponent with `TOKEN_KIND_1` (card
   number 1921). The row is guarded on `HAS_CARD_OJAMA_TRIO` and `HAS_CARD_OJAMA_TOKEN`.
 - **The token card.** `Ojama Token` is appended last in `config/new_cards.txt`; `TOKEN_NUMBERS` gives it number 1921
-  (Beast/LIGHT/Level 2/0/1000). When it is destroyed, `OjamaTokenDestroyed` (`SendFieldCardToGrave` in
-  `duel_send_to_grave.c`) inflicts 300 damage to its controller (`LoseLifePoints`); banish-without-destroy paths do
-  not call it.
+  (Beast/LIGHT/Level 2/0/1000). When it is destroyed, `OjamaTokenDestroyed` inflicts 300 to its controller
+  (`LoseLifePoints`): `SendFieldCardToGrave` for effect destruction and `SendBattleDestroyedCardToGraveyard` for battle
+  destruction; banish-without-destroy and Tribute paths do not call it.
 - The CPU activates it when the human has three empty monster zones (`AiShouldActivateAddedCard`).
 - Checked in the source and the build; not tested in an emulator.
 - **Bug fixed (2026-10-30, reported by the user: the tokens had 0 DEF).** `tools/newcards.py` built a token's stats
