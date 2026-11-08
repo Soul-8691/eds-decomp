@@ -4,8 +4,8 @@
  *   ListRefine_Open         the sort page's A (Magic and Trap: the filter page's A) opens the page
  *   ListRefine_Update       the page's input, from ListFilter_Update (LIST_FILTER_PHASE_REFINE)
  *   ListRefine_ApplyToList  DeckEdit_FilterAndSortList: drops the cards of its result that fail the page's fields
- *   ModCompareCardsByType, ModCompareCardsByAttribute  the sort page's Type and Attribute: alphabetical by name, then
- *                           by card ID (which is name order)
+ *   ModCompareCardsByType, ModCompareCardsByAttribute  the sort page's Type and Attribute: alphabetical type or
+ *                           attribute group, then by card name (case-insensitive)
  * Fields: a name's first letter, one Type, one Attribute, and from/to ranges of ATK, DEF and Level. Magic and Trap
  * lists only have the name's letter. A limit other than the name's keeps monsters only: the stats word of a Trap
  * carries attribute 1 (Light), so non-monsters must not reach those tests. The Gods count as the sort comparators
@@ -320,11 +320,37 @@ void ListRefine_ApplyToList(u8 list, u16 *cards)
 
 /* ---- Sort comparators (DeckEdit_FilterAndSortList): non-zero when a goes before b ---- */
 
+static u32 NameLess(const u8 *nameA, const u8 *nameB)
+{
+    u32 ca;
+    u32 cb;
+
+    for (;;) {
+        ca = *nameA;
+        cb = *nameB;
+        if (ca >= 'a' && ca <= 'z')
+            ca -= 'a' - 'A';
+        if (cb >= 'a' && cb <= 'z')
+            cb -= 'a' - 'A';
+        if (ca != cb)
+            return ca < cb;
+        if (ca == 0)
+            return 0;
+        nameA++;
+        nameB++;
+    }
+}
+
 static u32 RankedFirst(u32 rankA, u32 rankB, int a, int b)
 {
+    const u8 *nameA;
+    const u8 *nameB;
+
     if (rankA != rankB)
         return rankA < rankB;
-    return (u32)(a & CARD_ID_MASK) < (u32)(b & CARD_ID_MASK);
+    nameA = &gCardNames[(a & CARD_ID_MASK) * CARD_NAME_SIZE];
+    nameB = &gCardNames[(b & CARD_ID_MASK) * CARD_NAME_SIZE];
+    return NameLess(nameA, nameB);
 }
 
 u32 ModCompareCardsByType(int a, int b)

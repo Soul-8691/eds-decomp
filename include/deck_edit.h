@@ -522,8 +522,8 @@ void ListRefine_Reset(void);                        /* every field back to no li
 void ListRefine_Open(void);                         /* show the page: subPhase = LIST_FILTER_PHASE_REFINE */
 void ListRefine_Update(void);                       /* the page's input */
 void ListRefine_ApplyToList(u8 list, u16 *cards);   /* drop the cards of a filtered row that fail the page's fields */
-u32 ModCompareCardsByType(int a, int b);            /* 1 if a's Type name is first, then by card ID */
-u32 ModCompareCardsByAttribute(int a, int b);       /* 1 if a's Attribute name is first, then by card ID */
+u32 ModCompareCardsByType(int a, int b);            /* 1 if a's Type group is first, then by card name */
+u32 ModCompareCardsByAttribute(int a, int b);       /* 1 if a's Attribute group is first, then by card name */
 
 /* Statistics screen (gDeckStatsSteps). */
 u16 DeckStats_ClearState(void);                     /* step 0: clear the sub-screen fields */
