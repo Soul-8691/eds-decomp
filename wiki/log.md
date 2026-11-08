@@ -2850,3 +2850,7 @@ updated: 2026-09-29
 ## [2026-11-08] progress | Deck Edit label: tighter Empty, Main/Side
 - tools/mod_deck_edit_label.py: the letters of Empty set without gaps, the / narrower and without spaces.
 - Pages: [[deck-edit-list-c]].
+
+## [2026-11-08] progress | Goyo Guardian
+- Demo/full lists; pre-errata battle steal (face-up Defense, optional prompt); `ModGoyoBeforeGraveSend` /
+  `ModGoyoBattlePending`, `battle_phase2.c`. [[added-cards]].

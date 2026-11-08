@@ -458,17 +458,27 @@ def type_ex(c):
 
 
 SYNCHRO_TUNER_TYPE = 0x8000     # a rule's Tuner of one Type: 0x8000 | the EDS monster type (src/mod_synchro.c)
+# Pre-errata Synchro material lines YGOPRODeck no longer carries (the API text is usually the current errata).
+SYNCHRO_TUNER_OVERRIDES = {
+    'Goyo Guardian': 0,           # pre-errata: 1 Tuner + 1+ non-Tuner (errata: 1 EARTH Tuner + …)
+}
 
 
 def synchro_tuner(c, numbers):
     """The card number a Synchro needs as its Tuner (0: any Tuner), from the first sentence of its text:
     '"Junk Synchron" + 1+ non-Tuner monsters' names one; '1 Tuner + 1+ non-Tuner monsters' takes any;
-    '1 Fiend-Type Tuner + 1 or more non-Tuner monsters' takes a Tuner of that Type (SYNCHRO_TUNER_TYPE | type)."""
+    '1 Fiend-Type Tuner + 1 or more non-Tuner monsters' takes a Tuner of that Type (SYNCHRO_TUNER_TYPE | type).
+    SYNCHRO_TUNER_OVERRIDES fixes pre-errata material lines when the cached desc is errata."""
+    name = c['name']
+    if name in SYNCHRO_TUNER_OVERRIDES:
+        return SYNCHRO_TUNER_OVERRIDES[name]
     m = re.match(r'\s*"([^"]+)"\s*\+', c['desc'])
     if m:
         if m.group(1) not in numbers:
             fail(f'{c["name"]}: its Synchro Material "{m.group(1)}" is not an added or original card')
         return numbers[m.group(1)]
+    if re.match(r'\s*1 Tuner \+ 1(?:\+| or more) non-Tuner monsters', c['desc']):
+        return 0
     m = re.match(r'\s*1 ([A-Za-z -]+?)(?:-Type)? Tuner \+ 1(?:\+| or more) non-Tuner monsters', c['desc'])
     if m:
         race = m.group(1)
@@ -476,8 +486,7 @@ def synchro_tuner(c, numbers):
         if race not in MONSTER_TYPES:
             fail(f'{c["name"]}: its Tuner Type "{m.group(1)}" is not a monster Type')
         return SYNCHRO_TUNER_TYPE | MONSTER_TYPES[race]
-    if not re.match(r'\s*1 Tuner \+ 1(?:\+| or more) non-Tuner monsters', c['desc']):
-        print(f'newcards: warning: {c["name"]}: Synchro Materials read as "1 Tuner + 1+ non-Tuner monsters"')
+    print(f'newcards: warning: {c["name"]}: Synchro Materials read as "1 Tuner + 1+ non-Tuner monsters"')
     return 0
 
 

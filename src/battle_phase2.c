@@ -444,6 +444,8 @@ struct BattleZoneCopies {
  */
 void RyuKokkiAfterBattle(int player);   /* mod: src/added_effects.c */
 int ModProxyBattle(int player);         /* mod: src/added_effects.c */
+int ModGoyoBattlePending(void);         /* mod: src/added_effects.c */
+int ModGoyoBeforeGraveSend(int survivor, int destroyedPlayer, int destroyedZone, u16 *cardWords);
 void HydrogeddonAfterBattle(int player);
 
 int BattleStage_DestroyMonsters(int player)
@@ -507,6 +509,10 @@ int BattleStage_DestroyMonsters(int player)
 #endif
 #ifdef HAS_CARD_PROXY_DRAGON
     if (ModProxyBattle(player))     /* added: Proxy Dragon may save a destroyed monster (waits for the prompt) */
+        return 0;
+#endif
+#ifdef HAS_CARD_GOYO_GUARDIAN
+    if (ModGoyoBattlePending())     /* added: Goyo Guardian may steal a battled monster (waits for the prompt) */
         return 0;
 #endif
 #ifdef HAS_CARD_DARK_MAGICIAN_OF_CHAOS
@@ -612,8 +618,20 @@ int BattleStage_DestroyMonsters(int player)
                     ZONE_COPY(player).pendingOpponentSummon = 1;
                     break;
                 }
+#ifdef HAS_CARD_GOYO_GUARDIAN
+                {
+                    int goyo = ModGoyoBeforeGraveSend(1 - player, player, gBattle.atkSlot,
+                                                      (u16 *)&gBattle.zones[player]);
+                    if (goyo == 2)
+                        return 0;
+                    if (goyo == 0)
+                        SendBattleDestroyedCardToGraveyard(1 - player, player, gBattle.atkSlot,
+                                                           (u16 *)&gBattle.zones[player]);
+                }
+#else
                 SendBattleDestroyedCardToGraveyard(1 - player, player, gBattle.atkSlot,
                                                    (u16 *)&gBattle.zones[player]);
+#endif
                 gBattle.destroyedLoc[0] = LOC(player, gBattle.atkSlot);
             }
         } else if (!done)
@@ -722,8 +740,20 @@ int BattleStage_DestroyMonsters(int player)
                     ZONE_COPY(1 - player).pendingOpponentSummon = 1;
                     break;
                 }
+#ifdef HAS_CARD_GOYO_GUARDIAN
+                {
+                    int goyo = ModGoyoBeforeGraveSend(player, 1 - player, gBattle.defSlot,
+                                                      (u16 *)&gBattle.zones[1 - player]);
+                    if (goyo == 2)
+                        return 0;
+                    if (goyo == 0)
+                        SendBattleDestroyedCardToGraveyard(1 - player, 1 - player, gBattle.defSlot,
+                                                           (u16 *)&gBattle.zones[1 - player]);
+                }
+#else
                 SendBattleDestroyedCardToGraveyard(1 - player, 1 - player, gBattle.defSlot,
                                                    (u16 *)&gBattle.zones[1 - player]);
+#endif
                 gBattle.destroyedLoc[1] = LOC((1 - player), gBattle.defSlot);
             }
         } else if (!done)

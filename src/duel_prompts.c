@@ -195,6 +195,13 @@ u32 DuelPrompt_ConfirmCardEffect(int player, u16 cardNumber)
             break;
         }
 #endif
+#ifdef HAS_CARD_GOYO_GUARDIAN
+        case CARD_GOYO_GUARDIAN: {
+            extern const u8 gStrGoyoGuardianPrompt[];
+            TextBoxOpen(PROMPT_BOX_POS, PROMPT_BOX_SIZE, TEXTBOX_FLAGS_DEFAULT, gStrGoyoGuardianPrompt);
+            break;
+        }
+#endif
         }
         TextBoxSetMenu(TEXTBOX_MENU_YES_NO, NULL, NULL);
         gDuel.promptStep++;

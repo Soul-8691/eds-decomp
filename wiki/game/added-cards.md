@@ -2086,6 +2086,16 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
 - Moved above `------` in `new_cards.txt`; it wasn't in `card_pools/missing*.txt`. All far code.
 - Checked in the source and the build; not tested in an emulator.
 
+### Goyo Guardian (2026-11-08)
+- Synchro Monster: pre-errata — "1 Tuner + 1 or more non-Tuner monsters" (`SYNCHRO_TUNER_OVERRIDES` in
+  `tools/newcards.py`; YGOPRO text is errata with **1 EARTH Tuner**). When this card destroys an opponent's
+  monster by battle and sends it to the Graveyard, you can Special Summon that monster to your side of the field in
+  face-up Defense Position." No `gAddedCardEffects` row (optional battle destruction hook, like Proxy Dragon).
+- `ModGoyoBeforeGraveSend` / `ModGoyoBattlePending` in `added_effects.c`; `BattleStage_DestroyMonsters` in
+  `battle_phase2.c` before `SendBattleDestroyedCardToGraveyard`. **CPU** always steals when it has a free zone;
+  the human gets `PROMPT_CONFIRM_CARD_EFFECT`.
+- In `new_cards.txt` (demo) and `config/new_cards.txt`. Checked in source; not tested in an emulator.
+
 ### Ally of Justice Catastor (2026-11-07)
 - Synchro Monster (Level 5 DARK Machine): "1 Tuner + 1 or more non-Tuner monsters. At the start of the Damage Step,
   if this card battles a face-up non-DARK monster: Destroy that monster." No `gAddedCardEffects` row (continuous battle

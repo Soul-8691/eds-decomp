@@ -118,6 +118,12 @@ struct ModDuelState {
     u8 vampireLordPending[2];   /* Vampire Lord: per owner, copies to Special Summon in their next Standby Phase */
     u8 handLimitDiscard;        /* the End Phase's hand-size discard is under way (ModPostHandLimitDiscard) */
     u8 sillvaByOpponent;        /* Sillva, Warlord of Dark World: bit player, its last discard was by the opponent */
+    u8 goyoStep;                /* Goyo Guardian: 0 idle, 1 waiting for PROMPT_CONFIRM_CARD_EFFECT */
+    u8 goyoSurvivor;            /* the player who controls Goyo Guardian */
+    u8 goyoDestroyPlayer;       /* the player whose monster would go to the Graveyard */
+    u8 goyoDestroyZone;         /* monster zone of the destroyed card */
+    u8 goyoSkipDestroyPlayer;  /* 0xFF none; else skip SendBattleDestroyedCardToGraveyard for this player */
+    struct DuelCard goyoCard;   /* copy of the destroyed monster's card word */
 };
 extern struct ModDuelState gModDuel;
 /* gModDuel (0x0202FF04, symbols.ld) must end before gScratchBuffer (0x02030000). */
@@ -1654,6 +1660,8 @@ void ModDuelInit(void)
     gModDuel.limiterRemovalTurn = 0;
     gModDuel.aiPriorityDrawDone = 0;
     gModDuel.handLimitDiscard = 0;
+    gModDuel.goyoStep = 0;
+    gModDuel.goyoSkipDestroyPlayer = 0xFF;
     MemClear16(gModDuelExtra.type, sizeof(gModDuelExtra.type));
     MemClear16(gModDuelExtra.attr, sizeof(gModDuelExtra.attr));
     gModDuelExtra.picks[0] = gModDuelExtra.picks[1] = 0;
@@ -12486,6 +12494,87 @@ int AiCatastorDestroysNonDark(int attackerZone, int targetZone)
     return CatastorFaceUpNonDarkMonster(target);
 }
 #endif /* HAS_CARD_ALLY_OF_JUSTICE_CATASTOR */
+
+#ifdef HAS_CARD_GOYO_GUARDIAN
+/* ---- Goyo Guardian -----------------------------------------------------------------------------------------
+ * Pre-errata: "1 Tuner + 1 or more non-Tuner monsters. When this card destroys an opponent's monster by battle and
+ * sends it to the Graveyard, you can Special Summon that monster to your side of the field in face-up Defense
+ * Position." (Synchro: pre-errata any Tuner — SYNCHRO_TUNER_OVERRIDES in tools/newcards.py.)
+ *   BattleStage_DestroyMonsters (battle_phase2.c) calls ModGoyoBattlePending, then ModGoyoBeforeGraveSend before each
+ *   SendBattleDestroyedCardToGraveyard. The CPU uses it whenever a free zone exists; the human is asked with
+ *   PROMPT_CONFIRM_CARD_EFFECT. On Yes the battled monster is QueueSpecialSummoned (face-up Defense) instead of
+ *   going to the Graveyard. */
+
+#define GOYO_STEP_IDLE 0
+#define GOYO_STEP_ASKED 1
+#define GOYO_STEP_DECLINED 2       /* the human said No; send the monster to the Graveyard */
+
+const u8 gStrGoyoGuardianPrompt[] =
+    "Special Summon the destroyed monster to your field in face-up Defense Position?";
+
+static void GoyoSpecialSummonStolen(int survivor, int destroyedPlayer, int destroyedZone, struct DuelCard *card)
+{
+    ShowCardEffect(survivor, gCardNumberToId[CARD_GOYO_GUARDIAN]);
+    if (FindFreeMonsterZone(survivor) < 0)
+        return;
+    DestroyLinkedCards(destroyedPlayer, destroyedZone, 1);
+    QueueSpecialSummon(survivor, card, 1, 1, 0);
+}
+
+/* Returns 1 while the human's Goyo prompt is open (BattleStage_DestroyMonsters waits). */
+int ModGoyoBattlePending(void)
+{
+    if (gModDuel.goyoStep != GOYO_STEP_ASKED)
+        return 0;
+    if (gDuel.promptActive)
+        return 1;
+    if (gDuel.promptResult && FindFreeMonsterZone(gModDuel.goyoSurvivor) >= 0) {
+        GoyoSpecialSummonStolen(gModDuel.goyoSurvivor, gModDuel.goyoDestroyPlayer, gModDuel.goyoDestroyZone,
+                                &gModDuel.goyoCard);
+        gModDuel.goyoSkipDestroyPlayer = gModDuel.goyoDestroyPlayer;
+        gModDuel.goyoStep = GOYO_STEP_IDLE;
+    } else
+        gModDuel.goyoStep = GOYO_STEP_DECLINED;
+    return 0;
+}
+
+/* survivor: the player with Goyo; destroyedPlayer/zone: the opponent's monster. Returns 0 send to GY as usual,
+ * 1 skip SendBattleDestroyedCardToGraveyard, 2 pause the destroy step (prompt posted). */
+int ModGoyoBeforeGraveSend(int survivor, int destroyedPlayer, int destroyedZone, u16 *cardWords)
+{
+    struct DuelCard *card = (struct DuelCard *)cardWords;
+
+    if (gModDuel.goyoSkipDestroyPlayer == (u8)destroyedPlayer) {
+        gModDuel.goyoSkipDestroyPlayer = 0xFF;
+        return 1;
+    }
+    if (gModDuel.goyoStep == GOYO_STEP_DECLINED)
+        return 0;
+    if (gModDuel.goyoStep != GOYO_STEP_IDLE)
+        return 2;
+    if (CardNumberOfId(gBattle.side[survivor].cardId) != CARD_GOYO_GUARDIAN)
+        return 0;
+    if (gBattle.side[survivor].destroyed || !gBattle.side[destroyedPlayer].destroyed)
+        return 0;
+    if (IsBattleEffectBlockedFor(survivor))
+        return 0;
+    if (FindFreeMonsterZone(survivor) < 0)
+        return 0;
+    if (survivor) {
+        GoyoSpecialSummonStolen(survivor, destroyedPlayer, destroyedZone, card);
+        return 1;
+    }
+    if (gDuelCtrl.isLinkDuel)
+        return 0;
+    gModDuel.goyoSurvivor = survivor;
+    gModDuel.goyoDestroyPlayer = destroyedPlayer;
+    gModDuel.goyoDestroyZone = destroyedZone;
+    gModDuel.goyoCard = *card;
+    gModDuel.goyoStep = GOYO_STEP_ASKED;
+    DuelPrompt_Post(0, PROMPT_CONFIRM_CARD_EFFECT, CARD_GOYO_GUARDIAN, 0);
+    return 2;
+}
+#endif /* HAS_CARD_GOYO_GUARDIAN */
 
 #ifdef HAS_CARD_HYDROGEDDON
 /* ---- Hydrogeddon --------------------------------------------------------------------------------------------------
