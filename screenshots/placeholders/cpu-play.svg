@@ -1,9 +1,9 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 160" width="480" height="320" role="img" aria-label="Placeholder: The CPU at work">
   <rect width="240" height="160" fill="#1b2433"/>
   <rect x="5" y="5" width="230" height="150" rx="3" fill="none" stroke="#6f86a8" stroke-width="1" stroke-dasharray="4 3"/>
-  <text x="120" y="30" text-anchor="middle" font-family="Verdana, sans-serif" font-size="8" letter-spacing="1.5" fill="#f2c14e">SCREENSHOT NEEDED</text>
+  <text x="120" y="30" text-anchor="middle" font-family="Verdana, sans-serif" font-size="8" letter-spacing="1.5" fill="#f2c14e">VIDEO NEEDED</text>
   <text x="120" y="72" text-anchor="middle" font-family="Verdana, sans-serif" font-size="15" font-weight="bold" fill="#ffffff">The CPU at work</text>
-  <text x="120" y="98" text-anchor="middle" font-family="Verdana, sans-serif" font-size="8.5" fill="#c9d4e5">A clever play mid-chain, e.g. Trap Hole</text>
-  <text x="120" y="111" text-anchor="middle" font-family="Verdana, sans-serif" font-size="8.5" fill="#c9d4e5">chained to your Mobius summon effect</text>
-  <text x="120" y="142" text-anchor="middle" font-family="Verdana, sans-serif" font-size="7" fill="#8a9bb5">240 x 160 PNG: replaces cpu-play.svg</text>
+  <text x="120" y="98" text-anchor="middle" font-family="Verdana, sans-serif" font-size="8.5" fill="#c9d4e5">A well-timed Trap, a chain, or</text>
+  <text x="120" y="111" text-anchor="middle" font-family="Verdana, sans-serif" font-size="8.5" fill="#c9d4e5">a combo from a format deck</text>
+  <text x="120" y="142" text-anchor="middle" font-family="Verdana, sans-serif" font-size="7" fill="#8a9bb5">MP4 video: replaces cpu-play.svg</text>
 </svg>
