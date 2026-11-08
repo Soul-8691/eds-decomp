@@ -145,6 +145,11 @@ Choose the banlist your deck is built under from the main menu. Cards your curre
 the trunk. Before switching, the game checks that your cards can still make a Main Deck of at least 40 cards under the
 new banlist, counting its limits and card pool. If they can't, the switch is refused.
 
+### Deck Edit
+
+- **Empty Main/Side.** In Deck Edit, the bottom command that vanilla calls **Exit** is **Empty Main/Side**: every card in
+  your Main Deck, Side Deck and Fusion Deck goes back to the trunk, and you stay in Deck Edit.
+
 ## Cards, packs and DP
 
 <table>
@@ -257,6 +262,8 @@ See Mobius's README for chart semantics and options.
   | **ALWAYS** | Always fast-forward |
   | **SUPER** | Always fast-forward, with doubled skip amounts |
 
+- **Hold R.** While you hold **R**, the duel does not ask you to respond to chains or other Yes/No prompts (the text box
+  does not open; effects are declined as if you had answered No). **B** still fast-forwards, as in the table above.
 - **Still backgrounds.** The field background, the title screen's background and the pack pull screen's patterned
   background (Campaign packs too) no longer scroll.
 - **Menu order.** In the hand/field card menu, **Summon** comes before **Set**, **Activate** comes before **Set** for
