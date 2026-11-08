@@ -59,6 +59,7 @@
 #include "sound.h"
 #include "card_data.h"
 #include "constants/sound.h"
+#include "mod_mulligan.h"
 
 /* src/mod_decks.c */
 int GetRecipePreset(int n, const char **name, const u16 **cards, u32 *count, const u16 **side, u32 *sideCount);
@@ -667,6 +668,8 @@ void DeckRecipes_OnNewGame(void)
 static const char sStrEmpty[] = "(empty)";
 static const char sStrCustom[] = "Custom deck";
 static const char sStrHelp1[] = "A: options   B: back   L/R: page";
+static const char sStrMulliganSelect[] = "SELECT: sample opening hand";
+static const char sStrMulliganStart[] = "START: sample opening hand";
 static const char sStrHelp2[] = "*: the recipe last loaded or saved";
 static const char sStrMenuHelp[] = "LEFT/RIGHT: choose   A: OK   B: cancel";
 static const char sStrNameHelp1[] = "A: type   B: delete";
@@ -863,6 +866,8 @@ static void RenderList(void)
         p = AppendNum(AppendStr(line, sStrPlayerPrompt), ModRecipeBuildCopies(gMain.opponent, &limit), 1);
         AppendStr(p, sStrOpponentPromptEnd);
         DrawLine(ROWS_VISIBLE * ROW_HEIGHT + 10, COLOR_CURSOR, line);
+        if (ModMulliganAllowedOnDeckSelect())
+            DrawLine(ROWS_VISIBLE * ROW_HEIGHT + 20, COLOR_HELP, sStrMulliganStart);
     } else if (s->opponentPick && (s->pickPlayer || s->opponentBuilding)) {
         DrawLine(ROWS_VISIBLE * ROW_HEIGHT, COLOR_HELP, sStrBuildHelp);
         p = AppendStr(line, s->pickPlayer ? sStrYour : OpponentName());
@@ -870,6 +875,8 @@ static void RenderList(void)
         p = AppendNum(AppendStr(p, " S"), gSaveData.sideDeckSize, 1);
         AppendStr(AppendNum(AppendStr(p, " F"), gSaveData.fusionDeckSize, 1), sStrBuildDiscard);
         DrawLine(ROWS_VISIBLE * ROW_HEIGHT + 10, COLOR_CURSOR, line);
+        if (ModMulliganAllowedOnDeckSelect())
+            DrawLine(ROWS_VISIBLE * ROW_HEIGHT + 20, COLOR_HELP, sStrMulliganStart);
     } else if (s->opponentPick) {
         int limit;
 
@@ -878,13 +885,18 @@ static void RenderList(void)
         p = AppendNum(AppendStr(line, sStrOpponentPrompt), ModRecipeBuildCopies(gMain.opponent, &limit), 1);
         AppendStr(p, sStrOpponentPromptEnd);
         DrawLine(ROWS_VISIBLE * ROW_HEIGHT + 10, COLOR_CURSOR, line);
+        if (ModMulliganAllowedOnDeckSelect())
+            DrawLine(ROWS_VISIBLE * ROW_HEIGHT + 20, COLOR_HELP, sStrMulliganStart);
     } else if (s->challenger) {
         DrawLine(ROWS_VISIBLE * ROW_HEIGHT, COLOR_HELP, sStrChallengerHelp);
         AppendStr(AppendStr(line, sStrChallengerFormat), BanlistName(s->format));
         DrawLine(ROWS_VISIBLE * ROW_HEIGHT + 10, COLOR_CURSOR, line);
     } else {
         DrawLine(ROWS_VISIBLE * ROW_HEIGHT, COLOR_HELP, sStrHelp1);     /* right under the list */
-        DrawLine(ROWS_VISIBLE * ROW_HEIGHT + 10, COLOR_HELP, sStrHelp2);
+        if (ModMulliganAllowedOnDeckSelect())
+            DrawLine(ROWS_VISIBLE * ROW_HEIGHT + 10, COLOR_HELP, sStrMulliganSelect);
+        else
+            DrawLine(ROWS_VISIBLE * ROW_HEIGHT + 10, COLOR_HELP, sStrHelp2);
     }
     DrawLine(ROWS_VISIBLE * ROW_HEIGHT + 23, COLOR_STATUS, s->status);
 }
@@ -1275,12 +1287,51 @@ static void FinishOpponentPick(void)
     s->picked = 1;
 }
 
+/* Preview five cards from the highlighted recipe or the deck being built (SELECT or START when SELECT is taken). */
+static int TryDeckMulligan(struct DeckRecipes *s, u16 keys)
+{
+    u16 mulliganKey;
+
+    if (!ModMulliganAllowedOnDeckSelect() || s->mode != MODE_LIST)
+        return 0;
+    if (s->challenger)
+        mulliganKey = START_BUTTON;
+    else if (s->opponentPick)
+        mulliganKey = START_BUTTON;
+    else
+        mulliganKey = SELECT_BUTTON;
+    if (!(keys & mulliganKey))
+        return 0;
+    if (s->opponentPick && (s->pickPlayer || s->opponentBuilding)) {
+        if (gSaveData.deckSize == 0)
+            return 0;
+        ModMulliganDeckSelectRoll(gSaveData.deck, gSaveData.deckSize);
+        AppendStr(s->status, (const char *)ModMulliganDeckSelectStatus());
+        PlaySE(SE_CONFIRM);
+        return 1;
+    }
+    if (!s->sizes[s->cursor][3] || s->sizes[s->cursor][0] == 0)
+        return 0;
+    ReadSlot(s->cursor);
+    if (s->buf.deckSize == 0)
+        return 0;
+    ModMulliganDeckSelectRoll(s->buf.deck, s->buf.deckSize);
+    AppendStr(s->status, (const char *)ModMulliganDeckSelectStatus());
+    PlaySE(SE_CONFIRM);
+    return 1;
+}
+
 /* Returns 1 when the player leaves. */
 static int HandleInput(void)
 {
     struct DeckRecipes *s = &gDeckRecipes;
     u16 keys = gMain.newKeys;
     int n = s->cursor;
+
+    if (TryDeckMulligan(s, keys)) {
+        Render();
+        return 0;
+    }
 
     if (s->mode == MODE_NAME) {
         HandleNameEntry();
@@ -1477,6 +1528,7 @@ static u16 RunScene(int format)
             CopyDoubleWords((void *)OBJ_PLTT, gMainMenuObjPal, 0x20);
             LoadBgImage(0, 0, 0x20, gMainMenuSkyImage);
             DeckRecipes_BuildLabel((u16 *)OBJ_TILE(TITLE_TILE));
+            ModMulliganWorkClear();
             MemClear16(s, DECK_RECIPES_KEPT - sizeof(s->buf));
             s->opponentPick = format == RECIPES_PICK_OPPONENT;
             if (format >= 0) {

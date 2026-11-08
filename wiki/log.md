@@ -2854,3 +2854,24 @@ updated: 2026-09-29
 ## [2026-11-08] progress | Goyo Guardian
 - Demo/full lists; pre-errata battle steal (face-up Defense, optional prompt); `ModGoyoBeforeGraveSend` /
   `ModGoyoBattlePending`, `battle_phase2.c`. [[added-cards]].
+
+## [2026-11-08] progress | Mulligan (debug deck select and Debug duelist)
+- src/mod_mulligan.c: unlimited shuffle-and-redraw-5 in duels (testing builds and vs Debug) and deck-select previews.
+- duel_setup.c `DuelPhase_Opening`; booster_get_pack.c starter SELECT; mod_recipes.c SELECT/START; mod_decks.c
+  `ModStarterDeckForMulligan`. README.md.
+- Fix: state in `gModMulligan` (0x0202D800), not `.bss` at `gTextCanvas`; `@rodata mod_mulligan` with other mod units
+  (its strings had been linked at 0x08080A20 and shifted pinned rodata).
+
+## [2026-11-08] progress | Mulligan command with its own icon, separate from Draw
+- New card menu command CARDMENU_CMD_MULLIGAN (13, mask 0x2000; include/constants/duel.h): the Deck's menu
+  offers it (not Draw) while the opening mulligan is active (ModCardMenuDeckCommands); CardMenu_Execute runs
+  ModMulliganFromDeckMenu for it, and Draw is the Draw Phase's again (duel_cmd_queue.c).
+- Icon and label: tools/mulligan_menu_gfx.py draws them on the menu sheets' blank slot 13 (orange frame, a card
+  back in a circular arrow; "Mulligan" in the labels' white-with-shadow style), data/mod_mulligan_data.s;
+  LoadDuelUiGfx calls ModLoadMulliganMenuGfx after loading the sheets. README.md.
+
+## [2026-11-08] progress | Mulligan next to Draw, no START wait
+- DuelPhase_Opening back to the original (no wait for START after the deal; the openingActive flag and
+  ModOpeningMulliganRun removed). ModMulliganAvailable: allowed in the duel, turnCount <= 1 and the human's
+  turn; the Deck's menu offers Mulligan next to Draw in that Draw Phase (ModCardMenuDeckCommands), so drawing
+  ends it. src/mod_mulligan.c, src/mod_opponents.c, src/duel_setup.c, README.md.

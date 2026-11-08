@@ -179,6 +179,7 @@ enum CardMenuCommand {
     CARDMENU_CMD_FUSION = 10,
     CARDMENU_CMD_SP_SUMMON = 11,
     CARDMENU_CMD_SP_SUMMON_SET = 12,
+    CARDMENU_CMD_MULLIGAN = 13,         /* mod: the Deck's menu at the duel's opening (src/mod_mulligan.c) */
 };
 
 /* u16 command masks (bit i = 1 << CARDMENU_CMD_i) returned by CardMenu_GetAvailableCommands and the
@@ -197,6 +198,7 @@ enum CardMenuCommandMask {
     CARDMENU_MASK_FUSION = 0x0400,
     CARDMENU_MASK_SP_SUMMON = 0x0800,
     CARDMENU_MASK_SP_SUMMON_SET = 0x1000,
+    CARDMENU_MASK_MULLIGAN = 0x2000,
 };
 
 /* Chain entry kind: bits 21-24 of a Chain_AddPending word (ChainEntry.kind), as pushed by

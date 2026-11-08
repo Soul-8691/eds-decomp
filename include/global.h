@@ -102,11 +102,11 @@ int ModTestDuel(void);
  * (own deck menu or opponent deck with Card View only) in draw/stack order (deck[0] = next draw). */
 int ModDeckListVisible(void);
 /* Field card command menu: Card View last in the icon row (campaign.c hooks). */
-#define MOD_CARDMENU_CMD_COUNT 13
+#define MOD_CARDMENU_CMD_COUNT 14
 extern const u8 ModCardMenuCmdOrder[MOD_CARDMENU_CMD_COUNT];
 int ModCardMenuFirstCommand(u16 available);
 int ModCardMenuCycleCommand(u8 command, int dir, u16 available);
-/* Main-deck command menu: Draw before Card View (campaign.c hooks). */
+/* Main-deck command menu: Mulligan, Draw, Surrender, then Card View (campaign.c hooks). */
 int ModCardMenuDeckFirstCommand(u16 available);
 int ModCardMenuDeckCycleCommand(u8 command, int dir, u16 available);
 void ModCardMenuDeckDrawIcons(int x, int y, u16 available, u8 command, u8 timer);

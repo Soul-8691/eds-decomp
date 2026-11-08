@@ -729,6 +729,7 @@ void DuelScreen_LoadFieldBackground(u16 background)
  * DuelScreen.uiGfxLoaded. The palette numbers are the ones the sprites' attr2 values select.
  */
 void ModLoadCardSpriteGfx(void);
+void ModLoadMulliganMenuGfx(void);
 
 void LoadDuelUiGfx(void)
 {
@@ -752,6 +753,7 @@ void LoadDuelUiGfx(void)
     CopyDoubleWords((void *)OBJ_TILE_ADDR(OBJ_TILE_YES_LABEL), gYesNoLabelsGfx, TILES(16));
     CopyDoubleWords((void *)OBJ_TILE_ADDR(OBJ_TILE_UI_ICONS), gDuelUiIconsGfx, TILES(8));
     CopyDoubleWords((void *)OBJ_TILE_ADDR(OBJ_TILE_WAIT_SPRITES), gLinkWaitIndicatorGfx, TILES(64));
+    ModLoadMulliganMenuGfx();   /* added: the Mulligan command's icon and label in the sheets' slot 13 */
     gDuelScreen.uiGfxLoaded = 1;
 }
 

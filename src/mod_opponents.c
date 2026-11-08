@@ -42,6 +42,7 @@
 #include "duel_screen.h"
 #include "save.h"
 #include "campaign.h"
+#include "mod_mulligan.h"
 #include "constants/cards.h"
 #include "constants/game.h"
 #include "test_deck.h"          /* MOD_TEST_DECK, TEST_DECK_PORTRAIT (tools/testdeck.py) */
@@ -565,8 +566,9 @@ u16 ModCardMenuDeckCommands(int phase, int deckPlayer)
 {
     if (deckPlayer != 0 && ModDeckListVisible())
         return CARDMENU_MASK_CARD_VIEW;
-    if (phase == PHASE_DRAW)
-        return CARDMENU_MASK_DRAW | (ModDeckListVisible() ? CARDMENU_MASK_CARD_VIEW : 0);
+    if (phase == PHASE_DRAW)            /* your first Draw Phase: Mulligan as well (src/mod_mulligan.c) */
+        return CARDMENU_MASK_DRAW | (deckPlayer == 0 && ModMulliganAvailable() ? CARDMENU_MASK_MULLIGAN : 0)
+               | (ModDeckListVisible() ? CARDMENU_MASK_CARD_VIEW : 0);
     return CARDMENU_MASK_SURRENDER | (ModDeckListVisible() ? CARDMENU_MASK_CARD_VIEW : 0);
 }
 
@@ -592,6 +594,7 @@ const u8 ModCardMenuCmdOrder[MOD_CARDMENU_CMD_COUNT] = {
     CARDMENU_CMD_FUSION,
     CARDMENU_CMD_SP_SUMMON,
     CARDMENU_CMD_SP_SUMMON_SET,
+    CARDMENU_CMD_MULLIGAN,
     CARDMENU_CMD_CARD_VIEW,
 };
 
@@ -629,8 +632,9 @@ int ModCardMenuCycleCommand(u8 command, int dir, u16 available)
     return command;
 }
 
-#define DECK_MENU_CMD_ORDER_COUNT 3
+#define DECK_MENU_CMD_ORDER_COUNT 4
 static const u8 sDeckMenuCmdOrder[DECK_MENU_CMD_ORDER_COUNT] = {
+    CARDMENU_CMD_MULLIGAN,
     CARDMENU_CMD_DRAW,
     CARDMENU_CMD_SURRENDER,
     CARDMENU_CMD_CARD_VIEW,

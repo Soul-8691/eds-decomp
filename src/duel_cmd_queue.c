@@ -36,6 +36,7 @@ void ModQuillboltMenuRun(void);         /* mod: src/added_effects.c */
 #include "text_box.h"               /* gTextBox, TextBoxOpen, TextBoxSetMenu */
 #include "ai.h"                     /* gAiState, AiRunTurn */
 #include "palette.h"                /* FadeFromBlack */
+#include "mod_mulligan.h"
 
 /* ---- ROM data used only here ---- */
 
@@ -288,6 +289,9 @@ void CardMenu_Execute(void)
         gBattle.atkSlot = gDuelMenuView.cardMenu.index;
         gDuel.battleStep = 2;
         break;
+    case CARDMENU_CMD_MULLIGAN:         /* mod: the Deck's menu at the opening */
+        ModMulliganFromDeckMenu();
+        return;
     case CARDMENU_CMD_DRAW:
         gDuel.phaseStep++;
         MENU.confirmed = 0;

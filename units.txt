@@ -148,6 +148,8 @@ mod_info_bar
 @farcode mod_info_bar
 mod_list_filter
 @farcode mod_list_filter
+mod_mulligan
+@farcode mod_mulligan
 mod_deck_edit
 @farcode mod_deck_edit
 mod_synchro
@@ -161,6 +163,7 @@ mod_link
 mod_preduel
 @farcode mod_preduel
 mod_deck_edit_data
+mod_mulligan_data
 mod_field_icons_data
 mod_preduel_data
 mod_record_names
@@ -182,6 +185,7 @@ mod_title_data
 @rodata.added mod_record_faces
 @rodata.added mod_title_data
 @rodata.added mod_deck_edit_data
+@rodata.added mod_mulligan_data
 @libs
 veneer
 rodata_08080A20
@@ -202,6 +206,7 @@ rodata_08087FD0
 @rodata mod_field_icons
 @rodata mod_info_bar
 @rodata mod_list_filter
+@rodata mod_mulligan
 @rodata mod_deck_edit
 @rodata mod_synchro
 @rodata mod_xyz

@@ -275,6 +275,12 @@ build/assets/mod_deck_edit_empty_label.bin: tools/mod_deck_edit_label.py $(ASSET
 	$(PYTHON) tools/mod_deck_edit_label.py
 build/data/mod_deck_edit_data.o: build/assets/mod_deck_edit_empty_label.bin
 
+# The card command menu's Mulligan icon and label (tools/mulligan_menu_gfx.py).
+build/assets/mulligan_menu_gfx.bin: tools/mulligan_menu_gfx.py $(ASSETS_BUILT)
+	@mkdir -p $(@D)
+	$(PYTHON) tools/mulligan_menu_gfx.py
+build/data/mod_mulligan_data.o: build/assets/mulligan_menu_gfx.bin
+
 # The original duelists' opponent-select portraits as tiled images of their own (tools/duelist_portraits.py;
 # src/mod_opponents.c DrawSlotPortrait), cut from the page pictures of assets/gfx/mode4_bitmaps.
 build/assets/duelist_portraits.bin: tools/duelist_portraits.py tools/assets.py $(ASSETS_BUILT)

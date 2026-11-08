@@ -4013,6 +4013,40 @@ void GiveStartingTrunk(void)
 }
 
 
+/* Main Deck card IDs for mulligan previews (starter deck screen, mod_mulligan.c); 0 if empty or unknown. */
+int ModStarterDeckForMulligan(int choice, u16 *out, int max)
+{
+    const struct DeckList *list = NULL;
+    u32 i;
+
+#if !MOD_RELEASE
+    if (choice == STARTER_DECK_RED)
+        return 0;
+#endif
+    switch (choice) {
+#ifdef MOD_YUGI_KAIBA_SOUL_CONTROL
+    case STARTER_DECK_RED:
+        list = &sYugiKaibaSoulControlList;
+        break;
+#endif
+#ifdef MOD_YUGI_KAIBA_VANILLA_BEAT
+    case STARTER_DECK_GREEN:
+        list = &sYugiKaibaVanillaBeatList;
+        break;
+#endif
+#ifdef MOD_YUGI_KAIBA_STALL_MILL
+    case STARTER_DECK_BLACK:
+        list = &sYugiKaibaStallMillList;
+        break;
+#endif
+    }
+    if (list == NULL || (int)list->count > max)
+        return 0;
+    for (i = 0; i < list->count; i++)
+        out[i] = gCardNumberToId[list->cards[i] & CARD_ID_MASK];
+    return list->count;
+}
+
 /* Build the saved Deck (and Fusion Deck) of starter deck `choice` (enum StarterDeck) when this build replaces it:
  * the three Yugi-Kaiba decks (Tristan's): Red is El Duelista DEX-Soul Control, Green ellietincan-Vanilla Beat, Black
  * DK-ZERO-Stall Mill. A Fusion Monster goes to the saved Fusion Deck, and the .ydk's Side Deck to the saved one. Returns 1 then, 0 to let BuildStarterDeck build the original. */
