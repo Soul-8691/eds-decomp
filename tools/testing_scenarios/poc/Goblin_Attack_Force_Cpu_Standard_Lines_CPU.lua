@@ -29,8 +29,9 @@ local opts = {
     scenarioText = "Campaign **Imperial** duel (or Test Duel with the format opponent deck): give the **opponent** `Goblin Attack Force` in the main/extra deck at a realistic copy count from `usage/` decks. CPU should Normal Summon/set and attack with **Goblin Attack Force** using ordinary lines; verify mandatory / passive text from **Coded behavior** without expecting a card-menu activation.",
     setupCards = poc and poc.setupCards,
     play = poc and poc.play,
-    pocRequired = true,
+    pocRequired = false,
 }
 opts.recordFrames = 3600
 opts.play = nil
+opts.freezeOpponent = false
 EDS.run(opts)

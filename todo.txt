@@ -28,3 +28,4 @@ Hold down L in debug mode/duel to freeze opponent
 Always choose after rock/paper/scissors in debug mode/duel
 Always go second in testing Lua scripts until bug is fixed
 No face-down attack position cards in testing
+CPU vs CPU (player)

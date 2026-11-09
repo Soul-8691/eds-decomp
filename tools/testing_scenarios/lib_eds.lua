@@ -2335,7 +2335,7 @@ function EDS.run(opts)
     local timeout = opts.maxFrames or EDS.TIMEOUT_FRAMES
     local basename = EDS.recordingBasename(opts.card or "Card", opts.effect or "effect", actor)
     EDS.appendRunLog("START " .. basename)
-    if opts.pocRequired and (not opts.setupCards or not opts.play) then
+    if opts.pocRequired and actor ~= "CPU" and (not opts.setupCards or not opts.play) then
         EDS.appendRunLog("FAIL " .. basename .. " missing_poc_table")
         EDS.log("ERROR: POC table not found for " .. basename)
         return

@@ -29,8 +29,9 @@ local opts = {
     scenarioText = "Campaign **Android** duel (or Test Duel with the format opponent deck): give the **opponent** `Torrential Tribute` in the main/extra deck at a realistic copy count from `usage/` decks. Let the CPU play the duel: it should activate/set/chain **Torrential Tribute** when its `AiWants*` / `AiShouldActivateAddedCard` policy says so (see **AI coverage**). Repeat until you see at least one successful CPU use or confirm the policy never fires on this board.",
     setupCards = poc and poc.setupCards,
     play = poc and poc.play,
-    pocRequired = true,
+    pocRequired = false,
 }
 opts.recordFrames = 3600
 opts.play = nil
+opts.freezeOpponent = false
 EDS.run(opts)

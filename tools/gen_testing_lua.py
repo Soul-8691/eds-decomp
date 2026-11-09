@@ -228,12 +228,13 @@ def fix_poc_lua_body(entry: dict) -> str:
         f'    scenarioText = "{text_esc}",',
         "    setupCards = poc and poc.setupCards,",
         "    play = poc and poc.play,",
-        "    pocRequired = true,",
+        f"    pocRequired = {'true' if entry['actor'] != 'CPU' and poc_key_has_play(entry) else 'false'},",
         "}",
     ]
     if entry['actor'] == 'CPU':
         lines.append("opts.recordFrames = 3600")
         lines.append("opts.play = nil")
+        lines.append("opts.freezeOpponent = false")
     elif not poc_key_has_play(entry):
         lines.append("opts.play = { { wait = 120 }, { key = EDS.KEY_START, gap = 30 } }")
     lines.append("EDS.run(opts)")
