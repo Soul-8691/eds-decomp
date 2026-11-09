@@ -4,13 +4,14 @@ type: tool
 status: draft
 confidence: medium
 sources: [rom-analysis]
-updated: 2026-11-07
+updated: 2026-11-09
 ---
 # Hex Maniac Advance metadata for the demo
 
-`tools/hma_toml.py` writes `eds_demo.toml` next to `eds_demo.gba` on every `make demo` (not `make release-demo`),
-from `baserom.toml`, the [Hex Maniac Advance](https://github.com/haven1433/HexManiacAdvance) metadata of the
-original ROM (repo root). Without `baserom.toml` it does nothing. `eds_demo.toml` is git-ignored.
+`tools/hma_toml.py` writes a companion `.toml` next to each **demo-profile** ROM the Makefile links
+(`eds_demo.toml`, `eds_release_demo.toml`, or `eds_release_demo_extra.toml`; see below), from `baserom.toml`,
+the [Hex Maniac Advance](https://github.com/haven1433/HexManiacAdvance) metadata of the original ROM (repo root).
+Without `baserom.toml` it does nothing. Those TOMLs are git-ignored.
 
 ## How each entry moves
 - **NamedAnchors.** The original address is placed in the source: a data label of `data/*.s` (`Name: @ 0x08xxxxxx`,
@@ -31,7 +32,21 @@ original ROM (repo root). Without `baserom.toml` it does nothing. `eds_demo.toml
     `make demo`'s blank slots, `CARD_ID_LAST_REAL`). Functions rewritten without the constant (Deck Edit's and Card Trading's list
     builders now walk `gCardIdsByName`) are left out and listed in a comment at the top of the file.
   - Constants in data (the pack rarity weights) move like anchors.
+- **MatchedWords the mod adds** (appended after baserom.toml's; listed in `ADDED_WORDS_GUIDE` at the top of the TOML):
+  - `data.constants.title.flamewave` (Length 1, `gModTitleFlameWave`): `1` runs the original flame wave on the title
+    fade-in, `0` keeps the flames still.
+  - `data.constants.title.flamepriority` (Length 1, `gModTitleFlamePriority`): BG1 layer priority for the flame sheet
+    (`0`–`3`; default `1` in front of the coin and copyright).
+  - `data.constants.preduel.qrsquare` (Length 1, `gModPreDuelQrSquare`): `1` draws the white square behind QR modules,
+    `0` leaves the decorated box only (modules in white).
+  - `data.constants.packs.format.usagewins` and `data.constants.formats.unlock.<format>` (documented below under pack
+    unlock wins).
 - **Added anchors** (`EXTRA_ANCHORS`, by symbol plus an offset, so they follow the `.sym` and the card count):
+  - `data.cards.names` (``[name`asc`64]cardnumbers``), `data.cards.descriptions`
+    (``[description`asc`480]cardnumbers``), and `data.cards.nameorder`
+    (``[card:cardnumbers]!0000``): every card's name and effect text in fixed ASCII slots (`gCardNames`,
+    `gCardDescriptions`), and the name-sorted ID list Deck Edit / the Trunk walk (`gCardIdsByName`; `make demo`'s blank
+    slots are omitted until they have a name). At most **41** characters fit a Deck Edit name row.
   - `graphics.cards.icons.palettes` (``[`ucp4`]cardnumbers``) and `graphics.cards.icons.images`
     (``[`ucs4x2x2|graphics.cards.icons.palettes`]cardnumbers``): every card's own art icon, the art Deck Edit's
     ring shows. `gModFieldIconData`'s `DATA_DECK_EDIT` block (`tools/cardicons.py`, `src/mod_field_icons.c`), at
@@ -64,18 +79,20 @@ original ROM (repo root). Without `baserom.toml` it does nothing. `eds_demo.toml
     `text.packs.format.pack<i>`), `.flags` (1 = usage pack), `.formats` (an index of the `formats` list),
     `.releasedates` (yyyymmdd), `.portraits` (the cover card).
   - Format pack covers (by the `.sym`): `graphics.packs.format.<pack>` (the pack's name in lower case, letters and
-    digits; a repeated name gets its index) is pack i's shop cover in `gFormatPackCovers` (i * 0x1880; made from
-    its `.portraits` card's art by `tools/format_pack_covers.py`): `` `ucs8x7x14|graphics.palettes.packs` ``, the
-    original covers' format. Their palette is `gPackListPal` (0x0863CC7C), baserom.toml's
-    `graphics.palettes.packs` (`` `ucp4:0123456789ABCDEF` ``, 256 colours); the guide now marks it used (it was
-    UNUSED with the original covers). An edited palette changes every cover, the original covers and the shop's
-    background.
+    digits; a repeated name gets its index) is pack i's shop cover in `gFormatPackCovers` (i × 0x1880; baked at
+    link time by `tools/format_pack_covers.py` from `data.packs.format.portraits`, same crop as the old runtime
+    blit): `` `ucs8x7x14|graphics.palettes.packs` ``, the vanilla cover tile format. Changing `.portraits` needs a
+    rebuild to refresh the cover blob; you can repaint a cover in HMA without rebuilding. Palette
+    `graphics.palettes.packs` / `gPackListPal` (0x0863CC7C, 256 colours) is **used** for format covers, the vanilla
+    cover gfx still in the ROM, and the shop background — an edit there retints all of them.
   - Card prices (`src/mod_dp.c`, `build/include/card_prices.h`): `data.prices.cards`
     (``[costs<[card:cardinternalnumbers price:]/count> count: unused:]formats``), the DP of a password per format;
     the new list `formats` holds the 15 formats in banlist order.
-  - Decks (`src/mod_decks.c`): for every `DeckList` built in, `data.decks.mod.<deck>` (``[cards<> count: unused:]1``)
-    (now `data.decks.mod.<deck>.list`) with its card array `data.decks.mod.<deck>.main` (main + Fusion Deck, card numbers) and `.side`; the format
-    opponents' decks, the duelist decks and the Test Duel deck. `data.decks.recipes`
+  - Decks (`src/mod_decks.c`): for every `DeckList` built in, `data.decks.mod.<deck>.list`
+    (``[cards<> count: unused:]1``) with `data.decks.mod.<deck>.main` (main + Fusion Deck;
+    ``[card:cardinternalnumbers|data.cards.passwords]…`` so HMA's **Import .ydk** on a card resolves passwords into
+    `.main` and updates `.list`; `.side` is fixed-size and only its slots are filled) and `.side`. Format opponents'
+    decks, duelist fallbacks, and the Test Duel deck. `data.decks.recipes`
     (``[name<> list<> side<> sidecount::]45``) is the debug menu's deck recipes (`GetRecipePreset`; empty in the
     release), pointing at those decks and at their names `text.decks.recipes.recipe<i>` (`` `asc` ``); its last
     row is the terminator.
@@ -93,7 +110,9 @@ original ROM (repo root). Without `baserom.toml` it does nothing. `eds_demo.toml
   - Title screen (by the `.sym`): `graphics.title.text` / `.flame` / `.coin` / `.copyright`, each `.image` and
     `.palette` (`gModTitleImages`, `tools/title_images.py`; [[title-screen]]: text `ucs4x30x20`, 4bpp, BG palette 8;
     flame `ucs8x30x20` with a 128-colour palette, BG entries 0-127), `text.title.version` / `.release` /
-    `.debug` (`` `asc`16 ``), and the corrected original grid anchor (`ANCHOR_FIXES`).
+    `.debug` (`` `asc`16 ``). One kept original anchor is rewritten: `graphics.titlescreen.background` uses
+    `ANCHOR_FIXES` (plain `` `ucs4x4x4|graphics.palettes.titlescreen.background` `` instead of an image pack HMA
+    could not parse).
   - Duel backgrounds (by the `.sym`): `data.duel.backgrounds` (``[background<>]fieldbackgrounds``) is
     `gFieldBackgroundImages` (original data at 0x08086550), the BG0 texture per field: the normal field, then the 14
     Field Spells in `GetFieldMagicIndex`'s order (new list `fieldbackgrounds`). Its 15 pointers lead to 9 image packs,
@@ -153,7 +172,7 @@ original ROM (repo root). Without `baserom.toml` it does nothing. `eds_demo.toml
     the original page's portrait, `0x8000 | page << 4 | slot` takes an original page's (Solomon: 0x8043). New lists:
     `opponents` (duelist IDs with this build's opponent, e.g. "tristan - Yugi-Kaiba"; baserom.toml's `duelists` is in
     another order) and `opponentkinds`. Checked: La Jinn for Yugi-Kaiba, Sangan for Critter, Fiber Jar for Fiber.
-  - Pack unlock wins (MatchedWords, after baserom.toml's): `data.constants.packs.format.usagewins` (Length 1) is
+  - Pack unlock wins (`MatchedWords`; see also title and pre-duel constants above): `data.constants.packs.format.usagewins` (Length 1) is
     `gModUsagePackWins[0]` (src/mod_format_packs.c, 10 = `FORMAT_PACK_USAGE_WINS` of tools/format_packs.py): the wins
     against a format that open its usage pack. It is a byte of data so it exists in every build (`ModIsFormatPackUnlocked`
     is `return 1` in make / make demo, and an immediate in the release). `data.constants.formats.unlock.<format>`
@@ -171,8 +190,10 @@ original ROM (repo root). Without `baserom.toml` it does nothing. `eds_demo.toml
     `build/include/mod_config.h`). From the code: unused are the original starter-deck pools (`BuildModStarterDeck`
     replaces all three), the title logo and its palette (`ModTitle_Load`), Yugi's deck (hidden duelist); mostly
     unused the original opponent decks (every format opponent has a mod deck; Solomon and Debug fall back to theirs
-    without a picked recipe); partly used the original boosters, their covers and rarity odds (not in the shop,
-    `ModPackList_AddUnlockedPacks` lists only format packs; still the Campaign event rewards, `gMain.rewardPack`)
+    without a picked recipe);     partly used the original boosters and rarity odds (not in the shop;
+    `ModPackList_AddUnlockedPacks` lists only format packs; still the Campaign event rewards, `gMain.rewardPack`);
+    `graphics.palettes.packs` and the vanilla `graphics.packs` cover blobs are partly used — the palette tints format
+    covers and the shop BG, the vanilla tiles stay in the ROM but no table points at them in the mod shop)
     (correction, 2026-11-06: the original pack-unlock wins are unused: `unlocks.10winseach`, `.20wins` and
     `.10winstotal` are in `IsPackUnlocked`, read only by the original pack list `PackList_AddUnlockedPacks`, which
     nothing calls; `unlocks.2wins1`-`5` are in `IsCampaignLevel2Unlocked`, "more than 1 win against each of duelists

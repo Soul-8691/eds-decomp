@@ -2892,3 +2892,7 @@ updated: 2026-09-29
 - tools/hma_toml.py: graphics.packs.format.<pack> (50 covers in gFormatPackCovers, `ucs8x7x14` on
   graphics.palettes.packs); that palette (gPackListPal) marked used in the guide.
 - Pages: [[hma-toml]].
+
+## [2026-11-09] query | HMA TOML wiki sync
+- [[hma-toml]]: demo-profile TOML outputs, EXTRA_ANCHORS card text, mod MatchedWords (title flame, pre-duel QR),
+  format-cover bake vs HMA edit, deck .ydk import, `ANCHOR_FIXES`, guide notes for `graphics.palettes.packs`.
