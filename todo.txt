@@ -23,9 +23,9 @@ Make the chain hold more than 3 targets
 Shift the size-limited area
 CFRU template C injection
 "Empty" duelist
-Testing scenarios - test by writing a Lua script for each scenario in TESTING.md for going against the most used duelist for that format (I left Test Duel without any cards right now, so start a match with Test Duel) in mGBA and populating the game state in RAM, then manually performing the actions necessary on the fastest speed settings (mGBA max turbo) while recording the interaction as "{card_name}_{effect_name}_{player|CPU}" using mGBA's MP4 recording ability; separate videos for each test ("C:\Program Files\mGBA\mGBA.exe" -6 -C audioSync=0 -C videoSync=0 -C fpsTarget=6000 -C scaleMultiplier=6 --script script.lua eds_demo.gba)
+Testing scenarios - test by writing a Lua script for each scenario in TESTING.md for going against the most used duelist for that format (start a match with Test Duel) in mGBA and populating the game state in RAM, then manually performing the actions necessary on the fastest speed settings (mGBA max turbo) while recording the interaction as "{card_name}_{effect_name}_{player|CPU}" using mGBA's MP4 recording ability; separate videos for each test ("C:\Program Files\mGBA\mGBA.exe" -6 -C audioSync=0 -C videoSync=0 -C fpsTarget=6000 -C scaleMultiplier=6 --script script.lua eds_demo.gba)
 Hold down L in debug mode/duel to freeze opponent
-Always choose after rock/paper/scissors in debug mode/duel
+Always win rock/paper/scissors in debug mode/duel
 Always go second in testing Lua scripts until bug is fixed
 No face-down attack position cards in testing
 CPU vs CPU (player)
