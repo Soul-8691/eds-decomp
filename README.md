@@ -383,8 +383,7 @@ See [NEW_CARDS.md](NEW_CARDS.md) for all of them.
 - **Engine leftovers.** The engine already contains several cards that never made it into EDS, such as Magic Cylinder,
   Soul Exchange, Fairy Box and Thousand-Eyes Restrict. Those reuse that existing code instead of being written from
   scratch. The full inventory (157 unused card numbers and what each handler does) is in
-  [LEFTOVER_EFFECTS.md](https://github.com/Soul-8691/eds-decomp/blob/binary/LEFTOVER_EFFECTS.md) on the
-  [`binary`](https://github.com/Soul-8691/eds-decomp/tree/binary) branch. Every build adds each leftover with working
+  [LEFTOVER_EFFECTS.md](LEFTOVER_EFFECTS.md). Every build adds each leftover with working
   effect code (`config/leftover_cards.txt`) at its own card number, with its YGOPRODeck stats, text and art, so the
   original code plays it untouched. The card lists hold only the other cards, apart from 17 leftovers the mod wrote
   effect code for at a free number, which stay there until the two are merged (`overlaps.txt`).
