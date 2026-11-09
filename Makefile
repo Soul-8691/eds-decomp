@@ -244,6 +244,15 @@ $(FORMAT_PACKS_GEN): tools/format_packs.py tools/banlist.py packs/formats.json $
 -include build/include/format_pack_data.d
 build/src/mod_format_packs.o: $(FORMAT_PACKS_GEN)
 
+FORMAT_PACK_COVERS := build/assets/format_pack_covers.bin
+$(FORMAT_PACK_COVERS): tools/format_pack_covers.py $(FORMAT_PACKS_GEN) \
+		build/assets/newcards__art_gfx.bin build/assets/newcards__art_palettes.bin \
+		build/assets/newcards__number_to_id.bin build/assets/gfx__bank_a.bin
+	@mkdir -p $(@D)
+	$(PYTHON) tools/format_pack_covers.py $@
+build/data/mod_format_pack_covers.o: $(FORMAT_PACK_COVERS)
+build/src/mod_format_packs.o: $(FORMAT_PACK_COVERS)
+
 # The field card icons' palette, frames and art miniatures (tools/cardicons.py --data), for
 # data/mod_field_icons_data.s.
 FIELD_ICONS := build/assets/field_icons.bin

@@ -4,7 +4,7 @@ type: game
 status: draft
 confidence: medium
 sources: [rom-analysis]
-updated: 2026-10-31
+updated: 2026-11-09
 ---
 # Booster Packs menu (mod)
 
@@ -28,8 +28,9 @@ on the game's own Get-a-pack screens. Checked in the source and the build; not t
   Metal Raiders with Critter, and so on). Usage packs need 10 wins in that format. The next format opponent
   needs 20 campaign wins. Event dates in `packs/formats.json` (`date`) are used at generation time for ordering
   and metadata (`sFormatEventDate[]`). Debug builds (`make`, not `make release`) show every
-  pack. Pack covers are rendered from card art at open
-  time (`ModFormatPackLoadCoverGfx`, uniform scale to fill 56×112). Then come the usual opening, the reveal and card
+  pack. Format-pack covers are pre-baked at build time (`tools/format_pack_covers.py`, `gFormatPackCovers`, the same
+  56×112 8bpp tiles as vanilla ROM covers); `ModFormatPackLoadCoverGfx` DMAs them like `PackList_LoadCoverGfx`. Then
+  come the usual opening, the reveal and card
   detail, and the cards go to the trunk.
 - **Added around the steps:**
   - **B on the list** (no slide running) fades out (`FadeToBlack(4)`, as `PackList_FadeOut`) and returns to the

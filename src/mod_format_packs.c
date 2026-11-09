@@ -1,12 +1,12 @@
 /*
  * TCG booster packs for the main-menu Booster Packs shop and the pack a Campaign win gives (tools/format_packs.py,
  * packs/*_tcg.json).
- * Rarity-weighted pulls; pack cover art is the pool's rarest card (tools/format_packs.py portrait pick).
+ * Rarity-weighted pulls; pack cover art is pre-baked at build time (tools/format_pack_covers.py).
  */
 
 #include "global.h"
 #include "gba.h"
-#include "card_data.h"              /* gCardNumberToId, CARD_ART_* */
+#include "card_data.h"
 #include "booster.h"
 #include "format_packs.h"
 #include "format_pack_data.h"
@@ -32,77 +32,10 @@ struct ModPackList {
 };
 extern struct ModPackList gModPackList;
 
-/* gPackListPal at 0x0863CC7C (256 BGR555 colours for pack covers). */
-extern const u16 gPackListPal[];
-
-#define PACK_COVER_W        56
-#define PACK_COVER_H        112
 #define PACK_COVER_TILES    98
 #define PACK_COVER_BYTES    (PACK_COVER_TILES * 64)
 
-static u32 ColorDist(u16 a, u16 b)
-{
-    int dr = (a & 31) - (b & 31);
-    int dg = (a >> 5 & 31) - (b >> 5 & 31);
-    int db = (a >> 10 & 31) - (b >> 10 & 31);
-
-    return dr * dr + dg * dg + db * db;
-}
-
-static u8 NearestPalIndex(u16 rgb)
-{
-    u32 best = 0xFFFFFFFF;
-    u8 bestI = 1;
-    u32 i;
-
-    for (i = 1; i < 256; i++) {
-        u32 d = ColorDist(rgb, gPackListPal[i]);
-        if (d < best) {
-            best = d;
-            bestI = i;
-        }
-    }
-    return bestI;
-}
-
-static u32 ArtPixel(u16 id, int x, int y)
-{
-    const u8 *src = (const u8 *)(CARD_ART_GFX_ADDR + id * CARD_ART_SIZE);
-    u32 i = ((y >> 3) * 9 + (x >> 3)) * 64 + (y & 7) * 8 + (x & 7);
-    u32 bit = i * 6;
-
-    return ((src[bit >> 3] | src[(bit >> 3) + 1] << 8) >> (bit & 7)) & 63;
-}
-
-/* object-fit: cover — uniform scale to fill 56x112, centered on 72x80 art. */
-static void BlitArtCover(u16 cardId, u8 *tiles)
-{
-    const u16 *artPal = (const u16 *)(CARD_ART_PALETTES_ADDR + cardId * CARD_ART_PALETTE_SIZE);
-    u8 palMap[64];
-    int x, y, px, py;
-
-    for (x = 0; x < 64; x++)
-        palMap[x] = NearestPalIndex(artPal[x]);
-
-    for (y = 0; y < PACK_COVER_H; y++) {
-        for (x = 0; x < PACK_COVER_W; x++) {
-            int sx = 16 + x * 40 / PACK_COVER_W;
-            int sy = y * 80 / PACK_COVER_H;
-            u32 tileIdx;
-            u8 idx;
-
-            if (sx > 71)
-                sx = 71;
-            if (sy > 79)
-                sy = 79;
-            idx = palMap[ArtPixel(cardId, sx, sy)];
-            px = x;
-            py = y;
-            tileIdx = (py >> 3) * 7 + (px >> 3);
-            tiles[tileIdx * 64 + (py & 7) * 8 + (px & 7)] = idx;
-        }
-    }
-}
+extern const u8 gFormatPackCovers[];
 
 int FormatPackIndexFromId(u16 packId)
 {
@@ -133,7 +66,10 @@ static const struct PackInfo *FormatPackInfo(int fi)
 
     info->id = FORMAT_PACK_ID_FIRST + fi;
     info->pad2 = 0;
-    info->coverGfx = NULL;
+    if (sFormatPackPortraitNumber[fi] != 0)
+        info->coverGfx = &gFormatPackCovers[fi * PACK_COVER_BYTES];
+    else
+        info->coverGfx = NULL;
     for (i = 0; i < 0x3F && name[i]; i++)
         info->name[i] = name[i];
     info->name[i] = 0;
@@ -297,24 +233,16 @@ void ModPackList_AddUnlockedPacks(void)
 int ModFormatPackLoadCoverGfx(u16 slot, u16 packId)
 {
     int fi = FormatPackIndexFromId(packId);
-    u16 number;
-    u16 cardId;
+    const u8 *src;
     u16 tile;
-    u8 cover[PACK_COVER_BYTES];
 
-    if (fi < 0)
+    if (fi < 0 || sFormatPackPortraitNumber[fi] == 0)
         return 0;
-    number = sFormatPackPortraitNumber[fi];
-    if (number == 0)
-        return 0;
-    cardId = gCardNumberToId[number];
-    if (cardId == 0)
-        return 0;
-    BlitArtCover(cardId, cover);
+    src = &gFormatPackCovers[fi * PACK_COVER_BYTES];
     tile = slot * 0x62 + 0x10;
     {
         vu32 *dma = (vu32 *)0x040000D4;
-        dma[0] = (u32)cover;
+        dma[0] = (u32)src;
         dma[1] = (u32)&gSceneWork.bgTiles[tile << 6];
         dma[2] = 0x80000000 | (PACK_COVER_BYTES >> 1);
         while (dma[2] & 0x80000000)

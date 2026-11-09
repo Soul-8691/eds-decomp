@@ -164,6 +164,7 @@ mod_preduel
 @farcode mod_preduel
 mod_deck_edit_data
 mod_mulligan_data
+mod_format_pack_covers
 mod_field_icons_data
 mod_preduel_data
 mod_record_names
@@ -186,6 +187,7 @@ mod_title_data
 @rodata.added mod_title_data
 @rodata.added mod_deck_edit_data
 @rodata.added mod_mulligan_data
+@rodata.added mod_format_pack_covers
 @libs
 veneer
 rodata_08080A20

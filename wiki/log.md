@@ -2883,3 +2883,7 @@ updated: 2026-09-29
   ModOpeningMulliganRun removed). ModMulliganAvailable: allowed in the duel, turnCount <= 1 and the human's
   turn; the Deck's menu offers Mulligan next to Draw in that Draw Phase (ModCardMenuDeckCommands), so drawing
   ends it. src/mod_mulligan.c, src/mod_opponents.c, src/duel_setup.c, README.md.
+
+## [2026-11-09] progress | Format-pack covers baked at build time
+- tools/format_pack_covers.py, data/mod_format_pack_covers.s (`gFormatPackCovers`); src/mod_format_packs.c: DMA
+  from ROM instead of runtime BlitArtCover. Makefile, units.txt. [[pack-shop]].
