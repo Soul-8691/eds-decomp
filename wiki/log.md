@@ -2893,6 +2893,11 @@ updated: 2026-09-29
   graphics.palettes.packs); that palette (gPackListPal) marked used in the guide.
 - Pages: [[hma-toml]].
 
+## [2026-11-09] progress | TESTING.md high-usage effect scenarios
+- TESTING.md (demo cards >=10% usage, earliest format); tools/gen_testing_md.py regenerates from usage/ root
+  `total`+`extra`, limit multipliers, added_effects.c, LEFTOVER_EFFECTS, YGOPRODeck API.
+- gen_testing_md.py: inclusion capped at 100%; no deck_types double-count (115 cards).
+
 ## [2026-11-09] query | HMA TOML wiki sync
 - [[hma-toml]]: demo-profile TOML outputs, EXTRA_ANCHORS card text, mod MatchedWords (title flame, pre-duel QR),
   format-cover bake vs HMA edit, deck .ydk import, `ANCHOR_FIXES`, guide notes for `graphics.palettes.packs`.
