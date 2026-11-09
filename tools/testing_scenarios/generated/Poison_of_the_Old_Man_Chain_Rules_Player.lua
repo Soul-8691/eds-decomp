@@ -1,0 +1,11 @@
+-- AUTO-GENERATED from TESTING.md
+-- Recording: Poison_of_the_Old_Man_Chain_Rules_Player.mp4
+local EDS = dofile((script and script.dir or '.') .. '/../lib_eds.lua')
+EDS.run({
+    card = "Poison of the Old Man",
+    effect = "chain_rules",
+    actor = "Player",
+    scenarioText = "Same board: when you activate **Poison of the Old Man**, opponent may chain **Magic Jammer** (or **Book of Moon**). Confirm stack order. Normal Spells such as **Change of Heart** cannot be chained—only Traps and Quick-Play Spells.",
+    play = { { wait = 90 } },
+    recordFrames = nil,
+})

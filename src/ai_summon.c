@@ -28,6 +28,7 @@
 #include "duel_flow.h"              /* gDuelCtrl */
 #include "summon.h"                 /* CanSummonFromHand */
 #include "util.h"                   /* Random */
+#include "mod_testing_automation.h"
 
 /* ---- Local views (matching choices) ---- */
 
@@ -444,6 +445,8 @@ int AiShouldActivateSetCard(struct ChainEntry *entry)
     int zone;
     int zz;
 
+    if (ModTestingFreezeOpponentActive())
+        return 0;
     if (entry == 0)
         return 0;
     switch (CARD_NUMBER(entry->card)) {
@@ -676,6 +679,8 @@ int AiTryChainResponse(struct ChainEntry *entry)
     int x;
     u32 m;
 
+    if (ModTestingFreezeOpponentActive())
+        return 0;
     /* FAKEMATCH: the 0x7FF mask lives in a variable that the Magic Thorn case reuses for its whole index
      * chain, so the mask, switch value and table base get r1/r2/r3 as in the ROM. */
     if (AiChainSummonTriggerResponse(entry))    /* added */

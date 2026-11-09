@@ -41,6 +41,7 @@
 #include "text_box.h"               /* gTextBox, TextBoxOpen, TextBoxSetMenu */
 #include "util.h"                   /* StrCopy, StrCat, FormatStr, FormatInt */
 #include "mod_duel_speed.h"         /* ModDuelSkipResponsesActive */
+#include "mod_testing_automation.h"
 
 /* ---- Local views kept for matching (build/readability/HEADERS.md, "Keeping a deliberate local view") ---- */
 
@@ -715,6 +716,10 @@ int EventResponse_Run(void)
         gRunChain.requestPending = 0;
         return 1;
     case EVRESP_CPU_SEARCH:
+        if (ModTestingFreezeOpponentActive()) {
+            gRunChain.askStep = EVRESP_NEXT_PLAYER;
+            return 0;
+        }
         for (slot = ZONE_SPELL_0; slot <= ZONE_SPELL_4; slot++) {
             u32 id = CARD_ID(CARD_WORD(RUN_ZONE(1 & gRunChain.askPlayer, slot)->card));
             if (id != 0) {
@@ -728,6 +733,10 @@ int EventResponse_Run(void)
         gRunChain.askStep = EVRESP_NEXT_PLAYER;
         return 0;
     case EVRESP_CPU_ACTIVATE:
+        if (ModTestingFreezeOpponentActive()) {
+            gRunChain.askStep = EVRESP_NEXT_PLAYER;
+            return 0;
+        }
         if (!(RUN_ZONE(gRunChain.askPlayer, gRunChain.aiZone)->isFaceUp)) {
             u16 cmd;
             if (gRunChain.askPlayer)

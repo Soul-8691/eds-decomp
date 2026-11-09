@@ -1,0 +1,122 @@
+[
+  {
+    "card": "Card Destruction",
+    "effect": "discard_and_draw",
+    "actor": "Player",
+    "format": "Yugi-Kaiba",
+    "recording": "tools/testing_scenarios/recordings/Card_Destruction_Discard_And_Draw_Player.mp4",
+    "script": "tools/testing_scenarios/poc/Card_Destruction_Discard_And_Draw_Player.lua"
+  },
+  {
+    "card": "Card Destruction",
+    "effect": "cpu_duel",
+    "actor": "CPU",
+    "format": "Yugi-Kaiba",
+    "recording": "tools/testing_scenarios/recordings/Card_Destruction_Cpu_Duel_CPU.mp4",
+    "script": "tools/testing_scenarios/poc/Card_Destruction_Cpu_Duel_CPU.lua"
+  },
+  {
+    "card": "Card Destruction",
+    "effect": "chain_window",
+    "actor": "CPU",
+    "format": "Yugi-Kaiba",
+    "recording": "tools/testing_scenarios/recordings/Card_Destruction_Chain_Window_CPU.mp4",
+    "script": "tools/testing_scenarios/poc/Card_Destruction_Chain_Window_CPU.lua"
+  },
+  {
+    "card": "Soul Exchange",
+    "effect": "tribute_opponent_monster",
+    "actor": "Player",
+    "format": "Yugi-Kaiba",
+    "recording": "tools/testing_scenarios/recordings/Soul_Exchange_Tribute_Opponent_Monster_Player.mp4",
+    "script": "tools/testing_scenarios/poc/Soul_Exchange_Tribute_Opponent_Monster_Player.lua"
+  },
+  {
+    "card": "Soul Exchange",
+    "effect": "cpu_duel",
+    "actor": "CPU",
+    "format": "Yugi-Kaiba",
+    "recording": "tools/testing_scenarios/recordings/Soul_Exchange_Cpu_Duel_CPU.mp4",
+    "script": "tools/testing_scenarios/poc/Soul_Exchange_Cpu_Duel_CPU.lua"
+  },
+  {
+    "card": "Soul Exchange",
+    "effect": "chain_window",
+    "actor": "CPU",
+    "format": "Yugi-Kaiba",
+    "recording": "tools/testing_scenarios/recordings/Soul_Exchange_Chain_Window_CPU.mp4",
+    "script": "tools/testing_scenarios/poc/Soul_Exchange_Chain_Window_CPU.lua"
+  },
+  {
+    "card": "Goblin Attack Force",
+    "effect": "usage_deck_verify",
+    "actor": "Player",
+    "format": "Imperial",
+    "recording": "tools/testing_scenarios/recordings/Goblin_Attack_Force_Usage_Deck_Verify_Player.mp4",
+    "script": "tools/testing_scenarios/poc/Goblin_Attack_Force_Usage_Deck_Verify_Player.lua"
+  },
+  {
+    "card": "Goblin Attack Force",
+    "effect": "mandatory_follow_up",
+    "actor": "Player",
+    "format": "Imperial",
+    "recording": "tools/testing_scenarios/recordings/Goblin_Attack_Force_Mandatory_Follow_Up_Player.mp4",
+    "script": "tools/testing_scenarios/poc/Goblin_Attack_Force_Mandatory_Follow_Up_Player.lua"
+  },
+  {
+    "card": "Goblin Attack Force",
+    "effect": "cpu_standard_lines",
+    "actor": "CPU",
+    "format": "Imperial",
+    "recording": "tools/testing_scenarios/recordings/Goblin_Attack_Force_Cpu_Standard_Lines_CPU.mp4",
+    "script": "tools/testing_scenarios/poc/Goblin_Attack_Force_Cpu_Standard_Lines_CPU.lua"
+  },
+  {
+    "card": "Torrential Tribute",
+    "effect": "destroy_all_on_summon",
+    "actor": "Player",
+    "format": "Android",
+    "recording": "tools/testing_scenarios/recordings/Torrential_Tribute_Destroy_All_On_Summon_Player.mp4",
+    "script": "tools/testing_scenarios/poc/Torrential_Tribute_Destroy_All_On_Summon_Player.lua"
+  },
+  {
+    "card": "Torrential Tribute",
+    "effect": "cpu_duel",
+    "actor": "CPU",
+    "format": "Android",
+    "recording": "tools/testing_scenarios/recordings/Torrential_Tribute_Cpu_Duel_CPU.mp4",
+    "script": "tools/testing_scenarios/poc/Torrential_Tribute_Cpu_Duel_CPU.lua"
+  },
+  {
+    "card": "Torrential Tribute",
+    "effect": "chain_window",
+    "actor": "CPU",
+    "format": "Android",
+    "recording": "tools/testing_scenarios/recordings/Torrential_Tribute_Chain_Window_CPU.mp4",
+    "script": "tools/testing_scenarios/poc/Torrential_Tribute_Chain_Window_CPU.lua"
+  },
+  {
+    "card": "Exiled Force",
+    "effect": "tribute_destroy_target",
+    "actor": "Player",
+    "format": "Fiber",
+    "recording": "tools/testing_scenarios/recordings/Exiled_Force_Tribute_Destroy_Target_Player.mp4",
+    "script": "tools/testing_scenarios/poc/Exiled_Force_Tribute_Destroy_Target_Player.lua"
+  },
+  {
+    "card": "Exiled Force",
+    "effect": "cpu_duel",
+    "actor": "CPU",
+    "format": "Fiber",
+    "recording": "tools/testing_scenarios/recordings/Exiled_Force_Cpu_Duel_CPU.mp4",
+    "script": "tools/testing_scenarios/poc/Exiled_Force_Cpu_Duel_CPU.lua"
+  },
+  {
+    "card": "Exiled Force",
+    "effect": "chain_window",
+    "actor": "CPU",
+    "format": "Fiber",
+    "recording": "tools/testing_scenarios/recordings/Exiled_Force_Chain_Window_CPU.mp4",
+    "script": "tools/testing_scenarios/poc/Exiled_Force_Chain_Window_CPU.lua"
+  }
+]

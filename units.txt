@@ -138,6 +138,8 @@ mod_banlists
 @farcode mod_banlists
 mod_settings
 @farcode mod_settings
+mod_testing_automation
+@farcode mod_testing_automation
 mod_opponents
 @farcode mod_opponents
 mod_title
