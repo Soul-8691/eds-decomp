@@ -25,7 +25,7 @@
 |  |  |
 |---|---|
 | **15 formats** | Follows the [Format Library](https://www.formatlibrary.com/) pantheon of historical TCG formats, May 2002 to October 2005. Each one is a Campaign duelist with its own card pool and decks. |
-| **New cards** | The demo adds **306** cards. See [NEW_CARDS.md](NEW_CARDS.md). |
+| **New cards** | The demo adds **308** cards. See [NEW_CARDS.md](NEW_CARDS.md). |
 | **Synchro, Xyz and Link** | Summoned from the Fusion Deck (the Extra Deck), with Tuners, Xyz Materials, Link Arrows and Extra Monster Zones. You pick the Monster Zone for every summon. See [Synchro, Xyz and Link](#synchro-xyz-and-link). |
 | **Smarter CPU** | Opponents play much stronger than in vanilla EDS. See [AI_IMPROVEMENTS.md](AI_IMPROVEMENTS.md) and [AI_QUIRKS.md](AI_QUIRKS.md). |
 | **Best-of-3 matches** | Every Campaign duel is a match, with siding between games. |
@@ -118,8 +118,10 @@ testing decks.
   deck may be empty (an empty recipe slot, or B in the deck builder with no cards): the duel starts with no cards.
 - **Debug's rules.** Debug's duels use debug mode's rules: its hand is shown face up, you can read its face-down cards
   (info bar and Card View), you can open its main and fusion deck piles in order, and neither side can deck out.
-- **Mulligan.** In your first Draw Phase, open your **Main Deck** and choose **Mulligan** as often as you like until you
-  **Draw**.
+  - **Mulligan.** In your first Draw Phase, your Main Deck menu offers **Mulligan** next to **Draw**: your hand goes to
+    the bottom of the Main Deck, the deck shuffles, and you draw five again. Repeat until you **Draw**, which ends
+    mulligan for that duel. In the **release** build, mulligan is offered only in duels against **Debug**. In **testing**
+    builds (`make`, `make demo`, …), every Campaign duel offers it.
 
 Back on the recipe list:
 
@@ -323,10 +325,10 @@ now. Pick the monster, then its materials.
 
 ## The new cards
 
-The demo build adds **306** cards: the 173 listed above `------` in [`new_cards.txt`](new_cards.txt), and 133 cards of
+The demo build adds **308** cards: the 175 listed above `------` in [`new_cards.txt`](new_cards.txt), and 133 cards of
 the engine's leftover effects ([`config/leftover_cards.txt`](config/leftover_cards.txt)). All of them are in
 [`demo_cards.txt`](demo_cards.txt), in alphabetical order. **[NEW_CARDS.md](NEW_CARDS.md)** shows each of them in Deck
-Edit's Card View, and **[ADDING_NEW_CARDS.md](ADDING_NEW_CARDS.md)** explains how to add and code more.
+Edit's Card View (alphabetical, by Campaign format, and additional groupings), and **[ADDING_NEW_CARDS.md](ADDING_NEW_CARDS.md)** explains how to add and code more.
 
 <table>
 <tr>
@@ -387,7 +389,7 @@ See [NEW_CARDS.md](NEW_CARDS.md) for all of them.
   original code plays it untouched. The card lists hold only the other cards, apart from 17 leftovers the mod wrote
   effect code for at a free number, which stay there until the two are merged (`overlaps.txt`).
 - **Gallery screenshots.** After `make demo`, `tools/gen_new_cards_md.py` writes [`demo_cards.txt`](demo_cards.txt)
-  (every card the build adds, alphabetical, from `build/new_cards.tsv`) and [NEW_CARDS.md](NEW_CARDS.md) from it, and
+  (every card the build adds, from `build/new_cards.tsv`) and [NEW_CARDS.md](NEW_CARDS.md) from it, and
   lists the cards with no screenshot yet. `tools/card_screenshots.lua` in mGBA takes them (the cards and their IDs from
   `build/new_cards.tsv`; optional `cards/_capture_only.txt`, one name per line, for only those).
 
@@ -456,7 +458,7 @@ screens, title screen images, Deck Edit ring art, in-duel card miniatures, and m
   View.
 - You can open your deck pile from the command menu (Mulligan / Draw / Surrender / Card View), and the opponent's main or
   fusion deck pile with **Card View** (draw order on the main deck; works even when their deck is empty).
-- **Mulligan** in every duel (see [Practice opponents](#practice-opponents)).
+- **Mulligan** in every Campaign duel (the release build allows it only vs **Debug**).
 
 **Menus**
 

@@ -2870,6 +2870,10 @@ updated: 2026-09-29
   back in a circular arrow; "Mulligan" in the labels' white-with-shadow style), data/mod_mulligan_data.s;
   LoadDuelUiGfx calls ModLoadMulliganMenuGfx after loading the sheets. README.md.
 
+## [2026-11-08] progress | NEW_CARDS.md alphabetical, by format, and additional sections
+- tools/gen_new_cards_md.py: format pools + usage sort (cardprices.format_usage_raw), type-grouped additional cards;
+  cardprices.py: format_usage_raw. README.md.
+
 ## [2026-11-08] progress | Mulligan: in-duel only (deck-select sampling removed)
 - Removed starter deck SELECT and Deck Recipes SELECT/START sample hands; dropped `ModStarterDeckForMulligan`,
   `gModMulligan` EWRAM, and deck-select APIs from src/mod_mulligan.c. README.md.

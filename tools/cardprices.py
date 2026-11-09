@@ -52,11 +52,11 @@ def normalize_prices(prices):
     return out
 
 
-def format_prices(stem, lookup, missing):
-    """{card number: price} of the cards format `stem`'s decks use."""
+def format_usage_raw(stem, lookup, missing):
+    """{card number: raw usage score} of the cards format `stem`'s decks use, before linear DP scaling."""
     usage = json.load(open(f'usage/{stem}.json', encoding='utf-8'))
     decks = usage['decks_processed']
-    limits, _ = banlist.read_limits(f'banlists/{stem}_ban.json', lookup, [])
+    limits, _ = banlist.read_limits(f'banlists/{stem}_ban.json', lookup, missing)
     prices = {}
     for key, factor in (('total', 1.0), ('extra', 1.0 / EXTRA_DIVISOR)):
         for entry in usage.get(key, []):
@@ -66,8 +66,12 @@ def format_prices(stem, lookup, missing):
                 continue
             for number in numbers:
                 prices[number] = prices.get(number, 0.0) + share(entry, decks) * BASE * factor
-    raw = {n: p * LIMIT_FACTOR.get(limits.get(n), 1.0) for n, p in prices.items()}
-    return normalize_prices(raw)
+    return {n: p * LIMIT_FACTOR.get(limits.get(n), 1.0) for n, p in prices.items()}
+
+
+def format_prices(stem, lookup, missing):
+    """{card number: DP price} of the cards format `stem`'s decks use."""
+    return normalize_prices(format_usage_raw(stem, lookup, missing))
 
 
 def main():

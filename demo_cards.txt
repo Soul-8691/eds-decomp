@@ -4,6 +4,7 @@
 4-Starred Ladybug of Doom
 Abyss Soldier
 Airknight Parshath
+Ally of Justice Catastor
 Amazoness Archer
 Ancient Lamp
 Apprentice Magician
@@ -118,6 +119,7 @@ Goblin Attack Force
 Goblin Elite Attack Force
 Goldd, Wu-Lord of Dark World
 Golem Sentry
+Goyo Guardian
 Gradius
 Grand Tiki Elder
 Granmarg the Rock Monarch

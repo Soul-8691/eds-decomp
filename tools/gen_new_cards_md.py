@@ -7,16 +7,31 @@ demo_cards.txt: every card the demo build adds, in alphabetical order, one per l
 name" when the game shows a shorter one): the cards of the repo-root new_cards.txt (above ------) and the leftover
 effect cards (config/leftover_cards.txt, at their own card numbers), not make demo's blank slots. It is read from
 build/new_cards.tsv (tools/newcards.py), so run it after `make demo` or `make release-demo`.
-NEW_CARDS.md: the gallery of those cards, in the same order, from the screenshots in cards/ (tools/card_screenshots.lua).
+NEW_CARDS.md: alphabetical gallery, then each Campaign format's new cards (pool + usage sort), then additional cards.
 """
 
-import os
+import json
 import sys
 from pathlib import Path
 from urllib.parse import quote
 
+sys.path.insert(0, 'tools')
+import banlist  # noqa: E402
+from cardprices import format_usage_raw  # noqa: E402
+
 TSV = "build/new_cards.tsv"
 CARD_LIST = "demo_cards.txt"
+CACHE_JSON = "assets/new_cards/cards.json"
+ADDITIONAL_SECTIONS = (
+    "Effect monsters",
+    "Tuners",
+    "Fusion monsters",
+    "Spells",
+    "Traps",
+    "Synchro",
+    "Xyz",
+    "Link",
+)
 
 
 def demo_build(root: Path) -> bool:
@@ -53,6 +68,28 @@ def load_card_list(path: Path) -> list[str]:
     return names
 
 
+def list_names_before_sep(path: Path) -> set[str]:
+    names: set[str] = set()
+    for line in path.read_text(encoding="utf-8").splitlines():
+        line = line.strip()
+        if line == "------":
+            break
+        if line and not line.startswith("#"):
+            names.add(line.split("|", 1)[0].strip())
+    return names
+
+
+def leftover_names(path: Path) -> set[str]:
+    names: set[str] = set()
+    for line in path.read_text(encoding="utf-8").splitlines():
+        line = line.strip()
+        if not line or line.startswith("#"):
+            continue
+        if "|" in line:
+            names.add(line.split("|", 1)[1].strip().split("|")[0].strip())
+    return names
+
+
 def file_name(name: str) -> str:
     r"""The screenshot's file name, as tools/card_screenshots.lua's fileName writes it (<>:"/\|?* become _)."""
     return "".join("_" if ch in r'<>:"/\|?*' else ch for ch in name)
@@ -66,36 +103,168 @@ def img_cell(name: str) -> str:
     )
 
 
+def gallery_table(names: list[str]) -> str:
+    rows: list[str] = []
+    for i in range(0, len(names), 4):
+        chunk = names[i : i + 4]
+        cells = "".join(img_cell(n) for n in chunk)
+        while len(chunk) < 4:
+            cells += "<td></td>"
+            chunk.append("")
+        rows.append(f"<tr>\n{cells}\n</tr>")
+    return "\n".join(rows)
+
+
+def load_ygo_cache(root: Path) -> dict:
+    return json.loads((root / CACHE_JSON).read_text(encoding="utf-8"))
+
+
+def card_section(cache: dict, name: str) -> str:
+    c = cache.get(name)
+    if c is None:
+        return "Effect monsters"
+    t = c.get("type") or ""
+    if t == "Spell Card":
+        return "Spells"
+    if t == "Trap Card":
+        return "Traps"
+    if "Link" in t:
+        return "Link"
+    if "XYZ" in t:
+        return "Xyz"
+    if "Synchro" in t:
+        return "Synchro"
+    if "Fusion" in t:
+        return "Fusion monsters"
+    if "Tuner" in t:
+        return "Tuners"
+    return "Effect monsters"
+
+
+def format_pool(stems: list[str], lookup, missing: list) -> set[int]:
+    pool: set[int] = set()
+    for stem in stems:
+        pool |= banlist.read_pool(f"card_pools/{stem}.txt", lookup, missing)
+    return pool
+
+
+def card_usage_weight(name: str, usage_raw: dict[int, float], lookup) -> float:
+    numbers = lookup(name)
+    if not numbers:
+        return 0.0
+    return max(usage_raw.get(n, 0.0) for n in numbers)
+
+
+def card_in_pool(name: str, pool: set[int], lookup) -> bool:
+    numbers = lookup(name)
+    return bool(numbers and pool.intersection(numbers))
+
+
+def sort_format_cards(names: list[str], usage_raw: dict[int, float], lookup) -> list[str]:
+    def key(n: str) -> tuple:
+        w = card_usage_weight(n, usage_raw, lookup)
+        return (-w, n.casefold(), n)
+
+    return sorted(names, key=key)
+
+
 def main() -> None:
     root = Path(__file__).resolve().parents[1]
     if not (root / TSV).exists() or not demo_build(root):
         sys.exit(f"gen_new_cards_md: {TSV} is not a demo build's; run make demo first")
-    write_card_list(root, build_cards(root))
-    cards = load_card_list(root / CARD_LIST)
-    missing = [n for n in cards if not (root / "cards" / f"{file_name(n)}.png").exists()]
-    rows: list[str] = []
-    for i in range(0, len(cards), 4):
-        chunk = cards[i : i + 4]
-        cells = "".join(img_cell(n) for n in chunk)
-        while len(chunk) < 4:
-            cells += '<td></td>'
-            chunk.append("")
-        rows.append(f"<tr>\n{cells}\n</tr>")
+    if not (root / banlist.NAMES).exists():
+        sys.exit("gen_new_cards_md: run make demo first (need build/assets/newcards__names.bin)")
 
-    body = "\n".join(rows)
-    n = len(cards)
+    write_card_list(root, build_cards(root))
+    all_names = load_card_list(root / CARD_LIST)
+    missing_shot = [n for n in all_names if not (root / "cards" / f"{file_name(n)}.png").exists()]
+
+    main_names = list_names_before_sep(root / "new_cards.txt")
+    leftover = leftover_names(root / "config" / "leftover_cards.txt")
+    # Listed cards plus engine leftovers (effects in the ROM but not in vanilla EDS), e.g. Soul Exchange.
+    format_candidates = main_names | (leftover & set(all_names))
+
+    lookup = banlist.card_lookup()
+    pool_missing: list[str] = []
+    usage_missing: list[str] = []
+    cache = load_ygo_cache(root)
+
+    alpha_body = gallery_table(all_names)
+
+    format_parts: list[str] = []
+    assigned_in_format: set[str] = set()
+    for fmt_name, stem, pool_stems in banlist.BANLISTS:
+        pool = format_pool(pool_stems, lookup, pool_missing)
+        usage_raw = format_usage_raw(stem, lookup, usage_missing)
+        in_fmt = [
+            n for n in format_candidates
+            if n not in assigned_in_format and card_in_pool(n, pool, lookup)
+        ]
+        if not in_fmt:
+            continue
+        assigned_in_format.update(in_fmt)
+        ordered = sort_format_cards(in_fmt, usage_raw, lookup)
+        format_parts.append(f"### {fmt_name}\n\n<table>\n{gallery_table(ordered)}\n</table>")
+
+    by_format_body = "\n\n".join(format_parts)
+
+    additional_eligible = {n for n in all_names if n not in assigned_in_format}
+
+    buckets: dict[str, list[str]] = {s: [] for s in ADDITIONAL_SECTIONS}
+    for name in sorted(additional_eligible, key=lambda n: (n.casefold(), n)):
+        buckets[card_section(cache, name)].append(name)
+
+    additional_parts: list[str] = []
+    for section in ADDITIONAL_SECTIONS:
+        names = buckets[section]
+        if not names:
+            continue
+        additional_parts.append(f"### {section}\n\n<table>\n{gallery_table(names)}\n</table>")
+    additional_body = "\n\n".join(additional_parts)
+
+    n = len(all_names)
+    intro = (
+        f"The {n} cards the demo build adds ([`demo_cards.txt`](demo_cards.txt): the repo-root `new_cards.txt` above "
+        f"`------`, and the cards of the engine's leftover effects in `config/leftover_cards.txt`), as the game shows "
+        f"them in Deck Edit's Card View. The screenshots are taken by [`tools/card_screenshots.lua`]"
+        f"(tools/card_screenshots.lua) in mGBA."
+    )
     md = f"""# New cards
 
-The {n} cards the demo build adds, in alphabetical order ([`demo_cards.txt`](demo_cards.txt): the repo-root `new_cards.txt` above `------`, and the cards of the engine's leftover effects in `config/leftover_cards.txt`), as the game shows them in Deck Edit's Card View. The screenshots are taken by [`tools/card_screenshots.lua`](tools/card_screenshots.lua) in mGBA.
+{intro}
+
+## Alphabetical
+
+Every added card, A–Z.
 
 <table>
-{body}
+{alpha_body}
 </table>
+
+## By format
+
+The Campaign formats in order (Yugi-Kaiba through Reaper). Each subsection lists **new** cards from `new_cards.txt`
+and engine leftovers (`config/leftover_cards.txt`) that appear in that format's card pool (`card_pools/`). Cards are
+ordered by weighted deck usage in that format's `usage/` statistics
+(the same main + Extra Deck weights as [CARD_PRICES.md](CARD_PRICES.md), before DP scaling); cards with no usage
+but in the pool are alphabetical after the rest. Each card appears only under the **earliest** format whose pool
+includes it.
+
+{by_format_body}
+
+## Additional cards
+
+Added cards that are not in any format's pool (listed or engine leftover), grouped by card type and sorted
+alphabetically within each group.
+
+{additional_body}
 """
     (root / "NEW_CARDS.md").write_text(md, encoding="utf-8", newline="\n")
-    print(f"NEW_CARDS.md: {n} cards ({CARD_LIST}); {len(missing)} without a screenshot in cards/")
-    for name in missing:
+    print(f"NEW_CARDS.md: {n} cards ({CARD_LIST}); {len(missing_shot)} without a screenshot in cards/")
+    for name in missing_shot:
         print(f"  {name}")
+    if pool_missing:
+        print(f"gen_new_cards_md: {len(set(pool_missing))} pool names have no EDS card (skipped)", file=sys.stderr)
 
 
 if __name__ == "__main__":

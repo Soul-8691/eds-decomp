@@ -11,18 +11,18 @@ The DP the card password machine charges, per format, from the format's deck usa
 | [Yugi-Kaiba](#yugi-kaiba) | 75 |
 | [Critter](#critter) | 88 |
 | [Treasure](#treasure) | 84 |
-| [Imperial](#imperial) | 105 |
-| [Android](#android) | 102 |
-| [Joey-Pegasus](#joey-pegasus) | 105 |
-| [Fiber](#fiber) | 132 |
-| [Yata](#yata) | 132 |
-| [Scientist](#scientist) | 88 |
-| [Vampire](#vampire) | 111 |
-| [Chaos](#chaos) | 138 |
-| [Warrior](#warrior) | 182 |
-| [Goat](#goat) | 256 |
-| [Cyber](#cyber) | 139 |
-| [Reaper](#reaper) | 210 |
+| [Imperial](#imperial) | 106 |
+| [Android](#android) | 107 |
+| [Joey-Pegasus](#joey-pegasus) | 110 |
+| [Fiber](#fiber) | 143 |
+| [Yata](#yata) | 136 |
+| [Scientist](#scientist) | 92 |
+| [Vampire](#vampire) | 114 |
+| [Chaos](#chaos) | 142 |
+| [Warrior](#warrior) | 191 |
+| [Goat](#goat) | 282 |
+| [Cyber](#cyber) | 142 |
+| [Reaper](#reaper) | 232 |
 
 ## Yugi-Kaiba
 
@@ -383,6 +383,7 @@ The DP the card password machine charges, per format, from the format's deck usa
 | Seven Tools of the Bandit | 220 |  |
 | Soul Exchange | 220 |  |
 | Thunder Dragon | 220 |  |
+| Type Zero Magic Crusher | 220 |  |
 | Flame Swordsman | 213 |  |
 | Cyber Saurus | 211 |  |
 | Charubin the Fire Knight | 209 |  |
@@ -466,17 +467,21 @@ The DP the card password machine charges, per format, from the format's deck usa
 | Thousand-Eyes Restrict | 232 |  |
 | Gaia the Dragon Champion | 229 |  |
 | Flame Swordsman | 227 |  |
+| St. Joan | 227 |  |
 | Axe of Despair | 222 |  |
 | Castle of Dark Illusions | 222 |  |
 | Dark Elf | 222 |  |
+| Dark Necrofear | 222 |  |
 | Fake Trap | 222 |  |
 | Firegrass | 222 |  |
 | Giant Germ | 222 |  |
 | Giant Soldier of Stone | 222 |  |
 | Giant Trunade | 222 |  |
+| Hayabusa Knight | 222 |  |
 | La Jinn the Mystical Genie of the Lamp | 222 |  |
 | Megamorph | 222 |  |
 | Mirror Wall | 222 |  |
+| Royal Command | 222 |  |
 | Soul Release | 222 |  |
 | Summoned Skull | 222 |  |
 | The Fiend Megacyber | 222 |  |
@@ -489,6 +494,7 @@ The DP the card password machine charges, per format, from the format's deck usa
 | Musician King | 212 |  |
 | Bickuribox | 210 |  |
 | Charubin the Fire Knight | 207 |  |
+| Humanoid Worm Drake | 207 |  |
 | Metal Dragon | 207 |  |
 | Thousand Dragon | 207 |  |
 | Cyber Saurus | 205 |  |
@@ -566,6 +572,7 @@ The DP the card password machine charges, per format, from the format's deck usa
 | Masked Sorcerer | 293 |  |
 | Mirror Wall | 293 |  |
 | Nimble Momonga | 293 |  |
+| Offerings to the Doomed | 293 |  |
 | Seven Tools of the Bandit | 293 |  |
 | Thunder Dragon | 293 |  |
 | Backup Soldier | 269 | Semi-Limited |
@@ -577,6 +584,8 @@ The DP the card password machine charges, per format, from the format's deck usa
 | Giant Rat | 244 |  |
 | Giant Trunade | 244 |  |
 | Guardian Sphinx | 244 |  |
+| Hayabusa Knight | 244 |  |
+| Jowgen the Spiritualist | 244 |  |
 | Kotodama | 244 |  |
 | Last Will | 244 |  |
 | Magic Drain | 244 |  |
@@ -587,6 +596,7 @@ The DP the card password machine charges, per format, from the format's deck usa
 | Summoned Skull | 244 |  |
 | White Magical Hat | 244 |  |
 | B. Skull Dragon | 239 |  |
+| St. Joan | 234 |  |
 | Flame Swordsman | 230 |  |
 | Gaia the Dragon Champion | 230 |  |
 | Thousand-Eyes Restrict | 220 |  |
@@ -606,6 +616,7 @@ The DP the card password machine charges, per format, from the format's deck usa
 | Flame Ghost | 200 |  |
 | Flower Wolf | 200 |  |
 | Giltia the D. Knight | 200 |  |
+| Humanoid Worm Drake | 200 |  |
 | Kaminari Attack | 200 |  |
 | Roaring Ocean Snake | 200 |  |
 | Ryu Senshi | 200 |  |
@@ -686,6 +697,7 @@ The DP the card password machine charges, per format, from the format's deck usa
 | Giant Germ | 250 |  |
 | Chain Energy | 245 |  |
 | Electric Snake | 245 |  |
+| Offerings to the Doomed | 245 |  |
 | The Fiend Megacyber | 245 |  |
 | Waboku | 245 |  |
 | Blast with Chain | 240 |  |
@@ -697,30 +709,39 @@ The DP the card password machine charges, per format, from the format's deck usa
 | Dark Balter the Terrible | 232 |  |
 | Dragoness the Wicked Knight | 232 |  |
 | Fiend Skull Dragon | 230 |  |
+| Amazoness Archer | 225 |  |
 | Exchange | 225 |  |
 | Darkfire Dragon | 221 |  |
 | Magic Drain | 220 |  |
 | Labyrinth Tank | 218 |  |
 | Musician King | 217 |  |
 | Acid Trap Hole | 215 |  |
+| Hayabusa Knight | 215 |  |
 | Last Will | 215 |  |
 | Nimble Momonga | 215 |  |
 | Solemn Wishes | 215 |  |
 | Soul Exchange | 215 |  |
 | Gaia the Dragon Champion | 213 |  |
 | Roaring Ocean Snake | 213 |  |
+| Cure Mermaid | 210 |  |
+| Dark Necrofear | 210 |  |
 | Giant Trunade | 210 |  |
 | Graverobber | 210 |  |
+| Jowgen the Spiritualist | 210 |  |
 | Kuriboh | 210 |  |
+| Mad Sword Beast | 210 |  |
 | Mask of Darkness | 210 |  |
 | Princess of Tsurugi | 210 |  |
+| The Rock Spirit | 210 |  |
 | Thousand Dragon | 210 |  |
 | White Magical Hat | 210 |  |
 | Fusionist | 209 |  |
 | Flame Ghost | 206 |  |
 | Black Illusion Ritual | 205 |  |
+| Blind Destruction | 205 |  |
 | Bottomless Trap Hole | 205 |  |
 | Don Zaloog | 205 |  |
+| Ekibyo Drakmord | 205 |  |
 | Flame Swordsman | 205 |  |
 | Flash Assailant | 205 |  |
 | Flying Kamakiri #1 | 205 |  |
@@ -741,6 +762,7 @@ The DP the card password machine charges, per format, from the format's deck usa
 | Charubin the Fire Knight | 204 |  |
 | Cyber Saurus | 204 |  |
 | Skull Knight | 204 |  |
+| St. Joan | 204 |  |
 | Warrior of Tradition | 204 |  |
 | Metal Dragon | 203 |  |
 | Empress Judge | 201 |  |
@@ -815,6 +837,7 @@ The DP the card password machine charges, per format, from the format's deck usa
 | Cannon Soldier | 330 |  |
 | Trap Hole | 330 |  |
 | 4-Starred Ladybug of Doom | 319 |  |
+| Cure Mermaid | 319 |  |
 | Solemn Wishes | 319 |  |
 | Raigeki Break | 307 |  |
 | Solemn Judgment | 307 |  |
@@ -835,8 +858,10 @@ The DP the card password machine charges, per format, from the format's deck usa
 | Reaper on the Nightmare | 251 |  |
 | The Last Warrior from Another Planet | 249 |  |
 | Giant Germ | 247 |  |
+| Nightmare Wheel | 247 |  |
 | Nimble Momonga | 247 |  |
 | B. Skull Dragon | 241 |  |
+| Amazoness Archer | 235 |  |
 | Barrel Dragon | 235 |  |
 | Giant Rat | 235 |  |
 | Kuriboh | 235 |  |
@@ -850,6 +875,7 @@ The DP the card password machine charges, per format, from the format's deck usa
 | White Magical Hat | 235 |  |
 | Dragoness the Wicked Knight | 234 |  |
 | Darkfire Dragon | 229 |  |
+| St. Joan | 226 |  |
 | Gaia the Dragon Champion | 225 |  |
 | Book of Life | 223 |  |
 | Giant Trunade | 223 |  |
@@ -950,8 +976,10 @@ The DP the card password machine charges, per format, from the format's deck usa
 | Airknight Parshath | 348 |  |
 | Goblin Attack Force | 348 |  |
 | Jar of Greed | 348 |  |
+| Jowgen the Spiritualist | 348 |  |
 | Royal Decree | 348 |  |
 | Scapegoat | 348 |  |
+| Spiritualism | 348 |  |
 | Creature Swap | 309 | Semi-Limited |
 | Reinforcement of the Army | 309 | Semi-Limited |
 | Dark Balter the Terrible | 286 |  |
@@ -961,6 +989,7 @@ The DP the card password machine charges, per format, from the format's deck usa
 | Fiend Skull Dragon | 278 |  |
 | Punished Eagle | 278 |  |
 | Roaring Ocean Snake | 278 |  |
+| Amazoness Archer | 270 |  |
 | Apprentice Magician | 270 |  |
 | Asura Priest | 270 |  |
 | Dark Magician | 270 |  |
@@ -969,6 +998,7 @@ The DP the card password machine charges, per format, from the format's deck usa
 | Kycoo the Ghost Destroyer | 270 |  |
 | Mask of Restrict | 270 |  |
 | Nimble Momonga | 270 |  |
+| Offerings to the Doomed | 270 |  |
 | Sasuke Samurai | 270 |  |
 | Skilled Dark Magician | 270 |  |
 | Spell Canceller | 270 |  |
@@ -1034,6 +1064,7 @@ The DP the card password machine charges, per format, from the format's deck usa
 | Magic Cylinder | 440 | Limited |
 | Metamorphosis | 399 |  |
 | Scapegoat | 399 |  |
+| Amazoness Archer | 358 |  |
 | Mystic Tomato | 358 |  |
 | The Little Swordsman of Aile | 358 |  |
 | Dark Ruler Ha Des | 318 |  |
@@ -1078,6 +1109,7 @@ The DP the card password machine charges, per format, from the format's deck usa
 | Pyramid Turtle | 237 |  |
 | Raigeki Break | 237 |  |
 | Secret Barrel | 237 |  |
+| Slate Warrior | 237 |  |
 | Spirit Reaper | 237 |  |
 | Summoned Skull | 237 |  |
 | Time Seal | 237 |  |
@@ -1094,6 +1126,7 @@ The DP the card password machine charges, per format, from the format's deck usa
 | Empress Judge | 200 |  |
 | Giltia the D. Knight | 200 |  |
 | Skull Knight | 200 |  |
+| St. Joan | 200 |  |
 
 ## Chaos
 
@@ -1199,14 +1232,17 @@ The DP the card password machine charges, per format, from the format's deck usa
 | Reaper on the Nightmare | 224 |  |
 | Axe of Despair | 220 |  |
 | Black Illusion Ritual | 220 |  |
+| Cursed Seal of the Forbidden Spell | 220 |  |
 | Enemy Controller | 220 |  |
 | Jar of Greed | 220 |  |
 | Magic Jammer | 220 |  |
 | Masked Sorcerer | 220 |  |
 | Relinquished | 220 |  |
+| Spiritualism | 220 |  |
 | Darkfire Dragon | 216 |  |
 | Dragoness the Wicked Knight | 212 |  |
 | Flame Ghost | 212 |  |
+| Amazoness Archer | 210 |  |
 | Catapult Turtle | 210 |  |
 | Dark Ruler Ha Des | 210 |  |
 | Electric Snake | 210 |  |
@@ -1237,6 +1273,7 @@ The DP the card password machine charges, per format, from the format's deck usa
 | Metal Dragon | 201 |  |
 | Warrior of Tradition | 201 |  |
 | Deepsea Shark | 200 |  |
+| St. Joan | 200 |  |
 
 ## Warrior
 
@@ -1311,6 +1348,7 @@ The DP the card password machine charges, per format, from the format's deck usa
 | Jar of Greed | 358 |  |
 | Return from the Different Dimension | 346 |  |
 | Tsukuyomi | 346 |  |
+| Amazoness Archer | 334 |  |
 | Monster Gate | 322 |  |
 | Monster Reincarnation | 322 |  |
 | Pikeru's Circle of Enchantment | 322 |  |
@@ -1337,6 +1375,7 @@ The DP the card password machine charges, per format, from the format's deck usa
 | Reaper on the Nightmare | 260 |  |
 | Sacred Crane | 260 |  |
 | Skilled Dark Magician | 260 |  |
+| Swarm of Locusts | 260 |  |
 | Token Thanksgiving | 260 |  |
 | Xing Zhen Hu | 260 |  |
 | Dark Flare Knight | 257 |  |
@@ -1372,6 +1411,7 @@ The DP the card password machine charges, per format, from the format's deck usa
 | Big Shield Gardna | 223 |  |
 | Blast with Chain | 223 |  |
 | Chain Disappearance | 223 |  |
+| Cursed Seal of the Forbidden Spell | 223 |  |
 | Dark Magician | 223 |  |
 | Dark Scorpion - Cliff the Trap Remover | 223 |  |
 | Des Koala | 223 |  |
@@ -1393,10 +1433,13 @@ The DP the card password machine charges, per format, from the format's deck usa
 | Chain Energy | 211 |  |
 | Cyber-Stein | 211 |  |
 | Different Dimension Capsule | 211 |  |
+| Ekibyo Drakmord | 211 |  |
 | Exile of the Wicked | 211 |  |
 | Fairy Box | 211 |  |
+| Fusion Gate | 211 |  |
 | Gaia Power | 211 |  |
 | Greenkappa | 211 |  |
+| Jowgen the Spiritualist | 211 |  |
 | Light of Intervention | 211 |  |
 | Mask of Restrict | 211 |  |
 | Mirror Wall | 211 |  |
@@ -1405,8 +1448,10 @@ The DP the card password machine charges, per format, from the format's deck usa
 | Princess of Tsurugi | 211 |  |
 | Prohibition | 211 |  |
 | Pyramid Turtle | 211 |  |
+| Revival Jam | 211 |  |
 | Robbin' Goblin | 211 |  |
 | Seven Tools of the Bandit | 211 |  |
+| Slate Warrior | 211 |  |
 | Soul Exchange | 211 |  |
 | Stealth Bird | 211 |  |
 | The Fiend Megacyber | 211 |  |
@@ -1417,6 +1462,7 @@ The DP the card password machine charges, per format, from the format's deck usa
 | Empress Judge | 205 |  |
 | Flame Swordsman | 204 |  |
 | Karbonala Warrior | 204 |  |
+| St. Joan | 204 |  |
 | Charubin the Fire Knight | 202 |  |
 | Dark Paladin | 201 |  |
 | Cyber Saurus | 200 |  |
@@ -1501,6 +1547,7 @@ The DP the card password machine charges, per format, from the format's deck usa
 | United We Stand | 307 | Limited |
 | Zaborg the Thunder Monarch | 299 |  |
 | Level Limit - Area B | 296 | Semi-Limited |
+| Amazoness Archer | 292 |  |
 | Dark Scorpion - Cliff the Trap Remover | 290 |  |
 | Kuriboh | 290 |  |
 | Thousand-Eyes Restrict | 286 |  |
@@ -1530,12 +1577,14 @@ The DP the card password machine charges, per format, from the format's deck usa
 | Skilled Dark Magician | 260 |  |
 | Magical Merchant | 258 |  |
 | Dragoness the Wicked Knight | 257 |  |
+| Jowgen the Spiritualist | 257 |  |
 | Master of Oz | 256 |  |
 | Ojama Trio | 255 |  |
 | Just Desserts | 252 |  |
 | Return from the Different Dimension | 252 |  |
 | Spell Canceller | 245 |  |
 | Seven Tools of the Bandit | 238 |  |
+| Nightmare Wheel | 237 |  |
 | Enemy Controller | 236 |  |
 | Monster Gate | 231 |  |
 | Reasoning | 231 |  |
@@ -1552,6 +1601,7 @@ The DP the card password machine charges, per format, from the format's deck usa
 | Hysteric Fairy | 226 |  |
 | Flame Ghost | 225 |  |
 | Big Shield Gardna | 224 |  |
+| Cursed Seal of the Forbidden Spell | 224 |  |
 | Gigantes | 224 |  |
 | Monster Reincarnation | 224 |  |
 | Hallowed Life Barrier | 223 |  |
@@ -1587,12 +1637,16 @@ The DP the card password machine charges, per format, from the format's deck usa
 | Book of Life | 208 |  |
 | Dark Flare Knight | 208 |  |
 | Giltia the D. Knight | 208 |  |
+| Granmarg the Rock Monarch | 208 |  |
 | Greenkappa | 208 |  |
 | Jirai Gumo | 208 |  |
 | Magic Drain | 208 |  |
 | Relinquished | 208 |  |
 | Ryu Kokki | 208 |  |
 | Emergency Provisions | 206 | Semi-Limited |
+| Royal Command | 206 |  |
+| Swarm of Locusts | 206 |  |
+| Swift Gaia the Fierce Knight | 206 |  |
 | Blast with Chain | 205 |  |
 | Divine Wrath | 205 |  |
 | Gearfried the Iron Knight | 205 |  |
@@ -1601,7 +1655,9 @@ The DP the card password machine charges, per format, from the format's deck usa
 | Banisher of the Light | 204 |  |
 | Fake Trap | 204 |  |
 | Light of Intervention | 204 |  |
+| Old Vindictive Magician | 204 |  |
 | Prohibition | 204 |  |
+| The Rock Spirit | 204 |  |
 | Thestalos the Firestorm Monarch | 204 |  |
 | Acid Trap Hole | 203 |  |
 | B. Skull Dragon | 203 |  |
@@ -1635,6 +1691,8 @@ The DP the card password machine charges, per format, from the format's deck usa
 | Robbin' Goblin | 202 |  |
 | Solemn Wishes | 202 |  |
 | Spear Dragon | 202 |  |
+| St. Joan | 202 |  |
+| Summoner of Illusions | 202 |  |
 | The Shallow Grave | 202 |  |
 | Time Wizard | 202 |  |
 | Trap Hole | 202 |  |
@@ -1647,41 +1705,55 @@ The DP the card password machine charges, per format, from the format's deck usa
 | Giant Soldier of Stone | 201 |  |
 | Gilasaurus | 201 |  |
 | Guardian Sphinx | 201 |  |
+| Humanoid Worm Drake | 201 |  |
 | Labyrinth Tank | 201 |  |
 | Left Arm of the Forbidden One | 201 | Limited |
 | Left Leg of the Forbidden One | 201 | Limited |
 | Metal Dragon | 201 |  |
 | Mother Grizzly | 201 |  |
 | Musician King | 201 |  |
+| Offerings to the Doomed | 201 |  |
 | Pikeru's Circle of Enchantment | 201 |  |
 | Right Arm of the Forbidden One | 201 | Limited |
 | Right Leg of the Forbidden One | 201 | Limited |
 | Rush Recklessly | 201 |  |
 | Skull Knight | 201 |  |
+| Slate Warrior | 201 |  |
 | The Fiend Megacyber | 201 |  |
 | The Little Swordsman of Aile | 201 |  |
 | The Wicked Worm Beast | 201 |  |
 | Warrior of Tradition | 201 |  |
 | Windstorm of Etaqua | 201 |  |
+| Aqua Spirit | 200 |  |
 | Backup Soldier | 200 |  |
+| Card of Safe Return | 200 |  |
 | Catapult Turtle | 200 |  |
 | Dark Magician | 200 |  |
+| Dark Necrofear | 200 |  |
 | Dark Ruler Ha Des | 200 |  |
 | Dragon Zombie | 200 |  |
+| Ekibyo Drakmord | 200 |  |
 | Empress Judge | 200 |  |
+| Fire Princess | 200 |  |
 | Flower Wolf | 200 |  |
 | Gaia Power | 200 |  |
 | Giant Germ | 200 |  |
 | Graverobber | 200 |  |
 | Hiro's Shadow Scout | 200 |  |
+| Interdimensional Matter Transporter | 200 |  |
 | Kaminari Attack | 200 |  |
 | Kuwagata a | 200 |  |
 | Kwagar Hercules | 200 |  |
 | Lightforce Sword | 200 |  |
+| Mask of Brutality | 200 |  |
 | Minar | 200 |  |
 | Rabid Horseman | 200 |  |
 | Restructer Revolution | 200 |  |
 | Sonic Bird | 200 |  |
+| Spirit Message "A" | 200 |  |
+| Spirit Message "L" | 200 |  |
+| Spirit Message "N" | 200 |  |
+| The Forgiving Maiden | 200 |  |
 | Thunder Nyan Nyan | 200 |  |
 | Two-Pronged Attack | 200 |  |
 | Ultimate Offering | 200 |  |
@@ -1766,6 +1838,7 @@ The DP the card password machine charges, per format, from the format's deck usa
 | United We Stand | 322 | Limited |
 | Big Shield Gardna | 302 |  |
 | Chiron the Mage | 302 |  |
+| Cursed Seal of the Forbidden Spell | 302 |  |
 | Megamorph | 302 |  |
 | Ninja Grandmaster Sasuke | 302 |  |
 | Wave-Motion Cannon | 302 |  |
@@ -1802,6 +1875,7 @@ The DP the card password machine charges, per format, from the format's deck usa
 | Dragoness the Wicked Knight | 239 |  |
 | Electric Snake | 239 |  |
 | Jar of Greed | 239 |  |
+| Jowgen the Spiritualist | 239 |  |
 | Monster Gate | 239 |  |
 | Monster Reincarnation | 239 |  |
 | Poison of the Old Man | 239 |  |
@@ -1809,6 +1883,7 @@ The DP the card password machine charges, per format, from the format's deck usa
 | Reasoning | 239 |  |
 | Sacred Crane | 239 |  |
 | Upstart Goblin | 229 | Semi-Limited |
+| Amazoness Archer | 219 |  |
 | Apprentice Magician | 219 |  |
 | Cannon Soldier | 219 |  |
 | Dark Flare Knight | 219 |  |
@@ -1919,6 +1994,7 @@ The DP the card password machine charges, per format, from the format's deck usa
 | Giant Rat | 277 |  |
 | Trap Hole | 277 |  |
 | Dark Scorpion - Cliff the Trap Remover | 272 |  |
+| Goldd, Wu-Lord of Dark World | 272 |  |
 | Chain Disappearance | 268 |  |
 | Cyber End Dragon | 268 |  |
 | Cyber Twin Dragon | 268 |  |
@@ -1945,6 +2021,7 @@ The DP the card password machine charges, per format, from the format's deck usa
 | Dark Mimic LV1 | 245 |  |
 | Ojama King | 244 |  |
 | Compulsory Evacuation Device | 240 |  |
+| Cursed Seal of the Forbidden Spell | 240 |  |
 | Gyaku-Gire Panda | 240 |  |
 | Mystik Wok | 240 |  |
 | Gigantes | 236 |  |
@@ -1962,6 +2039,7 @@ The DP the card password machine charges, per format, from the format's deck usa
 | Milus Radiant | 231 |  |
 | Nobleman of Extermination | 231 |  |
 | Ojama Trio | 231 |  |
+| Sillva, Warlord of Dark World | 231 |  |
 | Vampire Lord | 231 |  |
 | Apprentice Magician | 227 |  |
 | Dark Magician of Chaos | 227 | Limited |
@@ -1974,24 +2052,32 @@ The DP the card password machine charges, per format, from the format's deck usa
 | Cyber Blader | 222 |  |
 | Mask of Darkness | 222 |  |
 | My Body as a Shield | 222 |  |
+| Old Vindictive Magician | 222 |  |
 | Sand Moth | 222 |  |
 | Sasuke Samurai | 222 |  |
 | Secret Barrel | 222 |  |
 | Seven Tools of the Bandit | 222 |  |
+| Swarm of Locusts | 222 |  |
 | Dragoness the Wicked Knight | 221 |  |
 | Dark Flare Knight | 218 |  |
 | Des Lacooda | 218 |  |
 | Flying Kamakiri #1 | 218 |  |
 | Goblin Elite Attack Force | 218 |  |
+| Nightmare Wheel | 218 |  |
+| Slate Warrior | 218 |  |
+| Aqua Spirit | 213 |  |
 | Big Shield Gardna | 213 |  |
+| Granmarg the Rock Monarch | 213 |  |
 | Mage Power | 213 | Limited |
 | Magic Jammer | 213 |  |
 | Mind Control | 213 |  |
 | Nimble Momonga | 213 |  |
+| Offerings to the Doomed | 213 |  |
 | Poison of the Old Man | 213 |  |
 | Skelengel | 213 |  |
 | The Wicked Worm Beast | 213 |  |
 | Tribute to The Doomed | 213 |  |
+| Amazoness Archer | 209 |  |
 | Black Illusion Ritual | 209 |  |
 | Blast with Chain | 209 |  |
 | Chain Energy | 209 |  |
@@ -1999,6 +2085,7 @@ The DP the card password machine charges, per format, from the format's deck usa
 | Divine Wrath | 209 |  |
 | Electric Snake | 209 |  |
 | Fissure | 209 |  |
+| Nightmare's Steelcage | 209 |  |
 | Princess of Tsurugi | 209 |  |
 | Relinquished | 209 |  |
 | Robbin' Goblin | 209 |  |
@@ -2011,9 +2098,16 @@ The DP the card password machine charges, per format, from the format's deck usa
 | Fusionist | 205 |  |
 | Acid Trap Hole | 204 |  |
 | Asura Priest | 204 |  |
+| Bait Doll | 204 |  |
+| Dark Deal | 204 |  |
+| Dark Necrofear | 204 |  |
+| Dark World Lightning | 204 |  |
 | De-Spell | 204 |  |
+| Dimension Wall | 204 |  |
+| Draining Shield | 204 |  |
 | Flame Ghost | 204 |  |
 | Giant Germ | 204 |  |
+| Karma Cut | 204 |  |
 | Light of Intervention | 204 |  |
 | Magic Drain | 204 |  |
 | Marauding Captain | 204 |  |
@@ -2023,12 +2117,14 @@ The DP the card password machine charges, per format, from the format's deck usa
 | Remove Trap | 204 |  |
 | Rising Air Current | 204 |  |
 | Roulette Barrel | 204 |  |
+| Royal Command | 204 |  |
 | Royal Oppression | 204 |  |
 | Sacred Crane | 204 |  |
 | Skull Lair | 204 |  |
 | Time Wizard | 204 |  |
 | UFO Turtle | 204 |  |
 | Warrior of Tradition | 204 |  |
+| St. Joan | 203 |  |
 | Empress Judge | 202 |  |
 | Giltia the D. Knight | 202 |  |
 | Dark Paladin | 201 |  |
@@ -2041,6 +2137,7 @@ The DP the card password machine charges, per format, from the format's deck usa
 | Charubin the Fire Knight | 200 |  |
 | Cyber Saurus | 200 |  |
 | Deepsea Shark | 200 |  |
+| Humanoid Worm Drake | 200 |  |
 | Labyrinth Tank | 200 |  |
 | Musician King | 200 |  |
 | Roaring Ocean Snake | 200 |  |

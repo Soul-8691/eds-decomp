@@ -12,7 +12,7 @@ that build: the list's cards above "------" (IDs 821, 822, ...), then the leftov
 is checked first, so a ROM from another build stops the script: rebuild the ROM before capturing.
 
 Optional cards/_capture_only.txt (one display name per line, before "|"): capture only those entries, then run
-tools/gen_new_cards_md.py to refresh NEW_CARDS.md.
+tools/gen_new_cards_md.py to refresh NEW_CARDS.md (alphabetical, by-format, and additional sections).
 
 The script plays the game with key presses: A until the main menu, then Down, Down, A into Deck Edit. For each
 card it writes the card's ID into the list entry under the cursor (DeckEdit_GetListCard's cell), opens the
