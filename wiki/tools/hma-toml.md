@@ -63,6 +63,13 @@ original ROM (repo root). Without `baserom.toml` it does nothing. `eds_demo.toml
     `` `asc` `` strings
     `text.packs.format.pack<i>`), `.flags` (1 = usage pack), `.formats` (an index of the `formats` list),
     `.releasedates` (yyyymmdd), `.portraits` (the cover card).
+  - Format pack covers (by the `.sym`): `graphics.packs.format.<pack>` (the pack's name in lower case, letters and
+    digits; a repeated name gets its index) is pack i's shop cover in `gFormatPackCovers` (i * 0x1880; made from
+    its `.portraits` card's art by `tools/format_pack_covers.py`): `` `ucs8x7x14|graphics.palettes.packs` ``, the
+    original covers' format. Their palette is `gPackListPal` (0x0863CC7C), baserom.toml's
+    `graphics.palettes.packs` (`` `ucp4:0123456789ABCDEF` ``, 256 colours); the guide now marks it used (it was
+    UNUSED with the original covers). An edited palette changes every cover, the original covers and the shop's
+    background.
   - Card prices (`src/mod_dp.c`, `build/include/card_prices.h`): `data.prices.cards`
     (``[costs<[card:cardinternalnumbers price:]/count> count: unused:]formats``), the DP of a password per format;
     the new list `formats` holds the 15 formats in banlist order.

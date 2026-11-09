@@ -2887,3 +2887,8 @@ updated: 2026-09-29
 ## [2026-11-09] progress | Format-pack covers baked at build time
 - tools/format_pack_covers.py, data/mod_format_pack_covers.s (`gFormatPackCovers`); src/mod_format_packs.c: DMA
   from ROM instead of runtime BlitArtCover. Makefile, units.txt. [[pack-shop]].
+
+## [2026-11-09] progress | HMA TOML: the format pack covers and gPackListPal
+- tools/hma_toml.py: graphics.packs.format.<pack> (50 covers in gFormatPackCovers, `ucs8x7x14` on
+  graphics.palettes.packs); that palette (gPackListPal) marked used in the guide.
+- Pages: [[hma-toml]].

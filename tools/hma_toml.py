@@ -25,7 +25,7 @@ source of this repo, and where that thing is in the demo ROM:
                 (graphics.cards.icons*). And the mod's own tables (mod_anchors), by the ELF's
                 symbols (static ones too: build/eds.elf's .symtab): the format packs (data.packs.format.*: each
                 pack's pool of card and weight, which is all a pull reads, flags, format, release date,
-                portrait, name; list formatpacks), the card prices (data.prices.cards: per format, card and DP; list
+                portrait, name; list formatpacks; graphics.packs.format.<pack>: its shop cover), the card prices (data.prices.cards: per format, card and DP; list
                 formats), every deck of src/mod_decks.c (data.decks.mod.<deck>: main + Fusion, side, DeckList) and
                 the debug deck recipes (data.decks.recipes: name, DeckList, side, side count), and the pre-duel
                 pictures (graphics.preduel.<format>: palette, QR code sprite and palette, 8bpp picture).
@@ -67,6 +67,7 @@ CARD_LIMIT_WORDS = ('data.constants.cards.limit', 'data.constants.cards.limit2')
 #   else), as graphics.cards.images / graphics.cards.palettes; the images' palette hint is the palettes table, whose
 #   row of the same index HMA uses.
 FIELD_ICON_MINIS = 0x7980
+PACK_COVER_BYTES = 98 * 64    # a format pack's shop cover: 7 x 14 8bpp tiles (tools/format_pack_covers.py)
 MINI_STRIDE = 256             # 8bpp 2x2 tiles (tools/cardicons.py, src/mod_field_icons.c)
 ICON_PALETTE_SIZE = 0x20
 
@@ -135,6 +136,10 @@ ADDED_GUIDE = [
     ('data.packs.format', "per format pack: .names, .flags (1 = usage pack), .formats, .releasedates (yyyymmdd), "
                           ".portraits (cover card)", USED),
     ('text.packs.format', 'the format pack names (ASCII)', USED),
+    ('graphics.packs.format', "each format pack's shop cover (gFormatPackCovers: 56 x 112, 8bpp, palette "
+                              "graphics.palettes.packs), named after the pack. Made from its portrait card's art when "
+                              "the ROM is built (tools/format_pack_covers.py), so a new data.packs.format.portraits "
+                              "card needs a new cover too (or a rebuild)", USED),
     ('data.prices.cards', "the DP to buy a card by password, per format: card and price", USED),
     ('data.decks.mod.yugideck', "Yugi's deck (30 7 Colored Fish)", 'UNUSED (Yugi is a hidden duelist)'),
     ('data.decks.mod.testdeck', "the Test Duel's deck (test.ydk)", (UNUSED, 'used (the Test Duel, debug builds only)')),
@@ -217,7 +222,8 @@ VANILLA_GUIDE = [
                           "cards per rarity", 'UNUSED (not in the shop, and Campaign rewards open format packs: ModRewardPack)'),
     ('graphics.packs', "the original booster pack covers, with graphics.palettes.packs",
      'UNUSED (as data.packs)'),
-    ('graphics.palettes.packs', "the pack covers' palette", 'UNUSED (as data.packs)'),
+    ('graphics.palettes.packs', "the pack covers' palette (gPackListPal, 256 colours): the shop's covers "
+                                "(graphics.packs.format.*) and its background", USED),
     ('graphics.titlescreen.medal', "the title screen's coin (inside its pack)",
      'UNUSED (the title draws graphics.title.coin)'),
     ('graphics.palettes.titlescreen.medal', "the coin's palette", 'UNUSED (as the coin)'),
@@ -455,6 +461,21 @@ def mod_anchors(elf, rom, rom_sym):
             s = sym(symbol, 'mod_format_packs.o')
             if s:
                 add(f'data.packs.format.{field_name}', s, fmt)
+        # The shop covers (gFormatPackCovers, tools/format_pack_covers.py): 56 x 112, 8bpp, on the original covers'
+        # palette (gPackListPal, baserom.toml's graphics.palettes.packs), one per pack in formatpacks order.
+        covers = rom_sym.get('gFormatPackCovers')
+        if covers and covers[1] == count * PACK_COVER_BYTES:
+            taken = set()
+            for i, pack in enumerate(packs):
+                n = anchor_id(pack) or f'pack{i}'
+                if n in taken:
+                    n += str(i)
+                taken.add(n)
+                anchors.append((f'graphics.packs.format.{n}', covers[0] + i * PACK_COVER_BYTES - ROM_BASE,
+                                '`ucs8x7x14|graphics.palettes.packs`'))
+        else:
+            report.append('gFormatPackCovers missing from the .sym or not %d covers: the format pack covers are left '
+                          'out' % count)
     else:
         report.append('no sFormatPackPools / sFormatPackNames in the ELF: the format packs are left out')
 
