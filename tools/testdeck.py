@@ -16,6 +16,9 @@ import os
 import struct
 import sys
 
+sys.path.insert(0, os.path.dirname(__file__))
+from ydk_io import read_ydk  # noqa: E402
+
 ASSETS = 'build/assets'
 # Passcodes the table does not hold: B. Skull Dragon has none in EDS; Dark Paladin was added under 98502115.
 ALIASES = {
@@ -54,18 +57,6 @@ def tables():
     number = lambda cid: struct.unpack_from('<H', i2n, cid * 2)[0]
     name = lambda cid: names[cid * 0x40:(cid + 1) * 0x40].split(b'\0')[0].decode('latin-1')
     return by_pass, number, name
-
-
-def read_ydk(path):
-    sections = {'#main': [], '#extra': [], '!side': []}
-    sec = None
-    for line in open(path, encoding='utf-8', errors='replace'):
-        line = line.strip()
-        if line in sections:
-            sec = line
-        elif line.isdigit() and sec:
-            sections[sec].append(int(line))
-    return sections
 
 
 def header(path):
