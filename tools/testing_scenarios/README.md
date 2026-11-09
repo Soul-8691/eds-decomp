@@ -41,7 +41,7 @@ Without ffmpeg, use mGBA’s GUI: **Tools → Record A/V** → **MPEG-4**, set t
 
 Format **main decks** (40 cards) load as soon as the duel starts (**before** your Draw step), from `usage/<format>.json` via `format_decks.lua`. When the usage deck is loaded into RAM, the script **clears both hands** and **shuffles each main deck once** (`p0ShuffledOnce` / `p1ShuffledOnce`). By default you confirm **Draw** on your deck (Mulligan → Draw → **A**). Optional `ramOpeningDraw = true` sets **`skipDrawPhase`** and **RAM-draws 5** instead (no deck menu). **Scenario hand/field RAM** (`setupCards`) runs only **after** you confirm **Draw** (or after `ramOpeningDraw` RAM-deal), still during Draw/Standby before Main 1. **Recording** waits until `scenarioSetupDone`, skips `draw_mulligan`, and holds **3 frames** so the first PNG matches the scenario hand. If **you go first**, load+shuffle wait until **Turn Start** (`duel_step` 2). Pass `format` from TESTING.md; disable with `usageDeck = false`.
 
-Capture ends as soon as the play key sequence finishes (`recordTail` defaults to **0**; set a positive value in a POC only if you need post-play hold time).
+Capture ends after the scripted `play` steps finish and the duel UI is idle (~**20** frames, `playSettleFrames`; no extra `recordTail` by default). Play steps may include `{ cursor = "opp_monster", zone = 0 }` or `{ cursor = "own_hand", slot = N }` before **A** presses.
 
 Opponent **hand** cards are written in RAM for effects like **Card Destruction**, but Test Duel does **not** show the CPU’s hand on screen (unlike Debug duels).
 

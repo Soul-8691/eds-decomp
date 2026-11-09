@@ -29,7 +29,20 @@ EDS.DUEL_STEP_OPENING = 1
 EDS.DUEL_STEP_TURN_START = 2
 EDS.DUEL_STEP_MAIN = 5
 EDS.G_CHAIN = 0x02017A40
+EDS.G_CHAIN_LINK_COUNT = EDS.G_CHAIN + 0x3C0
+EDS.G_CHAIN_LINKS = EDS.G_CHAIN + 0x280
+EDS.G_CHAIN_EFFECT_STEP = EDS.G_CHAIN + 0x3E0 -- gChain.effectStep (chain.h)
+EDS.G_CHAIN_TARGET_STEP = EDS.G_CHAIN + 0x3E5 -- chainB step (effect_targets3.c TARGET_STEP)
+EDS.G_TEXTBOX = 0x0201AE60
+-- EffectTributeOpponentMonsterResolve (effect_resolve8.c) Soul Exchange hand / field tribute picks
+EDS.EFFECT_TRIBUTE_OPP_PICK_SECOND = 0x76
+EDS.EFFECT_TRIBUTE_OPP_PICK_HAND = 0x77
+EDS.EFFECT_TRIBUTE_OPP_SUMMON_DONE = 0x6E
+EDS.CARD_ID_SOUL_EXCHANGE = 1000 -- duel RAM id (engine key 1220)
+EDS.CARD_ID_SUMMONED_SKULL = 675
 EDS.DEFAULT_PLAYER_HAND = 5
+-- Mulligan/Draw menu fills to 5, then DuelPhase_Draw calls DrawCards(0, 1) for the normal draw (battle_phase3.c).
+EDS.FIRST_TURN_HAND = 6
 EDS.DUEL_STEP_OPPONENT_TURN = 8
 EDS.DUEL_STEP_RESULT = 9
 EDS.G_DUEL_TURN_FLAGS = EDS.G_DUEL + 0x1B12
@@ -57,7 +70,7 @@ EDS.MAIN_SEQ_INDEX1 = EDS.G_MAIN + 0x4859
 
 EDS.CARD_NAMES = 0x0822C720
 EDS.CARD_NAME_SIZE = 0x40
-EDS.CARD_ID_LAST = 900 -- safe upper bound for name scan on demo builds
+EDS.CARD_ID_LAST = 2400 -- added cards (e.g. Soul Exchange @ 1220) live above legacy scan cap
 
 EDS.KEY_A, EDS.KEY_B = 0x01, 0x02
 EDS.KEY_START, EDS.KEY_SELECT = 0x08, 0x04
@@ -375,6 +388,87 @@ function EDS.opponentHandCount()
 end
 
 -- Chain list, response windows, or effect resolve still running on screen.
+function EDS.chainEffectStep()
+    return emu:read8(EDS.G_CHAIN_EFFECT_STEP)
+end
+
+function EDS.chainIsResolving()
+    return (emu:read8(EDS.G_CHAIN + 0x3D2) & 0x01) ~= 0
+end
+
+function EDS.chainResolvingCardId()
+    local n = emu:read16(EDS.G_CHAIN_LINK_COUNT)
+    if n == 0 or n > 16 then
+        return 0
+    end
+    local ent = EDS.G_CHAIN_LINKS + (n - 1) * 0x14
+    return emu:read16(ent) & 0x7FF
+end
+
+function EDS.chainBuilding()
+    return (emu:read8(EDS.G_CHAIN + 0x3D0) & 0x01) ~= 0
+end
+
+function EDS.chainTargetStep()
+    return emu:read8(EDS.G_CHAIN_TARGET_STEP)
+end
+
+function EDS.textBoxActive()
+    return (emu:read8(EDS.G_TEXTBOX) & 0x01) ~= 0
+end
+
+function EDS.textBoxMenuKind()
+    return emu:read16(EDS.G_TEXTBOX + 0x04)
+end
+
+function EDS.playerBattlePhaseDone(player)
+    player = player or 0
+    local base = player == 1 and EDS.PLAYER1 or EDS.PLAYER0
+    return (emu:read8(base + 0x09) & 0x10) ~= 0
+end
+
+-- Card on the chain entry being built or resolved (pending[buildIndex] or last link).
+function EDS.chainActivatingCardId()
+    local n = emu:read16(EDS.G_CHAIN_LINK_COUNT)
+    if n > 0 and n <= 16 then
+        local ent = EDS.G_CHAIN_LINKS + (n - 1) * 0x14
+        return emu:read16(ent) & 0x7FF
+    end
+    if EDS.chainBuilding() then
+        local bi = emu:read8(EDS.G_CHAIN + 0x3D1)
+        local ent = EDS.G_CHAIN + bi * 0x14
+        return emu:read16(ent) & 0x7FF
+    end
+    if EDS.chainIsResolving() then
+        return EDS.chainResolvingCardId()
+    end
+    return 0
+end
+
+function EDS.chainActivatingNumTargets()
+    local n = emu:read16(EDS.G_CHAIN_LINK_COUNT)
+    local ent
+    if n > 0 and n <= 16 then
+        ent = EDS.G_CHAIN_LINKS + (n - 1) * 0x14
+    else
+        local bi = emu:read8(EDS.G_CHAIN + 0x3D1)
+        ent = EDS.G_CHAIN + bi * 0x14
+    end
+    return emu:read8(ent + 0x0A) & 0x07
+end
+
+-- 0x77 is also generic EFFECT_STEP_10; only Soul Exchange tribute resolve uses these steps here.
+function EDS.tributeHandPickActive()
+    if not EDS.chainIsResolving() then
+        return false
+    end
+    if EDS.chainResolvingCardId() ~= EDS.CARD_ID_SOUL_EXCHANGE then
+        return false
+    end
+    local s = EDS.chainEffectStep()
+    return s == EDS.EFFECT_TRIBUTE_OPP_PICK_HAND or s == EDS.EFFECT_TRIBUTE_OPP_PICK_SECOND
+end
+
 function EDS.chainOrEffectBusy()
     local flags491 = emu:read8(EDS.G_CHAIN + 0x491)
     if (flags491 & 0x40) ~= 0 then
@@ -392,16 +486,107 @@ function EDS.chainOrEffectBusy()
 end
 
 function EDS.openingDrawSatisfied(frameState)
+    local opts = frameState.opts or {}
     if frameState.openingHandRamDone or frameState.openingRamDrew then
         return true
     end
-    if frameState.drawConfirmed and EDS.openingHandReady(frameState) then
-        return true
-    end
-    if EDS.duelStep() >= EDS.DUEL_STEP_MAIN and (frameState.timer or 0) > 90 then
+    EDS.syncDrawConfirmed(frameState)
+    if frameState.drawConfirmed and EDS.openingHandReady(frameState, opts) then
         return true
     end
     return false
+end
+
+-- drawMenuCommit = player chose Draw in the deck menu; drawConfirmed = full first-turn hand in RAM.
+function EDS.syncDrawConfirmed(frameState)
+    if frameState.drawConfirmed or frameState.openingRamDrew then
+        return
+    end
+    if not frameState.drawMenuCommit then
+        return
+    end
+    local opts = frameState.opts or {}
+    if EDS.openingHandReady(frameState, opts) then
+        frameState.drawConfirmed = true
+        EDS.log(string.format(
+            "Opening draw complete (hand=%d deck=%d want=%d).",
+            EDS.playerHandCount(), emu:read8(EDS.PLAYER0 + 3),
+            EDS.openingHandWant(frameState, opts)))
+    end
+end
+
+-- Route the free cursor toward your deck pile (DuelCursor_PickAny paths in duel_cursor.c).
+function EDS.keyTowardOwnDeck(area)
+    if area == EDS.DUEL_AREA_DECK then
+        return EDS.KEY_A
+    end
+    if area == EDS.DUEL_AREA_FUSION_DECK or area == EDS.DUEL_AREA_SPELL_TRAP then
+        return EDS.KEY_LEFT
+    end
+    if area == EDS.DUEL_AREA_HAND then
+        return EDS.KEY_UP
+    end
+    if area == EDS.DUEL_AREA_MONSTER or area == EDS.DUEL_AREA_FIELD then
+        return EDS.KEY_DOWN
+    end
+    return EDS.KEY_UP
+end
+
+-- Main Phase: move the free cursor onto your hand[slot] (one D-pad edge per call).
+function EDS.keyTowardHandSlot(area, idx, slot)
+    slot = slot or 0
+    if area == EDS.DUEL_AREA_HAND then
+        if idx < slot then
+            return EDS.KEY_RIGHT
+        end
+        if idx > slot then
+            return EDS.KEY_LEFT
+        end
+        return nil
+    end
+    -- duel_cursor.c PickAny (player 0): Deck --Left--> ST[4] --Down--> Hand[0]
+    if area == EDS.DUEL_AREA_SPELL_TRAP then
+        return EDS.KEY_DOWN
+    end
+    if area == EDS.DUEL_AREA_DECK then
+        return EDS.KEY_LEFT
+    end
+    if area == EDS.DUEL_AREA_FUSION_DECK then
+        return EDS.KEY_LEFT
+    end
+    if area == EDS.DUEL_AREA_MONSTER then
+        return EDS.KEY_DOWN
+    end
+    if area == EDS.DUEL_AREA_FIELD or area == EDS.DUEL_AREA_GRAVEYARD
+        or area == EDS.DUEL_AREA_BANISHED then
+        return EDS.KEY_RIGHT
+    end
+    return EDS.KEY_DOWN
+end
+
+function EDS.syncDrawMenuCommit(frameState, wantHand)
+    wantHand = wantHand or EDS.DEFAULT_PLAYER_HAND
+    if frameState.drawMenuCommit or not frameState.drawPickedDraw then
+        return
+    end
+    if EDS.playerHandCount() >= wantHand then
+        frameState.drawMenuCommit = true
+    end
+end
+
+-- After opening draw is confirmed, close the deck menu so the duel can leave Draw phase.
+function EDS.tickPostDrawMenuClose(frameState)
+    if not frameState.drawConfirmed then
+        return
+    end
+    if not EDS.cardMenuOpen() then
+        frameState.postDrawMenuClosedStreak = (frameState.postDrawMenuClosedStreak or 0) + 1
+        return
+    end
+    frameState.postDrawMenuClosedStreak = 0
+    if not EDS.busy() then
+        EDS.press(EDS.KEY_B, 14)
+    end
 end
 
 function EDS.fillPlayerHandToCount(wantCount, opts)
@@ -486,6 +671,21 @@ function EDS.forceOwnDeckCursor()
     end
 end
 
+function EDS.forceHandCursor(player, slot)
+    player = player or 0
+    slot = slot or 0
+    emu:write32(EDS.G_DUEL_SCREEN_SEL_PLAYER, player)
+    emu:write32(EDS.G_DUEL_SCREEN_SEL_AREA, EDS.DUEL_AREA_HAND)
+    emu:write32(EDS.G_DUEL_SCREEN_SEL_INDEX, slot)
+end
+
+function EDS.forceOpponentMonsterCursor(zone)
+    zone = zone or 0
+    emu:write32(EDS.G_DUEL_SCREEN_SEL_PLAYER, 1)
+    emu:write32(EDS.G_DUEL_SCREEN_SEL_AREA, EDS.DUEL_AREA_MONSTER)
+    emu:write32(EDS.G_DUEL_SCREEN_SEL_INDEX, zone)
+end
+
 function EDS.duelCursorReady()
     local flags = emu:read16(EDS.G_DUEL_SCREEN_FLAGS)
     return ((flags >> 3) & 1) == 1
@@ -495,10 +695,39 @@ function EDS.duelSelIndex()
     return emu:read32(EDS.G_DUEL_SCREEN_SEL_INDEX)
 end
 
+function EDS.isDeckPileMenu()
+    if not EDS.cardMenuOpen() then
+        return false
+    end
+    local cmd = EDS.cardMenuCommand()
+    return cmd == EDS.CARDMENU_CMD_SURRENDER or cmd == EDS.CARDMENU_CMD_MULLIGAN
+        or cmd == EDS.CARDMENU_CMD_DRAW
+end
+
+function EDS.isHandCommandMenu()
+    if not EDS.cardMenuOpen() or EDS.duelSelArea() ~= EDS.DUEL_AREA_HAND then
+        return false
+    end
+    return not EDS.isDeckPileMenu()
+end
+
+function EDS.dismissDeckPileMenuIfOpen()
+    if not EDS.isDeckPileMenu() then
+        return false
+    end
+    if not EDS.busy() then
+        EDS.press(EDS.KEY_B, 18)
+    end
+    return true
+end
+
 -- Block A only on deck-pile menus (Surrender/Mulligan/Draw). Hand command menus need A to confirm Activate.
 function EDS.safeToPressA()
     local area = EDS.duelSelArea()
     if EDS.cardMenuOpen() then
+        if EDS.isDeckPileMenu() then
+            return false
+        end
         local cmd = EDS.cardMenuCommand()
         if cmd == EDS.CARDMENU_CMD_SURRENDER or cmd == EDS.CARDMENU_CMD_MULLIGAN
             or cmd == EDS.CARDMENU_CMD_DRAW then
@@ -513,10 +742,17 @@ function EDS.safeToPressA()
         or area == EDS.DUEL_AREA_GRAVEYARD or area == EDS.DUEL_AREA_BANISHED then
         return false
     end
-    return area == EDS.DUEL_AREA_HAND
+    if area == EDS.DUEL_AREA_HAND or area == EDS.DUEL_AREA_MONSTER
+        or area == EDS.DUEL_AREA_SPELL_TRAP then
+        return true
+    end
+    return false
 end
 
 function EDS.handMenuTowardActivate()
+    if EDS.dismissDeckPileMenuIfOpen() then
+        return false
+    end
     if not EDS.cardMenuOpen() or EDS.duelSelArea() ~= EDS.DUEL_AREA_HAND then
         return false
     end
@@ -529,43 +765,149 @@ function EDS.handMenuTowardActivate()
     return false
 end
 
-function EDS.prepHandStep(frameState)
-    EDS.forceOwnHandCursor()
-    if EDS.cardMenuOpen() then
-        if not EDS.busy() then
-            EDS.press(EDS.KEY_B, 20)
+function EDS.onHandSlot(player, slot)
+    return EDS.duelSelPlayer() == player
+        and EDS.duelSelArea() == EDS.DUEL_AREA_HAND
+        and EDS.duelSelIndex() == slot
+end
+
+function EDS.handSlotCardId(player, slot)
+    local base = player == 1 and EDS.PLAYER1 or EDS.PLAYER0
+    local w = emu:read32(base + EDS.OFFSET_HAND + slot * 4)
+    return w & 0x7FF
+end
+
+function EDS.findPlayerHandSlot(cardId, player)
+    player = player or 0
+    local base = player == 1 and EDS.PLAYER1 or EDS.PLAYER0
+    local n = emu:read8(base + 2)
+    for i = 0, n - 1 do
+        if EDS.handSlotCardId(player, i) == (cardId & 0x7FF) then
+            return i
         end
+    end
+    return nil
+end
+
+function EDS.selHandCardId(player)
+    player = player or 0
+    if EDS.duelSelPlayer() ~= player or EDS.duelSelArea() ~= EDS.DUEL_AREA_HAND then
+        return nil
+    end
+    return EDS.handSlotCardId(player, EDS.duelSelIndex())
+end
+
+function EDS.onHandCard(player, cardId)
+    return EDS.selHandCardId(player) == (cardId & 0x7FF)
+end
+
+function EDS.onOppMonsterSlot(zone)
+    return EDS.duelSelPlayer() == 1
+        and EDS.duelSelArea() == EDS.DUEL_AREA_MONSTER
+        and EDS.duelSelIndex() == (zone or 0)
+end
+
+-- EffectTributeOpponentMonsterChainB: DuelCursor_PickTarget(PICK_PLAYER1(PICK_ANY_MONSTER)).
+function EDS.keyTowardOppMonsterSlot(selPlayer, area, idx, zone)
+    zone = zone or 0
+    if selPlayer == 1 and area == EDS.DUEL_AREA_MONSTER then
+        if idx < zone then
+            return EDS.KEY_RIGHT
+        end
+        if idx > zone then
+            return EDS.KEY_LEFT
+        end
+        return nil
+    end
+    if selPlayer == 0 and area == EDS.DUEL_AREA_MONSTER then
+        return EDS.KEY_UP
+    end
+    if selPlayer == 0 and area == EDS.DUEL_AREA_SPELL_TRAP then
+        return EDS.KEY_UP
+    end
+    if selPlayer == 0 and area == EDS.DUEL_AREA_HAND then
+        return EDS.KEY_UP
+    end
+    if selPlayer == 0 and (area == EDS.DUEL_AREA_DECK or area == EDS.DUEL_AREA_FUSION_DECK) then
+        return EDS.KEY_LEFT
+    end
+    if selPlayer == 1 and area ~= EDS.DUEL_AREA_MONSTER then
+        return EDS.KEY_DOWN
+    end
+    return EDS.KEY_UP
+end
+
+-- Real D-pad routing (duel_cursor.c). RAM sel* writes desync from PickAny — use keys callback only.
+function EDS.tickHandNavigateKeys(frameState)
+    local nav = frameState.handNav
+    if not nav or frameState.phase ~= "playing" then
         return
     end
-    local area = EDS.duelSelArea()
-    if area == EDS.DUEL_AREA_HAND then
-        if EDS.duelSelIndex() ~= 0 then
-            EDS.press(EDS.KEY_LEFT, 18)
-            return
-        end
-        frameState.handReady = true
-        EDS.log(string.format("Hand selected (index %d).", EDS.duelSelIndex()))
+    if EDS.chainOrEffectBusy() and nav.mode == "prep" then
         return
     end
     if EDS.busy() then
         return
     end
-    -- duel_cursor.c (player 0): Deck -> Left -> Spell/Trap; Spell/Trap -> Down -> Hand.
-    if area == EDS.DUEL_AREA_DECK then
-        EDS.press(EDS.KEY_LEFT, 22)
-    elseif area == EDS.DUEL_AREA_SPELL_TRAP then
-        EDS.press(EDS.KEY_DOWN, 22)
-    elseif area == EDS.DUEL_AREA_FUSION_DECK then
-        EDS.press(EDS.KEY_LEFT, 22)
-    else
-        if (frameState.timer % 60) < 30 then
-            EDS.press(EDS.KEY_DOWN, 22)
-        else
-            EDS.press(EDS.KEY_LEFT, 22)
+    if EDS.isDeckPileMenu() then
+        EDS.press(EDS.KEY_B, 16)
+        return
+    end
+    if EDS.cardMenuOpen() and not EDS.isHandCommandMenu() then
+        EDS.press(EDS.KEY_B, 16)
+        return
+    end
+    if nav.mode == "open" and EDS.isHandCommandMenu() then
+        frameState.handNavDone = true
+        frameState.handNav = nil
+        EDS.log(string.format("Hand command menu open (slot %d).", nav.slot or 0))
+        return
+    end
+    local slot = nav.slot or 0
+    if EDS.duelSelPlayer() ~= 0 then
+        EDS.press(EDS.KEY_UP, 16)
+        return
+    end
+    if not EDS.duelCursorReady() then
+        return
+    end
+    local area = EDS.duelSelArea()
+    local idx = EDS.duelSelIndex()
+    local toward = EDS.keyTowardHandSlot(area, idx, slot)
+    if toward then
+        EDS.press(toward, 16)
+        return
+    end
+    if area == EDS.DUEL_AREA_HAND and idx == slot then
+        if nav.mode == "open" and not EDS.cardMenuOpen() then
+            if EDS.safeToPressA() then
+                EDS.press(EDS.KEY_A, 20)
+            end
+        elseif nav.mode == "prep" then
+            frameState.handReady = true
+            frameState.handNav = nil
+            EDS.log(string.format("Hand selected (index %d).", idx))
         end
     end
-    if frameState.timer % 90 == 0 then
-        EDS.log(string.format("hand_prep area=%d index=%d", area, EDS.duelSelIndex()))
+    if (frameState.timer or 0) % 90 == 0 then
+        EDS.log(string.format(
+            "hand_nav mode=%s want=%d area=%d idx=%d menu=%s",
+            tostring(nav.mode), slot, area, idx, tostring(EDS.cardMenuOpen())))
+    end
+end
+
+function EDS.prepHandStep(frameState)
+    if frameState.handReady then
+        return
+    end
+    if not frameState.handNav then
+        frameState.handNav = { slot = 0, mode = "prep" }
+        EDS.log("Hand prep: navigating with D-pad (no RAM cursor snap).")
+    end
+    if frameState.timer % 120 == 0 then
+        EDS.log(string.format(
+            "hand_prep area=%d index=%d player=%d",
+            EDS.duelSelArea(), EDS.duelSelIndex(), EDS.duelSelPlayer()))
     end
 end
 
@@ -823,6 +1165,8 @@ function EDS.applyUsageDecks(opts, frameState)
         tostring(p1Shuffled), p1TopBefore, p1TopAfter))
     if opts.ramOpeningDraw ~= false then
         EDS.setPlayerSkipDraw(EDS.PLAYER0, true)
+    else
+        EDS.setPlayerSkipDraw(EDS.PLAYER0, false)
     end
 end
 
@@ -866,9 +1210,30 @@ function EDS.tickPlayerOpeningDraw(frameState, opts)
     end
 end
 
-function EDS.openingHandReady(frameState)
-    local want = frameState.minPlayerHand or EDS.DEFAULT_PLAYER_HAND
-    return EDS.playerHandCount() >= want
+function EDS.openingHandWant(frameState, opts)
+    opts = opts or {}
+    if frameState.minPlayerHand then
+        return frameState.minPlayerHand
+    end
+    if opts.ramOpeningDraw == false then
+        return EDS.FIRST_TURN_HAND
+    end
+    return EDS.DEFAULT_PLAYER_HAND
+end
+
+function EDS.openingHandReady(frameState, opts)
+    return EDS.playerHandCount() >= EDS.openingHandWant(frameState, opts)
+end
+
+function EDS.openingMainPending(frameState, opts)
+    opts = opts or {}
+    if not EDS.openingDrawSatisfied(frameState) then
+        return false
+    end
+    if opts.setupCards and not frameState.scenarioSetupDone then
+        return false
+    end
+    return true
 end
 
 -- Apply scenario hand/field after the game draw, during Draw or Standby (before Main Phase / capture).
@@ -877,11 +1242,12 @@ function EDS.canApplyScenarioSetup(frameState, opts)
     if EDS.turnPlayer() ~= 0 then
         return false
     end
+    EDS.syncDrawConfirmed(frameState)
     local step = EDS.duelStep()
-    if step < EDS.DUEL_STEP_DRAW or step > EDS.DUEL_STEP_STANDBY then
+    if step < EDS.DUEL_STEP_DRAW or step > EDS.DUEL_STEP_MAIN then
         return false
     end
-    if not EDS.openingHandReady(frameState) then
+    if not EDS.openingHandReady(frameState, opts) then
         return false
     end
     if opts.ramOpeningDraw ~= false then
@@ -900,7 +1266,6 @@ function EDS.tickScenarioSetup(opts, frameState)
     EDS.defaultSetup(opts)
     frameState.scenarioSetupDone = true
     frameState.scenarioCaptureHold = 3
-    EDS.forceOwnHandCursor()
     EDS.log(string.format(
         "Scenario RAM applied at duel_step=%d (after opening draw).", EDS.duelStep()))
 end
@@ -1140,13 +1505,11 @@ function EDS.navigateTestDuel(frameState, opts)
         local step = EDS.duelStep()
         if EDS.inHumanMainPhase1() then
             if frameState.requireOpeningDraw and not EDS.openingDrawSatisfied(frameState) then
-                if step == EDS.DUEL_STEP_DRAW or EDS.playerHandCount() < (frameState.minPlayerHand or EDS.DEFAULT_PLAYER_HAND) then
-                    EDS.log(string.format(
-                        "draw_mulligan: need opening draw (hand=%d step=%d).",
-                        EDS.playerHandCount(), step))
-                else
-                    frameState.drawConfirmed = true
-                end
+                EDS.log(string.format(
+                    "draw_mulligan: need opening draw (hand=%d step=%d commit=%s).",
+                    EDS.playerHandCount(), step, tostring(frameState.drawMenuCommit)))
+            elseif opts.setupCards and not frameState.scenarioSetupDone then
+                EDS.syncDrawConfirmed(frameState)
             else
                 frameState.phase = "in_duel"
                 frameState.timer = 0
@@ -1159,57 +1522,71 @@ function EDS.navigateTestDuel(frameState, opts)
             frameState.timer = 0
             return
         end
+        EDS.tickPostDrawMenuClose(frameState)
         if EDS.busy() then
             return
         end
-        local wantHand = frameState.minPlayerHand or EDS.DEFAULT_PLAYER_HAND
+        local wantHand = EDS.openingHandWant(frameState, opts)
+        EDS.syncDrawMenuCommit(frameState, wantHand)
+        EDS.syncDrawConfirmed(frameState)
         local scenarioOk = not opts.setupCards or frameState.scenarioSetupDone
         if scenarioOk and EDS.openingDrawSatisfied(frameState) then
             if EDS.inHumanMainPhase1() or step >= EDS.DUEL_STEP_STANDBY then
                 frameState.phase = "in_duel"
                 frameState.timer = 0
-                EDS.log("Entering in_duel after opening draw + scenario RAM.")
+                EDS.log(string.format(
+                    "Entering in_duel after opening draw + scenario (step=%d).", step))
+                return
+            elseif frameState.drawConfirmed and not EDS.cardMenuOpen()
+                and (frameState.postDrawMenuClosedStreak or 0) >= 45
+                and not frameState.openingAwaitMain then
+                frameState.openingAwaitMain = true
+                frameState.phase = "in_duel"
+                frameState.timer = 0
+                EDS.log("Entering in_duel (draw menu closed; waiting for Main 1).")
                 return
             end
         end
         if step == EDS.DUEL_STEP_DRAW and EDS.turnPlayer() == 0 then
-            if opts.ramOpeningDraw ~= false then
+            if frameState.drawConfirmed then
+                EDS.tickPostDrawMenuClose(frameState)
+            elseif opts.ramOpeningDraw ~= false then
                 if EDS.cardMenuOpen() and not EDS.busy() and frameState.timer % 28 == 5 then
                     EDS.press(EDS.KEY_B, 22)
                 end
             elseif not frameState.drawConfirmed or EDS.playerHandCount() < wantHand then
                 local menuOpen = EDS.cardMenuOpen()
                 local cmd = EDS.cardMenuCommand()
-                if not menuOpen and not EDS.busy() then
-                    EDS.forceOwnDeckCursor()
-                end
-                local ready = EDS.duelCursorReady()
-                    and EDS.duelSelArea() == EDS.DUEL_AREA_DECK
+                local area = EDS.duelSelArea()
                 if not menuOpen then
-                    frameState.drawPickedDraw = false
-                    if ready and frameState.timer >= 20 and frameState.timer % 30 == 5 then
-                        EDS.press(EDS.KEY_A, 28)
-                    elseif frameState.timer >= 45 and frameState.timer % 35 == 5 then
-                        EDS.forceOwnDeckCursor()
-                        EDS.press(EDS.KEY_A, 28)
+                    if frameState.timer >= 12 and frameState.timer % 20 == 0 and not EDS.busy() then
+                        EDS.press(EDS.keyTowardOwnDeck(area), 26)
                     end
                 else
                     if cmd == EDS.CARDMENU_CMD_MULLIGAN and not frameState.drawPickedDraw then
                         EDS.press(EDS.KEY_RIGHT, 28)
                         frameState.drawPickedDraw = true
                     elseif cmd == EDS.CARDMENU_CMD_DRAW then
-                        if not frameState.drawConfirmed then
+                        if EDS.playerHandCount() < wantHand and not EDS.busy()
+                            and frameState.timer % 22 == 0 then
                             EDS.press(EDS.KEY_A, 28)
-                            frameState.drawConfirmed = true
                         end
+                        EDS.syncDrawMenuCommit(frameState, wantHand)
                     elseif frameState.timer % 35 == 10 then
                         EDS.press(EDS.KEY_RIGHT, 28)
                     end
                 end
+                EDS.syncDrawMenuCommit(frameState, wantHand)
+                EDS.syncDrawConfirmed(frameState)
+                if frameState.drawPickedDraw and not menuOpen
+                    and EDS.playerHandCount() >= EDS.DEFAULT_PLAYER_HAND
+                    and EDS.playerHandCount() < wantHand
+                    and not EDS.busy() and frameState.timer % 20 == 0 then
+                    EDS.press(EDS.keyTowardOwnDeck(area), 26)
+                end
                 if frameState.drawConfirmed and EDS.cardMenuOpen()
-                    and EDS.playerHandCount() >= wantHand
-                    and frameState.timer % 45 == 20 then
-                    EDS.press(EDS.KEY_B, 22)
+                    and not EDS.busy() and frameState.timer % 20 == 0 then
+                    EDS.press(EDS.KEY_B, 18)
                 end
             end
         elseif step == EDS.DUEL_STEP_STANDBY then
@@ -1233,6 +1610,334 @@ function EDS.navigateTestDuel(frameState, opts)
     end
 end
 
+-- Soul Exchange chainB: designate opponent's monster (PickTarget, not RAM cursor).
+function EDS.tickOppMonsterTargetKeys(frameState)
+    if frameState.phase ~= "playing" or frameState.playDone then
+        return
+    end
+    local pick = frameState.pendingOppTarget
+    if not pick then
+        return
+    end
+    if EDS.tributeHandPickActive() then
+        frameState.pendingOppTarget = nil
+        EDS.log("Opponent target assist: resolve hand pick active (target done).")
+        return
+    end
+    if EDS.chainActivatingCardId() == EDS.CARD_ID_SOUL_EXCHANGE
+        and EDS.chainActivatingNumTargets() >= 1 then
+        frameState.pendingOppTarget = nil
+        EDS.log("Opponent target assist: target registered on chain.")
+        return
+    end
+    if EDS.busy() then
+        return
+    end
+    pick.tick = (pick.tick or 0) + 1
+    local zone = pick.zone or 0
+    if EDS.textBoxActive() then
+        if pick.tick % 12 == 0 then
+            EDS.press(EDS.KEY_A, 18)
+            EDS.log("Opponent target assist: A (dismiss target prompt).")
+        end
+        return
+    end
+    if not EDS.duelCursorReady() then
+        return
+    end
+    local selP = EDS.duelSelPlayer()
+    local area = EDS.duelSelArea()
+    local idx = EDS.duelSelIndex()
+    if EDS.onOppMonsterSlot(zone) then
+        if pick.tick % 10 == 0 then
+            EDS.press(EDS.KEY_A, 18)
+            pick.presses = (pick.presses or 0) + 1
+            EDS.log(string.format(
+                "Opponent target assist: A on opp M%d (press %d).",
+                zone, pick.presses))
+        end
+        if (pick.presses or 0) >= 12 and pick.tick > 200 then
+            frameState.pendingOppTarget = nil
+            EDS.log("Opponent target assist: timeout (still on target?).")
+        end
+        return
+    end
+    local toward = EDS.keyTowardOppMonsterSlot(selP, area, idx, zone)
+    if toward and pick.tick % 2 == 0 then
+        EDS.press(toward, 16)
+    end
+    if pick.tick % 90 == 0 then
+        EDS.log(string.format(
+            "opp_target want=M%d sel p=%d a=%d i=%d targets=%d chainB=%d",
+            zone, selP, area, idx, EDS.chainActivatingNumTargets(), EDS.chainTargetStep()))
+    end
+    if pick.tick > 900 then
+        frameState.pendingOppTarget = nil
+        EDS.log("Opponent target assist: navigation timeout.")
+    end
+end
+
+function EDS.keyTowardOwnMonsterSlot(selPlayer, area, idx, zone)
+    zone = zone or 0
+    if selPlayer == 0 and area == EDS.DUEL_AREA_MONSTER then
+        if idx < zone then
+            return EDS.KEY_RIGHT
+        end
+        if idx > zone then
+            return EDS.KEY_LEFT
+        end
+        return nil
+    end
+    if selPlayer == 0 and area == EDS.DUEL_AREA_SPELL_TRAP then
+        return EDS.KEY_UP
+    end
+    if selPlayer == 0 and area == EDS.DUEL_AREA_HAND then
+        return EDS.KEY_UP
+    end
+    if selPlayer == 0 and (area == EDS.DUEL_AREA_DECK or area == EDS.DUEL_AREA_FUSION_DECK) then
+        return EDS.KEY_LEFT
+    end
+    if selPlayer ~= 0 then
+        return EDS.KEY_DOWN
+    end
+    return EDS.KEY_DOWN
+end
+
+-- Soul Exchange resolve: text box "Select a high-level monster", then DuelCursor_PickTarget(PICK_HAND)
+-- at effectStep 0x77 (no RAM cursor — PickTarget only).
+function EDS.tickHandMonsterPickKeys(frameState)
+    if frameState.phase ~= "playing" or frameState.playDone then
+        return
+    end
+    local romPick = EDS.tributeHandPickActive()
+    local pick = frameState.pendingHandPick
+    if romPick and not pick then
+        pick = {
+            slot = 1,
+            cardId = EDS.CARD_ID_SUMMONED_SKULL,
+            secondZone = 0,
+            maxPresses = 64,
+            fromRom = true,
+        }
+        frameState.pendingHandPick = pick
+        frameState.handPickTick = 0
+        frameState.handPickPresses = 0
+        frameState.handPickSawRom = true
+        EDS.log(string.format("Hand pick assist: ROM effectStep=0x%02X.", EDS.chainEffectStep()))
+    end
+    if not pick and not romPick then
+        return
+    end
+    if not pick then
+        return
+    end
+    if EDS.busy() then
+        return
+    end
+    frameState.handPickTick = (frameState.handPickTick or 0) + 1
+    local step = EDS.chainEffectStep()
+    if frameState.handPickSawRom and not romPick then
+        if (frameState.handPickPresses or 0) > 0
+            or step == EDS.EFFECT_TRIBUTE_OPP_SUMMON_DONE then
+            frameState.pendingHandPick = nil
+            EDS.log(string.format("Hand pick assist: done (effectStep=0x%02X).", step))
+            return
+        end
+    end
+    local wantId = pick.cardId
+    local wantSlot = pick.slot or 1
+    if wantId then
+        local found = EDS.findPlayerHandSlot(wantId, 0)
+        if found ~= nil then
+            wantSlot = found
+            if pick.resolvedSlot ~= found then
+                pick.resolvedSlot = found
+                EDS.log(string.format(
+                    "Hand pick assist: cardId %d at hand[%d] (handCount=%d).",
+                    wantId, found, EDS.playerHandCount()))
+            end
+        end
+    end
+    local wantZone = pick.secondZone or 0
+
+    if EDS.textBoxActive()
+        and (step == EDS.EFFECT_TRIBUTE_OPP_PICK_HAND
+            or step == EDS.EFFECT_TRIBUTE_OPP_PICK_SECOND) then
+        if frameState.handPickTick % 12 == 0 then
+            EDS.press(EDS.KEY_A, 18)
+            EDS.log(string.format(
+                "Hand pick assist: A (dismiss prompt, effectStep=0x%02X).", step))
+        end
+        return
+    end
+    if not EDS.duelCursorReady() then
+        return
+    end
+
+    local selP = EDS.duelSelPlayer()
+    local area = EDS.duelSelArea()
+    local idx = EDS.duelSelIndex()
+
+    if step == EDS.EFFECT_TRIBUTE_OPP_PICK_SECOND then
+        if selP == 0 and area == EDS.DUEL_AREA_MONSTER and idx == wantZone then
+            if frameState.handPickTick % 10 == 0 then
+                EDS.press(EDS.KEY_A, 18)
+                frameState.handPickPresses = (frameState.handPickPresses or 0) + 1
+                EDS.log(string.format(
+                    "Hand pick assist: A second tribute M%d (press %d).",
+                    wantZone, frameState.handPickPresses))
+            end
+            return
+        end
+        local toward = EDS.keyTowardOwnMonsterSlot(selP, area, idx, wantZone)
+        if toward and frameState.handPickTick % 2 == 0 then
+            EDS.press(toward, 16)
+        end
+        return
+    end
+
+    if step == EDS.EFFECT_TRIBUTE_OPP_PICK_HAND then
+        local onTarget = wantId and EDS.onHandCard(0, wantId) or EDS.onHandSlot(0, wantSlot)
+        if onTarget then
+            if frameState.handPickTick % 10 == 0 then
+                EDS.press(EDS.KEY_A, 18)
+                frameState.handPickPresses = (frameState.handPickPresses or 0) + 1
+                EDS.log(string.format(
+                    "Hand pick assist: A on hand[%d] id=%s (effectStep=0x%02X press %d).",
+                    EDS.duelSelIndex(), wantId and tostring(wantId) or "?",
+                    step, frameState.handPickPresses))
+            end
+        else
+            if selP ~= 0 then
+                if frameState.handPickTick % 2 == 0 then
+                    EDS.press(EDS.KEY_UP, 16)
+                end
+            else
+                local toward = EDS.keyTowardHandSlot(area, idx, wantSlot)
+                if toward and frameState.handPickTick % 2 == 0 then
+                    EDS.press(toward, 16)
+                end
+            end
+            if frameState.handPickTick % 90 == 0 then
+                EDS.log(string.format(
+                    "hand_pick wantSlot=%d wantId=%s sel p=%d a=%d i=%d selId=%s",
+                    wantSlot, wantId and tostring(wantId) or "nil",
+                    selP, area, idx, tostring(EDS.selHandCardId(0))))
+            end
+        end
+    elseif romPick and frameState.handPickTick % 10 == 0 then
+        EDS.press(EDS.KEY_A, 18)
+        frameState.handPickPresses = (frameState.handPickPresses or 0) + 1
+        EDS.log(string.format(
+            "Hand pick assist: A fallback (effectStep=0x%02X press %d).",
+            step, frameState.handPickPresses))
+    end
+
+    if not pick.fromRom and not romPick and (frameState.handPickPresses or 0) >= (pick.maxPresses or 8) then
+        frameState.pendingHandPick = nil
+        EDS.log("Hand pick assist: play-step timeout (effect step never 0x77?).")
+    end
+    if (frameState.handPickPresses or 0) >= (pick.maxPresses or 64) then
+        frameState.pendingHandPick = nil
+        EDS.log("Hand pick assist: max presses.")
+    end
+end
+
+-- After tribute summon: display position (Attack), then B → end Main (no Battle Phase).
+function EDS.tickSoulExchangeFinishKeys(frameState)
+    if frameState.phase ~= "playing" or frameState.playDone then
+        return
+    end
+    if not frameState.pendingPostSoulExchange then
+        return
+    end
+    if EDS.busy() then
+        return
+    end
+    local tick = (frameState.postSoulExchangeTick or 0) + 1
+    frameState.postSoulExchangeTick = tick
+    local phase = frameState.postSoulExchangePhase or "prompts"
+
+    if phase == "prompts" then
+        if EDS.textBoxActive() then
+            if tick % 12 == 0 then
+                EDS.press(EDS.KEY_A, 18)
+                EDS.log("Soul Exchange finish: A (text box / summon position).")
+            end
+            return
+        end
+        if EDS.cardMenuOpen() then
+            if tick % 12 == 0 then
+                EDS.press(EDS.KEY_B, 16)
+                EDS.log("Soul Exchange finish: B (close card menu).")
+            end
+            return
+        end
+        if EDS.chainOrEffectBusy() then
+            return
+        end
+        frameState.postSoulExchangePhase = "end_main"
+        frameState.postSoulExchangeTick = 0
+        EDS.log("Soul Exchange finish: prompts done; ending Main Phase.")
+        return
+    end
+
+    if phase == "end_main" then
+        if EDS.textBoxActive() then
+            frameState.postSoulExchangePhase = "end_confirm"
+            frameState.postSoulExchangeTick = 0
+            return
+        end
+        if EDS.chainOrEffectBusy() then
+            return
+        end
+        if EDS.cardMenuOpen() then
+            if tick % 12 == 0 then
+                EDS.press(EDS.KEY_B, 16)
+                EDS.log("Soul Exchange finish: B (close menu before end phase).")
+            end
+            return
+        end
+        if not frameState.postEndMainBPushed and tick % 20 == 0 then
+            EDS.press(EDS.KEY_B, 18)
+            frameState.postEndMainBPushed = true
+            EDS.log("Soul Exchange finish: B (request end Main Phase).")
+        end
+        return
+    end
+
+    if phase == "end_confirm" then
+        if EDS.textBoxActive() then
+            local kind = EDS.textBoxMenuKind()
+            if kind == 5 and not frameState.postPhaseMenuPickedEndTurn then
+                if tick % 18 == 0 then
+                    EDS.press(EDS.KEY_DOWN, 16)
+                    frameState.postPhaseMenuPickedEndTurn = true
+                    EDS.log("Soul Exchange finish: Down (select End Turn, skip Battle Phase).")
+                end
+            elseif tick % 12 == 0 then
+                EDS.press(EDS.KEY_A, 18)
+                EDS.log(string.format(
+                    "Soul Exchange finish: A (end turn; menuKind=%d battlePhaseDone=%s).",
+                    kind, tostring(EDS.playerBattlePhaseDone(0))))
+            end
+            if tick > 180 and frameState.postEndMainConfirmed then
+                frameState.pendingPostSoulExchange = nil
+                frameState.postSoulExchangePhase = nil
+                EDS.log("Soul Exchange finish: done (battle phase skipped).")
+            end
+            return
+        end
+        frameState.postEndMainConfirmed = true
+        if not EDS.chainOrEffectBusy() and tick > 20 then
+            frameState.pendingPostSoulExchange = nil
+            frameState.postSoulExchangePhase = nil
+            EDS.log("Soul Exchange finish: Main Phase ended.")
+        end
+        return
+    end
+end
+
 function EDS.runPlaySequence(seq, frameState)
     if not seq or #seq == 0 then
         return false
@@ -1241,10 +1946,87 @@ function EDS.runPlaySequence(seq, frameState)
     if step > #seq then
         return true
     end
+    local item = seq[step]
+    if item.handOpen then
+        local slot = item.handOpen.slot or 0
+        frameState.playHandSlot = slot
+        if frameState.playHandOpenStep ~= step then
+            frameState.playHandOpenStep = step
+            frameState.handNavDone = false
+            frameState.handNav = { slot = slot, mode = "open" }
+            EDS.log(string.format("Play: navigate to hand[%d] and open menu.", slot))
+        end
+        if frameState.handNavDone or EDS.isHandCommandMenu() then
+            frameState.handNav = nil
+            frameState.playIndex = step + 1
+        elseif (frameState.handOpenWait or 0) > 900 then
+            EDS.log("Play: handOpen timed out.")
+            frameState.handNav = nil
+            frameState.playIndex = step + 1
+        else
+            frameState.handOpenWait = (frameState.handOpenWait or 0) + 1
+        end
+        return false
+    end
+    if item.oppTarget then
+        if frameState.playOppTargetStep ~= step then
+            frameState.playOppTargetStep = step
+            frameState.pendingOppTarget = {
+                zone = item.oppTarget.zone or 0,
+                tick = 0,
+                presses = 0,
+            }
+            EDS.log(string.format(
+                "Play: opponent monster target assist (zone %d).",
+                item.oppTarget.zone or 0))
+        end
+        if not frameState.pendingOppTarget then
+            frameState.playIndex = step + 1
+        end
+        return false
+    end
+    if item.handPick then
+        if frameState.pendingOppTarget then
+            return false
+        end
+        if frameState.playHandPickStep ~= step then
+            frameState.playHandPickStep = step
+            frameState.pendingHandPick = item.handPick
+            frameState.handPickTick = 0
+            frameState.handPickPresses = 0
+            frameState.handPickSawRom = true
+            EDS.log("Play: waiting for hand monster pick (assist).")
+        end
+        if not frameState.pendingHandPick then
+            frameState.playIndex = step + 1
+        end
+        return false
+    end
+    if item.soulExchangeFinish then
+        if frameState.playSoulExchangeFinishDone then
+            frameState.playIndex = step + 1
+            return false
+        end
+        if frameState.playSoulExchangeFinishStep ~= step then
+            frameState.playSoulExchangeFinishStep = step
+            frameState.pendingPostSoulExchange = true
+            frameState.postSoulExchangePhase = "prompts"
+            frameState.postSoulExchangeTick = 0
+            frameState.postEndMainBPushed = nil
+            frameState.postPhaseMenuPickedEndTurn = nil
+            frameState.postEndMainConfirmed = nil
+            EDS.log("Play: Soul Exchange finish (summon position + skip Battle Phase).")
+        end
+        if not frameState.pendingPostSoulExchange then
+            frameState.playSoulExchangeFinishDone = true
+            frameState.playIndex = step + 1
+            EDS.log("Play: Soul Exchange finish step complete.")
+        end
+        return false
+    end
     if EDS.busy() then
         return false
     end
-    local item = seq[step]
     if item.wait then
         frameState.playWait = (frameState.playWait or 0) + 1
         if frameState.playWait >= item.wait then
@@ -1253,14 +2035,49 @@ function EDS.runPlaySequence(seq, frameState)
         end
         return false
     end
+    if item.cursor then
+        if item.cursor == "opp_monster" then
+            EDS.forceOpponentMonsterCursor(item.zone or 0)
+        elseif item.cursor == "own_hand" or item.cursor == "own_hand_menu" then
+            local slot = item.slot or 0
+            frameState.playHandSlot = slot
+            frameState.handNav = { slot = slot, mode = "prep" }
+            frameState.handReady = false
+        end
+        EDS.log(string.format("Play step %d/%d (cursor %s).", step, #seq, item.cursor))
+        frameState.playIndex = step + 1
+        return false
+    end
     if item.key then
         if item.key == EDS.KEY_A then
-            if EDS.cardMenuOpen() and EDS.duelSelArea() == EDS.DUEL_AREA_HAND then
+            if EDS.dismissDeckPileMenuIfOpen() then
+                return false
+            end
+            local inEffect = EDS.chainOrEffectBusy()
+            if not inEffect and not EDS.cardMenuOpen() then
+                local slot = frameState.playHandSlot or 0
+                if not EDS.onHandSlot(0, slot) then
+                    frameState.handNav = { slot = slot, mode = "prep" }
+                    return false
+                end
+            end
+            if not inEffect and EDS.cardMenuOpen() and EDS.duelSelArea() == EDS.DUEL_AREA_HAND then
                 if not EDS.handMenuTowardActivate() then
                     return false
                 end
-            elseif not EDS.safeToPressA() then
+            elseif not inEffect and not EDS.safeToPressA() then
+                if (frameState.timer or 0) % 90 == 0 then
+                    EDS.log(string.format(
+                        "Play A blocked (area=%d menu=%s chain=%s).",
+                        EDS.duelSelArea(), tostring(EDS.cardMenuOpen()), tostring(inEffect)))
+                end
                 return false
+            elseif inEffect and EDS.cardMenuOpen() then
+                local cmd = EDS.cardMenuCommand()
+                if cmd == EDS.CARDMENU_CMD_SURRENDER or cmd == EDS.CARDMENU_CMD_MULLIGAN
+                    or cmd == EDS.CARDMENU_CMD_DRAW then
+                    return false
+                end
             end
         end
         EDS.press(item.key, item.gap or EDS.GAP_FRAMES)
@@ -1319,7 +2136,8 @@ function EDS.run(opts)
         recordStopAt = nil,
         timeout = timeout,
         basename = basename,
-        minPlayerHand = opts.minPlayerHand or EDS.DEFAULT_PLAYER_HAND,
+        minPlayerHand = opts.minPlayerHand,
+        opts = opts,
     }
     if doCapture then
         EDS.initMp4Capture(frameState, mp4Path, opts)
@@ -1334,17 +2152,38 @@ function EDS.run(opts)
         if frameState.phase ~= "draw_mulligan" then
             return
         end
-        if EDS.turnPlayer() ~= 0 or EDS.duelStep() ~= EDS.DUEL_STEP_DRAW then
-            return
-        end
-        if EDS.cardMenuOpen() or frameState.timer < 20 then
+        local duelStep = EDS.duelStep()
+        if EDS.turnPlayer() ~= 0 then
             return
         end
         if frameState.drawConfirmed then
+            if EDS.cardMenuOpen() then
+                emu:addKeys(EDS.KEY_B)
+            end
             return
         end
-        EDS.forceOwnDeckCursor()
-        emu:addKeys(EDS.KEY_A)
+        if duelStep ~= EDS.DUEL_STEP_DRAW then
+            return
+        end
+        local wantHand = EDS.openingHandWant(frameState, opts)
+        if EDS.cardMenuOpen() then
+            local cmd = EDS.cardMenuCommand()
+            if cmd == EDS.CARDMENU_CMD_MULLIGAN and not frameState.drawPickedDraw then
+                emu:addKeys(EDS.KEY_RIGHT)
+            elseif cmd == EDS.CARDMENU_CMD_DRAW and EDS.playerHandCount() < wantHand then
+                emu:addKeys(EDS.KEY_A)
+            end
+            return
+        end
+        if frameState.drawPickedDraw and EDS.playerHandCount() >= EDS.DEFAULT_PLAYER_HAND
+            and EDS.playerHandCount() < wantHand then
+            emu:addKeys(EDS.keyTowardOwnDeck(EDS.duelSelArea()))
+            return
+        end
+        if frameState.timer < 6 then
+            return
+        end
+        emu:addKeys(EDS.keyTowardOwnDeck(EDS.duelSelArea()))
     end)
     cbid = callbacks:add("frame", function()
         EDS.tickKeys()
@@ -1361,20 +2200,63 @@ function EDS.run(opts)
             EDS.navigateTestDuel(frameState, opts)
         end
         if frameState.phase == "in_duel" and not frameState.setupDone then
+            frameState.timer = (frameState.timer or 0) + 1
             if not EDS.inHumanMainPhase1() then
+                if EDS.openingMainPending(frameState, opts) then
+                    EDS.tickPostDrawMenuClose(frameState)
+                    if frameState.timer % 300 == 0 then
+                        EDS.log(string.format(
+                            "Waiting for Main Phase 1 (duel_step=%d menu=%s).",
+                            EDS.duelStep(), tostring(EDS.cardMenuOpen())))
+                    end
+                    return
+                end
                 frameState.phase = EDS.turnPlayer() == 1 and "cpu_turn" or "draw_mulligan"
                 frameState.timer = 0
+                return
+            end
+            if opts.setupCards and not frameState.scenarioSetupDone then
                 return
             end
             frameState.setupDone = true
             frameState.phase = actor == "CPU" and "watch" or "playing"
             frameState.timer = 0
+            frameState.playStartedAt = 0
+            frameState.handReady = false
+            if type(opts.play) == "table" then
+                local first = opts.play[frameState.playIndex or 1]
+                if first and first.handOpen then
+                    local slot = first.handOpen.slot or 0
+                    frameState.handReady = true
+                    frameState.handNav = { slot = slot, mode = "open" }
+                    frameState.playHandSlot = slot
+                    EDS.log(string.format(
+                        "Main Phase: navigating to hand[%d] for Soul Exchange.", slot))
+                end
+            end
         end
         if frameState.phase == "playing" then
             frameState.timer = frameState.timer + 1
-            if frameState.timer == 1 or frameState.timer % 45 == 0 then
-                EDS.forceOwnHandCursor()
+            EDS.tickOppMonsterTargetKeys(frameState)
+            EDS.tickHandMonsterPickKeys(frameState)
+            EDS.tickSoulExchangeFinishKeys(frameState)
+            if frameState.playStartedAt == 0 then
+                frameState.playStartedAt = frameState.timer
             end
+            if frameState.timer <= 8 and not frameState.handNav
+                and (EDS.isDeckPileMenu()
+                    or (EDS.cardMenuOpen() and not EDS.isHandCommandMenu())) then
+                if frameState.timer % 2 == 0 and not EDS.busy() then
+                    EDS.press(EDS.KEY_B, 16)
+                end
+            elseif not frameState.handNav and not EDS.chainOrEffectBusy()
+                and frameState.timer % 90 == 0 then
+                local area = EDS.duelSelArea()
+                if area == EDS.DUEL_AREA_DECK or area == EDS.DUEL_AREA_FUSION_DECK then
+                    EDS.prepHandStep(frameState)
+                end
+            end
+            EDS.tickHandNavigateKeys(frameState)
             if not frameState.scenarioSetupDone then
                 EDS.tickScenarioSetup(opts, frameState)
             end
@@ -1384,7 +2266,7 @@ function EDS.run(opts)
                         "playing: waiting scenario setup (hand=%d step=%d).",
                         EDS.playerHandCount(), EDS.duelStep()))
                 end
-            elseif not frameState.handReady then
+            elseif not frameState.handReady and not frameState.handNav then
                 EDS.prepHandStep(frameState)
                 if frameState.timer > 1200 then
                     EDS.log("Hand prep failed (still not on hand / menu stuck).")
@@ -1393,10 +2275,24 @@ function EDS.run(opts)
                 end
             elseif type(opts.play) == "function" then
                 if opts.play(frameState) then
-                    frameState.playDone = true
+                    frameState.playSequenceDone = true
                 end
             else
-                if EDS.runPlaySequence(opts.play, frameState) then
+                if not frameState.playSequenceDone and EDS.runPlaySequence(opts.play, frameState) then
+                    frameState.playSequenceDone = true
+                end
+            end
+            if frameState.playSequenceDone and not frameState.playDone then
+                if EDS.chainOrEffectBusy() or EDS.cardMenuOpen() then
+                    frameState.playSettleStable = 0
+                else
+                    frameState.playSettleStable = (frameState.playSettleStable or 0) + 1
+                end
+                local settleNeed = opts.playSettleFrames
+                if settleNeed == nil then
+                    settleNeed = 20
+                end
+                if (frameState.playSettleStable or 0) >= settleNeed then
                     frameState.playDone = true
                 end
             end

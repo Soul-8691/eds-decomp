@@ -66,17 +66,20 @@ P.Card_Destruction_Discard_And_Draw_Player = {
 
 P.Soul_Exchange_Tribute_Opponent_Monster_Player = {
     setupCards = {
-        { player = 0, zone = "hand", slot = 0, name = "Soul Exchange" },
-        { player = 0, zone = "hand", slot = 1, name = "Summoned Skull" },
-        { player = 1, zone = "monster", slot = 0, name = "Summoned Skull" },
+        { player = 0, zone = "hand", slot = 0, name = "Soul Exchange", id = 1000 },
+        { player = 0, zone = "hand", slot = 1, name = "Summoned Skull", id = 675 },
+        { player = 1, zone = "monster", slot = 0, name = "Summoned Skull", id = 675 },
     },
+    -- Soul Exchange → target opponent Summoned Skull → Tribute Summon hand skull (see TESTING.md).
     play = {
-        { key = K.A, gap = 25 },
+        { handOpen = { slot = 0 } },
+        { key = K.A, gap = 30 },
+        { wait = 50 },
+        { key = K.A, gap = 30 },
         { wait = 60 },
-        { key = K.A, gap = 25 },
-        { wait = 80 },
-        { key = K.A, gap = 25 },
-        { wait = 120 },
+        { oppTarget = { zone = 0 } },
+        { handPick = { cardId = 675, maxPresses = 64 } },
+        { soulExchangeFinish = true },
     },
 }
 

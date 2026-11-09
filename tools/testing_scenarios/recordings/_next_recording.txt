@@ -1,2 +1,2 @@
-tools\testing_scenarios\poc\..\recordings\Card_Destruction_Discard_And_Draw_Player.mp4
-tools/testing_scenarios/poc/../recordings/Card_Destruction_Discard_And_Draw_Player.mp4
+tools\testing_scenarios\poc\..\recordings\Soul_Exchange_Tribute_Opponent_Monster_Player.mp4
+tools/testing_scenarios/poc/../recordings/Soul_Exchange_Tribute_Opponent_Monster_Player.mp4
