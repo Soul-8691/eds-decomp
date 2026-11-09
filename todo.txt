@@ -23,4 +23,4 @@ Make the chain hold more than 3 targets
 Shift the size-limited area
 CFRU template C injection
 "Empty" duelist
-Testing scenarios - test by using the scenarios in TESTING.md by going against an empty duelist (I left Test Duel without any cards right now) in mGBA and populating the game state in RAM, then manually performing the actions necessary on the fastest speed settings while recording the interaction as "{card name}_{effect name}" using mGBA's MP4 recording ability; separate videos for each test
+Testing scenarios - test by writing a Lua script for each scenario in TESTING.md for going against an empty duelist (I left Test Duel without any cards right now, so start a match with Test Duel) in mGBA and populating the game state in RAM, then manually performing the actions necessary on the fastest speed settings (mGBA max turbo) while recording the interaction as "{card name}_{effect name}" using mGBA's MP4 recording ability; separate videos for each test

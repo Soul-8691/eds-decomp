@@ -28,6 +28,7 @@ from cardprices import share  # noqa: E402
 
 LIMIT_FACTOR = {1: 3.0, 2: 1.5}  # banlist limited / semi-limited multipliers on inclusion rate
 from gencards import ident  # noqa: E402
+from ai_coverage import ai_scenarios, ai_status  # noqa: E402
 
 THRESH = 0.10
 YGO_URL = 'https://db.ygoprodeck.com/api/v7/cardinfo.php'
@@ -786,6 +787,11 @@ def write_testing_md(assigned: dict[str, tuple[str, str, float]], *, use_api: bo
         'Defense Position change) are not optional Trigger activations—scenarios do not ask you to chain cards to those '
         'steps.',
         '',
+        '**AI:** each card lists **AI coverage** traced from `src/added_effects.c` (`AiPlayAddedCards`, '
+        '`AiWantsMonsterEffect`, `AiWantsSpell`, `AiShouldActivateAddedCard`, `AiChain*`, and `*Cpu*` effect steps). '
+        '**Yes — generalized routine** means the default added-card fallbacks apply; **dedicated** means a named hook. '
+        '**Automatic** means the CPU does not activate an effect from the card menu, but battle/engine code still runs.',
+        '',
         f'**{len(assigned)}** cards qualify (of {len(testing_pool_names())} in '
         f'`demo_cards.txt` minus `new_cards.txt` below `******`; {len(names_below_stars())} names excluded). '
         'Regenerate with `python3 tools/gen_testing_md.py`.',
@@ -826,9 +832,15 @@ def write_testing_md(assigned: dict[str, tuple[str, str, float]], *, use_api: bo
             )
             fmt_context, scenarios = make_scenarios(
                 name, fmt_name, stems[name], ctx, coded, ygo, cache)
+            ai_stat, ai_detail = ai_status(name, ae_text, engine, coded, impl)
+            ai_bullets = ai_scenarios(name, ai_stat, fmt_name, detail=ai_detail)
             lines.append(f'- **Format context:** {fmt_context}')
             lines.append('- **Scenarios:**')
             for i, sc in enumerate(scenarios, 1):
+                lines.append(f'  {i}. {sc}')
+            lines.append(f'- **AI coverage:** {ai_stat} — {ai_detail}')
+            lines.append('- **AI scenarios:**')
+            for i, sc in enumerate(ai_bullets, 1):
                 lines.append(f'  {i}. {sc}')
             lines.append('')
             if use_api:

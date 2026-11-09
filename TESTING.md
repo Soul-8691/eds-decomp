@@ -8,6 +8,8 @@ Scenarios only cite card names that appear in that format's [`card_pools/`](card
 
 **Chaining:** only **Trap Cards** and **Quick-Play Spell Cards** are described as chain responses. Normal Spells are never chained onto an existing chain. Mandatory battle follow-ups (e.g. Goblin Attack Force's Defense Position change) are not optional Trigger activations—scenarios do not ask you to chain cards to those steps.
 
+**AI:** each card lists **AI coverage** traced from `src/added_effects.c` (`AiPlayAddedCards`, `AiWantsMonsterEffect`, `AiWantsSpell`, `AiShouldActivateAddedCard`, `AiChain*`, and `*Cpu*` effect steps). **Yes — generalized routine** means the default added-card fallbacks apply; **dedicated** means a named hook. **Automatic** means the CPU does not activate an effect from the card menu, but battle/engine code still runs.
+
 **103** cards qualify (of 295 in `demo_cards.txt` minus `new_cards.txt` below `******`; 13 names excluded). Regenerate with `python3 tools/gen_testing_md.py`.
 
 ## Yugi-Kaiba
@@ -21,6 +23,10 @@ Scenarios only cite card names that appear in that format's [`card_pools/`](card
 - **Format context:** **Yugi-Kaiba** legal pool: `card_pools/yugi-kaiba.txt`. Build the opponent from these pool staples (**Change of Heart**, **Dark Hole**, **Fissure**, **Man-Eater Bug**, **Monster Reborn**, all from the same files).
 - **Scenarios:**
   1. Your hand: **Card Destruction**, **Change of Heart**, and another pool card; opponent has four cards including **Summoned Skull**. Activate **Card Destruction**: both hands discard, both draw the same count.
+- **AI coverage:** **Yes — generalized routine** — Monster menu: when the human holds more cards than the CPU would discard Main Phase Spell: when the human holds more cards than the CPU would discard Set/chain: when the human holds more cards than the CPU would discard
+- **AI scenarios:**
+  1. Campaign **Yugi-Kaiba** duel (or Test Duel with the format opponent deck): give the **opponent** `Card Destruction` in the main/extra deck at a realistic copy count from `usage/` decks. Let the CPU play the duel: it should activate/set/chain **Card Destruction** when its `AiWants*` / `AiShouldActivateAddedCard` policy says so (see **AI coverage**). Repeat until you see at least one successful CPU use or confirm the policy never fires on this board.
+  2. Second pass: open a chain window the policy cares about (Normal/Special Summon, attack declaration, or your Spell activation) and confirm the opponent flips/sets/chains **Card Destruction** when `CanActivateFieldCard` allows.
 
 ### Soul Exchange
 
@@ -32,6 +38,10 @@ Scenarios only cite card names that appear in that format's [`card_pools/`](card
 - **Format context:** **Yugi-Kaiba** legal pool: `card_pools/yugi-kaiba.txt`. Build the opponent from these pool staples (**Card Destruction**, **Change of Heart**, **Dark Hole**, **Fissure**, **Man-Eater Bug**, all from the same files).
 - **Scenarios:**
   1. You: **Soul Exchange** plus a Level 5+ Tribute from the pool (e.g. **Summoned Skull**). Opponent fields **Summoned Skull** in Attack Position. Main Phase 1: activate **Soul Exchange** on **Summoned Skull**, Tribute Summon the high-Level card, confirm you skip the Battle Phase, and confirm the tribute removed **Summoned Skull** even though they controlled it.
+- **AI coverage:** **Yes — dedicated logic** — Hooks: `SoulExchangeCpuChainB`, `SoulExchangeCpuResolve` Dedicated `*Cpu*` handlers in the card's effect steps.
+- **AI scenarios:**
+  1. Campaign **Yugi-Kaiba** duel (or Test Duel with the format opponent deck): give the **opponent** `Soul Exchange` in the main/extra deck at a realistic copy count from `usage/` decks. Let the CPU play the duel: it should activate/set/chain **Soul Exchange** when its `AiWants*` / `AiShouldActivateAddedCard` policy says so (see **AI coverage**). Repeat until you see at least one successful CPU use or confirm the policy never fires on this board.
+  2. Second pass: simplify the board until the hook conditions in **AI coverage** are met (extra hand size, weaker monsters, or an open monster zone) and re-check CPU behavior.
 
 ## Imperial
 
@@ -46,6 +56,10 @@ Other monsters on the field cannot change their battle positions or attack. Once
 - **Format context:** **Imperial** legal pool: `card_pools/imperial.txt`. Build the opponent from these pool staples (**Call of the Haunted**, **Ceasefire**, **Change of Heart**, **Confiscation**, **Cyber Jar**, all from the same files).
 - **Scenarios:**
   1. You: **Mystic Tomato** + a stall monster from the pool; opponent: **Summoned Skull** + set **Man-Eater Bug**. Activate **Thousand-Eyes Restrict** and list every monster destroyed; check whether **Man-Eater Bug** FLIP triggers when applicable.
+- **AI coverage:** **Yes — dedicated logic** — Monster menu: Conditional AiWants* / AiShouldActivateAddedCard Set/chain: Conditional AiWants* / AiShouldActivateAddedCard
+- **AI scenarios:**
+  1. Campaign **Imperial** duel (or Test Duel with the format opponent deck): give the **opponent** `Thousand-Eyes Restrict` in the main/extra deck at a realistic copy count from `usage/` decks. Let the CPU play the duel: it should activate/set/chain **Thousand-Eyes Restrict** when its `AiWants*` / `AiShouldActivateAddedCard` policy says so (see **AI coverage**). Repeat until you see at least one successful CPU use or confirm the policy never fires on this board.
+  2. Second pass: open a chain window the policy cares about (Normal/Special Summon, attack declaration, or your Spell activation) and confirm the opponent flips/sets/chains **Thousand-Eyes Restrict** when `CanActivateFieldCard` allows.
 
 ### The Fiend Megacyber
 
@@ -58,6 +72,9 @@ Other monsters on the field cannot change their battle positions or attack. Once
 - **Scenarios:**
   1. Campaign duel vs the **Imperial** opponent: put **The Fiend Megacyber** in your deck with pool backrow (**Call of the Haunted**) and monsters (**Mystic Tomato**, **Summoned Skull**). Opponent line: Normal Summon **Summoned Skull**, set **Man-Eater Bug**, pass. Play toward **The Fiend Megacyber** as you would in the usage decks and verify effect once as human and once watching CPU.
   2. Same board: use **The Fiend Megacyber** per **Coded behavior**. If the ROM offers a chain window to the opponent, it should accept only **Magic Jammer**-type responses (Trap or Quick-Play Spell), not Normal Spells.
+- **AI coverage:** **Automatic** (no card-menu activation) — No `CanActivateMonsterEffect` path; CPU uses standard lines.
+- **AI scenarios:**
+  1. Campaign **Imperial** duel (or Test Duel with the format opponent deck): give the **opponent** `The Fiend Megacyber` in the main/extra deck at a realistic copy count from `usage/` decks. CPU should Normal Summon/set and attack with **The Fiend Megacyber** using ordinary lines; verify mandatory / passive text from **Coded behavior** without expecting a card-menu activation.
 
 ### Goblin Attack Force
 
@@ -69,6 +86,9 @@ Other monsters on the field cannot change their battle positions or attack. Once
 - **Scenarios:**
   1. Campaign duel vs the **Imperial** opponent: put **Goblin Attack Force** in your deck with pool backrow (**Call of the Haunted**) and monsters (**Mystic Tomato**, **Summoned Skull**). Opponent line: Normal Summon **Summoned Skull**, set **Man-Eater Bug**, pass. Play toward **Goblin Attack Force** as you would in the usage decks and verify effect once as human and once watching CPU.
   2. Same duel: after **Goblin Attack Force**'s mandatory effect runs (see **Coded behavior**—not an optional Trigger you activate), confirm the ROM applies it automatically. Opponent cannot chain **Magic Jammer** to that mandatory step; they may still use it in a later open window.
+- **AI coverage:** **Automatic** (no activation logic needed) — Effect runs in engine/battle code when the CPU summons and attacks normally (`ai_deck.c`, `ai_summon.c`, `ai_picks.c`). Confirm the opponent still sets/attacks with the card; the passive or mandatory follow-up should apply without a card-menu prompt.
+- **AI scenarios:**
+  1. Campaign **Imperial** duel (or Test Duel with the format opponent deck): give the **opponent** `Goblin Attack Force` in the main/extra deck at a realistic copy count from `usage/` decks. CPU should Normal Summon/set and attack with **Goblin Attack Force** using ordinary lines; verify mandatory / passive text from **Coded behavior** without expecting a card-menu activation.
 
 ### Solemn Wishes
 
@@ -79,6 +99,10 @@ Other monsters on the field cannot change their battle positions or attack. Once
 - **Format context:** **Imperial** legal pool: `card_pools/imperial.txt`. Build the opponent from these pool staples (**Call of the Haunted**, **Ceasefire**, **Change of Heart**, **Confiscation**, **Cyber Jar**, all from the same files).
 - **Scenarios:**
   1. Set **Solemn Wishes**; opponent attacks with **Summoned Skull** or flips with **Change of Heart**. Resolve the FLIP effect against a legal target still in the pool (**Summoned Skull** or **Mystic Tomato**).
+- **AI coverage:** **Yes — generalized routine** — `AiPlayAddedCards` / `AiTryPlaySpellTrap` + default added-card policy.
+- **AI scenarios:**
+  1. Campaign **Imperial** duel (or Test Duel with the format opponent deck): give the **opponent** `Solemn Wishes` in the main/extra deck at a realistic copy count from `usage/` decks. Let the CPU play the duel: it should activate/set/chain **Solemn Wishes** when its `AiWants*` / `AiShouldActivateAddedCard` policy says so (see **AI coverage**). Repeat until you see at least one successful CPU use or confirm the policy never fires on this board.
+  2. Second pass: simplify the board until the hook conditions in **AI coverage** are met (extra hand size, weaker monsters, or an open monster zone) and re-check CPU behavior.
 
 ### Limiter Removal
 
@@ -89,6 +113,10 @@ Other monsters on the field cannot change their battle positions or attack. Once
 - **Format context:** **Imperial** legal pool: `card_pools/imperial.txt`. Build the opponent from these pool staples (**Call of the Haunted**, **Ceasefire**, **Change of Heart**, **Confiscation**, **Cyber Jar**, all from the same files).
 - **Scenarios:**
   1. You: **Mystic Tomato** + a stall monster from the pool; opponent: **Summoned Skull** + set **Man-Eater Bug**. Activate **Limiter Removal** and list every monster destroyed; check whether **Man-Eater Bug** FLIP triggers when applicable.
+- **AI coverage:** **Yes — dedicated logic** — Hooks: `AiWantsLimiterRemoval` Monster menu: Conditional AiWants* / AiShouldActivateAddedCard Main Phase Spell: Conditional AiWants* / AiShouldActivateAddedCard Set/chain: Conditional AiWants* / AiShouldActivateAddedCard
+- **AI scenarios:**
+  1. Campaign **Imperial** duel (or Test Duel with the format opponent deck): give the **opponent** `Limiter Removal` in the main/extra deck at a realistic copy count from `usage/` decks. Let the CPU play the duel: it should activate/set/chain **Limiter Removal** when its `AiWants*` / `AiShouldActivateAddedCard` policy says so (see **AI coverage**). Repeat until you see at least one successful CPU use or confirm the policy never fires on this board.
+  2. Second pass: open a chain window the policy cares about (Normal/Special Summon, attack declaration, or your Spell activation) and confirm the opponent flips/sets/chains **Limiter Removal** when `CanActivateFieldCard` allows.
 
 ### 4-Starred Ladybug of Doom
 
@@ -99,6 +127,9 @@ Other monsters on the field cannot change their battle positions or attack. Once
 - **Format context:** **Imperial** legal pool: `card_pools/imperial.txt`. Build the opponent from these pool staples (**Call of the Haunted**, **Ceasefire**, **Change of Heart**, **Confiscation**, **Cyber Jar**, all from the same files).
 - **Scenarios:**
   1. You: **Mystic Tomato** + a stall monster from the pool; opponent: **Summoned Skull** + set **Man-Eater Bug**. Activate **4-Starred Ladybug of Doom** and list every monster destroyed; check whether **Man-Eater Bug** FLIP triggers when applicable.
+- **AI coverage:** **Automatic** (no card-menu activation) — No `CanActivateMonsterEffect` path; CPU uses standard lines.
+- **AI scenarios:**
+  1. Campaign **Imperial** duel (or Test Duel with the format opponent deck): give the **opponent** `4-Starred Ladybug of Doom` in the main/extra deck at a realistic copy count from `usage/` decks. CPU should Normal Summon/set and attack with **4-Starred Ladybug of Doom** using ordinary lines; verify mandatory / passive text from **Coded behavior** without expecting a card-menu activation.
 
 ## Android
 
@@ -112,6 +143,9 @@ Other monsters on the field cannot change their battle positions or attack. Once
 - **Format context:** **Android** legal pool: `card_pools/android.txt`. Build the opponent from these pool staples (**Call of the Haunted**, **Ceasefire**, **Change of Heart**, **Confiscation**, **Cyber Jar**, all from the same files).
 - **Scenarios:**
   1. Opponent Graveyard: two high-ATK monsters from the pool (**Summoned Skull**, **Summoned Skull**). Battle with **Kycoo the Ghost Destroyer**: after battle damage, banish up to two opponent Graveyard cards (or activate **Call of the Haunted** first to refill targets).
+- **AI coverage:** **Automatic** (no card-menu activation) — No `CanActivateMonsterEffect` path; CPU uses standard lines.
+- **AI scenarios:**
+  1. Campaign **Android** duel (or Test Duel with the format opponent deck): give the **opponent** `Kycoo the Ghost Destroyer` in the main/extra deck at a realistic copy count from `usage/` decks. CPU should Normal Summon/set and attack with **Kycoo the Ghost Destroyer** using ordinary lines; verify mandatory / passive text from **Coded behavior** without expecting a card-menu activation.
 
 ### Bazoo the Soul-Eater
 
@@ -122,6 +156,10 @@ Other monsters on the field cannot change their battle positions or attack. Once
 - **Format context:** **Android** legal pool: `card_pools/android.txt`. Build the opponent from these pool staples (**Call of the Haunted**, **Ceasefire**, **Change of Heart**, **Confiscation**, **Cyber Jar**, all from the same files).
 - **Scenarios:**
   1. Opponent Graveyard: two high-ATK monsters from the pool (**Summoned Skull**, **Summoned Skull**). Battle with **Bazoo the Soul-Eater**: after battle damage, banish up to two opponent Graveyard cards (or activate **Call of the Haunted** first to refill targets).
+- **AI coverage:** **Yes — dedicated logic** — Hooks: `BazooCpuResolve` Dedicated `*Cpu*` handlers in the card's effect steps.
+- **AI scenarios:**
+  1. Campaign **Android** duel (or Test Duel with the format opponent deck): give the **opponent** `Bazoo the Soul-Eater` in the main/extra deck at a realistic copy count from `usage/` decks. Let the CPU play the duel: it should activate/set/chain **Bazoo the Soul-Eater** when its `AiWants*` / `AiShouldActivateAddedCard` policy says so (see **AI coverage**). Repeat until you see at least one successful CPU use or confirm the policy never fires on this board.
+  2. Second pass: simplify the board until the hook conditions in **AI coverage** are met (extra hand size, weaker monsters, or an open monster zone) and re-check CPU behavior.
 
 ### Torrential Tribute
 
@@ -132,6 +170,10 @@ Other monsters on the field cannot change their battle positions or attack. Once
 - **Format context:** **Android** legal pool: `card_pools/android.txt`. Build the opponent from these pool staples (**Call of the Haunted**, **Ceasefire**, **Change of Heart**, **Confiscation**, **Cyber Jar**, all from the same files).
 - **Scenarios:**
   1. You control **Mystic Tomato**; opponent Normal Summons **Summoned Skull** and sets **Man-Eater Bug**. Activate set **Torrential Tribute** when that summon resolves (Trap in response to Summon): every monster on the field is destroyed and any FLIP effects from **Man-Eater Bug** still resolve.
+- **AI coverage:** **Yes — generalized routine** — Monster menu: it destroys the CPU's monsters too Main Phase Spell: it destroys the CPU's monsters too Set/chain: it destroys the CPU's monsters too
+- **AI scenarios:**
+  1. Campaign **Android** duel (or Test Duel with the format opponent deck): give the **opponent** `Torrential Tribute` in the main/extra deck at a realistic copy count from `usage/` decks. Let the CPU play the duel: it should activate/set/chain **Torrential Tribute** when its `AiWants*` / `AiShouldActivateAddedCard` policy says so (see **AI coverage**). Repeat until you see at least one successful CPU use or confirm the policy never fires on this board.
+  2. Second pass: open a chain window the policy cares about (Normal/Special Summon, attack declaration, or your Spell activation) and confirm the opponent flips/sets/chains **Torrential Tribute** when `CanActivateFieldCard` allows.
 
 ### Jar of Greed
 
@@ -142,6 +184,10 @@ Other monsters on the field cannot change their battle positions or attack. Once
 - **Format context:** **Android** legal pool: `card_pools/android.txt`. Build the opponent from these pool staples (**Call of the Haunted**, **Ceasefire**, **Change of Heart**, **Confiscation**, **Cyber Jar**, all from the same files).
 - **Scenarios:**
   1. Open with **Jar of Greed** while opponent controls only **Summoned Skull**. Count hand size before/after relative to **Change of Heart** in the opponent list; repeat when your Standby/Draw Phase trigger applies.
+- **AI coverage:** **Yes — generalized routine** — `AiPlayAddedCards` / `AiTryPlaySpellTrap` + default added-card policy.
+- **AI scenarios:**
+  1. Campaign **Android** duel (or Test Duel with the format opponent deck): give the **opponent** `Jar of Greed` in the main/extra deck at a realistic copy count from `usage/` decks. Let the CPU play the duel: it should activate/set/chain **Jar of Greed** when its `AiWants*` / `AiShouldActivateAddedCard` policy says so (see **AI coverage**). Repeat until you see at least one successful CPU use or confirm the policy never fires on this board.
+  2. Second pass: simplify the board until the hook conditions in **AI coverage** are met (extra hand size, weaker monsters, or an open monster zone) and re-check CPU behavior.
 
 ### Skull Lair
 
@@ -152,6 +198,10 @@ Other monsters on the field cannot change their battle positions or attack. Once
 - **Format context:** **Android** legal pool: `card_pools/android.txt`. Build the opponent from these pool staples (**Call of the Haunted**, **Ceasefire**, **Change of Heart**, **Confiscation**, **Cyber Jar**, all from the same files).
 - **Scenarios:**
   1. You: **Mystic Tomato** + a stall monster from the pool; opponent: **Summoned Skull** + set **Man-Eater Bug**. Activate **Skull Lair** and list every monster destroyed; check whether **Man-Eater Bug** FLIP triggers when applicable.
+- **AI coverage:** **Yes — generalized routine** — Monster menu: destroy one of the human's monsters worth 1000+ ATK Main Phase Spell: destroy one of the human's monsters worth 1000+ ATK Set/chain: destroy one of the human's monsters worth 1000+ ATK
+- **AI scenarios:**
+  1. Campaign **Android** duel (or Test Duel with the format opponent deck): give the **opponent** `Skull Lair` in the main/extra deck at a realistic copy count from `usage/` decks. Let the CPU play the duel: it should activate/set/chain **Skull Lair** when its `AiWants*` / `AiShouldActivateAddedCard` policy says so (see **AI coverage**). Repeat until you see at least one successful CPU use or confirm the policy never fires on this board.
+  2. Second pass: open a chain window the policy cares about (Normal/Special Summon, attack declaration, or your Spell activation) and confirm the opponent flips/sets/chains **Skull Lair** when `CanActivateFieldCard` allows.
 
 ### Magic Cylinder
 
@@ -162,6 +212,9 @@ Other monsters on the field cannot change their battle positions or attack. Once
 - **Format context:** **Android** legal pool: `card_pools/android.txt`. Build the opponent from these pool staples (**Call of the Haunted**, **Ceasefire**, **Change of Heart**, **Confiscation**, **Cyber Jar**, all from the same files).
 - **Scenarios:**
   1. Opponent attacks your face-down **Man-Eater Bug** with **Summoned Skull** (note its ATK). Activate **Magic Cylinder** in the attack step: negate the attack and inflict that ATK as damage; **Man-Eater Bug** should not be destroyed by battle.
+- **AI coverage:** **Generic engine** — Uses the vanilla effect key tables; the CPU plays it like other cards in its deck lists. No dedicated `AiWants*` row in `src/added_effects.c`—watch whether the opponent activates the effect when rules allow.
+- **AI scenarios:**
+  1. Campaign **Android** duel (or Test Duel with the format opponent deck): give the **opponent** `Magic Cylinder` in the main/extra deck at a realistic copy count from `usage/` decks. Verify the CPU plays **Magic Cylinder** when its generic spell/monster heuristics allow (same class as vanilla cards with that effect key).
 
 ### St. Joan
 
@@ -174,6 +227,9 @@ Other monsters on the field cannot change their battle positions or attack. Once
 - **Scenarios:**
   1. Campaign duel vs the **Android** opponent: put **St. Joan** in your deck with pool backrow (**Call of the Haunted**) and monsters (**Mystic Tomato**, **Summoned Skull**). Opponent line: Normal Summon **Summoned Skull**, set **Man-Eater Bug**, pass. Play toward **St. Joan** as you would in the usage decks and verify effect once as human and once watching CPU.
   2. Same board: use **St. Joan** per **Coded behavior**. If the ROM offers a chain window to the opponent, it should accept only **Magic Jammer**-type responses (Trap or Quick-Play Spell), not Normal Spells.
+- **AI coverage:** **Unclear / likely missing** — No `CPU:` notes and no switch case found; treat as untested for CPU until you confirm in a duel.
+- **AI scenarios:**
+  1. Campaign **Android** duel (or Test Duel with the format opponent deck): give the **opponent** `St. Joan` in the main/extra deck at a realistic copy count from `usage/` decks. Watch several turns; note any turn where a human could legally use **St. Joan** but the CPU does not. File gaps against `src/added_effects.c` / `ai_deck.c`.
 
 ### United We Stand
 
@@ -184,6 +240,9 @@ Other monsters on the field cannot change their battle positions or attack. Once
 - **Format context:** **Android** legal pool: `card_pools/android.txt`. Build the opponent from these pool staples (**Call of the Haunted**, **Ceasefire**, **Change of Heart**, **Confiscation**, **Cyber Jar**, all from the same files).
 - **Scenarios:**
   1. Equip **United We Stand** to **Mystic Tomato**. Add or remove monsters/spells (**Summoned Skull**, **Change of Heart**) on your field and confirm ATK/DEF changes match the coded counters.
+- **AI coverage:** **Generic engine** — Uses the vanilla effect key tables; the CPU plays it like other cards in its deck lists. No dedicated `AiWants*` row in `src/added_effects.c`—watch whether the opponent activates the effect when rules allow.
+- **AI scenarios:**
+  1. Campaign **Android** duel (or Test Duel with the format opponent deck): give the **opponent** `United We Stand` in the main/extra deck at a realistic copy count from `usage/` decks. Verify the CPU plays **United We Stand** when its generic spell/monster heuristics allow (same class as vanilla cards with that effect key).
 
 ### Mage Power
 
@@ -194,6 +253,9 @@ Other monsters on the field cannot change their battle positions or attack. Once
 - **Format context:** **Android** legal pool: `card_pools/android.txt`. Build the opponent from these pool staples (**Call of the Haunted**, **Ceasefire**, **Change of Heart**, **Confiscation**, **Cyber Jar**, all from the same files).
 - **Scenarios:**
   1. Equip **Mage Power** to **Mystic Tomato**. Add or remove monsters/spells (**Summoned Skull**, **Change of Heart**) on your field and confirm ATK/DEF changes match the coded counters.
+- **AI coverage:** **Generic engine** — Uses the vanilla effect key tables; the CPU plays it like other cards in its deck lists. No dedicated `AiWants*` row in `src/added_effects.c`—watch whether the opponent activates the effect when rules allow.
+- **AI scenarios:**
+  1. Campaign **Android** duel (or Test Duel with the format opponent deck): give the **opponent** `Mage Power` in the main/extra deck at a realistic copy count from `usage/` decks. Verify the CPU plays **Mage Power** when its generic spell/monster heuristics allow (same class as vanilla cards with that effect key).
 
 ### Zombyra the Dark
 
@@ -205,6 +267,9 @@ Other monsters on the field cannot change their battle positions or attack. Once
 - **Format context:** **Android** legal pool: `card_pools/android.txt`. Build the opponent from these pool staples (**Call of the Haunted**, **Ceasefire**, **Change of Heart**, **Confiscation**, **Cyber Jar**, all from the same files).
 - **Scenarios:**
   1. You: **Mystic Tomato** + a stall monster from the pool; opponent: **Summoned Skull** + set **Man-Eater Bug**. Activate **Zombyra the Dark** and list every monster destroyed; check whether **Man-Eater Bug** FLIP triggers when applicable.
+- **AI coverage:** **Automatic** (no card-menu activation) — No `CanActivateMonsterEffect` path; CPU uses standard lines.
+- **AI scenarios:**
+  1. Campaign **Android** duel (or Test Duel with the format opponent deck): give the **opponent** `Zombyra the Dark` in the main/extra deck at a realistic copy count from `usage/` decks. CPU should Normal Summon/set and attack with **Zombyra the Dark** using ordinary lines; verify mandatory / passive text from **Coded behavior** without expecting a card-menu activation.
 
 ### Humanoid Worm Drake
 
@@ -217,6 +282,9 @@ Other monsters on the field cannot change their battle positions or attack. Once
 - **Scenarios:**
   1. Campaign duel vs the **Android** opponent: put **Humanoid Worm Drake** in your deck with pool backrow (**Call of the Haunted**) and monsters (**Mystic Tomato**, **Summoned Skull**). Opponent line: Normal Summon **Summoned Skull**, set **Man-Eater Bug**, pass. Play toward **Humanoid Worm Drake** as you would in the usage decks and verify effect once as human and once watching CPU.
   2. Same board: use **Humanoid Worm Drake** per **Coded behavior**. If the ROM offers a chain window to the opponent, it should accept only **Magic Jammer**-type responses (Trap or Quick-Play Spell), not Normal Spells.
+- **AI coverage:** **Unclear / likely missing** — No `CPU:` notes and no switch case found; treat as untested for CPU until you confirm in a duel.
+- **AI scenarios:**
+  1. Campaign **Android** duel (or Test Duel with the format opponent deck): give the **opponent** `Humanoid Worm Drake` in the main/extra deck at a realistic copy count from `usage/` decks. Watch several turns; note any turn where a human could legally use **Humanoid Worm Drake** but the CPU does not. File gaps against `src/added_effects.c` / `ai_deck.c`.
 
 ## Joey-Pegasus
 
@@ -230,6 +298,10 @@ Other monsters on the field cannot change their battle positions or attack. Once
 - **Format context:** **Joey-Pegasus** legal pool: `card_pools/joey-pegasus.txt`. Build the opponent from these pool staples (**Bazoo the Soul-Eater**, **Call of the Haunted**, **Change of Heart**, **Confiscation**, **Dark Hole**, all from the same files).
 - **Scenarios:**
   1. Opponent attacks your **Bazoo the Soul-Eater** with **Summoned Skull**. With four open zones and no summon yet, activate **Scapegoat**, block the attack with tokens, then try to summon **Summoned Skull** the same turn (should fail).
+- **AI coverage:** **Yes — dedicated logic** — Monster menu: Conditional AiWants* / AiShouldActivateAddedCard Main Phase Spell: Conditional AiWants* / AiShouldActivateAddedCard Set/chain: Conditional AiWants* / AiShouldActivateAddedCard
+- **AI scenarios:**
+  1. Campaign **Joey-Pegasus** duel (or Test Duel with the format opponent deck): give the **opponent** `Scapegoat` in the main/extra deck at a realistic copy count from `usage/` decks. Let the CPU play the duel: it should activate/set/chain **Scapegoat** when its `AiWants*` / `AiShouldActivateAddedCard` policy says so (see **AI coverage**). Repeat until you see at least one successful CPU use or confirm the policy never fires on this board.
+  2. Second pass: open a chain window the policy cares about (Normal/Special Summon, attack declaration, or your Spell activation) and confirm the opponent flips/sets/chains **Scapegoat** when `CanActivateFieldCard` allows.
 
 ### Offerings to the Doomed
 
@@ -241,6 +313,9 @@ Other monsters on the field cannot change their battle positions or attack. Once
 - **Format context:** **Joey-Pegasus** legal pool: `card_pools/joey-pegasus.txt`. Build the opponent from these pool staples (**Bazoo the Soul-Eater**, **Call of the Haunted**, **Change of Heart**, **Confiscation**, **Dark Hole**, all from the same files).
 - **Scenarios:**
   1. You: **Bazoo the Soul-Eater** + **Bazoo the Soul-Eater**; opponent: **Summoned Skull** + set **Man-Eater Bug**. Activate **Offerings to the Doomed** and list every monster destroyed; check whether **Man-Eater Bug** FLIP triggers when applicable.
+- **AI coverage:** **Automatic** (no card-menu activation) — No `CanActivateMonsterEffect` path; CPU uses standard lines.
+- **AI scenarios:**
+  1. Campaign **Joey-Pegasus** duel (or Test Duel with the format opponent deck): give the **opponent** `Offerings to the Doomed` in the main/extra deck at a realistic copy count from `usage/` decks. CPU should Normal Summon/set and attack with **Offerings to the Doomed** using ordinary lines; verify mandatory / passive text from **Coded behavior** without expecting a card-menu activation.
 
 ## Fiber
 
@@ -254,6 +329,10 @@ Other monsters on the field cannot change their battle positions or attack. Once
 - **Format context:** **Fiber** legal pool: `card_pools/fiber.txt`. Build the opponent from these pool staples (**Call of the Haunted**, **Change of Heart**, **Confiscation**, **Cyber Jar**, **Dark Hole**, all from the same files).
 - **Scenarios:**
   1. You: **Mystic Tomato** + a stall monster from the pool; opponent: **Summoned Skull** + set **Man-Eater Bug**. Activate **Exiled Force** and list every monster destroyed; check whether **Man-Eater Bug** FLIP triggers when applicable.
+- **AI coverage:** **Yes — generalized routine** — Monster menu: only for a human monster stronger than itself Set/chain: only for a human monster stronger than itself
+- **AI scenarios:**
+  1. Campaign **Fiber** duel (or Test Duel with the format opponent deck): give the **opponent** `Exiled Force` in the main/extra deck at a realistic copy count from `usage/` decks. Let the CPU play the duel: it should activate/set/chain **Exiled Force** when its `AiWants*` / `AiShouldActivateAddedCard` policy says so (see **AI coverage**). Repeat until you see at least one successful CPU use or confirm the policy never fires on this board.
+  2. Second pass: open a chain window the policy cares about (Normal/Special Summon, attack declaration, or your Spell activation) and confirm the opponent flips/sets/chains **Exiled Force** when `CanActivateFieldCard` allows.
 
 ### Fiber Jar
 
@@ -264,6 +343,10 @@ Other monsters on the field cannot change their battle positions or attack. Once
 - **Format context:** **Fiber** legal pool: `card_pools/fiber.txt`. Build the opponent from these pool staples (**Call of the Haunted**, **Change of Heart**, **Confiscation**, **Cyber Jar**, **Dark Hole**, all from the same files).
 - **Scenarios:**
   1. Both players have damaged fields (**Mystic Tomato** vs **Summoned Skull**) and uneven graveyards. Flip **Fiber Jar** and resolve the FLIP effect; opponent may only respond with **Magic Jammer** (Trap or Quick-Play Spell), not a Normal Spell like **Change of Heart**. Confirm timing matches the ROM.
+- **AI coverage:** **Yes — generalized routine** — `AiPlayAddedCards` / `AiTryPlaySpellTrap` + default added-card policy.
+- **AI scenarios:**
+  1. Campaign **Fiber** duel (or Test Duel with the format opponent deck): give the **opponent** `Fiber Jar` in the main/extra deck at a realistic copy count from `usage/` decks. Let the CPU play the duel: it should activate/set/chain **Fiber Jar** when its `AiWants*` / `AiShouldActivateAddedCard` policy says so (see **AI coverage**). Repeat until you see at least one successful CPU use or confirm the policy never fires on this board.
+  2. Second pass: simplify the board until the hook conditions in **AI coverage** are met (extra hand size, weaker monsters, or an open monster zone) and re-check CPU behavior.
 
 ### Injection Fairy Lily
 
@@ -275,6 +358,10 @@ Other monsters on the field cannot change their battle positions or attack. Once
 - **Scenarios:**
   1. Campaign duel vs the **Fiber** opponent: put **Injection Fairy Lily** in your deck with pool backrow (**Call of the Haunted**) and monsters (**Mystic Tomato**, **Summoned Skull**). Opponent line: Normal Summon **Summoned Skull**, set **Man-Eater Bug**, pass. Play toward **Injection Fairy Lily** as you would in the usage decks and verify effect once as human and once watching CPU.
   2. Same duel: after **Injection Fairy Lily**'s mandatory effect runs (see **Coded behavior**—not an optional Trigger you activate), confirm the ROM applies it automatically. Opponent cannot chain **Magic Jammer** to that mandatory step; they may still use it in a later open window.
+- **AI coverage:** **Yes — dedicated logic** — Hooks: `CpuWantsLily`
+- **AI scenarios:**
+  1. Campaign **Fiber** duel (or Test Duel with the format opponent deck): give the **opponent** `Injection Fairy Lily` in the main/extra deck at a realistic copy count from `usage/` decks. Let the CPU play the duel: it should activate/set/chain **Injection Fairy Lily** when its `AiWants*` / `AiShouldActivateAddedCard` policy says so (see **AI coverage**). Repeat until you see at least one successful CPU use or confirm the policy never fires on this board.
+  2. Second pass: simplify the board until the hook conditions in **AI coverage** are met (extra hand size, weaker monsters, or an open monster zone) and re-check CPU behavior.
 
 ### Yata-Garasu
 
@@ -285,6 +372,9 @@ Other monsters on the field cannot change their battle positions or attack. Once
 - **Format context:** **Fiber** legal pool: `card_pools/fiber.txt`. Build the opponent from these pool staples (**Call of the Haunted**, **Change of Heart**, **Confiscation**, **Cyber Jar**, **Dark Hole**, all from the same files).
 - **Scenarios:**
   1. You: empty field except **Yata-Garasu**; opponent has 6 cards including **Change of Heart**. Attack directly with **Yata-Garasu**, then pass turns until the opponent would draw: hand stays empty while **Yata-Garasu** is face-up.
+- **AI coverage:** **Automatic** (no card-menu activation) — No `CanActivateMonsterEffect` path; CPU uses standard lines.
+- **AI scenarios:**
+  1. Campaign **Fiber** duel (or Test Duel with the format opponent deck): give the **opponent** `Yata-Garasu` in the main/extra deck at a realistic copy count from `usage/` decks. CPU should Normal Summon/set and attack with **Yata-Garasu** using ordinary lines; verify mandatory / passive text from **Coded behavior** without expecting a card-menu activation.
 
 ### Creature Swap
 
@@ -296,6 +386,10 @@ Other monsters on the field cannot change their battle positions or attack. Once
 - **Scenarios:**
   1. Campaign duel vs the **Fiber** opponent: put **Creature Swap** in your deck with pool backrow (**Call of the Haunted**) and monsters (**Mystic Tomato**, **Summoned Skull**). Opponent line: Normal Summon **Summoned Skull**, set **Man-Eater Bug**, pass. Play toward **Creature Swap** as you would in the usage decks and verify effect once as human and once watching CPU.
   2. Same board: when you activate **Creature Swap**, opponent may chain **Magic Jammer** (or **Scapegoat**). Confirm stack order. Normal Spells such as **Change of Heart** cannot be chained—only Traps and Quick-Play Spells.
+- **AI coverage:** **Yes — generalized routine** — Monster menu: give the weakest monster for a stronger one Main Phase Spell: give the weakest monster for a stronger one Set/chain: give the weakest monster for a stronger one
+- **AI scenarios:**
+  1. Campaign **Fiber** duel (or Test Duel with the format opponent deck): give the **opponent** `Creature Swap` in the main/extra deck at a realistic copy count from `usage/` decks. Let the CPU play the duel: it should activate/set/chain **Creature Swap** when its `AiWants*` / `AiShouldActivateAddedCard` policy says so (see **AI coverage**). Repeat until you see at least one successful CPU use or confirm the policy never fires on this board.
+  2. Second pass: open a chain window the policy cares about (Normal/Special Summon, attack declaration, or your Spell activation) and confirm the opponent flips/sets/chains **Creature Swap** when `CanActivateFieldCard` allows.
 
 ### Asura Priest
 
@@ -306,6 +400,9 @@ Other monsters on the field cannot change their battle positions or attack. Once
 - **Format context:** **Fiber** legal pool: `card_pools/fiber.txt`. Build the opponent from these pool staples (**Call of the Haunted**, **Change of Heart**, **Confiscation**, **Cyber Jar**, **Dark Hole**, all from the same files).
 - **Scenarios:**
   1. Set **Asura Priest**; opponent attacks with **Summoned Skull** or flips with **Change of Heart**. Resolve the FLIP effect against a legal target still in the pool (**Summoned Skull** or **Mystic Tomato**).
+- **AI coverage:** **Automatic** (no card-menu activation) — No `CanActivateMonsterEffect` path; CPU uses standard lines.
+- **AI scenarios:**
+  1. Campaign **Fiber** duel (or Test Duel with the format opponent deck): give the **opponent** `Asura Priest` in the main/extra deck at a realistic copy count from `usage/` decks. CPU should Normal Summon/set and attack with **Asura Priest** using ordinary lines; verify mandatory / passive text from **Coded behavior** without expecting a card-menu activation.
 
 ### Spear Dragon
 
@@ -318,6 +415,9 @@ Other monsters on the field cannot change their battle positions or attack. Once
 - **Scenarios:**
   1. Campaign duel vs the **Fiber** opponent: put **Spear Dragon** in your deck with pool backrow (**Call of the Haunted**) and monsters (**Mystic Tomato**, **Summoned Skull**). Opponent line: Normal Summon **Summoned Skull**, set **Man-Eater Bug**, pass. Play toward **Spear Dragon** as you would in the usage decks and verify effect once as human and once watching CPU.
   2. Same board: use **Spear Dragon** per **Coded behavior**. If the ROM offers a chain window to the opponent, it should accept only **Magic Jammer**-type responses (Trap or Quick-Play Spell), not Normal Spells.
+- **AI coverage:** **Automatic** (no card-menu activation) — No `CanActivateMonsterEffect` path; CPU uses standard lines.
+- **AI scenarios:**
+  1. Campaign **Fiber** duel (or Test Duel with the format opponent deck): give the **opponent** `Spear Dragon` in the main/extra deck at a realistic copy count from `usage/` decks. CPU should Normal Summon/set and attack with **Spear Dragon** using ordinary lines; verify mandatory / passive text from **Coded behavior** without expecting a card-menu activation.
 
 ### Dark Ruler Ha Des
 
@@ -328,6 +428,9 @@ Other monsters on the field cannot change their battle positions or attack. Once
 - **Format context:** **Fiber** legal pool: `card_pools/fiber.txt`. Build the opponent from these pool staples (**Call of the Haunted**, **Change of Heart**, **Confiscation**, **Cyber Jar**, **Dark Hole**, all from the same files).
 - **Scenarios:**
   1. You: **Mystic Tomato** + a stall monster from the pool; opponent: **Summoned Skull** + set **Man-Eater Bug**. Activate **Dark Ruler Ha Des** and list every monster destroyed; check whether **Man-Eater Bug** FLIP triggers when applicable.
+- **AI coverage:** **Automatic** (no card-menu activation) — No `CanActivateMonsterEffect` path; CPU uses standard lines.
+- **AI scenarios:**
+  1. Campaign **Fiber** duel (or Test Duel with the format opponent deck): give the **opponent** `Dark Ruler Ha Des` in the main/extra deck at a realistic copy count from `usage/` decks. CPU should Normal Summon/set and attack with **Dark Ruler Ha Des** using ordinary lines; verify mandatory / passive text from **Coded behavior** without expecting a card-menu activation.
 
 ### Airknight Parshath
 
@@ -339,6 +442,9 @@ Other monsters on the field cannot change their battle positions or attack. Once
 - **Format context:** **Fiber** legal pool: `card_pools/fiber.txt`. Build the opponent from these pool staples (**Call of the Haunted**, **Change of Heart**, **Confiscation**, **Cyber Jar**, **Dark Hole**, all from the same files).
 - **Scenarios:**
   1. Open with **Airknight Parshath** while opponent controls only **Summoned Skull**. Count hand size before/after relative to **Change of Heart** in the opponent list; repeat when your Standby/Draw Phase trigger applies.
+- **AI coverage:** **Automatic** (no card-menu activation) — No `CanActivateMonsterEffect` path; CPU uses standard lines.
+- **AI scenarios:**
+  1. Campaign **Fiber** duel (or Test Duel with the format opponent deck): give the **opponent** `Airknight Parshath` in the main/extra deck at a realistic copy count from `usage/` decks. CPU should Normal Summon/set and attack with **Airknight Parshath** using ordinary lines; verify mandatory / passive text from **Coded behavior** without expecting a card-menu activation.
 
 ## Yata
 
@@ -351,6 +457,9 @@ Other monsters on the field cannot change their battle positions or attack. Once
 - **Format context:** **Yata** legal pool: `card_pools/yata.txt`. Build the opponent from these pool staples (**Call of the Haunted**, **Ceasefire**, **Change of Heart**, **Confiscation**, **Dark Hole**, all from the same files).
 - **Scenarios:**
   1. You hold **Mirage of Nightmare** and three pool cards; opponent holds **Change of Heart**, **Summoned Skull**, and two others. Resolve **Mirage of Nightmare** and verify each side's hand size after equal discard and draw.
+- **AI coverage:** **Automatic** (no card-menu activation) — No `CanActivateMonsterEffect` path; CPU uses standard lines.
+- **AI scenarios:**
+  1. Campaign **Yata** duel (or Test Duel with the format opponent deck): give the **opponent** `Mirage of Nightmare` in the main/extra deck at a realistic copy count from `usage/` decks. CPU should Normal Summon/set and attack with **Mirage of Nightmare** using ordinary lines; verify mandatory / passive text from **Coded behavior** without expecting a card-menu activation.
 
 ### Spirit Reaper
 
@@ -361,6 +470,9 @@ Other monsters on the field cannot change their battle positions or attack. Once
 - **Format context:** **Yata** legal pool: `card_pools/yata.txt`. Build the opponent from these pool staples (**Call of the Haunted**, **Ceasefire**, **Change of Heart**, **Confiscation**, **Dark Hole**, all from the same files).
 - **Scenarios:**
   1. Opponent attacks **Spirit Reaper** with **Summoned Skull**; confirm destruction immunity and discards or battle trigger. Use **Spirit Reaper** or **Change of Heart** from the pool to test interactions with non-destruction removal.
+- **AI coverage:** **Automatic** (no card-menu activation) — No `CanActivateMonsterEffect` path; CPU uses standard lines.
+- **AI scenarios:**
+  1. Campaign **Yata** duel (or Test Duel with the format opponent deck): give the **opponent** `Spirit Reaper` in the main/extra deck at a realistic copy count from `usage/` decks. CPU should Normal Summon/set and attack with **Spirit Reaper** using ordinary lines; verify mandatory / passive text from **Coded behavior** without expecting a card-menu activation.
 
 ### Don Zaloog
 
@@ -374,6 +486,9 @@ Other monsters on the field cannot change their battle positions or attack. Once
 - **Format context:** **Yata** legal pool: `card_pools/yata.txt`. Build the opponent from these pool staples (**Call of the Haunted**, **Ceasefire**, **Change of Heart**, **Confiscation**, **Dark Hole**, all from the same files).
 - **Scenarios:**
   1. Opponent attacks **Don Zaloog** with **Summoned Skull**; confirm destruction immunity and discards or battle trigger. Use **Spirit Reaper** or **Change of Heart** from the pool to test interactions with non-destruction removal.
+- **AI coverage:** **Automatic** (no card-menu activation) — No `CanActivateMonsterEffect` path; CPU uses standard lines.
+- **AI scenarios:**
+  1. Campaign **Yata** duel (or Test Duel with the format opponent deck): give the **opponent** `Don Zaloog` in the main/extra deck at a realistic copy count from `usage/` decks. CPU should Normal Summon/set and attack with **Don Zaloog** using ordinary lines; verify mandatory / passive text from **Coded behavior** without expecting a card-menu activation.
 
 ### Reinforcement of the Army
 
@@ -385,6 +500,10 @@ Other monsters on the field cannot change their battle positions or attack. Once
 - **Scenarios:**
   1. Campaign duel vs the **Yata** opponent: put **Reinforcement of the Army** in your deck with pool backrow (**Call of the Haunted**) and monsters (**Mystic Tomato**, **Summoned Skull**). Opponent line: Normal Summon **Summoned Skull**, set **Man-Eater Bug**, pass. Play toward **Reinforcement of the Army** as you would in the usage decks and verify effect once as human and once watching CPU.
   2. Same board: when you activate **Reinforcement of the Army**, opponent may chain **Magic Jammer** (or **Book of Moon**). Confirm stack order. Normal Spells such as **Change of Heart** cannot be chained—only Traps and Quick-Play Spells.
+- **AI coverage:** **Yes — generalized routine** — `AiPlayAddedCards` / `AiTryPlaySpellTrap` + default added-card policy.
+- **AI scenarios:**
+  1. Campaign **Yata** duel (or Test Duel with the format opponent deck): give the **opponent** `Reinforcement of the Army` in the main/extra deck at a realistic copy count from `usage/` decks. Let the CPU play the duel: it should activate/set/chain **Reinforcement of the Army** when its `AiWants*` / `AiShouldActivateAddedCard` policy says so (see **AI coverage**). Repeat until you see at least one successful CPU use or confirm the policy never fires on this board.
+  2. Second pass: simplify the board until the hook conditions in **AI coverage** are met (extra hand size, weaker monsters, or an open monster zone) and re-check CPU behavior.
 
 ### Gravekeeper's Spy
 
@@ -395,6 +514,9 @@ Other monsters on the field cannot change their battle positions or attack. Once
 - **Format context:** **Yata** legal pool: `card_pools/yata.txt`. Build the opponent from these pool staples (**Call of the Haunted**, **Ceasefire**, **Change of Heart**, **Confiscation**, **Dark Hole**, all from the same files).
 - **Scenarios:**
   1. Set **Gravekeeper's Spy** face-down. Opponent attacks with **Summoned Skull**; after FLIP, Special Summon a Gravekeeper from deck (another legal Gravekeeper from the pool) and confirm **Summoned Skull** cannot destroy **Gravekeeper's Spy** by battle alone.
+- **AI coverage:** **Automatic** (no card-menu activation) — No `CanActivateMonsterEffect` path; CPU uses standard lines.
+- **AI scenarios:**
+  1. Campaign **Yata** duel (or Test Duel with the format opponent deck): give the **opponent** `Gravekeeper's Spy` in the main/extra deck at a realistic copy count from `usage/` decks. CPU should Normal Summon/set and attack with **Gravekeeper's Spy** using ordinary lines; verify mandatory / passive text from **Coded behavior** without expecting a card-menu activation.
 
 ### Book of Moon
 
@@ -406,6 +528,10 @@ Other monsters on the field cannot change their battle positions or attack. Once
 - **Format context:** **Yata** legal pool: `card_pools/yata.txt`. Build the opponent from these pool staples (**Call of the Haunted**, **Ceasefire**, **Change of Heart**, **Confiscation**, **Dark Hole**, all from the same files).
 - **Scenarios:**
   1. You: **Mystic Tomato** + **Spirit Reaper**; opponent: **Summoned Skull** + set **Man-Eater Bug**. Activate **Book of Moon** and list every monster destroyed; check whether **Man-Eater Bug** FLIP triggers when applicable.
+- **AI coverage:** **Yes — generalized routine** — Monster menu: clears the way for the CPU's attack Main Phase Spell: clears the way for the CPU's attack Set/chain: clears the way for the CPU's attack
+- **AI scenarios:**
+  1. Campaign **Yata** duel (or Test Duel with the format opponent deck): give the **opponent** `Book of Moon` in the main/extra deck at a realistic copy count from `usage/` decks. Let the CPU play the duel: it should activate/set/chain **Book of Moon** when its `AiWants*` / `AiShouldActivateAddedCard` policy says so (see **AI coverage**). Repeat until you see at least one successful CPU use or confirm the policy never fires on this board.
+  2. Second pass: open a chain window the policy cares about (Normal/Special Summon, attack declaration, or your Spell activation) and confirm the opponent flips/sets/chains **Book of Moon** when `CanActivateFieldCard` allows.
 
 ### King Tiger Wanghu
 
@@ -417,6 +543,9 @@ Other monsters on the field cannot change their battle positions or attack. Once
 - **Format context:** **Yata** legal pool: `card_pools/yata.txt`. Build the opponent from these pool staples (**Call of the Haunted**, **Ceasefire**, **Change of Heart**, **Confiscation**, **Dark Hole**, all from the same files).
 - **Scenarios:**
   1. You: **Mystic Tomato** + **Spirit Reaper**; opponent: **Summoned Skull** + set **Man-Eater Bug**. Activate **King Tiger Wanghu** and list every monster destroyed; check whether **Man-Eater Bug** FLIP triggers when applicable.
+- **AI coverage:** **Automatic** (no card-menu activation) — No `CanActivateMonsterEffect` path; CPU uses standard lines.
+- **AI scenarios:**
+  1. Campaign **Yata** duel (or Test Duel with the format opponent deck): give the **opponent** `King Tiger Wanghu` in the main/extra deck at a realistic copy count from `usage/` decks. CPU should Normal Summon/set and attack with **King Tiger Wanghu** using ordinary lines; verify mandatory / passive text from **Coded behavior** without expecting a card-menu activation.
 
 ### Newdoria
 
@@ -427,6 +556,9 @@ Other monsters on the field cannot change their battle positions or attack. Once
 - **Format context:** **Yata** legal pool: `card_pools/yata.txt`. Build the opponent from these pool staples (**Call of the Haunted**, **Ceasefire**, **Change of Heart**, **Confiscation**, **Dark Hole**, all from the same files).
 - **Scenarios:**
   1. You: **Mystic Tomato** + **Spirit Reaper**; opponent: **Summoned Skull** + set **Man-Eater Bug**. Activate **Newdoria** and list every monster destroyed; check whether **Man-Eater Bug** FLIP triggers when applicable.
+- **AI coverage:** **Automatic** (no card-menu activation) — No `CanActivateMonsterEffect` path; CPU uses standard lines.
+- **AI scenarios:**
+  1. Campaign **Yata** duel (or Test Duel with the format opponent deck): give the **opponent** `Newdoria` in the main/extra deck at a realistic copy count from `usage/` decks. CPU should Normal Summon/set and attack with **Newdoria** using ordinary lines; verify mandatory / passive text from **Coded behavior** without expecting a card-menu activation.
 
 ### Metamorphosis
 
@@ -438,6 +570,10 @@ Other monsters on the field cannot change their battle positions or attack. Once
 - **Scenarios:**
   1. Campaign duel vs the **Yata** opponent: put **Metamorphosis** in your deck with pool backrow (**Call of the Haunted**) and monsters (**Mystic Tomato**, **Summoned Skull**). Opponent line: Normal Summon **Summoned Skull**, set **Man-Eater Bug**, pass. Play toward **Metamorphosis** as you would in the usage decks and verify effect once as human and once watching CPU.
   2. Same board: when you activate **Metamorphosis**, opponent may chain **Magic Jammer** (or **Book of Moon**). Confirm stack order. Normal Spells such as **Change of Heart** cannot be chained—only Traps and Quick-Play Spells.
+- **AI coverage:** **Yes — dedicated logic** — Hooks: `AiCpuMetamorphosisAllowed` Dedicated `*Cpu*` handlers in the card's effect steps. Monster menu: Conditional AiWants* / AiShouldActivateAddedCard Main Phase Spell: Conditional AiWants* / AiShouldActivateAddedCard Set/chain: Conditional AiWants* / AiShouldActivateAddedCard
+- **AI scenarios:**
+  1. Campaign **Yata** duel (or Test Duel with the format opponent deck): give the **opponent** `Metamorphosis` in the main/extra deck at a realistic copy count from `usage/` decks. Let the CPU play the duel: it should activate/set/chain **Metamorphosis** when its `AiWants*` / `AiShouldActivateAddedCard` policy says so (see **AI coverage**). Repeat until you see at least one successful CPU use or confirm the policy never fires on this board.
+  2. Second pass: open a chain window the policy cares about (Normal/Special Summon, attack declaration, or your Spell activation) and confirm the opponent flips/sets/chains **Metamorphosis** when `CanActivateFieldCard` allows.
 
 ### Cure Mermaid
 
@@ -450,6 +586,9 @@ Other monsters on the field cannot change their battle positions or attack. Once
 - **Scenarios:**
   1. Campaign duel vs the **Yata** opponent: put **Cure Mermaid** in your deck with pool backrow (**Call of the Haunted**) and monsters (**Mystic Tomato**, **Summoned Skull**). Opponent line: Normal Summon **Summoned Skull**, set **Man-Eater Bug**, pass. Play toward **Cure Mermaid** as you would in the usage decks and verify effect once as human and once watching CPU.
   2. Same board: use **Cure Mermaid** per **Coded behavior**. If the ROM offers a chain window to the opponent, it should accept only **Magic Jammer**-type responses (Trap or Quick-Play Spell), not Normal Spells.
+- **AI coverage:** **Unclear / likely missing** — No `CPU:` notes and no switch case found; treat as untested for CPU until you confirm in a duel.
+- **AI scenarios:**
+  1. Campaign **Yata** duel (or Test Duel with the format opponent deck): give the **opponent** `Cure Mermaid` in the main/extra deck at a realistic copy count from `usage/` decks. Watch several turns; note any turn where a human could legally use **Cure Mermaid** but the CPU does not. File gaps against `src/added_effects.c` / `ai_deck.c`.
 
 ### Raigeki Break
 
@@ -460,6 +599,10 @@ Other monsters on the field cannot change their battle positions or attack. Once
 - **Format context:** **Yata** legal pool: `card_pools/yata.txt`. Build the opponent from these pool staples (**Call of the Haunted**, **Ceasefire**, **Change of Heart**, **Confiscation**, **Dark Hole**, all from the same files).
 - **Scenarios:**
   1. You: **Mystic Tomato** + **Spirit Reaper**; opponent: **Summoned Skull** + set **Man-Eater Bug**. Activate **Raigeki Break** and list every monster destroyed; check whether **Man-Eater Bug** FLIP triggers when applicable.
+- **AI coverage:** **Yes — generalized routine** — `AiPlayAddedCards` / `AiTryPlaySpellTrap` + default added-card policy.
+- **AI scenarios:**
+  1. Campaign **Yata** duel (or Test Duel with the format opponent deck): give the **opponent** `Raigeki Break` in the main/extra deck at a realistic copy count from `usage/` decks. Let the CPU play the duel: it should activate/set/chain **Raigeki Break** when its `AiWants*` / `AiShouldActivateAddedCard` policy says so (see **AI coverage**). Repeat until you see at least one successful CPU use or confirm the policy never fires on this board.
+  2. Second pass: simplify the board until the hook conditions in **AI coverage** are met (extra hand size, weaker monsters, or an open monster zone) and re-check CPU behavior.
 
 ### Trap Dustshoot
 
@@ -471,6 +614,9 @@ Other monsters on the field cannot change their battle positions or attack. Once
 - **Scenarios:**
   1. Campaign duel vs the **Yata** opponent: put **Trap Dustshoot** in your deck with pool backrow (**Call of the Haunted**) and monsters (**Mystic Tomato**, **Summoned Skull**). Opponent line: Normal Summon **Summoned Skull**, set **Man-Eater Bug**, pass. Play toward **Trap Dustshoot** as you would in the usage decks and verify effect once as human and once watching CPU.
   2. Same board: when you activate **Trap Dustshoot**, opponent may chain **Magic Jammer** (or **Book of Moon**). Confirm stack order. Normal Spells such as **Change of Heart** cannot be chained—only Traps and Quick-Play Spells.
+- **AI coverage:** **Automatic** (no card-menu activation) — No `CanActivateMonsterEffect` path; CPU uses standard lines.
+- **AI scenarios:**
+  1. Campaign **Yata** duel (or Test Duel with the format opponent deck): give the **opponent** `Trap Dustshoot` in the main/extra deck at a realistic copy count from `usage/` decks. CPU should Normal Summon/set and attack with **Trap Dustshoot** using ordinary lines; verify mandatory / passive text from **Coded behavior** without expecting a card-menu activation.
 
 ### Blast with Chain
 
@@ -481,6 +627,10 @@ Other monsters on the field cannot change their battle positions or attack. Once
 - **Format context:** **Yata** legal pool: `card_pools/yata.txt`. Build the opponent from these pool staples (**Call of the Haunted**, **Ceasefire**, **Change of Heart**, **Confiscation**, **Dark Hole**, all from the same files).
 - **Scenarios:**
   1. You: **Mystic Tomato** + **Spirit Reaper**; opponent: **Summoned Skull** + set **Man-Eater Bug**. Activate **Blast with Chain** and list every monster destroyed; check whether **Man-Eater Bug** FLIP triggers when applicable.
+- **AI coverage:** **Yes — generalized routine** — Monster menu: against an attack, on a face-up monster of its own Main Phase Spell: against an attack, on a face-up monster of its own Set/chain: against an attack, on a face-up monster of its own
+- **AI scenarios:**
+  1. Campaign **Yata** duel (or Test Duel with the format opponent deck): give the **opponent** `Blast with Chain` in the main/extra deck at a realistic copy count from `usage/` decks. Let the CPU play the duel: it should activate/set/chain **Blast with Chain** when its `AiWants*` / `AiShouldActivateAddedCard` policy says so (see **AI coverage**). Repeat until you see at least one successful CPU use or confirm the policy never fires on this board.
+  2. Second pass: open a chain window the policy cares about (Normal/Special Summon, attack declaration, or your Spell activation) and confirm the opponent flips/sets/chains **Blast with Chain** when `CanActivateFieldCard` allows.
 
 ### Gearfried the Iron Knight
 
@@ -491,6 +641,9 @@ Other monsters on the field cannot change their battle positions or attack. Once
 - **Format context:** **Yata** legal pool: `card_pools/yata.txt`. Build the opponent from these pool staples (**Call of the Haunted**, **Ceasefire**, **Change of Heart**, **Confiscation**, **Dark Hole**, all from the same files).
 - **Scenarios:**
   1. Opponent controls **Summoned Skull**; use **Gearfried the Iron Knight**'s destruction effect per **Coded behavior**. Confirm targets; use **Magic Jammer** in a separate response window if the ROM allows, not a Normal Spell on the same chain.
+- **AI coverage:** **Generic engine** — Uses the vanilla effect key tables; the CPU plays it like other cards in its deck lists. No dedicated `AiWants*` row in `src/added_effects.c`—watch whether the opponent activates the effect when rules allow.
+- **AI scenarios:**
+  1. Campaign **Yata** duel (or Test Duel with the format opponent deck): give the **opponent** `Gearfried the Iron Knight` in the main/extra deck at a realistic copy count from `usage/` decks. Verify the CPU plays **Gearfried the Iron Knight** when its generic spell/monster heuristics allow (same class as vanilla cards with that effect key).
 
 ## Scientist
 
@@ -504,6 +657,10 @@ Other monsters on the field cannot change their battle positions or attack. Once
 - **Format context:** **Scientist** legal pool: `card_pools/scientist.txt`. Build the opponent from these pool staples (**Call of the Haunted**, **Card Destruction**, **Ceasefire**, **Change of Heart**, **Confiscation**, all from the same files).
 - **Scenarios:**
   1. Normal Summon **Breaker the Magical Warrior**; opponent sets **Man-Eater Bug** and **Call of the Haunted**. Battle Phase: attack **Summoned Skull**, gain the Spell/Trap destruction trigger, then destroy the set **Call of the Haunted** and confirm once-per-turn tracking.
+- **AI coverage:** **Yes — generalized routine** — Monster menu: the target step takes the human's cards first Set/chain: the target step takes the human's cards first
+- **AI scenarios:**
+  1. Campaign **Scientist** duel (or Test Duel with the format opponent deck): give the **opponent** `Breaker the Magical Warrior` in the main/extra deck at a realistic copy count from `usage/` decks. Let the CPU play the duel: it should activate/set/chain **Breaker the Magical Warrior** when its `AiWants*` / `AiShouldActivateAddedCard` policy says so (see **AI coverage**). Repeat until you see at least one successful CPU use or confirm the policy never fires on this board.
+  2. Second pass: open a chain window the policy cares about (Normal/Special Summon, attack declaration, or your Spell activation) and confirm the opponent flips/sets/chains **Breaker the Magical Warrior** when `CanActivateFieldCard` allows.
 
 ### Magical Scientist
 
@@ -516,6 +673,10 @@ Other monsters on the field cannot change their battle positions or attack. Once
 - **Scenarios:**
   1. Campaign duel vs the **Scientist** opponent: put **Magical Scientist** in your deck with pool backrow (**Call of the Haunted**) and monsters (**Breaker the Magical Warrior**, **Summoned Skull**). Opponent line: Normal Summon **Summoned Skull**, set **Man-Eater Bug**, pass. Play toward **Magical Scientist** as you would in the usage decks and verify effect once as human and once watching CPU.
   2. Same board: when you activate **Magical Scientist**, opponent may chain **Magic Jammer** (or **Book of Moon**). Confirm stack order. Normal Spells such as **Change of Heart** cannot be chained—only Traps and Quick-Play Spells.
+- **AI coverage:** **Yes — dedicated logic** — Hooks: `AiUseMagicalScientist` Monster menu: AiUseMagicalScientist decides Set/chain: AiUseMagicalScientist decides
+- **AI scenarios:**
+  1. Campaign **Scientist** duel (or Test Duel with the format opponent deck): give the **opponent** `Magical Scientist` in the main/extra deck at a realistic copy count from `usage/` decks. Let the CPU play the duel: it should activate/set/chain **Magical Scientist** when its `AiWants*` / `AiShouldActivateAddedCard` policy says so (see **AI coverage**). Repeat until you see at least one successful CPU use or confirm the policy never fires on this board.
+  2. Second pass: open a chain window the policy cares about (Normal/Special Summon, attack declaration, or your Spell activation) and confirm the opponent flips/sets/chains **Magical Scientist** when `CanActivateFieldCard` allows.
 
 ### Tribe-Infecting Virus
 
@@ -527,6 +688,10 @@ Other monsters on the field cannot change their battle positions or attack. Once
 - **Format context:** **Scientist** legal pool: `card_pools/scientist.txt`. Build the opponent from these pool staples (**Breaker the Magical Warrior**, **Call of the Haunted**, **Card Destruction**, **Ceasefire**, **Change of Heart**, all from the same files).
 - **Scenarios:**
   1. Your field: **Tribe-Infecting Virus** plus discard fodder; opponent fields **Gearfried the Iron Knight**, **Summoned Skull**, and **Breaker the Magical Warrior**. Declare Machine, discard a Machine from the pool, and confirm only the opponent's Machines are destroyed.
+- **AI coverage:** **Yes — generalized routine** — Monster menu: Default yes Set/chain: Default yes
+- **AI scenarios:**
+  1. Campaign **Scientist** duel (or Test Duel with the format opponent deck): give the **opponent** `Tribe-Infecting Virus` in the main/extra deck at a realistic copy count from `usage/` decks. Let the CPU play the duel: it should activate/set/chain **Tribe-Infecting Virus** when its `AiWants*` / `AiShouldActivateAddedCard` policy says so (see **AI coverage**). Repeat until you see at least one successful CPU use or confirm the policy never fires on this board.
+  2. Second pass: open a chain window the policy cares about (Normal/Special Summon, attack declaration, or your Spell activation) and confirm the opponent flips/sets/chains **Tribe-Infecting Virus** when `CanActivateFieldCard` allows.
 
 ### Gilasaurus
 
@@ -538,6 +703,10 @@ Other monsters on the field cannot change their battle positions or attack. Once
 - **Scenarios:**
   1. Campaign duel vs the **Scientist** opponent: put **Gilasaurus** in your deck with pool backrow (**Call of the Haunted**) and monsters (**Breaker the Magical Warrior**, **Summoned Skull**). Opponent line: Normal Summon **Summoned Skull**, set **Man-Eater Bug**, pass. Play toward **Gilasaurus** as you would in the usage decks and verify effect once as human and once watching CPU.
   2. Same board: use **Gilasaurus** per **Coded behavior**. If the ROM offers a chain window to the opponent, it should accept only **Magic Jammer**-type responses (Trap or Quick-Play Spell), not Normal Spells.
+- **AI coverage:** **Yes — dedicated logic** — Hooks: `AiWantsGilasaurus`
+- **AI scenarios:**
+  1. Campaign **Scientist** duel (or Test Duel with the format opponent deck): give the **opponent** `Gilasaurus` in the main/extra deck at a realistic copy count from `usage/` decks. Let the CPU play the duel: it should activate/set/chain **Gilasaurus** when its `AiWants*` / `AiShouldActivateAddedCard` policy says so (see **AI coverage**). Repeat until you see at least one successful CPU use or confirm the policy never fires on this board.
+  2. Second pass: simplify the board until the hook conditions in **AI coverage** are met (extra hand size, weaker monsters, or an open monster zone) and re-check CPU behavior.
 
 ### Poison of the Old Man
 
@@ -551,6 +720,10 @@ Other monsters on the field cannot change their battle positions or attack. Once
 - **Scenarios:**
   1. Campaign duel vs the **Scientist** opponent: put **Poison of the Old Man** in your deck with pool backrow (**Call of the Haunted**) and monsters (**Breaker the Magical Warrior**, **Summoned Skull**). Opponent line: Normal Summon **Summoned Skull**, set **Man-Eater Bug**, pass. Play toward **Poison of the Old Man** as you would in the usage decks and verify effect once as human and once watching CPU.
   2. Same board: when you activate **Poison of the Old Man**, opponent may chain **Magic Jammer** (or **Book of Moon**). Confirm stack order. Normal Spells such as **Change of Heart** cannot be chained—only Traps and Quick-Play Spells.
+- **AI coverage:** **Yes — dedicated logic** — Hooks: `AiWantsSpell` Monster menu: Default yes Main Phase Spell: always: AiPoisonOfTheOldManChoice picks the effect Set/chain: Default yes
+- **AI scenarios:**
+  1. Campaign **Scientist** duel (or Test Duel with the format opponent deck): give the **opponent** `Poison of the Old Man` in the main/extra deck at a realistic copy count from `usage/` decks. Let the CPU play the duel: it should activate/set/chain **Poison of the Old Man** when its `AiWants*` / `AiShouldActivateAddedCard` policy says so (see **AI coverage**). Repeat until you see at least one successful CPU use or confirm the policy never fires on this board.
+  2. Second pass: open a chain window the policy cares about (Normal/Special Summon, attack declaration, or your Spell activation) and confirm the opponent flips/sets/chains **Poison of the Old Man** when `CanActivateFieldCard` allows.
 
 ### Reasoning
 
@@ -561,6 +734,10 @@ Other monsters on the field cannot change their battle positions or attack. Once
 - **Format context:** **Scientist** legal pool: `card_pools/scientist.txt`. Build the opponent from these pool staples (**Breaker the Magical Warrior**, **Call of the Haunted**, **Card Destruction**, **Ceasefire**, **Change of Heart**, all from the same files).
 - **Scenarios:**
   1. Open with **Reasoning** while opponent controls only **Summoned Skull**. Count hand size before/after relative to **Card Destruction** in the opponent list; repeat when your Standby/Draw Phase trigger applies.
+- **AI coverage:** **Yes — dedicated logic** — Hooks: `sStrReasoningCpuDeclares` Dedicated `*Cpu*` handlers in the card's effect steps.
+- **AI scenarios:**
+  1. Campaign **Scientist** duel (or Test Duel with the format opponent deck): give the **opponent** `Reasoning` in the main/extra deck at a realistic copy count from `usage/` decks. Let the CPU play the duel: it should activate/set/chain **Reasoning** when its `AiWants*` / `AiShouldActivateAddedCard` policy says so (see **AI coverage**). Repeat until you see at least one successful CPU use or confirm the policy never fires on this board.
+  2. Second pass: simplify the board until the hook conditions in **AI coverage** are met (extra hand size, weaker monsters, or an open monster zone) and re-check CPU behavior.
 
 ### Jowgen the Spiritualist
 
@@ -572,6 +749,9 @@ Other monsters on the field cannot change their battle positions or attack. Once
 - **Format context:** **Scientist** legal pool: `card_pools/scientist.txt`. Build the opponent from these pool staples (**Breaker the Magical Warrior**, **Call of the Haunted**, **Card Destruction**, **Ceasefire**, **Change of Heart**, all from the same files).
 - **Scenarios:**
   1. You: **Breaker the Magical Warrior** + **Breaker the Magical Warrior**; opponent: **Summoned Skull** + set **Man-Eater Bug**. Activate **Jowgen the Spiritualist** and list every monster destroyed; check whether **Man-Eater Bug** FLIP triggers when applicable.
+- **AI coverage:** **Automatic** (no card-menu activation) — No `CanActivateMonsterEffect` path; CPU uses standard lines.
+- **AI scenarios:**
+  1. Campaign **Scientist** duel (or Test Duel with the format opponent deck): give the **opponent** `Jowgen the Spiritualist` in the main/extra deck at a realistic copy count from `usage/` decks. CPU should Normal Summon/set and attack with **Jowgen the Spiritualist** using ordinary lines; verify mandatory / passive text from **Coded behavior** without expecting a card-menu activation.
 
 ### Spiritualism
 
@@ -584,6 +764,9 @@ Other monsters on the field cannot change their battle positions or attack. Once
 - **Scenarios:**
   1. Campaign duel vs the **Scientist** opponent: put **Spiritualism** in your deck with pool backrow (**Call of the Haunted**) and monsters (**Breaker the Magical Warrior**, **Summoned Skull**). Opponent line: Normal Summon **Summoned Skull**, set **Man-Eater Bug**, pass. Play toward **Spiritualism** as you would in the usage decks and verify effect once as human and once watching CPU.
   2. Same board: when you activate **Spiritualism**, opponent may chain **Magic Jammer** (or **Book of Moon**). Confirm stack order. Normal Spells such as **Change of Heart** cannot be chained—only Traps and Quick-Play Spells.
+- **AI coverage:** **Unclear / likely missing** — No `CPU:` notes and no switch case found; treat as untested for CPU until you confirm in a duel.
+- **AI scenarios:**
+  1. Campaign **Scientist** duel (or Test Duel with the format opponent deck): give the **opponent** `Spiritualism` in the main/extra deck at a realistic copy count from `usage/` decks. Watch several turns; note any turn where a human could legally use **Spiritualism** but the CPU does not. File gaps against `src/added_effects.c` / `ai_deck.c`.
 
 ## Vampire
 
@@ -597,6 +780,9 @@ Other monsters on the field cannot change their battle positions or attack. Once
 - **Format context:** **Vampire** legal pool: `card_pools/vampire.txt`. Build the opponent from these pool staples (**Breaker the Magical Warrior**, **Call of the Haunted**, **Change of Heart**, **Confiscation**, **Dark Balter the Terrible**, all from the same files).
 - **Scenarios:**
   1. You: **Breaker the Magical Warrior** + **Breaker the Magical Warrior**; opponent: **Summoned Skull** + set **Man-Eater Bug**. Activate **D.D. Warrior Lady** and list every monster destroyed; check whether **Man-Eater Bug** FLIP triggers when applicable.
+- **AI coverage:** **Automatic** (no card-menu activation) — No `CanActivateMonsterEffect` path; CPU uses standard lines.
+- **AI scenarios:**
+  1. Campaign **Vampire** duel (or Test Duel with the format opponent deck): give the **opponent** `D.D. Warrior Lady` in the main/extra deck at a realistic copy count from `usage/` decks. CPU should Normal Summon/set and attack with **D.D. Warrior Lady** using ordinary lines; verify mandatory / passive text from **Coded behavior** without expecting a card-menu activation.
 
 ### Sakuretsu Armor
 
@@ -607,6 +793,10 @@ Other monsters on the field cannot change their battle positions or attack. Once
 - **Format context:** **Vampire** legal pool: `card_pools/vampire.txt`. Build the opponent from these pool staples (**Breaker the Magical Warrior**, **Call of the Haunted**, **Change of Heart**, **Confiscation**, **Dark Balter the Terrible**, all from the same files).
 - **Scenarios:**
   1. Opponent controls **Summoned Skull**; you activate **Sakuretsu Armor** on it (or on their set **Call of the Haunted**). If opponent chains **Magic Jammer**, confirm stack order and resolution. **Change of Heart** is a Normal Spell and cannot be chained on that stack—only Traps and Quick-Play Spells can.
+- **AI coverage:** **Yes — generalized routine** — `AiPlayAddedCards` / `AiTryPlaySpellTrap` + default added-card policy.
+- **AI scenarios:**
+  1. Campaign **Vampire** duel (or Test Duel with the format opponent deck): give the **opponent** `Sakuretsu Armor` in the main/extra deck at a realistic copy count from `usage/` decks. Let the CPU play the duel: it should activate/set/chain **Sakuretsu Armor** when its `AiWants*` / `AiShouldActivateAddedCard` policy says so (see **AI coverage**). Repeat until you see at least one successful CPU use or confirm the policy never fires on this board.
+  2. Second pass: simplify the board until the hook conditions in **AI coverage** are met (extra hand size, weaker monsters, or an open monster zone) and re-check CPU behavior.
 
 ### Sasuke Samurai
 
@@ -618,6 +808,9 @@ Other monsters on the field cannot change their battle positions or attack. Once
 - **Format context:** **Vampire** legal pool: `card_pools/vampire.txt`. Build the opponent from these pool staples (**Breaker the Magical Warrior**, **Call of the Haunted**, **Change of Heart**, **Confiscation**, **Dark Balter the Terrible**, all from the same files).
 - **Scenarios:**
   1. Opponent controls **Summoned Skull**; use **Sasuke Samurai**'s destruction effect per **Coded behavior**. Confirm targets; use **Magic Jammer** in a separate response window if the ROM allows, not a Normal Spell on the same chain.
+- **AI coverage:** **Automatic** (no card-menu activation) — No `CanActivateMonsterEffect` path; CPU uses standard lines.
+- **AI scenarios:**
+  1. Campaign **Vampire** duel (or Test Duel with the format opponent deck): give the **opponent** `Sasuke Samurai` in the main/extra deck at a realistic copy count from `usage/` decks. CPU should Normal Summon/set and attack with **Sasuke Samurai** using ordinary lines; verify mandatory / passive text from **Coded behavior** without expecting a card-menu activation.
 
 ### Amazoness Archer
 
@@ -630,6 +823,9 @@ Other monsters on the field cannot change their battle positions or attack. Once
 - **Scenarios:**
   1. Campaign duel vs the **Vampire** opponent: put **Amazoness Archer** in your deck with pool backrow (**Call of the Haunted**) and monsters (**Breaker the Magical Warrior**, **Summoned Skull**). Opponent line: Normal Summon **Summoned Skull**, set **Man-Eater Bug**, pass. Play toward **Amazoness Archer** as you would in the usage decks and verify effect once as human and once watching CPU.
   2. Same board: use **Amazoness Archer** per **Coded behavior**. If the ROM offers a chain window to the opponent, it should accept only **Magic Jammer**-type responses (Trap or Quick-Play Spell), not Normal Spells.
+- **AI coverage:** **Unclear / likely missing** — No `CPU:` notes and no switch case found; treat as untested for CPU until you confirm in a duel.
+- **AI scenarios:**
+  1. Campaign **Vampire** duel (or Test Duel with the format opponent deck): give the **opponent** `Amazoness Archer` in the main/extra deck at a realistic copy count from `usage/` decks. Watch several turns; note any turn where a human could legally use **Amazoness Archer** but the CPU does not. File gaps against `src/added_effects.c` / `ai_deck.c`.
 
 ### Vampire Lord
 
@@ -640,6 +836,10 @@ Other monsters on the field cannot change their battle positions or attack. Once
 - **Format context:** **Vampire** legal pool: `card_pools/vampire.txt`. Build the opponent from these pool staples (**Breaker the Magical Warrior**, **Call of the Haunted**, **Change of Heart**, **Confiscation**, **Dark Balter the Terrible**, all from the same files).
 - **Scenarios:**
   1. You: **Breaker the Magical Warrior** + **Breaker the Magical Warrior**; opponent: **Summoned Skull** + set **Man-Eater Bug**. Activate **Vampire Lord** and list every monster destroyed; check whether **Man-Eater Bug** FLIP triggers when applicable.
+- **AI coverage:** **Yes — dedicated logic** — Hooks: `sStrVampireCpuMonster`, `sStrVampireCpuSpell`, `sStrVampireCpuTrap` Dedicated `*Cpu*` handlers in the card's effect steps.
+- **AI scenarios:**
+  1. Campaign **Vampire** duel (or Test Duel with the format opponent deck): give the **opponent** `Vampire Lord` in the main/extra deck at a realistic copy count from `usage/` decks. Let the CPU play the duel: it should activate/set/chain **Vampire Lord** when its `AiWants*` / `AiShouldActivateAddedCard` policy says so (see **AI coverage**). Repeat until you see at least one successful CPU use or confirm the policy never fires on this board.
+  2. Second pass: simplify the board until the hook conditions in **AI coverage** are met (extra hand size, weaker monsters, or an open monster zone) and re-check CPU behavior.
 
 ## Chaos
 
@@ -653,6 +853,10 @@ Other monsters on the field cannot change their battle positions or attack. Once
 - **Format context:** **Chaos** legal pool: `card_pools/chaos.txt`. Build the opponent from these pool staples (**Breaker the Magical Warrior**, **Call of the Haunted**, **Change of Heart**, **Confiscation**, **Dark Hole**, all from the same files).
 - **Scenarios:**
   1. Your hand/field: enough LIGHT and DARK monsters from the pool (**Summoned Skull**, **Breaker the Magical Warrior**, etc.). Special Summon **Chaos Emperor Dragon - Envoy of the End**, pay 1000 LP, return all field cards and hands to the Deck, inflict 300 per returned card, and confirm **Change of Heart** cannot be played mid-resolution.
+- **AI coverage:** **Yes — dedicated logic** — Hooks: `AiWantsChaosEmperorDragon`, `AiWantsMonsterEffect` Monster menu: Conditional AiWants* / AiShouldActivateAddedCard Set/chain: Conditional AiWants* / AiShouldActivateAddedCard
+- **AI scenarios:**
+  1. Campaign **Chaos** duel (or Test Duel with the format opponent deck): give the **opponent** `Chaos Emperor Dragon - Envoy of the End` in the main/extra deck at a realistic copy count from `usage/` decks. Let the CPU play the duel: it should activate/set/chain **Chaos Emperor Dragon - Envoy of the End** when its `AiWants*` / `AiShouldActivateAddedCard` policy says so (see **AI coverage**). Repeat until you see at least one successful CPU use or confirm the policy never fires on this board.
+  2. Second pass: open a chain window the policy cares about (Normal/Special Summon, attack declaration, or your Spell activation) and confirm the opponent flips/sets/chains **Chaos Emperor Dragon - Envoy of the End** when `CanActivateFieldCard` allows.
 
 ### Dark Magician of Chaos
 
@@ -664,6 +868,9 @@ Other monsters on the field cannot change their battle positions or attack. Once
 - **Format context:** **Chaos** legal pool: `card_pools/chaos.txt`. Build the opponent from these pool staples (**Breaker the Magical Warrior**, **Call of the Haunted**, **Change of Heart**, **Chaos Emperor Dragon - Envoy of the End**, **Confiscation**, all from the same files).
 - **Scenarios:**
   1. You: **Breaker the Magical Warrior** + **Breaker the Magical Warrior**; opponent: **Summoned Skull** + set **Man-Eater Bug**. Activate **Dark Magician of Chaos** and list every monster destroyed; check whether **Man-Eater Bug** FLIP triggers when applicable.
+- **AI coverage:** **Automatic** (no card-menu activation) — No `CanActivateMonsterEffect` path; CPU uses standard lines.
+- **AI scenarios:**
+  1. Campaign **Chaos** duel (or Test Duel with the format opponent deck): give the **opponent** `Dark Magician of Chaos` in the main/extra deck at a realistic copy count from `usage/` decks. CPU should Normal Summon/set and attack with **Dark Magician of Chaos** using ordinary lines; verify mandatory / passive text from **Coded behavior** without expecting a card-menu activation.
 
 ### Chaos Sorcerer
 
@@ -676,6 +883,10 @@ Other monsters on the field cannot change their battle positions or attack. Once
 - **Scenarios:**
   1. Campaign duel vs the **Chaos** opponent: put **Chaos Sorcerer** in your deck with pool backrow (**Call of the Haunted**) and monsters (**Breaker the Magical Warrior**, **Summoned Skull**). Opponent line: Normal Summon **Summoned Skull**, set **Man-Eater Bug**, pass. Play toward **Chaos Sorcerer** as you would in the usage decks and verify effect once as human and once watching CPU.
   2. Same board: use **Chaos Sorcerer** per **Coded behavior**. If the ROM offers a chain window to the opponent, it should accept only **Magic Jammer**-type responses (Trap or Quick-Play Spell), not Normal Spells.
+- **AI coverage:** **Yes — generalized routine** — Monster menu: Default yes Set/chain: Default yes
+- **AI scenarios:**
+  1. Campaign **Chaos** duel (or Test Duel with the format opponent deck): give the **opponent** `Chaos Sorcerer` in the main/extra deck at a realistic copy count from `usage/` decks. Let the CPU play the duel: it should activate/set/chain **Chaos Sorcerer** when its `AiWants*` / `AiShouldActivateAddedCard` policy says so (see **AI coverage**). Repeat until you see at least one successful CPU use or confirm the policy never fires on this board.
+  2. Second pass: open a chain window the policy cares about (Normal/Special Summon, attack declaration, or your Spell activation) and confirm the opponent flips/sets/chains **Chaos Sorcerer** when `CanActivateFieldCard` allows.
 
 ### Tsukuyomi
 
@@ -687,6 +898,9 @@ Other monsters on the field cannot change their battle positions or attack. Once
 - **Format context:** **Chaos** legal pool: `card_pools/chaos.txt`. Build the opponent from these pool staples (**Breaker the Magical Warrior**, **Call of the Haunted**, **Change of Heart**, **Chaos Emperor Dragon - Envoy of the End**, **Confiscation**, all from the same files).
 - **Scenarios:**
   1. You: **Breaker the Magical Warrior** + **Breaker the Magical Warrior**; opponent: **Summoned Skull** + set **Man-Eater Bug**. Activate **Tsukuyomi** and list every monster destroyed; check whether **Man-Eater Bug** FLIP triggers when applicable.
+- **AI coverage:** **Automatic** (no card-menu activation) — No `CanActivateMonsterEffect` path; CPU uses standard lines.
+- **AI scenarios:**
+  1. Campaign **Chaos** duel (or Test Duel with the format opponent deck): give the **opponent** `Tsukuyomi` in the main/extra deck at a realistic copy count from `usage/` decks. CPU should Normal Summon/set and attack with **Tsukuyomi** using ordinary lines; verify mandatory / passive text from **Coded behavior** without expecting a card-menu activation.
 
 ### Cold Wave
 
@@ -698,6 +912,10 @@ Other monsters on the field cannot change their battle positions or attack. Once
 - **Format context:** **Chaos** legal pool: `card_pools/chaos.txt`. Build the opponent from these pool staples (**Breaker the Magical Warrior**, **Call of the Haunted**, **Change of Heart**, **Chaos Emperor Dragon - Envoy of the End**, **Confiscation**, all from the same files).
 - **Scenarios:**
   1. First turn of Main Phase 1, before any summon: activate **Cold Wave**. Both players try to Set/activate **Magic Jammer** or play Quick-Play Spells; Normal Spells such as **Change of Heart** must be blocked for two turns. Opponent later Normal Summons **Summoned Skull** under the lock-out.
+- **AI coverage:** **Yes — dedicated logic** — Hooks: `AiWantsSpell`
+- **AI scenarios:**
+  1. Campaign **Chaos** duel (or Test Duel with the format opponent deck): give the **opponent** `Cold Wave` in the main/extra deck at a realistic copy count from `usage/` decks. Let the CPU play the duel: it should activate/set/chain **Cold Wave** when its `AiWants*` / `AiShouldActivateAddedCard` policy says so (see **AI coverage**). Repeat until you see at least one successful CPU use or confirm the policy never fires on this board.
+  2. Second pass: simplify the board until the hook conditions in **AI coverage** are met (extra hand size, weaker monsters, or an open monster zone) and re-check CPU behavior.
 
 ### Thunder Nyan Nyan
 
@@ -708,6 +926,9 @@ Other monsters on the field cannot change their battle positions or attack. Once
 - **Format context:** **Chaos** legal pool: `card_pools/chaos.txt`. Build the opponent from these pool staples (**Breaker the Magical Warrior**, **Call of the Haunted**, **Change of Heart**, **Chaos Emperor Dragon - Envoy of the End**, **Confiscation**, all from the same files).
 - **Scenarios:**
   1. You: **Breaker the Magical Warrior** + **Breaker the Magical Warrior**; opponent: **Summoned Skull** + set **Man-Eater Bug**. Activate **Thunder Nyan Nyan** and list every monster destroyed; check whether **Man-Eater Bug** FLIP triggers when applicable.
+- **AI coverage:** **Automatic** (no card-menu activation) — No `CanActivateMonsterEffect` path; CPU uses standard lines.
+- **AI scenarios:**
+  1. Campaign **Chaos** duel (or Test Duel with the format opponent deck): give the **opponent** `Thunder Nyan Nyan` in the main/extra deck at a realistic copy count from `usage/` decks. CPU should Normal Summon/set and attack with **Thunder Nyan Nyan** using ordinary lines; verify mandatory / passive text from **Coded behavior** without expecting a card-menu activation.
 
 ## Warrior
 
@@ -721,6 +942,9 @@ Other monsters on the field cannot change their battle positions or attack. Once
 - **Scenarios:**
   1. Campaign duel vs the **Warrior** opponent: put **Cipher Soldier** in your deck with pool backrow (**Call of the Haunted**) and monsters (**Breaker the Magical Warrior**, **Summoned Skull**). Opponent line: Normal Summon **Summoned Skull**, set **Man-Eater Bug**, pass. Play toward **Cipher Soldier** as you would in the usage decks and verify effect once as human and once watching CPU.
   2. Same board: use **Cipher Soldier** per **Coded behavior**. If the ROM offers a chain window to the opponent, it should accept only **Magic Jammer**-type responses (Trap or Quick-Play Spell), not Normal Spells.
+- **AI coverage:** **Automatic** (no card-menu activation) — No `CanActivateMonsterEffect` path; CPU uses standard lines.
+- **AI scenarios:**
+  1. Campaign **Warrior** duel (or Test Duel with the format opponent deck): give the **opponent** `Cipher Soldier` in the main/extra deck at a realistic copy count from `usage/` decks. CPU should Normal Summon/set and attack with **Cipher Soldier** using ordinary lines; verify mandatory / passive text from **Coded behavior** without expecting a card-menu activation.
 
 ### Mobius the Frost Monarch
 
@@ -732,6 +956,10 @@ Other monsters on the field cannot change their battle positions or attack. Once
 - **Format context:** **Warrior** legal pool: `card_pools/warrior.txt`. Build the opponent from these pool staples (**Breaker the Magical Warrior**, **Call of the Haunted**, **Change of Heart**, **Confiscation**, **Exiled Force**, all from the same files).
 - **Scenarios:**
   1. You: **Breaker the Magical Warrior** + **Breaker the Magical Warrior**; opponent: **Summoned Skull** + set **Man-Eater Bug**. Activate **Mobius the Frost Monarch** and list every monster destroyed; check whether **Man-Eater Bug** FLIP triggers when applicable.
+- **AI coverage:** **Yes — generalized routine** — `AiPlayAddedCards` / `AiTryPlaySpellTrap` + default added-card policy.
+- **AI scenarios:**
+  1. Campaign **Warrior** duel (or Test Duel with the format opponent deck): give the **opponent** `Mobius the Frost Monarch` in the main/extra deck at a realistic copy count from `usage/` decks. Let the CPU play the duel: it should activate/set/chain **Mobius the Frost Monarch** when its `AiWants*` / `AiShouldActivateAddedCard` policy says so (see **AI coverage**). Repeat until you see at least one successful CPU use or confirm the policy never fires on this board.
+  2. Second pass: simplify the board until the hook conditions in **AI coverage** are met (extra hand size, weaker monsters, or an open monster zone) and re-check CPU behavior.
 
 ### Smashing Ground
 
@@ -742,6 +970,10 @@ Other monsters on the field cannot change their battle positions or attack. Once
 - **Format context:** **Warrior** legal pool: `card_pools/warrior.txt`. Build the opponent from these pool staples (**Breaker the Magical Warrior**, **Call of the Haunted**, **Change of Heart**, **Confiscation**, **Exiled Force**, all from the same files).
 - **Scenarios:**
   1. You: **Breaker the Magical Warrior** + **Breaker the Magical Warrior**; opponent: **Summoned Skull** + set **Man-Eater Bug**. Activate **Smashing Ground** and list every monster destroyed; check whether **Man-Eater Bug** FLIP triggers when applicable.
+- **AI coverage:** **Yes — generalized routine** — `AiPlayAddedCards` / `AiTryPlaySpellTrap` + default added-card policy.
+- **AI scenarios:**
+  1. Campaign **Warrior** duel (or Test Duel with the format opponent deck): give the **opponent** `Smashing Ground` in the main/extra deck at a realistic copy count from `usage/` decks. Let the CPU play the duel: it should activate/set/chain **Smashing Ground** when its `AiWants*` / `AiShouldActivateAddedCard` policy says so (see **AI coverage**). Repeat until you see at least one successful CPU use or confirm the policy never fires on this board.
+  2. Second pass: simplify the board until the hook conditions in **AI coverage** are met (extra hand size, weaker monsters, or an open monster zone) and re-check CPU behavior.
 
 ### Blade Knight
 
@@ -753,6 +985,9 @@ Other monsters on the field cannot change their battle positions or attack. Once
 - **Format context:** **Warrior** legal pool: `card_pools/warrior.txt`. Build the opponent from these pool staples (**Breaker the Magical Warrior**, **Call of the Haunted**, **Change of Heart**, **Confiscation**, **Exiled Force**, all from the same files).
 - **Scenarios:**
   1. Opponent controls **Summoned Skull**; use **Blade Knight**'s destruction effect per **Coded behavior**. Confirm targets; use **Magic Jammer** in a separate response window if the ROM allows, not a Normal Spell on the same chain.
+- **AI coverage:** **Automatic** (no card-menu activation) — No `CanActivateMonsterEffect` path; CPU uses standard lines.
+- **AI scenarios:**
+  1. Campaign **Warrior** duel (or Test Duel with the format opponent deck): give the **opponent** `Blade Knight` in the main/extra deck at a realistic copy count from `usage/` decks. CPU should Normal Summon/set and attack with **Blade Knight** using ordinary lines; verify mandatory / passive text from **Coded behavior** without expecting a card-menu activation.
 
 ### Mystic Swordsman LV2
 
@@ -764,6 +999,9 @@ Other monsters on the field cannot change their battle positions or attack. Once
 - **Format context:** **Warrior** legal pool: `card_pools/warrior.txt`. Build the opponent from these pool staples (**Breaker the Magical Warrior**, **Call of the Haunted**, **Change of Heart**, **Confiscation**, **Exiled Force**, all from the same files).
 - **Scenarios:**
   1. Opponent controls **Summoned Skull**; use **Mystic Swordsman LV2**'s destruction effect per **Coded behavior**. Confirm targets; use **Magic Jammer** in a separate response window if the ROM allows, not a Normal Spell on the same chain.
+- **AI coverage:** **Automatic** (no card-menu activation) — No `CanActivateMonsterEffect` path; CPU uses standard lines.
+- **AI scenarios:**
+  1. Campaign **Warrior** duel (or Test Duel with the format opponent deck): give the **opponent** `Mystic Swordsman LV2` in the main/extra deck at a realistic copy count from `usage/` decks. CPU should Normal Summon/set and attack with **Mystic Swordsman LV2** using ordinary lines; verify mandatory / passive text from **Coded behavior** without expecting a card-menu activation.
 
 ### Bottomless Trap Hole
 
@@ -774,6 +1012,10 @@ Other monsters on the field cannot change their battle positions or attack. Once
 - **Format context:** **Warrior** legal pool: `card_pools/warrior.txt`. Build the opponent from these pool staples (**Breaker the Magical Warrior**, **Call of the Haunted**, **Change of Heart**, **Confiscation**, **Exiled Force**, all from the same files).
 - **Scenarios:**
   1. Opponent Special Summons or Normal Summons **Summoned Skull** with 1500 or less ATK. Flip **Bottomless Trap Hole** in response: **Summoned Skull** is destroyed; opponent cannot chain a Normal Spell (e.g. **Change of Heart**)—only a Trap or Quick-Play Spell such as **Magic Jammer**.
+- **AI coverage:** **Yes — generalized routine** — `AiPlayAddedCards` / `AiTryPlaySpellTrap` + default added-card policy.
+- **AI scenarios:**
+  1. Campaign **Warrior** duel (or Test Duel with the format opponent deck): give the **opponent** `Bottomless Trap Hole` in the main/extra deck at a realistic copy count from `usage/` decks. Let the CPU play the duel: it should activate/set/chain **Bottomless Trap Hole** when its `AiWants*` / `AiShouldActivateAddedCard` policy says so (see **AI coverage**). Repeat until you see at least one successful CPU use or confirm the policy never fires on this board.
+  2. Second pass: simplify the board until the hook conditions in **AI coverage** are met (extra hand size, weaker monsters, or an open monster zone) and re-check CPU behavior.
 
 ### Emergency Provisions
 
@@ -785,6 +1027,10 @@ Other monsters on the field cannot change their battle positions or attack. Once
 - **Scenarios:**
   1. Campaign duel vs the **Warrior** opponent: put **Emergency Provisions** in your deck with pool backrow (**Call of the Haunted**) and monsters (**Breaker the Magical Warrior**, **Summoned Skull**). Opponent line: Normal Summon **Summoned Skull**, set **Man-Eater Bug**, pass. Play toward **Emergency Provisions** as you would in the usage decks and verify effect once as human and once watching CPU.
   2. Same board: when you activate **Emergency Provisions**, opponent may chain **Magic Jammer** (or **Book of Moon**). Confirm stack order. Normal Spells such as **Change of Heart** cannot be chained—only Traps and Quick-Play Spells.
+- **AI coverage:** **Yes — dedicated logic** — Hooks: `AiWantsEmergencyProvisions`, `AiWantsSpell` Monster menu: only when low on LP Main Phase Spell: only when low on LP Set/chain: only when low on LP
+- **AI scenarios:**
+  1. Campaign **Warrior** duel (or Test Duel with the format opponent deck): give the **opponent** `Emergency Provisions` in the main/extra deck at a realistic copy count from `usage/` decks. Let the CPU play the duel: it should activate/set/chain **Emergency Provisions** when its `AiWants*` / `AiShouldActivateAddedCard` policy says so (see **AI coverage**). Repeat until you see at least one successful CPU use or confirm the policy never fires on this board.
+  2. Second pass: open a chain window the policy cares about (Normal/Special Summon, attack declaration, or your Spell activation) and confirm the opponent flips/sets/chains **Emergency Provisions** when `CanActivateFieldCard` allows.
 
 ### Enemy Controller
 
@@ -798,6 +1044,10 @@ Other monsters on the field cannot change their battle positions or attack. Once
 - **Scenarios:**
   1. Campaign duel vs the **Warrior** opponent: put **Enemy Controller** in your deck with pool backrow (**Call of the Haunted**) and monsters (**Breaker the Magical Warrior**, **Summoned Skull**). Opponent line: Normal Summon **Summoned Skull**, set **Man-Eater Bug**, pass. Play toward **Enemy Controller** as you would in the usage decks and verify effect once as human and once watching CPU.
   2. Same board: when you activate **Enemy Controller**, opponent may chain **Magic Jammer** (or **Book of Moon**). Confirm stack order. Normal Spells such as **Change of Heart** cannot be chained—only Traps and Quick-Play Spells.
+- **AI coverage:** **Yes — dedicated logic** — Hooks: `AiWantsEnemyController`, `AiWantsSpell` Monster menu: to take a much stronger monster Main Phase Spell: to take a much stronger monster Set/chain: to take a much stronger monster
+- **AI scenarios:**
+  1. Campaign **Warrior** duel (or Test Duel with the format opponent deck): give the **opponent** `Enemy Controller` in the main/extra deck at a realistic copy count from `usage/` decks. Let the CPU play the duel: it should activate/set/chain **Enemy Controller** when its `AiWants*` / `AiShouldActivateAddedCard` policy says so (see **AI coverage**). Repeat until you see at least one successful CPU use or confirm the policy never fires on this board.
+  2. Second pass: open a chain window the policy cares about (Normal/Special Summon, attack declaration, or your Spell activation) and confirm the opponent flips/sets/chains **Enemy Controller** when `CanActivateFieldCard` allows.
 
 ### Mystik Wok
 
@@ -809,6 +1059,10 @@ Other monsters on the field cannot change their battle positions or attack. Once
 - **Scenarios:**
   1. Campaign duel vs the **Warrior** opponent: put **Mystik Wok** in your deck with pool backrow (**Call of the Haunted**) and monsters (**Breaker the Magical Warrior**, **Summoned Skull**). Opponent line: Normal Summon **Summoned Skull**, set **Man-Eater Bug**, pass. Play toward **Mystik Wok** as you would in the usage decks and verify effect once as human and once watching CPU.
   2. Same board: when you activate **Mystik Wok**, opponent may chain **Magic Jammer** (or **Book of Moon**). Confirm stack order. Normal Spells such as **Change of Heart** cannot be chained—only Traps and Quick-Play Spells.
+- **AI coverage:** **Yes — dedicated logic** — Hooks: `AiWantsMystikWok` Monster menu: Conditional AiWants* / AiShouldActivateAddedCard Main Phase Spell: Conditional AiWants* / AiShouldActivateAddedCard Set/chain: Conditional AiWants* / AiShouldActivateAddedCard
+- **AI scenarios:**
+  1. Campaign **Warrior** duel (or Test Duel with the format opponent deck): give the **opponent** `Mystik Wok` in the main/extra deck at a realistic copy count from `usage/` decks. Let the CPU play the duel: it should activate/set/chain **Mystik Wok** when its `AiWants*` / `AiShouldActivateAddedCard` policy says so (see **AI coverage**). Repeat until you see at least one successful CPU use or confirm the policy never fires on this board.
+  2. Second pass: open a chain window the policy cares about (Normal/Special Summon, attack declaration, or your Spell activation) and confirm the opponent flips/sets/chains **Mystik Wok** when `CanActivateFieldCard` allows.
 
 ### Berserk Gorilla
 
@@ -820,6 +1074,9 @@ Other monsters on the field cannot change their battle positions or attack. Once
 - **Format context:** **Warrior** legal pool: `card_pools/warrior.txt`. Build the opponent from these pool staples (**Breaker the Magical Warrior**, **Call of the Haunted**, **Change of Heart**, **Confiscation**, **Exiled Force**, all from the same files).
 - **Scenarios:**
   1. Opponent controls **Summoned Skull**; use **Berserk Gorilla**'s destruction effect per **Coded behavior**. Confirm targets; use **Magic Jammer** in a separate response window if the ROM allows, not a Normal Spell on the same chain.
+- **AI coverage:** **Automatic** (no card-menu activation) — No `CanActivateMonsterEffect` path; CPU uses standard lines.
+- **AI scenarios:**
+  1. Campaign **Warrior** duel (or Test Duel with the format opponent deck): give the **opponent** `Berserk Gorilla` in the main/extra deck at a realistic copy count from `usage/` decks. CPU should Normal Summon/set and attack with **Berserk Gorilla** using ordinary lines; verify mandatory / passive text from **Coded behavior** without expecting a card-menu activation.
 
 ### Ninja Grandmaster Sasuke
 
@@ -831,6 +1088,9 @@ Other monsters on the field cannot change their battle positions or attack. Once
 - **Format context:** **Warrior** legal pool: `card_pools/warrior.txt`. Build the opponent from these pool staples (**Breaker the Magical Warrior**, **Call of the Haunted**, **Change of Heart**, **Confiscation**, **Exiled Force**, all from the same files).
 - **Scenarios:**
   1. Opponent controls **Summoned Skull**; use **Ninja Grandmaster Sasuke**'s destruction effect per **Coded behavior**. Confirm targets; use **Magic Jammer** in a separate response window if the ROM allows, not a Normal Spell on the same chain.
+- **AI coverage:** **Automatic** (no card-menu activation) — No `CanActivateMonsterEffect` path; CPU uses standard lines.
+- **AI scenarios:**
+  1. Campaign **Warrior** duel (or Test Duel with the format opponent deck): give the **opponent** `Ninja Grandmaster Sasuke` in the main/extra deck at a realistic copy count from `usage/` decks. CPU should Normal Summon/set and attack with **Ninja Grandmaster Sasuke** using ordinary lines; verify mandatory / passive text from **Coded behavior** without expecting a card-menu activation.
 
 ### D.D. Assailant
 
@@ -842,6 +1102,9 @@ Other monsters on the field cannot change their battle positions or attack. Once
 - **Format context:** **Warrior** legal pool: `card_pools/warrior.txt`. Build the opponent from these pool staples (**Breaker the Magical Warrior**, **Call of the Haunted**, **Change of Heart**, **Confiscation**, **Exiled Force**, all from the same files).
 - **Scenarios:**
   1. Opponent controls **Summoned Skull**; use **D.D. Assailant**'s destruction effect per **Coded behavior**. Confirm targets; use **Magic Jammer** in a separate response window if the ROM allows, not a Normal Spell on the same chain.
+- **AI coverage:** **Unclear / likely missing** — No `CPU:` notes and no switch case found; treat as untested for CPU until you confirm in a duel.
+- **AI scenarios:**
+  1. Campaign **Warrior** duel (or Test Duel with the format opponent deck): give the **opponent** `D.D. Assailant` in the main/extra deck at a realistic copy count from `usage/` decks. Watch several turns; note any turn where a human could legally use **D.D. Assailant** but the CPU does not. File gaps against `src/added_effects.c` / `ai_deck.c`.
 
 ### Return from the Different Dimension
 
@@ -853,6 +1116,10 @@ Other monsters on the field cannot change their battle positions or attack. Once
 - **Scenarios:**
   1. Campaign duel vs the **Warrior** opponent: put **Return from the Different Dimension** in your deck with pool backrow (**Call of the Haunted**) and monsters (**Breaker the Magical Warrior**, **Summoned Skull**). Opponent line: Normal Summon **Summoned Skull**, set **Man-Eater Bug**, pass. Play toward **Return from the Different Dimension** as you would in the usage decks and verify effect once as human and once watching CPU.
   2. Same board: when you activate **Return from the Different Dimension**, opponent may chain **Magic Jammer** (or **Book of Moon**). Confirm stack order. Normal Spells such as **Change of Heart** cannot be chained—only Traps and Quick-Play Spells.
+- **AI coverage:** **Yes — generalized routine** — Monster menu: two or more monsters back, with LP to spare Main Phase Spell: two or more monsters back, with LP to spare Set/chain: two or more monsters back, with LP to spare
+- **AI scenarios:**
+  1. Campaign **Warrior** duel (or Test Duel with the format opponent deck): give the **opponent** `Return from the Different Dimension` in the main/extra deck at a realistic copy count from `usage/` decks. Let the CPU play the duel: it should activate/set/chain **Return from the Different Dimension** when its `AiWants*` / `AiShouldActivateAddedCard` policy says so (see **AI coverage**). Repeat until you see at least one successful CPU use or confirm the policy never fires on this board.
+  2. Second pass: open a chain window the policy cares about (Normal/Special Summon, attack declaration, or your Spell activation) and confirm the opponent flips/sets/chains **Return from the Different Dimension** when `CanActivateFieldCard` allows.
 
 ### Monster Gate
 
@@ -864,6 +1131,10 @@ Other monsters on the field cannot change their battle positions or attack. Once
 - **Scenarios:**
   1. Campaign duel vs the **Warrior** opponent: put **Monster Gate** in your deck with pool backrow (**Call of the Haunted**) and monsters (**Breaker the Magical Warrior**, **Summoned Skull**). Opponent line: Normal Summon **Summoned Skull**, set **Man-Eater Bug**, pass. Play toward **Monster Gate** as you would in the usage decks and verify effect once as human and once watching CPU.
   2. Same board: when you activate **Monster Gate**, opponent may chain **Magic Jammer** (or **Book of Moon**). Confirm stack order. Normal Spells such as **Change of Heart** cannot be chained—only Traps and Quick-Play Spells.
+- **AI coverage:** **Yes — generalized routine** — Monster menu: Tribute a weak monster for whatever the Deck gives Main Phase Spell: Tribute a weak monster for whatever the Deck gives Set/chain: Tribute a weak monster for whatever the Deck gives
+- **AI scenarios:**
+  1. Campaign **Warrior** duel (or Test Duel with the format opponent deck): give the **opponent** `Monster Gate` in the main/extra deck at a realistic copy count from `usage/` decks. Let the CPU play the duel: it should activate/set/chain **Monster Gate** when its `AiWants*` / `AiShouldActivateAddedCard` policy says so (see **AI coverage**). Repeat until you see at least one successful CPU use or confirm the policy never fires on this board.
+  2. Second pass: open a chain window the policy cares about (Normal/Special Summon, attack declaration, or your Spell activation) and confirm the opponent flips/sets/chains **Monster Gate** when `CanActivateFieldCard` allows.
 
 ### Monster Reincarnation
 
@@ -876,6 +1147,10 @@ Other monsters on the field cannot change their battle positions or attack. Once
 - **Scenarios:**
   1. Campaign duel vs the **Warrior** opponent: put **Monster Reincarnation** in your deck with pool backrow (**Call of the Haunted**) and monsters (**Breaker the Magical Warrior**, **Summoned Skull**). Opponent line: Normal Summon **Summoned Skull**, set **Man-Eater Bug**, pass. Play toward **Monster Reincarnation** as you would in the usage decks and verify effect once as human and once watching CPU.
   2. Same board: when you activate **Monster Reincarnation**, opponent may chain **Magic Jammer** (or **Book of Moon**). Confirm stack order. Normal Spells such as **Change of Heart** cannot be chained—only Traps and Quick-Play Spells.
+- **AI coverage:** **Yes — dedicated logic** — Hooks: `AiWantsMonsterReincarnation` Monster menu: Conditional AiWants* / AiShouldActivateAddedCard Main Phase Spell: Conditional AiWants* / AiShouldActivateAddedCard Set/chain: Conditional AiWants* / AiShouldActivateAddedCard
+- **AI scenarios:**
+  1. Campaign **Warrior** duel (or Test Duel with the format opponent deck): give the **opponent** `Monster Reincarnation` in the main/extra deck at a realistic copy count from `usage/` decks. Let the CPU play the duel: it should activate/set/chain **Monster Reincarnation** when its `AiWants*` / `AiShouldActivateAddedCard` policy says so (see **AI coverage**). Repeat until you see at least one successful CPU use or confirm the policy never fires on this board.
+  2. Second pass: open a chain window the policy cares about (Normal/Special Summon, attack declaration, or your Spell activation) and confirm the opponent flips/sets/chains **Monster Reincarnation** when `CanActivateFieldCard` allows.
 
 ### Pikeru's Circle of Enchantment
 
@@ -887,6 +1162,10 @@ Other monsters on the field cannot change their battle positions or attack. Once
 - **Scenarios:**
   1. Campaign duel vs the **Warrior** opponent: put **Pikeru's Circle of Enchantment** in your deck with pool backrow (**Call of the Haunted**) and monsters (**Breaker the Magical Warrior**, **Summoned Skull**). Opponent line: Normal Summon **Summoned Skull**, set **Man-Eater Bug**, pass. Play toward **Pikeru's Circle of Enchantment** as you would in the usage decks and verify effect once as human and once watching CPU.
   2. Same board: when you activate **Pikeru's Circle of Enchantment**, opponent may chain **Magic Jammer** (or **Book of Moon**). Confirm stack order. Normal Spells such as **Change of Heart** cannot be chained—only Traps and Quick-Play Spells.
+- **AI coverage:** **Yes — dedicated logic** — Monster menu: only chained to burn (AiChainPikerusCircle) Main Phase Spell: only chained to burn (AiChainPikerusCircle) Set/chain: only chained to burn (AiChainPikerusCircle)
+- **AI scenarios:**
+  1. Campaign **Warrior** duel (or Test Duel with the format opponent deck): give the **opponent** `Pikeru's Circle of Enchantment` in the main/extra deck at a realistic copy count from `usage/` decks. Let the CPU play the duel: it should activate/set/chain **Pikeru's Circle of Enchantment** when its `AiWants*` / `AiShouldActivateAddedCard` policy says so (see **AI coverage**). Repeat until you see at least one successful CPU use or confirm the policy never fires on this board.
+  2. Second pass: open a chain window the policy cares about (Normal/Special Summon, attack declaration, or your Spell activation) and confirm the opponent flips/sets/chains **Pikeru's Circle of Enchantment** when `CanActivateFieldCard` allows.
 
 ## Goat
 
@@ -901,6 +1180,10 @@ Other monsters on the field cannot change their battle positions or attack. Once
 - **Scenarios:**
   1. Campaign duel vs the **Goat** opponent: put **Mind Control** in your deck with pool backrow (**Call of the Haunted**) and monsters (**Breaker the Magical Warrior**, **Summoned Skull**). Opponent line: Normal Summon **Summoned Skull**, set **Man-Eater Bug**, pass. Play toward **Mind Control** as you would in the usage decks and verify effect once as human and once watching CPU.
   2. Same board: when you activate **Mind Control**, opponent may chain **Magic Jammer** (or **Book of Moon**). Confirm stack order. Normal Spells such as **Pot of Greed** cannot be chained—only Traps and Quick-Play Spells.
+- **AI coverage:** **Yes — generalized routine** — `AiPlayAddedCards` / `AiTryPlaySpellTrap` + default added-card policy.
+- **AI scenarios:**
+  1. Campaign **Goat** duel (or Test Duel with the format opponent deck): give the **opponent** `Mind Control` in the main/extra deck at a realistic copy count from `usage/` decks. Let the CPU play the duel: it should activate/set/chain **Mind Control** when its `AiWants*` / `AiShouldActivateAddedCard` policy says so (see **AI coverage**). Repeat until you see at least one successful CPU use or confirm the policy never fires on this board.
+  2. Second pass: simplify the board until the hook conditions in **AI coverage** are met (extra hand size, weaker monsters, or an open monster zone) and re-check CPU behavior.
 
 ### Night Assailant
 
@@ -913,6 +1196,9 @@ When this card is sent from the hand to the Graveyard: Target 1 Flip Effect Mons
 - **Format context:** **Goat** legal pool: `card_pools/goat.txt`. Build the opponent from these pool staples (**Breaker the Magical Warrior**, **Call of the Haunted**, **Card Destruction**, **D.D. Warrior Lady**, **Delinquent Duo**, all from the same files).
 - **Scenarios:**
   1. You: **Breaker the Magical Warrior** + **Breaker the Magical Warrior**; opponent: **Summoned Skull** + set **Man-Eater Bug**. Activate **Night Assailant** and list every monster destroyed; check whether **Man-Eater Bug** FLIP triggers when applicable.
+- **AI coverage:** **Automatic** (no card-menu activation) — No `CanActivateMonsterEffect` path; CPU uses standard lines.
+- **AI scenarios:**
+  1. Campaign **Goat** duel (or Test Duel with the format opponent deck): give the **opponent** `Night Assailant` in the main/extra deck at a realistic copy count from `usage/` decks. CPU should Normal Summon/set and attack with **Night Assailant** using ordinary lines; verify mandatory / passive text from **Coded behavior** without expecting a card-menu activation.
 
 ### Dekoichi the Battlechanted Locomotive
 
@@ -924,6 +1210,9 @@ When this card is sent from the hand to the Graveyard: Target 1 Flip Effect Mons
 - **Format context:** **Goat** legal pool: `card_pools/goat.txt`. Build the opponent from these pool staples (**Breaker the Magical Warrior**, **Call of the Haunted**, **Card Destruction**, **D.D. Warrior Lady**, **Delinquent Duo**, all from the same files).
 - **Scenarios:**
   1. Set **Dekoichi the Battlechanted Locomotive**; opponent attacks with **Summoned Skull** or flips with **Card Destruction**. Resolve the FLIP effect against a legal target still in the pool (**Summoned Skull** or **Breaker the Magical Warrior**).
+- **AI coverage:** **Automatic** (no card-menu activation) — No `CanActivateMonsterEffect` path; CPU uses standard lines.
+- **AI scenarios:**
+  1. Campaign **Goat** duel (or Test Duel with the format opponent deck): give the **opponent** `Dekoichi the Battlechanted Locomotive` in the main/extra deck at a realistic copy count from `usage/` decks. CPU should Normal Summon/set and attack with **Dekoichi the Battlechanted Locomotive** using ordinary lines; verify mandatory / passive text from **Coded behavior** without expecting a card-menu activation.
 
 ### Lightning Vortex
 
@@ -934,6 +1223,10 @@ When this card is sent from the hand to the Graveyard: Target 1 Flip Effect Mons
 - **Format context:** **Goat** legal pool: `card_pools/goat.txt`. Build the opponent from these pool staples (**Breaker the Magical Warrior**, **Call of the Haunted**, **Card Destruction**, **D.D. Warrior Lady**, **Delinquent Duo**, all from the same files).
 - **Scenarios:**
   1. You: **Breaker the Magical Warrior** + **Breaker the Magical Warrior**; opponent: **Summoned Skull** + set **Man-Eater Bug**. Activate **Lightning Vortex** and list every monster destroyed; check whether **Man-Eater Bug** FLIP triggers when applicable.
+- **AI coverage:** **Yes — generalized routine** — `AiPlayAddedCards` / `AiTryPlaySpellTrap` + default added-card policy.
+- **AI scenarios:**
+  1. Campaign **Goat** duel (or Test Duel with the format opponent deck): give the **opponent** `Lightning Vortex` in the main/extra deck at a realistic copy count from `usage/` decks. Let the CPU play the duel: it should activate/set/chain **Lightning Vortex** when its `AiWants*` / `AiShouldActivateAddedCard` policy says so (see **AI coverage**). Repeat until you see at least one successful CPU use or confirm the policy never fires on this board.
+  2. Second pass: simplify the board until the hook conditions in **AI coverage** are met (extra hand size, weaker monsters, or an open monster zone) and re-check CPU behavior.
 
 ### Phoenix Wing Wind Blast
 
@@ -944,6 +1237,10 @@ When this card is sent from the hand to the Graveyard: Target 1 Flip Effect Mons
 - **Format context:** **Goat** legal pool: `card_pools/goat.txt`. Build the opponent from these pool staples (**Breaker the Magical Warrior**, **Call of the Haunted**, **Card Destruction**, **D.D. Warrior Lady**, **Delinquent Duo**, all from the same files).
 - **Scenarios:**
   1. You: **Breaker the Magical Warrior** + **Breaker the Magical Warrior**; opponent: **Summoned Skull** + set **Man-Eater Bug**. Activate **Phoenix Wing Wind Blast** and list every monster destroyed; check whether **Man-Eater Bug** FLIP triggers when applicable.
+- **AI coverage:** **Yes — generalized routine** — `AiPlayAddedCards` / `AiTryPlaySpellTrap` + default added-card policy.
+- **AI scenarios:**
+  1. Campaign **Goat** duel (or Test Duel with the format opponent deck): give the **opponent** `Phoenix Wing Wind Blast` in the main/extra deck at a realistic copy count from `usage/` decks. Let the CPU play the duel: it should activate/set/chain **Phoenix Wing Wind Blast** when its `AiWants*` / `AiShouldActivateAddedCard` policy says so (see **AI coverage**). Repeat until you see at least one successful CPU use or confirm the policy never fires on this board.
+  2. Second pass: simplify the board until the hook conditions in **AI coverage** are met (extra hand size, weaker monsters, or an open monster zone) and re-check CPU behavior.
 
 ### Xing Zhen Hu
 
@@ -955,6 +1252,10 @@ When this card is sent from the hand to the Graveyard: Target 1 Flip Effect Mons
 - **Scenarios:**
   1. Campaign duel vs the **Goat** opponent: put **Xing Zhen Hu** in your deck with pool backrow (**Call of the Haunted**) and monsters (**Breaker the Magical Warrior**, **Summoned Skull**). Opponent line: Normal Summon **Summoned Skull**, set **Man-Eater Bug**, pass. Play toward **Xing Zhen Hu** as you would in the usage decks and verify effect once as human and once watching CPU.
   2. Same board: when you activate **Xing Zhen Hu**, opponent may chain **Magic Jammer** (or **Book of Moon**). Confirm stack order. Normal Spells such as **Pot of Greed** cannot be chained—only Traps and Quick-Play Spells.
+- **AI coverage:** **Yes — generalized routine** — Monster menu: only on two of the human's Set cards Main Phase Spell: only on two of the human's Set cards Set/chain: only on two of the human's Set cards
+- **AI scenarios:**
+  1. Campaign **Goat** duel (or Test Duel with the format opponent deck): give the **opponent** `Xing Zhen Hu` in the main/extra deck at a realistic copy count from `usage/` decks. Let the CPU play the duel: it should activate/set/chain **Xing Zhen Hu** when its `AiWants*` / `AiShouldActivateAddedCard` policy says so (see **AI coverage**). Repeat until you see at least one successful CPU use or confirm the policy never fires on this board.
+  2. Second pass: open a chain window the policy cares about (Normal/Special Summon, attack declaration, or your Spell activation) and confirm the opponent flips/sets/chains **Xing Zhen Hu** when `CanActivateFieldCard` allows.
 
 ### Brain Control
 
@@ -967,6 +1268,10 @@ When this card is sent from the hand to the Graveyard: Target 1 Flip Effect Mons
 - **Scenarios:**
   1. Campaign duel vs the **Goat** opponent: put **Brain Control** in your deck with pool backrow (**Call of the Haunted**) and monsters (**Breaker the Magical Warrior**, **Summoned Skull**). Opponent line: Normal Summon **Summoned Skull**, set **Man-Eater Bug**, pass. Play toward **Brain Control** as you would in the usage decks and verify effect once as human and once watching CPU.
   2. Same board: when you activate **Brain Control**, opponent may chain **Magic Jammer** (or **Book of Moon**). Confirm stack order. Normal Spells such as **Pot of Greed** cannot be chained—only Traps and Quick-Play Spells.
+- **AI coverage:** **Yes — generalized routine** — `AiPlayAddedCards` / `AiTryPlaySpellTrap` + default added-card policy.
+- **AI scenarios:**
+  1. Campaign **Goat** duel (or Test Duel with the format opponent deck): give the **opponent** `Brain Control` in the main/extra deck at a realistic copy count from `usage/` decks. Let the CPU play the duel: it should activate/set/chain **Brain Control** when its `AiWants*` / `AiShouldActivateAddedCard` policy says so (see **AI coverage**). Repeat until you see at least one successful CPU use or confirm the policy never fires on this board.
+  2. Second pass: simplify the board until the hook conditions in **AI coverage** are met (extra hand size, weaker monsters, or an open monster zone) and re-check CPU behavior.
 
 ### Zaborg the Thunder Monarch
 
@@ -978,6 +1283,9 @@ When this card is sent from the hand to the Graveyard: Target 1 Flip Effect Mons
 - **Format context:** **Goat** legal pool: `card_pools/goat.txt`. Build the opponent from these pool staples (**Breaker the Magical Warrior**, **Call of the Haunted**, **Card Destruction**, **D.D. Warrior Lady**, **Delinquent Duo**, all from the same files).
 - **Scenarios:**
   1. You: **Breaker the Magical Warrior** + **Breaker the Magical Warrior**; opponent: **Summoned Skull** + set **Man-Eater Bug**. Activate **Zaborg the Thunder Monarch** and list every monster destroyed; check whether **Man-Eater Bug** FLIP triggers when applicable.
+- **AI coverage:** **Automatic** (no card-menu activation) — No `CanActivateMonsterEffect` path; CPU uses standard lines.
+- **AI scenarios:**
+  1. Campaign **Goat** duel (or Test Duel with the format opponent deck): give the **opponent** `Zaborg the Thunder Monarch` in the main/extra deck at a realistic copy count from `usage/` decks. CPU should Normal Summon/set and attack with **Zaborg the Thunder Monarch** using ordinary lines; verify mandatory / passive text from **Coded behavior** without expecting a card-menu activation.
 
 ### Level Limit - Area B
 
@@ -989,6 +1297,9 @@ When this card is sent from the hand to the Graveyard: Target 1 Flip Effect Mons
 - **Scenarios:**
   1. Campaign duel vs the **Goat** opponent: put **Level Limit - Area B** in your deck with pool backrow (**Call of the Haunted**) and monsters (**Breaker the Magical Warrior**, **Summoned Skull**). Opponent line: Normal Summon **Summoned Skull**, set **Man-Eater Bug**, pass. Play toward **Level Limit - Area B** as you would in the usage decks and verify effect once as human and once watching CPU.
   2. Same board: when you activate **Level Limit - Area B**, opponent may chain **Magic Jammer** (or **Book of Moon**). Confirm stack order. Normal Spells such as **Pot of Greed** cannot be chained—only Traps and Quick-Play Spells.
+- **AI coverage:** **Automatic** (no card-menu activation) — No `CanActivateMonsterEffect` path; CPU uses standard lines.
+- **AI scenarios:**
+  1. Campaign **Goat** duel (or Test Duel with the format opponent deck): give the **opponent** `Level Limit - Area B` in the main/extra deck at a realistic copy count from `usage/` decks. CPU should Normal Summon/set and attack with **Level Limit - Area B** using ordinary lines; verify mandatory / passive text from **Coded behavior** without expecting a card-menu activation.
 
 ## Cyber
 
@@ -1004,6 +1315,9 @@ A Fusion Summon of this card can only be done with the above Fusion Materials. T
 - **Scenarios:**
   1. Campaign duel vs the **Cyber** opponent: put **Cyber Twin Dragon** in your deck with pool backrow (**Call of the Haunted**) and monsters (**Breaker the Magical Warrior**, **Summoned Skull**). Opponent line: Normal Summon **Summoned Skull**, set **Man-Eater Bug**, pass. Play toward **Cyber Twin Dragon** as you would in the usage decks and verify effect once as human and once watching CPU.
   2. Same board: use **Cyber Twin Dragon** per **Coded behavior**. If the ROM offers a chain window to the opponent, it should accept only **Magic Jammer**-type responses (Trap or Quick-Play Spell), not Normal Spells.
+- **AI coverage:** **Automatic** (no card-menu activation) — No `CanActivateMonsterEffect` path; CPU uses standard lines.
+- **AI scenarios:**
+  1. Campaign **Cyber** duel (or Test Duel with the format opponent deck): give the **opponent** `Cyber Twin Dragon` in the main/extra deck at a realistic copy count from `usage/` decks. CPU should Normal Summon/set and attack with **Cyber Twin Dragon** using ordinary lines; verify mandatory / passive text from **Coded behavior** without expecting a card-menu activation.
 
 ### Cyber Dragon
 
@@ -1014,6 +1328,9 @@ A Fusion Summon of this card can only be done with the above Fusion Materials. T
 - **Format context:** **Cyber** legal pool: `card_pools/cyber.txt`. Build the opponent from these pool staples (**Breaker the Magical Warrior**, **Call of the Haunted**, **D.D. Warrior Lady**, **Delinquent Duo**, **Exiled Force**, all from the same files).
 - **Scenarios:**
   1. Opponent controls **Summoned Skull** and you hold **Cyber Dragon** with an empty field. Special Summon **Cyber Dragon** from hand, attack into **Summoned Skull**, then overlay with format-legal Fusion/Synchro pieces if present in the pool.
+- **AI coverage:** **Automatic** (no card-menu activation) — No `CanActivateMonsterEffect` path; CPU uses standard lines.
+- **AI scenarios:**
+  1. Campaign **Cyber** duel (or Test Duel with the format opponent deck): give the **opponent** `Cyber Dragon` in the main/extra deck at a realistic copy count from `usage/` decks. CPU should Normal Summon/set and attack with **Cyber Dragon** using ordinary lines; verify mandatory / passive text from **Coded behavior** without expecting a card-menu activation.
 
 ### Cyber End Dragon
 
@@ -1027,6 +1344,9 @@ A Fusion Summon of this card can only be done with the above Fusion Materials. I
 - **Scenarios:**
   1. Campaign duel vs the **Cyber** opponent: put **Cyber End Dragon** in your deck with pool backrow (**Call of the Haunted**) and monsters (**Breaker the Magical Warrior**, **Summoned Skull**). Opponent line: Normal Summon **Summoned Skull**, set **Man-Eater Bug**, pass. Play toward **Cyber End Dragon** as you would in the usage decks and verify effect once as human and once watching CPU.
   2. Same board: use **Cyber End Dragon** per **Coded behavior**. If the ROM offers a chain window to the opponent, it should accept only **Magic Jammer**-type responses (Trap or Quick-Play Spell), not Normal Spells.
+- **AI coverage:** **Automatic** (no card-menu activation) — No `CanActivateMonsterEffect` path; CPU uses standard lines.
+- **AI scenarios:**
+  1. Campaign **Cyber** duel (or Test Duel with the format opponent deck): give the **opponent** `Cyber End Dragon` in the main/extra deck at a realistic copy count from `usage/` decks. CPU should Normal Summon/set and attack with **Cyber End Dragon** using ordinary lines; verify mandatory / passive text from **Coded behavior** without expecting a card-menu activation.
 
 ### Threatening Roar
 
@@ -1037,6 +1357,10 @@ A Fusion Summon of this card can only be done with the above Fusion Materials. I
 - **Format context:** **Cyber** legal pool: `card_pools/cyber.txt`. Build the opponent from these pool staples (**Breaker the Magical Warrior**, **Call of the Haunted**, **D.D. Warrior Lady**, **Delinquent Duo**, **Exiled Force**, all from the same files).
 - **Scenarios:**
   1. Set **Threatening Roar**; opponent attacks with **Summoned Skull** or flips with **Delinquent Duo**. Resolve the FLIP effect against a legal target still in the pool (**Summoned Skull** or **Breaker the Magical Warrior**).
+- **AI coverage:** **Yes — generalized routine** — Monster menu: against an attack, when another of the human's could attack after Main Phase Spell: against an attack, when another of the human's could attack after Set/chain: against an attack, when another of the human's could attack after
+- **AI scenarios:**
+  1. Campaign **Cyber** duel (or Test Duel with the format opponent deck): give the **opponent** `Threatening Roar` in the main/extra deck at a realistic copy count from `usage/` decks. Let the CPU play the duel: it should activate/set/chain **Threatening Roar** when its `AiWants*` / `AiShouldActivateAddedCard` policy says so (see **AI coverage**). Repeat until you see at least one successful CPU use or confirm the policy never fires on this board.
+  2. Second pass: open a chain window the policy cares about (Normal/Special Summon, attack declaration, or your Spell activation) and confirm the opponent flips/sets/chains **Threatening Roar** when `CanActivateFieldCard` allows.
 
 ### Exarion Universe
 
@@ -1048,6 +1372,10 @@ A Fusion Summon of this card can only be done with the above Fusion Materials. I
 - **Scenarios:**
   1. Campaign duel vs the **Cyber** opponent: put **Exarion Universe** in your deck with pool backrow (**Call of the Haunted**) and monsters (**Breaker the Magical Warrior**, **Summoned Skull**). Opponent line: Normal Summon **Summoned Skull**, set **Man-Eater Bug**, pass. Play toward **Exarion Universe** as you would in the usage decks and verify effect once as human and once watching CPU.
   2. Same duel: after **Exarion Universe**'s mandatory effect runs (see **Coded behavior**—not an optional Trigger you activate), confirm the ROM applies it automatically. Opponent cannot chain **Magic Jammer** to that mandatory step; they may still use it in a later open window.
+- **AI coverage:** **Yes — dedicated logic** — Hooks: `CpuWantsExarion`
+- **AI scenarios:**
+  1. Campaign **Cyber** duel (or Test Duel with the format opponent deck): give the **opponent** `Exarion Universe` in the main/extra deck at a realistic copy count from `usage/` decks. Let the CPU play the duel: it should activate/set/chain **Exarion Universe** when its `AiWants*` / `AiShouldActivateAddedCard` policy says so (see **AI coverage**). Repeat until you see at least one successful CPU use or confirm the policy never fires on this board.
+  2. Second pass: simplify the board until the hook conditions in **AI coverage** are met (extra hand size, weaker monsters, or an open monster zone) and re-check CPU behavior.
 
 ### Gravity Bind
 
@@ -1058,6 +1386,10 @@ A Fusion Summon of this card can only be done with the above Fusion Materials. I
 - **Format context:** **Cyber** legal pool: `card_pools/cyber.txt`. Build the opponent from these pool staples (**Breaker the Magical Warrior**, **Call of the Haunted**, **D.D. Warrior Lady**, **Delinquent Duo**, **Exiled Force**, all from the same files).
 - **Scenarios:**
   1. Opponent attacks **Breaker the Magical Warrior** with **Summoned Skull**. Activate **Gravity Bind** during the attack step; opponent may chain **Magic Jammer** (or **Book of Moon**) on top—do not use Normal Spells like **Delinquent Duo** as chain links.
+- **AI coverage:** **Yes — dedicated logic** — Block comment: CPU: AiPlayAddedCards; AiShouldActivateAddedCard default yes (CARD_1323 in AiShouldActivateSetCard).
+- **AI scenarios:**
+  1. Campaign **Cyber** duel (or Test Duel with the format opponent deck): give the **opponent** `Gravity Bind` in the main/extra deck at a realistic copy count from `usage/` decks. Let the CPU play the duel: it should activate/set/chain **Gravity Bind** when its `AiWants*` / `AiShouldActivateAddedCard` policy says so (see **AI coverage**). Repeat until you see at least one successful CPU use or confirm the policy never fires on this board.
+  2. Second pass: open a chain window the policy cares about (Normal/Special Summon, attack declaration, or your Spell activation) and confirm the opponent flips/sets/chains **Gravity Bind** when `CanActivateFieldCard` allows.
 
 ### Chiron the Mage
 
@@ -1069,6 +1401,10 @@ A Fusion Summon of this card can only be done with the above Fusion Materials. I
 - **Format context:** **Cyber** legal pool: `card_pools/cyber.txt`. Build the opponent from these pool staples (**Breaker the Magical Warrior**, **Call of the Haunted**, **D.D. Warrior Lady**, **Delinquent Duo**, **Exiled Force**, all from the same files).
 - **Scenarios:**
   1. Opponent controls **Summoned Skull**; you activate **Chiron the Mage** on it (or on their set **Call of the Haunted**). If opponent chains **Magic Jammer**, confirm stack order and resolution. **Delinquent Duo** is a Normal Spell and cannot be chained on that stack—only Traps and Quick-Play Spells can.
+- **AI coverage:** **Yes — generalized routine** — Monster menu: Default yes Set/chain: Default yes
+- **AI scenarios:**
+  1. Campaign **Cyber** duel (or Test Duel with the format opponent deck): give the **opponent** `Chiron the Mage` in the main/extra deck at a realistic copy count from `usage/` decks. Let the CPU play the duel: it should activate/set/chain **Chiron the Mage** when its `AiWants*` / `AiShouldActivateAddedCard` policy says so (see **AI coverage**). Repeat until you see at least one successful CPU use or confirm the policy never fires on this board.
+  2. Second pass: open a chain window the policy cares about (Normal/Special Summon, attack declaration, or your Spell activation) and confirm the opponent flips/sets/chains **Chiron the Mage** when `CanActivateFieldCard` allows.
 
 ### Cursed Seal of the Forbidden Spell
 
@@ -1080,6 +1416,10 @@ A Fusion Summon of this card can only be done with the above Fusion Materials. I
 - **Format context:** **Cyber** legal pool: `card_pools/cyber.txt`. Build the opponent from these pool staples (**Breaker the Magical Warrior**, **Call of the Haunted**, **D.D. Warrior Lady**, **Delinquent Duo**, **Exiled Force**, all from the same files).
 - **Scenarios:**
   1. Opponent controls **Summoned Skull**; you activate **Cursed Seal of the Forbidden Spell** on it (or on their set **Call of the Haunted**). If opponent chains **Magic Jammer**, confirm stack order and resolution. **Delinquent Duo** is a Normal Spell and cannot be chained on that stack—only Traps and Quick-Play Spells can.
+- **AI coverage:** **Yes — dedicated logic** — Monster menu: only chained (AiChainCursedSeal), not flipped blindly Main Phase Spell: only chained (AiChainCursedSeal), not flipped blindly Set/chain: only chained (AiChainCursedSeal), not flipped blindly
+- **AI scenarios:**
+  1. Campaign **Cyber** duel (or Test Duel with the format opponent deck): give the **opponent** `Cursed Seal of the Forbidden Spell` in the main/extra deck at a realistic copy count from `usage/` decks. Let the CPU play the duel: it should activate/set/chain **Cursed Seal of the Forbidden Spell** when its `AiWants*` / `AiShouldActivateAddedCard` policy says so (see **AI coverage**). Repeat until you see at least one successful CPU use or confirm the policy never fires on this board.
+  2. Second pass: open a chain window the policy cares about (Normal/Special Summon, attack declaration, or your Spell activation) and confirm the opponent flips/sets/chains **Cursed Seal of the Forbidden Spell** when `CanActivateFieldCard` allows.
 
 ### Wave-Motion Cannon
 
@@ -1091,6 +1431,10 @@ A Fusion Summon of this card can only be done with the above Fusion Materials. I
 - **Scenarios:**
   1. Campaign duel vs the **Cyber** opponent: put **Wave-Motion Cannon** in your deck with pool backrow (**Call of the Haunted**) and monsters (**Breaker the Magical Warrior**, **Summoned Skull**). Opponent line: Normal Summon **Summoned Skull**, set **Man-Eater Bug**, pass. Play toward **Wave-Motion Cannon** as you would in the usage decks and verify effect once as human and once watching CPU.
   2. Same board: when you activate **Wave-Motion Cannon**, opponent may chain **Magic Jammer** (or **Book of Moon**). Confirm stack order. Normal Spells such as **Pot of Greed** cannot be chained—only Traps and Quick-Play Spells.
+- **AI coverage:** **Yes — dedicated logic** — Hooks: `AiWantsWaveMotionIgnition` Monster menu: HAS_CARD_DES_WOMBAT Main Phase Spell: Conditional AiWants* / AiShouldActivateAddedCard Set/chain: HAS_CARD_DES_WOMBAT
+- **AI scenarios:**
+  1. Campaign **Cyber** duel (or Test Duel with the format opponent deck): give the **opponent** `Wave-Motion Cannon` in the main/extra deck at a realistic copy count from `usage/` decks. Let the CPU play the duel: it should activate/set/chain **Wave-Motion Cannon** when its `AiWants*` / `AiShouldActivateAddedCard` policy says so (see **AI coverage**). Repeat until you see at least one successful CPU use or confirm the policy never fires on this board.
+  2. Second pass: open a chain window the policy cares about (Normal/Special Summon, attack declaration, or your Spell activation) and confirm the opponent flips/sets/chains **Wave-Motion Cannon** when `CanActivateFieldCard` allows.
 
 ## Reaper
 
@@ -1104,6 +1448,9 @@ A Fusion Summon of this card can only be done with the above Fusion Materials. I
 - **Scenarios:**
   1. Campaign duel vs the **Reaper** opponent: put **Treeborn Frog** in your deck with pool backrow (**Call of the Haunted**) and monsters (**Breaker the Magical Warrior**, **Summoned Skull**). Opponent line: Normal Summon **Summoned Skull**, set **Man-Eater Bug**, pass. Play toward **Treeborn Frog** as you would in the usage decks and verify effect once as human and once watching CPU.
   2. Same board: use **Treeborn Frog** per **Coded behavior**. If the ROM offers a chain window to the opponent, it should accept only **Magic Jammer**-type responses (Trap or Quick-Play Spell), not Normal Spells.
+- **AI coverage:** **Unclear / likely missing** — No `CPU:` notes and no switch case found; treat as untested for CPU until you confirm in a duel.
+- **AI scenarios:**
+  1. Campaign **Reaper** duel (or Test Duel with the format opponent deck): give the **opponent** `Treeborn Frog` in the main/extra deck at a realistic copy count from `usage/` decks. Watch several turns; note any turn where a human could legally use **Treeborn Frog** but the CPU does not. File gaps against `src/added_effects.c` / `ai_deck.c`.
 
 ### Thestalos the Firestorm Monarch
 
@@ -1114,6 +1461,9 @@ A Fusion Summon of this card can only be done with the above Fusion Materials. I
 - **Format context:** **Reaper** legal pool: `card_pools/reaper.txt`. Build the opponent from these pool staples (**Book of Moon**, **Breaker the Magical Warrior**, **Call of the Haunted**, **Confiscation**, **D.D. Warrior Lady**, all from the same files).
 - **Scenarios:**
   1. Tribute **Breaker the Magical Warrior** and **Summoned Skull** (or one Level 4 from the pool) for **Thestalos the Firestorm Monarch**. On summon, hit the effect against opponent card(s) **Summoned Skull** / **Book of Moon** / hand, and test on your next Standby if a Monarch trigger repeats.
+- **AI coverage:** **Automatic** (no card-menu activation) — No `CanActivateMonsterEffect` path; CPU uses standard lines.
+- **AI scenarios:**
+  1. Campaign **Reaper** duel (or Test Duel with the format opponent deck): give the **opponent** `Thestalos the Firestorm Monarch` in the main/extra deck at a realistic copy count from `usage/` decks. CPU should Normal Summon/set and attack with **Thestalos the Firestorm Monarch** using ordinary lines; verify mandatory / passive text from **Coded behavior** without expecting a card-menu activation.
 
 ### D.D. Survivor
 
@@ -1125,6 +1475,9 @@ A Fusion Summon of this card can only be done with the above Fusion Materials. I
 - **Format context:** **Reaper** legal pool: `card_pools/reaper.txt`. Build the opponent from these pool staples (**Book of Moon**, **Breaker the Magical Warrior**, **Call of the Haunted**, **Confiscation**, **D.D. Warrior Lady**, all from the same files).
 - **Scenarios:**
   1. You: **Breaker the Magical Warrior** + **Breaker the Magical Warrior**; opponent: **Summoned Skull** + set **Man-Eater Bug**. Activate **D.D. Survivor** and list every monster destroyed; check whether **Man-Eater Bug** FLIP triggers when applicable.
+- **AI coverage:** **Automatic** (no card-menu activation) — No `CanActivateMonsterEffect` path; CPU uses standard lines.
+- **AI scenarios:**
+  1. Campaign **Reaper** duel (or Test Duel with the format opponent deck): give the **opponent** `D.D. Survivor` in the main/extra deck at a realistic copy count from `usage/` decks. CPU should Normal Summon/set and attack with **D.D. Survivor** using ordinary lines; verify mandatory / passive text from **Coded behavior** without expecting a card-menu activation.
 
 ### Pot of Avarice
 
@@ -1135,6 +1488,10 @@ A Fusion Summon of this card can only be done with the above Fusion Materials. I
 - **Format context:** **Reaper** legal pool: `card_pools/reaper.txt`. Build the opponent from these pool staples (**Book of Moon**, **Breaker the Magical Warrior**, **Call of the Haunted**, **Confiscation**, **D.D. Warrior Lady**, all from the same files).
 - **Scenarios:**
   1. Open with **Pot of Avarice** while opponent controls only **Summoned Skull**. Count hand size before/after relative to **Book of Moon** in the opponent list; repeat when your Standby/Draw Phase trigger applies.
+- **AI coverage:** **Yes — generalized routine** — `AiPlayAddedCards` / `AiTryPlaySpellTrap` + default added-card policy.
+- **AI scenarios:**
+  1. Campaign **Reaper** duel (or Test Duel with the format opponent deck): give the **opponent** `Pot of Avarice` in the main/extra deck at a realistic copy count from `usage/` decks. Let the CPU play the duel: it should activate/set/chain **Pot of Avarice** when its `AiWants*` / `AiShouldActivateAddedCard` policy says so (see **AI coverage**). Repeat until you see at least one successful CPU use or confirm the policy never fires on this board.
+  2. Second pass: simplify the board until the hook conditions in **AI coverage** are met (extra hand size, weaker monsters, or an open monster zone) and re-check CPU behavior.
 
 ### Magical Merchant
 
@@ -1146,6 +1503,10 @@ A Fusion Summon of this card can only be done with the above Fusion Materials. I
 - **Format context:** **Reaper** legal pool: `card_pools/reaper.txt`. Build the opponent from these pool staples (**Book of Moon**, **Breaker the Magical Warrior**, **Call of the Haunted**, **Confiscation**, **D.D. Warrior Lady**, all from the same files).
 - **Scenarios:**
   1. Set **Magical Merchant**; opponent attacks with **Summoned Skull** or flips with **Book of Moon**. Resolve the FLIP effect against a legal target still in the pool (**Summoned Skull** or **Breaker the Magical Warrior**).
+- **AI coverage:** **Yes — generalized routine** — `AiPlayAddedCards` / `AiTryPlaySpellTrap` + default added-card policy.
+- **AI scenarios:**
+  1. Campaign **Reaper** duel (or Test Duel with the format opponent deck): give the **opponent** `Magical Merchant` in the main/extra deck at a realistic copy count from `usage/` decks. Let the CPU play the duel: it should activate/set/chain **Magical Merchant** when its `AiWants*` / `AiShouldActivateAddedCard` policy says so (see **AI coverage**). Repeat until you see at least one successful CPU use or confirm the policy never fires on this board.
+  2. Second pass: simplify the board until the hook conditions in **AI coverage** are met (extra hand size, weaker monsters, or an open monster zone) and re-check CPU behavior.
 
 ### Mask of Restrict
 
@@ -1157,3 +1518,7 @@ A Fusion Summon of this card can only be done with the above Fusion Materials. I
 - **Scenarios:**
   1. Campaign duel vs the **Reaper** opponent: put **Mask of Restrict** in your deck with pool backrow (**Call of the Haunted**) and monsters (**Breaker the Magical Warrior**, **Summoned Skull**). Opponent line: Normal Summon **Summoned Skull**, set **Man-Eater Bug**, pass. Play toward **Mask of Restrict** as you would in the usage decks and verify effect once as human and once watching CPU.
   2. Same board: when you activate **Mask of Restrict**, opponent may chain **Magic Jammer** (or **Book of Moon**). Confirm stack order. Normal Spells such as **Dark Hole** cannot be chained—only Traps and Quick-Play Spells.
+- **AI coverage:** **Yes — dedicated logic** — Block comment: CPU: AiWantsMaskOfRestrict, AiPlayAddedCards (Main Phase); Set copies use AiShouldActivateAddedCard (yes). Hooks: `AiWantsMaskOfRestrict`
+- **AI scenarios:**
+  1. Campaign **Reaper** duel (or Test Duel with the format opponent deck): give the **opponent** `Mask of Restrict` in the main/extra deck at a realistic copy count from `usage/` decks. Let the CPU play the duel: it should activate/set/chain **Mask of Restrict** when its `AiWants*` / `AiShouldActivateAddedCard` policy says so (see **AI coverage**). Repeat until you see at least one successful CPU use or confirm the policy never fires on this board.
+  2. Second pass: open a chain window the policy cares about (Normal/Special Summon, attack declaration, or your Spell activation) and confirm the opponent flips/sets/chains **Mask of Restrict** when `CanActivateFieldCard` allows.
