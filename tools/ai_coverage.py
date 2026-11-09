@@ -231,15 +231,4 @@ def ai_scenarios(name: str, status: str, fmt: str, *, detail: str = '') -> list[
             f'`AiShouldActivateAddedCard` policy says so (see **AI coverage**). Repeat until you see at least one '
             f'successful CPU use or confirm the policy never fires on this board.'
         )
-        if 'Set/chain' in detail or 'AiShouldActivate' in detail:
-            scenarios.append(
-                f'Second pass: open a chain window the policy cares about (Normal/Special Summon, attack declaration, '
-                f'or your Spell activation) and confirm the opponent flips/sets/chains **{name}** when `CanActivateFieldCard` '
-                f'allows.'
-            )
-        else:
-            scenarios.append(
-                f'Second pass: simplify the board until the hook conditions in **AI coverage** are met (extra hand size, '
-                f'weaker monsters, or an open monster zone) and re-check CPU behavior.'
-            )
-    return scenarios[:2]
+    return scenarios[:1]

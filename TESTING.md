@@ -26,7 +26,6 @@ Scenarios only cite card names that appear in that format's [`card_pools/`](card
 - **AI coverage:** **Yes — generalized routine** — Monster menu: when the human holds more cards than the CPU would discard Main Phase Spell: when the human holds more cards than the CPU would discard Set/chain: when the human holds more cards than the CPU would discard
 - **AI scenarios:**
   1. Campaign **Yugi-Kaiba** duel (or Test Duel with the format opponent deck): give the **opponent** `Card Destruction` in the main/extra deck at a realistic copy count from `usage/` decks. Let the CPU play the duel: it should activate/set/chain **Card Destruction** when its `AiWants*` / `AiShouldActivateAddedCard` policy says so (see **AI coverage**). Repeat until you see at least one successful CPU use or confirm the policy never fires on this board.
-  2. Second pass: open a chain window the policy cares about (Normal/Special Summon, attack declaration, or your Spell activation) and confirm the opponent flips/sets/chains **Card Destruction** when `CanActivateFieldCard` allows.
 
 ### Soul Exchange
 
@@ -41,7 +40,6 @@ Scenarios only cite card names that appear in that format's [`card_pools/`](card
 - **AI coverage:** **Yes — dedicated logic** — Hooks: `SoulExchangeCpuChainB`, `SoulExchangeCpuResolve` Dedicated `*Cpu*` handlers in the card's effect steps.
 - **AI scenarios:**
   1. Campaign **Yugi-Kaiba** duel (or Test Duel with the format opponent deck): give the **opponent** `Soul Exchange` in the main/extra deck at a realistic copy count from `usage/` decks. Let the CPU play the duel: it should activate/set/chain **Soul Exchange** when its `AiWants*` / `AiShouldActivateAddedCard` policy says so (see **AI coverage**). Repeat until you see at least one successful CPU use or confirm the policy never fires on this board.
-  2. Second pass: simplify the board until the hook conditions in **AI coverage** are met (extra hand size, weaker monsters, or an open monster zone) and re-check CPU behavior.
 
 ## Imperial
 
@@ -59,7 +57,6 @@ Other monsters on the field cannot change their battle positions or attack. Once
 - **AI coverage:** **Yes — dedicated logic** — Monster menu: Conditional AiWants* / AiShouldActivateAddedCard Set/chain: Conditional AiWants* / AiShouldActivateAddedCard
 - **AI scenarios:**
   1. Campaign **Imperial** duel (or Test Duel with the format opponent deck): give the **opponent** `Thousand-Eyes Restrict` in the main/extra deck at a realistic copy count from `usage/` decks. Let the CPU play the duel: it should activate/set/chain **Thousand-Eyes Restrict** when its `AiWants*` / `AiShouldActivateAddedCard` policy says so (see **AI coverage**). Repeat until you see at least one successful CPU use or confirm the policy never fires on this board.
-  2. Second pass: open a chain window the policy cares about (Normal/Special Summon, attack declaration, or your Spell activation) and confirm the opponent flips/sets/chains **Thousand-Eyes Restrict** when `CanActivateFieldCard` allows.
 
 ### The Fiend Megacyber
 
@@ -102,7 +99,6 @@ Other monsters on the field cannot change their battle positions or attack. Once
 - **AI coverage:** **Yes — generalized routine** — `AiPlayAddedCards` / `AiTryPlaySpellTrap` + default added-card policy.
 - **AI scenarios:**
   1. Campaign **Imperial** duel (or Test Duel with the format opponent deck): give the **opponent** `Solemn Wishes` in the main/extra deck at a realistic copy count from `usage/` decks. Let the CPU play the duel: it should activate/set/chain **Solemn Wishes** when its `AiWants*` / `AiShouldActivateAddedCard` policy says so (see **AI coverage**). Repeat until you see at least one successful CPU use or confirm the policy never fires on this board.
-  2. Second pass: simplify the board until the hook conditions in **AI coverage** are met (extra hand size, weaker monsters, or an open monster zone) and re-check CPU behavior.
 
 ### Limiter Removal
 
@@ -116,7 +112,6 @@ Other monsters on the field cannot change their battle positions or attack. Once
 - **AI coverage:** **Yes — dedicated logic** — Hooks: `AiWantsLimiterRemoval` Monster menu: Conditional AiWants* / AiShouldActivateAddedCard Main Phase Spell: Conditional AiWants* / AiShouldActivateAddedCard Set/chain: Conditional AiWants* / AiShouldActivateAddedCard
 - **AI scenarios:**
   1. Campaign **Imperial** duel (or Test Duel with the format opponent deck): give the **opponent** `Limiter Removal` in the main/extra deck at a realistic copy count from `usage/` decks. Let the CPU play the duel: it should activate/set/chain **Limiter Removal** when its `AiWants*` / `AiShouldActivateAddedCard` policy says so (see **AI coverage**). Repeat until you see at least one successful CPU use or confirm the policy never fires on this board.
-  2. Second pass: open a chain window the policy cares about (Normal/Special Summon, attack declaration, or your Spell activation) and confirm the opponent flips/sets/chains **Limiter Removal** when `CanActivateFieldCard` allows.
 
 ### 4-Starred Ladybug of Doom
 
@@ -159,7 +154,6 @@ Other monsters on the field cannot change their battle positions or attack. Once
 - **AI coverage:** **Yes — dedicated logic** — Hooks: `BazooCpuResolve` Dedicated `*Cpu*` handlers in the card's effect steps.
 - **AI scenarios:**
   1. Campaign **Android** duel (or Test Duel with the format opponent deck): give the **opponent** `Bazoo the Soul-Eater` in the main/extra deck at a realistic copy count from `usage/` decks. Let the CPU play the duel: it should activate/set/chain **Bazoo the Soul-Eater** when its `AiWants*` / `AiShouldActivateAddedCard` policy says so (see **AI coverage**). Repeat until you see at least one successful CPU use or confirm the policy never fires on this board.
-  2. Second pass: simplify the board until the hook conditions in **AI coverage** are met (extra hand size, weaker monsters, or an open monster zone) and re-check CPU behavior.
 
 ### Torrential Tribute
 
@@ -173,7 +167,6 @@ Other monsters on the field cannot change their battle positions or attack. Once
 - **AI coverage:** **Yes — generalized routine** — Monster menu: it destroys the CPU's monsters too Main Phase Spell: it destroys the CPU's monsters too Set/chain: it destroys the CPU's monsters too
 - **AI scenarios:**
   1. Campaign **Android** duel (or Test Duel with the format opponent deck): give the **opponent** `Torrential Tribute` in the main/extra deck at a realistic copy count from `usage/` decks. Let the CPU play the duel: it should activate/set/chain **Torrential Tribute** when its `AiWants*` / `AiShouldActivateAddedCard` policy says so (see **AI coverage**). Repeat until you see at least one successful CPU use or confirm the policy never fires on this board.
-  2. Second pass: open a chain window the policy cares about (Normal/Special Summon, attack declaration, or your Spell activation) and confirm the opponent flips/sets/chains **Torrential Tribute** when `CanActivateFieldCard` allows.
 
 ### Jar of Greed
 
@@ -187,7 +180,6 @@ Other monsters on the field cannot change their battle positions or attack. Once
 - **AI coverage:** **Yes — generalized routine** — `AiPlayAddedCards` / `AiTryPlaySpellTrap` + default added-card policy.
 - **AI scenarios:**
   1. Campaign **Android** duel (or Test Duel with the format opponent deck): give the **opponent** `Jar of Greed` in the main/extra deck at a realistic copy count from `usage/` decks. Let the CPU play the duel: it should activate/set/chain **Jar of Greed** when its `AiWants*` / `AiShouldActivateAddedCard` policy says so (see **AI coverage**). Repeat until you see at least one successful CPU use or confirm the policy never fires on this board.
-  2. Second pass: simplify the board until the hook conditions in **AI coverage** are met (extra hand size, weaker monsters, or an open monster zone) and re-check CPU behavior.
 
 ### Skull Lair
 
@@ -201,7 +193,6 @@ Other monsters on the field cannot change their battle positions or attack. Once
 - **AI coverage:** **Yes — generalized routine** — Monster menu: destroy one of the human's monsters worth 1000+ ATK Main Phase Spell: destroy one of the human's monsters worth 1000+ ATK Set/chain: destroy one of the human's monsters worth 1000+ ATK
 - **AI scenarios:**
   1. Campaign **Android** duel (or Test Duel with the format opponent deck): give the **opponent** `Skull Lair` in the main/extra deck at a realistic copy count from `usage/` decks. Let the CPU play the duel: it should activate/set/chain **Skull Lair** when its `AiWants*` / `AiShouldActivateAddedCard` policy says so (see **AI coverage**). Repeat until you see at least one successful CPU use or confirm the policy never fires on this board.
-  2. Second pass: open a chain window the policy cares about (Normal/Special Summon, attack declaration, or your Spell activation) and confirm the opponent flips/sets/chains **Skull Lair** when `CanActivateFieldCard` allows.
 
 ### Magic Cylinder
 
@@ -301,7 +292,6 @@ Other monsters on the field cannot change their battle positions or attack. Once
 - **AI coverage:** **Yes — dedicated logic** — Monster menu: Conditional AiWants* / AiShouldActivateAddedCard Main Phase Spell: Conditional AiWants* / AiShouldActivateAddedCard Set/chain: Conditional AiWants* / AiShouldActivateAddedCard
 - **AI scenarios:**
   1. Campaign **Joey-Pegasus** duel (or Test Duel with the format opponent deck): give the **opponent** `Scapegoat` in the main/extra deck at a realistic copy count from `usage/` decks. Let the CPU play the duel: it should activate/set/chain **Scapegoat** when its `AiWants*` / `AiShouldActivateAddedCard` policy says so (see **AI coverage**). Repeat until you see at least one successful CPU use or confirm the policy never fires on this board.
-  2. Second pass: open a chain window the policy cares about (Normal/Special Summon, attack declaration, or your Spell activation) and confirm the opponent flips/sets/chains **Scapegoat** when `CanActivateFieldCard` allows.
 
 ### Offerings to the Doomed
 
@@ -332,7 +322,6 @@ Other monsters on the field cannot change their battle positions or attack. Once
 - **AI coverage:** **Yes — generalized routine** — Monster menu: only for a human monster stronger than itself Set/chain: only for a human monster stronger than itself
 - **AI scenarios:**
   1. Campaign **Fiber** duel (or Test Duel with the format opponent deck): give the **opponent** `Exiled Force` in the main/extra deck at a realistic copy count from `usage/` decks. Let the CPU play the duel: it should activate/set/chain **Exiled Force** when its `AiWants*` / `AiShouldActivateAddedCard` policy says so (see **AI coverage**). Repeat until you see at least one successful CPU use or confirm the policy never fires on this board.
-  2. Second pass: open a chain window the policy cares about (Normal/Special Summon, attack declaration, or your Spell activation) and confirm the opponent flips/sets/chains **Exiled Force** when `CanActivateFieldCard` allows.
 
 ### Fiber Jar
 
@@ -346,7 +335,6 @@ Other monsters on the field cannot change their battle positions or attack. Once
 - **AI coverage:** **Yes — generalized routine** — `AiPlayAddedCards` / `AiTryPlaySpellTrap` + default added-card policy.
 - **AI scenarios:**
   1. Campaign **Fiber** duel (or Test Duel with the format opponent deck): give the **opponent** `Fiber Jar` in the main/extra deck at a realistic copy count from `usage/` decks. Let the CPU play the duel: it should activate/set/chain **Fiber Jar** when its `AiWants*` / `AiShouldActivateAddedCard` policy says so (see **AI coverage**). Repeat until you see at least one successful CPU use or confirm the policy never fires on this board.
-  2. Second pass: simplify the board until the hook conditions in **AI coverage** are met (extra hand size, weaker monsters, or an open monster zone) and re-check CPU behavior.
 
 ### Injection Fairy Lily
 
@@ -361,7 +349,6 @@ Other monsters on the field cannot change their battle positions or attack. Once
 - **AI coverage:** **Yes — dedicated logic** — Hooks: `CpuWantsLily`
 - **AI scenarios:**
   1. Campaign **Fiber** duel (or Test Duel with the format opponent deck): give the **opponent** `Injection Fairy Lily` in the main/extra deck at a realistic copy count from `usage/` decks. Let the CPU play the duel: it should activate/set/chain **Injection Fairy Lily** when its `AiWants*` / `AiShouldActivateAddedCard` policy says so (see **AI coverage**). Repeat until you see at least one successful CPU use or confirm the policy never fires on this board.
-  2. Second pass: simplify the board until the hook conditions in **AI coverage** are met (extra hand size, weaker monsters, or an open monster zone) and re-check CPU behavior.
 
 ### Yata-Garasu
 
@@ -389,7 +376,6 @@ Other monsters on the field cannot change their battle positions or attack. Once
 - **AI coverage:** **Yes — generalized routine** — Monster menu: give the weakest monster for a stronger one Main Phase Spell: give the weakest monster for a stronger one Set/chain: give the weakest monster for a stronger one
 - **AI scenarios:**
   1. Campaign **Fiber** duel (or Test Duel with the format opponent deck): give the **opponent** `Creature Swap` in the main/extra deck at a realistic copy count from `usage/` decks. Let the CPU play the duel: it should activate/set/chain **Creature Swap** when its `AiWants*` / `AiShouldActivateAddedCard` policy says so (see **AI coverage**). Repeat until you see at least one successful CPU use or confirm the policy never fires on this board.
-  2. Second pass: open a chain window the policy cares about (Normal/Special Summon, attack declaration, or your Spell activation) and confirm the opponent flips/sets/chains **Creature Swap** when `CanActivateFieldCard` allows.
 
 ### Asura Priest
 
@@ -503,7 +489,6 @@ Other monsters on the field cannot change their battle positions or attack. Once
 - **AI coverage:** **Yes — generalized routine** — `AiPlayAddedCards` / `AiTryPlaySpellTrap` + default added-card policy.
 - **AI scenarios:**
   1. Campaign **Yata** duel (or Test Duel with the format opponent deck): give the **opponent** `Reinforcement of the Army` in the main/extra deck at a realistic copy count from `usage/` decks. Let the CPU play the duel: it should activate/set/chain **Reinforcement of the Army** when its `AiWants*` / `AiShouldActivateAddedCard` policy says so (see **AI coverage**). Repeat until you see at least one successful CPU use or confirm the policy never fires on this board.
-  2. Second pass: simplify the board until the hook conditions in **AI coverage** are met (extra hand size, weaker monsters, or an open monster zone) and re-check CPU behavior.
 
 ### Gravekeeper's Spy
 
@@ -531,7 +516,6 @@ Other monsters on the field cannot change their battle positions or attack. Once
 - **AI coverage:** **Yes — generalized routine** — Monster menu: clears the way for the CPU's attack Main Phase Spell: clears the way for the CPU's attack Set/chain: clears the way for the CPU's attack
 - **AI scenarios:**
   1. Campaign **Yata** duel (or Test Duel with the format opponent deck): give the **opponent** `Book of Moon` in the main/extra deck at a realistic copy count from `usage/` decks. Let the CPU play the duel: it should activate/set/chain **Book of Moon** when its `AiWants*` / `AiShouldActivateAddedCard` policy says so (see **AI coverage**). Repeat until you see at least one successful CPU use or confirm the policy never fires on this board.
-  2. Second pass: open a chain window the policy cares about (Normal/Special Summon, attack declaration, or your Spell activation) and confirm the opponent flips/sets/chains **Book of Moon** when `CanActivateFieldCard` allows.
 
 ### King Tiger Wanghu
 
@@ -573,7 +557,6 @@ Other monsters on the field cannot change their battle positions or attack. Once
 - **AI coverage:** **Yes — dedicated logic** — Hooks: `AiCpuMetamorphosisAllowed` Dedicated `*Cpu*` handlers in the card's effect steps. Monster menu: Conditional AiWants* / AiShouldActivateAddedCard Main Phase Spell: Conditional AiWants* / AiShouldActivateAddedCard Set/chain: Conditional AiWants* / AiShouldActivateAddedCard
 - **AI scenarios:**
   1. Campaign **Yata** duel (or Test Duel with the format opponent deck): give the **opponent** `Metamorphosis` in the main/extra deck at a realistic copy count from `usage/` decks. Let the CPU play the duel: it should activate/set/chain **Metamorphosis** when its `AiWants*` / `AiShouldActivateAddedCard` policy says so (see **AI coverage**). Repeat until you see at least one successful CPU use or confirm the policy never fires on this board.
-  2. Second pass: open a chain window the policy cares about (Normal/Special Summon, attack declaration, or your Spell activation) and confirm the opponent flips/sets/chains **Metamorphosis** when `CanActivateFieldCard` allows.
 
 ### Cure Mermaid
 
@@ -602,7 +585,6 @@ Other monsters on the field cannot change their battle positions or attack. Once
 - **AI coverage:** **Yes — generalized routine** — `AiPlayAddedCards` / `AiTryPlaySpellTrap` + default added-card policy.
 - **AI scenarios:**
   1. Campaign **Yata** duel (or Test Duel with the format opponent deck): give the **opponent** `Raigeki Break` in the main/extra deck at a realistic copy count from `usage/` decks. Let the CPU play the duel: it should activate/set/chain **Raigeki Break** when its `AiWants*` / `AiShouldActivateAddedCard` policy says so (see **AI coverage**). Repeat until you see at least one successful CPU use or confirm the policy never fires on this board.
-  2. Second pass: simplify the board until the hook conditions in **AI coverage** are met (extra hand size, weaker monsters, or an open monster zone) and re-check CPU behavior.
 
 ### Trap Dustshoot
 
@@ -630,7 +612,6 @@ Other monsters on the field cannot change their battle positions or attack. Once
 - **AI coverage:** **Yes — generalized routine** — Monster menu: against an attack, on a face-up monster of its own Main Phase Spell: against an attack, on a face-up monster of its own Set/chain: against an attack, on a face-up monster of its own
 - **AI scenarios:**
   1. Campaign **Yata** duel (or Test Duel with the format opponent deck): give the **opponent** `Blast with Chain` in the main/extra deck at a realistic copy count from `usage/` decks. Let the CPU play the duel: it should activate/set/chain **Blast with Chain** when its `AiWants*` / `AiShouldActivateAddedCard` policy says so (see **AI coverage**). Repeat until you see at least one successful CPU use or confirm the policy never fires on this board.
-  2. Second pass: open a chain window the policy cares about (Normal/Special Summon, attack declaration, or your Spell activation) and confirm the opponent flips/sets/chains **Blast with Chain** when `CanActivateFieldCard` allows.
 
 ### Gearfried the Iron Knight
 
@@ -660,7 +641,6 @@ Other monsters on the field cannot change their battle positions or attack. Once
 - **AI coverage:** **Yes — generalized routine** — Monster menu: the target step takes the human's cards first Set/chain: the target step takes the human's cards first
 - **AI scenarios:**
   1. Campaign **Scientist** duel (or Test Duel with the format opponent deck): give the **opponent** `Breaker the Magical Warrior` in the main/extra deck at a realistic copy count from `usage/` decks. Let the CPU play the duel: it should activate/set/chain **Breaker the Magical Warrior** when its `AiWants*` / `AiShouldActivateAddedCard` policy says so (see **AI coverage**). Repeat until you see at least one successful CPU use or confirm the policy never fires on this board.
-  2. Second pass: open a chain window the policy cares about (Normal/Special Summon, attack declaration, or your Spell activation) and confirm the opponent flips/sets/chains **Breaker the Magical Warrior** when `CanActivateFieldCard` allows.
 
 ### Magical Scientist
 
@@ -676,7 +656,6 @@ Other monsters on the field cannot change their battle positions or attack. Once
 - **AI coverage:** **Yes — dedicated logic** — Hooks: `AiUseMagicalScientist` Monster menu: AiUseMagicalScientist decides Set/chain: AiUseMagicalScientist decides
 - **AI scenarios:**
   1. Campaign **Scientist** duel (or Test Duel with the format opponent deck): give the **opponent** `Magical Scientist` in the main/extra deck at a realistic copy count from `usage/` decks. Let the CPU play the duel: it should activate/set/chain **Magical Scientist** when its `AiWants*` / `AiShouldActivateAddedCard` policy says so (see **AI coverage**). Repeat until you see at least one successful CPU use or confirm the policy never fires on this board.
-  2. Second pass: open a chain window the policy cares about (Normal/Special Summon, attack declaration, or your Spell activation) and confirm the opponent flips/sets/chains **Magical Scientist** when `CanActivateFieldCard` allows.
 
 ### Tribe-Infecting Virus
 
@@ -691,7 +670,6 @@ Other monsters on the field cannot change their battle positions or attack. Once
 - **AI coverage:** **Yes — generalized routine** — Monster menu: Default yes Set/chain: Default yes
 - **AI scenarios:**
   1. Campaign **Scientist** duel (or Test Duel with the format opponent deck): give the **opponent** `Tribe-Infecting Virus` in the main/extra deck at a realistic copy count from `usage/` decks. Let the CPU play the duel: it should activate/set/chain **Tribe-Infecting Virus** when its `AiWants*` / `AiShouldActivateAddedCard` policy says so (see **AI coverage**). Repeat until you see at least one successful CPU use or confirm the policy never fires on this board.
-  2. Second pass: open a chain window the policy cares about (Normal/Special Summon, attack declaration, or your Spell activation) and confirm the opponent flips/sets/chains **Tribe-Infecting Virus** when `CanActivateFieldCard` allows.
 
 ### Gilasaurus
 
@@ -706,7 +684,6 @@ Other monsters on the field cannot change their battle positions or attack. Once
 - **AI coverage:** **Yes — dedicated logic** — Hooks: `AiWantsGilasaurus`
 - **AI scenarios:**
   1. Campaign **Scientist** duel (or Test Duel with the format opponent deck): give the **opponent** `Gilasaurus` in the main/extra deck at a realistic copy count from `usage/` decks. Let the CPU play the duel: it should activate/set/chain **Gilasaurus** when its `AiWants*` / `AiShouldActivateAddedCard` policy says so (see **AI coverage**). Repeat until you see at least one successful CPU use or confirm the policy never fires on this board.
-  2. Second pass: simplify the board until the hook conditions in **AI coverage** are met (extra hand size, weaker monsters, or an open monster zone) and re-check CPU behavior.
 
 ### Poison of the Old Man
 
@@ -723,7 +700,6 @@ Other monsters on the field cannot change their battle positions or attack. Once
 - **AI coverage:** **Yes — dedicated logic** — Hooks: `AiWantsSpell` Monster menu: Default yes Main Phase Spell: always: AiPoisonOfTheOldManChoice picks the effect Set/chain: Default yes
 - **AI scenarios:**
   1. Campaign **Scientist** duel (or Test Duel with the format opponent deck): give the **opponent** `Poison of the Old Man` in the main/extra deck at a realistic copy count from `usage/` decks. Let the CPU play the duel: it should activate/set/chain **Poison of the Old Man** when its `AiWants*` / `AiShouldActivateAddedCard` policy says so (see **AI coverage**). Repeat until you see at least one successful CPU use or confirm the policy never fires on this board.
-  2. Second pass: open a chain window the policy cares about (Normal/Special Summon, attack declaration, or your Spell activation) and confirm the opponent flips/sets/chains **Poison of the Old Man** when `CanActivateFieldCard` allows.
 
 ### Reasoning
 
@@ -737,7 +713,6 @@ Other monsters on the field cannot change their battle positions or attack. Once
 - **AI coverage:** **Yes — dedicated logic** — Hooks: `sStrReasoningCpuDeclares` Dedicated `*Cpu*` handlers in the card's effect steps.
 - **AI scenarios:**
   1. Campaign **Scientist** duel (or Test Duel with the format opponent deck): give the **opponent** `Reasoning` in the main/extra deck at a realistic copy count from `usage/` decks. Let the CPU play the duel: it should activate/set/chain **Reasoning** when its `AiWants*` / `AiShouldActivateAddedCard` policy says so (see **AI coverage**). Repeat until you see at least one successful CPU use or confirm the policy never fires on this board.
-  2. Second pass: simplify the board until the hook conditions in **AI coverage** are met (extra hand size, weaker monsters, or an open monster zone) and re-check CPU behavior.
 
 ### Jowgen the Spiritualist
 
@@ -796,7 +771,6 @@ Other monsters on the field cannot change their battle positions or attack. Once
 - **AI coverage:** **Yes — generalized routine** — `AiPlayAddedCards` / `AiTryPlaySpellTrap` + default added-card policy.
 - **AI scenarios:**
   1. Campaign **Vampire** duel (or Test Duel with the format opponent deck): give the **opponent** `Sakuretsu Armor` in the main/extra deck at a realistic copy count from `usage/` decks. Let the CPU play the duel: it should activate/set/chain **Sakuretsu Armor** when its `AiWants*` / `AiShouldActivateAddedCard` policy says so (see **AI coverage**). Repeat until you see at least one successful CPU use or confirm the policy never fires on this board.
-  2. Second pass: simplify the board until the hook conditions in **AI coverage** are met (extra hand size, weaker monsters, or an open monster zone) and re-check CPU behavior.
 
 ### Sasuke Samurai
 
@@ -839,7 +813,6 @@ Other monsters on the field cannot change their battle positions or attack. Once
 - **AI coverage:** **Yes — dedicated logic** — Hooks: `sStrVampireCpuMonster`, `sStrVampireCpuSpell`, `sStrVampireCpuTrap` Dedicated `*Cpu*` handlers in the card's effect steps.
 - **AI scenarios:**
   1. Campaign **Vampire** duel (or Test Duel with the format opponent deck): give the **opponent** `Vampire Lord` in the main/extra deck at a realistic copy count from `usage/` decks. Let the CPU play the duel: it should activate/set/chain **Vampire Lord** when its `AiWants*` / `AiShouldActivateAddedCard` policy says so (see **AI coverage**). Repeat until you see at least one successful CPU use or confirm the policy never fires on this board.
-  2. Second pass: simplify the board until the hook conditions in **AI coverage** are met (extra hand size, weaker monsters, or an open monster zone) and re-check CPU behavior.
 
 ## Chaos
 
@@ -856,7 +829,6 @@ Other monsters on the field cannot change their battle positions or attack. Once
 - **AI coverage:** **Yes — dedicated logic** — Hooks: `AiWantsChaosEmperorDragon`, `AiWantsMonsterEffect` Monster menu: Conditional AiWants* / AiShouldActivateAddedCard Set/chain: Conditional AiWants* / AiShouldActivateAddedCard
 - **AI scenarios:**
   1. Campaign **Chaos** duel (or Test Duel with the format opponent deck): give the **opponent** `Chaos Emperor Dragon - Envoy of the End` in the main/extra deck at a realistic copy count from `usage/` decks. Let the CPU play the duel: it should activate/set/chain **Chaos Emperor Dragon - Envoy of the End** when its `AiWants*` / `AiShouldActivateAddedCard` policy says so (see **AI coverage**). Repeat until you see at least one successful CPU use or confirm the policy never fires on this board.
-  2. Second pass: open a chain window the policy cares about (Normal/Special Summon, attack declaration, or your Spell activation) and confirm the opponent flips/sets/chains **Chaos Emperor Dragon - Envoy of the End** when `CanActivateFieldCard` allows.
 
 ### Dark Magician of Chaos
 
@@ -886,7 +858,6 @@ Other monsters on the field cannot change their battle positions or attack. Once
 - **AI coverage:** **Yes — generalized routine** — Monster menu: Default yes Set/chain: Default yes
 - **AI scenarios:**
   1. Campaign **Chaos** duel (or Test Duel with the format opponent deck): give the **opponent** `Chaos Sorcerer` in the main/extra deck at a realistic copy count from `usage/` decks. Let the CPU play the duel: it should activate/set/chain **Chaos Sorcerer** when its `AiWants*` / `AiShouldActivateAddedCard` policy says so (see **AI coverage**). Repeat until you see at least one successful CPU use or confirm the policy never fires on this board.
-  2. Second pass: open a chain window the policy cares about (Normal/Special Summon, attack declaration, or your Spell activation) and confirm the opponent flips/sets/chains **Chaos Sorcerer** when `CanActivateFieldCard` allows.
 
 ### Tsukuyomi
 
@@ -915,7 +886,6 @@ Other monsters on the field cannot change their battle positions or attack. Once
 - **AI coverage:** **Yes — dedicated logic** — Hooks: `AiWantsSpell`
 - **AI scenarios:**
   1. Campaign **Chaos** duel (or Test Duel with the format opponent deck): give the **opponent** `Cold Wave` in the main/extra deck at a realistic copy count from `usage/` decks. Let the CPU play the duel: it should activate/set/chain **Cold Wave** when its `AiWants*` / `AiShouldActivateAddedCard` policy says so (see **AI coverage**). Repeat until you see at least one successful CPU use or confirm the policy never fires on this board.
-  2. Second pass: simplify the board until the hook conditions in **AI coverage** are met (extra hand size, weaker monsters, or an open monster zone) and re-check CPU behavior.
 
 ### Thunder Nyan Nyan
 
@@ -959,7 +929,6 @@ Other monsters on the field cannot change their battle positions or attack. Once
 - **AI coverage:** **Yes — generalized routine** — `AiPlayAddedCards` / `AiTryPlaySpellTrap` + default added-card policy.
 - **AI scenarios:**
   1. Campaign **Warrior** duel (or Test Duel with the format opponent deck): give the **opponent** `Mobius the Frost Monarch` in the main/extra deck at a realistic copy count from `usage/` decks. Let the CPU play the duel: it should activate/set/chain **Mobius the Frost Monarch** when its `AiWants*` / `AiShouldActivateAddedCard` policy says so (see **AI coverage**). Repeat until you see at least one successful CPU use or confirm the policy never fires on this board.
-  2. Second pass: simplify the board until the hook conditions in **AI coverage** are met (extra hand size, weaker monsters, or an open monster zone) and re-check CPU behavior.
 
 ### Smashing Ground
 
@@ -973,7 +942,6 @@ Other monsters on the field cannot change their battle positions or attack. Once
 - **AI coverage:** **Yes — generalized routine** — `AiPlayAddedCards` / `AiTryPlaySpellTrap` + default added-card policy.
 - **AI scenarios:**
   1. Campaign **Warrior** duel (or Test Duel with the format opponent deck): give the **opponent** `Smashing Ground` in the main/extra deck at a realistic copy count from `usage/` decks. Let the CPU play the duel: it should activate/set/chain **Smashing Ground** when its `AiWants*` / `AiShouldActivateAddedCard` policy says so (see **AI coverage**). Repeat until you see at least one successful CPU use or confirm the policy never fires on this board.
-  2. Second pass: simplify the board until the hook conditions in **AI coverage** are met (extra hand size, weaker monsters, or an open monster zone) and re-check CPU behavior.
 
 ### Blade Knight
 
@@ -1015,7 +983,6 @@ Other monsters on the field cannot change their battle positions or attack. Once
 - **AI coverage:** **Yes — generalized routine** — `AiPlayAddedCards` / `AiTryPlaySpellTrap` + default added-card policy.
 - **AI scenarios:**
   1. Campaign **Warrior** duel (or Test Duel with the format opponent deck): give the **opponent** `Bottomless Trap Hole` in the main/extra deck at a realistic copy count from `usage/` decks. Let the CPU play the duel: it should activate/set/chain **Bottomless Trap Hole** when its `AiWants*` / `AiShouldActivateAddedCard` policy says so (see **AI coverage**). Repeat until you see at least one successful CPU use or confirm the policy never fires on this board.
-  2. Second pass: simplify the board until the hook conditions in **AI coverage** are met (extra hand size, weaker monsters, or an open monster zone) and re-check CPU behavior.
 
 ### Emergency Provisions
 
@@ -1030,7 +997,6 @@ Other monsters on the field cannot change their battle positions or attack. Once
 - **AI coverage:** **Yes — dedicated logic** — Hooks: `AiWantsEmergencyProvisions`, `AiWantsSpell` Monster menu: only when low on LP Main Phase Spell: only when low on LP Set/chain: only when low on LP
 - **AI scenarios:**
   1. Campaign **Warrior** duel (or Test Duel with the format opponent deck): give the **opponent** `Emergency Provisions` in the main/extra deck at a realistic copy count from `usage/` decks. Let the CPU play the duel: it should activate/set/chain **Emergency Provisions** when its `AiWants*` / `AiShouldActivateAddedCard` policy says so (see **AI coverage**). Repeat until you see at least one successful CPU use or confirm the policy never fires on this board.
-  2. Second pass: open a chain window the policy cares about (Normal/Special Summon, attack declaration, or your Spell activation) and confirm the opponent flips/sets/chains **Emergency Provisions** when `CanActivateFieldCard` allows.
 
 ### Enemy Controller
 
@@ -1047,7 +1013,6 @@ Other monsters on the field cannot change their battle positions or attack. Once
 - **AI coverage:** **Yes — dedicated logic** — Hooks: `AiWantsEnemyController`, `AiWantsSpell` Monster menu: to take a much stronger monster Main Phase Spell: to take a much stronger monster Set/chain: to take a much stronger monster
 - **AI scenarios:**
   1. Campaign **Warrior** duel (or Test Duel with the format opponent deck): give the **opponent** `Enemy Controller` in the main/extra deck at a realistic copy count from `usage/` decks. Let the CPU play the duel: it should activate/set/chain **Enemy Controller** when its `AiWants*` / `AiShouldActivateAddedCard` policy says so (see **AI coverage**). Repeat until you see at least one successful CPU use or confirm the policy never fires on this board.
-  2. Second pass: open a chain window the policy cares about (Normal/Special Summon, attack declaration, or your Spell activation) and confirm the opponent flips/sets/chains **Enemy Controller** when `CanActivateFieldCard` allows.
 
 ### Mystik Wok
 
@@ -1062,7 +1027,6 @@ Other monsters on the field cannot change their battle positions or attack. Once
 - **AI coverage:** **Yes — dedicated logic** — Hooks: `AiWantsMystikWok` Monster menu: Conditional AiWants* / AiShouldActivateAddedCard Main Phase Spell: Conditional AiWants* / AiShouldActivateAddedCard Set/chain: Conditional AiWants* / AiShouldActivateAddedCard
 - **AI scenarios:**
   1. Campaign **Warrior** duel (or Test Duel with the format opponent deck): give the **opponent** `Mystik Wok` in the main/extra deck at a realistic copy count from `usage/` decks. Let the CPU play the duel: it should activate/set/chain **Mystik Wok** when its `AiWants*` / `AiShouldActivateAddedCard` policy says so (see **AI coverage**). Repeat until you see at least one successful CPU use or confirm the policy never fires on this board.
-  2. Second pass: open a chain window the policy cares about (Normal/Special Summon, attack declaration, or your Spell activation) and confirm the opponent flips/sets/chains **Mystik Wok** when `CanActivateFieldCard` allows.
 
 ### Berserk Gorilla
 
@@ -1119,7 +1083,6 @@ Other monsters on the field cannot change their battle positions or attack. Once
 - **AI coverage:** **Yes — generalized routine** — Monster menu: two or more monsters back, with LP to spare Main Phase Spell: two or more monsters back, with LP to spare Set/chain: two or more monsters back, with LP to spare
 - **AI scenarios:**
   1. Campaign **Warrior** duel (or Test Duel with the format opponent deck): give the **opponent** `Return from the Different Dimension` in the main/extra deck at a realistic copy count from `usage/` decks. Let the CPU play the duel: it should activate/set/chain **Return from the Different Dimension** when its `AiWants*` / `AiShouldActivateAddedCard` policy says so (see **AI coverage**). Repeat until you see at least one successful CPU use or confirm the policy never fires on this board.
-  2. Second pass: open a chain window the policy cares about (Normal/Special Summon, attack declaration, or your Spell activation) and confirm the opponent flips/sets/chains **Return from the Different Dimension** when `CanActivateFieldCard` allows.
 
 ### Monster Gate
 
@@ -1134,7 +1097,6 @@ Other monsters on the field cannot change their battle positions or attack. Once
 - **AI coverage:** **Yes — generalized routine** — Monster menu: Tribute a weak monster for whatever the Deck gives Main Phase Spell: Tribute a weak monster for whatever the Deck gives Set/chain: Tribute a weak monster for whatever the Deck gives
 - **AI scenarios:**
   1. Campaign **Warrior** duel (or Test Duel with the format opponent deck): give the **opponent** `Monster Gate` in the main/extra deck at a realistic copy count from `usage/` decks. Let the CPU play the duel: it should activate/set/chain **Monster Gate** when its `AiWants*` / `AiShouldActivateAddedCard` policy says so (see **AI coverage**). Repeat until you see at least one successful CPU use or confirm the policy never fires on this board.
-  2. Second pass: open a chain window the policy cares about (Normal/Special Summon, attack declaration, or your Spell activation) and confirm the opponent flips/sets/chains **Monster Gate** when `CanActivateFieldCard` allows.
 
 ### Monster Reincarnation
 
@@ -1150,7 +1112,6 @@ Other monsters on the field cannot change their battle positions or attack. Once
 - **AI coverage:** **Yes — dedicated logic** — Hooks: `AiWantsMonsterReincarnation` Monster menu: Conditional AiWants* / AiShouldActivateAddedCard Main Phase Spell: Conditional AiWants* / AiShouldActivateAddedCard Set/chain: Conditional AiWants* / AiShouldActivateAddedCard
 - **AI scenarios:**
   1. Campaign **Warrior** duel (or Test Duel with the format opponent deck): give the **opponent** `Monster Reincarnation` in the main/extra deck at a realistic copy count from `usage/` decks. Let the CPU play the duel: it should activate/set/chain **Monster Reincarnation** when its `AiWants*` / `AiShouldActivateAddedCard` policy says so (see **AI coverage**). Repeat until you see at least one successful CPU use or confirm the policy never fires on this board.
-  2. Second pass: open a chain window the policy cares about (Normal/Special Summon, attack declaration, or your Spell activation) and confirm the opponent flips/sets/chains **Monster Reincarnation** when `CanActivateFieldCard` allows.
 
 ### Pikeru's Circle of Enchantment
 
@@ -1165,7 +1126,6 @@ Other monsters on the field cannot change their battle positions or attack. Once
 - **AI coverage:** **Yes — dedicated logic** — Monster menu: only chained to burn (AiChainPikerusCircle) Main Phase Spell: only chained to burn (AiChainPikerusCircle) Set/chain: only chained to burn (AiChainPikerusCircle)
 - **AI scenarios:**
   1. Campaign **Warrior** duel (or Test Duel with the format opponent deck): give the **opponent** `Pikeru's Circle of Enchantment` in the main/extra deck at a realistic copy count from `usage/` decks. Let the CPU play the duel: it should activate/set/chain **Pikeru's Circle of Enchantment** when its `AiWants*` / `AiShouldActivateAddedCard` policy says so (see **AI coverage**). Repeat until you see at least one successful CPU use or confirm the policy never fires on this board.
-  2. Second pass: open a chain window the policy cares about (Normal/Special Summon, attack declaration, or your Spell activation) and confirm the opponent flips/sets/chains **Pikeru's Circle of Enchantment** when `CanActivateFieldCard` allows.
 
 ## Goat
 
@@ -1183,7 +1143,6 @@ Other monsters on the field cannot change their battle positions or attack. Once
 - **AI coverage:** **Yes — generalized routine** — `AiPlayAddedCards` / `AiTryPlaySpellTrap` + default added-card policy.
 - **AI scenarios:**
   1. Campaign **Goat** duel (or Test Duel with the format opponent deck): give the **opponent** `Mind Control` in the main/extra deck at a realistic copy count from `usage/` decks. Let the CPU play the duel: it should activate/set/chain **Mind Control** when its `AiWants*` / `AiShouldActivateAddedCard` policy says so (see **AI coverage**). Repeat until you see at least one successful CPU use or confirm the policy never fires on this board.
-  2. Second pass: simplify the board until the hook conditions in **AI coverage** are met (extra hand size, weaker monsters, or an open monster zone) and re-check CPU behavior.
 
 ### Night Assailant
 
@@ -1226,7 +1185,6 @@ When this card is sent from the hand to the Graveyard: Target 1 Flip Effect Mons
 - **AI coverage:** **Yes — generalized routine** — `AiPlayAddedCards` / `AiTryPlaySpellTrap` + default added-card policy.
 - **AI scenarios:**
   1. Campaign **Goat** duel (or Test Duel with the format opponent deck): give the **opponent** `Lightning Vortex` in the main/extra deck at a realistic copy count from `usage/` decks. Let the CPU play the duel: it should activate/set/chain **Lightning Vortex** when its `AiWants*` / `AiShouldActivateAddedCard` policy says so (see **AI coverage**). Repeat until you see at least one successful CPU use or confirm the policy never fires on this board.
-  2. Second pass: simplify the board until the hook conditions in **AI coverage** are met (extra hand size, weaker monsters, or an open monster zone) and re-check CPU behavior.
 
 ### Phoenix Wing Wind Blast
 
@@ -1240,7 +1198,6 @@ When this card is sent from the hand to the Graveyard: Target 1 Flip Effect Mons
 - **AI coverage:** **Yes — generalized routine** — `AiPlayAddedCards` / `AiTryPlaySpellTrap` + default added-card policy.
 - **AI scenarios:**
   1. Campaign **Goat** duel (or Test Duel with the format opponent deck): give the **opponent** `Phoenix Wing Wind Blast` in the main/extra deck at a realistic copy count from `usage/` decks. Let the CPU play the duel: it should activate/set/chain **Phoenix Wing Wind Blast** when its `AiWants*` / `AiShouldActivateAddedCard` policy says so (see **AI coverage**). Repeat until you see at least one successful CPU use or confirm the policy never fires on this board.
-  2. Second pass: simplify the board until the hook conditions in **AI coverage** are met (extra hand size, weaker monsters, or an open monster zone) and re-check CPU behavior.
 
 ### Xing Zhen Hu
 
@@ -1255,7 +1212,6 @@ When this card is sent from the hand to the Graveyard: Target 1 Flip Effect Mons
 - **AI coverage:** **Yes — generalized routine** — Monster menu: only on two of the human's Set cards Main Phase Spell: only on two of the human's Set cards Set/chain: only on two of the human's Set cards
 - **AI scenarios:**
   1. Campaign **Goat** duel (or Test Duel with the format opponent deck): give the **opponent** `Xing Zhen Hu` in the main/extra deck at a realistic copy count from `usage/` decks. Let the CPU play the duel: it should activate/set/chain **Xing Zhen Hu** when its `AiWants*` / `AiShouldActivateAddedCard` policy says so (see **AI coverage**). Repeat until you see at least one successful CPU use or confirm the policy never fires on this board.
-  2. Second pass: open a chain window the policy cares about (Normal/Special Summon, attack declaration, or your Spell activation) and confirm the opponent flips/sets/chains **Xing Zhen Hu** when `CanActivateFieldCard` allows.
 
 ### Brain Control
 
@@ -1271,7 +1227,6 @@ When this card is sent from the hand to the Graveyard: Target 1 Flip Effect Mons
 - **AI coverage:** **Yes — generalized routine** — `AiPlayAddedCards` / `AiTryPlaySpellTrap` + default added-card policy.
 - **AI scenarios:**
   1. Campaign **Goat** duel (or Test Duel with the format opponent deck): give the **opponent** `Brain Control` in the main/extra deck at a realistic copy count from `usage/` decks. Let the CPU play the duel: it should activate/set/chain **Brain Control** when its `AiWants*` / `AiShouldActivateAddedCard` policy says so (see **AI coverage**). Repeat until you see at least one successful CPU use or confirm the policy never fires on this board.
-  2. Second pass: simplify the board until the hook conditions in **AI coverage** are met (extra hand size, weaker monsters, or an open monster zone) and re-check CPU behavior.
 
 ### Zaborg the Thunder Monarch
 
@@ -1360,7 +1315,6 @@ A Fusion Summon of this card can only be done with the above Fusion Materials. I
 - **AI coverage:** **Yes — generalized routine** — Monster menu: against an attack, when another of the human's could attack after Main Phase Spell: against an attack, when another of the human's could attack after Set/chain: against an attack, when another of the human's could attack after
 - **AI scenarios:**
   1. Campaign **Cyber** duel (or Test Duel with the format opponent deck): give the **opponent** `Threatening Roar` in the main/extra deck at a realistic copy count from `usage/` decks. Let the CPU play the duel: it should activate/set/chain **Threatening Roar** when its `AiWants*` / `AiShouldActivateAddedCard` policy says so (see **AI coverage**). Repeat until you see at least one successful CPU use or confirm the policy never fires on this board.
-  2. Second pass: open a chain window the policy cares about (Normal/Special Summon, attack declaration, or your Spell activation) and confirm the opponent flips/sets/chains **Threatening Roar** when `CanActivateFieldCard` allows.
 
 ### Exarion Universe
 
@@ -1375,7 +1329,6 @@ A Fusion Summon of this card can only be done with the above Fusion Materials. I
 - **AI coverage:** **Yes — dedicated logic** — Hooks: `CpuWantsExarion`
 - **AI scenarios:**
   1. Campaign **Cyber** duel (or Test Duel with the format opponent deck): give the **opponent** `Exarion Universe` in the main/extra deck at a realistic copy count from `usage/` decks. Let the CPU play the duel: it should activate/set/chain **Exarion Universe** when its `AiWants*` / `AiShouldActivateAddedCard` policy says so (see **AI coverage**). Repeat until you see at least one successful CPU use or confirm the policy never fires on this board.
-  2. Second pass: simplify the board until the hook conditions in **AI coverage** are met (extra hand size, weaker monsters, or an open monster zone) and re-check CPU behavior.
 
 ### Gravity Bind
 
@@ -1389,7 +1342,6 @@ A Fusion Summon of this card can only be done with the above Fusion Materials. I
 - **AI coverage:** **Yes — dedicated logic** — Block comment: CPU: AiPlayAddedCards; AiShouldActivateAddedCard default yes (CARD_1323 in AiShouldActivateSetCard).
 - **AI scenarios:**
   1. Campaign **Cyber** duel (or Test Duel with the format opponent deck): give the **opponent** `Gravity Bind` in the main/extra deck at a realistic copy count from `usage/` decks. Let the CPU play the duel: it should activate/set/chain **Gravity Bind** when its `AiWants*` / `AiShouldActivateAddedCard` policy says so (see **AI coverage**). Repeat until you see at least one successful CPU use or confirm the policy never fires on this board.
-  2. Second pass: open a chain window the policy cares about (Normal/Special Summon, attack declaration, or your Spell activation) and confirm the opponent flips/sets/chains **Gravity Bind** when `CanActivateFieldCard` allows.
 
 ### Chiron the Mage
 
@@ -1404,7 +1356,6 @@ A Fusion Summon of this card can only be done with the above Fusion Materials. I
 - **AI coverage:** **Yes — generalized routine** — Monster menu: Default yes Set/chain: Default yes
 - **AI scenarios:**
   1. Campaign **Cyber** duel (or Test Duel with the format opponent deck): give the **opponent** `Chiron the Mage` in the main/extra deck at a realistic copy count from `usage/` decks. Let the CPU play the duel: it should activate/set/chain **Chiron the Mage** when its `AiWants*` / `AiShouldActivateAddedCard` policy says so (see **AI coverage**). Repeat until you see at least one successful CPU use or confirm the policy never fires on this board.
-  2. Second pass: open a chain window the policy cares about (Normal/Special Summon, attack declaration, or your Spell activation) and confirm the opponent flips/sets/chains **Chiron the Mage** when `CanActivateFieldCard` allows.
 
 ### Cursed Seal of the Forbidden Spell
 
@@ -1419,7 +1370,6 @@ A Fusion Summon of this card can only be done with the above Fusion Materials. I
 - **AI coverage:** **Yes — dedicated logic** — Monster menu: only chained (AiChainCursedSeal), not flipped blindly Main Phase Spell: only chained (AiChainCursedSeal), not flipped blindly Set/chain: only chained (AiChainCursedSeal), not flipped blindly
 - **AI scenarios:**
   1. Campaign **Cyber** duel (or Test Duel with the format opponent deck): give the **opponent** `Cursed Seal of the Forbidden Spell` in the main/extra deck at a realistic copy count from `usage/` decks. Let the CPU play the duel: it should activate/set/chain **Cursed Seal of the Forbidden Spell** when its `AiWants*` / `AiShouldActivateAddedCard` policy says so (see **AI coverage**). Repeat until you see at least one successful CPU use or confirm the policy never fires on this board.
-  2. Second pass: open a chain window the policy cares about (Normal/Special Summon, attack declaration, or your Spell activation) and confirm the opponent flips/sets/chains **Cursed Seal of the Forbidden Spell** when `CanActivateFieldCard` allows.
 
 ### Wave-Motion Cannon
 
@@ -1434,7 +1384,6 @@ A Fusion Summon of this card can only be done with the above Fusion Materials. I
 - **AI coverage:** **Yes — dedicated logic** — Hooks: `AiWantsWaveMotionIgnition` Monster menu: HAS_CARD_DES_WOMBAT Main Phase Spell: Conditional AiWants* / AiShouldActivateAddedCard Set/chain: HAS_CARD_DES_WOMBAT
 - **AI scenarios:**
   1. Campaign **Cyber** duel (or Test Duel with the format opponent deck): give the **opponent** `Wave-Motion Cannon` in the main/extra deck at a realistic copy count from `usage/` decks. Let the CPU play the duel: it should activate/set/chain **Wave-Motion Cannon** when its `AiWants*` / `AiShouldActivateAddedCard` policy says so (see **AI coverage**). Repeat until you see at least one successful CPU use or confirm the policy never fires on this board.
-  2. Second pass: open a chain window the policy cares about (Normal/Special Summon, attack declaration, or your Spell activation) and confirm the opponent flips/sets/chains **Wave-Motion Cannon** when `CanActivateFieldCard` allows.
 
 ## Reaper
 
@@ -1491,7 +1440,6 @@ A Fusion Summon of this card can only be done with the above Fusion Materials. I
 - **AI coverage:** **Yes — generalized routine** — `AiPlayAddedCards` / `AiTryPlaySpellTrap` + default added-card policy.
 - **AI scenarios:**
   1. Campaign **Reaper** duel (or Test Duel with the format opponent deck): give the **opponent** `Pot of Avarice` in the main/extra deck at a realistic copy count from `usage/` decks. Let the CPU play the duel: it should activate/set/chain **Pot of Avarice** when its `AiWants*` / `AiShouldActivateAddedCard` policy says so (see **AI coverage**). Repeat until you see at least one successful CPU use or confirm the policy never fires on this board.
-  2. Second pass: simplify the board until the hook conditions in **AI coverage** are met (extra hand size, weaker monsters, or an open monster zone) and re-check CPU behavior.
 
 ### Magical Merchant
 
@@ -1506,7 +1454,6 @@ A Fusion Summon of this card can only be done with the above Fusion Materials. I
 - **AI coverage:** **Yes — generalized routine** — `AiPlayAddedCards` / `AiTryPlaySpellTrap` + default added-card policy.
 - **AI scenarios:**
   1. Campaign **Reaper** duel (or Test Duel with the format opponent deck): give the **opponent** `Magical Merchant` in the main/extra deck at a realistic copy count from `usage/` decks. Let the CPU play the duel: it should activate/set/chain **Magical Merchant** when its `AiWants*` / `AiShouldActivateAddedCard` policy says so (see **AI coverage**). Repeat until you see at least one successful CPU use or confirm the policy never fires on this board.
-  2. Second pass: simplify the board until the hook conditions in **AI coverage** are met (extra hand size, weaker monsters, or an open monster zone) and re-check CPU behavior.
 
 ### Mask of Restrict
 
@@ -1521,4 +1468,3 @@ A Fusion Summon of this card can only be done with the above Fusion Materials. I
 - **AI coverage:** **Yes — dedicated logic** — Block comment: CPU: AiWantsMaskOfRestrict, AiPlayAddedCards (Main Phase); Set copies use AiShouldActivateAddedCard (yes). Hooks: `AiWantsMaskOfRestrict`
 - **AI scenarios:**
   1. Campaign **Reaper** duel (or Test Duel with the format opponent deck): give the **opponent** `Mask of Restrict` in the main/extra deck at a realistic copy count from `usage/` decks. Let the CPU play the duel: it should activate/set/chain **Mask of Restrict** when its `AiWants*` / `AiShouldActivateAddedCard` policy says so (see **AI coverage**). Repeat until you see at least one successful CPU use or confirm the policy never fires on this board.
-  2. Second pass: open a chain window the policy cares about (Normal/Special Summon, attack declaration, or your Spell activation) and confirm the opponent flips/sets/chains **Mask of Restrict** when `CanActivateFieldCard` allows.

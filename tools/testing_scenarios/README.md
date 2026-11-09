@@ -31,7 +31,7 @@ Examples:
 
 - `Card_Destruction_Discard_And_Draw_Player.mp4`
 - `Soul_Exchange_Tribute_Opponent_Monster_Player.mp4`
-- `Torrential_Tribute_Chain_Window_CPU.mp4`
+- `Torrential_Tribute_Cpu_Duel_CPU.mp4`
 
 Spaces and punctuation are folded to underscores; each effect word is title-cased (`EDS.slugEffect` in `lib_eds.lua`, `effect_slug` in `gen_testing_lua.py`).
 

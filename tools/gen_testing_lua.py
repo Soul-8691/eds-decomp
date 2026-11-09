@@ -105,10 +105,6 @@ def human_effect_name(card: str, text: str, coded: str, index: int, total: int) 
 
 def ai_effect_name(text: str, index: int) -> str:
     low = text.lower()
-    if 'second pass' in low:
-        return 'chain_window'
-    if 'simplify' in low or 'hook conditions' in low:
-        return 'hook_conditions'
     if 'mandatory' in low or 'passive' in low or 'ordinary lines' in low:
         return 'cpu_standard_lines'
     if index > 1:
@@ -179,6 +175,8 @@ def scenario_entries(card: dict) -> list[dict]:
             'basename': f"{slug(card['name'])}_{effect_slug(effect)}_Player",
         })
     for i, text in enumerate(card['ai_scenarios'], start=1):
+        if text.strip().lower().startswith('second pass'):
+            continue
         effect = ai_effect_name(text, i)
         out.append({
             'card': card['name'],
