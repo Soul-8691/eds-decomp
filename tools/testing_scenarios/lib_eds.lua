@@ -65,6 +65,32 @@ EDS.CARDMENU_CMD_SURRENDER = 9
 EDS.CARDMENU_CMD_MULLIGAN = 13
 
 EDS.G_MAIN = 0x03000040
+EDS.G_SCENE_WORK = 0x02020310
+EDS.G_TURN_ORDER_SCENE = EDS.G_SCENE_WORK + 0xAAC -- gSceneWork.u.turnOrder
+-- RPS result at TurnOrderSceneWork.result (RPS_WIN=0, RPS_LOSE=1, RPS_DRAW=2)
+EDS.OFF_TURN_ORDER_RESULT = 0x12
+EDS.OFF_TURN_ORDER_OPP_ANSWERED = 0x11
+EDS.OFF_TURN_ORDER_OPP_HAND = 0x10
+EDS.OFF_TURN_ORDER_TURN_CHOICE = 0x13
+EDS.OFF_TURN_ORDER_PHASE = 0x49
+EDS.OFF_TURN_ORDER_CAROUSEL_STOP = 0x2 -- scrollers[SCROLLER_CAROUSEL].stop
+EDS.OFF_TURN_ORDER_CAROUSEL_SPEED = 0x1
+EDS.OFF_TURN_ORDER_OPP_SCROLLER_POS = 0x4 -- scrollers[SCROLLER_OPPONENT_CARD].pos
+EDS.OFF_TURN_ORDER_OPP_SCROLLER_SPEED = 0x5
+EDS.OFF_TURN_ORDER_CAROUSEL_SPREAD = 0x28
+EDS.OFF_TURN_ORDER_CAROUSEL_SPREAD_SPEED = 0x29
+EDS.G_MAIN_FIRST_PLAYER = EDS.G_MAIN + 0x4870
+EDS.RPS_WIN = 0
+EDS.RPS_LOSE = 1
+EDS.RPS_DRAW = 2
+EDS.TURN_CHOICE_SECOND = 1
+EDS.TURN_ORDER_CHOOSE_HAND = 0
+EDS.TURN_ORDER_SHOW_RESULT = 1
+EDS.TURN_ORDER_CHOOSE_TURN = 2
+-- Campaign first-duel turn order (lose RPS -> CPU goes first -> player draws second).
+EDS.CB_CAMPAIGN_TURN_ORDER = 0x0801BE0D
+-- LCG seed that tends to yield RPS lose after typical menu navigation (see opts.rngSeedGoSecond).
+EDS.DEFAULT_RNG_SEED_GO_SECOND = 0x6D3A9C17
 EDS.MAIN_CALLBACK = EDS.G_MAIN + 0x0410
 EDS.MAIN_SEQ_INDEX1 = EDS.G_MAIN + 0x4859
 
@@ -1281,8 +1307,11 @@ end
 function EDS.setMonster(playerBase, zone, cardId, defense)
     local z = playerBase + EDS.ZONE_MON0 + zone * EDS.ZONE_SIZE
     EDS.writeDuelCard(z, cardId, EDS.playerIndexFromBase(playerBase))
+    -- DuelZone+0x06: isDefense bit0, isFaceUp bit1 (face-down attack is invalid).
     if defense then
-        emu:write8(z + 6, 1) -- isDefense at DuelZone+6 bit 0 (approximation for test harness)
+        emu:write8(z + 6, 0x01) -- face-down Defense Position
+    else
+        emu:write8(z + 6, 0x02) -- face-up Attack Position
     end
 end
 
@@ -1355,6 +1384,189 @@ end
 
 local function inMainMenu()
     return mainMenuCallbacks[currentCallback()] == true
+end
+
+function EDS.inCampaignTurnOrder()
+    return currentCallback() == EDS.CB_CAMPAIGN_TURN_ORDER
+end
+
+-- True when the Destiny Board turn-order scene is actually running (not a zeroed SceneWork stub).
+function EDS.turnOrderRpsUiActive()
+    if EDS.inCampaignTurnOrder() then
+        return true
+    end
+    local to = EDS.G_TURN_ORDER_SCENE
+    local phase = emu:read8(to + EDS.OFF_TURN_ORDER_PHASE)
+    if phase > 6 then
+        return false
+    end
+    if emu:read8(to + EDS.OFF_TURN_ORDER_CAROUSEL_SPREAD_SPEED) ~= 0
+        or emu:read8(to + EDS.OFF_TURN_ORDER_CAROUSEL_SPREAD) ~= 0 then
+        return true
+    end
+    if emu:read8(to + EDS.OFF_TURN_ORDER_OPP_ANSWERED) == 1 then
+        return true
+    end
+    if phase > 0 then
+        return true
+    end
+    if phase == 0 and emu:read8(to + EDS.OFF_TURN_ORDER_OPP_HAND) == 0xFF then
+        return true
+    end
+    return false
+end
+
+-- Turn-order RPS / FIRST-SECOND screen (pre-duel); not the in-duel Draw Phase menu.
+function EDS.turnOrderScreenActive(frameState)
+    if frameState and frameState.drawConfirmed then
+        return false
+    end
+    if not EDS.turnOrderRpsUiActive() then
+        return false
+    end
+    local step = EDS.duelStep()
+    if step >= EDS.DUEL_STEP_TURN_START then
+        return false
+    end
+    if step >= EDS.DUEL_STEP_DRAW then
+        return false
+    end
+    if step >= EDS.DUEL_STEP_OPENING
+        and emu:read8(EDS.G_TURN_ORDER_SCENE + EDS.OFF_TURN_ORDER_PHASE) == EDS.TURN_ORDER_CHOOSE_HAND
+        and emu:read8(EDS.G_TURN_ORDER_SCENE + EDS.OFF_TURN_ORDER_OPP_ANSWERED) == 0 then
+        return false
+    end
+    return true
+end
+
+function EDS.maintainGoSecond(frameState, opts)
+    opts = opts or {}
+    if opts.goSecond == false then
+        return
+    end
+    if frameState and frameState.drawConfirmed then
+        return
+    end
+    local step = EDS.duelStep()
+    if step >= EDS.DUEL_STEP_RESULT then
+        return
+    end
+    local b = emu:read8(EDS.G_MAIN_FIRST_PLAYER)
+    if (b & 1) == 0 then
+        emu:write8(EDS.G_MAIN_FIRST_PLAYER, b | 0x01)
+    end
+    EDS.setPlayerSkipDraw(EDS.PLAYER0, false)
+    EDS.setPlayerSkipDraw(EDS.PLAYER1, false)
+end
+
+-- Jump to RPS lose + opponent card shown (CPU picks first on A); avoids Random() on hand confirm.
+function EDS.forceTurnOrderRpsLose(to)
+    local stop = emu:read8(to + EDS.OFF_TURN_ORDER_CAROUSEL_STOP)
+    if stop > 2 then
+        return false
+    end
+    local opp = (stop + 2) % 3
+    emu:write8(to + EDS.OFF_TURN_ORDER_OPP_HAND, opp)
+    emu:write8(to + EDS.OFF_TURN_ORDER_OPP_ANSWERED, 1)
+    emu:write8(to + EDS.OFF_TURN_ORDER_RESULT, EDS.RPS_LOSE)
+    emu:write8(to + EDS.OFF_TURN_ORDER_PHASE, EDS.TURN_ORDER_SHOW_RESULT)
+    emu:write8(to + EDS.OFF_TURN_ORDER_OPP_SCROLLER_POS, 0x30)
+    emu:write8(to + EDS.OFF_TURN_ORDER_OPP_SCROLLER_SPEED, 0)
+    return true
+end
+
+function EDS.pinRngSeedForGoSecond(frameState, opts)
+    if frameState.turnOrderRngPinned == false then
+        return
+    end
+    local seed = opts.rngSeedGoSecond
+    if seed == nil then
+        seed = EDS.DEFAULT_RNG_SEED_GO_SECOND
+    end
+    emu:write32(EDS.G_MAIN, seed)
+end
+
+-- Work around RPS-win opening-draw bug: lose RPS so CPU takes first turn (you draw on your turn).
+function EDS.tickTurnOrderGoSecond(frameState, opts)
+    opts = opts or {}
+    if opts.goSecond == false then
+        return
+    end
+    if frameState.turnOrderRngPinned == false then
+        return
+    end
+    local step = EDS.duelStep()
+    if step >= EDS.DUEL_STEP_TURN_START and step < EDS.DUEL_STEP_RESULT then
+        frameState.turnOrderRngPinned = false
+        return
+    end
+    EDS.pinRngSeedForGoSecond(frameState, opts)
+    if not EDS.turnOrderScreenActive(frameState) then
+        return
+    end
+    if EDS.busy() then
+        return
+    end
+    local to = EDS.G_TURN_ORDER_SCENE
+    local phase = emu:read8(to + EDS.OFF_TURN_ORDER_PHASE)
+    frameState.turnOrderTick = (frameState.turnOrderTick or 0) + 1
+
+    if phase == EDS.TURN_ORDER_CHOOSE_HAND then
+        if emu:read8(to + EDS.OFF_TURN_ORDER_CAROUSEL_SPEED) ~= 0 then
+            return
+        end
+        frameState.turnOrderChooseWait = (frameState.turnOrderChooseWait or 0) + 1
+        if frameState.turnOrderChooseWait < 8 then
+            return
+        end
+        if not frameState.turnOrderRpsCommitted and EDS.forceTurnOrderRpsLose(to) then
+            frameState.turnOrderRpsCommitted = true
+            EDS.log("Turn order: forced RPS lose (CPU goes first).")
+        end
+        return
+    end
+
+    local result = emu:read8(to + EDS.OFF_TURN_ORDER_RESULT)
+    if result == EDS.RPS_WIN then
+        emu:write8(to + EDS.OFF_TURN_ORDER_RESULT, EDS.RPS_LOSE)
+        result = EDS.RPS_LOSE
+        if phase == EDS.TURN_ORDER_CHOOSE_TURN then
+            emu:write8(to + EDS.OFF_TURN_ORDER_PHASE, EDS.TURN_ORDER_SHOW_RESULT)
+            phase = EDS.TURN_ORDER_SHOW_RESULT
+        end
+        EDS.log("Turn order: coerced RPS_WIN -> RPS_LOSE.")
+    end
+
+    if phase == EDS.TURN_ORDER_CHOOSE_TURN then
+        emu:write8(to + EDS.OFF_TURN_ORDER_TURN_CHOICE, EDS.TURN_CHOICE_SECOND)
+        if frameState.turnOrderTick % 18 == 0 then
+            EDS.press(EDS.KEY_A, 18)
+            EDS.log("Turn order: SECOND + A (won RPS fallback).")
+        end
+        return
+    end
+
+    if phase == EDS.TURN_ORDER_SHOW_RESULT then
+        local oppPos = emu:read8(to + EDS.OFF_TURN_ORDER_OPP_SCROLLER_POS)
+        if oppPos < 0x30 and frameState.turnOrderRpsCommitted then
+            emu:write8(to + EDS.OFF_TURN_ORDER_OPP_SCROLLER_POS, 0x30)
+            emu:write8(to + EDS.OFF_TURN_ORDER_OPP_SCROLLER_SPEED, 0)
+            oppPos = 0x30
+        end
+        local answered = emu:read8(to + EDS.OFF_TURN_ORDER_OPP_ANSWERED)
+        if answered ~= 1 or oppPos < 0x30 then
+            return
+        end
+        if result == EDS.RPS_LOSE and frameState.turnOrderTick % 18 == 0 then
+            EDS.press(EDS.KEY_A, 18)
+            EDS.log("Turn order: A (lost RPS; CPU chooses first).")
+        elseif result == EDS.RPS_DRAW and frameState.turnOrderTick % 18 == 0 then
+            frameState.turnOrderRpsCommitted = false
+            frameState.turnOrderChooseWait = 0
+            EDS.press(EDS.KEY_A, 18)
+            EDS.log("Turn order: A (RPS draw; rematch).")
+        end
+    end
 end
 
 -- Campaign -> Test Duel (MOD_TEST_DECK cursor) -> confirm -> duel. Fragile; prefer savestate at Main 1 when available.
@@ -1450,8 +1662,11 @@ function EDS.navigateTestDuel(frameState, opts)
             return
         end
         -- MOD_TEST_DECK: cursor should start on Test Duel; confirm with A through deck flow.
-        if frameState.timer % 32 == 1 then
-            EDS.press(EDS.KEY_A, 20)
+        -- Do not mash A during turn-order RPS (random win breaks the opening draw).
+        if not EDS.turnOrderScreenActive(frameState) then
+            if frameState.timer % 32 == 1 then
+                EDS.press(EDS.KEY_A, 20)
+            end
         end
         if frameState.timer == 200 then
             EDS.press(EDS.KEY_START, 20)
@@ -2111,6 +2326,9 @@ function EDS.run(opts)
     if opts.ramOpeningDraw == nil then
         opts.ramOpeningDraw = false
     end
+    if opts.goSecond == nil then
+        opts.goSecond = true
+    end
     if opts.recordTail == nil then
         opts.recordTail = 0
     end
@@ -2138,6 +2356,7 @@ function EDS.run(opts)
         basename = basename,
         minPlayerHand = opts.minPlayerHand,
         opts = opts,
+        turnOrderRngPinned = opts.goSecond ~= false,
     }
     if doCapture then
         EDS.initMp4Capture(frameState, mp4Path, opts)
@@ -2187,6 +2406,9 @@ function EDS.run(opts)
     end)
     cbid = callbacks:add("frame", function()
         EDS.tickKeys()
+        if opts.goSecond ~= false and not frameState.drawConfirmed then
+            EDS.maintainGoSecond(frameState, opts)
+        end
         if EDS.inTestDuelFlow(frameState) then
             EDS.freezeOpponent(opts)
         end
@@ -2197,6 +2419,7 @@ function EDS.run(opts)
         EDS.tickScenarioSetup(opts, frameState)
         EDS.captureFrameIfNeeded(frameState, opts)
         if frameState.phase ~= "in_duel" and frameState.phase ~= "playing" and frameState.phase ~= "watch" then
+            EDS.tickTurnOrderGoSecond(frameState, opts)
             EDS.navigateTestDuel(frameState, opts)
         end
         if frameState.phase == "in_duel" and not frameState.setupDone then
