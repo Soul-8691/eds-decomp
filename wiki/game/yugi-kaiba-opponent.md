@@ -30,7 +30,7 @@ next to the one before it.
 - **Hidden.** The IDs not placed (Yugi, Tea, Joey, Bakura, Shadi, Duel Computer) are hidden. Page 4 is empty and
   can't be reached (`ModNextPageOpen`: pages 0-3).
 - **Opening position.** `ModOpponentSelectStart` (`OpponentSelect_Init`): in `make` with `MOD_TEST_DECK`, the cursor
-  starts on Test Duel (deck page, right slot); `make release` opens on the newest unlocked format.
+  starts on Test Duel (deck page, left slot since 2026-11-10); `make release` opens on the newest unlocked format.
 - **History.** The first version kept the ROM's placement (formats from page 1, slot order), which put Critter at
   page 1's bottom centre instead of next to Yugi-Kaiba.
 
@@ -75,6 +75,12 @@ next to the one before it.
     N♡va-Chaos Control 10% (recipe "Nova-Chaos Control"), wolfe_KMH-Panda Burn, Dingosig-Chaos Return and
     paede17-Reasoning Gate Turbo 5% each (`GoatDeck`, Ishizu's slot, in twentieths: 8/4/3/2/1/1/1). Every card was
     already in the game; the uncoded ones are listed in DECKS.md.
+  - **Deck percentages (2026-11-10, untested).** Each format opponent's pick is a table of `MOD_DECK_CHOICES` (10)
+    slots, `struct ModDeckChoice { u8 percent; u8 unused[3]; const struct DeckList *deck; }` (`sYugiKaibaDeckChoices`
+    … `sReaperDeckChoices`, src/mod_decks.c): each deck's chance out of 100, the unused slots 0 with no deck.
+    `PickDeckChoice` rolls 0-99 and walks the slots; a roll past the last one (percentages under 100) picks the first
+    deck, a slot with no deck is skipped. The odds stayed the same (Goat's twentieths became 40/20/15/10/5/5/5,
+    Cyber's coin 50/50). HMA edits them: `data.decks.choices.<format>` ([[hma-toml]]).
   - The other 2 keep their original duelists' decks for now.
   - Cards in these decks with no coded effect yet: Dark Balter the Terrible, Fiend Skull Dragon, Ryu Senshi (Joey-
     Pegasus Tomato Control's Fusion Deck), Skull Lair and The Last Warrior from Another Planet (Joey-Pegasus Vanilla
@@ -136,6 +142,14 @@ Always open, with no format check:
       `CanDeckOut` 0). Debug's own deck must still have a card. In make release the day still starts only with a
       40-card saved deck (`Campaign_StartDay`). SELECT builds a deck (`playerBuilding`). B goes back
       to the opponent select (`ModRecipeBuildEnd`). Every line says "Your deck" here, never "Debug's".
+    - **Empty Deck (2026-11-10, untested).** Simon's ID (`DUELIST_EMPTY_DECK` = `DUELIST_SIMON`), named "Empty
+      Deck", `DECK_ALWAYS` (make release too), Ultimate Offering's art, in the deck page's right slot; Test Duel moved
+      to the left slot. Its Main and Fusion Decks are empty (`sEmptyDeckList`, `PickOpponentDeckOverride`). Any deck
+      may challenge it (a deck opponent has no format: `ModOpponentFormat` -1, so `BanlistBlocksDuel` passes). It
+      never decks out: `ModEmptyDeckDuel` makes `CanDeckOut` (duel_cmd_deck.c) 0, as `ModDebugDuel` does. No DP
+      (`AwardDuelDP`) and no pack (`ModWinGivesPack`). Records: the deck page lists Solomon, Debug, Empty Deck,
+      Test Duel (`sRecordDeckPage`; `tools/record_names.py` DECK_PAGE); its face comes from the card art
+      (`tools/record_faces.py`).
     - **Picking Debug's deck.** `FinishPlayerPick` stashes the player's lists in `gModPlayerDeckStash` (EWRAM
       0x0202F500, a `RecipeSlot`), empties the decks and starts the scene over ("Now pick Debug's deck.").
       Debug's deck is then picked or built in the same collection (`opponentBuilding`). B there goes back to the

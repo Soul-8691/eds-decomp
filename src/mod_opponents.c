@@ -11,11 +11,14 @@
  *           left) and Debug (Pegasus' ID, Cyber Twin Dragon's art, top right), in make release too: each plays the
  *           Deck Recipe the player picks or builds before the duel (CB_OpponentRecipes; Solomon's built decks get 3 of
  *           every card, Debug's 8 with no copy limit: ModRecipeBuildCopies), and beating them gives no DP
- *           (src/mod_dp.c). A duel with Debug has the testing build's duel rules (ModDebugDuel). Then, make only,
- *           "Test Duel" in the Duel Computer's slot (right): the deck of the .ydk in TEST_YDK
- *           (the Makefile; tools/testdeck.py, build/include/test_deck.h), if there is one, with the Duel
- *           Computer's own portrait (copied from the original page 4, DrawSlotPortrait).
- *   HIDDEN  the duelist IDs not placed, and the empty slots (duelist 0: page 3's bottom and left, page 4): no name, the
+ *           (src/mod_dp.c). A duel with Debug has the testing build's duel rules (ModDebugDuel). "Empty Deck" (Simon's
+ *           ID, Ultimate Offering's art, right), in make release too: a CPU with no cards at all (an empty Main and
+ *           Fusion Deck, src/mod_decks.c), open with any deck (no format check), which never decks out
+ *           (ModEmptyDeckDuel) and gives no DP or pack. Then, make only, "Test Duel" in the left slot (the Duel
+ *           Computer's ID): the deck of the .ydk in TEST_YDK (the Makefile; tools/testdeck.py,
+ *           build/include/test_deck.h), if there is one, with the Duel Computer's own portrait (copied from the
+ *           original page 4, DrawSlotPortrait).
+ *   HIDDEN  the duelist IDs not placed, and the empty slots (duelist 0: page 3's bottom, page 4): no name, the
  *           stone cover over the portrait, the cursor skips them, never open. Page 4 cannot be reached.
  * Within a page the opponents follow the cursor's ring from the top left (slots 2, 3, 4, 0, 1: top left, top right,
  * right, bottom, left), so each one sits next to the one before it.
@@ -108,6 +111,7 @@ static const char sNameReaper[] = "Reaper";
 static const char sNameTestDuel[] = "Test Duel";
 static const char sNameSolomon[] = "Solomon";
 static const char sNameDebug[] = "Debug";
+static const char sNameEmptyDeck[] = "Empty Deck";
 
 /* Portrait cards that are added cards (config/new_cards.txt): 0 (the page's own portrait) when not in the build. */
 #ifdef HAS_CARD_SCAPEGOAT
@@ -183,6 +187,7 @@ static const char sNameDebug[] = "Debug";
 /* Debug: Pegasus' ID. Its built decks start from DEBUG_BUILD_COPIES of every card with no copy limit (as make);
  * Solomon's from 3 of every card, at most 3 of one. */
 #define DUELIST_DEBUG           DUELIST_PEGASUS
+#define DUELIST_EMPTY_DECK      DUELIST_SIMON
 #define DEBUG_BUILD_COPIES      8
 #define DEBUG_COPY_LIMIT        99
 #define SOLOMON_BUILD_COPIES    3
@@ -211,7 +216,7 @@ static const struct ModOpponent sOpponents[] = {
     [DUELIST_YAMI_BAKURA] = FORMAT(13, BANLIST_CYBER, sNameCyber, ART_CYBER_DRAGON),
     [DUELIST_YAMI_YUGI] = FORMAT(14, BANLIST_REAPER, sNameReaper, ART_SPIRIT_REAPER),
     [DUELIST_SHADI] = HIDDEN,           /* geistD-Goat Control until 2026-10-30 (the Goat opponent plays it now) */
-    [DUELIST_SIMON] = HIDDEN,           /* LR-Chaos Turbo until 2026-10-30 (the same) */
+    [DUELIST_SIMON] = DECK_ALWAYS(sNameEmptyDeck, CARD_ULTIMATE_OFFERING),    /* LR-Chaos Turbo until 2026-10-30 */
     [DUELIST_PEGASUS] = DECK_ALWAYS(sNameDebug, ART_CYBER_TWIN_DRAGON),     /* sdlkilla-Warrior until 2026-10-30 */
     [DUELIST_GRANDPA] = DECK_ALWAYS(sNameSolomon, PORTRAIT_SOLOMON),
 #if !MOD_RELEASE
@@ -258,7 +263,7 @@ static const u8 sPageDuelists[5][5] = {
     { DUELIST_MAKO,         DUELIST_MAI,        DUELIST_TRISTAN,       DUELIST_REX,           DUELIST_ESPA_ROBA },
     { DUELIST_UMBRA_LUMIS,  DUELIST_MARIK,      DUELIST_WEEVIL,        DUELIST_RARE_HUNTER,   DUELIST_ARKANA },
     { DUELIST_YAMI_BAKURA,  DUELIST_YAMI_YUGI,  DUELIST_STRINGS,       DUELIST_KAIBA,         DUELIST_ISHIZU },
-    { 0,                    0,                  DUELIST_GRANDPA,       DUELIST_PEGASUS,       DUELIST_DUEL_COMPUTER },
+    { 0,                    DUELIST_DUEL_COMPUTER, DUELIST_GRANDPA,    DUELIST_PEGASUS,       DUELIST_SIMON },
     { 0,                    0,                  0,                     0,                     0 },
 };
 
@@ -342,7 +347,8 @@ static u16 FormatDuelist(int order)
 
 /* ---- The Records screen (main_menu.c) ----------------------------------------------------------------------------
  * Its pages follow the opponent select: the format opponents in unlock order, 5 a page (pages 0-2), then the deck
- * opponents (page 3: Solomon, Debug and, in make / make demo, the Test Duel). Page 1 opens when the 6th format does
+ * opponents (page 3: Solomon, Debug, Empty Deck and, in make / make demo, the Test Duel). Page 1 opens when the 6th
+ * format does
  * (20 wins against Android), page 2 with the 11th (20 wins against Vampire), page 3 with page 2; make and make demo
  * open every page. The name plates are gModRecordNames (tools/record_names.py); the portraits stay the duelists'
  * own (gRecordPortraitImages), and a locked opponent shows "???" as before. */
@@ -353,7 +359,7 @@ extern const u8 gModRecordNames[];                      /* data/mod_record_names
 extern const u16 *const gRecordPortraitImages[25];      /* index duelistId - 1 */
 extern const u16 gRecordRows5Image[], gRecordRows4Image[];
 extern const u16 gRecordUnknownPortraitImage[];
-static const u8 sRecordDeckPage[] = { DUELIST_GRANDPA, DUELIST_PEGASUS, DUELIST_DUEL_COMPUTER };
+static const u8 sRecordDeckPage[] = { DUELIST_GRANDPA, DUELIST_PEGASUS, DUELIST_SIMON, DUELIST_DUEL_COMPUTER };
 
 static u16 FormatDuelist(int order);
 static const u8 *RecordFace(u16 duelist);
@@ -507,10 +513,10 @@ int ModOpponentPlaysRecipe(u16 duelist)
 }
 
 /* Campaign_GiveRewards (campaign_steps.c): 1 if beating `duelist` gives a pack from the pick-a-pack list (not Solomon
- * or Debug, whose decks the player picks; they give no DP either, AwardDuelDP). */
+ * or Debug, whose decks the player picks, nor Empty Deck; they give no DP either, AwardDuelDP). */
 int ModWinGivesPack(u16 duelist)
 {
-    return duelist != DUELIST_GRANDPA && duelist != DUELIST_DEBUG;
+    return duelist != DUELIST_GRANDPA && duelist != DUELIST_DEBUG && duelist != DUELIST_EMPTY_DECK;
 }
 
 /* CB_OpponentRecipes: the copies of every card a deck built for `duelist` starts from, and the copies of a card it may
@@ -538,6 +544,13 @@ int ModOpponentPicksPlayerDeck(u16 duelist)
 int ModDebugDuel(void)
 {
     return gMain.opponent == DUELIST_DEBUG && !gDuelCtrl.isLinkDuel;
+}
+
+/* 1 in a Campaign duel against Empty Deck (make release too): it has no cards, so neither player decks out (CanDeckOut,
+ * duel_cmd_deck.c). Never in a Link Battle. */
+int ModEmptyDeckDuel(void)
+{
+    return gMain.opponent == DUELIST_EMPTY_DECK && !gDuelCtrl.isLinkDuel;
 }
 
 /* 1 in a testing-build Campaign duel against Test Duel (Duel Computer slot): neither player decks out

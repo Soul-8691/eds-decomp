@@ -6,7 +6,7 @@
 The original Records screen draws each page's column of name plates from one image pack
 (gRecordPageNameImages[page], bank B): black plates with a blue edge and the duelists' names in white, in a 5-pixel
 font. This build's pages are the format opponents in unlock order (5 a page) and a page of the deck opponents
-(Solomon, Debug, Test Duel), so their names are drawn here: the plate of the first original page with its name
+(Solomon, Debug, Empty Deck, Test Duel), so their names are drawn here: the plate of the first original page with its name
 removed, and each name in the original font, whose letters are cut from the five original images
 (assets/gfx/bank_b, from `make setup`). F and - are not in any original name and are drawn here in the same style.
 The names come from src/mod_opponents.c (the FORMAT(order, ..., sName...) rows and the deck opponents' names).
@@ -37,7 +37,7 @@ EXTRA_GLYPHS = {
     'F': ('###', '#..', '###', '#..', '#..'),
     '-': ('..', '..', '##', '..', '..'),
 }
-DECK_PAGE = ['Solomon', 'Debug', 'Test Duel']   # ModRecordDuelist's page 3 order (src/mod_opponents.c)
+DECK_PAGE = ['Solomon', 'Debug', 'Empty Deck', 'Test Duel']   # ModRecordDuelist's page 3 order (src/mod_opponents.c)
 
 
 def white_index(pal, px=None, w=0):

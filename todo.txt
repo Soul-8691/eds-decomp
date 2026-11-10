@@ -27,4 +27,5 @@ Testing scenarios - test by writing a Lua script for each scenario in TESTING.md
 Hold down L in debug mode/duel to freeze opponent
 Always win rock/paper/scissors in debug mode/duel
 CPU vs CPU (player)
-Battle vs/with format-specific usage-based cards when testing (prefer Normal Monsters)
+Screenshot/GIF/video Lua scripts
+Configurable opponent decks

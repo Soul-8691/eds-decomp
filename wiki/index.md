@@ -84,6 +84,7 @@ Start with [[overview]]. The decompilation is 100% matched since 2026-10-02: all
 - [[agent-tooling]]: current lead-only continuation and no-restart policy; historical parallel tooling, handoffs, matching helpers and verification.
 - [[toolchain]]: native WSL build (Makefile + agbcc), disassembler, check tools.
 - [[agbcc]]: the compiler (confirmed).
+- [[readme-media]]: mGBA Lua scripts that capture the README's screenshots, GIFs and videos (`tools/media/`, `run_tests.ps1 -Media`).
 - [[hma-toml]]: `tools/hma_toml.py`, the Hex Maniac Advance metadata of the demo ROM, written from baserom.toml by every `make demo`.
 - [[decomp-permuter]]: random-rewrite search for near-miss drafts (`tools/permute.py`).
 - [[regoracle]]: register-allocation oracle (`tools/regoracle.py` plus a tracing agbcc patch). It shows which pseudos differ from the ROM's registers and why, then inverse-solves the allocation order and checks the answer by recompiling. *verified (`--verify-compiler` 112/112)*

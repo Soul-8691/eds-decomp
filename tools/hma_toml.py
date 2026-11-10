@@ -518,6 +518,14 @@ def mod_anchors(elf, rom, rom_sym):
             if side:
                 add(name + '.side', side, '[card:cardinternalnumbers|data.cards.passwords]%d' % (side[1] // 2))
                 break
+    # The format opponents' deck choices (src/mod_decks.c struct ModDeckChoice, 8 bytes, MOD_DECK_CHOICES = 10 per
+    # opponent): each deck's chance in percent, out of 100 (PickDeckChoice; the unused slots are 0 with no deck).
+    for key in sorted(k for k in elf if k.startswith('mod_decks.o:s') and k.endswith('DeckChoices')):
+        table = key.split(':', 1)[1]
+        s_ = sym(table, 'mod_decks.o')
+        if s_ and s_[1] == 80:
+            add('data.decks.choices.' + anchor_id(table[1:-len('DeckChoices')]), s_,
+                '[percent. unused. unused2: deck<>]10')
     recipes = sym('sRecipePresets', 'mod_decks.o')
     if recipes:
         add('data.decks.recipes', recipes, '[name<> list<> side<> sidecount::]%d' % (recipes[1] // 16))

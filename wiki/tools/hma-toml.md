@@ -92,7 +92,11 @@ Without `baserom.toml` it does nothing. Those TOMLs are git-ignored.
     (``[cards<> count: unused:]1``) with `data.decks.mod.<deck>.main` (main + Fusion Deck;
     ``[card:cardinternalnumbers|data.cards.passwords]…`` so HMA's **Import .ydk** on a card resolves passwords into
     `.main` and updates `.list`; `.side` is fixed-size and only its slots are filled) and `.side`. Format opponents'
-    decks, duelist fallbacks, and the Test Duel deck. `data.decks.recipes`
+    decks, duelist fallbacks, and the Test Duel deck. `data.decks.choices.<format>`
+    (``[percent. unused. unused2: deck<>]10``, 2026-11-10, untested in HMA) is each format opponent's 10 deck slots
+    and their chances out of 100 (src/mod_decks.c `PickDeckChoice`; unused slots 0, no deck). Not under
+    `data.opponents`: an anchor name must not sit under another anchor's name, or HMA's Goto hides it.
+    `data.decks.recipes`
     (``[name<> list<> side<> sidecount::]45``) is the debug menu's deck recipes (`GetRecipePreset`; empty in the
     release), pointing at those decks and at their names `text.decks.recipes.recipe<i>` (`` `asc` ``); its last
     row is the terminator.

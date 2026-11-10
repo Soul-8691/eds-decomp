@@ -1,7 +1,7 @@
 ﻿
-Script                                     Result Seconds Detail                                
-------                                     ------ ------- ------                                
-Limiter_Removal_Cpu_Double_Machine_Atk_CPU PASS        33 duel_main=false reason= play_done=true
+Script   Result Seconds Detail
+------   ------ ------- ------
+duelists PASS        10       
 
 
 

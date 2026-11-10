@@ -23,6 +23,36 @@
 
 int Random(void);   /* util.h */
 
+/*
+ * The format opponents' decks (YugiKaibaDeck ... ReaperDeck): MOD_DECK_CHOICES slots each, a deck and its chance in
+ * percent (out of 100); the unused slots have no deck and 0. HMA edits the percentages (data.decks.choices.<format>,
+ * tools/hma_toml.py). PickDeckChoice rolls 0-99 and walks the slots in order; a roll past the last one (percentages
+ * that add up to less than 100) picks the first deck, and slots past 100 are never reached. A slot with no deck is
+ * skipped.
+ */
+#define MOD_DECK_CHOICES 10
+
+struct ModDeckChoice {
+    u8 percent;
+    u8 unused[3];
+    const struct DeckList *deck;
+};
+
+static const struct DeckList *PickDeckChoice(const struct ModDeckChoice *choices)
+{
+    u32 roll = (u32)Random() % 100;
+    int i;
+
+    for (i = 0; i < MOD_DECK_CHOICES; i++) {
+        if (choices[i].deck == NULL)
+            continue;
+        if (roll < choices[i].percent)
+            return choices[i].deck;
+        roll -= choices[i].percent;
+    }
+    return choices[0].deck;
+}
+
 #define X2(card) card, card
 #define X3(card) card, card, card
 
@@ -489,17 +519,18 @@ STATIC_ASSERT(ARRAY_COUNT(sYugiKaibaStallMillSide) == 15, YugiKaibaStallMillSide
 #if defined(MOD_YUGI_KAIBA_SOUL_CONTROL) && defined(MOD_YUGI_KAIBA_VANILLA_BEAT) && defined(MOD_YUGI_KAIBA_STALL_MILL)
 #define MOD_YUGI_KAIBA_DECKS 1
 
-/* The Yugi-Kaiba deck for this duel: Soul Control 5 in 10, Vanilla Beat 3 in 10, Stall Mill 2 in 10. LoadOpponentDeck
+/* The Yugi-Kaiba deck for this duel: Soul Control 50%, Vanilla Beat 30%, Stall Mill 20%. LoadOpponentDeck
  * asks once per duel. */
+/* Its MOD_DECK_CHOICES slots (HMA: data.decks.choices.*): each deck's chance in percent; the unused slots are 0. */
+static const struct ModDeckChoice sYugiKaibaDeckChoices[MOD_DECK_CHOICES] = {
+    {  50, { 0, 0, 0 }, &sYugiKaibaSoulControlList },
+    {  30, { 0, 0, 0 }, &sYugiKaibaVanillaBeatList },
+    {  20, { 0, 0, 0 }, &sYugiKaibaStallMillList },
+};
+
 static const struct DeckList *YugiKaibaDeck(void)
 {
-    u32 roll = (u32)Random() % 10;
-
-    if (roll < 5)
-        return &sYugiKaibaSoulControlList;
-    if (roll < 8)
-        return &sYugiKaibaVanillaBeatList;
-    return &sYugiKaibaStallMillList;
+    return PickDeckChoice(sYugiKaibaDeckChoices);
 }
 #endif
 
@@ -617,10 +648,16 @@ static const u16 sCritterMukaMukaTurboSide[] = {
 STATIC_ASSERT(ARRAY_COUNT(sCritterMukaMukaTurboSide) == 15, CritterMukaMukaTurboSideSize);
 
 #ifdef MOD_CRITTER_MASKED_CONTROL
-/* The Critter opponent's deck for this duel: Masked Control 6 in 10, Muka Muka Turbo 4 in 10. */
+/* The Critter opponent's deck for this duel: Masked Control 60%, Muka Muka Turbo 40%. */
+/* Its MOD_DECK_CHOICES slots (HMA: data.decks.choices.*): each deck's chance in percent; the unused slots are 0. */
+static const struct ModDeckChoice sCritterDeckChoices[MOD_DECK_CHOICES] = {
+    {  60, { 0, 0, 0 }, &sCritterMaskedControlList },
+    {  40, { 0, 0, 0 }, &sCritterMukaMukaTurboList },
+};
+
 static const struct DeckList *CritterDeck(void)
 {
-    return (u32)Random() % 10 < 6 ? &sCritterMaskedControlList : &sCritterMukaMukaTurboList;
+    return PickDeckChoice(sCritterDeckChoices);
 }
 #endif
 
@@ -774,19 +811,20 @@ static const u16 sTreasureGermBurnSide[] = {
 };
 STATIC_ASSERT(ARRAY_COUNT(sTreasureGermBurnSide) == 15, TreasureGermBurnSideSize);
 
-/* The Treasure opponent's deck for this duel: Tomato Control 8 in 10, Recruiter Control 1 in 10, Germ Burn 1 in 10
+/* The Treasure opponent's deck for this duel: Tomato Control 80%, Recruiter Control 10%, Germ Burn 10%
  * (Recruiter Control's share goes to Tomato Control when it is not in the build). */
+/* Its MOD_DECK_CHOICES slots (HMA: data.decks.choices.*): each deck's chance in percent; the unused slots are 0. */
+static const struct ModDeckChoice sTreasureDeckChoices[MOD_DECK_CHOICES] = {
+    {  80, { 0, 0, 0 }, &sTreasureTomatoControlList },
+#ifdef MOD_TREASURE_RECRUITER_CONTROL
+    {  10, { 0, 0, 0 }, &sTreasureRecruiterControlList },
+#endif
+    {  10, { 0, 0, 0 }, &sTreasureGermBurnList },
+};
+
 static const struct DeckList *TreasureDeck(void)
 {
-    u32 roll = (u32)Random() % 10;
-
-    if (roll == 9)
-        return &sTreasureGermBurnList;
-#ifdef MOD_TREASURE_RECRUITER_CONTROL
-    if (roll == 8)
-        return &sTreasureRecruiterControlList;
-#endif
-    return &sTreasureTomatoControlList;
+    return PickDeckChoice(sTreasureDeckChoices);
 }
 
 /* The Imperial format opponent (Mako Tsunami's slot, src/mod_opponents.c): one of two decks per duel (ImperialDeck):
@@ -923,10 +961,16 @@ static const u16 sImperialRelinquishedSide[] = {
 };
 STATIC_ASSERT(ARRAY_COUNT(sImperialRelinquishedSide) == 15, ImperialRelinquishedSideSize);
 
-/* The Imperial opponent's deck for this duel: Tomato Control 8 in 10, Relinquished 2 in 10. */
+/* The Imperial opponent's deck for this duel: Tomato Control 80%, Relinquished 20%. */
+/* Its MOD_DECK_CHOICES slots (HMA: data.decks.choices.*): each deck's chance in percent; the unused slots are 0. */
+static const struct ModDeckChoice sImperialDeckChoices[MOD_DECK_CHOICES] = {
+    {  80, { 0, 0, 0 }, &sImperialTomatoControlList },
+    {  20, { 0, 0, 0 }, &sImperialRelinquishedList },
+};
+
 static const struct DeckList *ImperialDeck(void)
 {
-    return (u32)Random() % 10 < 8 ? &sImperialTomatoControlList : &sImperialRelinquishedList;
+    return PickDeckChoice(sImperialDeckChoices);
 }
 #endif
 
@@ -1058,10 +1102,16 @@ STATIC_ASSERT(ARRAY_COUNT(sAndroidVanillaBeatSide) == 15, AndroidVanillaBeatSide
 
 #if defined(MOD_ANDROID_TOMATO_CONTROL) && defined(MOD_ANDROID_VANILLA_BEAT)
 #define MOD_ANDROID_DECKS 1
-/* The Android opponent's deck for this duel: Tomato Control 8 in 10, Vanilla Beat 2 in 10. */
+/* The Android opponent's deck for this duel: Tomato Control 80%, Vanilla Beat 20%. */
+/* Its MOD_DECK_CHOICES slots (HMA: data.decks.choices.*): each deck's chance in percent; the unused slots are 0. */
+static const struct ModDeckChoice sAndroidDeckChoices[MOD_DECK_CHOICES] = {
+    {  80, { 0, 0, 0 }, &sAndroidTomatoControlList },
+    {  20, { 0, 0, 0 }, &sAndroidVanillaBeatList },
+};
+
 static const struct DeckList *AndroidDeck(void)
 {
-    return (u32)Random() % 10 < 8 ? &sAndroidTomatoControlList : &sAndroidVanillaBeatList;
+    return PickDeckChoice(sAndroidDeckChoices);
 }
 #endif
 
@@ -1199,10 +1249,16 @@ STATIC_ASSERT(ARRAY_COUNT(sJoeyPegasusVanillaBeatSide) == 15, JoeyPegasusVanilla
 
 #if defined(MOD_JOEY_PEGASUS_TOMATO_CONTROL) && defined(MOD_JOEY_PEGASUS_VANILLA_BEAT)
 #define MOD_JOEY_PEGASUS_DECKS 1
-/* The Joey-Pegasus opponent's deck for this duel: Tomato Control 8 in 10, Vanilla Beat 2 in 10. */
+/* The Joey-Pegasus opponent's deck for this duel: Tomato Control 80%, Vanilla Beat 20%. */
+/* Its MOD_DECK_CHOICES slots (HMA: data.decks.choices.*): each deck's chance in percent; the unused slots are 0. */
+static const struct ModDeckChoice sJoeyPegasusDeckChoices[MOD_DECK_CHOICES] = {
+    {  80, { 0, 0, 0 }, &sJoeyPegasusTomatoControlList },
+    {  20, { 0, 0, 0 }, &sJoeyPegasusVanillaBeatList },
+};
+
 static const struct DeckList *JoeyPegasusDeck(void)
 {
-    return (u32)Random() % 10 < 8 ? &sJoeyPegasusTomatoControlList : &sJoeyPegasusVanillaBeatList;
+    return PickDeckChoice(sJoeyPegasusDeckChoices);
 }
 #endif
 
@@ -1345,10 +1401,16 @@ STATIC_ASSERT(ARRAY_COUNT(sFiberRecruiterControlSide) == 14, FiberRecruiterContr
 
 #if defined(MOD_FIBER_TOMATO_CONTROL) && defined(MOD_FIBER_RECRUITER_CONTROL)
 #define MOD_FIBER_DECKS 1
-/* The Fiber opponent's deck for this duel: Tomato Control 8 in 10, Recruiter Control 2 in 10. */
+/* The Fiber opponent's deck for this duel: Tomato Control 80%, Recruiter Control 20%. */
+/* Its MOD_DECK_CHOICES slots (HMA: data.decks.choices.*): each deck's chance in percent; the unused slots are 0. */
+static const struct ModDeckChoice sFiberDeckChoices[MOD_DECK_CHOICES] = {
+    {  80, { 0, 0, 0 }, &sFiberTomatoControlList },
+    {  20, { 0, 0, 0 }, &sFiberRecruiterControlList },
+};
+
 static const struct DeckList *FiberDeck(void)
 {
-    return (u32)Random() % 10 < 8 ? &sFiberTomatoControlList : &sFiberRecruiterControlList;
+    return PickDeckChoice(sFiberDeckChoices);
 }
 #endif
 
@@ -1564,16 +1626,17 @@ STATIC_ASSERT(ARRAY_COUNT(sYataGearfriedSide) == 15, YataGearfriedSideSize);
 
 #if defined(MOD_YATA_TOMATO_CONTROL) && defined(MOD_YATA_WARRIOR_TOMATO_CONTROL) && defined(MOD_YATA_GEARFRIED)
 #define MOD_YATA_DECKS 1
-/* The Yata opponent's deck for this duel: Tomato Control 5 in 10, Warrior Tomato Control 4 in 10, Gearfried 1 in 10. */
+/* The Yata opponent's deck for this duel: Tomato Control 50%, Warrior Tomato Control 40%, Gearfried 10%. */
+/* Its MOD_DECK_CHOICES slots (HMA: data.decks.choices.*): each deck's chance in percent; the unused slots are 0. */
+static const struct ModDeckChoice sYataDeckChoices[MOD_DECK_CHOICES] = {
+    {  50, { 0, 0, 0 }, &sYataTomatoControlList },
+    {  40, { 0, 0, 0 }, &sYataWarriorTomatoControlList },
+    {  10, { 0, 0, 0 }, &sYataGearfriedList },
+};
+
 static const struct DeckList *YataDeck(void)
 {
-    u32 roll = (u32)Random() % 10;
-
-    if (roll < 5)
-        return &sYataTomatoControlList;
-    if (roll < 9)
-        return &sYataWarriorTomatoControlList;
-    return &sYataGearfriedList;
+    return PickDeckChoice(sYataDeckChoices);
 }
 #endif
 
@@ -1724,10 +1787,16 @@ STATIC_ASSERT(ARRAY_COUNT(sScientistFtkSide) == 15, ScientistFtkSideSize);
 
 #if defined(MOD_SCIENTIST_TOMATO_CONTROL) && defined(MOD_SCIENTIST_FTK)
 #define MOD_SCIENTIST_DECKS 1
-/* The Scientist opponent's deck for this duel: Tomato Control 6 in 10, Scientist FTK 4 in 10. */
+/* The Scientist opponent's deck for this duel: Tomato Control 60%, Scientist FTK 40%. */
+/* Its MOD_DECK_CHOICES slots (HMA: data.decks.choices.*): each deck's chance in percent; the unused slots are 0. */
+static const struct ModDeckChoice sScientistDeckChoices[MOD_DECK_CHOICES] = {
+    {  60, { 0, 0, 0 }, &sScientistTomatoControlList },
+    {  40, { 0, 0, 0 }, &sScientistFtkList },
+};
+
 static const struct DeckList *ScientistDeck(void)
 {
-    return (u32)Random() % 10 < 6 ? &sScientistTomatoControlList : &sScientistFtkList;
+    return PickDeckChoice(sScientistDeckChoices);
 }
 #endif
 
@@ -1955,17 +2024,18 @@ STATIC_ASSERT(ARRAY_COUNT(sVampireWarriorTomatoControlSide) == 15, VampireWarrio
 #if defined(MOD_VAMPIRE_WARRIOR_CONTROL) && defined(MOD_VAMPIRE_SCIENTIST_FTK) \
     && defined(MOD_VAMPIRE_WARRIOR_TOMATO_CONTROL)
 #define MOD_VAMPIRE_DECKS 1
-/* The Vampire opponent's deck for this duel: Warrior Control 8 in 10, Scientist FTK 1 in 10, Warrior Tomato Control
- * 1 in 10. */
+/* The Vampire opponent's deck for this duel: Warrior Control 80%, Scientist FTK 10%, Warrior Tomato Control
+ * 10%. */
+/* Its MOD_DECK_CHOICES slots (HMA: data.decks.choices.*): each deck's chance in percent; the unused slots are 0. */
+static const struct ModDeckChoice sVampireDeckChoices[MOD_DECK_CHOICES] = {
+    {  80, { 0, 0, 0 }, &sVampireWarriorControlList },
+    {  10, { 0, 0, 0 }, &sVampireScientistFtkList },
+    {  10, { 0, 0, 0 }, &sVampireWarriorTomatoControlList },
+};
+
 static const struct DeckList *VampireDeck(void)
 {
-    u32 roll = (u32)Random() % 10;
-
-    if (roll < 8)
-        return &sVampireWarriorControlList;
-    if (roll < 9)
-        return &sVampireScientistFtkList;
-    return &sVampireWarriorTomatoControlList;
+    return PickDeckChoice(sVampireDeckChoices);
 }
 #endif
 
@@ -2124,10 +2194,16 @@ STATIC_ASSERT(ARRAY_COUNT(sChaosWarriorSide) == 15, ChaosWarriorSideSize);
 
 #if defined(MOD_CHAOS_CONTROL) && defined(MOD_CHAOS_WARRIOR)
 #define MOD_CHAOS_DECKS 1
-/* The Chaos opponent's deck for this duel: Chaos Control 8 in 10, Chaos Warrior 2 in 10. */
+/* The Chaos opponent's deck for this duel: Chaos Control 80%, Chaos Warrior 20%. */
+/* Its MOD_DECK_CHOICES slots (HMA: data.decks.choices.*): each deck's chance in percent; the unused slots are 0. */
+static const struct ModDeckChoice sChaosDeckChoices[MOD_DECK_CHOICES] = {
+    {  80, { 0, 0, 0 }, &sChaosControlList },
+    {  20, { 0, 0, 0 }, &sChaosWarriorList },
+};
+
 static const struct DeckList *ChaosDeck(void)
 {
-    return (u32)Random() % 10 < 8 ? &sChaosControlList : &sChaosWarriorList;
+    return PickDeckChoice(sChaosDeckChoices);
 }
 #endif
 
@@ -2494,19 +2570,19 @@ STATIC_ASSERT(ARRAY_COUNT(sWarriorChaosReturnSide) == 15, WarriorChaosReturnSide
 #if defined(MOD_WARRIOR_GOAT_CONTROL) && defined(MOD_WARRIOR_WARRIOR) && defined(MOD_WARRIOR_WARRIOR_CONTROL) \
     && defined(MOD_WARRIOR_CHAOS_RETURN)
 #define MOD_WARRIOR_DECKS 1
-/* The Warrior opponent's deck for this duel: Goat Control 4 in 10, Warrior 3 in 10, Warrior Control 2 in 10, Chaos
- * Return 1 in 10. */
+/* The Warrior opponent's deck for this duel: Goat Control 40%, Warrior 30%, Warrior Control 20%, Chaos
+ * Return 10%. */
+/* Its MOD_DECK_CHOICES slots (HMA: data.decks.choices.*): each deck's chance in percent; the unused slots are 0. */
+static const struct ModDeckChoice sWarriorDeckChoices[MOD_DECK_CHOICES] = {
+    {  40, { 0, 0, 0 }, &sWarriorGoatControlList },
+    {  30, { 0, 0, 0 }, &sWarriorWarriorList },
+    {  20, { 0, 0, 0 }, &sWarriorWarriorControlList },
+    {  10, { 0, 0, 0 }, &sWarriorChaosReturnList },
+};
+
 static const struct DeckList *WarriorDeck(void)
 {
-    u32 roll = (u32)Random() % 10;
-
-    if (roll < 4)
-        return &sWarriorGoatControlList;
-    if (roll < 7)
-        return &sWarriorWarriorList;
-    if (roll < 9)
-        return &sWarriorWarriorControlList;
-    return &sWarriorChaosReturnList;
+    return PickDeckChoice(sWarriorDeckChoices);
 }
 #endif
 
@@ -2523,6 +2599,10 @@ static const struct DeckList sTestDeckList = { sTestDeck, ARRAY_COUNT(sTestDeck)
 static const u16 sEmptyTestDuelDeck[] = { };
 static const struct DeckList sEmptyTestDuelDeckList = { sEmptyTestDuelDeck, 0, 0 };
 #endif
+
+/* Empty Deck (Simon's ID, src/mod_opponents.c): no cards at all, in make release too. */
+static const u16 sEmptyDeck[] = { };
+static const struct DeckList sEmptyDeckList = { sEmptyDeck, 0, 0 };
 
 /* The deck of Solomon and Debug (Grandpa's and Pegasus' slots on the deck opponents' page, src/mod_opponents.c, in both
  * builds): the Deck Recipe the player picks or builds before the duel (CB_OpponentRecipes, src/mod_recipes.c), as card
@@ -3192,11 +3272,15 @@ STATIC_ASSERT(ARRAY_COUNT(sCyberSteinMonarchSide) == 15, CyberSteinMonarchSideSi
 
 #if defined(MOD_CYBER_BRIAN_LONG_GOAT) && defined(MOD_CYBER_STEIN_MONARCH)
 #define MOD_CYBER_DECKS 1
+/* Its MOD_DECK_CHOICES slots (HMA: data.decks.choices.*): each deck's chance in percent; the unused slots are 0. */
+static const struct ModDeckChoice sCyberDeckChoices[MOD_DECK_CHOICES] = {
+    {  50, { 0, 0, 0 }, &sCyberBrianLongGoatControlList },
+    {  50, { 0, 0, 0 }, &sCyberSteinMonarchList },
+};
+
 static const struct DeckList *CyberDeck(void)
 {
-    if ((Random() & 1) != 0)
-        return &sCyberBrianLongGoatControlList;
-    return &sCyberSteinMonarchList;
+    return PickDeckChoice(sCyberDeckChoices);
 }
 #endif
 
@@ -3647,44 +3731,40 @@ STATIC_ASSERT(ARRAY_COUNT(sReaperTomatoControlSide) == 15, ReaperTomatoControlSi
 #if defined(MOD_REAPER_STEIN_MONARCH) && defined(MOD_REAPER_WARRIOR) && defined(MOD_REAPER_BAZOO_RETURN) \
     && defined(MOD_REAPER_CHAOS_CONTROL) && defined(MOD_REAPER_TOMATO_CONTROL)
 #define MOD_REAPER_DECKS 1
+/* Its MOD_DECK_CHOICES slots (HMA: data.decks.choices.*): each deck's chance in percent; the unused slots are 0. */
+static const struct ModDeckChoice sReaperDeckChoices[MOD_DECK_CHOICES] = {
+    {  40, { 0, 0, 0 }, &sReaperSteinMonarchList },
+    {  20, { 0, 0, 0 }, &sReaperWarriorList },
+    {  15, { 0, 0, 0 }, &sReaperBazooReturnList },
+    {  15, { 0, 0, 0 }, &sReaperChaosControlList },
+    {  10, { 0, 0, 0 }, &sReaperTomatoControlList },
+};
+
 static const struct DeckList *ReaperDeck(void)
 {
-    u32 roll = (u32)Random() % 100;
-
-    if (roll < 40)
-        return &sReaperSteinMonarchList;
-    if (roll < 60)
-        return &sReaperWarriorList;
-    if (roll < 75)
-        return &sReaperBazooReturnList;
-    if (roll < 90)
-        return &sReaperChaosControlList;
-    return &sReaperTomatoControlList;
+    return PickDeckChoice(sReaperDeckChoices);
 }
 #endif
 
 #if defined(MOD_RED_DECK) && defined(MOD_JOEY_DECK) && defined(MOD_BAKURA_DECK) && defined(MOD_GOAT_CHAOS_CONTROL) \
     && defined(MOD_GOAT_PANDA_BURN) && defined(MOD_GOAT_CHAOS_RETURN) && defined(MOD_GOAT_REASONING_GATE_TURBO)
 #define MOD_GOAT_DECKS 1
-/* The Goat opponent's deck for this duel, in twentieths: Chaos Turbo 8, Warrior 4, Goat Control 3, Chaos Control 2,
- * Panda Burn, Chaos Return and Reasoning Gate Turbo 1 each. */
+/* The Goat opponent's deck for this duel: Chaos Turbo 40%, Warrior 20%, Goat Control 15%, Chaos Control 10%,
+ * Panda Burn, Chaos Return and Reasoning Gate Turbo 5% each. */
+/* Its MOD_DECK_CHOICES slots (HMA: data.decks.choices.*): each deck's chance in percent; the unused slots are 0. */
+static const struct ModDeckChoice sGoatDeckChoices[MOD_DECK_CHOICES] = {
+    {  40, { 0, 0, 0 }, &sRedDeckList },
+    {  20, { 0, 0, 0 }, &sJoeyDeckList },
+    {  15, { 0, 0, 0 }, &sBakuraDeckList },
+    {  10, { 0, 0, 0 }, &sGoatChaosControlList },
+    {   5, { 0, 0, 0 }, &sGoatPandaBurnList },
+    {   5, { 0, 0, 0 }, &sGoatChaosReturnList },
+    {   5, { 0, 0, 0 }, &sGoatReasoningGateTurboList },
+};
+
 static const struct DeckList *GoatDeck(void)
 {
-    u32 roll = (u32)Random() % 20;
-
-    if (roll < 8)
-        return &sRedDeckList;
-    if (roll < 12)
-        return &sJoeyDeckList;
-    if (roll < 15)
-        return &sBakuraDeckList;
-    if (roll < 17)
-        return &sGoatChaosControlList;
-    if (roll < 18)
-        return &sGoatPandaBurnList;
-    if (roll < 19)
-        return &sGoatChaosReturnList;
-    return &sGoatReasoningGateTurboList;
+    return PickDeckChoice(sGoatDeckChoices);
 }
 #endif
 
@@ -3768,6 +3848,8 @@ static const struct DeckList *PickOpponentDeckOverride(int opponent)
         return &sBakuraDeckList;
 #endif
     /* The deck opponents of page 4 (src/mod_opponents.c). */
+    case DUELIST_SIMON:                 /* Empty Deck (make release too): no cards */
+        return &sEmptyDeckList;
     case DUELIST_GRANDPA:               /* Solomon (make release too): the Deck Recipe the player picked or built */
     case DUELIST_PEGASUS:               /* Debug, the same */
         return gModOpponentRecipe.valid == MOD_OPPONENT_RECIPE_VALID ? &gModOpponentRecipe.list : NULL;

@@ -228,7 +228,8 @@ u32 GetCardCost(u16 id)
 
 void AwardDuelDP(u16 duelist)
 {
-    if (duelist == DUELIST_GRANDPA || duelist == DUELIST_PEGASUS)  /* Solomon and Debug: no DP (src/mod_opponents.c) */
+    /* Solomon, Debug and Empty Deck (Simon's ID): no DP (src/mod_opponents.c) */
+    if (duelist == DUELIST_GRANDPA || duelist == DUELIST_PEGASUS || duelist == DUELIST_SIMON)
         return;
     AddDP(duelist < ARRAY_COUNT(sDuelistRewards) && sDuelistRewards[duelist] ? sDuelistRewards[duelist]
                                                                               : DEFAULT_DUELIST_REWARD);

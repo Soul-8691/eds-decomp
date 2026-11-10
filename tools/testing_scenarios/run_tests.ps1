@@ -25,6 +25,10 @@ param(
     [string]$Filter = "*",
     # run the poc/ scripts instead of generated/
     [switch]$Poc,
+    # run the README media capture scripts (tools/media) instead of the test scenarios
+    [switch]$Media,
+    # -Media: the save to copy for the captures (default: the ROM's own .sav), e.g. eds_demo.sav with a release ROM
+    [string]$Save = "",
     # a script with no result by then is stopped (TIMEOUT), unless its PNG -> MP4 encode (ffmpeg) is running:
     # that may take up to EncodeTimeoutSeconds more
     [int]$TimeoutSeconds = 60,
@@ -84,7 +88,7 @@ $scenarios = $PSScriptRoot
 $repo = (Resolve-Path (Join-Path $scenarios "..\..")).Path
 Set-Location $repo
 
-$dir = Join-Path $scenarios $(if ($Poc) { "poc" } else { "generated" })
+$dir = if ($Media) { Join-Path $scenarios "..\media" } else { Join-Path $scenarios $(if ($Poc) { "poc" } else { "generated" }) }
 $pattern = if ($Filter.Contains("*") -or $Filter.Contains("?")) { $Filter } else { "*$Filter*" }
 # TESTING.md's order (top to bottom: each scenario's line starts with its script name in backticks); scripts it does
 # not name come last, by name
@@ -98,7 +102,7 @@ if (Test-Path $testingMd) {
         }
     }
 }
-$scripts = @(Get-ChildItem -Path $dir -Filter "*.lua" | Where-Object { $_.BaseName -like $pattern } |
+$scripts = @(Get-ChildItem -Path $dir -Filter "*.lua" | Where-Object { $_.BaseName -like $pattern -and $_.BaseName -notlike "lib_*" } |
              Sort-Object @{ Expression = { if ($order.ContainsKey($_.BaseName)) { $order[$_.BaseName] } else { [int]::MaxValue } } },
                          Name)
 # kept videos (review_videos.py moved them to recordings/keep/) are not recorded again
@@ -117,6 +121,10 @@ if ($scripts.Count -eq 0) {
 if (-not (Test-Path $Mgba)) { throw "mGBA not found: $Mgba" }
 if (-not (Test-Path (Join-Path $repo $Rom))) { throw "ROM not found: $Rom (build it with make demo)" }
 
+if ($Media) {
+    # lib_media.lua reads the ROM name for its symbol file (<rom>.sym)
+    Set-Content -Encoding ascii -Path (Join-Path $dir "_rom.txt") -Value ([IO.Path]::GetFileNameWithoutExtension($Rom))
+}
 $rec = Join-Path $scenarios "recordings"
 New-Item -ItemType Directory -Force $rec | Out-Null
 $runLog = Join-Path $rec "_last_run.log"
@@ -130,9 +138,21 @@ foreach ($s in $scripts) {
     $before = if (Test-Path $runLog) { @(Get-Content $runLog).Count } else { 0 }
     $start = Get-Date
     Write-Host -NoNewline ("[{0}/{1}] {2} ... " -f $n, $scripts.Count, $name)
+    # -Media: the captures load recipes, buy packs and so on, so each runs a copy of the ROM and of its save
+    # (recordings/_media_rom/): your save is read, never written
+    $romArg = $Rom
+    if ($Media) {
+        $mediaRom = Join-Path $rec "_media_rom"
+        New-Item -ItemType Directory -Force $mediaRom | Out-Null
+        Copy-Item -Force (Join-Path $repo $Rom) (Join-Path $mediaRom (Split-Path $Rom -Leaf))
+        $save = if ($Save) { Join-Path $repo $Save } else { Join-Path $repo ([IO.Path]::ChangeExtension($Rom, ".sav")) }
+        $saveCopy = Join-Path $mediaRom ([IO.Path]::ChangeExtension((Split-Path $Rom -Leaf), ".sav"))
+        if (Test-Path $save) { Copy-Item -Force $save $saveCopy } elseif (Test-Path $saveCopy) { Remove-Item -Force $saveCopy }
+        $romArg = Join-Path $mediaRom (Split-Path $Rom -Leaf)
+    }
     $args = @('-C', 'pauseOnMinimize=0', '-C', 'pauseOnFocusLost=0',
               '-C', 'audioSync=0', '-C', 'videoSync=0', '-C', 'fpsTarget=6000',
-              '--script', $s.FullName, $Rom)
+              '--script', $s.FullName, $romArg)
     if ($Visible) {
         $p = Start-Process -FilePath $Mgba -ArgumentList $args -WindowStyle Minimized -PassThru
     } else {
@@ -169,6 +189,7 @@ foreach ($s in $scripts) {
     if (-not $p.HasExited) {
         Stop-Process -Id $p.Id -Force -ErrorAction SilentlyContinue
     }
+
     if ($result -eq "TIMEOUT") {
         Get-Process ffmpeg -ErrorAction SilentlyContinue | Stop-Process -Force -ErrorAction SilentlyContinue
     }

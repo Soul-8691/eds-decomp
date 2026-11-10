@@ -293,13 +293,14 @@ void DuelCmd_ShuffleDeck(void)
 }
 
 /* Added: testing builds block deck-out in every duel except Link Battle. Release blocks it only vs Debug
- * (ModDebugDuel). Otherwise a draw from an empty deck sets deckOut and can end the duel. */
+ * (ModDebugDuel) and Empty Deck (ModEmptyDeckDuel). Otherwise a draw from an empty deck sets deckOut and can end the
+ * duel. */
 static inline int CanDeckOut(int player)
 {
     (void)player;
     if (gDuelCtrl.isLinkDuel)
         return 1;
-    if (ModDebugDuel())
+    if (ModDebugDuel() || ModEmptyDeckDuel())
         return 0;
 #if !MOD_RELEASE
     return 0;

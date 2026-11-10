@@ -3000,3 +3000,18 @@ updated: 2026-09-29
   recomputed. Kept where the test needs the card: a Warrior (Reinforcement of the Army, Cipher Soldier), a
   Machine (Limiter Removal), an effect under test (Sangan and Man-Eater Bug for Dark Ruler Ha Des and Blade Knight).
 - TESTING.md and the 218 scripts regenerated.
+
+## [2026-11-10] progress | README media scripts; deck percentages; Empty Deck (partly untested)
+- tools/media/ (new): lib_media.lua (coroutine capture scripts: menus, screenshots, GIF/MP4 via ffmpeg, the ROM's
+  own symbols) and title_screen, main_menu_screens, duelists, duelists_debug, password (verified: their PNGs in
+  screenshots/ replaced); gen_duel_media.py writes 7 duel captures (untested: the media step verbs for
+  lib_steps.lua are drafted, not applied, while the full test run uses it). run_tests.ps1 -Media, -Save: each capture
+  runs on a ROM and save copy (recordings/_media_rom/).
+- src/mod_decks.c: the format opponents' decks as 10-slot `ModDeckChoice` tables, chances out of 100
+  (`PickDeckChoice`); tools/hma_toml.py `data.decks.choices.<format>` (first `data.opponents.decks.*`, renamed:
+  HMA's Goto hid them under the `data.opponents` anchor). Built into the demo; the picks are untested in a duel.
+- Empty Deck: src/mod_opponents.c (Simon's ID, Ultimate Offering's art, the deck page's right slot; Test Duel to the
+  left slot), src/mod_decks.c (no cards), src/duel_cmd_deck.c + include/global.h (`ModEmptyDeckDuel`: no deck-out),
+  src/mod_dp.c (no DP), tools/record_names.py (Records). Not built yet (the full test run held eds_demo.gba): untested.
+- The demo ROM was rebuilt mid test run once (17:11), which timed out Sakuretsu Armor's player script.
+- Pages: [[readme-media]] (new), [[yugi-kaiba-opponent]], [[hma-toml]], [[index]].
