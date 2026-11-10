@@ -2965,3 +2965,12 @@ updated: 2026-09-29
   human, so the CPU's Amazoness Archer (a leftover card) hung. Hysteric Fairy's chainB now uses it too.
 - tools/testing_scenarios/run_tests.ps1 runs the scripts in TESTING.md order.
 - Pages: tools/testing_scenarios/README.md.
+
+## [2026-11-10] progress | Test videos: review tool, kept videos, Continuous cards' effects, 60 s timeout
+- tools/testing_scenarios/review_videos.py (new): a tkinter player of the recordings in TESTING.md order; Keep moves
+  a video to recordings/keep/, which run_tests.ps1 skips (-IncludeKept). run_tests.ps1 also times a script out after
+  60 s unless its ffmpeg encode is running (up to 600 s more).
+- lib_steps.lua / gen_testing_lua.py: a Continuous Spell/Trap's (effectShown) effect starts when the game shows it
+  (DUEL_CMD_SHOW_CARD_EFFECT) or chains it again, not at its activation; the setup marks Set Spell/Traps
+  activatable (+0x91 bit 2).
+- Pages: tools/testing_scenarios/README.md.

@@ -36,6 +36,13 @@ Deck), `start`, `steps`, `expect` and `freezeOpponent`. The key presses that pla
   (a Spell/Trap played from the hand: the cursor first reaches it on the field). With none of these, it starts when
   that phase begins. It ends right after the effect (`EDS.effectUnderTestDone`).
 
+### Reviewing the videos
+
+`python tools/testing_scenarios/review_videos.py` (Windows Python with Pillow; ffmpeg on PATH) lists the recordings in
+TESTING.md order and plays them (frame steps, speed, zoom, loop; the next videos decode ahead). **Keep** (K) moves a
+video to `recordings/keep/`; `run_tests.ps1` then skips its script (`-IncludeKept` runs it anyway). Keep on a kept
+video moves it back.
+
 ### The end of every scenario
 
 The last step waits for the card's effect to start (a chain link of the card, or a battle it fights in) and for the

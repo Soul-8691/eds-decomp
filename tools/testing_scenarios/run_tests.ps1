@@ -18,6 +18,7 @@
   powershell -ExecutionPolicy Bypass -File tools\testing_scenarios\run_tests.ps1 -Filter "*_CPU"
   powershell -ExecutionPolicy Bypass -File tools\testing_scenarios\run_tests.ps1            # every generated script
   powershell -ExecutionPolicy Bypass -File tools\testing_scenarios\run_tests.ps1 -Poc       # the poc/ scripts
+  Scripts whose video is in recordings\keep (marked with review_videos.py) are skipped unless -IncludeKept.
 #>
 param(
     # wildcard on the script names (without .lua); "*" runs them all
@@ -31,7 +32,9 @@ param(
     [string]$Mgba = "C:\Program Files\mGBA\mGBA.exe",
     [string]$Rom = "eds_demo.gba",
     # run mGBA on your own desktop (minimized) instead of the separate one
-    [switch]$Visible
+    [switch]$Visible,
+    # also run the scripts whose video was kept (recordings/keep/, review_videos.py); they are skipped otherwise
+    [switch]$IncludeKept
 )
 
 # Win32: start mGBA on a desktop of its own (CreateDesktop, then CreateProcess with lpDesktop): windows there are
@@ -98,6 +101,15 @@ if (Test-Path $testingMd) {
 $scripts = @(Get-ChildItem -Path $dir -Filter "*.lua" | Where-Object { $_.BaseName -like $pattern } |
              Sort-Object @{ Expression = { if ($order.ContainsKey($_.BaseName)) { $order[$_.BaseName] } else { [int]::MaxValue } } },
                          Name)
+# kept videos (review_videos.py moved them to recordings/keep/) are not recorded again
+$keepDir = Join-Path $scenarios "recordings\keep"
+if (-not $IncludeKept -and (Test-Path $keepDir)) {
+    $kept = @($scripts | Where-Object { Test-Path (Join-Path $keepDir ($_.BaseName + ".mp4")) })
+    if ($kept.Count -gt 0) {
+        Write-Host ("Skipping {0} kept script(s) (recordings\keep; -IncludeKept runs them)" -f $kept.Count)
+        $scripts = @($scripts | Where-Object { -not (Test-Path (Join-Path $keepDir ($_.BaseName + ".mp4"))) })
+    }
+}
 if ($scripts.Count -eq 0) {
     Write-Host "No script matches '$Filter' in $dir"
     exit 1
