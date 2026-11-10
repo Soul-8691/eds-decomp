@@ -41,7 +41,7 @@ For each card: **Implementation** and **Coded behavior** come from this repo (`s
 | Opponent | Hand 1 | Fissure |  |
 | Opponent | Hand 2 | Battle Ox |  |
 | Opponent | Hand 3 | La Jinn the Mystical Genie of the Lamp |  |
-| Opponent | Deck 0 | Dark Magician |  |
+| Opponent | Deck 0 | Summoned Skull |  |
 | Opponent | Deck 1 | Neo the Magic Swordsman |  |
 | Opponent | Deck 2 | Giant Soldier of Stone |  |
 | Opponent | Deck 3 | Swords of Revealing Light |  |
@@ -54,7 +54,7 @@ For each card: **Implementation** and **Coded behavior** come from this repo (`s
 
 - `you.hand = Summoned Skull, Neo the Magic Swordsman`: your hand is exactly Summoned Skull, Neo the Magic Swordsman.
 - `you.gy = Card Destruction, Dark Hole, Battle Ox`: your Graveyard is exactly Card Destruction, Dark Hole, Battle Ox.
-- `opp.hand = Dark Magician, Neo the Magic Swordsman, Giant Soldier of Stone, Swords of Revealing Light`: the opponent's hand is exactly Dark Magician, Neo the Magic Swordsman, Giant Soldier of Stone, Swords of Revealing Light.
+- `opp.hand = Summoned Skull, Neo the Magic Swordsman, Giant Soldier of Stone, Swords of Revealing Light`: the opponent's hand is exactly Summoned Skull, Neo the Magic Swordsman, Giant Soldier of Stone, Swords of Revealing Light.
 - `opp.gy = Trap Hole, Fissure, Battle Ox, La Jinn the Mystical Genie of the Lamp`: the opponent's Graveyard is exactly Trap Hole, Fissure, Battle Ox, La Jinn the Mystical Genie of the Lamp.
 
 #### CPU 1: Discard and draw

@@ -10,13 +10,13 @@ SCENARIOS = {
                    you.hand: Card Destruction, Dark Hole, Battle Ox
                    you.deck: Summoned Skull, Neo the Magic Swordsman, Fissure
                    opp.hand: Trap Hole, Fissure, Battle Ox, La Jinn the Mystical Genie of the Lamp
-                   opp.deck: Dark Magician, Neo the Magic Swordsman, Giant Soldier of Stone, Swords of Revealing Light
+                   opp.deck: Summoned Skull, Neo the Magic Swordsman, Giant Soldier of Stone, Swords of Revealing Light
                ''',
                steps='activate you.hand[Card Destruction]',
                expect='''
                    you.hand = Summoned Skull, Neo the Magic Swordsman
                    you.gy = Card Destruction, Dark Hole, Battle Ox
-                   opp.hand = Dark Magician, Neo the Magic Swordsman, Giant Soldier of Stone, Swords of Revealing Light
+                   opp.hand = Summoned Skull, Neo the Magic Swordsman, Giant Soldier of Stone, Swords of Revealing Light
                    opp.gy = Trap Hole, Fissure, Battle Ox, La Jinn the Mystical Genie of the Lamp
                '''),
         cpu('cpu_discard_and_draw', start=OPP_TURN,
