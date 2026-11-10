@@ -47,4 +47,5 @@ EDS.run({
         "you.st0 = Solemn Wishes up",
     },
     freezeOpponent = true,
+    effectShown = true,
 })

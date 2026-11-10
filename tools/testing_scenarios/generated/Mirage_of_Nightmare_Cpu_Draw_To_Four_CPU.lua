@@ -39,4 +39,5 @@ EDS.run({
         "opp.hand count 4",
     },
     freezeOpponent = false,
+    effectShown = true,
 })

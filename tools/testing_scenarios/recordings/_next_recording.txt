@@ -1,2 +1,2 @@
-C:\Users\pswan\Downloads\eds-decomp\tools\testing_scenarios\generated\..\recordings\Card_Destruction_Cpu_Discard_And_Draw_CPU.mp4
-C:/Users/pswan/Downloads/eds-decomp/tools/testing_scenarios/generated/../recordings/Card_Destruction_Cpu_Discard_And_Draw_CPU.mp4
+C:\Users\pswan\Downloads\eds-decomp\tools\testing_scenarios\generated\..\recordings\Torrential_Tribute_Cpu_On_Human_Summon_CPU.mp4
+C:/Users/pswan/Downloads/eds-decomp/tools/testing_scenarios/generated/../recordings/Torrential_Tribute_Cpu_On_Human_Summon_CPU.mp4

@@ -37,4 +37,5 @@ EDS.run({
         "opp.spells has Wave-Motion Cannon",
     },
     freezeOpponent = false,
+    effectShown = true,
 })

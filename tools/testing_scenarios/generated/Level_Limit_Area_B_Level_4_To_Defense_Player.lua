@@ -43,4 +43,5 @@ EDS.run({
         "menu you.m0 lacks Change Position",
     },
     freezeOpponent = true,
+    effectShown = true,
 })

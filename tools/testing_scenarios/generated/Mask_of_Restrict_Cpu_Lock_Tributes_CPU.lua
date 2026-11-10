@@ -41,4 +41,5 @@ EDS.run({
         "menu you.hand[Summoned Skull] lacks Summon",
     },
     freezeOpponent = false,
+    effectShown = true,
 })

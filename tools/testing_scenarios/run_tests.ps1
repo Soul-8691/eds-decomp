@@ -9,7 +9,8 @@
   pauseOnMinimize=0 and pauseOnFocusLost=0 keep it running unfocused. The scripts' screenshots come from the emulator, not the window, so capture still
   works. -Visible runs it on your desktop instead (minimized).
   The result is the script's line in recordings/_last_run.log
-  (PASS / FAIL / DONE); a script with no result after -TimeoutSeconds is stopped and counted as TIMEOUT. The
+  (PASS / FAIL / DONE); a script with no result after -TimeoutSeconds (60) is stopped and counted as TIMEOUT,
+  unless its ffmpeg PNG -> MP4 encode is running (then up to -EncodeTimeoutSeconds more). The
   summary also goes to recordings/_summary.txt.
 
 .EXAMPLE
@@ -23,7 +24,10 @@ param(
     [string]$Filter = "*",
     # run the poc/ scripts instead of generated/
     [switch]$Poc,
-    [int]$TimeoutSeconds = 300,
+    # a script with no result by then is stopped (TIMEOUT), unless its PNG -> MP4 encode (ffmpeg) is running:
+    # that may take up to EncodeTimeoutSeconds more
+    [int]$TimeoutSeconds = 60,
+    [int]$EncodeTimeoutSeconds = 600,
     [string]$Mgba = "C:\Program Files\mGBA\mGBA.exe",
     [string]$Rom = "eds_demo.gba",
     # run mGBA on your own desktop (minimized) instead of the separate one
@@ -126,10 +130,16 @@ foreach ($s in $scripts) {
     $result = "TIMEOUT"
     $detail = ""
     $tick = 0
-    while (((Get-Date) - $start).TotalSeconds -lt $TimeoutSeconds) {
+    while ($true) {
         Start-Sleep -Milliseconds 100
         $tick++
         if ($tick % 10 -ne 0) { continue }      # (the result check once a second)
+        $elapsed = ((Get-Date) - $start).TotalSeconds
+        if ($elapsed -ge $TimeoutSeconds) {
+            # past the timeout, only the PNG -> MP4 encode (the script's ffmpeg) may still finish
+            $encoding = [bool](Get-Process ffmpeg -ErrorAction SilentlyContinue)
+            if (-not $encoding -or $elapsed -ge $TimeoutSeconds + $EncodeTimeoutSeconds) { break }
+        }
         if (Test-Path $runLog) {
             $new = @(Get-Content $runLog | Select-Object -Skip $before)
             $line = $new | Where-Object { $_ -match "^(PASS|FAIL|DONE) $([regex]::Escape($name))\b" } | Select-Object -Last 1
@@ -146,6 +156,9 @@ foreach ($s in $scripts) {
     }
     if (-not $p.HasExited) {
         Stop-Process -Id $p.Id -Force -ErrorAction SilentlyContinue
+    }
+    if ($result -eq "TIMEOUT") {
+        Get-Process ffmpeg -ErrorAction SilentlyContinue | Stop-Process -Force -ErrorAction SilentlyContinue
     }
     $secs = [int]((Get-Date) - $start).TotalSeconds
     $color = switch ($result) { "PASS" { "Green" } "DONE" { "Yellow" } default { "Red" } }

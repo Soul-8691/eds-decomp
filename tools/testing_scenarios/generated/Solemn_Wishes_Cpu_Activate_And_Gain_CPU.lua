@@ -41,4 +41,5 @@ EDS.run({
         "opp.lp >= 8500",
     },
     freezeOpponent = false,
+    effectShown = true,
 })

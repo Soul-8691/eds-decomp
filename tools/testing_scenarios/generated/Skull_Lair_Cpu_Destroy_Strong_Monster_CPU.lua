@@ -41,4 +41,5 @@ EDS.run({
         "opp.st0 = Skull Lair up",
     },
     freezeOpponent = false,
+    effectShown = true,
 })

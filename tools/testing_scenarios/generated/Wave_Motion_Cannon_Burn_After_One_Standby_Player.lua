@@ -42,4 +42,5 @@ EDS.run({
         "you.gy = Wave-Motion Cannon",
     },
     freezeOpponent = true,
+    effectShown = true,
 })

@@ -45,4 +45,5 @@ EDS.run({
         "you.spells has Mirage of Nightmare",
     },
     freezeOpponent = true,
+    effectShown = true,
 })

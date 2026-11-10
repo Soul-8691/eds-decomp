@@ -893,13 +893,13 @@ local function opWhen(op, fs)
 end
 
 -- Wait until nothing is running (no box, chain, list or menu) for a few frames.
--- The scenario's last settle waits for the card's effect too (fs.effectSeen, set by EDS.effectUnderTestDone): a
+-- The scenario's last settle waits for the card's effect too (fs.effectReady, set by EDS.effectUnderTestDone): a
 -- Spell's activation starts a few frames after the menu's A, after a short idle gap that 10 idle frames alone would
 -- take for the end. A card that never starts a chain or a battle (a passive one) ends after END_EFFECT_WAIT frames.
 local END_EFFECT_WAIT = 600
 
 local function opSettle(op, fs)
-    if op.text == "end" and fs and fs.cardUnderTest and not fs.effectSeen and op.frames_in < END_EFFECT_WAIT then
+    if op.text == "end" and fs and fs.cardUnderTest and not fs.effectReady and op.frames_in < END_EFFECT_WAIT then
         op.quiet = 0
         return false
     end
@@ -1099,10 +1099,23 @@ end
 -- effect step, box, list, menu or summon, and an empty, idle duel command queue (the queued animations: cards to
 -- the Graveyard, LP counting down, draws). Cards with neither (a passive one) never end here: the
 -- scenario then runs to the end of its steps (the CPU's whole turn).
+-- The game showing the card's effect (DUEL_CMD_SHOW_CARD_EFFECT 0x73 running at the head of gDuelCmd, arg2 = the
+-- card ID): what a Continuous Spell/Trap does when its effect applies (Solemn Wishes on a draw). Its activation
+-- resolves with no effect, so for one (opts.effectShown, from gen_testing_lua.py) the effect starts here.
+local DUEL_CMD_SHOW_CARD_EFFECT = 0x73
+local function cardEffectShown(id)
+    return (emu:read8(G_DUEL_CMD + 0x80D) & 0x20) ~= 0
+        and (emu:read16(G_DUEL_CMD) & 0xFFF) == DUEL_CMD_SHOW_CARD_EFFECT
+        and (emu:read16(G_DUEL_CMD + 2) & 0x7FF) == id
+end
+
 function EDS.effectUnderTestDone(fs)
     local id = fs.cardUnderTest
     if not id then
         return false
+    end
+    if fs.needShown and not fs.shownSeen and cardEffectShown(id) then
+        fs.shownSeen = true
     end
     if not fs.effectSeen then
         if EDS.chainResolvingCardId() == id or (EDS.chainIsResolving() and EDS.chainActivatingCardId() == id) then
@@ -1121,6 +1134,21 @@ function EDS.effectUnderTestDone(fs)
         end
         return false
     end
+    if fs.needShown and not fs.shownSeen then
+        -- (activated; its effect has not applied yet: shown, or the card chained again once its activation ended,
+        -- as Skull Lair or Wave Motion Cannon do)
+        local resolving = EDS.chainResolvingCardId() == id
+            or (EDS.chainIsResolving() and EDS.chainActivatingCardId() == id)
+        if not resolving and not EDS.chainOrEffectBusy() then
+            fs.activationOver = true
+        elseif resolving and fs.activationOver then
+            fs.shownSeen = true
+        end
+        if not fs.shownSeen then
+            return false
+        end
+    end
+    fs.effectReady = true               -- (the effect started: the end waits for it; the video start is fixed)
     local busy = textBox().active or listView().active or EDS.cardMenuOpen() or EDS.chainOrEffectBusy()
         or summonActive() or duelCommandsRunning()
     if fs.effectSeen == "battle" then
@@ -1164,7 +1192,7 @@ local function duelPhase()
     return (emu:read8(EDS.G_DUEL_TURN_FLAGS) >> 2) & 7
 end
 
--- Every frame of a CPU-only capture until the card's effect starts (fs.effectSeen): the frames are all saved
+-- Every frame of a CPU-only capture until the card's effect starts (fs.effectReady): the frames are all saved
 -- from the CPU's turn on, and the video starts at fs.captureStartIndex (EDS.finalizeMp4Capture: ffmpeg
 -- -start_number). That is the first frame, in the phase the effect starts in, at which the CPU starts using the
 -- card under test: the cursor on it (the CPU pointing at it to play it), a summon of it (a Flip Summon moves no
@@ -1172,7 +1200,7 @@ end
 local VIDEO_HAND_LEAD = 12
 
 local function trackCpuVideoStart(fs)
-    if not fs.cpuOnlyCapture or not fs.captureArmed or fs.effectSeen or not fs.cardUnderTest then
+    if not fs.cpuOnlyCapture or not fs.captureArmed or fs.effectReady or not fs.cardUnderTest then
         return
     end
     if EDS.turnPlayer() ~= 1 then
@@ -1272,6 +1300,7 @@ function EDS.tickScenarioSteps(fs, opts)
         -- the CPU's turn and leaves your turns out (fs.cpuOnlyCapture, read by EDS.captureFrameIfNeeded).
         fs.cpuScenario = opts.actor == "CPU"
         fs.cardUnderTest = opts.card and cardId(opts.card)
+        fs.needShown = opts.effectShown and true or false
         if fs.cpuScenario and fs.cardUnderTest then
             opts.onlyCardId = fs.cardUnderTest      -- the CPU activates no other card (EDS.writeTestingFlags)
         end
@@ -1289,13 +1318,13 @@ function EDS.tickScenarioSteps(fs, opts)
         fs.captureArmed = true
         EDS.log("steps: capture starts (the CPU's turn)")
     end
-    local wasSeen = fs.effectSeen
+    local wasReady = fs.effectReady
     trackCpuVideoStart(fs)
     -- (every scenario tracks the card's effect, for the last settle; a CPU scenario also ends on it)
     local done = EDS.effectUnderTestDone(fs) and fs.cpuScenario
-    if fs.effectSeen and not wasSeen and fs.captureStartIndex then
+    if fs.effectReady and not wasReady and fs.captureStartIndex then
         EDS.log(string.format("steps: the effect started (%s); the video starts at frame %d (phase %d%s)",
-            fs.effectSeen, fs.captureStartIndex, fs.videoPhase or -1,
+            fs.shownSeen and "shown" or fs.effectSeen, fs.captureStartIndex, fs.videoPhase or -1,
             fs.videoOnCard and ", cursor on the card" or ""))
     end
     if done then
@@ -1412,6 +1441,10 @@ function EDS.applyExactSetup(opts)
                     emu:write8(a + 7, 0x20)               -- effectUnused: its once-per-turn effect is ready
                 else
                     flags = row.set and 0x00 or 0x02
+                    if row.set then
+                        -- canActivate (+0x91 bit 2): Set on an earlier turn, so it may be activated; not negated (bit 3)
+                        emu:write8(a + 0x91, (emu:read8(a + 0x91) & ~0x08) | 0x04)
+                    end
                 end
                 emu:write8(a + 6, flags)
             end

@@ -40,4 +40,5 @@ EDS.run({
         "you.st0 = Mask of Restrict up",
     },
     freezeOpponent = true,
+    effectShown = true,
 })

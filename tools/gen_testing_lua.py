@@ -78,6 +78,19 @@ def card_formats() -> dict[str, str]:
     return out
 
 
+_CARD_CACHE = None
+
+
+def continuous_spell_trap(name: str) -> bool:
+    """True for a Continuous Spell or Trap (YGOPRODeck data cached in assets/new_cards/cards.json)."""
+    global _CARD_CACHE
+    if _CARD_CACHE is None:
+        path = ROOT / 'assets/new_cards/cards.json'
+        _CARD_CACHE = json.loads(path.read_text(encoding='utf-8')) if path.is_file() else {}
+    card = _CARD_CACHE.get(name) or {}
+    return card.get('type') in ('Spell Card', 'Trap Card') and card.get('race') == 'Continuous'
+
+
 def load_entries() -> list[dict]:
     formats = card_formats()
     entries = []
@@ -119,6 +132,9 @@ def scenario_fields(entry: dict) -> list[str]:
         *[f"        {exact.lua_value(e)}," for e in sc['expect']],
         "    },",
         f"    freezeOpponent = {exact.lua_value(exact.frozen(sc))},",
+        # a Continuous Spell/Trap: its activation does nothing by itself; the video waits for its effect (the game
+        # showing the card, lib_steps.lua cardEffectShown)
+        *(["    effectShown = true,"] if continuous_spell_trap(entry['card']) else []),
     ]
 
 

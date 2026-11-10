@@ -48,4 +48,5 @@ EDS.run({
         "you.st0 = Xing Zhen Hu up",
     },
     freezeOpponent = false,
+    effectShown = true,
 })

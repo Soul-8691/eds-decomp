@@ -41,4 +41,5 @@ EDS.run({
         "you.st0 = Gravity Bind up",
     },
     freezeOpponent = false,
+    effectShown = true,
 })

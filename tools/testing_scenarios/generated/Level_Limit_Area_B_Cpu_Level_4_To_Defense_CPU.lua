@@ -38,4 +38,5 @@ EDS.run({
         "you.m0 = Summoned Skull def",
     },
     freezeOpponent = false,
+    effectShown = true,
 })

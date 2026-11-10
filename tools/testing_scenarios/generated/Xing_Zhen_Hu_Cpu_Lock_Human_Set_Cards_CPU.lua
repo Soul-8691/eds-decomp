@@ -42,4 +42,5 @@ EDS.run({
         "menu you.st1 lacks Activate",
     },
     freezeOpponent = false,
+    effectShown = true,
 })
