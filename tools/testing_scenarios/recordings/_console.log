@@ -878,3 +878,120 @@
    3435 MP4: encoding 1222 frames -> tools\testing_scenarios\generated\..\recordings\Soul_Exchange_Tribute_Opponent_Monster_Player.mp4
    3435 MP4: wrote tools\testing_scenarios\generated\..\recordings\Soul_Exchange_Tribute_Opponent_Monster_Player.mp4
    3435 Finished — PASS (play sequence + tail; MP4 from ffmpeg if encode succeeded).
+     31 MP4 target: tools\testing_scenarios\generated\..\recordings\Card_Destruction_Cpu_Discard_And_Draw_CPU.mp4
+     31 emu recording API: screenshot, screenshotToImage
+     31 MP4: ffmpeg found through the registry PATH: C:\Users\pswan\Downloads\ffmpeg-2026-11-09-git-16a345b022-full_build\ffmpeg-2026-11-09-git-16a345b022-full_build\bin\ffmpeg.exe
+     31 MP4: scripted capture (emu:screenshot PNG sequence + ffmpeg). See captureMp4 in README.
+     31 Card Destruction / cpu_discard_and_draw / CPU
+     31 cpu_turn
+     31 Capture dir: tools\testing_scenarios\generated\..\recordings\Card_Destruction_Cpu_Discard_And_Draw_CPU_frames (PNG usually 240x160; MP4 encoded 1440x960, 6x integer scale)
+     31 Launch mGBA with -6 (or maximize window) so on-screen size matches capture scale.
+    812 Main menu (callback 0x08003B15).
+    935 Campaign selected (callback 0x0801D749).
+   1074 Turn order: forced RPS lose (CPU goes first).
+   1084 Turn order: A (lost RPS; CPU chooses first).
+   1122 Turn order: A (lost RPS; CPU chooses first).
+   1314 Opponent's turn (waiting for your Main Phase 1).
+   1316 Usage deck yugi-kaiba / Soul Control: main=40 extra=15; P0 shuffled=true (top 394->737) P1 shuffled=true (top 394->771), hands cleared.
+   2214 cpu_turn f=900 duel_step=8 turn_player=1
+   2289 Player Draw Phase.
+   2500 Opening draw complete (hand=6 deck=34 want=6).
+   2640 Exact setup: P0 hand=5 deck=39 gy=0, P1 hand=2 deck=34 gy=0, LP 8000/8000, turnCount 2.
+   2640 Player Main Phase 1.
+   2640 steps: 2 steps, 3 ops
+   2640 step: pass
+   2644 screenshotToImage: 240x160
+   2778 step: cpu_turn
+   5191 Play sequence done; ending capture (no recording tail).
+   5191 MP4: encoding 2548 frames -> tools\testing_scenarios\generated\..\recordings\Card_Destruction_Cpu_Discard_And_Draw_CPU.mp4
+   5191 MP4: wrote tools\testing_scenarios\generated\..\recordings\Card_Destruction_Cpu_Discard_And_Draw_CPU.mp4
+   5191 Finished — PASS (play sequence + tail; MP4 from ffmpeg if encode succeeded).
+     30 MP4 target: tools\testing_scenarios\generated\..\recordings\Card_Destruction_Cpu_Discard_And_Draw_CPU.mp4
+     30 emu recording API: screenshot, screenshotToImage
+     30 MP4: ffmpeg found through the registry PATH: C:\Users\pswan\Downloads\ffmpeg-2026-11-09-git-16a345b022-full_build\ffmpeg-2026-11-09-git-16a345b022-full_build\bin\ffmpeg.exe
+     30 MP4: scripted capture (emu:screenshot PNG sequence + ffmpeg). See captureMp4 in README.
+     30 Card Destruction / cpu_discard_and_draw / CPU
+     30 cpu_turn
+     30 Capture dir: tools\testing_scenarios\generated\..\recordings\Card_Destruction_Cpu_Discard_And_Draw_CPU_frames (PNG usually 240x160; MP4 encoded 1440x960, 6x integer scale)
+     30 Launch mGBA with -6 (or maximize window) so on-screen size matches capture scale.
+    811 Main menu (callback 0x08003B15).
+    934 Campaign selected (callback 0x0801D749).
+   1073 Turn order: forced RPS lose (CPU goes first).
+   1083 Turn order: A (lost RPS; CPU chooses first).
+   1121 Turn order: A (lost RPS; CPU chooses first).
+   1313 Opponent's turn (waiting for your Main Phase 1).
+   1315 Usage deck yugi-kaiba / Soul Control: main=40 extra=15; P0 shuffled=true (top 394->363) P1 shuffled=true (top 394->51), hands cleared.
+   2213 cpu_turn f=900 duel_step=8 turn_player=1
+   2414 Player Draw Phase.
+   2625 Opening draw complete (hand=6 deck=34 want=6).
+   2763 Exact setup: P0 hand=5 deck=39 gy=0, P1 hand=2 deck=34 gy=0, LP 8000/8000, turnCount 2.
+   2763 Player Main Phase 1.
+   2763 steps: 2 steps, 3 ops
+   2763 step: pass
+   2900 step: cpu_turn
+   3044 steps: capture starts (the CPU's turn)
+   3048 screenshotToImage: 240x160
+   4332 steps: the card's effect is done; ending the scenario
+   4333 steps: the card's effect is done; ending the scenario
+   4334 steps: the card's effect is done; ending the scenario
+   4335 steps: the card's effect is done; ending the scenario
+   4336 steps: the card's effect is done; ending the scenario
+   4337 steps: the card's effect is done; ending the scenario
+   4338 steps: the card's effect is done; ending the scenario
+   4339 steps: the card's effect is done; ending the scenario
+   4340 steps: the card's effect is done; ending the scenario
+   4341 steps: the card's effect is done; ending the scenario
+   4342 steps: the card's effect is done; ending the scenario
+   4343 steps: the card's effect is done; ending the scenario
+   4344 steps: the card's effect is done; ending the scenario
+   4345 steps: the card's effect is done; ending the scenario
+   4346 steps: the card's effect is done; ending the scenario
+   4347 steps: the card's effect is done; ending the scenario
+   4348 steps: the card's effect is done; ending the scenario
+   4349 steps: the card's effect is done; ending the scenario
+   4350 steps: the card's effect is done; ending the scenario
+   4351 steps: the card's effect is done; ending the scenario
+   4352 steps: the card's effect is done; ending the scenario
+   4353 steps: the card's effect is done; ending the scenario
+   4354 steps: the card's effect is done; ending the scenario
+   4355 steps: the card's effect is done; ending the scenario
+   4356 steps: the card's effect is done; ending the scenario
+   4357 steps: the card's effect is done; ending the scenario
+   4358 steps: the card's effect is done; ending the scenario
+   4359 steps: the card's effect is done; ending the scenario
+   4360 steps: the card's effect is done; ending the scenario
+   4361 steps: the card's effect is done; ending the scenario
+   4361 Play sequence done; ending capture (no recording tail).
+   4361 MP4: encoding 1314 frames -> tools\testing_scenarios\generated\..\recordings\Card_Destruction_Cpu_Discard_And_Draw_CPU.mp4
+   4361 MP4: wrote tools\testing_scenarios\generated\..\recordings\Card_Destruction_Cpu_Discard_And_Draw_CPU.mp4
+   4361 Finished — PASS (play sequence + tail; MP4 from ffmpeg if encode succeeded).
+     22 MP4 target: tools\testing_scenarios\generated\..\recordings\Card_Destruction_Cpu_Discard_And_Draw_CPU.mp4
+     22 emu recording API: screenshot, screenshotToImage
+     22 MP4: ffmpeg found through the registry PATH: C:\Users\pswan\Downloads\ffmpeg-2026-11-09-git-16a345b022-full_build\ffmpeg-2026-11-09-git-16a345b022-full_build\bin\ffmpeg.exe
+     22 MP4: scripted capture (emu:screenshot PNG sequence + ffmpeg). See captureMp4 in README.
+     22 Card Destruction / cpu_discard_and_draw / CPU
+     22 cpu_turn
+     22 Capture dir: tools\testing_scenarios\generated\..\recordings\Card_Destruction_Cpu_Discard_And_Draw_CPU_frames (PNG usually 240x160; MP4 encoded 1440x960, 6x integer scale)
+     22 Launch mGBA with -6 (or maximize window) so on-screen size matches capture scale.
+    803 Main menu (callback 0x08003B15).
+    926 Campaign selected (callback 0x0801D749).
+   1065 Turn order: forced RPS lose (CPU goes first).
+   1075 Turn order: A (lost RPS; CPU chooses first).
+   1113 Turn order: A (lost RPS; CPU chooses first).
+   1305 Opponent's turn (waiting for your Main Phase 1).
+   1307 Usage deck yugi-kaiba / Soul Control: main=40 extra=15; P0 shuffled=true (top 394->394) P1 shuffled=true (top 394->675), hands cleared.
+   2205 cpu_turn f=900 duel_step=8 turn_player=1
+   2431 Player Draw Phase.
+   2642 Opening draw complete (hand=6 deck=34 want=6).
+   2781 Exact setup: P0 hand=5 deck=39 gy=0, P1 hand=2 deck=34 gy=0, LP 8000/8000, turnCount 2.
+   2781 Player Main Phase 1.
+   2781 steps: 2 steps, 3 ops
+   2781 step: pass
+   2919 step: cpu_turn
+   3063 steps: capture starts (the CPU's turn)
+   3067 screenshotToImage: 240x160
+   4307 steps: the card's effect is done; ending the scenario
+   4307 Play sequence done; ending capture (no recording tail).
+   4307 MP4: encoding 1241 frames -> tools\testing_scenarios\generated\..\recordings\Card_Destruction_Cpu_Discard_And_Draw_CPU.mp4
+   4307 MP4: wrote tools\testing_scenarios\generated\..\recordings\Card_Destruction_Cpu_Discard_And_Draw_CPU.mp4
+   4307 Finished — PASS (play sequence + tail; MP4 from ffmpeg if encode succeeded).

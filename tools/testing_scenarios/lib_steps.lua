@@ -143,6 +143,12 @@ local function summonActive()
     return (emu:read8(G_SUMMON_ACTION + 0x0E) & 1) ~= 0
 end
 
+-- gDuelCmd (duel_cmd.h): queued commands (+0x808) or one running (+0x80D bit 5): animations still playing.
+local G_DUEL_CMD = 0x020185C0
+local function duelCommandsRunning()
+    return emu:read16(G_DUEL_CMD + 0x808) ~= 0 or (emu:read8(G_DUEL_CMD + 0x80D) & 0x20) ~= 0
+end
+
 local inMainField                    -- (defined with the phase ops below)
 
 -- An effect or a summon is running (its picks are target picks, not card menus).
@@ -888,7 +894,8 @@ end
 
 -- Wait until nothing is running (no box, chain, list or menu) for a few frames.
 local function opSettle(op)
-    if textBox().active or EDS.chainOrEffectBusy() or listView().active or EDS.cardMenuOpen() then
+    if textBox().active or EDS.chainOrEffectBusy() or listView().active or EDS.cardMenuOpen() or summonActive()
+        or duelCommandsRunning() then
         op.quiet = 0
         dismissMessage()
         return false
@@ -1076,6 +1083,44 @@ buildOps = function(step, inResponse, fs)
     return ops
 end
 
+-- ---- the end of a CPU scenario ----
+
+-- True on the first frame after the card under test did its thing (a chain link of that card resolved, or a
+-- battle it fought in, as attacker or attack target, ended) when the duel has nothing left to run: no chain or
+-- effect step, box, list, menu or summon, and an empty, idle duel command queue (the queued animations: cards to
+-- the Graveyard, LP counting down, draws). Cards with neither (a passive one) never end here: the
+-- scenario then runs to the end of its steps (the CPU's whole turn).
+function EDS.effectUnderTestDone(fs)
+    local id = fs.cardUnderTest
+    if not id then
+        return false
+    end
+    if not fs.effectSeen then
+        if EDS.chainResolvingCardId() == id or (EDS.chainIsResolving() and EDS.chainActivatingCardId() == id) then
+            fs.effectSeen = "chain"
+        else
+            local bt = battle()
+            if bt.stage >= 7 and bt.stage <= 11 then         -- damage calculation to the end of the attack
+                local atkPlayer = bt.attacker
+                local b = emu:read16(G_BATTLE)
+                local defSlot = (b >> 9) & 7
+                if zoneCardId(atkPlayer, bt.atkSlot) == id
+                    or (defSlot < 5 and zoneCardId(1 - atkPlayer, defSlot) == id) then
+                    fs.effectSeen = "battle"
+                end
+            end
+        end
+        return false
+    end
+    local busy = textBox().active or listView().active or EDS.cardMenuOpen() or EDS.chainOrEffectBusy()
+        or summonActive() or duelCommandsRunning()
+    if fs.effectSeen == "battle" then
+        local st = battle().stage
+        busy = busy or (st >= 2 and st <= 11)
+    end
+    return not busy
+end
+
 -- ---- the runner ----
 
 function EDS.tickScenarioSteps(fs, opts)
@@ -1099,7 +1144,9 @@ function EDS.tickScenarioSteps(fs, opts)
                 EDS.log("steps: cannot read step " .. s .. ": " .. tostring(ops))
             end
         end
-        fs.ops[#fs.ops + 1] = { kind = "settle", text = "end", frames = 30 }
+        -- the end: the duel idle (no chain, box, summon or queued animation) for 10 frames; the margin covers the
+        -- idle gaps between phases after a final `pass` (End Phase effects come after them)
+        fs.ops[#fs.ops + 1] = { kind = "settle", text = "end", frames = 10 }
         fs.opIndex = 1
         -- The PNG capture starts once the cursor is on the first card to activate: that cursor op is marked
         -- `arm`. With the activation in a `when` step, its cursor op is marked when inserted; with none, the
@@ -1127,12 +1174,29 @@ function EDS.tickScenarioSteps(fs, opts)
                 end
             end
         end
-        if arm then
+        -- A CPU scenario with no action of yours (only passing, drawing, answering): the capture starts with
+        -- the CPU's turn and leaves your turns out (fs.cpuOnlyCapture, read by EDS.captureFrameIfNeeded).
+        fs.cpuScenario = opts.actor == "CPU"
+        fs.cardUnderTest = opts.card and cardId(opts.card)
+        if fs.cpuScenario and not arm and not fs.armOnWhen then
+            fs.armOnCpuTurn = true
+            fs.cpuOnlyCapture = true
+        elseif arm then
             arm.arm = true
         elseif not fs.armOnWhen then
             fs.captureArmed = true
         end
         EDS.log(string.format("steps: %d steps, %d ops", #steps, #fs.ops))
+    end
+    if fs.armOnCpuTurn and not fs.captureArmed and EDS.turnPlayer() == 1 then
+        fs.captureArmed = true
+        EDS.log("steps: capture starts (the CPU's turn)")
+    end
+    if fs.cpuScenario and EDS.effectUnderTestDone(fs) then
+        EDS.log("steps: the card's effect is done; ending the scenario")
+        fs.opIndex = #fs.ops + 1
+        fs.endNow = true                -- (no settle wait in EDS.run: the duel is idle already)
+        return true
     end
     if fs.opIndex > #fs.ops then
         return true

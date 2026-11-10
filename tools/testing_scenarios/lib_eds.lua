@@ -329,6 +329,9 @@ function EDS.captureFrameIfNeeded(frameState, opts)
     if opts.steps and not frameState.captureArmed then
         return          -- exact scenario: from the cursor on the card to activate (lib_steps.lua)
     end
+    if frameState.cpuOnlyCapture and EDS.turnPlayer() ~= 1 then
+        return          -- a CPU scenario with no action of yours: the CPU's turns only
+    end
     local from = frameState.captureFrom
     if from == "in_duel" then
         if opts.setupCards and not frameState.scenarioSetupDone then
@@ -2419,7 +2422,7 @@ function EDS.run(opts)
         opts.play = function(fs)
             return EDS.tickScenarioSteps(fs, opts)
         end
-        opts.playSettleFrames = opts.playSettleFrames or 30
+        opts.playSettleFrames = opts.playSettleFrames or 0     -- (the steps end on an idle duel already)
         if opts.maxFrames == nil then
             opts.maxFrames = 60 * 60 * 15
         end
@@ -2613,6 +2616,9 @@ function EDS.run(opts)
                 local settleNeed = opts.playSettleFrames
                 if settleNeed == nil then
                     settleNeed = 20
+                end
+                if frameState.endNow then
+                    settleNeed = 0          -- (lib_steps.lua found the duel idle after the effect)
                 end
                 if (frameState.playSettleStable or 0) >= settleNeed then
                     frameState.playDone = true
