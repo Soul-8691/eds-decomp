@@ -2,6 +2,7 @@
 """A pre-duel screen picture (src/mod_preduel.c): a 240x96 PNG for the bustup portrait area, as game data.
 
   python3 tools/preduel_image.py yugi-kaiba.png build/assets/preduel_yugi_kaiba.bin [yugi-kaiba.svg]
+  python3 tools/preduel_image.py --qr-only fiber.svg build/assets/preduel_qr/fiber.bin
 
 The screen is the bustup screen's Mode-4 layout: the picture in rows 0-95 over the empty dialogue box (rows 96-159).
 The box uses BG colours 16-31, so the picture has the other 224: colours 32-255. The PNG may be indexed or RGB(A)
@@ -22,6 +23,8 @@ Output (4-byte aligned), laid out so Hex Maniac Advance can show and edit it (to
   +0x3E4  u8 picture[23040]  the 240x96 picture as 8bpp tiles (30x12, row-major), each pixel its colour - 32 (0-223:
                              HMA indexes the palette from 0); HMA `ucs8x30x12`. src/mod_preduel.c turns it back into
                              the Mode 4 bitmap (colours 32-255).
+--qr-only writes the QR code of an opponent with no picture (it shows its duelist's scene): the same layout up to
++0x3E4 (no picture after it; the colours all 0), so src/mod_preduel.c reads its QR code at the same offsets.
 """
 import os
 import re
@@ -133,6 +136,17 @@ def read_png(path):
 
 
 def main():
+    if sys.argv[1:2] == ['--qr-only']:
+        if len(sys.argv) != 4:
+            sys.exit(__doc__)
+        qr = read_qr(sys.argv[2])
+        qr_pixels = [qr[r][c] if r < len(qr) and c < len(qr) else 0 for r in range(QR_ROWS) for c in range(QR_ROWS)]
+        out = (bytes(COLORS * 2) + struct.pack('<I', len(qr)) + struct.pack('<16H', *QR_PALETTE)
+               + tiles(qr_pixels, QR_ROWS, QR_ROWS, 4))
+        os.makedirs(os.path.dirname(sys.argv[3]), exist_ok=True)
+        if not os.path.exists(sys.argv[3]) or open(sys.argv[3], 'rb').read() != out:
+            open(sys.argv[3], 'wb').write(out)
+        return
     if len(sys.argv) not in (3, 4):
         sys.exit(__doc__)
     qr = read_qr(sys.argv[3]) if len(sys.argv) == 4 else []

@@ -13,8 +13,9 @@
  *            Bustup_LoadSceneSet loads it: 240x96 bitmap, colours 16-255, OBJ colours and tiles), from an
  *            uncompressed copy (tools/preduel_scenes.py; HMA: graphics.duelists.<duelist>.scene and .eyes), with the
  *            scene set's animation tracks: the eyes blink (Bustup_TickBlink) every frame of the screen;
- *   qr       the data holding its QR code (its own, or Yugi-Kaiba's formatlibrary.com code), or none: a white square at
- *            the left of the box, 2 px a module;
+ *   qr       the data holding its QR code (its formatlibrary.com code: in its picture's data, or, for an opponent
+ *            with no picture, QR-only data gModPreDuelQr<Name>; Yugi-Kaiba's for the others), or none: a white square
+ *            at the left of the box, 2 px a module;
  *   text     gModPreDuelText: 5 lines of up to 38 characters (data.preduel.text), drawn inside the box's border
  *            (x 24-216) in the bustup's 8x10 Latin font (DrawGlyph8bpp); the lines start with spaces where the QR
  *            code is, so without one the text can use the whole box.

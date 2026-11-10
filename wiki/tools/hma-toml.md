@@ -101,7 +101,9 @@ Without `baserom.toml` it does nothing. Those TOMLs are git-ignored.
     entries 32-255), `data.preduel.<format>.qrsize`, `graphics.preduel.<format>.qr.palette` (`` `ucp4` ``) and
     `.qr.image` (`` `ucs4x4x4|...qr.palette` ``, the QR code, 1 = dark module), and `graphics.preduel.<format>.picture`
     (`` `ucs8x30x12|...palette` ``, the 240x96 picture). An edited picture keeps 224 colours; an edited QR code must
-    stay at its module count (`qrsize`), drawn from the top left.
+    stay at its module count (`qrsize`), drawn from the top left. The formats with no picture (Joey-Pegasus to
+    Reaper) have QR-only data `gModPreDuelQr<Format>`: `data.preduel.<format>.qrsize`,
+    `graphics.preduel.<format>.qr.palette` and `.qr.image` only (no `.palette` or `.picture`).
   - Added effect rows (`src/added_effects.c`, by the `.sym`): `data.cards.addedeffects` is `gAddedCardEffects`
     in baserom.toml's `data.cards.effects` format (``[card:cardinternalnumbers padding: routine1::|h ... routine5::|h]``,
     resolve, check, prepare, chainA, chainB; 24 bytes a row), one row per added card with an effect row plus the

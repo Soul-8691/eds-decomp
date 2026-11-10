@@ -299,7 +299,15 @@ Related: [[banlists-menu]], [[campaign-select-c]], [[campaign-steps-c]].
   `tools/preduel_text.py` and filled after linking by `tools/preduel_scenes.py`: 256 BG colours, 30 x 12 8bpp
   tiles, 256 OBJ colours, the 0x2000-byte sheet). (A first version drew the opponent-select portrait and the
   Records eyes instead; replaced.)
-- **QR code:** its own `duelists/<name>.svg` (page 1), else Yugi-Kaiba's formatlibrary.com code.
+- **QR code:** every format has its own formatlibrary.com code, `duelists/<format>.svg`: the five with a picture
+  (page 1) in their picture's data; the other ten (2026-11-09) as QR-only data `gModPreDuelQr<Format>`
+  (`tools/preduel_image.py --qr-only`, Makefile `PREDUEL_QR_NAMES`: the picture layout up to +0x3E4, so
+  `DrawQrCode` reads it at the same offsets). Solomon, Debug and Test Duel keep Yugi-Kaiba's.
+  - The ten new SVGs are version 3 (29x29), level L, UTF-8 ECI, `https://formatlibrary.com/formats/<format>`, as
+    the first five (decoded: the same text form). Made with segno in the existing SVGs' layout (yugi-kaiba.svg's
+    finder patterns, a 57-unit `<rect>` per dark module from 173); segno with the same mask rebuilt
+    yugi-kaiba.svg exactly. Each slug checked on the Format Library API (`/api/formats/<slug>`: 200). Checked
+    by decoding all 15 QR sprites from the demo ROM through `gModPreDuelTable`.
 - **Text:** each opponent's own, all naming Format Library: 5 lines of up to 38 characters, drawn inside the box's
   border (x 24-216; measured on the box bitmap: plain fill from x 23 to 216 on the text rows); the first version drew from x 4 of the
   box (`DrawPreDuelText`); the lines start with 15 spaces where the QR code is, so with the QR pointer set to 0

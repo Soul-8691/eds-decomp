@@ -307,11 +307,17 @@ build/assets/preduel_%.bin: duelists/%.png duelists/%.svg tools/preduel_image.py
 	$(PYTHON) tools/preduel_image.py duelists/$*.png $@ duelists/$*.svg
 # The pre-duel screens' text and picture table (tools/preduel_text.py, from duelists/preduel_text.txt).
 PREDUEL_TEXT := build/assets/preduel_text.bin build/assets/preduel_table.inc
+# The QR codes of the format opponents with no picture (they show their duelist's scene): duelists/<name>.svg only.
+PREDUEL_QR_NAMES := joey-pegasus fiber yata scientist vampire chaos warrior goat cyber reaper
+PREDUEL_QR_BINS := $(PREDUEL_QR_NAMES:%=build/assets/preduel_qr/%.bin)
+build/assets/preduel_qr/%.bin: duelists/%.svg tools/preduel_image.py tools/assets.py
+	@mkdir -p $(@D)
+	$(PYTHON) tools/preduel_image.py --qr-only duelists/$*.svg $@
 build/assets/preduel_text.bin: duelists/preduel_text.txt tools/preduel_text.py src/mod_opponents.c Makefile $(wildcard duelists/*.svg)
 	@mkdir -p $(@D)
 	$(PYTHON) tools/preduel_text.py $(PREDUEL_TEXT)
 build/assets/preduel_table.inc: build/assets/preduel_text.bin ;
-build/data/mod_preduel_data.o: $(PREDUEL_BINS) $(PREDUEL_TEXT)
+build/data/mod_preduel_data.o: $(PREDUEL_BINS) $(PREDUEL_QR_BINS) $(PREDUEL_TEXT)
 
 build/data/%.o: data/%.s $(ASSETS_BUILT) $(NEWCARDS_BUILT)
 	@mkdir -p $(@D)

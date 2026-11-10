@@ -2901,3 +2901,10 @@ updated: 2026-09-29
 ## [2026-11-09] query | HMA TOML wiki sync
 - [[hma-toml]]: demo-profile TOML outputs, EXTRA_ANCHORS card text, mod MatchedWords (title flame, pre-duel QR),
   format-cover bake vs HMA edit, deck .ydk import, `ANCHOR_FIXES`, guide notes for `graphics.palettes.packs`.
+
+## [2026-11-09] progress | Pre-duel QR codes for the other ten formats
+- duelists/<format>.svg for Joey-Pegasus to Reaper: version 3 (29x29), level L, UTF-8 ECI,
+  https://formatlibrary.com/formats/<format>, in the existing SVGs' layout; checked by decoding.
+- tools/preduel_image.py --qr-only, Makefile PREDUEL_QR_NAMES, data/mod_preduel_data.s gModPreDuelQr<Format>,
+  tools/preduel_text.py (each format's own QR code), tools/hma_toml.py (QR-only anchors).
+- Pages: [[yugi-kaiba-opponent]], [[hma-toml]].

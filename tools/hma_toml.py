@@ -28,7 +28,8 @@ source of this repo, and where that thing is in the demo ROM:
                 portrait, name; list formatpacks; graphics.packs.format.<pack>: its shop cover), the card prices (data.prices.cards: per format, card and DP; list
                 formats), every deck of src/mod_decks.c (data.decks.mod.<deck>: main + Fusion, side, DeckList) and
                 the debug deck recipes (data.decks.recipes: name, DeckList, side, side count), and the pre-duel
-                pictures (graphics.preduel.<format>: palette, QR code sprite and palette, 8bpp picture).
+                pictures (graphics.preduel.<format>: palette, QR code sprite and palette, 8bpp picture; the
+                formats with no picture: the QR code only).
   Lists         cardnumbers (by card ID) and cardinternalnumbers (by card number) get the added cards
                 (build/new_cards.tsv: their in-game names at their IDs and numbers); the other lists are kept.
   DefaultHash   recomputed (HMA's StoredList.GenerateHash) for every format and list this changes.
@@ -155,14 +156,15 @@ ADDED_GUIDE = [
     ('data.decks.recipes', "the debug menu's deck recipes: name, DeckList, Side Deck, side count; last row the "
                            "terminator", (UNUSED + ' (GetRecipePreset returns 0 in the release)', USED)),
     ('text.decks.recipes', 'the deck recipe names (ASCII)', (UNUSED, USED)),
-    ('graphics.preduel', "the pre-duel pictures per format: <format>.picture the 240x96 picture, .palette its 224 "
-                         "colours, .qr.image the QR code (1 = dark module), .qr.palette", USED),
+    ('graphics.preduel', "the pre-duel pictures and QR codes per format: <format>.picture the 240x96 picture, "
+                         ".palette its 224 colours (Yugi-Kaiba to Android), .qr.image the formatlibrary.com QR code "
+                         "(1 = dark module; every format), .qr.palette", USED),
     ('data.preduel.table', "the pre-duel screen per opponent (by duelist, list opponents): picture (its own "
                            "picture's data, or 0), qr (the data whose QR code it shows, or 0: none), scene (with no "
                            "picture: its duelist's scene copy, graphics.duelists.<duelist>.scene / .eyes)", USED),
     ('data.preduel.text', "the pre-duel screen's text per opponent: line1-line5, up to 38 characters each inside "
                           "the box's border (10 spaces where the QR code is)", USED),
-    ('data.preduel', 'per pre-duel picture: .qrsize, the QR code modules a side (0 = none)', USED),
+    ('data.preduel', 'per format: .qrsize, the QR code modules a side (0 = none)', USED),
     ('data.opponents', "the opponents by duelist ID (list opponents): kind (hidden, format, deck), unlock order, format, "
                        ".name, and .portrait: the card whose art the opponent select and the Records screen show (0: "
                        "the original portrait; 0x8000 | page << 4 | slot: an original page's portrait, e.g. Solomon)",
@@ -735,6 +737,15 @@ def mod_anchors(elf, rom, rom_sym):
             report.append(f'pre-duel picture {label}: not in the .sym, left out')
             continue
         base = rom_sym[label][0] - ROM_BASE
+        if label.startswith('gModPreDuelQr'):           # a QR code with no picture (preduel_image.py --qr-only)
+            fmt_id = anchor_id(label[len('gModPreDuelQr'):])
+            name = 'graphics.preduel.' + fmt_id
+            anchors += [
+                (f'data.preduel.{fmt_id}.qrsize', base + 0x1C0, '[modules::]1'),
+                (name + '.qr.palette', base + 0x1C4, '`ucp4`'),
+                (name + '.qr.image', base + 0x1E4, f'`ucs4x4x4|{name}.qr.palette`'),
+            ]
+            continue
         name = 'graphics.preduel.' + anchor_id(label[len('gModPreDuel'):])
         anchors += [
             (name + '.palette', base, '`ucp4:0123456789ABCD`'),

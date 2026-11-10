@@ -25,6 +25,49 @@ gModPreDuelAndroid:
 	.incbin "build/assets/preduel_android.bin"
 	.balign 4
 
+@ The QR codes of the format opponents with no picture (Makefile: PREDUEL_QR_NAMES; tools/preduel_image.py --qr-only
+@ from duelists/<name>.svg): a picture's layout up to its QR sprite, nothing after it.
+	.global gModPreDuelQrJoeyPegasus
+gModPreDuelQrJoeyPegasus:
+	.incbin "build/assets/preduel_qr/joey-pegasus.bin"
+	.balign 4
+	.global gModPreDuelQrFiber
+gModPreDuelQrFiber:
+	.incbin "build/assets/preduel_qr/fiber.bin"
+	.balign 4
+	.global gModPreDuelQrYata
+gModPreDuelQrYata:
+	.incbin "build/assets/preduel_qr/yata.bin"
+	.balign 4
+	.global gModPreDuelQrScientist
+gModPreDuelQrScientist:
+	.incbin "build/assets/preduel_qr/scientist.bin"
+	.balign 4
+	.global gModPreDuelQrVampire
+gModPreDuelQrVampire:
+	.incbin "build/assets/preduel_qr/vampire.bin"
+	.balign 4
+	.global gModPreDuelQrChaos
+gModPreDuelQrChaos:
+	.incbin "build/assets/preduel_qr/chaos.bin"
+	.balign 4
+	.global gModPreDuelQrWarrior
+gModPreDuelQrWarrior:
+	.incbin "build/assets/preduel_qr/warrior.bin"
+	.balign 4
+	.global gModPreDuelQrGoat
+gModPreDuelQrGoat:
+	.incbin "build/assets/preduel_qr/goat.bin"
+	.balign 4
+	.global gModPreDuelQrCyber
+gModPreDuelQrCyber:
+	.incbin "build/assets/preduel_qr/cyber.bin"
+	.balign 4
+	.global gModPreDuelQrReaper
+gModPreDuelQrReaper:
+	.incbin "build/assets/preduel_qr/reaper.bin"
+	.balign 4
+
 @ By duelist ID (tools/preduel_text.py, from duelists/preduel_text.txt): { picture, qr, scene } (src/mod_preduel.c
 @ struct PreDuelEntry), then the text, 5 lines of 48 bytes each.
 	.balign 4
