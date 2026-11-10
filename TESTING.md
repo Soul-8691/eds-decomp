@@ -13,7 +13,7 @@ For each card: **Implementation** and **Coded behavior** come from this repo (`s
 
 **AI:** each card lists **AI coverage** traced from `src/added_effects.c` (`AiPlayAddedCards`, `AiWantsMonsterEffect`, `AiWantsSpell`, `AiShouldActivateAddedCard`, `AiChain*`, and `*Cpu*` effect steps). **Yes — generalized routine** means the default added-card fallbacks apply; **dedicated** means a named hook. **Automatic** means the CPU does not activate an effect from the card menu, but battle/engine code still runs.
 
-**102** cards qualify (of 294 in `demo_cards.txt` minus `new_cards.txt` below `******`; 14 names excluded). Regenerate with `python3 tools/gen_testing_md.py`.
+**103** cards qualify (of 295 in `demo_cards.txt` minus `new_cards.txt` below `******`; 13 names excluded). Regenerate with `python3 tools/gen_testing_md.py`.
 
 ## Yugi-Kaiba
 
@@ -4088,6 +4088,57 @@ B (cancel) cannot end the Battle Phase while the Gorilla can attack.
 
 - `you.m0 = empty`: your Monster Zone 0 (**Big Shield Gardna**) is empty.
 - `you.gy = Big Shield Gardna`: your Graveyard is exactly Big Shield Gardna.
+
+### D.D. Assailant
+
+- **Usage:** 19.7% weighted inclusion in `usage/warrior.json` (earliest qualifying format).
+- **Implementation:** Unknown / stats only
+- **Coded behavior:** No `gAddedCardEffects` row or engine key found for this demo card; verify in Deck Edit and trunk.
+- **YGOPRODeck (TCG) text:** After damage calculation, when this card is destroyed by battle with an opponent's monster: Banish that monster, also banish this card.
+- **TCG vs this ROM:** Coded behavior may differ from current TCG/OCG text; test against the **Coded behavior** section, not the card database alone.
+- **AI coverage:** **Unclear / likely missing** — No `CPU:` notes and no switch case found; treat as untested for CPU until you confirm in a duel.
+
+#### Player 1: Banish both when destroyed
+
+`DD_Assailant_Banish_Both_When_Destroyed_Player` · start: your turn, Main Phase 1 (turnCount 2) · LP 8000 / 8000 · opponent frozen
+
+No effect row was found for this card: this scenario checks the card text.
+
+| Side | Place | Card | Position |
+|---|---|---|---|
+| You | Monster Zone 0 | D.D. Assailant | face-up Attack Position |
+| Opponent | Monster Zone 0 | Summoned Skull | face-up Attack Position |
+
+**Steps**
+
+1. `battle`: Enter the Battle Phase.
+2. `attack you.m0 -> opp.m0`: Attack with your Monster Zone 0 (**D.D. Assailant**): target the opponent's Monster Zone 0 (**Summoned Skull**).
+
+**Expected**
+
+- `you.lp = 7200`: LP of you = 7200.
+- `you.banished = D.D. Assailant`: your banished cards is exactly D.D. Assailant.
+- `opp.banished = Summoned Skull`: the opponent's banished cards is exactly Summoned Skull.
+
+#### CPU 1: Banish both when destroyed
+
+`DD_Assailant_Cpu_Banish_Both_When_Destroyed_CPU` · start: your turn, Main Phase 1 (turnCount 2) · LP 8000 / 8000 · opponent not frozen
+
+| Side | Place | Card | Position |
+|---|---|---|---|
+| You | Monster Zone 0 | Summoned Skull | face-up Attack Position |
+| Opponent | Monster Zone 0 | D.D. Assailant | face-up Attack Position |
+
+**Steps**
+
+1. `battle`: Enter the Battle Phase.
+2. `attack you.m0 -> opp.m0`: Attack with your Monster Zone 0 (**Summoned Skull**): target the opponent's Monster Zone 0 (**D.D. Assailant**).
+
+**Expected**
+
+- `opp.lp = 7200`: LP of opp = 7200.
+- `you.banished = Summoned Skull`: your banished cards is exactly Summoned Skull.
+- `opp.banished = D.D. Assailant`: the opponent's banished cards is exactly D.D. Assailant.
 
 ### Return from the Different Dimension
 
