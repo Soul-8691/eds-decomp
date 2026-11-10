@@ -43,4 +43,5 @@ EDS.run({
         "you.lp = 8000",
     },
     freezeOpponent = false,
+    video = { clear = "cpu_monsters" },
 })

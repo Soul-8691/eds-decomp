@@ -42,4 +42,5 @@ EDS.run({
         "you.lp = 5700",
     },
     freezeOpponent = false,
+    video = { show = "opp.m0" },
 })

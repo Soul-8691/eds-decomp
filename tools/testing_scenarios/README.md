@@ -36,6 +36,22 @@ Deck), `start`, `steps`, `expect` and `freezeOpponent`. The key presses that pla
   (a Spell/Trap played from the hand: the cursor first reaches it on the field). With none of these, it starts when
   that phase begins. It ends right after the effect (`EDS.effectUnderTestDone`).
 
+### A scenario's `video` field
+
+When the card's chain or battle is not what the video must show, a scenario says so (`video={...}` in
+`exact_cards_*.py`, read by `lib_steps.lua`):
+
+| Key | Effect |
+|---|---|
+| `start='summon'` | the card's own summon is its effect (The Fiend Megacyber); the video ends when the summon does |
+| `start='first'` | the capture starts at the first cursor move, such as the summon that lets a Trap go off |
+| `until='defense'` | after the effect, wait for the card to be in Defense Position (Goblin Attack Force) |
+| `show='opp.m0'` | after the effect, the cursor goes on that zone (`gModTestingSelect`, 0x0202D802) so the info bar shows its ATK, for 90 frames or until the CPU's next phase begins |
+| `effect='none'` | nothing is meant to happen; no wait for an effect |
+| `clear='cpu_monsters'` | a CPU scenario empties the CPU's monster zones (it keeps its first-turn board otherwise), so it uses the card rather than a Tribute Summon |
+
+`check menu X lacks Y` steps open the card's menu for 90 frames, then close it (shown, not checked).
+
 ### Reviewing the videos
 
 `python tools/testing_scenarios/review_videos.py` (Windows Python with Pillow; ffmpeg on PATH) lists the recordings in

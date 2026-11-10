@@ -2974,3 +2974,18 @@ updated: 2026-09-29
   (DUEL_CMD_SHOW_CARD_EFFECT) or chains it again, not at its activation; the setup marks Set Spell/Traps
   activatable (+0x91 bit 2).
 - Pages: tools/testing_scenarios/README.md.
+
+## [2026-11-10] progress | Test videos: per-scenario `video` options; the CPU plays Soul Exchange
+- tools/testing_scenarios/exact.py: an optional `video` field (start summon/first, until defense, show <place>,
+  effect none, clear cpu_monsters); lua_value quotes Lua keyword keys. exact_cards_1.py: The Fiend Megacyber,
+  Goblin Attack Force, Limiter Removal, Bazoo the Soul-Eater, Torrential Tribute, Soul Exchange use it; Kycoo's
+  player scenario answers its second "banish another?" question.
+- lib_steps.lua: the options; `check menu` steps open the menu on screen; the settles stop at a question the next
+  step answers; a timed-out step logs the box, list and chain state.
+- src/mod_testing_automation.c: gModTestingSelect (0x0202D802), a script's request to put the cursor on a zone
+  (ModTestingTick: DuelCursor_Select, DuelScreen_DrawCursorInfo).
+- src/added_effects.c AiPlayAddedCards: the CPU plays Soul Exchange with no monster of its own and a level 5+ one
+  in hand (no code played it, though [[added-cards]] said AiPlayAddedCards did).
+- Verified in mGBA: the CPU videos of Soul Exchange, The Fiend Megacyber, Goblin Attack Force, Limiter Removal and
+  Bazoo; Torrential Tribute's from the summon.
+- Pages: tools/testing_scenarios/README.md.

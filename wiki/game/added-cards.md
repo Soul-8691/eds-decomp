@@ -378,7 +378,8 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
     strongest monster.
   - The resolve calls `SoulExchangeCpuResolve`: it Tribute Summons the CPU's strongest level 5+ hand monster (level 5-6
     with a free zone; level 7+ also Tributes its own weakest monster) and uses up its Normal Summon.
-  - `AiPlayAddedCards` plays the card when its prepare passes.
+  - `AiPlayAddedCards` plays the card when the CPU has no monster of its own to Tribute and the human has one
+    (its prepare checks the rest). Added 2026-11-10: no code played it before, although this page said so.
 - Number side effect as for Magic Cylinder: the added cards after it in the list moved down one free number.
 - **Prepare fixed** (effect_prepare2.c, under `HAS_CARD_SOUL_EXCHANGE`). The engine's key 1220 required a monster of
   the *player's* (`CountMonsters(card->player)`), so the card couldn't be used on an empty field, its usual play. It

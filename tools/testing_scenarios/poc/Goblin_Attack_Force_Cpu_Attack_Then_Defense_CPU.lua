@@ -43,6 +43,7 @@ local opts = {
         "opp.m0 = Goblin Attack Force def",
     },
     freezeOpponent = false,
+    video = { ["until"] = "defense" },
 }
 if poc then
     opts.setupCards = poc.setupCards or opts.setupCards

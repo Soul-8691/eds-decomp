@@ -45,6 +45,7 @@ local opts = {
         "opp.gy = Torrential Tribute",
     },
     freezeOpponent = false,
+    video = { start = "first" },
 }
 if poc then
     opts.setupCards = poc.setupCards or opts.setupCards

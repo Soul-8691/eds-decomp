@@ -14,6 +14,8 @@ int ModTestingCpuSetLimitReached(void);
 void ModTestingTick(void);
 /* EWRAM u16 (symbols.ld): a CPU scenario's card under test; the CPU may activate no other card. 0 = off. */
 extern u16 gModTestingOnlyCard;
+/* EWRAM u16 (symbols.ld): a script's one-shot request to put the field cursor on a zone (ModTestingTick). */
+extern u16 gModTestingSelect;
 /* 1 when the CPU (player 1) would activate a card other than gModTestingOnlyCard (testing builds only). */
 int ModTestingCpuCardBlocked(int player, u16 id);
 

@@ -45,4 +45,5 @@ EDS.run({
         "opp.gy = Summoned Skull, Man-Eater Bug",
     },
     freezeOpponent = false,
+    video = { start = "first" },
 })

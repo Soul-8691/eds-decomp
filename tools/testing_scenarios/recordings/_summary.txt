@@ -1,8 +1,7 @@
 ﻿
-Script                                    Result Seconds Detail                                
-------                                    ------ ------- ------                                
-Card_Destruction_Discard_And_Draw_Player  PASS        34 duel_main=true reason= play_done=true 
-Card_Destruction_Cpu_Discard_And_Draw_CPU PASS        39 duel_main=false reason= play_done=true
+Script                                     Result Seconds Detail                                
+------                                     ------ ------- ------                                
+Limiter_Removal_Cpu_Double_Machine_Atk_CPU PASS        33 duel_main=false reason= play_done=true
 
 
 

@@ -40,4 +40,5 @@ EDS.run({
         "opp.m0 = Goblin Attack Force def",
     },
     freezeOpponent = false,
+    video = { ["until"] = "defense" },
 })

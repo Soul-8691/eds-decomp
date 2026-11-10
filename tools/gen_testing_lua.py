@@ -135,6 +135,7 @@ def scenario_fields(entry: dict) -> list[str]:
         # a Continuous Spell/Trap: its activation does nothing by itself; the video waits for its effect (the game
         # showing the card, lib_steps.lua cardEffectShown)
         *(["    effectShown = true,"] if continuous_spell_trap(entry['card']) else []),
+        *([f"    video = {exact.lua_value(sc['video'])},"] if sc.get('video') else []),
     ]
 
 

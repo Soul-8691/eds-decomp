@@ -40,4 +40,5 @@ EDS.run({
         "you.hand = The Fiend Megacyber",
     },
     freezeOpponent = true,
+    video = { effect = "none" },
 })

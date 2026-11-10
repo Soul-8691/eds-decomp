@@ -39,4 +39,5 @@ EDS.run({
         "you.m0 = The Fiend Megacyber atk",
     },
     freezeOpponent = true,
+    video = { start = "summon" },
 })

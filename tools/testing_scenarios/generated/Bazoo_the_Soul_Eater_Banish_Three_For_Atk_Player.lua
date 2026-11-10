@@ -47,4 +47,5 @@ EDS.run({
         "menu you.m0 lacks Activate",
     },
     freezeOpponent = true,
+    video = { show = "you.m0" },
 })

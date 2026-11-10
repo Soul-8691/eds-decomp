@@ -23,7 +23,7 @@ EDS.run({
     effect = "banish_on_battle_damage",
     actor = "Player",
     format = "Android",
-    scenarioText = "battle; attack you.m0 -> direct; yes; pick opp.gy[Summoned Skull]; pick opp.gy[Sangan]",
+    scenarioText = "battle; attack you.m0 -> direct; yes; pick opp.gy[Summoned Skull]; yes; pick opp.gy[Sangan]",
     start = { turn = "you", turnCount = 2, lp = { 8000, 8000 } },
     setupCards = {
         { player = 0, zone = "monster", slot = 0, name = "Kycoo the Ghost Destroyer" },
@@ -36,6 +36,7 @@ EDS.run({
         "attack you.m0 -> direct",
         "yes",
         "pick opp.gy[Summoned Skull]",
+        "yes",
         "pick opp.gy[Sangan]",
     },
     expect = {

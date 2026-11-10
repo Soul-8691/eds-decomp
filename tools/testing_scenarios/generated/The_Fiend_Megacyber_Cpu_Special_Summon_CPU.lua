@@ -39,4 +39,5 @@ EDS.run({
         "opp.monsters has The Fiend Megacyber",
     },
     freezeOpponent = false,
+    video = { start = "summon", clear = "cpu_monsters" },
 })

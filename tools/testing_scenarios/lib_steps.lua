@@ -143,6 +143,14 @@ local function summonActive()
     return (emu:read8(G_SUMMON_ACTION + 0x0E) & 1) ~= 0
 end
 
+-- The card a summon is pending for (gSummonAction: +0x0E bit 0 active; cardId bits 31-46), or 0.
+local function summoningCardId()
+    if not summonActive() then
+        return 0
+    end
+    return ((emu:read32(G_SUMMON_ACTION) >> 31) | ((emu:read16(G_SUMMON_ACTION + 4) & 0x7FFF) << 1)) & 0x7FF
+end
+
 -- gDuelCmd (duel_cmd.h): queued commands (+0x808) or one running (+0x80D bit 5): animations still playing.
 local G_DUEL_CMD = 0x020185C0
 local function duelCommandsRunning()
@@ -899,9 +907,16 @@ end
 local END_EFFECT_WAIT = 600
 
 local function opSettle(op, fs)
-    if op.text == "end" and fs and fs.cardUnderTest and not fs.effectReady and op.frames_in < END_EFFECT_WAIT then
+    if op.text == "end" and fs and fs.cardUnderTest and not fs.effectDone and op.frames_in < END_EFFECT_WAIT then
         op.quiet = 0
         return false
+    end
+    if op.text ~= "end" then
+        -- a question or a list waiting for an answer: the next step answers it (Kycoo's Yes/No after its attack)
+        local ok, b = boxInput()
+        if (ok and b.kind ~= TEXTBOX_MESSAGE) or listReady() then
+            return true
+        end
     end
     if textBox().active or EDS.chainOrEffectBusy() or listView().active or EDS.cardMenuOpen() or summonActive()
         or duelCommandsRunning() then
@@ -1080,6 +1095,15 @@ buildOps = function(step, inResponse, fs)
         add({ kind = "other_turn", cpu = true })
     elseif verb == "draw" then
         add({ kind = "draw" })
+    elseif verb == "check" and args:match("^menu ") then
+        -- the card's menu, opened for a moment so the video shows what it offers (not checked), then closed
+        local where = args:match("^menu (.-) lacks ") or args:match("^menu (.-) has ") or args:match("^menu (.+)$")
+        add({ kind = "cursor", place = parsePlace(where) })
+        add({ kind = "press", key = EDS.KEY_A })
+        add({ kind = "wait", frames = 90 })
+        add({ kind = "press", key = EDS.KEY_B })
+        add({ kind = "wait", frames = 20 })
+        add({ kind = "log", msg = step .. " (shown, not checked)" })
     elseif verb == "check" or verb == "note" then
         add({ kind = "log", msg = step .. " (not checked)" })
     else
@@ -1109,16 +1133,55 @@ local function cardEffectShown(id)
         and (emu:read16(G_DUEL_CMD + 2) & 0x7FF) == id
 end
 
+-- The duel phase (gDuel.phase, +0x1B12 bits 2-4: Draw 0, Standby 1, Main 1 2, Battle 3, Main 2 4, End 5).
+local function duelPhase()
+    return (emu:read8(EDS.G_DUEL_TURN_FLAGS) >> 2) & 7
+end
+
+local VIDEO_SHOW_FRAMES = 90
+
+-- The card `id` face up in Defense Position in a monster zone of either player.
+local function cardInDefense(id)
+    for p = 0, 1 do
+        for z = 0, 4 do
+            if zoneCardId(p, z) == id and (emu:read8(zoneAddr(p, z) + 6) & 1) ~= 0 then
+                return true
+            end
+        end
+    end
+    return false
+end
+
 function EDS.effectUnderTestDone(fs)
     local id = fs.cardUnderTest
     if not id then
         return false
     end
+    if fs.effectDone then
+        return true
+    end
+    if fs.showFrames then
+        -- (showing: counted whatever the duel does meanwhile; the CPU goes on playing, so the shot also ends, and
+        -- the capture stops, when its next phase begins: the phase changes or the field fades to white for it,
+        -- REG_BLDCNT effect 2)
+        fs.showFrames = fs.showFrames + 1
+        local fading = ((emu:read16(0x04000050) >> 6) & 3) == 2
+        if fs.showFrames < VIDEO_SHOW_FRAMES and duelPhase() == fs.showPhase and not fading then
+            return false
+        end
+        if fs.showFrames < VIDEO_SHOW_FRAMES then
+            fs.captureStop = true
+        end
+        fs.effectDone = true
+        return true
+    end
     if fs.needShown and not fs.shownSeen and cardEffectShown(id) then
         fs.shownSeen = true
     end
     if not fs.effectSeen then
-        if EDS.chainResolvingCardId() == id or (EDS.chainIsResolving() and EDS.chainActivatingCardId() == id) then
+        if fs.video.start == "summon" and summoningCardId() == id then
+            fs.effectSeen = "summon"        -- (its own summon is the effect: The Fiend Megacyber)
+        elseif EDS.chainResolvingCardId() == id or (EDS.chainIsResolving() and EDS.chainActivatingCardId() == id) then
             fs.effectSeen = "chain"
         else
             local bt = battle()
@@ -1154,8 +1217,34 @@ function EDS.effectUnderTestDone(fs)
     if fs.effectSeen == "battle" then
         local st = battle().stage
         busy = busy or (st >= 2 and st <= 11)
+    elseif fs.effectSeen == "summon" then
+        -- (done when the summon is: the CPU goes on playing other cards at once, so the duel need not be idle)
+        busy = summonActive()
     end
-    return not busy
+    if busy then
+        return false
+    end
+    -- video until='defense': the card in Defense Position (Goblin Attack Force at the end of the Battle Phase)
+    if fs.video["until"] == "defense" and not cardInDefense(id) then
+        return false
+    end
+    -- video show=<place>: the cursor on that zone for VIDEO_SHOW_FRAMES, so the info bar shows its ATK
+    if fs.video.show then
+        if not fs.showFrames then
+            local place = parsePlace(fs.video.show)
+            local zone = place.kind == "st" and 5 + (place.index or 0) or (place.index or 0)
+            emu:write16(EDS.G_MOD_TESTING_SELECT, 0x8000 | ((place.player & 1) << 8) | (zone & 0xF))
+            fs.showFrames = 0
+            fs.showPhase = duelPhase()
+            EDS.log("steps: showing " .. fs.video.show)
+        end
+        fs.showFrames = fs.showFrames + 1
+        if fs.showFrames < VIDEO_SHOW_FRAMES then
+            return false
+        end
+    end
+    fs.effectDone = true
+    return true
 end
 
 -- ---- where a CPU scenario's video starts ----
@@ -1180,17 +1269,6 @@ local function selectedCardId()
 end
 
 -- The card a summon is pending for (gSummonAction: +0x0E bit 0 active; cardId bits 31-46), or 0.
-local function summoningCardId()
-    if not summonActive() then
-        return 0
-    end
-    return ((emu:read32(G_SUMMON_ACTION) >> 31) | ((emu:read16(G_SUMMON_ACTION + 4) & 0x7FFF) << 1)) & 0x7FF
-end
-
--- The duel phase (gDuel.phase, +0x1B12 bits 2-4: Draw 0, Standby 1, Main 1 2, Battle 3, Main 2 4, End 5).
-local function duelPhase()
-    return (emu:read8(EDS.G_DUEL_TURN_FLAGS) >> 2) & 7
-end
 
 -- Every frame of a CPU-only capture until the card's effect starts (fs.effectReady): the frames are all saved
 -- from the CPU's turn on, and the video starts at fs.captureStartIndex (EDS.finalizeMp4Capture: ffmpeg
@@ -1274,8 +1352,9 @@ function EDS.tickScenarioSteps(fs, opts)
         -- `arm`. With the activation in a `when` step, its cursor op is marked when inserted; with none, the
         -- first cursor op; with no cursor op at all, the capture starts now.
         local arm
+        local video = opts.video or {}
         for _, op in ipairs(fs.ops) do
-            if op.kind == "cursor" and op.activation then
+            if op.kind == "cursor" and not op.camera and (op.activation or video.start == "first") then
                 arm = op
                 break
             end
@@ -1301,6 +1380,10 @@ function EDS.tickScenarioSteps(fs, opts)
         fs.cpuScenario = opts.actor == "CPU"
         fs.cardUnderTest = opts.card and cardId(opts.card)
         fs.needShown = opts.effectShown and true or false
+        fs.video = opts.video or {}
+        if fs.video.effect == "none" then
+            fs.effectReady, fs.effectDone = true, true      -- (nothing is meant to happen)
+        end
         if fs.cpuScenario and fs.cardUnderTest then
             opts.onlyCardId = fs.cardUnderTest      -- the CPU activates no other card (EDS.writeTestingFlags)
         end
@@ -1357,7 +1440,11 @@ function EDS.tickScenarioSteps(fs, opts)
         end
         fs.opIndex = fs.opIndex + 1
     elseif op.frames_in > (op.limit or 900) and op.kind ~= "other_turn" and op.kind ~= "when" then
-        EDS.log(string.format("steps: %s timed out (%s)", op.kind, tostring(op.text or op.step)))
+        local tb, lv = textBox(), listView()
+        EDS.log(string.format("steps: %s timed out (%s) [box active=%s kind=%d step=%d; list=%s; chain=%s; summon=%s; cmds=%s; prompt=%d]",
+            op.kind, tostring(op.text or op.step), tostring(tb.active), tb.kind, tb.step, tostring(lv.active),
+            tostring(EDS.chainOrEffectBusy()), tostring(summonActive()), tostring(duelCommandsRunning()),
+            emu:read8(EDS.G_DUEL + 0x1B50)))
         fs.opIndex = fs.opIndex + 1
     end
     return false
@@ -1397,8 +1484,9 @@ function EDS.applyExactSetup(opts)
     for p = 0, 1 do
         local base = playerBase(p)
         local keep = keepCpuBoard and p == 1
+        local clearMonsters = keep and (opts.video or {}).clear == "cpu_monsters"
         for z = 0, 10 do
-            if not keep or listed[p][z] then
+            if not keep or listed[p][z] or (clearMonsters and z <= 4) then
                 clearZone(p, z)
             end
         end

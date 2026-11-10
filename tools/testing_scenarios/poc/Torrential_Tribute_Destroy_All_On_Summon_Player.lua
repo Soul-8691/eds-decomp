@@ -48,6 +48,7 @@ local opts = {
         "opp.gy = Summoned Skull, Man-Eater Bug",
     },
     freezeOpponent = false,
+    video = { start = "first" },
 }
 if poc then
     opts.setupCards = poc.setupCards or opts.setupCards

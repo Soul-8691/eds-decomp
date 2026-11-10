@@ -332,6 +332,9 @@ function EDS.captureFrameIfNeeded(frameState, opts)
     if opts.steps and not frameState.captureArmed then
         return          -- exact scenario: from the cursor on the card to activate (lib_steps.lua)
     end
+    if frameState.captureStop then
+        return          -- (a video's last shot ended as the CPU's next phase began: lib_steps.lua)
+    end
     if frameState.cpuOnlyCapture and EDS.turnPlayer() ~= 1 then
         return          -- a CPU scenario with no action of yours: the CPU's turns only
     end
@@ -470,6 +473,9 @@ EDS.AI_TURN_PHASE_END = 4
 -- gModTestingOnlyCard (u16): in a CPU scenario, the card under test (opts.onlyCardId, set by lib_steps.lua); the
 -- CPU activates no other card (ModTestingCpuCardBlocked: CanActivateEffect, ModCanActivateMonsterEffect).
 EDS.G_MOD_TESTING_ONLY_CARD = 0x0202D800
+-- gModTestingSelect (u16): a one-shot request to put the field cursor on a zone (bit 15; bit 8 the player; bits 0-3
+-- the zone), done by ModTestingTick: a video's `show` (lib_steps.lua).
+EDS.G_MOD_TESTING_SELECT = 0x0202D802
 function EDS.writeTestingFlags(freeze, opts)
     local cap = (opts.steps and opts.actor == "CPU") and 4 or 0
     local keep = emu:read8(EDS.G_MOD_TESTING_FREEZE) & 0x02
@@ -1816,8 +1822,15 @@ function EDS.navigateTestDuel(frameState, opts)
             return
         end
         if frameState.timer % 900 == 0 then
-            EDS.log(string.format("cpu_turn f=%d duel_step=%d turn_player=%d",
-                frameState.timer, EDS.duelStep(), EDS.turnPlayer()))
+            EDS.log(string.format("cpu_turn f=%d duel_step=%d turn_player=%d ai=%d/%d textbox=%d",
+                frameState.timer, EDS.duelStep(), EDS.turnPlayer(), emu:read8(EDS.G_AI_STATE),
+                emu:read8(EDS.G_AI_STATE + 1), emu:read8(EDS.G_TEXTBOX) & 1))
+            if frameState.timer >= 1800 and frameState.basename then
+                -- (a CPU turn that does not end: what is on the screen)
+                local shot = string.format("%s/_stuck_%s_%d.png", EDS.recordDir, frameState.basename,
+                    frameState.timer)
+                pcall(function() emu:screenshot(shot) end)
+            end
         end
         if frameState.timer > limit then
             frameState.phase = "done"

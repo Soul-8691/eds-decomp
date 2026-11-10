@@ -1,2 +1,2 @@
-C:\Users\pswan\Downloads\eds-decomp\tools\testing_scenarios\generated\..\recordings\Torrential_Tribute_Cpu_On_Human_Summon_CPU.mp4
-C:/Users/pswan/Downloads/eds-decomp/tools/testing_scenarios/generated/../recordings/Torrential_Tribute_Cpu_On_Human_Summon_CPU.mp4
+C:\Users\pswan\Downloads\eds-decomp\tools\testing_scenarios\generated\..\recordings\Limiter_Removal_Cpu_Double_Machine_Atk_CPU.mp4
+C:/Users/pswan/Downloads/eds-decomp/tools/testing_scenarios/generated/../recordings/Limiter_Removal_Cpu_Double_Machine_Atk_CPU.mp4

@@ -51,7 +51,7 @@ SCENARIOS = {
                    you.gy = Soul Exchange
                    battle_phase blocked
                '''),
-        cpu('cpu_tribute_opponent_monster', start=OPP_TURN,
+        cpu('cpu_tribute_opponent_monster', video={'clear': 'cpu_monsters'}, start=OPP_TURN,
             setup='''
                 opp.hand: Soul Exchange, Summoned Skull
                 you.m0: Battle Ox atk
@@ -99,7 +99,7 @@ SCENARIOS = {
             note='It absorbs Summoned Skull (2500 ATK), then attacks directly.'),
     ],
     'The Fiend Megacyber': [
-        player('special_summon_from_hand',
+        player('special_summon_from_hand', video={'start': 'summon'},
                setup='''
                    you.hand: The Fiend Megacyber
                    opp.m0: Battle Ox atk
@@ -107,7 +107,7 @@ SCENARIOS = {
                ''',
                steps='special_summon you.hand[The Fiend Megacyber] -> m0 atk',
                expect='you.m0 = The Fiend Megacyber atk'),
-        player('not_with_one_monster_difference',
+        player('not_with_one_monster_difference', video={'effect': 'none'},
                setup='''
                    you.hand: The Fiend Megacyber
                    you.m0: Celtic Guardian atk
@@ -116,7 +116,7 @@ SCENARIOS = {
                ''',
                steps='check menu you.hand[The Fiend Megacyber] lacks Special Summon',
                expect='you.hand = The Fiend Megacyber'),
-        cpu('cpu_special_summon', start=OPP_TURN,
+        cpu('cpu_special_summon', start=OPP_TURN, video={'start': 'summon', 'clear': 'cpu_monsters'},
             setup='''
                 opp.hand: The Fiend Megacyber
                 you.m0: Battle Ox atk
@@ -146,7 +146,7 @@ SCENARIOS = {
                    opp.gy = Celtic Guardian
                    you.m0 = Goblin Attack Force def
                '''),
-        cpu('cpu_attack_then_defense', start=OPP_TURN,
+        cpu('cpu_attack_then_defense', start=OPP_TURN, video={'until': 'defense'},
             setup='''
                 opp.m0: Goblin Attack Force atk
                 you.m0: Celtic Guardian atk
@@ -216,7 +216,7 @@ SCENARIOS = {
                    you.m1 = Battle Ox atk
                    opp.m0 = empty
                '''),
-        cpu('cpu_double_machine_atk', start=OPP_TURN,
+        cpu('cpu_double_machine_atk', start=OPP_TURN, video={'show': 'opp.m0'},
             setup='''
                 opp.hand: Limiter Removal
                 opp.m0: Jinzo atk
@@ -272,6 +272,7 @@ SCENARIOS = {
                    attack you.m0 -> direct
                    yes
                    pick opp.gy[Summoned Skull]
+                   yes
                    pick opp.gy[Sangan]
                ''',
                expect='''
@@ -292,7 +293,7 @@ SCENARIOS = {
             '''),
     ],
     'Bazoo the Soul-Eater': [
-        player('banish_three_for_atk',
+        player('banish_three_for_atk', video={'show': 'you.m0'},
                setup='''
                    you.m0: Bazoo the Soul-Eater atk
                    you.gy: Battle Ox, La Jinn the Mystical Genie of the Lamp, Sangan, Summoned Skull
@@ -312,7 +313,7 @@ SCENARIOS = {
                    you.gy = Summoned Skull
                    menu you.m0 lacks Activate
                '''),
-        cpu('cpu_banish_weakest', start=OPP_TURN,
+        cpu('cpu_banish_weakest', start=OPP_TURN, video={'show': 'opp.m0'},
             setup='''
                 opp.m0: Bazoo the Soul-Eater atk
                 opp.gy: Battle Ox, La Jinn the Mystical Genie of the Lamp, Sangan, Kuriboh
@@ -329,7 +330,7 @@ SCENARIOS = {
             note='BazooCpuResolve banishes its 3 weakest Graveyard monsters; 2500 ATK then beats Jinzo.'),
     ],
     'Torrential Tribute': [
-        player('destroy_all_on_summon',
+        player('destroy_all_on_summon', video={'start': 'first'},
                setup='''
                    you.m0: Mystic Tomato atk
                    you.st0: Torrential Tribute set
@@ -348,7 +349,7 @@ SCENARIOS = {
                    opp.gy = Summoned Skull, Man-Eater Bug
                ''',
                note='Destroyed by an effect: Mystic Tomato does not trigger, and the Set Man-Eater Bug is not flipped.'),
-        cpu('cpu_on_human_summon',
+        cpu('cpu_on_human_summon', video={'start': 'first'},
             setup='''
                 opp.st0: Torrential Tribute set
                 you.m0: Summoned Skull atk

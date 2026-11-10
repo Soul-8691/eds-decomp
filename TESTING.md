@@ -515,7 +515,8 @@ A face-down monster has no Level, so Man-Eater Bug stays.
 2. `attack you.m0 -> direct`: Attack with your Monster Zone 0 (**Kycoo the Ghost Destroyer**): target the opponent directly.
 3. `yes`: Answer Yes.
 4. `pick opp.gy[Summoned Skull]`: Pick **Summoned Skull** in the opponent's Graveyard in the list or on the field.
-5. `pick opp.gy[Sangan]`: Pick **Sangan** in the opponent's Graveyard in the list or on the field.
+5. `yes`: Answer Yes.
+6. `pick opp.gy[Sangan]`: Pick **Sangan** in the opponent's Graveyard in the list or on the field.
 
 **Expected**
 

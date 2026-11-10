@@ -15491,6 +15491,13 @@ int AiPlayAddedCards(void)
     /* Nobleman of Crossout on a face-down monster of the human's (see AiNoblemanOfCrossoutTarget) */
     if (HasFaceDownMonster(AI_HUMAN) && AiTryPlaySpellTrap(CARD_NOBLEMAN_OF_CROSSOUT))
         return 1;
+#ifdef HAS_CARD_SOUL_EXCHANGE
+    /* Soul Exchange: with no monster of its own to Tribute, the CPU Tributes the human's for a level 5+ monster in
+     * its hand (its prepare checks the hand and Main Phase 1; SoulExchangeCpuChainB / SoulExchangeCpuResolve) */
+    if (!p->normalSummonUsed && CountMonsters(AI_PLAYER) == 0 && CountMonsters(AI_HUMAN) > 0
+        && AiTryPlaySpellTrap(CARD_SOUL_EXCHANGE))
+        return 1;
+#endif
 #ifdef HAS_CARD_SECRET_BARREL
     /* Set Secret Barrel: flip and resolve in the Main Phase when the human holds enough cards */
     if (AiWantsSecretBarrel() && AiTryPlaySpellTrap(CARD_SECRET_BARREL))

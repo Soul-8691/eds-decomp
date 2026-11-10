@@ -46,6 +46,7 @@ local opts = {
         "you.lp = 8000",
     },
     freezeOpponent = false,
+    video = { clear = "cpu_monsters" },
 }
 if poc then
     opts.setupCards = poc.setupCards or opts.setupCards

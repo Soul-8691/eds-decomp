@@ -107,19 +107,38 @@ EXPECT_FORMS = [
 ]
 
 
-def player(effect, *, setup, steps, expect, start=None, note=None):
-    return _scenario('Player', effect, setup, steps, expect, start, note)
+# `video` (optional): what the recording must show, when the card's chain or battle is not enough (lib_steps.lua):
+#   start='summon'   the card's own summon is its effect (The Fiend Megacyber's Special Summon from the hand)
+#   start='first'    the capture starts at the first cursor move (the summon that lets a Trap go off), not at the
+#                    activation
+#   until='defense'  after the effect, wait until the card is in Defense Position (Goblin Attack Force)
+#   show='opp.m0'    after the effect, put the cursor on that zone for a moment: the info bar shows its ATK
+#   effect='none'    nothing is meant to happen (a card that cannot be used): no wait for an effect
+#   clear='cpu_monsters'  a CPU scenario empties the CPU's monster zones too (it keeps its first-turn board
+#                    otherwise): with a monster of its own it Tribute Summons instead of using Soul Exchange or
+#                    The Fiend Megacyber's Special Summon
+VIDEO_KEYS = {'start': ('summon', 'first'), 'until': ('defense',), 'show': None, 'effect': ('none',),
+              'clear': ('cpu_monsters',)}
 
 
-def cpu(effect, *, setup, steps, expect, start=None, note=None):
-    return _scenario('CPU', effect, setup, steps, expect, start, note)
+def player(effect, *, setup, steps, expect, start=None, note=None, video=None):
+    return _scenario('Player', effect, setup, steps, expect, start, note, video)
 
 
-def _scenario(actor, effect, setup, steps, expect, start, note):
+def cpu(effect, *, setup, steps, expect, start=None, note=None, video=None):
+    return _scenario('CPU', effect, setup, steps, expect, start, note, video)
+
+
+def _scenario(actor, effect, setup, steps, expect, start, note, video=None):
     st = dict(DEFAULT_START)
     st.update(start or {})
+    video = dict(video or {})
+    for k, v in video.items():
+        allowed = VIDEO_KEYS.get(k, ())
+        if k not in VIDEO_KEYS or (allowed is not None and v not in allowed):
+            raise ValueError('scenario %s: video %s=%r is not one of %s' % (effect, k, v, VIDEO_KEYS))
     return {'actor': actor, 'effect': effect, 'start': st, 'setup': _lines(setup), 'steps': _lines(steps),
-            'expect': _lines(expect), 'note': note}
+            'expect': _lines(expect), 'note': note, 'video': video}
 
 
 def _lines(text):
@@ -349,6 +368,10 @@ def basename(card, sc):
     return f'{_slug(card)}_{effect}_{sc["actor"]}'
 
 
+LUA_KEYWORDS = {'and', 'break', 'do', 'else', 'elseif', 'end', 'false', 'for', 'function', 'goto', 'if', 'in',
+                'local', 'nil', 'not', 'or', 'repeat', 'return', 'then', 'true', 'until', 'while'}
+
+
 def lua_value(v):
     if isinstance(v, bool):
         return 'true' if v else 'false'
@@ -357,7 +380,10 @@ def lua_value(v):
     if isinstance(v, str):
         return '"' + v.replace('\\', '\\\\').replace('"', '\\"') + '"'
     if isinstance(v, dict):
-        return '{ ' + ', '.join(f'{k} = {lua_value(x)}' for k, x in v.items()) + ' }'
+        # (a key that is a Lua keyword, such as `until`, or not a plain name is written ["key"])
+        def key(k):
+            return k if re.match(r'^[A-Za-z_]\w*$', k) and k not in LUA_KEYWORDS else '[' + lua_value(k) + ']'
+        return '{ ' + ', '.join(f'{key(k)} = {lua_value(x)}' for k, x in v.items()) + ' }'
     return '{ ' + ', '.join(lua_value(x) for x in v) + ' }'
 
 

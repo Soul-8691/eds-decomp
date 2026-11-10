@@ -42,4 +42,5 @@ EDS.run({
         "opp.gy = Torrential Tribute",
     },
     freezeOpponent = false,
+    video = { start = "first" },
 })
