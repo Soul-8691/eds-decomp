@@ -3,13 +3,12 @@
 3. Always win rock/paper/scissors in debug mode/duel
 4. CPU vs CPU
 5. Testing scenarios
-6. Pre-duel QR codes
-7. Tokyo Dome format
-8. Pre-Tokyo Dome OCG packs
-9. Synchro/XYZ/Link cards
-10. Chaos Return format
-11. Yugi Muto duelist
-12. Yugi Muto pack
-13. New cards
-14. Test
-15. Record longplay
+6. Tokyo Dome format
+7. Pre-Tokyo Dome OCG packs
+8. Synchro/XYZ/Link cards
+9. Chaos Return format
+10. Yugi Muto duelist
+11. Yugi Muto pack
+12. New cards
+13. Test
+14. Record longplay
