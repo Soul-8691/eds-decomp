@@ -546,6 +546,18 @@ int ModDebugDuel(void)
     return gMain.opponent == DUELIST_DEBUG && !gDuelCtrl.isLinkDuel;
 }
 
+/* TurnOrder_ChooseHand (turn_order_scene.c): 1 when the CPU shows the hand the player's beats, so the player always
+ * wins rock-paper-scissors: every duel of a testing build (make, make demo), and against Debug in make release.
+ * (Link Battles exchange the hands over the link and never ask.) */
+int ModAlwaysWinRps(void)
+{
+#if !MOD_RELEASE
+    return 1;
+#else
+    return gMain.opponent == DUELIST_DEBUG;
+#endif
+}
+
 /* 1 in a Campaign duel against Empty Deck (make release too): it has no cards, so neither player decks out (CanDeckOut,
  * duel_cmd_deck.c). Never in a Link Battle. */
 int ModEmptyDeckDuel(void)

@@ -22,10 +22,6 @@ HMA prototype
 Make the chain hold more than 3 targets
 Shift the size-limited area
 CFRU template C injection
-"Empty" duelist
 Testing scenarios - test by writing a Lua script for each scenario in TESTING.md for going against the most used duelist for that format (start a match with Test Duel) in mGBA and populating the game state in RAM, then manually performing the actions necessary on the fastest speed settings (mGBA max turbo) while recording the interaction as "{card_name}_{effect_name}_{player|CPU}" using mGBA's MP4 recording ability; separate videos for each test ("C:\Program Files\mGBA\mGBA.exe" -6 -C audioSync=0 -C videoSync=0 -C fpsTarget=6000 -C scaleMultiplier=6 --script tools\testing_scenarios\generated\script.lua eds_demo.gba)
-Hold down L in debug mode/duel to freeze opponent
-Always win rock/paper/scissors in debug mode/duel
 CPU vs CPU (player)
 Screenshot/GIF/video Lua scripts
-Configurable opponent decks

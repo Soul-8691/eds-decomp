@@ -3025,3 +3025,9 @@ updated: 2026-09-29
   not L; the Settings help line says so.
 - README.md / README_WIP.md: Settings on L+R; a Hold L (debug) bullet.
 - Not built yet (the full test run holds eds_demo.gba): untested.
+
+## [2026-11-10] progress | Always win rock-paper-scissors in debug duels (untested)
+- src/turn_order_scene.c TurnOrder_ChooseHand: the CPU's hand is the one the player's beats when
+  `ModAlwaysWinRps` (src/mod_opponents.c; include/global.h): every duel of a testing build, and against Debug in make
+  release. Link Battles are unaffected. The test harness still goes second (it writes the result directly).
+- Not built yet (the full test run holds eds_demo.gba).

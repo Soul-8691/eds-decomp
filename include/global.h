@@ -96,6 +96,7 @@ u32 GetTrunkFusionCopies(u16 id);
 /* 1 in a Campaign duel with Debug (src/mod_opponents.c): the testing build's duel rules apply in make release too
  * (the opponent's hand and face-down cards shown; neither player can deck out in that duel). */
 int ModDebugDuel(void);
+int ModAlwaysWinRps(void);          /* src/mod_opponents.c: the player wins rock-paper-scissors (debug duels) */
 int ModEmptyDeckDuel(void);         /* src/mod_opponents.c: a Campaign duel against Empty Deck (no deck-out) */
 /* 1 in a testing-build duel vs Test Duel (Duel Computer slot): neither player can deck out. */
 int ModTestDuel(void);

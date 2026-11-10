@@ -284,6 +284,8 @@ See Mobius's README for chart semantics and options.
   does not open; effects are declined as if you had answered No). **B** still fast-forwards, as in the table above.
 - **Hold L (debug).** In a testing build, or against Debug, the CPU does nothing while you hold **L**: it chains and
   activates no Set card, and on its turn it skips its Main and Battle Phase (a play already under way finishes first).
+- **Rock-paper-scissors (debug).** In a testing build, or against Debug, you always win the rock-paper-scissors before a
+  duel, so you choose who goes first.
 
 ### Smarter CPU
 

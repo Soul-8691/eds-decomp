@@ -308,7 +308,8 @@ u16 TurnOrder_Load(void)
 /* TURN_ORDER_CHOOSE_HAND: Left/Right turn the carousel; A (once it has stopped) picks the hand facing the
  * player. Over the link the hand is exchanged with LINKMSG_RPS_HAND, with the "Wait" sign up until the
  * partner's arrives. Otherwise the CPU answers: the same hand 1 time in 5 (a draw), else a hand the player
- * beats or loses to with equal odds. Then the result is judged and the opponent's card slides in. Draws the
+ * beats or loses to with equal odds (added: in debug duels always the one it beats, ModAlwaysWinRps). Then the result
+ * is judged and the opponent's card slides in. Draws the
  * SELECT A CARD banner while the opponent's card is still. Returns 0 (the phase moves itself on). */
 u16 TurnOrder_ChooseHand(void)
 {
@@ -320,7 +321,9 @@ u16 TurnOrder_ChooseHand(void)
                 work->u.turnOrder.linkWaiting = 1;
                 LinkSyncStart((u8 *)&work->u.turnOrder.linkSync);
             } else {
-                if (Random() % 500 < 100)
+                if (ModAlwaysWinRps())  /* added: debug duels, the hand the player's hand beats (src/mod_opponents.c) */
+                    work->u.turnOrder.opponentHand = (work->u.turnOrder.scrollers[SCROLLER_CAROUSEL].stop + 1) % 3;
+                else if (Random() % 500 < 100)
                     work->u.turnOrder.opponentHand = work->u.turnOrder.scrollers[SCROLLER_CAROUSEL].stop;
                 else if (Random() & 1)  /* the hand the player's hand beats */
                     work->u.turnOrder.opponentHand = (work->u.turnOrder.scrollers[SCROLLER_CAROUSEL].stop + 1) % 3;
