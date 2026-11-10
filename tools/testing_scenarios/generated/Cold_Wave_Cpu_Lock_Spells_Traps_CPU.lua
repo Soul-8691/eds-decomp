@@ -40,6 +40,4 @@ EDS.run({
         "menu you.hand[Pot of Greed] lacks Activate",
     },
     freezeOpponent = false,
-    play = { { wait = 90 } },     -- the key presses for `steps` are still to be written
-    recordFrames = 3600,
 })

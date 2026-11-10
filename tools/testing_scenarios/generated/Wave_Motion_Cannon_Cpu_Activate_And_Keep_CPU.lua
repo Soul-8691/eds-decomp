@@ -37,6 +37,4 @@ EDS.run({
         "opp.spells has Wave-Motion Cannon",
     },
     freezeOpponent = false,
-    play = { { wait = 90 } },     -- the key presses for `steps` are still to be written
-    recordFrames = 3600,
 })

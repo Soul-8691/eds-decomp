@@ -42,6 +42,4 @@ EDS.run({
         "opp.gy = Summoned Skull",
     },
     freezeOpponent = true,
-    play = { { wait = 90 } },     -- the key presses for `steps` are still to be written
-    recordFrames = nil,
 })

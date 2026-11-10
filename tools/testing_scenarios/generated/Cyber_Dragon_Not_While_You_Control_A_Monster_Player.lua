@@ -39,6 +39,4 @@ EDS.run({
         "you.hand = Cyber Dragon",
     },
     freezeOpponent = true,
-    play = { { wait = 90 } },     -- the key presses for `steps` are still to be written
-    recordFrames = nil,
 })

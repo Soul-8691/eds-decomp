@@ -42,6 +42,4 @@ EDS.run({
         "you.m1 = Gravekeeper's Spy atk",
     },
     freezeOpponent = true,
-    play = { { wait = 90 } },     -- the key presses for `steps` are still to be written
-    recordFrames = nil,
 })

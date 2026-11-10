@@ -46,6 +46,4 @@ EDS.run({
         "opp.gy has Trap Hole",
     },
     freezeOpponent = false,
-    play = { { wait = 90 } },     -- the key presses for `steps` are still to be written
-    recordFrames = nil,
 })

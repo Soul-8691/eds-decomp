@@ -40,6 +40,4 @@ EDS.run({
         "opp.hand has Asura Priest",
     },
     freezeOpponent = false,
-    play = { { wait = 90 } },     -- the key presses for `steps` are still to be written
-    recordFrames = 3600,
 })

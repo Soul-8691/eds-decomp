@@ -52,5 +52,4 @@ if poc then
     opts.play = poc.play
 end
 opts.pocRequired = false
-opts.recordFrames = 3600
-EDS.run(opts)
+EDS.run(opts)                 -- (no poc table: lib_steps.lua plays the steps)

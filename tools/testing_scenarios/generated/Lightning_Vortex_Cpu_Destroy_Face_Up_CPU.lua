@@ -41,6 +41,4 @@ EDS.run({
         "opp.gy has Lightning Vortex",
     },
     freezeOpponent = false,
-    play = { { wait = 90 } },     -- the key presses for `steps` are still to be written
-    recordFrames = 3600,
 })

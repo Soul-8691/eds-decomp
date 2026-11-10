@@ -42,6 +42,4 @@ EDS.run({
         "menu you.st1 lacks Activate",
     },
     freezeOpponent = false,
-    play = { { wait = 90 } },     -- the key presses for `steps` are still to be written
-    recordFrames = 3600,
 })

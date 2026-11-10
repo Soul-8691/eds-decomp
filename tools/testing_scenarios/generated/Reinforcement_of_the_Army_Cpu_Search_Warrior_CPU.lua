@@ -38,6 +38,4 @@ EDS.run({
         "opp.gy has Reinforcement of the Army",
     },
     freezeOpponent = false,
-    play = { { wait = 90 } },     -- the key presses for `steps` are still to be written
-    recordFrames = 3600,
 })

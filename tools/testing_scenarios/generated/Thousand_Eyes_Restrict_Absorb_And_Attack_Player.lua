@@ -47,6 +47,4 @@ EDS.run({
         "menu you.m0 lacks Activate",
     },
     freezeOpponent = true,
-    play = { { wait = 90 } },     -- the key presses for `steps` are still to be written
-    recordFrames = nil,
 })

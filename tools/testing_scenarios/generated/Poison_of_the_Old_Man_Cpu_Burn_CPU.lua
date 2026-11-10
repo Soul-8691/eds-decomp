@@ -38,6 +38,4 @@ EDS.run({
         "opp.gy = Poison of the Old Man",
     },
     freezeOpponent = false,
-    play = { { wait = 90 } },     -- the key presses for `steps` are still to be written
-    recordFrames = 3600,
 })

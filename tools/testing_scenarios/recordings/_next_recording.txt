@@ -1,2 +1,2 @@
-tools\testing_scenarios\poc\..\recordings\Card_Destruction_Cpu_Duel_CPU.mp4
-tools/testing_scenarios/poc/../recordings/Card_Destruction_Cpu_Duel_CPU.mp4
+tools\testing_scenarios\generated\..\recordings\Soul_Exchange_Tribute_Opponent_Monster_Player.mp4
+tools/testing_scenarios/generated/../recordings/Soul_Exchange_Tribute_Opponent_Monster_Player.mp4

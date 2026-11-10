@@ -45,6 +45,4 @@ EDS.run({
         "you.gy = Battle Ox, Enemy Controller",
     },
     freezeOpponent = true,
-    play = { { wait = 90 } },     -- the key presses for `steps` are still to be written
-    recordFrames = nil,
 })

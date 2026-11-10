@@ -41,6 +41,4 @@ EDS.run({
         "opp.gy = Fissure",
     },
     freezeOpponent = true,
-    play = { { wait = 90 } },     -- the key presses for `steps` are still to be written
-    recordFrames = nil,
 })

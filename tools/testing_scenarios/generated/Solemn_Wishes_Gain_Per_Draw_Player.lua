@@ -47,6 +47,4 @@ EDS.run({
         "you.st0 = Solemn Wishes up",
     },
     freezeOpponent = true,
-    play = { { wait = 90 } },     -- the key presses for `steps` are still to be written
-    recordFrames = nil,
 })

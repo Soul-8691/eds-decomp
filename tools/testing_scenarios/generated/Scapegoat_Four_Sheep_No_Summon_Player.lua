@@ -40,6 +40,4 @@ EDS.run({
         "menu you.hand[Battle Ox] has Set",
     },
     freezeOpponent = true,
-    play = { { wait = 90 } },     -- the key presses for `steps` are still to be written
-    recordFrames = nil,
 })

@@ -42,6 +42,4 @@ EDS.run({
         "you.m1 = Battle Ox atk",
     },
     freezeOpponent = false,
-    play = { { wait = 90 } },     -- the key presses for `steps` are still to be written
-    recordFrames = 3600,
 })

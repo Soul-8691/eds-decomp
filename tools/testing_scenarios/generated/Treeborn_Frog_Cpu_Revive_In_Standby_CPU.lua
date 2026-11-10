@@ -38,6 +38,4 @@ EDS.run({
         "opp.gy lacks Treeborn Frog",
     },
     freezeOpponent = false,
-    play = { { wait = 90 } },     -- the key presses for `steps` are still to be written
-    recordFrames = 3600,
 })

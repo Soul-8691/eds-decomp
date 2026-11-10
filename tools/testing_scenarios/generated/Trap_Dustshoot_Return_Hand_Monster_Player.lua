@@ -43,6 +43,4 @@ EDS.run({
         "you.gy = Trap Dustshoot",
     },
     freezeOpponent = true,
-    play = { { wait = 90 } },     -- the key presses for `steps` are still to be written
-    recordFrames = nil,
 })

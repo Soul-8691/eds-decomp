@@ -42,6 +42,4 @@ EDS.run({
         "you.m0 = Zaborg the Thunder Monarch atk",
     },
     freezeOpponent = true,
-    play = { { wait = 90 } },     -- the key presses for `steps` are still to be written
-    recordFrames = nil,
 })

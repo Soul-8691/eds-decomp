@@ -48,6 +48,4 @@ EDS.run({
         "you.st0 = Xing Zhen Hu up",
     },
     freezeOpponent = false,
-    play = { { wait = 90 } },     -- the key presses for `steps` are still to be written
-    recordFrames = nil,
 })

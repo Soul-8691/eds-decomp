@@ -44,6 +44,4 @@ EDS.run({
         "you.hand count 2",
     },
     freezeOpponent = true,
-    play = { { wait = 90 } },     -- the key presses for `steps` are still to be written
-    recordFrames = nil,
 })

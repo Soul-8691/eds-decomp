@@ -48,6 +48,4 @@ EDS.run({
         "you.banished = Summoned Skull, Battle Ox, Celtic Guardian",
     },
     freezeOpponent = true,
-    play = { { wait = 90 } },     -- the key presses for `steps` are still to be written
-    recordFrames = nil,
 })

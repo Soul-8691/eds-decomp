@@ -1,0 +1,880 @@
+     33 MP4 target: tools\testing_scenarios\generated\..\recordings\Soul_Exchange_Tribute_Opponent_Monster_Player.mp4
+     33 emu recording API: screenshot, screenshotToImage
+     33 MP4: ffmpeg found through the registry PATH: C:\Users\pswan\Downloads\ffmpeg-2026-11-09-git-16a345b022-full_build\ffmpeg-2026-11-09-git-16a345b022-full_build\bin\ffmpeg.exe
+     33 MP4: scripted capture (emu:screenshot PNG sequence + ffmpeg). See captureMp4 in README.
+     33 Soul Exchange / tribute_opponent_monster / Player
+     33 activate you.hand[Soul Exchange]; target opp.m0; tribute_summon you.hand[Summoned Skull] -> m0 atk tributes opp.m0
+     33 Capture dir: tools\testing_scenarios\generated\..\recordings\Soul_Exchange_Tribute_Opponent_Monster_Player_frames (PNG usually 240x160; MP4 encoded 1440x960, 6x integer scale)
+     33 Launch mGBA with -6 (or maximize window) so on-screen size matches capture scale.
+    814 Main menu (callback 0x08003B15).
+    937 Campaign selected (callback 0x0801D749).
+   1076 Turn order: forced RPS lose (CPU goes first).
+   1086 Turn order: A (lost RPS; CPU chooses first).
+   1124 Turn order: A (lost RPS; CPU chooses first).
+   1316 Opponent's turn (waiting for your Main Phase 1).
+   1318 Usage deck yugi-kaiba / Soul Control: main=40 extra=15; P0 shuffled=true (top 394->772) P1 shuffled=true (top 394->581), hands cleared.
+   1669 Player Draw Phase.
+   1880 Opening draw complete (hand=6 deck=34 want=6).
+   2017 Exact setup: P0 hand=2 deck=34 gy=0, P1 hand=0 deck=35 gy=0, LP 8000/8000, turnCount 2.
+   2017 Player Main Phase 1.
+   2017 steps: 3 steps, 11 ops
+   2017 step: activate you.hand[Soul Exchange]
+   2210 steps: capture starts (cursor on activate you.hand[Soul Exchange])
+   2214 screenshotToImage: 240x160
+   2256 step: target opp.m0
+   2256 dbg keys: held 0xFC00 new 0x000 targetStep 0 buildStep 0
+   2256 dbg target: sel 0/11/0 box false kind 0 step 0 result 0 | sig 0,0,0,false,0,false,false,0,0,0,0,1 | chainBuild false targetStep 0 cursorReady false | buildStep 0 cmdQueue 0 running 1 prompt 0x0000 summon 0x00
+   2257 dbg keys: held 0xFC00 new 0x000 targetStep 0 buildStep 0
+   2258 dbg keys: held 0xFC00 new 0x000 targetStep 0 buildStep 0
+   2259 dbg keys: held 0xFC00 new 0x000 targetStep 0 buildStep 0
+   2260 dbg keys: held 0xFC00 new 0x000 targetStep 0 buildStep 0
+   2261 dbg keys: held 0xFC00 new 0x000 targetStep 0 buildStep 0
+   2262 dbg keys: held 0xFC00 new 0x000 targetStep 0 buildStep 0
+   2263 dbg keys: held 0xFC00 new 0x000 targetStep 0 buildStep 0
+   2264 dbg keys: held 0xFC00 new 0x000 targetStep 0 buildStep 0
+   2265 dbg keys: held 0xFC00 new 0x000 targetStep 0 buildStep 0
+   2266 dbg keys: held 0xFC00 new 0x000 targetStep 0 buildStep 0
+   2267 dbg keys: held 0xFC00 new 0x000 targetStep 0 buildStep 0
+   2268 dbg keys: held 0xFC00 new 0x000 targetStep 0 buildStep 0
+   2269 dbg keys: held 0xFC00 new 0x000 targetStep 0 buildStep 0
+   2270 dbg keys: held 0xFC00 new 0x000 targetStep 0 buildStep 0
+   2271 dbg keys: held 0xFC00 new 0x000 targetStep 0 buildStep 2
+   2271 dbg target: sel 0/5/0 box false kind 0 step 0 result 0 | sig 0,0,0,false,0,false,false,0,0,0,1,1 | chainBuild true targetStep 0 cursorReady false | buildStep 2 cmdQueue 1 running 0 prompt 0x0000 summon 0x00
+   2272 dbg keys: held 0xFC00 new 0x000 targetStep 0 buildStep 2
+   2273 dbg keys: held 0xFC00 new 0x000 targetStep 0 buildStep 2
+   2274 dbg keys: held 0xFC00 new 0x000 targetStep 0 buildStep 2
+   2275 dbg keys: held 0xFC00 new 0x000 targetStep 0 buildStep 2
+   2276 dbg keys: held 0xFC00 new 0x000 targetStep 0 buildStep 2
+   2277 dbg keys: held 0xFC00 new 0x000 targetStep 0 buildStep 2
+   2278 dbg keys: held 0xFC00 new 0x000 targetStep 0 buildStep 2
+   2279 dbg keys: held 0xFC00 new 0x000 targetStep 0 buildStep 2
+   2280 dbg keys: held 0xFC00 new 0x000 targetStep 0 buildStep 2
+   2281 dbg keys: held 0xFC00 new 0x000 targetStep 0 buildStep 2
+   2282 dbg keys: held 0xFC00 new 0x000 targetStep 0 buildStep 2
+   2283 dbg keys: held 0xFC00 new 0x000 targetStep 0 buildStep 2
+   2284 dbg keys: held 0xFC00 new 0x000 targetStep 0 buildStep 2
+   2285 dbg keys: held 0xFC00 new 0x000 targetStep 0 buildStep 2
+   2286 dbg keys: held 0xFC00 new 0x000 targetStep 0 buildStep 2
+   2286 dbg target: sel 0/5/0 box false kind 0 step 0 result 0 | sig 0,0,0,false,0,false,false,0,0,0,1,1 | chainBuild true targetStep 0 cursorReady false | buildStep 2 cmdQueue 0 running 1 prompt 0x0000 summon 0x00
+   2287 dbg keys: held 0xFC00 new 0x000 targetStep 0 buildStep 2
+   2288 dbg keys: held 0xFC00 new 0x000 targetStep 0 buildStep 2
+   2289 dbg keys: held 0xFC00 new 0x000 targetStep 0 buildStep 2
+   2290 dbg keys: held 0xFC00 new 0x000 targetStep 0 buildStep 2
+   2291 dbg keys: held 0xFC00 new 0x000 targetStep 0 buildStep 2
+   2292 dbg keys: held 0xFC00 new 0x000 targetStep 0 buildStep 2
+   2293 dbg keys: held 0xFC00 new 0x000 targetStep 0 buildStep 2
+   2294 dbg keys: held 0xFC00 new 0x000 targetStep 0 buildStep 2
+   2295 dbg keys: held 0xFC00 new 0x000 targetStep 0 buildStep 2
+   2296 dbg keys: held 0xFC00 new 0x000 targetStep 0 buildStep 2
+   2297 dbg keys: held 0xFC00 new 0x000 targetStep 0 buildStep 2
+   2298 dbg keys: held 0xFC00 new 0x000 targetStep 0 buildStep 2
+   2299 dbg keys: held 0xFC00 new 0x000 targetStep 0 buildStep 2
+   2300 dbg keys: held 0xFC00 new 0x000 targetStep 0 buildStep 2
+   2301 dbg keys: held 0xFC00 new 0x000 targetStep 0 buildStep 2
+   2301 dbg target: sel 0/5/0 box false kind 0 step 0 result 0 | sig 0,0,0,false,0,false,false,0,0,0,1,1 | chainBuild true targetStep 0 cursorReady false | buildStep 2 cmdQueue 0 running 1 prompt 0x0000 summon 0x00
+   2302 dbg keys: held 0xFC00 new 0x000 targetStep 0 buildStep 2
+   2303 dbg keys: held 0xFC00 new 0x000 targetStep 0 buildStep 2
+   2304 dbg keys: held 0xFC00 new 0x000 targetStep 0 buildStep 2
+   2305 dbg keys: held 0xFC00 new 0x000 targetStep 0 buildStep 2
+   2306 dbg keys: held 0xFC00 new 0x000 targetStep 0 buildStep 2
+   2307 dbg keys: held 0xFC00 new 0x000 targetStep 0 buildStep 2
+   2308 dbg keys: held 0xFC00 new 0x000 targetStep 0 buildStep 2
+   2309 dbg keys: held 0xFC00 new 0x000 targetStep 0 buildStep 2
+   2310 dbg keys: held 0xFC00 new 0x000 targetStep 0 buildStep 2
+   2311 dbg keys: held 0xFC00 new 0x000 targetStep 0 buildStep 2
+   2312 dbg keys: held 0xFC00 new 0x000 targetStep 0 buildStep 2
+   2313 dbg keys: held 0xFC00 new 0x000 targetStep 0 buildStep 2
+   2314 dbg keys: held 0xFC00 new 0x000 targetStep 0 buildStep 2
+   2315 dbg keys: held 0xFC00 new 0x000 targetStep 0 buildStep 2
+   2316 dbg keys: held 0xFC00 new 0x000 targetStep 0 buildStep 2
+   2316 dbg target: sel 0/5/0 box false kind 0 step 0 result 0 | sig 0,0,0,false,0,false,false,0,0,0,1,1 | chainBuild true targetStep 0 cursorReady false | buildStep 2 cmdQueue 0 running 1 prompt 0x0000 summon 0x00
+   2317 dbg keys: held 0xFC00 new 0x000 targetStep 0 buildStep 2
+   2318 dbg keys: held 0xFC00 new 0x000 targetStep 0 buildStep 2
+   2319 dbg keys: held 0xFC00 new 0x000 targetStep 0 buildStep 2
+   2320 dbg keys: held 0xFC00 new 0x000 targetStep 0 buildStep 2
+   2321 dbg keys: held 0xFC00 new 0x000 targetStep 0 buildStep 2
+   2322 dbg keys: held 0xFC00 new 0x000 targetStep 0 buildStep 2
+   2323 dbg keys: held 0xFC00 new 0x000 targetStep 0 buildStep 2
+   2324 dbg keys: held 0xFC00 new 0x000 targetStep 0 buildStep 2
+   2325 dbg keys: held 0xFC00 new 0x000 targetStep 0 buildStep 2
+   2326 dbg keys: held 0xFC00 new 0x000 targetStep 0 buildStep 2
+   2327 dbg keys: held 0xFC00 new 0x000 targetStep 0 buildStep 2
+   2328 dbg keys: held 0xFC00 new 0x000 targetStep 0 buildStep 2
+   2329 dbg keys: held 0xFC00 new 0x000 targetStep 0 buildStep 2
+   2330 dbg keys: held 0xFC00 new 0x000 targetStep 0 buildStep 2
+   2331 dbg keys: held 0xFC00 new 0x000 targetStep 0 buildStep 2
+   2331 dbg target: sel 0/5/0 box false kind 0 step 0 result 0 | sig 0,0,0,false,0,false,false,0,0,0,1,1 | chainBuild true targetStep 0 cursorReady false | buildStep 2 cmdQueue 0 running 1 prompt 0x0000 summon 0x00
+   2332 dbg keys: held 0xFC00 new 0x000 targetStep 0 buildStep 2
+   2333 dbg keys: held 0xFC00 new 0x000 targetStep 0 buildStep 2
+   2334 dbg keys: held 0xFC00 new 0x000 targetStep 0 buildStep 2
+   2335 dbg keys: held 0xFC00 new 0x000 targetStep 0 buildStep 2
+   2336 dbg keys: held 0xFC00 new 0x000 targetStep 0 buildStep 2
+   2337 dbg keys: held 0xFC00 new 0x000 targetStep 0 buildStep 2
+   2338 dbg keys: held 0xFC00 new 0x000 targetStep 0 buildStep 2
+   2339 dbg keys: held 0xFC00 new 0x000 targetStep 0 buildStep 2
+   2340 dbg keys: held 0xFC00 new 0x000 targetStep 0 buildStep 2
+   2341 dbg keys: held 0xFC00 new 0x000 targetStep 0 buildStep 2
+   2342 dbg keys: held 0xFC00 new 0x000 targetStep 0 buildStep 2
+   2343 dbg keys: held 0xFC00 new 0x000 targetStep 0 buildStep 2
+   2344 dbg keys: held 0xFC00 new 0x000 targetStep 0 buildStep 2
+   2345 dbg keys: held 0xFC00 new 0x000 targetStep 0 buildStep 2
+   2346 dbg keys: held 0xFC00 new 0x000 targetStep 0 buildStep 2
+   2346 dbg target: sel 0/5/0 box false kind 0 step 0 result 0 | sig 0,0,0,false,0,false,false,0,0,0,1,1 | chainBuild true targetStep 0 cursorReady false | buildStep 2 cmdQueue 0 running 1 prompt 0x0000 summon 0x00
+   2347 dbg keys: held 0xFC00 new 0x000 targetStep 0 buildStep 2
+   2348 dbg keys: held 0xFC00 new 0x000 targetStep 0 buildStep 2
+   2349 dbg keys: held 0xFC00 new 0x000 targetStep 0 buildStep 2
+   2350 dbg keys: held 0xFC00 new 0x000 targetStep 0 buildStep 2
+   2351 dbg keys: held 0xFC00 new 0x000 targetStep 0 buildStep 2
+   2352 dbg keys: held 0xFC00 new 0x000 targetStep 0 buildStep 2
+   2353 dbg keys: held 0xFC00 new 0x000 targetStep 0 buildStep 2
+   2354 dbg keys: held 0xFC00 new 0x000 targetStep 0 buildStep 2
+   2355 dbg keys: held 0xFC00 new 0x000 targetStep 0 buildStep 2
+   2356 dbg keys: held 0xFC00 new 0x000 targetStep 0 buildStep 2
+   2357 dbg keys: held 0xFC00 new 0x000 targetStep 0 buildStep 2
+   2358 dbg keys: held 0xFC00 new 0x000 targetStep 0 buildStep 2
+   2359 dbg keys: held 0xFC00 new 0x000 targetStep 0 buildStep 2
+   2360 dbg keys: held 0xFC00 new 0x000 targetStep 0 buildStep 2
+   2361 dbg keys: held 0xFC00 new 0x000 targetStep 0 buildStep 2
+   2361 dbg target: sel 0/5/0 box false kind 0 step 0 result 0 | sig 0,0,0,false,0,false,false,0,0,0,1,1 | chainBuild true targetStep 0 cursorReady false | buildStep 2 cmdQueue 0 running 1 prompt 0x0000 summon 0x00
+   2362 dbg keys: held 0xFC00 new 0x000 targetStep 0 buildStep 2
+   2363 dbg keys: held 0xFC00 new 0x000 targetStep 0 buildStep 2
+   2364 dbg keys: held 0xFC00 new 0x000 targetStep 0 buildStep 2
+   2365 dbg keys: held 0xFC00 new 0x000 targetStep 0 buildStep 2
+   2366 dbg keys: held 0xFC00 new 0x000 targetStep 0 buildStep 2
+   2367 dbg keys: held 0xFC00 new 0x000 targetStep 0 buildStep 2
+   2368 dbg keys: held 0xFC00 new 0x000 targetStep 0 buildStep 2
+   2369 dbg keys: held 0xFC00 new 0x000 targetStep 0 buildStep 2
+   2370 dbg keys: held 0xFC00 new 0x000 targetStep 0 buildStep 2
+   2371 dbg keys: held 0xFC00 new 0x000 targetStep 0 buildStep 2
+   2372 dbg keys: held 0xFC00 new 0x000 targetStep 0 buildStep 2
+   2373 dbg keys: held 0xFC00 new 0x000 targetStep 0 buildStep 2
+   2374 dbg keys: held 0xFC00 new 0x000 targetStep 0 buildStep 2
+   2375 dbg keys: held 0xFC00 new 0x000 targetStep 0 buildStep 2
+   2376 dbg keys: held 0xFC00 new 0x000 targetStep 0 buildStep 2
+   2376 dbg target: sel 0/5/0 box false kind 0 step 0 result 0 | sig 0,0,0,false,0,false,false,0,0,0,1,1 | chainBuild true targetStep 0 cursorReady false | buildStep 2 cmdQueue 0 running 1 prompt 0x0000 summon 0x00
+   2377 dbg keys: held 0xFC00 new 0x000 targetStep 0 buildStep 2
+   2378 dbg keys: held 0xFC00 new 0x000 targetStep 0 buildStep 2
+   2379 dbg keys: held 0xFC00 new 0x000 targetStep 0 buildStep 2
+   2380 dbg keys: held 0xFC00 new 0x000 targetStep 0 buildStep 2
+   2381 dbg keys: held 0xFC00 new 0x000 targetStep 0 buildStep 2
+   2382 dbg keys: held 0xFC00 new 0x000 targetStep 0 buildStep 2
+   2383 dbg keys: held 0xFC00 new 0x000 targetStep 0 buildStep 2
+   2384 dbg keys: held 0xFC00 new 0x000 targetStep 0 buildStep 2
+   2385 dbg keys: held 0xFC00 new 0x000 targetStep 0 buildStep 2
+   2386 dbg keys: held 0xFC00 new 0x000 targetStep 0 buildStep 2
+   2387 dbg keys: held 0xFC00 new 0x000 targetStep 0 buildStep 2
+   2388 dbg keys: held 0xFC00 new 0x000 targetStep 0 buildStep 2
+   2389 dbg keys: held 0xFC00 new 0x000 targetStep 0 buildStep 2
+   2390 dbg keys: held 0xFC00 new 0x000 targetStep 0 buildStep 2
+   2391 dbg keys: held 0xFC00 new 0x000 targetStep 0 buildStep 2
+   2391 dbg target: sel 0/5/0 box false kind 0 step 0 result 0 | sig 0,0,0,false,0,false,false,0,0,0,1,1 | chainBuild true targetStep 0 cursorReady false | buildStep 2 cmdQueue 0 running 1 prompt 0x0000 summon 0x00
+   2392 dbg keys: held 0xFC00 new 0x000 targetStep 0 buildStep 2
+   2393 dbg keys: held 0xFC00 new 0x000 targetStep 0 buildStep 2
+   2394 dbg keys: held 0xFC00 new 0x000 targetStep 0 buildStep 2
+   2395 dbg keys: held 0xFC00 new 0x000 targetStep 0 buildStep 2
+   2396 dbg keys: held 0xFC00 new 0x000 targetStep 0 buildStep 2
+   2397 dbg keys: held 0xFC00 new 0x000 targetStep 0 buildStep 2
+   2398 dbg keys: held 0xFC00 new 0x000 targetStep 0 buildStep 2
+   2399 dbg keys: held 0xFC00 new 0x000 targetStep 0 buildStep 2
+   2400 dbg keys: held 0xFC00 new 0x000 targetStep 0 buildStep 2
+   2401 dbg keys: held 0xFC00 new 0x000 targetStep 0 buildStep 2
+   2402 dbg keys: held 0xFC00 new 0x000 targetStep 0 buildStep 2
+   2403 dbg keys: held 0xFC00 new 0x000 targetStep 0 buildStep 2
+   2404 dbg keys: held 0xFC00 new 0x000 targetStep 0 buildStep 2
+   2405 dbg keys: held 0xFC00 new 0x000 targetStep 0 buildStep 2
+   2406 dbg keys: held 0xFC00 new 0x000 targetStep 0 buildStep 2
+   2406 dbg target: sel 0/5/0 box false kind 0 step 0 result 0 | sig 0,0,0,false,0,false,false,0,0,0,1,1 | chainBuild true targetStep 0 cursorReady false | buildStep 2 cmdQueue 0 running 1 prompt 0x0000 summon 0x00
+   2407 dbg keys: held 0xFC00 new 0x000 targetStep 0 buildStep 2
+   2408 dbg keys: held 0xFC00 new 0x000 targetStep 0 buildStep 2
+   2409 dbg keys: held 0xFC00 new 0x000 targetStep 0 buildStep 2
+   2410 dbg keys: held 0xFC00 new 0x000 targetStep 0 buildStep 4
+   2411 dbg keys: held 0xFC00 new 0x000 targetStep 0 buildStep 5
+   2412 dbg keys: held 0xFC00 new 0x000 targetStep 0 buildStep 5
+   2413 dbg keys: held 0xFC00 new 0x000 targetStep 0 buildStep 5
+   2414 dbg keys: held 0xFC00 new 0x000 targetStep 0 buildStep 5
+   2415 dbg keys: held 0xFC00 new 0x000 targetStep 0 buildStep 5
+   2416 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 5
+   2417 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 5
+   2418 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 5
+   2419 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 5
+   2420 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 5
+   2421 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 5
+   2421 dbg target: sel 0/5/0 box true kind 0 step 0 result 0 | sig 0,1,0,true,0,false,false,0,0,0,1,1 | chainBuild true targetStep 1 cursorReady false | buildStep 5 cmdQueue 0 running 0 prompt 0x0000 summon 0x00
+   2422 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 5
+   2423 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 5
+   2424 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 5
+   2425 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 5
+   2426 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 5
+   2427 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 5
+   2428 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 5
+   2429 dbg hold key 0x001 left 3: game held 0xFC01 new 0x0001 emu keys 0x001
+   2430 dbg hold key 0x001 left 2: game held 0xFC01 new 0x0000 emu keys 0x001
+   2431 dbg hold key 0x001 left 1: game held 0xFC01 new 0x0000 emu keys 0x001
+   2447 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 5
+   2448 dbg hold key 0x001 left 3: game held 0xFC00 new 0x0000 emu keys 0x001
+   2449 dbg hold key 0x001 left 2: game held 0xFC00 new 0x0000 emu keys 0x001
+   2450 dbg hold key 0x001 left 1: game held 0xFC00 new 0x0000 emu keys 0x001
+   2466 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 5
+   2467 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 5
+   2468 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 5
+   2469 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 5
+   2470 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 5
+   2471 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 5
+   2472 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 5
+   2472 dbg target: sel 1/0/0 box false kind 0 step 3 result 0 | sig 0,1,0,false,3,false,false,0,0,0,1,1 | chainBuild true targetStep 1 cursorReady true | buildStep 5 cmdQueue 0 running 0 prompt 0x0000 summon 0x00
+   2473 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 5
+   2474 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 5
+   2475 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 5
+   2476 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 5
+   2477 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 5
+   2477 steps: target opp.m0: A again (not taken)
+   2478 dbg hold key 0x001 left 8: game held 0xFC01 new 0x0001 emu keys 0x001
+   2479 dbg hold key 0x001 left 7: game held 0xFC01 new 0x0000 emu keys 0x001
+   2480 dbg hold key 0x001 left 6: game held 0xFC01 new 0x0000 emu keys 0x001
+   2481 dbg hold key 0x001 left 5: game held 0xFC01 new 0x0000 emu keys 0x001
+   2482 dbg hold key 0x001 left 4: game held 0xFC01 new 0x0000 emu keys 0x001
+   2483 dbg hold key 0x001 left 3: game held 0xFC01 new 0x0000 emu keys 0x001
+   2484 dbg hold key 0x001 left 2: game held 0xFC01 new 0x0000 emu keys 0x001
+   2485 dbg hold key 0x001 left 1: game held 0xFC01 new 0x0000 emu keys 0x001
+   2501 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 6
+   2501 steps: target opp.m0: taken on press 2
+   2508 step: tribute_summon you.hand[Summoned Skull] -> m0 atk tributes opp.m0
+   2509 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 6
+   2509 dbg target: sel 1/0/0 box false kind 0 step 3 result 0 | sig 0,1,1,false,3,false,false,0,0,0,1,1 | chainBuild true targetStep 1 cursorReady false | buildStep 6 cmdQueue 0 running 1 prompt 0x0000 summon 0x00
+   2510 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 6
+   2511 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 6
+   2512 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 6
+   2513 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 6
+   2514 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 6
+   2515 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 6
+   2516 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 6
+   2517 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 6
+   2518 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 6
+   2519 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 6
+   2520 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 6
+   2521 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 6
+   2522 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 6
+   2523 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 6
+   2524 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 6
+   2524 dbg target: sel 1/0/0 box false kind 0 step 3 result 0 | sig 0,1,1,false,3,false,false,0,0,0,1,1 | chainBuild true targetStep 1 cursorReady false | buildStep 6 cmdQueue 0 running 1 prompt 0x0000 summon 0x00
+   2525 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 6
+   2526 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 6
+   2527 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 6
+   2528 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 6
+   2529 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 6
+   2530 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 6
+   2531 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 6
+   2532 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 6
+   2533 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 6
+   2534 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 6
+   2535 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 6
+   2536 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 6
+   2537 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 6
+   2538 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 6
+   2539 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 6
+   2539 dbg target: sel 1/0/0 box false kind 0 step 3 result 0 | sig 0,1,1,false,3,false,false,0,0,0,1,1 | chainBuild true targetStep 1 cursorReady false | buildStep 6 cmdQueue 0 running 1 prompt 0x0000 summon 0x00
+   2540 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 6
+   2541 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 6
+   2542 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 6
+   2543 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 6
+   2544 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 6
+   2545 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 6
+   2546 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 6
+   2547 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 6
+   2548 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 6
+   2549 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 6
+   2550 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 6
+   2551 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 6
+   2552 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 8
+   2553 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2554 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2554 dbg target: sel 1/0/0 box false kind 0 step 3 result 0 | sig 0,1,1,false,3,false,false,0,0,0,1,1 | chainBuild true targetStep 1 cursorReady false | buildStep 9 cmdQueue 0 running 0 prompt 0x0000 summon 0x00
+   2555 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2556 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2557 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2558 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2559 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2560 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2561 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2562 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2563 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2564 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2565 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2566 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2567 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2568 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2569 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2569 dbg target: sel 1/0/0 box false kind 0 step 3 result 0 | sig 0,1,1,false,3,false,false,0,0,0,1,1 | chainBuild true targetStep 1 cursorReady false | buildStep 9 cmdQueue 0 running 0 prompt 0x0000 summon 0x00
+   2570 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2571 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2572 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2573 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2574 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2575 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2576 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2577 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2578 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2579 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2580 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2581 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2582 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2583 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2584 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2584 dbg target: sel 1/0/0 box false kind 0 step 3 result 0 | sig 0,1,1,false,3,false,false,0,0,0,1,1 | chainBuild true targetStep 1 cursorReady false | buildStep 9 cmdQueue 0 running 0 prompt 0x0000 summon 0x00
+   2585 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2586 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2587 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2588 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2589 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2590 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2591 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2592 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2593 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2594 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2595 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2596 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2597 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2598 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2599 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2599 dbg target: sel 1/0/0 box false kind 0 step 3 result 0 | sig 0,1,1,false,3,false,false,0,0,0,1,1 | chainBuild true targetStep 1 cursorReady false | buildStep 9 cmdQueue 0 running 0 prompt 0x0000 summon 0x00
+   2600 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2601 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2602 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2603 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2604 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2605 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2606 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2607 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2608 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2609 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2610 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2611 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2612 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2613 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2614 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2614 dbg target: sel 1/0/0 box false kind 0 step 3 result 0 | sig 0,1,1,false,3,false,false,0,0,0,1,1 | chainBuild true targetStep 1 cursorReady false | buildStep 9 cmdQueue 0 running 0 prompt 0x0000 summon 0x00
+   2615 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2616 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2617 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2618 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2619 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2620 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2621 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2622 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2623 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2624 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2625 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2626 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2627 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2628 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2629 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2629 dbg target: sel 1/0/0 box false kind 0 step 3 result 0 | sig 0,1,1,false,3,false,false,0,0,0,1,1 | chainBuild true targetStep 1 cursorReady false | buildStep 9 cmdQueue 0 running 0 prompt 0x0000 summon 0x00
+   2630 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2631 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2632 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2633 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2634 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2635 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2636 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2637 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2638 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2639 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2640 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2641 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2642 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2643 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2644 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2644 dbg target: sel 1/0/0 box false kind 0 step 3 result 0 | sig 0,1,1,false,3,false,false,0,0,0,1,1 | chainBuild true targetStep 1 cursorReady false | buildStep 9 cmdQueue 0 running 0 prompt 0x0000 summon 0x00
+   2645 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2646 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2647 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2648 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2649 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2650 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2651 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2652 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2653 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2654 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2655 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2656 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2657 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2658 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2659 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2659 dbg target: sel 1/0/0 box false kind 0 step 3 result 0 | sig 0,1,1,false,3,false,false,0,0,0,1,1 | chainBuild true targetStep 1 cursorReady false | buildStep 9 cmdQueue 0 running 0 prompt 0x0000 summon 0x00
+   2660 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2661 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2662 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2663 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2664 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2665 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2666 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2667 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2668 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2669 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2670 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2671 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2672 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2673 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2674 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2674 dbg target: sel 1/0/0 box false kind 0 step 3 result 0 | sig 0,1,1,false,3,false,false,0,0,0,1,1 | chainBuild true targetStep 1 cursorReady false | buildStep 9 cmdQueue 0 running 0 prompt 0x0000 summon 0x00
+   2675 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2676 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2677 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2678 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2679 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2680 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2681 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2682 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2683 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2684 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2685 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2686 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2687 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2688 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2689 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2689 dbg target: sel 1/0/0 box false kind 0 step 3 result 0 | sig 0,1,1,false,3,false,false,0,0,0,1,1 | chainBuild true targetStep 1 cursorReady false | buildStep 9 cmdQueue 0 running 0 prompt 0x0000 summon 0x00
+   2690 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2691 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2692 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2693 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2694 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2695 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2696 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2697 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2698 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2699 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2700 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2701 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2702 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2703 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2704 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2704 dbg target: sel 1/0/0 box false kind 0 step 3 result 0 | sig 0,1,1,false,3,false,false,0,0,0,1,1 | chainBuild true targetStep 1 cursorReady false | buildStep 9 cmdQueue 0 running 0 prompt 0x0000 summon 0x00
+   2705 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2706 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2707 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2708 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2709 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2710 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2711 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2712 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2713 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2714 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2715 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2716 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2717 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2718 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2719 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2719 dbg target: sel 1/0/0 box false kind 0 step 3 result 0 | sig 0,1,1,false,3,false,false,0,0,0,1,1 | chainBuild true targetStep 1 cursorReady false | buildStep 9 cmdQueue 0 running 0 prompt 0x0000 summon 0x00
+   2720 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2721 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2722 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2723 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2724 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2725 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2726 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2727 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2728 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2729 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2730 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2731 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2732 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2733 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2734 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2734 dbg target: sel 1/0/0 box false kind 0 step 3 result 0 | sig 0,1,1,false,3,false,false,0,0,0,1,1 | chainBuild true targetStep 1 cursorReady false | buildStep 9 cmdQueue 0 running 0 prompt 0x0000 summon 0x00
+   2735 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2736 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2737 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2738 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 9
+   2739 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 10
+   2740 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 13
+   2741 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2742 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2743 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2744 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2745 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2746 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2747 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2748 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2749 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2749 dbg target: sel 1/0/0 box false kind 0 step 3 result 0 | sig 0,1,1,false,3,false,false,0,0,0,1,1 | chainBuild false targetStep 1 cursorReady false | buildStep 15 cmdQueue 0 running 0 prompt 0x0000 summon 0x00
+   2750 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2751 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2752 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2753 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2754 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2755 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2756 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2757 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2758 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2759 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2760 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2761 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2762 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2763 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2764 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2764 dbg target: sel 1/0/0 box false kind 0 step 3 result 0 | sig 0,1,1,false,3,false,false,0,0,0,1,1 | chainBuild false targetStep 1 cursorReady false | buildStep 15 cmdQueue 0 running 0 prompt 0x0000 summon 0x00
+   2765 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2766 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2767 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2768 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2769 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2770 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2771 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2772 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2773 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2774 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2775 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2776 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2777 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2778 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2779 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2779 dbg target: sel 1/0/0 box false kind 0 step 3 result 0 | sig 0,1,1,false,3,false,false,0,0,0,1,1 | chainBuild false targetStep 1 cursorReady false | buildStep 15 cmdQueue 0 running 0 prompt 0x0000 summon 0x00
+   2780 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2781 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2782 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2783 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2784 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2785 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2786 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2787 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2788 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2789 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2790 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2791 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2792 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2793 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2794 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2794 dbg target: sel 1/0/0 box false kind 0 step 3 result 0 | sig 0,1,1,false,3,false,false,0,0,0,1,1 | chainBuild false targetStep 1 cursorReady false | buildStep 15 cmdQueue 0 running 0 prompt 0x0000 summon 0x00
+   2795 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2796 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2797 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2798 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2799 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2800 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2801 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2802 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2803 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2804 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2805 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2806 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2807 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2808 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2809 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2809 dbg target: sel 1/0/0 box false kind 0 step 3 result 0 | sig 0,1,1,false,3,false,false,0,0,0,1,1 | chainBuild false targetStep 1 cursorReady false | buildStep 15 cmdQueue 0 running 0 prompt 0x0000 summon 0x00
+   2810 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2811 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2812 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2813 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2814 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2815 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2816 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2817 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2818 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2819 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2820 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2821 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2822 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2823 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2824 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2824 dbg target: sel 1/0/0 box false kind 0 step 3 result 0 | sig 0,1,1,false,3,false,false,0,0,0,1,1 | chainBuild false targetStep 1 cursorReady false | buildStep 15 cmdQueue 0 running 0 prompt 0x0000 summon 0x00
+   2825 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2826 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2827 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2828 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2829 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2830 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2831 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2832 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2833 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2834 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2835 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2836 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2837 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2838 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2839 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2839 dbg target: sel 1/0/0 box false kind 0 step 3 result 0 | sig 0,1,1,false,3,false,false,0,0,0,1,1 | chainBuild false targetStep 1 cursorReady false | buildStep 15 cmdQueue 0 running 0 prompt 0x0000 summon 0x00
+   2840 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2841 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2842 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2843 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2844 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2845 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2846 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2847 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2848 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2849 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2850 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2851 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2852 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2853 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2854 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2854 dbg target: sel 1/0/0 box false kind 0 step 3 result 0 | sig 0,1,1,false,3,false,false,0,0,0,1,1 | chainBuild false targetStep 1 cursorReady false | buildStep 15 cmdQueue 0 running 0 prompt 0x0000 summon 0x00
+   2855 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2856 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2857 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2858 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2859 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2860 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2861 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2862 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2863 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2864 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2865 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2866 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2867 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2868 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2869 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2869 dbg target: sel 1/0/0 box false kind 0 step 3 result 0 | sig 0,1,1,false,3,false,false,0,0,0,1,1 | chainBuild false targetStep 1 cursorReady false | buildStep 15 cmdQueue 0 running 0 prompt 0x0000 summon 0x00
+   2870 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2871 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2872 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2873 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2874 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2875 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2876 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2877 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2878 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2879 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2880 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2881 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2882 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2883 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2884 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2884 dbg target: sel 1/0/0 box false kind 0 step 3 result 0 | sig 0,1,1,false,3,false,false,0,0,0,1,1 | chainBuild false targetStep 1 cursorReady false | buildStep 15 cmdQueue 0 running 0 prompt 0x0000 summon 0x00
+   2885 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2886 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2887 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2888 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2889 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2890 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2891 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2892 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2893 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2894 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2895 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2896 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2897 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2898 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2899 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2899 dbg target: sel 1/0/0 box false kind 0 step 3 result 0 | sig 0,1,1,false,3,false,false,0,0,0,1,1 | chainBuild false targetStep 1 cursorReady false | buildStep 15 cmdQueue 0 running 0 prompt 0x0000 summon 0x00
+   2900 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2901 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2902 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2903 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2904 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2905 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2906 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2907 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2908 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2909 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2910 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2911 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2912 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2913 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2914 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2914 dbg target: sel 1/0/0 box false kind 0 step 3 result 0 | sig 0,1,1,false,3,false,false,0,0,0,1,1 | chainBuild false targetStep 1 cursorReady false | buildStep 15 cmdQueue 0 running 0 prompt 0x0000 summon 0x00
+   2915 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2916 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2917 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2918 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2919 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2920 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2921 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2922 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2923 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2924 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2925 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2926 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2927 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2928 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2929 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2929 dbg target: sel 1/0/0 box false kind 0 step 3 result 0 | sig 0,1,1,false,3,false,false,0,0,0,1,1 | chainBuild false targetStep 1 cursorReady false | buildStep 15 cmdQueue 0 running 0 prompt 0x0000 summon 0x00
+   2930 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2931 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2932 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2933 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2934 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2935 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2936 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2937 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2938 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2939 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2940 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2941 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2942 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2943 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2944 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2944 dbg target: sel 1/0/0 box true kind 0 step 0 result 0 | sig 119,1,1,true,0,false,false,0,0,0,1,1 | chainBuild false targetStep 1 cursorReady false | buildStep 15 cmdQueue 0 running 0 prompt 0x0000 summon 0x00
+   2945 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2946 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2947 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2948 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2949 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2950 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2951 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2952 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2953 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2954 dbg hold key 0x001 left 3: game held 0xFC01 new 0x0001 emu keys 0x001
+   2955 dbg hold key 0x001 left 2: game held 0xFC01 new 0x0000 emu keys 0x001
+   2956 dbg hold key 0x001 left 1: game held 0xFC01 new 0x0000 emu keys 0x001
+   2972 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2973 dbg hold key 0x001 left 3: game held 0xFC00 new 0x0000 emu keys 0x001
+   2974 dbg hold key 0x001 left 2: game held 0xFC00 new 0x0000 emu keys 0x001
+   2975 dbg hold key 0x001 left 1: game held 0xFC00 new 0x0000 emu keys 0x001
+   2991 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2992 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2993 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2994 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2995 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2995 dbg target: sel 0/11/0 box false kind 0 step 3 result 0 | sig 119,1,1,false,3,false,false,0,0,0,1,1 | chainBuild false targetStep 1 cursorReady true | buildStep 15 cmdQueue 0 running 0 prompt 0x0000 summon 0x00
+   2996 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2997 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2998 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   2999 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   3000 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   3001 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   3002 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   3002 steps: tribute_summon you.hand[Summoned Skull] -> m0 atk tributes opp.m0: A again (not taken)
+   3003 dbg hold key 0x001 left 8: game held 0xFC01 new 0x0001 emu keys 0x001
+   3004 dbg hold key 0x001 left 7: game held 0xFC01 new 0x0000 emu keys 0x001
+   3005 dbg hold key 0x001 left 6: game held 0xFC01 new 0x0000 emu keys 0x001
+   3006 dbg hold key 0x001 left 5: game held 0xFC01 new 0x0000 emu keys 0x001
+   3007 dbg hold key 0x001 left 4: game held 0xFC01 new 0x0000 emu keys 0x001
+   3008 dbg hold key 0x001 left 3: game held 0xFC01 new 0x0000 emu keys 0x001
+   3009 dbg hold key 0x001 left 2: game held 0xFC01 new 0x0000 emu keys 0x001
+   3010 dbg hold key 0x001 left 1: game held 0xFC01 new 0x0000 emu keys 0x001
+   3026 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   3026 steps: tribute_summon you.hand[Summoned Skull] -> m0 atk tributes opp.m0: taken on press 2
+   3027 steps: card menu not needed: the effect asked for the card
+   3028 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   3028 dbg target: sel 0/0/0 box false kind 0 step 3 result 0 | sig 110,1,1,false,3,false,false,9,0,0,1,1 | chainBuild false targetStep 1 cursorReady false | buildStep 15 cmdQueue 0 running 1 prompt 0x0000 summon 0x09
+   3029 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   3030 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   3031 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   3032 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   3033 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   3034 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   3035 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   3036 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   3037 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   3038 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   3039 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   3040 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   3041 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   3042 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   3043 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   3043 dbg target: sel 0/0/0 box false kind 0 step 3 result 0 | sig 110,1,1,false,3,false,false,9,0,0,1,1 | chainBuild false targetStep 1 cursorReady false | buildStep 15 cmdQueue 0 running 1 prompt 0x0000 summon 0x09
+   3044 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   3045 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   3046 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   3047 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   3048 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   3049 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   3050 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   3051 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   3052 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   3053 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   3054 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   3055 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   3056 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   3057 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   3058 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   3058 dbg target: sel 0/0/0 box false kind 0 step 3 result 0 | sig 110,1,1,false,3,false,false,9,0,0,1,1 | chainBuild false targetStep 1 cursorReady false | buildStep 15 cmdQueue 0 running 1 prompt 0x0000 summon 0x09
+   3059 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   3060 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   3061 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   3062 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   3063 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   3064 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   3065 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   3066 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   3067 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   3068 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   3069 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   3070 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   3071 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   3072 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   3073 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   3073 dbg target: sel 0/0/0 box true kind 5 step 0 result 0 | sig 110,1,1,true,0,false,false,9,1,0,1,1 | chainBuild false targetStep 1 cursorReady false | buildStep 15 cmdQueue 0 running 0 prompt 0x0000 summon 0x09
+   3074 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   3075 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   3076 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   3077 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   3078 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   3079 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   3080 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   3081 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   3082 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   3083 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   3084 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   3085 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   3086 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   3087 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   3088 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   3088 dbg target: sel 0/0/0 box true kind 5 step 1 result 0 | sig 110,1,1,true,1,false,false,9,1,0,1,1 | chainBuild false targetStep 1 cursorReady false | buildStep 15 cmdQueue 0 running 0 prompt 0x0000 summon 0x09
+   3089 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   3090 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   3091 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   3092 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   3093 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   3094 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   3095 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   3096 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   3097 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   3098 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   3099 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   3100 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   3101 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   3102 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   3103 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   3103 dbg target: sel 0/0/0 box true kind 5 step 1 result 0 | sig 110,1,1,true,1,false,false,9,1,0,1,1 | chainBuild false targetStep 1 cursorReady false | buildStep 15 cmdQueue 0 running 0 prompt 0x0000 summon 0x09
+   3104 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   3105 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   3106 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   3107 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   3108 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   3109 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   3110 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   3111 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   3112 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   3113 dbg keys: held 0xFC00 new 0x000 targetStep 1 buildStep 15
+   3113 steps: tribute_summon you.hand[Summoned Skull] -> m0 atk tributes opp.m0: not asked for; skipped
+   3115 dbg hold key 0x001 left 3: game held 0xFC01 new 0x0001 emu keys 0x001
+   3116 dbg hold key 0x001 left 2: game held 0xFC01 new 0x0000 emu keys 0x001
+   3117 dbg hold key 0x001 left 1: game held 0xFC01 new 0x0000 emu keys 0x001
+   4040 steps: settle timed out (end)
+     30 MP4 target: tools\testing_scenarios\generated\..\recordings\Soul_Exchange_Tribute_Opponent_Monster_Player.mp4
+     30 emu recording API: screenshot, screenshotToImage
+     30 MP4: ffmpeg found through the registry PATH: C:\Users\pswan\Downloads\ffmpeg-2026-11-09-git-16a345b022-full_build\ffmpeg-2026-11-09-git-16a345b022-full_build\bin\ffmpeg.exe
+     30 MP4: scripted capture (emu:screenshot PNG sequence + ffmpeg). See captureMp4 in README.
+     30 Soul Exchange / tribute_opponent_monster / Player
+     30 activate you.hand[Soul Exchange]; target opp.m0; tribute_summon you.hand[Summoned Skull] -> m0 atk tributes opp.m0
+     30 Capture dir: tools\testing_scenarios\generated\..\recordings\Soul_Exchange_Tribute_Opponent_Monster_Player_frames (PNG usually 240x160; MP4 encoded 1440x960, 6x integer scale)
+     30 Launch mGBA with -6 (or maximize window) so on-screen size matches capture scale.
+    811 Main menu (callback 0x08003B15).
+    934 Campaign selected (callback 0x0801D749).
+   1073 Turn order: forced RPS lose (CPU goes first).
+   1083 Turn order: A (lost RPS; CPU chooses first).
+   1121 Turn order: A (lost RPS; CPU chooses first).
+   1313 Opponent's turn (waiting for your Main Phase 1).
+   1315 Usage deck yugi-kaiba / Soul Control: main=40 extra=15; P0 shuffled=true (top 394->772) P1 shuffled=true (top 394->737), hands cleared.
+   1666 Player Draw Phase.
+   1877 Opening draw complete (hand=6 deck=34 want=6).
+   2017 Exact setup: P0 hand=2 deck=34 gy=0, P1 hand=0 deck=35 gy=0, LP 8000/8000, turnCount 2.
+   2017 Player Main Phase 1.
+   2017 steps: 3 steps, 12 ops
+   2017 step: activate you.hand[Soul Exchange]
+   2210 steps: capture starts (cursor on activate you.hand[Soul Exchange])
+   2214 screenshotToImage: 240x160
+   2256 step: target opp.m0
+   2477 steps: target opp.m0: A again (not taken)
+   2501 steps: target opp.m0: taken on press 2
+   2508 step: tribute_summon you.hand[Summoned Skull] -> m0 atk tributes opp.m0
+   3002 steps: tribute_summon you.hand[Summoned Skull] -> m0 atk tributes opp.m0: A again (not taken)
+   3026 steps: tribute_summon you.hand[Summoned Skull] -> m0 atk tributes opp.m0: taken on press 2
+   3027 steps: card menu not needed: the effect asked for the card
+   3073 steps: tribute_summon you.hand[Summoned Skull] -> m0 atk tributes opp.m0: a menu came instead; skipped
+   3435 Play sequence done; ending capture (no recording tail).
+   3435 MP4: encoding 1222 frames -> tools\testing_scenarios\generated\..\recordings\Soul_Exchange_Tribute_Opponent_Monster_Player.mp4
+   3435 MP4: wrote tools\testing_scenarios\generated\..\recordings\Soul_Exchange_Tribute_Opponent_Monster_Player.mp4
+   3435 Finished — PASS (play sequence + tail; MP4 from ffmpeg if encode succeeded).

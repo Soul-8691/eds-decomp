@@ -40,6 +40,4 @@ EDS.run({
         "you.deck[0] = Summoned Skull",
     },
     freezeOpponent = false,
-    play = { { wait = 90 } },     -- the key presses for `steps` are still to be written
-    recordFrames = 3600,
 })

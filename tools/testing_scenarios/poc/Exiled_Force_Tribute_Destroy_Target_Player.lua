@@ -51,5 +51,4 @@ if poc then
     opts.play = poc.play
 end
 opts.pocRequired = poc ~= nil and poc.play ~= nil
-if not opts.play then opts.play = { { wait = 120 }, { key = EDS.KEY_START, gap = 30 } } end
-EDS.run(opts)
+EDS.run(opts)                 -- (no poc table: lib_steps.lua plays the steps)

@@ -43,6 +43,4 @@ EDS.run({
         "you.gy = Fissure, Phoenix Wing Wind Blast",
     },
     freezeOpponent = true,
-    play = { { wait = 90 } },     -- the key presses for `steps` are still to be written
-    recordFrames = nil,
 })

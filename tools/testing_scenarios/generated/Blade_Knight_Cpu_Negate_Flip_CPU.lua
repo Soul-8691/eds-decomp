@@ -39,6 +39,4 @@ EDS.run({
         "opp.m0 = Blade Knight atk",
     },
     freezeOpponent = false,
-    play = { { wait = 90 } },     -- the key presses for `steps` are still to be written
-    recordFrames = 3600,
 })

@@ -43,6 +43,4 @@ EDS.run({
         "you.gy count 0",
     },
     freezeOpponent = false,
-    play = { { wait = 90 } },     -- the key presses for `steps` are still to be written
-    recordFrames = 3600,
 })

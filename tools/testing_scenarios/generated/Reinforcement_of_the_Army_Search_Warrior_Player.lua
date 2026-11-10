@@ -40,6 +40,4 @@ EDS.run({
         "you.gy = Reinforcement of the Army",
     },
     freezeOpponent = true,
-    play = { { wait = 90 } },     -- the key presses for `steps` are still to be written
-    recordFrames = nil,
 })

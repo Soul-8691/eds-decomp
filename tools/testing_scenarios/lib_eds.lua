@@ -138,6 +138,12 @@ local heldKey, holdLeft, gapLeft = 0, 0, 0
 
 function EDS.log(msg)
     console:log("[testing] " .. msg)
+    -- also in recordings/_console.log (frame number first), to read a run afterwards
+    local f = io.open(EDS.recordDir .. "/_console.log", "a")
+    if f then
+        f:write(string.format("%7d %s\n", emu and emu:currentFrame() or 0, msg))
+        f:close()
+    end
 end
 
 function EDS.slug(s)
@@ -224,9 +230,52 @@ function EDS.probeEmuRecordingApi()
     return found
 end
 
-function EDS.ffmpegAvailable()
+-- The ffmpeg command: "ffmpeg" when it is on mGBA's PATH, else ffmpeg.exe in a folder of the PATH saved in the
+-- registry (machine, then user). A PATH changed after the terminal that launched mGBA started is not in mGBA's
+-- environment; os.getenv("FFMPEG") overrides both.
+local ffmpegCmd
+function EDS.ffmpegCommand()
+    if ffmpegCmd ~= nil then
+        return ffmpegCmd or nil
+    end
+    ffmpegCmd = false
+    local env = os.getenv("FFMPEG")
+    if env and env ~= "" then
+        ffmpegCmd = '"' .. env .. '"'
+        return ffmpegCmd
+    end
     local rc = os.execute("ffmpeg -version >nul 2>&1")
-    return rc == 0 or rc == true
+    if rc == 0 or rc == true then
+        ffmpegCmd = "ffmpeg"
+        return ffmpegCmd
+    end
+    for _, key in ipairs({
+        [[HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Environment]],
+        [[HKCU\Environment]],
+    }) do
+        local p = io.popen('reg query "' .. key .. '" /v Path 2>nul')
+        local out = p and p:read("*a") or ""
+        if p then
+            p:close()
+        end
+        local value = out:match("Path%s+REG_%S+%s+([^\r\n]+)") or ""
+        for dir in value:gmatch("[^;]+") do
+            dir = dir:gsub("%%(%w+)%%", function(v) return os.getenv(v) or "" end):gsub("[\\/]+$", "")
+            local exe = dir .. "\\ffmpeg.exe"
+            local f = io.open(exe, "rb")
+            if f then
+                f:close()
+                ffmpegCmd = '"' .. exe .. '"'
+                EDS.log("MP4: ffmpeg found through the registry PATH: " .. exe)
+                return ffmpegCmd
+            end
+        end
+    end
+    return nil
+end
+
+function EDS.ffmpegAvailable()
+    return EDS.ffmpegCommand() ~= nil
 end
 
 function EDS.startRecording(card, effect, actor, opts)
@@ -276,6 +325,9 @@ end
 function EDS.captureFrameIfNeeded(frameState, opts)
     if not frameState.captureDir then
         return
+    end
+    if opts.steps and not frameState.captureArmed then
+        return          -- exact scenario: from the cursor on the card to activate (lib_steps.lua)
     end
     local from = frameState.captureFrom
     if from == "in_duel" then
@@ -332,10 +384,11 @@ function EDS.finalizeMp4Capture(frameState)
     local pattern = frameState.captureDir:gsub("/", "\\") .. "\\%06d.png"
     local vf = EDS.ffmpegScaleVf(frameState)
     local cmd = string.format(
-        'ffmpeg -y -hide_banner -loglevel error -framerate %d -i "%s" %s -pix_fmt yuv420p -c:v libx264 "%s"',
-        fps, pattern, vf, out:gsub("/", "\\"))
+        '%s -y -hide_banner -loglevel error -framerate %d -i "%s" %s -pix_fmt yuv420p -c:v libx264 "%s"',
+        EDS.ffmpegCommand() or "ffmpeg", fps, pattern, vf, out:gsub("/", "\\"))
     EDS.log(string.format("MP4: encoding %d frames -> %s", frameState.captureIndex, out))
-    local rc = os.execute(cmd)
+    -- (one more pair of quotes around the whole line: cmd.exe strips the outer pair of a line with several)
+    local rc = os.execute('"' .. cmd .. '"')
     local ok = rc == 0 or rc == true
     local probe = io.open(out, "rb")
     if probe then
@@ -372,6 +425,10 @@ function EDS.press(key, gap)
 end
 
 function EDS.tickKeys()
+    if holdLeft > 0 and EDS.debugKeys then
+        EDS.log(string.format("dbg hold key 0x%03X left %d: game held 0x%04X new 0x%04X emu keys 0x%03X",
+            heldKey, holdLeft, emu:read16(EDS.G_MAIN + 4), emu:read16(EDS.G_MAIN + 6), emu:getKeys()))
+    end
     if holdLeft > 0 then
         holdLeft = holdLeft - 1
         if holdLeft == 0 then
@@ -391,12 +448,24 @@ function EDS.turnPlayer()
 end
 
 -- Passive Test Duel opponent: no CPU turns and no chains / quick-play answers to your cards.
-function EDS.freezeOpponent(opts)
+-- Exact scenarios (opts.steps, once they run): the CPU's turn still passes through its Draw, Standby and End
+-- Phases (gAiTurnPhases: TurnStart, Draw, Standby, AiRunStep, End, TurnEnd); only AiRunStep (index 3: its Main
+-- and Battle Phase) is skipped.
+EDS.AI_TURN_PHASE_RUN_STEP = 3
+EDS.AI_TURN_PHASE_END = 4
+function EDS.freezeOpponent(opts, frameState)
     if opts.freezeOpponent == false then
         emu:write8(EDS.G_MOD_TESTING_FREEZE, 0)
         return
     end
     emu:write8(EDS.G_MOD_TESTING_FREEZE, 1)
+    if opts.steps and frameState and frameState.stepsRunning then
+        if EDS.turnPlayer() == 1 and emu:read8(EDS.G_AI_STATE) == EDS.AI_TURN_PHASE_RUN_STEP then
+            emu:write8(EDS.G_AI_STATE, EDS.AI_TURN_PHASE_END)
+            emu:write8(EDS.G_AI_STATE + 1, 0)
+        end
+        return
+    end
     local p1 = emu:read8(EDS.PLAYER1 + 9)
     emu:write8(EDS.PLAYER1 + 9, p1 | 0x08) -- skipTurn (consumed at TurnStart)
     if EDS.duelStep() == EDS.DUEL_STEP_OPPONENT_TURN or EDS.turnPlayer() == 1 then
@@ -514,6 +583,10 @@ end
 function EDS.openingDrawSatisfied(frameState)
     local opts = frameState.opts or {}
     if frameState.openingHandRamDone or frameState.openingRamDrew then
+        return true
+    end
+    -- An exact scenario replaced both hands with its own (any size): the opening draw is behind it.
+    if opts.steps and frameState.scenarioSetupDone then
         return true
     end
     EDS.syncDrawConfirmed(frameState)
@@ -1287,6 +1360,15 @@ function EDS.tickScenarioSetup(opts, frameState)
         return
     end
     if not EDS.canApplyScenarioSetup(frameState, opts) then
+        return
+    end
+    if opts.steps then
+        if not EDS.canApplyExactSetup() then
+            return
+        end
+        EDS.applyExactSetup(opts)
+        frameState.scenarioSetupDone = true
+        frameState.scenarioCaptureHold = 3
         return
     end
     EDS.defaultSetup(opts)
@@ -2332,6 +2414,16 @@ function EDS.run(opts)
     if opts.recordTail == nil then
         opts.recordTail = 0
     end
+    if opts.steps and opts.play == nil then
+        -- exact scenario: lib_steps.lua plays opts.steps (the expectations are not checked)
+        opts.play = function(fs)
+            return EDS.tickScenarioSteps(fs, opts)
+        end
+        opts.playSettleFrames = opts.playSettleFrames or 30
+        if opts.maxFrames == nil then
+            opts.maxFrames = 60 * 60 * 15
+        end
+    end
     local timeout = opts.maxFrames or EDS.TIMEOUT_FRAMES
     local basename = EDS.recordingBasename(opts.card or "Card", opts.effect or "effect", actor)
     EDS.appendRunLog("START " .. basename)
@@ -2410,7 +2502,7 @@ function EDS.run(opts)
             EDS.maintainGoSecond(frameState, opts)
         end
         if EDS.inTestDuelFlow(frameState) then
-            EDS.freezeOpponent(opts)
+            EDS.freezeOpponent(opts, frameState)
         end
         EDS.ensureUsageDecks(opts, frameState)
         if EDS.inTestDuelFlow(frameState) then
@@ -2442,10 +2534,11 @@ function EDS.run(opts)
                 return
             end
             frameState.setupDone = true
-            frameState.phase = actor == "CPU" and "watch" or "playing"
+            frameState.phase = (actor == "CPU" and not opts.steps) and "watch" or "playing"
             frameState.timer = 0
             frameState.playStartedAt = 0
-            frameState.handReady = false
+            frameState.handReady = opts.steps ~= nil    -- (steps move the cursor themselves)
+            frameState.stepsRunning = opts.steps ~= nil
             if type(opts.play) == "table" then
                 local first = opts.play[frameState.playIndex or 1]
                 if first and first.handOpen then
@@ -2460,13 +2553,17 @@ function EDS.run(opts)
         end
         if frameState.phase == "playing" then
             frameState.timer = frameState.timer + 1
-            EDS.tickOppMonsterTargetKeys(frameState)
-            EDS.tickHandMonsterPickKeys(frameState)
-            EDS.tickSoulExchangeFinishKeys(frameState)
+            if not opts.steps then      -- (the POC assists; exact scenarios press every key in lib_steps.lua)
+                EDS.tickOppMonsterTargetKeys(frameState)
+                EDS.tickHandMonsterPickKeys(frameState)
+                EDS.tickSoulExchangeFinishKeys(frameState)
+            end
             if frameState.playStartedAt == 0 then
                 frameState.playStartedAt = frameState.timer
             end
-            if frameState.timer <= 8 and not frameState.handNav
+            if opts.steps then
+                -- (no hand prep or menu clean-up: the steps press every key)
+            elseif frameState.timer <= 8 and not frameState.handNav
                 and (EDS.isDeckPileMenu()
                     or (EDS.cardMenuOpen() and not EDS.isHandCommandMenu())) then
                 if frameState.timer % 2 == 0 and not EDS.busy() then
@@ -2479,7 +2576,9 @@ function EDS.run(opts)
                     EDS.prepHandStep(frameState)
                 end
             end
-            EDS.tickHandNavigateKeys(frameState)
+            if not opts.steps then
+                EDS.tickHandNavigateKeys(frameState)
+            end
             if not frameState.scenarioSetupDone then
                 EDS.tickScenarioSetup(opts, frameState)
             end
@@ -2586,6 +2685,16 @@ function EDS.run(opts)
             end
         end
     end)
+end
+
+-- Exact scenarios: the starting state and the step runner (lib_steps.lua).
+do
+    local ok, install = pcall(dofile, scenariosDir .. "/lib_steps.lua")
+    if ok and type(install) == "function" then
+        install(EDS)
+    else
+        EDS.log("Could not load lib_steps.lua: " .. tostring(install))
+    end
 end
 
 return EDS

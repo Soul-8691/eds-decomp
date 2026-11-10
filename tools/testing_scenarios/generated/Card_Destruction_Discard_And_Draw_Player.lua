@@ -48,6 +48,4 @@ EDS.run({
         "opp.gy = Trap Hole, Fissure, Battle Ox, La Jinn the Mystical Genie of the Lamp",
     },
     freezeOpponent = true,
-    play = { { wait = 90 } },     -- the key presses for `steps` are still to be written
-    recordFrames = nil,
 })

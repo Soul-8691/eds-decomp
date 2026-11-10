@@ -40,6 +40,4 @@ EDS.run({
         "opp.gy = Bottomless Trap Hole",
     },
     freezeOpponent = false,
-    play = { { wait = 90 } },     -- the key presses for `steps` are still to be written
-    recordFrames = 3600,
 })

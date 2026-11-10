@@ -41,6 +41,4 @@ EDS.run({
         "opp.gy = Cursed Seal of the Forbidden Spell, Fissure",
     },
     freezeOpponent = false,
-    play = { { wait = 90 } },     -- the key presses for `steps` are still to be written
-    recordFrames = 3600,
 })
