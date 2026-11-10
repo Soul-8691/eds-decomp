@@ -6,10 +6,14 @@
  *              cards into the zones
  *   bits 4-7   the most Spell/Traps the CPU may Set (AiStepSetSpellTraps; 0 = no limit), so a CPU scenario's
  *              Normal Spell in its hand always finds a free Spell/Trap Zone (ModTestingCpuSetLimitReached)
+ * and gModTestingOnlyCard (u16, 0x0202D800): in a CPU scenario, the card under test (a card ID; 0 = off). The CPU
+ * may then activate no other card (ModTestingCpuActivationBlocked), so its videos show that card's effect only.
  */
 #include "global.h"
 #include "duel.h"
 #include "duel_screen.h"            /* DrawAllAreaTiles */
+#include "card_data.h"              /* CARD_ID_MASK, CARD_ID_TO_NUMBER_ADDR */
+#include "chain.h"                  /* struct ChainEntry */
 #include "mod_testing_automation.h"
 
 u8 gModTestingFreezeOpponent;
@@ -21,6 +25,28 @@ int ModTestingFreezeOpponentActive(void)
 #else
     return ModTestDuel() && (gModTestingFreezeOpponent & 1) != 0;
 #endif
+}
+
+/* 1 when gModTestingOnlyCard is set (a CPU scenario of a testing build's Test Duel) and the CPU (player 1) would
+ * activate a card other than it (compared by card number, so an alternate artwork counts as the card). */
+int ModTestingCpuCardBlocked(int player, u16 id)
+{
+#if MOD_RELEASE
+    return 0;
+#else
+    const u16 *number = (const u16 *)CARD_ID_TO_NUMBER_ADDR;
+    u16 only = gModTestingOnlyCard;
+
+    if ((player & 1) != 1 || only == 0 || !ModTestDuel())
+        return 0;
+    return number[id & CARD_ID_MASK] != number[only & CARD_ID_MASK];
+#endif
+}
+
+/* CanActivateEffect (effect_activation.c): the same for a chain entry about to be activated. */
+int ModTestingCpuActivationBlocked(struct ChainEntry *card)
+{
+    return ModTestingCpuCardBlocked(card->player, card->card);
 }
 
 /* Every duel frame (ModDuelSettingsRun): a script's redraw request (bit 1) redraws the field once. */

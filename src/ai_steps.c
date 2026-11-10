@@ -628,6 +628,9 @@ int AiStepChangePositions(void)
                                     break;
                                 case CARD_HANE_HANE:
                                 case CARD_PENGUIN_SOLDIER:
+#ifdef HAS_CARD_4_STARRED_LADYBUG_OF_DOOM
+                                case CARD_4_STARRED_LADYBUG_OF_DOOM:    /* added: flip-removal, as these two */
+#endif
                                     if (ZoneFace(savedMask, z) == 0 && CountMonsters(0) > 0
                                         && AiShouldFlipRemovalForAttacks(1, zone) != 0
                                         && AiShouldTurnDefenseToAttack(1, zone)

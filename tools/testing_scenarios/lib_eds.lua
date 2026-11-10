@@ -54,9 +54,12 @@ EDS.G_DUEL_SCREEN_SEL_AREA = EDS.G_DUEL_SCREEN + 0x828
 EDS.G_DUEL_SCREEN_FLAGS = EDS.G_DUEL_SCREEN + 0x808
 EDS.DUEL_AREA_MONSTER = 0
 EDS.DUEL_AREA_SPELL_TRAP = 5
+EDS.DUEL_AREA_FIELD = 10
 EDS.DUEL_AREA_FUSION_DECK = 12
 EDS.DUEL_AREA_DECK = 13
 EDS.DUEL_AREA_HAND = 11
+EDS.DUEL_AREA_GRAVEYARD = 14
+EDS.DUEL_AREA_BANISHED = 15
 EDS.G_DUEL_SCREEN_SEL_INDEX = EDS.G_DUEL_SCREEN + 0x82C
 EDS.CARDMENU_CMD_SET = 4
 EDS.CARDMENU_CMD_ACTIVATE = 6
@@ -386,10 +389,15 @@ function EDS.finalizeMp4Capture(frameState)
     local fps = frameState.captureFps or 60
     local pattern = frameState.captureDir:gsub("/", "\\") .. "\\%06d.png"
     local vf = EDS.ffmpegScaleVf(frameState)
+    -- a CPU scenario's video starts in the phase its card's effect starts in (lib_steps.lua trackCpuVideoStart)
+    local first = frameState.captureStartIndex or 0
+    if first > frameState.captureIndex - 2 then
+        first = 0
+    end
     local cmd = string.format(
-        '%s -y -hide_banner -loglevel error -framerate %d -i "%s" %s -pix_fmt yuv420p -c:v libx264 "%s"',
-        EDS.ffmpegCommand() or "ffmpeg", fps, pattern, vf, out:gsub("/", "\\"))
-    EDS.log(string.format("MP4: encoding %d frames -> %s", frameState.captureIndex, out))
+        '%s -y -hide_banner -loglevel error -framerate %d -start_number %d -i "%s" %s -pix_fmt yuv420p -c:v libx264 "%s"',
+        EDS.ffmpegCommand() or "ffmpeg", fps, first, pattern, vf, out:gsub("/", "\\"))
+    EDS.log(string.format("MP4: encoding %d frames (from %d) -> %s", frameState.captureIndex - first, first, out))
     -- (one more pair of quotes around the whole line: cmd.exe strips the outer pair of a line with several)
     local rc = os.execute('"' .. cmd .. '"')
     local ok = rc == 0 or rc == true
@@ -459,10 +467,14 @@ EDS.AI_TURN_PHASE_END = 4
 -- The flag byte (src/mod_testing_automation.c): bit 0 freeze, bit 1 a redraw request (the game clears it; kept
 -- here), bits 4-7 the most Spell/Traps the CPU may Set (4 in a CPU exact scenario: a zone stays free for its
 -- Normal Spell).
+-- gModTestingOnlyCard (u16): in a CPU scenario, the card under test (opts.onlyCardId, set by lib_steps.lua); the
+-- CPU activates no other card (ModTestingCpuCardBlocked: CanActivateEffect, ModCanActivateMonsterEffect).
+EDS.G_MOD_TESTING_ONLY_CARD = 0x0202D800
 function EDS.writeTestingFlags(freeze, opts)
     local cap = (opts.steps and opts.actor == "CPU") and 4 or 0
     local keep = emu:read8(EDS.G_MOD_TESTING_FREEZE) & 0x02
     emu:write8(EDS.G_MOD_TESTING_FREEZE, keep | (cap << 4) | (freeze and 1 or 0))
+    emu:write16(EDS.G_MOD_TESTING_ONLY_CARD, opts.onlyCardId or 0)
 end
 
 function EDS.requestRedraw()

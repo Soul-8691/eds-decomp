@@ -12,5 +12,9 @@ int ModTestingFreezeOpponentActive(void);
 int ModTestingCpuSetLimitReached(void);
 /* Every duel frame: a script's redraw request (bit 1) redraws the field once (DrawAllAreaTiles). */
 void ModTestingTick(void);
+/* EWRAM u16 (symbols.ld): a CPU scenario's card under test; the CPU may activate no other card. 0 = off. */
+extern u16 gModTestingOnlyCard;
+/* 1 when the CPU (player 1) would activate a card other than gModTestingOnlyCard (testing builds only). */
+int ModTestingCpuCardBlocked(int player, u16 id);
 
 #endif /* GUARD_MOD_TESTING_AUTOMATION_H */

@@ -12,6 +12,9 @@ gDeckEditHeldBack = 0x0202C200;
 /* Mod variables in free EWRAM (below gScratchBuffer): Injection Fairy Lily's battle state (src/added_effects.c). */
 gInjectionFairyLily = 0x0202FF00;
 gModTestingFreezeOpponent = 0x0202FF03;
+/* Mod: a CPU test scenario's card under test, the only card the CPU may activate (src/mod_testing_automation.c;
+   free RAM after gModLink, which ends by 0x0202D800). */
+gModTestingOnlyCard = 0x0202D800;
 gModDuel = 0x0202FF04;
 /* Mod: the Synchro Summon state of src/mod_synchro.c (at most 0x100 bytes, before gInjectionFairyLily). */
 gModSynchro = 0x0202FE00;

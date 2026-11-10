@@ -302,6 +302,7 @@ int GetCardSpellSpeed(u16 cardId)
  */
 int AiActivationWouldLoseLp(struct ChainEntry *card);  /* mod: src/added_effects.c */
 int ModCardNameSealed(struct ChainEntry *card);        /* mod: src/added_effects.c */
+int ModTestingCpuActivationBlocked(struct ChainEntry *card);   /* mod: src/mod_testing_automation.c */
 
 int CanActivateEffect(struct ChainEntry *card, struct ChainEntry *chainLink, u16 fromHand)
 {
@@ -326,6 +327,8 @@ int CanActivateEffect(struct ChainEntry *card, struct ChainEntry *chainLink, u16
     if (ModCardNameSealed(card))           /* added: Cursed Seal of the Forbidden Spell (src/added_effects.c) */
         return FALSE;
     if (AiActivationWouldLoseLp(card))     /* added: the CPU never pays itself to 0 LP (src/added_effects.c) */
+        return FALSE;
+    if (ModTestingCpuActivationBlocked(card))   /* added: a CPU test scenario's other cards stay quiet */
         return FALSE;
 #ifdef HAS_CARD_XING_ZHEN_HU
     if (!fromHand && IsLockedByXingZhenHu(card))   /* added card: a Set card locked by Xing Zhen Hu */

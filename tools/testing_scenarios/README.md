@@ -24,6 +24,17 @@ Deck), `start`, `steps`, `expect` and `freezeOpponent`. The key presses that pla
 `setupPiles` and `start` (LP, starting on the CPU's turn), and the `expect` checks are still to be written in
 `lib_eds.lua`; until then a generated script places the hand and field and waits (`play = { { wait = 90 } }`).
 
+### CPU scenarios (`_CPU` scripts)
+
+- **Only the card under test.** The script writes that card's ID to `gModTestingOnlyCard` (0x0202D800) every frame.
+  In a testing build's Test Duel the CPU then activates no other card: `CanActivateEffect` and
+  `ModCanActivateMonsterEffect` refuse them (`ModTestingCpuCardBlocked`, src/mod_testing_automation.c). It still
+  summons, Sets and attacks as usual.
+- **Where the video starts.** Frames are saved from the CPU's turn on; the MP4 starts (ffmpeg `-start_number`) in the
+  phase the card's effect starts in, at the first frame the CPU starts using the card: its cursor on the card, a
+  summon of it (a Flip Summon moves no cursor), or its attack declaration. With none of these, it starts when that
+  phase begins. It ends right after the effect (`EDS.effectUnderTestDone`).
+
 ## Recording file names
 
 Per [mGBA’s scripting API](https://mgba.io/docs/dev/scripting.html) (dev build docs mirror 0.10+), **`emu` has no method to start Tools → Record A/V**. The documented video-related calls are:

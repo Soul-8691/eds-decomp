@@ -2934,3 +2934,24 @@ updated: 2026-09-29
   bit 0 stays the freeze. Test Duels in testing builds only.
 - tools/testing_scenarios: CPU scenarios keep the CPU's first-turn board and piles; the CPU Sets at most 4;
   every exact setup asks for a redraw. exact.py, gen_testing_md.py (TESTING.md intro).
+
+## [2026-11-10] progress | CPU Flip Summons 4-Starred Ladybug of Doom; test runs on a separate desktop
+- src/ai_steps.c (the position step's flip-removal case) and src/added_effects.c (AiFlipRemovalMonsterNumber,
+  AiSimFlipRemovalEffect, AiShouldFlipRemovalForAttacks): Ladybug flips when it would destroy a monster.
+  Verified with the CPU scenario in mGBA.
+- new_cards.txt: D.D. Assailant was listed twice (the build refused it); the second entry removed.
+- tools/testing_scenarios/run_tests.ps1: mGBA starts on its own Win32 desktop (CreateDesktop + CreateProcess
+  lpDesktop), so no window or taskbar button shows; full speed kept.
+- Pages: [[added-cards]]; AI_IMPROVEMENTS.md.
+
+## [2026-11-10] progress | CPU test videos: only the card under test, start before its use
+- src/mod_testing_automation.c: gModTestingOnlyCard (u16, 0x0202D800 in symbols.ld, free RAM after gModLink) and
+  ModTestingCpuCardBlocked / ModTestingCpuActivationBlocked: in a testing build's Test Duel the CPU activates no
+  card but the one a CPU scenario tests. Hooks: CanActivateEffect (src/effect_activation.c), ModCanActivateMonsterEffect
+  (src/added_effects.c).
+- tools/testing_scenarios/lib_steps.lua: the video starts in the effect's phase at the CPU's first use of the card
+  (cursor on it, a summon of it, its attack), else at the phase start; lib_eds.lua encodes from that frame
+  (ffmpeg -start_number) and writes the card ID. EDS.DUEL_AREA_FIELD / GRAVEYARD / BANISHED were never defined
+  (nil); now 10 / 14 / 15.
+- Verified in mGBA: 4-Starred Ladybug of Doom's CPU video starts with Ladybug still face-down.
+- Pages: tools/testing_scenarios/README.md.

@@ -1121,6 +1121,72 @@ function EDS.effectUnderTestDone(fs)
     return not busy
 end
 
+-- ---- where a CPU scenario's video starts ----
+
+-- The card under the duel cursor (gDuelScreen's selection: the CPU moves it with DuelCursor_Select when it points
+-- at a card it plays, DUEL_CMD_POINT_AT_CARD), or 0.
+local function selectedCardId()
+    local p, area, index = EDS.duelSelPlayer(), EDS.duelSelArea(), EDS.duelSelIndex()
+    if p > 1 then
+        return 0
+    end
+    if area == EDS.DUEL_AREA_HAND then
+        return EDS.handSlotCardId(p, index) or 0
+    end
+    if (area == EDS.DUEL_AREA_MONSTER or area == EDS.DUEL_AREA_SPELL_TRAP) and index <= 4 then
+        return zoneCardId(p, area + index)
+    end
+    if area == EDS.DUEL_AREA_FIELD then
+        return zoneCardId(p, 10)
+    end
+    return 0
+end
+
+-- The card a summon is pending for (gSummonAction: +0x0E bit 0 active; cardId bits 31-46), or 0.
+local function summoningCardId()
+    if not summonActive() then
+        return 0
+    end
+    return ((emu:read32(G_SUMMON_ACTION) >> 31) | ((emu:read16(G_SUMMON_ACTION + 4) & 0x7FFF) << 1)) & 0x7FF
+end
+
+-- The duel phase (gDuel.phase, +0x1B12 bits 2-4: Draw 0, Standby 1, Main 1 2, Battle 3, Main 2 4, End 5).
+local function duelPhase()
+    return (emu:read8(EDS.G_DUEL_TURN_FLAGS) >> 2) & 7
+end
+
+-- Every frame of a CPU-only capture until the card's effect starts (fs.effectSeen): the frames are all saved
+-- from the CPU's turn on, and the video starts at fs.captureStartIndex (EDS.finalizeMp4Capture: ffmpeg
+-- -start_number). That is the first frame, in the phase the effect starts in, at which the CPU starts using the
+-- card under test: the cursor on it (the CPU pointing at it to play it), a summon of it (a Flip Summon moves no
+-- cursor), or its attack declaration; or the start of that phase when none of these happened.
+local function trackCpuVideoStart(fs)
+    if not fs.cpuOnlyCapture or not fs.captureArmed or fs.effectSeen or not fs.cardUnderTest then
+        return
+    end
+    if EDS.turnPlayer() ~= 1 then
+        return
+    end
+    local idx = math.max((fs.captureIndex or 1) - 1, 0)       -- the frame captured this frame
+    local phase = duelPhase()
+    if phase ~= fs.videoPhase then
+        fs.videoPhase = phase
+        fs.captureStartIndex = idx
+        fs.videoOnCard = false
+    end
+    -- the first time in this phase (the CPU pointing at it to play it: the flip, the activation, the attack); the
+    -- cursor comes back onto it later for the effect's activation, after the flip
+    if fs.videoOnCard then
+        return
+    end
+    local bt = battle()
+    if selectedCardId() == fs.cardUnderTest or summoningCardId() == fs.cardUnderTest
+        or (bt.declared and bt.attacker == 1 and zoneCardId(1, bt.atkSlot) == fs.cardUnderTest) then
+        fs.captureStartIndex = idx
+        fs.videoOnCard = true
+    end
+end
+
 -- ---- the runner ----
 
 function EDS.tickScenarioSteps(fs, opts)
@@ -1186,6 +1252,9 @@ function EDS.tickScenarioSteps(fs, opts)
         -- the CPU's turn and leaves your turns out (fs.cpuOnlyCapture, read by EDS.captureFrameIfNeeded).
         fs.cpuScenario = opts.actor == "CPU"
         fs.cardUnderTest = opts.card and cardId(opts.card)
+        if fs.cpuScenario and fs.cardUnderTest then
+            opts.onlyCardId = fs.cardUnderTest      -- the CPU activates no other card (EDS.writeTestingFlags)
+        end
         if fs.cpuScenario and not arm and not fs.armOnWhen then
             fs.armOnCpuTurn = true
             fs.cpuOnlyCapture = true
@@ -1200,7 +1269,15 @@ function EDS.tickScenarioSteps(fs, opts)
         fs.captureArmed = true
         EDS.log("steps: capture starts (the CPU's turn)")
     end
-    if fs.cpuScenario and EDS.effectUnderTestDone(fs) then
+    local wasSeen = fs.effectSeen
+    trackCpuVideoStart(fs)
+    local done = fs.cpuScenario and EDS.effectUnderTestDone(fs)
+    if fs.effectSeen and not wasSeen and fs.captureStartIndex then
+        EDS.log(string.format("steps: the effect started (%s); the video starts at frame %d (phase %d%s)",
+            fs.effectSeen, fs.captureStartIndex, fs.videoPhase or -1,
+            fs.videoOnCard and ", cursor on the card" or ""))
+    end
+    if done then
         EDS.log("steps: the card's effect is done; ending the scenario")
         fs.opIndex = #fs.ops + 1
         fs.endNow = true                -- (no settle wait in EDS.run: the duel is idle already)

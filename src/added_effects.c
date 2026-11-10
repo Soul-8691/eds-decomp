@@ -2598,8 +2598,12 @@ int EffectAbyssSoldierResolve(struct ChainEntry *link, struct ChainEntry *chaine
 
 int CanActivateMonsterEffect(u16 id, int player, int zone); /* card_command_menu.c */
 
+int ModTestingCpuCardBlocked(int player, u16 id);  /* src/mod_testing_automation.c */
+
 int ModCanActivateMonsterEffect(u16 id, int player, int zone)
 {
+    if (ModTestingCpuCardBlocked(player, id))   /* a CPU test scenario's other cards stay quiet */
+        return 0;
 #if defined(HAS_CARD_STEALTH_BIRD) || defined(HAS_CARD_GOLEM_SENTRY) || defined(HAS_CARD_GUARDIAN_SPHINX) || defined(HAS_CARD_DES_LACOODA) || defined(HAS_CARD_SWARM_OF_LOCUSTS)
     switch (((const u16 *)CARD_ID_TO_NUMBER_ADDR)[id & CARD_ID_MASK]) {
 #ifdef HAS_CARD_STEALTH_BIRD
@@ -11800,6 +11804,19 @@ static void AiSimFlipRemovalEffect(int cpuZone, u16 number)
                 AiSimClearMonsterOnField(0, second);
         }
     }
+#ifdef HAS_CARD_4_STARRED_LADYBUG_OF_DOOM
+    if (number == CARD_4_STARRED_LADYBUG_OF_DOOM) {
+        /* as EffectLadybugOfDoomResolve: every face-up Level 4 monster of the human */
+        for (first = ZONE_MONSTER_0; first <= ZONE_MONSTER_4; first++) {
+            struct DuelZone *hz = ZoneOf(0, first);
+            u16 hid = DUEL_CARD_ID(&hz->card);
+
+            if (hid != 0 && hz->isFaceUp
+             && (int)CARD_STATS_LEVEL(gCardStats[hid & CARD_ID_MASK]) == LADYBUG_LEVEL)
+                AiSimClearMonsterOnField(0, first);
+        }
+    }
+#endif
 }
 
 static int AiFlipRemovalMonsterNumber(u16 id)
@@ -11809,6 +11826,9 @@ static int AiFlipRemovalMonsterNumber(u16 id)
     switch (number) {
     case CARD_HANE_HANE:
     case CARD_PENGUIN_SOLDIER:
+#ifdef HAS_CARD_4_STARRED_LADYBUG_OF_DOOM
+    case CARD_4_STARRED_LADYBUG_OF_DOOM:
+#endif
         return (int)number;
     default:
         return 0;
@@ -11834,6 +11854,18 @@ int AiShouldFlipRemovalForAttacks(int player, int zone)
         return 0;
     before = AiSimCpuBattleDamage();
     AiBackupDuelState();
+#ifdef HAS_CARD_4_STARRED_LADYBUG_OF_DOOM
+    if (number == CARD_4_STARRED_LADYBUG_OF_DOOM) {
+        /* Ladybug: worth it when it destroys at least one of the human's monsters (card advantage), whatever
+         * the battle damage */
+        int monstersBefore = CountMonsters(0);
+
+        AiSimFlipRemovalEffect(zone, (u16)number);
+        after = CountMonsters(0) < monstersBefore;
+        AiRestoreDuelState();
+        return after;
+    }
+#endif
     AiSimFlipRemovalEffect(zone, (u16)number);
     AiSimSetAttackPositions();
     after = AiSimBattlePhase();

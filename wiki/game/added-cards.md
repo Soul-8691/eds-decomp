@@ -1683,6 +1683,11 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
   Every face-up monster of the opponent whose Level (`CARD_STATS_LEVEL`) is 4 is destroyed (`DestroyFieldCard`,
   `OnCardDestroyedByEffect`, as Tribe-Infecting Virus). A face-down monster has no Level, so it is not destroyed (the
   TCG ruling).
+- **CPU Flip Summon (2026-11-10).** The CPU's position step only Flip Summons flip-effect monsters it has a rule for
+  (ai_steps.c's switch), so a Set Ladybug was never flipped. It now shares Hane-Hane's and Penguin Soldier's case:
+  `AiShouldFlipRemovalForAttacks` (added_effects.c) simulates the effect (`AiSimFlipRemovalEffect` clears every
+  face-up Level 4 monster of the human) and flips when that removes at least one monster, whatever the battle
+  damage. Verified in mGBA: the CPU scenario `cpu_flip_destroy_level_4` (TESTING.md) flips it and the effect resolves.
 - Gradius' Option (GBO-Recruiter Control's Side Deck) was added at the same time and removed again: it needs
   Gradius, so that side deck stays at 14.
 - Checked in the source and the build; not tested in an emulator.
