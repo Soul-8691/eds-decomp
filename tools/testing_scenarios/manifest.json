@@ -4,87 +4,1961 @@
     "effect": "discard_and_draw",
     "actor": "Player",
     "format": "Yugi-Kaiba",
+    "start": "you",
     "recording": "tools/testing_scenarios/recordings/Card_Destruction_Discard_And_Draw_Player.mp4",
     "script": "tools/testing_scenarios/poc/Card_Destruction_Discard_And_Draw_Player.lua"
   },
   {
     "card": "Card Destruction",
-    "effect": "cpu_duel",
+    "effect": "cpu_discard_and_draw",
     "actor": "CPU",
     "format": "Yugi-Kaiba",
-    "recording": "tools/testing_scenarios/recordings/Card_Destruction_Cpu_Duel_CPU.mp4",
-    "script": "tools/testing_scenarios/poc/Card_Destruction_Cpu_Duel_CPU.lua"
+    "start": "opp",
+    "recording": "tools/testing_scenarios/recordings/Card_Destruction_Cpu_Discard_And_Draw_CPU.mp4",
+    "script": "tools/testing_scenarios/poc/Card_Destruction_Cpu_Discard_And_Draw_CPU.lua"
   },
   {
     "card": "Soul Exchange",
     "effect": "tribute_opponent_monster",
     "actor": "Player",
     "format": "Yugi-Kaiba",
+    "start": "you",
     "recording": "tools/testing_scenarios/recordings/Soul_Exchange_Tribute_Opponent_Monster_Player.mp4",
     "script": "tools/testing_scenarios/poc/Soul_Exchange_Tribute_Opponent_Monster_Player.lua"
   },
   {
     "card": "Soul Exchange",
-    "effect": "cpu_duel",
+    "effect": "cpu_tribute_opponent_monster",
     "actor": "CPU",
     "format": "Yugi-Kaiba",
-    "recording": "tools/testing_scenarios/recordings/Soul_Exchange_Cpu_Duel_CPU.mp4",
-    "script": "tools/testing_scenarios/poc/Soul_Exchange_Cpu_Duel_CPU.lua"
+    "start": "opp",
+    "recording": "tools/testing_scenarios/recordings/Soul_Exchange_Cpu_Tribute_Opponent_Monster_CPU.mp4",
+    "script": "tools/testing_scenarios/poc/Soul_Exchange_Cpu_Tribute_Opponent_Monster_CPU.lua"
   },
   {
-    "card": "Goblin Attack Force",
-    "effect": "usage_deck_verify",
+    "card": "Thousand-Eyes Restrict",
+    "effect": "absorb_and_attack",
     "actor": "Player",
     "format": "Imperial",
-    "recording": "tools/testing_scenarios/recordings/Goblin_Attack_Force_Usage_Deck_Verify_Player.mp4",
-    "script": "tools/testing_scenarios/poc/Goblin_Attack_Force_Usage_Deck_Verify_Player.lua"
+    "start": "you",
+    "recording": "tools/testing_scenarios/recordings/Thousand_Eyes_Restrict_Absorb_And_Attack_Player.mp4",
+    "script": "tools/testing_scenarios/generated/Thousand_Eyes_Restrict_Absorb_And_Attack_Player.lua"
+  },
+  {
+    "card": "Thousand-Eyes Restrict",
+    "effect": "cpu_absorb",
+    "actor": "CPU",
+    "format": "Imperial",
+    "start": "opp",
+    "recording": "tools/testing_scenarios/recordings/Thousand_Eyes_Restrict_Cpu_Absorb_CPU.mp4",
+    "script": "tools/testing_scenarios/generated/Thousand_Eyes_Restrict_Cpu_Absorb_CPU.lua"
+  },
+  {
+    "card": "The Fiend Megacyber",
+    "effect": "special_summon_from_hand",
+    "actor": "Player",
+    "format": "Imperial",
+    "start": "you",
+    "recording": "tools/testing_scenarios/recordings/The_Fiend_Megacyber_Special_Summon_From_Hand_Player.mp4",
+    "script": "tools/testing_scenarios/generated/The_Fiend_Megacyber_Special_Summon_From_Hand_Player.lua"
+  },
+  {
+    "card": "The Fiend Megacyber",
+    "effect": "not_with_one_monster_difference",
+    "actor": "Player",
+    "format": "Imperial",
+    "start": "you",
+    "recording": "tools/testing_scenarios/recordings/The_Fiend_Megacyber_Not_With_One_Monster_Difference_Player.mp4",
+    "script": "tools/testing_scenarios/generated/The_Fiend_Megacyber_Not_With_One_Monster_Difference_Player.lua"
+  },
+  {
+    "card": "The Fiend Megacyber",
+    "effect": "cpu_special_summon",
+    "actor": "CPU",
+    "format": "Imperial",
+    "start": "opp",
+    "recording": "tools/testing_scenarios/recordings/The_Fiend_Megacyber_Cpu_Special_Summon_CPU.mp4",
+    "script": "tools/testing_scenarios/generated/The_Fiend_Megacyber_Cpu_Special_Summon_CPU.lua"
   },
   {
     "card": "Goblin Attack Force",
     "effect": "mandatory_follow_up",
     "actor": "Player",
     "format": "Imperial",
+    "start": "you",
     "recording": "tools/testing_scenarios/recordings/Goblin_Attack_Force_Mandatory_Follow_Up_Player.mp4",
     "script": "tools/testing_scenarios/poc/Goblin_Attack_Force_Mandatory_Follow_Up_Player.lua"
   },
   {
     "card": "Goblin Attack Force",
-    "effect": "cpu_standard_lines",
+    "effect": "cpu_attack_then_defense",
     "actor": "CPU",
     "format": "Imperial",
-    "recording": "tools/testing_scenarios/recordings/Goblin_Attack_Force_Cpu_Standard_Lines_CPU.mp4",
-    "script": "tools/testing_scenarios/poc/Goblin_Attack_Force_Cpu_Standard_Lines_CPU.lua"
+    "start": "opp",
+    "recording": "tools/testing_scenarios/recordings/Goblin_Attack_Force_Cpu_Attack_Then_Defense_CPU.mp4",
+    "script": "tools/testing_scenarios/poc/Goblin_Attack_Force_Cpu_Attack_Then_Defense_CPU.lua"
+  },
+  {
+    "card": "Solemn Wishes",
+    "effect": "gain_per_draw",
+    "actor": "Player",
+    "format": "Imperial",
+    "start": "you",
+    "recording": "tools/testing_scenarios/recordings/Solemn_Wishes_Gain_Per_Draw_Player.mp4",
+    "script": "tools/testing_scenarios/generated/Solemn_Wishes_Gain_Per_Draw_Player.lua"
+  },
+  {
+    "card": "Solemn Wishes",
+    "effect": "cpu_activate_and_gain",
+    "actor": "CPU",
+    "format": "Imperial",
+    "start": "opp",
+    "recording": "tools/testing_scenarios/recordings/Solemn_Wishes_Cpu_Activate_And_Gain_CPU.mp4",
+    "script": "tools/testing_scenarios/generated/Solemn_Wishes_Cpu_Activate_And_Gain_CPU.lua"
+  },
+  {
+    "card": "Limiter Removal",
+    "effect": "double_machine_atk",
+    "actor": "Player",
+    "format": "Imperial",
+    "start": "you",
+    "recording": "tools/testing_scenarios/recordings/Limiter_Removal_Double_Machine_Atk_Player.mp4",
+    "script": "tools/testing_scenarios/generated/Limiter_Removal_Double_Machine_Atk_Player.lua"
+  },
+  {
+    "card": "Limiter Removal",
+    "effect": "cpu_double_machine_atk",
+    "actor": "CPU",
+    "format": "Imperial",
+    "start": "opp",
+    "recording": "tools/testing_scenarios/recordings/Limiter_Removal_Cpu_Double_Machine_Atk_CPU.mp4",
+    "script": "tools/testing_scenarios/generated/Limiter_Removal_Cpu_Double_Machine_Atk_CPU.lua"
+  },
+  {
+    "card": "4-Starred Ladybug of Doom",
+    "effect": "flip_destroy_level_4",
+    "actor": "Player",
+    "format": "Imperial",
+    "start": "you",
+    "recording": "tools/testing_scenarios/recordings/4_Starred_Ladybug_of_Doom_Flip_Destroy_Level_4_Player.mp4",
+    "script": "tools/testing_scenarios/generated/4_Starred_Ladybug_of_Doom_Flip_Destroy_Level_4_Player.lua"
+  },
+  {
+    "card": "4-Starred Ladybug of Doom",
+    "effect": "cpu_flip_destroy_level_4",
+    "actor": "CPU",
+    "format": "Imperial",
+    "start": "opp",
+    "recording": "tools/testing_scenarios/recordings/4_Starred_Ladybug_of_Doom_Cpu_Flip_Destroy_Level_4_CPU.mp4",
+    "script": "tools/testing_scenarios/generated/4_Starred_Ladybug_of_Doom_Cpu_Flip_Destroy_Level_4_CPU.lua"
+  },
+  {
+    "card": "Kycoo the Ghost Destroyer",
+    "effect": "banish_on_battle_damage",
+    "actor": "Player",
+    "format": "Android",
+    "start": "you",
+    "recording": "tools/testing_scenarios/recordings/Kycoo_the_Ghost_Destroyer_Banish_On_Battle_Damage_Player.mp4",
+    "script": "tools/testing_scenarios/generated/Kycoo_the_Ghost_Destroyer_Banish_On_Battle_Damage_Player.lua"
+  },
+  {
+    "card": "Kycoo the Ghost Destroyer",
+    "effect": "cpu_banish_on_battle_damage",
+    "actor": "CPU",
+    "format": "Android",
+    "start": "opp",
+    "recording": "tools/testing_scenarios/recordings/Kycoo_the_Ghost_Destroyer_Cpu_Banish_On_Battle_Damage_CPU.mp4",
+    "script": "tools/testing_scenarios/generated/Kycoo_the_Ghost_Destroyer_Cpu_Banish_On_Battle_Damage_CPU.lua"
+  },
+  {
+    "card": "Bazoo the Soul-Eater",
+    "effect": "banish_three_for_atk",
+    "actor": "Player",
+    "format": "Android",
+    "start": "you",
+    "recording": "tools/testing_scenarios/recordings/Bazoo_the_Soul_Eater_Banish_Three_For_Atk_Player.mp4",
+    "script": "tools/testing_scenarios/generated/Bazoo_the_Soul_Eater_Banish_Three_For_Atk_Player.lua"
+  },
+  {
+    "card": "Bazoo the Soul-Eater",
+    "effect": "cpu_banish_weakest",
+    "actor": "CPU",
+    "format": "Android",
+    "start": "opp",
+    "recording": "tools/testing_scenarios/recordings/Bazoo_the_Soul_Eater_Cpu_Banish_Weakest_CPU.mp4",
+    "script": "tools/testing_scenarios/generated/Bazoo_the_Soul_Eater_Cpu_Banish_Weakest_CPU.lua"
   },
   {
     "card": "Torrential Tribute",
     "effect": "destroy_all_on_summon",
     "actor": "Player",
     "format": "Android",
+    "start": "you",
     "recording": "tools/testing_scenarios/recordings/Torrential_Tribute_Destroy_All_On_Summon_Player.mp4",
     "script": "tools/testing_scenarios/poc/Torrential_Tribute_Destroy_All_On_Summon_Player.lua"
   },
   {
     "card": "Torrential Tribute",
-    "effect": "cpu_duel",
+    "effect": "cpu_on_human_summon",
     "actor": "CPU",
     "format": "Android",
-    "recording": "tools/testing_scenarios/recordings/Torrential_Tribute_Cpu_Duel_CPU.mp4",
-    "script": "tools/testing_scenarios/poc/Torrential_Tribute_Cpu_Duel_CPU.lua"
+    "start": "you",
+    "recording": "tools/testing_scenarios/recordings/Torrential_Tribute_Cpu_On_Human_Summon_CPU.mp4",
+    "script": "tools/testing_scenarios/poc/Torrential_Tribute_Cpu_On_Human_Summon_CPU.lua"
+  },
+  {
+    "card": "Jar of Greed",
+    "effect": "draw_one",
+    "actor": "Player",
+    "format": "Android",
+    "start": "you",
+    "recording": "tools/testing_scenarios/recordings/Jar_of_Greed_Draw_One_Player.mp4",
+    "script": "tools/testing_scenarios/generated/Jar_of_Greed_Draw_One_Player.lua"
+  },
+  {
+    "card": "Jar of Greed",
+    "effect": "cpu_draw_one",
+    "actor": "CPU",
+    "format": "Android",
+    "start": "opp",
+    "recording": "tools/testing_scenarios/recordings/Jar_of_Greed_Cpu_Draw_One_CPU.mp4",
+    "script": "tools/testing_scenarios/generated/Jar_of_Greed_Cpu_Draw_One_CPU.lua"
+  },
+  {
+    "card": "Skull Lair",
+    "effect": "banish_level_count",
+    "actor": "Player",
+    "format": "Android",
+    "start": "you",
+    "recording": "tools/testing_scenarios/recordings/Skull_Lair_Banish_Level_Count_Player.mp4",
+    "script": "tools/testing_scenarios/generated/Skull_Lair_Banish_Level_Count_Player.lua"
+  },
+  {
+    "card": "Skull Lair",
+    "effect": "cpu_destroy_strong_monster",
+    "actor": "CPU",
+    "format": "Android",
+    "start": "opp",
+    "recording": "tools/testing_scenarios/recordings/Skull_Lair_Cpu_Destroy_Strong_Monster_CPU.mp4",
+    "script": "tools/testing_scenarios/generated/Skull_Lair_Cpu_Destroy_Strong_Monster_CPU.lua"
+  },
+  {
+    "card": "Magic Cylinder",
+    "effect": "reflect_attack",
+    "actor": "Player",
+    "format": "Android",
+    "start": "opp",
+    "recording": "tools/testing_scenarios/recordings/Magic_Cylinder_Reflect_Attack_Player.mp4",
+    "script": "tools/testing_scenarios/generated/Magic_Cylinder_Reflect_Attack_Player.lua"
+  },
+  {
+    "card": "Magic Cylinder",
+    "effect": "cpu_reflect_attack",
+    "actor": "CPU",
+    "format": "Android",
+    "start": "you",
+    "recording": "tools/testing_scenarios/recordings/Magic_Cylinder_Cpu_Reflect_Attack_CPU.mp4",
+    "script": "tools/testing_scenarios/generated/Magic_Cylinder_Cpu_Reflect_Attack_CPU.lua"
+  },
+  {
+    "card": "St. Joan",
+    "effect": "fusion_summon",
+    "actor": "Player",
+    "format": "Android",
+    "start": "you",
+    "recording": "tools/testing_scenarios/recordings/St_Joan_Fusion_Summon_Player.mp4",
+    "script": "tools/testing_scenarios/generated/St_Joan_Fusion_Summon_Player.lua"
+  },
+  {
+    "card": "St. Joan",
+    "effect": "cpu_attack",
+    "actor": "CPU",
+    "format": "Android",
+    "start": "opp",
+    "recording": "tools/testing_scenarios/recordings/St_Joan_Cpu_Attack_CPU.mp4",
+    "script": "tools/testing_scenarios/generated/St_Joan_Cpu_Attack_CPU.lua"
+  },
+  {
+    "card": "United We Stand",
+    "effect": "equip_per_face_up_monster",
+    "actor": "Player",
+    "format": "Android",
+    "start": "you",
+    "recording": "tools/testing_scenarios/recordings/United_We_Stand_Equip_Per_Face_Up_Monster_Player.mp4",
+    "script": "tools/testing_scenarios/generated/United_We_Stand_Equip_Per_Face_Up_Monster_Player.lua"
+  },
+  {
+    "card": "United We Stand",
+    "effect": "cpu_equip",
+    "actor": "CPU",
+    "format": "Android",
+    "start": "opp",
+    "recording": "tools/testing_scenarios/recordings/United_We_Stand_Cpu_Equip_CPU.mp4",
+    "script": "tools/testing_scenarios/generated/United_We_Stand_Cpu_Equip_CPU.lua"
+  },
+  {
+    "card": "Mage Power",
+    "effect": "equip_per_spell_trap",
+    "actor": "Player",
+    "format": "Android",
+    "start": "you",
+    "recording": "tools/testing_scenarios/recordings/Mage_Power_Equip_Per_Spell_Trap_Player.mp4",
+    "script": "tools/testing_scenarios/generated/Mage_Power_Equip_Per_Spell_Trap_Player.lua"
+  },
+  {
+    "card": "Mage Power",
+    "effect": "cpu_equip",
+    "actor": "CPU",
+    "format": "Android",
+    "start": "opp",
+    "recording": "tools/testing_scenarios/recordings/Mage_Power_Cpu_Equip_CPU.mp4",
+    "script": "tools/testing_scenarios/generated/Mage_Power_Cpu_Equip_CPU.lua"
+  },
+  {
+    "card": "Zombyra the Dark",
+    "effect": "lose_atk_after_destroying",
+    "actor": "Player",
+    "format": "Android",
+    "start": "you",
+    "recording": "tools/testing_scenarios/recordings/Zombyra_the_Dark_Lose_Atk_After_Destroying_Player.mp4",
+    "script": "tools/testing_scenarios/generated/Zombyra_the_Dark_Lose_Atk_After_Destroying_Player.lua"
+  },
+  {
+    "card": "Zombyra the Dark",
+    "effect": "no_direct_attack",
+    "actor": "Player",
+    "format": "Android",
+    "start": "you",
+    "recording": "tools/testing_scenarios/recordings/Zombyra_the_Dark_No_Direct_Attack_Player.mp4",
+    "script": "tools/testing_scenarios/generated/Zombyra_the_Dark_No_Direct_Attack_Player.lua"
+  },
+  {
+    "card": "Zombyra the Dark",
+    "effect": "cpu_attack",
+    "actor": "CPU",
+    "format": "Android",
+    "start": "opp",
+    "recording": "tools/testing_scenarios/recordings/Zombyra_the_Dark_Cpu_Attack_CPU.mp4",
+    "script": "tools/testing_scenarios/generated/Zombyra_the_Dark_Cpu_Attack_CPU.lua"
+  },
+  {
+    "card": "Humanoid Worm Drake",
+    "effect": "fusion_summon",
+    "actor": "Player",
+    "format": "Android",
+    "start": "you",
+    "recording": "tools/testing_scenarios/recordings/Humanoid_Worm_Drake_Fusion_Summon_Player.mp4",
+    "script": "tools/testing_scenarios/generated/Humanoid_Worm_Drake_Fusion_Summon_Player.lua"
+  },
+  {
+    "card": "Humanoid Worm Drake",
+    "effect": "cpu_attack",
+    "actor": "CPU",
+    "format": "Android",
+    "start": "opp",
+    "recording": "tools/testing_scenarios/recordings/Humanoid_Worm_Drake_Cpu_Attack_CPU.mp4",
+    "script": "tools/testing_scenarios/generated/Humanoid_Worm_Drake_Cpu_Attack_CPU.lua"
+  },
+  {
+    "card": "Scapegoat",
+    "effect": "four_sheep_no_summon",
+    "actor": "Player",
+    "format": "Joey-Pegasus",
+    "start": "you",
+    "recording": "tools/testing_scenarios/recordings/Scapegoat_Four_Sheep_No_Summon_Player.mp4",
+    "script": "tools/testing_scenarios/generated/Scapegoat_Four_Sheep_No_Summon_Player.lua"
+  },
+  {
+    "card": "Scapegoat",
+    "effect": "cpu_block_direct_attack",
+    "actor": "CPU",
+    "format": "Joey-Pegasus",
+    "start": "you",
+    "recording": "tools/testing_scenarios/recordings/Scapegoat_Cpu_Block_Direct_Attack_CPU.mp4",
+    "script": "tools/testing_scenarios/generated/Scapegoat_Cpu_Block_Direct_Attack_CPU.lua"
+  },
+  {
+    "card": "Offerings to the Doomed",
+    "effect": "destroy_and_skip_draw",
+    "actor": "Player",
+    "format": "Joey-Pegasus",
+    "start": "you",
+    "recording": "tools/testing_scenarios/recordings/Offerings_to_the_Doomed_Destroy_And_Skip_Draw_Player.mp4",
+    "script": "tools/testing_scenarios/generated/Offerings_to_the_Doomed_Destroy_And_Skip_Draw_Player.lua"
+  },
+  {
+    "card": "Offerings to the Doomed",
+    "effect": "cpu_destroy",
+    "actor": "CPU",
+    "format": "Joey-Pegasus",
+    "start": "opp",
+    "recording": "tools/testing_scenarios/recordings/Offerings_to_the_Doomed_Cpu_Destroy_CPU.mp4",
+    "script": "tools/testing_scenarios/generated/Offerings_to_the_Doomed_Cpu_Destroy_CPU.lua"
   },
   {
     "card": "Exiled Force",
     "effect": "tribute_destroy_target",
     "actor": "Player",
     "format": "Fiber",
+    "start": "you",
     "recording": "tools/testing_scenarios/recordings/Exiled_Force_Tribute_Destroy_Target_Player.mp4",
     "script": "tools/testing_scenarios/poc/Exiled_Force_Tribute_Destroy_Target_Player.lua"
   },
   {
     "card": "Exiled Force",
-    "effect": "cpu_duel",
+    "effect": "cpu_tribute_destroy_stronger",
     "actor": "CPU",
     "format": "Fiber",
-    "recording": "tools/testing_scenarios/recordings/Exiled_Force_Cpu_Duel_CPU.mp4",
-    "script": "tools/testing_scenarios/poc/Exiled_Force_Cpu_Duel_CPU.lua"
+    "start": "opp",
+    "recording": "tools/testing_scenarios/recordings/Exiled_Force_Cpu_Tribute_Destroy_Stronger_CPU.mp4",
+    "script": "tools/testing_scenarios/poc/Exiled_Force_Cpu_Tribute_Destroy_Stronger_CPU.lua"
+  },
+  {
+    "card": "Fiber Jar",
+    "effect": "flip_reset_both_players",
+    "actor": "Player",
+    "format": "Fiber",
+    "start": "you",
+    "recording": "tools/testing_scenarios/recordings/Fiber_Jar_Flip_Reset_Both_Players_Player.mp4",
+    "script": "tools/testing_scenarios/generated/Fiber_Jar_Flip_Reset_Both_Players_Player.lua"
+  },
+  {
+    "card": "Fiber Jar",
+    "effect": "cpu_flipped_by_attack",
+    "actor": "CPU",
+    "format": "Fiber",
+    "start": "you",
+    "recording": "tools/testing_scenarios/recordings/Fiber_Jar_Cpu_Flipped_By_Attack_CPU.mp4",
+    "script": "tools/testing_scenarios/generated/Fiber_Jar_Cpu_Flipped_By_Attack_CPU.lua"
+  },
+  {
+    "card": "Injection Fairy Lily",
+    "effect": "pay_2000_for_3000",
+    "actor": "Player",
+    "format": "Fiber",
+    "start": "you",
+    "recording": "tools/testing_scenarios/recordings/Injection_Fairy_Lily_Pay_2000_For_3000_Player.mp4",
+    "script": "tools/testing_scenarios/generated/Injection_Fairy_Lily_Pay_2000_For_3000_Player.lua"
+  },
+  {
+    "card": "Injection Fairy Lily",
+    "effect": "cpu_pay_when_attacked",
+    "actor": "CPU",
+    "format": "Fiber",
+    "start": "you",
+    "recording": "tools/testing_scenarios/recordings/Injection_Fairy_Lily_Cpu_Pay_When_Attacked_CPU.mp4",
+    "script": "tools/testing_scenarios/generated/Injection_Fairy_Lily_Cpu_Pay_When_Attacked_CPU.lua"
+  },
+  {
+    "card": "Yata-Garasu",
+    "effect": "skip_opponent_draw",
+    "actor": "Player",
+    "format": "Fiber",
+    "start": "you",
+    "recording": "tools/testing_scenarios/recordings/Yata_Garasu_Skip_Opponent_Draw_Player.mp4",
+    "script": "tools/testing_scenarios/generated/Yata_Garasu_Skip_Opponent_Draw_Player.lua"
+  },
+  {
+    "card": "Yata-Garasu",
+    "effect": "cpu_skip_human_draw",
+    "actor": "CPU",
+    "format": "Fiber",
+    "start": "opp",
+    "recording": "tools/testing_scenarios/recordings/Yata_Garasu_Cpu_Skip_Human_Draw_CPU.mp4",
+    "script": "tools/testing_scenarios/generated/Yata_Garasu_Cpu_Skip_Human_Draw_CPU.lua"
+  },
+  {
+    "card": "Creature Swap",
+    "effect": "swap_control",
+    "actor": "Player",
+    "format": "Fiber",
+    "start": "you",
+    "recording": "tools/testing_scenarios/recordings/Creature_Swap_Swap_Control_Player.mp4",
+    "script": "tools/testing_scenarios/generated/Creature_Swap_Swap_Control_Player.lua"
+  },
+  {
+    "card": "Creature Swap",
+    "effect": "cpu_swap_weakest",
+    "actor": "CPU",
+    "format": "Fiber",
+    "start": "opp",
+    "recording": "tools/testing_scenarios/recordings/Creature_Swap_Cpu_Swap_Weakest_CPU.mp4",
+    "script": "tools/testing_scenarios/generated/Creature_Swap_Cpu_Swap_Weakest_CPU.lua"
+  },
+  {
+    "card": "Asura Priest",
+    "effect": "attack_every_monster",
+    "actor": "Player",
+    "format": "Fiber",
+    "start": "you",
+    "recording": "tools/testing_scenarios/recordings/Asura_Priest_Attack_Every_Monster_Player.mp4",
+    "script": "tools/testing_scenarios/generated/Asura_Priest_Attack_Every_Monster_Player.lua"
+  },
+  {
+    "card": "Asura Priest",
+    "effect": "cpu_attack_every_monster",
+    "actor": "CPU",
+    "format": "Fiber",
+    "start": "opp",
+    "recording": "tools/testing_scenarios/recordings/Asura_Priest_Cpu_Attack_Every_Monster_CPU.mp4",
+    "script": "tools/testing_scenarios/generated/Asura_Priest_Cpu_Attack_Every_Monster_CPU.lua"
+  },
+  {
+    "card": "Spear Dragon",
+    "effect": "pierce_then_defense",
+    "actor": "Player",
+    "format": "Fiber",
+    "start": "you",
+    "recording": "tools/testing_scenarios/recordings/Spear_Dragon_Pierce_Then_Defense_Player.mp4",
+    "script": "tools/testing_scenarios/generated/Spear_Dragon_Pierce_Then_Defense_Player.lua"
+  },
+  {
+    "card": "Spear Dragon",
+    "effect": "cpu_pierce",
+    "actor": "CPU",
+    "format": "Fiber",
+    "start": "opp",
+    "recording": "tools/testing_scenarios/recordings/Spear_Dragon_Cpu_Pierce_CPU.mp4",
+    "script": "tools/testing_scenarios/generated/Spear_Dragon_Cpu_Pierce_CPU.lua"
+  },
+  {
+    "card": "Dark Ruler Ha Des",
+    "effect": "negate_battle_destroyed_effects",
+    "actor": "Player",
+    "format": "Fiber",
+    "start": "you",
+    "recording": "tools/testing_scenarios/recordings/Dark_Ruler_Ha_Des_Negate_Battle_Destroyed_Effects_Player.mp4",
+    "script": "tools/testing_scenarios/generated/Dark_Ruler_Ha_Des_Negate_Battle_Destroyed_Effects_Player.lua"
+  },
+  {
+    "card": "Dark Ruler Ha Des",
+    "effect": "cpu_negate_sangan",
+    "actor": "CPU",
+    "format": "Fiber",
+    "start": "opp",
+    "recording": "tools/testing_scenarios/recordings/Dark_Ruler_Ha_Des_Cpu_Negate_Sangan_CPU.mp4",
+    "script": "tools/testing_scenarios/generated/Dark_Ruler_Ha_Des_Cpu_Negate_Sangan_CPU.lua"
+  },
+  {
+    "card": "Airknight Parshath",
+    "effect": "pierce_and_draw",
+    "actor": "Player",
+    "format": "Fiber",
+    "start": "you",
+    "recording": "tools/testing_scenarios/recordings/Airknight_Parshath_Pierce_And_Draw_Player.mp4",
+    "script": "tools/testing_scenarios/generated/Airknight_Parshath_Pierce_And_Draw_Player.lua"
+  },
+  {
+    "card": "Airknight Parshath",
+    "effect": "cpu_pierce_and_draw",
+    "actor": "CPU",
+    "format": "Fiber",
+    "start": "opp",
+    "recording": "tools/testing_scenarios/recordings/Airknight_Parshath_Cpu_Pierce_And_Draw_CPU.mp4",
+    "script": "tools/testing_scenarios/generated/Airknight_Parshath_Cpu_Pierce_And_Draw_CPU.lua"
+  },
+  {
+    "card": "Mirage of Nightmare",
+    "effect": "draw_to_four_then_discard",
+    "actor": "Player",
+    "format": "Yata",
+    "start": "you",
+    "recording": "tools/testing_scenarios/recordings/Mirage_of_Nightmare_Draw_To_Four_Then_Discard_Player.mp4",
+    "script": "tools/testing_scenarios/generated/Mirage_of_Nightmare_Draw_To_Four_Then_Discard_Player.lua"
+  },
+  {
+    "card": "Mirage of Nightmare",
+    "effect": "cpu_draw_to_four",
+    "actor": "CPU",
+    "format": "Yata",
+    "start": "opp",
+    "recording": "tools/testing_scenarios/recordings/Mirage_of_Nightmare_Cpu_Draw_To_Four_CPU.mp4",
+    "script": "tools/testing_scenarios/generated/Mirage_of_Nightmare_Cpu_Draw_To_Four_CPU.lua"
+  },
+  {
+    "card": "Spirit Reaper",
+    "effect": "discard_on_direct_attack",
+    "actor": "Player",
+    "format": "Yata",
+    "start": "you",
+    "recording": "tools/testing_scenarios/recordings/Spirit_Reaper_Discard_On_Direct_Attack_Player.mp4",
+    "script": "tools/testing_scenarios/generated/Spirit_Reaper_Discard_On_Direct_Attack_Player.lua"
+  },
+  {
+    "card": "Spirit Reaper",
+    "effect": "survive_battle",
+    "actor": "Player",
+    "format": "Yata",
+    "start": "you",
+    "recording": "tools/testing_scenarios/recordings/Spirit_Reaper_Survive_Battle_Player.mp4",
+    "script": "tools/testing_scenarios/generated/Spirit_Reaper_Survive_Battle_Player.lua"
+  },
+  {
+    "card": "Spirit Reaper",
+    "effect": "cpu_discard_human_card",
+    "actor": "CPU",
+    "format": "Yata",
+    "start": "opp",
+    "recording": "tools/testing_scenarios/recordings/Spirit_Reaper_Cpu_Discard_Human_Card_CPU.mp4",
+    "script": "tools/testing_scenarios/generated/Spirit_Reaper_Cpu_Discard_Human_Card_CPU.lua"
+  },
+  {
+    "card": "Don Zaloog",
+    "effect": "discard_random",
+    "actor": "Player",
+    "format": "Yata",
+    "start": "you",
+    "recording": "tools/testing_scenarios/recordings/Don_Zaloog_Discard_Random_Player.mp4",
+    "script": "tools/testing_scenarios/generated/Don_Zaloog_Discard_Random_Player.lua"
+  },
+  {
+    "card": "Don Zaloog",
+    "effect": "send_top_two",
+    "actor": "Player",
+    "format": "Yata",
+    "start": "you",
+    "recording": "tools/testing_scenarios/recordings/Don_Zaloog_Send_Top_Two_Player.mp4",
+    "script": "tools/testing_scenarios/generated/Don_Zaloog_Send_Top_Two_Player.lua"
+  },
+  {
+    "card": "Don Zaloog",
+    "effect": "cpu_discard_random",
+    "actor": "CPU",
+    "format": "Yata",
+    "start": "opp",
+    "recording": "tools/testing_scenarios/recordings/Don_Zaloog_Cpu_Discard_Random_CPU.mp4",
+    "script": "tools/testing_scenarios/generated/Don_Zaloog_Cpu_Discard_Random_CPU.lua"
+  },
+  {
+    "card": "Reinforcement of the Army",
+    "effect": "search_warrior",
+    "actor": "Player",
+    "format": "Yata",
+    "start": "you",
+    "recording": "tools/testing_scenarios/recordings/Reinforcement_of_the_Army_Search_Warrior_Player.mp4",
+    "script": "tools/testing_scenarios/generated/Reinforcement_of_the_Army_Search_Warrior_Player.lua"
+  },
+  {
+    "card": "Reinforcement of the Army",
+    "effect": "cpu_search_warrior",
+    "actor": "CPU",
+    "format": "Yata",
+    "start": "opp",
+    "recording": "tools/testing_scenarios/recordings/Reinforcement_of_the_Army_Cpu_Search_Warrior_CPU.mp4",
+    "script": "tools/testing_scenarios/generated/Reinforcement_of_the_Army_Cpu_Search_Warrior_CPU.lua"
+  },
+  {
+    "card": "Gravekeeper's Spy",
+    "effect": "flip_summon_gravekeeper",
+    "actor": "Player",
+    "format": "Yata",
+    "start": "you",
+    "recording": "tools/testing_scenarios/recordings/Gravekeepers_Spy_Flip_Summon_Gravekeeper_Player.mp4",
+    "script": "tools/testing_scenarios/generated/Gravekeepers_Spy_Flip_Summon_Gravekeeper_Player.lua"
+  },
+  {
+    "card": "Gravekeeper's Spy",
+    "effect": "cpu_flipped_by_attack",
+    "actor": "CPU",
+    "format": "Yata",
+    "start": "you",
+    "recording": "tools/testing_scenarios/recordings/Gravekeepers_Spy_Cpu_Flipped_By_Attack_CPU.mp4",
+    "script": "tools/testing_scenarios/generated/Gravekeepers_Spy_Cpu_Flipped_By_Attack_CPU.lua"
+  },
+  {
+    "card": "Book of Moon",
+    "effect": "face_down_target",
+    "actor": "Player",
+    "format": "Yata",
+    "start": "you",
+    "recording": "tools/testing_scenarios/recordings/Book_of_Moon_Face_Down_Target_Player.mp4",
+    "script": "tools/testing_scenarios/generated/Book_of_Moon_Face_Down_Target_Player.lua"
+  },
+  {
+    "card": "Book of Moon",
+    "effect": "cpu_clear_the_way",
+    "actor": "CPU",
+    "format": "Yata",
+    "start": "opp",
+    "recording": "tools/testing_scenarios/recordings/Book_of_Moon_Cpu_Clear_The_Way_CPU.mp4",
+    "script": "tools/testing_scenarios/generated/Book_of_Moon_Cpu_Clear_The_Way_CPU.lua"
+  },
+  {
+    "card": "King Tiger Wanghu",
+    "effect": "destroy_weak_summon",
+    "actor": "Player",
+    "format": "Yata",
+    "start": "you",
+    "recording": "tools/testing_scenarios/recordings/King_Tiger_Wanghu_Destroy_Weak_Summon_Player.mp4",
+    "script": "tools/testing_scenarios/generated/King_Tiger_Wanghu_Destroy_Weak_Summon_Player.lua"
+  },
+  {
+    "card": "King Tiger Wanghu",
+    "effect": "cpu_wanghu_on_human_summon",
+    "actor": "CPU",
+    "format": "Yata",
+    "start": "you",
+    "recording": "tools/testing_scenarios/recordings/King_Tiger_Wanghu_Cpu_Wanghu_On_Human_Summon_CPU.mp4",
+    "script": "tools/testing_scenarios/generated/King_Tiger_Wanghu_Cpu_Wanghu_On_Human_Summon_CPU.lua"
+  },
+  {
+    "card": "Newdoria",
+    "effect": "destroy_on_battle_destruction",
+    "actor": "Player",
+    "format": "Yata",
+    "start": "you",
+    "recording": "tools/testing_scenarios/recordings/Newdoria_Destroy_On_Battle_Destruction_Player.mp4",
+    "script": "tools/testing_scenarios/generated/Newdoria_Destroy_On_Battle_Destruction_Player.lua"
+  },
+  {
+    "card": "Newdoria",
+    "effect": "cpu_destroy_strongest",
+    "actor": "CPU",
+    "format": "Yata",
+    "start": "you",
+    "recording": "tools/testing_scenarios/recordings/Newdoria_Cpu_Destroy_Strongest_CPU.mp4",
+    "script": "tools/testing_scenarios/generated/Newdoria_Cpu_Destroy_Strongest_CPU.lua"
+  },
+  {
+    "card": "Metamorphosis",
+    "effect": "tribute_for_same_level_fusion",
+    "actor": "Player",
+    "format": "Yata",
+    "start": "you",
+    "recording": "tools/testing_scenarios/recordings/Metamorphosis_Tribute_For_Same_Level_Fusion_Player.mp4",
+    "script": "tools/testing_scenarios/generated/Metamorphosis_Tribute_For_Same_Level_Fusion_Player.lua"
+  },
+  {
+    "card": "Metamorphosis",
+    "effect": "cpu_highest_atk_fusion",
+    "actor": "CPU",
+    "format": "Yata",
+    "start": "opp",
+    "recording": "tools/testing_scenarios/recordings/Metamorphosis_Cpu_Highest_Atk_Fusion_CPU.mp4",
+    "script": "tools/testing_scenarios/generated/Metamorphosis_Cpu_Highest_Atk_Fusion_CPU.lua"
+  },
+  {
+    "card": "Cure Mermaid",
+    "effect": "gain_800_standby",
+    "actor": "Player",
+    "format": "Yata",
+    "start": "you",
+    "recording": "tools/testing_scenarios/recordings/Cure_Mermaid_Gain_800_Standby_Player.mp4",
+    "script": "tools/testing_scenarios/generated/Cure_Mermaid_Gain_800_Standby_Player.lua"
+  },
+  {
+    "card": "Cure Mermaid",
+    "effect": "cpu_gain_800_standby",
+    "actor": "CPU",
+    "format": "Yata",
+    "start": "you",
+    "recording": "tools/testing_scenarios/recordings/Cure_Mermaid_Cpu_Gain_800_Standby_CPU.mp4",
+    "script": "tools/testing_scenarios/generated/Cure_Mermaid_Cpu_Gain_800_Standby_CPU.lua"
+  },
+  {
+    "card": "Raigeki Break",
+    "effect": "discard_destroy_card",
+    "actor": "Player",
+    "format": "Yata",
+    "start": "you",
+    "recording": "tools/testing_scenarios/recordings/Raigeki_Break_Discard_Destroy_Card_Player.mp4",
+    "script": "tools/testing_scenarios/generated/Raigeki_Break_Discard_Destroy_Card_Player.lua"
+  },
+  {
+    "card": "Raigeki Break",
+    "effect": "cpu_discard_destroy",
+    "actor": "CPU",
+    "format": "Yata",
+    "start": "opp",
+    "recording": "tools/testing_scenarios/recordings/Raigeki_Break_Cpu_Discard_Destroy_CPU.mp4",
+    "script": "tools/testing_scenarios/generated/Raigeki_Break_Cpu_Discard_Destroy_CPU.lua"
+  },
+  {
+    "card": "Trap Dustshoot",
+    "effect": "return_hand_monster",
+    "actor": "Player",
+    "format": "Yata",
+    "start": "you",
+    "recording": "tools/testing_scenarios/recordings/Trap_Dustshoot_Return_Hand_Monster_Player.mp4",
+    "script": "tools/testing_scenarios/generated/Trap_Dustshoot_Return_Hand_Monster_Player.lua"
+  },
+  {
+    "card": "Trap Dustshoot",
+    "effect": "cpu_return_first_monster",
+    "actor": "CPU",
+    "format": "Yata",
+    "start": "opp",
+    "recording": "tools/testing_scenarios/recordings/Trap_Dustshoot_Cpu_Return_First_Monster_CPU.mp4",
+    "script": "tools/testing_scenarios/generated/Trap_Dustshoot_Cpu_Return_First_Monster_CPU.lua"
+  },
+  {
+    "card": "Blast with Chain",
+    "effect": "equip_then_destroy_when_destroyed",
+    "actor": "Player",
+    "format": "Yata",
+    "start": "you",
+    "recording": "tools/testing_scenarios/recordings/Blast_with_Chain_Equip_Then_Destroy_When_Destroyed_Player.mp4",
+    "script": "tools/testing_scenarios/generated/Blast_with_Chain_Equip_Then_Destroy_When_Destroyed_Player.lua"
+  },
+  {
+    "card": "Blast with Chain",
+    "effect": "cpu_equip_against_attack",
+    "actor": "CPU",
+    "format": "Yata",
+    "start": "you",
+    "recording": "tools/testing_scenarios/recordings/Blast_with_Chain_Cpu_Equip_Against_Attack_CPU.mp4",
+    "script": "tools/testing_scenarios/generated/Blast_with_Chain_Cpu_Equip_Against_Attack_CPU.lua"
+  },
+  {
+    "card": "Gearfried the Iron Knight",
+    "effect": "destroy_equip",
+    "actor": "Player",
+    "format": "Yata",
+    "start": "you",
+    "recording": "tools/testing_scenarios/recordings/Gearfried_the_Iron_Knight_Destroy_Equip_Player.mp4",
+    "script": "tools/testing_scenarios/generated/Gearfried_the_Iron_Knight_Destroy_Equip_Player.lua"
+  },
+  {
+    "card": "Gearfried the Iron Knight",
+    "effect": "cpu_attack",
+    "actor": "CPU",
+    "format": "Yata",
+    "start": "opp",
+    "recording": "tools/testing_scenarios/recordings/Gearfried_the_Iron_Knight_Cpu_Attack_CPU.mp4",
+    "script": "tools/testing_scenarios/generated/Gearfried_the_Iron_Knight_Cpu_Attack_CPU.lua"
+  },
+  {
+    "card": "Breaker the Magical Warrior",
+    "effect": "counter_then_destroy_spell_trap",
+    "actor": "Player",
+    "format": "Scientist",
+    "start": "you",
+    "recording": "tools/testing_scenarios/recordings/Breaker_the_Magical_Warrior_Counter_Then_Destroy_Spell_Trap_Player.mp4",
+    "script": "tools/testing_scenarios/generated/Breaker_the_Magical_Warrior_Counter_Then_Destroy_Spell_Trap_Player.lua"
+  },
+  {
+    "card": "Breaker the Magical Warrior",
+    "effect": "cpu_destroy_human_spell_trap",
+    "actor": "CPU",
+    "format": "Scientist",
+    "start": "opp",
+    "recording": "tools/testing_scenarios/recordings/Breaker_the_Magical_Warrior_Cpu_Destroy_Human_Spell_Trap_CPU.mp4",
+    "script": "tools/testing_scenarios/generated/Breaker_the_Magical_Warrior_Cpu_Destroy_Human_Spell_Trap_CPU.lua"
+  },
+  {
+    "card": "Magical Scientist",
+    "effect": "pay_1000_for_fusion",
+    "actor": "Player",
+    "format": "Scientist",
+    "start": "you",
+    "recording": "tools/testing_scenarios/recordings/Magical_Scientist_Pay_1000_For_Fusion_Player.mp4",
+    "script": "tools/testing_scenarios/generated/Magical_Scientist_Pay_1000_For_Fusion_Player.lua"
+  },
+  {
+    "card": "Magical Scientist",
+    "effect": "cpu_summon_fusion",
+    "actor": "CPU",
+    "format": "Scientist",
+    "start": "opp",
+    "recording": "tools/testing_scenarios/recordings/Magical_Scientist_Cpu_Summon_Fusion_CPU.mp4",
+    "script": "tools/testing_scenarios/generated/Magical_Scientist_Cpu_Summon_Fusion_CPU.lua"
+  },
+  {
+    "card": "Tribe-Infecting Virus",
+    "effect": "declare_type_destroy",
+    "actor": "Player",
+    "format": "Scientist",
+    "start": "you",
+    "recording": "tools/testing_scenarios/recordings/Tribe_Infecting_Virus_Declare_Type_Destroy_Player.mp4",
+    "script": "tools/testing_scenarios/generated/Tribe_Infecting_Virus_Declare_Type_Destroy_Player.lua"
+  },
+  {
+    "card": "Tribe-Infecting Virus",
+    "effect": "cpu_declare_best_type",
+    "actor": "CPU",
+    "format": "Scientist",
+    "start": "opp",
+    "recording": "tools/testing_scenarios/recordings/Tribe_Infecting_Virus_Cpu_Declare_Best_Type_CPU.mp4",
+    "script": "tools/testing_scenarios/generated/Tribe_Infecting_Virus_Cpu_Declare_Best_Type_CPU.lua"
+  },
+  {
+    "card": "Gilasaurus",
+    "effect": "special_summon_opponent_revives",
+    "actor": "Player",
+    "format": "Scientist",
+    "start": "you",
+    "recording": "tools/testing_scenarios/recordings/Gilasaurus_Special_Summon_Opponent_Revives_Player.mp4",
+    "script": "tools/testing_scenarios/generated/Gilasaurus_Special_Summon_Opponent_Revives_Player.lua"
+  },
+  {
+    "card": "Gilasaurus",
+    "effect": "cpu_special_summon_human_revives",
+    "actor": "CPU",
+    "format": "Scientist",
+    "start": "opp",
+    "recording": "tools/testing_scenarios/recordings/Gilasaurus_Cpu_Special_Summon_Human_Revives_CPU.mp4",
+    "script": "tools/testing_scenarios/generated/Gilasaurus_Cpu_Special_Summon_Human_Revives_CPU.lua"
+  },
+  {
+    "card": "Poison of the Old Man",
+    "effect": "gain_1200",
+    "actor": "Player",
+    "format": "Scientist",
+    "start": "you",
+    "recording": "tools/testing_scenarios/recordings/Poison_of_the_Old_Man_Gain_1200_Player.mp4",
+    "script": "tools/testing_scenarios/generated/Poison_of_the_Old_Man_Gain_1200_Player.lua"
+  },
+  {
+    "card": "Poison of the Old Man",
+    "effect": "burn_800",
+    "actor": "Player",
+    "format": "Scientist",
+    "start": "you",
+    "recording": "tools/testing_scenarios/recordings/Poison_of_the_Old_Man_Burn_800_Player.mp4",
+    "script": "tools/testing_scenarios/generated/Poison_of_the_Old_Man_Burn_800_Player.lua"
+  },
+  {
+    "card": "Poison of the Old Man",
+    "effect": "cpu_burn",
+    "actor": "CPU",
+    "format": "Scientist",
+    "start": "opp",
+    "recording": "tools/testing_scenarios/recordings/Poison_of_the_Old_Man_Cpu_Burn_CPU.mp4",
+    "script": "tools/testing_scenarios/generated/Poison_of_the_Old_Man_Cpu_Burn_CPU.lua"
+  },
+  {
+    "card": "Reasoning",
+    "effect": "excavate_special_summon",
+    "actor": "Player",
+    "format": "Scientist",
+    "start": "you",
+    "recording": "tools/testing_scenarios/recordings/Reasoning_Excavate_Special_Summon_Player.mp4",
+    "script": "tools/testing_scenarios/generated/Reasoning_Excavate_Special_Summon_Player.lua"
+  },
+  {
+    "card": "Reasoning",
+    "effect": "cpu_human_declares_match",
+    "actor": "CPU",
+    "format": "Scientist",
+    "start": "opp",
+    "recording": "tools/testing_scenarios/recordings/Reasoning_Cpu_Human_Declares_Match_CPU.mp4",
+    "script": "tools/testing_scenarios/generated/Reasoning_Cpu_Human_Declares_Match_CPU.lua"
+  },
+  {
+    "card": "Jowgen the Spiritualist",
+    "effect": "destroy_special_summoned",
+    "actor": "Player",
+    "format": "Scientist",
+    "start": "you",
+    "recording": "tools/testing_scenarios/recordings/Jowgen_the_Spiritualist_Destroy_Special_Summoned_Player.mp4",
+    "script": "tools/testing_scenarios/generated/Jowgen_the_Spiritualist_Destroy_Special_Summoned_Player.lua"
+  },
+  {
+    "card": "Jowgen the Spiritualist",
+    "effect": "cpu_lock_special_summon",
+    "actor": "CPU",
+    "format": "Scientist",
+    "start": "you",
+    "recording": "tools/testing_scenarios/recordings/Jowgen_the_Spiritualist_Cpu_Lock_Special_Summon_CPU.mp4",
+    "script": "tools/testing_scenarios/generated/Jowgen_the_Spiritualist_Cpu_Lock_Special_Summon_CPU.lua"
+  },
+  {
+    "card": "Spiritualism",
+    "effect": "return_spell_trap",
+    "actor": "Player",
+    "format": "Scientist",
+    "start": "you",
+    "recording": "tools/testing_scenarios/recordings/Spiritualism_Return_Spell_Trap_Player.mp4",
+    "script": "tools/testing_scenarios/generated/Spiritualism_Return_Spell_Trap_Player.lua"
+  },
+  {
+    "card": "Spiritualism",
+    "effect": "cpu_return_human_spell_trap",
+    "actor": "CPU",
+    "format": "Scientist",
+    "start": "opp",
+    "recording": "tools/testing_scenarios/recordings/Spiritualism_Cpu_Return_Human_Spell_Trap_CPU.mp4",
+    "script": "tools/testing_scenarios/generated/Spiritualism_Cpu_Return_Human_Spell_Trap_CPU.lua"
+  },
+  {
+    "card": "D.D. Warrior Lady",
+    "effect": "banish_both",
+    "actor": "Player",
+    "format": "Vampire",
+    "start": "you",
+    "recording": "tools/testing_scenarios/recordings/DD_Warrior_Lady_Banish_Both_Player.mp4",
+    "script": "tools/testing_scenarios/generated/DD_Warrior_Lady_Banish_Both_Player.lua"
+  },
+  {
+    "card": "D.D. Warrior Lady",
+    "effect": "cpu_banish_both",
+    "actor": "CPU",
+    "format": "Vampire",
+    "start": "you",
+    "recording": "tools/testing_scenarios/recordings/DD_Warrior_Lady_Cpu_Banish_Both_CPU.mp4",
+    "script": "tools/testing_scenarios/generated/DD_Warrior_Lady_Cpu_Banish_Both_CPU.lua"
+  },
+  {
+    "card": "Sakuretsu Armor",
+    "effect": "destroy_attacker",
+    "actor": "Player",
+    "format": "Vampire",
+    "start": "opp",
+    "recording": "tools/testing_scenarios/recordings/Sakuretsu_Armor_Destroy_Attacker_Player.mp4",
+    "script": "tools/testing_scenarios/generated/Sakuretsu_Armor_Destroy_Attacker_Player.lua"
+  },
+  {
+    "card": "Sakuretsu Armor",
+    "effect": "cpu_destroy_attacker",
+    "actor": "CPU",
+    "format": "Vampire",
+    "start": "you",
+    "recording": "tools/testing_scenarios/recordings/Sakuretsu_Armor_Cpu_Destroy_Attacker_CPU.mp4",
+    "script": "tools/testing_scenarios/generated/Sakuretsu_Armor_Cpu_Destroy_Attacker_CPU.lua"
+  },
+  {
+    "card": "Sasuke Samurai",
+    "effect": "destroy_face_down",
+    "actor": "Player",
+    "format": "Vampire",
+    "start": "you",
+    "recording": "tools/testing_scenarios/recordings/Sasuke_Samurai_Destroy_Face_Down_Player.mp4",
+    "script": "tools/testing_scenarios/generated/Sasuke_Samurai_Destroy_Face_Down_Player.lua"
+  },
+  {
+    "card": "Sasuke Samurai",
+    "effect": "cpu_destroy_face_down",
+    "actor": "CPU",
+    "format": "Vampire",
+    "start": "opp",
+    "recording": "tools/testing_scenarios/recordings/Sasuke_Samurai_Cpu_Destroy_Face_Down_CPU.mp4",
+    "script": "tools/testing_scenarios/generated/Sasuke_Samurai_Cpu_Destroy_Face_Down_CPU.lua"
+  },
+  {
+    "card": "Amazoness Archer",
+    "effect": "tribute_two_burn",
+    "actor": "Player",
+    "format": "Vampire",
+    "start": "you",
+    "recording": "tools/testing_scenarios/recordings/Amazoness_Archer_Tribute_Two_Burn_Player.mp4",
+    "script": "tools/testing_scenarios/generated/Amazoness_Archer_Tribute_Two_Burn_Player.lua"
+  },
+  {
+    "card": "Amazoness Archer",
+    "effect": "cpu_tribute_two_burn",
+    "actor": "CPU",
+    "format": "Vampire",
+    "start": "opp",
+    "recording": "tools/testing_scenarios/recordings/Amazoness_Archer_Cpu_Tribute_Two_Burn_CPU.mp4",
+    "script": "tools/testing_scenarios/generated/Amazoness_Archer_Cpu_Tribute_Two_Burn_CPU.lua"
+  },
+  {
+    "card": "Vampire Lord",
+    "effect": "declare_spell_on_damage",
+    "actor": "Player",
+    "format": "Vampire",
+    "start": "you",
+    "recording": "tools/testing_scenarios/recordings/Vampire_Lord_Declare_Spell_On_Damage_Player.mp4",
+    "script": "tools/testing_scenarios/generated/Vampire_Lord_Declare_Spell_On_Damage_Player.lua"
+  },
+  {
+    "card": "Vampire Lord",
+    "effect": "revive_after_destroyed_by_effect",
+    "actor": "Player",
+    "format": "Vampire",
+    "start": "you",
+    "recording": "tools/testing_scenarios/recordings/Vampire_Lord_Revive_After_Destroyed_By_Effect_Player.mp4",
+    "script": "tools/testing_scenarios/generated/Vampire_Lord_Revive_After_Destroyed_By_Effect_Player.lua"
+  },
+  {
+    "card": "Vampire Lord",
+    "effect": "cpu_declare_on_damage",
+    "actor": "CPU",
+    "format": "Vampire",
+    "start": "opp",
+    "recording": "tools/testing_scenarios/recordings/Vampire_Lord_Cpu_Declare_On_Damage_CPU.mp4",
+    "script": "tools/testing_scenarios/generated/Vampire_Lord_Cpu_Declare_On_Damage_CPU.lua"
+  },
+  {
+    "card": "Chaos Emperor Dragon - Envoy of the End",
+    "effect": "summon_and_wipe",
+    "actor": "Player",
+    "format": "Chaos",
+    "start": "you",
+    "recording": "tools/testing_scenarios/recordings/Chaos_Emperor_Dragon_Envoy_of_the_End_Summon_And_Wipe_Player.mp4",
+    "script": "tools/testing_scenarios/generated/Chaos_Emperor_Dragon_Envoy_of_the_End_Summon_And_Wipe_Player.lua"
+  },
+  {
+    "card": "Chaos Emperor Dragon - Envoy of the End",
+    "effect": "cpu_summon_and_wipe",
+    "actor": "CPU",
+    "format": "Chaos",
+    "start": "opp",
+    "recording": "tools/testing_scenarios/recordings/Chaos_Emperor_Dragon_Envoy_of_the_End_Cpu_Summon_And_Wipe_CPU.mp4",
+    "script": "tools/testing_scenarios/generated/Chaos_Emperor_Dragon_Envoy_of_the_End_Cpu_Summon_And_Wipe_CPU.lua"
+  },
+  {
+    "card": "Dark Magician of Chaos",
+    "effect": "banish_and_recover_spell",
+    "actor": "Player",
+    "format": "Chaos",
+    "start": "you",
+    "recording": "tools/testing_scenarios/recordings/Dark_Magician_of_Chaos_Banish_And_Recover_Spell_Player.mp4",
+    "script": "tools/testing_scenarios/generated/Dark_Magician_of_Chaos_Banish_And_Recover_Spell_Player.lua"
+  },
+  {
+    "card": "Dark Magician of Chaos",
+    "effect": "cpu_banish_by_battle",
+    "actor": "CPU",
+    "format": "Chaos",
+    "start": "opp",
+    "recording": "tools/testing_scenarios/recordings/Dark_Magician_of_Chaos_Cpu_Banish_By_Battle_CPU.mp4",
+    "script": "tools/testing_scenarios/generated/Dark_Magician_of_Chaos_Cpu_Banish_By_Battle_CPU.lua"
+  },
+  {
+    "card": "Chaos Sorcerer",
+    "effect": "summon_and_banish",
+    "actor": "Player",
+    "format": "Chaos",
+    "start": "you",
+    "recording": "tools/testing_scenarios/recordings/Chaos_Sorcerer_Summon_And_Banish_Player.mp4",
+    "script": "tools/testing_scenarios/generated/Chaos_Sorcerer_Summon_And_Banish_Player.lua"
+  },
+  {
+    "card": "Chaos Sorcerer",
+    "effect": "cpu_banish_human_monster",
+    "actor": "CPU",
+    "format": "Chaos",
+    "start": "opp",
+    "recording": "tools/testing_scenarios/recordings/Chaos_Sorcerer_Cpu_Banish_Human_Monster_CPU.mp4",
+    "script": "tools/testing_scenarios/generated/Chaos_Sorcerer_Cpu_Banish_Human_Monster_CPU.lua"
+  },
+  {
+    "card": "Tsukuyomi",
+    "effect": "flip_set_target",
+    "actor": "Player",
+    "format": "Chaos",
+    "start": "you",
+    "recording": "tools/testing_scenarios/recordings/Tsukuyomi_Flip_Set_Target_Player.mp4",
+    "script": "tools/testing_scenarios/generated/Tsukuyomi_Flip_Set_Target_Player.lua"
+  },
+  {
+    "card": "Tsukuyomi",
+    "effect": "cpu_flip_set_target",
+    "actor": "CPU",
+    "format": "Chaos",
+    "start": "opp",
+    "recording": "tools/testing_scenarios/recordings/Tsukuyomi_Cpu_Flip_Set_Target_CPU.mp4",
+    "script": "tools/testing_scenarios/generated/Tsukuyomi_Cpu_Flip_Set_Target_CPU.lua"
+  },
+  {
+    "card": "Cold Wave",
+    "effect": "lock_spells_traps",
+    "actor": "Player",
+    "format": "Chaos",
+    "start": "you",
+    "recording": "tools/testing_scenarios/recordings/Cold_Wave_Lock_Spells_Traps_Player.mp4",
+    "script": "tools/testing_scenarios/generated/Cold_Wave_Lock_Spells_Traps_Player.lua"
+  },
+  {
+    "card": "Cold Wave",
+    "effect": "cpu_lock_spells_traps",
+    "actor": "CPU",
+    "format": "Chaos",
+    "start": "opp",
+    "recording": "tools/testing_scenarios/recordings/Cold_Wave_Cpu_Lock_Spells_Traps_CPU.mp4",
+    "script": "tools/testing_scenarios/generated/Cold_Wave_Cpu_Lock_Spells_Traps_CPU.lua"
+  },
+  {
+    "card": "Thunder Nyan Nyan",
+    "effect": "destroyed_by_non_light",
+    "actor": "Player",
+    "format": "Chaos",
+    "start": "you",
+    "recording": "tools/testing_scenarios/recordings/Thunder_Nyan_Nyan_Destroyed_By_Non_Light_Player.mp4",
+    "script": "tools/testing_scenarios/generated/Thunder_Nyan_Nyan_Destroyed_By_Non_Light_Player.lua"
+  },
+  {
+    "card": "Thunder Nyan Nyan",
+    "effect": "face_down_does_not_count",
+    "actor": "Player",
+    "format": "Chaos",
+    "start": "you",
+    "recording": "tools/testing_scenarios/recordings/Thunder_Nyan_Nyan_Face_Down_Does_Not_Count_Player.mp4",
+    "script": "tools/testing_scenarios/generated/Thunder_Nyan_Nyan_Face_Down_Does_Not_Count_Player.lua"
+  },
+  {
+    "card": "Thunder Nyan Nyan",
+    "effect": "cpu_avoid_non_light",
+    "actor": "CPU",
+    "format": "Chaos",
+    "start": "opp",
+    "recording": "tools/testing_scenarios/recordings/Thunder_Nyan_Nyan_Cpu_Avoid_Non_Light_CPU.mp4",
+    "script": "tools/testing_scenarios/generated/Thunder_Nyan_Nyan_Cpu_Avoid_Non_Light_CPU.lua"
+  },
+  {
+    "card": "Cipher Soldier",
+    "effect": "bonus_against_warrior",
+    "actor": "Player",
+    "format": "Warrior",
+    "start": "you",
+    "recording": "tools/testing_scenarios/recordings/Cipher_Soldier_Bonus_Against_Warrior_Player.mp4",
+    "script": "tools/testing_scenarios/generated/Cipher_Soldier_Bonus_Against_Warrior_Player.lua"
+  },
+  {
+    "card": "Cipher Soldier",
+    "effect": "cpu_bonus_when_attacked",
+    "actor": "CPU",
+    "format": "Warrior",
+    "start": "you",
+    "recording": "tools/testing_scenarios/recordings/Cipher_Soldier_Cpu_Bonus_When_Attacked_CPU.mp4",
+    "script": "tools/testing_scenarios/generated/Cipher_Soldier_Cpu_Bonus_When_Attacked_CPU.lua"
+  },
+  {
+    "card": "Mobius the Frost Monarch",
+    "effect": "destroy_two_spell_traps",
+    "actor": "Player",
+    "format": "Warrior",
+    "start": "you",
+    "recording": "tools/testing_scenarios/recordings/Mobius_the_Frost_Monarch_Destroy_Two_Spell_Traps_Player.mp4",
+    "script": "tools/testing_scenarios/generated/Mobius_the_Frost_Monarch_Destroy_Two_Spell_Traps_Player.lua"
+  },
+  {
+    "card": "Mobius the Frost Monarch",
+    "effect": "cpu_destroy_human_spell_traps",
+    "actor": "CPU",
+    "format": "Warrior",
+    "start": "opp",
+    "recording": "tools/testing_scenarios/recordings/Mobius_the_Frost_Monarch_Cpu_Destroy_Human_Spell_Traps_CPU.mp4",
+    "script": "tools/testing_scenarios/generated/Mobius_the_Frost_Monarch_Cpu_Destroy_Human_Spell_Traps_CPU.lua"
+  },
+  {
+    "card": "Smashing Ground",
+    "effect": "destroy_highest_def",
+    "actor": "Player",
+    "format": "Warrior",
+    "start": "you",
+    "recording": "tools/testing_scenarios/recordings/Smashing_Ground_Destroy_Highest_Def_Player.mp4",
+    "script": "tools/testing_scenarios/generated/Smashing_Ground_Destroy_Highest_Def_Player.lua"
+  },
+  {
+    "card": "Smashing Ground",
+    "effect": "cpu_destroy_highest_def",
+    "actor": "CPU",
+    "format": "Warrior",
+    "start": "opp",
+    "recording": "tools/testing_scenarios/recordings/Smashing_Ground_Cpu_Destroy_Highest_Def_CPU.mp4",
+    "script": "tools/testing_scenarios/generated/Smashing_Ground_Cpu_Destroy_Highest_Def_CPU.lua"
+  },
+  {
+    "card": "Blade Knight",
+    "effect": "boost_and_negate_flip",
+    "actor": "Player",
+    "format": "Warrior",
+    "start": "you",
+    "recording": "tools/testing_scenarios/recordings/Blade_Knight_Boost_And_Negate_Flip_Player.mp4",
+    "script": "tools/testing_scenarios/generated/Blade_Knight_Boost_And_Negate_Flip_Player.lua"
+  },
+  {
+    "card": "Blade Knight",
+    "effect": "cpu_negate_flip",
+    "actor": "CPU",
+    "format": "Warrior",
+    "start": "opp",
+    "recording": "tools/testing_scenarios/recordings/Blade_Knight_Cpu_Negate_Flip_CPU.mp4",
+    "script": "tools/testing_scenarios/generated/Blade_Knight_Cpu_Negate_Flip_CPU.lua"
+  },
+  {
+    "card": "Mystic Swordsman LV2",
+    "effect": "destroy_face_down",
+    "actor": "Player",
+    "format": "Warrior",
+    "start": "you",
+    "recording": "tools/testing_scenarios/recordings/Mystic_Swordsman_LV2_Destroy_Face_Down_Player.mp4",
+    "script": "tools/testing_scenarios/generated/Mystic_Swordsman_LV2_Destroy_Face_Down_Player.lua"
+  },
+  {
+    "card": "Mystic Swordsman LV2",
+    "effect": "level_up_declined",
+    "actor": "Player",
+    "format": "Warrior",
+    "start": "you",
+    "recording": "tools/testing_scenarios/recordings/Mystic_Swordsman_LV2_Level_Up_Declined_Player.mp4",
+    "script": "tools/testing_scenarios/generated/Mystic_Swordsman_LV2_Level_Up_Declined_Player.lua"
+  },
+  {
+    "card": "Mystic Swordsman LV2",
+    "effect": "cpu_destroy_face_down",
+    "actor": "CPU",
+    "format": "Warrior",
+    "start": "opp",
+    "recording": "tools/testing_scenarios/recordings/Mystic_Swordsman_LV2_Cpu_Destroy_Face_Down_CPU.mp4",
+    "script": "tools/testing_scenarios/generated/Mystic_Swordsman_LV2_Cpu_Destroy_Face_Down_CPU.lua"
+  },
+  {
+    "card": "Bottomless Trap Hole",
+    "effect": "banish_summoned_monster",
+    "actor": "Player",
+    "format": "Warrior",
+    "start": "opp",
+    "recording": "tools/testing_scenarios/recordings/Bottomless_Trap_Hole_Banish_Summoned_Monster_Player.mp4",
+    "script": "tools/testing_scenarios/generated/Bottomless_Trap_Hole_Banish_Summoned_Monster_Player.lua"
+  },
+  {
+    "card": "Bottomless Trap Hole",
+    "effect": "cpu_banish_human_summon",
+    "actor": "CPU",
+    "format": "Warrior",
+    "start": "you",
+    "recording": "tools/testing_scenarios/recordings/Bottomless_Trap_Hole_Cpu_Banish_Human_Summon_CPU.mp4",
+    "script": "tools/testing_scenarios/generated/Bottomless_Trap_Hole_Cpu_Banish_Human_Summon_CPU.lua"
+  },
+  {
+    "card": "Emergency Provisions",
+    "effect": "send_two_gain_2000",
+    "actor": "Player",
+    "format": "Warrior",
+    "start": "you",
+    "recording": "tools/testing_scenarios/recordings/Emergency_Provisions_Send_Two_Gain_2000_Player.mp4",
+    "script": "tools/testing_scenarios/generated/Emergency_Provisions_Send_Two_Gain_2000_Player.lua"
+  },
+  {
+    "card": "Emergency Provisions",
+    "effect": "cpu_answer_spell_trap_removal",
+    "actor": "CPU",
+    "format": "Warrior",
+    "start": "you",
+    "recording": "tools/testing_scenarios/recordings/Emergency_Provisions_Cpu_Answer_Spell_Trap_Removal_CPU.mp4",
+    "script": "tools/testing_scenarios/generated/Emergency_Provisions_Cpu_Answer_Spell_Trap_Removal_CPU.lua"
+  },
+  {
+    "card": "Enemy Controller",
+    "effect": "change_position",
+    "actor": "Player",
+    "format": "Warrior",
+    "start": "you",
+    "recording": "tools/testing_scenarios/recordings/Enemy_Controller_Change_Position_Player.mp4",
+    "script": "tools/testing_scenarios/generated/Enemy_Controller_Change_Position_Player.lua"
+  },
+  {
+    "card": "Enemy Controller",
+    "effect": "take_control",
+    "actor": "Player",
+    "format": "Warrior",
+    "start": "you",
+    "recording": "tools/testing_scenarios/recordings/Enemy_Controller_Take_Control_Player.mp4",
+    "script": "tools/testing_scenarios/generated/Enemy_Controller_Take_Control_Player.lua"
+  },
+  {
+    "card": "Enemy Controller",
+    "effect": "cpu_take_stronger_monster",
+    "actor": "CPU",
+    "format": "Warrior",
+    "start": "opp",
+    "recording": "tools/testing_scenarios/recordings/Enemy_Controller_Cpu_Take_Stronger_Monster_CPU.mp4",
+    "script": "tools/testing_scenarios/generated/Enemy_Controller_Cpu_Take_Stronger_Monster_CPU.lua"
+  },
+  {
+    "card": "Mystik Wok",
+    "effect": "tribute_gain_def",
+    "actor": "Player",
+    "format": "Warrior",
+    "start": "you",
+    "recording": "tools/testing_scenarios/recordings/Mystik_Wok_Tribute_Gain_Def_Player.mp4",
+    "script": "tools/testing_scenarios/generated/Mystik_Wok_Tribute_Gain_Def_Player.lua"
+  },
+  {
+    "card": "Mystik Wok",
+    "effect": "cpu_low_lp_answer_attack",
+    "actor": "CPU",
+    "format": "Warrior",
+    "start": "you",
+    "recording": "tools/testing_scenarios/recordings/Mystik_Wok_Cpu_Low_Lp_Answer_Attack_CPU.mp4",
+    "script": "tools/testing_scenarios/generated/Mystik_Wok_Cpu_Low_Lp_Answer_Attack_CPU.lua"
+  },
+  {
+    "card": "Berserk Gorilla",
+    "effect": "destroyed_in_defense",
+    "actor": "Player",
+    "format": "Warrior",
+    "start": "you",
+    "recording": "tools/testing_scenarios/recordings/Berserk_Gorilla_Destroyed_In_Defense_Player.mp4",
+    "script": "tools/testing_scenarios/generated/Berserk_Gorilla_Destroyed_In_Defense_Player.lua"
+  },
+  {
+    "card": "Berserk Gorilla",
+    "effect": "must_attack",
+    "actor": "Player",
+    "format": "Warrior",
+    "start": "you",
+    "recording": "tools/testing_scenarios/recordings/Berserk_Gorilla_Must_Attack_Player.mp4",
+    "script": "tools/testing_scenarios/generated/Berserk_Gorilla_Must_Attack_Player.lua"
+  },
+  {
+    "card": "Berserk Gorilla",
+    "effect": "cpu_must_attack",
+    "actor": "CPU",
+    "format": "Warrior",
+    "start": "opp",
+    "recording": "tools/testing_scenarios/recordings/Berserk_Gorilla_Cpu_Must_Attack_CPU.mp4",
+    "script": "tools/testing_scenarios/generated/Berserk_Gorilla_Cpu_Must_Attack_CPU.lua"
+  },
+  {
+    "card": "Ninja Grandmaster Sasuke",
+    "effect": "destroy_face_up_defense",
+    "actor": "Player",
+    "format": "Warrior",
+    "start": "you",
+    "recording": "tools/testing_scenarios/recordings/Ninja_Grandmaster_Sasuke_Destroy_Face_Up_Defense_Player.mp4",
+    "script": "tools/testing_scenarios/generated/Ninja_Grandmaster_Sasuke_Destroy_Face_Up_Defense_Player.lua"
+  },
+  {
+    "card": "Ninja Grandmaster Sasuke",
+    "effect": "cpu_destroy_face_up_defense",
+    "actor": "CPU",
+    "format": "Warrior",
+    "start": "opp",
+    "recording": "tools/testing_scenarios/recordings/Ninja_Grandmaster_Sasuke_Cpu_Destroy_Face_Up_Defense_CPU.mp4",
+    "script": "tools/testing_scenarios/generated/Ninja_Grandmaster_Sasuke_Cpu_Destroy_Face_Up_Defense_CPU.lua"
+  },
+  {
+    "card": "D.D. Assailant",
+    "effect": "banish_both_when_destroyed",
+    "actor": "Player",
+    "format": "Warrior",
+    "start": "you",
+    "recording": "tools/testing_scenarios/recordings/DD_Assailant_Banish_Both_When_Destroyed_Player.mp4",
+    "script": "tools/testing_scenarios/generated/DD_Assailant_Banish_Both_When_Destroyed_Player.lua"
+  },
+  {
+    "card": "D.D. Assailant",
+    "effect": "cpu_banish_both_when_destroyed",
+    "actor": "CPU",
+    "format": "Warrior",
+    "start": "you",
+    "recording": "tools/testing_scenarios/recordings/DD_Assailant_Cpu_Banish_Both_When_Destroyed_CPU.mp4",
+    "script": "tools/testing_scenarios/generated/DD_Assailant_Cpu_Banish_Both_When_Destroyed_CPU.lua"
+  },
+  {
+    "card": "Return from the Different Dimension",
+    "effect": "return_banished_then_banish",
+    "actor": "Player",
+    "format": "Warrior",
+    "start": "you",
+    "recording": "tools/testing_scenarios/recordings/Return_from_the_Different_Dimension_Return_Banished_Then_Banish_Player.mp4",
+    "script": "tools/testing_scenarios/generated/Return_from_the_Different_Dimension_Return_Banished_Then_Banish_Player.lua"
+  },
+  {
+    "card": "Return from the Different Dimension",
+    "effect": "cpu_return_banished",
+    "actor": "CPU",
+    "format": "Warrior",
+    "start": "opp",
+    "recording": "tools/testing_scenarios/recordings/Return_from_the_Different_Dimension_Cpu_Return_Banished_CPU.mp4",
+    "script": "tools/testing_scenarios/generated/Return_from_the_Different_Dimension_Cpu_Return_Banished_CPU.lua"
+  },
+  {
+    "card": "Monster Gate",
+    "effect": "tribute_excavate_summon",
+    "actor": "Player",
+    "format": "Warrior",
+    "start": "you",
+    "recording": "tools/testing_scenarios/recordings/Monster_Gate_Tribute_Excavate_Summon_Player.mp4",
+    "script": "tools/testing_scenarios/generated/Monster_Gate_Tribute_Excavate_Summon_Player.lua"
+  },
+  {
+    "card": "Monster Gate",
+    "effect": "cpu_tribute_excavate_summon",
+    "actor": "CPU",
+    "format": "Warrior",
+    "start": "opp",
+    "recording": "tools/testing_scenarios/recordings/Monster_Gate_Cpu_Tribute_Excavate_Summon_CPU.mp4",
+    "script": "tools/testing_scenarios/generated/Monster_Gate_Cpu_Tribute_Excavate_Summon_CPU.lua"
+  },
+  {
+    "card": "Monster Reincarnation",
+    "effect": "discard_add_monster",
+    "actor": "Player",
+    "format": "Warrior",
+    "start": "you",
+    "recording": "tools/testing_scenarios/recordings/Monster_Reincarnation_Discard_Add_Monster_Player.mp4",
+    "script": "tools/testing_scenarios/generated/Monster_Reincarnation_Discard_Add_Monster_Player.lua"
+  },
+  {
+    "card": "Monster Reincarnation",
+    "effect": "cpu_add_monster_empty_field",
+    "actor": "CPU",
+    "format": "Warrior",
+    "start": "opp",
+    "recording": "tools/testing_scenarios/recordings/Monster_Reincarnation_Cpu_Add_Monster_Empty_Field_CPU.mp4",
+    "script": "tools/testing_scenarios/generated/Monster_Reincarnation_Cpu_Add_Monster_Empty_Field_CPU.lua"
+  },
+  {
+    "card": "Pikeru's Circle of Enchantment",
+    "effect": "no_effect_damage",
+    "actor": "Player",
+    "format": "Warrior",
+    "start": "opp",
+    "recording": "tools/testing_scenarios/recordings/Pikerus_Circle_of_Enchantment_No_Effect_Damage_Player.mp4",
+    "script": "tools/testing_scenarios/generated/Pikerus_Circle_of_Enchantment_No_Effect_Damage_Player.lua"
+  },
+  {
+    "card": "Pikeru's Circle of Enchantment",
+    "effect": "cpu_chain_to_lethal_burn",
+    "actor": "CPU",
+    "format": "Warrior",
+    "start": "you",
+    "recording": "tools/testing_scenarios/recordings/Pikerus_Circle_of_Enchantment_Cpu_Chain_To_Lethal_Burn_CPU.mp4",
+    "script": "tools/testing_scenarios/generated/Pikerus_Circle_of_Enchantment_Cpu_Chain_To_Lethal_Burn_CPU.lua"
+  },
+  {
+    "card": "Mind Control",
+    "effect": "take_control_no_attack",
+    "actor": "Player",
+    "format": "Goat",
+    "start": "you",
+    "recording": "tools/testing_scenarios/recordings/Mind_Control_Take_Control_No_Attack_Player.mp4",
+    "script": "tools/testing_scenarios/generated/Mind_Control_Take_Control_No_Attack_Player.lua"
+  },
+  {
+    "card": "Mind Control",
+    "effect": "cpu_take_control",
+    "actor": "CPU",
+    "format": "Goat",
+    "start": "opp",
+    "recording": "tools/testing_scenarios/recordings/Mind_Control_Cpu_Take_Control_CPU.mp4",
+    "script": "tools/testing_scenarios/generated/Mind_Control_Cpu_Take_Control_CPU.lua"
+  },
+  {
+    "card": "Night Assailant",
+    "effect": "flip_destroy",
+    "actor": "Player",
+    "format": "Goat",
+    "start": "you",
+    "recording": "tools/testing_scenarios/recordings/Night_Assailant_Flip_Destroy_Player.mp4",
+    "script": "tools/testing_scenarios/generated/Night_Assailant_Flip_Destroy_Player.lua"
+  },
+  {
+    "card": "Night Assailant",
+    "effect": "discarded_add_flip_monster",
+    "actor": "Player",
+    "format": "Goat",
+    "start": "you",
+    "recording": "tools/testing_scenarios/recordings/Night_Assailant_Discarded_Add_Flip_Monster_Player.mp4",
+    "script": "tools/testing_scenarios/generated/Night_Assailant_Discarded_Add_Flip_Monster_Player.lua"
+  },
+  {
+    "card": "Night Assailant",
+    "effect": "cpu_flipped_by_attack",
+    "actor": "CPU",
+    "format": "Goat",
+    "start": "you",
+    "recording": "tools/testing_scenarios/recordings/Night_Assailant_Cpu_Flipped_By_Attack_CPU.mp4",
+    "script": "tools/testing_scenarios/generated/Night_Assailant_Cpu_Flipped_By_Attack_CPU.lua"
+  },
+  {
+    "card": "Dekoichi the Battlechanted Locomotive",
+    "effect": "flip_draw_one",
+    "actor": "Player",
+    "format": "Goat",
+    "start": "you",
+    "recording": "tools/testing_scenarios/recordings/Dekoichi_the_Battlechanted_Locomotive_Flip_Draw_One_Player.mp4",
+    "script": "tools/testing_scenarios/generated/Dekoichi_the_Battlechanted_Locomotive_Flip_Draw_One_Player.lua"
+  },
+  {
+    "card": "Dekoichi the Battlechanted Locomotive",
+    "effect": "cpu_flipped_by_attack",
+    "actor": "CPU",
+    "format": "Goat",
+    "start": "you",
+    "recording": "tools/testing_scenarios/recordings/Dekoichi_the_Battlechanted_Locomotive_Cpu_Flipped_By_Attack_CPU.mp4",
+    "script": "tools/testing_scenarios/generated/Dekoichi_the_Battlechanted_Locomotive_Cpu_Flipped_By_Attack_CPU.lua"
+  },
+  {
+    "card": "Lightning Vortex",
+    "effect": "destroy_face_up",
+    "actor": "Player",
+    "format": "Goat",
+    "start": "you",
+    "recording": "tools/testing_scenarios/recordings/Lightning_Vortex_Destroy_Face_Up_Player.mp4",
+    "script": "tools/testing_scenarios/generated/Lightning_Vortex_Destroy_Face_Up_Player.lua"
+  },
+  {
+    "card": "Lightning Vortex",
+    "effect": "cpu_destroy_face_up",
+    "actor": "CPU",
+    "format": "Goat",
+    "start": "opp",
+    "recording": "tools/testing_scenarios/recordings/Lightning_Vortex_Cpu_Destroy_Face_Up_CPU.mp4",
+    "script": "tools/testing_scenarios/generated/Lightning_Vortex_Cpu_Destroy_Face_Up_CPU.lua"
+  },
+  {
+    "card": "Phoenix Wing Wind Blast",
+    "effect": "return_to_deck_top",
+    "actor": "Player",
+    "format": "Goat",
+    "start": "you",
+    "recording": "tools/testing_scenarios/recordings/Phoenix_Wing_Wind_Blast_Return_To_Deck_Top_Player.mp4",
+    "script": "tools/testing_scenarios/generated/Phoenix_Wing_Wind_Blast_Return_To_Deck_Top_Player.lua"
+  },
+  {
+    "card": "Phoenix Wing Wind Blast",
+    "effect": "cpu_return_to_deck_top",
+    "actor": "CPU",
+    "format": "Goat",
+    "start": "opp",
+    "recording": "tools/testing_scenarios/recordings/Phoenix_Wing_Wind_Blast_Cpu_Return_To_Deck_Top_CPU.mp4",
+    "script": "tools/testing_scenarios/generated/Phoenix_Wing_Wind_Blast_Cpu_Return_To_Deck_Top_CPU.lua"
+  },
+  {
+    "card": "Xing Zhen Hu",
+    "effect": "lock_two_set_cards",
+    "actor": "Player",
+    "format": "Goat",
+    "start": "you",
+    "recording": "tools/testing_scenarios/recordings/Xing_Zhen_Hu_Lock_Two_Set_Cards_Player.mp4",
+    "script": "tools/testing_scenarios/generated/Xing_Zhen_Hu_Lock_Two_Set_Cards_Player.lua"
+  },
+  {
+    "card": "Xing Zhen Hu",
+    "effect": "cpu_lock_human_set_cards",
+    "actor": "CPU",
+    "format": "Goat",
+    "start": "opp",
+    "recording": "tools/testing_scenarios/recordings/Xing_Zhen_Hu_Cpu_Lock_Human_Set_Cards_CPU.mp4",
+    "script": "tools/testing_scenarios/generated/Xing_Zhen_Hu_Cpu_Lock_Human_Set_Cards_CPU.lua"
+  },
+  {
+    "card": "Brain Control",
+    "effect": "pay_800_take_control",
+    "actor": "Player",
+    "format": "Goat",
+    "start": "you",
+    "recording": "tools/testing_scenarios/recordings/Brain_Control_Pay_800_Take_Control_Player.mp4",
+    "script": "tools/testing_scenarios/generated/Brain_Control_Pay_800_Take_Control_Player.lua"
+  },
+  {
+    "card": "Brain Control",
+    "effect": "cpu_pay_800_take_control",
+    "actor": "CPU",
+    "format": "Goat",
+    "start": "opp",
+    "recording": "tools/testing_scenarios/recordings/Brain_Control_Cpu_Pay_800_Take_Control_CPU.mp4",
+    "script": "tools/testing_scenarios/generated/Brain_Control_Cpu_Pay_800_Take_Control_CPU.lua"
+  },
+  {
+    "card": "Zaborg the Thunder Monarch",
+    "effect": "tribute_summon_destroy",
+    "actor": "Player",
+    "format": "Goat",
+    "start": "you",
+    "recording": "tools/testing_scenarios/recordings/Zaborg_the_Thunder_Monarch_Tribute_Summon_Destroy_Player.mp4",
+    "script": "tools/testing_scenarios/generated/Zaborg_the_Thunder_Monarch_Tribute_Summon_Destroy_Player.lua"
+  },
+  {
+    "card": "Zaborg the Thunder Monarch",
+    "effect": "cpu_tribute_summon_destroy",
+    "actor": "CPU",
+    "format": "Goat",
+    "start": "opp",
+    "recording": "tools/testing_scenarios/recordings/Zaborg_the_Thunder_Monarch_Cpu_Tribute_Summon_Destroy_CPU.mp4",
+    "script": "tools/testing_scenarios/generated/Zaborg_the_Thunder_Monarch_Cpu_Tribute_Summon_Destroy_CPU.lua"
+  },
+  {
+    "card": "Level Limit - Area B",
+    "effect": "level_4_to_defense",
+    "actor": "Player",
+    "format": "Goat",
+    "start": "you",
+    "recording": "tools/testing_scenarios/recordings/Level_Limit_Area_B_Level_4_To_Defense_Player.mp4",
+    "script": "tools/testing_scenarios/generated/Level_Limit_Area_B_Level_4_To_Defense_Player.lua"
+  },
+  {
+    "card": "Level Limit - Area B",
+    "effect": "cpu_level_4_to_defense",
+    "actor": "CPU",
+    "format": "Goat",
+    "start": "opp",
+    "recording": "tools/testing_scenarios/recordings/Level_Limit_Area_B_Cpu_Level_4_To_Defense_CPU.mp4",
+    "script": "tools/testing_scenarios/generated/Level_Limit_Area_B_Cpu_Level_4_To_Defense_CPU.lua"
+  },
+  {
+    "card": "Cyber Twin Dragon",
+    "effect": "second_attack",
+    "actor": "Player",
+    "format": "Cyber",
+    "start": "you",
+    "recording": "tools/testing_scenarios/recordings/Cyber_Twin_Dragon_Second_Attack_Player.mp4",
+    "script": "tools/testing_scenarios/generated/Cyber_Twin_Dragon_Second_Attack_Player.lua"
+  },
+  {
+    "card": "Cyber Twin Dragon",
+    "effect": "cpu_second_attack",
+    "actor": "CPU",
+    "format": "Cyber",
+    "start": "opp",
+    "recording": "tools/testing_scenarios/recordings/Cyber_Twin_Dragon_Cpu_Second_Attack_CPU.mp4",
+    "script": "tools/testing_scenarios/generated/Cyber_Twin_Dragon_Cpu_Second_Attack_CPU.lua"
+  },
+  {
+    "card": "Cyber Dragon",
+    "effect": "special_summon_from_hand",
+    "actor": "Player",
+    "format": "Cyber",
+    "start": "you",
+    "recording": "tools/testing_scenarios/recordings/Cyber_Dragon_Special_Summon_From_Hand_Player.mp4",
+    "script": "tools/testing_scenarios/generated/Cyber_Dragon_Special_Summon_From_Hand_Player.lua"
+  },
+  {
+    "card": "Cyber Dragon",
+    "effect": "not_while_you_control_a_monster",
+    "actor": "Player",
+    "format": "Cyber",
+    "start": "you",
+    "recording": "tools/testing_scenarios/recordings/Cyber_Dragon_Not_While_You_Control_A_Monster_Player.mp4",
+    "script": "tools/testing_scenarios/generated/Cyber_Dragon_Not_While_You_Control_A_Monster_Player.lua"
+  },
+  {
+    "card": "Cyber Dragon",
+    "effect": "cpu_special_summon_first",
+    "actor": "CPU",
+    "format": "Cyber",
+    "start": "opp",
+    "recording": "tools/testing_scenarios/recordings/Cyber_Dragon_Cpu_Special_Summon_First_CPU.mp4",
+    "script": "tools/testing_scenarios/generated/Cyber_Dragon_Cpu_Special_Summon_First_CPU.lua"
+  },
+  {
+    "card": "Cyber End Dragon",
+    "effect": "pierce",
+    "actor": "Player",
+    "format": "Cyber",
+    "start": "you",
+    "recording": "tools/testing_scenarios/recordings/Cyber_End_Dragon_Pierce_Player.mp4",
+    "script": "tools/testing_scenarios/generated/Cyber_End_Dragon_Pierce_Player.lua"
+  },
+  {
+    "card": "Cyber End Dragon",
+    "effect": "cpu_pierce",
+    "actor": "CPU",
+    "format": "Cyber",
+    "start": "opp",
+    "recording": "tools/testing_scenarios/recordings/Cyber_End_Dragon_Cpu_Pierce_CPU.mp4",
+    "script": "tools/testing_scenarios/generated/Cyber_End_Dragon_Cpu_Pierce_CPU.lua"
+  },
+  {
+    "card": "Threatening Roar",
+    "effect": "stop_further_attacks",
+    "actor": "Player",
+    "format": "Cyber",
+    "start": "opp",
+    "recording": "tools/testing_scenarios/recordings/Threatening_Roar_Stop_Further_Attacks_Player.mp4",
+    "script": "tools/testing_scenarios/generated/Threatening_Roar_Stop_Further_Attacks_Player.lua"
+  },
+  {
+    "card": "Threatening Roar",
+    "effect": "cpu_before_battle_phase",
+    "actor": "CPU",
+    "format": "Cyber",
+    "start": "you",
+    "recording": "tools/testing_scenarios/recordings/Threatening_Roar_Cpu_Before_Battle_Phase_CPU.mp4",
+    "script": "tools/testing_scenarios/generated/Threatening_Roar_Cpu_Before_Battle_Phase_CPU.lua"
+  },
+  {
+    "card": "Exarion Universe",
+    "effect": "lose_400_to_pierce",
+    "actor": "Player",
+    "format": "Cyber",
+    "start": "you",
+    "recording": "tools/testing_scenarios/recordings/Exarion_Universe_Lose_400_To_Pierce_Player.mp4",
+    "script": "tools/testing_scenarios/generated/Exarion_Universe_Lose_400_To_Pierce_Player.lua"
+  },
+  {
+    "card": "Exarion Universe",
+    "effect": "cpu_lose_400_to_pierce",
+    "actor": "CPU",
+    "format": "Cyber",
+    "start": "opp",
+    "recording": "tools/testing_scenarios/recordings/Exarion_Universe_Cpu_Lose_400_To_Pierce_CPU.mp4",
+    "script": "tools/testing_scenarios/generated/Exarion_Universe_Cpu_Lose_400_To_Pierce_CPU.lua"
+  },
+  {
+    "card": "Gravity Bind",
+    "effect": "stop_level_4_attacks",
+    "actor": "Player",
+    "format": "Cyber",
+    "start": "you",
+    "recording": "tools/testing_scenarios/recordings/Gravity_Bind_Stop_Level_4_Attacks_Player.mp4",
+    "script": "tools/testing_scenarios/generated/Gravity_Bind_Stop_Level_4_Attacks_Player.lua"
+  },
+  {
+    "card": "Gravity Bind",
+    "effect": "cpu_stop_human_attacks",
+    "actor": "CPU",
+    "format": "Cyber",
+    "start": "opp",
+    "recording": "tools/testing_scenarios/recordings/Gravity_Bind_Cpu_Stop_Human_Attacks_CPU.mp4",
+    "script": "tools/testing_scenarios/generated/Gravity_Bind_Cpu_Stop_Human_Attacks_CPU.lua"
+  },
+  {
+    "card": "Chiron the Mage",
+    "effect": "discard_spell_destroy",
+    "actor": "Player",
+    "format": "Cyber",
+    "start": "you",
+    "recording": "tools/testing_scenarios/recordings/Chiron_the_Mage_Discard_Spell_Destroy_Player.mp4",
+    "script": "tools/testing_scenarios/generated/Chiron_the_Mage_Discard_Spell_Destroy_Player.lua"
+  },
+  {
+    "card": "Chiron the Mage",
+    "effect": "cpu_discard_spell_destroy",
+    "actor": "CPU",
+    "format": "Cyber",
+    "start": "opp",
+    "recording": "tools/testing_scenarios/recordings/Chiron_the_Mage_Cpu_Discard_Spell_Destroy_CPU.mp4",
+    "script": "tools/testing_scenarios/generated/Chiron_the_Mage_Cpu_Discard_Spell_Destroy_CPU.lua"
+  },
+  {
+    "card": "Cursed Seal of the Forbidden Spell",
+    "effect": "negate_spell",
+    "actor": "Player",
+    "format": "Cyber",
+    "start": "opp",
+    "recording": "tools/testing_scenarios/recordings/Cursed_Seal_of_the_Forbidden_Spell_Negate_Spell_Player.mp4",
+    "script": "tools/testing_scenarios/generated/Cursed_Seal_of_the_Forbidden_Spell_Negate_Spell_Player.lua"
+  },
+  {
+    "card": "Cursed Seal of the Forbidden Spell",
+    "effect": "cpu_negate_human_spell",
+    "actor": "CPU",
+    "format": "Cyber",
+    "start": "you",
+    "recording": "tools/testing_scenarios/recordings/Cursed_Seal_of_the_Forbidden_Spell_Cpu_Negate_Human_Spell_CPU.mp4",
+    "script": "tools/testing_scenarios/generated/Cursed_Seal_of_the_Forbidden_Spell_Cpu_Negate_Human_Spell_CPU.lua"
+  },
+  {
+    "card": "Wave-Motion Cannon",
+    "effect": "burn_after_one_standby",
+    "actor": "Player",
+    "format": "Cyber",
+    "start": "you",
+    "recording": "tools/testing_scenarios/recordings/Wave_Motion_Cannon_Burn_After_One_Standby_Player.mp4",
+    "script": "tools/testing_scenarios/generated/Wave_Motion_Cannon_Burn_After_One_Standby_Player.lua"
+  },
+  {
+    "card": "Wave-Motion Cannon",
+    "effect": "cpu_activate_and_keep",
+    "actor": "CPU",
+    "format": "Cyber",
+    "start": "opp",
+    "recording": "tools/testing_scenarios/recordings/Wave_Motion_Cannon_Cpu_Activate_And_Keep_CPU.mp4",
+    "script": "tools/testing_scenarios/generated/Wave_Motion_Cannon_Cpu_Activate_And_Keep_CPU.lua"
+  },
+  {
+    "card": "Treeborn Frog",
+    "effect": "revive_in_standby",
+    "actor": "Player",
+    "format": "Reaper",
+    "start": "you",
+    "recording": "tools/testing_scenarios/recordings/Treeborn_Frog_Revive_In_Standby_Player.mp4",
+    "script": "tools/testing_scenarios/generated/Treeborn_Frog_Revive_In_Standby_Player.lua"
+  },
+  {
+    "card": "Treeborn Frog",
+    "effect": "cpu_revive_in_standby",
+    "actor": "CPU",
+    "format": "Reaper",
+    "start": "you",
+    "recording": "tools/testing_scenarios/recordings/Treeborn_Frog_Cpu_Revive_In_Standby_CPU.mp4",
+    "script": "tools/testing_scenarios/generated/Treeborn_Frog_Cpu_Revive_In_Standby_CPU.lua"
+  },
+  {
+    "card": "Thestalos the Firestorm Monarch",
+    "effect": "discard_monster_burn",
+    "actor": "Player",
+    "format": "Reaper",
+    "start": "you",
+    "recording": "tools/testing_scenarios/recordings/Thestalos_the_Firestorm_Monarch_Discard_Monster_Burn_Player.mp4",
+    "script": "tools/testing_scenarios/generated/Thestalos_the_Firestorm_Monarch_Discard_Monster_Burn_Player.lua"
+  },
+  {
+    "card": "Thestalos the Firestorm Monarch",
+    "effect": "cpu_discard_monster_burn",
+    "actor": "CPU",
+    "format": "Reaper",
+    "start": "opp",
+    "recording": "tools/testing_scenarios/recordings/Thestalos_the_Firestorm_Monarch_Cpu_Discard_Monster_Burn_CPU.mp4",
+    "script": "tools/testing_scenarios/generated/Thestalos_the_Firestorm_Monarch_Cpu_Discard_Monster_Burn_CPU.lua"
+  },
+  {
+    "card": "D.D. Survivor",
+    "effect": "return_at_end_phase",
+    "actor": "Player",
+    "format": "Reaper",
+    "start": "you",
+    "recording": "tools/testing_scenarios/recordings/DD_Survivor_Return_At_End_Phase_Player.mp4",
+    "script": "tools/testing_scenarios/generated/DD_Survivor_Return_At_End_Phase_Player.lua"
+  },
+  {
+    "card": "D.D. Survivor",
+    "effect": "cpu_return_at_end_phase",
+    "actor": "CPU",
+    "format": "Reaper",
+    "start": "you",
+    "recording": "tools/testing_scenarios/recordings/DD_Survivor_Cpu_Return_At_End_Phase_CPU.mp4",
+    "script": "tools/testing_scenarios/generated/DD_Survivor_Cpu_Return_At_End_Phase_CPU.lua"
+  },
+  {
+    "card": "Pot of Avarice",
+    "effect": "shuffle_five_draw_two",
+    "actor": "Player",
+    "format": "Reaper",
+    "start": "you",
+    "recording": "tools/testing_scenarios/recordings/Pot_of_Avarice_Shuffle_Five_Draw_Two_Player.mp4",
+    "script": "tools/testing_scenarios/generated/Pot_of_Avarice_Shuffle_Five_Draw_Two_Player.lua"
+  },
+  {
+    "card": "Pot of Avarice",
+    "effect": "cpu_shuffle_five_draw_two",
+    "actor": "CPU",
+    "format": "Reaper",
+    "start": "opp",
+    "recording": "tools/testing_scenarios/recordings/Pot_of_Avarice_Cpu_Shuffle_Five_Draw_Two_CPU.mp4",
+    "script": "tools/testing_scenarios/generated/Pot_of_Avarice_Cpu_Shuffle_Five_Draw_Two_CPU.lua"
+  },
+  {
+    "card": "Magical Merchant",
+    "effect": "flip_excavate_spell_trap",
+    "actor": "Player",
+    "format": "Reaper",
+    "start": "you",
+    "recording": "tools/testing_scenarios/recordings/Magical_Merchant_Flip_Excavate_Spell_Trap_Player.mp4",
+    "script": "tools/testing_scenarios/generated/Magical_Merchant_Flip_Excavate_Spell_Trap_Player.lua"
+  },
+  {
+    "card": "Magical Merchant",
+    "effect": "cpu_flipped_by_attack",
+    "actor": "CPU",
+    "format": "Reaper",
+    "start": "you",
+    "recording": "tools/testing_scenarios/recordings/Magical_Merchant_Cpu_Flipped_By_Attack_CPU.mp4",
+    "script": "tools/testing_scenarios/generated/Magical_Merchant_Cpu_Flipped_By_Attack_CPU.lua"
+  },
+  {
+    "card": "Mask of Restrict",
+    "effect": "no_tributes",
+    "actor": "Player",
+    "format": "Reaper",
+    "start": "you",
+    "recording": "tools/testing_scenarios/recordings/Mask_of_Restrict_No_Tributes_Player.mp4",
+    "script": "tools/testing_scenarios/generated/Mask_of_Restrict_No_Tributes_Player.lua"
+  },
+  {
+    "card": "Mask of Restrict",
+    "effect": "cpu_lock_tributes",
+    "actor": "CPU",
+    "format": "Reaper",
+    "start": "opp",
+    "recording": "tools/testing_scenarios/recordings/Mask_of_Restrict_Cpu_Lock_Tributes_CPU.mp4",
+    "script": "tools/testing_scenarios/generated/Mask_of_Restrict_Cpu_Lock_Tributes_CPU.lua"
   }
 ]

@@ -2,6 +2,28 @@
 
 One Lua script per human (**Player**) or AI (**CPU**) scenario in repo-root [`TESTING.md`](../../TESTING.md). Each run targets **Test Duel** vs an empty opponent (`make demo`, `MOD_TEST_DECK`).
 
+## Exact scenarios
+
+The scenarios are exact, so a script can reproduce each one: the whole starting state, every input, and the state to
+check after. They are data in `exact_cards_1.py` ... `exact_cards_5.py` (one `SCENARIOS` dict each, by TESTING.md
+format), written in the small format that [`exact.py`](exact.py) defines and documents:
+
+| Field | What it holds |
+|---|---|
+| `start` | Where the setup is applied (the start of that turn's Main Phase 1, the Draw Phase done): `turn` (`you` / `opp`), `turn_count` (`gDuel.turnCount`; 0 has no Battle Phase), `lp` |
+| `setup` | `<side>.<place>: <cards>` lines: `hand` (slot 0 first), `m0`-`m4` and `st0`-`st4` (`gDuelPlayers[p]` zones 0-4 / 5-9) with `atk`, `def`, `set` or `up` (and `ss` for Special Summoned), `fz`, `deck` (the top, top card first: `deck[0]` is the next draw), `gy`, `banished`, `extra`. Both hands are exactly as listed; anything else not listed is empty (the Deck excepted) |
+| `steps` | Verbs (`activate`, `summon`, `tribute_summon`, `special_summon`, `fusion_summon`, `set`, `flip_summon`, `change_position`, `target`, `pick`, `discard`, `yes`, `no`, `choose`, `declare`, `zone`, `position`, `battle`, `attack`, `cancel`, `main2`, `pass`, `opp_turn`, `cpu_turn`, `draw`, `check`) on places such as `you.hand[Card Destruction]`, `you.m0`, `opp.m[Summoned Skull]`, `you.gy[Sangan]`; `when <event>: <step>` waits for an attack, activation, summon, prompt or replay first |
+| `expect` | `you.m0 = Summoned Skull def`, `opp.m0 = empty`, `you.gy = A, B` (exact), `opp.gy has A` / `lacks A`, `you.hand count 2`, `opp.lp = 7200` (or `<=`, `in 5500\|6300`), `you.m0.atk = 2500`, `you.deck[0] = A`, `menu you.hand[A] has\|lacks Special Summon`, `cannot attack you.m0 -> direct`, `battle_phase blocked` |
+
+`tools/gen_testing_md.py` renders them into TESTING.md (a setup table, numbered steps and the expected state, each
+as code and in words) and fails when a card has no scenario, a line does not parse, or a scenario names a card that
+is not legal in the card's format. `tools/gen_testing_lua.py` writes one script per scenario with that data:
+`setupCards` (the hand and field rows, in the form `lib_eds.lua` already places; `position = "def"` and
+`specialSummoned = true` are new fields it does not read yet), `setupPiles` (deck top, Graveyard, banished, Fusion
+Deck), `start`, `steps`, `expect` and `freezeOpponent`. The key presses that play the `steps`, the RAM writes for
+`setupPiles` and `start` (LP, starting on the CPU's turn), and the `expect` checks are still to be written in
+`lib_eds.lua`; until then a generated script places the hand and field and waits (`play = { { wait = 90 } }`).
+
 ## Recording file names
 
 Per [mGBA’s scripting API](https://mgba.io/docs/dev/scripting.html) (dev build docs mirror 0.10+), **`emu` has no method to start Tools → Record A/V**. The documented video-related calls are:
@@ -79,9 +101,9 @@ Outputs:
 
 | Path | Contents |
 |------|----------|
-| `generated/*.lua` | Stub navigators for every scenario |
-| `poc/*.lua` | Same basenames for the 5 POC cards, with RAM setup + key sequences |
-| `manifest.json` | Card, effect, actor, script path, recording path |
+| `generated/*.lua` | One script per scenario, with its exact data (the old ones are deleted on each run) |
+| `poc/*.lua` | The 5 POC cards' scenarios again, with `poc_plays.lua`'s setup + key sequences where it has them |
+| `manifest.json` | Card, effect, actor, format, starting turn, script path, recording path |
 | `lib_eds.lua` | Duel RAM helpers, Test Duel navigation, naming |
 | `poc_plays.lua` | Hand-tuned setup/play tables for POC **Player** scenarios |
 
@@ -93,7 +115,8 @@ Run these after `make demo` and with a save that reaches the main menu:
 2. `poc/Soul_Exchange_Tribute_Opponent_Monster_Player.lua`
 3. `poc/Torrential_Tribute_Destroy_All_On_Summon_Player.lua`
 4. `poc/Exiled_Force_Tribute_Destroy_Target_Player.lua`
-5. `poc/Goblin_Attack_Force_Usage_Deck_Verify_Player.lua`
+5. `poc/Goblin_Attack_Force_Mandatory_Follow_Up_Player.lua` (`poc_plays.lua` has no table for it yet; the older
+   `Goblin_Attack_Force_Usage_Deck_Verify_Player.lua` is no longer a TESTING.md scenario)
 
 CPU scenarios for those cards use the same basename pattern with `_CPU` and let the empty-deck opponent idle while recording (~60 s).
 
@@ -104,7 +127,9 @@ python3 tools/gen_testing_md.py
 python3 tools/gen_testing_lua.py
 ```
 
-Effect slugs are derived from scenario wording and **Coded behavior** quotes; tweak `human_effect_name` / `ai_effect_name` in `gen_testing_lua.py` if a slug should be renamed for clarity.
+Script and recording names come from each scenario's `effect` (`<Card>_<Effect>_<Player|CPU>`); rename one by
+changing its `effect` in `exact_cards_*.py`. The POC basenames above match `poc_plays.lua`'s keys; a POC script uses
+that table's setup and key presses when it has the scenario, else the scenario's own setup.
 
 ## Headless
 

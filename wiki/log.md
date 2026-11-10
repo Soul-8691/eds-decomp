@@ -2908,3 +2908,12 @@ updated: 2026-09-29
 - tools/preduel_image.py --qr-only, Makefile PREDUEL_QR_NAMES, data/mod_preduel_data.s gModPreDuelQr<Format>,
   tools/preduel_text.py (each format's own QR code), tools/hma_toml.py (QR-only anchors).
 - Pages: [[yugi-kaiba-opponent]], [[hma-toml]].
+
+## [2026-11-09] progress | TESTING.md: exact, reproducible scenarios
+- tools/testing_scenarios/exact.py (the scenario format: start, setup lines, step verbs, expectations;
+  parser, validator, Markdown and Lua output) and exact_cards_1-5.py: 218 scenarios for the 103 cards (a
+  Player and a CPU one each, some two Player ones), every LP value from the ROM's gCardStats.
+- tools/gen_testing_md.py renders them (setup table, steps, expected state) instead of the templated text,
+  and fails on a missing scenario, a bad line, or a card not legal in the format. tools/gen_testing_lua.py
+  reads them directly: setupCards, setupPiles, start, steps, expect, freezeOpponent per script.
+- tools/testing_scenarios/README.md.

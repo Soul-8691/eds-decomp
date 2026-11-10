@@ -11,6 +11,10 @@ name appears above `------`), >= 10% usage in some format
 each listed once under the earliest qualifying format
 (tools/banlist.py BANLISTS order). Effect text is traced from src/added_effects.c, engine keys, and
 LEFTOVER_EFFECTS.md; official text from YGOPRODeck (https://ygoprodeck.com/api-guide/).
+
+Scenarios: the exact ones of tools/testing_scenarios/exact_cards_*.py (format in tools/testing_scenarios/exact.py):
+every card must have them, and every card a scenario names must be legal in the card's format (in its
+card_pools/ file, not Forbidden), else the run fails.
 """
 import argparse
 import json
@@ -28,7 +32,9 @@ from cardprices import share  # noqa: E402
 
 LIMIT_FACTOR = {1: 3.0, 2: 1.5}  # banlist limited / semi-limited multipliers on inclusion rate
 from gencards import ident  # noqa: E402
-from ai_coverage import ai_scenarios, ai_status  # noqa: E402
+from ai_coverage import ai_status  # noqa: E402
+sys.path.insert(0, 'tools/testing_scenarios')
+import exact  # noqa: E402
 
 THRESH = 0.10
 YGO_URL = 'https://db.ygoprodeck.com/api/v7/cardinfo.php'
@@ -741,6 +747,55 @@ def make_scenarios(
     return context, out[:3]
 
 
+# Cards a scenario may name that are not in any card pool (tokens a card makes).
+NOT_IN_POOLS = {'Sheep Token'}
+
+
+def load_exact() -> dict[str, list[dict]]:
+    """Every exact scenario: card name -> list (tools/testing_scenarios/exact_cards_*.py)."""
+    out: dict[str, list[dict]] = {}
+    for path in sorted((root / 'tools/testing_scenarios').glob('exact_cards_*.py')):
+        ns: dict = {}
+        exec(compile(path.read_text(encoding='utf-8'), str(path), 'exec'), ns)
+        for card, scs in ns['SCENARIOS'].items():
+            if card in out:
+                sys.exit(f'gen_testing_md: {card} has scenarios in two files')
+            out[card] = scs
+    return out
+
+
+def check_exact(assigned, exact_by_card, stem_pools, lookup, missing) -> None:
+    """Fail on a card with no scenario, a scenario the format rejects, or a card that is not legal there."""
+    errors = []
+    for name in sorted(set(assigned) - set(exact_by_card)):
+        errors.append(f'{name}: no exact scenario (tools/testing_scenarios/exact_cards_*.py)')
+    for name in sorted(set(exact_by_card) - set(assigned)):
+        print(f'gen_testing_md: {name} has scenarios but is not in TESTING.md (ignored)', file=sys.stderr)
+    pools: dict[str, set[str]] = {}
+    for name, (fmt, stem, _) in assigned.items():
+        if name not in exact_by_card:
+            continue
+        if stem not in pools:
+            pools[stem], _ = _legal_pool_names(stem_pools.get(stem, [stem]), stem, lookup, missing)
+        seen = set()
+        for sc in exact_by_card[name]:
+            try:
+                exact.validate(name, sc)
+            except ValueError as e:
+                errors.append(f'{name}: {e}')
+                continue
+            if sc['effect'] in seen:
+                errors.append(f'{name}: two scenarios named {sc["effect"]}')
+            seen.add(sc['effect'])
+            for card in sorted(exact.card_names(sc) - NOT_IN_POOLS):
+                if lookup(card) is None:
+                    errors.append(f'{name} / {sc["effect"]}: {card} is not an EDS card')
+                elif card not in pools[stem] and card != name:
+                    errors.append(f'{name} / {sc["effect"]}: {card} is not legal in {fmt}')
+    if errors:
+        sys.exit('gen_testing_md: exact scenarios:\n  ' + '\n  '.join(errors))
+
+
 def write_testing_md(assigned: dict[str, tuple[str, str, float]], *, use_api: bool = True) -> None:
     ae_text = AE_PATH.read_text(encoding='utf-8')
     ae_blocks = parse_ae_blocks(ae_text)
@@ -759,6 +814,8 @@ def write_testing_md(assigned: dict[str, tuple[str, str, float]], *, use_api: bo
     stem_pools = {stem: pools for _, stem, pools in banlist.BANLISTS}
     lookup = banlist.card_lookup()
     pool_missing: list[str] = []
+    exact_by_card = load_exact()
+    check_exact(assigned, exact_by_card, stem_pools, lookup, pool_missing)
 
     lines = [
         '# Effect testing scenarios (high-usage demo cards)',
@@ -778,14 +835,27 @@ def write_testing_md(assigned: dict[str, tuple[str, str, float]], *, use_api: bo
         f'from [YGOPRODeck API v7]({YGO_URL}) (`name` query). If the build differs from TCG/OCG, scenarios still follow '
         'the code—differences are noted, not treated as bugs to fix here.',
         '',
-        'Scenarios only cite card names that appear in that format\'s [`card_pools/`](card_pools/) file, exist as '
-        'playable EDS cards, and are not **Forbidden** in [`banlists/<format>_ban.json`](banlists/) (`forbidden`, '
-        'limit 0). Staple picks also come from high-usage entries in `usage/<format>.json` that pass the same checks.',
+        '**Scenarios** are exact, so an mGBA Lua script can reproduce each one '
+        '([`tools/testing_scenarios/`](tools/testing_scenarios/README.md)): the whole starting state, every input, '
+        'and the state to check after. They are written in `tools/testing_scenarios/exact_cards_*.py` (the format: '
+        '`tools/testing_scenarios/exact.py`); every card they name is legal in that format (in its '
+        '[`card_pools/`](card_pools/) file, not **Forbidden** in [`banlists/<format>_ban.json`](banlists/)), which '
+        'the generator checks. Each scenario has:',
         '',
-        '**Chaining:** only **Trap Cards** and **Quick-Play Spell Cards** are described as chain responses. Normal '
-        'Spells are never chained onto an existing chain. Mandatory battle follow-ups (e.g. Goblin Attack Force\'s '
-        'Defense Position change) are not optional Trigger activations—scenarios do not ask you to chain cards to those '
-        'steps.',
+        '- **A header line:** the recording name (`<Card>_<Effect>_<Player|CPU>`), where the setup is applied (the '
+        'start of that turn\'s Main Phase 1, the Draw Phase done; `turnCount` 0 is the duel\'s first turn, which has '
+        'no Battle Phase), both LP, and whether the opponent is frozen (`gModTestingFreezeOpponent`: it plays '
+        'nothing and answers nothing). **Player** scenarios test the human\'s use of the card; **CPU** scenarios '
+        'test the CPU\'s. On the opponent\'s turn the CPU acts by itself.',
+        '- **A setup table:** every card placed, by side and place. Monster Zones `m0`-`m4` and Spell/Trap Zones '
+        '`st0`-`st4` are `gDuelPlayers[p]` zones 0-4 and 5-9; the hand is listed from slot 0; the Deck rows are its '
+        'top, top card first (`deck[0]` is the next draw), the rest being the format\'s usage deck. Both hands are '
+        'exactly as listed; anything else not listed is empty.',
+        '- **Steps:** each input as code (the script\'s step) and in words. `you.hand[Card]` is that card in your '
+        'hand, `you.m0` your Monster Zone 0, `opp.m[Card]` the opponent\'s monster of that name; `when <event>: '
+        '<step>` waits for the event first; `check` checks the state mid-way.',
+        '- **Expected:** the state to check after the last step, as code and in words (`=` is the exact pile or '
+        'zone, `has` / `lacks` one card, `count` the number of cards).',
         '',
         '**AI:** each card lists **AI coverage** traced from `src/added_effects.c` (`AiPlayAddedCards`, '
         '`AiWantsMonsterEffect`, `AiWantsSpell`, `AiShouldActivateAddedCard`, `AiChain*`, and `*Cpu*` effect steps). '
@@ -822,27 +892,13 @@ def write_testing_md(assigned: dict[str, tuple[str, str, float]], *, use_api: bo
                 lines.append('- **YGOPRODeck (TCG) text:** *(API lookup failed; see [ygoprodeck.com](https://ygoprodeck.com/).)*')
             if note:
                 lines.append(f'- **TCG vs this ROM:** {note}')
-            ctx = format_test_context(
-                stems[name],
-                stem_pools.get(stems[name], [stems[name]]),
-                name,
-                lookup,
-                pool_missing,
-                cache,
-            )
-            fmt_context, scenarios = make_scenarios(
-                name, fmt_name, stems[name], ctx, coded, ygo, cache)
             ai_stat, ai_detail = ai_status(name, ae_text, engine, coded, impl)
-            ai_bullets = ai_scenarios(name, ai_stat, fmt_name, detail=ai_detail)
-            lines.append(f'- **Format context:** {fmt_context}')
-            lines.append('- **Scenarios:**')
-            for i, sc in enumerate(scenarios, 1):
-                lines.append(f'  {i}. {sc}')
             lines.append(f'- **AI coverage:** {ai_stat} — {ai_detail}')
-            lines.append('- **AI scenarios:**')
-            for i, sc in enumerate(ai_bullets, 1):
-                lines.append(f'  {i}. {sc}')
             lines.append('')
+            counts: dict[str, int] = {}
+            for sc in exact_by_card[name]:
+                counts[sc['actor']] = counts.get(sc['actor'], 0) + 1
+                lines += exact.markdown(name, counts[sc['actor']], sc)
             if use_api:
                 time.sleep(0.12)
 

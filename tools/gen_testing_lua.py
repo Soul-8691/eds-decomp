@@ -1,6 +1,19 @@
 #!/usr/bin/env python3
 """Emit one mGBA Lua script per TESTING.md scenario.
 
+The scenarios are the exact ones of tools/testing_scenarios/exact_cards_*.py (format: tools/testing_scenarios/
+exact.py), which tools/gen_testing_md.py renders into TESTING.md; each card's format is read from TESTING.md's
+headings. Each script hands EDS.run the scenario's data:
+  setupCards   the hand and field rows of the setup, in lib_eds.lua's form (player, zone, slot, name, set;
+               position = "def" for a face-up Defense monster, specialSummoned = true for an `ss` one)
+  setupPiles   the other places (deck top, gy, banished, extra): { player, pile, names }
+  start        { turn = "you"|"opp", turnCount, lp = { you, opp } }
+  steps        the scenario's steps, as written (exact.py STEP_VERBS)
+  expect       the expected state, as written (exact.py EXPECT_FORMS)
+  freezeOpponent  false when a CPU turn, response or choice is part of the scenario
+The scripts' key presses for the steps are still to be written (`play`); the five POC cards use the hand-tuned
+tables of poc_plays.lua (their scripts go to poc/ too).
+
 Recording file basename: {card name}_{effect name}_{Player|CPU}.mp4 under tools/testing_scenarios/recordings/
 
   python3 tools/gen_testing_lua.py
@@ -11,16 +24,19 @@ from __future__ import annotations
 
 import argparse
 import json
-import re
 import subprocess
 import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 TESTING = ROOT / 'TESTING.md'
-OUT_DIR = ROOT / 'tools' / 'testing_scenarios' / 'generated'
-POC_DIR = ROOT / 'tools' / 'testing_scenarios' / 'poc'
-MANIFEST = ROOT / 'tools' / 'testing_scenarios' / 'manifest.json'
+SCENARIOS = ROOT / 'tools' / 'testing_scenarios'
+OUT_DIR = SCENARIOS / 'generated'
+POC_DIR = SCENARIOS / 'poc'
+MANIFEST = SCENARIOS / 'manifest.json'
+
+sys.path.insert(0, str(SCENARIOS))
+import exact  # noqa: E402
 
 POC_CARDS = {
     'Card Destruction',
@@ -29,18 +45,6 @@ POC_CARDS = {
     'Torrential Tribute',
     'Exiled Force',
 }
-
-# Stable effect slugs for POC cards (must match keys in poc_plays.lua).
-POC_EFFECT_OVERRIDES: dict[tuple[str, int, str], str] = {
-    ('Card Destruction', 1, 'Player'): 'discard_and_draw',
-    ('Soul Exchange', 1, 'Player'): 'tribute_opponent_monster',
-    ('Goblin Attack Force', 1, 'Player'): 'usage_deck_verify',
-    ('Goblin Attack Force', 2, 'Player'): 'mandatory_follow_up',
-    ('Torrential Tribute', 1, 'Player'): 'destroy_all_on_summon',
-    ('Exiled Force', 1, 'Player'): 'tribute_destroy_target',
-}
-
-SCENARIO_LINE = re.compile(r'^\s+(\d+)\.\s+(.*)$')
 
 LUA_BOOTSTRAP = r'''local __edsScriptSrc = debug.getinfo(1, "S").source or ""
 local function __edsTestingRoot()
@@ -62,187 +66,101 @@ local paths = dofile(__edsTestingRoot() .. "/eds_paths.lua")
 local EDS = paths.loadEds()'''
 
 
-def slug(s: str) -> str:
-    s = re.sub(r'[^\w\s-]', '', s)
-    s = re.sub(r'[-\s]+', '_', s.strip())
-    return (s[:56] if s else 'effect').strip('_')
-
-
-def effect_slug(s: str) -> str:
-    """Title-case each underscore segment for recording / script file names."""
-    base = slug(s).lower()
-    parts = [p.capitalize() for p in base.split('_') if p]
-    out = '_'.join(parts) if parts else 'Effect'
-    return out[:56]
-
-
-def human_effect_name(card: str, text: str, coded: str, index: int, total: int) -> str:
-    low = text.lower()
-    if total > 1:
-        if 'mandatory' in low or 'not an optional' in low:
-            return 'mandatory_follow_up'
-        if text.startswith('Same ') or 'same duel' in low:
-            return 'chain_rules'
-        if 'per **coded behavior**' in low:
-            return 'chain_rules'
-    quoted = re.search(r'"([^"]{8,90})"', coded)
-    if quoted:
-        short = slug(quoted.group(1).split('.')[0])
-        if len(short) <= 48:
-            return short
-    m = re.search(rf'Activate \*\*{re.escape(card)}\*\*', text, re.I)
-    if m:
-        rest = text[m.end():].lstrip(' :,')
-        rest = re.sub(r'\*\*[^*]+\*\*', '', rest).strip()
-        if rest:
-            return slug(rest.split('.')[0][:48])
-    if 'Normal Spell' in coded or 'Normal Trap' in coded:
-        tail = coded.split(':', 1)[-1].strip()
-        if tail.startswith('"'):
-            return slug(tail.strip('"').split('.')[0])
-    return f'scenario_{index:02d}'
-
-
-def ai_effect_name(text: str, index: int) -> str:
-    low = text.lower()
-    if 'mandatory' in low or 'passive' in low or 'ordinary lines' in low:
-        return 'cpu_standard_lines'
-    if index > 1:
-        return f'cpu_pass_{index:02d}'
-    return 'cpu_duel'
-
-
-def parse_testing_md(text: str) -> list[dict]:
-    cards: list[dict] = []
-    current_format: str | None = None
-    current: dict | None = None
-    section: str | None = None
-
-    for line in text.splitlines():
-        if line.startswith('## ') and not line.startswith('### '):
-            current_format = line[3:].strip()
+def card_formats() -> dict[str, str]:
+    """Card name -> its TESTING.md format (the `## Format` heading above its `### Card`)."""
+    out, fmt = {}, ''
+    for line in TESTING.read_text(encoding='utf-8').splitlines():
+        if line.startswith('## '):
+            fmt = line[3:].strip()
         elif line.startswith('### '):
-            if current is not None:
-                cards.append(current)
-            current = {
-                'format': current_format or '',
-                'name': line[4:].strip(),
-                'coded': '',
-                'scenarios': [],
-                'ai_scenarios': [],
-            }
-            section = None
-        elif current is None:
-            continue
-        elif line.startswith('- **Coded behavior:**'):
-            section = 'coded'
-            current['coded'] = line.split(':', 1)[1].strip()
-        elif line.startswith('- **Scenarios:**'):
-            section = 'scenarios'
-        elif line.startswith('- **AI scenarios:**'):
-            section = 'ai_scenarios'
-        elif line.startswith('- **') and section != 'coded':
-            section = None
-        elif section == 'scenarios':
-            m = SCENARIO_LINE.match(line)
-            if m:
-                current['scenarios'].append(m.group(2))
-        elif section == 'ai_scenarios':
-            m = SCENARIO_LINE.match(line)
-            if m:
-                current['ai_scenarios'].append(m.group(2))
-        elif section == 'coded' and line.startswith('  '):
-            current['coded'] += ' ' + line.strip()
-
-    if current is not None:
-        cards.append(current)
-    return cards
-
-
-def scenario_entries(card: dict) -> list[dict]:
-    out: list[dict] = []
-    n = len(card['scenarios'])
-    for i, text in enumerate(card['scenarios'], start=1):
-        effect = POC_EFFECT_OVERRIDES.get((card['name'], i, 'Player')) or human_effect_name(
-            card['name'], text, card['coded'], i, n
-        )
-        out.append({
-            'card': card['name'],
-            'format': card['format'],
-            'actor': 'Player',
-            'effect': effect,
-            'text': text,
-            'basename': f"{slug(card['name'])}_{effect_slug(effect)}_Player",
-        })
-    for i, text in enumerate(card['ai_scenarios'], start=1):
-        if text.strip().lower().startswith('second pass'):
-            continue
-        effect = ai_effect_name(text, i)
-        out.append({
-            'card': card['name'],
-            'format': card['format'],
-            'actor': 'CPU',
-            'effect': effect,
-            'text': text,
-            'basename': f"{slug(card['name'])}_{effect_slug(effect)}_CPU",
-        })
+            out[line[4:].strip()] = fmt
     return out
 
 
+def load_entries() -> list[dict]:
+    formats = card_formats()
+    entries = []
+    for path in sorted(SCENARIOS.glob('exact_cards_*.py')):
+        ns: dict = {}
+        exec(compile(path.read_text(encoding='utf-8'), str(path), 'exec'), ns)
+        for card, scs in ns['SCENARIOS'].items():
+            if card not in formats:
+                continue                    # (not in TESTING.md: gen_testing_md.py reports it)
+            for sc in scs:
+                entries.append({'card': card, 'format': formats[card], 'sc': sc,
+                                'basename': exact.basename(card, sc)})
+    return entries
+
+
+def scenario_fields(entry: dict) -> list[str]:
+    sc = entry['sc']
+    rows, piles = exact.lua_setup_cards(sc)
+    st = sc['start']
+    start = {'turn': st['turn'], 'turnCount': st['turn_count'], 'lp': list(st['lp'])}
+    text = '; '.join(sc['steps'])
+    return [
+        f"    card = {exact.lua_value(entry['card'])},",
+        f"    effect = {exact.lua_value(sc['effect'])},",
+        f"    actor = {exact.lua_value(sc['actor'])},",
+        f"    format = {exact.lua_value(entry['format'])},",
+        f"    scenarioText = {exact.lua_value(text)},",
+        f"    start = {exact.lua_value(start)},",
+        "    setupCards = {",
+        *[f"        {exact.lua_value(r)}," for r in rows],
+        "    },",
+        "    setupPiles = {",
+        *[f"        {exact.lua_value(p)}," for p in piles],
+        "    },",
+        "    steps = {",
+        *[f"        {exact.lua_value(s)}," for s in sc['steps']],
+        "    },",
+        "    expect = {",
+        *[f"        {exact.lua_value(e)}," for e in sc['expect']],
+        "    },",
+        f"    freezeOpponent = {exact.lua_value(exact.frozen(sc))},",
+    ]
+
+
 def lua_body(entry: dict) -> str:
-    text_esc = entry['text'].replace('\\', '\\\\').replace('"', '\\"')
-    record_frames = '3600' if entry['actor'] == 'CPU' else 'nil'
-    play = '{ { wait = 90 } }' if entry['actor'] == 'Player' else 'nil'
+    cpu = entry['sc']['actor'] == 'CPU'
     lines = [
-        "-- AUTO-GENERATED from TESTING.md",
+        "-- AUTO-GENERATED by tools/gen_testing_lua.py from tools/testing_scenarios/exact_cards_*.py (TESTING.md)",
         f"-- Recording: {entry['basename']}.mp4",
         LUA_BOOTSTRAP,
         "EDS.run({",
-        f"    card = {json.dumps(entry['card'])},",
-        f"    effect = {json.dumps(entry['effect'])},",
-        f"    actor = {json.dumps(entry['actor'])},",
-        f"    format = {json.dumps(entry['format'])},",
-        f'    scenarioText = "{text_esc}",',
-        f"    play = {play},",
-        f"    recordFrames = {record_frames},",
+        *scenario_fields(entry),
+        "    play = { { wait = 90 } },     -- the key presses for `steps` are still to be written",
+        f"    recordFrames = {'3600' if cpu else 'nil'},",
         "})",
     ]
     return '\n'.join(lines) + '\n'
 
 
-def fix_poc_lua_body(entry: dict) -> str:
-    """POC scripts with cleaner CPU handling."""
-    text_esc = entry['text'].replace('\\', '\\\\').replace('"', '\\"')
+def poc_lua_body(entry: dict) -> str:
+    """POC scripts: the hand-tuned setup and key presses of poc_plays.lua when it has the scenario."""
+    cpu = entry['sc']['actor'] == 'CPU'
     lines = [
-        f"-- POC — TESTING.md scenario",
+        "-- POC: TESTING.md scenario (AUTO-GENERATED by tools/gen_testing_lua.py)",
         f"-- Recording: {entry['basename']}.mp4",
         LUA_BOOTSTRAP,
         "local POC = paths.loadPocPlays()",
-        f"local key = {json.dumps(entry['basename'])}",
+        f"local key = {exact.lua_value(entry['basename'])}",
         "local poc = POC[key]",
         "local opts = {",
-        f"    card = {json.dumps(entry['card'])},",
-        f"    effect = {json.dumps(entry['effect'])},",
-        f"    actor = {json.dumps(entry['actor'])},",
-        f"    format = {json.dumps(entry['format'])},",
-        f'    scenarioText = "{text_esc}",',
-        "    setupCards = poc and poc.setupCards,",
-        "    play = poc and poc.play,",
-        f"    pocRequired = {'true' if entry['actor'] != 'CPU' and poc_key_has_play(entry) else 'false'},",
+        *scenario_fields(entry),
         "}",
+        "if poc then",
+        "    opts.setupCards = poc.setupCards or opts.setupCards",
+        "    opts.play = poc.play",
+        "end",
+        f"opts.pocRequired = {'false' if cpu else 'poc ~= nil and poc.play ~= nil'}",
     ]
-    if entry['actor'] == 'CPU':
+    if cpu:
         lines.append("opts.recordFrames = 3600")
-        lines.append("opts.play = nil")
-        lines.append("opts.freezeOpponent = false")
-    elif not poc_key_has_play(entry):
-        lines.append("opts.play = { { wait = 120 }, { key = EDS.KEY_START, gap = 30 } }")
+    else:
+        lines.append("if not opts.play then opts.play = { { wait = 120 }, { key = EDS.KEY_START, gap = 30 } } end")
     lines.append("EDS.run(opts)")
     return '\n'.join(lines) + '\n'
-
-
-def poc_key_has_play(entry: dict) -> bool:
-    return entry['actor'] == 'Player' and entry['card'] in POC_CARDS
 
 
 def main() -> int:
@@ -251,14 +169,9 @@ def main() -> int:
     ap.add_argument('--list-only', action='store_true')
     args = ap.parse_args()
 
-    text = TESTING.read_text(encoding='utf-8')
-    cards = parse_testing_md(text)
-    all_entries: list[dict] = []
-    for card in cards:
-        all_entries.extend(scenario_entries(card))
-
+    all_entries = load_entries()
     if args.list_only:
-        print(f"{len(cards)} cards, {len(all_entries)} scenarios")
+        print(f"{len({e['card'] for e in all_entries})} cards, {len(all_entries)} scenarios")
         for e in all_entries[:5]:
             print(f"  {e['basename']}.mp4")
         print('  ...')
@@ -270,31 +183,28 @@ def main() -> int:
 
     OUT_DIR.mkdir(parents=True, exist_ok=True)
     POC_DIR.mkdir(parents=True, exist_ok=True)
+    if not args.poc_only:
+        for old in OUT_DIR.glob('*.lua'):       # (every script here is this tool's; names follow the scenarios)
+            old.unlink()
     manifest = []
-
     for entry in entries:
         fname = entry['basename'] + '.lua'
         poc = entry['card'] in POC_CARDS
+        (OUT_DIR / fname).write_text(lua_body(entry), encoding='utf-8')
         if poc:
-            body = fix_poc_lua_body(entry)
-            (POC_DIR / fname).write_text(body, encoding='utf-8')
-            (OUT_DIR / fname).write_text(lua_body(entry), encoding='utf-8')
-        else:
-            (OUT_DIR / fname).write_text(lua_body(entry), encoding='utf-8')
+            (POC_DIR / fname).write_text(poc_lua_body(entry), encoding='utf-8')
         manifest.append({
             'card': entry['card'],
-            'effect': entry['effect'],
-            'actor': entry['actor'],
+            'effect': entry['sc']['effect'],
+            'actor': entry['sc']['actor'],
             'format': entry['format'],
+            'start': entry['sc']['start']['turn'],
             'recording': f"tools/testing_scenarios/recordings/{entry['basename']}.mp4",
-            'script': (
-                f"tools/testing_scenarios/poc/{fname}"
-                if poc else f"tools/testing_scenarios/generated/{fname}"
-            ),
+            'script': f"tools/testing_scenarios/{'poc' if poc else 'generated'}/{fname}",
         })
 
     MANIFEST.write_text(json.dumps(manifest, indent=2) + '\n', encoding='utf-8')
-    print(f"Wrote {len(manifest)} scripts ({sum(1 for e in entries if e['card'] in POC_CARDS)} under poc/)")
+    print(f"Wrote {len(manifest)} scripts ({sum(1 for e in entries if e['card'] in POC_CARDS)} also under poc/)")
     subprocess.run([sys.executable, str(ROOT / 'tools' / 'gen_format_decks_lua.py')], check=False)
     return 0
 
