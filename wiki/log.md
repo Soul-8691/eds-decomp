@@ -2917,3 +2917,8 @@ updated: 2026-09-29
   and fails on a missing scenario, a bad line, or a card not legal in the format. tools/gen_testing_lua.py
   reads them directly: setupCards, setupPiles, start, steps, expect, freezeOpponent per script.
 - tools/testing_scenarios/README.md.
+
+## [2026-11-10] progress | Duel HUD: white in the Battle Phase flash, not black
+- src/mod_duel_hud.c DimHudPalettes: reads REG_BLDCNT's effect; a brightening one (the Battle Phase banner's
+  flash to white) moves the panel and LP colours towards white instead of black.
+- Pages: [[duel-hud]].

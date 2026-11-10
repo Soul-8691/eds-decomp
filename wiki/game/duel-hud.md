@@ -52,6 +52,10 @@ Added on 2026-11-06. None of this is in the original game. Built (`make demo`); 
   (BLDCNT 0x27E7, not OBJ), so these sprites stayed bright over a dark board (the phase letters seemed to flash on a
   different background). `ModDrawDuelHud` now darkens OBJ palettes 13-14 and palette 12's entries 1-4 (the badges and
   the Link arrows) by `gMain.brightness` / 16, the same formula, after writing them each frame.
+- **The white flash (2026-11-10 fix):** the Battle Phase banner's flash (`DuelFieldFadeToWhite`, BLDCNT
+  0x27A7) brightens instead of darkening: its effect bits (6-7) are 2. `DimHudPalettes` read only
+  `gMain.brightness` and always darkened, so the phase panel and the life points went black in the white flash.
+  It now reads the effect and moves the colours towards white for a brightening one.
 
 > [!question] To check in an emulator
 > Whether the corner LP overlap other sprites (the hand strips, the phase banners) or the text boxes (the sprites

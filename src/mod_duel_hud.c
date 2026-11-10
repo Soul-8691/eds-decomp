@@ -102,7 +102,11 @@ static void AddLifePoints(int x, int right, int y, u32 lp)
  * points) dimmed with the board. DuelFieldDim / DuelFieldFadeToBlack (duel_field_screen.c) darken the BG layers
  * with the brightness effect (BLDCNT 0x27E7: BG0-2 and the backdrop, not OBJ) by gMain.brightness / 16; these
  * sprites stand for what used to be board tiles, so they get the same darkening in their colours, or they would
- * stay bright over a dark board. */
+ * stay bright over a dark board. DuelFieldFadeToWhite (the Battle Phase banner's flash, BLDCNT 0x27A7) brightens
+ * instead: its effect bits (6-7) are BLDCNT_EFFECT_BRIGHTEN, so the colours go towards white then (they went to
+ * black, a black phase panel in the white flash). */
+#define BLDCNT_EFFECT_SHIFT     6
+#define BLDCNT_EFFECT_BRIGHTEN  2
 #define DIM_FIRST_PALETTE       12
 #define DIM_LAST_PALETTE        14
 
@@ -110,6 +114,7 @@ static void DimHudPalettes(void)
 {
     u32 evy = gMain.brightness, i;
     vu16 *pal = (vu16 *)(OBJ_PLTT + DIM_FIRST_PALETTE * 32);
+    int brighten = ((REG_BLDCNT >> BLDCNT_EFFECT_SHIFT) & 3) == BLDCNT_EFFECT_BRIGHTEN;
 
     if (evy == 0)
         return;
@@ -124,9 +129,15 @@ static void DimHudPalettes(void)
         r = c & 31;
         g = (c >> 5) & 31;
         b = (c >> 10) & 31;
-        r -= r * evy / 16;
-        g -= g * evy / 16;
-        b -= b * evy / 16;
+        if (brighten) {
+            r += (31 - r) * evy / 16;
+            g += (31 - g) * evy / 16;
+            b += (31 - b) * evy / 16;
+        } else {
+            r -= r * evy / 16;
+            g -= g * evy / 16;
+            b -= b * evy / 16;
+        }
         pal[i] = r | g << 5 | b << 10;
     }
 }
