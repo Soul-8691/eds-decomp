@@ -179,18 +179,6 @@ Dark End Dragon
 Red Dragon Archfiend
 Krebons
 Number 20: Giga-Brilliant
-Shrink
-Legacy of Yata-Garasu
-Green Gadget
-Red Gadget
-Yellow Gadget
-Magical Stone Excavation
-Marshmallon
-Foolish Burial
-Doomcaliber Knight
-Shield Crush
-Soul Taker
-Goblin Zombie
 Deck Devastation Virus
 Mind Crush
 Cyber Phoenix
@@ -204,6 +192,18 @@ Archfiend Playtime
 Archfiend's Usurpation
 Makourai, the Lightning Strike
 Archfiend's Manifestation
+Shrink
+Legacy of Yata-Garasu
+Green Gadget
+Red Gadget
+Yellow Gadget
+Magical Stone Excavation
+Marshmallon
+Foolish Burial
+Doomcaliber Knight
+Shield Crush
+Soul Taker
+Goblin Zombie
 D.D. Designator
 Reflect Bounder
 Yomi Ship
