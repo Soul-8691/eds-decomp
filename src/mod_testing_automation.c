@@ -18,8 +18,30 @@
 #include "card_data.h"              /* CARD_ID_MASK, CARD_ID_TO_NUMBER_ADDR */
 #include "chain.h"                  /* struct ChainEntry */
 #include "mod_testing_automation.h"
+#include "gba.h"                    /* L_BUTTON */
+#include "main.h"                   /* gMain.heldKeys */
+#include "duel_flow.h"              /* gDuelCtrl.isLinkDuel */
 
 u8 gModTestingFreezeOpponent;
+
+/*
+ * 1 while the CPU must not act: no plays of its own (AiRunStep ends its Main and Battle Phase) and no responses (it
+ * chains nothing, activates no Set card). Either a test script's freeze (bit 0 of gModTestingFreezeOpponent), or the
+ * player holding L in a debug duel: any duel of a testing build (make, make demo), or one against Debug in make
+ * release (ModDebugDuel). Never in a Link Battle. (L+R opens the in-duel settings, ModDuelSettingsHandleInput.)
+ */
+int ModOpponentFrozen(void)
+{
+    if (gDuelCtrl.isLinkDuel)
+        return 0;
+    if (ModTestingFreezeOpponentActive())
+        return 1;
+#if MOD_RELEASE
+    if (!ModDebugDuel())
+        return 0;
+#endif
+    return (gMain.heldKeys & L_BUTTON) != 0;
+}
 
 int ModTestingFreezeOpponentActive(void)
 {

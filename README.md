@@ -271,8 +271,8 @@ See Mobius's README for chart semantics and options.
 
 - **Menu order.** In the hand/field card menu, **Summon** comes before **Set**, **Activate** comes before **Set** for
   Spells you can activate or Set, and **Card Info** is always the last option. Left/Right order matches the row.
-- **Settings.** Open them from the main menu, or press **L** during a duel; leaving with **B** returns to the duel when
-  you opened them with L. The choice is saved. Pick one duel speed:
+- **Settings.** Open them from the main menu, or press **L+R** during a duel; leaving with **B** returns to the duel
+  when you opened them with L+R. The choice is saved. Pick one duel speed:
 
   | Speed | What it does |
   |---|---|
@@ -282,6 +282,8 @@ See Mobius's README for chart semantics and options.
 
 - **Hold R.** While you hold **R**, the duel does not ask you to respond to chains or other Yes/No prompts (the text box
   does not open; effects are declined as if you had answered No). **B** still fast-forwards, as in the table above.
+- **Hold L (debug).** In a testing build, or against Debug, the CPU does nothing while you hold **L**: it chains and
+  activates no Set card, and on its turn it skips its Main and Battle Phase (a play already under way finishes first).
 
 ### Smarter CPU
 

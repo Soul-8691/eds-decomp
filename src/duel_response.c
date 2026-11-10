@@ -716,7 +716,7 @@ int EventResponse_Run(void)
         gRunChain.requestPending = 0;
         return 1;
     case EVRESP_CPU_SEARCH:
-        if (ModTestingFreezeOpponentActive()) {
+        if (ModOpponentFrozen()) {
             gRunChain.askStep = EVRESP_NEXT_PLAYER;
             return 0;
         }
@@ -733,7 +733,7 @@ int EventResponse_Run(void)
         gRunChain.askStep = EVRESP_NEXT_PLAYER;
         return 0;
     case EVRESP_CPU_ACTIVATE:
-        if (ModTestingFreezeOpponentActive()) {
+        if (ModOpponentFrozen()) {
             gRunChain.askStep = EVRESP_NEXT_PLAYER;
             return 0;
         }

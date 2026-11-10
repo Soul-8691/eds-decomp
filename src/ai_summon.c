@@ -445,7 +445,7 @@ int AiShouldActivateSetCard(struct ChainEntry *entry)
     int zone;
     int zz;
 
-    if (ModTestingFreezeOpponentActive())
+    if (ModOpponentFrozen())        /* added: a test script's freeze, or L held in a debug duel */
         return 0;
     if (entry == 0)
         return 0;
@@ -679,7 +679,7 @@ int AiTryChainResponse(struct ChainEntry *entry)
     int x;
     u32 m;
 
-    if (ModTestingFreezeOpponentActive())
+    if (ModOpponentFrozen())
         return 0;
     /* FAKEMATCH: the 0x7FF mask lives in a variable that the Magic Thorn case reuses for its whole index
      * chain, so the mask, switch value and table base get r1/r2/r3 as in the ROM. */

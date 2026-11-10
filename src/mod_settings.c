@@ -127,7 +127,9 @@ int ModDuelSettingsHandleInput(void)
 {
     struct SettingsMenu *s = &gSettingsMenu;
 
-    if (!(gMain.newKeys & L_BUTTON) || !gDuelScreen.active || gDuelCtrl.isLinkDuel)
+    /* changed: L+R (both held, one just pressed); L held alone freezes the CPU in debug duels (ModOpponentFrozen) */
+    if (!(gMain.newKeys & (L_BUTTON | R_BUTTON)) || (gMain.heldKeys & (L_BUTTON | R_BUTTON)) != (L_BUTTON | R_BUTTON)
+        || !gDuelScreen.active || gDuelCtrl.isLinkDuel)
         return 0;
     if (gDuel.cardMenu.open || DeckReorderUsesShoulderButtons())
         return 0;
@@ -211,7 +213,7 @@ void SettingsMenu_BuildLabel(u16 *dst)
 static const char sStrSpeedHeader[] = "Duel speed";
 static const char *const sSpeedModeNames[] = { "DEFAULT", "ALWAYS", "SUPER" };
 static const char sStrHelp[] = "A: select   B: back";
-static const char sStrHelpL[] = "L in duel: settings";
+static const char sStrHelpL[] = "L+R in duel: settings";
 
 static void DrawText(int x, int y, u16 color, const char *text)
 {

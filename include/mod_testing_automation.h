@@ -8,6 +8,9 @@ extern u8 gModTestingFreezeOpponent;
 
 /* 1 when scripts request a passive opponent in a Test Duel (make demo, not release): bit 0 of the byte. */
 int ModTestingFreezeOpponentActive(void);
+/* 1 while the CPU must not act or respond: a script's freeze, or L held in a debug duel (testing builds, or against
+ * Debug in make release). */
+int ModOpponentFrozen(void);
 /* 1 when the CPU holds as many Set Spell/Traps as scripts allow (bits 4-7 of the byte; 0 = no limit). */
 int ModTestingCpuSetLimitReached(void);
 /* Every duel frame: a script's redraw request (bit 1) redraws the field once (DrawAllAreaTiles). */

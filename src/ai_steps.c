@@ -753,10 +753,16 @@ u16 AiStepBattle(void)
     return BattlePhase_Run(1);
 }
 
+int ModOpponentFrozen(void);       /* src/mod_testing_automation.c */
+
 int AiRunStep(void)
 {
     int (*fn)(void) = gAiSteps[gAiState.step];
     struct AiState *st = &gAiState;
+    /* added: the CPU frozen (a test script, or L held in a debug duel) ends its Main and Battle Phase, between two
+     * steps only (a step under way finishes first) */
+    if (st->stepState == 0 && st->phase == 0 && st->subState == 0 && ModOpponentFrozen())
+        return 1;
     if (fn != 0) {
         if ((u16)fn() != 0) {
             st->stepState = 0;

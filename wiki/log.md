@@ -3015,3 +3015,13 @@ updated: 2026-09-29
   src/mod_dp.c (no DP), tools/record_names.py (Records). Not built yet (the full test run held eds_demo.gba): untested.
 - The demo ROM was rebuilt mid test run once (17:11), which timed out Sakuretsu Armor's player script.
 - Pages: [[readme-media]] (new), [[yugi-kaiba-opponent]], [[hma-toml]], [[index]].
+
+## [2026-11-10] progress | Hold L freezes the CPU in debug duels; in-duel Settings on L+R (untested)
+- src/mod_testing_automation.c `ModOpponentFrozen`: a test script's freeze, or L held in a non-link debug duel (any
+  duel of a testing build; against Debug in make release). It replaces `ModTestingFreezeOpponentActive` at the CPU's
+  response checks (src/ai_summon.c AiShouldActivateSetCard and its chain answer, src/duel_response.c EVRESP_CPU_SEARCH
+  / EVRESP_CPU_ACTIVATE) and ends the CPU's Main and Battle Phase in `AiRunStep` (src/ai_steps.c), between steps.
+- src/mod_settings.c `ModDuelSettingsHandleInput`: the in-duel Settings open on L+R (both held, one just pressed),
+  not L; the Settings help line says so.
+- README.md / README_WIP.md: Settings on L+R; a Hold L (debug) bullet.
+- Not built yet (the full test run holds eds_demo.gba): untested.
