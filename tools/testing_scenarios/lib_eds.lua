@@ -1723,7 +1723,7 @@ function EDS.navigateTestDuel(frameState, opts)
             frameState.timer = 0
             frameState.drawSub = 0
             frameState.requireOpeningDraw = true
-            EDS.log("Draw Phase: deck menu defaults to Mulligan; use Right then Draw.")
+            EDS.log("Draw Phase: deck menu opens on Draw (Mulligan is next).")
             return
         end
         if EDS.inHumanMainPhase1() then
@@ -1864,9 +1864,10 @@ function EDS.navigateTestDuel(frameState, opts)
                     end
                 else
                     if cmd == EDS.CARDMENU_CMD_MULLIGAN and not frameState.drawPickedDraw then
-                        EDS.press(EDS.KEY_RIGHT, 28)
+                        EDS.press(EDS.KEY_LEFT, 28)     -- (Draw is before Mulligan in the deck menu)
                         frameState.drawPickedDraw = true
                     elseif cmd == EDS.CARDMENU_CMD_DRAW then
+                        frameState.drawPickedDraw = true
                         if EDS.playerHandCount() < wantHand and not EDS.busy()
                             and frameState.timer % 22 == 0 then
                             EDS.press(EDS.KEY_A, 28)
@@ -2483,8 +2484,9 @@ function EDS.run(opts)
         if EDS.cardMenuOpen() then
             local cmd = EDS.cardMenuCommand()
             if cmd == EDS.CARDMENU_CMD_MULLIGAN and not frameState.drawPickedDraw then
-                emu:addKeys(EDS.KEY_RIGHT)
+                emu:addKeys(EDS.KEY_LEFT)       -- (Draw is before Mulligan in the deck menu)
             elseif cmd == EDS.CARDMENU_CMD_DRAW and EDS.playerHandCount() < wantHand then
+                frameState.drawPickedDraw = true
                 emu:addKeys(EDS.KEY_A)
             end
             return

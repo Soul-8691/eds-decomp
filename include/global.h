@@ -106,7 +106,7 @@ int ModDeckListVisible(void);
 extern const u8 ModCardMenuCmdOrder[MOD_CARDMENU_CMD_COUNT];
 int ModCardMenuFirstCommand(u16 available);
 int ModCardMenuCycleCommand(u8 command, int dir, u16 available);
-/* Main-deck command menu: Mulligan, Draw, Surrender, then Card View (campaign.c hooks). */
+/* Main-deck command menu: Draw, Mulligan, Surrender, then Card View (campaign.c hooks). */
 int ModCardMenuDeckFirstCommand(u16 available);
 int ModCardMenuDeckCycleCommand(u8 command, int dir, u16 available);
 void ModCardMenuDeckDrawIcons(int x, int y, u16 available, u8 command, u8 timer);

@@ -2922,3 +2922,8 @@ updated: 2026-09-29
 - src/mod_duel_hud.c DimHudPalettes: reads REG_BLDCNT's effect; a brightening one (the Battle Phase banner's
   flash to white) moves the panel and LP colours towards white instead of black.
 - Pages: [[duel-hud]].
+
+## [2026-11-10] progress | Deck menu: Draw before Mulligan
+- src/mod_opponents.c sDeckMenuCmdOrder: Draw, Mulligan, Surrender, Card View (the menu opens on Draw).
+  tools/testing_scenarios/lib_eds.lua's opening draw follows (A on Draw; Left if it shows Mulligan); README.md,
+  README_WIP.md, tools/testing_scenarios/README.md, include/global.h.

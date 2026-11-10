@@ -61,7 +61,7 @@ With **ffmpeg on PATH** (default), you only need to run the POC script; the `.mp
 
 Without ffmpeg, use mGBA’s GUI: **Tools → Record A/V** → **MPEG-4**, set the path from `_next_recording.txt`, **Start** before the duel, **Stop** after **Finished**.
 
-Format **main decks** (40 cards) load as soon as the duel starts (**before** your Draw step), from `usage/<format>.json` via `format_decks.lua`. When the usage deck is loaded into RAM, the script **clears both hands** and **shuffles each main deck once** (`p0ShuffledOnce` / `p1ShuffledOnce`). By default you confirm **Draw** on your deck (Mulligan → Draw → **A**). Optional `ramOpeningDraw = true` sets **`skipDrawPhase`** and **RAM-draws 5** instead (no deck menu). **Scenario hand/field RAM** (`setupCards`) runs only **after** you confirm **Draw** (or after `ramOpeningDraw` RAM-deal), still during Draw/Standby before Main 1. **Recording** waits until `scenarioSetupDone`, skips `draw_mulligan`, and holds **3 frames** so the first PNG matches the scenario hand. If **you go first**, load+shuffle wait until **Turn Start** (`duel_step` 2). Pass `format` from TESTING.md; disable with `usageDeck = false`.
+Format **main decks** (40 cards) load as soon as the duel starts (**before** your Draw step), from `usage/<format>.json` via `format_decks.lua`. When the usage deck is loaded into RAM, the script **clears both hands** and **shuffles each main deck once** (`p0ShuffledOnce` / `p1ShuffledOnce`). By default you confirm **Draw** on your deck (the deck menu opens on **Draw**: **A**). Optional `ramOpeningDraw = true` sets **`skipDrawPhase`** and **RAM-draws 5** instead (no deck menu). **Scenario hand/field RAM** (`setupCards`) runs only **after** you confirm **Draw** (or after `ramOpeningDraw` RAM-deal), still during Draw/Standby before Main 1. **Recording** waits until `scenarioSetupDone`, skips `draw_mulligan`, and holds **3 frames** so the first PNG matches the scenario hand. If **you go first**, load+shuffle wait until **Turn Start** (`duel_step` 2). Pass `format` from TESTING.md; disable with `usageDeck = false`.
 
 Capture ends after the scripted `play` steps finish and the duel UI is idle (~**20** frames, `playSettleFrames`; no extra `recordTail` by default). Play steps may include `{ cursor = "opp_monster", zone = 0 }` or `{ cursor = "own_hand", slot = N }` before **A** presses.
 
@@ -87,7 +87,7 @@ If the opponent wins the opening, the script waits in **`cpu_turn`** until **you
 
 After your draw, **A** on the deck in Main Phase only opens **Surrender**—the script closes the menu with **B**, moves the field cursor **Left** (deck → spell/trap) then **Down** (→ hand, per `DuelCursor_PickAny`), and **blocks every A** until `sel_area=11` (hand). It will not run the play sequence on the deck pile.
 
-In the first **Draw Phase**, the testing ROM’s deck menu lists **Mulligan** before **Draw** (`sDeckMenuCmdOrder` in `src/mod_opponents.c`). The script presses **A** on the deck, **Right** to **Draw**, then **A** again—do not mash **A** there or you will mulligan forever.
+In the first **Draw Phase**, the testing ROM’s deck menu lists **Draw** before **Mulligan** (`sDeckMenuCmdOrder` in `src/mod_opponents.c`), so it opens on Draw. The script presses **A** on the deck, then **A** on **Draw** (Left back to Draw if the menu shows Mulligan).
 
 ## Generate scripts
 

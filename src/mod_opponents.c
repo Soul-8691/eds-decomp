@@ -634,8 +634,8 @@ int ModCardMenuCycleCommand(u8 command, int dir, u16 available)
 
 #define DECK_MENU_CMD_ORDER_COUNT 4
 static const u8 sDeckMenuCmdOrder[DECK_MENU_CMD_ORDER_COUNT] = {
-    CARDMENU_CMD_MULLIGAN,
     CARDMENU_CMD_DRAW,
+    CARDMENU_CMD_MULLIGAN,
     CARDMENU_CMD_SURRENDER,
     CARDMENU_CMD_CARD_VIEW,
 };

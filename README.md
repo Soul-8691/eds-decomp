@@ -455,7 +455,7 @@ screens, title screen images, Deck Edit ring art, in-duel card miniatures, and m
   In the **release** build, deck-out is blocked only vs **Debug**, and **Test Duel** is not offered.
 - The opponent's hand is shown face up, and the cursor shows the info of all their cards (face-down ones too), with Card
   View.
-- You can open your deck pile from the command menu (Mulligan / Draw / Surrender / Card View), and the opponent's main or
+- You can open your deck pile from the command menu (Draw / Mulligan / Surrender / Card View), and the opponent's main or
   fusion deck pile with **Card View** (draw order on the main deck; works even when their deck is empty).
 - **Mulligan** in every Campaign duel (the release build allows it only vs **Debug**).
 
