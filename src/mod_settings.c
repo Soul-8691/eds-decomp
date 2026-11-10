@@ -136,9 +136,13 @@ int ModDuelSettingsHandleInput(void)
     return 1;
 }
 
+void ModTestingTick(void);              /* src/mod_testing_automation.c: test scripts' redraw request */
+
 int ModDuelSettingsRun(void)
 {
     struct SettingsMenu *s = &gSettingsMenu;
+
+    ModTestingTick();
 
     switch (s->duelState) {
     case SETTINGS_DUEL_FADE_OUT:

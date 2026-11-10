@@ -456,12 +456,25 @@ end
 -- and Battle Phase) is skipped.
 EDS.AI_TURN_PHASE_RUN_STEP = 3
 EDS.AI_TURN_PHASE_END = 4
+-- The flag byte (src/mod_testing_automation.c): bit 0 freeze, bit 1 a redraw request (the game clears it; kept
+-- here), bits 4-7 the most Spell/Traps the CPU may Set (4 in a CPU exact scenario: a zone stays free for its
+-- Normal Spell).
+function EDS.writeTestingFlags(freeze, opts)
+    local cap = (opts.steps and opts.actor == "CPU") and 4 or 0
+    local keep = emu:read8(EDS.G_MOD_TESTING_FREEZE) & 0x02
+    emu:write8(EDS.G_MOD_TESTING_FREEZE, keep | (cap << 4) | (freeze and 1 or 0))
+end
+
+function EDS.requestRedraw()
+    emu:write8(EDS.G_MOD_TESTING_FREEZE, emu:read8(EDS.G_MOD_TESTING_FREEZE) | 0x02)
+end
+
 function EDS.freezeOpponent(opts, frameState)
     if opts.freezeOpponent == false then
-        emu:write8(EDS.G_MOD_TESTING_FREEZE, 0)
+        EDS.writeTestingFlags(false, opts)
         return
     end
-    emu:write8(EDS.G_MOD_TESTING_FREEZE, 1)
+    EDS.writeTestingFlags(true, opts)
     if opts.steps and frameState and frameState.stepsRunning then
         if EDS.turnPlayer() == 1 and emu:read8(EDS.G_AI_STATE) == EDS.AI_TURN_PHASE_RUN_STEP then
             emu:write8(EDS.G_AI_STATE, EDS.AI_TURN_PHASE_END)

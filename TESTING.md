@@ -7,13 +7,13 @@ For each card: **Implementation** and **Coded behavior** come from this repo (`s
 **Scenarios** are exact, so an mGBA Lua script can reproduce each one ([`tools/testing_scenarios/`](tools/testing_scenarios/README.md)): the whole starting state, every input, and the state to check after. They are written in `tools/testing_scenarios/exact_cards_*.py` (the format: `tools/testing_scenarios/exact.py`); every card they name is legal in that format (in its [`card_pools/`](card_pools/) file, not **Forbidden** in [`banlists/<format>_ban.json`](banlists/)), which the generator checks. Each scenario has:
 
 - **A header line:** the recording name (`<Card>_<Effect>_<Player|CPU>`), where the setup is applied (the start of that turn's Main Phase 1, the Draw Phase done; `turnCount` 0 is the duel's first turn, which has no Battle Phase), both LP, and whether the opponent is frozen (`gModTestingFreezeOpponent`: it plays nothing and answers nothing). **Player** scenarios test the human's use of the card; **CPU** scenarios test the CPU's. On the opponent's turn the CPU acts by itself.
-- **A setup table:** every card placed, by side and place. Monster Zones `m0`-`m4` and Spell/Trap Zones `st0`-`st4` are `gDuelPlayers[p]` zones 0-4 and 5-9; the hand is listed from slot 0; the Deck rows are its top, top card first (`deck[0]` is the next draw), the rest being the format's usage deck. Both hands are exactly as listed; anything else not listed is empty.
+- **A setup table:** every card placed, by side and place. Monster Zones `m0`-`m4` and Spell/Trap Zones `st0`-`st4` are `gDuelPlayers[p]` zones 0-4 and 5-9; the hand is listed from slot 0; the Deck rows are its top, top card first (`deck[0]` is the next draw), the rest being the format's usage deck. Both hands are exactly as listed; anything else not listed is empty, except in a **CPU** scenario: there the CPU's board and piles from its first turn stay (only its hand and the listed places are replaced), and the CPU Sets at most 4 Spell/Traps, so a zone stays free for its Normal Spell.
 - **Steps:** each input as code (the script's step) and in words. `you.hand[Card]` is that card in your hand, `you.m0` your Monster Zone 0, `opp.m[Card]` the opponent's monster of that name; `when <event>: <step>` waits for the event first; `check` checks the state mid-way.
 - **Expected:** the state to check after the last step, as code and in words (`=` is the exact pile or zone, `has` / `lacks` one card, `count` the number of cards).
 
 **AI:** each card lists **AI coverage** traced from `src/added_effects.c` (`AiPlayAddedCards`, `AiWantsMonsterEffect`, `AiWantsSpell`, `AiShouldActivateAddedCard`, `AiChain*`, and `*Cpu*` effect steps). **Yes — generalized routine** means the default added-card fallbacks apply; **dedicated** means a named hook. **Automatic** means the CPU does not activate an effect from the card menu, but battle/engine code still runs.
 
-**103** cards qualify (of 295 in `demo_cards.txt` minus `new_cards.txt` below `******`; 13 names excluded). Regenerate with `python3 tools/gen_testing_md.py`.
+**102** cards qualify (of 294 in `demo_cards.txt` minus `new_cards.txt` below `******`; 14 names excluded). Regenerate with `python3 tools/gen_testing_md.py`.
 
 ## Yugi-Kaiba
 
@@ -4088,57 +4088,6 @@ B (cancel) cannot end the Battle Phase while the Gorilla can attack.
 
 - `you.m0 = empty`: your Monster Zone 0 (**Big Shield Gardna**) is empty.
 - `you.gy = Big Shield Gardna`: your Graveyard is exactly Big Shield Gardna.
-
-### D.D. Assailant
-
-- **Usage:** 19.7% weighted inclusion in `usage/warrior.json` (earliest qualifying format).
-- **Implementation:** Unknown / stats only
-- **Coded behavior:** No `gAddedCardEffects` row or engine key found for this demo card; verify in Deck Edit and trunk.
-- **YGOPRODeck (TCG) text:** After damage calculation, when this card is destroyed by battle with an opponent's monster: Banish that monster, also banish this card.
-- **TCG vs this ROM:** Coded behavior may differ from current TCG/OCG text; test against the **Coded behavior** section, not the card database alone.
-- **AI coverage:** **Unclear / likely missing** — No `CPU:` notes and no switch case found; treat as untested for CPU until you confirm in a duel.
-
-#### Player 1: Banish both when destroyed
-
-`DD_Assailant_Banish_Both_When_Destroyed_Player` · start: your turn, Main Phase 1 (turnCount 2) · LP 8000 / 8000 · opponent frozen
-
-No effect row was found for this card: this scenario checks the card text.
-
-| Side | Place | Card | Position |
-|---|---|---|---|
-| You | Monster Zone 0 | D.D. Assailant | face-up Attack Position |
-| Opponent | Monster Zone 0 | Summoned Skull | face-up Attack Position |
-
-**Steps**
-
-1. `battle`: Enter the Battle Phase.
-2. `attack you.m0 -> opp.m0`: Attack with your Monster Zone 0 (**D.D. Assailant**): target the opponent's Monster Zone 0 (**Summoned Skull**).
-
-**Expected**
-
-- `you.lp = 7200`: LP of you = 7200.
-- `you.banished = D.D. Assailant`: your banished cards is exactly D.D. Assailant.
-- `opp.banished = Summoned Skull`: the opponent's banished cards is exactly Summoned Skull.
-
-#### CPU 1: Banish both when destroyed
-
-`DD_Assailant_Cpu_Banish_Both_When_Destroyed_CPU` · start: your turn, Main Phase 1 (turnCount 2) · LP 8000 / 8000 · opponent not frozen
-
-| Side | Place | Card | Position |
-|---|---|---|---|
-| You | Monster Zone 0 | Summoned Skull | face-up Attack Position |
-| Opponent | Monster Zone 0 | D.D. Assailant | face-up Attack Position |
-
-**Steps**
-
-1. `battle`: Enter the Battle Phase.
-2. `attack you.m0 -> opp.m0`: Attack with your Monster Zone 0 (**Summoned Skull**): target the opponent's Monster Zone 0 (**D.D. Assailant**).
-
-**Expected**
-
-- `opp.lp = 7200`: LP of opp = 7200.
-- `you.banished = Summoned Skull`: your banished cards is exactly Summoned Skull.
-- `opp.banished = D.D. Assailant`: the opponent's banished cards is exactly D.D. Assailant.
 
 ### Return from the Different Dimension
 

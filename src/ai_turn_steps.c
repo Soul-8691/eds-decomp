@@ -29,6 +29,7 @@
 #include "effect.h"                 /* CanActivateEffect, PayChainEnergyCost */
 #include "summon.h"                 /* QueueFlipSummon, CanSummonFromHand */
 #include "util.h"                   /* MemClear16 */
+#include "mod_testing_automation.h" /* ModTestingCpuSetLimitReached */
 
 /* The ROM tables of this unit, read by AiStepPlaySimpleSpells (the 20 card numbers of gAiSimpleSpells, 0x08086448:
  * Mooyan Curry .. Blue Medicine, Tremendous Fire, Ookazi, Final Flame, Sparks, Hinotama, Raimei, De-Spell, Remove
@@ -364,6 +365,8 @@ int AiStepSetSpellTraps(void)
     struct AiState *initial = &gAiState;
     u32 stepState = initial->stepState;
     register struct AiState *state asm("r9");
+    if (ModTestingCpuSetLimitReached())     /* added: test scripts keep a Spell/Trap Zone free */
+        return 1;
     state = initial;
     switch (stepState) {
     case 0:

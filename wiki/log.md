@@ -2927,3 +2927,10 @@ updated: 2026-09-29
 - src/mod_opponents.c sDeckMenuCmdOrder: Draw, Mulligan, Surrender, Card View (the menu opens on Draw).
   tools/testing_scenarios/lib_eds.lua's opening draw follows (A on Draw; Left if it shows Mulligan); README.md,
   README_WIP.md, tools/testing_scenarios/README.md, include/global.h.
+
+## [2026-11-10] progress | Testing: CPU board kept, Set limit, field redraw
+- src/mod_testing_automation.c: the flag byte's bit 1 (redraw request, ModTestingTick from ModDuelSettingsRun:
+  DrawAllAreaTiles) and bits 4-7 (the most Spell/Traps the CPU Sets: AiStepSetSpellTraps, ai_turn_steps.c);
+  bit 0 stays the freeze. Test Duels in testing builds only.
+- tools/testing_scenarios: CPU scenarios keep the CPU's first-turn board and piles; the CPU Sets at most 4;
+  every exact setup asks for a redraw. exact.py, gen_testing_md.py (TESTING.md intro).

@@ -1422,24 +1422,6 @@
     "script": "tools/testing_scenarios/generated/Ninja_Grandmaster_Sasuke_Cpu_Destroy_Face_Up_Defense_CPU.lua"
   },
   {
-    "card": "D.D. Assailant",
-    "effect": "banish_both_when_destroyed",
-    "actor": "Player",
-    "format": "Warrior",
-    "start": "you",
-    "recording": "tools/testing_scenarios/recordings/DD_Assailant_Banish_Both_When_Destroyed_Player.mp4",
-    "script": "tools/testing_scenarios/generated/DD_Assailant_Banish_Both_When_Destroyed_Player.lua"
-  },
-  {
-    "card": "D.D. Assailant",
-    "effect": "cpu_banish_both_when_destroyed",
-    "actor": "CPU",
-    "format": "Warrior",
-    "start": "you",
-    "recording": "tools/testing_scenarios/recordings/DD_Assailant_Cpu_Banish_Both_When_Destroyed_CPU.mp4",
-    "script": "tools/testing_scenarios/generated/DD_Assailant_Cpu_Banish_Both_When_Destroyed_CPU.lua"
-  },
-  {
     "card": "Return from the Different Dimension",
     "effect": "return_banished_then_banish",
     "actor": "Player",

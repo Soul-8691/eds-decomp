@@ -850,7 +850,9 @@ def write_testing_md(assigned: dict[str, tuple[str, str, float]], *, use_api: bo
         '- **A setup table:** every card placed, by side and place. Monster Zones `m0`-`m4` and Spell/Trap Zones '
         '`st0`-`st4` are `gDuelPlayers[p]` zones 0-4 and 5-9; the hand is listed from slot 0; the Deck rows are its '
         'top, top card first (`deck[0]` is the next draw), the rest being the format\'s usage deck. Both hands are '
-        'exactly as listed; anything else not listed is empty.',
+        'exactly as listed; anything else not listed is empty, except in a **CPU** scenario: there the CPU\'s board '
+        'and piles from its first turn stay (only its hand and the listed places are replaced), and the CPU Sets at '
+        'most 4 Spell/Traps, so a zone stays free for its Normal Spell.',
         '- **Steps:** each input as code (the script\'s step) and in words. `you.hand[Card]` is that card in your '
         'hand, `you.m0` your Monster Zone 0, `opp.m[Card]` the opponent\'s monster of that name; `when <event>: '
         '<step>` waits for the event first; `check` checks the state mid-way.',

@@ -1134,6 +1134,14 @@ function EDS.tickScenarioSteps(fs, opts)
             steps[#steps + 1] = s
         end
         for _, s in ipairs(steps) do
+            if s == "pass" and opts.actor == "CPU" then
+                -- The CPU's Standby Phase re-applies the cursor's stored selection (DuelCursor_Refresh), which
+                -- scrolls the field to it: left on your hand, the camera would pan down to your field before the
+                -- CPU acts. So the cursor goes to the CPU's Spell/Trap Zone 0 first: its scroll target (20) is the
+                -- one the CPU's turn starts at (its hand), so the refresh does not move the camera at all.
+                fs.ops[#fs.ops + 1] = { kind = "cursor", place = parsePlace("opp.st0"), camera = true,
+                                        text = "cursor to the CPU's side (camera)", step = s }
+            end
             local ok, ops = pcall(buildOps, s, false, fs)
             if ok then
                 for _, op in ipairs(ops) do
@@ -1168,7 +1176,7 @@ function EDS.tickScenarioSteps(fs, opts)
         end
         if not arm and not fs.armOnWhen then
             for _, op in ipairs(fs.ops) do
-                if op.kind == "cursor" then
+                if op.kind == "cursor" and not op.camera then
                     arm = op
                     break
                 end
@@ -1245,17 +1253,42 @@ local PILE_OFFSET = { deck = EDS.OFFSET_DECK, gy = 0x904, extra = EDS.OFFSET_FUS
 local PILE_COUNT = { deck = 3, gy = 4, extra = 5, banished = 6 }
 
 function EDS.applyExactSetup(opts)
+    -- A CPU scenario keeps the CPU's board from its first turn (its zones and piles stay as they are, so no card
+    -- vanishes before it acts); only its hand, and the zones and piles the setup lists, are replaced.
+    local keepCpuBoard = opts.actor == "CPU"
+    local listed = { [0] = {}, [1] = {} }
+    for _, row in ipairs(opts.setupCards or {}) do
+        if row.zone ~= "hand" then
+            local z = row.zone == "monster" and (row.slot or 0) or row.zone == "st" and 5 + (row.slot or 0) or 10
+            listed[row.player == 1 and 1 or 0][z] = true
+        end
+    end
+    local listedPiles = { [0] = {}, [1] = {} }
+    for _, pile in ipairs(opts.setupPiles or {}) do
+        listedPiles[pile.player == 1 and 1 or 0][pile.pile] = true
+    end
     for p = 0, 1 do
         local base = playerBase(p)
+        local keep = keepCpuBoard and p == 1
         for z = 0, 10 do
-            clearZone(p, z)
+            if not keep or listed[p][z] then
+                clearZone(p, z)
+            end
         end
         emu:write8(base + 2, 0)                   -- hand
-        emu:write8(base + 4, 0)                   -- Graveyard
-        emu:write8(base + 5, 0)                   -- Fusion Deck
-        emu:write8(base + 6, 0)                   -- banished
-        emu:write16(base + 0x26, 0)               -- attackedMask
-        emu:write8(base + 8, emu:read8(base + 8) & ~0x30)  -- normalSummonUsed, summonedThisTurn
+        if not keep or listedPiles[p].gy then
+            emu:write8(base + 4, 0)               -- Graveyard
+        end
+        if not keep or listedPiles[p].extra then
+            emu:write8(base + 5, 0)               -- Fusion Deck
+        end
+        if not keep or listedPiles[p].banished then
+            emu:write8(base + 6, 0)               -- banished
+        end
+        if not keep then
+            emu:write16(base + 0x26, 0)           -- attackedMask
+            emu:write8(base + 8, emu:read8(base + 8) & ~0x30)  -- normalSummonUsed, summonedThisTurn
+        end
     end
     for _, row in ipairs(opts.setupCards or {}) do
         local p = row.player == 1 and 1 or 0
@@ -1338,6 +1371,7 @@ function EDS.applyExactSetup(opts)
             emu:write16(G_DUEL_TURN_COUNT, st.turnCount)
         end
     end
+    EDS.requestRedraw()            -- the field shows the cards written here at once (ModTestingTick)
     EDS.log(string.format(
         "Exact setup: P0 hand=%d deck=%d gy=%d, P1 hand=%d deck=%d gy=%d, LP %d/%d, turnCount %d.",
         emu:read8(EDS.PLAYER0 + 2), emu:read8(EDS.PLAYER0 + 3), emu:read8(EDS.PLAYER0 + 4),

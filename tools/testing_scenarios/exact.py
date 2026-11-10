@@ -21,7 +21,9 @@ CPU's turn or response is under test):
              deck          the top of the Deck, top card first (deck[0] is the next draw); the rest of the Deck is
                            the format's usage deck, as the scripts load it
              gy, banished, extra (the Fusion Deck)   the whole pile, in that order
-           Anything not listed is empty (the Deck excepted). LP and the turn are in `start`.
+           Anything not listed is empty (the Deck excepted), but in a CPU scenario the CPU's board and piles from its
+           first turn stay (only its hand and the listed places are replaced), and while it plays the CPU Sets at
+           most 4 Spell/Traps (a zone stays free for its Normal Spell). LP and the turn are in `start`.
   steps    the inputs, in order (STEP_VERBS below); `when <event>: <step>` waits for that event first.
   expect   the state after the last step (EXPECT_FORMS below). `check <expect>` in the steps checks it mid-way.
   note     optional: what the scenario shows, or why an expectation is as it is.
