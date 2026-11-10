@@ -79,7 +79,21 @@ Set-Location $repo
 
 $dir = Join-Path $scenarios $(if ($Poc) { "poc" } else { "generated" })
 $pattern = if ($Filter.Contains("*") -or $Filter.Contains("?")) { $Filter } else { "*$Filter*" }
-$scripts = @(Get-ChildItem -Path $dir -Filter "*.lua" | Where-Object { $_.BaseName -like $pattern } | Sort-Object Name)
+# TESTING.md's order (top to bottom: each scenario's line starts with its script name in backticks); scripts it does
+# not name come last, by name
+$order = @{}
+$testingMd = Join-Path $repo "TESTING.md"
+if (Test-Path $testingMd) {
+    $i = 0
+    foreach ($line in Get-Content $testingMd -Encoding UTF8) {
+        if ($line -match '^`([A-Za-z0-9_]+)`') {
+            if (-not $order.ContainsKey($Matches[1])) { $order[$Matches[1]] = $i++ }
+        }
+    }
+}
+$scripts = @(Get-ChildItem -Path $dir -Filter "*.lua" | Where-Object { $_.BaseName -like $pattern } |
+             Sort-Object @{ Expression = { if ($order.ContainsKey($_.BaseName)) { $order[$_.BaseName] } else { [int]::MaxValue } } },
+                         Name)
 if ($scripts.Count -eq 0) {
     Write-Host "No script matches '$Filter' in $dir"
     exit 1

@@ -8405,15 +8405,12 @@ int EffectMystikWokResolve(struct ChainEntry *link, struct ChainEntry *chainedTo
 }
 #endif /* HAS_CARD_MYSTIK_WOK */
 
-#ifdef HAS_CARD_HYSTERIC_FAIRY
-/* ---- Hysteric Fairy (YGOPRODeck id 21297224) -----------------------------------------------------------------------
- * "Tribute 2 monsters on your side of the field to increase your Life Points by 1000 points."
- * Same tribute pick and resolve shape as ROM keys 1432/1442 (EffectTributeTwoMonsters*); the CPU picks its two
- * weakest tributable monsters. The CPU never activates it (AiWantsMonsterEffect returns 0). */
+/* ---- The CPU's two Tributes for ROM keys 1432 / 1442 (EffectTributeTwoMonstersChainB) -------------------------
+ * The original chainB only asks the human (a cursor pick): these keys had no card in EDS, so the CPU never used
+ * them. A leftover card (Amazoness Archer, 1432) can now be the CPU's: it then hung waiting for a pick. The CPU
+ * Tributes its two weakest tributable monsters (by ATK). Partner entries of a Link Battle skip chainB. */
 
-#define HYSTERIC_FAIRY_LP_GAIN 1000
-
-static void HystericFairyTwoWeakestTributes(int player, int *zoneA, int *zoneB)
+static void AiTwoWeakestTributes(int player, int *zoneA, int *zoneB)
 {
     int zone;
     int a = -1;
@@ -8441,6 +8438,30 @@ static void HystericFairyTwoWeakestTributes(int player, int *zoneA, int *zoneB)
     *zoneB = b;
 }
 
+/* EffectTributeTwoMonstersChainB (effect_targets4.c) for the CPU: picks both targets at once; returns 1 (done). */
+int ModTributeTwoCpuPick(struct ChainEntry *link)
+{
+    int z0, z1;
+
+    AiTwoWeakestTributes(link->player, &z0, &z1);
+    link->numTargets = 0;
+    if (z0 < 0 || z1 < 0)
+        return 1;
+    if (TryAddEffectTarget(link, link->player, z0) == 0)
+        return 1;
+    TryAddEffectTarget(link, link->player, z1);
+    return 1;
+}
+
+#ifdef HAS_CARD_HYSTERIC_FAIRY
+/* ---- Hysteric Fairy (YGOPRODeck id 21297224) -----------------------------------------------------------------------
+ * "Tribute 2 monsters on your side of the field to increase your Life Points by 1000 points."
+ * Same tribute pick and resolve shape as ROM keys 1432/1442 (EffectTributeTwoMonsters*, whose chainB lets the CPU
+ * pick its two weakest tributable monsters, ModTributeTwoCpuPick). The CPU never activates it (AiWantsMonsterEffect
+ * returns 0). */
+
+#define HYSTERIC_FAIRY_LP_GAIN 1000
+
 int EffectHystericFairyPrepare(struct ChainEntry *card, struct ChainEntry *chainLink, u16 fromHand)
 {
     struct DuelZone *z;
@@ -8459,20 +8480,7 @@ int EffectHystericFairyPrepare(struct ChainEntry *card, struct ChainEntry *chain
 
 int EffectHystericFairyChainB(struct ChainEntry *link, struct ChainEntry *prevLink)
 {
-    int z0, z1;
-
     (void)prevLink;
-    if (link->player) {
-        HystericFairyTwoWeakestTributes(link->player, &z0, &z1);
-        link->numTargets = 0;
-        if (z0 < 0 || z1 < 0)
-            return 1;
-        if (TryAddEffectTarget(link, link->player, z0) == 0)
-            return 1;
-        if (TryAddEffectTarget(link, link->player, z1) == 0)
-            return 1;
-        return 1;
-    }
     return EffectTributeTwoMonstersChainB(link);
 }
 

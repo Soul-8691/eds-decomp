@@ -405,10 +405,14 @@ int EffectFaceUpMagicTargetChainB(struct ChainEntry *link)
  *     returns 1; anything else plays SE_ERROR.
  *   Later steps do nothing.
  */
+int ModTributeTwoCpuPick(struct ChainEntry *link);     /* mod: src/added_effects.c */
+
 int EffectTributeTwoMonstersChainB(struct ChainEntry *link)
 {
     u8 *chain = gChainBytes;
     u8 *step = chain + TARGET_STEP;
+    if (link->player)                       /* added: the CPU picks its two Tributes (no cursor) */
+        return ModTributeTwoCpuPick(link);
     switch (*step) {
     case 0:
         TextBoxOpen(TARGET_PROMPT_POS, TARGET_PROMPT_SIZE, TEXTBOX_FLAGS_DEFAULT,

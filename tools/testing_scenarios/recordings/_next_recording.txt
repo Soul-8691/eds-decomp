@@ -1,2 +1,2 @@
-C:\Users\pswan\Downloads\eds-decomp\tools\testing_scenarios\generated\..\recordings\4_Starred_Ladybug_of_Doom_Cpu_Flip_Destroy_Level_4_CPU.mp4
-C:/Users/pswan/Downloads/eds-decomp/tools/testing_scenarios/generated/../recordings/4_Starred_Ladybug_of_Doom_Cpu_Flip_Destroy_Level_4_CPU.mp4
+C:\Users\pswan\Downloads\eds-decomp\tools\testing_scenarios\generated\..\recordings\Card_Destruction_Discard_And_Draw_Player.mp4
+C:/Users/pswan/Downloads/eds-decomp/tools/testing_scenarios/generated/../recordings/Card_Destruction_Discard_And_Draw_Player.mp4
