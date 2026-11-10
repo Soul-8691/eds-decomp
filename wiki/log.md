@@ -2955,3 +2955,13 @@ updated: 2026-09-29
   (nil); now 10 / 14 / 15.
 - Verified in mGBA: 4-Starred Ladybug of Doom's CPU video starts with Ladybug still face-down.
 - Pages: tools/testing_scenarios/README.md.
+
+## [2026-11-10] progress | Test videos: the effect's end, Spells from the CPU's hand, Amazoness Archer's CPU Tributes
+- tools/testing_scenarios/lib_steps.lua: every scenario's last settle waits for the card's effect (a player Spell's
+  video ended in the idle gap before its activation); a CPU Spell/Trap's video starts 12 frames before it leaves
+  the hand. Verified in mGBA with Card Destruction (Player and CPU).
+- src/effect_targets4.c EffectTributeTwoMonstersChainB (ROM keys 1432 / 1442) hands the CPU to
+  ModTributeTwoCpuPick (src/added_effects.c: its two weakest tributable monsters); the original asked only the
+  human, so the CPU's Amazoness Archer (a leftover card) hung. Hysteric Fairy's chainB now uses it too.
+- tools/testing_scenarios/run_tests.ps1 runs the scripts in TESTING.md order.
+- Pages: tools/testing_scenarios/README.md.

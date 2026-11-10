@@ -1,7 +1,8 @@
 ﻿
-Script                                                 Result Seconds Detail                                
-------                                                 ------ ------- ------                                
-4_Starred_Ladybug_of_Doom_Cpu_Flip_Destroy_Level_4_CPU PASS        29 duel_main=false reason= play_done=true
+Script                                    Result Seconds Detail                                
+------                                    ------ ------- ------                                
+Card_Destruction_Discard_And_Draw_Player  PASS        34 duel_main=true reason= play_done=true 
+Card_Destruction_Cpu_Discard_And_Draw_CPU PASS        39 duel_main=false reason= play_done=true
 
 
 

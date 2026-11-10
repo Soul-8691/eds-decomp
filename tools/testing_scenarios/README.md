@@ -32,8 +32,15 @@ Deck), `start`, `steps`, `expect` and `freezeOpponent`. The key presses that pla
   summons, Sets and attacks as usual.
 - **Where the video starts.** Frames are saved from the CPU's turn on; the MP4 starts (ffmpeg `-start_number`) in the
   phase the card's effect starts in, at the first frame the CPU starts using the card: its cursor on the card, a
-  summon of it (a Flip Summon moves no cursor), or its attack declaration. With none of these, it starts when that
-  phase begins. It ends right after the effect (`EDS.effectUnderTestDone`).
+  summon of it (a Flip Summon moves no cursor), its attack declaration, or 12 frames before it leaves the CPU's hand
+  (a Spell/Trap played from the hand: the cursor first reaches it on the field). With none of these, it starts when
+  that phase begins. It ends right after the effect (`EDS.effectUnderTestDone`).
+
+### The end of every scenario
+
+The last step waits for the card's effect to start (a chain link of the card, or a battle it fights in) and for the
+duel to go idle (10 frames). A Spell's activation starts a few frames after the menu's A, after an idle gap, which
+10 idle frames alone took as the end. A card that never starts a chain or a battle ends after 600 frames.
 
 ## Recording file names
 

@@ -893,7 +893,16 @@ local function opWhen(op, fs)
 end
 
 -- Wait until nothing is running (no box, chain, list or menu) for a few frames.
-local function opSettle(op)
+-- The scenario's last settle waits for the card's effect too (fs.effectSeen, set by EDS.effectUnderTestDone): a
+-- Spell's activation starts a few frames after the menu's A, after a short idle gap that 10 idle frames alone would
+-- take for the end. A card that never starts a chain or a battle (a passive one) ends after END_EFFECT_WAIT frames.
+local END_EFFECT_WAIT = 600
+
+local function opSettle(op, fs)
+    if op.text == "end" and fs and fs.cardUnderTest and not fs.effectSeen and op.frames_in < END_EFFECT_WAIT then
+        op.quiet = 0
+        return false
+    end
     if textBox().active or EDS.chainOrEffectBusy() or listView().active or EDS.cardMenuOpen() or summonActive()
         or duelCommandsRunning() then
         op.quiet = 0
@@ -1160,6 +1169,8 @@ end
 -- -start_number). That is the first frame, in the phase the effect starts in, at which the CPU starts using the
 -- card under test: the cursor on it (the CPU pointing at it to play it), a summon of it (a Flip Summon moves no
 -- cursor), or its attack declaration; or the start of that phase when none of these happened.
+local VIDEO_HAND_LEAD = 12
+
 local function trackCpuVideoStart(fs)
     if not fs.cpuOnlyCapture or not fs.captureArmed or fs.effectSeen or not fs.cardUnderTest then
         return
@@ -1171,9 +1182,18 @@ local function trackCpuVideoStart(fs)
     local phase = duelPhase()
     if phase ~= fs.videoPhase then
         fs.videoPhase = phase
+        fs.videoPhaseStart = idx
         fs.captureStartIndex = idx
         fs.videoOnCard = false
     end
+    -- A Spell/Trap the CPU plays from its hand: its cursor first reaches it on the field, so the video starts
+    -- VIDEO_HAND_LEAD frames before it left the hand (no earlier than the phase start), with it still in the hand.
+    local inHand = EDS.findPlayerHandSlot(fs.cardUnderTest, 1) ~= nil
+    if fs.videoCardInHand and not inHand and not fs.videoOnCard then
+        fs.captureStartIndex = math.max(fs.videoPhaseStart or 0, idx - VIDEO_HAND_LEAD)
+        fs.videoOnCard = true
+    end
+    fs.videoCardInHand = inHand
     -- the first time in this phase (the CPU pointing at it to play it: the flip, the activation, the attack); the
     -- cursor comes back onto it later for the effect's activation, after the flip
     if fs.videoOnCard then
@@ -1220,7 +1240,7 @@ function EDS.tickScenarioSteps(fs, opts)
         end
         -- the end: the duel idle (no chain, box, summon or queued animation) for 10 frames; the margin covers the
         -- idle gaps between phases after a final `pass` (End Phase effects come after them)
-        fs.ops[#fs.ops + 1] = { kind = "settle", text = "end", frames = 10 }
+        fs.ops[#fs.ops + 1] = { kind = "settle", text = "end", frames = 10, limit = END_EFFECT_WAIT + 900 }
         fs.opIndex = 1
         -- The PNG capture starts once the cursor is on the first card to activate: that cursor op is marked
         -- `arm`. With the activation in a `when` step, its cursor op is marked when inserted; with none, the
@@ -1271,7 +1291,8 @@ function EDS.tickScenarioSteps(fs, opts)
     end
     local wasSeen = fs.effectSeen
     trackCpuVideoStart(fs)
-    local done = fs.cpuScenario and EDS.effectUnderTestDone(fs)
+    -- (every scenario tracks the card's effect, for the last settle; a CPU scenario also ends on it)
+    local done = EDS.effectUnderTestDone(fs) and fs.cpuScenario
     if fs.effectSeen and not wasSeen and fs.captureStartIndex then
         EDS.log(string.format("steps: the effect started (%s); the video starts at frame %d (phase %d%s)",
             fs.effectSeen, fs.captureStartIndex, fs.videoPhase or -1,
