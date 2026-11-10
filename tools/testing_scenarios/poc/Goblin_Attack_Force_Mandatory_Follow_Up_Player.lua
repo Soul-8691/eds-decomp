@@ -30,7 +30,7 @@ local opts = {
     start = { turn = "you", turnCount = 2, lp = { 8000, 8000 } },
     setupCards = {
         { player = 0, zone = "monster", slot = 0, name = "Goblin Attack Force" },
-        { player = 1, zone = "monster", slot = 0, name = "Celtic Guardian" },
+        { player = 1, zone = "monster", slot = 0, name = "Mechanicalchaser" },
     },
     setupPiles = {
     },
@@ -45,8 +45,8 @@ local opts = {
         "check menu you.m0 lacks Change Position",
     },
     expect = {
-        "opp.lp = 7100",
-        "opp.gy = Celtic Guardian",
+        "opp.lp = 7550",
+        "opp.gy = Mechanicalchaser",
         "you.m0 = Goblin Attack Force def",
     },
     freezeOpponent = true,

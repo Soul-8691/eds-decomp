@@ -29,8 +29,8 @@ EDS.run({
         { player = 0, zone = "hand", slot = 0, name = "Lightning Vortex" },
         { player = 0, zone = "hand", slot = 1, name = "Fissure" },
         { player = 1, zone = "monster", slot = 0, name = "Summoned Skull" },
-        { player = 1, zone = "monster", slot = 1, name = "Battle Ox" },
-        { player = 1, zone = "monster", slot = 2, name = "Man-Eater Bug", set = true },
+        { player = 1, zone = "monster", slot = 1, name = "Gemini Elf" },
+        { player = 1, zone = "monster", slot = 2, name = "Mechanicalchaser", set = true },
     },
     setupPiles = {
     },
@@ -41,7 +41,7 @@ EDS.run({
     expect = {
         "opp.m0 = empty",
         "opp.m1 = empty",
-        "opp.m2 = Man-Eater Bug set",
+        "opp.m2 = Mechanicalchaser set",
         "you.gy = Fissure, Lightning Vortex",
     },
     freezeOpponent = true,

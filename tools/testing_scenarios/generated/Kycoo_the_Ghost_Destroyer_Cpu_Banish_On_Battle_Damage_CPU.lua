@@ -29,7 +29,7 @@ EDS.run({
         { player = 1, zone = "monster", slot = 0, name = "Kycoo the Ghost Destroyer" },
     },
     setupPiles = {
-        { player = 0, pile = "gy", names = { "Summoned Skull", "Battle Ox" } },
+        { player = 0, pile = "gy", names = { "Summoned Skull", "Gemini Elf" } },
     },
     steps = {
         "cpu_turn",

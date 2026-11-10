@@ -29,7 +29,7 @@ EDS.run({
         { player = 1, zone = "st", slot = 0, name = "Jar of Greed", set = true },
     },
     setupPiles = {
-        { player = 1, pile = "deck", names = { "Battle Ox" } },
+        { player = 1, pile = "deck", names = { "Gemini Elf" } },
     },
     steps = {
         "cpu_turn",

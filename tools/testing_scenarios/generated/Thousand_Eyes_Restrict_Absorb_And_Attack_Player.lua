@@ -28,7 +28,7 @@ EDS.run({
     setupCards = {
         { player = 0, zone = "monster", slot = 0, name = "Thousand-Eyes Restrict" },
         { player = 1, zone = "monster", slot = 0, name = "Summoned Skull" },
-        { player = 1, zone = "monster", slot = 1, name = "Battle Ox" },
+        { player = 1, zone = "monster", slot = 1, name = "Mechanicalchaser" },
     },
     setupPiles = {
     },
@@ -42,8 +42,8 @@ EDS.run({
     },
     expect = {
         "opp.monsters count 0",
-        "opp.gy = Battle Ox",
-        "opp.lp = 7200",
+        "opp.gy = Mechanicalchaser",
+        "opp.lp = 7350",
         "menu you.m0 lacks Activate",
     },
     freezeOpponent = true,

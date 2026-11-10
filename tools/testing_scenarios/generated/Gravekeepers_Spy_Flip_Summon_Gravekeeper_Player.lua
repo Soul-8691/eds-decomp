@@ -29,7 +29,7 @@ EDS.run({
         { player = 0, zone = "monster", slot = 0, name = "Gravekeeper's Spy", set = true },
     },
     setupPiles = {
-        { player = 0, pile = "deck", names = { "Gravekeeper's Spy", "Battle Ox" } },
+        { player = 0, pile = "deck", names = { "Gravekeeper's Spy", "Gemini Elf" } },
     },
     steps = {
         "flip_summon you.m0",

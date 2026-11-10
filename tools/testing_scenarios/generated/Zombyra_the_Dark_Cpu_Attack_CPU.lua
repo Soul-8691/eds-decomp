@@ -27,7 +27,7 @@ EDS.run({
     start = { turn = "opp", turnCount = 3, lp = { 8000, 8000 } },
     setupCards = {
         { player = 1, zone = "monster", slot = 0, name = "Zombyra the Dark" },
-        { player = 0, zone = "monster", slot = 0, name = "Celtic Guardian" },
+        { player = 0, zone = "monster", slot = 0, name = "Gemini Elf" },
     },
     setupPiles = {
     },
@@ -36,7 +36,7 @@ EDS.run({
     },
     expect = {
         "you.m0 = empty",
-        "you.lp = 7300",
+        "you.lp = 7800",
         "opp.m0.atk = 1900",
     },
     freezeOpponent = false,

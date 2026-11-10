@@ -27,7 +27,7 @@ EDS.run({
     start = { turn = "you", turnCount = 2, lp = { 8000, 8000 } },
     setupCards = {
         { player = 0, zone = "hand", slot = 0, name = "Scapegoat" },
-        { player = 0, zone = "hand", slot = 1, name = "Battle Ox" },
+        { player = 0, zone = "hand", slot = 1, name = "Gemini Elf" },
     },
     setupPiles = {
     },
@@ -36,8 +36,8 @@ EDS.run({
     },
     expect = {
         "you.monsters = Sheep Token, Sheep Token, Sheep Token, Sheep Token",
-        "menu you.hand[Battle Ox] lacks Summon",
-        "menu you.hand[Battle Ox] has Set",
+        "menu you.hand[Gemini Elf] lacks Summon",
+        "menu you.hand[Gemini Elf] has Set",
     },
     freezeOpponent = true,
 })

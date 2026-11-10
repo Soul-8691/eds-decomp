@@ -23,20 +23,20 @@ EDS.run({
     effect = "destroy_weak_summon",
     actor = "Player",
     format = "Yata",
-    scenarioText = "summon you.hand[Mystic Tomato] -> m1 atk",
+    scenarioText = "summon you.hand[Giant Soldier of Stone] -> m1 atk",
     start = { turn = "you", turnCount = 2, lp = { 8000, 8000 } },
     setupCards = {
         { player = 0, zone = "monster", slot = 0, name = "King Tiger Wanghu" },
-        { player = 0, zone = "hand", slot = 0, name = "Mystic Tomato" },
+        { player = 0, zone = "hand", slot = 0, name = "Giant Soldier of Stone" },
     },
     setupPiles = {
     },
     steps = {
-        "summon you.hand[Mystic Tomato] -> m1 atk",
+        "summon you.hand[Giant Soldier of Stone] -> m1 atk",
     },
     expect = {
         "you.m1 = empty",
-        "you.gy = Mystic Tomato",
+        "you.gy = Giant Soldier of Stone",
         "you.m0 = King Tiger Wanghu atk",
     },
     freezeOpponent = true,

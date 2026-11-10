@@ -27,7 +27,7 @@ EDS.run({
     start = { turn = "opp", turnCount = 3, lp = { 8000, 8000 } },
     setupCards = {
         { player = 0, zone = "st", slot = 0, name = "Sakuretsu Armor", set = true },
-        { player = 0, zone = "monster", slot = 0, name = "Celtic Guardian" },
+        { player = 0, zone = "monster", slot = 0, name = "Gemini Elf" },
         { player = 1, zone = "monster", slot = 0, name = "Summoned Skull" },
     },
     setupPiles = {
@@ -38,7 +38,7 @@ EDS.run({
     expect = {
         "opp.m0 = empty",
         "opp.gy = Summoned Skull",
-        "you.m0 = Celtic Guardian atk",
+        "you.m0 = Gemini Elf atk",
         "you.lp = 8000",
     },
     freezeOpponent = false,

@@ -35,18 +35,18 @@ local opts = {
         { player = 0, zone = "hand", slot = 1, name = "Dark Hole" },
         { player = 0, zone = "hand", slot = 2, name = "Fissure" },
         { player = 0, zone = "hand", slot = 3, name = "Trap Hole" },
-        { player = 0, zone = "hand", slot = 4, name = "Celtic Guardian" },
+        { player = 0, zone = "hand", slot = 4, name = "Neo the Magic Swordsman" },
     },
     setupPiles = {
-        { player = 0, pile = "deck", names = { "Battle Ox", "Celtic Guardian", "Man-Eater Bug", "Fissure", "Swords of Revealing Light" } },
+        { player = 0, pile = "deck", names = { "Battle Ox", "Neo the Magic Swordsman", "Giant Soldier of Stone", "Fissure", "Swords of Revealing Light" } },
     },
     steps = {
         "cpu_turn",
     },
     expect = {
         "opp.gy has Card Destruction",
-        "you.gy = Summoned Skull, Dark Hole, Fissure, Trap Hole, Celtic Guardian",
-        "you.hand = Battle Ox, Celtic Guardian, Man-Eater Bug, Fissure, Swords of Revealing Light",
+        "you.gy = Summoned Skull, Dark Hole, Fissure, Trap Hole, Neo the Magic Swordsman",
+        "you.hand = Battle Ox, Neo the Magic Swordsman, Giant Soldier of Stone, Fissure, Swords of Revealing Light",
     },
     freezeOpponent = false,
 }

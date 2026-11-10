@@ -27,7 +27,7 @@ EDS.run({
     start = { turn = "you", turnCount = 2, lp = { 8000, 8000 } },
     setupCards = {
         { player = 0, zone = "hand", slot = 0, name = "Chaos Sorcerer" },
-        { player = 1, zone = "monster", slot = 0, name = "Jinzo" },
+        { player = 1, zone = "monster", slot = 0, name = "Mechanicalchaser" },
     },
     setupPiles = {
         { player = 0, pile = "gy", names = { "Summoned Skull", "Blue-Eyes White Dragon" } },
@@ -40,7 +40,7 @@ EDS.run({
         "check cannot attack you.m0 -> direct",
     },
     expect = {
-        "opp.banished = Jinzo",
+        "opp.banished = Mechanicalchaser",
         "you.banished = Blue-Eyes White Dragon, Summoned Skull",
         "opp.lp = 8000",
     },

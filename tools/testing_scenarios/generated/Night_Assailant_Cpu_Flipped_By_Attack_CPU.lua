@@ -27,7 +27,7 @@ EDS.run({
     start = { turn = "you", turnCount = 2, lp = { 8000, 8000 } },
     setupCards = {
         { player = 0, zone = "monster", slot = 0, name = "Summoned Skull" },
-        { player = 0, zone = "monster", slot = 1, name = "Battle Ox" },
+        { player = 0, zone = "monster", slot = 1, name = "Gemini Elf" },
         { player = 1, zone = "monster", slot = 0, name = "Night Assailant", set = true },
     },
     setupPiles = {

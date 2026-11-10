@@ -27,7 +27,7 @@ EDS.run({
     start = { turn = "opp", turnCount = 3, lp = { 8000, 8000 } },
     setupCards = {
         { player = 1, zone = "st", slot = 0, name = "Enemy Controller", set = true },
-        { player = 1, zone = "monster", slot = 0, name = "Battle Ox" },
+        { player = 1, zone = "monster", slot = 0, name = "Gemini Elf" },
         { player = 0, zone = "monster", slot = 0, name = "Summoned Skull" },
     },
     setupPiles = {
@@ -37,7 +37,7 @@ EDS.run({
     },
     expect = {
         "opp.gy has Enemy Controller",
-        "opp.gy has Battle Ox",
+        "opp.gy has Gemini Elf",
         "you.monsters = Summoned Skull",
     },
     freezeOpponent = false,

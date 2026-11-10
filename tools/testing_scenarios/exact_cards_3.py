@@ -61,7 +61,7 @@ SCENARIOS = {
             setup='''
                 opp.m0: Magical Scientist atk
                 opp.extra: Flame Swordsman
-                you.m0: Celtic Guardian atk
+                you.m0: Gemini Elf atk
             ''',
             steps='cpu_turn',
             expect='''
@@ -74,7 +74,7 @@ SCENARIOS = {
                setup='''
                    you.m0: Tribe-Infecting Virus atk
                    you.hand: Fissure
-                   opp.m0: Battle Ox atk
+                   opp.m0: Gemini Elf atk
                    opp.m1: La Jinn the Mystical Genie of the Lamp atk
                    opp.m2: Summoned Skull atk
                ''',
@@ -84,7 +84,7 @@ SCENARIOS = {
                    declare Fiend
                ''',
                expect='''
-                   opp.m0 = Battle Ox atk
+                   opp.m0 = Gemini Elf atk
                    opp.m1 = empty
                    opp.m2 = empty
                    you.gy = Fissure
@@ -96,7 +96,7 @@ SCENARIOS = {
                 opp.hand: Fissure
                 you.m0: La Jinn the Mystical Genie of the Lamp atk
                 you.m1: Summoned Skull atk
-                you.m2: Battle Ox atk
+                you.m2: Gemini Elf atk
             ''',
             steps='cpu_turn',
             expect='''
@@ -169,7 +169,7 @@ SCENARIOS = {
         player('excavate_special_summon',
                setup='''
                    you.hand: Reasoning
-                   you.deck: Fissure, Trap Hole, Summoned Skull, Battle Ox
+                   you.deck: Fissure, Trap Hole, Summoned Skull, Gemini Elf
                ''',
                steps='''
                    activate you.hand[Reasoning]
@@ -184,7 +184,7 @@ SCENARIOS = {
         cpu('cpu_human_declares_match', start=OPP_TURN,
             setup='''
                 opp.hand: Reasoning
-                opp.deck: Fissure, Battle Ox
+                opp.deck: Fissure, Gemini Elf
             ''',
             steps='''
                 when prompt declare_level: declare level 4
@@ -192,8 +192,8 @@ SCENARIOS = {
             expect='''
                 opp.gy has Reasoning
                 opp.gy has Fissure
-                opp.gy has Battle Ox
-                opp.monsters lacks Battle Ox
+                opp.gy has Gemini Elf
+                opp.monsters lacks Gemini Elf
             '''),
     ],
     'Jowgen the Spiritualist': [
@@ -202,7 +202,7 @@ SCENARIOS = {
                    you.m0: Jowgen the Spiritualist atk
                    you.hand: Fissure, Gilasaurus
                    opp.m0: Summoned Skull atk ss
-                   opp.m1: Battle Ox atk
+                   opp.m1: Gemini Elf atk
                ''',
                steps='''
                    check menu you.hand[Gilasaurus] lacks Special Summon
@@ -210,7 +210,7 @@ SCENARIOS = {
                ''',
                expect='''
                    opp.m0 = empty
-                   opp.m1 = Battle Ox atk
+                   opp.m1 = Gemini Elf atk
                    you.hand count 1
                    you.gy count 1
                ''',
@@ -286,14 +286,14 @@ SCENARIOS = {
         player('destroy_attacker', start=OPP_TURN,
                setup='''
                    you.st0: Sakuretsu Armor set
-                   you.m0: Celtic Guardian atk
+                   you.m0: Gemini Elf atk
                    opp.m0: Summoned Skull atk
                ''',
                steps='when attack opp.m0 -> you.m0: activate you.st0',
                expect='''
                    opp.m0 = empty
                    opp.gy = Summoned Skull
-                   you.m0 = Celtic Guardian atk
+                   you.m0 = Gemini Elf atk
                    you.lp = 8000
                '''),
         cpu('cpu_destroy_attacker',
@@ -341,8 +341,8 @@ SCENARIOS = {
         player('tribute_two_burn',
                setup='''
                    you.m0: Amazoness Archer atk
-                   you.m1: Battle Ox atk
-                   you.m2: Celtic Guardian atk
+                   you.m1: Gemini Elf atk
+                   you.m2: Mechanicalchaser atk
                ''',
                steps='''
                    activate you.m0
@@ -351,14 +351,14 @@ SCENARIOS = {
                ''',
                expect='''
                    opp.lp = 6800
-                   you.gy = Battle Ox, Celtic Guardian
+                   you.gy = Gemini Elf, Mechanicalchaser
                    you.m0 = Amazoness Archer atk
                '''),
         cpu('cpu_tribute_two_burn', start=OPP_TURN,
             setup='''
                 opp.m0: Amazoness Archer atk
-                opp.m1: Battle Ox atk
-                opp.m2: Celtic Guardian atk
+                opp.m1: Gemini Elf atk
+                opp.m2: Mechanicalchaser atk
             ''',
             steps='cpu_turn',
             expect='you.lp <= 6800'),
@@ -367,7 +367,7 @@ SCENARIOS = {
         player('declare_spell_on_damage',
                setup='''
                    you.m0: Vampire Lord atk
-                   opp.deck: Fissure, Battle Ox, Trap Hole
+                   opp.deck: Fissure, Gemini Elf, Trap Hole
                ''',
                steps='''
                    battle
@@ -381,7 +381,7 @@ SCENARIOS = {
                note="The CPU sends its first Spell/Trap of the declared type (Fissure is on top)."),
         player('revive_after_destroyed_by_effect',
                setup='''
-                   you.m0: Battle Ox atk
+                   you.m0: Gemini Elf atk
                    you.hand: Vampire Lord
                    opp.st0: Trap Hole set
                ''',
@@ -413,10 +413,10 @@ SCENARIOS = {
     'Chaos Emperor Dragon - Envoy of the End': [
         player('summon_and_wipe',
                setup='''
-                   you.hand: Chaos Emperor Dragon - Envoy of the End, Battle Ox
+                   you.hand: Chaos Emperor Dragon - Envoy of the End, Gemini Elf
                    you.gy: Summoned Skull, Blue-Eyes White Dragon
                    you.st0: Trap Hole set
-                   opp.m0: Battle Ox atk
+                   opp.m0: Gemini Elf atk
                    opp.st0: Trap Hole set
                    opp.hand: Fissure, Dark Hole
                ''',
@@ -431,8 +431,8 @@ SCENARIOS = {
                    opp.monsters count 0
                    you.hand count 0
                    opp.hand count 0
-                   you.gy = Chaos Emperor Dragon - Envoy of the End, Trap Hole, Battle Ox
-                   opp.gy = Battle Ox, Trap Hole, Fissure, Dark Hole
+                   you.gy = Chaos Emperor Dragon - Envoy of the End, Trap Hole, Gemini Elf
+                   opp.gy = Gemini Elf, Trap Hole, Fissure, Dark Hole
                    you.banished = Blue-Eyes White Dragon, Summoned Skull
                ''',
                note='7 cards are sent (the Dragon, 3 more on the field, 3 in the hands): 2100 damage.'),
@@ -441,7 +441,7 @@ SCENARIOS = {
                 opp.hand: Chaos Emperor Dragon - Envoy of the End
                 opp.gy: Summoned Skull, Blue-Eyes White Dragon
                 you.m0: Summoned Skull atk
-                you.m1: Battle Ox atk
+                you.m1: Gemini Elf atk
                 you.st0: Trap Hole set
                 you.hand: Fissure, Dark Hole
             ''',
@@ -458,8 +458,8 @@ SCENARIOS = {
         player('banish_and_recover_spell',
                setup='''
                    you.hand: Dark Magician of Chaos
-                   you.m0: Battle Ox atk
-                   you.m1: Celtic Guardian atk
+                   you.m0: Gemini Elf atk
+                   you.m1: Mechanicalchaser atk
                    you.gy: Monster Reborn
                    opp.m0: Summoned Skull atk
                ''',
@@ -492,7 +492,7 @@ SCENARIOS = {
                setup='''
                    you.hand: Chaos Sorcerer
                    you.gy: Summoned Skull, Blue-Eyes White Dragon
-                   opp.m0: Jinzo atk
+                   opp.m0: Mechanicalchaser atk
                ''',
                steps='''
                    special_summon you.hand[Chaos Sorcerer] -> m0 atk banish you.gy[Blue-Eyes White Dragon], you.gy[Summoned Skull]
@@ -502,7 +502,7 @@ SCENARIOS = {
                    check cannot attack you.m0 -> direct
                ''',
                expect='''
-                   opp.banished = Jinzo
+                   opp.banished = Mechanicalchaser
                    you.banished = Blue-Eyes White Dragon, Summoned Skull
                    opp.lp = 8000
                '''),
@@ -572,31 +572,31 @@ SCENARIOS = {
         player('destroyed_by_non_light',
                setup='''
                    you.m0: Thunder Nyan Nyan atk
-                   you.hand: Battle Ox
+                   you.hand: Gemini Elf
                ''',
-               steps='summon you.hand[Battle Ox] -> m1 atk',
+               steps='summon you.hand[Gemini Elf] -> m1 atk',
                expect='''
                    you.m0 = empty
                    you.gy = Thunder Nyan Nyan
-                   you.m1 = Battle Ox atk
+                   you.m1 = Gemini Elf atk
                '''),
         player('face_down_does_not_count',
                setup='''
                    you.m0: Thunder Nyan Nyan atk
-                   you.hand: Battle Ox
+                   you.hand: Gemini Elf
                ''',
-               steps='set you.hand[Battle Ox] -> m1',
+               steps='set you.hand[Gemini Elf] -> m1',
                expect='''
                    you.m0 = Thunder Nyan Nyan atk
-                   you.m1 = Battle Ox set
+                   you.m1 = Gemini Elf set
                '''),
         cpu('cpu_avoid_non_light', start=OPP_TURN,
             setup='''
                 opp.m0: Thunder Nyan Nyan atk
-                opp.hand: Battle Ox
+                opp.hand: Gemini Elf
             ''',
             steps='cpu_turn',
             expect='opp.monsters has Thunder Nyan Nyan',
-            note='The CPU does not summon Battle Ox face up beside it (it may Set it).'),
+            note='The CPU does not summon Gemini Elf face up beside it (it may Set it).'),
     ],
 }

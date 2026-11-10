@@ -27,7 +27,7 @@ EDS.run({
     start = { turn = "you", turnCount = 2, lp = { 8000, 8000 } },
     setupCards = {
         { player = 0, zone = "monster", slot = 0, name = "Dark Ruler Ha Des" },
-        { player = 0, zone = "monster", slot = 1, name = "La Jinn the Mystical Genie of the Lamp" },
+        { player = 0, zone = "monster", slot = 1, name = "Gemini Elf" },
         { player = 1, zone = "monster", slot = 0, name = "Sangan" },
         { player = 1, zone = "monster", slot = 1, name = "Man-Eater Bug", set = true },
     },
@@ -41,8 +41,8 @@ EDS.run({
     expect = {
         "opp.monsters count 0",
         "you.m0 = Dark Ruler Ha Des atk",
-        "you.m1 = La Jinn the Mystical Genie of the Lamp atk",
-        "opp.lp = 7200",
+        "you.m1 = Gemini Elf atk",
+        "opp.lp = 7100",
         "opp.hand count 0",
     },
     freezeOpponent = true,

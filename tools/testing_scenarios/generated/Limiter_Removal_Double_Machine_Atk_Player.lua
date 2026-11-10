@@ -23,12 +23,12 @@ EDS.run({
     effect = "double_machine_atk",
     actor = "Player",
     format = "Imperial",
-    scenarioText = "activate you.hand[Limiter Removal]; check you.m0.atk = 4800; check you.m1.atk = 1700; battle; attack you.m0 -> opp.m0; check opp.lp = 5700; pass",
+    scenarioText = "activate you.hand[Limiter Removal]; check you.m0.atk = 4800; check you.m1.atk = 1800; battle; attack you.m0 -> opp.m0; check opp.lp = 5700; pass",
     start = { turn = "you", turnCount = 2, lp = { 8000, 8000 } },
     setupCards = {
         { player = 0, zone = "hand", slot = 0, name = "Limiter Removal" },
         { player = 0, zone = "monster", slot = 0, name = "Jinzo" },
-        { player = 0, zone = "monster", slot = 1, name = "Battle Ox" },
+        { player = 0, zone = "monster", slot = 1, name = "La Jinn the Mystical Genie of the Lamp" },
         { player = 1, zone = "monster", slot = 0, name = "Summoned Skull" },
     },
     setupPiles = {
@@ -36,7 +36,7 @@ EDS.run({
     steps = {
         "activate you.hand[Limiter Removal]",
         "check you.m0.atk = 4800",
-        "check you.m1.atk = 1700",
+        "check you.m1.atk = 1800",
         "battle",
         "attack you.m0 -> opp.m0",
         "check opp.lp = 5700",
@@ -45,7 +45,7 @@ EDS.run({
     expect = {
         "you.m0 = empty",
         "you.gy = Limiter Removal, Jinzo",
-        "you.m1 = Battle Ox atk",
+        "you.m1 = La Jinn the Mystical Genie of the Lamp atk",
         "opp.m0 = empty",
     },
     freezeOpponent = true,

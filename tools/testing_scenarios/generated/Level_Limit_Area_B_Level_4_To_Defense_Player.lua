@@ -27,9 +27,9 @@ EDS.run({
     start = { turn = "you", turnCount = 2, lp = { 8000, 8000 } },
     setupCards = {
         { player = 0, zone = "hand", slot = 0, name = "Level Limit - Area B" },
-        { player = 0, zone = "monster", slot = 0, name = "Battle Ox" },
+        { player = 0, zone = "monster", slot = 0, name = "Gemini Elf" },
         { player = 1, zone = "monster", slot = 0, name = "Summoned Skull" },
-        { player = 1, zone = "monster", slot = 1, name = "Man-Eater Bug" },
+        { player = 1, zone = "monster", slot = 1, name = "Giant Soldier of Stone" },
     },
     setupPiles = {
     },
@@ -37,9 +37,9 @@ EDS.run({
         "activate you.hand[Level Limit - Area B]",
     },
     expect = {
-        "you.m0 = Battle Ox def",
+        "you.m0 = Gemini Elf def",
         "opp.m0 = Summoned Skull def",
-        "opp.m1 = Man-Eater Bug atk",
+        "opp.m1 = Giant Soldier of Stone atk",
         "menu you.m0 lacks Change Position",
     },
     freezeOpponent = true,

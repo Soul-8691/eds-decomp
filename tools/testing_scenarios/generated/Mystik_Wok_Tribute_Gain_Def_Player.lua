@@ -27,7 +27,7 @@ EDS.run({
     start = { turn = "you", turnCount = 2, lp = { 8000, 8000 } },
     setupCards = {
         { player = 0, zone = "hand", slot = 0, name = "Mystik Wok" },
-        { player = 0, zone = "monster", slot = 0, name = "Giant Rat" },
+        { player = 0, zone = "monster", slot = 0, name = "Gemini Elf" },
     },
     setupPiles = {
     },
@@ -37,8 +37,8 @@ EDS.run({
         "choose \"DEF\"",
     },
     expect = {
-        "you.lp = 9450",
-        "you.gy = Giant Rat, Mystik Wok",
+        "you.lp = 8900",
+        "you.gy = Gemini Elf, Mystik Wok",
     },
     freezeOpponent = true,
 })

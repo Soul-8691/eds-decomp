@@ -27,7 +27,7 @@ EDS.run({
     start = { turn = "opp", turnCount = 3, lp = { 8000, 8000 } },
     setupCards = {
         { player = 1, zone = "hand", slot = 0, name = "Book of Moon" },
-        { player = 1, zone = "monster", slot = 0, name = "La Jinn the Mystical Genie of the Lamp" },
+        { player = 1, zone = "monster", slot = 0, name = "Gemini Elf" },
         { player = 0, zone = "monster", slot = 0, name = "Summoned Skull" },
     },
     setupPiles = {

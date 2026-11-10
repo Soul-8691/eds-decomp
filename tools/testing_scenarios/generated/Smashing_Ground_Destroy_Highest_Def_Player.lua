@@ -27,8 +27,8 @@ EDS.run({
     start = { turn = "you", turnCount = 2, lp = { 8000, 8000 } },
     setupCards = {
         { player = 0, zone = "hand", slot = 0, name = "Smashing Ground" },
-        { player = 1, zone = "monster", slot = 0, name = "Celtic Guardian" },
-        { player = 1, zone = "monster", slot = 1, name = "Giant Rat" },
+        { player = 1, zone = "monster", slot = 0, name = "Gemini Elf" },
+        { player = 1, zone = "monster", slot = 1, name = "Giant Soldier of Stone" },
     },
     setupPiles = {
     },
@@ -36,9 +36,9 @@ EDS.run({
         "activate you.hand[Smashing Ground]",
     },
     expect = {
-        "opp.m0 = Celtic Guardian atk",
+        "opp.m0 = Gemini Elf atk",
         "opp.m1 = empty",
-        "opp.gy = Giant Rat",
+        "opp.gy = Giant Soldier of Stone",
     },
     freezeOpponent = true,
 })

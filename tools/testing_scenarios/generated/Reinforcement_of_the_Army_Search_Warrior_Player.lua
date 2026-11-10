@@ -29,7 +29,7 @@ EDS.run({
         { player = 0, zone = "hand", slot = 0, name = "Reinforcement of the Army" },
     },
     setupPiles = {
-        { player = 0, pile = "deck", names = { "Battle Ox", "Celtic Guardian", "Summoned Skull" } },
+        { player = 0, pile = "deck", names = { "Gemini Elf", "Celtic Guardian", "Summoned Skull" } },
     },
     steps = {
         "activate you.hand[Reinforcement of the Army]",

@@ -27,10 +27,10 @@ EDS.run({
     start = { turn = "opp", turnCount = 3, lp = { 8000, 8000 } },
     setupCards = {
         { player = 1, zone = "st", slot = 0, name = "Skull Lair", set = true },
-        { player = 0, zone = "monster", slot = 0, name = "Battle Ox" },
+        { player = 0, zone = "monster", slot = 0, name = "Gemini Elf" },
     },
     setupPiles = {
-        { player = 1, pile = "gy", names = { "Battle Ox", "La Jinn the Mystical Genie of the Lamp", "Sangan", "Kuriboh" } },
+        { player = 1, pile = "gy", names = { "Gemini Elf", "Mechanicalchaser", "La Jinn the Mystical Genie of the Lamp", "Giant Soldier of Stone" } },
     },
     steps = {
         "cpu_turn",

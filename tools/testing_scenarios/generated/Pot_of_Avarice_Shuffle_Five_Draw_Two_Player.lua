@@ -23,21 +23,21 @@ EDS.run({
     effect = "shuffle_five_draw_two",
     actor = "Player",
     format = "Reaper",
-    scenarioText = "activate you.hand[Pot of Avarice]; pick you.gy[Battle Ox]; pick you.gy[Celtic Guardian]; pick you.gy[La Jinn the Mystical Genie of the Lamp]; pick you.gy[Summoned Skull]; pick you.gy[Man-Eater Bug]",
+    scenarioText = "activate you.hand[Pot of Avarice]; pick you.gy[Gemini Elf]; pick you.gy[Mechanicalchaser]; pick you.gy[La Jinn the Mystical Genie of the Lamp]; pick you.gy[Summoned Skull]; pick you.gy[Giant Soldier of Stone]",
     start = { turn = "you", turnCount = 2, lp = { 8000, 8000 } },
     setupCards = {
         { player = 0, zone = "hand", slot = 0, name = "Pot of Avarice" },
     },
     setupPiles = {
-        { player = 0, pile = "gy", names = { "Battle Ox", "Celtic Guardian", "La Jinn the Mystical Genie of the Lamp", "Summoned Skull", "Man-Eater Bug" } },
+        { player = 0, pile = "gy", names = { "Gemini Elf", "Mechanicalchaser", "La Jinn the Mystical Genie of the Lamp", "Summoned Skull", "Giant Soldier of Stone" } },
     },
     steps = {
         "activate you.hand[Pot of Avarice]",
-        "pick you.gy[Battle Ox]",
-        "pick you.gy[Celtic Guardian]",
+        "pick you.gy[Gemini Elf]",
+        "pick you.gy[Mechanicalchaser]",
         "pick you.gy[La Jinn the Mystical Genie of the Lamp]",
         "pick you.gy[Summoned Skull]",
-        "pick you.gy[Man-Eater Bug]",
+        "pick you.gy[Giant Soldier of Stone]",
     },
     expect = {
         "you.gy = Pot of Avarice",

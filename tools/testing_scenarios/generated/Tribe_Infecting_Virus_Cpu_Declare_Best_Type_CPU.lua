@@ -30,7 +30,7 @@ EDS.run({
         { player = 1, zone = "hand", slot = 0, name = "Fissure" },
         { player = 0, zone = "monster", slot = 0, name = "La Jinn the Mystical Genie of the Lamp" },
         { player = 0, zone = "monster", slot = 1, name = "Summoned Skull" },
-        { player = 0, zone = "monster", slot = 2, name = "Battle Ox" },
+        { player = 0, zone = "monster", slot = 2, name = "Gemini Elf" },
     },
     setupPiles = {
     },

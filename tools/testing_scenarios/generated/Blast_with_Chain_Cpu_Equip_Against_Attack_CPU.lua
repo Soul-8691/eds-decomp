@@ -26,9 +26,9 @@ EDS.run({
     scenarioText = "battle; attack you.m0 -> opp.m0",
     start = { turn = "you", turnCount = 2, lp = { 8000, 8000 } },
     setupCards = {
-        { player = 0, zone = "monster", slot = 0, name = "La Jinn the Mystical Genie of the Lamp" },
+        { player = 0, zone = "monster", slot = 0, name = "Gemini Elf" },
         { player = 1, zone = "st", slot = 0, name = "Blast with Chain", set = true },
-        { player = 1, zone = "monster", slot = 0, name = "Battle Ox" },
+        { player = 1, zone = "monster", slot = 0, name = "Mechanicalchaser" },
     },
     setupPiles = {
     },
@@ -38,9 +38,9 @@ EDS.run({
     },
     expect = {
         "you.m0 = empty",
-        "you.lp = 7600",
-        "opp.m0 = Battle Ox atk",
-        "opp.m0.atk = 2200",
+        "you.lp = 7550",
+        "opp.m0 = Mechanicalchaser atk",
+        "opp.m0.atk = 2350",
     },
     freezeOpponent = false,
 })

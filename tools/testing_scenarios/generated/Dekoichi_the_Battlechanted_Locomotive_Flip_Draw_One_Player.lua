@@ -29,13 +29,13 @@ EDS.run({
         { player = 0, zone = "monster", slot = 0, name = "Dekoichi the Battlechanted Locomotive", set = true },
     },
     setupPiles = {
-        { player = 0, pile = "deck", names = { "Battle Ox" } },
+        { player = 0, pile = "deck", names = { "Gemini Elf" } },
     },
     steps = {
         "flip_summon you.m0",
     },
     expect = {
-        "you.hand = Battle Ox",
+        "you.hand = Gemini Elf",
         "you.m0 = Dekoichi the Battlechanted Locomotive atk",
     },
     freezeOpponent = true,

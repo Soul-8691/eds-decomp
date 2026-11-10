@@ -30,7 +30,7 @@ EDS.run({
         { player = 1, zone = "monster", slot = 0, name = "Magical Merchant", set = true },
     },
     setupPiles = {
-        { player = 1, pile = "deck", names = { "Battle Ox", "Fissure" } },
+        { player = 1, pile = "deck", names = { "Gemini Elf", "Fissure" } },
     },
     steps = {
         "battle",
@@ -38,7 +38,7 @@ EDS.run({
     },
     expect = {
         "opp.hand = Fissure",
-        "opp.gy has Battle Ox",
+        "opp.gy has Gemini Elf",
         "opp.gy has Magical Merchant",
     },
     freezeOpponent = false,

@@ -23,24 +23,24 @@ EDS.run({
     effect = "discard_destroy_card",
     actor = "Player",
     format = "Yata",
-    scenarioText = "activate you.st0; discard you.hand[Battle Ox]; target opp.m0",
+    scenarioText = "activate you.st0; discard you.hand[Gemini Elf]; target opp.m0",
     start = { turn = "you", turnCount = 2, lp = { 8000, 8000 } },
     setupCards = {
         { player = 0, zone = "st", slot = 0, name = "Raigeki Break", set = true },
-        { player = 0, zone = "hand", slot = 0, name = "Battle Ox" },
+        { player = 0, zone = "hand", slot = 0, name = "Gemini Elf" },
         { player = 1, zone = "monster", slot = 0, name = "Summoned Skull" },
     },
     setupPiles = {
     },
     steps = {
         "activate you.st0",
-        "discard you.hand[Battle Ox]",
+        "discard you.hand[Gemini Elf]",
         "target opp.m0",
     },
     expect = {
         "opp.m0 = empty",
         "opp.gy = Summoned Skull",
-        "you.gy = Raigeki Break, Battle Ox",
+        "you.gy = Raigeki Break, Gemini Elf",
     },
     freezeOpponent = true,
 })

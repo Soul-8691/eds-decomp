@@ -27,7 +27,7 @@ EDS.run({
     start = { turn = "you", turnCount = 2, lp = { 8000, 8000 } },
     setupCards = {
         { player = 0, zone = "hand", slot = 0, name = "Monster Gate" },
-        { player = 0, zone = "monster", slot = 0, name = "Celtic Guardian" },
+        { player = 0, zone = "monster", slot = 0, name = "Gemini Elf" },
     },
     setupPiles = {
         { player = 0, pile = "deck", names = { "Fissure", "Trap Hole", "Summoned Skull" } },
@@ -40,7 +40,7 @@ EDS.run({
     },
     expect = {
         "you.m0 = Summoned Skull atk",
-        "you.gy = Monster Gate, Celtic Guardian, Fissure, Trap Hole",
+        "you.gy = Monster Gate, Gemini Elf, Fissure, Trap Hole",
     },
     freezeOpponent = true,
 })

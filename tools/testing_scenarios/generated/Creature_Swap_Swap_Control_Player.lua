@@ -27,9 +27,9 @@ EDS.run({
     start = { turn = "you", turnCount = 2, lp = { 8000, 8000 } },
     setupCards = {
         { player = 0, zone = "hand", slot = 0, name = "Creature Swap" },
-        { player = 0, zone = "monster", slot = 0, name = "Mystic Tomato" },
+        { player = 0, zone = "monster", slot = 0, name = "Mechanicalchaser" },
         { player = 1, zone = "monster", slot = 0, name = "Summoned Skull" },
-        { player = 1, zone = "monster", slot = 1, name = "Battle Ox" },
+        { player = 1, zone = "monster", slot = 1, name = "Gemini Elf" },
     },
     setupPiles = {
     },
@@ -38,9 +38,9 @@ EDS.run({
         "pick you.m0",
     },
     expect = {
-        "you.monsters = Battle Ox",
-        "opp.monsters = Summoned Skull, Mystic Tomato",
-        "menu you.m[Battle Ox] lacks Change Position",
+        "you.monsters = Gemini Elf",
+        "opp.monsters = Summoned Skull, Mechanicalchaser",
+        "menu you.m[Gemini Elf] lacks Change Position",
     },
     freezeOpponent = true,
 })

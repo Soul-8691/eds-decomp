@@ -23,20 +23,20 @@ EDS.run({
     effect = "draw_to_four_then_discard",
     actor = "Player",
     format = "Yata",
-    scenarioText = "activate you.hand[Mirage of Nightmare]; pass; opp_turn; check you.hand = Battle Ox, Celtic Guardian, La Jinn the Mystical Genie of the Lamp, Sangan; draw",
+    scenarioText = "activate you.hand[Mirage of Nightmare]; pass; opp_turn; check you.hand = Gemini Elf, Mechanicalchaser, La Jinn the Mystical Genie of the Lamp, Neo the Magic Swordsman; draw",
     start = { turn = "you", turnCount = 2, lp = { 8000, 8000 } },
     setupCards = {
         { player = 0, zone = "hand", slot = 0, name = "Mirage of Nightmare" },
-        { player = 0, zone = "hand", slot = 1, name = "Battle Ox" },
+        { player = 0, zone = "hand", slot = 1, name = "Gemini Elf" },
     },
     setupPiles = {
-        { player = 0, pile = "deck", names = { "Celtic Guardian", "La Jinn the Mystical Genie of the Lamp", "Sangan", "Fissure" } },
+        { player = 0, pile = "deck", names = { "Mechanicalchaser", "La Jinn the Mystical Genie of the Lamp", "Neo the Magic Swordsman", "Fissure" } },
     },
     steps = {
         "activate you.hand[Mirage of Nightmare]",
         "pass",
         "opp_turn",
-        "check you.hand = Battle Ox, Celtic Guardian, La Jinn the Mystical Genie of the Lamp, Sangan",
+        "check you.hand = Gemini Elf, Mechanicalchaser, La Jinn the Mystical Genie of the Lamp, Neo the Magic Swordsman",
         "draw",
     },
     expect = {

@@ -27,8 +27,8 @@ EDS.run({
     start = { turn = "opp", turnCount = 3, lp = { 8000, 8000 } },
     setupCards = {
         { player = 1, zone = "monster", slot = 0, name = "Asura Priest" },
-        { player = 0, zone = "monster", slot = 0, name = "Celtic Guardian", position = "def" },
-        { player = 0, zone = "monster", slot = 1, name = "Battle Ox", position = "def" },
+        { player = 0, zone = "monster", slot = 0, name = "Gemini Elf", position = "def" },
+        { player = 0, zone = "monster", slot = 1, name = "Mechanicalchaser", position = "def" },
     },
     setupPiles = {
     },

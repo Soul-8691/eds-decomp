@@ -23,21 +23,21 @@ EDS.run({
     effect = "destroyed_by_non_light",
     actor = "Player",
     format = "Chaos",
-    scenarioText = "summon you.hand[Battle Ox] -> m1 atk",
+    scenarioText = "summon you.hand[Gemini Elf] -> m1 atk",
     start = { turn = "you", turnCount = 2, lp = { 8000, 8000 } },
     setupCards = {
         { player = 0, zone = "monster", slot = 0, name = "Thunder Nyan Nyan" },
-        { player = 0, zone = "hand", slot = 0, name = "Battle Ox" },
+        { player = 0, zone = "hand", slot = 0, name = "Gemini Elf" },
     },
     setupPiles = {
     },
     steps = {
-        "summon you.hand[Battle Ox] -> m1 atk",
+        "summon you.hand[Gemini Elf] -> m1 atk",
     },
     expect = {
         "you.m0 = empty",
         "you.gy = Thunder Nyan Nyan",
-        "you.m1 = Battle Ox atk",
+        "you.m1 = Gemini Elf atk",
     },
     freezeOpponent = true,
 })

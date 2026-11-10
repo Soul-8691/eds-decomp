@@ -27,16 +27,16 @@ EDS.run({
     start = { turn = "opp", turnCount = 3, lp = { 8000, 8000 } },
     setupCards = {
         { player = 1, zone = "monster", slot = 0, name = "Airknight Parshath" },
-        { player = 0, zone = "monster", slot = 0, name = "Celtic Guardian", position = "def" },
+        { player = 0, zone = "monster", slot = 0, name = "Gemini Elf", position = "def" },
     },
     setupPiles = {
-        { player = 1, pile = "deck", names = { "Battle Ox" } },
+        { player = 1, pile = "deck", names = { "Mechanicalchaser" } },
     },
     steps = {
         "cpu_turn",
     },
     expect = {
-        "you.lp = 7300",
+        "you.lp = 7000",
         "you.m0 = empty",
     },
     freezeOpponent = false,

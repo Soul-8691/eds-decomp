@@ -27,8 +27,8 @@ EDS.run({
     start = { turn = "opp", turnCount = 3, lp = { 8000, 8000 } },
     setupCards = {
         { player = 1, zone = "monster", slot = 0, name = "4-Starred Ladybug of Doom", set = true },
-        { player = 0, zone = "monster", slot = 0, name = "Battle Ox" },
-        { player = 0, zone = "monster", slot = 1, name = "Celtic Guardian" },
+        { player = 0, zone = "monster", slot = 0, name = "Mechanicalchaser" },
+        { player = 0, zone = "monster", slot = 1, name = "La Jinn the Mystical Genie of the Lamp" },
     },
     setupPiles = {
     },
@@ -37,7 +37,7 @@ EDS.run({
     },
     expect = {
         "you.monsters count 0",
-        "you.gy = Battle Ox, Celtic Guardian",
+        "you.gy = Mechanicalchaser, La Jinn the Mystical Genie of the Lamp",
     },
     freezeOpponent = false,
 })

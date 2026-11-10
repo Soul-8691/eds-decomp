@@ -27,8 +27,8 @@ EDS.run({
     start = { turn = "you", turnCount = 2, lp = { 8000, 8000 } },
     setupCards = {
         { player = 0, zone = "monster", slot = 0, name = "Amazoness Archer" },
-        { player = 0, zone = "monster", slot = 1, name = "Battle Ox" },
-        { player = 0, zone = "monster", slot = 2, name = "Celtic Guardian" },
+        { player = 0, zone = "monster", slot = 1, name = "Gemini Elf" },
+        { player = 0, zone = "monster", slot = 2, name = "Mechanicalchaser" },
     },
     setupPiles = {
     },
@@ -39,7 +39,7 @@ EDS.run({
     },
     expect = {
         "opp.lp = 6800",
-        "you.gy = Battle Ox, Celtic Guardian",
+        "you.gy = Gemini Elf, Mechanicalchaser",
         "you.m0 = Amazoness Archer atk",
     },
     freezeOpponent = true,

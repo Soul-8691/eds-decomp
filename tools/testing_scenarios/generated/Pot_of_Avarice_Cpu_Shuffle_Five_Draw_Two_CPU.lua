@@ -29,7 +29,7 @@ EDS.run({
         { player = 1, zone = "hand", slot = 0, name = "Pot of Avarice" },
     },
     setupPiles = {
-        { player = 1, pile = "gy", names = { "Battle Ox", "Celtic Guardian", "La Jinn the Mystical Genie of the Lamp", "Summoned Skull", "Man-Eater Bug" } },
+        { player = 1, pile = "gy", names = { "Gemini Elf", "Mechanicalchaser", "La Jinn the Mystical Genie of the Lamp", "Summoned Skull", "Giant Soldier of Stone" } },
     },
     steps = {
         "cpu_turn",

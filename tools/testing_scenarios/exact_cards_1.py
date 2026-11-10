@@ -8,36 +8,36 @@ SCENARIOS = {
         player('discard_and_draw',
                setup='''
                    you.hand: Card Destruction, Dark Hole, Battle Ox
-                   you.deck: Summoned Skull, Celtic Guardian, Fissure
+                   you.deck: Summoned Skull, Neo the Magic Swordsman, Fissure
                    opp.hand: Trap Hole, Fissure, Battle Ox, La Jinn the Mystical Genie of the Lamp
-                   opp.deck: Dark Magician, Celtic Guardian, Man-Eater Bug, Swords of Revealing Light
+                   opp.deck: Dark Magician, Neo the Magic Swordsman, Giant Soldier of Stone, Swords of Revealing Light
                ''',
                steps='activate you.hand[Card Destruction]',
                expect='''
-                   you.hand = Summoned Skull, Celtic Guardian
+                   you.hand = Summoned Skull, Neo the Magic Swordsman
                    you.gy = Card Destruction, Dark Hole, Battle Ox
-                   opp.hand = Dark Magician, Celtic Guardian, Man-Eater Bug, Swords of Revealing Light
+                   opp.hand = Dark Magician, Neo the Magic Swordsman, Giant Soldier of Stone, Swords of Revealing Light
                    opp.gy = Trap Hole, Fissure, Battle Ox, La Jinn the Mystical Genie of the Lamp
                '''),
         cpu('cpu_discard_and_draw', start=OPP_TURN,
             note='The CPU plays it when the human holds more cards than it would discard.',
             setup='''
                 opp.hand: Card Destruction, Battle Ox
-                you.hand: Summoned Skull, Dark Hole, Fissure, Trap Hole, Celtic Guardian
-                you.deck: Battle Ox, Celtic Guardian, Man-Eater Bug, Fissure, Swords of Revealing Light
+                you.hand: Summoned Skull, Dark Hole, Fissure, Trap Hole, Neo the Magic Swordsman
+                you.deck: Battle Ox, Neo the Magic Swordsman, Giant Soldier of Stone, Fissure, Swords of Revealing Light
             ''',
             steps='cpu_turn',
             expect='''
                 opp.gy has Card Destruction
-                you.gy = Summoned Skull, Dark Hole, Fissure, Trap Hole, Celtic Guardian
-                you.hand = Battle Ox, Celtic Guardian, Man-Eater Bug, Fissure, Swords of Revealing Light
+                you.gy = Summoned Skull, Dark Hole, Fissure, Trap Hole, Neo the Magic Swordsman
+                you.hand = Battle Ox, Neo the Magic Swordsman, Giant Soldier of Stone, Fissure, Swords of Revealing Light
             '''),
     ],
     'Soul Exchange': [
         player('tribute_opponent_monster',
                setup='''
                    you.hand: Soul Exchange, Summoned Skull
-                   opp.m0: Battle Ox atk
+                   opp.m0: La Jinn the Mystical Genie of the Lamp atk
                ''',
                steps='''
                    activate you.hand[Soul Exchange]
@@ -46,7 +46,7 @@ SCENARIOS = {
                ''',
                expect='''
                    opp.m0 = empty
-                   opp.gy = Battle Ox
+                   opp.gy = La Jinn the Mystical Genie of the Lamp
                    you.m0 = Summoned Skull atk
                    you.gy = Soul Exchange
                    battle_phase blocked
@@ -54,12 +54,12 @@ SCENARIOS = {
         cpu('cpu_tribute_opponent_monster', video={'clear': 'cpu_monsters'}, start=OPP_TURN,
             setup='''
                 opp.hand: Soul Exchange, Summoned Skull
-                you.m0: Battle Ox atk
+                you.m0: La Jinn the Mystical Genie of the Lamp atk
             ''',
             steps='cpu_turn',
             expect='''
                 you.m0 = empty
-                you.gy = Battle Ox
+                you.gy = La Jinn the Mystical Genie of the Lamp
                 opp.monsters = Summoned Skull
                 opp.gy = Soul Exchange
                 you.lp = 8000
@@ -70,7 +70,7 @@ SCENARIOS = {
                setup='''
                    you.m0: Thousand-Eyes Restrict atk
                    opp.m0: Summoned Skull atk
-                   opp.m1: Battle Ox atk
+                   opp.m1: Mechanicalchaser atk
                ''',
                steps='''
                    activate you.m0
@@ -82,8 +82,8 @@ SCENARIOS = {
                ''',
                expect='''
                    opp.monsters count 0
-                   opp.gy = Battle Ox
-                   opp.lp = 7200
+                   opp.gy = Mechanicalchaser
+                   opp.lp = 7350
                    menu you.m0 lacks Activate
                '''),
         cpu('cpu_absorb', start=OPP_TURN,
@@ -102,7 +102,7 @@ SCENARIOS = {
         player('special_summon_from_hand', video={'start': 'summon'},
                setup='''
                    you.hand: The Fiend Megacyber
-                   opp.m0: Battle Ox atk
+                   opp.m0: Mechanicalchaser atk
                    opp.m1: La Jinn the Mystical Genie of the Lamp atk
                ''',
                steps='special_summon you.hand[The Fiend Megacyber] -> m0 atk',
@@ -110,8 +110,8 @@ SCENARIOS = {
         player('not_with_one_monster_difference', video={'effect': 'none'},
                setup='''
                    you.hand: The Fiend Megacyber
-                   you.m0: Celtic Guardian atk
-                   opp.m0: Battle Ox atk
+                   you.m0: Mechanicalchaser atk
+                   opp.m0: Mechanicalchaser atk
                    opp.m1: La Jinn the Mystical Genie of the Lamp atk
                ''',
                steps='check menu you.hand[The Fiend Megacyber] lacks Special Summon',
@@ -119,8 +119,8 @@ SCENARIOS = {
         cpu('cpu_special_summon', start=OPP_TURN, video={'start': 'summon', 'clear': 'cpu_monsters'},
             setup='''
                 opp.hand: The Fiend Megacyber
-                you.m0: Battle Ox atk
-                you.m1: Celtic Guardian atk
+                you.m0: Mechanicalchaser atk
+                you.m1: La Jinn the Mystical Genie of the Lamp atk
             ''',
             steps='cpu_turn',
             expect='opp.monsters has The Fiend Megacyber'),
@@ -129,7 +129,7 @@ SCENARIOS = {
         player('mandatory_follow_up',
                setup='''
                    you.m0: Goblin Attack Force atk
-                   opp.m0: Celtic Guardian atk
+                   opp.m0: Mechanicalchaser atk
                ''',
                steps='''
                    battle
@@ -142,19 +142,19 @@ SCENARIOS = {
                    check menu you.m0 lacks Change Position
                ''',
                expect='''
-                   opp.lp = 7100
-                   opp.gy = Celtic Guardian
+                   opp.lp = 7550
+                   opp.gy = Mechanicalchaser
                    you.m0 = Goblin Attack Force def
                '''),
         cpu('cpu_attack_then_defense', start=OPP_TURN, video={'until': 'defense'},
             setup='''
                 opp.m0: Goblin Attack Force atk
-                you.m0: Celtic Guardian atk
+                you.m0: Mechanicalchaser atk
             ''',
             steps='cpu_turn',
             expect='''
                 you.m0 = empty
-                you.lp = 7100
+                you.lp = 7550
                 opp.m0 = Goblin Attack Force def
             '''),
     ],
@@ -163,20 +163,20 @@ SCENARIOS = {
                setup='''
                    you.st0: Solemn Wishes set
                    you.hand: Pot of Greed
-                   you.deck: Battle Ox, Celtic Guardian, Fissure
+                   you.deck: Mechanicalchaser, La Jinn the Mystical Genie of the Lamp, Fissure
                ''',
                steps='''
                    activate you.st0
                    activate you.hand[Pot of Greed]
                    check you.lp = 8500
-                   check you.hand = Battle Ox, Celtic Guardian
+                   check you.hand = Mechanicalchaser, La Jinn the Mystical Genie of the Lamp
                    pass
                    opp_turn
                    draw
                ''',
                expect='''
                    you.lp = 9000
-                   you.hand = Battle Ox, Celtic Guardian, Fissure
+                   you.hand = Mechanicalchaser, La Jinn the Mystical Genie of the Lamp, Fissure
                    you.st0 = Solemn Wishes up
                ''',
                note='One gain per draw action: Pot of Greed draws 2 cards for 500 LP.'),
@@ -198,13 +198,13 @@ SCENARIOS = {
                setup='''
                    you.hand: Limiter Removal
                    you.m0: Jinzo atk
-                   you.m1: Battle Ox atk
+                   you.m1: La Jinn the Mystical Genie of the Lamp atk
                    opp.m0: Summoned Skull atk
                ''',
                steps='''
                    activate you.hand[Limiter Removal]
                    check you.m0.atk = 4800
-                   check you.m1.atk = 1700
+                   check you.m1.atk = 1800
                    battle
                    attack you.m0 -> opp.m0
                    check opp.lp = 5700
@@ -213,7 +213,7 @@ SCENARIOS = {
                expect='''
                    you.m0 = empty
                    you.gy = Limiter Removal, Jinzo
-                   you.m1 = Battle Ox atk
+                   you.m1 = La Jinn the Mystical Genie of the Lamp atk
                    opp.m0 = empty
                '''),
         cpu('cpu_double_machine_atk', start=OPP_TURN, video={'show': 'opp.m0'},
@@ -234,38 +234,38 @@ SCENARIOS = {
         player('flip_destroy_level_4',
                setup='''
                    you.m0: 4-Starred Ladybug of Doom set
-                   opp.m0: Battle Ox atk
+                   opp.m0: Mechanicalchaser atk
                    opp.m1: La Jinn the Mystical Genie of the Lamp atk
                    opp.m2: Summoned Skull atk
-                   opp.m3: Man-Eater Bug set
+                   opp.m3: Neo the Magic Swordsman set
                ''',
                steps='flip_summon you.m0',
                expect='''
                    opp.m0 = empty
                    opp.m1 = empty
                    opp.m2 = Summoned Skull atk
-                   opp.m3 = Man-Eater Bug set
-                   opp.gy = Battle Ox, La Jinn the Mystical Genie of the Lamp
+                   opp.m3 = Neo the Magic Swordsman set
+                   opp.gy = Mechanicalchaser, La Jinn the Mystical Genie of the Lamp
                    you.m0 = 4-Starred Ladybug of Doom atk
                ''',
-               note='A face-down monster has no Level, so Man-Eater Bug stays.'),
+               note='A face-down monster has no Level, so the Set Neo the Magic Swordsman (Level 4) stays.'),
         cpu('cpu_flip_destroy_level_4', start=OPP_TURN,
             setup='''
                 opp.m0: 4-Starred Ladybug of Doom set
-                you.m0: Battle Ox atk
-                you.m1: Celtic Guardian atk
+                you.m0: Mechanicalchaser atk
+                you.m1: La Jinn the Mystical Genie of the Lamp atk
             ''',
             steps='cpu_turn',
             expect='''
                 you.monsters count 0
-                you.gy = Battle Ox, Celtic Guardian
+                you.gy = Mechanicalchaser, La Jinn the Mystical Genie of the Lamp
             '''),
     ],
     'Kycoo the Ghost Destroyer': [
         player('banish_on_battle_damage',
                setup='''
                    you.m0: Kycoo the Ghost Destroyer atk
-                   opp.gy: Summoned Skull, Battle Ox, Sangan
+                   opp.gy: Summoned Skull, Gemini Elf, Mechanicalchaser
                ''',
                steps='''
                    battle
@@ -273,17 +273,17 @@ SCENARIOS = {
                    yes
                    pick opp.gy[Summoned Skull]
                    yes
-                   pick opp.gy[Sangan]
+                   pick opp.gy[Mechanicalchaser]
                ''',
                expect='''
                    opp.lp = 6200
-                   opp.banished = Summoned Skull, Sangan
-                   opp.gy = Battle Ox
+                   opp.banished = Summoned Skull, Mechanicalchaser
+                   opp.gy = Gemini Elf
                '''),
         cpu('cpu_banish_on_battle_damage', start=OPP_TURN,
             setup='''
                 opp.m0: Kycoo the Ghost Destroyer atk
-                you.gy: Summoned Skull, Battle Ox
+                you.gy: Summoned Skull, Gemini Elf
             ''',
             steps='cpu_turn',
             expect='''
@@ -296,70 +296,70 @@ SCENARIOS = {
         player('banish_three_for_atk', video={'show': 'you.m0'},
                setup='''
                    you.m0: Bazoo the Soul-Eater atk
-                   you.gy: Battle Ox, La Jinn the Mystical Genie of the Lamp, Sangan, Summoned Skull
+                   you.gy: Gemini Elf, Mechanicalchaser, La Jinn the Mystical Genie of the Lamp, Summoned Skull
                ''',
                steps='''
                    activate you.m0
                    yes
-                   pick you.gy[Battle Ox]
+                   pick you.gy[Gemini Elf]
+                   yes
+                   pick you.gy[Mechanicalchaser]
                    yes
                    pick you.gy[La Jinn the Mystical Genie of the Lamp]
-                   yes
-                   pick you.gy[Sangan]
                ''',
                expect='''
                    you.m0.atk = 2500
-                   you.banished = Battle Ox, La Jinn the Mystical Genie of the Lamp, Sangan
+                   you.banished = Gemini Elf, Mechanicalchaser, La Jinn the Mystical Genie of the Lamp
                    you.gy = Summoned Skull
                    menu you.m0 lacks Activate
                '''),
         cpu('cpu_banish_weakest', start=OPP_TURN, video={'show': 'opp.m0'},
             setup='''
                 opp.m0: Bazoo the Soul-Eater atk
-                opp.gy: Battle Ox, La Jinn the Mystical Genie of the Lamp, Sangan, Kuriboh
-                you.m0: Jinzo atk
+                opp.gy: Gemini Elf, Mechanicalchaser, La Jinn the Mystical Genie of the Lamp, Giant Soldier of Stone
+                you.m0: Gemini Elf atk
             ''',
             steps='cpu_turn',
             expect='''
-                opp.banished = Kuriboh, Sangan, Battle Ox
-                opp.gy = La Jinn the Mystical Genie of the Lamp
+                opp.banished = Giant Soldier of Stone, La Jinn the Mystical Genie of the Lamp, Mechanicalchaser
+                opp.gy = Gemini Elf
                 opp.m0.atk = 2500
                 you.m0 = empty
-                you.lp = 7900
+                you.lp = 7400
             ''',
             note='BazooCpuResolve banishes its 3 weakest Graveyard monsters; 2500 ATK then beats Jinzo.'),
     ],
     'Torrential Tribute': [
         player('destroy_all_on_summon', video={'start': 'first'},
                setup='''
-                   you.m0: Mystic Tomato atk
+                   you.m0: Gemini Elf atk
                    you.st0: Torrential Tribute set
-                   you.hand: Battle Ox
+                   you.hand: Mechanicalchaser
                    opp.m0: Summoned Skull atk
-                   opp.m1: Man-Eater Bug set
+                   opp.m1: La Jinn the Mystical Genie of the Lamp set
                ''',
                steps='''
-                   summon you.hand[Battle Ox] -> m1 atk
+                   summon you.hand[Mechanicalchaser] -> m1 atk
                    when prompt response: activate you.st0
                ''',
                expect='''
                    you.monsters count 0
                    opp.monsters count 0
-                   you.gy = Mystic Tomato, Battle Ox, Torrential Tribute
-                   opp.gy = Summoned Skull, Man-Eater Bug
+                   you.gy = Gemini Elf, Mechanicalchaser, Torrential Tribute
+                   opp.gy = Summoned Skull, La Jinn the Mystical Genie of the Lamp
                ''',
-               note='Destroyed by an effect: Mystic Tomato does not trigger, and the Set Man-Eater Bug is not flipped.'),
+               note='Destroyed by an effect: Gemini Elf does not trigger, and the Set La Jinn the Mystical Genie of the Lamp is not flipped.'),
         cpu('cpu_on_human_summon', video={'start': 'first'},
             setup='''
                 opp.st0: Torrential Tribute set
                 you.m0: Summoned Skull atk
-                you.m1: La Jinn the Mystical Genie of the Lamp atk
-                you.hand: Battle Ox
+                you.m1: Gemini Elf atk
+                you.hand: Mechanicalchaser
             ''',
-            steps='summon you.hand[Battle Ox] -> m2 atk',
+            steps='summon you.hand[Mechanicalchaser] -> m2 atk',
             expect='''
                 you.monsters count 0
-                you.gy = Summoned Skull, La Jinn the Mystical Genie of the Lamp, Battle Ox
+                you.gy = Summoned Skull, Gemini Elf, Mechanicalchaser
                 opp.gy = Torrential Tribute
             '''),
     ],
@@ -367,17 +367,17 @@ SCENARIOS = {
         player('draw_one',
                setup='''
                    you.st0: Jar of Greed set
-                   you.deck: Battle Ox
+                   you.deck: Gemini Elf
                ''',
                steps='activate you.st0',
                expect='''
-                   you.hand = Battle Ox
+                   you.hand = Gemini Elf
                    you.gy = Jar of Greed
                '''),
         cpu('cpu_draw_one', start=OPP_TURN,
             setup='''
                 opp.st0: Jar of Greed set
-                opp.deck: Battle Ox
+                opp.deck: Gemini Elf
             ''',
             steps='cpu_turn',
             expect='opp.gy has Jar of Greed'),
@@ -386,29 +386,29 @@ SCENARIOS = {
         player('banish_level_count',
                setup='''
                    you.st0: Skull Lair set
-                   you.gy: Battle Ox, La Jinn the Mystical Genie of the Lamp, Sangan, Mystic Tomato
-                   opp.m0: Sangan atk
+                   you.gy: Gemini Elf, Mechanicalchaser, La Jinn the Mystical Genie of the Lamp, Neo the Magic Swordsman
+                   opp.m0: Giant Soldier of Stone atk
                ''',
                steps='''
                    activate you.st0
                    target opp.m0
-                   pick you.gy[Battle Ox]
+                   pick you.gy[Gemini Elf]
+                   pick you.gy[Mechanicalchaser]
                    pick you.gy[La Jinn the Mystical Genie of the Lamp]
-                   pick you.gy[Sangan]
                ''',
                expect='''
                    opp.m0 = empty
-                   opp.gy = Sangan
-                   you.banished = Battle Ox, La Jinn the Mystical Genie of the Lamp, Sangan
-                   you.gy = Mystic Tomato
+                   opp.gy = Giant Soldier of Stone
+                   you.banished = Gemini Elf, Mechanicalchaser, La Jinn the Mystical Genie of the Lamp
+                   you.gy = Neo the Magic Swordsman
                    you.st0 = Skull Lair up
                ''',
-               note='Sangan is Level 3, so 3 Graveyard monsters are banished.'),
+               note='La Jinn the Mystical Genie of the Lamp is Level 3, so 3 Graveyard monsters are banished.'),
         cpu('cpu_destroy_strong_monster', start=OPP_TURN,
             setup='''
                 opp.st0: Skull Lair set
-                opp.gy: Battle Ox, La Jinn the Mystical Genie of the Lamp, Sangan, Kuriboh
-                you.m0: Battle Ox atk
+                opp.gy: Gemini Elf, Mechanicalchaser, La Jinn the Mystical Genie of the Lamp, Giant Soldier of Stone
+                you.m0: Gemini Elf atk
             ''',
             steps='cpu_turn',
             expect='''
@@ -472,27 +472,27 @@ SCENARIOS = {
         player('equip_per_face_up_monster',
                setup='''
                    you.hand: United We Stand
-                   you.m0: Battle Ox atk
-                   you.m1: La Jinn the Mystical Genie of the Lamp atk
-                   you.m2: Mystic Tomato set
+                   you.m0: Gemini Elf atk
+                   you.m1: Mechanicalchaser atk
+                   you.m2: La Jinn the Mystical Genie of the Lamp set
                ''',
                steps='''
                    activate you.hand[United We Stand]
                    target you.m0
-                   check you.m0.atk = 3300
-                   check you.m0.def = 2600
+                   check you.m0.atk = 3500
+                   check you.m0.def = 2500
                    flip_summon you.m2
                ''',
                expect='''
-                   you.m0.atk = 4100
-                   you.m0.def = 3400
+                   you.m0.atk = 4300
+                   you.m0.def = 3300
                ''',
                note='+800 ATK/DEF for each face-up monster you control: 2, then 3 after the Flip Summon.'),
         cpu('cpu_equip', start=OPP_TURN,
             setup='''
                 opp.hand: United We Stand
-                opp.m0: Battle Ox atk
-                opp.m1: La Jinn the Mystical Genie of the Lamp atk
+                opp.m0: Gemini Elf atk
+                opp.m1: Mechanicalchaser atk
                 you.m0: Summoned Skull atk
             ''',
             steps='cpu_turn',
@@ -505,7 +505,7 @@ SCENARIOS = {
         player('equip_per_spell_trap',
                setup='''
                    you.hand: Mage Power
-                   you.m0: Battle Ox atk
+                   you.m0: Gemini Elf atk
                    you.st0: Trap Hole set
                    you.st1: Call of the Haunted set
                ''',
@@ -514,29 +514,29 @@ SCENARIOS = {
                    target you.m0
                ''',
                expect='''
-                   you.m0.atk = 3200
-                   you.m0.def = 2500
+                   you.m0.atk = 3400
+                   you.m0.def = 2400
                ''',
                note='+500 for each of your Spells/Traps, Mage Power included: 3.'),
         cpu('cpu_equip', start=OPP_TURN,
             setup='''
                 opp.hand: Mage Power
-                opp.m0: Battle Ox atk
+                opp.m0: Gemini Elf atk
                 opp.st0: Trap Hole set
                 you.m0: Summoned Skull atk
             ''',
             steps='cpu_turn',
             expect='''
-                opp.m0.atk = 2700
+                opp.m0.atk = 2900
                 you.m0 = empty
-                you.lp = 7800
+                you.lp = 7600
             '''),
     ],
     'Zombyra the Dark': [
         player('lose_atk_after_destroying',
                setup='''
                    you.m0: Zombyra the Dark atk
-                   opp.m0: Battle Ox atk
+                   opp.m0: Gemini Elf atk
                ''',
                steps='''
                    battle
@@ -544,7 +544,7 @@ SCENARIOS = {
                ''',
                expect='''
                    opp.m0 = empty
-                   opp.lp = 7600
+                   opp.lp = 7800
                    you.m0.atk = 1900
                '''),
         player('no_direct_attack',
@@ -557,12 +557,12 @@ SCENARIOS = {
         cpu('cpu_attack', start=OPP_TURN,
             setup='''
                 opp.m0: Zombyra the Dark atk
-                you.m0: Celtic Guardian atk
+                you.m0: Gemini Elf atk
             ''',
             steps='cpu_turn',
             expect='''
                 you.m0 = empty
-                you.lp = 7300
+                you.lp = 7800
                 opp.m0.atk = 1900
             '''),
     ],
@@ -580,22 +580,22 @@ SCENARIOS = {
         cpu('cpu_attack', start=OPP_TURN,
             setup='''
                 opp.m0: Humanoid Worm Drake atk
-                you.m0: Battle Ox atk
+                you.m0: Gemini Elf atk
             ''',
             steps='cpu_turn',
             expect='''
                 you.m0 = empty
-                you.lp = 7500
+                you.lp = 7700
             '''),
     ],
     'Scapegoat': [
         player('four_sheep_no_summon',
-               setup='you.hand: Scapegoat, Battle Ox',
+               setup='you.hand: Scapegoat, Gemini Elf',
                steps='activate you.hand[Scapegoat]',
                expect='''
                    you.monsters = Sheep Token, Sheep Token, Sheep Token, Sheep Token
-                   menu you.hand[Battle Ox] lacks Summon
-                   menu you.hand[Battle Ox] has Set
+                   menu you.hand[Gemini Elf] lacks Summon
+                   menu you.hand[Gemini Elf] has Set
                ''',
                note='The 4 Sheep Tokens are in Defense Position.'),
         cpu('cpu_block_direct_attack',
@@ -636,7 +636,7 @@ SCENARIOS = {
         cpu('cpu_destroy', start=OPP_TURN,
             setup='''
                 opp.hand: Offerings to the Doomed
-                opp.m0: Battle Ox atk
+                opp.m0: Gemini Elf atk
                 you.m0: Summoned Skull atk
             ''',
             steps='cpu_turn',

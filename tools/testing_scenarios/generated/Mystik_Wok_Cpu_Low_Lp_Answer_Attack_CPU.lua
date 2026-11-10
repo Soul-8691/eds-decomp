@@ -28,7 +28,7 @@ EDS.run({
     setupCards = {
         { player = 0, zone = "monster", slot = 0, name = "Summoned Skull" },
         { player = 1, zone = "st", slot = 0, name = "Mystik Wok", set = true },
-        { player = 1, zone = "monster", slot = 0, name = "Celtic Guardian" },
+        { player = 1, zone = "monster", slot = 0, name = "Gemini Elf" },
     },
     setupPiles = {
     },
@@ -38,8 +38,8 @@ EDS.run({
         "when replay: cancel",
     },
     expect = {
-        "opp.lp = 2400",
-        "opp.gy has Celtic Guardian",
+        "opp.lp = 2900",
+        "opp.gy has Gemini Elf",
         "opp.gy has Mystik Wok",
     },
     freezeOpponent = false,

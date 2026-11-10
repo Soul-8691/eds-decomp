@@ -27,10 +27,10 @@ EDS.run({
     start = { turn = "you", turnCount = 2, lp = { 8000, 8000 } },
     setupCards = {
         { player = 0, zone = "monster", slot = 0, name = "4-Starred Ladybug of Doom", set = true },
-        { player = 1, zone = "monster", slot = 0, name = "Battle Ox" },
+        { player = 1, zone = "monster", slot = 0, name = "Mechanicalchaser" },
         { player = 1, zone = "monster", slot = 1, name = "La Jinn the Mystical Genie of the Lamp" },
         { player = 1, zone = "monster", slot = 2, name = "Summoned Skull" },
-        { player = 1, zone = "monster", slot = 3, name = "Man-Eater Bug", set = true },
+        { player = 1, zone = "monster", slot = 3, name = "Neo the Magic Swordsman", set = true },
     },
     setupPiles = {
     },
@@ -41,8 +41,8 @@ EDS.run({
         "opp.m0 = empty",
         "opp.m1 = empty",
         "opp.m2 = Summoned Skull atk",
-        "opp.m3 = Man-Eater Bug set",
-        "opp.gy = Battle Ox, La Jinn the Mystical Genie of the Lamp",
+        "opp.m3 = Neo the Magic Swordsman set",
+        "opp.gy = Mechanicalchaser, La Jinn the Mystical Genie of the Lamp",
         "you.m0 = 4-Starred Ladybug of Doom atk",
     },
     freezeOpponent = true,

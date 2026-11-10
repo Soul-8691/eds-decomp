@@ -27,7 +27,7 @@ EDS.run({
     start = { turn = "you", turnCount = 2, lp = { 8000, 8000 } },
     setupCards = {
         { player = 0, zone = "hand", slot = 0, name = "Mobius the Frost Monarch" },
-        { player = 0, zone = "monster", slot = 0, name = "Battle Ox" },
+        { player = 0, zone = "monster", slot = 0, name = "Gemini Elf" },
         { player = 1, zone = "st", slot = 0, name = "Call of the Haunted", set = true },
         { player = 1, zone = "st", slot = 1, name = "Magic Jammer", set = true },
     },

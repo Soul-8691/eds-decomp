@@ -26,22 +26,22 @@ local opts = {
     effect = "cpu_on_human_summon",
     actor = "CPU",
     format = "Android",
-    scenarioText = "summon you.hand[Battle Ox] -> m2 atk",
+    scenarioText = "summon you.hand[Mechanicalchaser] -> m2 atk",
     start = { turn = "you", turnCount = 2, lp = { 8000, 8000 } },
     setupCards = {
         { player = 1, zone = "st", slot = 0, name = "Torrential Tribute", set = true },
         { player = 0, zone = "monster", slot = 0, name = "Summoned Skull" },
-        { player = 0, zone = "monster", slot = 1, name = "La Jinn the Mystical Genie of the Lamp" },
-        { player = 0, zone = "hand", slot = 0, name = "Battle Ox" },
+        { player = 0, zone = "monster", slot = 1, name = "Gemini Elf" },
+        { player = 0, zone = "hand", slot = 0, name = "Mechanicalchaser" },
     },
     setupPiles = {
     },
     steps = {
-        "summon you.hand[Battle Ox] -> m2 atk",
+        "summon you.hand[Mechanicalchaser] -> m2 atk",
     },
     expect = {
         "you.monsters count 0",
-        "you.gy = Summoned Skull, La Jinn the Mystical Genie of the Lamp, Battle Ox",
+        "you.gy = Summoned Skull, Gemini Elf, Mechanicalchaser",
         "opp.gy = Torrential Tribute",
     },
     freezeOpponent = false,

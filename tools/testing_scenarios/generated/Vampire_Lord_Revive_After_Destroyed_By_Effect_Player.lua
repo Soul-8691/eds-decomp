@@ -26,7 +26,7 @@ EDS.run({
     scenarioText = "tribute_summon you.hand[Vampire Lord] -> m0 atk tributes you.m0; check you.gy has Vampire Lord; pass; cpu_turn; draw; position atk",
     start = { turn = "you", turnCount = 2, lp = { 8000, 8000 } },
     setupCards = {
-        { player = 0, zone = "monster", slot = 0, name = "Battle Ox" },
+        { player = 0, zone = "monster", slot = 0, name = "Gemini Elf" },
         { player = 0, zone = "hand", slot = 0, name = "Vampire Lord" },
         { player = 1, zone = "st", slot = 0, name = "Trap Hole", set = true },
     },

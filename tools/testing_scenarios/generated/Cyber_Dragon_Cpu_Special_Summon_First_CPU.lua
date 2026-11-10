@@ -27,7 +27,7 @@ EDS.run({
     start = { turn = "opp", turnCount = 3, lp = { 8000, 8000 } },
     setupCards = {
         { player = 1, zone = "hand", slot = 0, name = "Cyber Dragon" },
-        { player = 0, zone = "monster", slot = 0, name = "Battle Ox" },
+        { player = 0, zone = "monster", slot = 0, name = "Gemini Elf" },
     },
     setupPiles = {
     },
@@ -37,7 +37,7 @@ EDS.run({
     expect = {
         "opp.monsters has Cyber Dragon",
         "you.m0 = empty",
-        "you.lp = 7600",
+        "you.lp = 7800",
     },
     freezeOpponent = false,
 })

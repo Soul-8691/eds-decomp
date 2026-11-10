@@ -27,7 +27,7 @@ EDS.run({
     start = { turn = "you", turnCount = 2, lp = { 8000, 8000 } },
     setupCards = {
         { player = 0, zone = "monster", slot = 0, name = "Exarion Universe" },
-        { player = 1, zone = "monster", slot = 0, name = "Celtic Guardian", position = "def" },
+        { player = 1, zone = "monster", slot = 0, name = "Gemini Elf", position = "def" },
     },
     setupPiles = {
     },
@@ -38,7 +38,7 @@ EDS.run({
     },
     expect = {
         "opp.m0 = empty",
-        "opp.lp = 7800",
+        "opp.lp = 7500",
         "you.m0.atk = 1400",
     },
     freezeOpponent = true,

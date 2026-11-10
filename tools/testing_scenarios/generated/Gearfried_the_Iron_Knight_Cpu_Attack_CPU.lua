@@ -27,7 +27,7 @@ EDS.run({
     start = { turn = "opp", turnCount = 3, lp = { 8000, 8000 } },
     setupCards = {
         { player = 1, zone = "monster", slot = 0, name = "Gearfried the Iron Knight" },
-        { player = 0, zone = "monster", slot = 0, name = "Celtic Guardian" },
+        { player = 0, zone = "monster", slot = 0, name = "Battle Ox" },
     },
     setupPiles = {
     },
@@ -36,7 +36,7 @@ EDS.run({
     },
     expect = {
         "you.m0 = empty",
-        "you.lp = 7600",
+        "you.lp = 7900",
     },
     freezeOpponent = false,
 })

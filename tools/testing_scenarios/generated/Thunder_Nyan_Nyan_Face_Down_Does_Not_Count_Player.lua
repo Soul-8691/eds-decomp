@@ -23,20 +23,20 @@ EDS.run({
     effect = "face_down_does_not_count",
     actor = "Player",
     format = "Chaos",
-    scenarioText = "set you.hand[Battle Ox] -> m1",
+    scenarioText = "set you.hand[Gemini Elf] -> m1",
     start = { turn = "you", turnCount = 2, lp = { 8000, 8000 } },
     setupCards = {
         { player = 0, zone = "monster", slot = 0, name = "Thunder Nyan Nyan" },
-        { player = 0, zone = "hand", slot = 0, name = "Battle Ox" },
+        { player = 0, zone = "hand", slot = 0, name = "Gemini Elf" },
     },
     setupPiles = {
     },
     steps = {
-        "set you.hand[Battle Ox] -> m1",
+        "set you.hand[Gemini Elf] -> m1",
     },
     expect = {
         "you.m0 = Thunder Nyan Nyan atk",
-        "you.m1 = Battle Ox set",
+        "you.m1 = Gemini Elf set",
     },
     freezeOpponent = true,
 })

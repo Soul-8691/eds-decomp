@@ -27,7 +27,7 @@ EDS.run({
     start = { turn = "opp", turnCount = 3, lp = { 8000, 8000 } },
     setupCards = {
         { player = 1, zone = "hand", slot = 0, name = "Mage Power" },
-        { player = 1, zone = "monster", slot = 0, name = "Battle Ox" },
+        { player = 1, zone = "monster", slot = 0, name = "Gemini Elf" },
         { player = 1, zone = "st", slot = 0, name = "Trap Hole", set = true },
         { player = 0, zone = "monster", slot = 0, name = "Summoned Skull" },
     },
@@ -37,9 +37,9 @@ EDS.run({
         "cpu_turn",
     },
     expect = {
-        "opp.m0.atk = 2700",
+        "opp.m0.atk = 2900",
         "you.m0 = empty",
-        "you.lp = 7800",
+        "you.lp = 7600",
     },
     freezeOpponent = false,
 })

@@ -28,7 +28,7 @@ EDS.run({
     setupCards = {
         { player = 1, zone = "hand", slot = 0, name = "Chaos Emperor Dragon - Envoy of the End" },
         { player = 0, zone = "monster", slot = 0, name = "Summoned Skull" },
-        { player = 0, zone = "monster", slot = 1, name = "Battle Ox" },
+        { player = 0, zone = "monster", slot = 1, name = "Gemini Elf" },
         { player = 0, zone = "st", slot = 0, name = "Trap Hole", set = true },
         { player = 0, zone = "hand", slot = 0, name = "Fissure" },
         { player = 0, zone = "hand", slot = 1, name = "Dark Hole" },

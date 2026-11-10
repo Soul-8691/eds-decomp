@@ -28,7 +28,7 @@ EDS.run({
     setupCards = {
         { player = 0, zone = "hand", slot = 0, name = "Soul Exchange" },
         { player = 0, zone = "hand", slot = 1, name = "Summoned Skull" },
-        { player = 1, zone = "monster", slot = 0, name = "Battle Ox" },
+        { player = 1, zone = "monster", slot = 0, name = "La Jinn the Mystical Genie of the Lamp" },
     },
     setupPiles = {
     },
@@ -39,7 +39,7 @@ EDS.run({
     },
     expect = {
         "opp.m0 = empty",
-        "opp.gy = Battle Ox",
+        "opp.gy = La Jinn the Mystical Genie of the Lamp",
         "you.m0 = Summoned Skull atk",
         "you.gy = Soul Exchange",
         "battle_phase blocked",

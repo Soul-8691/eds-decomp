@@ -27,7 +27,7 @@ EDS.run({
     start = { turn = "opp", turnCount = 3, lp = { 8000, 8000 } },
     setupCards = {
         { player = 1, zone = "monster", slot = 0, name = "Spear Dragon" },
-        { player = 0, zone = "monster", slot = 0, name = "Celtic Guardian", position = "def" },
+        { player = 0, zone = "monster", slot = 0, name = "Gemini Elf", position = "def" },
     },
     setupPiles = {
     },
@@ -36,7 +36,7 @@ EDS.run({
     },
     expect = {
         "you.m0 = empty",
-        "you.lp = 7300",
+        "you.lp = 7000",
         "opp.m0 = Spear Dragon def",
     },
     freezeOpponent = false,

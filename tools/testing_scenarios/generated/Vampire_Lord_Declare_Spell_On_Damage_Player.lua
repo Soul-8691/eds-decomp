@@ -29,7 +29,7 @@ EDS.run({
         { player = 0, zone = "monster", slot = 0, name = "Vampire Lord" },
     },
     setupPiles = {
-        { player = 1, pile = "deck", names = { "Fissure", "Battle Ox", "Trap Hole" } },
+        { player = 1, pile = "deck", names = { "Fissure", "Gemini Elf", "Trap Hole" } },
     },
     steps = {
         "battle",

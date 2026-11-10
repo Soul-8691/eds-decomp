@@ -36,13 +36,13 @@ SCENARIOS = {
         player('flip_reset_both_players',
                setup='''
                    you.m0: Fiber Jar set
-                   you.m1: Battle Ox atk
+                   you.m1: Gemini Elf atk
                    you.st0: Trap Hole set
                    you.hand: Summoned Skull, Pot of Greed
-                   you.gy: La Jinn the Mystical Genie of the Lamp
-                   opp.m0: Celtic Guardian atk
-                   opp.hand: Fissure, Dark Hole, Man-Eater Bug
-                   opp.gy: Sangan
+                   you.gy: Mechanicalchaser
+                   opp.m0: Gemini Elf atk
+                   opp.hand: Fissure, Dark Hole, Mechanicalchaser
+                   opp.gy: La Jinn the Mystical Genie of the Lamp
                ''',
                steps='flip_summon you.m0',
                expect='''
@@ -140,24 +140,24 @@ SCENARIOS = {
         player('swap_control',
                setup='''
                    you.hand: Creature Swap
-                   you.m0: Mystic Tomato atk
+                   you.m0: Mechanicalchaser atk
                    opp.m0: Summoned Skull atk
-                   opp.m1: Battle Ox atk
+                   opp.m1: Gemini Elf atk
                ''',
                steps='''
                    activate you.hand[Creature Swap]
                    pick you.m0
                ''',
                expect='''
-                   you.monsters = Battle Ox
-                   opp.monsters = Summoned Skull, Mystic Tomato
-                   menu you.m[Battle Ox] lacks Change Position
+                   you.monsters = Gemini Elf
+                   opp.monsters = Summoned Skull, Mechanicalchaser
+                   menu you.m[Gemini Elf] lacks Change Position
                ''',
-               note='The CPU gives its weakest monster (Battle Ox).'),
+               note='The CPU gives its weakest monster (Gemini Elf).'),
         cpu('cpu_swap_weakest', start=OPP_TURN,
             setup='''
                 opp.hand: Creature Swap
-                opp.m0: Mystic Tomato atk
+                opp.m0: Mechanicalchaser atk
                 you.m0: Summoned Skull atk
             ''',
             steps='cpu_turn',
@@ -170,9 +170,9 @@ SCENARIOS = {
         player('attack_every_monster',
                setup='''
                    you.m0: Asura Priest atk
-                   opp.m0: Celtic Guardian def
-                   opp.m1: Battle Ox def
-                   opp.m2: Kuriboh atk
+                   opp.m0: Gemini Elf def
+                   opp.m1: Mechanicalchaser def
+                   opp.m2: Giant Soldier of Stone atk
                ''',
                steps='''
                    battle
@@ -184,16 +184,16 @@ SCENARIOS = {
                ''',
                expect='''
                    opp.monsters count 0
-                   opp.lp = 6600
+                   opp.lp = 7600
                    you.hand = Asura Priest
                ''',
-               note='Only the attack on Kuriboh (300 ATK) deals damage: 1400. Asura Priest returns to the hand at '
+               note='Only the attack on Giant Soldier of Stone (300 ATK) deals damage: 1400. Asura Priest returns to the hand at '
                     'the End Phase.'),
         cpu('cpu_attack_every_monster', start=OPP_TURN,
             setup='''
                 opp.m0: Asura Priest atk
-                you.m0: Celtic Guardian def
-                you.m1: Battle Ox def
+                you.m0: Gemini Elf def
+                you.m1: Mechanicalchaser def
             ''',
             steps='cpu_turn',
             expect='''
@@ -205,7 +205,7 @@ SCENARIOS = {
         player('pierce_then_defense',
                setup='''
                    you.m0: Spear Dragon atk
-                   opp.m0: Celtic Guardian def
+                   opp.m0: Gemini Elf def
                ''',
                steps='''
                    battle
@@ -213,18 +213,18 @@ SCENARIOS = {
                ''',
                expect='''
                    opp.m0 = empty
-                   opp.lp = 7300
+                   opp.lp = 7000
                    you.m0 = Spear Dragon def
                '''),
         cpu('cpu_pierce', start=OPP_TURN,
             setup='''
                 opp.m0: Spear Dragon atk
-                you.m0: Celtic Guardian def
+                you.m0: Gemini Elf def
             ''',
             steps='cpu_turn',
             expect='''
                 you.m0 = empty
-                you.lp = 7300
+                you.lp = 7000
                 opp.m0 = Spear Dragon def
             '''),
     ],
@@ -232,7 +232,7 @@ SCENARIOS = {
         player('negate_battle_destroyed_effects',
                setup='''
                    you.m0: Dark Ruler Ha Des atk
-                   you.m1: La Jinn the Mystical Genie of the Lamp atk
+                   you.m1: Gemini Elf atk
                    opp.m0: Sangan atk
                    opp.m1: Man-Eater Bug set
                ''',
@@ -244,8 +244,8 @@ SCENARIOS = {
                expect='''
                    opp.monsters count 0
                    you.m0 = Dark Ruler Ha Des atk
-                   you.m1 = La Jinn the Mystical Genie of the Lamp atk
-                   opp.lp = 7200
+                   you.m1 = Gemini Elf atk
+                   opp.lp = 7100
                    opp.hand count 0
                ''',
                note="Sangan's search and Man-Eater Bug's FLIP effect do not activate (both destroyed by Fiends)."),
@@ -265,8 +265,8 @@ SCENARIOS = {
         player('pierce_and_draw',
                setup='''
                    you.m0: Airknight Parshath atk
-                   you.deck: Battle Ox
-                   opp.m0: Celtic Guardian def
+                   you.deck: Mechanicalchaser
+                   opp.m0: Gemini Elf def
                ''',
                steps='''
                    battle
@@ -274,32 +274,32 @@ SCENARIOS = {
                ''',
                expect='''
                    opp.m0 = empty
-                   opp.lp = 7300
-                   you.hand = Battle Ox
+                   opp.lp = 7000
+                   you.hand = Mechanicalchaser
                '''),
         cpu('cpu_pierce_and_draw', start=OPP_TURN,
             setup='''
                 opp.m0: Airknight Parshath atk
-                opp.deck: Battle Ox
-                you.m0: Celtic Guardian def
+                opp.deck: Mechanicalchaser
+                you.m0: Gemini Elf def
             ''',
             steps='cpu_turn',
             expect='''
-                you.lp = 7300
+                you.lp = 7000
                 you.m0 = empty
             '''),
     ],
     'Mirage of Nightmare': [
         player('draw_to_four_then_discard',
                setup='''
-                   you.hand: Mirage of Nightmare, Battle Ox
-                   you.deck: Celtic Guardian, La Jinn the Mystical Genie of the Lamp, Sangan, Fissure
+                   you.hand: Mirage of Nightmare, Gemini Elf
+                   you.deck: Mechanicalchaser, La Jinn the Mystical Genie of the Lamp, Neo the Magic Swordsman, Fissure
                ''',
                steps='''
                    activate you.hand[Mirage of Nightmare]
                    pass
                    opp_turn
-                   check you.hand = Battle Ox, Celtic Guardian, La Jinn the Mystical Genie of the Lamp, Sangan
+                   check you.hand = Gemini Elf, Mechanicalchaser, La Jinn the Mystical Genie of the Lamp, Neo the Magic Swordsman
                    draw
                ''',
                expect='''
@@ -381,7 +381,7 @@ SCENARIOS = {
                setup='''
                    you.m0: Don Zaloog atk
                    opp.hand: Fissure, Trap Hole
-                   opp.deck: Summoned Skull, Battle Ox
+                   opp.deck: Summoned Skull, Gemini Elf
                ''',
                steps='''
                    battle
@@ -392,7 +392,7 @@ SCENARIOS = {
                expect='''
                    opp.lp = 6600
                    opp.hand count 2
-                   opp.gy = Summoned Skull, Battle Ox
+                   opp.gy = Summoned Skull, Gemini Elf
                '''),
         cpu('cpu_discard_random', start=OPP_TURN,
             setup='''
@@ -409,7 +409,7 @@ SCENARIOS = {
         player('search_warrior',
                setup='''
                    you.hand: Reinforcement of the Army
-                   you.deck: Battle Ox, Celtic Guardian, Summoned Skull
+                   you.deck: Gemini Elf, Celtic Guardian, Summoned Skull
                ''',
                steps='''
                    activate you.hand[Reinforcement of the Army]
@@ -431,7 +431,7 @@ SCENARIOS = {
         player('flip_summon_gravekeeper',
                setup='''
                    you.m0: Gravekeeper's Spy set
-                   you.deck: Gravekeeper's Spy, Battle Ox
+                   you.deck: Gravekeeper's Spy, Gemini Elf
                ''',
                steps='''
                    flip_summon you.m0
@@ -446,7 +446,7 @@ SCENARIOS = {
                note="Gravekeeper's Spy is the only Gravekeeper's monster in the ROM."),
         cpu('cpu_flipped_by_attack',
             setup='''
-                you.m0: Battle Ox atk
+                you.m0: Gemini Elf atk
                 opp.m0: Gravekeeper's Spy set
                 opp.deck: Gravekeeper's Spy
             ''',
@@ -455,7 +455,7 @@ SCENARIOS = {
                 attack you.m0 -> opp.m0
             ''',
             expect='''
-                you.lp = 7700
+                you.lp = 7900
                 opp.monsters = Gravekeeper's Spy, Gravekeeper's Spy
             '''),
     ],
@@ -476,7 +476,7 @@ SCENARIOS = {
         cpu('cpu_clear_the_way', start=OPP_TURN,
             setup='''
                 opp.hand: Book of Moon
-                opp.m0: La Jinn the Mystical Genie of the Lamp atk
+                opp.m0: Gemini Elf atk
                 you.m0: Summoned Skull atk
             ''',
             steps='cpu_turn',
@@ -490,23 +490,23 @@ SCENARIOS = {
         player('destroy_weak_summon',
                setup='''
                    you.m0: King Tiger Wanghu atk
-                   you.hand: Mystic Tomato
+                   you.hand: Giant Soldier of Stone
                ''',
-               steps='summon you.hand[Mystic Tomato] -> m1 atk',
+               steps='summon you.hand[Giant Soldier of Stone] -> m1 atk',
                expect='''
                    you.m1 = empty
-                   you.gy = Mystic Tomato
+                   you.gy = Giant Soldier of Stone
                    you.m0 = King Tiger Wanghu atk
                '''),
         cpu('cpu_wanghu_on_human_summon',
             setup='''
                 opp.m0: King Tiger Wanghu atk
-                you.hand: Mystic Tomato
+                you.hand: Giant Soldier of Stone
             ''',
-            steps='summon you.hand[Mystic Tomato] -> m0 atk',
+            steps='summon you.hand[Giant Soldier of Stone] -> m0 atk',
             expect='''
                 you.m0 = empty
-                you.gy = Mystic Tomato
+                you.gy = Giant Soldier of Stone
             '''),
     ],
     'Newdoria': [
@@ -529,7 +529,7 @@ SCENARIOS = {
         cpu('cpu_destroy_strongest',
             setup='''
                 you.m0: Summoned Skull atk
-                you.m1: Battle Ox atk
+                you.m1: Gemini Elf atk
                 opp.m0: Newdoria atk
             ''',
             steps='''
@@ -539,7 +539,7 @@ SCENARIOS = {
             expect='''
                 opp.lp = 6700
                 you.m0 = empty
-                you.m1 = Battle Ox atk
+                you.m1 = Gemini Elf atk
             '''),
     ],
     'Metamorphosis': [
@@ -594,18 +594,18 @@ SCENARIOS = {
         player('discard_destroy_card',
                setup='''
                    you.st0: Raigeki Break set
-                   you.hand: Battle Ox
+                   you.hand: Gemini Elf
                    opp.m0: Summoned Skull atk
                ''',
                steps='''
                    activate you.st0
-                   discard you.hand[Battle Ox]
+                   discard you.hand[Gemini Elf]
                    target opp.m0
                ''',
                expect='''
                    opp.m0 = empty
                    opp.gy = Summoned Skull
-                   you.gy = Raigeki Break, Battle Ox
+                   you.gy = Raigeki Break, Gemini Elf
                '''),
         cpu('cpu_discard_destroy', start=OPP_TURN,
             setup='''
@@ -649,13 +649,13 @@ SCENARIOS = {
                setup='''
                    you.st0: Blast with Chain set
                    you.hand: Mystical Space Typhoon
-                   you.m0: Battle Ox atk
+                   you.m0: Gemini Elf atk
                    opp.m0: Summoned Skull atk
                ''',
                steps='''
                    activate you.st0
                    target you.m0
-                   check you.m0.atk = 2200
+                   check you.m0.atk = 2400
                    activate you.hand[Mystical Space Typhoon]
                    target you.st0
                    target opp.m0
@@ -664,13 +664,13 @@ SCENARIOS = {
                    opp.m0 = empty
                    opp.gy = Summoned Skull
                    you.gy = Blast with Chain, Mystical Space Typhoon
-                   you.m0.atk = 1700
+                   you.m0.atk = 1900
                '''),
         cpu('cpu_equip_against_attack',
             setup='''
-                you.m0: La Jinn the Mystical Genie of the Lamp atk
+                you.m0: Gemini Elf atk
                 opp.st0: Blast with Chain set
-                opp.m0: Battle Ox atk
+                opp.m0: Mechanicalchaser atk
             ''',
             steps='''
                 battle
@@ -678,9 +678,9 @@ SCENARIOS = {
             ''',
             expect='''
                 you.m0 = empty
-                you.lp = 7600
-                opp.m0 = Battle Ox atk
-                opp.m0.atk = 2200
+                you.lp = 7550
+                opp.m0 = Mechanicalchaser atk
+                opp.m0.atk = 2350
             '''),
     ],
     'Gearfried the Iron Knight': [
@@ -701,12 +701,12 @@ SCENARIOS = {
         cpu('cpu_attack', start=OPP_TURN,
             setup='''
                 opp.m0: Gearfried the Iron Knight atk
-                you.m0: Celtic Guardian atk
+                you.m0: Battle Ox atk
             ''',
             steps='cpu_turn',
             expect='''
                 you.m0 = empty
-                you.lp = 7600
+                you.lp = 7900
             '''),
     ],
 }

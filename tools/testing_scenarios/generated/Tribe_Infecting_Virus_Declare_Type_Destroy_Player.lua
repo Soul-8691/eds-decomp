@@ -28,7 +28,7 @@ EDS.run({
     setupCards = {
         { player = 0, zone = "monster", slot = 0, name = "Tribe-Infecting Virus" },
         { player = 0, zone = "hand", slot = 0, name = "Fissure" },
-        { player = 1, zone = "monster", slot = 0, name = "Battle Ox" },
+        { player = 1, zone = "monster", slot = 0, name = "Gemini Elf" },
         { player = 1, zone = "monster", slot = 1, name = "La Jinn the Mystical Genie of the Lamp" },
         { player = 1, zone = "monster", slot = 2, name = "Summoned Skull" },
     },
@@ -40,7 +40,7 @@ EDS.run({
         "declare Fiend",
     },
     expect = {
-        "opp.m0 = Battle Ox atk",
+        "opp.m0 = Gemini Elf atk",
         "opp.m1 = empty",
         "opp.m2 = empty",
         "you.gy = Fissure",

@@ -35,16 +35,16 @@ EDS.run({
         { player = 1, zone = "hand", slot = 3, name = "La Jinn the Mystical Genie of the Lamp" },
     },
     setupPiles = {
-        { player = 0, pile = "deck", names = { "Summoned Skull", "Celtic Guardian", "Fissure" } },
-        { player = 1, pile = "deck", names = { "Dark Magician", "Celtic Guardian", "Man-Eater Bug", "Swords of Revealing Light" } },
+        { player = 0, pile = "deck", names = { "Summoned Skull", "Neo the Magic Swordsman", "Fissure" } },
+        { player = 1, pile = "deck", names = { "Dark Magician", "Neo the Magic Swordsman", "Giant Soldier of Stone", "Swords of Revealing Light" } },
     },
     steps = {
         "activate you.hand[Card Destruction]",
     },
     expect = {
-        "you.hand = Summoned Skull, Celtic Guardian",
+        "you.hand = Summoned Skull, Neo the Magic Swordsman",
         "you.gy = Card Destruction, Dark Hole, Battle Ox",
-        "opp.hand = Dark Magician, Celtic Guardian, Man-Eater Bug, Swords of Revealing Light",
+        "opp.hand = Dark Magician, Neo the Magic Swordsman, Giant Soldier of Stone, Swords of Revealing Light",
         "opp.gy = Trap Hole, Fissure, Battle Ox, La Jinn the Mystical Genie of the Lamp",
     },
     freezeOpponent = true,

@@ -27,7 +27,7 @@ EDS.run({
     start = { turn = "opp", turnCount = 3, lp = { 8000, 8000 } },
     setupCards = {
         { player = 1, zone = "monster", slot = 0, name = "Cyber End Dragon" },
-        { player = 0, zone = "monster", slot = 0, name = "Big Shield Gardna", position = "def" },
+        { player = 0, zone = "monster", slot = 0, name = "Giant Soldier of Stone", position = "def" },
     },
     setupPiles = {
     },
@@ -36,7 +36,7 @@ EDS.run({
     },
     expect = {
         "you.m0 = empty",
-        "you.lp = 6600",
+        "you.lp = 6000",
     },
     freezeOpponent = false,
 })

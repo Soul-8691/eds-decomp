@@ -31,7 +31,7 @@ EDS.run({
         { player = 1, zone = "hand", slot = 1, name = "Trap Hole" },
     },
     setupPiles = {
-        { player = 1, pile = "deck", names = { "Summoned Skull", "Battle Ox" } },
+        { player = 1, pile = "deck", names = { "Summoned Skull", "Gemini Elf" } },
     },
     steps = {
         "battle",
@@ -42,7 +42,7 @@ EDS.run({
     expect = {
         "opp.lp = 6600",
         "opp.hand count 2",
-        "opp.gy = Summoned Skull, Battle Ox",
+        "opp.gy = Summoned Skull, Gemini Elf",
     },
     freezeOpponent = true,
 })

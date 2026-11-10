@@ -28,7 +28,7 @@ EDS.run({
     setupCards = {
         { player = 0, zone = "st", slot = 0, name = "Threatening Roar", set = true },
         { player = 1, zone = "monster", slot = 0, name = "Summoned Skull" },
-        { player = 1, zone = "monster", slot = 1, name = "Battle Ox" },
+        { player = 1, zone = "monster", slot = 1, name = "Gemini Elf" },
     },
     setupPiles = {
     },
@@ -36,7 +36,7 @@ EDS.run({
         "when attack opp.m0 -> direct: activate you.st0",
     },
     expect = {
-        "you.lp in 5500|6300",
+        "you.lp in 5500|6100",
         "you.gy = Threatening Roar",
     },
     freezeOpponent = false,

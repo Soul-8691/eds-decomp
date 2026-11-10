@@ -29,14 +29,14 @@ EDS.run({
         { player = 0, zone = "monster", slot = 0, name = "Magical Merchant", set = true },
     },
     setupPiles = {
-        { player = 0, pile = "deck", names = { "Battle Ox", "Celtic Guardian", "Fissure", "Trap Hole" } },
+        { player = 0, pile = "deck", names = { "Gemini Elf", "Mechanicalchaser", "Fissure", "Trap Hole" } },
     },
     steps = {
         "flip_summon you.m0",
     },
     expect = {
         "you.hand = Fissure",
-        "you.gy = Battle Ox, Celtic Guardian",
+        "you.gy = Gemini Elf, Mechanicalchaser",
         "you.deck[0] = Trap Hole",
     },
     freezeOpponent = true,

@@ -29,14 +29,14 @@ EDS.run({
         { player = 1, zone = "st", slot = 0, name = "Return from the Different Dimension", set = true },
     },
     setupPiles = {
-        { player = 1, pile = "banished", names = { "Summoned Skull", "Battle Ox" } },
+        { player = 1, pile = "banished", names = { "Summoned Skull", "Gemini Elf" } },
     },
     steps = {
         "cpu_turn",
     },
     expect = {
         "opp.lp = 4000",
-        "opp.banished = Summoned Skull, Battle Ox",
+        "opp.banished = Summoned Skull, Gemini Elf",
         "opp.monsters count 0",
     },
     freezeOpponent = false,

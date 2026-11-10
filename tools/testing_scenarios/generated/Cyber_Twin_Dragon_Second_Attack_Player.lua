@@ -27,8 +27,8 @@ EDS.run({
     start = { turn = "you", turnCount = 2, lp = { 8000, 8000 } },
     setupCards = {
         { player = 0, zone = "monster", slot = 0, name = "Cyber Twin Dragon" },
-        { player = 1, zone = "monster", slot = 0, name = "Celtic Guardian" },
-        { player = 1, zone = "monster", slot = 1, name = "Battle Ox" },
+        { player = 1, zone = "monster", slot = 0, name = "Gemini Elf" },
+        { player = 1, zone = "monster", slot = 1, name = "Mechanicalchaser" },
     },
     setupPiles = {
     },
@@ -39,7 +39,7 @@ EDS.run({
     },
     expect = {
         "opp.monsters count 0",
-        "opp.lp = 5500",
+        "opp.lp = 6150",
     },
     freezeOpponent = true,
 })

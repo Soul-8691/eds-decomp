@@ -27,7 +27,7 @@ EDS.run({
     start = { turn = "you", turnCount = 2, lp = { 8000, 8000 } },
     setupCards = {
         { player = 0, zone = "hand", slot = 0, name = "Mage Power" },
-        { player = 0, zone = "monster", slot = 0, name = "Battle Ox" },
+        { player = 0, zone = "monster", slot = 0, name = "Gemini Elf" },
         { player = 0, zone = "st", slot = 0, name = "Trap Hole", set = true },
         { player = 0, zone = "st", slot = 1, name = "Call of the Haunted", set = true },
     },
@@ -38,8 +38,8 @@ EDS.run({
         "target you.m0",
     },
     expect = {
-        "you.m0.atk = 3200",
-        "you.m0.def = 2500",
+        "you.m0.atk = 3400",
+        "you.m0.def = 2400",
     },
     freezeOpponent = true,
 })

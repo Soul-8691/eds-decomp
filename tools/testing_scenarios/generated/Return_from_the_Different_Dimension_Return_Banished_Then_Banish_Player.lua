@@ -23,13 +23,13 @@ EDS.run({
     effect = "return_banished_then_banish",
     actor = "Player",
     format = "Warrior",
-    scenarioText = "activate you.st0; zone m0; position atk; zone m1; position atk; zone m2; position atk; check you.lp = 4000; check you.monsters = Summoned Skull, Battle Ox, Celtic Guardian; pass",
+    scenarioText = "activate you.st0; zone m0; position atk; zone m1; position atk; zone m2; position atk; check you.lp = 4000; check you.monsters = Summoned Skull, Gemini Elf, Mechanicalchaser; pass",
     start = { turn = "you", turnCount = 2, lp = { 8000, 8000 } },
     setupCards = {
         { player = 0, zone = "st", slot = 0, name = "Return from the Different Dimension", set = true },
     },
     setupPiles = {
-        { player = 0, pile = "banished", names = { "Summoned Skull", "Battle Ox", "Celtic Guardian" } },
+        { player = 0, pile = "banished", names = { "Summoned Skull", "Gemini Elf", "Mechanicalchaser" } },
     },
     steps = {
         "activate you.st0",
@@ -40,12 +40,12 @@ EDS.run({
         "zone m2",
         "position atk",
         "check you.lp = 4000",
-        "check you.monsters = Summoned Skull, Battle Ox, Celtic Guardian",
+        "check you.monsters = Summoned Skull, Gemini Elf, Mechanicalchaser",
         "pass",
     },
     expect = {
         "you.monsters count 0",
-        "you.banished = Summoned Skull, Battle Ox, Celtic Guardian",
+        "you.banished = Summoned Skull, Gemini Elf, Mechanicalchaser",
     },
     freezeOpponent = true,
 })

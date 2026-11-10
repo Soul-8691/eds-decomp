@@ -29,13 +29,13 @@ EDS.run({
         { player = 0, zone = "st", slot = 0, name = "Jar of Greed", set = true },
     },
     setupPiles = {
-        { player = 0, pile = "deck", names = { "Battle Ox" } },
+        { player = 0, pile = "deck", names = { "Gemini Elf" } },
     },
     steps = {
         "activate you.st0",
     },
     expect = {
-        "you.hand = Battle Ox",
+        "you.hand = Gemini Elf",
         "you.gy = Jar of Greed",
     },
     freezeOpponent = true,

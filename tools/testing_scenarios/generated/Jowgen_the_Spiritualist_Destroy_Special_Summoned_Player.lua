@@ -30,7 +30,7 @@ EDS.run({
         { player = 0, zone = "hand", slot = 0, name = "Fissure" },
         { player = 0, zone = "hand", slot = 1, name = "Gilasaurus" },
         { player = 1, zone = "monster", slot = 0, name = "Summoned Skull", specialSummoned = true },
-        { player = 1, zone = "monster", slot = 1, name = "Battle Ox" },
+        { player = 1, zone = "monster", slot = 1, name = "Gemini Elf" },
     },
     setupPiles = {
     },
@@ -40,7 +40,7 @@ EDS.run({
     },
     expect = {
         "opp.m0 = empty",
-        "opp.m1 = Battle Ox atk",
+        "opp.m1 = Gemini Elf atk",
         "you.hand count 1",
         "you.gy count 1",
     },

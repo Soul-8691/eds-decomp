@@ -27,7 +27,7 @@ EDS.run({
     start = { turn = "opp", turnCount = 3, lp = { 8000, 8000 } },
     setupCards = {
         { player = 1, zone = "hand", slot = 0, name = "Monster Gate" },
-        { player = 1, zone = "monster", slot = 0, name = "Celtic Guardian" },
+        { player = 1, zone = "monster", slot = 0, name = "Gemini Elf" },
     },
     setupPiles = {
         { player = 1, pile = "deck", names = { "Fissure", "Summoned Skull" } },

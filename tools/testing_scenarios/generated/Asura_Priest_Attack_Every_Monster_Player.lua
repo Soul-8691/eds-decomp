@@ -27,9 +27,9 @@ EDS.run({
     start = { turn = "you", turnCount = 2, lp = { 8000, 8000 } },
     setupCards = {
         { player = 0, zone = "monster", slot = 0, name = "Asura Priest" },
-        { player = 1, zone = "monster", slot = 0, name = "Celtic Guardian", position = "def" },
-        { player = 1, zone = "monster", slot = 1, name = "Battle Ox", position = "def" },
-        { player = 1, zone = "monster", slot = 2, name = "Kuriboh" },
+        { player = 1, zone = "monster", slot = 0, name = "Gemini Elf", position = "def" },
+        { player = 1, zone = "monster", slot = 1, name = "Mechanicalchaser", position = "def" },
+        { player = 1, zone = "monster", slot = 2, name = "Giant Soldier of Stone" },
     },
     setupPiles = {
     },
@@ -43,7 +43,7 @@ EDS.run({
     },
     expect = {
         "opp.monsters count 0",
-        "opp.lp = 6600",
+        "opp.lp = 7600",
         "you.hand = Asura Priest",
     },
     freezeOpponent = true,

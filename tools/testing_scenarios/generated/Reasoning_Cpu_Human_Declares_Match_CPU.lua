@@ -29,7 +29,7 @@ EDS.run({
         { player = 1, zone = "hand", slot = 0, name = "Reasoning" },
     },
     setupPiles = {
-        { player = 1, pile = "deck", names = { "Fissure", "Battle Ox" } },
+        { player = 1, pile = "deck", names = { "Fissure", "Gemini Elf" } },
     },
     steps = {
         "when prompt declare_level: declare level 4",
@@ -37,8 +37,8 @@ EDS.run({
     expect = {
         "opp.gy has Reasoning",
         "opp.gy has Fissure",
-        "opp.gy has Battle Ox",
-        "opp.monsters lacks Battle Ox",
+        "opp.gy has Gemini Elf",
+        "opp.monsters lacks Gemini Elf",
     },
     freezeOpponent = false,
 })

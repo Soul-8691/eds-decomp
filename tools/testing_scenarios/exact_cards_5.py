@@ -8,8 +8,8 @@ SCENARIOS = {
         player('second_attack',
                setup='''
                    you.m0: Cyber Twin Dragon atk
-                   opp.m0: Celtic Guardian atk
-                   opp.m1: Battle Ox atk
+                   opp.m0: Gemini Elf atk
+                   opp.m1: Mechanicalchaser atk
                ''',
                steps='''
                    battle
@@ -18,18 +18,18 @@ SCENARIOS = {
                ''',
                expect='''
                    opp.monsters count 0
-                   opp.lp = 5500
+                   opp.lp = 6150
                '''),
         cpu('cpu_second_attack', start=OPP_TURN,
             setup='''
                 opp.m0: Cyber Twin Dragon atk
-                you.m0: Celtic Guardian atk
-                you.m1: Battle Ox atk
+                you.m0: Gemini Elf atk
+                you.m1: Mechanicalchaser atk
             ''',
             steps='cpu_turn',
             expect='''
                 you.monsters count 0
-                you.lp = 5500
+                you.lp = 6150
             '''),
     ],
     'Cyber Dragon': [
@@ -43,7 +43,7 @@ SCENARIOS = {
         player('not_while_you_control_a_monster',
                setup='''
                    you.hand: Cyber Dragon
-                   you.m0: Battle Ox atk
+                   you.m0: Gemini Elf atk
                    opp.m0: Summoned Skull atk
                ''',
                steps='check menu you.hand[Cyber Dragon] lacks Special Summon',
@@ -51,20 +51,20 @@ SCENARIOS = {
         cpu('cpu_special_summon_first', start=OPP_TURN,
             setup='''
                 opp.hand: Cyber Dragon
-                you.m0: Battle Ox atk
+                you.m0: Gemini Elf atk
             ''',
             steps='cpu_turn',
             expect='''
                 opp.monsters has Cyber Dragon
                 you.m0 = empty
-                you.lp = 7600
+                you.lp = 7800
             '''),
     ],
     'Cyber End Dragon': [
         player('pierce',
                setup='''
                    you.m0: Cyber End Dragon atk
-                   opp.m0: Big Shield Gardna def
+                   opp.m0: Giant Soldier of Stone def
                ''',
                steps='''
                    battle
@@ -72,17 +72,17 @@ SCENARIOS = {
                ''',
                expect='''
                    opp.m0 = empty
-                   opp.lp = 6600
+                   opp.lp = 6000
                '''),
         cpu('cpu_pierce', start=OPP_TURN,
             setup='''
                 opp.m0: Cyber End Dragon atk
-                you.m0: Big Shield Gardna def
+                you.m0: Giant Soldier of Stone def
             ''',
             steps='cpu_turn',
             expect='''
                 you.m0 = empty
-                you.lp = 6600
+                you.lp = 6000
             '''),
     ],
     'Threatening Roar': [
@@ -90,14 +90,14 @@ SCENARIOS = {
                setup='''
                    you.st0: Threatening Roar set
                    opp.m0: Summoned Skull atk
-                   opp.m1: Battle Ox atk
+                   opp.m1: Gemini Elf atk
                ''',
                steps='when attack opp.m0 -> direct: activate you.st0',
                expect='''
-                   you.lp in 5500|6300
+                   you.lp in 5500|6100
                    you.gy = Threatening Roar
                ''',
-               note='The declared attack goes on (2500); Battle Ox cannot attack after it. If Battle Ox attacks '
+               note='The declared attack goes on (2500); Gemini Elf cannot attack after it. If Gemini Elf attacks '
                     'first, answer that attack instead (then you.lp is 6300).'),
         cpu('cpu_before_battle_phase',
             setup='''
@@ -118,7 +118,7 @@ SCENARIOS = {
         player('lose_400_to_pierce',
                setup='''
                    you.m0: Exarion Universe atk
-                   opp.m0: Celtic Guardian def
+                   opp.m0: Gemini Elf def
                ''',
                steps='''
                    battle
@@ -127,18 +127,18 @@ SCENARIOS = {
                ''',
                expect='''
                    opp.m0 = empty
-                   opp.lp = 7800
+                   opp.lp = 7500
                    you.m0.atk = 1400
                '''),
         cpu('cpu_lose_400_to_pierce', start=OPP_TURN,
             setup='''
                 opp.m0: Exarion Universe atk
-                you.m0: Celtic Guardian def
+                you.m0: Gemini Elf def
             ''',
             steps='cpu_turn',
             expect='''
                 you.m0 = empty
-                you.lp = 7800
+                you.lp = 7500
             '''),
     ],
     'Gravity Bind': [
@@ -277,7 +277,7 @@ SCENARIOS = {
         player('discard_monster_burn',
                setup='''
                    you.hand: Thestalos the Firestorm Monarch
-                   you.m0: Battle Ox atk
+                   you.m0: Gemini Elf atk
                    opp.hand: Summoned Skull
                ''',
                steps='tribute_summon you.hand[Thestalos the Firestorm Monarch] -> m0 atk tributes you.m0',
@@ -290,7 +290,7 @@ SCENARIOS = {
         cpu('cpu_discard_monster_burn', start=OPP_TURN,
             setup='''
                 opp.hand: Thestalos the Firestorm Monarch
-                opp.m0: Battle Ox atk
+                opp.m0: Gemini Elf atk
                 you.hand: Summoned Skull
             ''',
             steps='cpu_turn',
@@ -339,15 +339,15 @@ SCENARIOS = {
         player('shuffle_five_draw_two',
                setup='''
                    you.hand: Pot of Avarice
-                   you.gy: Battle Ox, Celtic Guardian, La Jinn the Mystical Genie of the Lamp, Summoned Skull, Man-Eater Bug
+                   you.gy: Gemini Elf, Mechanicalchaser, La Jinn the Mystical Genie of the Lamp, Summoned Skull, Giant Soldier of Stone
                ''',
                steps='''
                    activate you.hand[Pot of Avarice]
-                   pick you.gy[Battle Ox]
-                   pick you.gy[Celtic Guardian]
+                   pick you.gy[Gemini Elf]
+                   pick you.gy[Mechanicalchaser]
                    pick you.gy[La Jinn the Mystical Genie of the Lamp]
                    pick you.gy[Summoned Skull]
-                   pick you.gy[Man-Eater Bug]
+                   pick you.gy[Giant Soldier of Stone]
                ''',
                expect='''
                    you.gy = Pot of Avarice
@@ -356,7 +356,7 @@ SCENARIOS = {
         cpu('cpu_shuffle_five_draw_two', start=OPP_TURN,
             setup='''
                 opp.hand: Pot of Avarice
-                opp.gy: Battle Ox, Celtic Guardian, La Jinn the Mystical Genie of the Lamp, Summoned Skull, Man-Eater Bug
+                opp.gy: Gemini Elf, Mechanicalchaser, La Jinn the Mystical Genie of the Lamp, Summoned Skull, Giant Soldier of Stone
             ''',
             steps='cpu_turn',
             expect='''
@@ -368,19 +368,19 @@ SCENARIOS = {
         player('flip_excavate_spell_trap',
                setup='''
                    you.m0: Magical Merchant set
-                   you.deck: Battle Ox, Celtic Guardian, Fissure, Trap Hole
+                   you.deck: Gemini Elf, Mechanicalchaser, Fissure, Trap Hole
                ''',
                steps='flip_summon you.m0',
                expect='''
                    you.hand = Fissure
-                   you.gy = Battle Ox, Celtic Guardian
+                   you.gy = Gemini Elf, Mechanicalchaser
                    you.deck[0] = Trap Hole
                '''),
         cpu('cpu_flipped_by_attack',
             setup='''
                 you.m0: Summoned Skull atk
                 opp.m0: Magical Merchant set
-                opp.deck: Battle Ox, Fissure
+                opp.deck: Gemini Elf, Fissure
             ''',
             steps='''
                 battle
@@ -388,7 +388,7 @@ SCENARIOS = {
             ''',
             expect='''
                 opp.hand = Fissure
-                opp.gy has Battle Ox
+                opp.gy has Gemini Elf
                 opp.gy has Magical Merchant
             '''),
     ],
@@ -396,7 +396,7 @@ SCENARIOS = {
         player('no_tributes',
                setup='''
                    you.st0: Mask of Restrict set
-                   you.m0: Battle Ox atk
+                   you.m0: Gemini Elf atk
                    you.hand: Summoned Skull
                ''',
                steps='activate you.st0',
@@ -407,7 +407,7 @@ SCENARIOS = {
         cpu('cpu_lock_tributes', start=OPP_TURN,
             setup='''
                 opp.st0: Mask of Restrict set
-                you.m0: Battle Ox atk
+                you.m0: Gemini Elf atk
                 you.hand: Summoned Skull
             ''',
             steps='''

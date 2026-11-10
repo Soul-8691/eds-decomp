@@ -35,15 +35,15 @@ For each card: **Implementation** and **Coded behavior** come from this repo (`s
 | You | Hand 1 | Dark Hole |  |
 | You | Hand 2 | Battle Ox |  |
 | You | Deck 0 | Summoned Skull |  |
-| You | Deck 1 | Celtic Guardian |  |
+| You | Deck 1 | Neo the Magic Swordsman |  |
 | You | Deck 2 | Fissure |  |
 | Opponent | Hand 0 | Trap Hole |  |
 | Opponent | Hand 1 | Fissure |  |
 | Opponent | Hand 2 | Battle Ox |  |
 | Opponent | Hand 3 | La Jinn the Mystical Genie of the Lamp |  |
 | Opponent | Deck 0 | Dark Magician |  |
-| Opponent | Deck 1 | Celtic Guardian |  |
-| Opponent | Deck 2 | Man-Eater Bug |  |
+| Opponent | Deck 1 | Neo the Magic Swordsman |  |
+| Opponent | Deck 2 | Giant Soldier of Stone |  |
 | Opponent | Deck 3 | Swords of Revealing Light |  |
 
 **Steps**
@@ -52,9 +52,9 @@ For each card: **Implementation** and **Coded behavior** come from this repo (`s
 
 **Expected**
 
-- `you.hand = Summoned Skull, Celtic Guardian`: your hand is exactly Summoned Skull, Celtic Guardian.
+- `you.hand = Summoned Skull, Neo the Magic Swordsman`: your hand is exactly Summoned Skull, Neo the Magic Swordsman.
 - `you.gy = Card Destruction, Dark Hole, Battle Ox`: your Graveyard is exactly Card Destruction, Dark Hole, Battle Ox.
-- `opp.hand = Dark Magician, Celtic Guardian, Man-Eater Bug, Swords of Revealing Light`: the opponent's hand is exactly Dark Magician, Celtic Guardian, Man-Eater Bug, Swords of Revealing Light.
+- `opp.hand = Dark Magician, Neo the Magic Swordsman, Giant Soldier of Stone, Swords of Revealing Light`: the opponent's hand is exactly Dark Magician, Neo the Magic Swordsman, Giant Soldier of Stone, Swords of Revealing Light.
 - `opp.gy = Trap Hole, Fissure, Battle Ox, La Jinn the Mystical Genie of the Lamp`: the opponent's Graveyard is exactly Trap Hole, Fissure, Battle Ox, La Jinn the Mystical Genie of the Lamp.
 
 #### CPU 1: Discard and draw
@@ -71,10 +71,10 @@ The CPU plays it when the human holds more cards than it would discard.
 | You | Hand 1 | Dark Hole |  |
 | You | Hand 2 | Fissure |  |
 | You | Hand 3 | Trap Hole |  |
-| You | Hand 4 | Celtic Guardian |  |
+| You | Hand 4 | Neo the Magic Swordsman |  |
 | You | Deck 0 | Battle Ox |  |
-| You | Deck 1 | Celtic Guardian |  |
-| You | Deck 2 | Man-Eater Bug |  |
+| You | Deck 1 | Neo the Magic Swordsman |  |
+| You | Deck 2 | Giant Soldier of Stone |  |
 | You | Deck 3 | Fissure |  |
 | You | Deck 4 | Swords of Revealing Light |  |
 
@@ -85,8 +85,8 @@ The CPU plays it when the human holds more cards than it would discard.
 **Expected**
 
 - `opp.gy has Card Destruction`: the opponent's Graveyard includes Card Destruction.
-- `you.gy = Summoned Skull, Dark Hole, Fissure, Trap Hole, Celtic Guardian`: your Graveyard is exactly Summoned Skull, Dark Hole, Fissure, Trap Hole, Celtic Guardian.
-- `you.hand = Battle Ox, Celtic Guardian, Man-Eater Bug, Fissure, Swords of Revealing Light`: your hand is exactly Battle Ox, Celtic Guardian, Man-Eater Bug, Fissure, Swords of Revealing Light.
+- `you.gy = Summoned Skull, Dark Hole, Fissure, Trap Hole, Neo the Magic Swordsman`: your Graveyard is exactly Summoned Skull, Dark Hole, Fissure, Trap Hole, Neo the Magic Swordsman.
+- `you.hand = Battle Ox, Neo the Magic Swordsman, Giant Soldier of Stone, Fissure, Swords of Revealing Light`: your hand is exactly Battle Ox, Neo the Magic Swordsman, Giant Soldier of Stone, Fissure, Swords of Revealing Light.
 
 ### Soul Exchange
 
@@ -105,18 +105,18 @@ The CPU plays it when the human holds more cards than it would discard.
 |---|---|---|---|
 | You | Hand 0 | Soul Exchange |  |
 | You | Hand 1 | Summoned Skull |  |
-| Opponent | Monster Zone 0 | Battle Ox | face-up Attack Position |
+| Opponent | Monster Zone 0 | La Jinn the Mystical Genie of the Lamp | face-up Attack Position |
 
 **Steps**
 
 1. `activate you.hand[Soul Exchange]`: Open the card menu of **Soul Exchange** in your hand and choose Activate.
-2. `target opp.m0`: Pick the opponent's Monster Zone 0 (**Battle Ox**) as the target.
-3. `tribute_summon you.hand[Summoned Skull] -> m0 atk tributes opp.m0`: Tribute Summon **Summoned Skull** in your hand into your Monster Zone 0 (face-up Attack Position), Tributing the opponent's Monster Zone 0 (**Battle Ox**).
+2. `target opp.m0`: Pick the opponent's Monster Zone 0 (**La Jinn the Mystical Genie of the Lamp**) as the target.
+3. `tribute_summon you.hand[Summoned Skull] -> m0 atk tributes opp.m0`: Tribute Summon **Summoned Skull** in your hand into your Monster Zone 0 (face-up Attack Position), Tributing the opponent's Monster Zone 0 (**La Jinn the Mystical Genie of the Lamp**).
 
 **Expected**
 
-- `opp.m0 = empty`: the opponent's Monster Zone 0 (**Battle Ox**) is empty.
-- `opp.gy = Battle Ox`: the opponent's Graveyard is exactly Battle Ox.
+- `opp.m0 = empty`: the opponent's Monster Zone 0 (**La Jinn the Mystical Genie of the Lamp**) is empty.
+- `opp.gy = La Jinn the Mystical Genie of the Lamp`: the opponent's Graveyard is exactly La Jinn the Mystical Genie of the Lamp.
 - `you.m0 = Summoned Skull atk`: your Monster Zone 0 holds Summoned Skull, face-up Attack Position.
 - `you.gy = Soul Exchange`: your Graveyard is exactly Soul Exchange.
 - `battle_phase blocked`: The Battle Phase cannot be entered.
@@ -129,7 +129,7 @@ The CPU plays it when the human holds more cards than it would discard.
 |---|---|---|---|
 | Opponent | Hand 0 | Soul Exchange |  |
 | Opponent | Hand 1 | Summoned Skull |  |
-| You | Monster Zone 0 | Battle Ox | face-up Attack Position |
+| You | Monster Zone 0 | La Jinn the Mystical Genie of the Lamp | face-up Attack Position |
 
 **Steps**
 
@@ -137,8 +137,8 @@ The CPU plays it when the human holds more cards than it would discard.
 
 **Expected**
 
-- `you.m0 = empty`: your Monster Zone 0 (**Battle Ox**) is empty.
-- `you.gy = Battle Ox`: your Graveyard is exactly Battle Ox.
+- `you.m0 = empty`: your Monster Zone 0 (**La Jinn the Mystical Genie of the Lamp**) is empty.
+- `you.gy = La Jinn the Mystical Genie of the Lamp`: your Graveyard is exactly La Jinn the Mystical Genie of the Lamp.
 - `opp.monsters = Summoned Skull`: the opponent's monsters is exactly Summoned Skull.
 - `opp.gy = Soul Exchange`: the opponent's Graveyard is exactly Soul Exchange.
 - `you.lp = 8000`: LP of you = 8000.
@@ -163,7 +163,7 @@ Other monsters on the field cannot change their battle positions or attack. Once
 |---|---|---|---|
 | You | Monster Zone 0 | Thousand-Eyes Restrict | face-up Attack Position |
 | Opponent | Monster Zone 0 | Summoned Skull | face-up Attack Position |
-| Opponent | Monster Zone 1 | Battle Ox | face-up Attack Position |
+| Opponent | Monster Zone 1 | Mechanicalchaser | face-up Attack Position |
 
 **Steps**
 
@@ -172,13 +172,13 @@ Other monsters on the field cannot change their battle positions or attack. Once
 3. `check you.m0.atk = 2500`: Check: The face-up Attack Position of your Monster Zone 0 (**Thousand-Eyes Restrict**) is 2500.
 4. `check you.m0.def = 1200`: Check: The face-up Defense Position of your Monster Zone 0 (**Thousand-Eyes Restrict**) is 1200.
 5. `battle`: Enter the Battle Phase.
-6. `attack you.m0 -> opp.m1`: Attack with your Monster Zone 0 (**Thousand-Eyes Restrict**): target the opponent's Monster Zone 1 (**Battle Ox**).
+6. `attack you.m0 -> opp.m1`: Attack with your Monster Zone 0 (**Thousand-Eyes Restrict**): target the opponent's Monster Zone 1 (**Mechanicalchaser**).
 
 **Expected**
 
 - `opp.monsters count 0`: the opponent's monsters holds 0 card(s).
-- `opp.gy = Battle Ox`: the opponent's Graveyard is exactly Battle Ox.
-- `opp.lp = 7200`: LP of opp = 7200.
+- `opp.gy = Mechanicalchaser`: the opponent's Graveyard is exactly Mechanicalchaser.
+- `opp.lp = 7350`: LP of opp = 7350.
 - `menu you.m0 lacks Activate`: The card menu of your Monster Zone 0 (**Thousand-Eyes Restrict**) does not offer Activate.
 
 #### CPU 1: Absorb
@@ -217,7 +217,7 @@ It absorbs Summoned Skull (2500 ATK), then attacks directly.
 | Side | Place | Card | Position |
 |---|---|---|---|
 | You | Hand 0 | The Fiend Megacyber |  |
-| Opponent | Monster Zone 0 | Battle Ox | face-up Attack Position |
+| Opponent | Monster Zone 0 | Mechanicalchaser | face-up Attack Position |
 | Opponent | Monster Zone 1 | La Jinn the Mystical Genie of the Lamp | face-up Attack Position |
 
 **Steps**
@@ -235,8 +235,8 @@ It absorbs Summoned Skull (2500 ATK), then attacks directly.
 | Side | Place | Card | Position |
 |---|---|---|---|
 | You | Hand 0 | The Fiend Megacyber |  |
-| You | Monster Zone 0 | Celtic Guardian | face-up Attack Position |
-| Opponent | Monster Zone 0 | Battle Ox | face-up Attack Position |
+| You | Monster Zone 0 | Mechanicalchaser | face-up Attack Position |
+| Opponent | Monster Zone 0 | Mechanicalchaser | face-up Attack Position |
 | Opponent | Monster Zone 1 | La Jinn the Mystical Genie of the Lamp | face-up Attack Position |
 
 **Steps**
@@ -254,8 +254,8 @@ It absorbs Summoned Skull (2500 ATK), then attacks directly.
 | Side | Place | Card | Position |
 |---|---|---|---|
 | Opponent | Hand 0 | The Fiend Megacyber |  |
-| You | Monster Zone 0 | Battle Ox | face-up Attack Position |
-| You | Monster Zone 1 | Celtic Guardian | face-up Attack Position |
+| You | Monster Zone 0 | Mechanicalchaser | face-up Attack Position |
+| You | Monster Zone 1 | La Jinn the Mystical Genie of the Lamp | face-up Attack Position |
 
 **Steps**
 
@@ -280,12 +280,12 @@ It absorbs Summoned Skull (2500 ATK), then attacks directly.
 | Side | Place | Card | Position |
 |---|---|---|---|
 | You | Monster Zone 0 | Goblin Attack Force | face-up Attack Position |
-| Opponent | Monster Zone 0 | Celtic Guardian | face-up Attack Position |
+| Opponent | Monster Zone 0 | Mechanicalchaser | face-up Attack Position |
 
 **Steps**
 
 1. `battle`: Enter the Battle Phase.
-2. `attack you.m0 -> opp.m0`: Attack with your Monster Zone 0 (**Goblin Attack Force**): target the opponent's Monster Zone 0 (**Celtic Guardian**).
+2. `attack you.m0 -> opp.m0`: Attack with your Monster Zone 0 (**Goblin Attack Force**): target the opponent's Monster Zone 0 (**Mechanicalchaser**).
 3. `main2`: Go to Main Phase 2.
 4. `check you.m0 = Goblin Attack Force def`: Check: your Monster Zone 0 (**Goblin Attack Force**) holds Goblin Attack Force, face-up Defense Position.
 5. `pass`: End your turn (its End Phase effects resolve).
@@ -295,8 +295,8 @@ It absorbs Summoned Skull (2500 ATK), then attacks directly.
 
 **Expected**
 
-- `opp.lp = 7100`: LP of opp = 7100.
-- `opp.gy = Celtic Guardian`: the opponent's Graveyard is exactly Celtic Guardian.
+- `opp.lp = 7550`: LP of opp = 7550.
+- `opp.gy = Mechanicalchaser`: the opponent's Graveyard is exactly Mechanicalchaser.
 - `you.m0 = Goblin Attack Force def`: your Monster Zone 0 (**Goblin Attack Force**) holds Goblin Attack Force, face-up Defense Position.
 
 #### CPU 1: Attack then defense
@@ -306,7 +306,7 @@ It absorbs Summoned Skull (2500 ATK), then attacks directly.
 | Side | Place | Card | Position |
 |---|---|---|---|
 | Opponent | Monster Zone 0 | Goblin Attack Force | face-up Attack Position |
-| You | Monster Zone 0 | Celtic Guardian | face-up Attack Position |
+| You | Monster Zone 0 | Mechanicalchaser | face-up Attack Position |
 
 **Steps**
 
@@ -314,8 +314,8 @@ It absorbs Summoned Skull (2500 ATK), then attacks directly.
 
 **Expected**
 
-- `you.m0 = empty`: your Monster Zone 0 (**Celtic Guardian**) is empty.
-- `you.lp = 7100`: LP of you = 7100.
+- `you.m0 = empty`: your Monster Zone 0 (**Mechanicalchaser**) is empty.
+- `you.lp = 7550`: LP of you = 7550.
 - `opp.m0 = Goblin Attack Force def`: the opponent's Monster Zone 0 (**Goblin Attack Force**) holds Goblin Attack Force, face-up Defense Position.
 
 ### Solemn Wishes
@@ -336,8 +336,8 @@ One gain per draw action: Pot of Greed draws 2 cards for 500 LP.
 |---|---|---|---|
 | You | Spell/Trap Zone 0 | Solemn Wishes | face-down (Set) |
 | You | Hand 0 | Pot of Greed |  |
-| You | Deck 0 | Battle Ox |  |
-| You | Deck 1 | Celtic Guardian |  |
+| You | Deck 0 | Mechanicalchaser |  |
+| You | Deck 1 | La Jinn the Mystical Genie of the Lamp |  |
 | You | Deck 2 | Fissure |  |
 
 **Steps**
@@ -345,7 +345,7 @@ One gain per draw action: Pot of Greed draws 2 cards for 500 LP.
 1. `activate you.st0`: Open the card menu of your Spell/Trap Zone 0 (**Solemn Wishes**) and choose Activate.
 2. `activate you.hand[Pot of Greed]`: Open the card menu of **Pot of Greed** in your hand and choose Activate.
 3. `check you.lp = 8500`: Check: LP of you = 8500.
-4. `check you.hand = Battle Ox, Celtic Guardian`: Check: your hand is exactly Battle Ox, Celtic Guardian.
+4. `check you.hand = Mechanicalchaser, La Jinn the Mystical Genie of the Lamp`: Check: your hand is exactly Mechanicalchaser, La Jinn the Mystical Genie of the Lamp.
 5. `pass`: End your turn (its End Phase effects resolve).
 6. `opp_turn`: The opponent's turn passes: frozen, it plays nothing (its own Draw Phase and phase effects still run).
 7. `draw`: In your Draw Phase, open your Main Deck and choose Draw; stop at Main Phase 1.
@@ -353,7 +353,7 @@ One gain per draw action: Pot of Greed draws 2 cards for 500 LP.
 **Expected**
 
 - `you.lp = 9000`: LP of you = 9000.
-- `you.hand = Battle Ox, Celtic Guardian, Fissure`: your hand is exactly Battle Ox, Celtic Guardian, Fissure.
+- `you.hand = Mechanicalchaser, La Jinn the Mystical Genie of the Lamp, Fissure`: your hand is exactly Mechanicalchaser, La Jinn the Mystical Genie of the Lamp, Fissure.
 - `you.st0 = Solemn Wishes up`: your Spell/Trap Zone 0 (**Solemn Wishes**) holds Solemn Wishes, face up.
 
 #### CPU 1: Activate and gain
@@ -392,14 +392,14 @@ One gain per draw action: Pot of Greed draws 2 cards for 500 LP.
 |---|---|---|---|
 | You | Hand 0 | Limiter Removal |  |
 | You | Monster Zone 0 | Jinzo | face-up Attack Position |
-| You | Monster Zone 1 | Battle Ox | face-up Attack Position |
+| You | Monster Zone 1 | La Jinn the Mystical Genie of the Lamp | face-up Attack Position |
 | Opponent | Monster Zone 0 | Summoned Skull | face-up Attack Position |
 
 **Steps**
 
 1. `activate you.hand[Limiter Removal]`: Open the card menu of **Limiter Removal** in your hand and choose Activate.
 2. `check you.m0.atk = 4800`: Check: The face-up Attack Position of your Monster Zone 0 (**Jinzo**) is 4800.
-3. `check you.m1.atk = 1700`: Check: The face-up Attack Position of your Monster Zone 1 (**Battle Ox**) is 1700.
+3. `check you.m1.atk = 1800`: Check: The face-up Attack Position of your Monster Zone 1 (**La Jinn the Mystical Genie of the Lamp**) is 1800.
 4. `battle`: Enter the Battle Phase.
 5. `attack you.m0 -> opp.m0`: Attack with your Monster Zone 0 (**Jinzo**): target the opponent's Monster Zone 0 (**Summoned Skull**).
 6. `check opp.lp = 5700`: Check: LP of opp = 5700.
@@ -409,7 +409,7 @@ One gain per draw action: Pot of Greed draws 2 cards for 500 LP.
 
 - `you.m0 = empty`: your Monster Zone 0 (**Jinzo**) is empty.
 - `you.gy = Limiter Removal, Jinzo`: your Graveyard is exactly Limiter Removal, Jinzo.
-- `you.m1 = Battle Ox atk`: your Monster Zone 1 (**Battle Ox**) holds Battle Ox, face-up Attack Position.
+- `you.m1 = La Jinn the Mystical Genie of the Lamp atk`: your Monster Zone 1 (**La Jinn the Mystical Genie of the Lamp**) holds La Jinn the Mystical Genie of the Lamp, face-up Attack Position.
 - `opp.m0 = empty`: the opponent's Monster Zone 0 (**Summoned Skull**) is empty.
 
 #### CPU 1: Double machine atk
@@ -445,15 +445,15 @@ One gain per draw action: Pot of Greed draws 2 cards for 500 LP.
 
 `4_Starred_Ladybug_of_Doom_Flip_Destroy_Level_4_Player` · start: your turn, Main Phase 1 (turnCount 2) · LP 8000 / 8000 · opponent frozen
 
-A face-down monster has no Level, so Man-Eater Bug stays.
+A face-down monster has no Level, so the Set Neo the Magic Swordsman (Level 4) stays.
 
 | Side | Place | Card | Position |
 |---|---|---|---|
 | You | Monster Zone 0 | 4-Starred Ladybug of Doom | face-down (Set) |
-| Opponent | Monster Zone 0 | Battle Ox | face-up Attack Position |
+| Opponent | Monster Zone 0 | Mechanicalchaser | face-up Attack Position |
 | Opponent | Monster Zone 1 | La Jinn the Mystical Genie of the Lamp | face-up Attack Position |
 | Opponent | Monster Zone 2 | Summoned Skull | face-up Attack Position |
-| Opponent | Monster Zone 3 | Man-Eater Bug | face-down (Set) |
+| Opponent | Monster Zone 3 | Neo the Magic Swordsman | face-down (Set) |
 
 **Steps**
 
@@ -461,11 +461,11 @@ A face-down monster has no Level, so Man-Eater Bug stays.
 
 **Expected**
 
-- `opp.m0 = empty`: the opponent's Monster Zone 0 (**Battle Ox**) is empty.
+- `opp.m0 = empty`: the opponent's Monster Zone 0 (**Mechanicalchaser**) is empty.
 - `opp.m1 = empty`: the opponent's Monster Zone 1 (**La Jinn the Mystical Genie of the Lamp**) is empty.
 - `opp.m2 = Summoned Skull atk`: the opponent's Monster Zone 2 (**Summoned Skull**) holds Summoned Skull, face-up Attack Position.
-- `opp.m3 = Man-Eater Bug set`: the opponent's Monster Zone 3 (**Man-Eater Bug**) holds Man-Eater Bug, face-down (Set).
-- `opp.gy = Battle Ox, La Jinn the Mystical Genie of the Lamp`: the opponent's Graveyard is exactly Battle Ox, La Jinn the Mystical Genie of the Lamp.
+- `opp.m3 = Neo the Magic Swordsman set`: the opponent's Monster Zone 3 (**Neo the Magic Swordsman**) holds Neo the Magic Swordsman, face-down (Set).
+- `opp.gy = Mechanicalchaser, La Jinn the Mystical Genie of the Lamp`: the opponent's Graveyard is exactly Mechanicalchaser, La Jinn the Mystical Genie of the Lamp.
 - `you.m0 = 4-Starred Ladybug of Doom atk`: your Monster Zone 0 (**4-Starred Ladybug of Doom**) holds 4-Starred Ladybug of Doom, face-up Attack Position.
 
 #### CPU 1: Flip destroy level 4
@@ -475,8 +475,8 @@ A face-down monster has no Level, so Man-Eater Bug stays.
 | Side | Place | Card | Position |
 |---|---|---|---|
 | Opponent | Monster Zone 0 | 4-Starred Ladybug of Doom | face-down (Set) |
-| You | Monster Zone 0 | Battle Ox | face-up Attack Position |
-| You | Monster Zone 1 | Celtic Guardian | face-up Attack Position |
+| You | Monster Zone 0 | Mechanicalchaser | face-up Attack Position |
+| You | Monster Zone 1 | La Jinn the Mystical Genie of the Lamp | face-up Attack Position |
 
 **Steps**
 
@@ -485,7 +485,7 @@ A face-down monster has no Level, so Man-Eater Bug stays.
 **Expected**
 
 - `you.monsters count 0`: your monsters holds 0 card(s).
-- `you.gy = Battle Ox, Celtic Guardian`: your Graveyard is exactly Battle Ox, Celtic Guardian.
+- `you.gy = Mechanicalchaser, La Jinn the Mystical Genie of the Lamp`: your Graveyard is exactly Mechanicalchaser, La Jinn the Mystical Genie of the Lamp.
 
 ## Android
 
@@ -506,8 +506,8 @@ A face-down monster has no Level, so Man-Eater Bug stays.
 |---|---|---|---|
 | You | Monster Zone 0 | Kycoo the Ghost Destroyer | face-up Attack Position |
 | Opponent | Graveyard | Summoned Skull |  |
-| Opponent | Graveyard | Battle Ox |  |
-| Opponent | Graveyard | Sangan |  |
+| Opponent | Graveyard | Gemini Elf |  |
+| Opponent | Graveyard | Mechanicalchaser |  |
 
 **Steps**
 
@@ -516,13 +516,13 @@ A face-down monster has no Level, so Man-Eater Bug stays.
 3. `yes`: Answer Yes.
 4. `pick opp.gy[Summoned Skull]`: Pick **Summoned Skull** in the opponent's Graveyard in the list or on the field.
 5. `yes`: Answer Yes.
-6. `pick opp.gy[Sangan]`: Pick **Sangan** in the opponent's Graveyard in the list or on the field.
+6. `pick opp.gy[Mechanicalchaser]`: Pick **Mechanicalchaser** in the opponent's Graveyard in the list or on the field.
 
 **Expected**
 
 - `opp.lp = 6200`: LP of opp = 6200.
-- `opp.banished = Summoned Skull, Sangan`: the opponent's banished cards is exactly Summoned Skull, Sangan.
-- `opp.gy = Battle Ox`: the opponent's Graveyard is exactly Battle Ox.
+- `opp.banished = Summoned Skull, Mechanicalchaser`: the opponent's banished cards is exactly Summoned Skull, Mechanicalchaser.
+- `opp.gy = Gemini Elf`: the opponent's Graveyard is exactly Gemini Elf.
 
 #### CPU 1: Banish on battle damage
 
@@ -532,7 +532,7 @@ A face-down monster has no Level, so Man-Eater Bug stays.
 |---|---|---|---|
 | Opponent | Monster Zone 0 | Kycoo the Ghost Destroyer | face-up Attack Position |
 | You | Graveyard | Summoned Skull |  |
-| You | Graveyard | Battle Ox |  |
+| You | Graveyard | Gemini Elf |  |
 
 **Steps**
 
@@ -559,25 +559,25 @@ A face-down monster has no Level, so Man-Eater Bug stays.
 | Side | Place | Card | Position |
 |---|---|---|---|
 | You | Monster Zone 0 | Bazoo the Soul-Eater | face-up Attack Position |
-| You | Graveyard | Battle Ox |  |
+| You | Graveyard | Gemini Elf |  |
+| You | Graveyard | Mechanicalchaser |  |
 | You | Graveyard | La Jinn the Mystical Genie of the Lamp |  |
-| You | Graveyard | Sangan |  |
 | You | Graveyard | Summoned Skull |  |
 
 **Steps**
 
 1. `activate you.m0`: Open the card menu of your Monster Zone 0 (**Bazoo the Soul-Eater**) and activate its effect.
 2. `yes`: Answer Yes.
-3. `pick you.gy[Battle Ox]`: Pick **Battle Ox** in your Graveyard in the list or on the field.
+3. `pick you.gy[Gemini Elf]`: Pick **Gemini Elf** in your Graveyard in the list or on the field.
 4. `yes`: Answer Yes.
-5. `pick you.gy[La Jinn the Mystical Genie of the Lamp]`: Pick **La Jinn the Mystical Genie of the Lamp** in your Graveyard in the list or on the field.
+5. `pick you.gy[Mechanicalchaser]`: Pick **Mechanicalchaser** in your Graveyard in the list or on the field.
 6. `yes`: Answer Yes.
-7. `pick you.gy[Sangan]`: Pick **Sangan** in your Graveyard in the list or on the field.
+7. `pick you.gy[La Jinn the Mystical Genie of the Lamp]`: Pick **La Jinn the Mystical Genie of the Lamp** in your Graveyard in the list or on the field.
 
 **Expected**
 
 - `you.m0.atk = 2500`: The face-up Attack Position of your Monster Zone 0 (**Bazoo the Soul-Eater**) is 2500.
-- `you.banished = Battle Ox, La Jinn the Mystical Genie of the Lamp, Sangan`: your banished cards is exactly Battle Ox, La Jinn the Mystical Genie of the Lamp, Sangan.
+- `you.banished = Gemini Elf, Mechanicalchaser, La Jinn the Mystical Genie of the Lamp`: your banished cards is exactly Gemini Elf, Mechanicalchaser, La Jinn the Mystical Genie of the Lamp.
 - `you.gy = Summoned Skull`: your Graveyard is exactly Summoned Skull.
 - `menu you.m0 lacks Activate`: The card menu of your Monster Zone 0 (**Bazoo the Soul-Eater**) does not offer Activate.
 
@@ -590,11 +590,11 @@ BazooCpuResolve banishes its 3 weakest Graveyard monsters; 2500 ATK then beats J
 | Side | Place | Card | Position |
 |---|---|---|---|
 | Opponent | Monster Zone 0 | Bazoo the Soul-Eater | face-up Attack Position |
-| Opponent | Graveyard | Battle Ox |  |
+| Opponent | Graveyard | Gemini Elf |  |
+| Opponent | Graveyard | Mechanicalchaser |  |
 | Opponent | Graveyard | La Jinn the Mystical Genie of the Lamp |  |
-| Opponent | Graveyard | Sangan |  |
-| Opponent | Graveyard | Kuriboh |  |
-| You | Monster Zone 0 | Jinzo | face-up Attack Position |
+| Opponent | Graveyard | Giant Soldier of Stone |  |
+| You | Monster Zone 0 | Gemini Elf | face-up Attack Position |
 
 **Steps**
 
@@ -602,11 +602,11 @@ BazooCpuResolve banishes its 3 weakest Graveyard monsters; 2500 ATK then beats J
 
 **Expected**
 
-- `opp.banished = Kuriboh, Sangan, Battle Ox`: the opponent's banished cards is exactly Kuriboh, Sangan, Battle Ox.
-- `opp.gy = La Jinn the Mystical Genie of the Lamp`: the opponent's Graveyard is exactly La Jinn the Mystical Genie of the Lamp.
+- `opp.banished = Giant Soldier of Stone, La Jinn the Mystical Genie of the Lamp, Mechanicalchaser`: the opponent's banished cards is exactly Giant Soldier of Stone, La Jinn the Mystical Genie of the Lamp, Mechanicalchaser.
+- `opp.gy = Gemini Elf`: the opponent's Graveyard is exactly Gemini Elf.
 - `opp.m0.atk = 2500`: The face-up Attack Position of the opponent's Monster Zone 0 (**Bazoo the Soul-Eater**) is 2500.
-- `you.m0 = empty`: your Monster Zone 0 (**Jinzo**) is empty.
-- `you.lp = 7900`: LP of you = 7900.
+- `you.m0 = empty`: your Monster Zone 0 (**Gemini Elf**) is empty.
+- `you.lp = 7400`: LP of you = 7400.
 
 ### Torrential Tribute
 
@@ -620,27 +620,27 @@ BazooCpuResolve banishes its 3 weakest Graveyard monsters; 2500 ATK then beats J
 
 `Torrential_Tribute_Destroy_All_On_Summon_Player` · start: your turn, Main Phase 1 (turnCount 2) · LP 8000 / 8000 · opponent not frozen
 
-Destroyed by an effect: Mystic Tomato does not trigger, and the Set Man-Eater Bug is not flipped.
+Destroyed by an effect: Gemini Elf does not trigger, and the Set La Jinn the Mystical Genie of the Lamp is not flipped.
 
 | Side | Place | Card | Position |
 |---|---|---|---|
-| You | Monster Zone 0 | Mystic Tomato | face-up Attack Position |
+| You | Monster Zone 0 | Gemini Elf | face-up Attack Position |
 | You | Spell/Trap Zone 0 | Torrential Tribute | face-down (Set) |
-| You | Hand 0 | Battle Ox |  |
+| You | Hand 0 | Mechanicalchaser |  |
 | Opponent | Monster Zone 0 | Summoned Skull | face-up Attack Position |
-| Opponent | Monster Zone 1 | Man-Eater Bug | face-down (Set) |
+| Opponent | Monster Zone 1 | La Jinn the Mystical Genie of the Lamp | face-down (Set) |
 
 **Steps**
 
-1. `summon you.hand[Battle Ox] -> m1 atk`: Normal Summon **Battle Ox** in your hand into your Monster Zone 1 (face-up Attack Position).
+1. `summon you.hand[Mechanicalchaser] -> m1 atk`: Normal Summon **Mechanicalchaser** in your hand into your Monster Zone 1 (face-up Attack Position).
 2. `when prompt response: activate you.st0`: When the response prompt opens: open the card menu of your Spell/Trap Zone 0 (**Torrential Tribute**) and choose Activate.
 
 **Expected**
 
 - `you.monsters count 0`: your monsters holds 0 card(s).
 - `opp.monsters count 0`: the opponent's monsters holds 0 card(s).
-- `you.gy = Mystic Tomato, Battle Ox, Torrential Tribute`: your Graveyard is exactly Mystic Tomato, Battle Ox, Torrential Tribute.
-- `opp.gy = Summoned Skull, Man-Eater Bug`: the opponent's Graveyard is exactly Summoned Skull, Man-Eater Bug.
+- `you.gy = Gemini Elf, Mechanicalchaser, Torrential Tribute`: your Graveyard is exactly Gemini Elf, Mechanicalchaser, Torrential Tribute.
+- `opp.gy = Summoned Skull, La Jinn the Mystical Genie of the Lamp`: the opponent's Graveyard is exactly Summoned Skull, La Jinn the Mystical Genie of the Lamp.
 
 #### CPU 1: On human summon
 
@@ -650,17 +650,17 @@ Destroyed by an effect: Mystic Tomato does not trigger, and the Set Man-Eater Bu
 |---|---|---|---|
 | Opponent | Spell/Trap Zone 0 | Torrential Tribute | face-down (Set) |
 | You | Monster Zone 0 | Summoned Skull | face-up Attack Position |
-| You | Monster Zone 1 | La Jinn the Mystical Genie of the Lamp | face-up Attack Position |
-| You | Hand 0 | Battle Ox |  |
+| You | Monster Zone 1 | Gemini Elf | face-up Attack Position |
+| You | Hand 0 | Mechanicalchaser |  |
 
 **Steps**
 
-1. `summon you.hand[Battle Ox] -> m2 atk`: Normal Summon **Battle Ox** in your hand into your Monster Zone 2 (face-up Attack Position).
+1. `summon you.hand[Mechanicalchaser] -> m2 atk`: Normal Summon **Mechanicalchaser** in your hand into your Monster Zone 2 (face-up Attack Position).
 
 **Expected**
 
 - `you.monsters count 0`: your monsters holds 0 card(s).
-- `you.gy = Summoned Skull, La Jinn the Mystical Genie of the Lamp, Battle Ox`: your Graveyard is exactly Summoned Skull, La Jinn the Mystical Genie of the Lamp, Battle Ox.
+- `you.gy = Summoned Skull, Gemini Elf, Mechanicalchaser`: your Graveyard is exactly Summoned Skull, Gemini Elf, Mechanicalchaser.
 - `opp.gy = Torrential Tribute`: the opponent's Graveyard is exactly Torrential Tribute.
 
 ### Jar of Greed
@@ -678,7 +678,7 @@ Destroyed by an effect: Mystic Tomato does not trigger, and the Set Man-Eater Bu
 | Side | Place | Card | Position |
 |---|---|---|---|
 | You | Spell/Trap Zone 0 | Jar of Greed | face-down (Set) |
-| You | Deck 0 | Battle Ox |  |
+| You | Deck 0 | Gemini Elf |  |
 
 **Steps**
 
@@ -686,7 +686,7 @@ Destroyed by an effect: Mystic Tomato does not trigger, and the Set Man-Eater Bu
 
 **Expected**
 
-- `you.hand = Battle Ox`: your hand is exactly Battle Ox.
+- `you.hand = Gemini Elf`: your hand is exactly Gemini Elf.
 - `you.gy = Jar of Greed`: your Graveyard is exactly Jar of Greed.
 
 #### CPU 1: Draw one
@@ -696,7 +696,7 @@ Destroyed by an effect: Mystic Tomato does not trigger, and the Set Man-Eater Bu
 | Side | Place | Card | Position |
 |---|---|---|---|
 | Opponent | Spell/Trap Zone 0 | Jar of Greed | face-down (Set) |
-| Opponent | Deck 0 | Battle Ox |  |
+| Opponent | Deck 0 | Gemini Elf |  |
 
 **Steps**
 
@@ -718,31 +718,31 @@ Destroyed by an effect: Mystic Tomato does not trigger, and the Set Man-Eater Bu
 
 `Skull_Lair_Banish_Level_Count_Player` · start: your turn, Main Phase 1 (turnCount 2) · LP 8000 / 8000 · opponent frozen
 
-Sangan is Level 3, so 3 Graveyard monsters are banished.
+La Jinn the Mystical Genie of the Lamp is Level 3, so 3 Graveyard monsters are banished.
 
 | Side | Place | Card | Position |
 |---|---|---|---|
 | You | Spell/Trap Zone 0 | Skull Lair | face-down (Set) |
-| You | Graveyard | Battle Ox |  |
+| You | Graveyard | Gemini Elf |  |
+| You | Graveyard | Mechanicalchaser |  |
 | You | Graveyard | La Jinn the Mystical Genie of the Lamp |  |
-| You | Graveyard | Sangan |  |
-| You | Graveyard | Mystic Tomato |  |
-| Opponent | Monster Zone 0 | Sangan | face-up Attack Position |
+| You | Graveyard | Neo the Magic Swordsman |  |
+| Opponent | Monster Zone 0 | Giant Soldier of Stone | face-up Attack Position |
 
 **Steps**
 
 1. `activate you.st0`: Open the card menu of your Spell/Trap Zone 0 (**Skull Lair**) and choose Activate.
-2. `target opp.m0`: Pick the opponent's Monster Zone 0 (**Sangan**) as the target.
-3. `pick you.gy[Battle Ox]`: Pick **Battle Ox** in your Graveyard in the list or on the field.
-4. `pick you.gy[La Jinn the Mystical Genie of the Lamp]`: Pick **La Jinn the Mystical Genie of the Lamp** in your Graveyard in the list or on the field.
-5. `pick you.gy[Sangan]`: Pick **Sangan** in your Graveyard in the list or on the field.
+2. `target opp.m0`: Pick the opponent's Monster Zone 0 (**Giant Soldier of Stone**) as the target.
+3. `pick you.gy[Gemini Elf]`: Pick **Gemini Elf** in your Graveyard in the list or on the field.
+4. `pick you.gy[Mechanicalchaser]`: Pick **Mechanicalchaser** in your Graveyard in the list or on the field.
+5. `pick you.gy[La Jinn the Mystical Genie of the Lamp]`: Pick **La Jinn the Mystical Genie of the Lamp** in your Graveyard in the list or on the field.
 
 **Expected**
 
-- `opp.m0 = empty`: the opponent's Monster Zone 0 (**Sangan**) is empty.
-- `opp.gy = Sangan`: the opponent's Graveyard is exactly Sangan.
-- `you.banished = Battle Ox, La Jinn the Mystical Genie of the Lamp, Sangan`: your banished cards is exactly Battle Ox, La Jinn the Mystical Genie of the Lamp, Sangan.
-- `you.gy = Mystic Tomato`: your Graveyard is exactly Mystic Tomato.
+- `opp.m0 = empty`: the opponent's Monster Zone 0 (**Giant Soldier of Stone**) is empty.
+- `opp.gy = Giant Soldier of Stone`: the opponent's Graveyard is exactly Giant Soldier of Stone.
+- `you.banished = Gemini Elf, Mechanicalchaser, La Jinn the Mystical Genie of the Lamp`: your banished cards is exactly Gemini Elf, Mechanicalchaser, La Jinn the Mystical Genie of the Lamp.
+- `you.gy = Neo the Magic Swordsman`: your Graveyard is exactly Neo the Magic Swordsman.
 - `you.st0 = Skull Lair up`: your Spell/Trap Zone 0 (**Skull Lair**) holds Skull Lair, face up.
 
 #### CPU 1: Destroy strong monster
@@ -752,11 +752,11 @@ Sangan is Level 3, so 3 Graveyard monsters are banished.
 | Side | Place | Card | Position |
 |---|---|---|---|
 | Opponent | Spell/Trap Zone 0 | Skull Lair | face-down (Set) |
-| Opponent | Graveyard | Battle Ox |  |
+| Opponent | Graveyard | Gemini Elf |  |
+| Opponent | Graveyard | Mechanicalchaser |  |
 | Opponent | Graveyard | La Jinn the Mystical Genie of the Lamp |  |
-| Opponent | Graveyard | Sangan |  |
-| Opponent | Graveyard | Kuriboh |  |
-| You | Monster Zone 0 | Battle Ox | face-up Attack Position |
+| Opponent | Graveyard | Giant Soldier of Stone |  |
+| You | Monster Zone 0 | Gemini Elf | face-up Attack Position |
 
 **Steps**
 
@@ -764,7 +764,7 @@ Sangan is Level 3, so 3 Graveyard monsters are banished.
 
 **Expected**
 
-- `you.m0 = empty`: your Monster Zone 0 (**Battle Ox**) is empty.
+- `you.m0 = empty`: your Monster Zone 0 (**Gemini Elf**) is empty.
 - `opp.banished count 4`: the opponent's banished cards holds 4 card(s).
 - `opp.st0 = Skull Lair up`: the opponent's Spell/Trap Zone 0 (**Skull Lair**) holds Skull Lair, face up.
 
@@ -881,22 +881,22 @@ Sangan is Level 3, so 3 Graveyard monsters are banished.
 | Side | Place | Card | Position |
 |---|---|---|---|
 | You | Hand 0 | United We Stand |  |
-| You | Monster Zone 0 | Battle Ox | face-up Attack Position |
-| You | Monster Zone 1 | La Jinn the Mystical Genie of the Lamp | face-up Attack Position |
-| You | Monster Zone 2 | Mystic Tomato | face-down (Set) |
+| You | Monster Zone 0 | Gemini Elf | face-up Attack Position |
+| You | Monster Zone 1 | Mechanicalchaser | face-up Attack Position |
+| You | Monster Zone 2 | La Jinn the Mystical Genie of the Lamp | face-down (Set) |
 
 **Steps**
 
 1. `activate you.hand[United We Stand]`: Open the card menu of **United We Stand** in your hand and choose Activate.
-2. `target you.m0`: Pick your Monster Zone 0 (**Battle Ox**) as the target.
-3. `check you.m0.atk = 3300`: Check: The face-up Attack Position of your Monster Zone 0 (**Battle Ox**) is 3300.
-4. `check you.m0.def = 2600`: Check: The face-up Defense Position of your Monster Zone 0 (**Battle Ox**) is 2600.
-5. `flip_summon you.m2`: Flip Summon your Monster Zone 2 (**Mystic Tomato**).
+2. `target you.m0`: Pick your Monster Zone 0 (**Gemini Elf**) as the target.
+3. `check you.m0.atk = 3500`: Check: The face-up Attack Position of your Monster Zone 0 (**Gemini Elf**) is 3500.
+4. `check you.m0.def = 2500`: Check: The face-up Defense Position of your Monster Zone 0 (**Gemini Elf**) is 2500.
+5. `flip_summon you.m2`: Flip Summon your Monster Zone 2 (**La Jinn the Mystical Genie of the Lamp**).
 
 **Expected**
 
-- `you.m0.atk = 4100`: The face-up Attack Position of your Monster Zone 0 (**Battle Ox**) is 4100.
-- `you.m0.def = 3400`: The face-up Defense Position of your Monster Zone 0 (**Battle Ox**) is 3400.
+- `you.m0.atk = 4300`: The face-up Attack Position of your Monster Zone 0 (**Gemini Elf**) is 4300.
+- `you.m0.def = 3300`: The face-up Defense Position of your Monster Zone 0 (**Gemini Elf**) is 3300.
 
 #### CPU 1: Equip
 
@@ -905,8 +905,8 @@ Sangan is Level 3, so 3 Graveyard monsters are banished.
 | Side | Place | Card | Position |
 |---|---|---|---|
 | Opponent | Hand 0 | United We Stand |  |
-| Opponent | Monster Zone 0 | Battle Ox | face-up Attack Position |
-| Opponent | Monster Zone 1 | La Jinn the Mystical Genie of the Lamp | face-up Attack Position |
+| Opponent | Monster Zone 0 | Gemini Elf | face-up Attack Position |
+| Opponent | Monster Zone 1 | Mechanicalchaser | face-up Attack Position |
 | You | Monster Zone 0 | Summoned Skull | face-up Attack Position |
 
 **Steps**
@@ -935,19 +935,19 @@ Sangan is Level 3, so 3 Graveyard monsters are banished.
 | Side | Place | Card | Position |
 |---|---|---|---|
 | You | Hand 0 | Mage Power |  |
-| You | Monster Zone 0 | Battle Ox | face-up Attack Position |
+| You | Monster Zone 0 | Gemini Elf | face-up Attack Position |
 | You | Spell/Trap Zone 0 | Trap Hole | face-down (Set) |
 | You | Spell/Trap Zone 1 | Call of the Haunted | face-down (Set) |
 
 **Steps**
 
 1. `activate you.hand[Mage Power]`: Open the card menu of **Mage Power** in your hand and choose Activate.
-2. `target you.m0`: Pick your Monster Zone 0 (**Battle Ox**) as the target.
+2. `target you.m0`: Pick your Monster Zone 0 (**Gemini Elf**) as the target.
 
 **Expected**
 
-- `you.m0.atk = 3200`: The face-up Attack Position of your Monster Zone 0 (**Battle Ox**) is 3200.
-- `you.m0.def = 2500`: The face-up Defense Position of your Monster Zone 0 (**Battle Ox**) is 2500.
+- `you.m0.atk = 3400`: The face-up Attack Position of your Monster Zone 0 (**Gemini Elf**) is 3400.
+- `you.m0.def = 2400`: The face-up Defense Position of your Monster Zone 0 (**Gemini Elf**) is 2400.
 
 #### CPU 1: Equip
 
@@ -956,7 +956,7 @@ Sangan is Level 3, so 3 Graveyard monsters are banished.
 | Side | Place | Card | Position |
 |---|---|---|---|
 | Opponent | Hand 0 | Mage Power |  |
-| Opponent | Monster Zone 0 | Battle Ox | face-up Attack Position |
+| Opponent | Monster Zone 0 | Gemini Elf | face-up Attack Position |
 | Opponent | Spell/Trap Zone 0 | Trap Hole | face-down (Set) |
 | You | Monster Zone 0 | Summoned Skull | face-up Attack Position |
 
@@ -966,9 +966,9 @@ Sangan is Level 3, so 3 Graveyard monsters are banished.
 
 **Expected**
 
-- `opp.m0.atk = 2700`: The face-up Attack Position of the opponent's Monster Zone 0 (**Battle Ox**) is 2700.
+- `opp.m0.atk = 2900`: The face-up Attack Position of the opponent's Monster Zone 0 (**Gemini Elf**) is 2900.
 - `you.m0 = empty`: your Monster Zone 0 (**Summoned Skull**) is empty.
-- `you.lp = 7800`: LP of you = 7800.
+- `you.lp = 7600`: LP of you = 7600.
 
 ### Zombyra the Dark
 
@@ -986,17 +986,17 @@ Sangan is Level 3, so 3 Graveyard monsters are banished.
 | Side | Place | Card | Position |
 |---|---|---|---|
 | You | Monster Zone 0 | Zombyra the Dark | face-up Attack Position |
-| Opponent | Monster Zone 0 | Battle Ox | face-up Attack Position |
+| Opponent | Monster Zone 0 | Gemini Elf | face-up Attack Position |
 
 **Steps**
 
 1. `battle`: Enter the Battle Phase.
-2. `attack you.m0 -> opp.m0`: Attack with your Monster Zone 0 (**Zombyra the Dark**): target the opponent's Monster Zone 0 (**Battle Ox**).
+2. `attack you.m0 -> opp.m0`: Attack with your Monster Zone 0 (**Zombyra the Dark**): target the opponent's Monster Zone 0 (**Gemini Elf**).
 
 **Expected**
 
-- `opp.m0 = empty`: the opponent's Monster Zone 0 (**Battle Ox**) is empty.
-- `opp.lp = 7600`: LP of opp = 7600.
+- `opp.m0 = empty`: the opponent's Monster Zone 0 (**Gemini Elf**) is empty.
+- `opp.lp = 7800`: LP of opp = 7800.
 - `you.m0.atk = 1900`: The face-up Attack Position of your Monster Zone 0 (**Zombyra the Dark**) is 1900.
 
 #### Player 2: No direct attack
@@ -1023,7 +1023,7 @@ Sangan is Level 3, so 3 Graveyard monsters are banished.
 | Side | Place | Card | Position |
 |---|---|---|---|
 | Opponent | Monster Zone 0 | Zombyra the Dark | face-up Attack Position |
-| You | Monster Zone 0 | Celtic Guardian | face-up Attack Position |
+| You | Monster Zone 0 | Gemini Elf | face-up Attack Position |
 
 **Steps**
 
@@ -1031,8 +1031,8 @@ Sangan is Level 3, so 3 Graveyard monsters are banished.
 
 **Expected**
 
-- `you.m0 = empty`: your Monster Zone 0 (**Celtic Guardian**) is empty.
-- `you.lp = 7300`: LP of you = 7300.
+- `you.m0 = empty`: your Monster Zone 0 (**Gemini Elf**) is empty.
+- `you.lp = 7800`: LP of you = 7800.
 - `opp.m0.atk = 1900`: The face-up Attack Position of the opponent's Monster Zone 0 (**Zombyra the Dark**) is 1900.
 
 ### Humanoid Worm Drake
@@ -1071,7 +1071,7 @@ Sangan is Level 3, so 3 Graveyard monsters are banished.
 | Side | Place | Card | Position |
 |---|---|---|---|
 | Opponent | Monster Zone 0 | Humanoid Worm Drake | face-up Attack Position |
-| You | Monster Zone 0 | Battle Ox | face-up Attack Position |
+| You | Monster Zone 0 | Gemini Elf | face-up Attack Position |
 
 **Steps**
 
@@ -1079,8 +1079,8 @@ Sangan is Level 3, so 3 Graveyard monsters are banished.
 
 **Expected**
 
-- `you.m0 = empty`: your Monster Zone 0 (**Battle Ox**) is empty.
-- `you.lp = 7500`: LP of you = 7500.
+- `you.m0 = empty`: your Monster Zone 0 (**Gemini Elf**) is empty.
+- `you.lp = 7700`: LP of you = 7700.
 
 ## Joey-Pegasus
 
@@ -1102,7 +1102,7 @@ The 4 Sheep Tokens are in Defense Position.
 | Side | Place | Card | Position |
 |---|---|---|---|
 | You | Hand 0 | Scapegoat |  |
-| You | Hand 1 | Battle Ox |  |
+| You | Hand 1 | Gemini Elf |  |
 
 **Steps**
 
@@ -1111,8 +1111,8 @@ The 4 Sheep Tokens are in Defense Position.
 **Expected**
 
 - `you.monsters = Sheep Token, Sheep Token, Sheep Token, Sheep Token`: your monsters is exactly Sheep Token, Sheep Token, Sheep Token, Sheep Token.
-- `menu you.hand[Battle Ox] lacks Summon`: The card menu of **Battle Ox** in your hand does not offer Summon.
-- `menu you.hand[Battle Ox] has Set`: The card menu of **Battle Ox** in your hand offers Set.
+- `menu you.hand[Gemini Elf] lacks Summon`: The card menu of **Gemini Elf** in your hand does not offer Summon.
+- `menu you.hand[Gemini Elf] has Set`: The card menu of **Gemini Elf** in your hand offers Set.
 
 #### CPU 1: Block direct attack
 
@@ -1176,7 +1176,7 @@ Your next Draw Phase is skipped: no Draw is offered, and the hand stays empty.
 | Side | Place | Card | Position |
 |---|---|---|---|
 | Opponent | Hand 0 | Offerings to the Doomed |  |
-| Opponent | Monster Zone 0 | Battle Ox | face-up Attack Position |
+| Opponent | Monster Zone 0 | Gemini Elf | face-up Attack Position |
 | You | Monster Zone 0 | Summoned Skull | face-up Attack Position |
 
 **Steps**
@@ -1254,16 +1254,16 @@ Your next Draw Phase is skipped: no Draw is offered, and the hand stays empty.
 | Side | Place | Card | Position |
 |---|---|---|---|
 | You | Monster Zone 0 | Fiber Jar | face-down (Set) |
-| You | Monster Zone 1 | Battle Ox | face-up Attack Position |
+| You | Monster Zone 1 | Gemini Elf | face-up Attack Position |
 | You | Spell/Trap Zone 0 | Trap Hole | face-down (Set) |
 | You | Hand 0 | Summoned Skull |  |
 | You | Hand 1 | Pot of Greed |  |
-| You | Graveyard | La Jinn the Mystical Genie of the Lamp |  |
-| Opponent | Monster Zone 0 | Celtic Guardian | face-up Attack Position |
+| You | Graveyard | Mechanicalchaser |  |
+| Opponent | Monster Zone 0 | Gemini Elf | face-up Attack Position |
 | Opponent | Hand 0 | Fissure |  |
 | Opponent | Hand 1 | Dark Hole |  |
-| Opponent | Hand 2 | Man-Eater Bug |  |
-| Opponent | Graveyard | Sangan |  |
+| Opponent | Hand 2 | Mechanicalchaser |  |
+| Opponent | Graveyard | La Jinn the Mystical Genie of the Lamp |  |
 
 **Steps**
 
@@ -1421,25 +1421,25 @@ Your next Draw Phase is skipped: no Draw is offered at the start of your turn.
 
 `Creature_Swap_Swap_Control_Player` · start: your turn, Main Phase 1 (turnCount 2) · LP 8000 / 8000 · opponent frozen
 
-The CPU gives its weakest monster (Battle Ox).
+The CPU gives its weakest monster (Gemini Elf).
 
 | Side | Place | Card | Position |
 |---|---|---|---|
 | You | Hand 0 | Creature Swap |  |
-| You | Monster Zone 0 | Mystic Tomato | face-up Attack Position |
+| You | Monster Zone 0 | Mechanicalchaser | face-up Attack Position |
 | Opponent | Monster Zone 0 | Summoned Skull | face-up Attack Position |
-| Opponent | Monster Zone 1 | Battle Ox | face-up Attack Position |
+| Opponent | Monster Zone 1 | Gemini Elf | face-up Attack Position |
 
 **Steps**
 
 1. `activate you.hand[Creature Swap]`: Open the card menu of **Creature Swap** in your hand and choose Activate.
-2. `pick you.m0`: Pick your Monster Zone 0 (**Mystic Tomato**) in the list or on the field.
+2. `pick you.m0`: Pick your Monster Zone 0 (**Mechanicalchaser**) in the list or on the field.
 
 **Expected**
 
-- `you.monsters = Battle Ox`: your monsters is exactly Battle Ox.
-- `opp.monsters = Summoned Skull, Mystic Tomato`: the opponent's monsters is exactly Summoned Skull, Mystic Tomato.
-- `menu you.m[Battle Ox] lacks Change Position`: The card menu of your **Battle Ox** does not offer Change Position.
+- `you.monsters = Gemini Elf`: your monsters is exactly Gemini Elf.
+- `opp.monsters = Summoned Skull, Mechanicalchaser`: the opponent's monsters is exactly Summoned Skull, Mechanicalchaser.
+- `menu you.m[Gemini Elf] lacks Change Position`: The card menu of your **Gemini Elf** does not offer Change Position.
 
 #### CPU 1: Swap weakest
 
@@ -1448,7 +1448,7 @@ The CPU gives its weakest monster (Battle Ox).
 | Side | Place | Card | Position |
 |---|---|---|---|
 | Opponent | Hand 0 | Creature Swap |  |
-| Opponent | Monster Zone 0 | Mystic Tomato | face-up Attack Position |
+| Opponent | Monster Zone 0 | Mechanicalchaser | face-up Attack Position |
 | You | Monster Zone 0 | Summoned Skull | face-up Attack Position |
 
 **Steps**
@@ -1472,28 +1472,28 @@ The CPU gives its weakest monster (Battle Ox).
 
 `Asura_Priest_Attack_Every_Monster_Player` · start: your turn, Main Phase 1 (turnCount 2) · LP 8000 / 8000 · opponent frozen
 
-Only the attack on Kuriboh (300 ATK) deals damage: 1400. Asura Priest returns to the hand at the End Phase.
+Only the attack on Giant Soldier of Stone (300 ATK) deals damage: 1400. Asura Priest returns to the hand at the End Phase.
 
 | Side | Place | Card | Position |
 |---|---|---|---|
 | You | Monster Zone 0 | Asura Priest | face-up Attack Position |
-| Opponent | Monster Zone 0 | Celtic Guardian | face-up Defense Position |
-| Opponent | Monster Zone 1 | Battle Ox | face-up Defense Position |
-| Opponent | Monster Zone 2 | Kuriboh | face-up Attack Position |
+| Opponent | Monster Zone 0 | Gemini Elf | face-up Defense Position |
+| Opponent | Monster Zone 1 | Mechanicalchaser | face-up Defense Position |
+| Opponent | Monster Zone 2 | Giant Soldier of Stone | face-up Attack Position |
 
 **Steps**
 
 1. `battle`: Enter the Battle Phase.
-2. `attack you.m0 -> opp.m0`: Attack with your Monster Zone 0 (**Asura Priest**): target the opponent's Monster Zone 0 (**Celtic Guardian**).
-3. `attack you.m0 -> opp.m1`: Attack with your Monster Zone 0 (**Asura Priest**): target the opponent's Monster Zone 1 (**Battle Ox**).
-4. `attack you.m0 -> opp.m2`: Attack with your Monster Zone 0 (**Asura Priest**): target the opponent's Monster Zone 2 (**Kuriboh**).
+2. `attack you.m0 -> opp.m0`: Attack with your Monster Zone 0 (**Asura Priest**): target the opponent's Monster Zone 0 (**Gemini Elf**).
+3. `attack you.m0 -> opp.m1`: Attack with your Monster Zone 0 (**Asura Priest**): target the opponent's Monster Zone 1 (**Mechanicalchaser**).
+4. `attack you.m0 -> opp.m2`: Attack with your Monster Zone 0 (**Asura Priest**): target the opponent's Monster Zone 2 (**Giant Soldier of Stone**).
 5. `check cannot attack you.m0 -> direct`: Check: your Monster Zone 0 (**Asura Priest**) cannot attack the opponent directly.
 6. `pass`: End your turn (its End Phase effects resolve).
 
 **Expected**
 
 - `opp.monsters count 0`: the opponent's monsters holds 0 card(s).
-- `opp.lp = 6600`: LP of opp = 6600.
+- `opp.lp = 7600`: LP of opp = 7600.
 - `you.hand = Asura Priest`: your hand is exactly Asura Priest.
 
 #### CPU 1: Attack every monster
@@ -1503,8 +1503,8 @@ Only the attack on Kuriboh (300 ATK) deals damage: 1400. Asura Priest returns to
 | Side | Place | Card | Position |
 |---|---|---|---|
 | Opponent | Monster Zone 0 | Asura Priest | face-up Attack Position |
-| You | Monster Zone 0 | Celtic Guardian | face-up Defense Position |
-| You | Monster Zone 1 | Battle Ox | face-up Defense Position |
+| You | Monster Zone 0 | Gemini Elf | face-up Defense Position |
+| You | Monster Zone 1 | Mechanicalchaser | face-up Defense Position |
 
 **Steps**
 
@@ -1531,17 +1531,17 @@ Only the attack on Kuriboh (300 ATK) deals damage: 1400. Asura Priest returns to
 | Side | Place | Card | Position |
 |---|---|---|---|
 | You | Monster Zone 0 | Spear Dragon | face-up Attack Position |
-| Opponent | Monster Zone 0 | Celtic Guardian | face-up Defense Position |
+| Opponent | Monster Zone 0 | Gemini Elf | face-up Defense Position |
 
 **Steps**
 
 1. `battle`: Enter the Battle Phase.
-2. `attack you.m0 -> opp.m0`: Attack with your Monster Zone 0 (**Spear Dragon**): target the opponent's Monster Zone 0 (**Celtic Guardian**).
+2. `attack you.m0 -> opp.m0`: Attack with your Monster Zone 0 (**Spear Dragon**): target the opponent's Monster Zone 0 (**Gemini Elf**).
 
 **Expected**
 
-- `opp.m0 = empty`: the opponent's Monster Zone 0 (**Celtic Guardian**) is empty.
-- `opp.lp = 7300`: LP of opp = 7300.
+- `opp.m0 = empty`: the opponent's Monster Zone 0 (**Gemini Elf**) is empty.
+- `opp.lp = 7000`: LP of opp = 7000.
 - `you.m0 = Spear Dragon def`: your Monster Zone 0 (**Spear Dragon**) holds Spear Dragon, face-up Defense Position.
 
 #### CPU 1: Pierce
@@ -1551,7 +1551,7 @@ Only the attack on Kuriboh (300 ATK) deals damage: 1400. Asura Priest returns to
 | Side | Place | Card | Position |
 |---|---|---|---|
 | Opponent | Monster Zone 0 | Spear Dragon | face-up Attack Position |
-| You | Monster Zone 0 | Celtic Guardian | face-up Defense Position |
+| You | Monster Zone 0 | Gemini Elf | face-up Defense Position |
 
 **Steps**
 
@@ -1559,8 +1559,8 @@ Only the attack on Kuriboh (300 ATK) deals damage: 1400. Asura Priest returns to
 
 **Expected**
 
-- `you.m0 = empty`: your Monster Zone 0 (**Celtic Guardian**) is empty.
-- `you.lp = 7300`: LP of you = 7300.
+- `you.m0 = empty`: your Monster Zone 0 (**Gemini Elf**) is empty.
+- `you.lp = 7000`: LP of you = 7000.
 - `opp.m0 = Spear Dragon def`: the opponent's Monster Zone 0 (**Spear Dragon**) holds Spear Dragon, face-up Defense Position.
 
 ### Dark Ruler Ha Des
@@ -1580,22 +1580,22 @@ Sangan's search and Man-Eater Bug's FLIP effect do not activate (both destroyed 
 | Side | Place | Card | Position |
 |---|---|---|---|
 | You | Monster Zone 0 | Dark Ruler Ha Des | face-up Attack Position |
-| You | Monster Zone 1 | La Jinn the Mystical Genie of the Lamp | face-up Attack Position |
+| You | Monster Zone 1 | Gemini Elf | face-up Attack Position |
 | Opponent | Monster Zone 0 | Sangan | face-up Attack Position |
 | Opponent | Monster Zone 1 | Man-Eater Bug | face-down (Set) |
 
 **Steps**
 
 1. `battle`: Enter the Battle Phase.
-2. `attack you.m1 -> opp.m0`: Attack with your Monster Zone 1 (**La Jinn the Mystical Genie of the Lamp**): target the opponent's Monster Zone 0 (**Sangan**).
+2. `attack you.m1 -> opp.m0`: Attack with your Monster Zone 1 (**Gemini Elf**): target the opponent's Monster Zone 0 (**Sangan**).
 3. `attack you.m0 -> opp.m1`: Attack with your Monster Zone 0 (**Dark Ruler Ha Des**): target the opponent's Monster Zone 1 (**Man-Eater Bug**).
 
 **Expected**
 
 - `opp.monsters count 0`: the opponent's monsters holds 0 card(s).
 - `you.m0 = Dark Ruler Ha Des atk`: your Monster Zone 0 (**Dark Ruler Ha Des**) holds Dark Ruler Ha Des, face-up Attack Position.
-- `you.m1 = La Jinn the Mystical Genie of the Lamp atk`: your Monster Zone 1 (**La Jinn the Mystical Genie of the Lamp**) holds La Jinn the Mystical Genie of the Lamp, face-up Attack Position.
-- `opp.lp = 7200`: LP of opp = 7200.
+- `you.m1 = Gemini Elf atk`: your Monster Zone 1 (**Gemini Elf**) holds Gemini Elf, face-up Attack Position.
+- `opp.lp = 7100`: LP of opp = 7100.
 - `opp.hand count 0`: the opponent's hand holds 0 card(s).
 
 #### CPU 1: Negate sangan
@@ -1633,19 +1633,19 @@ Sangan's search and Man-Eater Bug's FLIP effect do not activate (both destroyed 
 | Side | Place | Card | Position |
 |---|---|---|---|
 | You | Monster Zone 0 | Airknight Parshath | face-up Attack Position |
-| You | Deck 0 | Battle Ox |  |
-| Opponent | Monster Zone 0 | Celtic Guardian | face-up Defense Position |
+| You | Deck 0 | Mechanicalchaser |  |
+| Opponent | Monster Zone 0 | Gemini Elf | face-up Defense Position |
 
 **Steps**
 
 1. `battle`: Enter the Battle Phase.
-2. `attack you.m0 -> opp.m0`: Attack with your Monster Zone 0 (**Airknight Parshath**): target the opponent's Monster Zone 0 (**Celtic Guardian**).
+2. `attack you.m0 -> opp.m0`: Attack with your Monster Zone 0 (**Airknight Parshath**): target the opponent's Monster Zone 0 (**Gemini Elf**).
 
 **Expected**
 
-- `opp.m0 = empty`: the opponent's Monster Zone 0 (**Celtic Guardian**) is empty.
-- `opp.lp = 7300`: LP of opp = 7300.
-- `you.hand = Battle Ox`: your hand is exactly Battle Ox.
+- `opp.m0 = empty`: the opponent's Monster Zone 0 (**Gemini Elf**) is empty.
+- `opp.lp = 7000`: LP of opp = 7000.
+- `you.hand = Mechanicalchaser`: your hand is exactly Mechanicalchaser.
 
 #### CPU 1: Pierce and draw
 
@@ -1654,8 +1654,8 @@ Sangan's search and Man-Eater Bug's FLIP effect do not activate (both destroyed 
 | Side | Place | Card | Position |
 |---|---|---|---|
 | Opponent | Monster Zone 0 | Airknight Parshath | face-up Attack Position |
-| Opponent | Deck 0 | Battle Ox |  |
-| You | Monster Zone 0 | Celtic Guardian | face-up Defense Position |
+| Opponent | Deck 0 | Mechanicalchaser |  |
+| You | Monster Zone 0 | Gemini Elf | face-up Defense Position |
 
 **Steps**
 
@@ -1663,8 +1663,8 @@ Sangan's search and Man-Eater Bug's FLIP effect do not activate (both destroyed 
 
 **Expected**
 
-- `you.lp = 7300`: LP of you = 7300.
-- `you.m0 = empty`: your Monster Zone 0 (**Celtic Guardian**) is empty.
+- `you.lp = 7000`: LP of you = 7000.
+- `you.m0 = empty`: your Monster Zone 0 (**Gemini Elf**) is empty.
 
 ## Yata
 
@@ -1685,10 +1685,10 @@ In the opponent's Standby Phase you draw up to 4 (3 cards); after your own draw 
 | Side | Place | Card | Position |
 |---|---|---|---|
 | You | Hand 0 | Mirage of Nightmare |  |
-| You | Hand 1 | Battle Ox |  |
-| You | Deck 0 | Celtic Guardian |  |
+| You | Hand 1 | Gemini Elf |  |
+| You | Deck 0 | Mechanicalchaser |  |
 | You | Deck 1 | La Jinn the Mystical Genie of the Lamp |  |
-| You | Deck 2 | Sangan |  |
+| You | Deck 2 | Neo the Magic Swordsman |  |
 | You | Deck 3 | Fissure |  |
 
 **Steps**
@@ -1696,7 +1696,7 @@ In the opponent's Standby Phase you draw up to 4 (3 cards); after your own draw 
 1. `activate you.hand[Mirage of Nightmare]`: Open the card menu of **Mirage of Nightmare** in your hand and choose Activate.
 2. `pass`: End your turn (its End Phase effects resolve).
 3. `opp_turn`: The opponent's turn passes: frozen, it plays nothing (its own Draw Phase and phase effects still run).
-4. `check you.hand = Battle Ox, Celtic Guardian, La Jinn the Mystical Genie of the Lamp, Sangan`: Check: your hand is exactly Battle Ox, Celtic Guardian, La Jinn the Mystical Genie of the Lamp, Sangan.
+4. `check you.hand = Gemini Elf, Mechanicalchaser, La Jinn the Mystical Genie of the Lamp, Neo the Magic Swordsman`: Check: your hand is exactly Gemini Elf, Mechanicalchaser, La Jinn the Mystical Genie of the Lamp, Neo the Magic Swordsman.
 5. `draw`: In your Draw Phase, open your Main Deck and choose Draw; stop at Main Phase 1.
 
 **Expected**
@@ -1834,7 +1834,7 @@ The CPU draws up to 4 in your Standby Phase (after your own draw).
 | Opponent | Hand 0 | Fissure |  |
 | Opponent | Hand 1 | Trap Hole |  |
 | Opponent | Deck 0 | Summoned Skull |  |
-| Opponent | Deck 1 | Battle Ox |  |
+| Opponent | Deck 1 | Gemini Elf |  |
 
 **Steps**
 
@@ -1847,7 +1847,7 @@ The CPU draws up to 4 in your Standby Phase (after your own draw).
 
 - `opp.lp = 6600`: LP of opp = 6600.
 - `opp.hand count 2`: the opponent's hand holds 2 card(s).
-- `opp.gy = Summoned Skull, Battle Ox`: the opponent's Graveyard is exactly Summoned Skull, Battle Ox.
+- `opp.gy = Summoned Skull, Gemini Elf`: the opponent's Graveyard is exactly Summoned Skull, Gemini Elf.
 
 #### CPU 1: Discard random
 
@@ -1883,7 +1883,7 @@ The CPU draws up to 4 in your Standby Phase (after your own draw).
 | Side | Place | Card | Position |
 |---|---|---|---|
 | You | Hand 0 | Reinforcement of the Army |  |
-| You | Deck 0 | Battle Ox |  |
+| You | Deck 0 | Gemini Elf |  |
 | You | Deck 1 | Celtic Guardian |  |
 | You | Deck 2 | Summoned Skull |  |
 
@@ -1932,7 +1932,7 @@ Gravekeeper's Spy is the only Gravekeeper's monster in the ROM.
 |---|---|---|---|
 | You | Monster Zone 0 | Gravekeeper's Spy | face-down (Set) |
 | You | Deck 0 | Gravekeeper's Spy |  |
-| You | Deck 1 | Battle Ox |  |
+| You | Deck 1 | Gemini Elf |  |
 
 **Steps**
 
@@ -1952,18 +1952,18 @@ Gravekeeper's Spy is the only Gravekeeper's monster in the ROM.
 
 | Side | Place | Card | Position |
 |---|---|---|---|
-| You | Monster Zone 0 | Battle Ox | face-up Attack Position |
+| You | Monster Zone 0 | Gemini Elf | face-up Attack Position |
 | Opponent | Monster Zone 0 | Gravekeeper's Spy | face-down (Set) |
 | Opponent | Deck 0 | Gravekeeper's Spy |  |
 
 **Steps**
 
 1. `battle`: Enter the Battle Phase.
-2. `attack you.m0 -> opp.m0`: Attack with your Monster Zone 0 (**Battle Ox**): target the opponent's Monster Zone 0 (**Gravekeeper's Spy**).
+2. `attack you.m0 -> opp.m0`: Attack with your Monster Zone 0 (**Gemini Elf**): target the opponent's Monster Zone 0 (**Gravekeeper's Spy**).
 
 **Expected**
 
-- `you.lp = 7700`: LP of you = 7700.
+- `you.lp = 7900`: LP of you = 7900.
 - `opp.monsters = Gravekeeper's Spy, Gravekeeper's Spy`: the opponent's monsters is exactly Gravekeeper's Spy, Gravekeeper's Spy.
 
 ### Book of Moon
@@ -2003,7 +2003,7 @@ Book of Moon turns Summoned Skull face down (DEF 1200), then La Jinn (1800) dest
 | Side | Place | Card | Position |
 |---|---|---|---|
 | Opponent | Hand 0 | Book of Moon |  |
-| Opponent | Monster Zone 0 | La Jinn the Mystical Genie of the Lamp | face-up Attack Position |
+| Opponent | Monster Zone 0 | Gemini Elf | face-up Attack Position |
 | You | Monster Zone 0 | Summoned Skull | face-up Attack Position |
 
 **Steps**
@@ -2031,16 +2031,16 @@ Book of Moon turns Summoned Skull face down (DEF 1200), then La Jinn (1800) dest
 | Side | Place | Card | Position |
 |---|---|---|---|
 | You | Monster Zone 0 | King Tiger Wanghu | face-up Attack Position |
-| You | Hand 0 | Mystic Tomato |  |
+| You | Hand 0 | Giant Soldier of Stone |  |
 
 **Steps**
 
-1. `summon you.hand[Mystic Tomato] -> m1 atk`: Normal Summon **Mystic Tomato** in your hand into your Monster Zone 1 (face-up Attack Position).
+1. `summon you.hand[Giant Soldier of Stone] -> m1 atk`: Normal Summon **Giant Soldier of Stone** in your hand into your Monster Zone 1 (face-up Attack Position).
 
 **Expected**
 
 - `you.m1 = empty`: your Monster Zone 1 is empty.
-- `you.gy = Mystic Tomato`: your Graveyard is exactly Mystic Tomato.
+- `you.gy = Giant Soldier of Stone`: your Graveyard is exactly Giant Soldier of Stone.
 - `you.m0 = King Tiger Wanghu atk`: your Monster Zone 0 (**King Tiger Wanghu**) holds King Tiger Wanghu, face-up Attack Position.
 
 #### CPU 1: Wanghu on human summon
@@ -2050,16 +2050,16 @@ Book of Moon turns Summoned Skull face down (DEF 1200), then La Jinn (1800) dest
 | Side | Place | Card | Position |
 |---|---|---|---|
 | Opponent | Monster Zone 0 | King Tiger Wanghu | face-up Attack Position |
-| You | Hand 0 | Mystic Tomato |  |
+| You | Hand 0 | Giant Soldier of Stone |  |
 
 **Steps**
 
-1. `summon you.hand[Mystic Tomato] -> m0 atk`: Normal Summon **Mystic Tomato** in your hand into your Monster Zone 0 (face-up Attack Position).
+1. `summon you.hand[Giant Soldier of Stone] -> m0 atk`: Normal Summon **Giant Soldier of Stone** in your hand into your Monster Zone 0 (face-up Attack Position).
 
 **Expected**
 
 - `you.m0 = empty`: your Monster Zone 0 is empty.
-- `you.gy = Mystic Tomato`: your Graveyard is exactly Mystic Tomato.
+- `you.gy = Giant Soldier of Stone`: your Graveyard is exactly Giant Soldier of Stone.
 
 ### Newdoria
 
@@ -2098,7 +2098,7 @@ Book of Moon turns Summoned Skull face down (DEF 1200), then La Jinn (1800) dest
 | Side | Place | Card | Position |
 |---|---|---|---|
 | You | Monster Zone 0 | Summoned Skull | face-up Attack Position |
-| You | Monster Zone 1 | Battle Ox | face-up Attack Position |
+| You | Monster Zone 1 | Gemini Elf | face-up Attack Position |
 | Opponent | Monster Zone 0 | Newdoria | face-up Attack Position |
 
 **Steps**
@@ -2110,7 +2110,7 @@ Book of Moon turns Summoned Skull face down (DEF 1200), then La Jinn (1800) dest
 
 - `opp.lp = 6700`: LP of opp = 6700.
 - `you.m0 = empty`: your Monster Zone 0 (**Summoned Skull**) is empty.
-- `you.m1 = Battle Ox atk`: your Monster Zone 1 (**Battle Ox**) holds Battle Ox, face-up Attack Position.
+- `you.m1 = Gemini Elf atk`: your Monster Zone 1 (**Gemini Elf**) holds Gemini Elf, face-up Attack Position.
 
 ### Metamorphosis
 
@@ -2224,20 +2224,20 @@ Book of Moon turns Summoned Skull face down (DEF 1200), then La Jinn (1800) dest
 | Side | Place | Card | Position |
 |---|---|---|---|
 | You | Spell/Trap Zone 0 | Raigeki Break | face-down (Set) |
-| You | Hand 0 | Battle Ox |  |
+| You | Hand 0 | Gemini Elf |  |
 | Opponent | Monster Zone 0 | Summoned Skull | face-up Attack Position |
 
 **Steps**
 
 1. `activate you.st0`: Open the card menu of your Spell/Trap Zone 0 (**Raigeki Break**) and choose Activate.
-2. `discard you.hand[Battle Ox]`: Discard **Battle Ox** in your hand for the cost.
+2. `discard you.hand[Gemini Elf]`: Discard **Gemini Elf** in your hand for the cost.
 3. `target opp.m0`: Pick the opponent's Monster Zone 0 (**Summoned Skull**) as the target.
 
 **Expected**
 
 - `opp.m0 = empty`: the opponent's Monster Zone 0 (**Summoned Skull**) is empty.
 - `opp.gy = Summoned Skull`: the opponent's Graveyard is exactly Summoned Skull.
-- `you.gy = Raigeki Break, Battle Ox`: your Graveyard is exactly Raigeki Break, Battle Ox.
+- `you.gy = Raigeki Break, Gemini Elf`: your Graveyard is exactly Raigeki Break, Gemini Elf.
 
 #### CPU 1: Discard destroy
 
@@ -2325,14 +2325,14 @@ Book of Moon turns Summoned Skull face down (DEF 1200), then La Jinn (1800) dest
 |---|---|---|---|
 | You | Spell/Trap Zone 0 | Blast with Chain | face-down (Set) |
 | You | Hand 0 | Mystical Space Typhoon |  |
-| You | Monster Zone 0 | Battle Ox | face-up Attack Position |
+| You | Monster Zone 0 | Gemini Elf | face-up Attack Position |
 | Opponent | Monster Zone 0 | Summoned Skull | face-up Attack Position |
 
 **Steps**
 
 1. `activate you.st0`: Open the card menu of your Spell/Trap Zone 0 (**Blast with Chain**) and choose Activate.
-2. `target you.m0`: Pick your Monster Zone 0 (**Battle Ox**) as the target.
-3. `check you.m0.atk = 2200`: Check: The face-up Attack Position of your Monster Zone 0 (**Battle Ox**) is 2200.
+2. `target you.m0`: Pick your Monster Zone 0 (**Gemini Elf**) as the target.
+3. `check you.m0.atk = 2400`: Check: The face-up Attack Position of your Monster Zone 0 (**Gemini Elf**) is 2400.
 4. `activate you.hand[Mystical Space Typhoon]`: Open the card menu of **Mystical Space Typhoon** in your hand and choose Activate.
 5. `target you.st0`: Pick your Spell/Trap Zone 0 (**Blast with Chain**) as the target.
 6. `target opp.m0`: Pick the opponent's Monster Zone 0 (**Summoned Skull**) as the target.
@@ -2342,7 +2342,7 @@ Book of Moon turns Summoned Skull face down (DEF 1200), then La Jinn (1800) dest
 - `opp.m0 = empty`: the opponent's Monster Zone 0 (**Summoned Skull**) is empty.
 - `opp.gy = Summoned Skull`: the opponent's Graveyard is exactly Summoned Skull.
 - `you.gy = Blast with Chain, Mystical Space Typhoon`: your Graveyard is exactly Blast with Chain, Mystical Space Typhoon.
-- `you.m0.atk = 1700`: The face-up Attack Position of your Monster Zone 0 (**Battle Ox**) is 1700.
+- `you.m0.atk = 1900`: The face-up Attack Position of your Monster Zone 0 (**Gemini Elf**) is 1900.
 
 #### CPU 1: Equip against attack
 
@@ -2350,21 +2350,21 @@ Book of Moon turns Summoned Skull face down (DEF 1200), then La Jinn (1800) dest
 
 | Side | Place | Card | Position |
 |---|---|---|---|
-| You | Monster Zone 0 | La Jinn the Mystical Genie of the Lamp | face-up Attack Position |
+| You | Monster Zone 0 | Gemini Elf | face-up Attack Position |
 | Opponent | Spell/Trap Zone 0 | Blast with Chain | face-down (Set) |
-| Opponent | Monster Zone 0 | Battle Ox | face-up Attack Position |
+| Opponent | Monster Zone 0 | Mechanicalchaser | face-up Attack Position |
 
 **Steps**
 
 1. `battle`: Enter the Battle Phase.
-2. `attack you.m0 -> opp.m0`: Attack with your Monster Zone 0 (**La Jinn the Mystical Genie of the Lamp**): target the opponent's Monster Zone 0 (**Battle Ox**).
+2. `attack you.m0 -> opp.m0`: Attack with your Monster Zone 0 (**Gemini Elf**): target the opponent's Monster Zone 0 (**Mechanicalchaser**).
 
 **Expected**
 
-- `you.m0 = empty`: your Monster Zone 0 (**La Jinn the Mystical Genie of the Lamp**) is empty.
-- `you.lp = 7600`: LP of you = 7600.
-- `opp.m0 = Battle Ox atk`: the opponent's Monster Zone 0 (**Battle Ox**) holds Battle Ox, face-up Attack Position.
-- `opp.m0.atk = 2200`: The face-up Attack Position of the opponent's Monster Zone 0 (**Battle Ox**) is 2200.
+- `you.m0 = empty`: your Monster Zone 0 (**Gemini Elf**) is empty.
+- `you.lp = 7550`: LP of you = 7550.
+- `opp.m0 = Mechanicalchaser atk`: the opponent's Monster Zone 0 (**Mechanicalchaser**) holds Mechanicalchaser, face-up Attack Position.
+- `opp.m0.atk = 2350`: The face-up Attack Position of the opponent's Monster Zone 0 (**Mechanicalchaser**) is 2350.
 
 ### Gearfried the Iron Knight
 
@@ -2401,7 +2401,7 @@ Book of Moon turns Summoned Skull face down (DEF 1200), then La Jinn (1800) dest
 | Side | Place | Card | Position |
 |---|---|---|---|
 | Opponent | Monster Zone 0 | Gearfried the Iron Knight | face-up Attack Position |
-| You | Monster Zone 0 | Celtic Guardian | face-up Attack Position |
+| You | Monster Zone 0 | Battle Ox | face-up Attack Position |
 
 **Steps**
 
@@ -2409,8 +2409,8 @@ Book of Moon turns Summoned Skull face down (DEF 1200), then La Jinn (1800) dest
 
 **Expected**
 
-- `you.m0 = empty`: your Monster Zone 0 (**Celtic Guardian**) is empty.
-- `you.lp = 7600`: LP of you = 7600.
+- `you.m0 = empty`: your Monster Zone 0 (**Battle Ox**) is empty.
+- `you.lp = 7900`: LP of you = 7900.
 
 ## Scientist
 
@@ -2512,7 +2512,7 @@ Thousand Dragon (Level 7) is not offered: only Level 6 or lower.
 |---|---|---|---|
 | Opponent | Monster Zone 0 | Magical Scientist | face-up Attack Position |
 | Opponent | Fusion Deck | Flame Swordsman |  |
-| You | Monster Zone 0 | Celtic Guardian | face-up Attack Position |
+| You | Monster Zone 0 | Gemini Elf | face-up Attack Position |
 
 **Steps**
 
@@ -2540,7 +2540,7 @@ Thousand Dragon (Level 7) is not offered: only Level 6 or lower.
 |---|---|---|---|
 | You | Monster Zone 0 | Tribe-Infecting Virus | face-up Attack Position |
 | You | Hand 0 | Fissure |  |
-| Opponent | Monster Zone 0 | Battle Ox | face-up Attack Position |
+| Opponent | Monster Zone 0 | Gemini Elf | face-up Attack Position |
 | Opponent | Monster Zone 1 | La Jinn the Mystical Genie of the Lamp | face-up Attack Position |
 | Opponent | Monster Zone 2 | Summoned Skull | face-up Attack Position |
 
@@ -2552,7 +2552,7 @@ Thousand Dragon (Level 7) is not offered: only Level 6 or lower.
 
 **Expected**
 
-- `opp.m0 = Battle Ox atk`: the opponent's Monster Zone 0 (**Battle Ox**) holds Battle Ox, face-up Attack Position.
+- `opp.m0 = Gemini Elf atk`: the opponent's Monster Zone 0 (**Gemini Elf**) holds Gemini Elf, face-up Attack Position.
 - `opp.m1 = empty`: the opponent's Monster Zone 1 (**La Jinn the Mystical Genie of the Lamp**) is empty.
 - `opp.m2 = empty`: the opponent's Monster Zone 2 (**Summoned Skull**) is empty.
 - `you.gy = Fissure`: your Graveyard is exactly Fissure.
@@ -2568,7 +2568,7 @@ Thousand Dragon (Level 7) is not offered: only Level 6 or lower.
 | Opponent | Hand 0 | Fissure |  |
 | You | Monster Zone 0 | La Jinn the Mystical Genie of the Lamp | face-up Attack Position |
 | You | Monster Zone 1 | Summoned Skull | face-up Attack Position |
-| You | Monster Zone 2 | Battle Ox | face-up Attack Position |
+| You | Monster Zone 2 | Gemini Elf | face-up Attack Position |
 
 **Steps**
 
@@ -2716,7 +2716,7 @@ The CPU declares Level 4; Summoned Skull is Level 6, so it is Special Summoned.
 | You | Deck 0 | Fissure |  |
 | You | Deck 1 | Trap Hole |  |
 | You | Deck 2 | Summoned Skull |  |
-| You | Deck 3 | Battle Ox |  |
+| You | Deck 3 | Gemini Elf |  |
 
 **Steps**
 
@@ -2737,7 +2737,7 @@ The CPU declares Level 4; Summoned Skull is Level 6, so it is Special Summoned.
 |---|---|---|---|
 | Opponent | Hand 0 | Reasoning |  |
 | Opponent | Deck 0 | Fissure |  |
-| Opponent | Deck 1 | Battle Ox |  |
+| Opponent | Deck 1 | Gemini Elf |  |
 
 **Steps**
 
@@ -2747,8 +2747,8 @@ The CPU declares Level 4; Summoned Skull is Level 6, so it is Special Summoned.
 
 - `opp.gy has Reasoning`: the opponent's Graveyard includes Reasoning.
 - `opp.gy has Fissure`: the opponent's Graveyard includes Fissure.
-- `opp.gy has Battle Ox`: the opponent's Graveyard includes Battle Ox.
-- `opp.monsters lacks Battle Ox`: the opponent's monsters does not include Battle Ox.
+- `opp.gy has Gemini Elf`: the opponent's Graveyard includes Gemini Elf.
+- `opp.monsters lacks Gemini Elf`: the opponent's monsters does not include Gemini Elf.
 
 ### Jowgen the Spiritualist
 
@@ -2771,7 +2771,7 @@ The discard is random (Fissure or Gilasaurus).
 | You | Hand 0 | Fissure |  |
 | You | Hand 1 | Gilasaurus |  |
 | Opponent | Monster Zone 0 | Summoned Skull | face-up Attack Position, Special Summoned |
-| Opponent | Monster Zone 1 | Battle Ox | face-up Attack Position |
+| Opponent | Monster Zone 1 | Gemini Elf | face-up Attack Position |
 
 **Steps**
 
@@ -2781,7 +2781,7 @@ The discard is random (Fissure or Gilasaurus).
 **Expected**
 
 - `opp.m0 = empty`: the opponent's Monster Zone 0 (**Summoned Skull**) is empty.
-- `opp.m1 = Battle Ox atk`: the opponent's Monster Zone 1 (**Battle Ox**) holds Battle Ox, face-up Attack Position.
+- `opp.m1 = Gemini Elf atk`: the opponent's Monster Zone 1 (**Gemini Elf**) holds Gemini Elf, face-up Attack Position.
 - `you.hand count 1`: your hand holds 1 card(s).
 - `you.gy count 1`: your Graveyard holds 1 card(s).
 
@@ -2918,18 +2918,18 @@ The discard is random (Fissure or Gilasaurus).
 | Side | Place | Card | Position |
 |---|---|---|---|
 | You | Spell/Trap Zone 0 | Sakuretsu Armor | face-down (Set) |
-| You | Monster Zone 0 | Celtic Guardian | face-up Attack Position |
+| You | Monster Zone 0 | Gemini Elf | face-up Attack Position |
 | Opponent | Monster Zone 0 | Summoned Skull | face-up Attack Position |
 
 **Steps**
 
-1. `when attack opp.m0 -> you.m0: activate you.st0`: When the opponent's Monster Zone 0 (**Summoned Skull**) declares an attack on your Monster Zone 0 (**Celtic Guardian**): open the card menu of your Spell/Trap Zone 0 (**Sakuretsu Armor**) and choose Activate.
+1. `when attack opp.m0 -> you.m0: activate you.st0`: When the opponent's Monster Zone 0 (**Summoned Skull**) declares an attack on your Monster Zone 0 (**Gemini Elf**): open the card menu of your Spell/Trap Zone 0 (**Sakuretsu Armor**) and choose Activate.
 
 **Expected**
 
 - `opp.m0 = empty`: the opponent's Monster Zone 0 (**Summoned Skull**) is empty.
 - `opp.gy = Summoned Skull`: the opponent's Graveyard is exactly Summoned Skull.
-- `you.m0 = Celtic Guardian atk`: your Monster Zone 0 (**Celtic Guardian**) holds Celtic Guardian, face-up Attack Position.
+- `you.m0 = Gemini Elf atk`: your Monster Zone 0 (**Gemini Elf**) holds Gemini Elf, face-up Attack Position.
 - `you.lp = 8000`: LP of you = 8000.
 
 #### CPU 1: Destroy attacker
@@ -3015,19 +3015,19 @@ The discard is random (Fissure or Gilasaurus).
 | Side | Place | Card | Position |
 |---|---|---|---|
 | You | Monster Zone 0 | Amazoness Archer | face-up Attack Position |
-| You | Monster Zone 1 | Battle Ox | face-up Attack Position |
-| You | Monster Zone 2 | Celtic Guardian | face-up Attack Position |
+| You | Monster Zone 1 | Gemini Elf | face-up Attack Position |
+| You | Monster Zone 2 | Mechanicalchaser | face-up Attack Position |
 
 **Steps**
 
 1. `activate you.m0`: Open the card menu of your Monster Zone 0 (**Amazoness Archer**) and activate its effect.
-2. `target you.m1`: Pick your Monster Zone 1 (**Battle Ox**) as the target.
-3. `target you.m2`: Pick your Monster Zone 2 (**Celtic Guardian**) as the target.
+2. `target you.m1`: Pick your Monster Zone 1 (**Gemini Elf**) as the target.
+3. `target you.m2`: Pick your Monster Zone 2 (**Mechanicalchaser**) as the target.
 
 **Expected**
 
 - `opp.lp = 6800`: LP of opp = 6800.
-- `you.gy = Battle Ox, Celtic Guardian`: your Graveyard is exactly Battle Ox, Celtic Guardian.
+- `you.gy = Gemini Elf, Mechanicalchaser`: your Graveyard is exactly Gemini Elf, Mechanicalchaser.
 - `you.m0 = Amazoness Archer atk`: your Monster Zone 0 (**Amazoness Archer**) holds Amazoness Archer, face-up Attack Position.
 
 #### CPU 1: Tribute two burn
@@ -3037,8 +3037,8 @@ The discard is random (Fissure or Gilasaurus).
 | Side | Place | Card | Position |
 |---|---|---|---|
 | Opponent | Monster Zone 0 | Amazoness Archer | face-up Attack Position |
-| Opponent | Monster Zone 1 | Battle Ox | face-up Attack Position |
-| Opponent | Monster Zone 2 | Celtic Guardian | face-up Attack Position |
+| Opponent | Monster Zone 1 | Gemini Elf | face-up Attack Position |
+| Opponent | Monster Zone 2 | Mechanicalchaser | face-up Attack Position |
 
 **Steps**
 
@@ -3066,7 +3066,7 @@ The CPU sends its first Spell/Trap of the declared type (Fissure is on top).
 |---|---|---|---|
 | You | Monster Zone 0 | Vampire Lord | face-up Attack Position |
 | Opponent | Deck 0 | Fissure |  |
-| Opponent | Deck 1 | Battle Ox |  |
+| Opponent | Deck 1 | Gemini Elf |  |
 | Opponent | Deck 2 | Trap Hole |  |
 
 **Steps**
@@ -3088,13 +3088,13 @@ The CPU answers the summon with Trap Hole; Vampire Lord comes back in your next 
 
 | Side | Place | Card | Position |
 |---|---|---|---|
-| You | Monster Zone 0 | Battle Ox | face-up Attack Position |
+| You | Monster Zone 0 | Gemini Elf | face-up Attack Position |
 | You | Hand 0 | Vampire Lord |  |
 | Opponent | Spell/Trap Zone 0 | Trap Hole | face-down (Set) |
 
 **Steps**
 
-1. `tribute_summon you.hand[Vampire Lord] -> m0 atk tributes you.m0`: Tribute Summon **Vampire Lord** in your hand into your Monster Zone 0 (**Battle Ox**) (face-up Attack Position), Tributing your Monster Zone 0 (**Battle Ox**).
+1. `tribute_summon you.hand[Vampire Lord] -> m0 atk tributes you.m0`: Tribute Summon **Vampire Lord** in your hand into your Monster Zone 0 (**Gemini Elf**) (face-up Attack Position), Tributing your Monster Zone 0 (**Gemini Elf**).
 2. `check you.gy has Vampire Lord`: Check: your Graveyard includes Vampire Lord.
 3. `pass`: End your turn (its End Phase effects resolve).
 4. `cpu_turn`: The CPU plays its whole turn (not frozen).
@@ -3146,11 +3146,11 @@ The CPU declares a type at random; pick the first card the list offers.
 | Side | Place | Card | Position |
 |---|---|---|---|
 | You | Hand 0 | Chaos Emperor Dragon - Envoy of the End |  |
-| You | Hand 1 | Battle Ox |  |
+| You | Hand 1 | Gemini Elf |  |
 | You | Graveyard | Summoned Skull |  |
 | You | Graveyard | Blue-Eyes White Dragon |  |
 | You | Spell/Trap Zone 0 | Trap Hole | face-down (Set) |
-| Opponent | Monster Zone 0 | Battle Ox | face-up Attack Position |
+| Opponent | Monster Zone 0 | Gemini Elf | face-up Attack Position |
 | Opponent | Spell/Trap Zone 0 | Trap Hole | face-down (Set) |
 | Opponent | Hand 0 | Fissure |  |
 | Opponent | Hand 1 | Dark Hole |  |
@@ -3168,8 +3168,8 @@ The CPU declares a type at random; pick the first card the list offers.
 - `opp.monsters count 0`: the opponent's monsters holds 0 card(s).
 - `you.hand count 0`: your hand holds 0 card(s).
 - `opp.hand count 0`: the opponent's hand holds 0 card(s).
-- `you.gy = Chaos Emperor Dragon - Envoy of the End, Trap Hole, Battle Ox`: your Graveyard is exactly Chaos Emperor Dragon - Envoy of the End, Trap Hole, Battle Ox.
-- `opp.gy = Battle Ox, Trap Hole, Fissure, Dark Hole`: the opponent's Graveyard is exactly Battle Ox, Trap Hole, Fissure, Dark Hole.
+- `you.gy = Chaos Emperor Dragon - Envoy of the End, Trap Hole, Gemini Elf`: your Graveyard is exactly Chaos Emperor Dragon - Envoy of the End, Trap Hole, Gemini Elf.
+- `opp.gy = Gemini Elf, Trap Hole, Fissure, Dark Hole`: the opponent's Graveyard is exactly Gemini Elf, Trap Hole, Fissure, Dark Hole.
 - `you.banished = Blue-Eyes White Dragon, Summoned Skull`: your banished cards is exactly Blue-Eyes White Dragon, Summoned Skull.
 
 #### CPU 1: Summon and wipe
@@ -3184,7 +3184,7 @@ The CPU declares a type at random; pick the first card the list offers.
 | Opponent | Graveyard | Summoned Skull |  |
 | Opponent | Graveyard | Blue-Eyes White Dragon |  |
 | You | Monster Zone 0 | Summoned Skull | face-up Attack Position |
-| You | Monster Zone 1 | Battle Ox | face-up Attack Position |
+| You | Monster Zone 1 | Gemini Elf | face-up Attack Position |
 | You | Spell/Trap Zone 0 | Trap Hole | face-down (Set) |
 | You | Hand 0 | Fissure |  |
 | You | Hand 1 | Dark Hole |  |
@@ -3216,16 +3216,16 @@ The CPU declares a type at random; pick the first card the list offers.
 | Side | Place | Card | Position |
 |---|---|---|---|
 | You | Hand 0 | Dark Magician of Chaos |  |
-| You | Monster Zone 0 | Battle Ox | face-up Attack Position |
-| You | Monster Zone 1 | Celtic Guardian | face-up Attack Position |
+| You | Monster Zone 0 | Gemini Elf | face-up Attack Position |
+| You | Monster Zone 1 | Mechanicalchaser | face-up Attack Position |
 | You | Graveyard | Monster Reborn |  |
 | Opponent | Monster Zone 0 | Summoned Skull | face-up Attack Position |
 
 **Steps**
 
-1. `tribute_summon you.hand[Dark Magician of Chaos] -> m0 atk tributes you.m0, you.m1`: Tribute Summon **Dark Magician of Chaos** in your hand into your Monster Zone 0 (**Battle Ox**) (face-up Attack Position), Tributing your Monster Zone 0 (**Battle Ox**) and your Monster Zone 1 (**Celtic Guardian**).
+1. `tribute_summon you.hand[Dark Magician of Chaos] -> m0 atk tributes you.m0, you.m1`: Tribute Summon **Dark Magician of Chaos** in your hand into your Monster Zone 0 (**Gemini Elf**) (face-up Attack Position), Tributing your Monster Zone 0 (**Gemini Elf**) and your Monster Zone 1 (**Mechanicalchaser**).
 2. `battle`: Enter the Battle Phase.
-3. `attack you.m0 -> opp.m0`: Attack with your Monster Zone 0 (**Battle Ox**): target the opponent's Monster Zone 0 (**Summoned Skull**).
+3. `attack you.m0 -> opp.m0`: Attack with your Monster Zone 0 (**Gemini Elf**): target the opponent's Monster Zone 0 (**Summoned Skull**).
 4. `pass`: End your turn (its End Phase effects resolve).
 5. `yes`: Answer Yes.
 6. `pick you.gy[Monster Reborn]`: Pick **Monster Reborn** in your Graveyard in the list or on the field.
@@ -3272,19 +3272,19 @@ The CPU declares a type at random; pick the first card the list offers.
 | You | Hand 0 | Chaos Sorcerer |  |
 | You | Graveyard | Summoned Skull |  |
 | You | Graveyard | Blue-Eyes White Dragon |  |
-| Opponent | Monster Zone 0 | Jinzo | face-up Attack Position |
+| Opponent | Monster Zone 0 | Mechanicalchaser | face-up Attack Position |
 
 **Steps**
 
 1. `special_summon you.hand[Chaos Sorcerer] -> m0 atk banish you.gy[Blue-Eyes White Dragon], you.gy[Summoned Skull]`: Special Summon **Chaos Sorcerer** in your hand from the hand by its own rule into your Monster Zone 0 (face-up Attack Position), banishing **Blue-Eyes White Dragon** in your Graveyard and **Summoned Skull** in your Graveyard.
 2. `activate you.m0`: Open the card menu of your Monster Zone 0 and activate its effect.
-3. `target opp.m0`: Pick the opponent's Monster Zone 0 (**Jinzo**) as the target.
+3. `target opp.m0`: Pick the opponent's Monster Zone 0 (**Mechanicalchaser**) as the target.
 4. `battle`: Enter the Battle Phase.
 5. `check cannot attack you.m0 -> direct`: Check: your Monster Zone 0 cannot attack the opponent directly.
 
 **Expected**
 
-- `opp.banished = Jinzo`: the opponent's banished cards is exactly Jinzo.
+- `opp.banished = Mechanicalchaser`: the opponent's banished cards is exactly Mechanicalchaser.
 - `you.banished = Blue-Eyes White Dragon, Summoned Skull`: your banished cards is exactly Blue-Eyes White Dragon, Summoned Skull.
 - `opp.lp = 8000`: LP of opp = 8000.
 
@@ -3421,17 +3421,17 @@ Activate it first thing in Main Phase 1. The lock lasts this turn and the next o
 | Side | Place | Card | Position |
 |---|---|---|---|
 | You | Monster Zone 0 | Thunder Nyan Nyan | face-up Attack Position |
-| You | Hand 0 | Battle Ox |  |
+| You | Hand 0 | Gemini Elf |  |
 
 **Steps**
 
-1. `summon you.hand[Battle Ox] -> m1 atk`: Normal Summon **Battle Ox** in your hand into your Monster Zone 1 (face-up Attack Position).
+1. `summon you.hand[Gemini Elf] -> m1 atk`: Normal Summon **Gemini Elf** in your hand into your Monster Zone 1 (face-up Attack Position).
 
 **Expected**
 
 - `you.m0 = empty`: your Monster Zone 0 (**Thunder Nyan Nyan**) is empty.
 - `you.gy = Thunder Nyan Nyan`: your Graveyard is exactly Thunder Nyan Nyan.
-- `you.m1 = Battle Ox atk`: your Monster Zone 1 holds Battle Ox, face-up Attack Position.
+- `you.m1 = Gemini Elf atk`: your Monster Zone 1 holds Gemini Elf, face-up Attack Position.
 
 #### Player 2: Face down does not count
 
@@ -3440,27 +3440,27 @@ Activate it first thing in Main Phase 1. The lock lasts this turn and the next o
 | Side | Place | Card | Position |
 |---|---|---|---|
 | You | Monster Zone 0 | Thunder Nyan Nyan | face-up Attack Position |
-| You | Hand 0 | Battle Ox |  |
+| You | Hand 0 | Gemini Elf |  |
 
 **Steps**
 
-1. `set you.hand[Battle Ox] -> m1`: Set **Battle Ox** in your hand into your Monster Zone 1.
+1. `set you.hand[Gemini Elf] -> m1`: Set **Gemini Elf** in your hand into your Monster Zone 1.
 
 **Expected**
 
 - `you.m0 = Thunder Nyan Nyan atk`: your Monster Zone 0 (**Thunder Nyan Nyan**) holds Thunder Nyan Nyan, face-up Attack Position.
-- `you.m1 = Battle Ox set`: your Monster Zone 1 holds Battle Ox, face-down (Set).
+- `you.m1 = Gemini Elf set`: your Monster Zone 1 holds Gemini Elf, face-down (Set).
 
 #### CPU 1: Avoid non light
 
 `Thunder_Nyan_Nyan_Cpu_Avoid_Non_Light_CPU` · start: the opponent's turn, Main Phase 1 (turnCount 3) · LP 8000 / 8000 · opponent not frozen
 
-The CPU does not summon Battle Ox face up beside it (it may Set it).
+The CPU does not summon Gemini Elf face up beside it (it may Set it).
 
 | Side | Place | Card | Position |
 |---|---|---|---|
 | Opponent | Monster Zone 0 | Thunder Nyan Nyan | face-up Attack Position |
-| Opponent | Hand 0 | Battle Ox |  |
+| Opponent | Hand 0 | Gemini Elf |  |
 
 **Steps**
 
@@ -3538,13 +3538,13 @@ The CPU does not summon Battle Ox face up beside it (it may Set it).
 | Side | Place | Card | Position |
 |---|---|---|---|
 | You | Hand 0 | Mobius the Frost Monarch |  |
-| You | Monster Zone 0 | Battle Ox | face-up Attack Position |
+| You | Monster Zone 0 | Gemini Elf | face-up Attack Position |
 | Opponent | Spell/Trap Zone 0 | Call of the Haunted | face-down (Set) |
 | Opponent | Spell/Trap Zone 1 | Magic Jammer | face-down (Set) |
 
 **Steps**
 
-1. `tribute_summon you.hand[Mobius the Frost Monarch] -> m0 atk tributes you.m0`: Tribute Summon **Mobius the Frost Monarch** in your hand into your Monster Zone 0 (**Battle Ox**) (face-up Attack Position), Tributing your Monster Zone 0 (**Battle Ox**).
+1. `tribute_summon you.hand[Mobius the Frost Monarch] -> m0 atk tributes you.m0`: Tribute Summon **Mobius the Frost Monarch** in your hand into your Monster Zone 0 (**Gemini Elf**) (face-up Attack Position), Tributing your Monster Zone 0 (**Gemini Elf**).
 2. `yes`: Answer Yes.
 3. `target opp.st0`: Pick the opponent's Spell/Trap Zone 0 (**Call of the Haunted**) as the target.
 4. `target opp.st1`: Pick the opponent's Spell/Trap Zone 1 (**Magic Jammer**) as the target.
@@ -3553,7 +3553,7 @@ The CPU does not summon Battle Ox face up beside it (it may Set it).
 
 - `opp.spells count 0`: the opponent's Spells/Traps holds 0 card(s).
 - `opp.gy = Call of the Haunted, Magic Jammer`: the opponent's Graveyard is exactly Call of the Haunted, Magic Jammer.
-- `you.m0 = Mobius the Frost Monarch atk`: your Monster Zone 0 (**Battle Ox**) holds Mobius the Frost Monarch, face-up Attack Position.
+- `you.m0 = Mobius the Frost Monarch atk`: your Monster Zone 0 (**Gemini Elf**) holds Mobius the Frost Monarch, face-up Attack Position.
 
 #### CPU 1: Destroy human spell traps
 
@@ -3562,7 +3562,7 @@ The CPU does not summon Battle Ox face up beside it (it may Set it).
 | Side | Place | Card | Position |
 |---|---|---|---|
 | Opponent | Hand 0 | Mobius the Frost Monarch |  |
-| Opponent | Monster Zone 0 | Battle Ox | face-up Attack Position |
+| Opponent | Monster Zone 0 | Gemini Elf | face-up Attack Position |
 | You | Spell/Trap Zone 0 | Call of the Haunted | face-down (Set) |
 | You | Spell/Trap Zone 1 | Magic Jammer | face-down (Set) |
 
@@ -3588,13 +3588,13 @@ The CPU does not summon Battle Ox face up beside it (it may Set it).
 
 `Smashing_Ground_Destroy_Highest_Def_Player` · start: your turn, Main Phase 1 (turnCount 2) · LP 8000 / 8000 · opponent frozen
 
-Giant Rat has DEF 1450, Celtic Guardian 1200.
+Giant Soldier of Stone has DEF 1450, Gemini Elf 1200.
 
 | Side | Place | Card | Position |
 |---|---|---|---|
 | You | Hand 0 | Smashing Ground |  |
-| Opponent | Monster Zone 0 | Celtic Guardian | face-up Attack Position |
-| Opponent | Monster Zone 1 | Giant Rat | face-up Attack Position |
+| Opponent | Monster Zone 0 | Gemini Elf | face-up Attack Position |
+| Opponent | Monster Zone 1 | Giant Soldier of Stone | face-up Attack Position |
 
 **Steps**
 
@@ -3602,9 +3602,9 @@ Giant Rat has DEF 1450, Celtic Guardian 1200.
 
 **Expected**
 
-- `opp.m0 = Celtic Guardian atk`: the opponent's Monster Zone 0 (**Celtic Guardian**) holds Celtic Guardian, face-up Attack Position.
-- `opp.m1 = empty`: the opponent's Monster Zone 1 (**Giant Rat**) is empty.
-- `opp.gy = Giant Rat`: the opponent's Graveyard is exactly Giant Rat.
+- `opp.m0 = Gemini Elf atk`: the opponent's Monster Zone 0 (**Gemini Elf**) holds Gemini Elf, face-up Attack Position.
+- `opp.m1 = empty`: the opponent's Monster Zone 1 (**Giant Soldier of Stone**) is empty.
+- `opp.gy = Giant Soldier of Stone`: the opponent's Graveyard is exactly Giant Soldier of Stone.
 
 #### CPU 1: Destroy highest def
 
@@ -3613,8 +3613,8 @@ Giant Rat has DEF 1450, Celtic Guardian 1200.
 | Side | Place | Card | Position |
 |---|---|---|---|
 | Opponent | Hand 0 | Smashing Ground |  |
-| You | Monster Zone 0 | Celtic Guardian | face-up Attack Position |
-| You | Monster Zone 1 | Giant Rat | face-up Attack Position |
+| You | Monster Zone 0 | Gemini Elf | face-up Attack Position |
+| You | Monster Zone 1 | Giant Soldier of Stone | face-up Attack Position |
 
 **Steps**
 
@@ -3622,8 +3622,8 @@ Giant Rat has DEF 1450, Celtic Guardian 1200.
 
 **Expected**
 
-- `you.m1 = empty`: your Monster Zone 1 (**Giant Rat**) is empty.
-- `you.gy has Giant Rat`: your Graveyard includes Giant Rat.
+- `you.m1 = empty`: your Monster Zone 1 (**Giant Soldier of Stone**) is empty.
+- `you.gy has Giant Soldier of Stone`: your Graveyard includes Giant Soldier of Stone.
 
 ### Blade Knight
 
@@ -3716,18 +3716,18 @@ Mystic Swordsman LV4 is not in the ROM, so answer No to the End Phase level-up.
 | Side | Place | Card | Position |
 |---|---|---|---|
 | You | Monster Zone 0 | Mystic Swordsman LV2 | face-up Attack Position |
-| Opponent | Monster Zone 0 | Kuriboh | face-up Attack Position |
+| Opponent | Monster Zone 0 | Mystical Elf | face-up Attack Position |
 
 **Steps**
 
 1. `battle`: Enter the Battle Phase.
-2. `attack you.m0 -> opp.m0`: Attack with your Monster Zone 0 (**Mystic Swordsman LV2**): target the opponent's Monster Zone 0 (**Kuriboh**).
+2. `attack you.m0 -> opp.m0`: Attack with your Monster Zone 0 (**Mystic Swordsman LV2**): target the opponent's Monster Zone 0 (**Mystical Elf**).
 3. `pass`: End your turn (its End Phase effects resolve).
 4. `no`: Answer No.
 
 **Expected**
 
-- `opp.lp = 7400`: LP of opp = 7400.
+- `opp.lp = 7900`: LP of opp = 7900.
 - `you.m0 = Mystic Swordsman LV2 atk`: your Monster Zone 0 (**Mystic Swordsman LV2**) holds Mystic Swordsman LV2, face-up Attack Position.
 
 #### CPU 1: Destroy face down
@@ -3884,14 +3884,14 @@ With low LP the CPU chains it, sending the targeted Trap Hole for 1000 LP.
 | Side | Place | Card | Position |
 |---|---|---|---|
 | You | Hand 0 | Enemy Controller |  |
-| You | Monster Zone 0 | Battle Ox | face-up Attack Position |
+| You | Monster Zone 0 | Gemini Elf | face-up Attack Position |
 | Opponent | Monster Zone 0 | Summoned Skull | face-up Attack Position |
 
 **Steps**
 
 1. `activate you.hand[Enemy Controller]`: Open the card menu of **Enemy Controller** in your hand and choose Activate.
 2. `choose "Take control"`: Choose "Take control" in the menu.
-3. `target you.m0`: Pick your Monster Zone 0 (**Battle Ox**) as the target.
+3. `target you.m0`: Pick your Monster Zone 0 (**Gemini Elf**) as the target.
 4. `target opp.m0`: Pick the opponent's Monster Zone 0 (**Summoned Skull**) as the target.
 5. `check you.monsters = Summoned Skull`: Check: your monsters is exactly Summoned Skull.
 6. `pass`: End your turn (its End Phase effects resolve).
@@ -3899,7 +3899,7 @@ With low LP the CPU chains it, sending the targeted Trap Hole for 1000 LP.
 **Expected**
 
 - `opp.monsters = Summoned Skull`: the opponent's monsters is exactly Summoned Skull.
-- `you.gy = Battle Ox, Enemy Controller`: your Graveyard is exactly Battle Ox, Enemy Controller.
+- `you.gy = Gemini Elf, Enemy Controller`: your Graveyard is exactly Gemini Elf, Enemy Controller.
 
 #### CPU 1: Take stronger monster
 
@@ -3910,7 +3910,7 @@ Control comes back at the End Phase.
 | Side | Place | Card | Position |
 |---|---|---|---|
 | Opponent | Spell/Trap Zone 0 | Enemy Controller | face-down (Set) |
-| Opponent | Monster Zone 0 | Battle Ox | face-up Attack Position |
+| Opponent | Monster Zone 0 | Gemini Elf | face-up Attack Position |
 | You | Monster Zone 0 | Summoned Skull | face-up Attack Position |
 
 **Steps**
@@ -3920,7 +3920,7 @@ Control comes back at the End Phase.
 **Expected**
 
 - `opp.gy has Enemy Controller`: the opponent's Graveyard includes Enemy Controller.
-- `opp.gy has Battle Ox`: the opponent's Graveyard includes Battle Ox.
+- `opp.gy has Gemini Elf`: the opponent's Graveyard includes Gemini Elf.
 - `you.monsters = Summoned Skull`: your monsters is exactly Summoned Skull.
 
 ### Mystik Wok
@@ -3938,41 +3938,41 @@ Control comes back at the End Phase.
 | Side | Place | Card | Position |
 |---|---|---|---|
 | You | Hand 0 | Mystik Wok |  |
-| You | Monster Zone 0 | Giant Rat | face-up Attack Position |
+| You | Monster Zone 0 | Gemini Elf | face-up Attack Position |
 
 **Steps**
 
 1. `activate you.hand[Mystik Wok]`: Open the card menu of **Mystik Wok** in your hand and choose Activate.
-2. `target you.m0`: Pick your Monster Zone 0 (**Giant Rat**) as the target.
+2. `target you.m0`: Pick your Monster Zone 0 (**Gemini Elf**) as the target.
 3. `choose "DEF"`: Choose "DEF" in the menu.
 
 **Expected**
 
-- `you.lp = 9450`: LP of you = 9450.
-- `you.gy = Giant Rat, Mystik Wok`: your Graveyard is exactly Giant Rat, Mystik Wok.
+- `you.lp = 8900`: LP of you = 8900.
+- `you.gy = Gemini Elf, Mystik Wok`: your Graveyard is exactly Gemini Elf, Mystik Wok.
 
 #### CPU 1: Low lp answer attack
 
 `Mystik_Wok_Cpu_Low_Lp_Answer_Attack_CPU` · start: your turn, Main Phase 1 (turnCount 2) · LP 8000 / 1000 · opponent not frozen
 
-It Tributes the attacked Celtic Guardian and takes its ATK (1400, higher than its DEF).
+It Tributes the attacked Gemini Elf and takes its ATK (1400, higher than its DEF).
 
 | Side | Place | Card | Position |
 |---|---|---|---|
 | You | Monster Zone 0 | Summoned Skull | face-up Attack Position |
 | Opponent | Spell/Trap Zone 0 | Mystik Wok | face-down (Set) |
-| Opponent | Monster Zone 0 | Celtic Guardian | face-up Attack Position |
+| Opponent | Monster Zone 0 | Gemini Elf | face-up Attack Position |
 
 **Steps**
 
 1. `battle`: Enter the Battle Phase.
-2. `attack you.m0 -> opp.m0`: Attack with your Monster Zone 0 (**Summoned Skull**): target the opponent's Monster Zone 0 (**Celtic Guardian**).
+2. `attack you.m0 -> opp.m0`: Attack with your Monster Zone 0 (**Summoned Skull**): target the opponent's Monster Zone 0 (**Gemini Elf**).
 3. `when replay: cancel`: When the attack is replayed (its target left the field): cancel (B): do not attack again / make no choice.
 
 **Expected**
 
-- `opp.lp = 2400`: LP of opp = 2400.
-- `opp.gy has Celtic Guardian`: the opponent's Graveyard includes Celtic Guardian.
+- `opp.lp = 2900`: LP of opp = 2900.
+- `opp.gy has Gemini Elf`: the opponent's Graveyard includes Gemini Elf.
 - `opp.gy has Mystik Wok`: the opponent's Graveyard includes Mystik Wok.
 
 ### Berserk Gorilla
@@ -4032,7 +4032,7 @@ B (cancel) cannot end the Battle Phase while the Gorilla can attack.
 | Side | Place | Card | Position |
 |---|---|---|---|
 | Opponent | Monster Zone 0 | Berserk Gorilla | face-up Attack Position |
-| You | Monster Zone 0 | Celtic Guardian | face-up Attack Position |
+| You | Monster Zone 0 | Gemini Elf | face-up Attack Position |
 
 **Steps**
 
@@ -4040,8 +4040,8 @@ B (cancel) cannot end the Battle Phase while the Gorilla can attack.
 
 **Expected**
 
-- `you.m0 = empty`: your Monster Zone 0 (**Celtic Guardian**) is empty.
-- `you.lp = 7400`: LP of you = 7400.
+- `you.m0 = empty`: your Monster Zone 0 (**Gemini Elf**) is empty.
+- `you.lp = 7900`: LP of you = 7900.
 
 ### Ninja Grandmaster Sasuke
 
@@ -4059,17 +4059,17 @@ B (cancel) cannot end the Battle Phase while the Gorilla can attack.
 | Side | Place | Card | Position |
 |---|---|---|---|
 | You | Monster Zone 0 | Ninja Grandmaster Sasuke | face-up Attack Position |
-| Opponent | Monster Zone 0 | Big Shield Gardna | face-up Defense Position |
+| Opponent | Monster Zone 0 | Giant Soldier of Stone | face-up Defense Position |
 
 **Steps**
 
 1. `battle`: Enter the Battle Phase.
-2. `attack you.m0 -> opp.m0`: Attack with your Monster Zone 0 (**Ninja Grandmaster Sasuke**): target the opponent's Monster Zone 0 (**Big Shield Gardna**).
+2. `attack you.m0 -> opp.m0`: Attack with your Monster Zone 0 (**Ninja Grandmaster Sasuke**): target the opponent's Monster Zone 0 (**Giant Soldier of Stone**).
 
 **Expected**
 
-- `opp.m0 = empty`: the opponent's Monster Zone 0 (**Big Shield Gardna**) is empty.
-- `opp.gy = Big Shield Gardna`: the opponent's Graveyard is exactly Big Shield Gardna.
+- `opp.m0 = empty`: the opponent's Monster Zone 0 (**Giant Soldier of Stone**) is empty.
+- `opp.gy = Giant Soldier of Stone`: the opponent's Graveyard is exactly Giant Soldier of Stone.
 - `you.lp = 8000`: LP of you = 8000.
 
 #### CPU 1: Destroy face up defense
@@ -4079,7 +4079,7 @@ B (cancel) cannot end the Battle Phase while the Gorilla can attack.
 | Side | Place | Card | Position |
 |---|---|---|---|
 | Opponent | Monster Zone 0 | Ninja Grandmaster Sasuke | face-up Attack Position |
-| You | Monster Zone 0 | Big Shield Gardna | face-up Defense Position |
+| You | Monster Zone 0 | Giant Soldier of Stone | face-up Defense Position |
 
 **Steps**
 
@@ -4087,8 +4087,8 @@ B (cancel) cannot end the Battle Phase while the Gorilla can attack.
 
 **Expected**
 
-- `you.m0 = empty`: your Monster Zone 0 (**Big Shield Gardna**) is empty.
-- `you.gy = Big Shield Gardna`: your Graveyard is exactly Big Shield Gardna.
+- `you.m0 = empty`: your Monster Zone 0 (**Giant Soldier of Stone**) is empty.
+- `you.gy = Giant Soldier of Stone`: your Graveyard is exactly Giant Soldier of Stone.
 
 ### D.D. Assailant
 
@@ -4153,14 +4153,14 @@ No effect row was found for this card: this scenario checks the card text.
 
 `Return_from_the_Different_Dimension_Return_Banished_Then_Banish_Player` · start: your turn, Main Phase 1 (turnCount 2) · LP 8000 / 8000 · opponent frozen
 
-The strongest ATK comes back first: Summoned Skull, Battle Ox, Celtic Guardian.
+The strongest ATK comes back first: Summoned Skull, Gemini Elf, Mechanicalchaser.
 
 | Side | Place | Card | Position |
 |---|---|---|---|
 | You | Spell/Trap Zone 0 | Return from the Different Dimension | face-down (Set) |
 | You | Banished | Summoned Skull |  |
-| You | Banished | Battle Ox |  |
-| You | Banished | Celtic Guardian |  |
+| You | Banished | Gemini Elf |  |
+| You | Banished | Mechanicalchaser |  |
 
 **Steps**
 
@@ -4172,13 +4172,13 @@ The strongest ATK comes back first: Summoned Skull, Battle Ox, Celtic Guardian.
 6. `zone m2`: Choose your Monster Zone 2 for the summoned monster.
 7. `position atk`: Choose face-up Attack Position for the summoned monster.
 8. `check you.lp = 4000`: Check: LP of you = 4000.
-9. `check you.monsters = Summoned Skull, Battle Ox, Celtic Guardian`: Check: your monsters is exactly Summoned Skull, Battle Ox, Celtic Guardian.
+9. `check you.monsters = Summoned Skull, Gemini Elf, Mechanicalchaser`: Check: your monsters is exactly Summoned Skull, Gemini Elf, Mechanicalchaser.
 10. `pass`: End your turn (its End Phase effects resolve).
 
 **Expected**
 
 - `you.monsters count 0`: your monsters holds 0 card(s).
-- `you.banished = Summoned Skull, Battle Ox, Celtic Guardian`: your banished cards is exactly Summoned Skull, Battle Ox, Celtic Guardian.
+- `you.banished = Summoned Skull, Gemini Elf, Mechanicalchaser`: your banished cards is exactly Summoned Skull, Gemini Elf, Mechanicalchaser.
 
 #### CPU 1: Return banished
 
@@ -4188,7 +4188,7 @@ The strongest ATK comes back first: Summoned Skull, Battle Ox, Celtic Guardian.
 |---|---|---|---|
 | Opponent | Spell/Trap Zone 0 | Return from the Different Dimension | face-down (Set) |
 | Opponent | Banished | Summoned Skull |  |
-| Opponent | Banished | Battle Ox |  |
+| Opponent | Banished | Gemini Elf |  |
 
 **Steps**
 
@@ -4197,7 +4197,7 @@ The strongest ATK comes back first: Summoned Skull, Battle Ox, Celtic Guardian.
 **Expected**
 
 - `opp.lp = 4000`: LP of opp = 4000.
-- `opp.banished = Summoned Skull, Battle Ox`: the opponent's banished cards is exactly Summoned Skull, Battle Ox.
+- `opp.banished = Summoned Skull, Gemini Elf`: the opponent's banished cards is exactly Summoned Skull, Gemini Elf.
 - `opp.monsters count 0`: the opponent's monsters holds 0 card(s).
 
 ### Monster Gate
@@ -4215,7 +4215,7 @@ The strongest ATK comes back first: Summoned Skull, Battle Ox, Celtic Guardian.
 | Side | Place | Card | Position |
 |---|---|---|---|
 | You | Hand 0 | Monster Gate |  |
-| You | Monster Zone 0 | Celtic Guardian | face-up Attack Position |
+| You | Monster Zone 0 | Gemini Elf | face-up Attack Position |
 | You | Deck 0 | Fissure |  |
 | You | Deck 1 | Trap Hole |  |
 | You | Deck 2 | Summoned Skull |  |
@@ -4223,14 +4223,14 @@ The strongest ATK comes back first: Summoned Skull, Battle Ox, Celtic Guardian.
 **Steps**
 
 1. `activate you.hand[Monster Gate]`: Open the card menu of **Monster Gate** in your hand and choose Activate.
-2. `target you.m0`: Pick your Monster Zone 0 (**Celtic Guardian**) as the target.
-3. `zone m0`: Choose your Monster Zone 0 (**Celtic Guardian**) for the summoned monster.
+2. `target you.m0`: Pick your Monster Zone 0 (**Gemini Elf**) as the target.
+3. `zone m0`: Choose your Monster Zone 0 (**Gemini Elf**) for the summoned monster.
 4. `position atk`: Choose face-up Attack Position for the summoned monster.
 
 **Expected**
 
-- `you.m0 = Summoned Skull atk`: your Monster Zone 0 (**Celtic Guardian**) holds Summoned Skull, face-up Attack Position.
-- `you.gy = Monster Gate, Celtic Guardian, Fissure, Trap Hole`: your Graveyard is exactly Monster Gate, Celtic Guardian, Fissure, Trap Hole.
+- `you.m0 = Summoned Skull atk`: your Monster Zone 0 (**Gemini Elf**) holds Summoned Skull, face-up Attack Position.
+- `you.gy = Monster Gate, Gemini Elf, Fissure, Trap Hole`: your Graveyard is exactly Monster Gate, Gemini Elf, Fissure, Trap Hole.
 
 #### CPU 1: Tribute excavate summon
 
@@ -4239,7 +4239,7 @@ The strongest ATK comes back first: Summoned Skull, Battle Ox, Celtic Guardian.
 | Side | Place | Card | Position |
 |---|---|---|---|
 | Opponent | Hand 0 | Monster Gate |  |
-| Opponent | Monster Zone 0 | Celtic Guardian | face-up Attack Position |
+| Opponent | Monster Zone 0 | Gemini Elf | face-up Attack Position |
 | Opponent | Deck 0 | Fissure |  |
 | Opponent | Deck 1 | Summoned Skull |  |
 
@@ -4466,13 +4466,13 @@ Flipped by the attack, its FLIP effect destroys one of your monsters.
 | Side | Place | Card | Position |
 |---|---|---|---|
 | You | Monster Zone 0 | Summoned Skull | face-up Attack Position |
-| You | Monster Zone 1 | Battle Ox | face-up Attack Position |
+| You | Monster Zone 1 | Gemini Elf | face-up Attack Position |
 | Opponent | Monster Zone 0 | Night Assailant | face-down (Set) |
 
 **Steps**
 
 1. `battle`: Enter the Battle Phase.
-2. `attack you.m1 -> opp.m0`: Attack with your Monster Zone 1 (**Battle Ox**): target the opponent's Monster Zone 0 (**Night Assailant**).
+2. `attack you.m1 -> opp.m0`: Attack with your Monster Zone 1 (**Gemini Elf**): target the opponent's Monster Zone 0 (**Night Assailant**).
 
 **Expected**
 
@@ -4497,7 +4497,7 @@ Bokoichi the Freightening Car is not in the ROM, so it is always 1 card.
 | Side | Place | Card | Position |
 |---|---|---|---|
 | You | Monster Zone 0 | Dekoichi the Battlechanted Locomotive | face-down (Set) |
-| You | Deck 0 | Battle Ox |  |
+| You | Deck 0 | Gemini Elf |  |
 
 **Steps**
 
@@ -4505,7 +4505,7 @@ Bokoichi the Freightening Car is not in the ROM, so it is always 1 card.
 
 **Expected**
 
-- `you.hand = Battle Ox`: your hand is exactly Battle Ox.
+- `you.hand = Gemini Elf`: your hand is exactly Gemini Elf.
 - `you.m0 = Dekoichi the Battlechanted Locomotive atk`: your Monster Zone 0 (**Dekoichi the Battlechanted Locomotive**) holds Dekoichi the Battlechanted Locomotive, face-up Attack Position.
 
 #### CPU 1: Flipped by attack
@@ -4544,8 +4544,8 @@ Bokoichi the Freightening Car is not in the ROM, so it is always 1 card.
 | You | Hand 0 | Lightning Vortex |  |
 | You | Hand 1 | Fissure |  |
 | Opponent | Monster Zone 0 | Summoned Skull | face-up Attack Position |
-| Opponent | Monster Zone 1 | Battle Ox | face-up Attack Position |
-| Opponent | Monster Zone 2 | Man-Eater Bug | face-down (Set) |
+| Opponent | Monster Zone 1 | Gemini Elf | face-up Attack Position |
+| Opponent | Monster Zone 2 | Mechanicalchaser | face-down (Set) |
 
 **Steps**
 
@@ -4555,8 +4555,8 @@ Bokoichi the Freightening Car is not in the ROM, so it is always 1 card.
 **Expected**
 
 - `opp.m0 = empty`: the opponent's Monster Zone 0 (**Summoned Skull**) is empty.
-- `opp.m1 = empty`: the opponent's Monster Zone 1 (**Battle Ox**) is empty.
-- `opp.m2 = Man-Eater Bug set`: the opponent's Monster Zone 2 (**Man-Eater Bug**) holds Man-Eater Bug, face-down (Set).
+- `opp.m1 = empty`: the opponent's Monster Zone 1 (**Gemini Elf**) is empty.
+- `opp.m2 = Mechanicalchaser set`: the opponent's Monster Zone 2 (**Mechanicalchaser**) holds Mechanicalchaser, face-down (Set).
 - `you.gy = Fissure, Lightning Vortex`: your Graveyard is exactly Fissure, Lightning Vortex.
 
 #### CPU 1: Destroy face up
@@ -4568,7 +4568,7 @@ Bokoichi the Freightening Car is not in the ROM, so it is always 1 card.
 | Opponent | Hand 0 | Lightning Vortex |  |
 | Opponent | Hand 1 | Fissure |  |
 | You | Monster Zone 0 | Summoned Skull | face-up Attack Position |
-| You | Monster Zone 1 | Battle Ox | face-up Attack Position |
+| You | Monster Zone 1 | Gemini Elf | face-up Attack Position |
 
 **Steps**
 
@@ -4753,19 +4753,19 @@ The locked Trap Hole cannot answer your summon (the opponent is not frozen).
 | Side | Place | Card | Position |
 |---|---|---|---|
 | You | Hand 0 | Zaborg the Thunder Monarch |  |
-| You | Monster Zone 0 | Battle Ox | face-up Attack Position |
+| You | Monster Zone 0 | Gemini Elf | face-up Attack Position |
 | Opponent | Monster Zone 0 | Summoned Skull | face-up Attack Position |
 
 **Steps**
 
-1. `tribute_summon you.hand[Zaborg the Thunder Monarch] -> m0 atk tributes you.m0`: Tribute Summon **Zaborg the Thunder Monarch** in your hand into your Monster Zone 0 (**Battle Ox**) (face-up Attack Position), Tributing your Monster Zone 0 (**Battle Ox**).
+1. `tribute_summon you.hand[Zaborg the Thunder Monarch] -> m0 atk tributes you.m0`: Tribute Summon **Zaborg the Thunder Monarch** in your hand into your Monster Zone 0 (**Gemini Elf**) (face-up Attack Position), Tributing your Monster Zone 0 (**Gemini Elf**).
 2. `target opp.m0`: Pick the opponent's Monster Zone 0 (**Summoned Skull**) as the target.
 
 **Expected**
 
 - `opp.m0 = empty`: the opponent's Monster Zone 0 (**Summoned Skull**) is empty.
 - `opp.gy = Summoned Skull`: the opponent's Graveyard is exactly Summoned Skull.
-- `you.m0 = Zaborg the Thunder Monarch atk`: your Monster Zone 0 (**Battle Ox**) holds Zaborg the Thunder Monarch, face-up Attack Position.
+- `you.m0 = Zaborg the Thunder Monarch atk`: your Monster Zone 0 (**Gemini Elf**) holds Zaborg the Thunder Monarch, face-up Attack Position.
 
 #### CPU 1: Tribute summon destroy
 
@@ -4774,7 +4774,7 @@ The locked Trap Hole cannot answer your summon (the opponent is not frozen).
 | Side | Place | Card | Position |
 |---|---|---|---|
 | Opponent | Hand 0 | Zaborg the Thunder Monarch |  |
-| Opponent | Monster Zone 0 | Battle Ox | face-up Attack Position |
+| Opponent | Monster Zone 0 | Gemini Elf | face-up Attack Position |
 | You | Monster Zone 0 | Summoned Skull | face-up Attack Position |
 
 **Steps**
@@ -4801,9 +4801,9 @@ The locked Trap Hole cannot answer your summon (the opponent is not frozen).
 | Side | Place | Card | Position |
 |---|---|---|---|
 | You | Hand 0 | Level Limit - Area B |  |
-| You | Monster Zone 0 | Battle Ox | face-up Attack Position |
+| You | Monster Zone 0 | Gemini Elf | face-up Attack Position |
 | Opponent | Monster Zone 0 | Summoned Skull | face-up Attack Position |
-| Opponent | Monster Zone 1 | Man-Eater Bug | face-up Attack Position |
+| Opponent | Monster Zone 1 | Giant Soldier of Stone | face-up Attack Position |
 
 **Steps**
 
@@ -4811,10 +4811,10 @@ The locked Trap Hole cannot answer your summon (the opponent is not frozen).
 
 **Expected**
 
-- `you.m0 = Battle Ox def`: your Monster Zone 0 (**Battle Ox**) holds Battle Ox, face-up Defense Position.
+- `you.m0 = Gemini Elf def`: your Monster Zone 0 (**Gemini Elf**) holds Gemini Elf, face-up Defense Position.
 - `opp.m0 = Summoned Skull def`: the opponent's Monster Zone 0 (**Summoned Skull**) holds Summoned Skull, face-up Defense Position.
-- `opp.m1 = Man-Eater Bug atk`: the opponent's Monster Zone 1 (**Man-Eater Bug**) holds Man-Eater Bug, face-up Attack Position.
-- `menu you.m0 lacks Change Position`: The card menu of your Monster Zone 0 (**Battle Ox**) does not offer Change Position.
+- `opp.m1 = Giant Soldier of Stone atk`: the opponent's Monster Zone 1 (**Giant Soldier of Stone**) holds Giant Soldier of Stone, face-up Attack Position.
+- `menu you.m0 lacks Change Position`: The card menu of your Monster Zone 0 (**Gemini Elf**) does not offer Change Position.
 
 #### CPU 1: Level 4 to defense
 
@@ -4852,19 +4852,19 @@ A Fusion Summon of this card can only be done with the above Fusion Materials. T
 | Side | Place | Card | Position |
 |---|---|---|---|
 | You | Monster Zone 0 | Cyber Twin Dragon | face-up Attack Position |
-| Opponent | Monster Zone 0 | Celtic Guardian | face-up Attack Position |
-| Opponent | Monster Zone 1 | Battle Ox | face-up Attack Position |
+| Opponent | Monster Zone 0 | Gemini Elf | face-up Attack Position |
+| Opponent | Monster Zone 1 | Mechanicalchaser | face-up Attack Position |
 
 **Steps**
 
 1. `battle`: Enter the Battle Phase.
-2. `attack you.m0 -> opp.m0`: Attack with your Monster Zone 0 (**Cyber Twin Dragon**): target the opponent's Monster Zone 0 (**Celtic Guardian**).
-3. `attack you.m0 -> opp.m1`: Attack with your Monster Zone 0 (**Cyber Twin Dragon**): target the opponent's Monster Zone 1 (**Battle Ox**).
+2. `attack you.m0 -> opp.m0`: Attack with your Monster Zone 0 (**Cyber Twin Dragon**): target the opponent's Monster Zone 0 (**Gemini Elf**).
+3. `attack you.m0 -> opp.m1`: Attack with your Monster Zone 0 (**Cyber Twin Dragon**): target the opponent's Monster Zone 1 (**Mechanicalchaser**).
 
 **Expected**
 
 - `opp.monsters count 0`: the opponent's monsters holds 0 card(s).
-- `opp.lp = 5500`: LP of opp = 5500.
+- `opp.lp = 6150`: LP of opp = 6150.
 
 #### CPU 1: Second attack
 
@@ -4873,8 +4873,8 @@ A Fusion Summon of this card can only be done with the above Fusion Materials. T
 | Side | Place | Card | Position |
 |---|---|---|---|
 | Opponent | Monster Zone 0 | Cyber Twin Dragon | face-up Attack Position |
-| You | Monster Zone 0 | Celtic Guardian | face-up Attack Position |
-| You | Monster Zone 1 | Battle Ox | face-up Attack Position |
+| You | Monster Zone 0 | Gemini Elf | face-up Attack Position |
+| You | Monster Zone 1 | Mechanicalchaser | face-up Attack Position |
 
 **Steps**
 
@@ -4883,7 +4883,7 @@ A Fusion Summon of this card can only be done with the above Fusion Materials. T
 **Expected**
 
 - `you.monsters count 0`: your monsters holds 0 card(s).
-- `you.lp = 5500`: LP of you = 5500.
+- `you.lp = 6150`: LP of you = 6150.
 
 ### Cyber Dragon
 
@@ -4917,7 +4917,7 @@ A Fusion Summon of this card can only be done with the above Fusion Materials. T
 | Side | Place | Card | Position |
 |---|---|---|---|
 | You | Hand 0 | Cyber Dragon |  |
-| You | Monster Zone 0 | Battle Ox | face-up Attack Position |
+| You | Monster Zone 0 | Gemini Elf | face-up Attack Position |
 | Opponent | Monster Zone 0 | Summoned Skull | face-up Attack Position |
 
 **Steps**
@@ -4935,7 +4935,7 @@ A Fusion Summon of this card can only be done with the above Fusion Materials. T
 | Side | Place | Card | Position |
 |---|---|---|---|
 | Opponent | Hand 0 | Cyber Dragon |  |
-| You | Monster Zone 0 | Battle Ox | face-up Attack Position |
+| You | Monster Zone 0 | Gemini Elf | face-up Attack Position |
 
 **Steps**
 
@@ -4944,8 +4944,8 @@ A Fusion Summon of this card can only be done with the above Fusion Materials. T
 **Expected**
 
 - `opp.monsters has Cyber Dragon`: the opponent's monsters includes Cyber Dragon.
-- `you.m0 = empty`: your Monster Zone 0 (**Battle Ox**) is empty.
-- `you.lp = 7600`: LP of you = 7600.
+- `you.m0 = empty`: your Monster Zone 0 (**Gemini Elf**) is empty.
+- `you.lp = 7800`: LP of you = 7800.
 
 ### Cyber End Dragon
 
@@ -4964,17 +4964,17 @@ A Fusion Summon of this card can only be done with the above Fusion Materials. I
 | Side | Place | Card | Position |
 |---|---|---|---|
 | You | Monster Zone 0 | Cyber End Dragon | face-up Attack Position |
-| Opponent | Monster Zone 0 | Big Shield Gardna | face-up Defense Position |
+| Opponent | Monster Zone 0 | Giant Soldier of Stone | face-up Defense Position |
 
 **Steps**
 
 1. `battle`: Enter the Battle Phase.
-2. `attack you.m0 -> opp.m0`: Attack with your Monster Zone 0 (**Cyber End Dragon**): target the opponent's Monster Zone 0 (**Big Shield Gardna**).
+2. `attack you.m0 -> opp.m0`: Attack with your Monster Zone 0 (**Cyber End Dragon**): target the opponent's Monster Zone 0 (**Giant Soldier of Stone**).
 
 **Expected**
 
-- `opp.m0 = empty`: the opponent's Monster Zone 0 (**Big Shield Gardna**) is empty.
-- `opp.lp = 6600`: LP of opp = 6600.
+- `opp.m0 = empty`: the opponent's Monster Zone 0 (**Giant Soldier of Stone**) is empty.
+- `opp.lp = 6000`: LP of opp = 6000.
 
 #### CPU 1: Pierce
 
@@ -4983,7 +4983,7 @@ A Fusion Summon of this card can only be done with the above Fusion Materials. I
 | Side | Place | Card | Position |
 |---|---|---|---|
 | Opponent | Monster Zone 0 | Cyber End Dragon | face-up Attack Position |
-| You | Monster Zone 0 | Big Shield Gardna | face-up Defense Position |
+| You | Monster Zone 0 | Giant Soldier of Stone | face-up Defense Position |
 
 **Steps**
 
@@ -4991,8 +4991,8 @@ A Fusion Summon of this card can only be done with the above Fusion Materials. I
 
 **Expected**
 
-- `you.m0 = empty`: your Monster Zone 0 (**Big Shield Gardna**) is empty.
-- `you.lp = 6600`: LP of you = 6600.
+- `you.m0 = empty`: your Monster Zone 0 (**Giant Soldier of Stone**) is empty.
+- `you.lp = 6000`: LP of you = 6000.
 
 ### Threatening Roar
 
@@ -5006,13 +5006,13 @@ A Fusion Summon of this card can only be done with the above Fusion Materials. I
 
 `Threatening_Roar_Stop_Further_Attacks_Player` · start: the opponent's turn, Main Phase 1 (turnCount 3) · LP 8000 / 8000 · opponent not frozen
 
-The declared attack goes on (2500); Battle Ox cannot attack after it. If Battle Ox attacks first, answer that attack instead (then you.lp is 6300).
+The declared attack goes on (2500); Gemini Elf cannot attack after it. If Gemini Elf attacks first, answer that attack instead (then you.lp is 6300).
 
 | Side | Place | Card | Position |
 |---|---|---|---|
 | You | Spell/Trap Zone 0 | Threatening Roar | face-down (Set) |
 | Opponent | Monster Zone 0 | Summoned Skull | face-up Attack Position |
-| Opponent | Monster Zone 1 | Battle Ox | face-up Attack Position |
+| Opponent | Monster Zone 1 | Gemini Elf | face-up Attack Position |
 
 **Steps**
 
@@ -5020,7 +5020,7 @@ The declared attack goes on (2500); Battle Ox cannot attack after it. If Battle 
 
 **Expected**
 
-- `you.lp in 5500|6300`: LP of you is one of 5500|6300.
+- `you.lp in 5500|6100`: LP of you is one of 5500|6100.
 - `you.gy = Threatening Roar`: your Graveyard is exactly Threatening Roar.
 
 #### CPU 1: Before battle phase
@@ -5059,18 +5059,18 @@ The CPU flips it as your Battle Phase starts, since you have a monster with 2000
 | Side | Place | Card | Position |
 |---|---|---|---|
 | You | Monster Zone 0 | Exarion Universe | face-up Attack Position |
-| Opponent | Monster Zone 0 | Celtic Guardian | face-up Defense Position |
+| Opponent | Monster Zone 0 | Gemini Elf | face-up Defense Position |
 
 **Steps**
 
 1. `battle`: Enter the Battle Phase.
-2. `attack you.m0 -> opp.m0`: Attack with your Monster Zone 0 (**Exarion Universe**): target the opponent's Monster Zone 0 (**Celtic Guardian**).
+2. `attack you.m0 -> opp.m0`: Attack with your Monster Zone 0 (**Exarion Universe**): target the opponent's Monster Zone 0 (**Gemini Elf**).
 3. `yes`: Answer Yes.
 
 **Expected**
 
-- `opp.m0 = empty`: the opponent's Monster Zone 0 (**Celtic Guardian**) is empty.
-- `opp.lp = 7800`: LP of opp = 7800.
+- `opp.m0 = empty`: the opponent's Monster Zone 0 (**Gemini Elf**) is empty.
+- `opp.lp = 7500`: LP of opp = 7500.
 - `you.m0.atk = 1400`: The face-up Attack Position of your Monster Zone 0 (**Exarion Universe**) is 1400.
 
 #### CPU 1: Lose 400 to pierce
@@ -5080,7 +5080,7 @@ The CPU flips it as your Battle Phase starts, since you have a monster with 2000
 | Side | Place | Card | Position |
 |---|---|---|---|
 | Opponent | Monster Zone 0 | Exarion Universe | face-up Attack Position |
-| You | Monster Zone 0 | Celtic Guardian | face-up Defense Position |
+| You | Monster Zone 0 | Gemini Elf | face-up Defense Position |
 
 **Steps**
 
@@ -5088,8 +5088,8 @@ The CPU flips it as your Battle Phase starts, since you have a monster with 2000
 
 **Expected**
 
-- `you.m0 = empty`: your Monster Zone 0 (**Celtic Guardian**) is empty.
-- `you.lp = 7800`: LP of you = 7800.
+- `you.m0 = empty`: your Monster Zone 0 (**Gemini Elf**) is empty.
+- `you.lp = 7500`: LP of you = 7500.
 
 ### Gravity Bind
 
@@ -5353,12 +5353,12 @@ Summoned Skull is the only card in hand, so the random discard is known: Level 6
 | Side | Place | Card | Position |
 |---|---|---|---|
 | You | Hand 0 | Thestalos the Firestorm Monarch |  |
-| You | Monster Zone 0 | Battle Ox | face-up Attack Position |
+| You | Monster Zone 0 | Gemini Elf | face-up Attack Position |
 | Opponent | Hand 0 | Summoned Skull |  |
 
 **Steps**
 
-1. `tribute_summon you.hand[Thestalos the Firestorm Monarch] -> m0 atk tributes you.m0`: Tribute Summon **Thestalos the Firestorm Monarch** in your hand into your Monster Zone 0 (**Battle Ox**) (face-up Attack Position), Tributing your Monster Zone 0 (**Battle Ox**).
+1. `tribute_summon you.hand[Thestalos the Firestorm Monarch] -> m0 atk tributes you.m0`: Tribute Summon **Thestalos the Firestorm Monarch** in your hand into your Monster Zone 0 (**Gemini Elf**) (face-up Attack Position), Tributing your Monster Zone 0 (**Gemini Elf**).
 
 **Expected**
 
@@ -5373,7 +5373,7 @@ Summoned Skull is the only card in hand, so the random discard is known: Level 6
 | Side | Place | Card | Position |
 |---|---|---|---|
 | Opponent | Hand 0 | Thestalos the Firestorm Monarch |  |
-| Opponent | Monster Zone 0 | Battle Ox | face-up Attack Position |
+| Opponent | Monster Zone 0 | Gemini Elf | face-up Attack Position |
 | You | Hand 0 | Summoned Skull |  |
 
 **Steps**
@@ -5456,20 +5456,20 @@ D.D. Warrior Lady's controller always banishes both (the CPU says Yes).
 | Side | Place | Card | Position |
 |---|---|---|---|
 | You | Hand 0 | Pot of Avarice |  |
-| You | Graveyard | Battle Ox |  |
-| You | Graveyard | Celtic Guardian |  |
+| You | Graveyard | Gemini Elf |  |
+| You | Graveyard | Mechanicalchaser |  |
 | You | Graveyard | La Jinn the Mystical Genie of the Lamp |  |
 | You | Graveyard | Summoned Skull |  |
-| You | Graveyard | Man-Eater Bug |  |
+| You | Graveyard | Giant Soldier of Stone |  |
 
 **Steps**
 
 1. `activate you.hand[Pot of Avarice]`: Open the card menu of **Pot of Avarice** in your hand and choose Activate.
-2. `pick you.gy[Battle Ox]`: Pick **Battle Ox** in your Graveyard in the list or on the field.
-3. `pick you.gy[Celtic Guardian]`: Pick **Celtic Guardian** in your Graveyard in the list or on the field.
+2. `pick you.gy[Gemini Elf]`: Pick **Gemini Elf** in your Graveyard in the list or on the field.
+3. `pick you.gy[Mechanicalchaser]`: Pick **Mechanicalchaser** in your Graveyard in the list or on the field.
 4. `pick you.gy[La Jinn the Mystical Genie of the Lamp]`: Pick **La Jinn the Mystical Genie of the Lamp** in your Graveyard in the list or on the field.
 5. `pick you.gy[Summoned Skull]`: Pick **Summoned Skull** in your Graveyard in the list or on the field.
-6. `pick you.gy[Man-Eater Bug]`: Pick **Man-Eater Bug** in your Graveyard in the list or on the field.
+6. `pick you.gy[Giant Soldier of Stone]`: Pick **Giant Soldier of Stone** in your Graveyard in the list or on the field.
 
 **Expected**
 
@@ -5483,11 +5483,11 @@ D.D. Warrior Lady's controller always banishes both (the CPU says Yes).
 | Side | Place | Card | Position |
 |---|---|---|---|
 | Opponent | Hand 0 | Pot of Avarice |  |
-| Opponent | Graveyard | Battle Ox |  |
-| Opponent | Graveyard | Celtic Guardian |  |
+| Opponent | Graveyard | Gemini Elf |  |
+| Opponent | Graveyard | Mechanicalchaser |  |
 | Opponent | Graveyard | La Jinn the Mystical Genie of the Lamp |  |
 | Opponent | Graveyard | Summoned Skull |  |
-| Opponent | Graveyard | Man-Eater Bug |  |
+| Opponent | Graveyard | Giant Soldier of Stone |  |
 
 **Steps**
 
@@ -5514,8 +5514,8 @@ D.D. Warrior Lady's controller always banishes both (the CPU says Yes).
 | Side | Place | Card | Position |
 |---|---|---|---|
 | You | Monster Zone 0 | Magical Merchant | face-down (Set) |
-| You | Deck 0 | Battle Ox |  |
-| You | Deck 1 | Celtic Guardian |  |
+| You | Deck 0 | Gemini Elf |  |
+| You | Deck 1 | Mechanicalchaser |  |
 | You | Deck 2 | Fissure |  |
 | You | Deck 3 | Trap Hole |  |
 
@@ -5526,8 +5526,8 @@ D.D. Warrior Lady's controller always banishes both (the CPU says Yes).
 **Expected**
 
 - `you.hand = Fissure`: your hand is exactly Fissure.
-- `you.gy = Battle Ox, Celtic Guardian`: your Graveyard is exactly Battle Ox, Celtic Guardian.
-- `you.deck[0] = Trap Hole`: your Deck slot 0 (**Battle Ox**) is exactly Trap Hole.
+- `you.gy = Gemini Elf, Mechanicalchaser`: your Graveyard is exactly Gemini Elf, Mechanicalchaser.
+- `you.deck[0] = Trap Hole`: your Deck slot 0 (**Gemini Elf**) is exactly Trap Hole.
 
 #### CPU 1: Flipped by attack
 
@@ -5537,7 +5537,7 @@ D.D. Warrior Lady's controller always banishes both (the CPU says Yes).
 |---|---|---|---|
 | You | Monster Zone 0 | Summoned Skull | face-up Attack Position |
 | Opponent | Monster Zone 0 | Magical Merchant | face-down (Set) |
-| Opponent | Deck 0 | Battle Ox |  |
+| Opponent | Deck 0 | Gemini Elf |  |
 | Opponent | Deck 1 | Fissure |  |
 
 **Steps**
@@ -5548,7 +5548,7 @@ D.D. Warrior Lady's controller always banishes both (the CPU says Yes).
 **Expected**
 
 - `opp.hand = Fissure`: the opponent's hand is exactly Fissure.
-- `opp.gy has Battle Ox`: the opponent's Graveyard includes Battle Ox.
+- `opp.gy has Gemini Elf`: the opponent's Graveyard includes Gemini Elf.
 - `opp.gy has Magical Merchant`: the opponent's Graveyard includes Magical Merchant.
 
 ### Mask of Restrict
@@ -5566,7 +5566,7 @@ D.D. Warrior Lady's controller always banishes both (the CPU says Yes).
 | Side | Place | Card | Position |
 |---|---|---|---|
 | You | Spell/Trap Zone 0 | Mask of Restrict | face-down (Set) |
-| You | Monster Zone 0 | Battle Ox | face-up Attack Position |
+| You | Monster Zone 0 | Gemini Elf | face-up Attack Position |
 | You | Hand 0 | Summoned Skull |  |
 
 **Steps**
@@ -5585,7 +5585,7 @@ D.D. Warrior Lady's controller always banishes both (the CPU says Yes).
 | Side | Place | Card | Position |
 |---|---|---|---|
 | Opponent | Spell/Trap Zone 0 | Mask of Restrict | face-down (Set) |
-| You | Monster Zone 0 | Battle Ox | face-up Attack Position |
+| You | Monster Zone 0 | Gemini Elf | face-up Attack Position |
 | You | Hand 0 | Summoned Skull |  |
 
 **Steps**

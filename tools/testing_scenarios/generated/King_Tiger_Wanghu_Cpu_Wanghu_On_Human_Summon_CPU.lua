@@ -23,20 +23,20 @@ EDS.run({
     effect = "cpu_wanghu_on_human_summon",
     actor = "CPU",
     format = "Yata",
-    scenarioText = "summon you.hand[Mystic Tomato] -> m0 atk",
+    scenarioText = "summon you.hand[Giant Soldier of Stone] -> m0 atk",
     start = { turn = "you", turnCount = 2, lp = { 8000, 8000 } },
     setupCards = {
         { player = 1, zone = "monster", slot = 0, name = "King Tiger Wanghu" },
-        { player = 0, zone = "hand", slot = 0, name = "Mystic Tomato" },
+        { player = 0, zone = "hand", slot = 0, name = "Giant Soldier of Stone" },
     },
     setupPiles = {
     },
     steps = {
-        "summon you.hand[Mystic Tomato] -> m0 atk",
+        "summon you.hand[Giant Soldier of Stone] -> m0 atk",
     },
     expect = {
         "you.m0 = empty",
-        "you.gy = Mystic Tomato",
+        "you.gy = Giant Soldier of Stone",
     },
     freezeOpponent = false,
 })

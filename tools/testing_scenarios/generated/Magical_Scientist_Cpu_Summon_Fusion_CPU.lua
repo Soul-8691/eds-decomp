@@ -27,7 +27,7 @@ EDS.run({
     start = { turn = "opp", turnCount = 3, lp = { 8000, 8000 } },
     setupCards = {
         { player = 1, zone = "monster", slot = 0, name = "Magical Scientist" },
-        { player = 0, zone = "monster", slot = 0, name = "Celtic Guardian" },
+        { player = 0, zone = "monster", slot = 0, name = "Gemini Elf" },
     },
     setupPiles = {
         { player = 1, pile = "extra", names = { "Flame Swordsman" } },

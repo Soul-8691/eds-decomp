@@ -29,7 +29,7 @@ EDS.run({
         { player = 0, zone = "hand", slot = 0, name = "Reasoning" },
     },
     setupPiles = {
-        { player = 0, pile = "deck", names = { "Fissure", "Trap Hole", "Summoned Skull", "Battle Ox" } },
+        { player = 0, pile = "deck", names = { "Fissure", "Trap Hole", "Summoned Skull", "Gemini Elf" } },
     },
     steps = {
         "activate you.hand[Reasoning]",

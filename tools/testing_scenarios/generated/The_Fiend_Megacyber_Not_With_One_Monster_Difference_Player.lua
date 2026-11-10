@@ -27,8 +27,8 @@ EDS.run({
     start = { turn = "you", turnCount = 2, lp = { 8000, 8000 } },
     setupCards = {
         { player = 0, zone = "hand", slot = 0, name = "The Fiend Megacyber" },
-        { player = 0, zone = "monster", slot = 0, name = "Celtic Guardian" },
-        { player = 1, zone = "monster", slot = 0, name = "Battle Ox" },
+        { player = 0, zone = "monster", slot = 0, name = "Mechanicalchaser" },
+        { player = 1, zone = "monster", slot = 0, name = "Mechanicalchaser" },
         { player = 1, zone = "monster", slot = 1, name = "La Jinn the Mystical Genie of the Lamp" },
     },
     setupPiles = {

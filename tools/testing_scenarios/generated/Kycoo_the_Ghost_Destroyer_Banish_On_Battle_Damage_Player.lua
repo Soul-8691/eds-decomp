@@ -23,13 +23,13 @@ EDS.run({
     effect = "banish_on_battle_damage",
     actor = "Player",
     format = "Android",
-    scenarioText = "battle; attack you.m0 -> direct; yes; pick opp.gy[Summoned Skull]; yes; pick opp.gy[Sangan]",
+    scenarioText = "battle; attack you.m0 -> direct; yes; pick opp.gy[Summoned Skull]; yes; pick opp.gy[Mechanicalchaser]",
     start = { turn = "you", turnCount = 2, lp = { 8000, 8000 } },
     setupCards = {
         { player = 0, zone = "monster", slot = 0, name = "Kycoo the Ghost Destroyer" },
     },
     setupPiles = {
-        { player = 1, pile = "gy", names = { "Summoned Skull", "Battle Ox", "Sangan" } },
+        { player = 1, pile = "gy", names = { "Summoned Skull", "Gemini Elf", "Mechanicalchaser" } },
     },
     steps = {
         "battle",
@@ -37,12 +37,12 @@ EDS.run({
         "yes",
         "pick opp.gy[Summoned Skull]",
         "yes",
-        "pick opp.gy[Sangan]",
+        "pick opp.gy[Mechanicalchaser]",
     },
     expect = {
         "opp.lp = 6200",
-        "opp.banished = Summoned Skull, Sangan",
-        "opp.gy = Battle Ox",
+        "opp.banished = Summoned Skull, Mechanicalchaser",
+        "opp.gy = Gemini Elf",
     },
     freezeOpponent = true,
 })

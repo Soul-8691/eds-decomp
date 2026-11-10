@@ -27,20 +27,20 @@ EDS.run({
     start = { turn = "opp", turnCount = 3, lp = { 8000, 8000 } },
     setupCards = {
         { player = 1, zone = "monster", slot = 0, name = "Bazoo the Soul-Eater" },
-        { player = 0, zone = "monster", slot = 0, name = "Jinzo" },
+        { player = 0, zone = "monster", slot = 0, name = "Gemini Elf" },
     },
     setupPiles = {
-        { player = 1, pile = "gy", names = { "Battle Ox", "La Jinn the Mystical Genie of the Lamp", "Sangan", "Kuriboh" } },
+        { player = 1, pile = "gy", names = { "Gemini Elf", "Mechanicalchaser", "La Jinn the Mystical Genie of the Lamp", "Giant Soldier of Stone" } },
     },
     steps = {
         "cpu_turn",
     },
     expect = {
-        "opp.banished = Kuriboh, Sangan, Battle Ox",
-        "opp.gy = La Jinn the Mystical Genie of the Lamp",
+        "opp.banished = Giant Soldier of Stone, La Jinn the Mystical Genie of the Lamp, Mechanicalchaser",
+        "opp.gy = Gemini Elf",
         "opp.m0.atk = 2500",
         "you.m0 = empty",
-        "you.lp = 7900",
+        "you.lp = 7400",
     },
     freezeOpponent = false,
     video = { show = "opp.m0" },

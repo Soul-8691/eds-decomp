@@ -27,18 +27,18 @@ EDS.run({
     start = { turn = "you", turnCount = 2, lp = { 8000, 8000 } },
     setupCards = {
         { player = 0, zone = "monster", slot = 0, name = "Fiber Jar", set = true },
-        { player = 0, zone = "monster", slot = 1, name = "Battle Ox" },
+        { player = 0, zone = "monster", slot = 1, name = "Gemini Elf" },
         { player = 0, zone = "st", slot = 0, name = "Trap Hole", set = true },
         { player = 0, zone = "hand", slot = 0, name = "Summoned Skull" },
         { player = 0, zone = "hand", slot = 1, name = "Pot of Greed" },
-        { player = 1, zone = "monster", slot = 0, name = "Celtic Guardian" },
+        { player = 1, zone = "monster", slot = 0, name = "Gemini Elf" },
         { player = 1, zone = "hand", slot = 0, name = "Fissure" },
         { player = 1, zone = "hand", slot = 1, name = "Dark Hole" },
-        { player = 1, zone = "hand", slot = 2, name = "Man-Eater Bug" },
+        { player = 1, zone = "hand", slot = 2, name = "Mechanicalchaser" },
     },
     setupPiles = {
-        { player = 0, pile = "gy", names = { "La Jinn the Mystical Genie of the Lamp" } },
-        { player = 1, pile = "gy", names = { "Sangan" } },
+        { player = 0, pile = "gy", names = { "Mechanicalchaser" } },
+        { player = 1, pile = "gy", names = { "La Jinn the Mystical Genie of the Lamp" } },
     },
     steps = {
         "flip_summon you.m0",

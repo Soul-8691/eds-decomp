@@ -39,7 +39,7 @@ SCENARIOS = {
         player('destroy_two_spell_traps',
                setup='''
                    you.hand: Mobius the Frost Monarch
-                   you.m0: Battle Ox atk
+                   you.m0: Gemini Elf atk
                    opp.st0: Call of the Haunted set
                    opp.st1: Magic Jammer set
                ''',
@@ -57,7 +57,7 @@ SCENARIOS = {
         cpu('cpu_destroy_human_spell_traps', start=OPP_TURN,
             setup='''
                 opp.hand: Mobius the Frost Monarch
-                opp.m0: Battle Ox atk
+                opp.m0: Gemini Elf atk
                 you.st0: Call of the Haunted set
                 you.st1: Magic Jammer set
             ''',
@@ -74,26 +74,26 @@ SCENARIOS = {
         player('destroy_highest_def',
                setup='''
                    you.hand: Smashing Ground
-                   opp.m0: Celtic Guardian atk
-                   opp.m1: Giant Rat atk
+                   opp.m0: Gemini Elf atk
+                   opp.m1: Giant Soldier of Stone atk
                ''',
                steps='activate you.hand[Smashing Ground]',
                expect='''
-                   opp.m0 = Celtic Guardian atk
+                   opp.m0 = Gemini Elf atk
                    opp.m1 = empty
-                   opp.gy = Giant Rat
+                   opp.gy = Giant Soldier of Stone
                ''',
-               note='Giant Rat has DEF 1450, Celtic Guardian 1200.'),
+               note='Giant Soldier of Stone has DEF 1450, Gemini Elf 1200.'),
         cpu('cpu_destroy_highest_def', start=OPP_TURN,
             setup='''
                 opp.hand: Smashing Ground
-                you.m0: Celtic Guardian atk
-                you.m1: Giant Rat atk
+                you.m0: Gemini Elf atk
+                you.m1: Giant Soldier of Stone atk
             ''',
             steps='cpu_turn',
             expect='''
                 you.m1 = empty
-                you.gy has Giant Rat
+                you.gy has Giant Soldier of Stone
             '''),
     ],
     'Blade Knight': [
@@ -144,7 +144,7 @@ SCENARIOS = {
         player('level_up_declined',
                setup='''
                    you.m0: Mystic Swordsman LV2 atk
-                   opp.m0: Kuriboh atk
+                   opp.m0: Mystical Elf atk
                ''',
                steps='''
                    battle
@@ -153,7 +153,7 @@ SCENARIOS = {
                    no
                ''',
                expect='''
-                   opp.lp = 7400
+                   opp.lp = 7900
                    you.m0 = Mystic Swordsman LV2 atk
                ''',
                note='Mystic Swordsman LV4 is not in the ROM, so answer No to the End Phase level-up.'),
@@ -244,7 +244,7 @@ SCENARIOS = {
         player('take_control',
                setup='''
                    you.hand: Enemy Controller
-                   you.m0: Battle Ox atk
+                   you.m0: Gemini Elf atk
                    opp.m0: Summoned Skull atk
                ''',
                steps='''
@@ -257,18 +257,18 @@ SCENARIOS = {
                ''',
                expect='''
                    opp.monsters = Summoned Skull
-                   you.gy = Battle Ox, Enemy Controller
+                   you.gy = Gemini Elf, Enemy Controller
                '''),
         cpu('cpu_take_stronger_monster', start=OPP_TURN,
             setup='''
                 opp.st0: Enemy Controller set
-                opp.m0: Battle Ox atk
+                opp.m0: Gemini Elf atk
                 you.m0: Summoned Skull atk
             ''',
             steps='cpu_turn',
             expect='''
                 opp.gy has Enemy Controller
-                opp.gy has Battle Ox
+                opp.gy has Gemini Elf
                 you.monsters = Summoned Skull
             ''',
             note='Control comes back at the End Phase.'),
@@ -277,7 +277,7 @@ SCENARIOS = {
         player('tribute_gain_def',
                setup='''
                    you.hand: Mystik Wok
-                   you.m0: Giant Rat atk
+                   you.m0: Gemini Elf atk
                ''',
                steps='''
                    activate you.hand[Mystik Wok]
@@ -285,14 +285,14 @@ SCENARIOS = {
                    choose "DEF"
                ''',
                expect='''
-                   you.lp = 9450
-                   you.gy = Giant Rat, Mystik Wok
+                   you.lp = 8900
+                   you.gy = Gemini Elf, Mystik Wok
                '''),
         cpu('cpu_low_lp_answer_attack', start={'turn': 'you', 'turn_count': 2, 'lp': (8000, 1000)},
             setup='''
                 you.m0: Summoned Skull atk
                 opp.st0: Mystik Wok set
-                opp.m0: Celtic Guardian atk
+                opp.m0: Gemini Elf atk
             ''',
             steps='''
                 battle
@@ -300,11 +300,11 @@ SCENARIOS = {
                 when replay: cancel
             ''',
             expect='''
-                opp.lp = 2400
-                opp.gy has Celtic Guardian
+                opp.lp = 2900
+                opp.gy has Gemini Elf
                 opp.gy has Mystik Wok
             ''',
-            note='It Tributes the attacked Celtic Guardian and takes its ATK (1400, higher than its DEF).'),
+            note='It Tributes the attacked Gemini Elf and takes its ATK (1400, higher than its DEF).'),
     ],
     'Berserk Gorilla': [
         player('destroyed_in_defense',
@@ -334,19 +334,19 @@ SCENARIOS = {
         cpu('cpu_must_attack', start=OPP_TURN,
             setup='''
                 opp.m0: Berserk Gorilla atk
-                you.m0: Celtic Guardian atk
+                you.m0: Gemini Elf atk
             ''',
             steps='cpu_turn',
             expect='''
                 you.m0 = empty
-                you.lp = 7400
+                you.lp = 7900
             '''),
     ],
     'Ninja Grandmaster Sasuke': [
         player('destroy_face_up_defense',
                setup='''
                    you.m0: Ninja Grandmaster Sasuke atk
-                   opp.m0: Big Shield Gardna def
+                   opp.m0: Giant Soldier of Stone def
                ''',
                steps='''
                    battle
@@ -354,18 +354,18 @@ SCENARIOS = {
                ''',
                expect='''
                    opp.m0 = empty
-                   opp.gy = Big Shield Gardna
+                   opp.gy = Giant Soldier of Stone
                    you.lp = 8000
                '''),
         cpu('cpu_destroy_face_up_defense', start=OPP_TURN,
             setup='''
                 opp.m0: Ninja Grandmaster Sasuke atk
-                you.m0: Big Shield Gardna def
+                you.m0: Giant Soldier of Stone def
             ''',
             steps='cpu_turn',
             expect='''
                 you.m0 = empty
-                you.gy = Big Shield Gardna
+                you.gy = Giant Soldier of Stone
             '''),
     ],
     'D.D. Assailant': [
@@ -403,7 +403,7 @@ SCENARIOS = {
         player('return_banished_then_banish',
                setup='''
                    you.st0: Return from the Different Dimension set
-                   you.banished: Summoned Skull, Battle Ox, Celtic Guardian
+                   you.banished: Summoned Skull, Gemini Elf, Mechanicalchaser
                ''',
                steps='''
                    activate you.st0
@@ -414,23 +414,23 @@ SCENARIOS = {
                    zone m2
                    position atk
                    check you.lp = 4000
-                   check you.monsters = Summoned Skull, Battle Ox, Celtic Guardian
+                   check you.monsters = Summoned Skull, Gemini Elf, Mechanicalchaser
                    pass
                ''',
                expect='''
                    you.monsters count 0
-                   you.banished = Summoned Skull, Battle Ox, Celtic Guardian
+                   you.banished = Summoned Skull, Gemini Elf, Mechanicalchaser
                ''',
-               note='The strongest ATK comes back first: Summoned Skull, Battle Ox, Celtic Guardian.'),
+               note='The strongest ATK comes back first: Summoned Skull, Gemini Elf, Mechanicalchaser.'),
         cpu('cpu_return_banished', start=OPP_TURN,
             setup='''
                 opp.st0: Return from the Different Dimension set
-                opp.banished: Summoned Skull, Battle Ox
+                opp.banished: Summoned Skull, Gemini Elf
             ''',
             steps='cpu_turn',
             expect='''
                 opp.lp = 4000
-                opp.banished = Summoned Skull, Battle Ox
+                opp.banished = Summoned Skull, Gemini Elf
                 opp.monsters count 0
             '''),
     ],
@@ -438,7 +438,7 @@ SCENARIOS = {
         player('tribute_excavate_summon',
                setup='''
                    you.hand: Monster Gate
-                   you.m0: Celtic Guardian atk
+                   you.m0: Gemini Elf atk
                    you.deck: Fissure, Trap Hole, Summoned Skull
                ''',
                steps='''
@@ -449,12 +449,12 @@ SCENARIOS = {
                ''',
                expect='''
                    you.m0 = Summoned Skull atk
-                   you.gy = Monster Gate, Celtic Guardian, Fissure, Trap Hole
+                   you.gy = Monster Gate, Gemini Elf, Fissure, Trap Hole
                '''),
         cpu('cpu_tribute_excavate_summon', start=OPP_TURN,
             setup='''
                 opp.hand: Monster Gate
-                opp.m0: Celtic Guardian atk
+                opp.m0: Gemini Elf atk
                 opp.deck: Fissure, Summoned Skull
             ''',
             steps='cpu_turn',
@@ -581,7 +581,7 @@ SCENARIOS = {
         cpu('cpu_flipped_by_attack',
             setup='''
                 you.m0: Summoned Skull atk
-                you.m1: Battle Ox atk
+                you.m1: Gemini Elf atk
                 opp.m0: Night Assailant set
             ''',
             steps='''
@@ -598,11 +598,11 @@ SCENARIOS = {
         player('flip_draw_one',
                setup='''
                    you.m0: Dekoichi the Battlechanted Locomotive set
-                   you.deck: Battle Ox
+                   you.deck: Gemini Elf
                ''',
                steps='flip_summon you.m0',
                expect='''
-                   you.hand = Battle Ox
+                   you.hand = Gemini Elf
                    you.m0 = Dekoichi the Battlechanted Locomotive atk
                ''',
                note='Bokoichi the Freightening Car is not in the ROM, so it is always 1 card.'),
@@ -625,8 +625,8 @@ SCENARIOS = {
                setup='''
                    you.hand: Lightning Vortex, Fissure
                    opp.m0: Summoned Skull atk
-                   opp.m1: Battle Ox atk
-                   opp.m2: Man-Eater Bug set
+                   opp.m1: Gemini Elf atk
+                   opp.m2: Mechanicalchaser set
                ''',
                steps='''
                    activate you.hand[Lightning Vortex]
@@ -635,14 +635,14 @@ SCENARIOS = {
                expect='''
                    opp.m0 = empty
                    opp.m1 = empty
-                   opp.m2 = Man-Eater Bug set
+                   opp.m2 = Mechanicalchaser set
                    you.gy = Fissure, Lightning Vortex
                '''),
         cpu('cpu_destroy_face_up', start=OPP_TURN,
             setup='''
                 opp.hand: Lightning Vortex, Fissure
                 you.m0: Summoned Skull atk
-                you.m1: Battle Ox atk
+                you.m1: Gemini Elf atk
             ''',
             steps='cpu_turn',
             expect='''
@@ -752,7 +752,7 @@ SCENARIOS = {
         player('tribute_summon_destroy',
                setup='''
                    you.hand: Zaborg the Thunder Monarch
-                   you.m0: Battle Ox atk
+                   you.m0: Gemini Elf atk
                    opp.m0: Summoned Skull atk
                ''',
                steps='''
@@ -767,7 +767,7 @@ SCENARIOS = {
         cpu('cpu_tribute_summon_destroy', start=OPP_TURN,
             setup='''
                 opp.hand: Zaborg the Thunder Monarch
-                opp.m0: Battle Ox atk
+                opp.m0: Gemini Elf atk
                 you.m0: Summoned Skull atk
             ''',
             steps='cpu_turn',
@@ -780,15 +780,15 @@ SCENARIOS = {
         player('level_4_to_defense',
                setup='''
                    you.hand: Level Limit - Area B
-                   you.m0: Battle Ox atk
+                   you.m0: Gemini Elf atk
                    opp.m0: Summoned Skull atk
-                   opp.m1: Man-Eater Bug atk
+                   opp.m1: Giant Soldier of Stone atk
                ''',
                steps='activate you.hand[Level Limit - Area B]',
                expect='''
-                   you.m0 = Battle Ox def
+                   you.m0 = Gemini Elf def
                    opp.m0 = Summoned Skull def
-                   opp.m1 = Man-Eater Bug atk
+                   opp.m1 = Giant Soldier of Stone atk
                    menu you.m0 lacks Change Position
                '''),
         cpu('cpu_level_4_to_defense', start=OPP_TURN,

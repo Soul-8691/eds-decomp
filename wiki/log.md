@@ -2989,3 +2989,14 @@ updated: 2026-09-29
 - Verified in mGBA: the CPU videos of Soul Exchange, The Fiend Megacyber, Goblin Attack Force, Limiter Removal and
   Bazoo; Torrential Tribute's from the summon.
 - Pages: tools/testing_scenarios/README.md.
+
+## [2026-11-10] progress | Test scenarios use each format's most-played Normal Monsters
+- tools/testing_scenarios/exact_cards_1..5.py: 126 scenarios rewritten. Fodder (Celtic Guardian, Sangan, Kuriboh,
+  Giant Rat, Mystic Tomato, Man-Eater Bug, Big Shield Gardna, Battle Ox outside Yugi-Kaiba) became the format's
+  top Normal Monster by usage (YGOPRODeck frameType "normal", usage/<format>.json): La Jinn / Neo / Battle Ox /
+  Giant Soldier of Stone in Yugi-Kaiba, Mechanicalchaser in Imperial, Gemini Elf elsewhere (Archfiend Soldier,
+  Chaos and Vampire's top Normal, is not an EDS card). Where that card would change the outcome, the next in
+  Gemini Elf > Mechanicalchaser > La Jinn > Neo / Battle Ox > Giant Soldier of Stone; LP and ATK expectations
+  recomputed. Kept where the test needs the card: a Warrior (Reinforcement of the Army, Cipher Soldier), a
+  Machine (Limiter Removal), an effect under test (Sangan and Man-Eater Bug for Dark Ruler Ha Des and Blade Knight).
+- TESTING.md and the 218 scripts regenerated.

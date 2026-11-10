@@ -26,7 +26,7 @@ EDS.run({
     scenarioText = "battle; attack you.m0 -> opp.m0",
     start = { turn = "you", turnCount = 2, lp = { 8000, 8000 } },
     setupCards = {
-        { player = 0, zone = "monster", slot = 0, name = "Battle Ox" },
+        { player = 0, zone = "monster", slot = 0, name = "Gemini Elf" },
         { player = 1, zone = "monster", slot = 0, name = "Gravekeeper's Spy", set = true },
     },
     setupPiles = {
@@ -37,7 +37,7 @@ EDS.run({
         "attack you.m0 -> opp.m0",
     },
     expect = {
-        "you.lp = 7700",
+        "you.lp = 7900",
         "opp.monsters = Gravekeeper's Spy, Gravekeeper's Spy",
     },
     freezeOpponent = false,

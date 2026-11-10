@@ -27,8 +27,8 @@ EDS.run({
     start = { turn = "opp", turnCount = 3, lp = { 8000, 8000 } },
     setupCards = {
         { player = 1, zone = "hand", slot = 0, name = "United We Stand" },
-        { player = 1, zone = "monster", slot = 0, name = "Battle Ox" },
-        { player = 1, zone = "monster", slot = 1, name = "La Jinn the Mystical Genie of the Lamp" },
+        { player = 1, zone = "monster", slot = 0, name = "Gemini Elf" },
+        { player = 1, zone = "monster", slot = 1, name = "Mechanicalchaser" },
         { player = 0, zone = "monster", slot = 0, name = "Summoned Skull" },
     },
     setupPiles = {

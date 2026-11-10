@@ -30,7 +30,7 @@ local opts = {
     start = { turn = "opp", turnCount = 3, lp = { 8000, 8000 } },
     setupCards = {
         { player = 1, zone = "monster", slot = 0, name = "Goblin Attack Force" },
-        { player = 0, zone = "monster", slot = 0, name = "Celtic Guardian" },
+        { player = 0, zone = "monster", slot = 0, name = "Mechanicalchaser" },
     },
     setupPiles = {
     },
@@ -39,7 +39,7 @@ local opts = {
     },
     expect = {
         "you.m0 = empty",
-        "you.lp = 7100",
+        "you.lp = 7550",
         "opp.m0 = Goblin Attack Force def",
     },
     freezeOpponent = false,
