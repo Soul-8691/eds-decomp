@@ -582,6 +582,7 @@ u32 DuelPhase_ShowResult(void)
 int ModDuelStateCheck(void);    /* mod: the added cards' continuous rules (src/added_effects.c) */
 int ModDuelSettingsHandleInput(void);  /* mod: L opens Settings on an idle frame (src/mod_settings.c) */
 int ModDuelSettingsRun(void);          /* mod: the in-duel Settings screen, while it is up */
+int ModTestingHidePrompts(void);       /* mod: test videos, the text box not drawn (src/mod_testing_automation.c) */
 
 u32 DuelMainStep(void)
 {
@@ -603,7 +604,7 @@ u32 DuelMainStep(void)
         }
         /* Text box sprites, while the duel screen is up and the box has not started closing. */
         if (gDuelScreen.uiGfxLoaded && gDuelScreen.active && gTextBox.active
-            && gTextBox.step <= TEXTBOX_STEP_SLIDE_OUT) {
+            && gTextBox.step <= TEXTBOX_STEP_SLIDE_OUT && !ModTestingHidePrompts()) {  /* added: test videos */
             if (gTextBox.drawCallback)
                 gTextBox.drawCallback();
             else

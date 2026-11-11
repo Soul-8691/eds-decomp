@@ -117,8 +117,11 @@ EXPECT_FORMS = [
 #   clear='cpu_monsters'  a CPU scenario empties the CPU's monster zones too (it keeps its first-turn board
 #                    otherwise): with a monster of its own it Tribute Summons instead of using Soul Exchange or
 #                    The Fiend Megacyber's Special Summon
+#   chain='show'     keep the chain window ("Chain: Activating / Resolving"; hidden by default for cleaner videos)
+#   cards='show'     keep the card-showing animations (hidden by default)
+#   prompts='show'   draw the prompts (by default they work, answered by the steps, but are not drawn)
 VIDEO_KEYS = {'start': ('summon', 'first'), 'until': ('defense',), 'show': None, 'effect': ('none',),
-              'clear': ('cpu_monsters',)}
+              'clear': ('cpu_monsters',), 'chain': ('show',), 'cards': ('show',), 'prompts': ('show',)}
 
 
 def player(effect, *, setup, steps, expect, start=None, note=None, video=None):

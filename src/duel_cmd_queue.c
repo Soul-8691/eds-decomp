@@ -492,9 +492,15 @@ void DuelCmd_Push(u16 cmd, u16 arg2, int arg4Word, int arg6Word)
 /* Run one frame of the current duel command: call the handler of its id (bits 0-11 of gDuelCmd.cmd). One
  * handler can serve several ids (the negation flags, the two life-point commands, the phase banners). Unknown
  * ids just finish. */
+int ModTestingSkipCardShow(void);   /* src/mod_testing_automation.c */
+
 void DuelCmd_Dispatch(void)
 {
     gDuelScreen.showCursor = 0;
+    if (ModTestingSkipCardShow()) {     /* added: test videos without the card-showing animations */
+        gDuelCmd.running = 0;
+        return;
+    }
     switch (gDuelCmd.cmd & DUEL_CMD_ID_MASK) {
     case DUEL_CMD_TURN_START:
         DuelCmd_TurnStart();

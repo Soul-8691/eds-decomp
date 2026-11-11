@@ -3,11 +3,14 @@
 
     python tools/testing_scenarios/review_videos.py
 
-Lists tools/testing_scenarios/recordings/*.mp4 (and recordings/keep/*.mp4) in TESTING.md order. "Keep" moves a
-video to recordings/keep/; run_tests.ps1 skips the scripts whose video is there (-IncludeKept runs them anyway).
-Pressing Keep on a kept video moves it back.
+Lists tools/testing_scenarios/recordings/*.mp4 (and recordings/keep/, recordings/throwaway/) in TESTING.md order.
+"Keep" (K) moves a video to recordings/keep/ (tracked by git); "Highlight" (H) to recordings/keep/highlights/ (tracked
+too, apart from the other kept ones: the videos worth showing); "Throwaway" (T) to recordings/throwaway/ (ignored by
+git): a video you are done with but do not want in the repository. run_tests.ps1 skips the scripts whose video is in
+any of them (-IncludeKept runs them anyway). Pressing the same key again moves the video back. Thrown-away videos are
+hidden unless "Show thrown away" is ticked.
 
-Keys: Space play/pause, Left/Right one frame (Shift: 1 s), Home/End, Up/Down previous/next video, K keep,
+Keys: F5 refresh the video from disk, Space play/pause, Left/Right one frame (Shift: 1 s), Home/End, Up/Down previous/next video, K keep, H highlight, T throwaway,
 L loop, 1-4 zoom, [ ] speed.
 
 Needs ffmpeg on PATH (the recordings already need it) and Pillow.
@@ -37,6 +40,13 @@ HERE = Path(__file__).resolve().parent
 REPO = HERE.parents[1]
 RECORDINGS = HERE / "recordings"
 KEEP = RECORDINGS / "keep"
+THROWAWAY = RECORDINGS / "throwaway"
+HIGHLIGHTS = KEEP / "highlights"
+# a video's status: where it lives (None: recordings/ itself, still to review)
+FOLDERS = {None: RECORDINGS, "keep": KEEP, "highlight": HIGHLIGHTS, "throw": THROWAWAY}
+MARKS = {"keep": "★ ", "highlight": "◆ ", "throw": "✗ "}
+LABELS = {"keep": "   (kept)", "highlight": "   (highlight)", "throw": "   (thrown away)"}
+COLOURS = {"keep": "#2e7d32", "highlight": "#b8860b", "throw": "#888888"}
 TESTING_MD = REPO / "TESTING.md"
 
 SRC_W, SRC_H = 240, 160                                 # (decoded at the GBA's size; zoomed with nearest neighbour)
@@ -124,10 +134,12 @@ class App:
         self.playing = False
         self.loop = tk.BooleanVar(value=True)
         self.show_kept = tk.BooleanVar(value=True)
+        self.show_thrown = tk.BooleanVar(value=False)
+        self.show_highlights = tk.BooleanVar(value=True)
         self.filter = tk.StringVar()
         self.zoom = 3
         self.speed_i = SPEEDS.index(1.0)
-        self.videos = []                                # [(name, path, kept)] in the list's order
+        self.videos = []                                # [(name, path, status)] in the list's order
         self._photo = None
         self._last_tick = None
         self._slider_busy = False
@@ -144,7 +156,11 @@ class App:
         ent.pack(fill=tk.X)
         self.filter.trace_add("write", lambda *a: self.refresh_list())
         ttk.Checkbutton(left, text="Show kept videos", variable=self.show_kept,
-                        command=self.refresh_list).pack(anchor="w", pady=(4, 2))
+                        command=self.refresh_list).pack(anchor="w", pady=(4, 0))
+        ttk.Checkbutton(left, text="Show highlights", variable=self.show_highlights,
+                        command=self.refresh_list).pack(anchor="w")
+        ttk.Checkbutton(left, text="Show thrown away", variable=self.show_thrown,
+                        command=self.refresh_list).pack(anchor="w", pady=(0, 2))
         box = ttk.Frame(left)
         box.pack(fill=tk.Y, expand=True)
         self.listbox = tk.Listbox(box, width=52, activestyle="dotbox", exportselection=False,
@@ -194,10 +210,15 @@ class App:
         ttk.Button(bar2, text="↑ Previous", command=lambda: self.move_selection(-1)).pack(side=tk.LEFT)
         ttk.Button(bar2, text="↓ Next", command=lambda: self.move_selection(1)).pack(side=tk.LEFT, padx=4)
         self.keep_btn = ttk.Button(bar2, text="★ Keep (K)", command=self.toggle_keep)
-        self.keep_btn.pack(side=tk.LEFT, padx=12)
+        self.keep_btn.pack(side=tk.LEFT, padx=(12, 4))
+        self.highlight_btn = ttk.Button(bar2, text="◆ Highlight (H)", command=self.toggle_highlight)
+        self.highlight_btn.pack(side=tk.LEFT, padx=(0, 4))
+        self.throw_btn = ttk.Button(bar2, text="✗ Throwaway (T)", command=self.toggle_throw)
+        self.throw_btn.pack(side=tk.LEFT, padx=(0, 12))
         ttk.Button(bar2, text="Open folder", command=self.open_folder).pack(side=tk.LEFT)
         ttk.Button(bar2, text="Rescan", command=self.refresh_list).pack(side=tk.LEFT, padx=4)
-        ttk.Label(bar2, text="Space play · ←/→ frame (Shift 1 s) · ↑/↓ video · K keep · L loop · [ ] speed",
+        ttk.Button(bar2, text="⟳ Refresh video (F5)", command=self.refresh_video).pack(side=tk.LEFT)
+        ttk.Label(bar2, text="Space play · ←/→ frame (Shift 1 s) · ↑/↓ video · K keep · H highlight · T throwaway · L loop · [ ] speed",
                   foreground="#666").pack(side=tk.RIGHT)
 
         for key, fn in [("<space>", lambda e: self.toggle_play()),
@@ -207,6 +228,9 @@ class App:
                         ("<Home>", lambda e: self.seek(0)), ("<End>", lambda e: self.seek(10 ** 9)),
                         ("<Up>", lambda e: self.move_selection(-1)), ("<Down>", lambda e: self.move_selection(1)),
                         ("<k>", lambda e: self.toggle_keep()), ("<K>", lambda e: self.toggle_keep()),
+                        ("<t>", lambda e: self.toggle_throw()), ("<T>", lambda e: self.toggle_throw()),
+                        ("<F5>", lambda e: self.refresh_video()),
+                        ("<h>", lambda e: self.toggle_highlight()), ("<H>", lambda e: self.toggle_highlight()),
                         ("<l>", lambda e: self.loop.set(not self.loop.get())),
                         ("<bracketleft>", lambda e: self.set_speed(self.speed_i - 1)),
                         ("<bracketright>", lambda e: self.set_speed(self.speed_i + 1))]:
@@ -236,11 +260,11 @@ class App:
     def scan(self):
         order = testing_order()
         found = {}
-        for path in RECORDINGS.glob("*.mp4"):
-            found[path.stem] = (path, False)
-        if KEEP.is_dir():
-            for path in KEEP.glob("*.mp4"):
-                found[path.stem] = (path, True)
+        for status, folder in FOLDERS.items():         # (a name in keep/ or throwaway/ wins over recordings/)
+            if folder.is_dir():
+                for path in folder.glob("*.mp4"):
+                    if status or path.stem not in found:
+                        found[path.stem] = (path, status)
         names = sorted(found, key=lambda n: (order.get(n, 10 ** 9), n))
         return [(n, found[n][0], found[n][1]) for n in names]
 
@@ -248,14 +272,17 @@ class App:
         current = keep_name or self.current_name()
         allv = self.scan()
         f = self.filter.get().strip().lower()
-        self.videos = [v for v in allv if (self.show_kept.get() or not v[2]) and (not f or f in v[0].lower())]
+        shown = {None: True, "keep": self.show_kept.get(), "highlight": self.show_highlights.get(),
+                 "throw": self.show_thrown.get()}
+        self.videos = [v for v in allv if shown[v[2]] and (not f or f in v[0].lower())]
         self.listbox.delete(0, tk.END)
-        for name, _, kept in self.videos:
-            self.listbox.insert(tk.END, ("★ " if kept else "   ") + name)
-            if kept:
-                self.listbox.itemconfig(tk.END, foreground="#2e7d32")
-        kept_n = sum(1 for v in allv if v[2])
-        self.count_label.configure(text="%d videos · %d kept · %d to review" % (len(allv), kept_n, len(allv) - kept_n))
+        for name, _, status in self.videos:
+            self.listbox.insert(tk.END, MARKS.get(status, "   ") + name)
+            if status:
+                self.listbox.itemconfig(tk.END, foreground=COLOURS[status])
+        n = {s: sum(1 for v in allv if v[2] == s) for s in MARKS}
+        self.count_label.configure(text="%d videos · %d kept · %d highlights · %d thrown away · %d to review" % (
+            len(allv), n["keep"], n["highlight"], n["throw"], len(allv) - sum(n.values())))
         for i, v in enumerate(self.videos):
             if v[0] == current:
                 self.listbox.selection_clear(0, tk.END)
@@ -286,7 +313,7 @@ class App:
         sel = self.listbox.curselection()
         if not sel:
             return
-        name, path, kept = self.videos[sel[0]]
+        name, path, status = self.videos[sel[0]]
         if self.decoder and self.decoder.path == path:
             return
         self.close_video()
@@ -296,8 +323,10 @@ class App:
         self.playing = self._autoplay           # (the first video at startup waits, paused on its first frame)
         self._autoplay = True
         self._last_tick = None
-        self.title_label.configure(text=("★ " if kept else "") + name + ("   (kept)" if kept else ""))
-        self.keep_btn.configure(text="Unkeep (K)" if kept else "★ Keep (K)")
+        self.title_label.configure(text=MARKS.get(status, "") + name + LABELS.get(status, ""))
+        self.keep_btn.configure(text="Unkeep (K)" if status == "keep" else "★ Keep (K)")
+        self.highlight_btn.configure(text="Unhighlight (H)" if status == "highlight" else "◆ Highlight (H)")
+        self.throw_btn.configure(text="Restore (T)" if status == "throw" else "✗ Throwaway (T)")
         self.play_btn.configure(text="⏸ Pause" if self.playing else "▶ Play")
 
     def decoder_for(self, path):
@@ -410,14 +439,26 @@ class App:
             self.show()
         self.root.after(8, self.tick)
 
-    # ---- keep ----
+    # ---- keep / throwaway ----
 
     def toggle_keep(self):
+        self.toggle_status("keep")
+
+    def toggle_throw(self):
+        self.toggle_status("throw")
+
+    def toggle_highlight(self):
+        self.toggle_status("highlight")
+
+    def toggle_status(self, status):
+        """Moves the selected video to `status`'s folder (keep/, keep/highlights/, throwaway/), or back to recordings/ when it is there
+        already; then on to the next video."""
         sel = self.listbox.curselection()
         if not sel:
             return
-        name, path, kept = self.videos[sel[0]]
-        target = (RECORDINGS if kept else KEEP) / path.name
+        name, path, current = self.videos[sel[0]]
+        new = None if current == status else status
+        target = FOLDERS[new] / path.name
         if self.decoder and self.decoder.path == path:
             self.close_video()
         self.release(path)                              # (ffmpeg must let go of the file first)
@@ -427,16 +468,28 @@ class App:
                 target.unlink()
             shutil.move(str(path), str(target))
         except OSError as e:
-            messagebox.showerror("Keep", "Could not move %s:\n%s" % (path.name, e))
+            messagebox.showerror("Move", "Could not move %s:\n%s" % (path.name, e))
             return
         idx = sel[0]
         self.refresh_list(keep_name=name)
-        if not kept and self.show_kept.get() is False:
+        still_listed = any(v[0] == name for v in self.videos)
+        if new and not still_listed:
             self.select(idx)                            # (it left the list: the next one takes its place)
-        elif not kept:
-            self.move_selection(1)                      # (kept: on to the next video)
+        elif new:
+            self.move_selection(1)                      # (marked: on to the next video)
         else:
             self.open_selected()
+
+    def refresh_video(self):
+        """The current video read again from disk (after it was re-recorded), with the list rescanned; it also lets go of
+        the file, so the test runner can replace it."""
+        name = self.current_name()
+        if self.decoder:
+            path = self.decoder.path
+            self.close_video()
+            self.release(path)
+        self.refresh_list(keep_name=name)
+        self.open_selected()
 
     def open_folder(self):
         folder = KEEP if KEEP.is_dir() else RECORDINGS

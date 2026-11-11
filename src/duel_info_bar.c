@@ -367,6 +367,9 @@ void TextBoxDrawText(u16 pos, u16 size, const u8 *text)
  * TextBoxDrawChoiceCursor applies to y) and must be 0-19. The text tiles are numbered row by row from
  * BG_TILE_BOX_TEXT.
  */
+static void TextBoxBlankTilemap(u32 row);
+int ModTestingHidePrompts(void);    /* src/mod_testing_automation.c */
+
 void TextBoxDrawTilemap(u32 row)
 {
     u32 top = row - gTextBox.height;
@@ -422,6 +425,24 @@ void TextBoxDrawTilemap(u32 row)
     if (screenRow <= SCREEN_LAST_ROW) {
         for (i = 0; i < gTextBox.width + 2; i++)
             TEXTBOX_MAP[cell + i] = 0;
+    }
+    if (ModTestingHidePrompts())        /* added: test videos, the box blanked again (src/mod_testing_automation.c) */
+        TextBoxBlankTilemap(row);
+}
+
+/* Added: the cells TextBoxDrawTilemap(row) writes, all blank (an invisible box for test videos). */
+static void TextBoxBlankTilemap(u32 row)
+{
+    u32 top = row - gTextBox.height;
+    u32 screenRow = top - 2;
+    u32 cell = gTextBox.x + 0xFFFF + (top - 4) * MAP_ROW_STRIDE;
+    int r, i;
+
+    for (r = 0; r < gTextBox.height + 4; r++, screenRow++, cell += MAP_ROW_STRIDE) {
+        if (screenRow <= SCREEN_LAST_ROW) {
+            for (i = 0; i < gTextBox.width + 2; i++)
+                TEXTBOX_MAP[(u16)(cell + i)] = 0;
+        }
     }
 }
 

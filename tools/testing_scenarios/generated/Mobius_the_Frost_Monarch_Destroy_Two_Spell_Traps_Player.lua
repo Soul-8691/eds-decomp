@@ -23,7 +23,7 @@ EDS.run({
     effect = "destroy_two_spell_traps",
     actor = "Player",
     format = "Warrior",
-    scenarioText = "tribute_summon you.hand[Mobius the Frost Monarch] -> m0 atk tributes you.m0; yes; target opp.st0; target opp.st1",
+    scenarioText = "tribute_summon you.hand[Mobius the Frost Monarch] -> m0 atk tributes you.m0; target opp.st0; target opp.st1",
     start = { turn = "you", turnCount = 2, lp = { 8000, 8000 } },
     setupCards = {
         { player = 0, zone = "hand", slot = 0, name = "Mobius the Frost Monarch" },
@@ -35,7 +35,6 @@ EDS.run({
     },
     steps = {
         "tribute_summon you.hand[Mobius the Frost Monarch] -> m0 atk tributes you.m0",
-        "yes",
         "target opp.st0",
         "target opp.st1",
     },

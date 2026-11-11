@@ -48,6 +48,9 @@ When the card's chain or battle is not what the video must show, a scenario says
 | `until='defense'` | after the effect, wait for the card to be in Defense Position (Goblin Attack Force) |
 | `show='opp.m0'` | after the effect, the cursor goes on that zone (`gModTestingSelect`, 0x0202D802) so the info bar shows its ATK, for 90 frames or until the CPU's next phase begins |
 | `effect='none'` | nothing is meant to happen; no wait for an effect |
+| `chain='show'` | keep the chain window ("Chain: Activating / Resolving"); hidden by default for cleaner videos |
+| `cards='show'` | keep the card-showing animations (the big card zoom, flash, unroll); hidden by default |
+| `prompts='show'` | draw the prompts (text boxes); by default they work as usual, answered by the steps' key presses, but are not drawn |
 | `clear='cpu_monsters'` | a CPU scenario empties the CPU's monster zones (it keeps its first-turn board otherwise), so it uses the card rather than a Tribute Summon |
 
 `check menu X lacks Y` steps open the card's menu for 90 frames, then close it (shown, not checked).
@@ -56,8 +59,11 @@ When the card's chain or battle is not what the video must show, a scenario says
 
 `python tools/testing_scenarios/review_videos.py` (Windows Python with Pillow; ffmpeg on PATH) lists the recordings in
 TESTING.md order and plays them (frame steps, speed, zoom, loop; the next videos decode ahead). **Keep** (K) moves a
-video to `recordings/keep/`; `run_tests.ps1` then skips its script (`-IncludeKept` runs it anyway). Keep on a kept
-video moves it back.
+video to `recordings/keep/` (tracked by git). **Highlight** (H) moves it to `recordings/keep/highlights/` (tracked
+too, apart from the other kept videos: the ones worth showing). **Throwaway** (T) moves it to `recordings/throwaway/` (ignored by git):
+done with, but not worth keeping in the repository; hidden from the list unless "Show thrown away" is ticked.
+`run_tests.ps1` skips the scripts whose video is in any of them (`-IncludeKept` runs them anyway). The same key again
+moves a video back.
 
 ### The end of every scenario
 

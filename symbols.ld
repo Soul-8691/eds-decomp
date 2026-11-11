@@ -16,6 +16,8 @@ gModTestingFreezeOpponent = 0x0202FF03;
    free RAM after gModLink, which ends by 0x0202D800). */
 gModTestingOnlyCard = 0x0202D800;
 gModTestingSelect = 0x0202D802;
+gModTestingFlags2 = 0x0202D804;
+gModTestingLastShown = 0x0202D806;
 gModDuel = 0x0202FF04;
 /* Mod: the Synchro Summon state of src/mod_synchro.c (at most 0x100 bytes, before gInjectionFairyLily). */
 gModSynchro = 0x0202FE00;

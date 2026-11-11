@@ -19,6 +19,11 @@ void ModTestingTick(void);
 extern u16 gModTestingOnlyCard;
 /* EWRAM u16 (symbols.ld): a script's one-shot request to put the field cursor on a zone (ModTestingTick). */
 extern u16 gModTestingSelect;
+/* EWRAM (symbols.ld): bit 0 skip card-showing animations, bit 1 no prompts; the card of the last skipped animation. */
+extern u8 gModTestingFlags2;
+extern u16 gModTestingLastShown;
+int ModTestingSkipCardShow(void);
+int ModTestingHidePrompts(void);
 /* 1 when the CPU (player 1) would activate a card other than gModTestingOnlyCard (testing builds only). */
 int ModTestingCpuCardBlocked(int player, u16 id);
 

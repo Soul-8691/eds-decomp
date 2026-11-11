@@ -39,3 +39,5 @@ eds_release_demo.toml
 eds_release_demo_extra.toml
 # Test scenario videos: only the kept ones (recordings/keep/, review_videos.py) are tracked
 tools/testing_scenarios/recordings/*.mp4
+# videos marked throwaway in review_videos.py: done, but not kept in the repository
+tools/testing_scenarios/recordings/throwaway/

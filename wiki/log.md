@@ -3031,3 +3031,25 @@ updated: 2026-09-29
   `ModAlwaysWinRps` (src/mod_opponents.c; include/global.h): every duel of a testing build, and against Debug in make
   release. Link Battles are unaffected. The test harness still goes second (it writes the result directly).
 - Not built yet (the full test run holds eds_demo.gba).
+
+## [2026-11-10] progress | Cleaner test videos: no chain window, card animations or prompts; 60 s limit
+- src/mod_testing_automation.c (testing builds, Test Duels): bit 2 of gModTestingFreezeOpponent skips the chain window
+  (ChainListScreen_Run, duel_card_actions.c); gModTestingFlags2 (0x0202D804) bit 0 skips the card-showing animations
+  (commands 0x71-0x76 end at once in DuelCmd_Dispatch, duel_cmd_queue.c; the card goes to gModTestingLastShown,
+  0x0202D806, for the Continuous cards' effect check) and bit 1 the player's response / Yes-No prompts (as Hold R,
+  ModDuelSkipResponsesActive). lib_eds.lua sets them; a scenario keeps the window or animations with video
+  chain='show' / cards='show', and keeps the prompts when a step answers one.
+- run_tests.ps1: a script stops after 60 s (encoding excluded) or 60 s without progress, and a TIMEOUT leaves
+  recordings/throwaway/<name>.toolong so it is skipped; -RerecordKept records kept and highlighted videos again;
+  -Names. 88 scripts that took 60 s or more in the logs went to throwaway (36 kept ones left alone).
+- review_videos.py: Throwaway (T, recordings/throwaway/, git-ignored), Highlight (H, recordings/keep/highlights/),
+  Refresh video (F5).
+- Built (demo); not yet re-recorded.
+
+## [2026-11-10] progress | Test videos: prompts work unseen and are cut from the video (untested)
+- gModTestingFlags2 bit 1 now hides the prompts instead of declining them (the earlier auto-decline is undone):
+  TextBoxDrawTilemap blanks the box's map cells (TextBoxBlankTilemap, duel_info_bar.c) and DuelMainStep skips its
+  sprites (duel_main.c); the box opens, waits and takes the steps' key presses as usual (ModTestingHidePrompts).
+- lib_eds.lua: no frame is captured while a text box or duel prompt is open, so the video shows no pause for it.
+  A scenario keeps the prompts with video prompts='show'.
+- Built (demo, .text to 0x0807F504); not yet re-recorded.

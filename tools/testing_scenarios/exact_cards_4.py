@@ -45,7 +45,6 @@ SCENARIOS = {
                ''',
                steps='''
                    tribute_summon you.hand[Mobius the Frost Monarch] -> m0 atk tributes you.m0
-                   yes
                    target opp.st0
                    target opp.st1
                ''',

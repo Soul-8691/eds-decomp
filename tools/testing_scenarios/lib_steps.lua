@@ -710,6 +710,10 @@ end
 -- B from the Main Phase field or the attacker choice, then the phase menu (result) or "End your turn?" (yes).
 local function opPhaseMenu(op)
     if not op.opened then
+        -- a message waiting for A keeps the field from being idle (Vampire Lord's "sent to the Graveyard" note)
+        if dismissMessage() then
+            return false
+        end
         if inMainField() or inAttackerChoice() then
             press(EDS.KEY_B)
             op.opened = true
@@ -1210,6 +1214,14 @@ end
 -- resolves with no effect, so for one (opts.effectShown, from gen_testing_lua.py) the effect starts here.
 local DUEL_CMD_SHOW_CARD_EFFECT = 0x73
 local function cardEffectShown(id)
+    -- (with the animations skipped, gModTestingLastShown holds the card the game would have shown)
+    local last = emu:read16(EDS.G_MOD_TESTING_LAST_SHOWN)
+    if last ~= 0 then
+        emu:write16(EDS.G_MOD_TESTING_LAST_SHOWN, 0)
+        if (last & 0x7FF) == id then
+            return true
+        end
+    end
     return (emu:read8(G_DUEL_CMD + 0x80D) & 0x20) ~= 0
         and (emu:read16(G_DUEL_CMD) & 0xFFF) == DUEL_CMD_SHOW_CARD_EFFECT
         and (emu:read16(G_DUEL_CMD + 2) & 0x7FF) == id

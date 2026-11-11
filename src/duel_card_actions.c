@@ -602,6 +602,8 @@ int ChainListScreen_Run(void)
      * default case, and lets the two timer stores of CHAIN_LIST_HOLD cross-jump into one. */
     switch (gChainListScreen.state) {
     case CHAIN_LIST_SETUP:
+        if (ModTestingHideChainList())  /* added: test videos without the window (src/mod_testing_automation.c) */
+            return 1;
         TextCellsClear();
         DuelScreen_ScrollToZone(0, 0);
         gChainListScreen.state++;

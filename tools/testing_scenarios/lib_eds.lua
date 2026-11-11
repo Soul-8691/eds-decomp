@@ -335,6 +335,10 @@ function EDS.captureFrameIfNeeded(frameState, opts)
     if frameState.captureStop then
         return          -- (a video's last shot ended as the CPU's next phase began: lib_steps.lua)
     end
+    if opts.steps and (opts.video or {}).prompts ~= "show"
+        and ((emu:read8(EDS.G_TEXTBOX) & 1) ~= 0 or (emu:read8(EDS.G_DUEL + 0x1B50) & 2) ~= 0) then
+        return          -- a prompt is open (not drawn, gModTestingFlags2 bit 1): its frames are left out of the video
+    end
     if frameState.cpuOnlyCapture and EDS.turnPlayer() ~= 1 then
         return          -- a CPU scenario with no action of yours: the CPU's turns only
     end
@@ -476,10 +480,23 @@ EDS.G_MOD_TESTING_ONLY_CARD = 0x0202D800
 -- gModTestingSelect (u16): a one-shot request to put the field cursor on a zone (bit 15; bit 8 the player; bits 0-3
 -- the zone), done by ModTestingTick: a video's `show` (lib_steps.lua).
 EDS.G_MOD_TESTING_SELECT = 0x0202D802
+-- gModTestingFlags2: bit 0 the card-showing animations skipped, bit 1 the prompts not drawn (src/mod_testing_automation.c);
+-- gModTestingLastShown: the card of the last skipped animation
+EDS.G_MOD_TESTING_FLAGS2 = 0x0202D804
+EDS.G_MOD_TESTING_LAST_SHOWN = 0x0202D806
+
+
 function EDS.writeTestingFlags(freeze, opts)
     local cap = (opts.steps and opts.actor == "CPU") and 4 or 0
     local keep = emu:read8(EDS.G_MOD_TESTING_FREEZE) & 0x02
-    emu:write8(EDS.G_MOD_TESTING_FREEZE, keep | (cap << 4) | (freeze and 1 or 0))
+    -- bit 2: no chain window (cleaner videos), unless the scenario needs it (video chain='show')
+    local hideChain = ((opts.video or {}).chain ~= "show") and 4 or 0
+    emu:write8(EDS.G_MOD_TESTING_FREEZE, keep | hideChain | (cap << 4) | (freeze and 1 or 0))
+    -- cleaner videos: no card-showing animations (unless video cards='show'); the prompts work but are not drawn
+    -- (the steps' key presses answer them unseen; unless video prompts='show')
+    local video = opts.video or {}
+    local flags2 = (video.cards ~= "show" and 1 or 0) | ((opts.steps and video.prompts ~= "show") and 2 or 0)
+    emu:write8(EDS.G_MOD_TESTING_FLAGS2, flags2)
     emu:write16(EDS.G_MOD_TESTING_ONLY_CARD, opts.onlyCardId or 0)
 end
 

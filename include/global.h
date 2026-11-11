@@ -97,7 +97,8 @@ u32 GetTrunkFusionCopies(u16 id);
  * (the opponent's hand and face-down cards shown; neither player can deck out in that duel). */
 int ModDebugDuel(void);
 int ModAlwaysWinRps(void);          /* src/mod_opponents.c: the player wins rock-paper-scissors (debug duels) */
-int ModEmptyDeckDuel(void);         /* src/mod_opponents.c: a Campaign duel against Empty Deck (no deck-out) */
+int ModEmptyDeckDuel(void);
+int ModTestingHideChainList(void);  /* src/mod_testing_automation.c: test scripts' "no chain window" (bit 2) */         /* src/mod_opponents.c: a Campaign duel against Empty Deck (no deck-out) */
 /* 1 in a testing-build duel vs Test Duel (Duel Computer slot): neither player can deck out. */
 int ModTestDuel(void);
 /* 1 in make (testing), ModTestDuel, or ModDebugDuel: the human can use Card View on main/fusion deck piles

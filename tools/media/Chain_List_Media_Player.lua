@@ -43,6 +43,6 @@ EDS.run({
     expect = {
     },
     freezeOpponent = false,
-    video = { effect = "none" },
+    video = { effect = "none", chain = "show" },
     captureMp4 = false,
 })

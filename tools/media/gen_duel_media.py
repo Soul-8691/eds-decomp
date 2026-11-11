@@ -99,7 +99,7 @@ def sc_of(name, start, setup, steps):
     st = dict(exact.DEFAULT_START)
     st.update(start or {})
     return {'actor': 'Player', 'effect': 'media', 'start': st, 'setup': exact._lines(setup),
-            'steps': exact._lines(steps), 'expect': [], 'note': None, 'video': {'effect': 'none'}}
+            'steps': exact._lines(steps), 'expect': [], 'note': None, 'video': {'effect': 'none', 'chain': 'show'}}
 
 
 def main():

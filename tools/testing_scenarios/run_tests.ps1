@@ -9,8 +9,10 @@
   pauseOnMinimize=0 and pauseOnFocusLost=0 keep it running unfocused. The scripts' screenshots come from the emulator, not the window, so capture still
   works. -Visible runs it on your desktop instead (minimized).
   The result is the script's line in recordings/_last_run.log
-  (PASS / FAIL / DONE); a script with no result after -TimeoutSeconds (60) is stopped and counted as TIMEOUT,
-  unless its ffmpeg PNG -> MP4 encode is running (then up to -EncodeTimeoutSeconds more). The
+  (PASS / FAIL / DONE); a script that makes no progress for -TimeoutSeconds (60: its log does not grow and no
+  ffmpeg encode runs), or runs longer than -MaxSeconds (60), is stopped and counted as TIMEOUT, and marked
+  recordings/throwaway/<script>.toolong so it is not run again. -RerecordKept records the kept and highlighted
+  scripts again, replacing their videos. The
   summary also goes to recordings/_summary.txt.
 
 .EXAMPLE
@@ -29,10 +31,16 @@ param(
     [switch]$Media,
     # -Media: the save to copy for the captures (default: the ROM's own .sav), e.g. eds_demo.sav with a release ROM
     [string]$Save = "",
-    # a script with no result by then is stopped (TIMEOUT), unless its PNG -> MP4 encode (ffmpeg) is running:
-    # that may take up to EncodeTimeoutSeconds more
+    # seconds without progress (no new log line, no ffmpeg encode) before a script is stopped as TIMEOUT
     [int]$TimeoutSeconds = 60,
-    [int]$EncodeTimeoutSeconds = 600,
+    # the most a script may run in all: a video that takes longer is not wanted (a TIMEOUT leaves the marker
+    # recordings/throwaway/<script>.toolong, so the script is skipped from then on)
+    [int]$MaxSeconds = 60,
+    # record the kept and highlighted scripts again (recordings/keep/, keep/highlights/): each new video replaces the
+    # old one in its folder
+    [switch]$RerecordKept,
+    # only these script names (e.g. the ones that failed last time); empty: every script matching -Filter
+    [string[]]$Names = @(),
     [string]$Mgba = "C:\Program Files\mGBA\mGBA.exe",
     [string]$Rom = "eds_demo.gba",
     # run mGBA on your own desktop (minimized) instead of the separate one
@@ -103,15 +111,32 @@ if (Test-Path $testingMd) {
     }
 }
 $scripts = @(Get-ChildItem -Path $dir -Filter "*.lua" | Where-Object { $_.BaseName -like $pattern -and $_.BaseName -notlike "lib_*" } |
+             Where-Object { $Names.Count -eq 0 -or $Names -contains $_.BaseName } |
              Sort-Object @{ Expression = { if ($order.ContainsKey($_.BaseName)) { $order[$_.BaseName] } else { [int]::MaxValue } } },
                          Name)
-# kept videos (review_videos.py moved them to recordings/keep/) are not recorded again
-$keepDir = Join-Path $scenarios "recordings\keep"
-if (-not $IncludeKept -and (Test-Path $keepDir)) {
-    $kept = @($scripts | Where-Object { Test-Path (Join-Path $keepDir ($_.BaseName + ".mp4")) })
-    if ($kept.Count -gt 0) {
-        Write-Host ("Skipping {0} kept script(s) (recordings\keep; -IncludeKept runs them)" -f $kept.Count)
-        $scripts = @($scripts | Where-Object { -not (Test-Path (Join-Path $keepDir ($_.BaseName + ".mp4"))) })
+# kept, highlighted and thrown-away videos (review_videos.py moved them to recordings/keep/, recordings/keep/highlights/
+# or recordings/throwaway/) are not recorded again
+$doneDirs = @((Join-Path $scenarios "recordings\keep"), (Join-Path $scenarios "recordings\keep\highlights"),
+              (Join-Path $scenarios "recordings\throwaway"))
+$throwDir = Join-Path $scenarios "recordings\throwaway"
+# the folder of a script's kept or highlighted video, or $null
+function Get-KeptDir($script) {
+    foreach ($d in $doneDirs[0..1]) { if (Test-Path (Join-Path $d ($script.BaseName + ".mp4"))) { return $d } }
+    return $null
+}
+# kept, highlighted, thrown away (a video), or too long (a .toolong marker in throwaway/)
+function Test-Reviewed($script) {
+    if (Get-KeptDir $script) { return $true }
+    return [bool](Get-ChildItem -Path $throwDir -Filter ($script.BaseName + ".*") -ErrorAction SilentlyContinue)
+}
+if ($RerecordKept) {
+    $scripts = @($scripts | Where-Object { Get-KeptDir $_ })
+    Write-Host ("Re-recording {0} kept or highlighted script(s)" -f $scripts.Count)
+} elseif (-not $IncludeKept -and -not $Media) {
+    $reviewed = @($scripts | Where-Object { Test-Reviewed $_ })
+    if ($reviewed.Count -gt 0) {
+        Write-Host ("Skipping {0} kept, highlighted or thrown-away script(s) (recordings\keep, keep\highlights, throwaway; -IncludeKept runs them)" -f $reviewed.Count)
+        $scripts = @($scripts | Where-Object { -not (Test-Reviewed $_) })
     }
 }
 if ($scripts.Count -eq 0) {
@@ -162,16 +187,23 @@ foreach ($s in $scripts) {
     $result = "TIMEOUT"
     $detail = ""
     $tick = 0
+    $consoleLog = Join-Path $rec "_console.log"
+    $lastSize = if (Test-Path $consoleLog) { (Get-Item $consoleLog).Length } else { 0 }
+    $lastProgress = Get-Date
     while ($true) {
         Start-Sleep -Milliseconds 100
         $tick++
         if ($tick % 10 -ne 0) { continue }      # (the result check once a second)
-        $elapsed = ((Get-Date) - $start).TotalSeconds
-        if ($elapsed -ge $TimeoutSeconds) {
-            # past the timeout, only the PNG -> MP4 encode (the script's ffmpeg) may still finish
-            $encoding = [bool](Get-Process ffmpeg -ErrorAction SilentlyContinue)
-            if (-not $encoding -or $elapsed -ge $TimeoutSeconds + $EncodeTimeoutSeconds) { break }
+        # Progress: the script's log grows (each step, and a stuck step's own time-out, logs a line) or its
+        # PNG -> MP4 encode (ffmpeg) runs. TimeoutSeconds without any is a TIMEOUT; MaxSeconds caps the whole run.
+        $size = if (Test-Path $consoleLog) { (Get-Item $consoleLog).Length } else { 0 }
+        $encoding = [bool](Get-Process ffmpeg -ErrorAction SilentlyContinue)
+        if ($size -ne $lastSize -or $encoding) {
+            $lastSize = $size
+            $lastProgress = Get-Date
         }
+        $elapsed = ((Get-Date) - $start).TotalSeconds
+        if (((Get-Date) - $lastProgress).TotalSeconds -ge $TimeoutSeconds -or ($elapsed -ge $MaxSeconds -and -not $encoding)) { break }
         if (Test-Path $runLog) {
             $new = @(Get-Content $runLog | Select-Object -Skip $before)
             $line = $new | Where-Object { $_ -match "^(PASS|FAIL|DONE) $([regex]::Escape($name))\b" } | Select-Object -Last 1
@@ -196,6 +228,24 @@ foreach ($s in $scripts) {
     $secs = [int]((Get-Date) - $start).TotalSeconds
     $color = switch ($result) { "PASS" { "Green" } "DONE" { "Yellow" } default { "Red" } }
     Write-Host ("{0} ({1}s)" -f $result, $secs) -ForegroundColor $color
+    if (-not $Media) {
+        $video = Join-Path $rec ($name + ".mp4")
+        if ($RerecordKept -and $result -eq "PASS" -and (Test-Path $video)) {
+            # the new video replaces the kept one, in its folder; if that one is open (the review player), the new
+            # video stays in recordings/ and the run goes on
+            $keptVideo = Join-Path (Get-KeptDir $s) ($name + ".mp4")
+            try {
+                Copy-Item -Force $video $keptVideo -ErrorAction Stop
+                Remove-Item -Force $video -ErrorAction Stop
+            } catch {
+                Write-Host ("  (could not replace {0}: {1}; the new video is in recordings\)" -f $keptVideo, $_.Exception.Message) -ForegroundColor Yellow
+            }
+        } elseif ($result -eq "TIMEOUT" -and -not $RerecordKept) {
+            # too long to be wanted: never recorded again (review_videos.py lists only videos, not the marker)
+            New-Item -ItemType Directory -Force $throwDir | Out-Null
+            Set-Content -Path (Join-Path $throwDir ($name + ".toolong")) -Value ("TIMEOUT after {0}s" -f $secs)
+        }
+    }
     $results += [pscustomobject]@{ Script = $name; Result = $result; Seconds = $secs; Detail = $detail }
 }
 
