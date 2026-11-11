@@ -140,6 +140,14 @@ Failed: `while (--i >= 0)`, `i-- > 0`, `for (i = n - 1; i >= 0; i--)` (no duplic
 
 ### `DestroyLinkedCards` (0x1B8, start score 102; ordinary C)
 
+> [!note] Mod change (2026-11-11, reported by the user: Sangan / Witch of the Black Forest revived by Call of the Haunted activated twice)
+> Destroying the revived monster: `SendFieldCardToGrave` queues its send and its trigger, then `DestroyLinkedCards`
+> destroys the Call. The Call's own `SendFieldCardToGrave` looks for its monster (`FindMonsterWithLinkTo`), finds it
+> still on the field and linked (its send is only queued) and sends it again, with a second trigger. Premature
+> Burial does the same. Now, before destroying a linked Call of the Haunted or Premature Burial, the loop drops
+> that link (`ModUnlinkReviver`, src/added_effects.c: `RemoveZoneLinkAt`, and steps `i` back). Destroying the Call
+> first still takes its monster once. Found by reading the code; built, not tested in an emulator.
+
 Steps (score after each):
 
 1. 74: a zone pointer local `zp` and the two-statement address additions before the loads (`offset = i * 2; link = zp + 0xA; link += offset; info = zp + 0x4A; info += offset;`), the idiom of `0x08017F98` / `0x08017D38` above. `i*2` no longer stays live and `i` is no longer spilled.

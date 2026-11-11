@@ -10422,6 +10422,42 @@ void BigBangShotLeaves(int player, int zone)
     BanishFieldCard(DUEL_LOC_PLAYER(monster), DUEL_LOC_ZONE(monster), 0);
 }
 
+/* DestroyLinkedCards (duel_send_to_grave.c): the monster in (player, zone) is leaving the field and its link `idx`
+ * points to linkedId, about to be destroyed. For Call of the Haunted and Premature Burial the link is removed now
+ * and 1 returned (the caller steps its loop back). Otherwise their SendFieldCardToGrave finds the monster still on
+ * the field (its own send is only queued), still linked, and sends it a second time: Sangan, Witch of the Black
+ * Forest and the other Graveyard triggers activated twice. */
+int ModUnlinkReviver(int player, int zone, int idx, u16 linkedId)
+{
+    switch (CARD_NUMBER(linkedId)) {
+    case CARD_CALL_OF_THE_HAUNTED:
+    case CARD_PREMATURE_BURIAL:
+        RemoveZoneLinkAt(player, zone, idx);
+        return 1;
+    }
+    return 0;
+}
+
+/* A Call of the Haunted (not disabled) in (player, zone) leaves the field some way other than to the Graveyard:
+ * returned to the hand (Giant Trunade) or the Deck, or banished (also when Banisher of the Light banishes it instead
+ * of sending it to the Graveyard). Its own monster (FindMonsterWithLinkTo: the link to this zone; the original
+ * looked up any monster linked to any Call of the Haunted by card number) is unlinked, then destroyed. Unlinked
+ * first: else the monster's DestroyLinkedCards finds the Call still in its zone (its move is only queued) and
+ * destroys it too, queueing a Graveyard send after its return. */
+void ModCallOfTheHauntedLeaves(int player, int zone)
+{
+    struct DuelZone *z = ZoneOf(player, zone);
+    u16 loc;
+
+    if (CARD_NUMBER(DUEL_CARD_ID(&z->card)) != CARD_CALL_OF_THE_HAUNTED || z->isDisabled || zone <= ZONE_MONSTER_4)
+        return;
+    loc = FindMonsterWithLinkTo(player, zone);
+    if (loc == 0xFFFF)
+        return;
+    RemoveZoneLink(loc, (u16)((u8)player | ((u8)zone << 8)), ZONE_LINK_CONTINUOUS);
+    DestroyFieldCard(DUEL_LOC_PLAYER(loc), DUEL_LOC_ZONE(loc), 1);
+}
+
 void BigBangShotMonsterLeaving(int player, int zone, u16 destroyed)
 {
     struct DuelZone *z = ZoneOf(player, zone);

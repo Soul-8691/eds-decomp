@@ -56,6 +56,15 @@ the same bytes. Unit-specific layouts the headers do not define stay local:
 | `0x080193B0` | 0x24 | matching | `Field_NotifyEvent` | Announce event 0xC3 with `(arg1,arg2)`. |
 | `0x080193D4` | 0x180 | matching (ordinary C) | `Field_HandCardUsed` | Hand-row card used: 0xC0 (0xC1 while `CountFaceUpMonstersByNumber(_,0x453)`); look up the hand word `0x02019968[player].c[idx]`; card 0x215/0x1CE with `arg2` -> event 0x73 + `LoseLifePoints`/`DrawCards`; 0x4DA queues `Chain_AddPending`; finally if `CountActiveCardsOnField(1-player,0x40E) > 0` announce 0x73 with `gCardNumberToId[0x40E]` and `LoseLifePoints(player,n*500)`; `LoseLpOnSendToGraveyard(player,1)`. |
 
+> [!note] Mod change (2026-11-11, asked by the user: Call of the Haunted returned by Giant Trunade)
+> `ReturnFieldCardToHand` and `ReturnFieldCardToDeck` destroyed Call of the Haunted's monster through
+> `FindMonsterLinkedToCard`, which matches any face-up monster linked to *a* Call of the Haunted by card number (with
+> two Calls, possibly the other one's monster), and left the link in place: the monster's `DestroyLinkedCards` then
+> found the Call still in its zone (its return is only queued) and destroyed it too, a Graveyard send queued after
+> the return. A banished Call (`BanishFieldCard`, or Banisher of the Light in `SendFieldCardToGrave`) never took its
+> monster. All four now call `ModCallOfTheHauntedLeaves` (src/added_effects.c): unless disabled, the monster linked
+> to this zone (`FindMonsterWithLinkTo`) is unlinked, then destroyed. Built; not tested in an emulator.
+
 ## Data
 
 - `0x0201930C` = `0x020192E4 + 0x28`: the 11 zones of a player struct (`0xD64`

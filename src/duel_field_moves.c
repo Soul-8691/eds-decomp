@@ -294,6 +294,7 @@ void SendBattleDestroyedCardToGraveyard(int defender, int player, int zone, u16 
  * 20, when flagged); nothing for an empty zone. A monster's linked cards are destroyed, a banished
  * Prohibition lifts its prohibition, and a face-up Field Magic resets the field background. */
 void BigBangShotLeaves(int player, int zone);   /* mod: src/added_effects.c */
+void ModCallOfTheHauntedLeaves(int player, int zone);   /* mod: src/added_effects.c */
 
 void BanishFieldCard(int player, int zone, u16 flagged)
 {
@@ -306,6 +307,7 @@ void BanishFieldCard(int player, int zone, u16 flagged)
         DuelCmd_Push(PLAYER_CMD(player, DUEL_CMD_BANISH_FLAGGED), zone, 1, 0);
     else
         DuelCmd_Push(PLAYER_CMD(player, DUEL_CMD_BANISH), zone, 1, 0);
+    ModCallOfTheHauntedLeaves(player, zone);    /* added: a banished Call of the Haunted destroys its monster */
     if (zone <= ZONE_MONSTER_4) {
         DetachRevivingCards(player, zone); /* mod: no Graveyard triggers for a banished revived monster */
         DestroyLinkedCards(player, zone, 1);
@@ -345,12 +347,7 @@ void ReturnFieldCardToHand(int player, int zone, u16 cmdArg)
     }
     if (zone == ZONE_FIELD && ZONE(player, zone)->isFaceUp)
         DuelCmd_Push(PLAYER_CMD(player, DUEL_CMD_SET_FIELD_BACKGROUND), 0, 0, 0);
-    if (CARD_NUMBER(id) == CARD_CALL_OF_THE_HAUNTED) {
-        u32 loc = FindMonsterLinkedToCard(player, zone);
-        u16 target = loc;
-        if (target != 0xFFFF && !ZONE(player, zone)->isDisabled)
-            DestroyFieldCard((u8)target, loc >> 8 & 0xFF, 1);
-    }
+    ModCallOfTheHauntedLeaves(player, zone);    /* mod: its own monster, unlinked first (src/added_effects.c) */
 }
 
 /* Return the card in (player, zone) to the top of its owner's deck (DUEL_CMD_RETURN_TO_DECK; Fusion
@@ -378,12 +375,7 @@ void ReturnFieldCardToDeck(int player, int zone)
         DestroyLinkedCards(player, zone, 0);
     if (zone == ZONE_FIELD && ZONE(player, zone)->isFaceUp)
         DuelCmd_Push(PLAYER_CMD(player, DUEL_CMD_SET_FIELD_BACKGROUND), 0, 0, 0);
-    if (CARD_NUMBER(id) == CARD_CALL_OF_THE_HAUNTED) {
-        u32 loc = FindMonsterLinkedToCard(player, zone);
-        u16 target = loc;
-        if (target != 0xFFFF && !ZONE(player, zone)->isDisabled)
-            DestroyFieldCard((u8)target, loc >> 8 & 0xFF, 1);
-    }
+    ModCallOfTheHauntedLeaves(player, zone);    /* mod: its own monster, unlinked first (src/added_effects.c) */
 }
 
 /* Return both players' monsters to the deck, the opponent's first (Morphing Jar #2). With shuffle, a side

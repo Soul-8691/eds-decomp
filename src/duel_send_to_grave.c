@@ -156,6 +156,8 @@ void BlastWithChainEquipDestroyed(int player, int zone);
 
 void BigBangShotLeaves(int player, int zone);   /* mod: src/added_effects.c */
 void BigBangShotMonsterLeaving(int player, int zone, u16 destroyed);
+int ModUnlinkReviver(int player, int zone, int idx, u16 linkedId);  /* mod: src/added_effects.c */
+void ModCallOfTheHauntedLeaves(int player, int zone);               /* mod: src/added_effects.c */
 
 void SendFieldCardToGrave(int player, int zone, u16 destroyed, u16 runTriggers)
 {
@@ -196,6 +198,8 @@ void SendFieldCardToGrave(int player, int zone, u16 destroyed, u16 runTriggers)
     if (CountFaceUpMonstersByNumber(0, CARD_BANISHER_OF_THE_LIGHT) > 0
         || CountFaceUpMonstersByNumber(1, CARD_BANISHER_OF_THE_LIGHT) > 0) {
         DuelCmd_Push(PLAYER_CMD(player, DUEL_CMD_BANISH), zone, destroyed, 0);
+        if (runTriggers)
+            ModCallOfTheHauntedLeaves(player, zone);    /* added: banished instead, it still takes its monster */
         DestroyLinkedCards(player, zone, 1);
         return;
     }
@@ -505,8 +509,13 @@ void DestroyLinkedCards(int player, int zone, u16 destroyed)
             destroy = 1;
             break;
         }
-        if (destroy)
+        if (destroy) {
+            /* added: the link to a Call of the Haunted / Premature Burial is dropped first, so that card's
+             * SendFieldCardToGrave does not send this monster again (Sangan's trigger twice) */
+            if (ModUnlinkReviver(player, zone, i, linkedId))
+                i--;
             DestroyFieldCard(linkPlayer, linkZone, destroyed != 0);
+        }
     }
     if (zone <= ZONE_MONSTER_4) {
         for (i = 0; i <= 1; i++)

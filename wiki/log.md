@@ -3076,3 +3076,11 @@ updated: 2026-09-29
 - Checked every Deck/Graveyard search that opens a card list (EffectSanganResolve and the added searchers, the recruiters, Ritual searches, Different Dimension Capsule, Kycoo, Manticore, Marauding Captain, Archfiend's Call...): all let the CPU pick. The unguarded keys 1318, 1421, 1430, 1433, 1439, 1444, 1524 belong to no EDS or added card.
 - Fixed: Time Wizard's Dark Sage branch (effect_resolve8.c) asked the human for the CPU; now ModTimeWizardCpuDarkSage / ModTimeWizardCpuPickMagic (src/added_effects.c) answer. Built; not tested in an emulator.
 - wiki/functions/effect-resolve8-c.md
+
+## [2026-11-11] progress | Call of the Haunted / Premature Burial: the revived monster is sent once
+- src/duel_send_to_grave.c DestroyLinkedCards, src/added_effects.c ModUnlinkReviver: the link to a Call of the Haunted or Premature Burial is removed before that card is destroyed, so it no longer sends the leaving monster a second time (Sangan and Witch of the Black Forest triggered twice). Built; not tested in an emulator.
+- wiki/functions/duel-send-to-grave-c.md
+
+## [2026-11-11] progress | Call of the Haunted leaving by Giant Trunade, to the Deck or banished
+- src/duel_field_moves.c, src/duel_send_to_grave.c, src/added_effects.c ModCallOfTheHauntedLeaves: Call of the Haunted returned to the hand or Deck, or banished, destroys its own monster (the link to its zone; unlinked first, so the Call is not also sent to the Graveyard). Built; not tested in an emulator.
+- wiki/functions/duel-field-moves-c.md
