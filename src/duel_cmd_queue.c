@@ -207,6 +207,12 @@ void CardMenu_Execute(void)
             if (!ZONE_HEAD(MENU.player & 1, ZONE_FIELD)->isFaceUp)
                 DuelCmd_Push(MENU.player ? DUEL_CMD_PLAYER | DUEL_CMD_FLIP_CARD : DUEL_CMD_FLIP_CARD,
                              ZONE_FIELD, 0, 0);
+            /* added: a Set Field Spell taken with Graverobber costs its 2000 LP too (the ROM had no check) */
+            if (ZONE_CARD(MENU.player & 1, ZONE_FIELD)->graverobbed
+                && ZONE_CARD(MENU.player & 1, ZONE_FIELD)->owner != (MENU.player & 1)) {
+                ShowCardEffect(MENU.player, gCardNumberToId_Graverobber);
+                LoseLifePoints(MENU.player, 2000);
+            }
             Chain_AddPending(((MENU.player & 1) << 31)
                              | (ev = (((MENU.index + MENU.area) & 0x1F) << 16) | CHAIN_KIND_SPELL_TRAP << 21)
                              | gDuel.cardMenuCard, 0);
@@ -222,10 +228,12 @@ void CardMenu_Execute(void)
             if (!ZONE_HEAD(player, zone)->isFaceUp)
                 DuelCmd_Push(MENU.player ? DUEL_CMD_PLAYER | DUEL_CMD_FLIP_CARD : DUEL_CMD_FLIP_CARD,
                              MENU.index + MENU.area, 0, 0);
-            /* A card taken with Graverobber costs 2000 LP when activated. This reads the card word of
-             * zones[index] (the monster zone in the same column), not of zones[5 + index]: the ROM does the
-             * same, possibly an original bug. */
-            if (ZONE_CARD(MENU.player & 1, MENU.index)->graverobbed) {
+            /* A card taken with Graverobber costs 2000 LP when activated. Fixed (mod): the ROM read the card
+             * word of zones[index] (the monster zone in the same column), so a stolen card Set first and then
+             * activated cost nothing. Now the Spell/Trap zone itself, as from the hand (stolen and owned by the
+             * opponent: CardMenu_PlaySpellTrapFromHand). */
+            if (ZONE_CARD(MENU.player & 1, zone)->graverobbed
+                && ZONE_CARD(MENU.player & 1, zone)->owner != (MENU.player & 1)) {
                 ShowCardEffect(MENU.player, gCardNumberToId_Graverobber);
                 LoseLifePoints(MENU.player, 2000);
             }

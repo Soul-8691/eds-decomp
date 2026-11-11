@@ -3084,3 +3084,7 @@ updated: 2026-09-29
 ## [2026-11-11] progress | Call of the Haunted leaving by Giant Trunade, to the Deck or banished
 - src/duel_field_moves.c, src/duel_send_to_grave.c, src/added_effects.c ModCallOfTheHauntedLeaves: Call of the Haunted returned to the hand or Deck, or banished, destroys its own monster (the link to its zone; unlinked first, so the Call is not also sent to the Graveyard). Built; not tested in an emulator.
 - wiki/functions/duel-field-moves-c.md
+
+## [2026-11-11] progress | Graverobber: a stolen card Set first still costs 2000 LP
+- src/duel_cmd_queue.c CardMenu_Execute: activating a Set card checked the monster zone of its column for the stolen bit (original bug), and a Set Field Spell was not checked; both now check the card's own zone. Built; not tested in an emulator.
+- wiki/functions/duel-cmd-queue-c.md

@@ -64,6 +64,14 @@ local views were needed there.
 | `0x0801EC58` | 0x50 | matching | `(cmd, a2, a4, a6)`: appends an 8-byte entry to the duel command queue `0x020185C0+0x8`, count at `+0x808` (max 256) | `DuelCmd_Push` (hypothesis) |
 | `0x0801ECA8` | 0x7AC | matching | **Duel command dispatcher**: clears `0x0201CFB0+0x808` bit 3, then `switch (0x020185C0.cmd & 0xFFF)` over 229 ids (1-0xE5) calling the command handlers (`DuelCmd_TurnStart`, `DuelCmd_TurnEnd`, `DuelCmd_ShowEndTurnHand`, ..., `DuelCmd_StartBattleScene`, `DuelCmd_TakeOpponentGraveyardCard`, ...; a few pass a constant: `DuelCmd_ChangeLifePoints(0/1)`, `DuelCmd_EnterPhase(0-5)`); unknown ids clear `running` (`+0x80D` bit 5) | `DuelCmd_Dispatch` (hypothesis) |
 
+> [!note] Mod change (2026-11-11, reported by the user: Graverobber's 2000 LP skipped by Setting the card first)
+> A card taken with Graverobber (card word bit 18) costs 2000 LP when activated. From the hand that is
+> `CardMenu_PlaySpellTrapFromHand` (card_command_menu.c). From the field, `CardMenu_Execute`'s Spell/Trap
+> case read the card word of `zones[index]`, the monster zone in the same column, instead of the Spell/Trap zone
+> (an original bug), and the Field Zone case had no check: a stolen card Set and then activated cost nothing. Both
+> now check the card's own zone, stolen and owned by the opponent, as from the hand. Built; not tested in an
+> emulator.
+
 ## Data
 
 - `0x02017A30` message request block: `+0x0` handler (`u16 (*)(void)`), `+0x4` u16 id (bits 0-14) and flag (bit 15), `+0x6` u16 arg (set by the command handlers in [[duel-cmd-screen-c]]), `+0xA` step index, `+0xB` state, `+0xC`, `+0xD`.
