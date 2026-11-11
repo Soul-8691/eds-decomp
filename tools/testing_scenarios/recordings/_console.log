@@ -11807,3 +11807,797 @@
     914 Campaign selected (callback 0x0801D745).
      11 MP4 target: C:\Users\pswan\Downloads\eds-decomp\tools\testing_scenarios\generated\..\recordings\Spear_Dragon_Pierce_Then_Defense_Player.mp4
      11 emu recording API: screenshot, screenshotToImage
+     11 MP4 target: C:\Users\pswan\Downloads\eds-decomp\tools\testing_scenarios\generated\..\recordings\Card_Destruction_Discard_And_Draw_Player.mp4
+     11 emu recording API: screenshot, screenshotToImage
+     11 MP4: scripted capture (emu:screenshot PNG sequence + ffmpeg). See captureMp4 in README.
+     11 Card Destruction / discard_and_draw / Player
+     11 activate you.hand[Card Destruction]
+     11 Capture dir: C:\Users\pswan\Downloads\eds-decomp\tools\testing_scenarios\generated\..\recordings\Card_Destruction_Discard_And_Draw_Player_frames (PNG usually 240x160; MP4 encoded 1440x960, 6x integer scale)
+     11 Launch mGBA with -6 (or maximize window) so on-screen size matches capture scale.
+    792 Main menu (callback 0x08003B15).
+    915 Campaign selected (callback 0x0801D745).
+   1108 Turn order: forced RPS lose (CPU goes first).
+   1118 Turn order: A (lost RPS; CPU chooses first).
+   1156 Turn order: A (lost RPS; CPU chooses first).
+   1350 Opponent's turn (waiting for your Main Phase 1).
+   1352 Usage deck yugi-kaiba / Soul Control: main=40 extra=15; P0 shuffled=true (top 394->581) P1 shuffled=true (top 394->581), hands cleared.
+   1703 Player Draw Phase.
+   1884 Opening draw complete (hand=6 deck=34 want=6).
+   2025 Exact setup: P0 hand=3 deck=37 gy=0, P1 hand=4 deck=39 gy=0, LP 8000/8000, turnCount 2.
+   2025 Player Main Phase 1.
+   2025 steps: 1 steps, 4 ops
+   2025 step: activate you.hand[Card Destruction]
+   2219 steps: capture starts (cursor on activate you.hand[Card Destruction])
+   2223 screenshotToImage: 240x160
+   2609 Play sequence done; ending capture (no recording tail).
+   2609 MP4: encoding 387 frames (from 0) -> C:\Users\pswan\Downloads\eds-decomp\tools\testing_scenarios\generated\..\recordings\Card_Destruction_Discard_And_Draw_Player.mp4
+   2609 MP4: wrote C:\Users\pswan\Downloads\eds-decomp\tools\testing_scenarios\generated\..\recordings\Card_Destruction_Discard_And_Draw_Player.mp4
+   2609 Finished — PASS (play sequence + tail; MP4 from ffmpeg if encode succeeded).
+     11 MP4 target: C:\Users\pswan\Downloads\eds-decomp\tools\testing_scenarios\generated\..\recordings\Card_Destruction_Cpu_Discard_And_Draw_CPU.mp4
+     11 emu recording API: screenshot, screenshotToImage
+     11 MP4: scripted capture (emu:screenshot PNG sequence + ffmpeg). See captureMp4 in README.
+     11 Card Destruction / cpu_discard_and_draw / CPU
+     11 cpu_turn
+     11 Capture dir: C:\Users\pswan\Downloads\eds-decomp\tools\testing_scenarios\generated\..\recordings\Card_Destruction_Cpu_Discard_And_Draw_CPU_frames (PNG usually 240x160; MP4 encoded 1440x960, 6x integer scale)
+     11 Launch mGBA with -6 (or maximize window) so on-screen size matches capture scale.
+    792 Main menu (callback 0x08003B15).
+    915 Campaign selected (callback 0x0801D745).
+   1108 Turn order: forced RPS lose (CPU goes first).
+   1118 Turn order: A (lost RPS; CPU chooses first).
+   1156 Turn order: A (lost RPS; CPU chooses first).
+   1350 Opponent's turn (waiting for your Main Phase 1).
+   1352 Usage deck yugi-kaiba / Soul Control: main=40 extra=15; P0 shuffled=true (top 394->519) P1 shuffled=true (top 394->683), hands cleared.
+   2250 cpu_turn f=900 duel_step=8 turn_player=1 ai=4/0 textbox=0
+   2384 Player Draw Phase.
+   2565 Opening draw complete (hand=6 deck=34 want=6).
+   2706 Exact setup: P0 hand=5 deck=39 gy=0, P1 hand=2 deck=34 gy=0, LP 8000/8000, turnCount 2.
+   2706 Player Main Phase 1.
+   2706 steps: 2 steps, 4 ops
+   2706 step: pass
+   2997 step: cpu_turn
+   3142 steps: capture starts (the CPU's turn)
+   3146 screenshotToImage: 240x160
+   3478 steps: the effect started (chain); the video starts at frame 291 (phase 2, cursor on the card)
+   3750 steps: the card's effect is done; ending the scenario
+   3750 Play sequence done; ending capture (no recording tail).
+   3750 MP4: encoding 314 frames (from 291) -> C:\Users\pswan\Downloads\eds-decomp\tools\testing_scenarios\generated\..\recordings\Card_Destruction_Cpu_Discard_And_Draw_CPU.mp4
+   3750 MP4: wrote C:\Users\pswan\Downloads\eds-decomp\tools\testing_scenarios\generated\..\recordings\Card_Destruction_Cpu_Discard_And_Draw_CPU.mp4
+   3750 Finished — PASS (play sequence + tail; MP4 from ffmpeg if encode succeeded).
+     12 MP4 target: C:\Users\pswan\Downloads\eds-decomp\tools\testing_scenarios\generated\..\recordings\Soul_Exchange_Tribute_Opponent_Monster_Player.mp4
+     12 emu recording API: screenshot, screenshotToImage
+     12 MP4: scripted capture (emu:screenshot PNG sequence + ffmpeg). See captureMp4 in README.
+     12 Soul Exchange / tribute_opponent_monster / Player
+     12 activate you.hand[Soul Exchange]; target opp.m0; tribute_summon you.hand[Summoned Skull] -> m0 atk tributes opp.m0
+     12 Capture dir: C:\Users\pswan\Downloads\eds-decomp\tools\testing_scenarios\generated\..\recordings\Soul_Exchange_Tribute_Opponent_Monster_Player_frames (PNG usually 240x160; MP4 encoded 1440x960, 6x integer scale)
+     12 Launch mGBA with -6 (or maximize window) so on-screen size matches capture scale.
+    793 Main menu (callback 0x08003B15).
+    916 Campaign selected (callback 0x0801D745).
+   1109 Turn order: forced RPS lose (CPU goes first).
+   1119 Turn order: A (lost RPS; CPU chooses first).
+   1157 Turn order: A (lost RPS; CPU chooses first).
+   1351 Opponent's turn (waiting for your Main Phase 1).
+   1353 Usage deck yugi-kaiba / Soul Control: main=40 extra=15; P0 shuffled=true (top 394->683) P1 shuffled=true (top 394->441), hands cleared.
+   1705 Player Draw Phase.
+   1886 Opening draw complete (hand=6 deck=34 want=6).
+   2026 Exact setup: P0 hand=2 deck=34 gy=0, P1 hand=0 deck=35 gy=0, LP 8000/8000, turnCount 2.
+   2026 Player Main Phase 1.
+   2026 steps: 3 steps, 12 ops
+   2026 step: activate you.hand[Soul Exchange]
+   2219 steps: capture starts (cursor on activate you.hand[Soul Exchange])
+   2223 screenshotToImage: 240x160
+   2265 step: target opp.m0
+   2349 steps: target opp.m0: A again (not taken)
+   2373 steps: target opp.m0: taken on press 2
+   2380 step: tribute_summon you.hand[Summoned Skull] -> m0 atk tributes opp.m0
+   2505 steps: tribute_summon you.hand[Summoned Skull] -> m0 atk tributes opp.m0: A again (not taken)
+   2529 steps: tribute_summon you.hand[Summoned Skull] -> m0 atk tributes opp.m0: taken on press 2
+   2530 steps: card menu not needed: the effect asked for the card
+   2576 steps: tribute_summon you.hand[Summoned Skull] -> m0 atk tributes opp.m0: a menu came instead; skipped
+   2748 Play sequence done; ending capture (no recording tail).
+   2748 MP4: encoding 374 frames (from 0) -> C:\Users\pswan\Downloads\eds-decomp\tools\testing_scenarios\generated\..\recordings\Soul_Exchange_Tribute_Opponent_Monster_Player.mp4
+   2748 MP4: wrote C:\Users\pswan\Downloads\eds-decomp\tools\testing_scenarios\generated\..\recordings\Soul_Exchange_Tribute_Opponent_Monster_Player.mp4
+   2748 Finished — PASS (play sequence + tail; MP4 from ffmpeg if encode succeeded).
+     10 MP4 target: C:\Users\pswan\Downloads\eds-decomp\tools\testing_scenarios\generated\..\recordings\Soul_Exchange_Cpu_Tribute_Opponent_Monster_CPU.mp4
+     10 emu recording API: screenshot, screenshotToImage
+     10 MP4: scripted capture (emu:screenshot PNG sequence + ffmpeg). See captureMp4 in README.
+     10 Soul Exchange / cpu_tribute_opponent_monster / CPU
+     10 cpu_turn
+     10 Capture dir: C:\Users\pswan\Downloads\eds-decomp\tools\testing_scenarios\generated\..\recordings\Soul_Exchange_Cpu_Tribute_Opponent_Monster_CPU_frames (PNG usually 240x160; MP4 encoded 1440x960, 6x integer scale)
+     10 Launch mGBA with -6 (or maximize window) so on-screen size matches capture scale.
+    791 Main menu (callback 0x08003B15).
+    914 Campaign selected (callback 0x0801D745).
+   1107 Turn order: forced RPS lose (CPU goes first).
+   1117 Turn order: A (lost RPS; CPU chooses first).
+   1155 Turn order: A (lost RPS; CPU chooses first).
+   1349 Opponent's turn (waiting for your Main Phase 1).
+   1351 Usage deck yugi-kaiba / Soul Control: main=40 extra=15; P0 shuffled=true (top 394->581) P1 shuffled=true (top 394->1000), hands cleared.
+   2249 cpu_turn f=900 duel_step=8 turn_player=1 ai=4/0 textbox=0
+   2327 Player Draw Phase.
+   2508 Opening draw complete (hand=6 deck=34 want=6).
+   2651 Exact setup: P0 hand=0 deck=34 gy=0, P1 hand=2 deck=34 gy=0, LP 8000/8000, turnCount 2.
+   2651 Player Main Phase 1.
+   2651 steps: 2 steps, 4 ops
+   2651 step: pass
+   3015 step: cpu_turn
+   3168 steps: capture starts (the CPU's turn)
+   3172 screenshotToImage: 240x160
+   3448 steps: the effect started (chain); the video starts at frame 236 (phase 2, cursor on the card)
+   3656 steps: the card's effect is done; ending the scenario
+   3656 Play sequence done; ending capture (no recording tail).
+   3656 MP4: encoding 249 frames (from 236) -> C:\Users\pswan\Downloads\eds-decomp\tools\testing_scenarios\generated\..\recordings\Soul_Exchange_Cpu_Tribute_Opponent_Monster_CPU.mp4
+   3656 MP4: wrote C:\Users\pswan\Downloads\eds-decomp\tools\testing_scenarios\generated\..\recordings\Soul_Exchange_Cpu_Tribute_Opponent_Monster_CPU.mp4
+   3656 Finished — PASS (play sequence + tail; MP4 from ffmpeg if encode succeeded).
+     15 MP4 target: C:\Users\pswan\Downloads\eds-decomp\tools\testing_scenarios\generated\..\recordings\Thousand_Eyes_Restrict_Absorb_And_Attack_Player.mp4
+     15 emu recording API: screenshot, screenshotToImage
+     15 MP4: scripted capture (emu:screenshot PNG sequence + ffmpeg). See captureMp4 in README.
+     15 Thousand-Eyes Restrict / absorb_and_attack / Player
+     15 activate you.m0; target opp.m0; check you.m0.atk = 2500; check you.m0.def = 1200; battle; attack you.m0 -> opp.m1
+     15 Capture dir: C:\Users\pswan\Downloads\eds-decomp\tools\testing_scenarios\generated\..\recordings\Thousand_Eyes_Restrict_Absorb_And_Attack_Player_frames (PNG usually 240x160; MP4 encoded 1440x960, 6x integer scale)
+     15 Launch mGBA with -6 (or maximize window) so on-screen size matches capture scale.
+    796 Main menu (callback 0x08003B15).
+    919 Campaign selected (callback 0x0801D745).
+   1112 Turn order: forced RPS lose (CPU goes first).
+   1122 Turn order: A (lost RPS; CPU chooses first).
+   1160 Turn order: A (lost RPS; CPU chooses first).
+   1354 Opponent's turn (waiting for your Main Phase 1).
+   1356 Usage deck imperial / Tomato Control: main=40 extra=12; P0 shuffled=true (top 454->505) P1 shuffled=true (top 454->454), hands cleared.
+   1708 Player Draw Phase.
+   1889 Opening draw complete (hand=6 deck=34 want=6).
+   2026 Exact setup: P0 hand=0 deck=34 gy=0, P1 hand=0 deck=35 gy=0, LP 8000/8000, turnCount 2.
+   2026 Player Main Phase 1.
+   2026 steps: 6 steps, 15 ops
+   2026 step: activate you.m0
+   2163 steps: capture starts (cursor on activate you.m0)
+   2167 screenshotToImage: 240x160
+   2228 step: target opp.m0
+   2283 steps: target opp.m0: A again (not taken)
+   2307 steps: target opp.m0: taken on press 2
+   2314 step: check you.m0.atk = 2500
+   2314 steps: check you.m0.atk = 2500 (not checked)
+   2315 step: check you.m0.def = 1200
+   2315 steps: check you.m0.def = 1200 (not checked)
+   2316 step: battle
+   2515 step: attack you.m0 -> opp.m1
+   2780 steps: attack you.m0 -> opp.m1: taken on press 1
+   2945 Play sequence done; ending capture (no recording tail).
+   2945 MP4: encoding 647 frames (from 0) -> C:\Users\pswan\Downloads\eds-decomp\tools\testing_scenarios\generated\..\recordings\Thousand_Eyes_Restrict_Absorb_And_Attack_Player.mp4
+   2945 MP4: wrote C:\Users\pswan\Downloads\eds-decomp\tools\testing_scenarios\generated\..\recordings\Thousand_Eyes_Restrict_Absorb_And_Attack_Player.mp4
+   2945 Finished — PASS (play sequence + tail; MP4 from ffmpeg if encode succeeded).
+     22 MP4 target: C:\Users\pswan\Downloads\eds-decomp\tools\testing_scenarios\generated\..\recordings\Thousand_Eyes_Restrict_Cpu_Absorb_CPU.mp4
+     22 emu recording API: screenshot, screenshotToImage
+     22 MP4: scripted capture (emu:screenshot PNG sequence + ffmpeg). See captureMp4 in README.
+     22 Thousand-Eyes Restrict / cpu_absorb / CPU
+     22 cpu_turn
+     22 Capture dir: C:\Users\pswan\Downloads\eds-decomp\tools\testing_scenarios\generated\..\recordings\Thousand_Eyes_Restrict_Cpu_Absorb_CPU_frames (PNG usually 240x160; MP4 encoded 1440x960, 6x integer scale)
+     22 Launch mGBA with -6 (or maximize window) so on-screen size matches capture scale.
+    803 Main menu (callback 0x08003B15).
+    926 Campaign selected (callback 0x0801D745).
+   1119 Turn order: forced RPS lose (CPU goes first).
+   1129 Turn order: A (lost RPS; CPU chooses first).
+   1167 Turn order: A (lost RPS; CPU chooses first).
+   1361 Opponent's turn (waiting for your Main Phase 1).
+   1363 Usage deck imperial / Tomato Control: main=40 extra=12; P0 shuffled=true (top 454->441) P1 shuffled=true (top 454->192), hands cleared.
+   2261 cpu_turn f=900 duel_step=8 turn_player=1 ai=4/0 textbox=0
+   2341 Player Draw Phase.
+   2522 Opening draw complete (hand=6 deck=34 want=6).
+   2663 Exact setup: P0 hand=0 deck=34 gy=0, P1 hand=0 deck=34 gy=0, LP 8000/8000, turnCount 2.
+   2663 Player Main Phase 1.
+   2663 steps: 2 steps, 4 ops
+   2663 step: pass
+   2953 step: cpu_turn
+   3097 steps: capture starts (the CPU's turn)
+   3101 screenshotToImage: 240x160
+   3429 steps: the effect started (chain); the video starts at frame 253 (phase 2, cursor on the card)
+   3552 steps: the card's effect is done; ending the scenario
+   3552 Play sequence done; ending capture (no recording tail).
+   3552 MP4: encoding 199 frames (from 253) -> C:\Users\pswan\Downloads\eds-decomp\tools\testing_scenarios\generated\..\recordings\Thousand_Eyes_Restrict_Cpu_Absorb_CPU.mp4
+   3552 MP4: wrote C:\Users\pswan\Downloads\eds-decomp\tools\testing_scenarios\generated\..\recordings\Thousand_Eyes_Restrict_Cpu_Absorb_CPU.mp4
+   3552 Finished — PASS (play sequence + tail; MP4 from ffmpeg if encode succeeded).
+     17 MP4 target: C:\Users\pswan\Downloads\eds-decomp\tools\testing_scenarios\generated\..\recordings\The_Fiend_Megacyber_Special_Summon_From_Hand_Player.mp4
+     17 emu recording API: screenshot, screenshotToImage
+     17 MP4: scripted capture (emu:screenshot PNG sequence + ffmpeg). See captureMp4 in README.
+     17 The Fiend Megacyber / special_summon_from_hand / Player
+     17 special_summon you.hand[The Fiend Megacyber] -> m0 atk
+     17 Capture dir: C:\Users\pswan\Downloads\eds-decomp\tools\testing_scenarios\generated\..\recordings\The_Fiend_Megacyber_Special_Summon_From_Hand_Player_frames (PNG usually 240x160; MP4 encoded 1440x960, 6x integer scale)
+     17 Launch mGBA with -6 (or maximize window) so on-screen size matches capture scale.
+    798 Main menu (callback 0x08003B15).
+    921 Campaign selected (callback 0x0801D745).
+   1114 Turn order: forced RPS lose (CPU goes first).
+   1124 Turn order: A (lost RPS; CPU chooses first).
+   1162 Turn order: A (lost RPS; CPU chooses first).
+   1356 Opponent's turn (waiting for your Main Phase 1).
+   1358 Usage deck imperial / Tomato Control: main=40 extra=12; P0 shuffled=true (top 454->441) P1 shuffled=true (top 454->230), hands cleared.
+   1710 Player Draw Phase.
+   1891 Opening draw complete (hand=6 deck=34 want=6).
+   2028 Exact setup: P0 hand=1 deck=34 gy=0, P1 hand=0 deck=35 gy=0, LP 8000/8000, turnCount 2.
+   2028 Player Main Phase 1.
+   2028 steps: 1 steps, 6 ops
+   2028 step: special_summon you.hand[The Fiend Megacyber] -> m0 atk
+   2222 steps: capture starts (cursor on special_summon you.hand[The Fiend Megacyber] -> m0 atk)
+   2226 screenshotToImage: 240x160
+   2399 Play sequence done; ending capture (no recording tail).
+   2399 MP4: encoding 149 frames (from 0) -> C:\Users\pswan\Downloads\eds-decomp\tools\testing_scenarios\generated\..\recordings\The_Fiend_Megacyber_Special_Summon_From_Hand_Player.mp4
+   2399 MP4: wrote C:\Users\pswan\Downloads\eds-decomp\tools\testing_scenarios\generated\..\recordings\The_Fiend_Megacyber_Special_Summon_From_Hand_Player.mp4
+   2399 Finished — PASS (play sequence + tail; MP4 from ffmpeg if encode succeeded).
+     12 MP4 target: C:\Users\pswan\Downloads\eds-decomp\tools\testing_scenarios\generated\..\recordings\The_Fiend_Megacyber_Cpu_Special_Summon_CPU.mp4
+     12 emu recording API: screenshot, screenshotToImage
+     12 MP4: scripted capture (emu:screenshot PNG sequence + ffmpeg). See captureMp4 in README.
+     12 The Fiend Megacyber / cpu_special_summon / CPU
+     12 cpu_turn
+     12 Capture dir: C:\Users\pswan\Downloads\eds-decomp\tools\testing_scenarios\generated\..\recordings\The_Fiend_Megacyber_Cpu_Special_Summon_CPU_frames (PNG usually 240x160; MP4 encoded 1440x960, 6x integer scale)
+     12 Launch mGBA with -6 (or maximize window) so on-screen size matches capture scale.
+    793 Main menu (callback 0x08003B15).
+    916 Campaign selected (callback 0x0801D745).
+   1109 Turn order: forced RPS lose (CPU goes first).
+   1119 Turn order: A (lost RPS; CPU chooses first).
+   1157 Turn order: A (lost RPS; CPU chooses first).
+   1351 Opponent's turn (waiting for your Main Phase 1).
+   1353 Usage deck imperial / Tomato Control: main=40 extra=12; P0 shuffled=true (top 454->482) P1 shuffled=true (top 454->192), hands cleared.
+   2251 cpu_turn f=900 duel_step=8 turn_player=1 ai=4/0 textbox=0
+   2326 Player Draw Phase.
+   2507 Opening draw complete (hand=6 deck=34 want=6).
+   2647 Exact setup: P0 hand=0 deck=34 gy=0, P1 hand=1 deck=34 gy=0, LP 8000/8000, turnCount 2.
+   2647 Player Main Phase 1.
+   2647 steps: 2 steps, 4 ops
+   2647 step: pass
+   3011 step: cpu_turn
+   3165 steps: capture starts (the CPU's turn)
+   3169 screenshotToImage: 240x160
+   3404 steps: the effect started (summon); the video starts at frame 234 (phase 2, cursor on the card)
+   3434 steps: the card's effect is done; ending the scenario
+   3434 Play sequence done; ending capture (no recording tail).
+   3434 MP4: encoding 32 frames (from 234) -> C:\Users\pswan\Downloads\eds-decomp\tools\testing_scenarios\generated\..\recordings\The_Fiend_Megacyber_Cpu_Special_Summon_CPU.mp4
+   3434 MP4: wrote C:\Users\pswan\Downloads\eds-decomp\tools\testing_scenarios\generated\..\recordings\The_Fiend_Megacyber_Cpu_Special_Summon_CPU.mp4
+   3434 Finished — PASS (play sequence + tail; MP4 from ffmpeg if encode succeeded).
+     10 MP4 target: C:\Users\pswan\Downloads\eds-decomp\tools\testing_scenarios\generated\..\recordings\Goblin_Attack_Force_Cpu_Attack_Then_Defense_CPU.mp4
+     10 emu recording API: screenshot, screenshotToImage
+     10 MP4: scripted capture (emu:screenshot PNG sequence + ffmpeg). See captureMp4 in README.
+     10 Goblin Attack Force / cpu_attack_then_defense / CPU
+     10 cpu_turn
+     10 Capture dir: C:\Users\pswan\Downloads\eds-decomp\tools\testing_scenarios\generated\..\recordings\Goblin_Attack_Force_Cpu_Attack_Then_Defense_CPU_frames (PNG usually 240x160; MP4 encoded 1440x960, 6x integer scale)
+     10 Launch mGBA with -6 (or maximize window) so on-screen size matches capture scale.
+    791 Main menu (callback 0x08003B15).
+    914 Campaign selected (callback 0x0801D745).
+   1107 Turn order: forced RPS lose (CPU goes first).
+   1117 Turn order: A (lost RPS; CPU chooses first).
+   1155 Turn order: A (lost RPS; CPU chooses first).
+   1349 Opponent's turn (waiting for your Main Phase 1).
+   1351 Usage deck imperial / Tomato Control: main=40 extra=12; P0 shuffled=true (top 454->230) P1 shuffled=true (top 454->522), hands cleared.
+   2249 cpu_turn f=900 duel_step=8 turn_player=1 ai=4/0 textbox=0
+   2309 Player Draw Phase.
+   2490 Opening draw complete (hand=6 deck=34 want=6).
+   2630 Exact setup: P0 hand=0 deck=34 gy=0, P1 hand=0 deck=34 gy=0, LP 8000/8000, turnCount 2.
+   2630 Player Main Phase 1.
+   2630 steps: 2 steps, 4 ops
+   2630 step: pass
+   2994 step: cpu_turn
+   3147 steps: capture starts (the CPU's turn)
+   3151 screenshotToImage: 240x160
+   3612 steps: the effect started (battle); the video starts at frame 358 (phase 3, cursor on the card)
+   3765 steps: the card's effect is done; ending the scenario
+   3765 Play sequence done; ending capture (no recording tail).
+   3765 MP4: encoding 257 frames (from 358) -> C:\Users\pswan\Downloads\eds-decomp\tools\testing_scenarios\generated\..\recordings\Goblin_Attack_Force_Cpu_Attack_Then_Defense_CPU.mp4
+   3765 MP4: wrote C:\Users\pswan\Downloads\eds-decomp\tools\testing_scenarios\generated\..\recordings\Goblin_Attack_Force_Cpu_Attack_Then_Defense_CPU.mp4
+   3765 Finished — PASS (play sequence + tail; MP4 from ffmpeg if encode succeeded).
+     11 MP4 target: C:\Users\pswan\Downloads\eds-decomp\tools\testing_scenarios\generated\..\recordings\Solemn_Wishes_Cpu_Activate_And_Gain_CPU.mp4
+     11 emu recording API: screenshot, screenshotToImage
+     11 MP4: scripted capture (emu:screenshot PNG sequence + ffmpeg). See captureMp4 in README.
+     11 Solemn Wishes / cpu_activate_and_gain / CPU
+     11 cpu_turn; check opp.st0 = Solemn Wishes up; draw; pass; cpu_turn
+     11 Capture dir: C:\Users\pswan\Downloads\eds-decomp\tools\testing_scenarios\generated\..\recordings\Solemn_Wishes_Cpu_Activate_And_Gain_CPU_frames (PNG usually 240x160; MP4 encoded 1440x960, 6x integer scale)
+     11 Launch mGBA with -6 (or maximize window) so on-screen size matches capture scale.
+    792 Main menu (callback 0x08003B15).
+    915 Campaign selected (callback 0x0801D745).
+   1108 Turn order: forced RPS lose (CPU goes first).
+   1118 Turn order: A (lost RPS; CPU chooses first).
+   1156 Turn order: A (lost RPS; CPU chooses first).
+   1350 Opponent's turn (waiting for your Main Phase 1).
+   1352 Usage deck imperial / Tomato Control: main=40 extra=12; P0 shuffled=true (top 454->192) P1 shuffled=true (top 454->441), hands cleared.
+   2250 cpu_turn f=900 duel_step=8 turn_player=1 ai=4/0 textbox=0
+   2326 Player Draw Phase.
+   2507 Opening draw complete (hand=6 deck=34 want=6).
+   2647 Exact setup: P0 hand=0 deck=34 gy=0, P1 hand=0 deck=34 gy=0, LP 8000/8000, turnCount 2.
+   2647 Player Main Phase 1.
+   2647 steps: 6 steps, 9 ops
+   2647 step: pass
+   2937 step: cpu_turn
+   3081 steps: capture starts (the CPU's turn)
+   3085 screenshotToImage: 240x160
+   3515 step: check opp.st0 = Solemn Wishes up
+   3515 steps: check opp.st0 = Solemn Wishes up (not checked)
+   3516 step: draw
+   3660 step: pass
+   4101 step: cpu_turn
+   4692 steps: the effect started (shown); the video starts at frame 859 (phase 2, cursor on the card)
+   4707 steps: the card's effect is done; ending the scenario
+   4707 Play sequence done; ending capture (no recording tail).
+   4707 MP4: encoding 25 frames (from 859) -> C:\Users\pswan\Downloads\eds-decomp\tools\testing_scenarios\generated\..\recordings\Solemn_Wishes_Cpu_Activate_And_Gain_CPU.mp4
+   4707 MP4: wrote C:\Users\pswan\Downloads\eds-decomp\tools\testing_scenarios\generated\..\recordings\Solemn_Wishes_Cpu_Activate_And_Gain_CPU.mp4
+   4707 Finished — PASS (play sequence + tail; MP4 from ffmpeg if encode succeeded).
+      8 MP4 target: C:\Users\pswan\Downloads\eds-decomp\tools\testing_scenarios\generated\..\recordings\Limiter_Removal_Double_Machine_Atk_Player.mp4
+      8 emu recording API: screenshot, screenshotToImage
+      8 MP4: scripted capture (emu:screenshot PNG sequence + ffmpeg). See captureMp4 in README.
+      8 Limiter Removal / double_machine_atk / Player
+      8 activate you.hand[Limiter Removal]; check you.m0.atk = 4800; check you.m1.atk = 1800; battle; attack you.m0 -> opp.m0; c
+      8 Capture dir: C:\Users\pswan\Downloads\eds-decomp\tools\testing_scenarios\generated\..\recordings\Limiter_Removal_Double_Machine_Atk_Player_frames (PNG usually 240x160; MP4 encoded 1440x960, 6x integer scale)
+      8 Launch mGBA with -6 (or maximize window) so on-screen size matches capture scale.
+    789 Main menu (callback 0x08003B15).
+    912 Campaign selected (callback 0x0801D745).
+   1105 Turn order: forced RPS lose (CPU goes first).
+   1115 Turn order: A (lost RPS; CPU chooses first).
+   1153 Turn order: A (lost RPS; CPU chooses first).
+   1347 Opponent's turn (waiting for your Main Phase 1).
+   1349 Usage deck imperial / Tomato Control: main=40 extra=12; P0 shuffled=true (top 454->648) P1 shuffled=true (top 454->454), hands cleared.
+   1701 Player Draw Phase.
+   1882 Opening draw complete (hand=6 deck=34 want=6).
+   2020 Exact setup: P0 hand=1 deck=34 gy=0, P1 hand=0 deck=35 gy=0, LP 8000/8000, turnCount 2.
+   2020 Player Main Phase 1.
+   2020 steps: 7 steps, 15 ops
+   2020 step: activate you.hand[Limiter Removal]
+   2214 steps: capture starts (cursor on activate you.hand[Limiter Removal])
+   2218 screenshotToImage: 240x160
+   2260 step: check you.m0.atk = 4800
+   2260 steps: check you.m0.atk = 4800 (not checked)
+   2261 step: check you.m1.atk = 1800
+   2261 steps: check you.m1.atk = 1800 (not checked)
+   2262 step: battle
+   2402 step: attack you.m0 -> opp.m0
+   2665 steps: attack you.m0 -> opp.m0: taken on press 1
+   2834 step: check opp.lp = 5700
+   2834 steps: check opp.lp = 5700 (not checked)
+   2835 step: pass
+   3215 Play sequence done; ending capture (no recording tail).
+   3215 MP4: encoding 786 frames (from 0) -> C:\Users\pswan\Downloads\eds-decomp\tools\testing_scenarios\generated\..\recordings\Limiter_Removal_Double_Machine_Atk_Player.mp4
+   3215 MP4: wrote C:\Users\pswan\Downloads\eds-decomp\tools\testing_scenarios\generated\..\recordings\Limiter_Removal_Double_Machine_Atk_Player.mp4
+   3215 Finished — PASS (play sequence + tail; MP4 from ffmpeg if encode succeeded).
+     14 MP4 target: C:\Users\pswan\Downloads\eds-decomp\tools\testing_scenarios\generated\..\recordings\Limiter_Removal_Cpu_Double_Machine_Atk_CPU.mp4
+     14 emu recording API: screenshot, screenshotToImage
+     14 MP4: scripted capture (emu:screenshot PNG sequence + ffmpeg). See captureMp4 in README.
+     14 Limiter Removal / cpu_double_machine_atk / CPU
+     14 cpu_turn
+     14 Capture dir: C:\Users\pswan\Downloads\eds-decomp\tools\testing_scenarios\generated\..\recordings\Limiter_Removal_Cpu_Double_Machine_Atk_CPU_frames (PNG usually 240x160; MP4 encoded 1440x960, 6x integer scale)
+     14 Launch mGBA with -6 (or maximize window) so on-screen size matches capture scale.
+    795 Main menu (callback 0x08003B15).
+    918 Campaign selected (callback 0x0801D745).
+   1111 Turn order: forced RPS lose (CPU goes first).
+   1121 Turn order: A (lost RPS; CPU chooses first).
+   1159 Turn order: A (lost RPS; CPU chooses first).
+   1353 Opponent's turn (waiting for your Main Phase 1).
+   1355 Usage deck imperial / Tomato Control: main=40 extra=12; P0 shuffled=true (top 454->434) P1 shuffled=true (top 454->737), hands cleared.
+   2253 cpu_turn f=900 duel_step=8 turn_player=1 ai=4/0 textbox=0
+   2349 Player Draw Phase.
+   2530 Opening draw complete (hand=6 deck=34 want=6).
+   2670 Exact setup: P0 hand=0 deck=34 gy=0, P1 hand=1 deck=34 gy=0, LP 8000/8000, turnCount 2.
+   2670 Player Main Phase 1.
+   2670 steps: 2 steps, 4 ops
+   2670 step: pass
+   3034 step: cpu_turn
+   3187 steps: capture starts (the CPU's turn)
+   3191 screenshotToImage: 240x160
+   3468 steps: the effect started (chain); the video starts at frame 237 (phase 2, cursor on the card)
+   3486 steps: showing opp.m0
+   3540 steps: the card's effect is done; ending the scenario
+   3540 Play sequence done; ending capture (no recording tail).
+   3540 MP4: encoding 113 frames (from 237) -> C:\Users\pswan\Downloads\eds-decomp\tools\testing_scenarios\generated\..\recordings\Limiter_Removal_Cpu_Double_Machine_Atk_CPU.mp4
+   3540 MP4: wrote C:\Users\pswan\Downloads\eds-decomp\tools\testing_scenarios\generated\..\recordings\Limiter_Removal_Cpu_Double_Machine_Atk_CPU.mp4
+   3540 Finished — PASS (play sequence + tail; MP4 from ffmpeg if encode succeeded).
+     11 MP4 target: C:\Users\pswan\Downloads\eds-decomp\tools\testing_scenarios\generated\..\recordings\4_Starred_Ladybug_of_Doom_Flip_Destroy_Level_4_Player.mp4
+     11 emu recording API: screenshot, screenshotToImage
+     11 MP4: scripted capture (emu:screenshot PNG sequence + ffmpeg). See captureMp4 in README.
+     11 4-Starred Ladybug of Doom / flip_destroy_level_4 / Player
+     11 flip_summon you.m0
+     11 Capture dir: C:\Users\pswan\Downloads\eds-decomp\tools\testing_scenarios\generated\..\recordings\4_Starred_Ladybug_of_Doom_Flip_Destroy_Level_4_Player_frames (PNG usually 240x160; MP4 encoded 1440x960, 6x integer scale)
+     11 Launch mGBA with -6 (or maximize window) so on-screen size matches capture scale.
+    792 Main menu (callback 0x08003B15).
+    915 Campaign selected (callback 0x0801D745).
+   1108 Turn order: forced RPS lose (CPU goes first).
+   1118 Turn order: A (lost RPS; CPU chooses first).
+   1156 Turn order: A (lost RPS; CPU chooses first).
+   1350 Opponent's turn (waiting for your Main Phase 1).
+   1352 Usage deck imperial / Tomato Control: main=40 extra=12; P0 shuffled=true (top 454->522) P1 shuffled=true (top 454->147), hands cleared.
+   1703 Player Draw Phase.
+   1884 Opening draw complete (hand=6 deck=34 want=6).
+   2021 Exact setup: P0 hand=0 deck=34 gy=0, P1 hand=0 deck=35 gy=0, LP 8000/8000, turnCount 2.
+   2021 Player Main Phase 1.
+   2021 steps: 1 steps, 4 ops
+   2021 step: flip_summon you.m0
+   2158 steps: capture starts (cursor on flip_summon you.m0)
+   2162 screenshotToImage: 240x160
+   2352 Play sequence done; ending capture (no recording tail).
+   2352 MP4: encoding 191 frames (from 0) -> C:\Users\pswan\Downloads\eds-decomp\tools\testing_scenarios\generated\..\recordings\4_Starred_Ladybug_of_Doom_Flip_Destroy_Level_4_Player.mp4
+   2352 MP4: wrote C:\Users\pswan\Downloads\eds-decomp\tools\testing_scenarios\generated\..\recordings\4_Starred_Ladybug_of_Doom_Flip_Destroy_Level_4_Player.mp4
+   2352 Finished — PASS (play sequence + tail; MP4 from ffmpeg if encode succeeded).
+     27 MP4 target: C:\Users\pswan\Downloads\eds-decomp\tools\testing_scenarios\generated\..\recordings\4_Starred_Ladybug_of_Doom_Cpu_Flip_Destroy_Level_4_CPU.mp4
+     27 emu recording API: screenshot, screenshotToImage
+     27 MP4: scripted capture (emu:screenshot PNG sequence + ffmpeg). See captureMp4 in README.
+     27 4-Starred Ladybug of Doom / cpu_flip_destroy_level_4 / CPU
+     27 cpu_turn
+     27 Capture dir: C:\Users\pswan\Downloads\eds-decomp\tools\testing_scenarios\generated\..\recordings\4_Starred_Ladybug_of_Doom_Cpu_Flip_Destroy_Level_4_CPU_frames (PNG usually 240x160; MP4 encoded 1440x960, 6x integer scale)
+     27 Launch mGBA with -6 (or maximize window) so on-screen size matches capture scale.
+    808 Main menu (callback 0x08003B15).
+    931 Campaign selected (callback 0x0801D745).
+   1124 Turn order: forced RPS lose (CPU goes first).
+   1134 Turn order: A (lost RPS; CPU chooses first).
+   1172 Turn order: A (lost RPS; CPU chooses first).
+   1366 Opponent's turn (waiting for your Main Phase 1).
+   1368 Usage deck imperial / Tomato Control: main=40 extra=12; P0 shuffled=true (top 454->512) P1 shuffled=true (top 454->434), hands cleared.
+   2266 cpu_turn f=900 duel_step=8 turn_player=1 ai=4/0 textbox=0
+   2346 Player Draw Phase.
+   2527 Opening draw complete (hand=6 deck=34 want=6).
+   2664 Exact setup: P0 hand=0 deck=34 gy=0, P1 hand=0 deck=34 gy=0, LP 8000/8000, turnCount 2.
+   2664 Player Main Phase 1.
+   2664 steps: 2 steps, 4 ops
+   2664 step: pass
+   3028 step: cpu_turn
+   3182 steps: capture starts (the CPU's turn)
+   3186 screenshotToImage: 240x160
+   3467 steps: the effect started (chain); the video starts at frame 250 (phase 2, cursor on the card)
+   3588 steps: the card's effect is done; ending the scenario
+   3588 Play sequence done; ending capture (no recording tail).
+   3588 MP4: encoding 153 frames (from 250) -> C:\Users\pswan\Downloads\eds-decomp\tools\testing_scenarios\generated\..\recordings\4_Starred_Ladybug_of_Doom_Cpu_Flip_Destroy_Level_4_CPU.mp4
+   3588 MP4: wrote C:\Users\pswan\Downloads\eds-decomp\tools\testing_scenarios\generated\..\recordings\4_Starred_Ladybug_of_Doom_Cpu_Flip_Destroy_Level_4_CPU.mp4
+   3588 Finished — PASS (play sequence + tail; MP4 from ffmpeg if encode succeeded).
+     13 MP4 target: C:\Users\pswan\Downloads\eds-decomp\tools\testing_scenarios\generated\..\recordings\Kycoo_the_Ghost_Destroyer_Banish_On_Battle_Damage_Player.mp4
+     13 emu recording API: screenshot, screenshotToImage
+     13 MP4: scripted capture (emu:screenshot PNG sequence + ffmpeg). See captureMp4 in README.
+     13 Kycoo the Ghost Destroyer / banish_on_battle_damage / Player
+     13 battle; attack you.m0 -> direct; yes; pick opp.gy[Summoned Skull]; yes; pick opp.gy[Mechanicalchaser]
+     13 Capture dir: C:\Users\pswan\Downloads\eds-decomp\tools\testing_scenarios\generated\..\recordings\Kycoo_the_Ghost_Destroyer_Banish_On_Battle_Damage_Player_frames (PNG usually 240x160; MP4 encoded 1440x960, 6x integer scale)
+     13 Launch mGBA with -6 (or maximize window) so on-screen size matches capture scale.
+    794 Main menu (callback 0x08003B15).
+    917 Campaign selected (callback 0x0801D745).
+   1110 Turn order: forced RPS lose (CPU goes first).
+   1120 Turn order: A (lost RPS; CPU chooses first).
+   1158 Turn order: A (lost RPS; CPU chooses first).
+   1352 Opponent's turn (waiting for your Main Phase 1).
+   1354 Usage deck android / Tomato Control: main=40 extra=12; P0 shuffled=true (top 505->265) P1 shuffled=true (top 505->889), hands cleared.
+   1707 Player Draw Phase.
+   1888 Opening draw complete (hand=6 deck=34 want=6).
+   2027 Exact setup: P0 hand=0 deck=34 gy=0, P1 hand=0 deck=35 gy=3, LP 8000/8000, turnCount 2.
+   2027 Player Main Phase 1.
+   2027 steps: 6 steps, 16 ops
+   2027 step: battle
+   2225 step: attack you.m0 -> direct
+   2330 steps: capture starts (cursor on attack you.m0 -> direct)
+   2334 screenshotToImage: 240x160
+   2615 step: yes
+   2641 step: pick opp.gy[Summoned Skull]
+   2720 step: yes
+   2789 step: pick opp.gy[Mechanicalchaser]
+   2939 Play sequence done; ending capture (no recording tail).
+   2939 MP4: encoding 489 frames (from 0) -> C:\Users\pswan\Downloads\eds-decomp\tools\testing_scenarios\generated\..\recordings\Kycoo_the_Ghost_Destroyer_Banish_On_Battle_Damage_Player.mp4
+   2939 MP4: wrote C:\Users\pswan\Downloads\eds-decomp\tools\testing_scenarios\generated\..\recordings\Kycoo_the_Ghost_Destroyer_Banish_On_Battle_Damage_Player.mp4
+   2939 Finished — PASS (play sequence + tail; MP4 from ffmpeg if encode succeeded).
+     17 MP4 target: C:\Users\pswan\Downloads\eds-decomp\tools\testing_scenarios\generated\..\recordings\Kycoo_the_Ghost_Destroyer_Cpu_Banish_On_Battle_Damage_CPU.mp4
+     17 emu recording API: screenshot, screenshotToImage
+     17 MP4: scripted capture (emu:screenshot PNG sequence + ffmpeg). See captureMp4 in README.
+     17 Kycoo the Ghost Destroyer / cpu_banish_on_battle_damage / CPU
+     17 cpu_turn
+     17 Capture dir: C:\Users\pswan\Downloads\eds-decomp\tools\testing_scenarios\generated\..\recordings\Kycoo_the_Ghost_Destroyer_Cpu_Banish_On_Battle_Damage_CPU_frames (PNG usually 240x160; MP4 encoded 1440x960, 6x integer scale)
+     17 Launch mGBA with -6 (or maximize window) so on-screen size matches capture scale.
+    798 Main menu (callback 0x08003B15).
+    921 Campaign selected (callback 0x0801D745).
+   1114 Turn order: forced RPS lose (CPU goes first).
+   1124 Turn order: A (lost RPS; CPU chooses first).
+   1162 Turn order: A (lost RPS; CPU chooses first).
+   1356 Opponent's turn (waiting for your Main Phase 1).
+   1358 Usage deck android / Tomato Control: main=40 extra=12; P0 shuffled=true (top 505->230) P1 shuffled=true (top 505->889), hands cleared.
+   2256 cpu_turn f=900 duel_step=8 turn_player=1 ai=4/0 textbox=0
+   2354 Player Draw Phase.
+   2535 Opening draw complete (hand=6 deck=34 want=6).
+   2675 Exact setup: P0 hand=0 deck=34 gy=2, P1 hand=0 deck=34 gy=0, LP 8000/8000, turnCount 2.
+   2675 Player Main Phase 1.
+   2675 steps: 2 steps, 4 ops
+   2675 step: pass
+   2965 step: cpu_turn
+   3109 steps: capture starts (the CPU's turn)
+   3113 screenshotToImage: 240x160
+   3571 steps: the effect started (battle); the video starts at frame 359 (phase 3, cursor on the card)
+   3779 steps: the card's effect is done; ending the scenario
+   3779 Play sequence done; ending capture (no recording tail).
+   3779 MP4: encoding 308 frames (from 359) -> C:\Users\pswan\Downloads\eds-decomp\tools\testing_scenarios\generated\..\recordings\Kycoo_the_Ghost_Destroyer_Cpu_Banish_On_Battle_Damage_CPU.mp4
+   3779 MP4: wrote C:\Users\pswan\Downloads\eds-decomp\tools\testing_scenarios\generated\..\recordings\Kycoo_the_Ghost_Destroyer_Cpu_Banish_On_Battle_Damage_CPU.mp4
+   3779 Finished — PASS (play sequence + tail; MP4 from ffmpeg if encode succeeded).
+     12 MP4 target: C:\Users\pswan\Downloads\eds-decomp\tools\testing_scenarios\generated\..\recordings\Bazoo_the_Soul_Eater_Banish_Three_For_Atk_Player.mp4
+     12 emu recording API: screenshot, screenshotToImage
+     12 MP4: scripted capture (emu:screenshot PNG sequence + ffmpeg). See captureMp4 in README.
+     12 Bazoo the Soul-Eater / banish_three_for_atk / Player
+     12 activate you.m0; yes; pick you.gy[Gemini Elf]; yes; pick you.gy[Mechanicalchaser]; yes; pick you.gy[La Jinn the Mystical
+     12 Capture dir: C:\Users\pswan\Downloads\eds-decomp\tools\testing_scenarios\generated\..\recordings\Bazoo_the_Soul_Eater_Banish_Three_For_Atk_Player_frames (PNG usually 240x160; MP4 encoded 1440x960, 6x integer scale)
+     12 Launch mGBA with -6 (or maximize window) so on-screen size matches capture scale.
+    793 Main menu (callback 0x08003B15).
+    916 Campaign selected (callback 0x0801D745).
+   1109 Turn order: forced RPS lose (CPU goes first).
+   1119 Turn order: A (lost RPS; CPU chooses first).
+   1157 Turn order: A (lost RPS; CPU chooses first).
+   1351 Opponent's turn (waiting for your Main Phase 1).
+   1353 Usage deck android / Tomato Control: main=40 extra=12; P0 shuffled=true (top 505->512) P1 shuffled=true (top 505->512), hands cleared.
+   1705 Player Draw Phase.
+   1886 Opening draw complete (hand=6 deck=34 want=6).
+   2026 Exact setup: P0 hand=0 deck=34 gy=4, P1 hand=0 deck=35 gy=0, LP 8000/8000, turnCount 2.
+   2026 Player Main Phase 1.
+   2026 steps: 7 steps, 16 ops
+   2026 step: activate you.m0
+   2162 steps: capture starts (cursor on activate you.m0)
+   2166 screenshotToImage: 240x160
+   2227 step: yes
+   2302 step: pick you.gy[Gemini Elf]
+   2351 step: yes
+   2449 step: pick you.gy[Mechanicalchaser]
+   2497 step: yes
+   2595 step: pick you.gy[La Jinn the Mystical Genie of the Lamp]
+   2674 steps: showing you.m0
+   2773 Play sequence done; ending capture (no recording tail).
+   2773 MP4: encoding 441 frames (from 0) -> C:\Users\pswan\Downloads\eds-decomp\tools\testing_scenarios\generated\..\recordings\Bazoo_the_Soul_Eater_Banish_Three_For_Atk_Player.mp4
+   2773 MP4: wrote C:\Users\pswan\Downloads\eds-decomp\tools\testing_scenarios\generated\..\recordings\Bazoo_the_Soul_Eater_Banish_Three_For_Atk_Player.mp4
+   2773 Finished — PASS (play sequence + tail; MP4 from ffmpeg if encode succeeded).
+      8 MP4 target: C:\Users\pswan\Downloads\eds-decomp\tools\testing_scenarios\generated\..\recordings\Bazoo_the_Soul_Eater_Cpu_Banish_Weakest_CPU.mp4
+      8 emu recording API: screenshot, screenshotToImage
+      8 MP4: scripted capture (emu:screenshot PNG sequence + ffmpeg). See captureMp4 in README.
+      8 Bazoo the Soul-Eater / cpu_banish_weakest / CPU
+      8 cpu_turn
+      8 Capture dir: C:\Users\pswan\Downloads\eds-decomp\tools\testing_scenarios\generated\..\recordings\Bazoo_the_Soul_Eater_Cpu_Banish_Weakest_CPU_frames (PNG usually 240x160; MP4 encoded 1440x960, 6x integer scale)
+      8 Launch mGBA with -6 (or maximize window) so on-screen size matches capture scale.
+    789 Main menu (callback 0x08003B15).
+    912 Campaign selected (callback 0x0801D745).
+   1105 Turn order: forced RPS lose (CPU goes first).
+   1115 Turn order: A (lost RPS; CPU chooses first).
+   1153 Turn order: A (lost RPS; CPU chooses first).
+   1347 Opponent's turn (waiting for your Main Phase 1).
+   1349 Usage deck android / Tomato Control: main=40 extra=12; P0 shuffled=true (top 505->889) P1 shuffled=true (top 505->522), hands cleared.
+   2247 cpu_turn f=900 duel_step=8 turn_player=1 ai=4/0 textbox=0
+   2346 Player Draw Phase.
+   2527 Opening draw complete (hand=6 deck=34 want=6).
+   2667 Exact setup: P0 hand=0 deck=34 gy=0, P1 hand=0 deck=34 gy=4, LP 8000/8000, turnCount 2.
+   2667 Player Main Phase 1.
+   2667 steps: 2 steps, 4 ops
+   2667 step: pass
+   3032 step: cpu_turn
+   3185 steps: capture starts (the CPU's turn)
+   3189 screenshotToImage: 240x160
+   3518 steps: the effect started (chain); the video starts at frame 254 (phase 2, cursor on the card)
+   3636 steps: showing opp.m0
+   3679 steps: the card's effect is done; ending the scenario
+   3679 Play sequence done; ending capture (no recording tail).
+   3679 MP4: encoding 237 frames (from 254) -> C:\Users\pswan\Downloads\eds-decomp\tools\testing_scenarios\generated\..\recordings\Bazoo_the_Soul_Eater_Cpu_Banish_Weakest_CPU.mp4
+   3679 MP4: wrote C:\Users\pswan\Downloads\eds-decomp\tools\testing_scenarios\generated\..\recordings\Bazoo_the_Soul_Eater_Cpu_Banish_Weakest_CPU.mp4
+   3679 Finished — PASS (play sequence + tail; MP4 from ffmpeg if encode succeeded).
+     12 MP4 target: C:\Users\pswan\Downloads\eds-decomp\tools\testing_scenarios\generated\..\recordings\Torrential_Tribute_Destroy_All_On_Summon_Player.mp4
+     12 emu recording API: screenshot, screenshotToImage
+     12 MP4: scripted capture (emu:screenshot PNG sequence + ffmpeg). See captureMp4 in README.
+     12 Torrential Tribute / destroy_all_on_summon / Player
+     12 summon you.hand[Mechanicalchaser] -> m1 atk; when prompt response: activate you.st0
+     12 Capture dir: C:\Users\pswan\Downloads\eds-decomp\tools\testing_scenarios\generated\..\recordings\Torrential_Tribute_Destroy_All_On_Summon_Player_frames (PNG usually 240x160; MP4 encoded 1440x960, 6x integer scale)
+     12 Launch mGBA with -6 (or maximize window) so on-screen size matches capture scale.
+    793 Main menu (callback 0x08003B15).
+    916 Campaign selected (callback 0x0801D745).
+   1109 Turn order: forced RPS lose (CPU goes first).
+   1119 Turn order: A (lost RPS; CPU chooses first).
+   1157 Turn order: A (lost RPS; CPU chooses first).
+   1351 Opponent's turn (waiting for your Main Phase 1).
+   1353 Usage deck android / Tomato Control: main=40 extra=12; P0 shuffled=true (top 505->737) P1 shuffled=true (top 505->512), hands cleared.
+   2251 cpu_turn f=900 duel_step=8 turn_player=1 ai=4/0 textbox=0
+   2346 Player Draw Phase.
+   2527 Opening draw complete (hand=6 deck=34 want=6).
+   2668 Exact setup: P0 hand=1 deck=34 gy=0, P1 hand=0 deck=34 gy=0, LP 8000/8000, turnCount 2.
+   2668 Player Main Phase 1.
+   2668 steps: 2 steps, 7 ops
+   2668 step: summon you.hand[Mechanicalchaser] -> m1 atk
+   2862 steps: capture starts (cursor on summon you.hand[Mechanicalchaser] -> m1 atk)
+   2866 screenshotToImage: 240x160
+   2999 step: when prompt response: activate you.st0
+   2999 steps: event: when prompt response: activate you.st0
+   3319 Play sequence done; ending capture (no recording tail).
+   3319 MP4: encoding 388 frames (from 0) -> C:\Users\pswan\Downloads\eds-decomp\tools\testing_scenarios\generated\..\recordings\Torrential_Tribute_Destroy_All_On_Summon_Player.mp4
+   3319 MP4: wrote C:\Users\pswan\Downloads\eds-decomp\tools\testing_scenarios\generated\..\recordings\Torrential_Tribute_Destroy_All_On_Summon_Player.mp4
+   3319 Finished — PASS (play sequence + tail; MP4 from ffmpeg if encode succeeded).
+     11 MP4 target: C:\Users\pswan\Downloads\eds-decomp\tools\testing_scenarios\generated\..\recordings\Torrential_Tribute_Cpu_On_Human_Summon_CPU.mp4
+     11 emu recording API: screenshot, screenshotToImage
+     11 MP4: scripted capture (emu:screenshot PNG sequence + ffmpeg). See captureMp4 in README.
+     11 Torrential Tribute / cpu_on_human_summon / CPU
+     11 summon you.hand[Mechanicalchaser] -> m2 atk
+     11 Capture dir: C:\Users\pswan\Downloads\eds-decomp\tools\testing_scenarios\generated\..\recordings\Torrential_Tribute_Cpu_On_Human_Summon_CPU_frames (PNG usually 240x160; MP4 encoded 1440x960, 6x integer scale)
+     11 Launch mGBA with -6 (or maximize window) so on-screen size matches capture scale.
+    792 Main menu (callback 0x08003B15).
+    915 Campaign selected (callback 0x0801D745).
+   1108 Turn order: forced RPS lose (CPU goes first).
+   1118 Turn order: A (lost RPS; CPU chooses first).
+   1156 Turn order: A (lost RPS; CPU chooses first).
+   1350 Opponent's turn (waiting for your Main Phase 1).
+   1352 Usage deck android / Tomato Control: main=40 extra=12; P0 shuffled=true (top 505->951) P1 shuffled=true (top 505->192), hands cleared.
+   2250 cpu_turn f=900 duel_step=8 turn_player=1 ai=4/0 textbox=0
+   2348 Player Draw Phase.
+   2529 Opening draw complete (hand=6 deck=34 want=6).
+   2667 Exact setup: P0 hand=1 deck=34 gy=0, P1 hand=0 deck=34 gy=0, LP 8000/8000, turnCount 2.
+   2667 Player Main Phase 1.
+   2667 steps: 1 steps, 6 ops
+   2667 step: summon you.hand[Mechanicalchaser] -> m2 atk
+   2861 steps: capture starts (cursor on summon you.hand[Mechanicalchaser] -> m2 atk)
+   2865 screenshotToImage: 240x160
+   3225 steps: the card's effect is done; ending the scenario
+   3225 Play sequence done; ending capture (no recording tail).
+   3225 MP4: encoding 336 frames (from 0) -> C:\Users\pswan\Downloads\eds-decomp\tools\testing_scenarios\generated\..\recordings\Torrential_Tribute_Cpu_On_Human_Summon_CPU.mp4
+   3225 MP4: wrote C:\Users\pswan\Downloads\eds-decomp\tools\testing_scenarios\generated\..\recordings\Torrential_Tribute_Cpu_On_Human_Summon_CPU.mp4
+   3225 Finished — PASS (play sequence + tail; MP4 from ffmpeg if encode succeeded).
+     14 MP4 target: C:\Users\pswan\Downloads\eds-decomp\tools\testing_scenarios\generated\..\recordings\Jar_of_Greed_Draw_One_Player.mp4
+     14 emu recording API: screenshot, screenshotToImage
+     14 MP4: scripted capture (emu:screenshot PNG sequence + ffmpeg). See captureMp4 in README.
+     14 Jar of Greed / draw_one / Player
+     14 activate you.st0
+     14 Capture dir: C:\Users\pswan\Downloads\eds-decomp\tools\testing_scenarios\generated\..\recordings\Jar_of_Greed_Draw_One_Player_frames (PNG usually 240x160; MP4 encoded 1440x960, 6x integer scale)
+     14 Launch mGBA with -6 (or maximize window) so on-screen size matches capture scale.
+    795 Main menu (callback 0x08003B15).
+    918 Campaign selected (callback 0x0801D745).
+   1111 Turn order: forced RPS lose (CPU goes first).
+   1121 Turn order: A (lost RPS; CPU chooses first).
+   1159 Turn order: A (lost RPS; CPU chooses first).
+   1353 Opponent's turn (waiting for your Main Phase 1).
+   1355 Usage deck android / Tomato Control: main=40 extra=12; P0 shuffled=true (top 505->522) P1 shuffled=true (top 505->1092), hands cleared.
+   1707 Player Draw Phase.
+   1888 Opening draw complete (hand=6 deck=34 want=6).
+   2025 Exact setup: P0 hand=0 deck=35 gy=0, P1 hand=0 deck=35 gy=0, LP 8000/8000, turnCount 2.
+   2025 Player Main Phase 1.
+   2025 steps: 1 steps, 4 ops
+   2025 step: activate you.st0
+   2142 steps: capture starts (cursor on activate you.st0)
+   2146 screenshotToImage: 240x160
+   2272 Play sequence done; ending capture (no recording tail).
+   2272 MP4: encoding 127 frames (from 0) -> C:\Users\pswan\Downloads\eds-decomp\tools\testing_scenarios\generated\..\recordings\Jar_of_Greed_Draw_One_Player.mp4
+   2272 MP4: wrote C:\Users\pswan\Downloads\eds-decomp\tools\testing_scenarios\generated\..\recordings\Jar_of_Greed_Draw_One_Player.mp4
+   2272 Finished — PASS (play sequence + tail; MP4 from ffmpeg if encode succeeded).
+     11 MP4 target: C:\Users\pswan\Downloads\eds-decomp\tools\testing_scenarios\generated\..\recordings\United_We_Stand_Equip_Per_Face_Up_Monster_Player.mp4
+     11 emu recording API: screenshot, screenshotToImage
+     11 MP4: scripted capture (emu:screenshot PNG sequence + ffmpeg). See captureMp4 in README.
+     11 United We Stand / equip_per_face_up_monster / Player
+     11 activate you.hand[United We Stand]; target you.m0; check you.m0.atk = 3500; check you.m0.def = 2500; flip_summon you.m2
+     11 Capture dir: C:\Users\pswan\Downloads\eds-decomp\tools\testing_scenarios\generated\..\recordings\United_We_Stand_Equip_Per_Face_Up_Monster_Player_frames (PNG usually 240x160; MP4 encoded 1440x960, 6x integer scale)
+     11 Launch mGBA with -6 (or maximize window) so on-screen size matches capture scale.
+    792 Main menu (callback 0x08003B15).
+    915 Campaign selected (callback 0x0801D745).
+   1108 Turn order: forced RPS lose (CPU goes first).
+   1118 Turn order: A (lost RPS; CPU chooses first).
+   1156 Turn order: A (lost RPS; CPU chooses first).
+   1350 Opponent's turn (waiting for your Main Phase 1).
+   1352 Usage deck android / Tomato Control: main=40 extra=12; P0 shuffled=true (top 505->1092) P1 shuffled=true (top 505->737), hands cleared.
+   1703 Player Draw Phase.
+   1884 Opening draw complete (hand=6 deck=34 want=6).
+   2024 Exact setup: P0 hand=1 deck=34 gy=0, P1 hand=0 deck=35 gy=0, LP 8000/8000, turnCount 2.
+   2024 Player Main Phase 1.
+   2024 steps: 5 steps, 11 ops
+   2024 step: activate you.hand[United We Stand]
+   2218 steps: capture starts (cursor on activate you.hand[United We Stand])
+   2222 screenshotToImage: 240x160
+   2264 step: target you.m0
+   2347 steps: target you.m0: A again (not taken)
+   2371 steps: target you.m0: taken on press 2
+   2378 step: check you.m0.atk = 3500
+   2378 steps: check you.m0.atk = 3500 (not checked)
+   2379 step: check you.m0.def = 2500
+   2379 steps: check you.m0.def = 2500 (not checked)
+   2380 step: flip_summon you.m2
+   2567 Play sequence done; ending capture (no recording tail).
+   2567 MP4: encoding 321 frames (from 0) -> C:\Users\pswan\Downloads\eds-decomp\tools\testing_scenarios\generated\..\recordings\United_We_Stand_Equip_Per_Face_Up_Monster_Player.mp4
+   2567 MP4: wrote C:\Users\pswan\Downloads\eds-decomp\tools\testing_scenarios\generated\..\recordings\United_We_Stand_Equip_Per_Face_Up_Monster_Player.mp4
+   2567 Finished — PASS (play sequence + tail; MP4 from ffmpeg if encode succeeded).
+     10 MP4 target: C:\Users\pswan\Downloads\eds-decomp\tools\testing_scenarios\generated\..\recordings\United_We_Stand_Cpu_Equip_CPU.mp4
+     10 emu recording API: screenshot, screenshotToImage
+     10 MP4: scripted capture (emu:screenshot PNG sequence + ffmpeg). See captureMp4 in README.
+     10 United We Stand / cpu_equip / CPU
+     10 cpu_turn
+     10 Capture dir: C:\Users\pswan\Downloads\eds-decomp\tools\testing_scenarios\generated\..\recordings\United_We_Stand_Cpu_Equip_CPU_frames (PNG usually 240x160; MP4 encoded 1440x960, 6x integer scale)
+     10 Launch mGBA with -6 (or maximize window) so on-screen size matches capture scale.
+    791 Main menu (callback 0x08003B15).
+    914 Campaign selected (callback 0x0801D745).
+   1107 Turn order: forced RPS lose (CPU goes first).
+   1117 Turn order: A (lost RPS; CPU chooses first).
+   1155 Turn order: A (lost RPS; CPU chooses first).
+   1349 Opponent's turn (waiting for your Main Phase 1).
+   1351 Usage deck android / Tomato Control: main=40 extra=12; P0 shuffled=true (top 505->265) P1 shuffled=true (top 505->1092), hands cleared.
+   2249 cpu_turn f=900 duel_step=8 turn_player=1 ai=4/0 textbox=0
+   2345 Player Draw Phase.
+   2526 Opening draw complete (hand=6 deck=34 want=6).
+   2667 Exact setup: P0 hand=0 deck=34 gy=0, P1 hand=1 deck=34 gy=0, LP 8000/8000, turnCount 2.
+   2667 Player Main Phase 1.
+   2667 steps: 2 steps, 4 ops
+   2667 step: pass
+   3032 step: cpu_turn
+   3185 steps: capture starts (the CPU's turn)
+   3189 screenshotToImage: 240x160
+   3470 steps: the effect started (chain); the video starts at frame 240 (phase 2, cursor on the card)
+   3576 steps: the card's effect is done; ending the scenario
+   3576 Play sequence done; ending capture (no recording tail).
+   3576 MP4: encoding 148 frames (from 240) -> C:\Users\pswan\Downloads\eds-decomp\tools\testing_scenarios\generated\..\recordings\United_We_Stand_Cpu_Equip_CPU.mp4
+   3576 MP4: wrote C:\Users\pswan\Downloads\eds-decomp\tools\testing_scenarios\generated\..\recordings\United_We_Stand_Cpu_Equip_CPU.mp4
+   3576 Finished — PASS (play sequence + tail; MP4 from ffmpeg if encode succeeded).
+     13 MP4 target: C:\Users\pswan\Downloads\eds-decomp\tools\testing_scenarios\generated\..\recordings\Mage_Power_Equip_Per_Spell_Trap_Player.mp4
+     13 emu recording API: screenshot, screenshotToImage
+     13 MP4: scripted capture (emu:screenshot PNG sequence + ffmpeg). See captureMp4 in README.
+     13 Mage Power / equip_per_spell_trap / Player
+     13 activate you.hand[Mage Power]; target you.m0
+     13 Capture dir: C:\Users\pswan\Downloads\eds-decomp\tools\testing_scenarios\generated\..\recordings\Mage_Power_Equip_Per_Spell_Trap_Player_frames (PNG usually 240x160; MP4 encoded 1440x960, 6x integer scale)
+     13 Launch mGBA with -6 (or maximize window) so on-screen size matches capture scale.
+    794 Main menu (callback 0x08003B15).
+    917 Campaign selected (callback 0x0801D745).
+   1110 Turn order: forced RPS lose (CPU goes first).
+   1120 Turn order: A (lost RPS; CPU chooses first).
+   1158 Turn order: A (lost RPS; CPU chooses first).
+   1352 Opponent's turn (waiting for your Main Phase 1).
+   1354 Usage deck android / Tomato Control: main=40 extra=12; P0 shuffled=true (top 505->505) P1 shuffled=true (top 505->192), hands cleared.
+   1705 Player Draw Phase.
+   1886 Opening draw complete (hand=6 deck=34 want=6).
+   2024 Exact setup: P0 hand=1 deck=34 gy=0, P1 hand=0 deck=35 gy=0, LP 8000/8000, turnCount 2.
+   2024 Player Main Phase 1.
+   2024 steps: 2 steps, 6 ops
+   2024 step: activate you.hand[Mage Power]
+   2217 steps: capture starts (cursor on activate you.hand[Mage Power])
+   2221 screenshotToImage: 240x160
+   2263 step: target you.m0
+   2345 steps: target you.m0: A again (not taken)
+   2369 steps: target you.m0: taken on press 2
+   2458 Play sequence done; ending capture (no recording tail).
+   2458 MP4: encoding 213 frames (from 0) -> C:\Users\pswan\Downloads\eds-decomp\tools\testing_scenarios\generated\..\recordings\Mage_Power_Equip_Per_Spell_Trap_Player.mp4
+   2458 MP4: wrote C:\Users\pswan\Downloads\eds-decomp\tools\testing_scenarios\generated\..\recordings\Mage_Power_Equip_Per_Spell_Trap_Player.mp4
+   2458 Finished — PASS (play sequence + tail; MP4 from ffmpeg if encode succeeded).
+     12 MP4 target: C:\Users\pswan\Downloads\eds-decomp\tools\testing_scenarios\generated\..\recordings\Mage_Power_Cpu_Equip_CPU.mp4
+     12 emu recording API: screenshot, screenshotToImage
+     12 MP4: scripted capture (emu:screenshot PNG sequence + ffmpeg). See captureMp4 in README.
+     12 Mage Power / cpu_equip / CPU
+     12 cpu_turn
+     12 Capture dir: C:\Users\pswan\Downloads\eds-decomp\tools\testing_scenarios\generated\..\recordings\Mage_Power_Cpu_Equip_CPU_frames (PNG usually 240x160; MP4 encoded 1440x960, 6x integer scale)
+     12 Launch mGBA with -6 (or maximize window) so on-screen size matches capture scale.
+    793 Main menu (callback 0x08003B15).
+    916 Campaign selected (callback 0x0801D745).
+   1109 Turn order: forced RPS lose (CPU goes first).
+   1119 Turn order: A (lost RPS; CPU chooses first).
+   1157 Turn order: A (lost RPS; CPU chooses first).
+   1351 Opponent's turn (waiting for your Main Phase 1).
+   1353 Usage deck android / Tomato Control: main=40 extra=12; P0 shuffled=true (top 505->648) P1 shuffled=true (top 505->951), hands cleared.
+   2251 cpu_turn f=900 duel_step=8 turn_player=1 ai=4/0 textbox=0
+   2328 Player Draw Phase.
+   2509 Opening draw complete (hand=6 deck=34 want=6).
+   2650 Exact setup: P0 hand=0 deck=34 gy=0, P1 hand=1 deck=34 gy=0, LP 8000/8000, turnCount 2.
+   2650 Player Main Phase 1.
+   2650 steps: 2 steps, 4 ops
+   2650 step: pass
+   3014 step: cpu_turn
+   3167 steps: capture starts (the CPU's turn)
+   3171 screenshotToImage: 240x160
+   3448 steps: the effect started (chain); the video starts at frame 237 (phase 2, cursor on the card)
+   3553 steps: the card's effect is done; ending the scenario
+   3553 Play sequence done; ending capture (no recording tail).
+   3553 MP4: encoding 146 frames (from 237) -> C:\Users\pswan\Downloads\eds-decomp\tools\testing_scenarios\generated\..\recordings\Mage_Power_Cpu_Equip_CPU.mp4
+   3553 MP4: wrote C:\Users\pswan\Downloads\eds-decomp\tools\testing_scenarios\generated\..\recordings\Mage_Power_Cpu_Equip_CPU.mp4
+   3553 Finished — PASS (play sequence + tail; MP4 from ffmpeg if encode succeeded).
+     10 MP4 target: C:\Users\pswan\Downloads\eds-decomp\tools\testing_scenarios\generated\..\recordings\Zombyra_the_Dark_Lose_Atk_After_Destroying_Player.mp4
+     10 emu recording API: screenshot, screenshotToImage
+     10 MP4: scripted capture (emu:screenshot PNG sequence + ffmpeg). See captureMp4 in README.
+     10 Zombyra the Dark / lose_atk_after_destroying / Player
+     10 battle; attack you.m0 -> opp.m0
+     10 Capture dir: C:\Users\pswan\Downloads\eds-decomp\tools\testing_scenarios\generated\..\recordings\Zombyra_the_Dark_Lose_Atk_After_Destroying_Player_frames (PNG usually 240x160; MP4 encoded 1440x960, 6x integer scale)
+     10 Launch mGBA with -6 (or maximize window) so on-screen size matches capture scale.
+    791 Main menu (callback 0x08003B15).
+    914 Campaign selected (callback 0x0801D745).
+   1107 Turn order: forced RPS lose (CPU goes first).
+   1117 Turn order: A (lost RPS; CPU chooses first).
+   1155 Turn order: A (lost RPS; CPU chooses first).
+   1349 Opponent's turn (waiting for your Main Phase 1).
+   1351 Usage deck android / Tomato Control: main=40 extra=12; P0 shuffled=true (top 505->192) P1 shuffled=true (top 505->886), hands cleared.
+   1703 Player Draw Phase.
+   1884 Opening draw complete (hand=6 deck=34 want=6).
+   2021 Exact setup: P0 hand=0 deck=34 gy=0, P1 hand=0 deck=35 gy=0, LP 8000/8000, turnCount 2.
+   2021 Player Main Phase 1.
+   2021 steps: 2 steps, 8 ops
+   2021 step: battle
+   2219 step: attack you.m0 -> opp.m0
+   2324 steps: capture starts (cursor on attack you.m0 -> opp.m0)
+   2328 screenshotToImage: 240x160
+   2484 steps: attack you.m0 -> opp.m0: taken on press 1
+   2641 Play sequence done; ending capture (no recording tail).
+   2641 MP4: encoding 292 frames (from 0) -> C:\Users\pswan\Downloads\eds-decomp\tools\testing_scenarios\generated\..\recordings\Zombyra_the_Dark_Lose_Atk_After_Destroying_Player.mp4
+   2641 MP4: wrote C:\Users\pswan\Downloads\eds-decomp\tools\testing_scenarios\generated\..\recordings\Zombyra_the_Dark_Lose_Atk_After_Destroying_Player.mp4
+   2641 Finished — PASS (play sequence + tail; MP4 from ffmpeg if encode succeeded).
+     12 MP4 target: C:\Users\pswan\Downloads\eds-decomp\tools\testing_scenarios\generated\..\recordings\Offerings_to_the_Doomed_Cpu_Destroy_CPU.mp4
+     12 emu recording API: screenshot, screenshotToImage
+     12 MP4: scripted capture (emu:screenshot PNG sequence + ffmpeg). See captureMp4 in README.
+     12 Offerings to the Doomed / cpu_destroy / CPU
+     12 cpu_turn

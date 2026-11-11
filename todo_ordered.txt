@@ -1,11 +1,15 @@
 1. Testing scenarios
-2. CPU vs CPU (setting to have CPU play your turn)
-3. Tokyo Dome format
-4. Pre-Tokyo Dome OCG packs
-5. Synchro/XYZ/Link cards
-6. Chaos Return format
-7. Yugi Muto duelist
-8. Yugi Muto pack
-9. New cards
-10. Test
-11. Record longplay
+2. Review videos (python tools\testing_scenarios\review_videos.py)
+3. Hide card animations setting
+4. Hide battle scenes setting
+5. Test
+6. Record Yugi-Kaiba/Imperial/Goat/Reaper duels
+7. Update READMEs
+8. README GIF/video Lua scripts
+9. Tokyo Dome format
+10. Pre-Tokyo Dome OCG packs
+11. Synchro/XYZ/Link cards (including videos)
+12. Chaos Return format
+13. Yugi Muto duelist
+14. Yugi Muto pack
+15. New cards
