@@ -496,6 +496,7 @@ function EDS.writeTestingFlags(freeze, opts)
     -- (the steps' key presses answer them unseen; unless video prompts='show')
     local video = opts.video or {}
     local flags2 = (video.cards ~= "show" and 1 or 0) | ((opts.steps and video.prompts ~= "show") and 2 or 0)
+        | (video.battle ~= "show" and 4 or 0)       -- no battle animations (unless video battle='show')
     emu:write8(EDS.G_MOD_TESTING_FLAGS2, flags2)
     emu:write16(EDS.G_MOD_TESTING_ONLY_CARD, opts.onlyCardId or 0)
 end

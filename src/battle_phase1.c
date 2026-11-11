@@ -611,6 +611,7 @@ struct LinkCardPromptByte {
  *           the attacker into a free zone of the defender, make it the target, flip it, CalcBattle
  */
 int DrillroidBeforeDamageCalc(int player);  /* mod: src/added_effects.c */
+int ModTestingHideBattle(void);             /* mod: test videos without the battle scene (src/mod_testing_automation.c) */
 #ifdef HAS_CARD_ALLY_OF_JUSTICE_CATASTOR
 int CatastorStartOfDamageStep(int player); /* mod: src/added_effects.c */
 #endif
@@ -741,6 +742,10 @@ int BattleStage_DamageCalc(int player)
         /* The normal path immediately performs step 2 as well. */
     }
     case DAMAGE_STEP_START_SCENE:
+        if (ModTestingHideBattle()) {   /* added: no battle scene (the field stays; no fade to reopen) */
+            gDuel.battleStep = DAMAGE_STEP_CLEAR_ZONES;
+            return 0;
+        }
         DuelCmd_Push(player ? DUEL_CMD_PLAYER | DUEL_CMD_START_BATTLE_SCENE : DUEL_CMD_START_BATTLE_SCENE,
                      BATTLE_BYTES.side[0].cardId, BATTLE_BYTES.side[1].cardId, 0);
         gDuel.battleStep++;
@@ -782,7 +787,8 @@ int BattleStage_DamageCalc(int player)
                 DuelCmd_Push(i ? DUEL_CMD_PLAYER | DUEL_CMD_CLEAR_ZONE_CARD : DUEL_CMD_CLEAR_ZONE_CARD,
                              ((struct BattleSideBytes *)(side + 8))->slot, 0, 0);
         }
-        DuelCmd_Push(player ? DUEL_CMD_PLAYER | DUEL_CMD_OPEN_DUEL_SCREEN : DUEL_CMD_OPEN_DUEL_SCREEN, 0, 0, 0);
+        if (!ModTestingHideBattle())    /* (added: with no battle scene the field never closed) */
+            DuelCmd_Push(player ? DUEL_CMD_PLAYER | DUEL_CMD_OPEN_DUEL_SCREEN : DUEL_CMD_OPEN_DUEL_SCREEN, 0, 0, 0);
         return 1;
     }
     case DAMAGE_STEP_ASK_ZERO_ATK:

@@ -16,6 +16,9 @@
  *              0x0202D806), where a script sees an effect "shown" (a Continuous Spell/Trap's)
  *   bit 1      the prompts (text boxes: messages, Yes/No, choices) work as usual but are not drawn
  *              (ModTestingHidePrompts): the script's key presses answer them unseen
+ *   bit 2      no battle animations: the "Attack" / "Direct Attack" commands (0x33, 0x34: the cursor, sword and
+ *              banner) end at once, and the full-screen battle scene is not played (ModTestingHideBattle,
+ *              BattleStage_DamageCalc)
  * and gModTestingSelect (u16, 0x0202D802): a one-shot request to put the field cursor on a zone, so the info bar
  * shows that card (a video showing a changed ATK): bit 15 the request, bit 8 the player, bits 0-3 the zone (0-4
  * monsters, 5-9 Spell/Traps, 10 Field). Done by ModTestingTick (DuelCursor_Select, DuelScreen_DrawCursorInfo).
@@ -97,12 +100,24 @@ int ModTestingSkipCardShow(void)
 #else
     u32 id = gDuelCmd.cmd & DUEL_CMD_ID_MASK;
 
-    if (gDuelCmd.step != 0 || id < DUEL_CMD_SHOW_CARD_ASSEMBLE || id > DUEL_CMD_SHOW_CARD_UNROLL_SIDEWAYS)
+    if (gDuelCmd.step != 0 || !ModTestDuel())
         return 0;
-    if (!(gModTestingFlags2 & 1) || !ModTestDuel())
+    if ((id == DUEL_CMD_ATTACK || id == DUEL_CMD_DIRECT_ATTACK) && (gModTestingFlags2 & 4))
+        return 1;                       /* the attack's cursor, sword and banner */
+    if (id < DUEL_CMD_SHOW_CARD_ASSEMBLE || id > DUEL_CMD_SHOW_CARD_UNROLL_SIDEWAYS || !(gModTestingFlags2 & 1))
         return 0;
     gModTestingLastShown = gDuelCmd.arg2;
     return 1;
+#endif
+}
+
+/* BattleStage_DamageCalc (battle_phase1.c): 1 when a test script asks for no battle scene (bit 2). */
+int ModTestingHideBattle(void)
+{
+#if MOD_RELEASE
+    return 0;
+#else
+    return (gModTestingFlags2 & 4) && ModTestDuel();
 #endif
 }
 

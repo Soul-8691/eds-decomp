@@ -50,6 +50,7 @@ When the card's chain or battle is not what the video must show, a scenario says
 | `effect='none'` | nothing is meant to happen; no wait for an effect |
 | `chain='show'` | keep the chain window ("Chain: Activating / Resolving"); hidden by default for cleaner videos |
 | `cards='show'` | keep the card-showing animations (the big card zoom, flash, unroll); hidden by default |
+| `battle='show'` | keep the battle animations (the attack's sword and banner, the full-screen battle scene); hidden by default |
 | `prompts='show'` | draw the prompts (text boxes); by default they work as usual, answered by the steps' key presses, but are not drawn |
 | `clear='cpu_monsters'` | a CPU scenario empties the CPU's monster zones (it keeps its first-turn board otherwise), so it uses the card rather than a Tribute Summon |
 

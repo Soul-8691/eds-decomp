@@ -24,6 +24,7 @@ extern u8 gModTestingFlags2;
 extern u16 gModTestingLastShown;
 int ModTestingSkipCardShow(void);
 int ModTestingHidePrompts(void);
+int ModTestingHideBattle(void);
 /* 1 when the CPU (player 1) would activate a card other than gModTestingOnlyCard (testing builds only). */
 int ModTestingCpuCardBlocked(int player, u16 id);
 

@@ -28,3 +28,4 @@ Screenshot/GIF/video Lua scripts
 Call CardMenu_DrawCardPreview() in the INIT state
 Review videos (python tools\testing_scenarios\review_videos.py)
 Hide card animations setting
+Hide battle scenes setting
