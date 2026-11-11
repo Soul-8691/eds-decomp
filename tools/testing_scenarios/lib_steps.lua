@@ -326,6 +326,69 @@ local function opWaitFrames(op)
     return op.n >= (op.frames or 30)
 end
 
+-- ---- README media (tools/media): `shot`, `gif_start` / `mp4_start` ... `rec_stop` ----
+
+local function mediaRoot()
+    return (EDS.recordDir:gsub("/recordings$", "")) .. "/../.."
+end
+
+local function winPath(p)
+    return (p:gsub("/", "\\"))
+end
+
+local function opMediaShot(op)
+    os.execute('mkdir "' .. winPath(mediaRoot() .. "/screenshots") .. '" 2>nul')
+    emu:screenshot(mediaRoot() .. "/screenshots/" .. op.name .. ".png")
+    EDS.log("media: shot " .. op.name .. ".png")
+    return true
+end
+
+local function opMediaRec(op, fs)
+    local dir = mediaRoot() .. "/tools/media/_frames/" .. op.name
+    os.execute('if exist "' .. winPath(dir) .. '" rmdir /s /q "' .. winPath(dir) .. '" 2>nul')
+    os.execute('mkdir "' .. winPath(dir) .. '" 2>nul')
+    fs.mediaRec = { dir = dir, n = 0, name = op.name, format = op.format }
+    EDS.log("media: recording " .. op.name .. " (" .. op.format .. ")")
+    return true
+end
+
+-- Every frame while recording (EDS.tickScenarioSteps): the frame as a PNG.
+local function mediaCaptureFrame(fs)
+    local r = fs.mediaRec
+    if r then
+        emu:screenshot(string.format("%s/%06d.png", r.dir, r.n))
+        r.n = r.n + 1
+    end
+end
+
+-- The recording encoded (ffmpeg): a GIF at 2x and 30 fps, or an MP4 at 3x (tools/media/lib_media.lua M.stop).
+local function opMediaStop(op, fs)
+    local r = fs.mediaRec
+    fs.mediaRec = nil
+    if not r or r.n < 2 then
+        EDS.log("media: nothing recorded")
+        return true
+    end
+    local input = winPath(r.dir) .. "\\%06d.png"
+    local out, args
+    if r.format == "mp4" then
+        os.execute('mkdir "' .. winPath(mediaRoot() .. "/screenshots/videos") .. '" 2>nul')
+        out = winPath(mediaRoot() .. "/screenshots/videos/" .. r.name .. ".mp4")
+        args = string.format('-framerate 60 -i "%s" -vf scale=720:480:flags=neighbor -pix_fmt yuv420p -c:v libx264 "%s"',
+            input, out)
+    else
+        os.execute('mkdir "' .. winPath(mediaRoot() .. "/screenshots/gifs") .. '" 2>nul')
+        out = winPath(mediaRoot() .. "/screenshots/gifs/" .. r.name .. ".gif")
+        args = string.format('-framerate 60 -i "%s" -vf "fps=30,scale=480:320:flags=neighbor,split[a][b];'
+            .. '[a]palettegen=stats_mode=diff[p];[b][p]paletteuse=dither=none" "%s"', input, out)
+    end
+    local cmd = string.format('%s -y -hide_banner -loglevel error %s', EDS.ffmpegCommand() or "ffmpeg", args)
+    EDS.log(string.format("media: encoding %d frames -> %s", r.n, out))
+    os.execute('"' .. cmd .. '"')
+    os.execute('rmdir /s /q "' .. winPath(r.dir) .. '" 2>nul')
+    return true
+end
+
 -- Dismiss a box (A) while waiting for something else; true if it pressed. Only MESSAGE boxes, except before a
 -- cursor pick (beforePick): see below.
 local function dismissMessage(beforePick)
@@ -931,6 +994,7 @@ end
 local RUN = {
     cursor = opCursor, menu = opMenuCommand, result = opMenuResult, yesno = opYesNo, list = opListPick,
     zone = opZone, phase = opPhaseMenu, target = opTarget, draw = opDraw, other_turn = opOtherTurn,
+    media_shot = opMediaShot, media_rec = opMediaRec, media_stop = opMediaStop,
     when = opWhen, settle = opSettle,
     wait = opWaitFrames,
     press = function(op)
@@ -1106,6 +1170,24 @@ buildOps = function(step, inResponse, fs)
         add({ kind = "log", msg = step .. " (shown, not checked)" })
     elseif verb == "check" or verb == "note" then
         add({ kind = "log", msg = step .. " (not checked)" })
+    -- README media (tools/media): pictures and recordings of a set board
+    elseif verb == "point" then
+        add({ kind = "cursor", place = parsePlace(args) })      -- the cursor on a card (its info bar), no menu
+    elseif verb == "shot" then
+        add({ kind = "media_shot", name = args })               -- screenshots/<name>.png
+    elseif verb == "open_menu" then
+        add({ kind = "cursor", place = parsePlace(args) })      -- the card's menu, left open (a `shot` follows)
+        add({ kind = "press", key = EDS.KEY_A })
+        add({ kind = "wait", frames = 40 })
+    elseif verb == "close" then
+        add({ kind = "press", key = EDS.KEY_B })
+        add({ kind = "wait", frames = 20 })
+    elseif verb == "wait" then
+        add({ kind = "wait", frames = tonumber(args) or 30 })
+    elseif verb == "gif_start" or verb == "mp4_start" then
+        add({ kind = "media_rec", name = args, format = verb == "gif_start" and "gif" or "mp4" })
+    elseif verb == "rec_stop" then
+        add({ kind = "media_stop" })
     else
         add({ kind = "log", msg = "unknown step " .. step })
     end
@@ -1397,6 +1479,7 @@ function EDS.tickScenarioSteps(fs, opts)
         end
         EDS.log(string.format("steps: %d steps, %d ops", #steps, #fs.ops))
     end
+    mediaCaptureFrame(fs)
     if fs.armOnCpuTurn and not fs.captureArmed and EDS.turnPlayer() == 1 then
         fs.captureArmed = true
         EDS.log("steps: capture starts (the CPU's turn)")

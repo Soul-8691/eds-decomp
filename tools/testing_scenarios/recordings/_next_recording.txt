@@ -1,2 +1,2 @@
-C:\Users\pswan\Downloads\eds-decomp\tools\testing_scenarios\generated\..\recordings\Cyber_End_Dragon_Pierce_Player.mp4
-C:/Users/pswan/Downloads/eds-decomp/tools/testing_scenarios/generated/../recordings/Cyber_End_Dragon_Pierce_Player.mp4
+tools\testing_scenarios\recordings\Chain_List_Media_Player.mp4
+tools/testing_scenarios/recordings/Chain_List_Media_Player.mp4

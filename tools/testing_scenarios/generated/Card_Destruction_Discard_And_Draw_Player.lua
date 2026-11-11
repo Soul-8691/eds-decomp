@@ -36,7 +36,7 @@ EDS.run({
     },
     setupPiles = {
         { player = 0, pile = "deck", names = { "Summoned Skull", "Neo the Magic Swordsman", "Fissure" } },
-        { player = 1, pile = "deck", names = { "Dark Magician", "Neo the Magic Swordsman", "Giant Soldier of Stone", "Swords of Revealing Light" } },
+        { player = 1, pile = "deck", names = { "Summoned Skull", "Neo the Magic Swordsman", "Giant Soldier of Stone", "Swords of Revealing Light" } },
     },
     steps = {
         "activate you.hand[Card Destruction]",
@@ -44,7 +44,7 @@ EDS.run({
     expect = {
         "you.hand = Summoned Skull, Neo the Magic Swordsman",
         "you.gy = Card Destruction, Dark Hole, Battle Ox",
-        "opp.hand = Dark Magician, Neo the Magic Swordsman, Giant Soldier of Stone, Swords of Revealing Light",
+        "opp.hand = Summoned Skull, Neo the Magic Swordsman, Giant Soldier of Stone, Swords of Revealing Light",
         "opp.gy = Trap Hole, Fissure, Battle Ox, La Jinn the Mystical Genie of the Lamp",
     },
     freezeOpponent = true,

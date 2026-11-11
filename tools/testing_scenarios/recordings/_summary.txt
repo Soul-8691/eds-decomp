@@ -1,7 +1,7 @@
 ﻿
-Script   Result Seconds Detail
-------   ------ ------- ------
-duelists PASS        10       
+Script                  Result Seconds Detail                               
+------                  ------ ------- ------                               
+Chain_List_Media_Player PASS        24 duel_main=true reason= play_done=true
 
 
 

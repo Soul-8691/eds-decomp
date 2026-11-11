@@ -81,10 +81,16 @@ MEDIA = [
         shot Duel Board'''),
     ('Chain List', 'Goat', None,
      '''you.hand: Mystical Space Typhoon
-        you.st0: Magic Jammer set
-        opp.st0: Call of the Haunted set''',
+        you.st0: Mystical Space Typhoon set
+        opp.st0: Call of the Haunted set
+        opp.st1: Trap Hole set''',
+     # (a 2-link chain: the Set Mystical Space Typhoon answers the one from the hand; the list, with both, shows from
+     # about 75 frames after the second target)
      '''activate you.hand[Mystical Space Typhoon]
         target opp.st0
+        when prompt response: activate you.st0
+        target opp.st1
+        wait 100
         shot Chain List'''),
 ]
 
