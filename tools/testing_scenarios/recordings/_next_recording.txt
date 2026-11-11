@@ -1,2 +1,2 @@
-C:\Users\pswan\Downloads\eds-decomp\tools\testing_scenarios\generated\..\recordings\Jar_of_Greed_Draw_One_Player.mp4
-C:/Users/pswan/Downloads/eds-decomp/tools/testing_scenarios/generated/../recordings/Jar_of_Greed_Draw_One_Player.mp4
+C:\Users\pswan\Downloads\eds-decomp\tools\testing_scenarios\generated\..\recordings\Card_Destruction_Discard_And_Draw_Player.mp4
+C:/Users/pswan/Downloads/eds-decomp/tools/testing_scenarios/generated/../recordings/Card_Destruction_Discard_And_Draw_Player.mp4

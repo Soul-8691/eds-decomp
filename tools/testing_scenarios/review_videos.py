@@ -10,7 +10,7 @@ git): a video you are done with but do not want in the repository. run_tests.ps1
 any of them (-IncludeKept runs them anyway). Pressing the same key again moves the video back. Thrown-away videos are
 hidden unless "Show thrown away" is ticked.
 
-Keys: F5 refresh the video from disk, Space play/pause, Left/Right one frame (Shift: 1 s), Home/End, Up/Down previous/next video, K keep, H highlight, T throwaway,
+Keys: F5 refresh the videos that changed on disk, Space play/pause, Left/Right one frame (Shift: 1 s), Home/End, Up/Down previous/next video, K keep, H highlight, T throwaway,
 L loop, 1-4 zoom, [ ] speed.
 
 Needs ffmpeg on PATH (the recordings already need it) and Pillow.
@@ -70,11 +70,21 @@ PREFETCH = 2                                            # videos after the curre
                                                         # ~3 s to start here; the decode itself ~1 s)
 
 
+def file_stamp(path):
+    """The file's modification time and size, to see that it changed (None when it is gone)."""
+    try:
+        st = os.stat(str(path))
+        return st.st_mtime_ns, st.st_size
+    except OSError:
+        return None
+
+
 class Decoder:
     """Decodes a video into zlib-compressed RGB frames in a thread; frames become available as they arrive."""
 
     def __init__(self, path):
         self.path = path
+        self.stamp = file_stamp(path)               # (Refresh videos: the file as it was decoded)
         self.frames = []
         self.done = False
         self.error = None
@@ -217,7 +227,7 @@ class App:
         self.throw_btn.pack(side=tk.LEFT, padx=(0, 12))
         ttk.Button(bar2, text="Open folder", command=self.open_folder).pack(side=tk.LEFT)
         ttk.Button(bar2, text="Rescan", command=self.refresh_list).pack(side=tk.LEFT, padx=4)
-        ttk.Button(bar2, text="⟳ Refresh video (F5)", command=self.refresh_video).pack(side=tk.LEFT)
+        ttk.Button(bar2, text="⟳ Refresh videos (F5)", command=self.refresh_videos).pack(side=tk.LEFT)
         ttk.Label(bar2, text="Space play · ←/→ frame (Shift 1 s) · ↑/↓ video · K keep · H highlight · T throwaway · L loop · [ ] speed",
                   foreground="#666").pack(side=tk.RIGHT)
 
@@ -229,7 +239,7 @@ class App:
                         ("<Up>", lambda e: self.move_selection(-1)), ("<Down>", lambda e: self.move_selection(1)),
                         ("<k>", lambda e: self.toggle_keep()), ("<K>", lambda e: self.toggle_keep()),
                         ("<t>", lambda e: self.toggle_throw()), ("<T>", lambda e: self.toggle_throw()),
-                        ("<F5>", lambda e: self.refresh_video()),
+                        ("<F5>", lambda e: self.refresh_videos()),
                         ("<h>", lambda e: self.toggle_highlight()), ("<H>", lambda e: self.toggle_highlight()),
                         ("<l>", lambda e: self.loop.set(not self.loop.get())),
                         ("<bracketleft>", lambda e: self.set_speed(self.speed_i - 1)),
@@ -480,16 +490,21 @@ class App:
         else:
             self.open_selected()
 
-    def refresh_video(self):
-        """The current video read again from disk (after it was re-recorded), with the list rescanned; it also lets go of
-        the file, so the test runner can replace it."""
+    def refresh_videos(self):
+        """Every loaded video whose file changed on disk (re-recorded, or moved away) is dropped, so it is read again;
+        the list is rescanned (new videos appear) and the current video reopened if it was one of them."""
         name = self.current_name()
-        if self.decoder:
-            path = self.decoder.path
+        current = self.decoder.path if self.decoder else None
+        changed = [path for path, d in self.cache.items() if file_stamp(path) != d.stamp]
+        if current in changed:
             self.close_video()
+        for path in changed:
             self.release(path)
         self.refresh_list(keep_name=name)
-        self.open_selected()
+        if self.decoder is None:
+            self.open_selected()
+        self.title_label.configure(text=self.title_label.cget("text").split("   ⟳")[0]
+                                   + "   ⟳ %d changed video%s refreshed" % (len(changed), "" if len(changed) == 1 else "s"))
 
     def open_folder(self):
         folder = KEEP if KEEP.is_dir() else RECORDINGS

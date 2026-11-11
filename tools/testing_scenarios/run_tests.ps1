@@ -202,8 +202,7 @@ foreach ($s in $scripts) {
             $lastSize = $size
             $lastProgress = Get-Date
         }
-        $elapsed = ((Get-Date) - $start).TotalSeconds
-        if (((Get-Date) - $lastProgress).TotalSeconds -ge $TimeoutSeconds -or ($elapsed -ge $MaxSeconds -and -not $encoding)) { break }
+        # the result first: a script that finished in the same second as the limit has passed
         if (Test-Path $runLog) {
             $new = @(Get-Content $runLog | Select-Object -Skip $before)
             $line = $new | Where-Object { $_ -match "^(PASS|FAIL|DONE) $([regex]::Escape($name))\b" } | Select-Object -Last 1
@@ -213,6 +212,8 @@ foreach ($s in $scripts) {
                 break
             }
         }
+        $elapsed = ((Get-Date) - $start).TotalSeconds
+        if (((Get-Date) - $lastProgress).TotalSeconds -ge $TimeoutSeconds -or ($elapsed -ge $MaxSeconds -and -not $encoding)) { break }
         if ($p.HasExited) {
             $result = "EXITED"
             break
