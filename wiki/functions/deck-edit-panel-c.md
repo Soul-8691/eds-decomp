@@ -40,6 +40,17 @@ updated: 2026-10-02
 | `0x080657F8` | 0x2BC | **matching** (wave 1, 2026-10-01; FAKEMATCH) | `DrawCardHeader(pos)` | gets the card id with `DeckEdit_GetListCard(cursor, arr14A0[cursor], arr620[cursor])`, then draws its attribute/type/level metatiles at map `0x0600C000`, column 4/6/8, row `((scroll + (pos+7)*8) & 0xFF) >> 3` (kinds 0x15/0x16: icon 9/8 then `stats >> 17 & 7`; 0x17: none; 0x18: icon 10; else `stats >> 29`, kind, frame kind as in `0x0806518C`) |
 | `0x08065AB4` | 0x3B8 | not attempted | (card frame / text box drawing, hypothesis) | uses `memset`/`memcpy` (4 bytes) and `PutMapTileRun` to draw a bordered box for the same card id; cases by kind 0x15..0x18 and card number 0x776-0x778 |
 
+> [!note] Mod change (2026-11-11, reported by the user: a piece of card art above "Statistics" with Black Luster
+> Soldier - Envoy of the Beginning)
+> The cursor row's name goes to one of two 50-tile pages (`DeckEdit_GetCursorRowTile`: 0x19B and 0x1CD); BG2's
+> tile base is 0x06000000. `DrawTextStrip` takes `(n * 5 + 7) / 8` two-tile columns for n characters, so a page
+> holds 40. A 45-character added name (58 tiles) ran past 0x1FE into tiles 0x1FF-0x200; 0x200 (0x06004000) is the
+> first tile of `gDeckEditLabelTiles`, the top-left corner of the highlight that the command bar puts at map
+> (14, 0) for Statistics and Empty Main/Side (label tiles 0, 1, 16, 17). Blanked, it let the card art behind show
+> through. `DeckEdit_DrawCursorRowName` now draws its `buf` copy cut to 40 characters, and
+> `DeckEdit_DrawListRowName` a copy cut to 42 (a row slot is 21 tiles of two characters; the last slot ends at
+> 0x3A0). Found with mGBA's map viewer; built, not tested in an emulator.
+
 ## State at `0x0201DB20` (fields verified against the asm)
 
 | Offset | Field |

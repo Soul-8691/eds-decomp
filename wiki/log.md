@@ -3098,3 +3098,7 @@ updated: 2026-09-29
 
 ## [2026-11-11] progress | Settings: the Hide switches are not indented
 - src/mod_settings.c Render: "Hide card animations" and "Hide battle scenes" are drawn level with the "Duel speed" header (no "> " prefix); the selected one gets a ">" in the left margin. Built; not checked in an emulator.
+
+## [2026-11-11] progress | Deck Edit: long card names no longer overwrite the command bar
+- src/deck_edit_panel.c: the cursor row name is cut to 40 characters (its 50-tile page) and list row names to 42 (21-tile slots). Black Luster Soldier - Envoy of the Beginning (45) ran into label tile 0x200 and blanked the corner of the highlighted Statistics icon. Built; not tested in an emulator.
+- wiki/functions/deck-edit-panel-c.md

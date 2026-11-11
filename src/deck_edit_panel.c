@@ -325,7 +325,13 @@ void DeckEdit_DrawListRowName(u16 cardId, u8 *map, u16 col, u16 row, u32 unused,
 {
     u32 tiles = DeckEdit_GetListRowVram(slot);
     u16 firstTile = DeckEdit_GetListRowTile(slot);
-    DrawStringTiles((u8 *)(gCardNames + cardId * CARD_NAME_SIZE), (u32)(map + (((col + 4) & 0x1F) + ((row + 1) & 0x1F) * 32) * 2), tiles, firstTile, 2, 1, 0, 0);
+    char buf[CARD_NAME_SIZE];
+
+    /* Fixed (mod): a row slot holds 21 tiles, two characters each: a name over 42 characters (an added card's)
+     * ran into the next slot, or past the last one. */
+    StrCopy(buf, (const char *)(gCardNames + cardId * CARD_NAME_SIZE));
+    buf[42] = 0;
+    DrawStringTiles((u8 *)buf, (u32)(map + (((col + 4) & 0x1F) + ((row + 1) & 0x1F) * 32) * 2), tiles, firstTile, 2, 1, 0, 0);
 }
 /* Constant-address table reads (see include/card_data.h): the ROM reloads the table address at
  * every use, so these stay macros over the literal addresses (gCardStats / gCardIdToNumber)
@@ -345,9 +351,14 @@ void DeckEdit_DrawCursorRowName(u16 cardId, u8 *map, u16 col, u16 row)
     u16 firstTile;
     int frame;
     StrCopy(buf, (const char *)gfx);
+    /* Fixed (mod): a cursor-row page holds 50 tiles, 25 two-tile columns: DrawTextStrip takes (n * 5 + 7) / 8
+     * columns for n characters, so at most 40. A longer added card name (Black Luster Soldier - Envoy of the
+     * Beginning, 45) ran past the second page (0x1CD-0x1FE) into BG tile 0x200, the first of Deck Edit's label
+     * tiles, and blanked the corner of the highlighted Statistics / Empty Main/Side icon. Drawn from buf, cut. */
+    buf[40] = 0;
     tiles = DeckEdit_GetCursorRowVram();
     firstTile = DeckEdit_GetCursorRowTileU16();
-    DrawTextStrip((u8 *)gfx, map + (((col + 4) & 0x1F) + ((row + 1) & 0x1F) * 32) * 2, tiles, firstTile, 2, 1, 0, 0);
+    DrawTextStrip((u8 *)buf, map + (((col + 4) & 0x1F) + ((row + 1) & 0x1F) * 32) * 2, tiles, firstTile, 2, 1, 0, 0);
     DeckEdit_FlipCursorRowPage();
     switch (CARD_NUMBER(cardId)) {
     case CARD_OBELISK_THE_TORMENTOR:
