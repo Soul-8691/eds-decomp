@@ -1,16 +1,14 @@
-1. Testing scenarios
-2. Review videos (python tools\testing_scenarios\review_videos.py)
-3. Test
-4. Record Yugi-Kaiba/Imperial/Goat/Reaper duels
-5. Screenshot HMA & TOML
-6. Screenshot Mobius
+1. Test
+2. Trailer videos
+3. Record Yugi-Kaiba/Imperial/Goat/Reaper duels
+4. Screenshot HMA & TOML
+5. Screenshot Mobius
+6. README GIF/video Lua scripts
 7. Update READMEs
-8. README GIF/video Lua scripts
-9. Trailer
-10 Tokyo Dome format
-11. Pre-Tokyo Dome OCG packs
-12. Synchro/XYZ/Link cards (including videos)
-13. Chaos Return format
-14. Yugi Muto duelist
-15. Yugi Muto pack
-16. New cards
+8. Tokyo Dome format
+9. Pre-Tokyo Dome OCG packs
+10. Synchro/XYZ/Link cards (including videos)
+11. Chaos Return format
+12. Yugi Muto duelist
+13. Yugi Muto pack
+14. New cards
