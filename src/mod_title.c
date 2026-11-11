@@ -37,7 +37,7 @@
 #include "text.h"
 
 /* The small lines' text (HMA: text.title.version, .release, .debug; NUL-terminated, at most 15 characters). */
-const char gModTitleVersion[16] = "v1.0.2.10";
+const char gModTitleVersion[16] = "v1.0.2.11";
 const char gModTitleRelease[16] = "Release";
 const char gModTitleDebug[16] = "Debug";
 /* The flames' wave during the fade-in (Title_HBlank shifts BG1 by gMain.hblankScroll): 1 waves, 0 keeps them still.

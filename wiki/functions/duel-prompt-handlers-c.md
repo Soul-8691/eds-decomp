@@ -129,6 +129,15 @@ This is a direct port of the matched `DuelPrompt_BanishRandomFaceDown` source (s
 
 ### `DuelPrompt_SelectGraveyardMonster` (0x178, start score 88; FAKEMATCH)
 
+> [!note] Mod change (2026-11-11, reported by the user: Spear Cretin did not take the card out of the Graveyard)
+> On player 1's turn the original flips the picked card's owner bit (bit 12). Only the Link Battle path undoes it:
+> `EffectEachPlayerReviveResolve` (effect_resolve7.c) and key 1520's resolve (effect_resolve11.c) flip it back when
+> `gDuelCtrl.isLinkDuel`. Against the CPU nothing undid it. A card you picked on the CPU's turn (Spear Cretin, The
+> Shallow Grave, Gilasaurus) was summoned, but `DUEL_CMD_REMOVE_CARD_FROM_GRAVEYARD` looked for it in the CPU's
+> Graveyard, so it also stayed in yours, and it was summoned with the CPU as owner. The mod now flips only in a
+> Link Battle (`duel->turnPlayer && gDuelCtrl.isLinkDuel`). This was found by reading the code; it is built but not
+> tested in an emulator. (The function no longer matches the original; the matching form is in git history.)
+
 Four changes, in order of effect:
 1. Write `gDuel.step++` directly in cases 0 and 1 instead of through a `step` pointer, and put case 1's increment after the call (88 -> 70). CSE follows the single-use jump into case 1 and reuses the step address in r4. Case 0 ends in a 3-way merge, so it reloads its literals fresh, as the ROM does.
 2. Keep a `struct Duel *d` local only for the two result stores and the `d->u0[0x1B12] & 2` test (70 -> 40). The store block uses r7, so it needs a real pointer: GCSE does not supply the address there.

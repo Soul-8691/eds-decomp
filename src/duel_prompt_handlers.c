@@ -34,6 +34,7 @@
 
 #include "chain.h"                  /* gChain.handPickTimer, gChain.handPickCount */
 #include "duel_screen.h"            /* gDuelScreen, DuelCursor_PickTarget, DuelCursor_Select, ... */
+#include "duel_flow.h"                 /* gDuelCtrl.isLinkDuel (mod) */
 #include "card_list_view.h"         /* gCardListView, gCardListViewCards, CardListView_Open */
 #include "summon.h"                 /* CanSummonFromHand */
 #include "duel_cmd.h"               /* DuelCmd_Push */
@@ -395,7 +396,12 @@ int DuelPrompt_SelectGraveyardMonster(s32 player, u16 cardId, u16 collectorArg)
         return 0;
     default:
         chosen = (struct DuelCard *)&LIST_CURSOR_CARD;
-        if (duel->turnPlayer)
+        /* Fixed (mod): the owner bit is flipped on player 1's turn only in a Link Battle, where the resolves
+         * (EffectEachPlayerReviveResolve, key 1520's) flip it back. In a duel against the CPU the original
+         * flipped it too and nothing undid it: on the CPU's turn the card you picked for Spear Cretin, The
+         * Shallow Grave or Gilasaurus was summoned but stayed in your Graveyard (the removal looked in the
+         * CPU's), and was summoned as the CPU's card. */
+        if (duel->turnPlayer && gDuelCtrl.isLinkDuel)
             /* FAKEMATCH: `(...)[0]` keeps the byte store relative to the cards base ([r2,#1])
                instead of folding +0xC+1 into one offset off the cursor ([r2,#13]). */
             ((struct DuelCard *)&LIST_CURSOR_CARD)[0].owner = 1 - ((LIST_CURSOR_CARD << 19) >> 31);

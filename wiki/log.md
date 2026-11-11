@@ -3067,3 +3067,7 @@ updated: 2026-09-29
 ## [2026-11-10] progress | Test videos: response-window frames, no card lists, Copy title
 - tools/testing_scenarios/lib_eds.lua: frames are skipped only while a text box is open (not gDuel.promptActive, which stays set through a whole response window and left Magic Cylinder's video empty); frames with a card list open (gCardListView) are left out too, unless video lists='show'.
 - tools/testing_scenarios/exact.py, README.md: the lists video option; review_videos.py: Copy title (C).
+
+## [2026-11-11] progress | Spear Cretin / The Shallow Grave / Gilasaurus: the picked card leaves your Graveyard
+- src/duel_prompt_handlers.c: DuelPrompt_SelectGraveyardMonster flips the picked card's owner bit on player 1's turn only in a Link Battle; against the CPU the flip sent the removal to the CPU's Graveyard, so the revived card stayed in yours. Built (make demo); not tested in an emulator.
+- wiki/functions/duel-prompt-handlers-c.md
