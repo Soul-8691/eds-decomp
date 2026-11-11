@@ -272,14 +272,15 @@ static void Render(void)
         const char *src = sToggleNames[i];
         char *p = line;
 
-        *p++ = s->cursor == row ? '>' : ' ';
-        *p++ = ' ';
+        /* not indented (they are not under "Duel speed"): level with the header, the cursor in the margin */
         while (*src)
             *p++ = *src++;
         src = (gSaveData.options & sToggleBits[i]) ? ": ON" : ": OFF";
         while (*src)
             *p++ = *src++;
         *p = 0;
+        if (s->cursor == row)
+            DrawText(1, (row + 1) * ROW_HEIGHT + 2, color, ">");
         DrawText(8, (row + 1) * ROW_HEIGHT + 2, color, line);
     }
     DrawText(8, (ROW_COUNT + 1) * ROW_HEIGHT + 4, COLOR_HELP, sStrHelpL);

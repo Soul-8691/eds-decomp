@@ -3095,3 +3095,6 @@ updated: 2026-09-29
 
 ## [2026-11-11] progress | Empty Main/Side redraws the Deck Edit cards
 - src/mod_deck_edit.c ModDeckEditEmptyMainAndSide: after emptying, DeckEdit_StartListSlide(2) and DeckEdit_DrawStatementLabels (as switching lists with R), so the card art, the card frames beside the list, the rows and the scroll bar show the emptied list. Built; not tested in an emulator.
+
+## [2026-11-11] progress | Settings: the Hide switches are not indented
+- src/mod_settings.c Render: "Hide card animations" and "Hide battle scenes" are drawn level with the "Duel speed" header (no "> " prefix); the selected one gets a ">" in the left margin. Built; not checked in an emulator.
