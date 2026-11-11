@@ -58,6 +58,8 @@ int EffectTheLittleSwordsmanOfAileResolve2(struct ChainEntry *link, int chainedT
 
 #ifdef HAS_CARD_SOUL_EXCHANGE
 int SoulExchangeCpuResolve(struct ChainEntry *link);    /* mod (src/added_effects.c) */
+int ModTimeWizardCpuDarkSage(struct ChainEntry *link);  /* mod: Time Wizard's questions answered for the CPU */
+int ModTimeWizardCpuPickMagic(struct ChainEntry *link); /* (src/added_effects.c) */
 #endif
 
 /* Prompts used only by this unit (the coin toss and key 1220 prompts are in effect.h). */
@@ -315,6 +317,11 @@ int EffectTimeWizardResolve(struct ChainEntry *link)
             }
         }
         case TIME_WIZARD_OFFER_DARK_SAGE:
+            if (link->player) {     /* added: the CPU is not asked (it said Yes and the human was prompted) */
+                if (ModTimeWizardCpuDarkSage(link))
+                    return TIME_WIZARD_SUMMON_DARK_SAGE;
+                goto done;
+            }
             /* "Do you wish to tribute Dark Magician and Special Summon Dark Sage?" */
             FormatStr(format, gStrPromptTributeToSpecialSummonFmt, CARD_NAME(gCardNumberToId_DarkMagician));
             FormatStr(text, format, CARD_NAME(gCardNumberToId_DarkSage));
@@ -407,6 +414,11 @@ int EffectTimeWizardResolve(struct ChainEntry *link)
         case TIME_WIZARD_WAIT_SUMMON:
             return TIME_WIZARD_OFFER_MAGIC;
         case TIME_WIZARD_OFFER_MAGIC:
+            if (link->player) {     /* added: the CPU picks its Spell itself */
+                if (ModTimeWizardCpuPickMagic(link))
+                    return TIME_WIZARD_ADD_MAGIC;
+                goto done;
+            }
             /* the target collector of Dark Sage lists the deck's Magic cards */
             if (CollectEffectTargetsInt(link->player, CARD_DARK_SAGE, 0) > 0) {
                 TextBoxOpen(EFFECT_TEXTBOX_POS, COIN_TEXTBOX_SIZE, TEXTBOX_FLAGS_DEFAULT, gStrSelectMagicFromDeck);

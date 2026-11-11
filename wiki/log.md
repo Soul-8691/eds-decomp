@@ -3071,3 +3071,8 @@ updated: 2026-09-29
 ## [2026-11-11] progress | Spear Cretin / The Shallow Grave / Gilasaurus: the picked card leaves your Graveyard
 - src/duel_prompt_handlers.c: DuelPrompt_SelectGraveyardMonster flips the picked card's owner bit on player 1's turn only in a Link Battle; against the CPU the flip sent the removal to the CPU's Graveyard, so the revived card stayed in yours. Built (make demo); not tested in an emulator.
 - wiki/functions/duel-prompt-handlers-c.md
+
+## [2026-11-11] progress | Searchers: no pick prompts for the human on a CPU activation
+- Checked every Deck/Graveyard search that opens a card list (EffectSanganResolve and the added searchers, the recruiters, Ritual searches, Different Dimension Capsule, Kycoo, Manticore, Marauding Captain, Archfiend's Call...): all let the CPU pick. The unguarded keys 1318, 1421, 1430, 1433, 1439, 1444, 1524 belong to no EDS or added card.
+- Fixed: Time Wizard's Dark Sage branch (effect_resolve8.c) asked the human for the CPU; now ModTimeWizardCpuDarkSage / ModTimeWizardCpuPickMagic (src/added_effects.c) answer. Built; not tested in an emulator.
+- wiki/functions/effect-resolve8-c.md

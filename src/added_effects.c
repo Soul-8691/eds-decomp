@@ -2013,6 +2013,49 @@ int EffectSmashingGroundResolve(struct ChainEntry *link, struct ChainEntry *chai
 }
 #endif /* HAS_CARD_SMASHING_GROUND */
 
+/* ---- Time Wizard for the CPU (EffectTimeWizardResolve, effect_resolve8.c) ------------------------------------------
+ * After a right call the original asks the human (Yes/No, Hand/Deck, the Tribute with the cursor, then the list of
+ * the Deck's Spells) even when the CPU activated Time Wizard. For the CPU these two answer instead:
+ * ModTimeWizardCpuDarkSage says Yes, takes Dark Sage from the hand if one is there (else the Deck: targets[0]) and
+ * Tributes its first face-up Dark Magician; 1 when done (then Dark Sage is summoned), 0 to end the effect. The list
+ * is the one the toss step collected (CollectEffectTargets for Time Wizard). */
+int ModTimeWizardCpuDarkSage(struct ChainEntry *link)
+{
+    int i, zone;
+
+    link->targets[0] = CARDLIST_SRC_DECK;
+    for (i = 0; i < gCardListView.count; i++) {
+        if (gCardListView.sources[i] == CARDLIST_SRC_HAND)
+            link->targets[0] = CARDLIST_SRC_HAND;
+    }
+    for (zone = ZONE_MONSTER_0; zone <= ZONE_MONSTER_4; zone++) {
+        struct DuelZone *z = ZoneOf(link->player, zone);
+        u16 number = CARD_NUMBER(DUEL_CARD_ID(&z->card));
+
+        if (DUEL_CARD_ID(&z->card) != 0 && z->isFaceUp
+            && (number == CARD_DARK_MAGICIAN || number == CARD_1210 || number == CARD_DARK_MAGICIAN_ALT)) {
+            TributeMonster(link->player, zone);
+            return 1;
+        }
+    }
+    return 0;
+}
+
+int CollectEffectTargetsInt(int player, int cardNumber, int param) asm("CollectEffectTargets");
+
+/* The Spell Dark Sage adds, for the CPU: a random one of the Deck's Spells (the AI's list pick ranks monsters by
+ * ATK and DEF). Sets the list's pick and returns 1, 0 when the Deck has none. */
+int ModTimeWizardCpuPickMagic(struct ChainEntry *link)
+{
+    int count = CollectEffectTargetsInt(link->player, CARD_DARK_SAGE, 0);
+
+    if (count <= 0)
+        return 0;
+    gCardListView.cursorRow = 0;
+    gCardListView.top = Random() % count;
+    return 1;
+}
+
 #ifdef HAS_CARD_MAGICAL_MERCHANT
 /* ---- Magical Merchant ------------------------------------------------------------------------------------------------
  * "FLIP: Excavate cards from the top of your Deck until you excavate a Spell/Trap. Add that card to your hand, also
