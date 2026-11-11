@@ -68,6 +68,18 @@ int ModDuelFastForwardActive(void)
     return (gMain.heldKeys & B_BUTTON) || gDuelScreen.fast != 0;
 }
 
+/* Settings: skip the card-showing animations / the battle scene (not in a Link Battle, so both Game Boys keep
+ * step). ModTestingSkipCardShow (src/mod_testing_automation.c) and BattleStage_DamageCalc (battle_phase1.c) ask. */
+int ModHideCardAnimations(void)
+{
+    return (gSaveData.options & OPTION_HIDE_CARD_ANIMS) && !gDuelCtrl.isLinkDuel;
+}
+
+int ModHideBattleScenes(void)
+{
+    return (gSaveData.options & OPTION_HIDE_BATTLE_SCENES) && !gDuelCtrl.isLinkDuel;
+}
+
 int ModDuelSkipResponsesActive(void)
 {
     return (gMain.heldKeys & R_BUTTON) != 0;
@@ -202,7 +214,7 @@ void SettingsMenu_BuildLabel(u16 *dst)
 #define CANVAS_TILE     0x040
 #define CANVAS_ROWS     12
 #define CANVAS_Y        28
-#define ROW_HEIGHT      14
+#define ROW_HEIGHT      12
 #define OBJ_TILE(n)     (OBJ_VRAM0 + (n) * 0x20)
 
 #define COLOR_ROW       TEXT_SIZE_COLOR(10, 8)
@@ -213,6 +225,11 @@ void SettingsMenu_BuildLabel(u16 *dst)
 static const char sStrSpeedHeader[] = "Duel speed";
 static const char *const sSpeedModeNames[] = { "DEFAULT", "ALWAYS", "SUPER" };
 static const char sStrHelp[] = "A: select   B: back";
+/* The rows after the three speeds: on/off options (gSaveData.options bits). */
+#define SPEED_ROWS      3
+#define ROW_COUNT       5
+static const char *const sToggleNames[] = { "Hide card animations", "Hide battle scenes" };
+static const u16 sToggleBits[] = { OPTION_HIDE_CARD_ANIMS, OPTION_HIDE_BATTLE_SCENES };
 static const char sStrHelpL[] = "L+R in duel: settings";
 
 static void DrawText(int x, int y, u16 color, const char *text)
@@ -249,8 +266,24 @@ static void Render(void)
         *p = 0;
         DrawText(8, (i + 1) * ROW_HEIGHT, color, line);
     }
-    DrawText(8, 4 * ROW_HEIGHT + 4, COLOR_HELP, sStrHelpL);
-    DrawText(8, 4 * ROW_HEIGHT + 18, COLOR_HELP, sStrHelp);
+    for (i = 0; i < ROW_COUNT - SPEED_ROWS; i++) {
+        int row = SPEED_ROWS + i;
+        u16 color = s->cursor == row ? COLOR_CURSOR : COLOR_ROW;
+        const char *src = sToggleNames[i];
+        char *p = line;
+
+        *p++ = s->cursor == row ? '>' : ' ';
+        *p++ = ' ';
+        while (*src)
+            *p++ = *src++;
+        src = (gSaveData.options & sToggleBits[i]) ? ": ON" : ": OFF";
+        while (*src)
+            *p++ = *src++;
+        *p = 0;
+        DrawText(8, (row + 1) * ROW_HEIGHT + 2, color, line);
+    }
+    DrawText(8, (ROW_COUNT + 1) * ROW_HEIGHT + 4, COLOR_HELP, sStrHelpL);
+    DrawText(8, (ROW_COUNT + 1) * ROW_HEIGHT + 14, COLOR_HELP, sStrHelp);
     TextCanvasToTiles((u16 *)OBJ_TILE(CANVAS_TILE), 0);
 }
 
@@ -270,7 +303,10 @@ static void SelectCursor(void)
 {
     struct SettingsMenu *s = &gSettingsMenu;
 
-    if (ModGetSpeedMode() != s->cursor) {
+    if (s->cursor >= SPEED_ROWS) {
+        gSaveData.options ^= sToggleBits[s->cursor - SPEED_ROWS];
+        PlaySE(SE_CONFIRM);
+    } else if (ModGetSpeedMode() != s->cursor) {
         ModSetSpeedMode(s->cursor);
         PlaySE(SE_CONFIRM);
     } else {
@@ -289,9 +325,9 @@ static int HandleInput(void)
         return 1;
     }
     if (keys & DPAD_UP)
-        s->cursor = (s->cursor + 2) % 3;
+        s->cursor = (s->cursor + ROW_COUNT - 1) % ROW_COUNT;
     else if (keys & DPAD_DOWN)
-        s->cursor = (s->cursor + 1) % 3;
+        s->cursor = (s->cursor + 1) % ROW_COUNT;
     else if (keys & A_BUTTON)
         SelectCursor();
     else

@@ -3053,3 +3053,13 @@ updated: 2026-09-29
 - lib_eds.lua: no frame is captured while a text box or duel prompt is open, so the video shows no pause for it.
   A scenario keeps the prompts with video prompts='show'.
 - Built (demo, .text to 0x0807F504); not yet re-recorded.
+
+## [2026-11-10] progress | Settings: Hide card animations, Hide battle scenes; test videos hide battles (untested)
+- include/save.h OPTION_HIDE_CARD_ANIMS (bit 4), OPTION_HIDE_BATTLE_SCENES (bit 5); src/mod_settings.c two on/off rows
+  under the speeds (ROW_HEIGHT 12 so they fit), ModHideCardAnimations / ModHideBattleScenes (not in a Link Battle).
+- src/mod_testing_automation.c: ModTestingSkipCardShow (DuelCmd_Dispatch) also skips the card-showing animations for
+  the setting, in every build; ModTestingHideBattle (BattleStage_DamageCalc, battle_phase1.c: no START/PLAY_BATTLE_SCENE
+  and no OPEN_DUEL_SCREEN) for the setting or a test script (gModTestingFlags2 bit 2, which also skips the attack's
+  cursor, sword and banner, commands 0x33/0x34). Test scenarios keep them with video battle='show'.
+- README.md / README_WIP.md: the two settings.
+- Not built yet (a re-recording holds eds_demo.gba).

@@ -346,6 +346,12 @@ See Mobius's README for chart semantics and options.
   | **ALWAYS** | Always fast-forward |
   | **SUPER** | Always fast-forward, with doubled skip amounts |
 
+  Two more switches below the speeds, each saved:
+  - **Hide card animations:** the big card that zooms, flashes or unrolls when a card is activated or its effect applies
+    is skipped.
+  - **Hide battle scenes:** the full-screen battle between the two cards is skipped; the attack plays out on the field.
+  Both are off in a Link Battle.
+
 - **Hold R.** While you hold **R**, the duel does not ask you to respond to chains or other Yes/No prompts (the text box
   does not open; effects are declined as if you had answered No). **B** still fast-forwards, as in the table above.
 - **Hold L (debug).** In a testing build, or against Debug, the CPU does nothing while you hold **L**: it chains and

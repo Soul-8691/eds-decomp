@@ -37,6 +37,8 @@ enum SaveOptionFlags {
     OPTION_BGM_ON = 1 << 1,     /* music on */
     OPTION_TURBO_ON = 1 << 2,   /* added: ModDuelSpeedMode ALWAYS (mod_settings.c) */
     OPTION_SUPER_TURBO_ON = 1 << 3, /* added: ModDuelSpeedMode SUPER (mutually exclusive with ALWAYS) */
+    OPTION_HIDE_CARD_ANIMS = 1 << 4,    /* added: Settings, the card-showing animations are skipped (mod_settings.c) */
+    OPTION_HIDE_BATTLE_SCENES = 1 << 5, /* added: Settings, the full-screen battle scene is skipped */
 };
 
 /* One of three duel speed presets in gSaveData.options bits 2-3 (mod_settings.c). */

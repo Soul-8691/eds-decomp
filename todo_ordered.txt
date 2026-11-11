@@ -1,15 +1,13 @@
 1. Testing scenarios
 2. Review videos (python tools\testing_scenarios\review_videos.py)
-3. Hide card animations setting
-4. Hide battle scenes setting
-5. Test
-6. Record Yugi-Kaiba/Imperial/Goat/Reaper duels
-7. Update READMEs
-8. README GIF/video Lua scripts
-9. Tokyo Dome format
-10. Pre-Tokyo Dome OCG packs
-11. Synchro/XYZ/Link cards (including videos)
-12. Chaos Return format
-13. Yugi Muto duelist
-14. Yugi Muto pack
-15. New cards
+3. Test
+4. Record Yugi-Kaiba/Imperial/Goat/Reaper duels
+5. Update READMEs
+6. README GIF/video Lua scripts
+7. Tokyo Dome format
+8. Pre-Tokyo Dome OCG packs
+9. Synchro/XYZ/Link cards (including videos)
+10. Chaos Return format
+11. Yugi Muto duelist
+12. Yugi Muto pack
+13. New cards

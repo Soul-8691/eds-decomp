@@ -90,21 +90,28 @@ int ModTestingCpuActivationBlocked(struct ChainEntry *card)
 void DuelCursor_Select(s32 player, s32 area, s32 index);     /* duel_field_view.c */
 void DuelScreen_DrawCursorInfo(void);                       /* mod_info_bar.c */
 
-/* DuelCmd_Dispatch (duel_cmd_queue.c), on a command's first frame: 1 when it is a card-showing animation a test script
- * asks to skip (gModTestingFlags2 bit 0, Test Duel of a testing build); the caller ends the command at once. The
+/* DuelCmd_Dispatch (duel_cmd_queue.c), on a command's first frame: 1 when it is a card-showing animation the player's
+ * Settings hide (Hide card animations, every build), or one a test script asks to skip (gModTestingFlags2 bit 0, Test Duel of a testing build); the caller ends the command at once. The
  * card is recorded in gModTestingLastShown. */
+int ModHideCardAnimations(void);    /* src/mod_settings.c: the player's setting */
+
 int ModTestingSkipCardShow(void)
 {
+    u32 id = gDuelCmd.cmd & DUEL_CMD_ID_MASK;
+    int cardShow = id >= DUEL_CMD_SHOW_CARD_ASSEMBLE && id <= DUEL_CMD_SHOW_CARD_UNROLL_SIDEWAYS;
+
+    if (gDuelCmd.step != 0)
+        return 0;
+    if (cardShow && ModHideCardAnimations())    /* Settings: Hide card animations (make release too) */
+        return 1;
 #if MOD_RELEASE
     return 0;
 #else
-    u32 id = gDuelCmd.cmd & DUEL_CMD_ID_MASK;
-
-    if (gDuelCmd.step != 0 || !ModTestDuel())
+    if (!ModTestDuel())
         return 0;
     if ((id == DUEL_CMD_ATTACK || id == DUEL_CMD_DIRECT_ATTACK) && (gModTestingFlags2 & 4))
         return 1;                       /* the attack's cursor, sword and banner */
-    if (id < DUEL_CMD_SHOW_CARD_ASSEMBLE || id > DUEL_CMD_SHOW_CARD_UNROLL_SIDEWAYS || !(gModTestingFlags2 & 1))
+    if (!cardShow || !(gModTestingFlags2 & 1))
         return 0;
     gModTestingLastShown = gDuelCmd.arg2;
     return 1;
@@ -112,8 +119,12 @@ int ModTestingSkipCardShow(void)
 }
 
 /* BattleStage_DamageCalc (battle_phase1.c): 1 when a test script asks for no battle scene (bit 2). */
+int ModHideBattleScenes(void);      /* src/mod_settings.c: the player's setting */
+
 int ModTestingHideBattle(void)
 {
+    if (ModHideBattleScenes())          /* Settings: Hide battle scenes (make release too) */
+        return 1;
 #if MOD_RELEASE
     return 0;
 #else
