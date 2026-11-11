@@ -1,2 +1,2 @@
-C:\Users\pswan\Downloads\eds-decomp\tools\testing_scenarios\generated\..\recordings\Spirit_Reaper_Survive_Battle_Player.mp4
-C:/Users/pswan/Downloads/eds-decomp/tools/testing_scenarios/generated/../recordings/Spirit_Reaper_Survive_Battle_Player.mp4
+C:\Users\pswan\Downloads\eds-decomp\tools\testing_scenarios\generated\..\recordings\Smashing_Ground_Cpu_Destroy_Highest_Def_CPU.mp4
+C:/Users/pswan/Downloads/eds-decomp/tools/testing_scenarios/generated/../recordings/Smashing_Ground_Cpu_Destroy_Highest_Def_CPU.mp4

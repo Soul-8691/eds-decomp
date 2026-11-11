@@ -3063,3 +3063,7 @@ updated: 2026-09-29
   cursor, sword and banner, commands 0x33/0x34). Test scenarios keep them with video battle='show'.
 - README.md / README_WIP.md: the two settings.
 - Not built yet (a re-recording holds eds_demo.gba).
+
+## [2026-11-10] progress | Test videos: response-window frames, no card lists, Copy title
+- tools/testing_scenarios/lib_eds.lua: frames are skipped only while a text box is open (not gDuel.promptActive, which stays set through a whole response window and left Magic Cylinder's video empty); frames with a card list open (gCardListView) are left out too, unless video lists='show'.
+- tools/testing_scenarios/exact.py, README.md: the lists video option; review_videos.py: Copy title (C).

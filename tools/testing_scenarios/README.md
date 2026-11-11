@@ -50,6 +50,7 @@ When the card's chain or battle is not what the video must show, a scenario says
 | `effect='none'` | nothing is meant to happen; no wait for an effect |
 | `chain='show'` | keep the chain window ("Chain: Activating / Resolving"); hidden by default for cleaner videos |
 | `cards='show'` | keep the card-showing animations (the big card zoom, flash, unroll); hidden by default |
+| `lists='show'` | keep the card lists (choose cards from the Deck, Graveyard, hand...); by default they work but their frames are left out of the video |
 | `battle='show'` | keep the battle animations (the attack's sword and banner, the full-screen battle scene); hidden by default |
 | `prompts='show'` | draw the prompts (text boxes); by default they work as usual, answered by the steps' key presses, but are not drawn |
 | `clear='cpu_monsters'` | a CPU scenario empties the CPU's monster zones (it keeps its first-turn board otherwise), so it uses the card rather than a Tribute Summon |
@@ -64,7 +65,8 @@ video to `recordings/keep/` (tracked by git). **Highlight** (H) moves it to `rec
 too, apart from the other kept videos: the ones worth showing). **Throwaway** (T) moves it to `recordings/throwaway/` (ignored by git):
 done with, but not worth keeping in the repository; hidden from the list unless "Show thrown away" is ticked.
 `run_tests.ps1` skips the scripts whose video is in any of them (`-IncludeKept` runs them anyway). The same key again
-moves a video back.
+moves a video back. **Copy title** (C) puts the video's name (the test script's name, for `run_tests.ps1 -Filter`) on
+the clipboard.
 
 ### The end of every scenario
 

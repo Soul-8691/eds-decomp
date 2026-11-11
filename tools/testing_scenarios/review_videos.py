@@ -228,7 +228,9 @@ class App:
         ttk.Button(bar2, text="Open folder", command=self.open_folder).pack(side=tk.LEFT)
         ttk.Button(bar2, text="Rescan", command=self.refresh_list).pack(side=tk.LEFT, padx=4)
         ttk.Button(bar2, text="⟳ Refresh videos (F5)", command=self.refresh_videos).pack(side=tk.LEFT)
-        ttk.Label(bar2, text="Space play · ←/→ frame (Shift 1 s) · ↑/↓ video · K keep · H highlight · T throwaway · L loop · [ ] speed",
+        self.copy_btn = ttk.Button(bar2, text="⧉ Copy title (C)", command=self.copy_title)
+        self.copy_btn.pack(side=tk.LEFT, padx=4)
+        ttk.Label(bar2, text="Space play · ←/→ frame (Shift 1 s) · ↑/↓ video · K keep · H highlight · T throwaway · C copy title · L loop · [ ] speed",
                   foreground="#666").pack(side=tk.RIGHT)
 
         for key, fn in [("<space>", lambda e: self.toggle_play()),
@@ -240,6 +242,7 @@ class App:
                         ("<k>", lambda e: self.toggle_keep()), ("<K>", lambda e: self.toggle_keep()),
                         ("<t>", lambda e: self.toggle_throw()), ("<T>", lambda e: self.toggle_throw()),
                         ("<F5>", lambda e: self.refresh_videos()),
+                        ("<c>", lambda e: self.copy_title()), ("<C>", lambda e: self.copy_title()),
                         ("<h>", lambda e: self.toggle_highlight()), ("<H>", lambda e: self.toggle_highlight()),
                         ("<l>", lambda e: self.loop.set(not self.loop.get())),
                         ("<bracketleft>", lambda e: self.set_speed(self.speed_i - 1)),
@@ -489,6 +492,17 @@ class App:
             self.move_selection(1)                      # (marked: on to the next video)
         else:
             self.open_selected()
+
+    def copy_title(self):
+        """The selected video's title (its file name without .mp4, the test script's name) to the clipboard."""
+        name = self.current_name()
+        if not name:
+            return
+        self.root.clipboard_clear()
+        self.root.clipboard_append(name)
+        self.root.update()                  # (the clipboard keeps it after the window closes)
+        self.copy_btn.config(text="✓ Copied")
+        self.root.after(1200, lambda: self.copy_btn.config(text="⧉ Copy title (C)"))
 
     def refresh_videos(self):
         """Every loaded video whose file changed on disk (re-recorded, or moved away) is dropped, so it is read again;

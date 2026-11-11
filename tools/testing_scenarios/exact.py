@@ -120,10 +120,11 @@ EXPECT_FORMS = [
 #   chain='show'     keep the chain window ("Chain: Activating / Resolving"; hidden by default for cleaner videos)
 #   cards='show'     keep the card-showing animations (hidden by default)
 #   prompts='show'   draw the prompts (by default they work, answered by the steps, but are not drawn)
+#   lists='show'     keep the card lists (choose cards from the Deck, Graveyard...); left out of the video by default
 #   battle='show'    keep the battle animations (the attack's sword and banner, the full-screen battle scene)
 VIDEO_KEYS = {'start': ('summon', 'first'), 'until': ('defense',), 'show': None, 'effect': ('none',),
               'clear': ('cpu_monsters',), 'chain': ('show',), 'cards': ('show',), 'prompts': ('show',),
-              'battle': ('show',)}
+              'battle': ('show',), 'lists': ('show',)}
 
 
 def player(effect, *, setup, steps, expect, start=None, note=None, video=None):

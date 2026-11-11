@@ -34,6 +34,7 @@ EDS.G_CHAIN_LINKS = EDS.G_CHAIN + 0x280
 EDS.G_CHAIN_EFFECT_STEP = EDS.G_CHAIN + 0x3E0 -- gChain.effectStep (chain.h)
 EDS.G_CHAIN_TARGET_STEP = EDS.G_CHAIN + 0x3E5 -- chainB step (effect_targets3.c TARGET_STEP)
 EDS.G_TEXTBOX = 0x0201AE60
+EDS.G_CARD_LIST = 0x0201D810       -- gCardListView (card_list_view.h): bit 0 of byte 0, a list is open
 -- EffectTributeOpponentMonsterResolve (effect_resolve8.c) Soul Exchange hand / field tribute picks
 EDS.EFFECT_TRIBUTE_OPP_PICK_SECOND = 0x76
 EDS.EFFECT_TRIBUTE_OPP_PICK_HAND = 0x77
@@ -336,8 +337,14 @@ function EDS.captureFrameIfNeeded(frameState, opts)
         return          -- (a video's last shot ended as the CPU's next phase began: lib_steps.lua)
     end
     if opts.steps and (opts.video or {}).prompts ~= "show"
-        and ((emu:read8(EDS.G_TEXTBOX) & 1) ~= 0 or (emu:read8(EDS.G_DUEL + 0x1B50) & 2) ~= 0) then
-        return          -- a prompt is open (not drawn, gModTestingFlags2 bit 1): its frames are left out of the video
+        and (emu:read8(EDS.G_TEXTBOX) & 1) ~= 0 then
+        -- a text box is open (not drawn, gModTestingFlags2 bit 1): its frames are left out of the video. (Not
+        -- gDuel.promptActive: it stays set through a whole response window, the cursor and the activation included,
+        -- which left Magic Cylinder's video with no frames.)
+        return
+    end
+    if opts.steps and (opts.video or {}).lists ~= "show" and (emu:read8(EDS.G_CARD_LIST) & 1) ~= 0 then
+        return          -- a card list is open (choose cards from the Deck, Graveyard...): left out of the video
     end
     if frameState.cpuOnlyCapture and EDS.turnPlayer() ~= 1 then
         return          -- a CPU scenario with no action of yours: the CPU's turns only
