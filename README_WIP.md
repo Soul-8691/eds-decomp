@@ -11,7 +11,7 @@
 
 <p align="center">
   <img src="screenshots/Title%20Screen.png" width="400" alt="The title screen">
-  <img src="screenshots/placeholders/duel-field.svg" width="400" alt="Placeholder: a duel in progress">
+  <img src="screenshots/Duel.png" width="400" alt="A duel in progress: Jinzo under the cursor, card art on the field">
 </p>
 
 <p align="center">
@@ -27,7 +27,9 @@
   <a href="#in-the-duel">Duels</a> ·
   <a href="#synchro-xyz-and-link">Synchro, Xyz, Link</a> ·
   <a href="#the-new-cards">New cards</a> ·
-  <a href="#building-from-source">Build</a>
+  <a href="#building-from-source">Build</a> ·
+  <a href="#editing-with-hex-maniac-advance">HMA</a> ·
+  <a href="#debug-and-testing-builds">Debug</a>
 </p>
 
 ## Highlights
@@ -35,12 +37,13 @@
 |  |  |
 |---|---|
 | **15 formats** | Follows the [Format Library](https://www.formatlibrary.com/) pantheon of historical TCG formats, May 2002 to October 2005. Each one is a Campaign duelist with its own card pool and decks. |
-| **New cards** | The demo adds **306** cards. See [NEW_CARDS.md](NEW_CARDS.md). |
+| **New cards** | The demo adds **308** cards. See [NEW_CARDS.md](NEW_CARDS.md). |
 | **Synchro, Xyz and Link** | Summoned from the Fusion Deck (the Extra Deck), with Tuners, Xyz Materials, Link Arrows and Extra Monster Zones. You pick the Monster Zone for every summon. See [Synchro, Xyz and Link](#synchro-xyz-and-link). |
 | **Smarter CPU** | Opponents play much stronger than in vanilla EDS. See [AI_IMPROVEMENTS.md](AI_IMPROVEMENTS.md) and [AI_QUIRKS.md](AI_QUIRKS.md). |
 | **Best-of-3 matches** | Every Campaign duel is a match, with siding between games. |
 | **A real economy** | Earn Duelist Points, buy cards by password, and open TCG sets and usage-weighted packs. |
 | **Deck tools** | 60 Deck Recipes, a choice of banlists, and practice opponents that play decks you pick. |
+| **Editable** | Every build can come with a Hex Maniac Advance `.toml` that labels the mod's data: deck chances, packs, prices, cards, screens. |
 
 <p align="center">
   <img src="screenshots/placeholders/highlights.svg" width="480" alt="Placeholder: Highlights (GIF)"><br>
@@ -102,19 +105,30 @@ release to unlock the next one (every format is open in the debug build).
 
 - **Their decks.** Each format duelist picks one of 2-3 (sometimes more) strong decks from its format, at weighted
   random. All 15 are fully coded. [DECKS.md](DECKS.md) lists every deck and its chance.
+- **Deck chances.** Each format has 10 deck slots with a chance out of 100 each (unused slots get 0). With the
+  [HMA `.toml`](#editing-with-hex-maniac-advance) you can change them under `data.decks.choices.<format>`.
 - **Your deck.** It has to be legal in that format's banlist and card pool to duel them.
 - **Portraits.** Each duelist's portrait is its format's namesake card, or the Format Library picture when the format
   isn't named after a card.
-- **Pre-duel screen.** Campaign opponents (and Solomon and Debug, after you pick their deck) get a pre-duel screen
-  instead of vanilla dialogue: custom text in the dialogue box, a Format Library QR code, and either a format picture
-  (Yugi-Kaiba through Android) or the opponent's original bust-up scene with blinking eyes. Press **A** to continue. A
-  New Game skips Tea's intro, and there is no post-duel dialogue.
+
+<table>
+<tr>
+<td align="center"><img src="screenshots/placeholders/format-check.svg" width="240" alt="Placeholder: The format check warning"><br><sub>The format check warning</sub></td>
+<td align="center"><img src="screenshots/placeholders/hma-deck-choices.svg" width="240" alt="Placeholder: HMA: a format's deck chances"><br><sub>HMA: a format's deck chances</sub></td>
+</tr>
+</table>
+
+### The pre-duel screen
+
+Campaign opponents (and Solomon and Debug, after you pick their deck) get a pre-duel screen instead of vanilla
+dialogue: custom text in the dialogue box, a Format Library QR code, and either a format picture (Yugi-Kaiba through
+Android) or the opponent's original bust-up scene with blinking eyes. Press **A** to continue. A New Game skips Tea's
+intro, and there is no post-duel dialogue.
 
 <table>
 <tr>
 <td align="center"><img src="screenshots/placeholders/pre-duel.svg" width="240" alt="Placeholder: The pre-duel screen (GIF)"><br><sub>The pre-duel screen (GIF)</sub></td>
 <td align="center"><img src="screenshots/placeholders/pre-duel-format.svg" width="240" alt="Placeholder: A format picture"><br><sub>A format picture</sub></td>
-<td align="center"><img src="screenshots/placeholders/format-check.svg" width="240" alt="Placeholder: The format check warning"><br><sub>The format check warning</sub></td>
 </tr>
 </table>
 
@@ -138,13 +152,31 @@ cards) can't duel until you fix it.
 
 <img src="screenshots/placeholders/event-challenger.svg" width="240" alt="Placeholder: Deck Recipes before an event duel">
 
-### Practice opponents
+## Practice opponents
 
 <img src="screenshots/Duelists%20(Screen%204).png" width="240" align="right" alt="The practice opponents' page, with Debug selected">
 
-The opponent page after the formats has **Solomon** (top left) and **Debug** (top right), open from the start. Before the
-duel you pick one of your own Deck Recipes for them to play. Beating them gives no DP, so they're for practice and
-testing decks.
+The opponent page after the formats is open from the start:
+
+| Slot | Opponent | Deck | Rules |
+|---|---|---|---|
+| Top left | **Solomon** | A Deck Recipe you pick or build (3 of every card) | Normal |
+| Top right | **Debug** | A Deck Recipe you pick or build (8 of every card, no copy limit) | Debug mode's |
+| Middle right | **Empty Deck** | None at all | Nobody decks out |
+| Middle left | **Test Duel** | A `.ydk` file (testing builds only) | Debug mode's |
+
+None of them give DP or a pack, and none check your deck's format: they're for practice and testing decks. The Records
+screen has a page for them too.
+
+<table>
+<tr>
+<td align="center"><img src="screenshots/placeholders/records-practice.svg" width="240" alt="Placeholder: Records: the practice page"><br><sub>Records: the practice page</sub></td>
+</tr>
+</table>
+
+### Solomon and Debug
+
+Before the duel you pick one of your own Deck Recipes for them to play.
 
 - **Building their deck.** Press SELECT on the recipe list to build their deck instead. Deck Edit opens with a temporary
   collection and no banlist: 3 copies of every card for Solomon, or 8 copies with no copy limit for Debug.
@@ -153,16 +185,14 @@ testing decks.
 - **Your deck against Debug.** You first pick your own deck the same way (a recipe, or one you build from 8 of every card
   with no limits), then Debug's. Your cards and decks aren't touched, and your pick is used for the whole match. Your
   deck may be empty (an empty recipe slot, or B in the deck builder with no cards): the duel starts with no cards.
-- **Debug's rules.** Debug's duels use debug mode's rules: its hand is shown face up, you can read its face-down cards
-  (info bar and Card View), you can open its main and fusion deck piles in order, and neither side can deck out.
-- **Mulligan.** In your first Draw Phase, open your **Main Deck** and choose **Mulligan** as often as you like until you
-  **Draw**.
+- **Debug's rules.** Debug's duels use [debug mode's rules](#duels): its hand is shown face up, you can read its
+  face-down cards (info bar and Card View), you can open its main and fusion deck piles in order, and neither side can
+  deck out. The [debug controls](#debug-controls) work too.
 
 <table>
 <tr>
 <td align="center"><img src="screenshots/placeholders/debug-picker.svg" width="240" alt="Placeholder: Picking your deck"><br><sub>Picking your deck</sub></td>
 <td align="center"><img src="screenshots/placeholders/debug-duel.svg" width="240" alt="Placeholder: A duel with Debug"><br><sub>A duel with Debug</sub></td>
-<td align="center"><img src="screenshots/placeholders/mulligan.svg" width="240" alt="Placeholder: Mulligan (GIF)"><br><sub>Mulligan (GIF)</sub></td>
 </tr>
 </table>
 
@@ -174,6 +204,30 @@ Back on the recipe list:
 | **SELECT** | Goes back to Deck Edit |
 | **B** | Starts the duel with their deck |
 | **START** | Discards their deck |
+
+### Empty Deck
+
+A CPU with no cards at all (Ultimate Offering's picture), in the release too. Any deck may challenge it, and neither
+player decks out, so you can try your deck's combos against an open board.
+
+<table>
+<tr>
+<td align="center"><img src="screenshots/placeholders/empty-deck.svg" width="240" alt="Placeholder: A duel against Empty Deck"><br><sub>A duel against Empty Deck</sub></td>
+</tr>
+</table>
+
+### Mulligan
+
+In your first Draw Phase, your Main Deck menu offers **Mulligan** next to **Draw**: your hand goes to the bottom of the
+Main Deck, the deck shuffles, and you draw five again. Repeat until you **Draw**, which ends mulligan for that duel. In
+the **release** build, mulligan is offered only in duels against **Debug**. In **testing** builds (`make`, `make demo`,
+…), every Campaign duel offers it.
+
+<table>
+<tr>
+<td align="center"><img src="screenshots/placeholders/mulligan.svg" width="240" alt="Placeholder: Mulligan (GIF)"><br><sub>Mulligan (GIF)</sub></td>
+</tr>
+</table>
 
 ## Decks and banlists
 
@@ -200,6 +254,12 @@ Back on the recipe list:
 - The release build starts with empty slots until you save your own. The deck recipes will eventually include all 15
   TCG formats in release too.
 
+<table>
+<tr>
+<td align="center"><img src="screenshots/placeholders/hma-recipes.svg" width="240" alt="Placeholder: HMA: the premade Deck Recipes"><br><sub>HMA: the premade Deck Recipes</sub></td>
+</tr>
+</table>
+
 ### Banlists
 
 Choose the banlist your deck is built under from the main menu. Cards your current deck can no longer hold go back to
@@ -216,8 +276,6 @@ new banlist, counting its limits and card pool. If they can't, the switch is ref
 - **Empty Main/Side.** The bottom command that vanilla calls **Exit** is **Empty Main/Side**: every card in your Main
   Deck, Side Deck and Fusion Deck goes back to the trunk, and you stay in Deck Edit.
 - **Card art.** The column of cards beside the list shows each card's art.
-- **Fix.** Deck Edit no longer blots out the first letters of the row above the cursor after Card View, a bug in the
-  original game.
 
 <table>
 <tr>
@@ -249,6 +307,12 @@ new banlist, counting its limits and card pool. If they can't, the switch is ref
   Limited/Semi-Limited multipliers, then linearly scaled). Cards with no usage entry cost **100 DP**. Per-format prices
   are listed in [CARD_PRICES.md](CARD_PRICES.md).
 
+<table>
+<tr>
+<td align="center"><img src="screenshots/placeholders/hma-prices.svg" width="240" alt="Placeholder: HMA: a format's card prices"><br><sub>HMA: a format's card prices</sub></td>
+</tr>
+</table>
+
 ### Booster Packs
 
 | Pack | Comes from | Unlocks | Price |
@@ -258,10 +322,18 @@ new banlist, counting its limits and card pool. If they can't, the switch is ref
 
 - Only cards in the ROM are in each pool, pull rates follow listed rarities, and the cover art is the pool's rarest
   card. Per-pack weights and pull percentages are in [PACKS.md](PACKS.md).
-- **Campaign wins** against format duelists (not Solomon or Debug) reward **one random unlocked TCG format pack** (not a
-  usage pack), chosen when the reward starts.
+- **Campaign wins** against format duelists (not the practice opponents) reward **one random unlocked TCG format pack**
+  (not a usage pack), chosen when the reward starts.
 - When a win opens new packs (a usage pack at 10 wins in that format, or TCG sets when the next format unlocks at 20
   wins), the game shows the **"new packs are available"** message before the list.
+
+<table>
+<tr>
+<td align="center"><img src="screenshots/placeholders/hma-pack-pools.svg" width="240" alt="Placeholder: HMA: a pack's cards and weights"><br><sub>HMA: a pack's cards and weights</sub></td>
+<td align="center"><img src="screenshots/placeholders/hma-pack-covers.svg" width="240" alt="Placeholder: HMA: pack names and covers"><br><sub>HMA: pack names and covers</sub></td>
+<td align="center"><img src="screenshots/placeholders/hma-unlocks.svg" width="240" alt="Placeholder: HMA: the unlock wins"><br><sub>HMA: the unlock wins</sub></td>
+</tr>
+</table>
 
 ### Usage stats and Mobius
 
@@ -310,13 +382,8 @@ See Mobius's README for chart semantics and options.
 </tr>
 <tr>
 <td align="center"><img src="screenshots/Counters.png" width="240" alt="Breaker the Magical Warrior on the field, with the card's details in the info bar"><br><sub>Spell Counters</sub></td>
-<td align="center"><img src="screenshots/Settings%20(Main%20Menu).png" width="240" alt="Settings in the main menu"><br><sub>Settings in the main menu</sub></td>
-<td align="center"><img src="screenshots/Settings.png" width="240" alt="The Settings screen"><br><sub>Duel speed</sub></td>
-</tr>
-<tr>
-<td align="center"><img src="screenshots/placeholders/chain-list.svg" width="240" alt="Placeholder: The chain list"><br><sub>The chain list</sub></td>
-<td align="center"><img src="screenshots/placeholders/duel-board.svg" width="240" alt="Placeholder: The full board"><br><sub>The full board</sub></td>
-<td align="center"><img src="screenshots/placeholders/hold-r.svg" width="240" alt="Placeholder: Hold R (GIF)"><br><sub>Hold R (GIF)</sub></td>
+<td align="center"><img src="screenshots/Duel%20Board.png" width="240" alt="The board: the phase panel between the Extra Monster Zones, both life points"><br><sub>The full board</sub></td>
+<td align="center"><img src="screenshots/Chain%20List.png" width="240" alt="The chain list: two Mystical Space Typhoons, with card art"><br><sub>The chain list</sub></td>
 </tr>
 </table>
 
@@ -333,36 +400,63 @@ See Mobius's README for chart semantics and options.
 - **Still backgrounds.** The field background, the title screen's background and the pack pull screen's patterned
   background (Campaign packs too) no longer scroll.
 
-### Menus and controls
+### The card menu
 
-- **Menu order.** In the hand/field card menu, **Summon** comes before **Set**, **Activate** comes before **Set** for
-  Spells you can activate or Set, and **Card Info** is always the last option. Left/Right order matches the row.
-- **Settings.** Open them from the main menu, or press **L+R** during a duel; leaving with **B** returns to the duel
-  when you opened them with L+R. The choice is saved. Pick one duel speed:
+In the hand/field card menu, **Summon** comes before **Set**, **Activate** comes before **Set** for Spells you can
+activate or Set, and **Card Info** is always the last option. Left/Right order matches the row.
 
-  | Speed | What it does |
-  |---|---|
-  | **DEFAULT** | Hold B to fast-forward |
-  | **ALWAYS** | Always fast-forward |
-  | **SUPER** | Always fast-forward, with doubled skip amounts |
+### Settings
 
-  Two more switches below the speeds, each saved:
-  - **Hide card animations:** the big card that zooms, flashes or unrolls when a card is activated or its effect applies
-    is skipped.
-  - **Hide battle scenes:** the full-screen battle between the two cards is skipped; the attack plays out on the field.
-  Both are off in a Link Battle.
+<table>
+<tr>
+<td align="center"><img src="screenshots/Settings%20(Main%20Menu).png" width="240" alt="Settings in the main menu"><br><sub>Settings in the main menu</sub></td>
+<td align="center"><img src="screenshots/Settings.png" width="240" alt="The Settings screen: the three duel speeds and the two Hide switches"><br><sub>The Settings screen</sub></td>
+</tr>
+</table>
 
-- **Hold R.** While you hold **R**, the duel does not ask you to respond to chains or other Yes/No prompts (the text box
-  does not open; effects are declined as if you had answered No). **B** still fast-forwards, as in the table above.
-- **Hold L (debug).** In a testing build, or against Debug, the CPU does nothing while you hold **L**: it chains and
-  activates no Set card, and on its turn it skips its Main and Battle Phase (a play already under way finishes first).
-- **Rock-paper-scissors (debug).** In a testing build, or against Debug, you always win the rock-paper-scissors before a
-  duel, so you choose who goes first.
+Open them from the main menu, or press **L+R** during a duel; leaving with **B** returns to the duel when you opened them
+with L+R. Every choice is saved.
+
+| Setting | What it does |
+|---|---|
+| **DEFAULT** speed | Hold B to fast-forward |
+| **ALWAYS** speed | Always fast-forward |
+| **SUPER** speed | Always fast-forward, with doubled skip amounts |
+| **Hide card animations** | The big card that zooms, flashes or unrolls when a card is activated or its effect applies is skipped |
+| **Hide battle scenes** | The full-screen battle between the two cards is skipped; the attack plays out on the field |
+
+Pick one of the three speeds; the two Hide switches are ON/OFF with **A**. Both are off in a Link Battle.
 
 <p align="center">
   <img src="screenshots/placeholders/duel-speed.svg" width="480" alt="Placeholder: The three duel speeds (video)"><br>
   <sub>The three duel speeds (video)</sub>
 </p>
+
+<p align="center">
+  <img src="screenshots/placeholders/hide-anims.svg" width="480" alt="Placeholder: Hide card animations, off then on (video)"><br>
+  <sub>Hide card animations, off then on (video)</sub>
+</p>
+
+<table>
+<tr>
+<td align="center"><img src="screenshots/placeholders/hide-battle.svg" width="240" alt="Placeholder: Hide battle scenes (GIF)"><br><sub>Hide battle scenes (GIF)</sub></td>
+</tr>
+</table>
+
+### Controls
+
+| Button | In a duel |
+|---|---|
+| **B** (held) | Fast-forward (DEFAULT speed) |
+| **R** (held) | The duel doesn't ask you to respond to chains or other Yes/No prompts: the text box doesn't open, and effects are declined as if you had answered No |
+| **L+R** | Opens Settings |
+| **L** (held), debug only | The CPU does nothing (see [Debug controls](#debug-controls)) |
+
+<table>
+<tr>
+<td align="center"><img src="screenshots/placeholders/hold-r.svg" width="240" alt="Placeholder: Hold R (GIF)"><br><sub>Hold R (GIF)</sub></td>
+</tr>
+</table>
 
 ### Smarter CPU
 
@@ -380,6 +474,27 @@ current CPU behavior in full.
 - **Cards can fail to find.** Cards like Thunder Dragon and Toon Table of Contents can be activated even with no copy
   left in the Deck; the search then finds nothing.
 
+### Fixes to the original game
+
+| Card or screen | The bug | Now |
+|---|---|---|
+| **Deck Edit** | After Card View, the first letters of the row above the cursor were blotted out | Drawn correctly |
+| **Spear Cretin, The Shallow Grave** | On the CPU's turn, the monster you revived also stayed in your Graveyard and counted as the CPU's card | It leaves your Graveyard and stays yours |
+| **Sangan, Witch of the Black Forest** (and other Graveyard effects) | Revived by Call of the Haunted or Premature Burial and then destroyed, the effect activated twice | Once |
+| **Call of the Haunted** | Returned to the hand (Giant Trunade) or the Deck, it could destroy another Call's monster and was also sent to the Graveyard; banished, it left its monster on the field | It destroys its own monster, whichever way it leaves |
+| **Graverobber** | A stolen card Set first and activated later skipped the 2000 LP cost | It costs 2000 LP |
+| **Time Wizard** | When the CPU's Time Wizard could summon Dark Sage, you got its questions and its Spell search | The CPU answers them itself |
+
+> [!NOTE]
+> The fixes after Deck Edit's are recent and not yet play-tested.
+
+<table>
+<tr>
+<td align="center"><img src="screenshots/placeholders/fix-call-trunade.svg" width="240" alt="Placeholder: Call of the Haunted and Giant Trunade (GIF)"><br><sub>Call of the Haunted and Giant Trunade (GIF)</sub></td>
+<td align="center"><img src="screenshots/placeholders/fix-graverobber.svg" width="240" alt="Placeholder: Graverobber's cost (GIF)"><br><sub>Graverobber's cost (GIF)</sub></td>
+</tr>
+</table>
+
 ## Synchro, Xyz and Link
 
 Three newer summoning mechanics are in, each with a few cards so far. In your Main Phase, press A on your Fusion Deck
@@ -394,37 +509,44 @@ now. Pick the monster, then its materials.
 
 <table>
 <tr>
-<td align="center"><img src="screenshots/placeholders/synchro.svg" width="240" alt="Placeholder: A Synchro Summon (GIF)"><br><sub>A Synchro Summon (GIF)</sub></td>
-<td align="center"><img src="screenshots/placeholders/xyz.svg" width="240" alt="Placeholder: An Xyz Summon (GIF)"><br><sub>An Xyz Summon (GIF)</sub></td>
-<td align="center"><img src="screenshots/placeholders/link.svg" width="240" alt="Placeholder: A Link Summon (GIF)"><br><sub>A Link Summon (GIF)</sub></td>
-</tr>
-</table>
-
-<table>
-<tr>
 <td><img src="cards/Brionac%2C%20Dragon%20of%20the%20Ice%20Barrier.png" width="240" alt="Brionac, Dragon of the Ice Barrier"></td>
 <td><img src="cards/Number%2039_%20Utopia.png" width="240" alt="Number 39: Utopia"></td>
 <td><img src="cards/Proxy%20Dragon.png" width="240" alt="Proxy Dragon"></td>
 </tr>
 </table>
 
+<table>
+<tr>
+<td align="center"><img src="screenshots/placeholders/synchro.svg" width="240" alt="Placeholder: A Synchro Summon (GIF)"><br><sub>A Synchro Summon (GIF)</sub></td>
+<td align="center"><img src="screenshots/placeholders/xyz.svg" width="240" alt="Placeholder: An Xyz Summon (GIF)"><br><sub>An Xyz Summon (GIF)</sub></td>
+<td align="center"><img src="screenshots/placeholders/link.svg" width="240" alt="Placeholder: A Link Summon (GIF)"><br><sub>A Link Summon (GIF)</sub></td>
+</tr>
+</table>
+
+### Extra Monster Zones and choosing zones
+
 - **Extra Monster Zones** sit at the two ends of the board's middle row. You can have one monster in them, and it uses
   the Main Monster Zone at that end (zone 1 or 5), so you hold at most 5 monsters in all. For Link Arrows they count
   as above zones 2 and 4, as in the real game.
 - **Choosing zones.** Every summon now asks which Monster Zone to use (Control Pad, then A) when more than one fits.
-- **New Types.** Psychic, Wyrm, Cyberse, Illusion and Creator God monsters can be added; they use the closest existing
-  Type icon for now.
-- **Not yet:** Pendulum Monsters; Link Summons in Link Battles; the original game's Level-based cards still see an
-  Xyz Monster's Rank or a Link Monster's Link Rating as its Level.
 
 <img src="screenshots/placeholders/zone-pick.svg" width="240" alt="Placeholder: choosing a zone (GIF)">
+- **New Types.** Psychic, Wyrm, Cyberse, Illusion and Creator God monsters can be added; they use the closest existing
+  Type icon for now.
+
+### Not yet
+
+- Pendulum Monsters.
+- Link Summons in Link Battles.
+- The original game's Level-based cards still see an Xyz Monster's Rank or a Link Monster's Link Rating as its Level.
 
 ## The new cards
 
-The demo build adds **306** cards: the 173 listed above `------` in [`new_cards.txt`](new_cards.txt), and 133 cards of
+The demo build adds **308** cards: the 175 listed above `------` in [`new_cards.txt`](new_cards.txt), and 133 cards of
 the engine's leftover effects ([`config/leftover_cards.txt`](config/leftover_cards.txt)). All of them are in
 [`demo_cards.txt`](demo_cards.txt), in alphabetical order. **[NEW_CARDS.md](NEW_CARDS.md)** shows each of them in Deck
-Edit's Card View, and **[ADDING_NEW_CARDS.md](ADDING_NEW_CARDS.md)** explains how to add and code more.
+Edit's Card View (alphabetical, by Campaign format, and other groupings), and
+**[ADDING_NEW_CARDS.md](ADDING_NEW_CARDS.md)** explains how to add and code more.
 
 <table>
 <tr>
@@ -481,18 +603,32 @@ See [NEW_CARDS.md](NEW_CARDS.md) for all of them.
 - **Effects.** Effects are written in C on top of the original duel engine, mostly in `src/added_effects.c`. Each card
   gets the same handlers the game's own cards use: activation check, cost, targeting, resolution. Small hooks in the
   engine cover timings it doesn't already have, and each card gets a rule for when the computer should use it.
-- **Engine leftovers.** The engine already contains several cards that never made it into EDS, such as Magic Cylinder,
-  Soul Exchange, Fairy Box and Thousand-Eyes Restrict. Those reuse that existing code instead of being written from
-  scratch. The full inventory (157 unused card numbers and what each handler does) is in
-  [LEFTOVER_EFFECTS.md](https://github.com/Soul-8691/eds-decomp/blob/binary/LEFTOVER_EFFECTS.md) on the
-  [`binary`](https://github.com/Soul-8691/eds-decomp/tree/binary) branch. Every build adds each leftover with working
-  effect code (`config/leftover_cards.txt`) at its own card number, with its YGOPRODeck stats, text and art, so the
-  original code plays it untouched. The card lists hold only the other cards, apart from 17 leftovers the mod wrote
-  effect code for at a free number, which stay there until the two are merged (`overlaps.txt`).
-- **Gallery screenshots.** After `make demo`, `tools/gen_new_cards_md.py` writes [`demo_cards.txt`](demo_cards.txt)
-  (every card the build adds, alphabetical, from `build/new_cards.tsv`) and [NEW_CARDS.md](NEW_CARDS.md) from it, and
-  lists the cards with no screenshot yet. `tools/card_screenshots.lua` in mGBA takes them (the cards and their IDs from
-  `build/new_cards.tsv`; optional `cards/_capture_only.txt`, one name per line, for only those).
+
+<table>
+<tr>
+<td align="center"><img src="screenshots/placeholders/hma-card-stats.svg" width="240" alt="Placeholder: HMA: the added cards' stats"><br><sub>HMA: the added cards' stats</sub></td>
+<td align="center"><img src="screenshots/placeholders/hma-card-text.svg" width="240" alt="Placeholder: HMA: card names and text"><br><sub>HMA: card names and text</sub></td>
+<td align="center"><img src="screenshots/placeholders/hma-linkmarkers.svg" width="240" alt="Placeholder: HMA: Link Arrows"><br><sub>HMA: Link Arrows</sub></td>
+</tr>
+</table>
+
+### Engine leftovers
+
+The engine already contains several cards that never made it into EDS, such as Magic Cylinder, Soul Exchange, Fairy Box
+and Thousand-Eyes Restrict. Those reuse that existing code instead of being written from scratch. The full inventory
+(157 unused card numbers and what each handler does) is in [LEFTOVER_EFFECTS.md](LEFTOVER_EFFECTS.md).
+
+Every build adds each leftover with working effect code (`config/leftover_cards.txt`) at its own card number, with its
+YGOPRODeck stats, text and art, so the original code plays it untouched. The card lists hold only the other cards,
+apart from 17 leftovers the mod wrote effect code for at a free number, which stay there until the two are merged
+(`overlaps.txt`).
+
+### Gallery screenshots
+
+After `make demo`, `tools/gen_new_cards_md.py` writes [`demo_cards.txt`](demo_cards.txt) (every card the build adds,
+from `build/new_cards.tsv`) and [NEW_CARDS.md](NEW_CARDS.md) from it, and lists the cards with no screenshot yet.
+`tools/card_screenshots.lua` in mGBA takes them (the cards and their IDs from `build/new_cards.tsv`; optional
+`cards/_capture_only.txt`, one name per line, for only those).
 
 ## Planned
 
@@ -518,61 +654,152 @@ make card-icons                     # optional: PNG previews of in-duel card min
 You need `make`, `cpp`, `python3` and `binutils-arm-none-eabi`, plus network access the first time new cards are fetched.
 See `CLAUDE.md` and the `wiki/` for details on the decompilation and the hack.
 
+### Build targets
+
 | Target | Rules | Card list |
 |---|---|---|
-| `make` | Debug/testing (`MOD_RELEASE` 0) | Every name in `config/new_cards.txt` (**319**), plus engine leftovers |
+| `make` | Debug/testing (`MOD_RELEASE` 0) | Every name in `config/new_cards.txt` (**321**), plus engine leftovers |
 | `make release` | Release | Same as `make` |
 | `make demo` | Debug/testing (`MOD_RELEASE` 0) | The coded block at the top of `new_cards.txt`, plus leftovers; **blank card slots to 615**; **`eds_demo.toml`** when `baserom.toml` exists |
 | `make release-demo` | Release | Same card pool as `make demo` (without the blank slots); **`eds_release_demo.toml`** when `baserom.toml` exists |
 | `make release-demo-extra` | Release | As `make release-demo`, plus blank slots to 615; **`eds_release_demo_extra.toml`** when `baserom.toml` exists |
 
-### Hex Maniac Advance TOML
+## Editing with Hex Maniac Advance
 
 Every **demo-profile** link (`make demo`, `make release-demo` or `make release-demo-extra`) also runs `tools/hma_toml.py`
 and writes a matching `.toml` next to the ROM if repo-root **`baserom.toml`** exists (export it from your vanilla USA ROM
 in [Hex Maniac Advance](https://github.com/haven1433/HexManiacAdvance); it is not committed). The `.toml` files are
-git-ignored. They label mod data in that build (added card tables, format pack pools and weights, deck lists, pre-duel
-screens, title screen images, Deck Edit ring art, in-duel card miniatures, and more). See
-[wiki/tools/hma-toml.md](wiki/tools/hma-toml.md).
+git-ignored. Open the patched ROM in HMA with its `.toml` beside it, and the mod's data shows up as named, editable
+tables. See [wiki/tools/hma-toml.md](wiki/tools/hma-toml.md) for every anchor.
 
-<img src="screenshots/placeholders/hma.svg" width="240" alt="Placeholder: Hex Maniac Advance with the TOML">
+<table>
+<tr>
+<td align="center"><img src="screenshots/placeholders/hma.svg" width="240" alt="Placeholder: HMA with the TOML"><br><sub>HMA with the TOML</sub></td>
+<td align="center"><img src="screenshots/placeholders/hma-goto.svg" width="240" alt="Placeholder: HMA: the anchors in Goto"><br><sub>HMA: the anchors in Goto</sub></td>
+</tr>
+</table>
 
-<details>
-<summary>Debug mode (testing builds only, not in the release)</summary>
+| What you can edit | Anchors |
+|---|---|
+| Added cards: stats, names, text, passwords, effect rows | `data.cards.stats`, `data.cards.names`, `data.cards.descriptions`, `data.cards.passwords`, `data.cards.addedeffects` |
+| Synchro, Xyz and Link data | `data.cards.typeex`, `data.cards.linkmarkers` |
+| Card prices per format | `data.prices.cards` |
+| Each format's deck chances (out of 100) | `data.decks.choices.<format>` |
+| The opponents' decks | `data.decks.mod.<deck>` |
+| Premade Deck Recipes | `data.decks.recipes`, `text.decks.recipes` |
+| Format packs: names, cards and pull weights, covers | `data.packs.format.names`, `data.packs.format.pools`, `graphics.packs.format` |
+| Unlocks: wins per format and per usage pack | `data.constants.formats.unlock`, `data.constants.packs.format.usagewins` |
+| The opponents: kind, format, portrait, name | `data.opponents`, `graphics.opponents.<name>`, `text.opponents.<name>` |
+| Pre-duel screens: picture, QR code, text | `data.preduel.table`, `data.preduel.text`, `graphics.preduel.<format>` |
+| The title screen and its version lines | `graphics.titlescreen.*`, `text.title.*` |
+| In-duel card art and Deck Edit ring art | `graphics.cards.fieldicons.miniatures`, `graphics.cards.icons.images` |
 
-<br>
+#### Opponents and their decks
 
-**Starting out**
+<table>
+<tr>
+<td align="center"><img src="screenshots/placeholders/hma-opponents.svg" width="240" alt="Placeholder: HMA: the opponents table"><br><sub>HMA: the opponents table</sub></td>
+<td align="center"><img src="screenshots/placeholders/hma-portrait.svg" width="240" alt="Placeholder: HMA: an opponent's portrait"><br><sub>HMA: an opponent's portrait</sub></td>
+<td align="center"><img src="screenshots/placeholders/hma-opponent-deck.svg" width="240" alt="Placeholder: HMA: an opponent's deck"><br><sub>HMA: an opponent's deck</sub></td>
+</tr>
+</table>
+
+#### Screens and art
+
+<table>
+<tr>
+<td align="center"><img src="screenshots/placeholders/hma-preduel-text.svg" width="240" alt="Placeholder: HMA: pre-duel text"><br><sub>HMA: pre-duel text</sub></td>
+<td align="center"><img src="screenshots/placeholders/hma-preduel-picture.svg" width="240" alt="Placeholder: HMA: a pre-duel picture"><br><sub>HMA: a pre-duel picture</sub></td>
+<td align="center"><img src="screenshots/placeholders/hma-title.svg" width="240" alt="Placeholder: HMA: the title screen"><br><sub>HMA: the title screen</sub></td>
+</tr>
+<tr>
+<td align="center"><img src="screenshots/placeholders/hma-miniatures.svg" width="240" alt="Placeholder: HMA: in-duel card art"><br><sub>HMA: in-duel card art</sub></td>
+<td align="center"><img src="screenshots/placeholders/hma-ring-art.svg" width="240" alt="Placeholder: HMA: Deck Edit ring art"><br><sub>HMA: Deck Edit ring art</sub></td>
+</tr>
+</table>
+
+## Debug and testing builds
+
+Testing builds (`make`, `make demo`) use debug mode; the release builds don't, apart from duels against Debug.
+
+### Starting out
 
 - You start with 8 copies of every card.
 - On **New Game**, choosing the **red** starter deck leaves your saved Main, Fusion and Side Decks **empty** (build from
   the trunk). Green and black still load their premade Yugi-Kaiba recipe decks.
+- Every format is unlocked, and the Record (Duel Score) screen shows every duelist on every page.
 
-**Deck rules**
+### Deck rules
 
 - Decks can be under 40 cards, even empty, can hold any number of copies of a card, and ignore banlists.
 - Switching banlists skips the 40-card Main Deck check.
 
-**Duels**
+### Duels
 
 - **Deck-out is off** in every Campaign duel, format opponents included. Link Battles still use normal deck-out rules.
-  In the **release** build, deck-out is blocked only vs **Debug**, and **Test Duel** is not offered.
+  In the **release** build, deck-out is blocked only against **Debug** and **Empty Deck**, and **Test Duel** is not
+  offered.
 - The opponent's hand is shown face up, and the cursor shows the info of all their cards (face-down ones too), with Card
   View.
 - You can open your deck pile from the command menu (Draw / Mulligan / Surrender / Card View), and the opponent's main or
   fusion deck pile with **Card View** (draw order on the main deck; works even when their deck is empty).
-- **Mulligan** in every duel (see [Practice opponents](#practice-opponents)).
+- **Mulligan** in every Campaign duel (the release build allows it only against **Debug**).
 
-**Menus**
+### Debug controls
 
-- Every format is unlocked, and the Record (Duel Score) screen shows every duelist on every page.
+In a testing build, or against Debug in the release:
 
-**Test Duel**
+- **Hold L** and the CPU does nothing: it chains and activates no Set card, and on its turn it skips its Main and Battle
+  Phase (a play already under way finishes first).
+- **Rock-paper-scissors.** You always win the rock-paper-scissors before a duel, so you choose who goes first.
 
-The deck opponents' page (fourth page, right slot) has **Test Duel**, whose deck is the `.ydk` in `TEST_YDK` (default
+<table>
+<tr>
+<td align="center"><img src="screenshots/placeholders/hold-l.svg" width="240" alt="Placeholder: Hold L (GIF)"><br><sub>Hold L (GIF)</sub></td>
+<td align="center"><img src="screenshots/placeholders/rps.svg" width="240" alt="Placeholder: Rock-paper-scissors (GIF)"><br><sub>Rock-paper-scissors (GIF)</sub></td>
+</tr>
+</table>
+
+### Test Duel
+
+The practice page's middle-left slot has **Test Duel**, whose deck is the `.ydk` in `TEST_YDK` (default
 `/mnt/c/ProjectIgnis/deck/test.ydk`) as read when the ROM is built. Only cards in **that** build exist: for `make demo`,
 every passcode in the deck must be among the coded cards in repo-root `new_cards.txt` above `------`. Passcodes that are
 missing are dropped, and if none remain the opponent starts with **no deck** (not the vanilla Duel Computer deck). An
 empty `.ydk` does the same.
 
-</details>
+### Card test scripts and videos
+
+[TESTING.md](TESTING.md) has an exact scenario for each high-usage demo card (the setup, every input, and the state to
+check after), for the human and for the CPU. Each one is also an mGBA Lua script that plays it in the Test Duel and
+records a video; see [`tools/testing_scenarios/README.md`](tools/testing_scenarios/README.md).
+
+```
+powershell -ExecutionPolicy Bypass -File tools\testing_scenarios\run_tests.ps1 [-Filter name]   # run them (Windows)
+python tools/testing_scenarios/review_videos.py                                                # review the videos
+```
+
+- **The runner** plays the scripts on a separate Windows desktop (no windows show), times out a script after 60 seconds
+  without progress, and writes each video to `tools/testing_scenarios/recordings/`.
+- **Cleaner videos.** In the recordings the prompts work but aren't drawn, and the chain window, card-showing
+  animations, battle animations and card lists are left out (each can be kept per scenario).
+- **The video reviewer** plays the videos in TESTING.md order and sorts them: **Keep** (K), **Highlight** (H) and
+  **Throwaway** (T) move a video to its folder, and the runner skips those scripts afterwards. **Copy title** (C) copies
+  a video's script name, and **F5** reloads the videos that changed.
+
+<table>
+<tr>
+<td align="center"><img src="screenshots/placeholders/test-runner.svg" width="240" alt="Placeholder: The test runner"><br><sub>The test runner</sub></td>
+<td align="center"><img src="screenshots/placeholders/video-reviewer.svg" width="240" alt="Placeholder: The video reviewer"><br><sub>The video reviewer</sub></td>
+</tr>
+</table>
+
+<p align="center">
+  <img src="screenshots/placeholders/test-reel.svg" width="480" alt="Placeholder: The card test reel, 4x speed (video)"><br>
+  <sub>The card test reel, 4x speed (video)</sub>
+</p>
+
+### README screenshots
+
+The README's screenshots are taken by mGBA Lua scripts in `tools/media/`, so they can be redone whenever the game
+changes: `run_tests.ps1 -Media [-Filter name]`. See [wiki/tools/readme-media.md](wiki/tools/readme-media.md).

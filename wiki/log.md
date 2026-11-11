@@ -3088,3 +3088,7 @@ updated: 2026-09-29
 ## [2026-11-11] progress | Graverobber: a stolen card Set first still costs 2000 LP
 - src/duel_cmd_queue.c CardMenu_Execute: activating a Set card checked the monster zone of its column for the stolen bit (original bug), and a Set Field Spell was not checked; both now check the card's own zone. Built; not tested in an emulator.
 - wiki/functions/duel-cmd-queue-c.md
+
+## [2026-11-11] setup | README, README_WIP and README_TODO reorganized
+- README.md: new sections Practice opponents (Solomon and Debug, Empty Deck, Mulligan), Settings, Controls, Fixes to the original game, Editing with Hex Maniac Advance (anchor table), Debug and testing builds (debug controls, Test Duel, card test scripts and videos, README screenshots); Duel, Duel Board and Chain List screenshots in; counts updated (config/new_cards.txt 321).
+- README_WIP.md: generated from README.md plus 58 placeholder slots (28 new, 18 of them HMA); new SVGs in screenshots/placeholders/. README_TODO.md lists every slot by section.
