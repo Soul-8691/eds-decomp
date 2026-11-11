@@ -1,2 +1,2 @@
-tools\testing_scenarios\recordings\Chain_List_Media_Player.mp4
-tools/testing_scenarios/recordings/Chain_List_Media_Player.mp4
+tools\testing_scenarios\generated\..\recordings\Card_Destruction_Discard_And_Draw_Player.mp4
+tools/testing_scenarios/generated/../recordings/Card_Destruction_Discard_And_Draw_Player.mp4

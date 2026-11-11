@@ -660,3 +660,5 @@ START Chain_List_Media_Player
 PASS Chain_List_Media_Player duel_main=true reason= play_done=true
 START Chain_List_Media_Player
 PASS Chain_List_Media_Player duel_main=true reason= play_done=true
+START Card_Destruction_Discard_And_Draw_Player
+PASS Card_Destruction_Discard_And_Draw_Player duel_main=true reason= play_done=true
