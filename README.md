@@ -91,7 +91,7 @@ release to unlock the next one (every format is open in the debug build).
 
 Campaign opponents (and Solomon and Debug, after you pick their deck) get a pre-duel screen instead of vanilla
 dialogue: custom text in the dialogue box, a Format Library QR code, and either a format picture (Yugi-Kaiba through
-Android) or the opponent's original bust-up scene with blinking eyes. Press **A** to continue. A New Game skips Tea's
+Android) or the opponent's original bust-up scene with blinking eyes. A New Game skips Tea's
 intro, and there is no post-duel dialogue.
 
 ### Best-of-3 matches
@@ -159,8 +159,7 @@ player decks out, so you can try your deck's combos against an open board.
 
 In your first Draw Phase, your Main Deck menu offers **Mulligan** next to **Draw**: your hand goes to the bottom of the
 Main Deck, the deck shuffles, and you draw five again. Repeat until you **Draw**, which ends mulligan for that duel. In
-the **release** build, mulligan is offered only in duels against **Debug**. In **testing** builds (`make`, `make demo`,
-…), every Campaign duel offers it.
+the **release** build, mulligan is offered only in duels against **Debug**. In **testing** builds, every Campaign duel offers it.
 
 ## Decks and banlists
 
@@ -182,7 +181,7 @@ the **release** build, mulligan is offered only in duels against **Debug**. In *
 - Save up to **60** decks.
 - Loading a recipe takes the cards from your trunk. Any you don't have are left out, and the game tells you which and
   why.
-- In the debug build (`make`), the first slots are premade staple decks of the first fifteen formats (including Goat),
+- In the debug build, the first slots are premade staple decks of the first fifteen formats (including Goat),
   named after their `.ydk` files. Premade recipes include Side and Extra Decks from those files.
 - The release build starts with empty slots until you save your own. The deck recipes will eventually include all 15
   TCG formats in release too.

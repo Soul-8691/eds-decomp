@@ -3092,3 +3092,6 @@ updated: 2026-09-29
 ## [2026-11-11] setup | README, README_WIP and README_TODO reorganized
 - README.md: new sections Practice opponents (Solomon and Debug, Empty Deck, Mulligan), Settings, Controls, Fixes to the original game, Editing with Hex Maniac Advance (anchor table), Debug and testing builds (debug controls, Test Duel, card test scripts and videos, README screenshots); Duel, Duel Board and Chain List screenshots in; counts updated (config/new_cards.txt 321).
 - README_WIP.md: generated from README.md plus 58 placeholder slots (28 new, 18 of them HMA); new SVGs in screenshots/placeholders/. README_TODO.md lists every slot by section.
+
+## [2026-11-11] progress | Empty Main/Side redraws the Deck Edit cards
+- src/mod_deck_edit.c ModDeckEditEmptyMainAndSide: after emptying, DeckEdit_StartListSlide(2) and DeckEdit_DrawStatementLabels (as switching lists with R), so the card art, the card frames beside the list, the rows and the scroll bar show the emptied list. Built; not tested in an emulator.

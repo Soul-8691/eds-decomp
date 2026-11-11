@@ -43,7 +43,9 @@ updated: 2026-10-02
 
 - In Deck Edit (menu variant 0) `DeckEdit_CommandLabelVBlank` loads `gModDeckEditEmptyMainSideLabelGfx` for command 6
   in place of the Exit label (`data/mod_deck_edit_data.s`, built by `tools/mod_deck_edit_label.py`; the action is
-  `ModDeckEditEmptyMainAndSide`, src/mod_deck_edit.c).
+  `ModDeckEditEmptyMainAndSide`, src/mod_deck_edit.c). After emptying it calls `DeckEdit_StartListSlide(2)` and
+  `DeckEdit_DrawStatementLabels(curList)`, as R does, so the card art, the card frames beside the list, the rows and
+  the scroll bar are redrawn (2026-11-11; before, the frames kept the emptied cards). Not tested in an emulator.
 - The command labels (0x086EF3B0, 0x400-byte blocks of 2 x 16 4bpp tiles, 128 x 16) are pre-drawn pills with
   anti-aliased, shaded lettering (OBJ palette 0 of `gDeckEditObjPal`). The label is put together from the original
   ones so it matches: the pill from "Select A Swapping Card"'s ends, narrowed around the text with its notch kept

@@ -52,5 +52,10 @@ void ModDeckEditEmptyMainAndSide(void)
     if (gDeckEdit.listCount[0][gDeckEdit.curList] == 0)
         gDeckEdit.curList = DECKEDIT_LIST_TRUNK;
     gDeckEdit.commandMenu.anim = CMDMENU_REFRESH;
+    /* Redraw the list as switching lists does (R): the big card art, the card frames beside the list (else they
+     * kept showing the emptied cards), the rows and the scroll bar; then the list's label (it may now be the
+     * trunk). */
+    DeckEdit_StartListSlide(2);
+    DeckEdit_DrawStatementLabels(gDeckEdit.curList);
     PlaySE(SE_CONFIRM);
 }
