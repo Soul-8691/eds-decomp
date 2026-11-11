@@ -39,3 +39,4 @@ eds_*.toml
 tools/testing_scenarios/recordings/*.mp4
 # videos marked throwaway in review_videos.py: done, but not kept in the repository
 tools/testing_scenarios/recordings/throwaway/
+tools/testing_scenarios/highlights.mp4
