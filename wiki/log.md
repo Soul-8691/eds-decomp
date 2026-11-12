@@ -3126,3 +3126,7 @@ updated: 2026-09-29
 ## [2026-11-11] progress | Snatch Steal leaving by Giant Trunade
 - src/added_effects.c: ModCallOfTheHauntedLeaves also gives Snatch Steal's monster back (UpdateMonsterControl) when Snatch Steal is returned to the hand or Deck or banished; before, only the Graveyard path did.
 - [[duel-field-moves-c]], README / README_WIP fixes table. Built (`make demo`); not tested in an emulator.
+
+## [2026-11-11] progress | CPU Magic Cylinder
+- src/ai_summon.c (AiShouldActivateSetCard, key 1214) calls the new AiShouldActivateMagicCylinder (src/added_effects.c): the original read the ATK of the human's zone 0 (CallZoneZero), not the attacker's, and refused a 3000-ATK BLS at 8000 LP each. Mirror Force has the same CallZoneZero read (not changed).
+- [[added-cards]] (Magic Cylinder), AI_IMPROVEMENTS.md. Built (`make demo`, .text 0x0807F504); not tested in an emulator.

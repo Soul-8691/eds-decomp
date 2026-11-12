@@ -13962,6 +13962,57 @@ static int AiChainDiscardRemoval(struct ChainEntry *entry)
 }
 #endif
 
+/* ---- The CPU's Magic Cylinder (engine key 1214) -------------------------------------------------------------------
+ * AiShouldActivateSetCard's original case read the ATK of the human's monster in zone 0 (CallZoneZero: the attacker's
+ * location word passed as a player, zone 0 always), not the attacker's, so an attacker elsewhere or an empty zone 0
+ * read 0 or the wrong monster; and its thresholds (half the human's LP, the CPU's LP, the human still ahead after it,
+ * or exactly one human monster) turned down a 3000-ATK BLS at 8000 LP each. Now, with the attacker's own ATK (loc0)
+ * it activates when:
+ *   - that ATK is lethal to the human, or the attack is lethal to the CPU (its battle damage);
+ *   - the ATK is MAGIC_CYLINDER_BIG_ATK or more;
+ *   - the ATK is MAGIC_CYLINDER_MIN_ATK or more and no other human monster that can still attack has more (no better
+ *     target is coming this turn). */
+#define MAGIC_CYLINDER_BIG_ATK 2000
+#define MAGIC_CYLINDER_MIN_ATK 1000
+
+extern int CanMonsterAttackInt(int player, int zone, int checkCost) asm("CanMonsterAttack");
+
+int AiShouldActivateMagicCylinder(struct ChainEntry *entry)
+{
+    int attacker = DUEL_LOC_ZONE(entry->loc0);
+    int atk, damage, i;
+    struct DuelZone *def;
+
+    if (DUEL_LOC_PLAYER(entry->loc0) != AI_HUMAN || attacker > ZONE_MONSTER_4)
+        return 0;
+    atk = (int)GetZoneCardAtk(AI_HUMAN, attacker);
+    if (atk <= 0)
+        return 0;
+    if (atk >= (int)gDuelPlayers[AI_HUMAN].lifePoints || atk >= MAGIC_CYLINDER_BIG_ATK)
+        return 1;
+    /* the battle damage the CPU would take */
+    damage = atk;
+    if (!gBattle.direct) {
+        def = ZoneOf(AI_PLAYER, gBattle.defSlot);
+        if (DUEL_CARD_ID(&def->card) != 0) {
+            if (def->isDefense || !def->isFaceUp)
+                damage = 0;
+            else
+                damage = atk - (int)GetZoneCardAtk(AI_PLAYER, gBattle.defSlot);
+        }
+    }
+    if (damage >= (int)gDuelPlayers[AI_PLAYER].lifePoints)
+        return 1;
+    if (atk < MAGIC_CYLINDER_MIN_ATK)
+        return 0;
+    for (i = 0; i <= ZONE_MONSTER_4; i++) {
+        if (i != attacker && DUEL_CARD_ID(&ZoneOf(AI_HUMAN, i)->card) != 0 && CanMonsterAttackInt(AI_HUMAN, i, 0)
+            && (int)GetZoneCardAtk(AI_HUMAN, i) > atk)
+            return 0;
+    }
+    return 1;
+}
+
 int AiChainSummonTriggerResponse(struct ChainEntry *entry)
 {
     struct ChainEntry ref;

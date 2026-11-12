@@ -310,7 +310,14 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
 - **The engine already has it** as effect key 1214. Its row is `EffectAttackResponsePrepare` (an opponent's attack
   declaration, from the field) and `EffectAttackResponseResolve`: `DUEL_CMD_NEGATE_ATTACK` (the battle goes to
   `BATTLE_STAGE_END_ATTACK` and the attacker is marked), then the attacker's controller loses LP equal to its ATK.
-  The CPU's Set-Trap logic has a case for it (ai_summon.c: when the attacker's ATK is high enough).
+  The CPU's Set-Trap logic has a case for it (ai_summon.c `AiShouldActivateSetCard`).
+- **CPU fix (2026-11-11).** That case read the ATK of the human's monster in zone 0 (`CallZoneZero`: the attacker's
+  location word passed as a player number, zone 0 always), not the attacker's, and its thresholds (half the human's
+  LP, all of the CPU's, the human still ahead after it, or exactly one human monster) refused a 3000-ATK Black Luster
+  Soldier at 8000 LP each. It now calls `AiShouldActivateMagicCylinder` (added_effects.c), with the attacker's own
+  ATK (`loc0`): yes when the ATK or the CPU's battle damage is lethal, when the ATK is 2000 or more, or when it is
+  1000 or more and no other human monster that can still attack has more. Mirror Force's case has the same
+  `CallZoneZero` read, left as it is.
 - `tools/newcards.py` `ENGINE_NUMBERS` gives Magic Cylinder number 1214; no code change. Verified in the built
   tables: ID 866 = number 1214, Normal Trap.
 - **Side effect.** The added cards after it in the list moved down one free number, as for Thousand-Eyes Restrict.

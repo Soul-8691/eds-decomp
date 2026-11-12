@@ -201,6 +201,7 @@ int AiTributeIsUpgrade(u16 cardId, u16 tributeMask);
 int AiSummonCandidatePreferred(u16 aId, int aDmg, u16 bId, int bDmg);
 int AiSummonBetterWhenAttacksStopped(u16 cardId, u16 tributeMask, int cpuMonstersBefore);
 int AiSkipAttackSummon(u16 cardId);
+int AiShouldActivateMagicCylinder(struct ChainEntry *entry);   /* mod: src/added_effects.c */
 
 int AiChooseSummonWithTribute(int *outDamage)
 {
@@ -571,20 +572,9 @@ int AiShouldActivateSetCard(struct ChainEntry *entry)
         }
         return 0;
     case CARD_1214:
-        /* a = the ATK of zone 0 of the side loc0 names (see CallZoneZero). Go if it reaches half the human's
-         * life points or all of the CPU's, if the human would still have more life points than the CPU
-         * after taking it, or if the human has exactly one monster. */
-        zone = entry->loc0;
-        a = CallZoneZero(zone);
-        if (a >= gDuelPlayers[0].lifePoints / 2)
-            return 1;
-        if (a >= gDuelPlayers[1].lifePoints)
-            return 1;
-        if (gDuelPlayers[0].lifePoints - a > gDuelPlayers[1].lifePoints)
-            return 1;
-        if (CountMonsters(0) == 1)
-            return 1;
-        return 0;
+        /* Magic Cylinder. Changed: the original read the ATK of the human's zone 0 (CallZoneZero), not the
+         * attacker's, with thresholds that refused most attacks (src/added_effects.c). */
+        return AiShouldActivateMagicCylinder(entry);
     case CARD_1425:
         r = CountMonsters(0);
     nonzero:
