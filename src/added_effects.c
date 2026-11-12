@@ -11775,6 +11775,98 @@ int AiSpecialSummonCyberDragon(void)
     return 0;
 }
 
+/* ---- Cannon Soldier and Toon Cannon Soldier (the CPU) --------------------------------------------------------------
+ * "Tribute 1 monster; inflict 500 damage to your opponent." The CPU used to activate Cannon Soldier whenever it had a
+ * second monster (AiActivateMonsterEffects, ai_deck.c), Toon Cannon Soldier whenever it could (AiWantsMonsterEffect),
+ * and AiPickEffectTribute took the first occupied zone (its Sangan/Witch passes assign instead of compare), Cannon
+ * Soldier itself included. Now both ask AiCannonSoldierTribute, which gives the zone to Tribute or -1 (no
+ * activation). A monster may go only:
+ *   - for lethal: 500 per CPU monster (each one a Tribute, the Cannon last) reaches the human's LP; then any;
+ *   - a token, or a monster Magical Scientist summoned (both leave anyway; the Scapegoat and Scientist combos);
+ *   - one taken from the human (Change of Heart, Snatch Steal, Brain Control), in Main Phase 2 only, after it could
+ *     attack;
+ *   - the CPU's own Sangan or Witch of the Black Forest while its Normal Summon is unused and the Deck holds a card to
+ *     search: a monster to summon this turn.
+ * Among those: tokens, Scientist's, taken, Sangan/Witch, others (lethal), a Cannon itself (lethal) last; then the
+ * lowest ATK. AiModPickEffectTribute gives the pick to the Tribute step (summon_builders.c). */
+#define CANNON_BURN 500
+
+int AiPickScientistTribute(int excludeZone);
+
+static int IsCannonSoldierNumber(u16 number)
+{
+#ifdef HAS_CARD_TOON_CANNON_SOLDIER
+    if (number == CARD_TOON_CANNON_SOLDIER)
+        return 1;
+#endif
+    return number == CARD_CANNON_SOLDIER;
+}
+
+/* The rank of the CPU's monster in `zone` as a Tribute (lower first), or -1 when it may not go. */
+static int AiCannonTributeRank(int zone, int cannonZone, int lethal)
+{
+    struct DuelZone *z = ZoneOf(AI_PLAYER, zone);
+    u16 id = DUEL_CARD_ID(&z->card);
+    u16 number;
+
+    if (id == 0)
+        return -1;
+    number = CardNumberOfId(id);
+    if (IsTokenCardId(id))
+        return 0;
+#ifdef HAS_CARD_MAGICAL_SCIENTIST
+    if (IsScientistSummoned(AI_PLAYER, zone))
+        return 1;
+#endif
+    if (z->card.owner != AI_PLAYER && gDuel.phase == PHASE_MAIN2)
+        return 2;
+    if (z->card.owner == AI_PLAYER && (number == CARD_SANGAN || number == CARD_WITCH_OF_THE_BLACK_FOREST)
+        && CanNormalSummon(AI_PLAYER) && CollectEffectTargetsInt(AI_PLAYER, number, 0) > 0)
+        return 3;
+    if (!lethal)
+        return -1;
+    return zone == cannonZone || IsCannonSoldierNumber(number) ? 5 : 4;
+}
+
+/* The zone the CPU's Cannon Soldier in `cannonZone` Tributes, or -1 not to activate it. */
+int AiCannonSoldierTribute(int cannonZone)
+{
+    int lethal = CANNON_BURN * CountMonsters(AI_PLAYER) >= (int)gDuelPlayers[AI_HUMAN].lifePoints;
+    int zone, best = -1, bestRank = 99, rank;
+
+    for (zone = ZONE_MONSTER_0; zone <= ZONE_MONSTER_4; zone++) {
+        rank = AiCannonTributeRank(zone, cannonZone, lethal);
+        if (rank < 0)
+            continue;
+        if (rank < bestRank || (rank == bestRank && GetZoneCardAtk(AI_PLAYER, zone) < GetZoneCardAtk(AI_PLAYER, best))) {
+            best = zone;
+            bestRank = rank;
+        }
+    }
+    return best;
+}
+
+/* AiPickEffectTribute (summon_builders.c) asks this first: the CPU's Cannon Soldier link being built takes
+ * AiCannonSoldierTribute's pick; else a monster Magical Scientist summoned (AiPickScientistTribute); -1: the original
+ * passes. */
+int AiModPickEffectTribute(int excludeZone)
+{
+    if (gChain.building) {
+        struct ChainEntry *link = &gChain.links[gChain.buildIndex];
+
+        if (link->player == AI_PLAYER && IsCannonSoldierNumber(CardNumberOfId(link->card))) {
+            int zone = AiCannonSoldierTribute(link->zone);
+
+            if (zone >= 0 && zone != excludeZone)
+                return zone;
+        }
+    }
+#ifdef HAS_CARD_MAGICAL_SCIENTIST
+    return AiPickScientistTribute(excludeZone);
+#else
+    return -1;
+#endif
+}
 
 #ifdef HAS_CARD_MAGICAL_SCIENTIST
 /* ---- Magical Scientist (the CPU) -----------------------------------------------------------------------------------
@@ -14367,6 +14459,10 @@ static int AiWantsMonsterEffect(u16 number, int zone)
 #ifdef HAS_CARD_MAGICAL_SCIENTIST
     case CARD_MAGICAL_SCIENTIST:                /* AiUseMagicalScientist decides */
         return 0;
+#endif
+#ifdef HAS_CARD_TOON_CANNON_SOLDIER
+    case CARD_TOON_CANNON_SOLDIER:              /* only with a reason to Tribute (AiCannonSoldierTribute) */
+        return AiCannonSoldierTribute(zone) >= 0;
 #endif
 #ifdef HAS_CARD_THE_DARK_HEX_SEALED_FUSION
     case CARD_THE_DARK_HEX_SEALED_FUSION:       /* a Fusion Monster for its materials: whenever it can */

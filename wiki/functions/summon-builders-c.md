@@ -74,3 +74,11 @@ Joint release of all subsets of six r4 table bindings, live-mask rewrites with g
 - Steps: (1) a clean rewrite modelled on sibling `AiPickStrongestHandMonster`, with constant-pointer `CARD_*` macros and `u16 id`, scored 229 (registers only). (2) `CardDefValue`'s default written `((u16)CARD_STATS(id) & 0x1FF) * 10`: the front end shortens the AND to HImode, so 0x1FF becomes an HImode constant that needs a reload (`ldr r3,=0x1FF; adds r0,r3`), and that reload puts every later rotation choice back in step (58). (3) `v = CardDefValue(id) + atk` (DEF first) fixes the `adds r0, r0, r2` operand order (52). (4) The ATK value as a switch-statement macro `CARD_ATK_VALUE(id, atk)` instead of the `CardValue` inline: every arm writes `atk` (r2) directly, with no return-value copy (0).
 - The unused `WeakestValue`/`WeakestKey` helpers used only by the parked draft were removed.
 - Tip: `cc.sh -dl -dg` in `build/wf/AiPickWeakestHandCard/` shows the reload insns (`set (reg:SI rN) (const_int ...)` before an HImode move). See [[matching-tricks#Register allocation priority and reload rotation]].
+
+> [!note] Mod change (2026-11-11): Cannon Soldier's Tribute pick
+> `AiPickEffectTribute` now asks `AiModPickEffectTribute` (src/added_effects.c) first, in place of the `#ifdef`'d
+> `AiPickScientistTribute` call. For the CPU's Cannon Soldier or Toon Cannon Soldier link being built
+> (`gChain.links[gChain.buildIndex]`) it returns `AiCannonSoldierTribute`'s pick: tokens, then Magical Scientist's
+> Fusions, then monsters taken from the human (Main Phase 2), then Sangan/Witch, then (lethal only) others and a
+> Cannon itself last; lowest ATK within a rank. Otherwise Scientist's Fusion as before. The original passes took
+> the first occupied zone (the Sangan/Witch '=' bug), Cannon Soldier itself included.

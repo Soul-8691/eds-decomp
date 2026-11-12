@@ -88,3 +88,10 @@ The word count result is reconciled in [[duel-card-lists-c]], and the observed t
 > The original 832-case fixture set's synthetic field counts never selected the first hand scan. Its pass was finite evidence, not full branch coverage. The expanded set independently selects empty and occupied fields, checks hand/deck counts 0..80 and synthetic count changes, and now passes **1,664 fixtures** over all eleven states and two invalid states. Full EWRAM, active IWRAM, call traces, return values, preserved registers and SP agree. Exact full-unit bytes remain the acceptance criterion.
 
 Evidence: `build/bigguns-lead2/ai_step_b_{resume,loop_stage,mask_copies,first_hint,deck,deck_regs,deck_pointer,deck_initial,deck_scratch,deck_final,first_types,case4,minimize,abi,clean,accept}.py`, `verify_ai_step_b_complete.py`, `AiPlaySpells/solo-step-b-clean/`, and `build/lead-pass26/`. Failed return-group/preheader/type-binding grids remain private; do not replay them unchanged.
+
+> [!note] Mod change (2026-11-11): Cannon Soldier's Tributes
+> `AiActivateMonsterEffects` activated Cannon Soldier whenever the CPU had a second monster (`CountMonsters(1) <= 1`
+> refused it). It now asks `AiCannonSoldierTribute` (src/added_effects.c), which gives -1 unless a monster may go:
+> lethal burn (500 per CPU monster reaches the human's LP), a token or a Magical Scientist Fusion, a monster taken
+> from the human in Main Phase 2, or the CPU's Sangan / Witch of the Black Forest with the Normal Summon unused and a
+> card to search. Toon Cannon Soldier gets the same rule in `AiWantsMonsterEffect`. Built; not tested in an emulator.

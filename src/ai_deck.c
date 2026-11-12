@@ -381,6 +381,7 @@ static inline u32 PackZoneIndex(u32 z)
 /* The CPU's table of monsters with an activated effect: gAiEffectMonsters (0x0819DD64): Time Wizard, Cannon
  * Soldier, Relinquished, Barrel Dragon. */
 extern const u16 gAiEffectMonsters[];
+int AiCannonSoldierTribute(int cannonZone);     /* mod: src/added_effects.c */
 
 /*
  * Activate the effect of a face-up monster of gAiEffectMonsters on the CPU's field (listIndex walks the table,
@@ -423,7 +424,9 @@ int AiActivateMonsterEffects(void)
                         *(u8 *)(gDuelZonesP1Bytes + 0xD9C) |= 2;
                         return 0;
                     }
-                    if (CountMonsters(1) <= 1)
+                    /* changed: a Tribute only for a reason (lethal, a token, a taken monster in Main Phase 2, Sangan
+                     * or Witch for a summon; src/added_effects.c); the original took any second monster */
+                    if (AiCannonSoldierTribute(gAiState.zoneIndex) < 0)
                         ok = 0;
                 }
                 if (ok != 0) {

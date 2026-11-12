@@ -3142,3 +3142,7 @@ updated: 2026-09-29
 ## [2026-11-11] progress | CPU: no Solemn Judgment to save itself
 - src/added_effects.c: AiChainSolemnJudgment skips a link whose every target is a Set Solemn Judgment of the CPU's (AiLinkTargetsOnlySolemn: MST, Dust Tornado and other targeted removal).
 - [[added-cards]] (Solemn Judgment), AI_IMPROVEMENTS.md. Built (`make demo`); not tested in an emulator.
+
+## [2026-11-11] progress | CPU Cannon Soldier Tributes only for a reason
+- src/added_effects.c: AiCannonSoldierTribute / AiModPickEffectTribute; src/ai_deck.c (AiActivateMonsterEffects) and src/summon_builders.c (AiPickEffectTribute) call them; AiWantsMonsterEffect case for Toon Cannon Soldier. Reasons: lethal burn, tokens and Scientist Fusions, taken monsters in Main Phase 2, Sangan/Witch with the Normal Summon unused.
+- [[ai-deck-c]], [[summon-builders-c]], AI_IMPROVEMENTS.md. Built (`make demo`, .text unchanged); not tested in an emulator.
