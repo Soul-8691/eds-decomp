@@ -2711,7 +2711,8 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
   - `DAMAGE_STEP_CALC`, before `CalcBattle`: `InjectionFairyLilyDamageStep` checks the attacker, then the target
     (not for a direct attack). It acts for a face-up Lily whose controller has more than 2000 LP. The human is
     asked through `PROMPT_CONFIRM_CARD_EFFECT` (text in duel_prompts.c). The CPU pays when the 3000 ATK would turn
-    the battle; on a direct attack, when it has more than 4000 LP. Paying shows the card, queues `DUEL_CMD_LOSE_LP`
+    the battle; on a direct attack, when it has more than 4000 LP; and (2026-11-11, `CpuWantsLily`) whenever the
+    boosted battle damage is lethal (a direct attack, or an Attack Position monster). Paying shows the card, queues `DUEL_CMD_LOSE_LP`
     2000 (as a cost) and a `ZONE_LINK_ATK_BONUS` link of 3000, then returns 1. The stage waits, because
     `DuelMainStep` runs the phase handlers only when the command queue and the prompts are idle, so `CalcBattle`
     sees the new ATK.

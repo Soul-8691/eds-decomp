@@ -3130,3 +3130,7 @@ updated: 2026-09-29
 ## [2026-11-11] progress | CPU Magic Cylinder
 - src/ai_summon.c (AiShouldActivateSetCard, key 1214) calls the new AiShouldActivateMagicCylinder (src/added_effects.c): the original read the ATK of the human's zone 0 (CallZoneZero), not the attacker's, and refused a 3000-ATK BLS at 8000 LP each. Mirror Force has the same CallZoneZero read (not changed).
 - [[added-cards]] (Magic Cylinder), AI_IMPROVEMENTS.md. Built (`make demo`, .text 0x0807F504); not tested in an emulator.
+
+## [2026-11-11] progress | CPU pays Lily for lethal
+- src/added_effects.c: CpuWantsLily also pays when the boosted battle damage is lethal (a direct attack with 4000 LP or less used to be refused; a Lily that already won never paid).
+- [[added-cards]] (Injection Fairy Lily), AI_IMPROVEMENTS.md. Built (`make demo`); not tested in an emulator.

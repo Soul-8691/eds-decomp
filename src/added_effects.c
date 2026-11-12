@@ -5902,19 +5902,29 @@ static int CanUseLily(int attacker, int side, int *who, int *zone)
            && gDuelPlayers[*who & 1].lifePoints > LILY_COST;
 }
 
-/* The CPU pays when the 3000 ATK turn the battle (a direct attack: with LP to spare). */
+/* The CPU pays when the boosted battle damage is lethal (added 2026-11-11: before, a direct attack needed more than
+ * 4000 LP, and a Lily that already won never paid, even for the win), when the 3000 ATK turn the battle, or for a
+ * direct attack with LP to spare. */
 static int CpuWantsLily(int attacker, int side, int who, int zone)
 {
     int otherWho, otherZone;
     u32 atk = GetZoneCardAtk(who, zone);
     u32 value;
+    struct DuelZone *other;
 
-    if (!BattleMonster(attacker, 1 - side, &otherWho, &otherZone))
+    if (!BattleMonster(attacker, 1 - side, &otherWho, &otherZone)) {
+        if ((int)(atk + LILY_BONUS) >= (int)gDuelPlayers[1 - (who & 1)].lifePoints)
+            return 1;               /* a direct attack for the win */
         return gDuelPlayers[who & 1].lifePoints > 2 * LILY_COST;
-    if (DUEL_CARD_ID(&ZoneOf(otherWho, otherZone)->card) == 0)
+    }
+    other = ZoneOf(otherWho, otherZone);
+    if (DUEL_CARD_ID(&other->card) == 0)
         return 0;
-    value = ZoneOf(otherWho, otherZone)->isDefense ? GetZoneCardDef(otherWho, otherZone)
-                                                   : GetZoneCardAtk(otherWho, otherZone);
+    value = other->isDefense ? GetZoneCardDef(otherWho, otherZone) : GetZoneCardAtk(otherWho, otherZone);
+    /* an Attack Position monster: the difference is battle damage to its controller */
+    if (!other->isDefense && atk + LILY_BONUS > value
+        && (int)(atk + LILY_BONUS - value) >= (int)gDuelPlayers[otherWho & 1].lifePoints)
+        return 1;
     return atk <= value && atk + LILY_BONUS > value;
 }
 
