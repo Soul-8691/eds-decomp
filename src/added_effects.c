@@ -991,9 +991,9 @@ int EffectRaigekiBreakChainB(struct ChainEntry *link, struct ChainEntry *prevLin
         int opponent = 1 - controller;
         int zone;
 
+        /* No CanActivateEffect re-check here: the discard cost is paid by now, so the prepare's hand count would
+         * fail when the discarded card was the last one in hand. */
         link->numTargets = 0;
-        if (CanActivateEffect(link, prevLink, 0) == 0)
-            return 1;
         zone = CountMonsters(opponent) > 0 ? AiFindStrongestMonster(opponent, -1, 1, 1) : -1;
         if (zone >= 0 && EffectRaigekiBreakCheck(link, RAIGEKI_BREAK_POS(opponent, zone))
             && TryAddEffectTarget(link, opponent, zone))
@@ -1013,8 +1013,6 @@ int EffectRaigekiBreakChainB(struct ChainEntry *link, struct ChainEntry *prevLin
     switch (gChain.targetStep) {
     case 0:
         link->numTargets = 0;
-        if (CanActivateEffect(link, prevLink, 0) == 0)
-            return 1;
         TextBoxOpen(0x206, 0x712, TEXTBOX_FLAGS_DEFAULT, gStrDesignateFirstCardToDestroy);
         gChain.targetStep++;
         return 0;

@@ -2719,8 +2719,8 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
 - **ChainA:** the discard cost `DuelPrompt_PostDiscardCost`, as for Raigeki Break and Tribe-Infecting Virus.
 - **ChainB** (`EffectPhoenixWingWindBlastChainB`): a cursor pick among the opponent's monster, Spell/Trap and Field
   zones (`PICK_PLAYER1(...)`, `EffectPhoenixWingWindBlastCheck`). The CPU takes the human's strongest monster, else
-  their first card. Unlike Raigeki Break's ChainB it does not call `CanActivateEffect` again: the discard is paid by
-  then, and the hand count of the prepare could fail.
+  their first card. It does not call `CanActivateEffect` again: the discard is paid by then, and the hand count of
+  the prepare could fail (the bug Raigeki Break had until 2026-11-11).
 - **Resolve:** `ReturnFieldCardToDeck`, which puts the card on top of its owner's Deck. A Fusion Monster goes to the
   Fusion Deck and a token is destroyed, the game's own rules for that command.
 - Checked in the source and the build; not tested in an emulator.
@@ -2950,6 +2950,9 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
 - **Cost (chainA):** `DuelPrompt_PostDiscardCost` for 1 card (same as Tribe-Infecting Virus / Magic Jammer).
 - **Target (chainB):** any occupied zone on either side; human cursor `PICK_ANY_MONSTER | PICK_ANY_SPELL_TRAP`;
   prompt `gStrDesignateFirstCardToDestroy` (Greenkappa's "card" wording, not monster-only text).
+  - Fixed 2026-11-11: ChainB used to call `CanActivateEffect` again. The discard is paid by then, so with one card
+    in hand (the one discarded) the prepare's hand count failed and the Trap took no target. The re-check is gone
+    (as Karma Cut and Phoenix Wing Wind Blast).
 - **Resolve:** `EffectDestroyTargetResolve`.
 - Checked in the source; not tested in an emulator.
 
