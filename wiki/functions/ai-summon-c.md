@@ -84,6 +84,14 @@ The parked draft's comment gave score 4 (only the default case's `b & 7 | 8` dif
 
 Failed: `(u16)(a << 4)` and `(a << 4) | ...` forms of the mask (26-56); `(b & 7) | 8` inlined into the mask expression (34).
 
+> [!note] Mod (2026-11-11)
+> Both summon pickers (`AiChooseSummonWithTribute`, `AiChooseSummonNoTribute`) call `AiSkipAttackSummon`
+> (src/added_effects.c) in place of the `#ifdef`'d `AiShouldSkipSummonInjectionFairyLily` call (same size; it still
+> applies Lily's rule). It skips a monster under 900 ATK (`AI_WEAK_ATTACKER_ATK`) that would neither destroy a human
+> monster nor, with the CPU's Attack Position monsters, deal lethal direct damage, so Big Shield Gardna (100 ATK) is
+> no longer summoned face up to attack an empty field. Flip-effect and summon-trigger monsters are not skipped. The
+> Set step (`AiPickMonsterToSet`) can still Set it.
+
 ### `AddCardNumberToDeckTop` (0x208, start score 129; ordinary C)
 
 1. Every table (`0x08623DF4`, `0x08621DE0`, `0x08622AB4`) goes through an integer-constant pointer instead of the extern-symbol forms. With the externs, GCSE keeps the table address in a register, while the ROM reloads it at every use (129 -> 40).

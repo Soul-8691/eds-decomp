@@ -10784,15 +10784,13 @@ u32 AiProjectedAtk(int zone);
  * It now switches only when it destroys one of the human's monsters, or when the human has none and the CPU's
  * Attack Position monsters with it deal lethal damage. Face-down flip-effect monsters are not asked (they are
  * flipped for their effects). */
-static int AiWeakAttackerWorthIt(int zone)
+/* Is an attacker with `atk` worth putting in Attack Position? Yes from AI_WEAK_ATTACKER_ATK up; below it only when
+ * it destroys one of the human's monsters, or the human has none and it plus the CPU's other face-up Attack Position
+ * monsters (not the one in `zone`; -1: none left out) deal lethal damage. */
+static int AiWeakAtkWorthAttacking(int atk, int zone)
 {
-    struct DuelZone *z = ZoneOf(AI_PLAYER, zone);
-    u16 number = CardNumberOfId(DUEL_CARD_ID(&z->card));
-    int atk, total, i;
+    int total, i;
 
-    if (!z->isFaceUp && (HasFlipEffect(number, 0) || HasFlipEffect(number, 1)))
-        return 1;
-    atk = (int)AiProjectedAtk(zone);
     if (atk >= AI_WEAK_ATTACKER_ATK)
         return 1;
     if (CountMonsters(AI_HUMAN) > 0) {
@@ -10810,6 +10808,31 @@ static int AiWeakAttackerWorthIt(int zone)
             total += (int)GetZoneCardAtk(AI_PLAYER, i);
     }
     return total >= (int)gDuelPlayers[AI_HUMAN].lifePoints;
+}
+
+static int AiWeakAttackerWorthIt(int zone)
+{
+    struct DuelZone *z = ZoneOf(AI_PLAYER, zone);
+
+    if (!z->isFaceUp && AiFlipEffectMonster(DUEL_CARD_ID(&z->card)))
+        return 1;
+    return AiWeakAtkWorthAttacking((int)AiProjectedAtk(zone), zone);
+}
+
+/* The CPU's attack-summon pickers (AiChooseSummonWithTribute, AiChooseSummonNoTribute) skip a card for which this
+ * is 1. They summon face up in Attack Position any monster that adds simulated battle damage, so Big Shield Gardna
+ * (100 ATK) was summoned to attack the human's empty field. A monster under AI_WEAK_ATTACKER_ATK is now skipped
+ * unless it is worth attacking with (AiWeakAtkWorthAttacking); the Set step can still Set it. Flip-effect monsters
+ * (Set by these pickers) and summon-trigger monsters are not skipped. Also Injection Fairy Lily's LP rule. */
+int AiSkipAttackSummon(u16 cardId)
+{
+#ifdef HAS_CARD_INJECTION_FAIRY_LILY
+    if (AiShouldSkipSummonInjectionFairyLily(cardId))
+        return 1;
+#endif
+    if (AiFlipEffectMonster(cardId) || AiNormalSummonTriggerMonster(cardId))
+        return 0;
+    return !AiWeakAtkWorthAttacking(AiPrintedMonsterAtk(cardId), -1);
 }
 
 int AiShouldTurnDefenseToAttack(int player, int zone)

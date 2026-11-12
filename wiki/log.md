@@ -3118,3 +3118,7 @@ updated: 2026-09-29
 ## [2026-11-11] progress | CPU: weak monsters stay in Defense
 - src/added_effects.c: AiShouldTurnDefenseToAttack asks AiWeakAttackerWorthIt: under 900 ATK (AI_WEAK_ATTACKER_ATK) a Defense Position monster switches to Attack only to destroy a human monster or for a lethal direct attack (Treeborn Frog no longer attacks an open field for 100). Face-down flip monsters exempt.
 - [[added-cards]] (Treeborn Frog), AI_IMPROVEMENTS.md. Built (`make demo`); not tested in an emulator.
+
+## [2026-11-11] progress | CPU: no weak attack summons
+- src/added_effects.c: AiSkipAttackSummon (weak-attacker rule shared with the Treeborn Frog fix via AiWeakAtkWorthAttacking, plus Lily's LP rule). src/ai_summon.c: both summon pickers call it instead of AiShouldSkipSummonInjectionFairyLily. Big Shield Gardna is no longer summoned in Attack Position to hit an empty field for 100.
+- [[ai-summon-c]], AI_IMPROVEMENTS.md. Built (`make demo`, .text unchanged); not tested in an emulator.
