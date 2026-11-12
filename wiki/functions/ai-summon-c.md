@@ -89,7 +89,9 @@ Failed: `(u16)(a << 4)` and `(a << 4) | ...` forms of the mask (26-56); `(b & 7)
 > (src/added_effects.c) in place of the `#ifdef`'d `AiShouldSkipSummonInjectionFairyLily` call (same size; it still
 > applies Lily's rule). It skips a monster under 900 ATK (`AI_WEAK_ATTACKER_ATK`) that would neither destroy a human
 > monster nor, with the CPU's Attack Position monsters, deal lethal direct damage, so Big Shield Gardna (100 ATK) is
-> no longer summoned face up to attack an empty field. Flip-effect and summon-trigger monsters are not skipped. The
+> no longer summoned face up to attack an empty field. Flip-effect and summon-trigger monsters, and Spirits that
+> return to the hand in the End Phase (Yata-Garasu: no counterattack; `AiReturnsBeforeCounterattack`, also in the
+> Defense-to-Attack switch) are not skipped. The
 > Set step (`AiPickMonsterToSet`) can still Set it.
 
 ### `AddCardNumberToDeckTop` (0x208, start score 129; ordinary C)

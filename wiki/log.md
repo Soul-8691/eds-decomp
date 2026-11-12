@@ -3134,3 +3134,7 @@ updated: 2026-09-29
 ## [2026-11-11] progress | CPU pays Lily for lethal
 - src/added_effects.c: CpuWantsLily also pays when the boosted battle damage is lethal (a direct attack with 4000 LP or less used to be refused; a Lily that already won never paid).
 - [[added-cards]] (Injection Fairy Lily), AI_IMPROVEMENTS.md. Built (`make demo`); not tested in an emulator.
+
+## [2026-11-11] progress | Yata-Garasu exempt from the weak-attacker rule
+- src/added_effects.c: AiReturnsBeforeCounterattack (IsReturningSpirit: Yata-Garasu, Asura Priest) exempts End-Phase-returning Spirits in AiSkipAttackSummon and AiWeakAttackerWorthIt. Spirit Reaper stays under the rule (user's call).
+- [[ai-summon-c]], AI_IMPROVEMENTS.md. Built (`make demo`); not tested in an emulator.

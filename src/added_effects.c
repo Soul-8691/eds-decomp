@@ -10831,10 +10831,24 @@ static int AiWeakAtkWorthAttacking(int atk, int zone)
     return total >= (int)gDuelPlayers[AI_HUMAN].lifePoints;
 }
 
+/* A Spirit that returns to the hand in the End Phase (Yata-Garasu): it is gone before the human's turn, so a weak one
+ * risks no counterattack and is always worth attacking with. */
+static int AiReturnsBeforeCounterattack(u16 cardId)
+{
+#if defined(HAS_CARD_YATA_GARASU) || defined(HAS_CARD_ASURA_PRIEST)
+    return IsReturningSpirit(cardId);
+#else
+    (void)cardId;
+    return 0;
+#endif
+}
+
 static int AiWeakAttackerWorthIt(int zone)
 {
     struct DuelZone *z = ZoneOf(AI_PLAYER, zone);
 
+    if (AiReturnsBeforeCounterattack(DUEL_CARD_ID(&z->card)))
+        return 1;
     if (!z->isFaceUp && AiFlipEffectMonster(DUEL_CARD_ID(&z->card)))
         return 1;
     return AiWeakAtkWorthAttacking((int)AiProjectedAtk(zone), zone);
@@ -10851,7 +10865,7 @@ int AiSkipAttackSummon(u16 cardId)
     if (AiShouldSkipSummonInjectionFairyLily(cardId))
         return 1;
 #endif
-    if (AiFlipEffectMonster(cardId) || AiNormalSummonTriggerMonster(cardId))
+    if (AiFlipEffectMonster(cardId) || AiNormalSummonTriggerMonster(cardId) || AiReturnsBeforeCounterattack(cardId))
         return 0;
     return !AiWeakAtkWorthAttacking(AiPrintedMonsterAtk(cardId), -1);
 }
