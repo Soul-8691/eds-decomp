@@ -482,6 +482,7 @@ current CPU behavior in full.
 | **Spear Cretin, The Shallow Grave** | On the CPU's turn, the monster you revived also stayed in your Graveyard and counted as the CPU's card | It leaves your Graveyard and stays yours |
 | **Sangan, Witch of the Black Forest** (and other Graveyard effects) | Revived by Call of the Haunted or Premature Burial and then destroyed, the effect activated twice | Once |
 | **Call of the Haunted** | Returned to the hand (Giant Trunade) or the Deck, it could destroy another Call's monster and was also sent to the Graveyard; banished, it left its monster on the field | It destroys its own monster, whichever way it leaves |
+| **Snatch Steal** | Returned to the hand (Giant Trunade) or the Deck, or banished, it left the stolen monster with the player who took it | The monster goes back to its owner, whichever way Snatch Steal leaves |
 | **Graverobber** | A stolen card Set first and activated later skipped the 2000 LP cost | It costs 2000 LP |
 | **Time Wizard** | When the CPU's Time Wizard could summon Dark Sage, you got its questions and its Spell search | The CPU answers them itself |
 

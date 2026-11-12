@@ -65,6 +65,13 @@ the same bytes. Unit-specific layouts the headers do not define stay local:
 > monster. All four now call `ModCallOfTheHauntedLeaves` (src/added_effects.c): unless disabled, the monster linked
 > to this zone (`FindMonsterWithLinkTo`) is unlinked, then destroyed. Built; not tested in an emulator.
 
+> [!note] Mod change (2026-11-11, asked by the user: Snatch Steal returned by Giant Trunade)
+> Only `SendFieldCardToGrave` gave a stolen monster back (`UpdateMonsterControl` with the leaving Snatch Steal as
+> `removedLink`). Returned to the hand or Deck, or banished (also by Banisher of the Light), Snatch Steal left the
+> monster with its taker. `ModCallOfTheHauntedLeaves` now also handles Snatch Steal: the monster linked to this
+> zone goes through `UpdateMonsterControl` the same way (back to its owner's first free zone, destroyed with none
+> free). Built; not tested in an emulator.
+
 ## Data
 
 - `0x0201930C` = `0x020192E4 + 0x28`: the 11 zones of a player struct (`0xD64`

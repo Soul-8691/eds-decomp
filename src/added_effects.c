@@ -10466,12 +10466,23 @@ int ModUnlinkReviver(int player, int zone, int idx, u16 linkedId)
  * looked up any monster linked to any Call of the Haunted by card number) is unlinked, then destroyed. Unlinked
  * first: else the monster's DestroyLinkedCards finds the Call still in its zone (its move is only queued) and
  * destroys it too, queueing a Graveyard send after its return. */
+/* Also Snatch Steal (2026-11-11): leaving the field this way (Giant Trunade, say) gave nothing back, as only
+ * SendFieldCardToGrave called UpdateMonsterControl. Now its monster returns to its owner here too, as when Snatch
+ * Steal goes to the Graveyard (the same call: removedLink = this zone; with no free zone the monster is destroyed). */
 void ModCallOfTheHauntedLeaves(int player, int zone)
 {
     struct DuelZone *z = ZoneOf(player, zone);
     u16 loc;
 
-    if (CARD_NUMBER(DUEL_CARD_ID(&z->card)) != CARD_CALL_OF_THE_HAUNTED || z->isDisabled || zone <= ZONE_MONSTER_4)
+    if (zone <= ZONE_MONSTER_4)
+        return;
+    if (CARD_NUMBER(DUEL_CARD_ID(&z->card)) == CARD_SNATCH_STEAL) {
+        loc = FindMonsterWithLinkTo(player, zone);
+        if (loc != 0xFFFF)
+            UpdateMonsterControl(DUEL_LOC_PLAYER(loc), DUEL_LOC_ZONE(loc), (u16)((u8)player | ((u8)zone << 8)));
+        return;
+    }
+    if (CARD_NUMBER(DUEL_CARD_ID(&z->card)) != CARD_CALL_OF_THE_HAUNTED || z->isDisabled)
         return;
     loc = FindMonsterWithLinkTo(player, zone);
     if (loc == 0xFFFF)

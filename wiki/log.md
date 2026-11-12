@@ -3122,3 +3122,7 @@ updated: 2026-09-29
 ## [2026-11-11] progress | CPU: no weak attack summons
 - src/added_effects.c: AiSkipAttackSummon (weak-attacker rule shared with the Treeborn Frog fix via AiWeakAtkWorthAttacking, plus Lily's LP rule). src/ai_summon.c: both summon pickers call it instead of AiShouldSkipSummonInjectionFairyLily. Big Shield Gardna is no longer summoned in Attack Position to hit an empty field for 100.
 - [[ai-summon-c]], AI_IMPROVEMENTS.md. Built (`make demo`, .text unchanged); not tested in an emulator.
+
+## [2026-11-11] progress | Snatch Steal leaving by Giant Trunade
+- src/added_effects.c: ModCallOfTheHauntedLeaves also gives Snatch Steal's monster back (UpdateMonsterControl) when Snatch Steal is returned to the hand or Deck or banished; before, only the Graveyard path did.
+- [[duel-field-moves-c]], README / README_WIP fixes table. Built (`make demo`); not tested in an emulator.
