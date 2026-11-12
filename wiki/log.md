@@ -3138,3 +3138,7 @@ updated: 2026-09-29
 ## [2026-11-11] progress | Yata-Garasu exempt from the weak-attacker rule
 - src/added_effects.c: AiReturnsBeforeCounterattack (IsReturningSpirit: Yata-Garasu, Asura Priest) exempts End-Phase-returning Spirits in AiSkipAttackSummon and AiWeakAttackerWorthIt. Spirit Reaper stays under the rule (user's call).
 - [[ai-summon-c]], AI_IMPROVEMENTS.md. Built (`make demo`); not tested in an emulator.
+
+## [2026-11-11] progress | CPU: no Solemn Judgment to save itself
+- src/added_effects.c: AiChainSolemnJudgment skips a link whose every target is a Set Solemn Judgment of the CPU's (AiLinkTargetsOnlySolemn: MST, Dust Tornado and other targeted removal).
+- [[added-cards]] (Solemn Judgment), AI_IMPROVEMENTS.md. Built (`make demo`); not tested in an emulator.

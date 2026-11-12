@@ -916,6 +916,9 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
     used only when none of those applies. It is also called in the Harpie's Feather Duster case, which otherwise
     returns early. The cases that return 0 before the type switch (Field Magic, LP recovery, the lethal-only burn
     cards, De-Spell / Mystical Space Typhoon aimed at Black Pendant or Magic Jammer) still get no answer.
+    Since 2026-11-11 it is not chained to a link whose every target is a Set Solemn Judgment of the CPU's
+    (Mystical Space Typhoon or Dust Tornado on it: `AiLinkTargetsOnlySolemn`), which would pay half the LP to save
+    a card used up anyway.
 - Checked in the source and the build; not tested in an emulator.
 
 ### The CPU uses Nobleman of Crossout (2026-10-29)

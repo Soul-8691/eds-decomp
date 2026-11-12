@@ -15947,6 +15947,27 @@ int AiShouldRetreatToDefense(int zone)
  *               Harpie's Feather Duster */
 #define AI_SOLEMN_MAX_LP 4000
 
+/* 1 when every target of the link is a Set Solemn Judgment of the CPU's (Mystical Space Typhoon or Dust Tornado on
+ * it): chaining it would pay half the LP only to save a card that is used up anyway. Added 2026-11-11. */
+static int AiLinkTargetsOnlySolemn(struct ChainEntry *entry)
+{
+    int i;
+
+    if (entry->numTargets == 0)
+        return 0;
+    for (i = 0; i < entry->numTargets; i++) {
+        int zone = DUEL_LOC_ZONE(entry->targets[i]);
+        struct DuelZone *z;
+
+        if (DUEL_LOC_PLAYER(entry->targets[i]) != AI_PLAYER || zone < ZONE_SPELL_0 || zone > ZONE_SPELL_4)
+            return 0;
+        z = ZoneOf(AI_PLAYER, zone);
+        if (z->isFaceUp || CardNumberOfId(DUEL_CARD_ID(&z->card)) != CARD_SOLEMN_JUDGMENT)
+            return 0;
+    }
+    return 1;
+}
+
 int AiChainSolemnJudgment(struct ChainEntry *entry)
 {
     u32 type = CARD_STATS_TYPE(gCardStats[entry->card & CARD_ID_MASK]);
@@ -15977,7 +15998,7 @@ int AiChainSolemnJudgment(struct ChainEntry *entry)
     if (AiChainEmergencyProvisions(entry))
         return 1;
 #endif
-    if (gDuelPlayers[AI_PLAYER].lifePoints > AI_SOLEMN_MAX_LP)
+    if (gDuelPlayers[AI_PLAYER].lifePoints > AI_SOLEMN_MAX_LP || AiLinkTargetsOnlySolemn(entry))
         return 0;
     return AiChainSetCard(entry, CARD_SOLEMN_JUDGMENT) != 0;
 }
