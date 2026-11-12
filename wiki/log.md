@@ -3114,3 +3114,7 @@ updated: 2026-09-29
 ## [2026-11-11] progress | CPU chains Raigeki Break and Karma Cut
 - src/added_effects.c: AiChainDiscardRemoval (from AiChainSummonTriggerResponse) chains a Set Raigeki Break / Karma Cut to a human monster effect on the field, or to a link that would destroy the Set card (Heavy Storm, Harpie's Feather Duster, a target on its zone) unless a Set Magic Jammer / Solemn Judgment / Gryphon Wing can negate it. ChainedOpponentMonsterZone: the CPU's ChainB of both takes the monster it answers.
 - [[added-cards]]. Built (`make demo`); not tested in an emulator.
+
+## [2026-11-11] progress | CPU: weak monsters stay in Defense
+- src/added_effects.c: AiShouldTurnDefenseToAttack asks AiWeakAttackerWorthIt: under 900 ATK (AI_WEAK_ATTACKER_ATK) a Defense Position monster switches to Attack only to destroy a human monster or for a lethal direct attack (Treeborn Frog no longer attacks an open field for 100). Face-down flip monsters exempt.
+- [[added-cards]] (Treeborn Frog), AI_IMPROVEMENTS.md. Built (`make demo`); not tested in an emulator.

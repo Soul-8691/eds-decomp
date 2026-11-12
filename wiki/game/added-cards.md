@@ -687,6 +687,12 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
 - **Summon.** The human is asked (Yes/No); the CPU always says Yes. The conditions are checked again on resolve. Then
   `RemoveGraveyardCardByNumber` and `QueueSpecialSummonChoosePosition` with `ZONE_STATUS_FROM_GRAVEYARD`.
 - **CPU limit.** The CPU doesn't hold back Spell/Trap cards to keep the Frog coming back.
+- **CPU attacks** (2026-11-11). The Frog used to switch to Attack Position in the CPU's position-change step whenever
+  it could beat something, the human's empty field included (100 damage, then open to a counterattack).
+  `AiShouldTurnDefenseToAttack` now asks `AiWeakAttackerWorthIt`: a monster under 900 ATK (`AI_WEAK_ATTACKER_ATK`,
+  with the Equip in hand counted, `AiProjectedAtk`) switches only when it destroys a human monster
+  (`AiCanBeatMonster`), or when the human has none and it plus the CPU's face-up Attack Position monsters deal
+  lethal damage. Face-down flip-effect monsters are not asked. Masked Sorcerer (900) still attacks an open field.
 - Checked in the source and the build; not tested in an emulator.
 
 ### The CPU plays its Spells after summoning (2026-10-29)

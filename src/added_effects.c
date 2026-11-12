@@ -10774,9 +10774,51 @@ int AiHumanSwordsActive(void)
 
 /* Position-change step: while the human's Swords blocks attacks, do not Flip Summon or switch Defense to
  * Attack unless ATK exceeds DEF (no point exposing a wall). Tribute flips use a separate path. */
+/* Below this ATK a monster is not switched to Attack Position only to deal damage (AiWeakAttackerWorthIt). */
+#define AI_WEAK_ATTACKER_ATK 900       /* Masked Sorcerer (900) still attacks an open field */
+
+u32 AiProjectedAtk(int zone);
+
+/* A weak monster in Defense Position (Treeborn Frog, 100 ATK) used to switch to Attack whenever it could beat
+ * something, the human's empty field included: a 100-damage direct attack that leaves it open to a counterattack.
+ * It now switches only when it destroys one of the human's monsters, or when the human has none and the CPU's
+ * Attack Position monsters with it deal lethal damage. Face-down flip-effect monsters are not asked (they are
+ * flipped for their effects). */
+static int AiWeakAttackerWorthIt(int zone)
+{
+    struct DuelZone *z = ZoneOf(AI_PLAYER, zone);
+    u16 number = CardNumberOfId(DUEL_CARD_ID(&z->card));
+    int atk, total, i;
+
+    if (!z->isFaceUp && (HasFlipEffect(number, 0) || HasFlipEffect(number, 1)))
+        return 1;
+    atk = (int)AiProjectedAtk(zone);
+    if (atk >= AI_WEAK_ATTACKER_ATK)
+        return 1;
+    if (CountMonsters(AI_HUMAN) > 0) {
+        for (i = 0; i < MONSTER_ZONE_COUNT; i++) {
+            if (DUEL_CARD_ID(&ZoneOf(AI_HUMAN, i)->card) != 0 && AiCanBeatMonster(atk, i))
+                return 1;
+        }
+        return 0;
+    }
+    total = atk;
+    for (i = 0; i < MONSTER_ZONE_COUNT; i++) {
+        struct DuelZone *other = ZoneOf(AI_PLAYER, i);
+
+        if (i != zone && DUEL_CARD_ID(&other->card) != 0 && other->isFaceUp && !other->isDefense)
+            total += (int)GetZoneCardAtk(AI_PLAYER, i);
+    }
+    return total >= (int)gDuelPlayers[AI_HUMAN].lifePoints;
+}
+
 int AiShouldTurnDefenseToAttack(int player, int zone)
 {
-    if (player != 1 || !AiHumanSwordsActive())
+    if (player != 1)
+        return 1;
+    if (!AiWeakAttackerWorthIt(zone))
+        return 0;
+    if (!AiHumanSwordsActive())
         return 1;
     return (int)GetZoneCardAtk(player, zone) > (int)GetZoneCardDef(player, zone);
 }

@@ -5,6 +5,7 @@ Campaign duelists in Yak's YGO Hack use a much stronger opponent AI than vanilla
 ## Battle and positions
 
 - It switches a monster that can't beat any of yours to Defense Position when you have a face-up monster with higher ATK, instead of leaving it to be run over. A monster with 1700 ATK or more stays in Attack Position unless your strongest monster has at least 1000 more ATK than it.
+- It doesn't switch a monster with under 900 ATK (Treeborn Frog, for example) from Defense to Attack Position just to deal a little damage. It does when that monster can destroy one of yours, or when you control no monsters and its direct attack, with its other Attack Position monsters, would win the duel.
 - When it chooses Attack or Defense Position, it counts the ATK a monster will gain from an Equip Spell in its hand, Breaker's Spell Counter, and Blade Knight's bonus once its hand shrinks.
 - It summons a monster with 1400 or more ATK in Attack Position instead of Setting it (unless the monster has a flip effect, or it would be run over: below 1700 ATK that is any face-up monster with higher ATK; at 1700+ ATK only when your strongest face-up monster has at least 1000 more ATK), even on the first turn.
 - It attacks your face-down Defense Position monsters with any monster of 1400 ATK or more, even though it can't see their DEF (it guesses 1400).
