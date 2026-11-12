@@ -2392,12 +2392,13 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
 - Normal Trap (`assets/new_cards/cards.json`): "Discard 1 card, then target 1 face-up monster your opponent controls;
   banish that target, then banish all cards with the same name as that monster from your opponent's Graveyard."
 - Built like Raigeki Break.
-  - Prepare: not as a response, a card to discard, and a target.
+  - Prepare: a card to discard and a target. Since 2026-11-11 it may also answer a chain (it used to refuse
+    `chainLink != NULL`).
   - ChainA: discard 1 card (`DuelPrompt_PostDiscardCost`).
   - ChainB: the human picks the opponent's face-up monster (`EffectKarmaCutCheck`); the CPU takes the highest ATK.
   - Resolve: `BanishFieldCard`, then `DUEL_CMD_BANISH_GRAVEYARD_CARD` for each card of that player's Graveyard with
     the same name (`IsSameCardName`).
-- The CPU activates it in its usual Trap windows, as Raigeki Break.
+- The CPU activates it in its usual Trap windows, as Raigeki Break, and answers chains with it (see Raigeki Break).
 - It wasn't in `card_pools/missing*.txt`.
 - Checked in the source and the build; not tested in an emulator.
 
@@ -2945,7 +2946,7 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
 ### Raigeki Break (2026-10-25)
 "Discard 1 card, then target 1 card on the field; destroy it." Normal Trap (`gAddedCardEffects` row in
 `added_effects.c`).
-- **Prepare:** at least `1 + fromHand` cards in hand (one to discard; from hand, the trap itself counts toward
+- **Prepare:** it may start a chain or (since 2026-11-11) answer one; at least `1 + fromHand` cards in hand (one to discard; from hand, the trap itself counts toward
   `fromHand`), another card on the field that `CanCardTargetZone` allows (monsters and Spell/Trap/Field zones).
 - **Cost (chainA):** `DuelPrompt_PostDiscardCost` for 1 card (same as Tribe-Infecting Virus / Magic Jammer).
 - **Target (chainB):** any occupied zone on either side; human cursor `PICK_ANY_MONSTER | PICK_ANY_SPELL_TRAP`;
@@ -2953,6 +2954,12 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
   - Fixed 2026-11-11: ChainB used to call `CanActivateEffect` again. The discard is paid by then, so with one card
     in hand (the one discarded) the prepare's hand count failed and the Trap took no target. The re-check is gone
     (as Karma Cut and Phoenix Wing Wind Blast).
+- **CPU chain answers** (2026-11-11, `AiChainDiscardRemoval`, run first from `AiChainSummonTriggerResponse`, which
+  `AiTryChainResponse` calls): the CPU chains a Set Raigeki Break or Karma Cut to the human's link when it is the
+  effect of a human monster on the field the card can take (ChainB then picks that monster,
+  `ChainedOpponentMonsterZone`), or when the link would destroy the Set card (Heavy Storm, Harpie's Feather Duster,
+  or a target on its zone), unless a Set Magic Jammer, Solemn Judgment or (against the Duster) Gryphon Wing could
+  negate it. The activation is checked with `CanActivateFieldCard`.
 - **Resolve:** `EffectDestroyTargetResolve`.
 - Checked in the source; not tested in an emulator.
 

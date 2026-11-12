@@ -3106,3 +3106,11 @@ updated: 2026-09-29
 ## [2026-11-11] progress | Raigeki Break with one card in hand
 - src/added_effects.c: EffectRaigekiBreakChainB no longer calls CanActivateEffect after the discard cost (the hand count failed once the only card was discarded, so no target was taken).
 - [[added-cards]] (Raigeki Break, Phoenix Wing Wind Blast note). Built (`make demo`, .text 0x0807F510); not tested in an emulator.
+
+## [2026-11-11] progress | Raigeki Break and Karma Cut answer chains
+- src/added_effects.c: EffectRaigekiBreakPrepare and EffectKarmaCutPrepare no longer refuse a chain link, so the human can activate them in a response window. The CPU still plays them only in its own Trap windows (AiTryChainResponse has no case for them).
+- [[added-cards]] (Raigeki Break, Karma Cut). Built (`make demo`); not tested in an emulator.
+
+## [2026-11-11] progress | CPU chains Raigeki Break and Karma Cut
+- src/added_effects.c: AiChainDiscardRemoval (from AiChainSummonTriggerResponse) chains a Set Raigeki Break / Karma Cut to a human monster effect on the field, or to a link that would destroy the Set card (Heavy Storm, Harpie's Feather Duster, a target on its zone) unless a Set Magic Jammer / Solemn Judgment / Gryphon Wing can negate it. ChainedOpponentMonsterZone: the CPU's ChainB of both takes the monster it answers.
+- [[added-cards]]. Built (`make demo`); not tested in an emulator.

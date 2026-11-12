@@ -910,6 +910,23 @@ int EffectTrapDustshootResolve(struct ChainEntry *link, struct ChainEntry *chain
 }
 #endif /* HAS_CARD_TRAP_DUSTSHOOT */
 
+#if defined(HAS_CARD_RAIGEKI_BREAK) || defined(HAS_CARD_KARMA_CUT)
+/* The monster on the field whose effect the chain link `prevLink` is (an opponent's of `link`), or -1. The CPU's
+ * Raigeki Break and Karma Cut answering a monster effect take that monster (AiChainDiscardRemoval). */
+static int ChainedOpponentMonsterZone(struct ChainEntry *link, struct ChainEntry *prevLink)
+{
+    struct DuelZone *z;
+
+    if (prevLink == NULL || prevLink->player == link->player || prevLink->kind != CHAIN_KIND_MONSTER
+        || prevLink->zone > ZONE_MONSTER_4)
+        return -1;
+    z = ZoneOf(prevLink->player, prevLink->zone);
+    if (DUEL_CARD_ID(&z->card) != (prevLink->card & CARD_ID_MASK))
+        return -1;
+    return prevLink->zone;
+}
+#endif
+
 #ifdef HAS_CARD_RAIGEKI_BREAK
 /* ---- Raigeki Break -------------------------------------------------------------------------------------------
  * "Discard 1 card, then target 1 card on the field; destroy it."
@@ -950,8 +967,7 @@ static int RaigekiBreakHasOpponentTarget(struct ChainEntry *card)
 
 int EffectRaigekiBreakPrepare(struct ChainEntry *card, struct ChainEntry *chainLink, u16 fromHand)
 {
-    if (chainLink != NULL)
-        return 0;
+    (void)chainLink;                    /* a Normal Trap: it may start a chain or answer one */
     if (gDuelPlayers[card->player & 1].handCount < 1 + fromHand)
         return 0;
     if (card->player)
@@ -994,6 +1010,11 @@ int EffectRaigekiBreakChainB(struct ChainEntry *link, struct ChainEntry *prevLin
         /* No CanActivateEffect re-check here: the discard cost is paid by now, so the prepare's hand count would
          * fail when the discarded card was the last one in hand. */
         link->numTargets = 0;
+        /* answering a monster effect: that monster first */
+        zone = ChainedOpponentMonsterZone(link, prevLink);
+        if (zone >= 0 && EffectRaigekiBreakCheck(link, RAIGEKI_BREAK_POS(opponent, zone))
+            && TryAddEffectTarget(link, opponent, zone))
+            return 1;
         zone = CountMonsters(opponent) > 0 ? AiFindStrongestMonster(opponent, -1, 1, 1) : -1;
         if (zone >= 0 && EffectRaigekiBreakCheck(link, RAIGEKI_BREAK_POS(opponent, zone))
             && TryAddEffectTarget(link, opponent, zone))
@@ -1210,7 +1231,8 @@ static int KarmaCutHasTarget(struct ChainEntry *card)
 
 int EffectKarmaCutPrepare(struct ChainEntry *card, struct ChainEntry *chainLink, u16 fromHand)
 {
-    return chainLink == NULL && gDuelPlayers[card->player & 1].handCount >= 1 + fromHand && KarmaCutHasTarget(card);
+    (void)chainLink;                    /* a Normal Trap: it may start a chain or answer one */
+    return gDuelPlayers[card->player & 1].handCount >= 1 + fromHand && KarmaCutHasTarget(card);
 }
 
 int EffectKarmaCutChainA(struct ChainEntry *link, struct ChainEntry *prevLink)
@@ -1224,12 +1246,14 @@ int EffectKarmaCutChainB(struct ChainEntry *link, struct ChainEntry *prevLink)
 {
     int opponent = 1 - (link->player & 1), zone;
 
-    (void)prevLink;
-    if (link->player) {                 /* the CPU: the highest ATK */
+    if (link->player) {                 /* the CPU: the monster whose effect it answers, else the highest ATK */
         int best = -1;
         u32 bestAtk = 0;
 
         link->numTargets = 0;
+        zone = ChainedOpponentMonsterZone(link, prevLink);
+        if (zone >= 0 && EffectKarmaCutCheck(link, DUEL_LOC(opponent, zone)) && TryAddEffectTarget(link, opponent, zone))
+            return 1;
         for (zone = ZONE_MONSTER_0; zone <= ZONE_MONSTER_4; zone++) {
             if (EffectKarmaCutCheck(link, DUEL_LOC(opponent, zone))
                 && (best < 0 || GetZoneCardAtk(opponent, zone) > bestAtk)) {
@@ -13774,10 +13798,103 @@ int AiShouldActivateAddedCard(struct ChainEntry *entry); /* below: added-card Se
  * comes after the trigger resolved (Mobius could destroy the trap first). AiTryChainResponse now asks this first:
  * for a summon of the human's, the first Set card that the summon window would use (spell speed 2 or more,
  * CanActivateFieldCard against the link's event and locations, AiShouldActivateSetCard) is chained. */
+#if defined(HAS_CARD_RAIGEKI_BREAK) || defined(HAS_CARD_KARMA_CUT)
+/* ---- The CPU's Raigeki Break and Karma Cut as chain answers ---------------------------------------------------------
+ * Both may answer a chain (their prepares take any link). The CPU chains a Set one to the human's link when:
+ *   - the link is the effect of a monster of the human's on the field that the card can take (Raigeki Break: any
+ *     targetable monster; Karma Cut: face-up); ChainB then picks that monster (ChainedOpponentMonsterZone);
+ *   - the link would destroy the Set card itself: Heavy Storm, Harpie's Feather Duster, or a target on its zone. Not
+ *     when a Set Magic Jammer, Gryphon Wing or Solemn Judgment could negate it (AiTryChainResponse answers those after
+ *     this hook); ChainB then takes its usual target.
+ * The activation is checked as the CPU's Trap windows do (CanActivateFieldCard: hand count, a target). */
+static int AiHasSetCard(u16 number)
+{
+    int zone;
+
+    for (zone = ZONE_SPELL_0; zone <= ZONE_SPELL_4; zone++) {
+        struct DuelZone *z = ZoneOf(AI_PLAYER, zone);
+        u16 id = DUEL_CARD_ID(&z->card);
+
+        if (id != 0 && !z->isFaceUp && CardNumberOfId(id) == number)
+            return 1;
+    }
+    return 0;
+}
+
+static int AiLinkDestroysSetCard(struct ChainEntry *entry, int zone)
+{
+    int i;
+    u16 number = CardNumberOfId(entry->card);
+
+    if (number == CARD_HEAVY_STORM || number == CARD_HARPIES_FEATHER_DUSTER) {
+        if (AiHasSetCard(CARD_MAGIC_JAMMER) || AiHasSetCard(CARD_SOLEMN_JUDGMENT)
+            || (number == CARD_HARPIES_FEATHER_DUSTER && AiHasSetCard(CARD_GRYPHON_WING)))
+            return 0;
+        return 1;
+    }
+    for (i = 0; i < entry->numTargets; i++) {
+        if (entry->targets[i] == DUEL_LOC(AI_PLAYER, zone))
+            return 1;
+    }
+    return 0;
+}
+
+/* -1: `number` is neither card; else 1 if it can take the human's monster in `source` (a zone, or -1 for none). */
+static int AiRemovalTakes(struct ChainEntry *ref, u16 number, int source)
+{
+#ifdef HAS_CARD_RAIGEKI_BREAK
+    if (number == CARD_RAIGEKI_BREAK)
+        return source >= 0 && EffectRaigekiBreakCheck(ref, DUEL_LOC(AI_HUMAN, source));
+#endif
+#ifdef HAS_CARD_KARMA_CUT
+    if (number == CARD_KARMA_CUT)
+        return source >= 0 && EffectKarmaCutCheck(ref, DUEL_LOC(AI_HUMAN, source));
+#endif
+    return -1;
+}
+
+static int AiChainDiscardRemoval(struct ChainEntry *entry)
+{
+    struct ChainEntry ref;
+    int zone, source;
+
+    if (entry->player != AI_HUMAN || entry->negated)
+        return 0;
+    source = -1;
+    if (entry->kind == CHAIN_KIND_MONSTER && entry->zone <= ZONE_MONSTER_4
+        && DUEL_CARD_ID(&ZoneOf(AI_HUMAN, entry->zone)->card) == (entry->card & CARD_ID_MASK))
+        source = entry->zone;
+    for (zone = ZONE_SPELL_0; zone <= ZONE_SPELL_4; zone++) {
+        struct DuelZone *z = ZoneOf(AI_PLAYER, zone);
+        u16 id = DUEL_CARD_ID(&z->card);
+        u16 number;
+        int hitsSource;
+
+        if (id == 0 || z->isFaceUp)
+            continue;
+        number = CardNumberOfId(id);
+        if (AiRemovalTakes(&ref, number, -1) < 0)     /* neither card */
+            continue;
+        MemCopy16(&ref, entry, sizeof(ref));            /* the link's event and locations; the card is filled in */
+        if (!CanActivateFieldCard(&ref, AI_PLAYER, zone))
+            continue;
+        hitsSource = AiRemovalTakes(&ref, number, source);
+        if (hitsSource || AiLinkDestroysSetCard(entry, zone))
+            return AiChainSetCard(entry, number);
+    }
+    return 0;
+}
+#endif
+
 int AiChainSummonTriggerResponse(struct ChainEntry *entry)
 {
     struct ChainEntry ref;
     int zone;
+
+#if defined(HAS_CARD_RAIGEKI_BREAK) || defined(HAS_CARD_KARMA_CUT)
+    if (AiChainDiscardRemoval(entry))
+        return 1;
+#endif
 
 #ifdef HAS_CARD_MY_BODY_AS_A_SHIELD
     if (AiChainMyBodyAsAShield(entry))
