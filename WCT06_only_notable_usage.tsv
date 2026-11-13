@@ -1,6 +1,6 @@
-WCT06-only cards with raw usage ≥ 1% in any of: Chaos Return, Stein, Chimeratech, Demise, Trooper, Zombie, Perfect Circle, DAD Return, Gladiator
-(source pool: 326 cards from WCT06_only.txt)
-(15 matched)
+# WCT06-only cards with raw usage ≥ 1% in any of: Chaos Return, Stein, Chimeratech, Demise, Trooper, Zombie, Perfect Circle, DAD Return, Gladiator
+# (source pool: 326 cards from WCT06_only.txt)
+# (15 matched)
 
 name	Chaos Return	Stein	Chimeratech	Demise	Trooper	Zombie	Perfect Circle	DAD Return	Gladiator
 Crush Card Virus	— (not in pool)	— (not in pool)	— (not in pool)	2.04%	6.29%	9.77%	18.47%	13.17%	25.78%

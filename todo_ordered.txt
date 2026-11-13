@@ -1,11 +1,11 @@
 1. Test
 2. Trailer videos
-3. Record Yugi-Kaiba/Imperial/Goat/Reaper duels
-4. Screenshot HMA & TOML
-5. Screenshot Mobius
-6. Update README_TODO/README_WIP
-7. README_WIP GIF/video Lua scripts
-8. Update README to be README_WIP
+3. Screenshot HMA & TOML
+4. Screenshot Mobius
+5. Update README_TODO/README_WIP
+6. README_WIP GIF/video Lua scripts
+7. Update README to be README_WIP
+8. Flip opponent cards 180 degrees
 9. Tokyo Dome format
 10. Pre-Tokyo Dome OCG packs
 11. Synchro/XYZ/Link cards (including videos)

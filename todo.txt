@@ -27,3 +27,4 @@ CPU vs CPU (player)
 Screenshot/GIF/video Lua scripts
 Call CardMenu_DrawCardPreview() in the INIT state
 Review videos (python tools\testing_scenarios\review_videos.py)
+Opponent cards are flipped 180 degrees
