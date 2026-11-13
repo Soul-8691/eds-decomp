@@ -18751,3 +18751,301 @@
    2186 [list_filter] done
      13 [_explore] start (symbols: tools/media/../../eds_release_demo.sym)
    1170 [_explore] FAIL: ...ers\pswan\Downloads\eds-decomp\tools\media/lib_media.lua:491: no recipe named like Chaos Turbo
+     15 [format_check] start (symbols: tools/media/../../eds_demo.sym)
+   1467 [format_check] FAIL: ...ers\pswan\Downloads\eds-decomp\tools\media/lib_media.lua:693: Banlists: cursor did not reach 12
+     14 [left_out] start (symbols: tools/media/../../eds_demo.sym)
+   2435 [left_out] loaded recipe 30 (Chaos Turbo)
+   2735 [left_out] FAIL: ...ers\pswan\Downloads\eds-decomp\tools\media/lib_media.lua:202: timeout waiting for the left-out list
+     23 [banlist_refused] start (symbols: tools/media/../../eds_release_demo.sym)
+   1469 [banlist_refused] FAIL: ...ers\pswan\Downloads\eds-decomp\tools\media/lib_media.lua:693: Banlists: cursor did not reach 12
+     11 [format_check] start (symbols: tools/media/../../eds_demo.sym)
+   1172 [format_check] banlist cursor 1
+   1189 [format_check] banlist cursor 1
+   1206 [format_check] banlist cursor 2
+   1223 [format_check] banlist cursor 2
+   1240 [format_check] banlist cursor 3
+   1257 [format_check] banlist cursor 3
+   1274 [format_check] banlist cursor 4
+   1291 [format_check] banlist cursor 4
+   1308 [format_check] banlist cursor 5
+   1325 [format_check] banlist cursor 5
+   1342 [format_check] banlist cursor 6
+   1359 [format_check] banlist cursor 6
+   1376 [format_check] banlist cursor 7
+   1393 [format_check] banlist cursor 7
+   1410 [format_check] banlist cursor 8
+   1427 [format_check] banlist cursor 8
+   1444 [format_check] banlist cursor 9
+   1461 [format_check] banlist cursor 9
+   1478 [format_check] banlist cursor 10
+   1495 [format_check] banlist cursor 10
+   1495 [format_check] FAIL: ...ers\pswan\Downloads\eds-decomp\tools\media/lib_media.lua:694: Banlists: cursor did not reach 12
+     13 [left_out] start (symbols: tools/media/../../eds_demo.sym)
+   2466 [left_out] loaded recipe 30 (Chaos Turbo)
+   2506 [left_out] shot Left Out.png
+   2507 [left_out] done
+     11 [format_check] start (symbols: tools/media/../../eds_demo.sym)
+   3187 [format_check] loaded recipe 30 (Chaos Turbo)
+   4057 [format_check] shot Format Check.png
+   4058 [format_check] done
+     11 [banlist_refused] start (symbols: tools/media/../../eds_release_demo.sym)
+   1658 [banlist_refused] shot Banlist Refused.png
+   1659 [banlist_refused] done
+     12 [banlist_refused] start (symbols: tools/media/../../eds_release_demo.sym)
+   1659 [banlist_refused] shot Banlist Refused.png
+   1660 [banlist_refused] done
+     15 [format_check] start (symbols: tools/media/../../eds_release_demo.sym)
+   1278 [format_check] shot Format Check.png
+   1279 [format_check] done
+     17 [banlist_refused] start (symbols: tools/media/../../eds_release_demo.sym)
+   1632 [banlist_refused] shot Banlist Refused.png
+   1633 [banlist_refused] done
+     15 [_explore] start (symbols: tools/media/../../eds_demo.sym)
+   2436 [_explore] loaded recipe 30 (Chaos Turbo)
+   4538 [_explore] snap 1 CB_Campaign de+1C48=0
+   4583 [_explore] snap 2 CB_Campaign de+1C48=0
+   4628 [_explore] snap 3 CB_Campaign de+1C48=0
+   4673 [_explore] snap 4 CB_Campaign de+1C48=0
+   4718 [_explore] snap 5 CB_Campaign de+1C48=0
+   4763 [_explore] snap 6 CB_Campaign de+1C48=0
+   4808 [_explore] snap 7 CB_Campaign de+1C48=0
+   4853 [_explore] snap 8 CB_Campaign de+1C48=0
+   4898 [_explore] snap 9 CB_Campaign de+1C48=0
+   4943 [_explore] snap 10 CB_Campaign de+1C48=0
+   4988 [_explore] snap 11 CB_Campaign de+1C48=0
+   5033 [_explore] snap 12 CB_Campaign de+1C48=0
+   5078 [_explore] snap 13 CB_Campaign de+1C48=0
+   5123 [_explore] snap 14 CB_Campaign de+1C48=0
+   5181 [_explore] snap 15 CB_Campaign de+1C48=1
+   5226 [_explore] snap 16 CB_Campaign de+1C48=1
+   5284 [_explore] snap 17 CB_Campaign de+1C48=1
+   5329 [_explore] snap 18 CB_Campaign de+1C48=1
+   5387 [_explore] snap 19 CB_Campaign de+1C48=1
+   5432 [_explore] snap 20 CB_Campaign de+1C48=1
+   5490 [_explore] snap 21 CB_Campaign de+1C48=1
+   5535 [_explore] snap 22 CB_Campaign de+1C48=1
+   5593 [_explore] snap 23 CB_Campaign de+1C48=1
+   5638 [_explore] snap 24 CB_Campaign de+1C48=1
+   5696 [_explore] snap 25 CB_Campaign de+1C48=1
+   5741 [_explore] snap 26 CB_Campaign de+1C48=1
+   5799 [_explore] snap 27 CB_Campaign de+1C48=1
+   5844 [_explore] snap 28 CB_Campaign de+1C48=1
+   5902 [_explore] snap 29 CB_Campaign de+1C48=1
+   5947 [_explore] snap 30 CB_Campaign de+1C48=1
+   6005 [_explore] snap 31 CB_Campaign de+1C48=1
+   6050 [_explore] snap 32 CB_Campaign de+1C48=1
+   6108 [_explore] snap 33 CB_Campaign de+1C48=1
+   6153 [_explore] snap 34 CB_Campaign de+1C48=1
+   6211 [_explore] snap 35 CB_Campaign de+1C48=1
+   6256 [_explore] snap 36 CB_Campaign de+1C48=1
+   6314 [_explore] snap 37 CB_Campaign de+1C48=1
+   6359 [_explore] snap 38 CB_Campaign de+1C48=1
+   6417 [_explore] snap 39 CB_Campaign de+1C48=1
+   6462 [_explore] snap 40 CB_Campaign de+1C48=1
+   6520 [_explore] done
+     13 [match] start (symbols: tools/media/../../eds_demo.sym)
+   2466 [match] loaded recipe 30 (Chaos Turbo)
+   5020 [match] recording siding (gif)
+   5309 MP4: ffmpeg found through the registry PATH: C:\Users\pswan\Downloads\ffmpeg-2026-11-11-git-23c4540053-full_build\ffmpeg-2026-11-11-git-23c4540053-full_build\bin\ffmpeg.exe
+   5309 [match] encoding 289 frames -> tools\media\..\..\screenshots\gifs\siding.gif
+   5372 [match] exit 1 B main=false
+   5435 [match] exit 2 B main=false
+   5498 [match] exit 3 START main=false
+   5561 [match] exit 4 A main=false
+   5624 [match] exit 5 A main=false
+   5687 [match] exit 6 A main=false
+   5687 [match] done
+     17 [match] start (symbols: tools/media/../../eds_demo.sym)
+   2438 [match] loaded recipe 30 (Chaos Turbo)
+   4990 [match] recording siding (gif)
+   5279 MP4: ffmpeg found through the registry PATH: C:\Users\pswan\Downloads\ffmpeg-2026-11-11-git-23c4540053-full_build\ffmpeg-2026-11-11-git-23c4540053-full_build\bin\ffmpeg.exe
+   5279 [match] encoding 289 frames -> tools\media\..\..\screenshots\gifs\siding.gif
+  13442 [match] FAIL: ...ers\pswan\Downloads\eds-decomp\tools\media/lib_media.lua:441: timeout waiting for Main Phase 1
+     15 [match] start (symbols: tools/media/../../eds_demo.sym)
+   2436 [match] loaded recipe 30 (Chaos Turbo)
+   4988 [match] recording siding (gif)
+   5277 MP4: ffmpeg found through the registry PATH: C:\Users\pswan\Downloads\ffmpeg-2026-11-11-git-23c4540053-full_build\ffmpeg-2026-11-11-git-23c4540053-full_build\bin\ffmpeg.exe
+   5277 [match] encoding 289 frames -> tools\media\..\..\screenshots\gifs\siding.gif
+   5640 [match] g2 1 step=10 turn=0
+   5790 [match] g2 2 step=10 turn=0
+   5940 [match] g2 3 step=10 turn=0
+   6090 [match] g2 4 step=10 turn=0
+   6240 [match] g2 5 step=10 turn=0
+   6390 [match] g2 6 step=10 turn=0
+  14340 [match] FAIL: ...ers\pswan\Downloads\eds-decomp\tools\media/lib_media.lua:441: timeout waiting for Main Phase 1
+     14 [match] start (symbols: tools/media/../../eds_demo.sym)
+   2435 [match] loaded recipe 30 (Chaos Turbo)
+   4990 [match] recording siding (gif)
+   5279 MP4: ffmpeg found through the registry PATH: C:\Users\pswan\Downloads\ffmpeg-2026-11-11-git-23c4540053-full_build\ffmpeg-2026-11-11-git-23c4540053-full_build\bin\ffmpeg.exe
+   5279 [match] encoding 289 frames -> tools\media\..\..\screenshots\gifs\siding.gif
+  13943 [match] FAIL: ...ers\pswan\Downloads\eds-decomp\tools\media/lib_media.lua:441: timeout waiting for Main Phase 1
+     18 [new_packs] start (symbols: tools/media/../../eds_demo.sym)
+   2439 [new_packs] loaded recipe 30 (Chaos Turbo)
+   8142 [new_packs] FAIL: ...ers\pswan\Downloads\eds-decomp\tools\media\new_packs.lua:28: timeout waiting for the new packs text
+     14 [siding] start (symbols: tools/media/../../eds_demo.sym)
+   2435 [siding] loaded recipe 30 (Chaos Turbo)
+   4990 [siding] recording siding (gif)
+   5279 MP4: ffmpeg found through the registry PATH: C:\Users\pswan\Downloads\ffmpeg-2026-11-11-git-23c4540053-full_build\ffmpeg-2026-11-11-git-23c4540053-full_build\bin\ffmpeg.exe
+   5279 [siding] encoding 289 frames -> tools\media\..\..\screenshots\gifs\siding.gif
+   5279 [siding] done
+     14 [new_packs] start (symbols: tools/media/../../eds_demo.sym)
+   2435 [new_packs] loaded recipe 30 (Chaos Turbo)
+   4978 [new_packs] shot New Packs.png
+   4979 [new_packs] done
+     11 [new_packs] start (symbols: tools/media/../../eds_demo.sym)
+   2464 [new_packs] loaded recipe 30 (Chaos Turbo)
+   5770 [new_packs] done
+     20 [new_packs] start (symbols: tools/media/../../eds_demo.sym)
+   2441 [new_packs] loaded recipe 30 (Chaos Turbo)
+   5326 [new_packs] shot New Packs.png
+   5327 [new_packs] done
+     15 [unlock] start (symbols: tools/media/../../eds_release_demo.sym)
+   2508 [unlock] u 1 notices=0
+   2568 [unlock] u 2 notices=0
+   2641 [unlock] u 3 notices=0
+   2701 [unlock] u 4 notices=0
+   2774 [unlock] u 5 notices=0
+   2834 [unlock] u 6 notices=0
+   2907 [unlock] u 7 notices=0
+   2967 [unlock] u 8 notices=0
+   3040 [unlock] u 9 notices=0
+   3100 [unlock] u 10 notices=0
+   3173 [unlock] u 11 notices=0
+   3233 [unlock] u 12 notices=0
+   3306 [unlock] u 13 notices=0
+   3366 [unlock] u 14 notices=0
+   3439 [unlock] u 15 notices=0
+   3499 [unlock] u 16 notices=0
+   3572 [unlock] u 17 notices=0
+   3632 [unlock] u 18 notices=0
+   3705 [unlock] u 19 notices=0
+   3765 [unlock] u 20 notices=0
+   3838 [unlock] u 21 notices=0
+   3898 [unlock] u 22 notices=0
+   3971 [unlock] u 23 notices=0
+   4031 [unlock] u 24 notices=0
+   4104 [unlock] u 25 notices=0
+   4164 [unlock] u 26 notices=0
+   4237 [unlock] u 27 notices=0
+   4297 [unlock] u 28 notices=0
+   4370 [unlock] u 29 notices=0
+   4430 [unlock] u 30 notices=0
+   4503 [unlock] u 31 notices=0
+   4563 [unlock] u 32 notices=0
+   4636 [unlock] u 33 notices=0
+   4696 [unlock] u 34 notices=0
+   4769 [unlock] u 35 notices=0
+   4829 [unlock] u 36 notices=0
+   4902 [unlock] u 37 notices=0
+   4962 [unlock] u 38 notices=0
+   5035 [unlock] u 39 notices=0
+   5095 [unlock] u 40 notices=0
+   5168 [unlock] done
+     15 [unlock] start (symbols: tools/media/../../eds_release_demo.sym)
+   2508 [unlock] u 1 notices=0
+   2568 [unlock] u 2 notices=0
+   2641 [unlock] u 3 notices=0
+   2701 [unlock] u 4 notices=0
+   2774 [unlock] u 5 notices=0
+   2834 [unlock] u 6 notices=0
+   2907 [unlock] u 7 notices=0
+   2967 [unlock] u 8 notices=0
+   3040 [unlock] u 9 notices=0
+   3100 [unlock] u 10 notices=0
+   3173 [unlock] u 11 notices=0
+   3233 [unlock] u 12 notices=0
+   3306 [unlock] u 13 notices=0
+   3366 [unlock] u 14 notices=0
+   3439 [unlock] u 15 notices=0
+   3499 [unlock] u 16 notices=0
+   3572 [unlock] u 17 notices=0
+   3632 [unlock] u 18 notices=0
+   3705 [unlock] u 19 notices=0
+   3765 [unlock] u 20 notices=0
+   3838 [unlock] u 21 notices=0
+   3898 [unlock] u 22 notices=0
+   3971 [unlock] u 23 notices=0
+   4031 [unlock] u 24 notices=0
+   4104 [unlock] u 25 notices=0
+   4164 [unlock] u 26 notices=0
+   4237 [unlock] u 27 notices=0
+   4297 [unlock] u 28 notices=0
+   4370 [unlock] u 29 notices=0
+   4430 [unlock] u 30 notices=0
+   4503 [unlock] u 31 notices=0
+   4563 [unlock] u 32 notices=0
+   4636 [unlock] u 33 notices=0
+   4696 [unlock] u 34 notices=0
+   4769 [unlock] u 35 notices=0
+   4829 [unlock] u 36 notices=0
+   4902 [unlock] u 37 notices=0
+   4962 [unlock] u 38 notices=0
+   5035 [unlock] u 39 notices=0
+   5095 [unlock] u 40 notices=0
+   5168 [unlock] done
+     18 [unlock] start (symbols: tools/media/../../eds_release_demo.sym)
+   2472 [unlock] recording unlock (gif)
+   3635 MP4: ffmpeg found through the registry PATH: C:\Users\pswan\Downloads\ffmpeg-2026-11-11-git-23c4540053-full_build\ffmpeg-2026-11-11-git-23c4540053-full_build\bin\ffmpeg.exe
+   3635 [unlock] encoding 458 frames -> tools\media\..\..\screenshots\gifs\unlock.gif
+   3635 [unlock] done
+     15 [event_challenger] start (symbols: tools/media/../../eds_demo.sym)
+   2436 [event_challenger] loaded recipe 30 (Chaos Turbo)
+   4198 [event_challenger] done
+     13 [event_challenger] start (symbols: tools/media/../../eds_demo.sym)
+   2466 [event_challenger] loaded recipe 30 (Chaos Turbo)
+   2684 [event_challenger] e 1 recipes mode=0
+   2744 [event_challenger] e 2 recipes mode=0
+   2817 [event_challenger] e 3 recipes mode=0
+   2877 [event_challenger] e 4 recipes mode=0
+   2950 [event_challenger] e 5 recipes mode=0
+   3010 [event_challenger] e 6 recipes mode=0
+   3083 [event_challenger] e 7 recipes mode=0
+   3143 [event_challenger] e 8 recipes mode=0
+   3216 [event_challenger] e 9 recipes mode=0
+   3276 [event_challenger] e 10 recipes mode=0
+   3349 [event_challenger] e 11 recipes mode=0
+   3409 [event_challenger] e 12 recipes mode=0
+   3482 [event_challenger] e 13 recipes mode=0
+   3542 [event_challenger] e 14 recipes mode=0
+   3615 [event_challenger] e 15 recipes mode=0
+   3675 [event_challenger] e 16 recipes mode=0
+   3748 [event_challenger] e 17 recipes mode=0
+   3808 [event_challenger] e 18 recipes mode=0
+   3881 [event_challenger] e 19 recipes mode=0
+   3941 [event_challenger] e 20 recipes mode=0
+   4014 [event_challenger] e 21 recipes mode=0
+   4074 [event_challenger] e 22 recipes mode=0
+   4147 [event_challenger] e 23 recipes mode=0
+   4207 [event_challenger] e 24 recipes mode=0
+   4280 [event_challenger] e 25 recipes mode=0
+   4340 [event_challenger] e 26 recipes mode=0
+   4413 [event_challenger] e 27 recipes mode=0
+   4473 [event_challenger] e 28 recipes mode=0
+   4546 [event_challenger] e 29 recipes mode=0
+   4606 [event_challenger] e 30 recipes mode=0
+   4679 [event_challenger] e 31 recipes mode=1
+   4739 [event_challenger] e 32 recipes mode=1
+   4812 [event_challenger] e 33 recipes mode=0
+   4872 [event_challenger] e 34 recipes mode=0
+   4945 [event_challenger] e 35 recipes mode=1
+   5005 [event_challenger] e 36 recipes mode=1
+   5078 [event_challenger] e 37 recipes mode=0
+   5138 [event_challenger] e 38 recipes mode=0
+   5211 [event_challenger] e 39 recipes mode=1
+   5271 [event_challenger] e 40 recipes mode=1
+   5331 [event_challenger] e 41 recipes mode=1
+   5391 [event_challenger] e 42 recipes mode=1
+   5451 [event_challenger] e 43 recipes mode=1
+   5511 [event_challenger] e 44 recipes mode=1
+   5571 [event_challenger] e 45 recipes mode=1
+   5631 [event_challenger] e 46 recipes mode=1
+   5691 [event_challenger] e 47 recipes mode=1
+   5751 [event_challenger] e 48 recipes mode=1
+   5811 [event_challenger] done
+     18 [event_challenger] start (symbols: tools/media/../../eds_demo.sym)
+   2439 [event_challenger] loaded recipe 30 (Chaos Turbo)
+   3257 [event_challenger] FAIL: ...ers\pswan\Downloads\eds-decomp\tools\media/lib_media.lua:202: timeout waiting for the event's dialogue
+     19 [event_challenger] start (symbols: tools/media/../../eds_demo.sym)
+   2440 [event_challenger] loaded recipe 30 (Chaos Turbo)
+   3786 [event_challenger] shot Event Challenger.png
+   3787 [event_challenger] done

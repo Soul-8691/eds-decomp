@@ -147,7 +147,7 @@ local function tickKeys()
 end
 
 local function captureFrame()
-    if rec then
+    if rec and not rec.paused then
         emu:screenshot(string.format("%s/%06d.png", rec.dir, rec.n))
         rec.n = rec.n + 1
     end
@@ -675,6 +675,75 @@ function M.refineSet(row, value, big, count)
     error("List Filter: row " .. row .. " did not reach " .. value)
 end
 
+-- Banlists (src/mod_banlists.c): from the main menu, the cursor (gBanlistsMenu +0) onto banlist `index` (the order of
+-- build/include/banlists.h: 0 Yugi-Kaiba .. 12 Goat .. 14 Reaper), then A puts it in use (in make release a switch
+-- the collection cannot follow is refused). Stays on the screen.
+M.BANLIST = { YUGI_KAIBA = 0, GOAT = 12 }
+
+function M.banlistSelect(index)
+    M.openMenu(M.MENU.BANLISTS, "CB_Banlists", 90)
+    local menu = M.sym("gBanlistsMenu")
+    for _ = 1, 40 do                -- (presses closer than about 20 frames are dropped)
+        if M.read8(menu) == index then
+            break
+        end
+        M.press(M.read8(menu) < index and M.KEY.DOWN or M.KEY.UP, nil, 30)
+    end
+    if M.read8(menu) ~= index then
+        error("Banlists: cursor did not reach " .. index)
+    end
+    M.wait(20)
+    M.press(M.KEY.A, nil, 60)
+end
+
+-- Card `name` (all its IDs) out of the trunk: count 0 (gSaveData.trunk[id], the low 10 bits; trunkSize follows).
+function M.takeFromTrunk(name)
+    local save = M.sym("gSaveData")
+    local base = M.sym("gCardNames")
+    local ids = math.min(M.symSize("gCardNames") // 0x40, 0x800)
+    for id = 1, ids - 1 do
+        if emu:readRange(base + id * 0x40, 0x40):match("^[^%z]*") == name then
+            local a = save + 8 + id * 4
+            local w = M.read16(a)
+            M.write16(save + 0x20C6, M.read16(save + 0x20C6) - (w & 0x3FF))
+            M.write16(a, w & ~0x3FF)
+        end
+    end
+end
+
+-- `copies` (1-3) of card `name` into the saved Deck (gSaveData.trunk[id].deckCopies, bits 10-11 of the first u16):
+-- a deck for the release ROM's format check, whose recipes start empty.
+function M.addToDeck(name, copies)
+    local save = M.sym("gSaveData")
+    local id = M.cardId(name)
+    local a = save + 8 + id * 4
+    M.write16(a, (M.read16(a) & ~0x0C00) | ((copies & 3) << 10))
+end
+
+-- A small collection: the trunk emptied (counts 0), then `fewer` cards taken off the saved Deck (one copy each of the
+-- first cards found in it). With the 40-card starter deck, `fewer` 3 leaves 37 cards owned.
+function M.shrinkCollection(fewer)
+    local save = M.sym("gSaveData")
+    local ids = math.min(M.symSize("gCardNames") // 0x40, 0x800)
+    for id = 1, ids - 1 do
+        local a = save + 8 + id * 4
+        local w = M.read16(a)
+        if fewer > 0 and ((w >> 10) & 3) > 0 then
+            w = w - 0x0400          -- one copy fewer in the Deck
+            fewer = fewer - 1
+        end
+        M.write16(a, w & ~0x3FF)
+    end
+    M.write16(save + 0x20C6, 0)
+end
+
+-- Win the duel at once: the CPU's LP to 0 (gDuel.players[1].lifePoints, EDS.PLAYER1 +0); Duel_CheckWin (duel_main.c)
+-- ends the duel at its next check, as a real win would.
+function M.winDuel()
+    M.write16(EDS.PLAYER1, 0)
+    M.waitUntil(function() return not EDS.inDuelMainPhase() end, 600, "the duel's end")
+end
+
 -- ---- captures ----
 
 local function winPath(p)
@@ -701,6 +770,19 @@ function M.record(name, kind)
     mkdir(dir)
     rec = { dir = dir, n = 0, name = name, kind = kind or "gif" }
     M.log("recording " .. name .. " (" .. rec.kind .. ")")
+end
+
+-- A recording's frames held back (M.pause) and taken again (M.resume): one GIF of two moments (unlock.lua).
+function M.pause()
+    if rec then
+        rec.paused = true
+    end
+end
+
+function M.resume()
+    if rec then
+        rec.paused = false
+    end
 end
 
 -- Ends the recording and encodes it (ffmpeg); the PNG frames are deleted afterwards.

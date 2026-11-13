@@ -40,3 +40,5 @@ tools/testing_scenarios/recordings/*.mp4
 # videos marked throwaway in review_videos.py: done, but not kept in the repository
 tools/testing_scenarios/recordings/throwaway/
 tools/testing_scenarios/highlights.mp4
+# the README trailer (tools/media/stitch_media.py): uploaded to GitHub, not kept in the repo
+screenshots/videos/trailer.mp4

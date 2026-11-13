@@ -52,6 +52,14 @@ powershell -ExecutionPolicy Bypass -File tools\testing_scenarios\run_tests.ps1 -
 | `records_practice.lua` | Records (Practice).png (R three times) | demo | verified |
 | `pack_pull.lua` | pack-pull.gif (the list browsed, the Goat pack opened, a card's details) | demo | verified |
 | `empty_main_side.lua` / `list_filter.lua` | empty-main-side.gif / list-filter.gif (every card in the trunk; D, Warrior, ATK from 1000: 12 cards) | demo | verified |
+| `left_out.lua` | Left Out.png (three Chaos Turbo cards taken out of the trunk, then the recipe loaded: make ignores the banlist when loading) | demo | verified |
+| `format_check.lua` | Format Check.png (cards Yugi-Kaiba lacks added to the saved Deck, then its duelist picked) | **release** (make has no format check) | verified |
+| `banlist_refused.lua` | Banlist Refused.png (the collection shrunk, then Goat: "only 34 (40 needed)") | **release** (make has no check) | verified |
+| `siding.lua` | siding.gif (game 1 won at once, then Bell of Destruction out, Kycoo in) | demo | verified |
+| `new_packs.lua` | New Packs.png (one duel counted played and won, the new-packs notice bit set, the match won) | demo | verified |
+| `unlock.lua` | unlock.gif (Tristan at 19 wins, the 20th, then Critter's portrait open on the select screen; the reward screens paused out) | **release** (make opens every format) | verified |
+| `event_challenger.lua` | Event Challenger.png (a Duel Ceremony day: `gSaveData.days` 12, Saturday 13 January 2001) | demo | verified |
+| `stitch_media.py` | duel-speed.mp4 (the three speeds side by side), trailer.mp4 (git-ignored), highlights.gif | ffmpeg | verified |
 
 Duel captures are written as test scenarios (setup and steps, the format of `tools/testing_scenarios/exact.py`) by
 `tools/media/gen_duel_media.py`, with media steps: `point`, `open_menu`, `close`, `wait`, `shot`, `gif_start` /
@@ -86,6 +94,11 @@ Duel captures are written as test scenarios (setup and steps, the format of `too
 - `lib_media.lua` helpers (2026-11-13): `campaignPick(page, slot)` (steered by `gOpponentSelectSlotPos`), `rpsWin`,
   `mulligan`, `toMainPhase`, `pointOpponentHand`, `deckEditCommand`, `refineSet` (List Filter values from
   `gDeckEdit` +0x644; key-count presses get dropped), `giveAllCards`, `callbackName`; recordings trim their still tail.
+- Faked progress (2026-11-13): `M.winDuel` (the CPU's LP to 0; Duel_CheckWin ends the duel), a match decided by one
+  duel (gMain +0x4888 duel count 1, +0x4889 score 1), `M.giveAllCards` / `takeFromTrunk` / `addToDeck` /
+  `shrinkCollection`, notices (`gSaveData` +0x2164), wins (`duelRecords`, +0x20D0), the day (+0x2150). The
+  Campaign's steps run inside `CB_Campaign` (gMain +0x4857 step, +0x488A bits 4-11 sub-step); the side swap ends
+  with B only once its animation is over (not used: new_packs.lua decides the match in one duel instead).
 - The pre-duel screen and rock-paper-scissors are steps inside `CB_Campaign`; Debug asks for both decks (Deck
   Recipes) first.
 

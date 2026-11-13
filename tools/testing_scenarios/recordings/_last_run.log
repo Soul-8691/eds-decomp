@@ -1197,3 +1197,57 @@ START list_filter
 PASS list_filter
 START _explore
 FAIL _explore ...ers\pswan\Downloads\eds-decomp\tools\media/lib_media.lua:491: no recipe named like Chaos Turbo
+START format_check
+FAIL format_check ...ers\pswan\Downloads\eds-decomp\tools\media/lib_media.lua:693: Banlists: cursor did not reach 12
+START left_out
+FAIL left_out ...ers\pswan\Downloads\eds-decomp\tools\media/lib_media.lua:202: timeout waiting for the left-out list
+START banlist_refused
+FAIL banlist_refused ...ers\pswan\Downloads\eds-decomp\tools\media/lib_media.lua:693: Banlists: cursor did not reach 12
+START format_check
+FAIL format_check ...ers\pswan\Downloads\eds-decomp\tools\media/lib_media.lua:694: Banlists: cursor did not reach 12
+START left_out
+PASS left_out
+START format_check
+PASS format_check
+START banlist_refused
+PASS banlist_refused
+START banlist_refused
+PASS banlist_refused
+START format_check
+PASS format_check
+START banlist_refused
+PASS banlist_refused
+START _explore
+PASS _explore
+START match
+PASS match
+START match
+FAIL match ...ers\pswan\Downloads\eds-decomp\tools\media/lib_media.lua:441: timeout waiting for Main Phase 1
+START match
+FAIL match ...ers\pswan\Downloads\eds-decomp\tools\media/lib_media.lua:441: timeout waiting for Main Phase 1
+START match
+FAIL match ...ers\pswan\Downloads\eds-decomp\tools\media/lib_media.lua:441: timeout waiting for Main Phase 1
+START new_packs
+FAIL new_packs ...ers\pswan\Downloads\eds-decomp\tools\media\new_packs.lua:28: timeout waiting for the new packs text
+START siding
+PASS siding
+START new_packs
+PASS new_packs
+START new_packs
+PASS new_packs
+START new_packs
+PASS new_packs
+START unlock
+PASS unlock
+START unlock
+PASS unlock
+START unlock
+PASS unlock
+START event_challenger
+PASS event_challenger
+START event_challenger
+PASS event_challenger
+START event_challenger
+FAIL event_challenger ...ers\pswan\Downloads\eds-decomp\tools\media/lib_media.lua:202: timeout waiting for the event's dialogue
+START event_challenger
+PASS event_challenger

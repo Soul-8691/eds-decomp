@@ -3155,3 +3155,7 @@ updated: 2026-09-29
 ## [2026-11-13] progress | README menu captures
 - tools/media: pre_duel, pre_duel_picture, debug_duel (Debug Picker, rps.gif, mulligan.gif, Debug Duel), empty_deck, records_practice, pack_pull, empty_main_side, list_filter; lib_media.lua helpers (campaignPick, rpsWin, mulligan, toMainPhase, deckEditCommand, refineSet, giveAllCards, loadRecipe and the pack helpers moved from main_menu_screens.lua); still-tail trim.
 - [[readme-media]]. All run and checked.
+
+## [2026-11-13] progress | README faked-progress captures and stitching
+- tools/media: left_out, format_check (release), banlist_refused (release), siding, new_packs, unlock (release), event_challenger; lib_media.lua winDuel, banlistSelect, takeFromTrunk, addToDeck, shrinkCollection, pause/resume. tools/media/stitch_media.py: duel-speed.mp4, trailer.mp4 (git-ignored), highlights.gif.
+- [[readme-media]]. All run and checked.
