@@ -5,11 +5,12 @@
 5. Update README_TODO/README_WIP
 6. README_WIP GIF/video Lua scripts
 7. Update README to be README_WIP
-8. Flip opponent cards 180 degrees
-9. Tokyo Dome format
-10. Pre-Tokyo Dome OCG packs
-11. Synchro/XYZ/Link cards (including videos)
-12. Chaos Return format
-13. Yugi Muto duelist
-14. Yugi Muto pack
-15. New cards
+8. No pulling 2 or more of the same card in packs
+9. Flip opponent cards 180 degrees
+10. Tokyo Dome format
+11. Pre-Tokyo Dome OCG packs
+12. Synchro/XYZ/Link cards (including videos)
+13. Chaos Return format
+14. Yugi Muto duelist
+15. Yugi Muto pack
+16. New cards
