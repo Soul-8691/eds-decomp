@@ -3151,3 +3151,7 @@ updated: 2026-09-29
 - tools/media/gen_duel_media.py: 15 new duel captures (Synchro, Xyz, Link, zone pick, Call/Trunade, Graverobber, new cards, CPU Magic Cylinder, duel speeds x3, Hide anims/battle, Hold R/L); Duel Board with adjacent cards.
 - tools/testing_scenarios/lib_steps.lua: extra_summon, options, hold/release, menu, settle, unfreeze, await/await_resolve; media frames skip hidden prompts/lists; still tails trimmed; effectAsksForCard; Fusion picks press once. run_tests.ps1: retry on a locked ROM/save copy.
 - [[readme-media]]. All 16 run and checked on contact sheets.
+
+## [2026-11-13] progress | README menu captures
+- tools/media: pre_duel, pre_duel_picture, debug_duel (Debug Picker, rps.gif, mulligan.gif, Debug Duel), empty_deck, records_practice, pack_pull, empty_main_side, list_filter; lib_media.lua helpers (campaignPick, rpsWin, mulligan, toMainPhase, deckEditCommand, refineSet, giveAllCards, loadRecipe and the pack helpers moved from main_menu_screens.lua); still-tail trim.
+- [[readme-media]]. All run and checked.

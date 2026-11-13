@@ -277,6 +277,404 @@ function M.openMenu(item, cb, settle)
     end
 end
 
+-- The symbol name of the main callback now (logs), or its address.
+function M.callbackName()
+    local cb = M.callback() & ~1
+    for name, a in pairs(SYM) do
+        if (a & ~1) == cb and name:match("^CB_") then
+            return name
+        end
+    end
+    return string.format("0x%08X", cb)
+end
+
+-- ---- the Campaign's opponent select (gOpponentSelect, include/campaign.h) ----
+
+-- Slots: 0 bottom, 1 left, 2 top left, 3 top right, 4 right (gOpponentSelectSlotPos: the portraits' top-left).
+M.SLOT = { BOTTOM = 0, LEFT = 1, TOP_LEFT = 2, TOP_RIGHT = 3, RIGHT = 4 }
+local SLOT_POS = { [0] = { 89, 91 }, { 36, 58 }, { 1, 5 }, { 177, 5 }, { 142, 58 } }
+
+function M.selectPage()
+    return M.read8(M.sym("gOpponentSelect")) & 7
+end
+
+function M.selectSlot()
+    return (M.read16(M.sym("gOpponentSelect")) >> 3) & 7
+end
+
+-- On the select screen: L/R to `page` (about 90 frames a turn), then the cursor onto `slot` with the D-pad, steered by
+-- the portraits' positions (the longer axis first; the other when a press does not move it).
+function M.campaignPick(page, slot)
+    for _ = 1, 8 do
+        if M.selectPage() == page then
+            break
+        end
+        M.press(M.selectPage() < page and M.KEY.R or M.KEY.L, nil, 90)
+    end
+    if M.selectPage() ~= page then
+        error("duelist page " .. page .. " not reached")
+    end
+    M.wait(30)
+    local flip = false
+    for _ = 1, 12 do
+        local cur = M.selectSlot()
+        if cur == slot then
+            M.wait(30)
+            return
+        end
+        local dx = SLOT_POS[slot][1] - SLOT_POS[cur][1]
+        local dy = SLOT_POS[slot][2] - SLOT_POS[cur][2]
+        local horizontal = math.abs(dx) >= math.abs(dy)
+        if flip then
+            horizontal = not horizontal
+        end
+        local key
+        if horizontal then
+            key = dx > 0 and M.KEY.RIGHT or M.KEY.LEFT
+        else
+            key = dy > 0 and M.KEY.DOWN or M.KEY.UP
+        end
+        M.press(key, nil, 24)
+        flip = M.selectSlot() == cur and not flip
+    end
+    error("duelist slot " .. slot .. " not reached (at " .. M.selectSlot() .. ")")
+end
+
+-- ---- a duel's opening: rock-paper-scissors, the first Draw Phase (tools/testing_scenarios/lib_eds.lua) ----
+
+local function turnOrder(off)
+    return M.read8(EDS.G_TURN_ORDER_SCENE + off)
+end
+
+-- True while the rock-paper-scissors screen waits for your card.
+function M.rpsChoosing()
+    return EDS.turnOrderRpsUiActive() and turnOrder(EDS.OFF_TURN_ORDER_PHASE) == EDS.TURN_ORDER_CHOOSE_HAND
+        and EDS.duelStep() < EDS.DUEL_STEP_DRAW
+end
+
+-- Rock-paper-scissors, won: A on a card, then the CPU's card (once it has answered) is the one yours beats (the
+-- harness's forced loss, EDS.forceTurnOrderRpsLose, the other way round); then `first` (go first) or second, A.
+function M.rpsWin(first)
+    M.waitUntil(M.rpsChoosing, 1800, "rock-paper-scissors")
+    M.wait(60)
+    M.press(M.KEY.A)
+    local to = EDS.G_TURN_ORDER_SCENE
+    M.waitUntil(function() return turnOrder(EDS.OFF_TURN_ORDER_OPP_ANSWERED) == 1 end, 600, "the CPU's card")
+    local stop = turnOrder(EDS.OFF_TURN_ORDER_CAROUSEL_STOP)
+    M.write8(to + EDS.OFF_TURN_ORDER_OPP_HAND, (stop + 1) % 3)
+    M.write8(to + EDS.OFF_TURN_ORDER_RESULT, EDS.RPS_WIN)
+    M.wait(100)                     -- "WIN !!" shown; A goes on to the first / second choice
+    for _ = 1, 10 do
+        if turnOrder(EDS.OFF_TURN_ORDER_PHASE) == EDS.TURN_ORDER_CHOOSE_TURN then
+            break
+        end
+        M.press(M.KEY.A, nil, 40)
+    end
+    M.waitUntil(function() return turnOrder(EDS.OFF_TURN_ORDER_PHASE) == EDS.TURN_ORDER_CHOOSE_TURN end, 300,
+        "the first / second choice")
+    M.wait(45)
+    M.write8(to + EDS.OFF_TURN_ORDER_TURN_CHOICE, first and 0 or EDS.TURN_CHOICE_SECOND)
+    M.press(M.KEY.A)
+end
+
+-- Your first Draw Phase (the testing ROM, or against Debug: src/mod_mulligan.c): the cursor onto your Deck, then
+-- `n` Mulligans from its menu (each redraws the hand), then Draw. `record` names a GIF of it.
+function M.mulligan(n, record)
+    M.waitUntil(function()
+        return EDS.duelStep() == EDS.DUEL_STEP_DRAW and EDS.turnPlayer() == 0 and not EDS.busy()
+    end, 3600, "your first Draw Phase")
+    for _ = 1, 20 do
+        if EDS.duelSelArea() == EDS.DUEL_AREA_DECK and EDS.duelSelPlayer() == 0 then
+            break
+        end
+        M.press(EDS.keyTowardOwnDeck(EDS.duelSelArea()), nil, 10)
+    end
+    M.wait(30)
+    if record then
+        M.record(record, "gif")
+    end
+    local function choose(cmd)
+        for _ = 1, 3 do
+            if EDS.cardMenuOpen() then
+                break
+            end
+            M.press(M.KEY.A, nil, 30)
+        end
+        for _ = 1, 6 do
+            if EDS.cardMenuCommand() == cmd then
+                break
+            end
+            M.press(cmd == EDS.CARDMENU_CMD_MULLIGAN and M.KEY.RIGHT or M.KEY.LEFT, nil, 20)
+        end
+        M.wait(20)
+        M.press(M.KEY.A, nil, 20)
+    end
+    for _ = 1, n do
+        choose(EDS.CARDMENU_CMD_MULLIGAN)
+        M.wait(150)                 -- the hand goes back, the deck is shuffled, five are drawn
+    end
+    choose(EDS.CARDMENU_CMD_DRAW)
+    M.wait(90)
+    if record then
+        M.stop()
+    end
+end
+
+-- The cursor onto the opponent's hand (the screen scrolls to their side; the info bar names the card).
+function M.pointOpponentHand()
+    for _ = 1, 12 do
+        if EDS.duelSelPlayer() == 1 and EDS.duelSelArea() == EDS.DUEL_AREA_HAND then
+            break
+        end
+        M.press(M.KEY.UP, nil, 14)
+    end
+    M.wait(60)
+end
+
+-- From the opening to your Main Phase 1: in your first Draw Phase the deck menu's Draw (not Mulligan); A through the
+-- rest (messages, the CPU's turn when it goes first).
+function M.toMainPhase(timeout)
+    local t = 0
+    while not EDS.inHumanMainPhase1() do
+        t = t + 1
+        if t > (timeout or 3600) then
+            error("timeout waiting for Main Phase 1")
+        end
+        if EDS.busy() then
+            coroutine.yield()
+        elseif EDS.duelStep() == EDS.DUEL_STEP_DRAW and EDS.turnPlayer() == 0 then
+            if EDS.cardMenuOpen() then
+                M.press(EDS.cardMenuCommand() == EDS.CARDMENU_CMD_DRAW and M.KEY.A or M.KEY.LEFT, nil, 16)
+            else
+                M.press(EDS.keyTowardOwnDeck(EDS.duelSelArea()), nil, 10)
+            end
+        elseif t % 40 == 0 then
+            M.press(M.KEY.A, nil, 10)
+        else
+            coroutine.yield()
+        end
+    end
+    M.wait(60)
+end
+
+-- ---- shared screens (moved from main_menu_screens.lua) ----
+
+-- A line of a build header (build/include/...), or nil.
+function M.buildFile(name)
+    local f = io.open(M.ROOT .. "/build/include/" .. name, "r")
+    if not f then
+        return nil
+    end
+    local t = f:read("*a")
+    f:close()
+    return t
+end
+
+-- gDeckRecipes (src/mod_recipes.c struct DeckRecipes): cursor +0 (the slot), scroll +1 (the top row's slot),
+-- active +2 (the recipe last loaded), mode +3 (0 list, 1 the actions, 3 the cards
+-- a load left out), action +4; the slots' summaries from +0x2C, 36 bytes each (sizes, then the name at +4).
+local RECIPE_COUNT, RECIPE_SUMMARY = 60, 36
+
+-- Deck Recipes: the recipe whose name holds `pattern` loaded (cursor onto it with Down, A, Load, A), then back to
+-- the main menu.
+function M.loadRecipe(pattern)
+    local dr = M.sym("gDeckRecipes")
+    local slot
+    for n = 0, RECIPE_COUNT - 1 do
+        local name = emu:readRange(dr + 0x2C + n * RECIPE_SUMMARY + 4, 32):match("^[^%z]*")
+        if name:find(pattern, 1, true) then
+            slot = n
+            break
+        end
+    end
+    if not slot then
+        error("no recipe named like " .. pattern)
+    end
+    local function at() return M.read8(dr) end
+    for _ = 1, RECIPE_COUNT * 3 do       -- (a press can be missed: checked after each one)
+        if at() == slot then
+            break
+        end
+        M.press(at() < slot and M.KEY.DOWN or M.KEY.UP, nil, 16)
+    end
+    if at() ~= slot then
+        error("Deck Recipes cursor did not reach slot " .. slot)
+    end
+    M.press(M.KEY.A, nil, 20)                          -- the actions
+    for _ = 1, 5 do
+        if M.read8(dr + 4) == 0 then                   -- ACTION_LOAD
+            break
+        end
+        M.press(M.KEY.LEFT, nil, 10)
+    end
+    for _ = 1, 3 do                                    -- (a load over a deck asks twice)
+        if M.read8(dr + 3) ~= 1 then
+            break
+        end
+        M.press(M.KEY.A, nil, 40)
+    end
+    M.wait(60)
+    if M.read8(dr + 2) ~= slot then
+        error("recipe " .. slot .. " was not loaded (active " .. M.read8(dr + 2) .. ")")
+    end
+    M.log("loaded recipe " .. slot .. " (" .. pattern .. ")")
+end
+
+-- Deck Edit: the Main Deck list (R selects the next list: deck_edit_list.c), its cursor scrolled onto
+-- `name` with Down, so the rows on the way are drawn as in play.
+function M.deckEditMainDeckOn(name)
+    local de = M.sym("gDeckEdit")
+    local lists = M.sym("gDeckEditCardLists")
+    local added = tonumber((M.buildFile("card_count.h") or ""):match("CARD_ID_COUNT_ADDED (%d+)") or "0")
+    local trunkSize = 821 + added
+    local rowSize = (trunkSize + 80 + 15) * 2
+    for _ = 1, 3 do
+        if M.read8(de + 0x1C1C) == 1 then              -- curList: the Main Deck
+            break
+        end
+        M.press(M.KEY.R, nil, 30)
+    end
+    if M.read8(de + 0x1C1C) ~= 1 then
+        error("Deck Edit: could not reach the Main Deck list")
+    end
+    local id = M.cardId(name)
+    local base = lists + M.read8(de + 0x14A0 + 1) * rowSize + trunkSize * 2
+    local target
+    for i = 0, 79 do
+        if (M.read16(base + i * 2) & 0x7FF) == id then
+            target = i
+            break
+        end
+    end
+    if not target then
+        error(name .. " is not in the Main Deck")
+    end
+    local function pos() return M.read16(de + 0x0620 + 2) end   -- listPos[1]
+    for _ = 1, 90 do
+        if pos() == target then
+            break
+        end
+        M.press(pos() < target and M.KEY.DOWN or M.KEY.UP, nil, 10)
+    end
+    if pos() ~= target then
+        error("Deck Edit cursor did not reach " .. name)
+    end
+end
+
+-- B until the main menu again
+function M.back()
+    -- B until the main menu again
+    for _ = 1, 6 do
+        if M.inCallback("CB_MainMenu") then
+            break
+        end
+        M.press(M.KEY.B, nil, 40)
+    end
+    M.waitCallback("CB_MainMenu", 45)
+end
+
+
+-- The pack ID of the format pack named `name` (FORMAT_PACK_ID_FIRST 601 + its sFormatPackNames index).
+function M.formatPackId(name)
+    local t = M.buildFile("format_pack_data.h") or ""
+    local block = t:match("sFormatPackNames%b[]%s*=%s*(%b{})") or ""
+    local i = 0
+    for n in block:gmatch('"(.-)",') do
+        if n == name then
+            return 601 + i
+        end
+        i = i + 1
+    end
+    error("no format pack " .. name)
+end
+
+-- Booster Packs with `packId` in the centre: CB_PackShop's own restore (lastPackId, restore: it puts the last
+-- opened pack back in the centre) is asked for while the list sets up.
+function M.packShopCentred(packId)
+    local shop = M.sym("gPackShop")
+    for _ = 1, 150 do
+        M.write16(shop + 4, packId)         -- lastPackId
+        M.write8(shop + 2, 1)               -- restore
+        coroutine.yield()
+    end
+end
+
+-- Deck Edit's command bar (gDeckEdit.commandMenu +0x1C3C, include/deck_edit.h): A opens it; Left/Right onto command
+-- `cmd` (0 Card View, 1 To Trunk, 2 To Main, 3 To Side, 4 List Filter, 5 Statistics, 6 Empty Main/Side); A.
+M.DECK_CMD = { CARD_VIEW = 0, TO_TRUNK = 1, TO_MAIN = 2, TO_SIDE = 3, LIST_FILTER = 4, STATISTICS = 5, EMPTY = 6 }
+
+function M.deckEditCommand(cmd)
+    local de = M.sym("gDeckEdit")
+    local function choice() return (M.read32(de + 0x1C3C) >> 15) & 7 end
+    local function open() return (M.read8(de + 0x1C48) & 1) ~= 0 end
+    M.press(M.KEY.A, nil, 20)
+    M.waitUntil(open, 120, "the command bar")
+    M.wait(10)
+    for _ = 1, 10 do
+        if choice() == cmd then
+            break
+        end
+        M.press(choice() < cmd and M.KEY.RIGHT or M.KEY.LEFT, nil, 14)
+    end
+    if choice() ~= cmd then
+        error("command bar: choice " .. cmd .. " not reached (at " .. choice() .. ")")
+    end
+    M.wait(20)
+    M.press(M.KEY.A, nil, 20)
+end
+
+-- Every named card at least once in the trunk (gSaveData.trunk[id].count, the low 10 bits; trunkSize +0x20C6): a
+-- fresh save holds a few cards only. The captures run on a copy of the save.
+function M.giveAllCards()
+    local save = M.sym("gSaveData")
+    local names = M.sym("gCardNames")
+    local ids = math.min(M.symSize("gCardNames") // 0x40, 0x800)
+    local total = 0
+    for id = 1, ids - 1 do
+        local a = save + 8 + id * 4
+        local w = M.read16(a)
+        if (w & 0x3FF) == 0 and M.read8(names + id * 0x40) ~= 0 then
+            w = (w & ~0x3FF) | 1
+            M.write16(a, w)
+        end
+        total = total + (w & 0x3FF)
+    end
+    M.write16(save + 0x20C6, total)
+end
+
+-- The List Filter's third page (src/mod_list_filter.c struct ListRefine at gDeckEdit +0x644: the row, then a value
+-- per row): Up/Down onto `row`, then Left/Right (one step; with `count`, the row's values, the shorter way round as
+-- one step wraps) or L/R (5, `big`) until its value is `value`.
+M.REFINE = { NAME = 0, TYPE = 1, ATTRIBUTE = 2, ATK_FROM = 3, ATK_TO = 4, DEF_FROM = 5, DEF_TO = 6, LEVEL_FROM = 7,
+             LEVEL_TO = 8 }
+
+function M.refineSet(row, value, big, count)
+    local base = M.sym("gDeckEdit") + 0x644
+    for _ = 1, 12 do
+        local r = M.read8(base)
+        if r == row then
+            break
+        end
+        M.press(r < row and M.KEY.DOWN or M.KEY.UP, nil, 24)
+    end
+    for _ = 1, 40 do
+        local v = M.read8(base + 1 + row)
+        if v == value then
+            return
+        end
+        local up = value > v
+        if count and not big then
+            up = (value - v) % count <= count // 2     -- (one step wraps: the shorter way round)
+        end
+        if big and math.abs(value - v) >= 5 then
+            M.press(value > v and M.KEY.R or M.KEY.L, nil, 24)
+        else
+            M.press(up and M.KEY.RIGHT or M.KEY.LEFT, nil, 24)
+        end
+    end
+    error("List Filter: row " .. row .. " did not reach " .. value)
+end
+
 -- ---- captures ----
 
 local function winPath(p)
@@ -312,6 +710,27 @@ function M.stop()
     if not r or r.n < 2 then
         error("nothing recorded")
     end
+    -- no still tail: the trailing frames identical to the last one go, but 20 (as lib_steps.lua's recordings)
+    local function frame(i) return string.format("%s/%06d.png", r.dir, i) end
+    local function readAll(p)
+        local f = io.open(p, "rb")
+        if not f then
+            return nil
+        end
+        local d = f:read("*a")
+        f:close()
+        return d
+    end
+    local last = readAll(frame(r.n - 1))
+    local first = r.n - 1
+    while first > 0 and readAll(frame(first - 1)) == last do
+        first = first - 1
+    end
+    local keep = math.min(r.n - 1, first + 20)
+    for i = keep + 1, r.n - 1 do
+        os.remove(frame(i))
+    end
+    r.n = keep + 1
     local ffmpeg = EDS.ffmpegCommand() or "ffmpeg"
     local input = winPath(r.dir) .. "\\%06d.png"
     local out, args

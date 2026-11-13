@@ -18603,3 +18603,151 @@
    3887 media: encoding 1528 frames -> tools\testing_scenarios\..\..\screenshots\gifs\link.gif
    3904 Play sequence done; ending capture (no recording tail).
    3904 Finished — PASS (play sequence + tail). Stop mGBA Record A/V to finalize MP4.
+     16 [_explore] start (symbols: tools/media/../../eds_demo.sym)
+   1528 [_explore] t=45 CB_Campaign
+   4273 [_explore] done
+     15 [_explore] start (symbols: tools/media/../../eds_demo.sym)
+   1434 [_explore] t=45 CB_Campaign
+   2679 [_explore] done
+     13 [_explore] start (symbols: tools/media/../../eds_demo.sym)
+   1305 [_explore] t=45 CB_Campaign
+   2580 [_explore] done
+     17 [debug_duel] start (symbols: tools/media/../../eds_demo.sym)
+   1427 [debug_duel] shot Debug Picker.png
+   1749 [debug_duel] recording rps (gif)
+   2724 [debug_duel] FAIL: ...ers\pswan\Downloads\eds-decomp\tools\media/lib_media.lua:202: timeout waiting for the first / second choice
+     18 [debug_duel] start (symbols: tools/media/../../eds_demo.sym)
+   1428 [debug_duel] shot Debug Picker.png
+   1750 [debug_duel] recording rps (gif)
+   2073 MP4: ffmpeg found through the registry PATH: C:\Users\pswan\Downloads\ffmpeg-2026-11-11-git-23c4540053-full_build\ffmpeg-2026-11-11-git-23c4540053-full_build\bin\ffmpeg.exe
+   2073 [debug_duel] encoding 323 frames -> tools\media\..\..\screenshots\gifs\rps.gif
+   2909 [debug_duel] shot Debug Duel.png
+   2910 [debug_duel] done
+     15 [debug_duel] start (symbols: tools/media/../../eds_demo.sym)
+   1425 [debug_duel] shot Debug Picker.png
+   1747 [debug_duel] recording rps (gif)
+   2070 MP4: ffmpeg found through the registry PATH: C:\Users\pswan\Downloads\ffmpeg-2026-11-11-git-23c4540053-full_build\ffmpeg-2026-11-11-git-23c4540053-full_build\bin\ffmpeg.exe
+   2070 [debug_duel] encoding 323 frames -> tools\media\..\..\screenshots\gifs\rps.gif
+   2697 [debug_duel] recording mulligan (gif)
+   3361 [debug_duel] encoding 664 frames -> tools\media\..\..\screenshots\gifs\mulligan.gif
+   3674 [debug_duel] shot Debug Duel.png
+   3675 [debug_duel] done
+     14 [empty_deck] start (symbols: tools/media/../../eds_demo.sym)
+   2377 [empty_deck] shot Empty Deck.png
+   2378 [empty_deck] done
+     13 [pre_duel] start (symbols: tools/media/../../eds_demo.sym)
+   1534 [pre_duel] recording pre-duel (gif)
+   1829 MP4: ffmpeg found through the registry PATH: C:\Users\pswan\Downloads\ffmpeg-2026-11-11-git-23c4540053-full_build\ffmpeg-2026-11-11-git-23c4540053-full_build\bin\ffmpeg.exe
+   1829 [pre_duel] encoding 295 frames -> tools\media\..\..\screenshots\gifs\pre-duel.gif
+   1829 [pre_duel] done
+     11 [pre_duel_picture] start (symbols: tools/media/../../eds_demo.sym)
+   1705 [pre_duel_picture] shot Pre-duel (Yugi-Kaiba).png
+   1706 [pre_duel_picture] done
+     11 [records_practice] start (symbols: tools/media/../../eds_demo.sym)
+   1421 [records_practice] shot Records (Practice).png
+   1422 [records_practice] done
+     13 [empty_deck] start (symbols: tools/media/../../eds_demo.sym)
+   2466 [empty_deck] loaded recipe 30 (Chaos Turbo)
+   4151 [empty_deck] shot Empty Deck.png
+   4152 [empty_deck] done
+     23 [main_menu_screens] start (symbols: tools/media/../../eds_demo.sym)
+   1009 [main_menu_screens] shot Settings (Main Menu).png
+   1104 [main_menu_screens] shot Settings.png
+   1291 [main_menu_screens] shot Deck Recipes (Main Menu).png
+   1416 [main_menu_screens] shot Deck Recipes.png
+   1586 [main_menu_screens] shot Banlists (Main Menu).png
+   1681 [main_menu_screens] shot Banlists.png
+   1834 [main_menu_screens] shot Booster Packs (Main Menu).png
+   2064 [main_menu_screens] shot Pack Opener.png
+   3584 [main_menu_screens] loaded recipe 30 (Chaos Turbo)
+   4523 [main_menu_screens] shot Deck Edit.png
+   4524 [main_menu_screens] done
+     13 [_explore] start (symbols: tools/media/../../eds_demo.sym)
+   1290 [_explore] recording _explore_pack (gif)
+   1353 [_explore] press 1 CB_PackShop
+   1416 [_explore] press 2 CB_PackShop
+   1479 [_explore] press 3 CB_PackShop
+   1542 [_explore] press 4 CB_PackShop
+   1605 [_explore] press 5 CB_PackShop
+   1668 [_explore] press 6 CB_PackShop
+   1731 [_explore] press 7 CB_PackShop
+   1794 [_explore] press 8 CB_PackShop
+   1857 [_explore] press 9 CB_PackShop
+   1920 [_explore] press 10 CB_PackShop
+   1983 [_explore] press 11 CB_PackShop
+   2046 [_explore] press 12 CB_PackShop
+   2109 [_explore] press 13 CB_PackShop
+   2172 [_explore] press 14 CB_PackShop
+   2172 MP4: ffmpeg found through the registry PATH: C:\Users\pswan\Downloads\ffmpeg-2026-11-11-git-23c4540053-full_build\ffmpeg-2026-11-11-git-23c4540053-full_build\bin\ffmpeg.exe
+   2172 [_explore] encoding 882 frames -> tools\media\..\..\screenshots\gifs\_explore_pack.gif
+   2172 [_explore] done
+     10 [_explore] start (symbols: tools/media/../../eds_demo.sym)
+   2463 [_explore] loaded recipe 30 (Chaos Turbo)
+   3082 [_explore] key 1 A
+   3125 [_explore] key 2 DOWN
+   3168 [_explore] key 3 DOWN
+   3211 [_explore] key 4 A
+   3254 [_explore] key 5 B
+   3297 [_explore] key 6 RIGHT
+   3340 [_explore] key 7 A
+   3383 [_explore] key 8 RIGHT
+   3426 [_explore] key 9 A
+   3469 [_explore] key 10 DOWN
+   3512 [_explore] key 11 RIGHT
+   3555 [_explore] key 12 DOWN
+   3598 [_explore] key 13 RIGHT
+   3641 [_explore] key 14 A
+   3684 [_explore] key 15 B
+   3727 [_explore] key 16 B
+   3727 [_explore] done
+     10 [empty_main_side] start (symbols: tools/media/../../eds_demo.sym)
+   2463 [empty_main_side] loaded recipe 30 (Chaos Turbo)
+   3402 [empty_main_side] recording empty-main-side (gif)
+   3743 MP4: ffmpeg found through the registry PATH: C:\Users\pswan\Downloads\ffmpeg-2026-11-11-git-23c4540053-full_build\ffmpeg-2026-11-11-git-23c4540053-full_build\bin\ffmpeg.exe
+   3743 [empty_main_side] encoding 341 frames -> tools\media\..\..\screenshots\gifs\empty-main-side.gif
+   3743 [empty_main_side] done
+     14 [pack_pull] start (symbols: tools/media/../../eds_demo.sym)
+   1259 [pack_pull] recording pack-pull (gif)
+   1649 MP4: ffmpeg found through the registry PATH: C:\Users\pswan\Downloads\ffmpeg-2026-11-11-git-23c4540053-full_build\ffmpeg-2026-11-11-git-23c4540053-full_build\bin\ffmpeg.exe
+   1649 [pack_pull] encoding 390 frames -> tools\media\..\..\screenshots\gifs\pack-pull.gif
+   1649 [pack_pull] done
+     16 [list_filter] start (symbols: tools/media/../../eds_demo.sym)
+   2437 [list_filter] loaded recipe 30 (Chaos Turbo)
+   2796 [list_filter] recording list-filter (gif)
+   3555 MP4: ffmpeg found through the registry PATH: C:\Users\pswan\Downloads\ffmpeg-2026-11-11-git-23c4540053-full_build\ffmpeg-2026-11-11-git-23c4540053-full_build\bin\ffmpeg.exe
+   3555 [list_filter] encoding 759 frames -> tools\media\..\..\screenshots\gifs\list-filter.gif
+   3555 [list_filter] done
+     14 [pack_pull] start (symbols: tools/media/../../eds_demo.sym)
+   1259 [pack_pull] recording pack-pull (gif)
+   1649 MP4: ffmpeg found through the registry PATH: C:\Users\pswan\Downloads\ffmpeg-2026-11-11-git-23c4540053-full_build\ffmpeg-2026-11-11-git-23c4540053-full_build\bin\ffmpeg.exe
+   1649 [pack_pull] encoding 390 frames -> tools\media\..\..\screenshots\gifs\pack-pull.gif
+   1649 [pack_pull] done
+     13 [pack_pull] start (symbols: tools/media/../../eds_demo.sym)
+   1290 [pack_pull] recording pack-pull (gif)
+   2032 MP4: ffmpeg found through the registry PATH: C:\Users\pswan\Downloads\ffmpeg-2026-11-11-git-23c4540053-full_build\ffmpeg-2026-11-11-git-23c4540053-full_build\bin\ffmpeg.exe
+   2032 [pack_pull] encoding 659 frames -> tools\media\..\..\screenshots\gifs\pack-pull.gif
+   2032 [pack_pull] done
+     16 [list_filter] start (symbols: tools/media/../../eds_demo.sym)
+   2437 [list_filter] loaded recipe 30 (Chaos Turbo)
+   3232 [list_filter] recording list-filter (gif)
+   3977 MP4: ffmpeg found through the registry PATH: C:\Users\pswan\Downloads\ffmpeg-2026-11-11-git-23c4540053-full_build\ffmpeg-2026-11-11-git-23c4540053-full_build\bin\ffmpeg.exe
+   3977 [list_filter] encoding 745 frames -> tools\media\..\..\screenshots\gifs\list-filter.gif
+   3977 [list_filter] done
+     17 [list_filter] start (symbols: tools/media/../../eds_demo.sym)
+   2438 [list_filter] loaded recipe 30 (Chaos Turbo)
+   3233 [list_filter] recording list-filter (gif)
+   4132 MP4: ffmpeg found through the registry PATH: C:\Users\pswan\Downloads\ffmpeg-2026-11-11-git-23c4540053-full_build\ffmpeg-2026-11-11-git-23c4540053-full_build\bin\ffmpeg.exe
+   4132 [list_filter] encoding 899 frames -> tools\media\..\..\screenshots\gifs\list-filter.gif
+   4132 [list_filter] done
+     15 [list_filter] start (symbols: tools/media/../../eds_demo.sym)
+   1157 [list_filter] recording list-filter (gif)
+   2669 MP4: ffmpeg found through the registry PATH: C:\Users\pswan\Downloads\ffmpeg-2026-11-11-git-23c4540053-full_build\ffmpeg-2026-11-11-git-23c4540053-full_build\bin\ffmpeg.exe
+   2669 [list_filter] encoding 1512 frames -> tools\media\..\..\screenshots\gifs\list-filter.gif
+   2669 [list_filter] done
+     13 [list_filter] start (symbols: tools/media/../../eds_demo.sym)
+   1187 [list_filter] recording list-filter (gif)
+   2186 MP4: ffmpeg found through the registry PATH: C:\Users\pswan\Downloads\ffmpeg-2026-11-11-git-23c4540053-full_build\ffmpeg-2026-11-11-git-23c4540053-full_build\bin\ffmpeg.exe
+   2186 [list_filter] encoding 999 frames -> tools\media\..\..\screenshots\gifs\list-filter.gif
+   2186 [list_filter] done
+     13 [_explore] start (symbols: tools/media/../../eds_release_demo.sym)
+   1170 [_explore] FAIL: ...ers\pswan\Downloads\eds-decomp\tools\media/lib_media.lua:491: no recipe named like Chaos Turbo

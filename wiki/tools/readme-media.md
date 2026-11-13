@@ -46,6 +46,12 @@ powershell -ExecutionPolicy Bypass -File tools\testing_scenarios\run_tests.ps1 -
 | `password.lua` | Password.png: Breaker's password typed on the keypad (a path over `gPasswordKeypad`'s links), then the "Buy …?" question | demo | verified |
 | `*_Media_Player.lua` (from `gen_duel_media.py`) | Card Icons, Card Icons (Up Close), Activate-Set Order, Counters, Duel, Duel Board (cards side by side), Chain List | demo | Duel Board verified 2026-11-13; the rest run before |
 | `*_Media_Player.lua` (2026-11-13) | GIFs: synchro, xyz, link, zone-pick, call-trunade, graverobber, hide-battle, hold-r, hold-l. Videos: new-cards, cpu-play, hide-anims, duel-speed-default/always/super | demo | verified (contact sheets) |
+| `pre_duel.lua` / `pre_duel_picture.lua` | pre-duel.gif (Weevil's bust-up, page 2 top left, then A) / Pre-duel (Yugi-Kaiba).png (page 1 top left) | demo | verified |
+| `debug_duel.lua` | Debug Picker.png, rps.gif (a forced win: the CPU's card set once it answers), mulligan.gif (two Mulligans, then Draw), Debug Duel.png (cursor on Debug's face-up hand) | demo | verified |
+| `empty_deck.lua` | Empty Deck.png (loads Chaos Turbo first: a fresh save has no deck) | demo | verified |
+| `records_practice.lua` | Records (Practice).png (R three times) | demo | verified |
+| `pack_pull.lua` | pack-pull.gif (the list browsed, the Goat pack opened, a card's details) | demo | verified |
+| `empty_main_side.lua` / `list_filter.lua` | empty-main-side.gif / list-filter.gif (every card in the trunk; D, Warrior, ATK from 1000: 12 cards) | demo | verified |
 
 Duel captures are written as test scenarios (setup and steps, the format of `tools/testing_scenarios/exact.py`) by
 `tools/media/gen_duel_media.py`, with media steps: `point`, `open_menu`, `close`, `wait`, `shot`, `gif_start` /
@@ -75,6 +81,13 @@ Duel captures are written as test scenarios (setup and steps, the format of `too
 - `run_tests.ps1 -Media` retries copying the ROM/save copy (the previous mGBA holds it for a moment).
 
 ## Lessons
+- The captures run on a fresh save (no `eds_demo.sav`): no deck, a trunk of a few cards, 5000 DP. `M.loadRecipe`,
+  `M.giveAllCards` set up what a capture needs. The release-demo ROM's recipe list differs (no Chaos Turbo).
+- `lib_media.lua` helpers (2026-11-13): `campaignPick(page, slot)` (steered by `gOpponentSelectSlotPos`), `rpsWin`,
+  `mulligan`, `toMainPhase`, `pointOpponentHand`, `deckEditCommand`, `refineSet` (List Filter values from
+  `gDeckEdit` +0x644; key-count presses get dropped), `giveAllCards`, `callbackName`; recordings trim their still tail.
+- The pre-duel screen and rock-paper-scissors are steps inside `CB_Campaign`; Debug asks for both decks (Deck
+  Recipes) first.
 
 - Deck Recipes' `gDeckRecipes.cursor` is the absolute slot (+1 scroll, +2 the recipe last loaded); presses closer
   than about 16 frames apart can be missed, so loops re-check after each press.

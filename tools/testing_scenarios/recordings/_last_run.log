@@ -1149,3 +1149,51 @@ START Link_Media_Player
 PASS Link_Media_Player duel_main=true reason= play_done=true
 START Link_Media_Player
 PASS Link_Media_Player duel_main=true reason= play_done=true
+START _explore
+PASS _explore
+START _explore
+PASS _explore
+START _explore
+PASS _explore
+START debug_duel
+FAIL debug_duel ...ers\pswan\Downloads\eds-decomp\tools\media/lib_media.lua:202: timeout waiting for the first / second choice
+START debug_duel
+PASS debug_duel
+START debug_duel
+PASS debug_duel
+START empty_deck
+PASS empty_deck
+START pre_duel
+PASS pre_duel
+START pre_duel_picture
+PASS pre_duel_picture
+START records_practice
+PASS records_practice
+START empty_deck
+PASS empty_deck
+START main_menu_screens
+PASS main_menu_screens
+START _explore
+PASS _explore
+START _explore
+PASS _explore
+START empty_main_side
+PASS empty_main_side
+START pack_pull
+PASS pack_pull
+START list_filter
+PASS list_filter
+START pack_pull
+PASS pack_pull
+START pack_pull
+PASS pack_pull
+START list_filter
+PASS list_filter
+START list_filter
+PASS list_filter
+START list_filter
+PASS list_filter
+START list_filter
+PASS list_filter
+START _explore
+FAIL _explore ...ers\pswan\Downloads\eds-decomp\tools\media/lib_media.lua:491: no recipe named like Chaos Turbo

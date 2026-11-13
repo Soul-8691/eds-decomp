@@ -1,7 +1,7 @@
 ﻿
-Script            Result Seconds Detail                               
-------            ------ ------- ------                               
-Link_Media_Player PASS        24 duel_main=true reason= play_done=true
+Script   Result Seconds Detail                                                                                           
+------   ------ ------- ------                                                                                           
+_explore FAIL         2 ...ers\pswan\Downloads\eds-decomp\tools\media/lib_media.lua:491: no recipe named like Chaos Turbo
 
 
 
