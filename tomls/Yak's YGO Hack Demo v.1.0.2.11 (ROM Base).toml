@@ -72,9 +72,6 @@
 #   data.constants.fusion2 -- used: a Fusion constant of the original
 #   data.constants.cards.limit2 [3] -- used: the card ID count in GeneratePackCards (random pack cards): the
 #       last real card
-#   data.constants.cards.limit -- used (two sites are debug screens: DebugCardDetail_Browse, DebugGetAllCards):
-#       the card ID count limits in the code: now the build's count (or the last real card's, before make demo's
-#       blank slots); sites whose code no longer holds it are listed below
 #   data.constants.effects.limit -- used: the original effect table's row count
 #  Lists (the names of table rows and enum values):
 #   cardnumbers -- used: card names by card ID: the original cards, then the added ones (and make demo's blank
@@ -186,6 +183,7 @@
 #   data.constants.cards.limit at 0x070C38: TradeCardSelect_Init no longer holds the card count limit
 #   data.constants.cards.limit at 0x070D9A: TradeCardSelect_Init no longer holds the card count limit
 #   data.constants.cards.limit at 0x07715E: DebugGetAllCards no longer holds the card count limit
+#   data.constants.cards.limit at 0x07C362: FindCardByPassword no longer holds the card count limit
 [General]
 ApplicationVersion = '''0.5.7.1'''
 FreeSpaceSearch = '''000200'''
@@ -2760,115 +2758,115 @@ DefaultHash = '''5BD1BB9D'''
 
 [[NamedAnchors]]
 Name = '''text.opponents.yugikaiba'''
-Address = 0x256574
+Address = 0x256578
 Format = '''`asc`11'''
 DefaultHash = '''9CFD324B'''
 
 [[NamedAnchors]]
 Name = '''text.opponents.critter'''
-Address = 0x256580
+Address = 0x256584
 Format = '''`asc`8'''
 DefaultHash = '''FB44E13F'''
 
 [[NamedAnchors]]
 Name = '''text.opponents.treasure'''
-Address = 0x256594
+Address = 0x256598
 Format = '''`asc`9'''
 DefaultHash = '''823F019D'''
 
 [[NamedAnchors]]
 Name = '''text.opponents.joeypegasus'''
-Address = 0x2565A8
+Address = 0x2565AC
 Format = '''`asc`13'''
 DefaultHash = '''6A5BED9B'''
 
 [[NamedAnchors]]
 Name = '''text.opponents.imperial'''
-Address = 0x256588
+Address = 0x25658C
 Format = '''`asc`9'''
 DefaultHash = '''823F019D'''
 
 [[NamedAnchors]]
 Name = '''text.opponents.android'''
-Address = 0x2565A0
+Address = 0x2565A4
 Format = '''`asc`8'''
 DefaultHash = '''FB44E13F'''
 
 [[NamedAnchors]]
 Name = '''text.opponents.fiber'''
-Address = 0x2565B8
+Address = 0x2565BC
 Format = '''`asc`6'''
 DefaultHash = '''8FC4D28A'''
 
 [[NamedAnchors]]
 Name = '''text.opponents.yata'''
-Address = 0x2565C0
+Address = 0x2565C4
 Format = '''`asc`5'''
 DefaultHash = '''D0DBCAE6'''
 
 [[NamedAnchors]]
 Name = '''text.opponents.chaos'''
-Address = 0x2565DC
+Address = 0x2565E0
 Format = '''`asc`6'''
 DefaultHash = '''8FC4D28A'''
 
 [[NamedAnchors]]
 Name = '''text.opponents.scientist'''
-Address = 0x2565C8
+Address = 0x2565CC
 Format = '''`asc`10'''
 DefaultHash = '''17F0FB6F'''
 
 [[NamedAnchors]]
 Name = '''text.opponents.vampire'''
-Address = 0x2565D4
+Address = 0x2565D8
 Format = '''`asc`8'''
 DefaultHash = '''FB44E13F'''
 
 [[NamedAnchors]]
 Name = '''text.opponents.warrior'''
-Address = 0x2565E4
+Address = 0x2565E8
 Format = '''`asc`8'''
 DefaultHash = '''FB44E13F'''
 
 [[NamedAnchors]]
 Name = '''text.opponents.goat'''
-Address = 0x2565EC
+Address = 0x2565F0
 Format = '''`asc`5'''
 DefaultHash = '''D0DBCAE6'''
 
 [[NamedAnchors]]
 Name = '''text.opponents.cyber'''
-Address = 0x2565F4
+Address = 0x2565F8
 Format = '''`asc`6'''
 DefaultHash = '''8FC4D28A'''
 
 [[NamedAnchors]]
 Name = '''text.opponents.reaper'''
-Address = 0x2565FC
+Address = 0x256600
 Format = '''`asc`7'''
 DefaultHash = '''A3E37836'''
 
 [[NamedAnchors]]
 Name = '''text.opponents.emptydeck'''
-Address = 0x256620
+Address = 0x256624
 Format = '''`asc`11'''
 DefaultHash = '''9CFD324B'''
 
 [[NamedAnchors]]
 Name = '''text.opponents.debug'''
-Address = 0x256618
+Address = 0x25661C
 Format = '''`asc`6'''
 DefaultHash = '''8FC4D28A'''
 
 [[NamedAnchors]]
 Name = '''text.opponents.solomon'''
-Address = 0x256610
+Address = 0x256614
 Format = '''`asc`8'''
 DefaultHash = '''FB44E13F'''
 
 [[NamedAnchors]]
 Name = '''data.opponents'''
-Address = 0x25662C
+Address = 0x256630
 Format = '''[kind.opponentkinds order. format.formats unused. name<> portrait:cardinternalnumbers padding:]opponents'''
 DefaultHash = '''3FE2E882'''
 
@@ -3852,19 +3850,19 @@ DefaultHash = '''31CEBDF1'''
 
 [[NamedAnchors]]
 Name = '''text.title.version'''
-Address = 0x256798
+Address = 0x25679C
 Format = '''`asc`16'''
 DefaultHash = '''EF7E1A14'''
 
 [[NamedAnchors]]
 Name = '''text.title.release'''
-Address = 0x2567A8
+Address = 0x2567AC
 Format = '''`asc`16'''
 DefaultHash = '''EF7E1A14'''
 
 [[NamedAnchors]]
 Name = '''text.title.debug'''
-Address = 0x2567B8
+Address = 0x2567BC
 Format = '''`asc`16'''
 DefaultHash = '''EF7E1A14'''
 
@@ -4680,7 +4678,7 @@ DefaultHash = '''33FCFF8E'''
 
 [[MatchedWords]]
 Name = '''data.constants.packs.rarities.total'''
-Address = 0x062C34
+Address = 0x062BF0
 Length = 1
 
 [[MatchedWords]]
@@ -4725,72 +4723,67 @@ Length = 1
 
 [[MatchedWords]]
 Name = '''data.constants.packs.unlocks.2wins1'''
-Address = 0x063DDC
+Address = 0x063D98
 Length = 1
 
 [[MatchedWords]]
 Name = '''data.constants.packs.unlocks.2wins2'''
-Address = 0x063DEA
+Address = 0x063DA6
 Length = 1
 
 [[MatchedWords]]
 Name = '''data.constants.packs.unlocks.2wins3'''
-Address = 0x063DF8
+Address = 0x063DB4
 Length = 1
 
 [[MatchedWords]]
 Name = '''data.constants.packs.unlocks.2wins4'''
-Address = 0x063E06
+Address = 0x063DC2
 Length = 1
 
 [[MatchedWords]]
 Name = '''data.constants.packs.unlocks.2wins5'''
-Address = 0x063E14
+Address = 0x063DD0
 Length = 1
 
 [[MatchedWords]]
 Name = '''data.constants.packs.unlocks.10winseach'''
-Address = 0x064162
+Address = 0x06411E
 Length = 1
 
 [[MatchedWords]]
 Name = '''data.constants.packs.unlocks.20wins'''
-Address = 0x064386
+Address = 0x064342
 Length = 1
 
 [[MatchedWords]]
 Name = '''data.constants.packs.unlocks.10winstotal'''
-Address = 0x064282
+Address = 0x06423E
 Length = 1
 
 [[MatchedWords]]
 Name = '''data.constants.fusion2'''
-Address = 0x03B7FC
+Address = 0x03B7D0
 Length = 1
 
 [[MatchedWords]]
-Name = '''data.constants.cards.limit'''
-Address = 0x07BBA4
-Length = 2
-
-[[MatchedWords]]
 Name = '''data.constants.effects.limit'''
-Address = 0x045F60
+Address = 0x045F34
 Length = 2
 
 [[MatchedWords]]
 Name = '''data.constants.cards.limit2'''
-Address = 0x062DF0
+Address = 0x062DAC
 Length = 2
 
 [[MatchedWords]]
 Name = '''data.constants.cards.limit2'''
-Address = 0x062EB4
+Address = 0x062E70
 Length = 2
 
 [[MatchedWords]]
 Name = '''data.constants.cards.limit2'''
-Address = 0x062F8C
+Address = 0x062F48
 Length = 2
 
 #################################
@@ -4802,87 +4795,87 @@ Length = 1
 
 [[MatchedWords]]
 Name = '''data.constants.title.flamewave'''
-Address = 0x2567C8
+Address = 0x2567CC
 Length = 1
 
 [[MatchedWords]]
 Name = '''data.constants.title.flamepriority'''
-Address = 0x2567C9
+Address = 0x2567CD
 Length = 1
 
 [[MatchedWords]]
 Name = '''data.constants.preduel.qrsquare'''
-Address = 0x256EAB
+Address = 0x256EAF
 Length = 1
 
 [[MatchedWords]]
 Name = '''data.constants.formats.unlock.critter'''
-Address = 0x256758
-Length = 1
-
-[[MatchedWords]]
-Name = '''data.constants.formats.unlock.treasure'''
-Address = 0x256759
-Length = 1
-
-[[MatchedWords]]
-Name = '''data.constants.formats.unlock.imperial'''
-Address = 0x25675A
-Length = 1
-
-[[MatchedWords]]
-Name = '''data.constants.formats.unlock.android'''
-Address = 0x25675B
-Length = 1
-
-[[MatchedWords]]
-Name = '''data.constants.formats.unlock.joeypegasus'''
 Address = 0x25675C
 Length = 1
 
 [[MatchedWords]]
-Name = '''data.constants.formats.unlock.fiber'''
+Name = '''data.constants.formats.unlock.treasure'''
 Address = 0x25675D
 Length = 1
 
 [[MatchedWords]]
-Name = '''data.constants.formats.unlock.yata'''
+Name = '''data.constants.formats.unlock.imperial'''
 Address = 0x25675E
 Length = 1
 
 [[MatchedWords]]
-Name = '''data.constants.formats.unlock.scientist'''
+Name = '''data.constants.formats.unlock.android'''
 Address = 0x25675F
 Length = 1
 
 [[MatchedWords]]
-Name = '''data.constants.formats.unlock.vampire'''
+Name = '''data.constants.formats.unlock.joeypegasus'''
 Address = 0x256760
 Length = 1
 
 [[MatchedWords]]
-Name = '''data.constants.formats.unlock.chaos'''
+Name = '''data.constants.formats.unlock.fiber'''
 Address = 0x256761
 Length = 1
 
 [[MatchedWords]]
-Name = '''data.constants.formats.unlock.warrior'''
+Name = '''data.constants.formats.unlock.yata'''
 Address = 0x256762
 Length = 1
 
 [[MatchedWords]]
-Name = '''data.constants.formats.unlock.goat'''
+Name = '''data.constants.formats.unlock.scientist'''
 Address = 0x256763
 Length = 1
 
 [[MatchedWords]]
-Name = '''data.constants.formats.unlock.cyber'''
+Name = '''data.constants.formats.unlock.vampire'''
 Address = 0x256764
 Length = 1
 
 [[MatchedWords]]
-Name = '''data.constants.formats.unlock.reaper'''
+Name = '''data.constants.formats.unlock.chaos'''
 Address = 0x256765
+Length = 1
+
+[[MatchedWords]]
+Name = '''data.constants.formats.unlock.warrior'''
+Address = 0x256766
+Length = 1
+
+[[MatchedWords]]
+Name = '''data.constants.formats.unlock.goat'''
+Address = 0x256767
+Length = 1
+
+[[MatchedWords]]
+Name = '''data.constants.formats.unlock.cyber'''
+Address = 0x256768
+Length = 1
+
+[[MatchedWords]]
+Name = '''data.constants.formats.unlock.reaper'''
+Address = 0x256769
 Length = 1
 
 [[List]]
