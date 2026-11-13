@@ -19049,3 +19049,12 @@
    2440 [event_challenger] loaded recipe 30 (Chaos Turbo)
    3786 [event_challenger] shot Event Challenger.png
    3787 [event_challenger] done
+     11 [_siding_exit] start (symbols: tools/media/../../eds_demo.sym)
+   2464 [_siding_exit] loaded recipe 30 (Chaos Turbo)
+   5017 [_siding_exit] recording _siding_exit (gif)
+   5306 MP4: ffmpeg found through the registry PATH: C:\Users\pswan\Downloads\ffmpeg-2026-11-11-git-23c4540053-full_build\ffmpeg-2026-11-11-git-23c4540053-full_build\bin\ffmpeg.exe
+   5306 [_siding_exit] encoding 289 frames -> tools\media\..\..\screenshots\gifs\_siding_exit.gif
+   5306 [_siding_exit] bar open 1 choice 3
+   5468 [_siding_exit] choice now 6
+   7446 [_siding_exit] game 2 reached its Main Phase 1
+   7446 [_siding_exit] done

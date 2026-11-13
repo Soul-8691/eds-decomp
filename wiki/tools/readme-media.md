@@ -97,8 +97,12 @@ Duel captures are written as test scenarios (setup and steps, the format of `too
 - Faked progress (2026-11-13): `M.winDuel` (the CPU's LP to 0; Duel_CheckWin ends the duel), a match decided by one
   duel (gMain +0x4888 duel count 1, +0x4889 score 1), `M.giveAllCards` / `takeFromTrunk` / `addToDeck` /
   `shrinkCollection`, notices (`gSaveData` +0x2164), wins (`duelRecords`, +0x20D0), the day (+0x2150). The
-  Campaign's steps run inside `CB_Campaign` (gMain +0x4857 step, +0x488A bits 4-11 sub-step); the side swap ends
-  with B only once its animation is over (not used: new_packs.lua decides the match in one duel instead).
+  Campaign's steps run inside `CB_Campaign` (gMain +0x4857 step, +0x488A bits 4-11 sub-step).
+- The side swap between games is left through its command bar's last command, labelled **Exit** there
+  (`SideDeckSwap_Update`, deck_edit_filter_steps.c; the label is `LABEL_TILES[6]`, not the mod's Empty
+  Main/Side, `DeckEdit_CommandLabelVBlank` variant 1). B on the open bar only cancels a half-made swap, and
+  after a swap the bar stays open, so B alone never leaves: the original game's behaviour, not a bug
+  (checked 2026-11-13: Exit leads to game 2's Main Phase 1). new_packs.lua still decides its match in one duel.
 - The pre-duel screen and rock-paper-scissors are steps inside `CB_Campaign`; Debug asks for both decks (Deck
   Recipes) first.
 

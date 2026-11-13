@@ -46,7 +46,7 @@
 | **Editable** | Every build can come with a Hex Maniac Advance `.toml` that labels the mod's data: deck chances, packs, prices, cards, screens. |
 
 <p align="center">
-  <img src="screenshots/placeholders/highlights.svg" width="480" alt="Placeholder: Highlights (GIF)"><br>
+  <img src="screenshots/gifs/highlights.gif" width="480" alt="Highlights"><br>
   <sub>Highlights (GIF)</sub>
 </p>
 
@@ -97,7 +97,7 @@ release to unlock the next one (every format is open in the debug build).
 | 8 | Yata | August 2003 | | | | |
 
 <p align="center">
-  <img src="screenshots/placeholders/unlock.svg" width="240" alt="Placeholder: Unlocking the next format (GIF)"><br>
+  <img src="screenshots/gifs/unlock.gif" width="240" alt="Unlocking the next format"><br>
   <sub>Unlocking the next format (GIF)</sub>
 </p>
 
@@ -113,7 +113,7 @@ release to unlock the next one (every format is open in the debug build).
 
 <table>
 <tr>
-<td align="center"><img src="screenshots/placeholders/format-check.svg" width="240" alt="Placeholder: The format check warning"><br><sub>The format check warning</sub></td>
+<td align="center"><img src="screenshots/Format%20Check.png" width="240" alt="The format check warning"><br><sub>The format check warning</sub></td>
 <td align="center"><img src="screenshots/placeholders/hma-deck-choices.svg" width="240" alt="Placeholder: HMA: a format's deck chances"><br><sub>HMA: a format's deck chances</sub></td>
 </tr>
 </table>
@@ -127,8 +127,8 @@ intro, and there is no post-duel dialogue.
 
 <table>
 <tr>
-<td align="center"><img src="screenshots/placeholders/pre-duel.svg" width="240" alt="Placeholder: The pre-duel screen (GIF)"><br><sub>The pre-duel screen (GIF)</sub></td>
-<td align="center"><img src="screenshots/placeholders/pre-duel-format.svg" width="240" alt="Placeholder: A format picture"><br><sub>A format picture</sub></td>
+<td align="center"><img src="screenshots/gifs/pre-duel.gif" width="240" alt="The pre-duel screen"><br><sub>The pre-duel screen (GIF)</sub></td>
+<td align="center"><img src="screenshots/Pre-duel%20(Yugi-Kaiba).png" width="240" alt="A format picture"><br><sub>A format picture</sub></td>
 </tr>
 </table>
 
@@ -138,7 +138,7 @@ Every Campaign duel against the CPU is a best-of-3 match, not only on match days
 cards between your Main Deck and Side Deck, and your deck goes back to how it was once the match ends. The CPU uses the
 same deck for every game of the match. Records, DP and the pack reward count the match, not each game.
 
-<img src="screenshots/placeholders/side-deck.svg" width="240" alt="Placeholder: siding between games (GIF)">
+<img src="screenshots/gifs/siding.gif" width="240" alt="siding between games">
 
 ### Event challengers
 
@@ -150,7 +150,7 @@ After the dialogue, your banlist switches to the challenger's format and the Dec
 press SELECT for Deck Edit, or press B to duel. In the release, a deck that isn't legal in the format (or is under 40
 cards) can't duel until you fix it.
 
-<img src="screenshots/placeholders/event-challenger.svg" width="240" alt="Placeholder: Deck Recipes before an event duel">
+<img src="screenshots/Event%20Challenger.png" width="240" alt="Deck Recipes before an event duel">
 
 ## Practice opponents
 
@@ -170,7 +170,7 @@ screen has a page for them too.
 
 <table>
 <tr>
-<td align="center"><img src="screenshots/placeholders/records-practice.svg" width="240" alt="Placeholder: Records: the practice page"><br><sub>Records: the practice page</sub></td>
+<td align="center"><img src="screenshots/Records%20(Practice).png" width="240" alt="Records: the practice page"><br><sub>Records: the practice page</sub></td>
 </tr>
 </table>
 
@@ -191,8 +191,8 @@ Before the duel you pick one of your own Deck Recipes for them to play.
 
 <table>
 <tr>
-<td align="center"><img src="screenshots/placeholders/debug-picker.svg" width="240" alt="Placeholder: Picking your deck"><br><sub>Picking your deck</sub></td>
-<td align="center"><img src="screenshots/placeholders/debug-duel.svg" width="240" alt="Placeholder: A duel with Debug"><br><sub>A duel with Debug</sub></td>
+<td align="center"><img src="screenshots/Debug%20Picker.png" width="240" alt="Picking your deck"><br><sub>Picking your deck</sub></td>
+<td align="center"><img src="screenshots/Debug%20Duel.png" width="240" alt="A duel with Debug"><br><sub>A duel with Debug</sub></td>
 </tr>
 </table>
 
@@ -212,7 +212,7 @@ player decks out, so you can try your deck's combos against an open board.
 
 <table>
 <tr>
-<td align="center"><img src="screenshots/placeholders/empty-deck.svg" width="240" alt="Placeholder: A duel against Empty Deck"><br><sub>A duel against Empty Deck</sub></td>
+<td align="center"><img src="screenshots/Empty%20Deck.png" width="240" alt="A duel against Empty Deck"><br><sub>A duel against Empty Deck</sub></td>
 </tr>
 </table>
 
@@ -225,7 +225,7 @@ the **release** build, mulligan is offered only in duels against **Debug**. In *
 
 <table>
 <tr>
-<td align="center"><img src="screenshots/placeholders/mulligan.svg" width="240" alt="Placeholder: Mulligan (GIF)"><br><sub>Mulligan (GIF)</sub></td>
+<td align="center"><img src="screenshots/gifs/mulligan.gif" width="240" alt="Mulligan"><br><sub>Mulligan (GIF)</sub></td>
 </tr>
 </table>
 
@@ -240,7 +240,7 @@ the **release** build, mulligan is offered only in duels against **Debug**. In *
 <tr>
 <td align="center"><img src="screenshots/Banlists%20(Main%20Menu).png" width="240" alt="Banlists in the main menu"><br><sub>Banlists in the main menu</sub></td>
 <td align="center"><img src="screenshots/Banlists.png" width="240" alt="The Banlists screen"><br><sub>Choosing a banlist</sub></td>
-<td align="center"><img src="screenshots/placeholders/left-out.svg" width="240" alt="Placeholder: Cards a recipe left out"><br><sub>Cards a recipe left out</sub></td>
+<td align="center"><img src="screenshots/Left%20Out.png" width="240" alt="Cards a recipe left out"><br><sub>Cards a recipe left out</sub></td>
 </tr>
 </table>
 
@@ -266,7 +266,7 @@ Choose the banlist your deck is built under from the main menu. Cards your curre
 the trunk. Before switching, the game checks that your cards can still make a Main Deck of at least 40 cards under the
 new banlist, counting its limits and card pool. If they can't, the switch is refused.
 
-<img src="screenshots/placeholders/banlist-refused.svg" width="240" alt="Placeholder: a refused banlist switch">
+<img src="screenshots/Banlist%20Refused.png" width="240" alt="a refused banlist switch">
 
 ### Deck Edit
 
@@ -279,8 +279,8 @@ new banlist, counting its limits and card pool. If they can't, the switch is ref
 
 <table>
 <tr>
-<td align="center"><img src="screenshots/placeholders/list-filter.svg" width="240" alt="Placeholder: List Filter (GIF)"><br><sub>List Filter (GIF)</sub></td>
-<td align="center"><img src="screenshots/placeholders/empty-main-side.svg" width="240" alt="Placeholder: Empty Main/Side (GIF)"><br><sub>Empty Main/Side (GIF)</sub></td>
+<td align="center"><img src="screenshots/gifs/list-filter.gif" width="240" alt="List Filter"><br><sub>List Filter (GIF)</sub></td>
+<td align="center"><img src="screenshots/gifs/empty-main-side.gif" width="240" alt="Empty Main/Side"><br><sub>Empty Main/Side (GIF)</sub></td>
 </tr>
 </table>
 
@@ -293,8 +293,8 @@ new banlist, counting its limits and card pool. If they can't, the switch is ref
 <td align="center"><img src="screenshots/Password.png" width="240" alt="Buying Breaker the Magical Warrior with a password for 2773 DP"><br><sub>Buying a card by password</sub></td>
 </tr>
 <tr>
-<td align="center"><img src="screenshots/placeholders/pack-pull.svg" width="240" alt="Placeholder: An opened pack (GIF)"><br><sub>An opened pack (GIF)</sub></td>
-<td align="center"><img src="screenshots/placeholders/new-packs.svg" width="240" alt="Placeholder: The free pack reward"><br><sub>The free pack reward</sub></td>
+<td align="center"><img src="screenshots/gifs/pack-pull.gif" width="240" alt="An opened pack"><br><sub>An opened pack (GIF)</sub></td>
+<td align="center"><img src="screenshots/New%20Packs.png" width="240" alt="The free pack reward"><br><sub>The free pack reward</sub></td>
 <td></td>
 </tr>
 </table>
@@ -428,18 +428,18 @@ with L+R. Every choice is saved.
 Pick one of the three speeds; the two Hide switches are ON/OFF with **A**. Both are off in a Link Battle.
 
 <p align="center">
-  <img src="screenshots/placeholders/duel-speed.svg" width="480" alt="Placeholder: The three duel speeds (video)"><br>
+  <a href="screenshots/videos/duel-speed.mp4"><img src="screenshots/videos/posters/duel-speed.png" width="480" alt="The three duel speeds (video: click to play)"></a><br>
   <sub>The three duel speeds (video)</sub>
 </p>
 
 <p align="center">
-  <img src="screenshots/placeholders/hide-anims.svg" width="480" alt="Placeholder: Hide card animations, off then on (video)"><br>
+  <a href="screenshots/videos/hide-anims.mp4"><img src="screenshots/videos/posters/hide-anims.png" width="480" alt="Hide card animations, off then on (video: click to play)"></a><br>
   <sub>Hide card animations, off then on (video)</sub>
 </p>
 
 <table>
 <tr>
-<td align="center"><img src="screenshots/placeholders/hide-battle.svg" width="240" alt="Placeholder: Hide battle scenes (GIF)"><br><sub>Hide battle scenes (GIF)</sub></td>
+<td align="center"><img src="screenshots/gifs/hide-battle.gif" width="240" alt="Hide battle scenes"><br><sub>Hide battle scenes (GIF)</sub></td>
 </tr>
 </table>
 
@@ -454,7 +454,7 @@ Pick one of the three speeds; the two Hide switches are ON/OFF with **A**. Both 
 
 <table>
 <tr>
-<td align="center"><img src="screenshots/placeholders/hold-r.svg" width="240" alt="Placeholder: Hold R (GIF)"><br><sub>Hold R (GIF)</sub></td>
+<td align="center"><img src="screenshots/gifs/hold-r.gif" width="240" alt="Hold R"><br><sub>Hold R (GIF)</sub></td>
 </tr>
 </table>
 
@@ -465,7 +465,7 @@ shortcomings that were fixed (original-roster cards only), and [AI_IMPROVEMENTS.
 current CPU behavior in full.
 
 <p align="center">
-  <img src="screenshots/placeholders/cpu-play.svg" width="480" alt="Placeholder: The CPU at work (video)"><br>
+  <a href="screenshots/videos/cpu-play.mp4"><img src="screenshots/videos/posters/cpu-play.png" width="480" alt="The CPU at work (video: click to play)"></a><br>
   <sub>The CPU at work (video)</sub>
 </p>
 
@@ -491,8 +491,8 @@ current CPU behavior in full.
 
 <table>
 <tr>
-<td align="center"><img src="screenshots/placeholders/fix-call-trunade.svg" width="240" alt="Placeholder: Call of the Haunted and Giant Trunade (GIF)"><br><sub>Call of the Haunted and Giant Trunade (GIF)</sub></td>
-<td align="center"><img src="screenshots/placeholders/fix-graverobber.svg" width="240" alt="Placeholder: Graverobber's cost (GIF)"><br><sub>Graverobber's cost (GIF)</sub></td>
+<td align="center"><img src="screenshots/gifs/call-trunade.gif" width="240" alt="Call of the Haunted and Giant Trunade"><br><sub>Call of the Haunted and Giant Trunade (GIF)</sub></td>
+<td align="center"><img src="screenshots/gifs/graverobber.gif" width="240" alt="Graverobber's cost"><br><sub>Graverobber's cost (GIF)</sub></td>
 </tr>
 </table>
 
@@ -518,9 +518,9 @@ now. Pick the monster, then its materials.
 
 <table>
 <tr>
-<td align="center"><img src="screenshots/placeholders/synchro.svg" width="240" alt="Placeholder: A Synchro Summon (GIF)"><br><sub>A Synchro Summon (GIF)</sub></td>
-<td align="center"><img src="screenshots/placeholders/xyz.svg" width="240" alt="Placeholder: An Xyz Summon (GIF)"><br><sub>An Xyz Summon (GIF)</sub></td>
-<td align="center"><img src="screenshots/placeholders/link.svg" width="240" alt="Placeholder: A Link Summon (GIF)"><br><sub>A Link Summon (GIF)</sub></td>
+<td align="center"><img src="screenshots/gifs/synchro.gif" width="240" alt="A Synchro Summon"><br><sub>A Synchro Summon (GIF)</sub></td>
+<td align="center"><img src="screenshots/gifs/xyz.gif" width="240" alt="An Xyz Summon"><br><sub>An Xyz Summon (GIF)</sub></td>
+<td align="center"><img src="screenshots/gifs/link.gif" width="240" alt="A Link Summon"><br><sub>A Link Summon (GIF)</sub></td>
 </tr>
 </table>
 
@@ -530,10 +530,10 @@ now. Pick the monster, then its materials.
   the Main Monster Zone at that end (zone 1 or 5), so you hold at most 5 monsters in all. For Link Arrows they count
   as above zones 2 and 4, as in the real game.
 - **Choosing zones.** Every summon now asks which Monster Zone to use (Control Pad, then A) when more than one fits.
-
-<img src="screenshots/placeholders/zone-pick.svg" width="240" alt="Placeholder: choosing a zone (GIF)">
 - **New Types.** Psychic, Wyrm, Cyberse, Illusion and Creator God monsters can be added; they use the closest existing
   Type icon for now.
+
+<img src="screenshots/gifs/zone-pick.gif" width="240" alt="choosing a zone">
 
 ### Not yet
 
@@ -585,7 +585,7 @@ See [NEW_CARDS.md](NEW_CARDS.md) for all of them.
 </details>
 
 <p align="center">
-  <img src="screenshots/placeholders/new-cards.svg" width="480" alt="Placeholder: New cards in action (video)"><br>
+  <a href="screenshots/videos/new-cards.mp4"><img src="screenshots/videos/posters/new-cards.png" width="480" alt="New cards in action (video: click to play)"></a><br>
   <sub>New cards in action (video)</sub>
 </p>
 
@@ -756,8 +756,8 @@ In a testing build, or against Debug in the release:
 
 <table>
 <tr>
-<td align="center"><img src="screenshots/placeholders/hold-l.svg" width="240" alt="Placeholder: Hold L (GIF)"><br><sub>Hold L (GIF)</sub></td>
-<td align="center"><img src="screenshots/placeholders/rps.svg" width="240" alt="Placeholder: Rock-paper-scissors (GIF)"><br><sub>Rock-paper-scissors (GIF)</sub></td>
+<td align="center"><img src="screenshots/gifs/hold-l.gif" width="240" alt="Hold L"><br><sub>Hold L (GIF)</sub></td>
+<td align="center"><img src="screenshots/gifs/rps.gif" width="240" alt="Rock-paper-scissors"><br><sub>Rock-paper-scissors (GIF)</sub></td>
 </tr>
 </table>
 
@@ -796,7 +796,7 @@ python tools/testing_scenarios/review_videos.py                                 
 </table>
 
 <p align="center">
-  <img src="screenshots/placeholders/test-reel.svg" width="480" alt="Placeholder: The card test reel, 4x speed (video)"><br>
+  <a href="tools/testing_scenarios/highlights_4x.mp4"><img src="screenshots/videos/posters/highlights_4x.png" width="480" alt="The card test reel, 4x speed (video: click to play)"></a><br>
   <sub>The card test reel, 4x speed (video)</sub>
 </p>
 

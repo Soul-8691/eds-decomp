@@ -3159,3 +3159,9 @@ updated: 2026-09-29
 ## [2026-11-13] progress | README faked-progress captures and stitching
 - tools/media: left_out, format_check (release), banlist_refused (release), siding, new_packs, unlock (release), event_challenger; lib_media.lua winDuel, banlistSelect, takeFromTrunk, addToDeck, shrinkCollection, pause/resume. tools/media/stitch_media.py: duel-speed.mp4, trailer.mp4 (git-ignored), highlights.gif.
 - [[readme-media]]. All run and checked.
+
+## [2026-11-13] query | Is the side swap stuck?
+- No: the side swap is left through the command bar's Exit (command 6, the original label in that mode); B on the open bar only cancels a half-made swap. Checked in the emulator (Exit -> game 2). [[readme-media]] corrected.
+
+## [2026-11-13] progress | README_WIP assembled from the captures
+- README_WIP.md: 33 placeholders replaced by the captured PNGs and GIFs; the 5 videos as poster stills (screenshots/videos/posters/, ffmpeg at 40%) linking to their .mp4. Left as placeholders: the 19 HMA slots, Mobius x2, Rom Patcher, the test runner, the video reviewer and the trailer (git-ignored).

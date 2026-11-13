@@ -1,7 +1,7 @@
 ﻿
-Script           Result Seconds Detail
-------           ------ ------- ------
-event_challenger PASS         5       
+Script       Result Seconds Detail
+------       ------ ------- ------
+_siding_exit PASS        10       
 
 
 

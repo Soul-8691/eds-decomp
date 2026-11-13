@@ -1251,3 +1251,5 @@ START event_challenger
 FAIL event_challenger ...ers\pswan\Downloads\eds-decomp\tools\media/lib_media.lua:202: timeout waiting for the event's dialogue
 START event_challenger
 PASS event_challenger
+START _siding_exit
+PASS _siding_exit
