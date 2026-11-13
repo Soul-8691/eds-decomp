@@ -29,6 +29,14 @@ local CMD = {
     draw = 8, surrender = 9, fusion = 10, sp_summon = 11, sp_summon_set = 12, mulligan = 13,
 }
 local TEXTBOX_MESSAGE, TEXTBOX_YES_NO, TEXTBOX_TWO_CHOICE, TEXTBOX_CUSTOM = 0, 1, 2, 5
+-- gSaveData.options (0x02011C20 + 0x2152, include/save.h): the Settings bits the `options` step sets
+local SAVE_OPTIONS = 0x02013D72
+local OPTION_BITS = {
+    speed = { mask = 0x0C, values = { default = 0x00, always = 0x04, super = 0x08 } },
+    anims = { mask = 0x10, values = { show = 0x00, hide = 0x10 } },
+    battle = { mask = 0x20, values = { show = 0x00, hide = 0x20 } },
+}
+local HOLD_KEYS = { R = 0x100, L = 0x200, B = 0x02 }
 local MAIN_STEP_FIELD, MAIN_STEP_BATTLE = 1, 21
 local BATTLE_STAGE_SELECT_ATTACKER, BATTLE_STAGE_SELECT_TARGET = 1, 2
 local LIST_BUTTON_DECIDE = 3
@@ -164,6 +172,21 @@ local function effectRunning()
     return EDS.chainOrEffectBusy() or summonActive()
 end
 
+-- An effect that may be asking for a card now (a summon step's "effect pick": Soul Exchange, Metamorphosis): the chain
+-- build's cost and target steps (gChain +0x3D0: bit 0 building, bits 1-7 the step; BUILD_RUN_CHAIN_B is 5), a link
+-- resolving, or a summon under way. Not effectRunning: with the chain list shown (README media), the build byte stays
+-- at BUILD_WAIT_LIST (9) after the chain is done, which made the next summon or Set look like an effect pick.
+local function effectAsksForCard()
+    local build = emu:read8(EDS.G_CHAIN + 0x3D0)
+    if (build & 1) ~= 0 and (build >> 1) <= 5 then
+        return true
+    end
+    if (emu:read8(EDS.G_CHAIN + 0x491) & 0x40) ~= 0 or (emu:read8(EDS.G_CHAIN + 0x3D2) & 1) ~= 0 then
+        return true
+    end
+    return summonActive()
+end
+
 -- What changes when a press is taken: effect and target steps, picks so far, boxes, lists, menus, summons, battle.
 local function progressSignature()
     local b = textBox()
@@ -253,6 +276,9 @@ local function cursorOf(place)
     end
     if place.kind == "deck" then
         return p, EDS.DUEL_AREA_DECK, 0
+    end
+    if place.kind == "extra" and not place.key and not place.index then
+        return p, EDS.DUEL_AREA_FUSION_DECK, 0      -- the Extra Deck pile itself (extra_summon)
     end
     return nil
 end
@@ -352,9 +378,18 @@ local function opMediaRec(op, fs)
     return true
 end
 
--- Every frame while recording (EDS.tickScenarioSteps): the frame as a PNG.
-local function mediaCaptureFrame(fs)
+-- Every frame while recording (EDS.tickScenarioSteps): the frame as a PNG. As the card-test videos
+-- (EDS.captureFrameIfNeeded), the frames of an open text box (not drawn) and of a card list are left out, unless the
+-- scenario shows them (video prompts='show' / lists='show').
+local function mediaCaptureFrame(fs, opts)
     local r = fs.mediaRec
+    local video = (opts and opts.video) or {}
+    if r and video.prompts ~= "show" and (emu:read8(EDS.G_TEXTBOX) & 1) ~= 0 then
+        return
+    end
+    if r and video.lists ~= "show" and (emu:read8(EDS.G_CARD_LIST) & 1) ~= 0 then
+        return
+    end
     if r then
         emu:screenshot(string.format("%s/%06d.png", r.dir, r.n))
         r.n = r.n + 1
@@ -362,12 +397,39 @@ local function mediaCaptureFrame(fs)
 end
 
 -- The recording encoded (ffmpeg): a GIF at 2x and 30 fps, or an MP4 at 3x (tools/media/lib_media.lua M.stop).
+local MEDIA_TAIL_KEEP = 20          -- still frames kept at the end of a recording (a third of a second)
+
+local function readFile(path)
+    local f = io.open(path, "rb")
+    if not f then
+        return nil
+    end
+    local d = f:read("*a")
+    f:close()
+    return d
+end
+
 local function opMediaStop(op, fs)
     local r = fs.mediaRec
     fs.mediaRec = nil
     if not r or r.n < 2 then
         EDS.log("media: nothing recorded")
         return true
+    end
+    -- no still tail: the trailing frames identical to the last one go, but MEDIA_TAIL_KEEP
+    local function frame(i) return string.format("%s/%06d.png", r.dir, i) end
+    local last = readFile(frame(r.n - 1))
+    local first = r.n - 1
+    while first > 0 and readFile(frame(first - 1)) == last do
+        first = first - 1
+    end
+    local keep = math.min(r.n - 1, first + MEDIA_TAIL_KEEP)
+    for i = keep + 1, r.n - 1 do
+        os.remove(frame(i))
+    end
+    if keep + 1 < r.n then
+        EDS.log(string.format("media: %d still frames trimmed from the end", r.n - 1 - keep))
+        r.n = keep + 1
     end
     local input = winPath(r.dir) .. "\\%06d.png"
     local out, args
@@ -405,7 +467,7 @@ end
 
 -- Move the cursor onto a place (field, hand or deck pile) with the D-pad.
 local function opCursor(op, fs)
-    if op.effectPick and not op.started and effectRunning() then
+    if op.effectPick and not op.started and effectAsksForCard() then
         -- the summon is the effect's own (Soul Exchange, Metamorphosis): the card is picked, no card menu
         op.kind = "target"
         local nxt = fs and fs.ops[fs.opIndex + 1]
@@ -466,6 +528,51 @@ local function opCursor(op, fs)
     return false
 end
 
+-- A pick on the field while the summon's prompt stays open (Synchro, Xyz and Link materials, mod_synchro.c
+-- ModSynchroMenuRun and the like): the cursor moves with the box shown (opTarget would press A on the box), then A.
+local function opFieldPick(op)
+    op.n = (op.n or 0) + 1
+    if op.confirmed then
+        return op.n >= op.at + 40
+    end
+    if op.n < 40 then
+        return false                 -- the prompt of this pick comes up
+    end
+    -- the materials were taken without a pick (the only ones that fit: an Xyz's): the summon is under way (its zone
+    -- or position comes next). (Not the box's kind: the Synchro prompt is a custom box, like the position menu.)
+    if zonePicker().picking or summonActive() then
+        EDS.log("steps: " .. op.text .. ": no material pick (taken by the game)")
+        return true
+    end
+    local tp, ta, ti = cursorOf(op.place)
+    if tp == nil then
+        EDS.log("steps: " .. op.text .. ": material not on the field; skipped")
+        return true
+    end
+    local p, a, i = sel()
+    local here = string.format("%d/%d/%d", p, a, i)
+    if op.last == here then
+        op.same = (op.same or 0) + 1
+    else
+        op.same = 0
+    end
+    op.last = here
+    local key = keyToward(tp, ta, ti, op.same >= 3 and op.same < 6)
+    if key == nil then
+        press(EDS.KEY_A)
+        op.confirmed = true
+        op.at = op.n
+        return false
+    end
+    op.presses = (op.presses or 0) + 1
+    if op.presses > 80 then
+        EDS.log(string.format("steps: %s: cursor stuck at %s (want %d/%d/%d)", op.text, here, tp, ta, ti))
+        return true
+    end
+    press(key)
+    return false
+end
+
 -- Card menu open on the cursor's card: Right until the command is `cmd` (or one of `cmds`), then A.
 local function opMenuCommand(op)
     local want = op.cmds or { op.cmd }
@@ -480,6 +587,11 @@ local function opMenuCommand(op)
     if not EDS.cardMenuOpen() then
         if op.confirmed then
             return true
+        end
+        if op.onlyIfOpen then
+            -- `menu <cmd>`: a menu the game opened; none within half a second (the step before did it all): done
+            op.idle = (op.idle or 0) + 1
+            return op.idle > 30
         end
         if textBox().active then
             return op.confirmed
@@ -763,7 +875,8 @@ end
 -- skipped when the game is back at the Main Phase field, or shows the zone picker, without asking for it.
 local function opTarget(op)
     if op.confirmed then
-        local done = pressTaken(op, 12, 12)
+        -- (op.once: a pick the progress signature cannot see, such as a Fusion material: one press, then on)
+        local done = pressTaken(op, op.once and 30 or 12, op.once and 1 or 12)
         if done and progressSignature() ~= op.sig then
             EDS.log(string.format("steps: %s: taken on press %d", op.text, op.tries or 1))
         end
@@ -997,10 +1110,57 @@ end
 
 local RUN = {
     cursor = opCursor, menu = opMenuCommand, result = opMenuResult, yesno = opYesNo, list = opListPick,
-    zone = opZone, phase = opPhaseMenu, target = opTarget, draw = opDraw, other_turn = opOtherTurn,
+    zone = opZone, phase = opPhaseMenu, target = opTarget, fieldpick = opFieldPick, draw = opDraw, other_turn = opOtherTurn,
     media_shot = opMediaShot, media_rec = opMediaRec, media_stop = opMediaStop,
     when = opWhen, settle = opSettle,
     wait = opWaitFrames,
+    await = function(op)
+        op.t = (op.t or 0) + 1
+        if op.t > 60 * 60 then
+            EDS.log("steps: await " .. op.name .. ": never came")
+            return true
+        end
+        if not op.seen then
+            op.seen = op.id ~= nil and (EDS.chainActivatingCardId() == op.id or EDS.chainResolvingCardId() == op.id)
+            return false
+        end
+        if not op.resolved then
+            -- (the chain list comes between the activation and the resolution: wait for the resolution itself)
+            op.resolved = EDS.chainIsResolving()
+            return op.resolved and op.startOnly
+        end
+        -- (not chainOrEffectBusy: with the chain list shown its build byte stays set after the chain)
+        if EDS.chainIsResolving() or effectAsksForCard() or textBox().active or duelCommandsRunning() then
+            op.quiet = 0
+            return false
+        end
+        op.quiet = (op.quiet or 0) + 1
+        return op.quiet >= 30
+    end,
+    unfreeze = function(op, fs)
+        if fs.opts then
+            fs.opts.freezeOpponent = false
+        end
+        -- (the frozen set-up also marked the CPU's next turn as skipped: EDS.freezeOpponent, skipTurn bit 0x08)
+        emu:write8(EDS.PLAYER1 + 9, emu:read8(EDS.PLAYER1 + 9) & ~0x08)
+        return true
+    end,
+    -- README media: a key held across the following steps (`hold R` ... `release R`: Hold R / Hold L)
+    keyhold = function(op)
+        if op.on then
+            emu:addKeys(op.key)
+        else
+            emu:clearKeys(op.key)
+        end
+        return true
+    end,
+    -- README media: Settings bits in gSaveData.options (src/mod_settings.c), read live by the duel
+    options = function(op)
+        local v = (emu:read16(SAVE_OPTIONS) & ~op.clear) | op.set
+        emu:write16(SAVE_OPTIONS, v)
+        EDS.log(string.format("steps: options = 0x%04X", v))
+        return true
+    end,
     press = function(op)
         if not op.done then
             press(op.key)
@@ -1099,7 +1259,7 @@ buildOps = function(step, inResponse, fs)
         add({ kind = "menu", cmd = CMD.activate })
         add({ kind = "list", place = { player = 0, kind = "extra", key = fusion } })
         for _, m in ipairs(splitList(mats)) do
-            add({ kind = "target", place = parsePlace(m) })
+            add({ kind = "target", place = parsePlace(m), once = true })
         end
         add({ kind = "zone", zone = parsePlace(zone).index, optional = true })
         add({ kind = "result", value = pos == "def" and 1 or 0, optional = true, timeout = 90 })
@@ -1190,6 +1350,54 @@ buildOps = function(step, inResponse, fs)
         add({ kind = "wait", frames = tonumber(args) or 30 })
     elseif verb == "gif_start" or verb == "mp4_start" then
         add({ kind = "media_rec", name = args, format = verb == "gif_start" and "gif" or "mp4" })
+    elseif verb == "extra_summon" then
+        -- `extra_summon <Card> from <material>, <material> -> <m0..m4|emz0|emz1> [atk|def]`: a Synchro, Xyz or Link
+        -- Summon through the Extra Deck pile's Special Summon list (mod_synchro.c, mod_xyz.c, mod_link.c)
+        local card, mats, zone, pos = args:match("^(.-) from (.+) %-> (%S+)%s*(%a*)$")
+        add({ kind = "cursor", place = { player = 0, kind = "extra" } })
+        add({ kind = "menu", cmd = CMD.sp_summon })
+        add({ kind = "list", place = { player = 0, kind = "extra", key = card } })
+        for _, m in ipairs(splitList(mats)) do
+            add({ kind = "fieldpick", place = parsePlace(m) })
+        end
+        local emz = zone:match("^emz(%d)$")
+        -- (the materials leave first: the picker can take several seconds to open)
+        add({ kind = "zone", zone = emz and 16 + tonumber(emz) or parsePlace(zone).index, optional = true,
+              timeout = 600 })
+        if pos ~= "" then
+            add({ kind = "result", value = pos == "def" and 1 or 0, optional = true, timeout = 90 })
+        end
+        add({ kind = "settle" })
+    elseif verb == "await" or verb == "await_resolve" then
+        -- `await <card>`: until that card's chain link has come and resolved (a clip that ends on the CPU's play);
+        -- `await_resolve <card>`: only until it starts resolving (Hold R: let go of R there, or the chain list waits)
+        add({ kind = "await", id = cardId(args), name = args, startOnly = verb == "await_resolve",
+              limit = 3600 })
+    elseif verb == "unfreeze" then
+        -- `unfreeze`: the CPU plays from here on (a clip whose CPU turn matters, after your own set-up turn)
+        add({ kind = "unfreeze" })
+    elseif verb == "settle" then
+        -- `settle`: until the duel is idle (no box, chain, effect, list, menu, summon or queued command) for 20
+        -- frames: a recording ends there, with no still tail
+        add({ kind = "settle" })
+    elseif verb == "menu" then
+        -- `menu set`: a command of a card menu the game opened by itself (Graverobber's stolen card)
+        add({ kind = "menu", cmd = CMD[args] or CMD.activate, onlyIfOpen = true })
+    elseif verb == "options" then
+        -- `options speed=super anims=hide battle=show`: the Settings bits (gSaveData.options)
+        local set, clear = 0, 0
+        for name, value in args:gmatch("(%a+)=(%a+)") do
+            local o = OPTION_BITS[name]
+            if o and o.values[value] then
+                clear = clear | o.mask
+                set = set | o.values[value]
+            else
+                add({ kind = "log", msg = "unknown option " .. name .. "=" .. value })
+            end
+        end
+        add({ kind = "options", set = set, clear = clear })
+    elseif verb == "hold" or verb == "release" then
+        add({ kind = "keyhold", key = HOLD_KEYS[args] or 0, on = verb == "hold" })
     elseif verb == "rec_stop" then
         add({ kind = "media_stop" })
     else
@@ -1410,6 +1618,7 @@ end
 -- ---- the runner ----
 
 function EDS.tickScenarioSteps(fs, opts)
+    fs.opts = opts                  -- (the `unfreeze` step changes opts.freezeOpponent)
     if not fs.ops then
         fs.ops = {}
         local steps = {}
@@ -1491,7 +1700,7 @@ function EDS.tickScenarioSteps(fs, opts)
         end
         EDS.log(string.format("steps: %d steps, %d ops", #steps, #fs.ops))
     end
-    mediaCaptureFrame(fs)
+    mediaCaptureFrame(fs, opts)
     if fs.armOnCpuTurn and not fs.captureArmed and EDS.turnPlayer() == 1 then
         fs.captureArmed = true
         EDS.log("steps: capture starts (the CPU's turn)")

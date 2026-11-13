@@ -172,7 +172,17 @@ foreach ($s in $scripts) {
         Copy-Item -Force (Join-Path $repo $Rom) (Join-Path $mediaRom (Split-Path $Rom -Leaf))
         $save = if ($Save) { Join-Path $repo $Save } else { Join-Path $repo ([IO.Path]::ChangeExtension($Rom, ".sav")) }
         $saveCopy = Join-Path $mediaRom ([IO.Path]::ChangeExtension((Split-Path $Rom -Leaf), ".sav"))
-        if (Test-Path $save) { Copy-Item -Force $save $saveCopy } elseif (Test-Path $saveCopy) { Remove-Item -Force $saveCopy }
+        # (the previous capture's mGBA can hold the copies for a moment after it exits: retry)
+        for ($try = 1; $try -le 20; $try++) {
+            try {
+                Copy-Item -Force (Join-Path $repo $Rom) (Join-Path $mediaRom (Split-Path $Rom -Leaf)) -ErrorAction Stop
+                if (Test-Path $save) { Copy-Item -Force $save $saveCopy -ErrorAction Stop }
+                elseif (Test-Path $saveCopy) { Remove-Item -Force $saveCopy -ErrorAction Stop }
+                break
+            } catch {
+                Start-Sleep -Milliseconds 500
+            }
+        }
         $romArg = Join-Path $mediaRom (Split-Path $Rom -Leaf)
     }
     $args = @('-C', 'pauseOnMinimize=0', '-C', 'pauseOnFocusLost=0',

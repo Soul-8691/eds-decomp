@@ -4,7 +4,7 @@ type: tool
 status: draft
 confidence: medium
 sources: [rom-analysis]
-updated: 2026-11-10
+updated: 2026-11-13
 ---
 
 # README media capture scripts
@@ -44,11 +44,35 @@ powershell -ExecutionPolicy Bypass -File tools\testing_scenarios\run_tests.ps1 -
 | `duelists.lua` | Duelists (Screen 1-3), cursor on each page's first format | demo | verified |
 | `duelists_debug.lua` | Duelists (Screen 4), cursor on Debug (top right) | release | verified |
 | `password.lua` | Password.png: Breaker's password typed on the keypad (a path over `gPasswordKeypad`'s links), then the "Buy …?" question | demo | verified |
-| `*_Media_Player.lua` (from `gen_duel_media.py`) | Card Icons, Card Icons (Up Close), Activate-Set Order, Counters, Duel, Duel Board, Chain List | demo | **untested**: they need the media step verbs in `lib_steps.lua`, not applied yet |
+| `*_Media_Player.lua` (from `gen_duel_media.py`) | Card Icons, Card Icons (Up Close), Activate-Set Order, Counters, Duel, Duel Board (cards side by side), Chain List | demo | Duel Board verified 2026-11-13; the rest run before |
+| `*_Media_Player.lua` (2026-11-13) | GIFs: synchro, xyz, link, zone-pick, call-trunade, graverobber, hide-battle, hold-r, hold-l. Videos: new-cards, cpu-play, hide-anims, duel-speed-default/always/super | demo | verified (contact sheets) |
 
 Duel captures are written as test scenarios (setup and steps, the format of `tools/testing_scenarios/exact.py`) by
 `tools/media/gen_duel_media.py`, with media steps: `point`, `open_menu`, `close`, `wait`, `shot`, `gif_start` /
-`mp4_start` … `rec_stop`. The step code for these is drafted (scratchpad) but not yet in `lib_steps.lua`.
+`mp4_start` … `rec_stop`, all in `lib_steps.lua`. Added 2026-11-13:
+- `extra_summon <Card> from <materials> -> <m0..m4|emz0|emz1> [atk|def]`: the Extra Deck pile's Special Summon list, the
+  material picks (`fieldpick`: the cursor moves with the summon's prompt open), the zone and the position.
+- `options speed=… anims=… battle=…` (gSaveData.options, 0x02013D72), `hold R|L|B` / `release …`, `menu <cmd>` (a
+  menu the game opened itself), `settle` (until the duel is idle), `unfreeze` (the CPU plays from here; clears its
+  skip-turn bit), `await <card>` / `await_resolve <card>` (that card's chain link resolved / started resolving).
+- A recording drops the frames of hidden prompts and lists, as the card-test videos do, and its still tail (20
+  identical frames kept).
+
+### Capture rules (the user's, 2026-11-13)
+- Card effects are recorded like the card-test videos: no chain list, card-show animations, prompts or battle
+  scenes (`CLEAN`); a capture shows one only when that is its subject (Synchro/Xyz/Link: lists, prompts and the
+  summoned card; Hide Anims: card animations; Hide Battle and the speeds: battle; Hold R: chain and prompts).
+- Plays are competitive: attack only weaker monsters; no needless loss of your own cards (the CPU's Giant Trunade,
+  not yours; Proxy Dragon from Sangan and Witch of the Black Forest, which search); no monster under 900 ATK in
+  Attack Position.
+- Cards on a board sit next to each other; a recording starts with the cursor already on the first card used
+  (else it crosses empty hand slots that still name the hand the setup replaced); no still tail.
+
+### Harness fixes made for these
+- `effectAsksForCard` (lib_steps.lua) replaces `effectRunning` for a summon/Set step's effect-pick test: with the
+  chain list shown, `gChain` +0x3D0 stays at `BUILD_WAIT_LIST` after the chain, which made the next summon look
+  like an effect pick. Fusion material picks press A once (`once`): the progress signature can't see them.
+- `run_tests.ps1 -Media` retries copying the ROM/save copy (the previous mGBA holds it for a moment).
 
 ## Lessons
 

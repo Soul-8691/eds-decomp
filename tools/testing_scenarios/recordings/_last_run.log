@@ -959,3 +959,193 @@ PASS Pot_of_Avarice_Shuffle_Five_Draw_Two_Player duel_main=true reason= play_don
 START Pot_of_Avarice_Cpu_Shuffle_Five_Draw_Two_CPU
 PASS Pot_of_Avarice_Cpu_Shuffle_Five_Draw_Two_CPU duel_main=false reason= play_done=true
 PASS Magical_Merchant_Flip_Excavate_Spell_Trap_Player duel_main=true reason= play_done=true
+START Duel_Board_Media_Player
+PASS Duel_Board_Media_Player duel_main=true reason= play_done=true
+START Synchro_Media_Player
+START Synchro_Media_Player
+PASS Synchro_Media_Player duel_main=true reason= play_done=true
+START Call_Trunade_Media_Player
+PASS Call_Trunade_Media_Player duel_main=true reason= play_done=true
+START CPU_Play_Media_Player
+PASS CPU_Play_Media_Player duel_main=true reason= play_done=true
+START Duel_Speed_Always_Media_Player
+PASS Duel_Speed_Always_Media_Player duel_main=true reason= play_done=true
+START Duel_Speed_Default_Media_Player
+PASS Duel_Speed_Default_Media_Player duel_main=true reason= play_done=true
+START Duel_Speed_Super_Media_Player
+PASS Duel_Speed_Super_Media_Player duel_main=true reason= play_done=true
+START Graverobber_Media_Player
+PASS Graverobber_Media_Player duel_main=true reason= play_done=true
+START Hide_Anims_Media_Player
+PASS Hide_Anims_Media_Player duel_main=true reason= play_done=true
+START Hide_Battle_Media_Player
+PASS Hide_Battle_Media_Player duel_main=true reason= play_done=true
+START Hold_L_Media_Player
+START Hold_R_Media_CPU
+PASS Hold_R_Media_CPU duel_main=false reason= play_done=true
+START Link_Media_Player
+PASS Link_Media_Player duel_main=true reason= play_done=true
+START New_Cards_Media_Player
+START Synchro_Media_Player
+PASS Synchro_Media_Player duel_main=true reason= play_done=true
+START Xyz_Media_Player
+PASS Xyz_Media_Player duel_main=true reason= play_done=true
+START Zone_Pick_Media_Player
+PASS Zone_Pick_Media_Player duel_main=true reason= play_done=true
+START Call_Trunade_Media_Player
+PASS Call_Trunade_Media_Player duel_main=true reason= play_done=true
+START CPU_Play_Media_Player
+PASS CPU_Play_Media_Player duel_main=true reason= play_done=true
+START Graverobber_Media_Player
+PASS Graverobber_Media_Player duel_main=true reason= play_done=true
+START Hide_Anims_Media_Player
+PASS Hide_Anims_Media_Player duel_main=true reason= play_done=true
+START Hold_L_Media_Player
+PASS Hold_L_Media_Player duel_main=false reason= play_done=true
+START Hold_R_Media_CPU
+PASS Hold_R_Media_CPU duel_main=false reason= play_done=true
+START New_Cards_Media_Player
+PASS New_Cards_Media_Player duel_main=true reason= play_done=true
+START Xyz_Media_Player
+PASS Xyz_Media_Player duel_main=true reason= play_done=true
+START Call_Trunade_Media_Player
+PASS Call_Trunade_Media_Player duel_main=true reason= play_done=true
+START Graverobber_Media_Player
+PASS Graverobber_Media_Player duel_main=true reason= play_done=true
+START New_Cards_Media_Player
+PASS New_Cards_Media_Player duel_main=true reason= play_done=true
+START Xyz_Media_Player
+PASS Xyz_Media_Player duel_main=true reason= play_done=true
+START Graverobber_Media_Player
+PASS Graverobber_Media_Player duel_main=true reason= play_done=true
+START Graverobber_Media_Player
+PASS Graverobber_Media_Player duel_main=true reason= play_done=true
+START New_Cards_Media_Player
+PASS New_Cards_Media_Player duel_main=true reason= play_done=true
+START Graverobber_Media_Player
+PASS Graverobber_Media_Player duel_main=true reason= play_done=true
+START Graverobber_Media_Player
+PASS Graverobber_Media_Player duel_main=true reason= play_done=true
+START Graverobber_Media_Player
+PASS Graverobber_Media_Player duel_main=true reason= play_done=true
+START Graverobber_Media_Player
+PASS Graverobber_Media_Player duel_main=true reason= play_done=true
+START New_Cards_Media_Player
+PASS New_Cards_Media_Player duel_main=true reason= play_done=true
+START Call_Trunade_Media_Player
+PASS Call_Trunade_Media_Player duel_main=true reason= play_done=true
+START CPU_Play_Media_Player
+PASS CPU_Play_Media_Player duel_main=true reason= play_done=true
+START Duel_Speed_Always_Media_Player
+PASS Duel_Speed_Always_Media_Player duel_main=true reason= play_done=true
+START Duel_Speed_Default_Media_Player
+PASS Duel_Speed_Default_Media_Player duel_main=true reason= play_done=true
+START Duel_Speed_Super_Media_Player
+PASS Duel_Speed_Super_Media_Player duel_main=true reason= play_done=true
+START Graverobber_Media_Player
+PASS Graverobber_Media_Player duel_main=true reason= play_done=true
+START Hide_Anims_Media_Player
+PASS Hide_Anims_Media_Player duel_main=true reason= play_done=true
+START Hide_Battle_Media_Player
+PASS Hide_Battle_Media_Player duel_main=true reason= play_done=true
+START Hold_L_Media_Player
+PASS Hold_L_Media_Player duel_main=false reason= play_done=true
+START Hold_R_Media_CPU
+PASS Hold_R_Media_CPU duel_main=false reason= play_done=true
+START Link_Media_Player
+PASS Link_Media_Player duel_main=true reason= play_done=true
+START New_Cards_Media_Player
+PASS New_Cards_Media_Player duel_main=true reason= play_done=true
+START Synchro_Media_Player
+START Xyz_Media_Player
+PASS Xyz_Media_Player duel_main=true reason= play_done=true
+START Zone_Pick_Media_Player
+PASS Zone_Pick_Media_Player duel_main=true reason= play_done=true
+START Call_Trunade_Media_Player
+PASS Call_Trunade_Media_Player duel_main=true reason= play_done=true
+START CPU_Play_Media_Player
+PASS CPU_Play_Media_Player duel_main=true reason= play_done=true
+START Duel_Board_Media_Player
+PASS Duel_Board_Media_Player duel_main=true reason= play_done=true
+START Duel_Speed_Always_Media_Player
+PASS Duel_Speed_Always_Media_Player duel_main=true reason= play_done=true
+START Duel_Speed_Default_Media_Player
+PASS Duel_Speed_Default_Media_Player duel_main=true reason= play_done=true
+START Duel_Speed_Super_Media_Player
+PASS Duel_Speed_Super_Media_Player duel_main=true reason= play_done=true
+START Graverobber_Media_Player
+PASS Graverobber_Media_Player duel_main=true reason= play_done=true
+START Hide_Anims_Media_Player
+PASS Hide_Anims_Media_Player duel_main=true reason= play_done=true
+START Hide_Battle_Media_Player
+PASS Hide_Battle_Media_Player duel_main=true reason= play_done=true
+START Hold_L_Media_Player
+PASS Hold_L_Media_Player duel_main=false reason= play_done=true
+START Hold_R_Media_Player
+PASS Hold_R_Media_Player duel_main=false reason= play_done=true
+START Link_Media_Player
+PASS Link_Media_Player duel_main=true reason= play_done=true
+START New_Cards_Media_Player
+PASS New_Cards_Media_Player duel_main=true reason= play_done=true
+START Synchro_Media_Player
+PASS Synchro_Media_Player duel_main=true reason= play_done=true
+START Xyz_Media_Player
+PASS Xyz_Media_Player duel_main=true reason= play_done=true
+START Zone_Pick_Media_Player
+PASS Zone_Pick_Media_Player duel_main=true reason= play_done=true
+START Call_Trunade_Media_Player
+PASS Call_Trunade_Media_Player duel_main=true reason= play_done=true
+START CPU_Play_Media_Player
+PASS CPU_Play_Media_Player duel_main=true reason= play_done=true
+START Duel_Speed_Always_Media_Player
+PASS Duel_Speed_Always_Media_Player duel_main=true reason= play_done=true
+START Duel_Speed_Default_Media_Player
+PASS Duel_Speed_Default_Media_Player duel_main=true reason= play_done=true
+START Duel_Speed_Super_Media_Player
+PASS Duel_Speed_Super_Media_Player duel_main=true reason= play_done=true
+START Graverobber_Media_Player
+PASS Graverobber_Media_Player duel_main=true reason= play_done=true
+START Hide_Anims_Media_Player
+PASS Hide_Anims_Media_Player duel_main=true reason= play_done=true
+START Hide_Battle_Media_Player
+PASS Hide_Battle_Media_Player duel_main=true reason= play_done=true
+START Hold_L_Media_Player
+PASS Hold_L_Media_Player duel_main=false reason= play_done=true
+START Hold_R_Media_Player
+PASS Hold_R_Media_Player duel_main=false reason= play_done=true
+START Link_Media_Player
+PASS Link_Media_Player duel_main=true reason= play_done=true
+START New_Cards_Media_Player
+PASS New_Cards_Media_Player duel_main=true reason= play_done=true
+START Synchro_Media_Player
+PASS Synchro_Media_Player duel_main=true reason= play_done=true
+START Xyz_Media_Player
+PASS Xyz_Media_Player duel_main=true reason= play_done=true
+START Zone_Pick_Media_Player
+PASS Zone_Pick_Media_Player duel_main=true reason= play_done=true
+START Call_Trunade_Media_Player
+START Graverobber_Media_Player
+PASS Graverobber_Media_Player duel_main=true reason= play_done=true
+START Hold_R_Media_Player
+PASS Hold_R_Media_Player duel_main=false reason= play_done=true
+START Link_Media_Player
+PASS Link_Media_Player duel_main=true reason= play_done=true
+START Call_Trunade_Media_Player
+START Hold_R_Media_Player
+PASS Hold_R_Media_Player duel_main=false reason= play_done=true
+START Call_Trunade_Media_Player
+PASS Call_Trunade_Media_Player duel_main=false reason= play_done=true
+START Call_Trunade_Media_Player
+PASS Call_Trunade_Media_Player duel_main=false reason= play_done=true
+START Hold_R_Media_Player
+PASS Hold_R_Media_Player duel_main=false reason= play_done=true
+START Hold_R_Media_Player
+PASS Hold_R_Media_Player duel_main=false reason= play_done=true
+START Hold_R_Media_Player
+PASS Hold_R_Media_Player duel_main=false reason= play_done=true
+START Link_Media_Player
+PASS Link_Media_Player duel_main=true reason= play_done=true
+START Link_Media_Player
+PASS Link_Media_Player duel_main=true reason= play_done=true
+START Link_Media_Player
+PASS Link_Media_Player duel_main=true reason= play_done=true

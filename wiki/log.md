@@ -3146,3 +3146,8 @@ updated: 2026-09-29
 ## [2026-11-11] progress | CPU Cannon Soldier Tributes only for a reason
 - src/added_effects.c: AiCannonSoldierTribute / AiModPickEffectTribute; src/ai_deck.c (AiActivateMonsterEffects) and src/summon_builders.c (AiPickEffectTribute) call them; AiWantsMonsterEffect case for Toon Cannon Soldier. Reasons: lethal burn, tokens and Scientist Fusions, taken monsters in Main Phase 2, Sangan/Witch with the Normal Summon unused.
 - [[ai-deck-c]], [[summon-builders-c]], AI_IMPROVEMENTS.md. Built (`make demo`, .text unchanged); not tested in an emulator.
+
+## [2026-11-13] progress | README duel captures (GIFs and videos)
+- tools/media/gen_duel_media.py: 15 new duel captures (Synchro, Xyz, Link, zone pick, Call/Trunade, Graverobber, new cards, CPU Magic Cylinder, duel speeds x3, Hide anims/battle, Hold R/L); Duel Board with adjacent cards.
+- tools/testing_scenarios/lib_steps.lua: extra_summon, options, hold/release, menu, settle, unfreeze, await/await_resolve; media frames skip hidden prompts/lists; still tails trimmed; effectAsksForCard; Fusion picks press once. run_tests.ps1: retry on a locked ROM/save copy.
+- [[readme-media]]. All 16 run and checked on contact sheets.
