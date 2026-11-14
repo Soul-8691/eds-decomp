@@ -118,8 +118,8 @@
 #       (all a pull reads; chance = weight / total)
 #   data.packs.format.* [5] -- used: per format pack: .names, .flags (1 = usage pack), .formats, .releasedates
 #       (yyyymmdd), .portraits (cover card)
-#   text.packs.format.* [50] -- used: the format pack names (ASCII)
-#   graphics.packs.format.* [50] -- used: each format pack's shop cover (gFormatPackCovers: 56 x 112, 8bpp,
+#   text.packs.format.* [44] -- used: the format pack names (ASCII)
+#   graphics.packs.format.* [44] -- used: each format pack's shop cover (gFormatPackCovers: 56 x 112, 8bpp,
 #       palette graphics.palettes.packs), named after the pack. Made from its portrait card's art when the ROM
 #       is built (tools/format_pack_covers.py), so a new data.packs.format.portraits card needs a new cover too
 #       (or a rebuild)
@@ -940,313 +940,277 @@ DefaultHash = '''0F69AA2C'''
 
 [[NamedAnchors]]
 Name = '''data.packs.format.pools'''
-Address = 0x24E15C
+Address = 0x24E12C
 Format = '''[pool<[card:cardinternalnumbers weight:]/count> count: unused:]formatpacks'''
 DefaultHash = '''2FC28085'''
 
 [[NamedAnchors]]
 Name = '''data.packs.format.names'''
-Address = 0x24E2EC
+Address = 0x24E28C
 Format = '''[name<>]formatpacks'''
 DefaultHash = '''C948D9E4'''
 
 [[NamedAnchors]]
 Name = '''text.packs.format.pack0'''
-Address = 0x24E768
+Address = 0x24E680
 Format = '''`asc`33'''
 DefaultHash = '''856DF726'''
 
 [[NamedAnchors]]
 Name = '''text.packs.format.pack1'''
-Address = 0x24E754
+Address = 0x24E66C
 Format = '''`asc`19'''
 DefaultHash = '''D9099174'''
 
 [[NamedAnchors]]
 Name = '''text.packs.format.pack2'''
-Address = 0x24E740
+Address = 0x24E658
 Format = '''`asc`20'''
 DefaultHash = '''15D86D51'''
 
 [[NamedAnchors]]
 Name = '''text.packs.format.pack3'''
-Address = 0x24E734
+Address = 0x24E64C
 Format = '''`asc`11'''
 DefaultHash = '''9CFD324B'''
 
 [[NamedAnchors]]
 Name = '''text.packs.format.pack4'''
-Address = 0x24E724
+Address = 0x24E63C
 Format = '''`asc`14'''
 DefaultHash = '''66086418'''
 
 [[NamedAnchors]]
 Name = '''text.packs.format.pack5'''
-Address = 0x24E71C
+Address = 0x24E634
 Format = '''`asc`8'''
 DefaultHash = '''FB44E13F'''
 
 [[NamedAnchors]]
 Name = '''text.packs.format.pack6'''
-Address = 0x24E710
+Address = 0x24E628
 Format = '''`asc`12'''
 DefaultHash = '''662A937D'''
 
 [[NamedAnchors]]
 Name = '''text.packs.format.pack7'''
-Address = 0x24E704
+Address = 0x24E61C
 Format = '''`asc`9'''
 DefaultHash = '''823F019D'''
 
 [[NamedAnchors]]
 Name = '''text.packs.format.pack8'''
-Address = 0x24E6F0
+Address = 0x24E608
 Format = '''`asc`18'''
 DefaultHash = '''9E393CB1'''
 
 [[NamedAnchors]]
 Name = '''text.packs.format.pack9'''
-Address = 0x24E6E4
+Address = 0x24E5FC
 Format = '''`asc`9'''
 DefaultHash = '''823F019D'''
 
 [[NamedAnchors]]
 Name = '''text.packs.format.pack10'''
-Address = 0x24E6CC
+Address = 0x24E5E4
 Format = '''`asc`23'''
 DefaultHash = '''F7ACE04B'''
 
 [[NamedAnchors]]
 Name = '''text.packs.format.pack11'''
-Address = 0x24E6C4
+Address = 0x24E5DC
 Format = '''`asc`8'''
 DefaultHash = '''FB44E13F'''
 
 [[NamedAnchors]]
 Name = '''text.packs.format.pack12'''
-Address = 0x24E6B0
+Address = 0x24E5C8
 Format = '''`asc`19'''
 DefaultHash = '''D9099174'''
 
 [[NamedAnchors]]
 Name = '''text.packs.format.pack13'''
-Address = 0x24E698
+Address = 0x24E5B0
 Format = '''`asc`22'''
 DefaultHash = '''63E4DF2F'''
 
 [[NamedAnchors]]
 Name = '''text.packs.format.pack14'''
-Address = 0x24E688
+Address = 0x24E5A0
 Format = '''`asc`13'''
 DefaultHash = '''6A5BED9B'''
 
 [[NamedAnchors]]
 Name = '''text.packs.format.pack15'''
-Address = 0x24E674
+Address = 0x24E58C
 Format = '''`asc`19'''
 DefaultHash = '''D9099174'''
 
 [[NamedAnchors]]
 Name = '''text.packs.format.pack16'''
-Address = 0x24E66C
+Address = 0x24E584
 Format = '''`asc`6'''
 DefaultHash = '''8FC4D28A'''
 
 [[NamedAnchors]]
 Name = '''text.packs.format.pack17'''
-Address = 0x24E658
+Address = 0x24E570
 Format = '''`asc`19'''
 DefaultHash = '''D9099174'''
 
 [[NamedAnchors]]
 Name = '''text.packs.format.pack18'''
-Address = 0x24E650
+Address = 0x24E568
 Format = '''`asc`5'''
 DefaultHash = '''D0DBCAE6'''
 
 [[NamedAnchors]]
 Name = '''text.packs.format.pack19'''
-Address = 0x24E63C
+Address = 0x24E554
 Format = '''`asc`17'''
 DefaultHash = '''77AFC927'''
 
 [[NamedAnchors]]
 Name = '''text.packs.format.pack20'''
-Address = 0x24E630
+Address = 0x24E548
 Format = '''`asc`10'''
 DefaultHash = '''17F0FB6F'''
 
 [[NamedAnchors]]
 Name = '''text.packs.format.pack21'''
-Address = 0x24E624
-Format = '''`asc`12'''
-DefaultHash = '''662A937D'''
-
-[[NamedAnchors]]
-Name = '''text.packs.format.pack22'''
-Address = 0x24E61C
+Address = 0x24E540
 Format = '''`asc`8'''
 DefaultHash = '''FB44E13F'''
 
 [[NamedAnchors]]
-Name = '''text.packs.format.pack23'''
-Address = 0x24E5FC
+Name = '''text.packs.format.pack22'''
+Address = 0x24E520
 Format = '''`asc`29'''
 DefaultHash = '''D84B74FF'''
 
 [[NamedAnchors]]
-Name = '''text.packs.format.pack24'''
-Address = 0x24E5DC
+Name = '''text.packs.format.pack23'''
+Address = 0x24E500
 Format = '''`asc`30'''
 DefaultHash = '''AB4BF199'''
 
 [[NamedAnchors]]
-Name = '''text.packs.format.pack25'''
-Address = 0x24E5C8
+Name = '''text.packs.format.pack24'''
+Address = 0x24E4EC
 Format = '''`asc`18'''
 DefaultHash = '''9E393CB1'''
 
 [[NamedAnchors]]
-Name = '''text.packs.format.pack26'''
-Address = 0x24E5C0
+Name = '''text.packs.format.pack25'''
+Address = 0x24E4E4
 Format = '''`asc`6'''
 DefaultHash = '''8FC4D28A'''
 
 [[NamedAnchors]]
-Name = '''text.packs.format.pack27'''
-Address = 0x24E5AC
+Name = '''text.packs.format.pack26'''
+Address = 0x24E4D0
 Format = '''`asc`18'''
 DefaultHash = '''9E393CB1'''
 
 [[NamedAnchors]]
-Name = '''text.packs.format.pack28'''
-Address = 0x24E598
-Format = '''`asc`20'''
-DefaultHash = '''15D86D51'''
-
-[[NamedAnchors]]
-Name = '''text.packs.format.pack29'''
-Address = 0x24E584
+Name = '''text.packs.format.pack27'''
+Address = 0x24E4BC
 Format = '''`asc`17'''
 DefaultHash = '''77AFC927'''
 
 [[NamedAnchors]]
-Name = '''text.packs.format.pack30'''
-Address = 0x24E574
-Format = '''`asc`16'''
-DefaultHash = '''EF7E1A14'''
-
-[[NamedAnchors]]
-Name = '''text.packs.format.pack31'''
-Address = 0x24E554
+Name = '''text.packs.format.pack28'''
+Address = 0x24E49C
 Format = '''`asc`30'''
 DefaultHash = '''AB4BF199'''
 
 [[NamedAnchors]]
-Name = '''text.packs.format.pack32'''
-Address = 0x24E534
+Name = '''text.packs.format.pack29'''
+Address = 0x24E47C
 Format = '''`asc`31'''
 DefaultHash = '''FA7F6AA5'''
 
 [[NamedAnchors]]
-Name = '''text.packs.format.pack33'''
-Address = 0x24E52C
+Name = '''text.packs.format.pack30'''
+Address = 0x24E474
 Format = '''`asc`8'''
 DefaultHash = '''FB44E13F'''
 
 [[NamedAnchors]]
-Name = '''text.packs.format.pack34'''
-Address = 0x24E518
+Name = '''text.packs.format.pack31'''
+Address = 0x24E460
 Format = '''`asc`17'''
 DefaultHash = '''77AFC927'''
 
 [[NamedAnchors]]
-Name = '''text.packs.format.pack35'''
-Address = 0x24E4FC
+Name = '''text.packs.format.pack32'''
+Address = 0x24E444
 Format = '''`asc`25'''
 DefaultHash = '''F4D21624'''
 
 [[NamedAnchors]]
-Name = '''text.packs.format.pack36'''
-Address = 0x24E4D4
+Name = '''text.packs.format.pack33'''
+Address = 0x24E41C
 Format = '''`asc`37'''
 DefaultHash = '''C2F872CB'''
 
 [[NamedAnchors]]
-Name = '''text.packs.format.pack37'''
-Address = 0x24E4B0
+Name = '''text.packs.format.pack34'''
+Address = 0x24E3F8
 Format = '''`asc`35'''
 DefaultHash = '''E8A552C6'''
 
 [[NamedAnchors]]
-Name = '''text.packs.format.pack38'''
-Address = 0x24E49C
-Format = '''`asc`20'''
-DefaultHash = '''15D86D51'''
-
-[[NamedAnchors]]
-Name = '''text.packs.format.pack39'''
-Address = 0x24E488
+Name = '''text.packs.format.pack35'''
+Address = 0x24E3E4
 Format = '''`asc`17'''
 DefaultHash = '''77AFC927'''
 
 [[NamedAnchors]]
-Name = '''text.packs.format.pack40'''
-Address = 0x24E46C
+Name = '''text.packs.format.pack36'''
+Address = 0x24E3C8
 Format = '''`asc`25'''
 DefaultHash = '''F4D21624'''
 
 [[NamedAnchors]]
-Name = '''text.packs.format.pack41'''
-Address = 0x24E448
+Name = '''text.packs.format.pack37'''
+Address = 0x24E3A4
 Format = '''`asc`34'''
 DefaultHash = '''1E65FA05'''
 
 [[NamedAnchors]]
-Name = '''text.packs.format.pack42'''
-Address = 0x24E440
+Name = '''text.packs.format.pack38'''
+Address = 0x24E39C
 Format = '''`asc`5'''
 DefaultHash = '''D0DBCAE6'''
 
 [[NamedAnchors]]
-Name = '''text.packs.format.pack43'''
-Address = 0x24E428
-Format = '''`asc`22'''
-DefaultHash = '''63E4DF2F'''
-
-[[NamedAnchors]]
-Name = '''text.packs.format.pack44'''
-Address = 0x24E420
+Name = '''text.packs.format.pack39'''
+Address = 0x24E394
 Format = '''`asc`6'''
 DefaultHash = '''8FC4D28A'''
 
 [[NamedAnchors]]
-Name = '''text.packs.format.pack45'''
-Address = 0x24E40C
-Format = '''`asc`17'''
-DefaultHash = '''77AFC927'''
-
-[[NamedAnchors]]
-Name = '''text.packs.format.pack46'''
-Address = 0x24E3E4
+Name = '''text.packs.format.pack40'''
+Address = 0x24E36C
 Format = '''`asc`39'''
 DefaultHash = '''F38DDE39'''
 
 [[NamedAnchors]]
-Name = '''text.packs.format.pack47'''
-Address = 0x24E3D0
+Name = '''text.packs.format.pack41'''
+Address = 0x24E358
 Format = '''`asc`19'''
 DefaultHash = '''D9099174'''
 
 [[NamedAnchors]]
-Name = '''text.packs.format.pack48'''
-Address = 0x24E3BC
+Name = '''text.packs.format.pack42'''
+Address = 0x24E344
 Format = '''`asc`18'''
 DefaultHash = '''9E393CB1'''
 
 [[NamedAnchors]]
-Name = '''text.packs.format.pack49'''
-Address = 0x24E3B4
+Name = '''text.packs.format.pack43'''
+Address = 0x24E33C
 Format = '''`asc`7'''
 DefaultHash = '''A3E37836'''
 
@@ -1258,19 +1222,19 @@ DefaultHash = '''7771E2DF'''
 
 [[NamedAnchors]]
 Name = '''data.packs.format.formats'''
-Address = 0x24DFFE
+Address = 0x24DFF8
 Format = '''[format.formats]formatpacks'''
 DefaultHash = '''F539D35D'''
 
 [[NamedAnchors]]
 Name = '''data.packs.format.releasedates'''
-Address = 0x24E030
+Address = 0x24E024
 Format = '''[yyyymmdd::]formatpacks'''
 DefaultHash = '''033C9D46'''
 
 [[NamedAnchors]]
 Name = '''data.packs.format.portraits'''
-Address = 0x24E0F8
+Address = 0x24E0D4
 Format = '''[card:cardinternalnumbers]formatpacks'''
 DefaultHash = '''3F15B492'''
 
@@ -1401,182 +1365,146 @@ Format = '''`ucs8x7x14|graphics.palettes.packs`'''
 DefaultHash = '''CBE407BA'''
 
 [[NamedAnchors]]
-Name = '''graphics.packs.format.darkcrisis'''
+Name = '''graphics.packs.format.vampire'''
 Address = 0x1063A60
 Format = '''`ucs8x7x14|graphics.palettes.packs`'''
 DefaultHash = '''CBE407BA'''
 
 [[NamedAnchors]]
-Name = '''graphics.packs.format.vampire'''
+Name = '''graphics.packs.format.starterdeckyugievolution'''
 Address = 0x10652E0
 Format = '''`ucs8x7x14|graphics.palettes.packs`'''
 DefaultHash = '''CBE407BA'''
 
 [[NamedAnchors]]
-Name = '''graphics.packs.format.starterdeckyugievolution'''
+Name = '''graphics.packs.format.starterdeckkaibaevolution'''
 Address = 0x1066B60
 Format = '''`ucs8x7x14|graphics.palettes.packs`'''
 DefaultHash = '''CBE407BA'''
 
 [[NamedAnchors]]
-Name = '''graphics.packs.format.starterdeckkaibaevolution'''
+Name = '''graphics.packs.format.invasionofchaos'''
 Address = 0x10683E0
 Format = '''`ucs8x7x14|graphics.palettes.packs`'''
 DefaultHash = '''CBE407BA'''
 
 [[NamedAnchors]]
-Name = '''graphics.packs.format.invasionofchaos'''
+Name = '''graphics.packs.format.chaos'''
 Address = 0x1069C60
 Format = '''`ucs8x7x14|graphics.palettes.packs`'''
 DefaultHash = '''CBE407BA'''
 
 [[NamedAnchors]]
-Name = '''graphics.packs.format.chaos'''
+Name = '''graphics.packs.format.ancientsanctuary'''
 Address = 0x106B4E0
 Format = '''`ucs8x7x14|graphics.palettes.packs`'''
 DefaultHash = '''CBE407BA'''
 
 [[NamedAnchors]]
-Name = '''graphics.packs.format.ancientsanctuary'''
+Name = '''graphics.packs.format.darkbeginning1'''
 Address = 0x106CD60
 Format = '''`ucs8x7x14|graphics.palettes.packs`'''
 DefaultHash = '''CBE407BA'''
 
 [[NamedAnchors]]
-Name = '''graphics.packs.format.souloftheduelist'''
+Name = '''graphics.packs.format.structuredeckdragonsroar'''
 Address = 0x106E5E0
 Format = '''`ucs8x7x14|graphics.palettes.packs`'''
 DefaultHash = '''CBE407BA'''
 
 [[NamedAnchors]]
-Name = '''graphics.packs.format.darkbeginning1'''
+Name = '''graphics.packs.format.structuredeckzombiemadness'''
 Address = 0x106FE60
 Format = '''`ucs8x7x14|graphics.palettes.packs`'''
 DefaultHash = '''CBE407BA'''
 
 [[NamedAnchors]]
-Name = '''graphics.packs.format.riseofdestiny'''
+Name = '''graphics.packs.format.warrior'''
 Address = 0x10716E0
 Format = '''`ucs8x7x14|graphics.palettes.packs`'''
 DefaultHash = '''CBE407BA'''
 
 [[NamedAnchors]]
-Name = '''graphics.packs.format.structuredeckdragonsroar'''
+Name = '''graphics.packs.format.flamingeternity'''
 Address = 0x1072F60
 Format = '''`ucs8x7x14|graphics.palettes.packs`'''
 DefaultHash = '''CBE407BA'''
 
 [[NamedAnchors]]
-Name = '''graphics.packs.format.structuredeckzombiemadness'''
+Name = '''graphics.packs.format.darkrevelationvolume1'''
 Address = 0x10747E0
 Format = '''`ucs8x7x14|graphics.palettes.packs`'''
 DefaultHash = '''CBE407BA'''
 
 [[NamedAnchors]]
-Name = '''graphics.packs.format.warrior'''
+Name = '''graphics.packs.format.structuredeckblazeofdestruction'''
 Address = 0x1076060
 Format = '''`ucs8x7x14|graphics.palettes.packs`'''
 DefaultHash = '''CBE407BA'''
 
 [[NamedAnchors]]
-Name = '''graphics.packs.format.flamingeternity'''
+Name = '''graphics.packs.format.structuredeckfuryfromthedeep'''
 Address = 0x10778E0
 Format = '''`ucs8x7x14|graphics.palettes.packs`'''
 DefaultHash = '''CBE407BA'''
 
 [[NamedAnchors]]
-Name = '''graphics.packs.format.darkrevelationvolume1'''
+Name = '''graphics.packs.format.darkbeginning2'''
 Address = 0x1079160
 Format = '''`ucs8x7x14|graphics.palettes.packs`'''
 DefaultHash = '''CBE407BA'''
 
 [[NamedAnchors]]
-Name = '''graphics.packs.format.structuredeckblazeofdestruction'''
+Name = '''graphics.packs.format.darkrevelationvolume2'''
 Address = 0x107A9E0
 Format = '''`ucs8x7x14|graphics.palettes.packs`'''
 DefaultHash = '''CBE407BA'''
 
 [[NamedAnchors]]
-Name = '''graphics.packs.format.structuredeckfuryfromthedeep'''
+Name = '''graphics.packs.format.structuredeckwarriorstriumph'''
 Address = 0x107C260
 Format = '''`ucs8x7x14|graphics.palettes.packs`'''
 DefaultHash = '''CBE407BA'''
 
 [[NamedAnchors]]
-Name = '''graphics.packs.format.thelostmillennium'''
+Name = '''graphics.packs.format.goat'''
 Address = 0x107DAE0
 Format = '''`ucs8x7x14|graphics.palettes.packs`'''
 DefaultHash = '''CBE407BA'''
 
 [[NamedAnchors]]
-Name = '''graphics.packs.format.darkbeginning2'''
+Name = '''graphics.packs.format.cyber'''
 Address = 0x107F360
 Format = '''`ucs8x7x14|graphics.palettes.packs`'''
 DefaultHash = '''CBE407BA'''
 
 [[NamedAnchors]]
-Name = '''graphics.packs.format.darkrevelationvolume2'''
+Name = '''graphics.packs.format.structuredeckspellcastersjudgment'''
 Address = 0x1080BE0
 Format = '''`ucs8x7x14|graphics.palettes.packs`'''
 DefaultHash = '''CBE407BA'''
 
 [[NamedAnchors]]
-Name = '''graphics.packs.format.structuredeckwarriorstriumph'''
+Name = '''graphics.packs.format.shadowofinfinity'''
 Address = 0x1082460
 Format = '''`ucs8x7x14|graphics.palettes.packs`'''
 DefaultHash = '''CBE407BA'''
 
 [[NamedAnchors]]
-Name = '''graphics.packs.format.goat'''
+Name = '''graphics.packs.format.starterdeck2006'''
 Address = 0x1083CE0
 Format = '''`ucs8x7x14|graphics.palettes.packs`'''
 DefaultHash = '''CBE407BA'''
 
 [[NamedAnchors]]
-Name = '''graphics.packs.format.cyberneticrevolution'''
+Name = '''graphics.packs.format.reaper'''
 Address = 0x1085560
 Format = '''`ucs8x7x14|graphics.palettes.packs`'''
 DefaultHash = '''CBE407BA'''
 
 [[NamedAnchors]]
-Name = '''graphics.packs.format.cyber'''
-Address = 0x1086DE0
-Format = '''`ucs8x7x14|graphics.palettes.packs`'''
-DefaultHash = '''CBE407BA'''
-
-[[NamedAnchors]]
-Name = '''graphics.packs.format.elementalenergy'''
-Address = 0x1088660
-Format = '''`ucs8x7x14|graphics.palettes.packs`'''
-DefaultHash = '''CBE407BA'''
-
-[[NamedAnchors]]
-Name = '''graphics.packs.format.structuredeckspellcastersjudgment'''
-Address = 0x1089EE0
-Format = '''`ucs8x7x14|graphics.palettes.packs`'''
-DefaultHash = '''CBE407BA'''
-
-[[NamedAnchors]]
-Name = '''graphics.packs.format.shadowofinfinity'''
-Address = 0x108B760
-Format = '''`ucs8x7x14|graphics.palettes.packs`'''
-DefaultHash = '''CBE407BA'''
-
-[[NamedAnchors]]
-Name = '''graphics.packs.format.starterdeck2006'''
-Address = 0x108CFE0
-Format = '''`ucs8x7x14|graphics.palettes.packs`'''
-DefaultHash = '''CBE407BA'''
-
-[[NamedAnchors]]
-Name = '''graphics.packs.format.reaper'''
-Address = 0x108E860
-Format = '''`ucs8x7x14|graphics.palettes.packs`'''
-DefaultHash = '''CBE407BA'''
-
-[[NamedAnchors]]
 Name = '''data.prices.cards'''
-Address = 0x2507E8
+Address = 0x250700
 Format = '''[costs<[card:cardinternalnumbers price:]/count> count: unused:]formats'''
 DefaultHash = '''40D80AA0'''
 
@@ -2758,115 +2686,115 @@ DefaultHash = '''5BD1BB9D'''
 
 [[NamedAnchors]]
 Name = '''text.opponents.yugikaiba'''
-Address = 0x256578
+Address = 0x2564B0
 Format = '''`asc`11'''
 DefaultHash = '''9CFD324B'''
 
 [[NamedAnchors]]
 Name = '''text.opponents.critter'''
-Address = 0x256584
+Address = 0x2564BC
 Format = '''`asc`8'''
 DefaultHash = '''FB44E13F'''
 
 [[NamedAnchors]]
 Name = '''text.opponents.treasure'''
-Address = 0x256598
+Address = 0x2564D0
 Format = '''`asc`9'''
 DefaultHash = '''823F019D'''
 
 [[NamedAnchors]]
 Name = '''text.opponents.joeypegasus'''
-Address = 0x2565AC
+Address = 0x2564E4
 Format = '''`asc`13'''
 DefaultHash = '''6A5BED9B'''
 
 [[NamedAnchors]]
 Name = '''text.opponents.imperial'''
-Address = 0x25658C
+Address = 0x2564C4
 Format = '''`asc`9'''
 DefaultHash = '''823F019D'''
 
 [[NamedAnchors]]
 Name = '''text.opponents.android'''
-Address = 0x2565A4
+Address = 0x2564DC
 Format = '''`asc`8'''
 DefaultHash = '''FB44E13F'''
 
 [[NamedAnchors]]
 Name = '''text.opponents.fiber'''
-Address = 0x2565BC
+Address = 0x2564F4
 Format = '''`asc`6'''
 DefaultHash = '''8FC4D28A'''
 
 [[NamedAnchors]]
 Name = '''text.opponents.yata'''
-Address = 0x2565C4
+Address = 0x2564FC
 Format = '''`asc`5'''
 DefaultHash = '''D0DBCAE6'''
 
 [[NamedAnchors]]
 Name = '''text.opponents.chaos'''
-Address = 0x2565E0
+Address = 0x256518
 Format = '''`asc`6'''
 DefaultHash = '''8FC4D28A'''
 
 [[NamedAnchors]]
 Name = '''text.opponents.scientist'''
-Address = 0x2565CC
+Address = 0x256504
 Format = '''`asc`10'''
 DefaultHash = '''17F0FB6F'''
 
 [[NamedAnchors]]
 Name = '''text.opponents.vampire'''
-Address = 0x2565D8
+Address = 0x256510
 Format = '''`asc`8'''
 DefaultHash = '''FB44E13F'''
 
 [[NamedAnchors]]
 Name = '''text.opponents.warrior'''
-Address = 0x2565E8
+Address = 0x256520
 Format = '''`asc`8'''
 DefaultHash = '''FB44E13F'''
 
 [[NamedAnchors]]
 Name = '''text.opponents.goat'''
-Address = 0x2565F0
+Address = 0x256528
 Format = '''`asc`5'''
 DefaultHash = '''D0DBCAE6'''
 
 [[NamedAnchors]]
 Name = '''text.opponents.cyber'''
-Address = 0x2565F8
+Address = 0x256530
 Format = '''`asc`6'''
 DefaultHash = '''8FC4D28A'''
 
 [[NamedAnchors]]
 Name = '''text.opponents.reaper'''
-Address = 0x256600
+Address = 0x256538
 Format = '''`asc`7'''
 DefaultHash = '''A3E37836'''
 
 [[NamedAnchors]]
 Name = '''text.opponents.emptydeck'''
-Address = 0x256624
+Address = 0x25655C
 Format = '''`asc`11'''
 DefaultHash = '''9CFD324B'''
 
 [[NamedAnchors]]
 Name = '''text.opponents.debug'''
-Address = 0x25661C
+Address = 0x256554
 Format = '''`asc`6'''
 DefaultHash = '''8FC4D28A'''
 
 [[NamedAnchors]]
 Name = '''text.opponents.solomon'''
-Address = 0x256614
+Address = 0x25654C
 Format = '''`asc`8'''
 DefaultHash = '''FB44E13F'''
 
 [[NamedAnchors]]
 Name = '''data.opponents'''
-Address = 0x256630
+Address = 0x256568
 Format = '''[kind.opponentkinds order. format.formats unused. name<> portrait:cardinternalnumbers padding:]opponents'''
 DefaultHash = '''3FE2E882'''
 
@@ -3850,19 +3778,19 @@ DefaultHash = '''31CEBDF1'''
 
 [[NamedAnchors]]
 Name = '''text.title.version'''
-Address = 0x25679C
+Address = 0x2566D4
 Format = '''`asc`16'''
 DefaultHash = '''EF7E1A14'''
 
 [[NamedAnchors]]
 Name = '''text.title.release'''
-Address = 0x2567AC
+Address = 0x2566E4
 Format = '''`asc`16'''
 DefaultHash = '''EF7E1A14'''
 
 [[NamedAnchors]]
 Name = '''text.title.debug'''
-Address = 0x2567BC
+Address = 0x2566F4
 Format = '''`asc`16'''
 DefaultHash = '''EF7E1A14'''
 
@@ -4790,92 +4718,92 @@ Length = 2
 #################################
 [[MatchedWords]]
 Name = '''data.constants.packs.format.usagewins'''
-Address = 0x24E789
+Address = 0x24E6A1
 Length = 1
 
 [[MatchedWords]]
 Name = '''data.constants.title.flamewave'''
-Address = 0x2567CC
+Address = 0x256704
 Length = 1
 
 [[MatchedWords]]
 Name = '''data.constants.title.flamepriority'''
-Address = 0x2567CD
+Address = 0x256705
 Length = 1
 
 [[MatchedWords]]
 Name = '''data.constants.preduel.qrsquare'''
-Address = 0x256EAF
+Address = 0x256DE7
 Length = 1
 
 [[MatchedWords]]
 Name = '''data.constants.formats.unlock.critter'''
-Address = 0x25675C
+Address = 0x256694
 Length = 1
 
 [[MatchedWords]]
 Name = '''data.constants.formats.unlock.treasure'''
-Address = 0x25675D
+Address = 0x256695
 Length = 1
 
 [[MatchedWords]]
 Name = '''data.constants.formats.unlock.imperial'''
-Address = 0x25675E
+Address = 0x256696
 Length = 1
 
 [[MatchedWords]]
 Name = '''data.constants.formats.unlock.android'''
-Address = 0x25675F
+Address = 0x256697
 Length = 1
 
 [[MatchedWords]]
 Name = '''data.constants.formats.unlock.joeypegasus'''
-Address = 0x256760
+Address = 0x256698
 Length = 1
 
 [[MatchedWords]]
 Name = '''data.constants.formats.unlock.fiber'''
-Address = 0x256761
+Address = 0x256699
 Length = 1
 
 [[MatchedWords]]
 Name = '''data.constants.formats.unlock.yata'''
-Address = 0x256762
+Address = 0x25669A
 Length = 1
 
 [[MatchedWords]]
 Name = '''data.constants.formats.unlock.scientist'''
-Address = 0x256763
+Address = 0x25669B
 Length = 1
 
 [[MatchedWords]]
 Name = '''data.constants.formats.unlock.vampire'''
-Address = 0x256764
+Address = 0x25669C
 Length = 1
 
 [[MatchedWords]]
 Name = '''data.constants.formats.unlock.chaos'''
-Address = 0x256765
+Address = 0x25669D
 Length = 1
 
 [[MatchedWords]]
 Name = '''data.constants.formats.unlock.warrior'''
-Address = 0x256766
+Address = 0x25669E
 Length = 1
 
 [[MatchedWords]]
 Name = '''data.constants.formats.unlock.goat'''
-Address = 0x256767
+Address = 0x25669F
 Length = 1
 
 [[MatchedWords]]
 Name = '''data.constants.formats.unlock.cyber'''
-Address = 0x256768
+Address = 0x2566A0
 Length = 1
 
 [[MatchedWords]]
 Name = '''data.constants.formats.unlock.reaper'''
-Address = 0x256769
+Address = 0x2566A1
 Length = 1
 
 [[List]]
@@ -8853,7 +8781,7 @@ DefaultHash = '''648B7DC5'''
 #################################
 [[List]]
 Name = '''formatpacks'''
-DefaultHash = '''5968290A'''
+DefaultHash = '''CEDFF431'''
 0 = [
    '''Legend of Blue Eyes White Dragon''',
    '''Starter Deck- Yugi''',
@@ -8876,16 +8804,13 @@ DefaultHash = '''5968290A'''
    '''Yata''',
    '''Magician's Force''',
    '''Scientist''',
-   '''Dark Crisis''',
    '''Vampire''',
    '''Starter Deck- Yugi Evolution''',
    '''Starter Deck- Kaiba Evolution''',
    '''Invasion of Chaos''',
    '''Chaos''',
    '''Ancient Sanctuary''',
-   '''Soul of the Duelist''',
    '''Dark Beginning 1''',
-   '''Rise of Destiny''',
    '''Structure Deck- Dragon's Roar''',
    '''Structure Deck- Zombie Madness''',
    '''Warrior''',
@@ -8893,14 +8818,11 @@ DefaultHash = '''5968290A'''
    '''Dark Revelation Volume 1''',
    '''Structure Deck- Blaze of Destruction''',
    '''Structure Deck- Fury from the Deep''',
-   '''The Lost Millennium''',
    '''Dark Beginning 2''',
    '''Dark Revelation Volume 2''',
    '''Structure Deck- Warrior's Triumph''',
    '''Goat''',
-   '''Cybernetic Revolution''',
    '''Cyber''',
-   '''Elemental Energy''',
    '''Structure Deck- Spellcaster's Judgment''',
    '''Shadow of Infinity''',
    '''Starter Deck 2006''',
