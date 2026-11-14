@@ -34,7 +34,7 @@
 | **Best-of-3 matches** | Every Campaign duel is a match, with siding between games. |
 | **A real economy** | Earn Duelist Points, buy cards by password, and open TCG sets and usage-weighted packs. |
 | **Deck tools** | 60 Deck Recipes, a choice of banlists, and practice opponents that play decks you pick. |
-| **Editable** | Every build can come with a Hex Maniac Advance `.toml` that labels the mod's data: deck chances, packs, prices, cards, screens. |
+| **Editable** | Every build can come with a Hex Maniac Advance `.toml` that labels the mod's data: deck chances, packs, prices, cards, screens. Needs [HMA CE's `upcoming` branch](https://github.com/Soul-8691/HexManiacAdvance-CE/tree/upcoming), built from source. |
 
 ## Play it
 
@@ -504,11 +504,17 @@ See `CLAUDE.md` and the `wiki/` for details on the decompilation and the hack.
 
 ## Editing with Hex Maniac Advance
 
+> [!IMPORTANT]
+> **Use Hex Maniac Advance CE built from source, `upcoming` branch:
+> [Soul-8691/HexManiacAdvance-CE @ upcoming](https://github.com/Soul-8691/HexManiacAdvance-CE/tree/upcoming).** The released HMA builds (including the CE releases) can't
+> edit this mod properly. Build that branch yourself and use it for every step below, from exporting `baserom.toml`
+> to editing the patched ROM.
+
 Every **demo-profile** link (`make demo`, `make release-demo` or `make release-demo-extra`) also runs `tools/hma_toml.py`
 and writes a matching `.toml` next to the ROM if repo-root **`baserom.toml`** exists (export it from your vanilla USA ROM
-in [Hex Maniac Advance](https://github.com/haven1433/HexManiacAdvance); it is not committed). The `.toml` files are
-git-ignored. Open the patched ROM in HMA with its `.toml` beside it, and the mod's data shows up as named, editable
-tables. See [wiki/tools/hma-toml.md](wiki/tools/hma-toml.md) for every anchor.
+in that HMA build; it is not committed). The `.toml` files are git-ignored. Open the patched ROM in HMA with its `.toml`
+beside it, and the mod's data shows up as named, editable tables. See [wiki/tools/hma-toml.md](wiki/tools/hma-toml.md)
+for every anchor.
 
 | What you can edit | Anchors |
 |---|---|

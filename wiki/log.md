@@ -3195,3 +3195,6 @@ updated: 2026-09-29
 ## [2026-11-13] progress | CPU draws first: Pot of Greed, Graceful Charity, Jar of Greed
 - src/added_effects.c: AiTryPlayCpuPriorityDrawSpells marks the phase done only in a Main Phase with nothing left to try; tries a Set Jar of Greed third.
 - AI_IMPROVEMENTS.md; [[added-cards]].
+
+## [2026-11-14] progress | READMEs: HMA CE upcoming branch, built from source
+- README.md, README_WIP.md (the HMA section and the Editable row), [[hma-toml]].
