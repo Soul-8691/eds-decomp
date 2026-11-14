@@ -773,6 +773,10 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
   human's face-up monsters than the CPU's, and a card stays in hand for the discard. The Main Phase then reaches
   `AI_MAIN_MONSTER_EFFECTS` and uses it, even if the monster left over can run the Virus over. Checked in the
   source and the build; not tested in an emulator.
+  - **Exiled Force (same day).** 1000 ATK, so it was always Set and never used its effect the turn it came out. It
+    now goes face up when the human controls a face-up monster with more than its printed ATK or a face-down one
+    (`AiWantsMonsterEffect`'s test), and is Tributed in the same Main Phase to destroy it (Man-Eater Bug's target
+    step picks the monster).
 
 ### Cyber Dragon (2026-10-29)
 - Effect Monster (Level 5, LIGHT Machine, 2100/1600): "If only your opponent controls a monster, you can Special

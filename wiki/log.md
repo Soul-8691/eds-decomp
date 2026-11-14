@@ -3187,3 +3187,7 @@ updated: 2026-09-29
 ## [2026-11-13] progress | CPU summons Tribe-Infecting Virus face up to use its effect
 - src/added_effects.c: AiSummonFaceUpForEffect, asked first by AiSummonFaceUpOnOpenField.
 - [[added-cards]].
+
+## [2026-11-13] progress | CPU summons Exiled Force face up to use its effect
+- src/added_effects.c: AiSummonFaceUpForEffect case for Exiled Force.
+- [[added-cards]].

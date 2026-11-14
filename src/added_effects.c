@@ -11224,7 +11224,8 @@ static int AiBestVirusType(int *gain);
 
 /* A monster whose Ignition Effect the CPU would use this turn goes face up even when it would be run over (a Set one
  * can't use it): Tribe-Infecting Virus, when declaring a Type would destroy more of the human's face-up monsters than
- * the CPU's (the Virus itself counted, Aqua) and a card is left in hand to discard after the summon. */
+ * the CPU's (the Virus itself counted, Aqua) and a card is left in hand to discard after the summon; Exiled Force,
+ * when the human has a monster worth Tributing it for (AiWantsMonsterEffect's test). */
 static int AiSummonFaceUpForEffect(u16 id)
 {
     switch (CardNumberOfId(id)) {
@@ -11236,6 +11237,13 @@ static int AiSummonFaceUpForEffect(u16 id)
             gain--;                         /* it would destroy the Virus too */
         return gain > 0 && gDuelPlayers[AI_PLAYER].handCount >= 2;
     }
+#endif
+#ifdef HAS_CARD_EXILED_FORCE
+    case CARD_EXILED_FORCE:     /* as AiWantsMonsterEffect: a human monster stronger than it, or a face-down one */
+        return CountMonsters(AI_HUMAN) > 0
+               && (AiStrongestFaceUpMonsterAtk(AI_HUMAN)
+                       > (int)(CARD_STATS_ATK(gCardStats[id & CARD_ID_MASK]) * CARD_STATS_POINTS_SCALE)
+                   || CountFaceUpMonsters(AI_HUMAN) < CountMonsters(AI_HUMAN));
 #endif
     default:
         return 0;
