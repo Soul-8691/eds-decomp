@@ -4,7 +4,7 @@ type: game
 status: draft
 confidence: medium
 sources: [rom-analysis]
-updated: 2026-11-13
+updated: 2026-11-14
 ---
 # Booster Packs menu (mod)
 
@@ -24,6 +24,12 @@ on the game's own Get-a-pack screens. Checked in the source and the build; not t
   `usage/<stem>.json` (same universe as [[duelist-points]] / `tools/cardprices.py`), not the full legal pool.
   Pull weights still favor lower-usage cards, but `tools/format_packs.py` flattens the curve (`USAGE_PACK_SCORE_POWER`,
   uniform baseline) so staples are easier to hit and the same low-tier cards repeat less.
+- **TCG rarity weights.** A TCG card's weight is `RARITY_WEIGHT` of its rarity in the set file: Common 10000,
+  Short Print 7000, Rare 2500, Super 600, Ultra 100, Secret 25, Ultimate 10. A card listed with several rarities
+  takes the highest, but Ultimate Rare is ignored when another rarity is listed (`card_rarity_rank`, 2026-11-14):
+  from Soul of the Duelist on, nearly every Rare / Super / Ultra also had an Ultimate print, and taking it made all
+  of them weight 10 (about 1000 times rarer than a Common, e.g. Flaming Eternity: 6 Commons at 10000, 18 cards at
+  10). Flaming Eternity is now 6 at 10000, 8 at 2500, 9 at 600, 1 at 100.
 - **Merged sets (2026-11-13).** Six late TCG sets had pools of 3-10 ROM cards in the demo (most of their cards are
   not in the game), so nearly every pack repeated a card. `PACK_MERGE_INTO` (tools/format_packs.py) folds them into
   a nearby set's pack, which keeps its place and its format: Dark Crisis into Ancient Sanctuary (demo pool 17),

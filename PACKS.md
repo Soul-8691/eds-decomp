@@ -2835,34 +2835,34 @@ Forbidden cards (limit 0) are omitted. Lower usage ⇒ higher weight ⇒ more co
 
 ### Flaming Eternity
 
-- **Type:** TCG, with Soul of the Duelist, Rise of Destiny · **Format:** Goat · **Cards in pool:** 24 · **Weight sum:** 60180
+- **Type:** TCG, with Soul of the Duelist, Rise of Destiny · **Format:** Goat · **Cards in pool:** 24 · **Weight sum:** 85500
 
 | Card | Weight | Pull % |
 |---|---:|---:|
-| Dark Mimic LV1 | 10000 | 16.6168 |
-| Golem Sentry | 10000 | 16.6168 |
-| Masked Dragon | 10000 | 16.6168 |
-| The Dark - Hex-Sealed Fusion | 10000 | 16.6168 |
-| Threatening Roar | 10000 | 16.6168 |
-| Xing Zhen Hu | 10000 | 16.6168 |
-| Chiron the Mage | 10 | 0.0166 |
-| Dark Blade the Dragon Knight | 10 | 0.0166 |
-| Dekoichi the Battlechanted Locomotive | 10 | 0.0166 |
-| Divine Wrath | 10 | 0.0166 |
-| Gatling Dragon | 10 | 0.0166 |
-| Granmarg the Rock Monarch | 10 | 0.0166 |
-| Hallowed Life Barrier | 10 | 0.0166 |
-| King Dragun | 10 | 0.0166 |
-| Lightning Vortex | 10 | 0.0166 |
-| Master of Oz | 10 | 0.0166 |
-| Mobius the Frost Monarch | 10 | 0.0166 |
-| Monster Reincarnation | 10 | 0.0166 |
-| Mystic Swordsman LV2 | 10 | 0.0166 |
-| Ninja Grandmaster Sasuke | 10 | 0.0166 |
-| Ojama King | 10 | 0.0166 |
-| Phoenix Wing Wind Blast | 10 | 0.0166 |
-| Pikeru's Circle of Enchantment | 10 | 0.0166 |
-| Thestalos the Firestorm Monarch | 10 | 0.0166 |
+| Dark Mimic LV1 | 10000 | 11.6959 |
+| Golem Sentry | 10000 | 11.6959 |
+| Masked Dragon | 10000 | 11.6959 |
+| The Dark - Hex-Sealed Fusion | 10000 | 11.6959 |
+| Threatening Roar | 10000 | 11.6959 |
+| Xing Zhen Hu | 10000 | 11.6959 |
+| Chiron the Mage | 2500 | 2.9240 |
+| Dark Blade the Dragon Knight | 2500 | 2.9240 |
+| Dekoichi the Battlechanted Locomotive | 2500 | 2.9240 |
+| Master of Oz | 2500 | 2.9240 |
+| Mystic Swordsman LV2 | 2500 | 2.9240 |
+| Ninja Grandmaster Sasuke | 2500 | 2.9240 |
+| Ojama King | 2500 | 2.9240 |
+| Phoenix Wing Wind Blast | 2500 | 2.9240 |
+| Divine Wrath | 600 | 0.7018 |
+| Granmarg the Rock Monarch | 600 | 0.7018 |
+| Hallowed Life Barrier | 600 | 0.7018 |
+| King Dragun | 600 | 0.7018 |
+| Lightning Vortex | 600 | 0.7018 |
+| Mobius the Frost Monarch | 600 | 0.7018 |
+| Monster Reincarnation | 600 | 0.7018 |
+| Pikeru's Circle of Enchantment | 600 | 0.7018 |
+| Thestalos the Firestorm Monarch | 600 | 0.7018 |
+| Gatling Dragon | 100 | 0.1170 |
 
 ### Dark Revelation Volume 1
 
@@ -3623,29 +3623,29 @@ Forbidden cards (limit 0) are omitted. Lower usage ⇒ higher weight ⇒ more co
 
 ### Shadow of Infinity
 
-- **Type:** TCG, with The Lost Millennium, Cybernetic Revolution, Elemental Energy · **Format:** Reaper · **Cards in pool:** 19 · **Weight sum:** 60130
+- **Type:** TCG, with The Lost Millennium, Cybernetic Revolution, Elemental Energy · **Format:** Reaper · **Cards in pool:** 19 · **Weight sum:** 76800
 
 | Card | Weight | Pull % |
 |---|---:|---:|
-| Dark Deal | 10000 | 16.6306 |
-| Dark World Lightning | 10000 | 16.6306 |
-| Des Wombat | 10000 | 16.6306 |
-| Drillroid | 10000 | 16.6306 |
-| Hydrogeddon | 10000 | 16.6306 |
-| Sand Moth | 10000 | 16.6306 |
-| Brain Control | 10 | 0.0166 |
-| Cyber Blader | 10 | 0.0166 |
-| Cyber Dragon | 10 | 0.0166 |
-| Cyber End Dragon | 10 | 0.0166 |
-| Cyber Twin Dragon | 10 | 0.0166 |
-| D.D. Survivor | 10 | 0.0166 |
-| Dimension Wall | 10 | 0.0166 |
-| Goblin Elite Attack Force | 10 | 0.0166 |
-| Goldd, Wu-Lord of Dark World | 10 | 0.0166 |
-| Karma Cut | 10 | 0.0166 |
-| Pot of Avarice | 10 | 0.0166 |
-| Sillva, Warlord of Dark World | 10 | 0.0166 |
-| Treeborn Frog | 10 | 0.0166 |
+| Dark Deal | 10000 | 13.0208 |
+| Dark World Lightning | 10000 | 13.0208 |
+| Des Wombat | 10000 | 13.0208 |
+| Drillroid | 10000 | 13.0208 |
+| Hydrogeddon | 10000 | 13.0208 |
+| Sand Moth | 10000 | 13.0208 |
+| D.D. Survivor | 2500 | 3.2552 |
+| Dimension Wall | 2500 | 3.2552 |
+| Karma Cut | 2500 | 3.2552 |
+| Sillva, Warlord of Dark World | 2500 | 3.2552 |
+| Treeborn Frog | 2500 | 3.2552 |
+| Brain Control | 600 | 0.7812 |
+| Cyber Blader | 600 | 0.7812 |
+| Cyber Dragon | 600 | 0.7812 |
+| Cyber Twin Dragon | 600 | 0.7812 |
+| Goblin Elite Attack Force | 600 | 0.7812 |
+| Goldd, Wu-Lord of Dark World | 600 | 0.7812 |
+| Pot of Avarice | 600 | 0.7812 |
+| Cyber End Dragon | 100 | 0.1302 |
 
 ### Starter Deck 2006
 

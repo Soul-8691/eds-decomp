@@ -198,26 +198,35 @@ def load_format_event_dates():
     return ordinals
 
 
-def rarity_rank(rarity_str):
+ULTIMATE_RARE_RANK = 6
+
+
+def rarity_ranks(rarity_str):
+    """The set of rarity ranks named in one rarity string ("Rare, Ultimate Rare" -> {2, 6}); empty if none."""
     if not rarity_str or not isinstance(rarity_str, str):
-        return None
+        return set()
     s = rarity_str.strip()
     if not s or len(s) > 48:
-        return None
+        return set()
     low = s.lower()
     if 'tip card' in low:
-        return None
+        return set()
     if any(x in low for x in ('deck', 'strategy', 'phase', 'summon', 'attack', 'defense', 'shuffling')):
         if low not in RARITY_TOKEN_RANK:
-            return None
-    parts = re.split(r'[,/]+', low)
-    rank = None
-    for part in parts:
-        part = part.strip()
-        if part in RARITY_TOKEN_RANK:
-            r = RARITY_TOKEN_RANK[part]
-            rank = r if rank is None else max(rank, r)
-    return rank
+            return set()
+    return {RARITY_TOKEN_RANK[p.strip()] for p in re.split(r'[,/]+', low) if p.strip() in RARITY_TOKEN_RANK}
+
+
+def card_rarity_rank(rarities):
+    """A card's pull rank from all its rarities in the set: the highest base rarity. Ultimate Rare is an alternate
+    print of a Rare / Super / Ultra (from Soul of the Duelist on, nearly every non-Common had one), so it is ignored
+    when the card has another rarity; a card listed only as Ultimate Rare keeps it. None if no rarity is known."""
+    ranks = set()
+    for r in rarities:
+        ranks |= rarity_ranks(r)
+    if len(ranks) > 1:
+        ranks.discard(ULTIMATE_RARE_RANK)
+    return max(ranks) if ranks else None
 
 
 def pack_entries_tcg(path, lookup, missing):
@@ -226,11 +235,7 @@ def pack_entries_tcg(path, lookup, missing):
     for name, rarities in data.items():
         if not rarities:
             continue
-        rank = None
-        for r in rarities:
-            rr = rarity_rank(r)
-            if rr is not None:
-                rank = rr if rank is None else max(rank, rr)
+        rank = card_rarity_rank(rarities)
         if rank is None:
             continue
         numbers = lookup(name)

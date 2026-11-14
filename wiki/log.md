@@ -3198,3 +3198,8 @@ updated: 2026-09-29
 
 ## [2026-11-14] progress | READMEs: HMA CE upcoming branch, built from source
 - README.md, README_WIP.md (the HMA section and the Editable row), [[hma-toml]].
+
+## [2026-11-14] progress | TCG pack weights: Ultimate Rare no longer overrides the base rarity
+- tools/format_packs.py: card_rarity_rank drops Ultimate Rare when a card lists another rarity (Rare/Super/Ultra from SOD on had been weight 10).
+- Regenerated build/include/format_pack_data.h (make demo) and PACKS.md.
+- [[pack-shop]].
