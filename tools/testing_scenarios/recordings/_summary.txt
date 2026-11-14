@@ -1,7 +1,10 @@
 ﻿
-Script       Result Seconds Detail
-------       ------ ------- ------
-_siding_exit PASS        10       
+Script          Result Seconds Detail
+------          ------ ------- ------
+banlist_refused PASS         5       
+duelists_debug  PASS         8       
+format_check    PASS         5       
+unlock          PASS        19       
 
 
 

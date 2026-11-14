@@ -1,2 +1,2 @@
-tools\testing_scenarios\recordings\Link_Media_Player.mp4
-tools/testing_scenarios/recordings/Link_Media_Player.mp4
+C:\Users\pswan\Downloads\eds-decomp\tools\testing_scenarios\generated\..\recordings\Poison_of_the_Old_Man_Cpu_Burn_CPU.mp4
+C:/Users/pswan/Downloads/eds-decomp/tools/testing_scenarios/generated/../recordings/Poison_of_the_Old_Man_Cpu_Burn_CPU.mp4

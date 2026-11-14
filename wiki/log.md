@@ -3215,3 +3215,13 @@ updated: 2026-09-29
 ## [2026-11-14] progress | CPU: no second Swords of Revealing Light while one is up
 - src/ai_deck.c: AiTryPlaySpellTrap refuses Swords while the CPU has an active one (.text end 0x0807F52C).
 - [[added-cards]], AI_IMPROVEMENTS.md.
+
+## [2026-11-14] progress | Re-recorded media and kept test videos (opponent art turned 180 degrees)
+- run_tests.ps1 -Media: the 37 demo-ROM capture scripts, all PASS (the 5 release-ROM ones, which show no duel field, not re-run: no eds_release.gba). stitch_media.py: duel-speed.mp4, trailer.mp4, highlights.gif. 35 tracked files in screenshots/ changed.
+- run_tests.ps1 -RerecordKept: 91 of the 92 kept / highlighted videos replaced in place (3 timed out at 60 s; Gravekeepers Spy and Cyber End Dragon passed with -MaxSeconds 180). Poison_of_the_Old_Man_Cpu_Burn_CPU failed 3 times before its scenario starts (the Tomato Control opening CPU turn sits with a text box open, or the opening draw stalls): its old video stays.
+- [[readme-media]].
+
+## [2026-11-14] progress | Release ROMs rebuilt; release-ROM media re-captured
+- make release and make release-demo-extra (the latter failed once on effect_prepare3.o, then built on a retry with no change).
+- run_tests.ps1 -Media: title_screen (eds_release_demo_extra.gba), duelists_debug, format_check, banlist_refused, unlock (eds_release.gba): all PASS. stitch_media.py trailer redone (it opens on Title Screen.png).
+- [[readme-media]].
