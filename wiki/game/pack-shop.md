@@ -4,7 +4,7 @@ type: game
 status: draft
 confidence: medium
 sources: [rom-analysis]
-updated: 2026-11-09
+updated: 2026-11-13
 ---
 # Booster Packs menu (mod)
 
@@ -24,6 +24,12 @@ on the game's own Get-a-pack screens. Checked in the source and the build; not t
   `usage/<stem>.json` (same universe as [[duelist-points]] / `tools/cardprices.py`), not the full legal pool.
   Pull weights still favor lower-usage cards, but `tools/format_packs.py` flattens the curve (`USAGE_PACK_SCORE_POWER`,
   uniform baseline) so staples are easier to hit and the same low-tier cards repeat less.
+- **Merged sets (2026-11-13).** Six late TCG sets had pools of 3-10 ROM cards in the demo (most of their cards are
+  not in the game), so nearly every pack repeated a card. `PACK_MERGE_INTO` (tools/format_packs.py) folds them into
+  a nearby set's pack, which keeps its place and its format: Dark Crisis into Ancient Sanctuary (demo pool 17),
+  Soul of the Duelist and Rise of Destiny into Flaming Eternity (24), The Lost Millennium, Cybernetic Revolution and
+  Elemental Energy into Shadow of Infinity (19). A card in two sets keeps its rarer weight. 50 packs became 44; the
+  smallest demo pool is now 13 (Structure Deck- Dragon's Roar). Pack ids after a merged set's old slot moved down.
   TCG sets unlock when their [[banlists]] format opponent is unlocked (LOB/Yugi/Kaiba starters with Yugi-Kaiba,
   Metal Raiders with Critter, and so on). Usage packs need 10 wins in that format. The next format opponent
   needs 20 campaign wins. Event dates in `packs/formats.json` (`date`) are used at generation time for ordering

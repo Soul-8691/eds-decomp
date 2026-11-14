@@ -124,20 +124,7 @@ def pack_chances_section() -> list[str]:
     names = card_names()
     fusion_numbers = fp.load_fusion_card_numbers()
 
-    tcg_by_format: list[list[dict]] = [[] for _ in banlist.BANLISTS]
-    for path in glob.glob('packs/*_tcg.json'):
-        name = fp.pack_display_name(path)
-        if name not in fp.PACK_FORMAT_INDEX:
-            continue
-        iso = fp.TCG_RELEASE_DATE.get(name)
-        fmt = fp.PACK_FORMAT_INDEX[name]
-        tcg_by_format[fmt].append({
-            'kind': 'tcg',
-            'path': path,
-            'name': name,
-            'format_index': fmt,
-            'release': fp.date_ordinal(iso),
-        })
+    tcg_by_format: list[list[dict]] = fp.tcg_pack_specs()
 
     pack_specs: list[dict] = []
     for i, (fmt_name, stem, pools) in enumerate(banlist.BANLISTS):
@@ -181,8 +168,11 @@ def pack_chances_section() -> list[str]:
             kind = 'Usage'
             fmt_label = display
         else:
-            entries = fp.pack_entries_tcg(spec['path'], lookup, missing)
+            entries = fp.tcg_spec_entries(spec, lookup, missing)
             kind = 'TCG'
+            merged = [fp.pack_display_name(p) for p in spec['paths'][1:]]
+            if merged:
+                kind = 'TCG, with ' + ', '.join(merged)
             fmt_label = banlist.BANLISTS[spec['format_index']][0]
 
         total_w = sum(w for _, w in entries) or 1

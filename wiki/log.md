@@ -3179,3 +3179,7 @@ updated: 2026-09-29
 - src/mod_banlists.c: MainDeckCardsKept, ModDeckEditMayLeave; the Banlists menu refuses a switch that would leave the Main Deck under 40 (release only).
 - src/deck_edit_view.c: DeckEdit_Update B asks ModDeckEditMayLeave.
 - [[banlists-menu]], [[release-build]].
+
+## [2026-11-13] progress | Six small TCG packs merged into three
+- tools/format_packs.py: PACK_MERGE_INTO, tcg_pack_specs, tcg_spec_entries; tools/packs_md.py uses them. Dark Crisis -> Ancient Sanctuary; Soul of the Duelist, Rise of Destiny -> Flaming Eternity; The Lost Millennium, Cybernetic Revolution, Elemental Energy -> Shadow of Infinity. 50 -> 44 packs. PACKS.md regenerated.
+- [[pack-shop]].

@@ -115,6 +115,18 @@ PACK_FORMAT_INDEX = {
     'Starter Deck 2006': 14,
 }
 
+# TCG sets folded into another set's pack (their pools alone were tiny: most of their cards are not in the ROM). The
+# set's cards join the target's pool (a card in both keeps its rarer weight, as within one set); the set gets no pack
+# of its own, and the target keeps its place in the list.
+PACK_MERGE_INTO = {
+    'Dark Crisis': 'Ancient Sanctuary',
+    'Soul of the Duelist': 'Flaming Eternity',
+    'Rise of Destiny': 'Flaming Eternity',
+    'The Lost Millennium': 'Shadow of Infinity',
+    'Cybernetic Revolution': 'Shadow of Infinity',
+    'Elemental Energy': 'Shadow of Infinity',
+}
+
 PORTRAIT_NAMES = [
     'La Jinn the Mystical Genie of the Lamp',
     'Sangan',
@@ -315,6 +327,48 @@ def usage_pack_entry_weight(number, weight, fusion_numbers):
     return weight
 
 
+def tcg_pack_specs():
+    """The TCG packs per format (BANLISTS order), unsorted: {'kind': 'tcg', 'path' (the set's own file), 'paths' (it
+    and the sets merged into it, PACK_MERGE_INTO), 'name', 'format_index', 'release'}."""
+    paths = {pack_display_name(p): p for p in glob.glob('packs/*_tcg.json')}
+    for src, dst in PACK_MERGE_INTO.items():
+        if src not in paths or dst not in paths:
+            print(f'format_packs: merge {src!r} -> {dst!r}: a set file is missing', file=sys.stderr)
+    tcg_by_format = [[] for _ in banlist.BANLISTS]
+    for name, path in paths.items():
+        if name in PACK_MERGE_INTO:
+            continue
+        if name not in PACK_FORMAT_INDEX:
+            print(f'format_packs: no format index for {name!r}', file=sys.stderr)
+            continue
+        iso = TCG_RELEASE_DATE.get(name)
+        if not iso:
+            print(f'format_packs: no TCG release date for {name!r}', file=sys.stderr)
+        fmt = PACK_FORMAT_INDEX[name]
+        merged = [paths[s] for s, d in PACK_MERGE_INTO.items() if d == name and s in paths]
+        tcg_by_format[fmt].append({
+            'kind': 'tcg',
+            'path': path,
+            'paths': [path] + merged,
+            'name': name,
+            'format_index': fmt,
+            'release': date_ordinal(iso),
+        })
+    return tcg_by_format
+
+
+def tcg_spec_entries(spec, lookup, missing):
+    """[(card number, weight)] of a TCG pack: its set and the sets merged into it (a card in more than one keeps the
+    lowest weight, its rarest print)."""
+    by_number = {}
+    for path in spec['paths']:
+        for number, weight in pack_entries_tcg(path, lookup, missing):
+            prev = by_number.get(number)
+            if prev is None or weight < prev:
+                by_number[number] = weight
+    return sorted(by_number.items())
+
+
 def portrait_number(entries):
     if not entries:
         return 0
@@ -336,23 +390,7 @@ def main():
     fusion_numbers = load_fusion_card_numbers()
     format_event_dates = load_format_event_dates()
 
-    tcg_by_format = [[] for _ in banlist.BANLISTS]
-    for path in glob.glob('packs/*_tcg.json'):
-        name = pack_display_name(path)
-        if name not in PACK_FORMAT_INDEX:
-            print(f'format_packs: no format index for {name!r}', file=sys.stderr)
-            continue
-        iso = TCG_RELEASE_DATE.get(name)
-        if not iso:
-            print(f'format_packs: no TCG release date for {name!r}', file=sys.stderr)
-        fmt = PACK_FORMAT_INDEX[name]
-        tcg_by_format[fmt].append({
-            'kind': 'tcg',
-            'path': path,
-            'name': name,
-            'format_index': fmt,
-            'release': date_ordinal(iso),
-        })
+    tcg_by_format = tcg_pack_specs()
 
     def tcg_sort_key(spec):
         name = spec['name']
@@ -434,7 +472,7 @@ def main():
             label = f'{display} usage'
         else:
             flags.append(0)
-            entries = pack_entries_tcg(spec['path'], lookup, missing)
+            entries = tcg_spec_entries(spec, lookup, missing)
             portrait_nums.append(portrait_number(entries))
             label = f'{display} ({len(entries)} ROM cards)'
 

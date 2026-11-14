@@ -49,7 +49,7 @@ Forbidden cards (limit 0) are omitted. Lower usage ⇒ higher weight ⇒ more co
 
 ## Pack pull rates
 
-50 format packs (TCG sets interleaved with usage packs per Campaign format).
+44 format packs (TCG sets interleaved with usage packs per Campaign format).
 
 ### Legend of Blue Eyes White Dragon
 
@@ -1935,23 +1935,6 @@ Forbidden cards (limit 0) are omitted. Lower usage ⇒ higher weight ⇒ more co
 | Call Of The Haunted | 53 | 0.0707 |
 | Imperial Order | 52 | 0.0694 |
 
-### Dark Crisis
-
-- **Type:** TCG · **Format:** Vampire · **Cards in pool:** 10 · **Weight sum:** 53825
-
-| Card | Weight | Pull % |
-|---|---:|---:|
-| Final Attack Orders | 10000 | 18.5787 |
-| Gyaku-Gire Panda | 10000 | 18.5787 |
-| Ojama Trio | 10000 | 18.5787 |
-| Sakuretsu Armor | 10000 | 18.5787 |
-| Token Thanksgiving | 10000 | 18.5787 |
-| Tsukuyomi | 2500 | 4.6447 |
-| D.D. Warrior Lady | 600 | 1.1147 |
-| Dark Flare Knight | 600 | 1.1147 |
-| Interdimensional Matter Transporter | 100 | 0.1858 |
-| Vampire Lord | 25 | 0.0464 |
-
 ### Vampire
 
 - **Type:** Usage · **Format:** Vampire · **Cards in pool:** 114 · **Weight sum:** 127168
@@ -2344,32 +2327,27 @@ Forbidden cards (limit 0) are omitted. Lower usage ⇒ higher weight ⇒ more co
 
 ### Ancient Sanctuary
 
-- **Type:** TCG · **Format:** Warrior · **Cards in pool:** 7 · **Weight sum:** 40200
+- **Type:** TCG, with Dark Crisis · **Format:** Warrior · **Cards in pool:** 17 · **Weight sum:** 94025
 
 | Card | Weight | Pull % |
 |---|---:|---:|
-| Monster Gate | 10000 | 24.8756 |
-| Mystik Wok | 10000 | 24.8756 |
-| Night Assailant | 10000 | 24.8756 |
-| Level Limit - Area B | 7000 | 17.4129 |
-| Draining Shield | 2500 | 6.2189 |
-| Zaborg the Thunder Monarch | 600 | 1.4925 |
-| Enemy Controller | 100 | 0.2488 |
-
-### Soul of the Duelist
-
-- **Type:** TCG · **Format:** Warrior · **Cards in pool:** 8 · **Weight sum:** 20060
-
-| Card | Weight | Pull % |
-|---|---:|---:|
-| Dark Mimic LV1 | 10000 | 49.8504 |
-| Masked Dragon | 10000 | 49.8504 |
-| Hallowed Life Barrier | 10 | 0.0499 |
-| Master of Oz | 10 | 0.0499 |
-| Mobius the Frost Monarch | 10 | 0.0499 |
-| Mystic Swordsman LV2 | 10 | 0.0499 |
-| Ninja Grandmaster Sasuke | 10 | 0.0499 |
-| Ojama King | 10 | 0.0499 |
+| Final Attack Orders | 10000 | 10.6355 |
+| Gyaku-Gire Panda | 10000 | 10.6355 |
+| Monster Gate | 10000 | 10.6355 |
+| Mystik Wok | 10000 | 10.6355 |
+| Night Assailant | 10000 | 10.6355 |
+| Ojama Trio | 10000 | 10.6355 |
+| Sakuretsu Armor | 10000 | 10.6355 |
+| Token Thanksgiving | 10000 | 10.6355 |
+| Level Limit - Area B | 7000 | 7.4448 |
+| Draining Shield | 2500 | 2.6589 |
+| Tsukuyomi | 2500 | 2.6589 |
+| D.D. Warrior Lady | 600 | 0.6381 |
+| Dark Flare Knight | 600 | 0.6381 |
+| Zaborg the Thunder Monarch | 600 | 0.6381 |
+| Enemy Controller | 100 | 0.1064 |
+| Interdimensional Matter Transporter | 100 | 0.1064 |
+| Vampire Lord | 25 | 0.0266 |
 
 ### Dark Beginning 1
 
@@ -2612,20 +2590,6 @@ Forbidden cards (limit 0) are omitted. Lower usage ⇒ higher weight ⇒ more co
 | Thousand-Eyes Restrict | 100 | 0.0055 |
 | Torrential Tribute | 100 | 0.0055 |
 | United We Stand | 100 | 0.0055 |
-
-### Rise of Destiny
-
-- **Type:** TCG · **Format:** Warrior · **Cards in pool:** 7 · **Weight sum:** 10060
-
-| Card | Weight | Pull % |
-|---|---:|---:|
-| Xing Zhen Hu | 10000 | 99.4036 |
-| Dark Blade the Dragon Knight | 10 | 0.0994 |
-| Dekoichi the Battlechanted Locomotive | 10 | 0.0994 |
-| Divine Wrath | 10 | 0.0994 |
-| Monster Reincarnation | 10 | 0.0994 |
-| Pikeru's Circle of Enchantment | 10 | 0.0994 |
-| Thestalos the Firestorm Monarch | 10 | 0.0994 |
 
 ### Structure Deck- Dragon's Roar
 
@@ -2871,19 +2835,34 @@ Forbidden cards (limit 0) are omitted. Lower usage ⇒ higher weight ⇒ more co
 
 ### Flaming Eternity
 
-- **Type:** TCG · **Format:** Goat · **Cards in pool:** 9 · **Weight sum:** 30060
+- **Type:** TCG, with Soul of the Duelist, Rise of Destiny · **Format:** Goat · **Cards in pool:** 24 · **Weight sum:** 60180
 
 | Card | Weight | Pull % |
 |---|---:|---:|
-| Golem Sentry | 10000 | 33.2668 |
-| The Dark - Hex-Sealed Fusion | 10000 | 33.2668 |
-| Threatening Roar | 10000 | 33.2668 |
-| Chiron the Mage | 10 | 0.0333 |
-| Gatling Dragon | 10 | 0.0333 |
-| Granmarg the Rock Monarch | 10 | 0.0333 |
-| King Dragun | 10 | 0.0333 |
-| Lightning Vortex | 10 | 0.0333 |
-| Phoenix Wing Wind Blast | 10 | 0.0333 |
+| Dark Mimic LV1 | 10000 | 16.6168 |
+| Golem Sentry | 10000 | 16.6168 |
+| Masked Dragon | 10000 | 16.6168 |
+| The Dark - Hex-Sealed Fusion | 10000 | 16.6168 |
+| Threatening Roar | 10000 | 16.6168 |
+| Xing Zhen Hu | 10000 | 16.6168 |
+| Chiron the Mage | 10 | 0.0166 |
+| Dark Blade the Dragon Knight | 10 | 0.0166 |
+| Dekoichi the Battlechanted Locomotive | 10 | 0.0166 |
+| Divine Wrath | 10 | 0.0166 |
+| Gatling Dragon | 10 | 0.0166 |
+| Granmarg the Rock Monarch | 10 | 0.0166 |
+| Hallowed Life Barrier | 10 | 0.0166 |
+| King Dragun | 10 | 0.0166 |
+| Lightning Vortex | 10 | 0.0166 |
+| Master of Oz | 10 | 0.0166 |
+| Mobius the Frost Monarch | 10 | 0.0166 |
+| Monster Reincarnation | 10 | 0.0166 |
+| Mystic Swordsman LV2 | 10 | 0.0166 |
+| Ninja Grandmaster Sasuke | 10 | 0.0166 |
+| Ojama King | 10 | 0.0166 |
+| Phoenix Wing Wind Blast | 10 | 0.0166 |
+| Pikeru's Circle of Enchantment | 10 | 0.0166 |
+| Thestalos the Firestorm Monarch | 10 | 0.0166 |
 
 ### Dark Revelation Volume 1
 
@@ -2971,16 +2950,6 @@ Forbidden cards (limit 0) are omitted. Lower usage ⇒ higher weight ⇒ more co
 | Torrential Tribute | 10000 | 5.8824 |
 | Tribe-Infecting Virus | 10000 | 5.8824 |
 | Xing Zhen Hu | 10000 | 5.8824 |
-
-### The Lost Millennium
-
-- **Type:** TCG · **Format:** Goat · **Cards in pool:** 3 · **Weight sum:** 10020
-
-| Card | Weight | Pull % |
-|---|---:|---:|
-| Des Wombat | 10000 | 99.8004 |
-| Brain Control | 10 | 0.0998 |
-| D.D. Survivor | 10 | 0.0998 |
 
 ### Dark Beginning 2
 
@@ -3476,19 +3445,6 @@ Forbidden cards (limit 0) are omitted. Lower usage ⇒ higher weight ⇒ more co
 | Call Of The Haunted | 70 | 0.0072 |
 | Mystical Space Typhoon | 53 | 0.0055 |
 
-### Cybernetic Revolution
-
-- **Type:** TCG · **Format:** Cyber · **Cards in pool:** 6 · **Weight sum:** 10050
-
-| Card | Weight | Pull % |
-|---|---:|---:|
-| Drillroid | 10000 | 99.5025 |
-| Cyber Dragon | 10 | 0.0995 |
-| Cyber End Dragon | 10 | 0.0995 |
-| Cyber Twin Dragon | 10 | 0.0995 |
-| Dimension Wall | 10 | 0.0995 |
-| Goblin Elite Attack Force | 10 | 0.0995 |
-
 ### Cyber
 
 - **Type:** Usage · **Format:** Cyber · **Cards in pool:** 142 · **Weight sum:** 164290
@@ -3638,20 +3594,6 @@ Forbidden cards (limit 0) are omitted. Lower usage ⇒ higher weight ⇒ more co
 | Call Of The Haunted | 59 | 0.0359 |
 | Mystical Space Typhoon | 53 | 0.0323 |
 
-### Elemental Energy
-
-- **Type:** TCG · **Format:** Reaper · **Cards in pool:** 7 · **Weight sum:** 30040
-
-| Card | Weight | Pull % |
-|---|---:|---:|
-| Dark Deal | 10000 | 33.2889 |
-| Dark World Lightning | 10000 | 33.2889 |
-| Hydrogeddon | 10000 | 33.2889 |
-| Cyber Blader | 10 | 0.0333 |
-| Goldd, Wu-Lord of Dark World | 10 | 0.0333 |
-| Pot of Avarice | 10 | 0.0333 |
-| Sillva, Warlord of Dark World | 10 | 0.0333 |
-
 ### Structure Deck- Spellcaster's Judgment
 
 - **Type:** TCG · **Format:** Reaper · **Cards in pool:** 20 · **Weight sum:** 200000
@@ -3681,13 +3623,29 @@ Forbidden cards (limit 0) are omitted. Lower usage ⇒ higher weight ⇒ more co
 
 ### Shadow of Infinity
 
-- **Type:** TCG · **Format:** Reaper · **Cards in pool:** 3 · **Weight sum:** 10020
+- **Type:** TCG, with The Lost Millennium, Cybernetic Revolution, Elemental Energy · **Format:** Reaper · **Cards in pool:** 19 · **Weight sum:** 60130
 
 | Card | Weight | Pull % |
 |---|---:|---:|
-| Sand Moth | 10000 | 99.8004 |
-| Karma Cut | 10 | 0.0998 |
-| Treeborn Frog | 10 | 0.0998 |
+| Dark Deal | 10000 | 16.6306 |
+| Dark World Lightning | 10000 | 16.6306 |
+| Des Wombat | 10000 | 16.6306 |
+| Drillroid | 10000 | 16.6306 |
+| Hydrogeddon | 10000 | 16.6306 |
+| Sand Moth | 10000 | 16.6306 |
+| Brain Control | 10 | 0.0166 |
+| Cyber Blader | 10 | 0.0166 |
+| Cyber Dragon | 10 | 0.0166 |
+| Cyber End Dragon | 10 | 0.0166 |
+| Cyber Twin Dragon | 10 | 0.0166 |
+| D.D. Survivor | 10 | 0.0166 |
+| Dimension Wall | 10 | 0.0166 |
+| Goblin Elite Attack Force | 10 | 0.0166 |
+| Goldd, Wu-Lord of Dark World | 10 | 0.0166 |
+| Karma Cut | 10 | 0.0166 |
+| Pot of Avarice | 10 | 0.0166 |
+| Sillva, Warlord of Dark World | 10 | 0.0166 |
+| Treeborn Frog | 10 | 0.0166 |
 
 ### Starter Deck 2006
 
