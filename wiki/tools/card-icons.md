@@ -4,7 +4,7 @@ type: tool
 status: draft
 confidence: high
 sources: [rom-analysis]
-updated: 2026-11-07
+updated: 2026-11-14
 ---
 
 # Card icons with art
@@ -38,7 +38,8 @@ art. `make` builds the game's data with it (`--data`, below); `make card-icons` 
   8bpp tile 0 is the font's blank tiles 0-1 (checked: all zero), so cleared map cells stay empty.
 - **Cells.** `ModFieldCardTile(player, place, id, sideways)` copies the type's frame (`GetCardIconBgTile` order;
   upright or rotated clockwise, which equals the game's pose 3: checked) into the place's 16 tiles and writes the
-  miniature (rotated: upright (x, y) -> (31 - y, x), so x 9-24, y 8-22 sideways) with halfword read-modify-writes. 26 places (per player 5
+  miniature (rotated: upright (x, y) -> (31 - y, x), so x 9-24, y 8-22 sideways) with halfword read-modify-writes. The opponent's (player 1, the top of the board) miniature is turned 180 degrees
+  in its window (read from (14 - i, 15 - j); since 2026-11-14), upright and sideways; the frame is not. 26 places (per player 5
   monster, 5 Spell/Trap, the field, the Graveyard top, the banished top), `sCellTiles`: 0x38-0x6F, 0x80-0x9F, 0xB0-0x146,
   0x1D8-0x22F, 0x28E-0x2FF. Called from `DrawZoneTiles` (face up) and `DrawAreaTiles` (Graveyard, banished).
 - **Redraws.** The battle scene clears char blocks 1-2 and BG palettes 4-15; every way back (`DuelScreen_Init`,
@@ -58,6 +59,10 @@ art. `make` builds the game's data with it (`--data`, below); `make card-icons` 
   reorder row (`DeckReorder_DrawCards` / `DrawSwap`), the change-position, flip and move animations, the
   unused `DuelPrompt_DrawPositionChoice`, and (2026-10-30) the summon position menu (`SummonPositionMenu_Draw`) and
   the five-card pick (`FiveCardMenu_Draw`), both in summon_checks.c.
+  - **The opponent's revealed hand (2026-11-14).** `DrawHandCards` calls `ModAddHandCardSprite(yx, id, player)`
+    (it was `ModAddCardSprite`; 4 bytes smaller). For player 1 it asks the slot cache for `POSE_TURNED` (3): pose 0's
+    frame with the art read from (14 - column, 15 - row), turned 180 degrees as on the field. The cache keeps it
+    apart from the upright pose 0 by its pose number.
   - **Bug fixed (2026-10-30, eds-35.png).** Those two still drew `GetCardIconObjTile(id)` (the original layout,
     0x80 + 0x40 * type) in palette 1. For any type but Normal that tile is now inside the art slots, so the "Select
     display position of card." prompt of a Special Summon (Magical Scientist's Fusion Monster) showed garbage. A

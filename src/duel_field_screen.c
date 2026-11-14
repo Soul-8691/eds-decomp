@@ -584,6 +584,7 @@ void DrawFieldOverlay(void)
 /* Mod (src/mod_field_icons.c): a face-up card's sprite with its art (pose 0 upright, 1-2 the flip's frames). */
 void ModAddCardSprite(u32 yx, u16 shape, u16 id, u16 attr2);
 void ModAddAffineCardSprite(u32 yx, u16 shape, u16 id, u32 pose, u16 attr2, u32 scaleAngle);
+void ModAddHandCardSprite(u32 yx, u16 id, u32 player);     /* the opponent's art turned 180 degrees */
 
 void DrawHandCards(void)
 {
@@ -616,8 +617,8 @@ void DrawHandCards(void)
                            a plain gDuel.cardMenu.open folds into one 0x0201AE0C literal. */
                         if (!(DUEL_VIEW->cardMenuOpen && gDuelScreen.selPlayer == player && gDuelScreen.selArea == DUEL_AREA_HAND
                               && gDuelScreen.selIndex == cardIdx)) {
-                            if (revealed)       /* changed: the card with its art */
-                                ModAddCardSprite((y << 16) | x, 0x80, cardId, 0x400);
+                            if (revealed)       /* changed: the card with its art (the opponent's turned) */
+                                ModAddHandCardSprite((y << 16) | x, cardId, player);
                             else
                                 AddSprite((y << 16) | x, 0x80, tile + 0x400);
                         }

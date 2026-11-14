@@ -24,7 +24,8 @@
  * Spell/Trap, the field, the Graveyard's and the banished pile's top card). 8bpp tile 0 is the font's blank tiles
  * 0-1, so a cleared cell stays empty.
  * A cell is the frame of the card's type and pose (the card_icons PNGs, entries 32-47: BG palette 2) with the 15x16
- * miniature (entries 192-255: BG palettes 12-15, which the duel leaves free) over its black window (x 8-22, y 7-22), or turned clockwise
+ * miniature (entries 192-255: BG palettes 12-15, which the duel leaves free) over its black window (x 8-22, y 7-22),
+ * turned 180 degrees for the opponent (player 1, the top of the board), or turned clockwise
  * The miniature is stored as GBA 8bpp 2x2 tiles (16x16); bytes 0xFF pad, 0-63 index the shared palette (ModFieldIconMiniColor).
  * Reads use MiniByte (tile-major), matching tools/cardicons.py.
  * with the frame for a sideways (defense) card. The data is gModFieldIconData (tools/cardicons.py --data,
@@ -93,6 +94,8 @@ extern const u8 gModFieldIconData[];            /* tools/cardicons.py --data */
 #define POSE_MAP_SIZE           80              /* x0, width, y0, height, the art column of each column (32), the
                                                    art row of each row (32) */
 #define SPRITE_POSES            3
+#define POSE_TURNED             SPRITE_POSES    /* the sprite cache's pose for pose 0 with the art turned 180 degrees
+                                                   (the opponent's revealed hand, ModAddHandCardSprite) */
 #define FRAME_SIZE              (CELL_TILES * TILE8_SIZE)
 #define MINI_W                  15              /* the miniature: the black window, x 8-22, y 7-22 */
 #define MINI_H                  16
@@ -188,7 +191,9 @@ u16 ModFieldCardTile(u32 player, u32 place, u16 id, u32 sideways)
     mini = gModFieldIconData + DATA_MINIS + id * MINI_STRIDE;
     for (j = 0; j < MINI_H; j++) {
         for (i = 0; i < MINI_W; i++) {
-            u32 color = ModFieldIconMiniColor(MiniByte(mini, i, j));
+            /* the opponent's (player 1, across the board) art is turned 180 degrees in its window */
+            u32 color = (player & 1) ? ModFieldIconMiniColor(MiniByte(mini, MINI_W - 1 - i, MINI_H - 1 - j))
+                                     : ModFieldIconMiniColor(MiniByte(mini, i, j));
 
             if (color == 0)
                 continue;
@@ -242,9 +247,14 @@ void ModLoadCardSpriteGfx(void)
 static void BuildCardSprite(u32 slot, u16 id, u32 type, u32 pose)
 {
     u8 *dst = (u8 *)OBJ_TILE8_ADDR(OBJ_TILE_SLOTS + slot * 32);
-    const u8 *map = gModFieldIconData + DATA_POSE_MAPS + pose * POSE_MAP_SIZE;
-    const u8 *mini;
-    u32 x0 = map[0], w = map[1], y0 = map[2], h = map[3], r, c;
+    u32 turned = pose == POSE_TURNED;
+    const u8 *map, *mini;
+    u32 x0, w, y0, h, r, c;
+
+    if (turned)
+        pose = 0;
+    map = gModFieldIconData + DATA_POSE_MAPS + pose * POSE_MAP_SIZE;
+    x0 = map[0], w = map[1], y0 = map[2], h = map[3];
 
     if (DATA_EXTRA(id))             /* the silver or black frame (gCardTypeEx) */
         CopyDoubleWords(dst, gModFieldIconData + DATA_EXTRA(id) + (2 + pose) * FRAME_SIZE, FRAME_SIZE);
@@ -256,7 +266,8 @@ static void BuildCardSprite(u32 slot, u16 id, u32 type, u32 pose)
     mini = gModFieldIconData + DATA_MINIS + id * MINI_STRIDE;
     for (r = 0; r < h; r++) {
         for (c = 0; c < w; c++) {
-            u32 color = ModFieldIconMiniColor(MiniByte(mini, map[4 + c], map[4 + 32 + r]));
+            u32 color = turned ? ModFieldIconMiniColor(MiniByte(mini, MINI_W - 1 - map[4 + c], MINI_H - 1 - map[4 + 32 + r]))
+                               : ModFieldIconMiniColor(MiniByte(mini, map[4 + c], map[4 + 32 + r]));
 
             if (color != 0)
                 PutCellPixel(dst, x0 + c, y0 + r, color - OBJ_ART_SHIFT);
@@ -274,7 +285,7 @@ static u16 CardSpriteTile(u16 id, u32 pose, u32 *is8bpp)
     u32 i;
 
     id &= CARD_ID_MASK;
-    if (pose >= SPRITE_POSES)
+    if (pose > POSE_TURNED)
         pose = 0;
     for (i = 0; i < SPRITE_SLOTS; i++) {
         struct ModCardSpriteSlot *s = &gModCardSprites[i];
@@ -311,6 +322,16 @@ void ModAddCardSprite(u32 yx, u16 shape, u16 id, u16 attr2)
     u16 tile = CardSpriteTile(id, 0, &is8bpp);
 
     AddSprite(yx, is8bpp ? shape | ATTR0_256COLOR : shape, tile | attr2);
+}
+
+/* DrawHandCards (duel_field_screen.c): a face-up hand card's 32x32 sprite (attr1 0x80, priority 1); the opponent's
+ * (player 1, across the board) has its art turned 180 degrees, as on the field (ModFieldCardTile). */
+void ModAddHandCardSprite(u32 yx, u16 id, u32 player)
+{
+    u32 is8bpp;
+    u16 tile = CardSpriteTile(id, (player & 1) ? POSE_TURNED : 0, &is8bpp);
+
+    AddSprite(yx, is8bpp ? 0x80 | ATTR0_256COLOR : 0x80, tile | 0x400);
 }
 
 /* AddAffineSprite for face-up card `id` in pose `pose` (0-2: the flip's frames). */

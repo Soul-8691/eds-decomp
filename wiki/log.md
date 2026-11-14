@@ -3203,3 +3203,11 @@ updated: 2026-09-29
 - tools/format_packs.py: card_rarity_rank drops Ultimate Rare when a card lists another rarity (Rare/Super/Ultra from SOD on had been weight 10).
 - Regenerated build/include/format_pack_data.h (make demo) and PACKS.md.
 - [[pack-shop]].
+
+## [2026-11-14] progress | Opponent field card art turned 180 degrees
+- src/mod_field_icons.c: ModFieldCardTile reads player 1's miniature rotated 180 degrees (zones, Graveyard and banished tops; upright and sideways).
+- [[card-icons]].
+
+## [2026-11-14] progress | Opponent revealed hand art turned 180 degrees
+- src/mod_field_icons.c: ModAddHandCardSprite, sprite cache pose POSE_TURNED (3). src/duel_field_screen.c: DrawHandCards calls it (.text end 0x0807F510).
+- [[card-icons]].
