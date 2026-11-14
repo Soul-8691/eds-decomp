@@ -27,6 +27,7 @@ void MemClear16Wide(void *dst, u32 size) asm("MemClear16");
 void DeckEdit_ResetFrameSlotsWide(void *p) asm("DeckEdit_ResetFrameSlots");
 void DeckEdit_ResetCardMoveWide(void *p) asm("DeckEdit_ResetCardMove");
 void DeckEdit_CalcScrollBar(u16 a, u16 b, u16 *out);
+int ModDeckEditMayLeave(void);  /* mod: src/mod_banlists.c */
 
 /* Deck Edit step: reset the card list state and re-sync the list slide. */
 int DeckEdit_ResetListView(void)
@@ -462,6 +463,8 @@ int DeckEdit_Update(void)
             if (DECK_TWEEN_STATE != TICK_RUNNING) {
                 switch (keys) {
                 case B_BUTTON:
+                    if (!ModDeckEditMayLeave())     /* mod: make release, a Main Deck under 40 (mod_banlists.c) */
+                        break;
                     FadeStartWide(0, 0x180, 0, PSTATE + 0x618);
                     gDeckEdit.exitMode = DECKEDIT_EXIT_LEAVE;
                     PlaySE(SE_CANCEL);

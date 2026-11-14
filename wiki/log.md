@@ -3174,3 +3174,8 @@ updated: 2026-09-29
 ## [2026-11-13] progress | Cards of formats not unlocked yet cost 3000 DP
 - src/mod_dp.c: POOL_CARD_COST is now DEFAULT_CARD_COST (100, in an unlocked pool but in no unlocked usage table); the old 100 DP fallback for a card in no unlocked pool is NON_CARD_POOL_COST (3000), which also replaces OUTSIDE_LATEST_POOL_COST.
 - tools/cardprices.py, tools/packs_md.py, CARD_PRICES.md, PACKS.md; [[duelist-points]].
+
+## [2026-11-13] progress | Release: 40-card Main Deck enforced in Deck Edit and on banlist switches
+- src/mod_banlists.c: MainDeckCardsKept, ModDeckEditMayLeave; the Banlists menu refuses a switch that would leave the Main Deck under 40 (release only).
+- src/deck_edit_view.c: DeckEdit_Update B asks ModDeckEditMayLeave.
+- [[banlists-menu]], [[release-build]].

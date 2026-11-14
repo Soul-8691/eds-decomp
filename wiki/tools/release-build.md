@@ -4,7 +4,7 @@ type: tool
 status: draft
 confidence: high
 sources: [rom-analysis]
-updated: 2026-10-26
+updated: 2026-11-13
 ---
 # Release build (`make release`)
 
@@ -33,6 +33,8 @@ updated: 2026-10-26
 | Format check against opponents (`BanlistBlocksDuel`, mod_banlist.c) | none | the opponent's format |
 | Deck opponents page (Chaos Turbo, Warrior, Goat Control; mod_opponents.c) | page 4 of the opponent select | not there (`DECK` entries hidden, `PAGE_COUNT` 3) |
 | Banlist switch needs a possible 40-card Main Deck (`MainDeckCapacity`, mod_banlists.c) | no check | checked |
+| Banlist switch must leave the saved Main Deck at 40+ (`MainDeckCardsKept`, mod_banlists.c) | no check | checked |
+| Leaving Deck Edit with a Main Deck under 40 (`ModDeckEditMayLeave`, mod_banlists.c) | allowed | refused (`SE_ERROR`) |
 
 ## Checked
 Both builds were checked in the preprocessed units:

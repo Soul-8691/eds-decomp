@@ -4,7 +4,7 @@ type: game
 status: draft
 confidence: medium
 sources: [rom-analysis]
-updated: 2026-10-26
+updated: 2026-11-13
 ---
 # Banlists menu (mod)
 
@@ -64,6 +64,20 @@ target banlist:
 - **Skipped.** Fusion Monsters and tokens.
 - **Not counted.** The engine's extra shared-limit pairs (the two Polymerizations, the Dark Magician / Harpie Lady
   prints) are counted separately.
+
+A switch is also refused (make release only, since 2026-11-13; "<name>: your Main Deck would keep N (40 needed).")
+when the saved Main Deck would keep fewer than 40 cards under the target banlist (`MainDeckCardsKept(n)`): per card
+id, its Main Deck copies up to `DeckLimitIn` (the trim takes Side Deck copies first, so the Main Deck keeps
+min(copies, limit)); Extra Deck monsters (`DeckEdit_IsFusionMonster`) are not counted. So a 40-card deck holding a
+card the target format forbids or doesn't have must first get spare cards (up to 60) before the switch.
+
+## Leaving Deck Edit (make release)
+Deck Edit's B (`DeckEdit_Update`, deck_edit_view.c, one call) asks `ModDeckEditMayLeave`. In make release it
+refuses (`SE_ERROR`, no message) while the Main Deck has under 40 cards that aren't Extra Deck monsters
+(`MainDeckCardsKept` of the banlist in use), unless `MainDeckCapacity` of that banlist is under 40 (the collection
+can't make 40, so the player isn't shut in) or the deck being built is Solomon's/Debug's (`ModRecipeBuilding`).
+Before this, Deck Edit could be left with any deck; only the duels refused it (`DECK_MIN_CARDS`,
+`Campaign_StartDay`, `LinkBattle_Init`).
 
 ## Scene
 Laid out like [[deck-recipes]]:

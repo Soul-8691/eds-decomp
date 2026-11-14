@@ -8,7 +8,9 @@
  *                         the CPU's decks keep the game's own list (GetCardCopyLimit, RemoveOverLimitDeckCards).
  *   BanlistsMenu_BuildLabel  the "Banlists" menu label (MainMenu_Init, tiles 0x280-0x2BF; BuildMenuLabel)
  *   CB_Banlists           the scene: the banlists, A puts one in use (refused when the player's cards could not make
- *                         a 40-card Main Deck under it: MainDeckCapacity), B goes back
+ *                         a 40-card Main Deck under it: MainDeckCapacity, or when the saved Main Deck would
+ *                         keep fewer than 40 cards: MainDeckCardsKept; make release only), B goes back
+ *   ModDeckEditMayLeave   Deck Edit's B: refused in make release while the Main Deck has under 40 cards
  *   BanlistMainDeckCapacity, SwitchToBanlist  the same check and switch for a calendar event's challenger
  *                         (ModEventChallenger, CB_ChallengerRecipes)
  * The banlists come from banlists/<name>_ban.json (tools/banlist.py --all: build/include/banlists.h), in the order
@@ -225,6 +227,49 @@ static int MainDeckCapacity(int n)
     return total;
 }
 
+/* src/deck_edit_widgets.c: 1 for an Extra Deck monster (Fusion, Synchro, Xyz, Link: the Fusion Deck's cards). */
+u16 DeckEdit_IsFusionMonster(u16 id);
+
+/* The saved Main Deck's cards that are not Extra Deck monsters and that banlist n lets it keep: per card id, its
+ * copies up to its limit there (SetActiveBanlist's trim takes the Side Deck's copies first, so the Main Deck keeps
+ * min(copies, limit)). */
+static int MainDeckCardsKept(int n)
+{
+    int i, j, kept = 0;
+
+    for (i = 0; i < gSaveData.deckSize; i++) {
+        u16 id = gSaveData.deck[i];
+        u16 number = gCardIdToNumber[id & CARD_ID_MASK];
+        int earlier = 0;
+
+        if (DeckEdit_IsFusionMonster(id))
+            continue;
+        if (number >= CARD_NUMBER_ALT_ART && number != 0xFFFF)
+            number -= CARD_NUMBER_ALT_ART;
+        for (j = 0; j < i; j++) {
+            if (gSaveData.deck[j] == id)
+                earlier++;
+        }
+        if (earlier < DeckLimitIn(n, number))
+            kept++;
+    }
+    return kept;
+}
+
+/* Deck Edit's B (DeckEdit_Update, deck_edit_view.c): 1 if the player may leave. In make release a Main Deck of
+ * fewer than 40 cards (Extra Deck monsters not counted) is refused with the error sound, unless the collection
+ * cannot make 40 under the banlist in use (MainDeckCapacity), so a player is never shut in. */
+int ModDeckEditMayLeave(void)
+{
+    int n = GetActiveBanlist();
+
+    if (MOD_RELEASE && !ModRecipeBuilding() && MainDeckCardsKept(n) < BANLIST_MIN_MAIN_DECK && MainDeckCapacity(n) >= BANLIST_MIN_MAIN_DECK) {
+        PlaySE(SE_ERROR);
+        return 0;
+    }
+    return 1;
+}
+
 /* Put banlist n in use and move the saved decks' copies over its limits back to the trunk; returns the cards moved. */
 static int SetActiveBanlist(int n)
 {
@@ -311,6 +356,7 @@ static const char sStrAlready[] = " is already in use.";
 static const char sStrMoved[] = " card(s) went back to the trunk.";
 static const char sStrTooFew[] = ": your cards make only ";
 static const char sStrTooFewEnd[] = " (40 needed).";
+static const char sStrDeckKeeps[] = ": your Main Deck would keep ";
 
 static char *AppendStr(char *dst, const char *src)
 {
@@ -419,6 +465,10 @@ static int HandleInput(void)
         } else if (MOD_RELEASE && (moved = MainDeckCapacity(n)) < BANLIST_MIN_MAIN_DECK) {
             /* make release: not enough cards for a 40-card Main Deck under it: refused (no check in make) */
             AppendStr(AppendNum(AppendStr(p, sStrTooFew), moved), sStrTooFewEnd);
+            PlaySE(SE_ERROR);
+        } else if (MOD_RELEASE && (moved = MainDeckCardsKept(n)) < BANLIST_MIN_MAIN_DECK) {
+            /* make release: the switch would leave the Main Deck under 40 cards: refused */
+            AppendStr(AppendNum(AppendStr(p, sStrDeckKeeps), moved), sStrTooFewEnd);
             PlaySE(SE_ERROR);
         } else {
             moved = SetActiveBanlist(n);
