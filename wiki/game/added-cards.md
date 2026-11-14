@@ -914,6 +914,16 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
   deck check, Needle Worm, the White Hole set choice in ai_turn_steps.c) don't play it.
 - Checked in the source and the build; not tested in an emulator.
 
+### The CPU's second Swords of Revealing Light (2026-11-14)
+- **Before.** Swords is in `gAiGenericSpells`, which `AiPlaySpells` (state `AI_SPELLS_LISTS`) plays whenever it can,
+  so the CPU played a second copy the same turn while its first was still up. Only the Exodia step
+  (`AI_SPELLS_EXODIA_SWORDS`) checked for one already on the field.
+- **Now.** `AiTryPlaySpellTrap` refuses Swords while the CPU has a face-up, not disabled Swords
+  (`CountActiveCardsOnFieldExcept(1, CARD_SWORDS_OF_REVEALING_LIGHT, -1)`), from the hand or a Set copy. It plays the
+  next one once the first is destroyed at the end of its third turn (or earlier). Setting one is still allowed.
+  `.text` end 0x0807F52C (+0x1C).
+- Checked in the source and the build; not tested in an emulator.
+
 ### The CPU uses Solemn Judgment (2026-10-29)
 - **Before.** The vanilla CPU never activated Solemn Judgment (number 1028). `AiShouldActivateSetCard` (ai_summon.c)
   has no case for it, so it never answered a summon, and `AiTryChainResponse` never chains it.

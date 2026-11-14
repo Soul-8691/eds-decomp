@@ -3211,3 +3211,7 @@ updated: 2026-09-29
 ## [2026-11-14] progress | Opponent revealed hand art turned 180 degrees
 - src/mod_field_icons.c: ModAddHandCardSprite, sprite cache pose POSE_TURNED (3). src/duel_field_screen.c: DrawHandCards calls it (.text end 0x0807F510).
 - [[card-icons]].
+
+## [2026-11-14] progress | CPU: no second Swords of Revealing Light while one is up
+- src/ai_deck.c: AiTryPlaySpellTrap refuses Swords while the CPU has an active one (.text end 0x0807F52C).
+- [[added-cards]], AI_IMPROVEMENTS.md.

@@ -273,6 +273,9 @@ int AiTryPlaySpellTrap(u16 number)
 #endif
     if (number == CARD_MEGAMORPH && !AiWantsMegamorph())
         return 0;
+    /* added: no second Swords of Revealing Light while the CPU's own is still face up (wait until it runs out) */
+    if (number == CARD_SWORDS_OF_REVEALING_LIGHT && CountActiveCardsOnFieldExcept(1, CARD_SWORDS_OF_REVEALING_LIGHT, -1))
+        return 0;
 #if defined(HAS_CARD_SCAPEGOAT) && defined(HAS_CARD_SHEEP_TOKEN)
     if (number == CARD_SCAPEGOAT && !AiWantsScapegoat())
         return 0;
