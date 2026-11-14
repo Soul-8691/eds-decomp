@@ -766,6 +766,13 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
   with exactly that much did not count as winning, so a 1400 attacker held back. `AiEvalAttack` and
   `AiCanBeatMonster` (ai_picks.c) now count a face-down Defense Position monster as beaten by an attacker with the
   guessed DEF or more. Release `.text` 0x080806AC.
+- **Effect monsters go face up (2026-11-13, the user's report).** The CPU Set Tribe-Infecting Virus against two
+  stronger face-up monsters (1600 ATK, so it would be run over), and a Set Virus can't use its Ignition Effect.
+  `AiSummonFaceUpOnOpenField` now first asks `AiSummonFaceUpForEffect`: the Virus is summoned face up in Attack
+  Position when its best declaration (`AiBestVirusType`, less 1 if that Type is its own, Aqua) destroys more of the
+  human's face-up monsters than the CPU's, and a card stays in hand for the discard. The Main Phase then reaches
+  `AI_MAIN_MONSTER_EFFECTS` and uses it, even if the monster left over can run the Virus over. Checked in the
+  source and the build; not tested in an emulator.
 
 ### Cyber Dragon (2026-10-29)
 - Effect Monster (Level 5, LIGHT Machine, 2100/1600): "If only your opponent controls a monster, you can Special

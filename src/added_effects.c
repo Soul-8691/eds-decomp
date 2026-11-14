@@ -11218,6 +11218,30 @@ int AiRecruiterCopyEntry(u16 cardId)
  * higher ATK; at 1700+ ATK only when a face-up opponent leads by AI_RETREAT_GAP (same as AiShouldRetreatToDefense). */
 #define AI_SUMMON_ATTACK_ATK 1400
 
+#ifdef HAS_CARD_TRIBE_INFECTING_VIRUS
+static int AiBestVirusType(int *gain);
+#endif
+
+/* A monster whose Ignition Effect the CPU would use this turn goes face up even when it would be run over (a Set one
+ * can't use it): Tribe-Infecting Virus, when declaring a Type would destroy more of the human's face-up monsters than
+ * the CPU's (the Virus itself counted, Aqua) and a card is left in hand to discard after the summon. */
+static int AiSummonFaceUpForEffect(u16 id)
+{
+    switch (CardNumberOfId(id)) {
+#ifdef HAS_CARD_TRIBE_INFECTING_VIRUS
+    case CARD_TRIBE_INFECTING_VIRUS: {
+        int gain, type = AiBestVirusType(&gain);
+
+        if ((u32)type == CARD_STATS_TYPE(gCardStats[id & CARD_ID_MASK]))
+            gain--;                         /* it would destroy the Virus too */
+        return gain > 0 && gDuelPlayers[AI_PLAYER].handCount >= 2;
+    }
+#endif
+    default:
+        return 0;
+    }
+}
+
 int AiSummonFaceUpOnOpenField(u16 id)
 {
     u32 stats = gCardStats[id & CARD_ID_MASK];
@@ -11225,6 +11249,8 @@ int AiSummonFaceUpOnOpenField(u16 id)
     int atk = CARD_STATS_ATK(stats) * CARD_STATS_POINTS_SCALE, zone;
     int threat;
 
+    if (AiSummonFaceUpForEffect(id))
+        return 1;
     if (CARD_STATS_TYPE(stats) > CARD_TYPE_REPTILE || atk < AI_SUMMON_ATTACK_ATK)
         return 0;
     if (HasFlipEffect(number, 0) || HasFlipEffect(number, 1))

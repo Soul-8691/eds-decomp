@@ -3183,3 +3183,7 @@ updated: 2026-09-29
 ## [2026-11-13] progress | Six small TCG packs merged into three
 - tools/format_packs.py: PACK_MERGE_INTO, tcg_pack_specs, tcg_spec_entries; tools/packs_md.py uses them. Dark Crisis -> Ancient Sanctuary; Soul of the Duelist, Rise of Destiny -> Flaming Eternity; The Lost Millennium, Cybernetic Revolution, Elemental Energy -> Shadow of Infinity. 50 -> 44 packs. PACKS.md regenerated.
 - [[pack-shop]].
+
+## [2026-11-13] progress | CPU summons Tribe-Infecting Virus face up to use its effect
+- src/added_effects.c: AiSummonFaceUpForEffect, asked first by AiSummonFaceUpOnOpenField.
+- [[added-cards]].
