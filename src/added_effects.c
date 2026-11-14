@@ -12628,8 +12628,9 @@ int AiActivationWouldLoseLp(struct ChainEntry *card)
 
 /* ---- Pot of Greed / Graceful Charity before other Main Phase plays -----------------------------------------------
  * AiStepPlaySimpleSpells and AiStepMainPhase call these before heal/burn Spells, Thunder Dragon, summons, and the
- * rest of AiPlaySpells. Each Main Phase 1 / Main Phase 2 tries Pot of Greed, then Graceful Charity, once both are
- * unavailable. Hand activations finish through AiPlaySpells' confirm/wait substates. */
+ * rest of AiPlaySpells. Each Main Phase 1 / Main Phase 2 tries Pot of Greed, then Graceful Charity, then a Set Jar
+ * of Greed that can be activated, until neither Spell is in hand (a card drawn by one is tried in turn). Hand activations finish through AiPlaySpells' confirm/wait
+ * substates. */
 
 static u16 AiPriorityDrawPhaseMarker(void)
 {
@@ -12658,7 +12659,24 @@ int AiTryPlayCpuPriorityDrawSpells(void)
         return 1;
     if ((u16)AiTryPlaySpellTrap(CARD_GRACEFUL_CHARITY))
         return 1;
-    gModDuel.aiPriorityDrawDone = marker;
+#ifdef HAS_CARD_JAR_OF_GREED
+    /* A Set Jar of Greed that can be activated (not Set this turn): the Set-card path of AiTryPlaySpellTrap only (a
+     * Trap is never played from the hand) */
+    if (CountActivatableSetCards(AI_PLAYER, CARD_JAR_OF_GREED) > 0 && (u16)AiTryPlaySpellTrap(CARD_JAR_OF_GREED))
+        return 1;
+#endif
+    /* Done for this phase only in a Main Phase with neither in hand. A refusal with one in hand is tried again next
+     * call: the step's first call comes before Main Phase 1 has begun (AiStepStartMainPhase only queues it), where
+     * the activation is refused; marking it done there left Pot of Greed / Graceful Charity to AiPlaySpells, after the
+     * summon and the other Spells. */
+    if ((gDuel.phase == PHASE_MAIN1 || gDuel.phase == PHASE_MAIN2)
+        && FindHandCardByNumber(AI_PLAYER, CARD_POT_OF_GREED) < 0
+        && FindHandCardByNumber(AI_PLAYER, CARD_GRACEFUL_CHARITY) < 0
+#ifdef HAS_CARD_JAR_OF_GREED
+        && CountActivatableSetCards(AI_PLAYER, CARD_JAR_OF_GREED) == 0
+#endif
+        )
+        gModDuel.aiPriorityDrawDone = marker;
     return 0;
 }
 

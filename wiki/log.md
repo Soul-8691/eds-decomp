@@ -3191,3 +3191,7 @@ updated: 2026-09-29
 ## [2026-11-13] progress | CPU summons Exiled Force face up to use its effect
 - src/added_effects.c: AiSummonFaceUpForEffect case for Exiled Force.
 - [[added-cards]].
+
+## [2026-11-13] progress | CPU draws first: Pot of Greed, Graceful Charity, Jar of Greed
+- src/added_effects.c: AiTryPlayCpuPriorityDrawSpells marks the phase done only in a Main Phase with nothing left to try; tries a Set Jar of Greed third.
+- AI_IMPROVEMENTS.md; [[added-cards]].

@@ -3117,6 +3117,21 @@ A Normal Trap for the response window a summon opens: Normal, Flip or Special Su
 with the summoned monster at `loc0`, like Trap Hole's prepare but for any monster. It resolves with Dark Hole's
 handler (`EffectDarkHoleResolve`), which destroys every monster, the opponent's first.
 
+### CPU draws first: Pot of Greed, Graceful Charity, Jar of Greed (2026-11-13)
+- **The report.** The CPU played Pot of Greed and Graceful Charity after its other cards.
+- **Cause (from the source).** `AiTryPlayCpuPriorityDrawSpells` (added_effects.c), the first call of
+  `AiStepPlaySimpleSpells` and of `AiStepMainPhase`'s summon phase, marked itself done for the turn's Main Phase
+  1 after one failed try. Its first call comes on the frame after `AiStepStartMainPhase` only queues
+  `DUEL_CMD_MAIN1_PHASE`, and the Main Phase 1 marker equals that frame's (`gDuel.turnCount`), so a refusal there
+  (hypothesis: the phase hadn't begun) left both cards to `AiPlaySpells`, after the summon and the other Spells. A
+  Magic Jammer roll in `AiTryPlaySpellTrap` could do the same.
+- **Fix.** The marker is set only in Main Phase 1 or 2 with neither card in hand (and no Set Jar of Greed that can be
+  activated); otherwise every call tries again.
+- **Jar of Greed.** A Set one that can be activated (`CountActivatableSetCards`, so not one Set this turn) is now tried
+  third, through `AiTryPlaySpellTrap`'s Set-card path. Before, the CPU used it only in response windows
+  (`AiShouldActivateAddedCard`) or through `AiPlayAddedCards`, after other plays.
+- Checked in the source and the build; not tested in an emulator.
+
 ### Tribe-Infecting Virus (2026-10-25)
 Main Phase menu effect, once per turn: discard 1 card (Magic Jammer's cost prompt), declare a Monster Type (DNA
 Surgery's type prompt), destroy every face-up monster of that type on the field, the opponent's first. It does not

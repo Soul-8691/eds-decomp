@@ -24,7 +24,7 @@ Campaign duelists in Yak's YGO Hack use a much stronger opponent AI than vanilla
 
 ## Card use
 
-- At the start of each Main Phase (before heal/burn Spells, Thunder Dragon, summons, and its other spell logic), it activates **Pot of Greed** and then **Graceful Charity** from its hand when it can.
+- At the start of each Main Phase (before heal/burn Spells, Thunder Dragon, summons, and its other spell logic), it activates **Pot of Greed** and then **Graceful Charity** from its hand, then a **Jar of Greed** it Set on an earlier turn, so it draws before it plays anything else. Cards drawn by them are tried in turn.
 - It plays its Spells after its Normal Summon, in both Main Phases. The original CPU skipped its Spells on any turn it summoned to attack (always, with your field empty), after a Tribute Summon, and in Main Phase 2.
 - It uses Thunder Dragon at the start of its Main Phase. It discards one to add a single copy, then discards the new copy for the last one, then discards that one too, finding nothing. All three end up in its Graveyard. A lone copy, with none left in its Deck and not just added, stays in its hand.
 - It plays Nobleman of Crossout on your face-down monsters (the original CPU never used it).
