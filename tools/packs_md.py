@@ -19,9 +19,10 @@ import format_packs as fp  # noqa: E402
 from cardprices import (  # noqa: E402
     BASE,
     EXTRA_DIVISOR,
-    NORM_MAX,
-    NORM_MIN,
-    NO_USAGE_PRICE,
+    PRICE_MAX,
+    PRICE_MIN,
+    DEFAULT_CARD_COST,
+    NON_CARD_POOL_COST,
     format_prices,
     card_names,
 )
@@ -220,13 +221,15 @@ def pack_prices_section() -> list[str]:
         '## Password machine prices (DP)',
         '',
         'Same formula as `tools/cardprices.py` / `src/mod_dp.c`. Each table lists only cards that format\'s '
-        'usage file mentions. At runtime, **GetCardCost** uses the newest unlocked format whose decks use the card.',
+        'usage file mentions. At runtime, **GetCardCost** charges a card outside the newest format\'s card pool '
+        f'**{PRICE_MAX} DP**; otherwise it uses the newest unlocked format whose decks use the card.',
         '',
-        f'- **Usage score:** main+side share × {BASE} + extra share × {BASE}/{EXTRA_DIVISOR}; '
+        f'- **Usage score:** main+side copies per deck × {BASE} + extra copies per deck × {BASE}/{EXTRA_DIVISOR}; '
         f'×3 if Limited, ×1.5 if Semi-Limited.',
-        f'- **Scaled price:** linear map per format so the cheapest listed card is **{NORM_MIN} DP** '
-        f'and the priciest is **{NORM_MAX} DP**.',
-        f'- **Not in any usage table:** **{NO_USAGE_PRICE} DP** (`POOL_CARD_COST` / `DEFAULT_CARD_COST`).',
+        f'- **Price:** the score, kept between **{PRICE_MIN} DP** and **{PRICE_MAX} DP** (a Limited one-of in '
+        'every deck: 1000 × 3 = 3000; a Semi-Limited two-of: 2000 × 1.5 = 3000).',
+        f'- **In an unlocked pool, in no unlocked usage table:** **{DEFAULT_CARD_COST} DP** (`DEFAULT_CARD_COST`).',
+        f'- **In no unlocked pool, or outside the newest pool:** **{NON_CARD_POOL_COST} DP** (`NON_CARD_POOL_COST`).',
         '',
         '| Format | Cards priced |',
         '|---|---:|',

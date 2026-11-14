@@ -6,14 +6,18 @@
 
 One price table per format, in the order of tools/banlist.py's BANLISTS (the banlist indices), from
 usage/<stem>.json ("decks_processed" decks; "total" = main + side and "extra" lists of
-{ "name", "count", "copies": {"1": decks, "2": decks, "3": decks} }) and the format's banlist:
-  main + side   the share of decks that run the card ("total": the sum of its "copies" over decks_processed) * 1000
-  extra         the same share of its "extra" entry * 1000 / 10 (the extra deck is worth less)
-the two added, times 3 if the card is limited and 1.5 if semi-limited in that format. Each format's raw scores are
-then linearly scaled so the cheapest card in that table is NORM_MIN DP and the most expensive is NORM_MAX DP.
-A table lists only the cards the format's decks use. At run time GetCardCost (src/mod_dp.c) takes the price from
-the newest unlocked format whose decks use the card; a card none of them uses costs NO_USAGE_PRICE (POOL_CARD_COST)
-if it is in an unlocked format's card pool, else DEFAULT_CARD_COST (also NO_USAGE_PRICE).
+{ "name", "count", "copies": {"1": decks, "2": decks, "3": decks} }, "count" being the copies over all decks) and the
+format's banlist:
+  main + side   the copies an average deck runs ("total" count / decks_processed) * 1000
+  extra         the same for its "extra" entry * 1000 / 10 (the extra deck is worth less)
+the two added, times 3 if the card is limited and 1.5 if semi-limited in that format, then clamped to
+[PRICE_MIN, PRICE_MAX]. So a Limited card in every deck is 1000 x 3 = 3000 DP, a Semi-Limited one played at two
+copies everywhere 2000 x 1.5 = 3000 DP, an unlimited three-of 3000 DP.
+A table lists only the cards the format's decks use. At run time GetCardCost (src/mod_dp.c) charges
+NON_CARD_POOL_COST for a card outside the latest format's card pool (LATEST_FORMAT_BANLIST, the last of BANLISTS);
+otherwise it takes the price from the newest unlocked format whose decks use the card; a card none of them uses costs
+DEFAULT_CARD_COST if it is in an unlocked format's card pool, else (a card of a format not unlocked yet)
+NON_CARD_POOL_COST.
 Names are matched as tools/banlist.py matches them (its aliases included).
 """
 import json
@@ -25,35 +29,29 @@ import banlist  # noqa: E402
 BASE = 1000
 EXTRA_DIVISOR = 10
 LIMIT_FACTOR = {1: 3.0, 2: 1.5}         # limited, semi-limited
-NORM_MIN = 200                          # scaled usage price floor (per format table)
-NORM_MAX = 3000                         # scaled usage price ceiling (per format table)
-NO_USAGE_PRICE = 100                    # src/mod_dp.c POOL_CARD_COST and DEFAULT_CARD_COST
-DEFAULT_CARD_COST = NO_USAGE_PRICE      # for --md copy
+PRICE_MIN = 200                         # usage price floor
+PRICE_MAX = 3000                        # usage price ceiling
+DEFAULT_CARD_COST = 100                 # src/mod_dp.c: in an unlocked pool, no unlocked format's decks use it
+NON_CARD_POOL_COST = 3000               # src/mod_dp.c: in no unlocked pool, or not in the latest format's pool
 
 
 def share(entry, decks):
+    """The share of the format's decks that run the card (pack weights, tools/format_packs.py; not prices)."""
     return sum(entry['copies'].values()) / decks
 
 
-def normalize_prices(prices):
-    """Scale raw usage scores in `prices` to integers in [NORM_MIN, NORM_MAX]."""
-    if not prices:
-        return prices
-    lo_raw = min(prices.values())
-    hi_raw = max(prices.values())
-    if hi_raw <= lo_raw:
-        mid = (NORM_MIN + NORM_MAX) // 2
-        return {n: mid for n in prices}
-    span = hi_raw - lo_raw
-    out = {}
-    for n, raw in prices.items():
-        t = (raw - lo_raw) / span
-        out[n] = int(NORM_MIN + t * (NORM_MAX - NORM_MIN) + 0.5)
-    return out
+def copies_per_deck(entry, decks):
+    """The copies of the card an average deck of the format runs."""
+    return entry['count'] / decks
+
+
+def clamp_prices(prices):
+    """Round raw usage scores in `prices` to integers in [PRICE_MIN, PRICE_MAX]."""
+    return {n: min(PRICE_MAX, max(PRICE_MIN, int(raw + 0.5))) for n, raw in prices.items()}
 
 
 def format_usage_raw(stem, lookup, missing):
-    """{card number: raw usage score} of the cards format `stem`'s decks use, before linear DP scaling."""
+    """{card number: raw usage score} of the cards format `stem`'s decks use, before clamping."""
     usage = json.load(open(f'usage/{stem}.json', encoding='utf-8'))
     decks = usage['decks_processed']
     limits, _ = banlist.read_limits(f'banlists/{stem}_ban.json', lookup, missing)
@@ -65,13 +63,13 @@ def format_usage_raw(stem, lookup, missing):
                 missing.append(entry['name'])
                 continue
             for number in numbers:
-                prices[number] = prices.get(number, 0.0) + share(entry, decks) * BASE * factor
+                prices[number] = prices.get(number, 0.0) + copies_per_deck(entry, decks) * BASE * factor
     return {n: p * LIMIT_FACTOR.get(limits.get(n), 1.0) for n, p in prices.items()}
 
 
 def format_prices(stem, lookup, missing):
     """{card number: DP price} of the cards format `stem`'s decks use."""
-    return normalize_prices(format_usage_raw(stem, lookup, missing))
+    return clamp_prices(format_usage_raw(stem, lookup, missing))
 
 
 def main():
@@ -79,7 +77,8 @@ def main():
     lookup = banlist.card_lookup()
     missing = []
     lines = ['/* Generated by tools/cardprices.py from usage/*.json and banlists/*_ban.json. Do not edit. */',
-             '/* DP to buy a card with a password, per format (banlist index): { card number, price }, sorted. */', '']
+             '/* DP to buy a card with a password, per format (banlist index): { card number, price }, sorted. */', '',
+             f'#define LATEST_FORMAT_BANLIST {len(banlist.BANLISTS) - 1}   /* {banlist.BANLISTS[-1][0]} */', '']
     rows = []
     for i, (name, stem, _pools) in enumerate(banlist.BANLISTS):
         prices = format_prices(stem, lookup, missing)
@@ -117,13 +116,17 @@ def markdown(out):
     lines = ['# Card Prices', '',
              'The DP the card password machine charges, per format, from the format\'s deck usage statistics '
              '(`usage/`). Generated by `python3 tools/cardprices.py --md CARD_PRICES.md`; do not edit.', '',
-             '- **Price.** The share of the format\'s decks that run the card (main + side) times 1000, plus its '
-             'Extra Deck share times 100; times 3 if the card is Limited in that format, times 1.5 if Semi-Limited; '
-             f'then scaled linearly so the format\'s cheapest listed card is {NORM_MIN} DP and the priciest is '
-             f'{NORM_MAX} DP.',
+             '- **Price.** The copies of the card an average deck of the format runs (main + side) times 1000, '
+             'plus its Extra Deck copies per deck times 100; times 3 if the card is Limited in that format, times 1.5 '
+             f'if Semi-Limited; then kept between {PRICE_MIN} and {PRICE_MAX} DP. A Limited card in every deck is '
+             '1000 x 3 = 3000 DP; a Semi-Limited card run at two copies is 2000 x 1.5 = 3000 DP.',
+             f'- **Outside the card pools.** A card not in the {banlist.BANLISTS[-1][0]} card pool always costs '
+             f'{NON_CARD_POOL_COST} DP, whatever format it was priced in; so does a card in no unlocked format\'s '
+             'card pool (a card of a format you have not unlocked yet).',
              '- **Which format.** The game uses the newest format you have unlocked whose decks use the card.',
              '- **Not listed.** Cards a format\'s decks don\'t use: those keep their price from an earlier format, '
-             f'or cost {NO_USAGE_PRICE} DP if they never appear in any unlocked format\'s usage table.', '']
+             f'or cost {DEFAULT_CARD_COST} DP if they are in an unlocked format\'s card pool but in no unlocked '
+             'format\'s usage table.', '']
     lines.append('| Format | Cards priced |')
     lines.append('|---|---|')
     tables = []

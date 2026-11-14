@@ -3165,3 +3165,12 @@ updated: 2026-09-29
 
 ## [2026-11-13] progress | README_WIP assembled from the captures
 - README_WIP.md: 33 placeholders replaced by the captured PNGs and GIFs; the 5 videos as poster stills (screenshots/videos/posters/, ffmpeg at 40%) linking to their .mp4. Left as placeholders: the 19 HMA slots, Mobius x2, Rom Patcher, the test runner, the video reviewer and the trailer (git-ignored).
+
+## [2026-11-13] progress | Password card prices: copies per deck, 3000 DP outside the latest pool
+- tools/cardprices.py: price = copies per deck (count / decks) x 1000 (+ extra / 10), x3 limited, x1.5 semi-limited, clamped 200-3000; the per-format linear rescale is gone. `share` kept for pack weights.
+- src/mod_dp.c: GetCardCost charges 3000 for a card outside the Reaper card pool (LATEST_FORMAT_BANLIST).
+- tools/packs_md.py, CARD_PRICES.md, PACKS.md regenerated; [[duelist-points]] updated.
+
+## [2026-11-13] progress | Cards of formats not unlocked yet cost 3000 DP
+- src/mod_dp.c: POOL_CARD_COST is now DEFAULT_CARD_COST (100, in an unlocked pool but in no unlocked usage table); the old 100 DP fallback for a card in no unlocked pool is NON_CARD_POOL_COST (3000), which also replaces OUTSIDE_LATEST_POOL_COST.
+- tools/cardprices.py, tools/packs_md.py, CARD_PRICES.md, PACKS.md; [[duelist-points]].
