@@ -3225,3 +3225,7 @@ updated: 2026-09-29
 - make release and make release-demo-extra (the latter failed once on effect_prepare3.o, then built on a retry with no change).
 - run_tests.ps1 -Media: title_screen (eds_release_demo_extra.gba), duelists_debug, format_check, banlist_refused, unlock (eds_release.gba): all PASS. stitch_media.py trailer redone (it opens on Title Screen.png).
 - [[readme-media]].
+
+## [2026-11-15] progress | READMEs: companion C injection template (CFRU eternal-duelist-soul)
+- README.md, README_WIP.md: a NOTE in "Editing with Hex Maniac Advance" linking Soul-8691/Complete-Fire-Red-Upgrade @ eternal-duelist-soul, for code edits to the compiled ROM alongside HMA.
+- [[hma-toml]].

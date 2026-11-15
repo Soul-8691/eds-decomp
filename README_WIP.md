@@ -679,6 +679,11 @@ in that HMA build; it is not committed). The `.toml` files are git-ignored. Open
 beside it, and the mod's data shows up as named, editable tables. See [wiki/tools/hma-toml.md](wiki/tools/hma-toml.md)
 for every anchor.
 
+> [!NOTE]
+> **C injection alongside HMA:** a companion C injection template is set up for this game in
+> [Soul-8691/Complete-Fire-Red-Upgrade @ eternal-duelist-soul](https://github.com/Soul-8691/Complete-Fire-Red-Upgrade/tree/eternal-duelist-soul). Use it to add or change code in the compiled
+> ROM, while HMA edits its data.
+
 <table>
 <tr>
 <td align="center"><img src="screenshots/placeholders/hma.svg" width="240" alt="Placeholder: HMA with the TOML"><br><sub>HMA with the TOML</sub></td>

@@ -4,13 +4,13 @@ type: tool
 status: draft
 confidence: medium
 sources: [rom-analysis]
-updated: 2026-11-14
+updated: 2026-11-15
 ---
 # Hex Maniac Advance metadata for the demo
 
 `tools/hma_toml.py` writes a companion `.toml` next to each **demo-profile** ROM the Makefile links
 (`eds_demo.toml`, `eds_release_demo.toml`, or `eds_release_demo_extra.toml`; see below), from `baserom.toml`,
-the Hex Maniac Advance metadata of the original ROM (repo root). The HMA to use is Hex Maniac Advance CE built from source on its `upcoming` branch ([Soul-8691/HexManiacAdvance-CE](https://github.com/Soul-8691/HexManiacAdvance-CE/tree/upcoming)), not a released build: the released versions can't edit the mod properly (the user's instruction, 2026-11-14).
+the Hex Maniac Advance metadata of the original ROM (repo root). The HMA to use is Hex Maniac Advance CE built from source on its `upcoming` branch ([Soul-8691/HexManiacAdvance-CE](https://github.com/Soul-8691/HexManiacAdvance-CE/tree/upcoming)), not a released build: the released versions can't edit the mod properly (the user's instruction, 2026-11-14). For code changes to the compiled ROM alongside HMA, a companion C injection template is set up in [Soul-8691/Complete-Fire-Red-Upgrade @ eternal-duelist-soul](https://github.com/Soul-8691/Complete-Fire-Red-Upgrade/tree/eternal-duelist-soul) (the user's note, 2026-11-15; the READMEs say so too).
 Without `baserom.toml` it does nothing. Those TOMLs are git-ignored.
 
 ## How each entry moves
