@@ -12,3 +12,4 @@
 12. Yugi Muto duelist
 13. Yugi Muto pack
 14. New cards
+15. Card priority orders
