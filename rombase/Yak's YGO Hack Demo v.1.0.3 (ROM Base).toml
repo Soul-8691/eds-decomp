@@ -4606,7 +4606,7 @@ DefaultHash = '''33FCFF8E'''
 
 [[MatchedWords]]
 Name = '''data.constants.packs.rarities.total'''
-Address = 0x062BF0
+Address = 0x062C08
 Length = 1
 
 [[MatchedWords]]
@@ -4651,42 +4651,42 @@ Length = 1
 
 [[MatchedWords]]
 Name = '''data.constants.packs.unlocks.2wins1'''
-Address = 0x063D98
+Address = 0x063DB0
 Length = 1
 
 [[MatchedWords]]
 Name = '''data.constants.packs.unlocks.2wins2'''
-Address = 0x063DA6
+Address = 0x063DBE
 Length = 1
 
 [[MatchedWords]]
 Name = '''data.constants.packs.unlocks.2wins3'''
-Address = 0x063DB4
+Address = 0x063DCC
 Length = 1
 
 [[MatchedWords]]
 Name = '''data.constants.packs.unlocks.2wins4'''
-Address = 0x063DC2
+Address = 0x063DDA
 Length = 1
 
 [[MatchedWords]]
 Name = '''data.constants.packs.unlocks.2wins5'''
-Address = 0x063DD0
+Address = 0x063DE8
 Length = 1
 
 [[MatchedWords]]
 Name = '''data.constants.packs.unlocks.10winseach'''
-Address = 0x06411E
+Address = 0x064136
 Length = 1
 
 [[MatchedWords]]
 Name = '''data.constants.packs.unlocks.20wins'''
-Address = 0x064342
+Address = 0x06435A
 Length = 1
 
 [[MatchedWords]]
 Name = '''data.constants.packs.unlocks.10winstotal'''
-Address = 0x06423E
+Address = 0x064256
 Length = 1
 
 [[MatchedWords]]
@@ -4701,17 +4701,17 @@ Length = 2
 
 [[MatchedWords]]
 Name = '''data.constants.cards.limit2'''
-Address = 0x062DAC
+Address = 0x062DC4
 Length = 2
 
 [[MatchedWords]]
 Name = '''data.constants.cards.limit2'''
-Address = 0x062E70
+Address = 0x062E88
 Length = 2
 
 [[MatchedWords]]
 Name = '''data.constants.cards.limit2'''
-Address = 0x062F48
+Address = 0x062F60
 Length = 2
 
 #################################

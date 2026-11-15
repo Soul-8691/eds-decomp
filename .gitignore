@@ -1,6 +1,6 @@
 # Game images and saves: never committed (see CLAUDE.md).
 *.gba
-*.sym
+eds_*.sym
 *.sav
 *.zip
 roms/
