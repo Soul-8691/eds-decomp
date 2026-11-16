@@ -3187,7 +3187,7 @@
 082468d0 l 00000030 sStrHexSealedSelect
 08246900 l 0000002a sStrNecroFusionSelect
 0824692a l 00000002 free space
-0824692c l 00000005 sToonNeedle.1014
+0824692c l 00000005 sToonNeedle.1017
 08246931 l 00000003 free space
 08246934 l 0000001e sStrDdcSelectDeckCard
 08246952 l 00000002 free space
@@ -3225,7 +3225,7 @@
 08246cb9 l 00000003 free space
 08246cbc g 00000050 gStrGoyoGuardianPrompt
 08246d0c l 0000001e sStrGranmargPick
-08246d2a l 0000000c sOrder.1915
+08246d2a l 0000000c sOrder.1924
 08246d36 l 00000002 free space
 08246d38 l 00000041 sStrSillvaReturn
 08246d79 l 00000003 free space
@@ -4179,1256 +4179,1263 @@
 0825dce6 l 00000002 free space
 0825dce8 l 00000088 IsBattleFlipRemoval
 0825dd70 g 00000080 AiFlipEffectPreferredTarget
-0825ddf0 g 0000002c AiFlipEffectTarget
-0825de1c g 00000090 EffectLadybugOfDoomResolve
-0825deac g 00000044 EffectDesKoalaResolve
-0825def0 l 0000003c CountFaceDownSelfEffectOnField
-0825df2c l 000000bc ZoneOfFaceDownSelfEffectCard
-0825dfe8 l 0000007c FaceDownSelfEffectPosOk
-0825e064 l 00000028 FaceDownSelfEffectMarkUsedZone
-0825e08c l 00000054 FaceDownSelfEffectEntryHasKnownZone
-0825e0e0 l 0000008a FaceDownSelfEffectMenuPrepare
-0825e16a l 00000002 free space
-0825e16c g 00000090 FaceDownSelfEffectOnSummonedFaceUp
-0825e1fc g 00000050 EffectStealthBirdPrepare
-0825e24c g 0000005e EffectStealthBirdCheck
-0825e2aa l 00000002 free space
-0825e2ac g 0000006c EffectStealthBirdChainB
-0825e318 g 00000058 EffectStealthBirdResolve
-0825e370 l 00000050 RouletteBarrelInZone
-0825e3c0 l 0000002c RouletteHasFaceUpMonsterOfLevel
-0825e3ec l 00000098 AiRouletteChooseRoll
-0825e484 l 0000005e RouletteBarrelCanActivateNow
-0825e4e2 l 00000002 free space
-0825e4e4 g 0000000a RouletteBarrelCanActivateInZone
-0825e4ee l 00000002 free space
-0825e4f0 g 0000002c EffectRouletteBarrelPrepare
-0825e51c g 0000005a EffectRouletteBarrelCheck
-0825e576 l 00000002 free space
-0825e578 g 00000294 EffectRouletteBarrelChainA
-0825e80c g 0000011c EffectRouletteBarrelChainB
-0825e928 g 00000078 EffectRouletteBarrelResolve
-0825e9a0 l 00000024 IsReturningSpirit
-0825e9c4 g 00000094 EndPhase_ReturnSpiritMonsters
-0825ea58 g 0000002c YataGarasuDealtDamage
-0825ea84 g 0000001c IsMindControlled
-0825eaa0 l 00000044 CountOpponentFaceUpMonsters
-0825eae4 g 0000003c EffectLightningVortexPrepare
-0825eb20 g 00000018 EffectLightningVortexChainA
-0825eb38 g 0000006c EffectLightningVortexResolve
-0825eba4 l 00000054 DonZaloogMill
-0825ebf8 g 00000114 EffectDonZaloogResolve
-0825ed0c l 0000003c VampireLordTypeMatches
-0825ed48 l 00000030 VampireMenu_Draw
-0825ed78 l 00000010 VampireMenu_HandleInput
-0825ed88 l 00000068 AiVampireLordPick
-0825edf0 g 000001f4 EffectVampireLordResolve
-0825efe4 l 00000060 VampireLordCount
-0825f044 g 00000054 VampireLordFieldDestroyed
-0825f098 g 0000002c VampireLordDestroyed
-0825f0c4 l 0000008c VampireLordStandbyStep
-0825f150 l 0000002a CliffBattleDamageToOpponent
-0825f17a l 00000002 free space
-0825f17c l 00000046 CliffAnySpellTrapOnField
-0825f1c2 l 00000002 free space
-0825f1c4 l 00000054 CliffMillDeckTop
-0825f218 l 00000064 CliffDestroyAt
-0825f27c g 00000238 EffectDarkScorpionCliffResolve
-0825f4b4 g 00000022 EffectCreatureSwapPrepare
-0825f4d6 l 00000002 free space
-0825f4d8 g 00000124 EffectCreatureSwapResolve
-0825f5fc l 00000044 BattleMonster
-0825f640 l 00000080 CanUseLily
-0825f6c0 l 0000011c CpuWantsLily
-0825f7dc l 00000074 ActivateLily
-0825f850 g 00000010 InjectionFairyLilyResetBattle
-0825f860 g 000000ca InjectionFairyLilyDamageStep
-0825f92a l 00000002 free space
-0825f92c g 000000e4 InjectionFairyLilyEndAttack
-0825fa10 g 0000003c AiShouldSkipSummonInjectionFairyLily
-0825fa4c l 00000068 AttackingExarion
-0825fab4 l 00000070 ExarionCanActivate
-0825fb24 l 00000044 CpuWantsExarion
-0825fb68 l 00000054 ActivateExarion
-0825fbbc g 00000024 ExarionUniverseClearTurnPenalty
-0825fbe0 g 00000014 ExarionUniverseResetBattle
-0825fbf4 g 000000ac ExarionUniverseDamageStep
-0825fca0 g 0000005c EffectPhoenixWingWindBlastCheck
-0825fcfc g 0000005a EffectPhoenixWingWindBlastPrepare
-0825fd56 l 00000002 free space
-0825fd58 g 00000018 EffectPhoenixWingWindBlastChainA
-0825fd70 g 00000144 EffectPhoenixWingWindBlastChainB
-0825feb4 g 00000050 EffectPhoenixWingWindBlastResolve
-0825ff04 g 0000003c IsMetamorphosisFusion
-0825ff40 l 0000004e HasFusionOfLevel
-0825ff8e l 00000002 free space
-0825ff90 l 00000060 IsMetamorphosisTribute
-0825fff0 g 0000007e EffectMetamorphosisPrepare
+0825ddf0 l 000000a4 AiAbsorbTarget
+0825de94 g 00000066 AiFlipEffectTarget
+0825defa l 00000002 free space
+0825defc g 00000090 EffectLadybugOfDoomResolve
+0825df8c g 00000044 EffectDesKoalaResolve
+0825dfd0 l 0000003c CountFaceDownSelfEffectOnField
+0825e00c l 000000bc ZoneOfFaceDownSelfEffectCard
+0825e0c8 l 0000007c FaceDownSelfEffectPosOk
+0825e144 l 00000028 FaceDownSelfEffectMarkUsedZone
+0825e16c l 00000054 FaceDownSelfEffectEntryHasKnownZone
+0825e1c0 l 0000008a FaceDownSelfEffectMenuPrepare
+0825e24a l 00000002 free space
+0825e24c g 00000090 FaceDownSelfEffectOnSummonedFaceUp
+0825e2dc g 00000050 EffectStealthBirdPrepare
+0825e32c g 0000005e EffectStealthBirdCheck
+0825e38a l 00000002 free space
+0825e38c g 0000006c EffectStealthBirdChainB
+0825e3f8 g 00000058 EffectStealthBirdResolve
+0825e450 l 00000050 RouletteBarrelInZone
+0825e4a0 l 0000002c RouletteHasFaceUpMonsterOfLevel
+0825e4cc l 00000098 AiRouletteChooseRoll
+0825e564 l 0000005e RouletteBarrelCanActivateNow
+0825e5c2 l 00000002 free space
+0825e5c4 g 0000000a RouletteBarrelCanActivateInZone
+0825e5ce l 00000002 free space
+0825e5d0 g 0000002c EffectRouletteBarrelPrepare
+0825e5fc g 0000005a EffectRouletteBarrelCheck
+0825e656 l 00000002 free space
+0825e658 g 00000294 EffectRouletteBarrelChainA
+0825e8ec g 0000011c EffectRouletteBarrelChainB
+0825ea08 g 00000078 EffectRouletteBarrelResolve
+0825ea80 l 00000024 IsReturningSpirit
+0825eaa4 g 00000094 EndPhase_ReturnSpiritMonsters
+0825eb38 g 0000002c YataGarasuDealtDamage
+0825eb64 g 0000001c IsMindControlled
+0825eb80 l 00000044 CountOpponentFaceUpMonsters
+0825ebc4 g 0000003c EffectLightningVortexPrepare
+0825ec00 g 00000018 EffectLightningVortexChainA
+0825ec18 g 0000006c EffectLightningVortexResolve
+0825ec84 l 00000054 DonZaloogMill
+0825ecd8 g 00000114 EffectDonZaloogResolve
+0825edec l 0000003c VampireLordTypeMatches
+0825ee28 l 00000030 VampireMenu_Draw
+0825ee58 l 00000010 VampireMenu_HandleInput
+0825ee68 l 00000068 AiVampireLordPick
+0825eed0 g 000001f4 EffectVampireLordResolve
+0825f0c4 l 00000060 VampireLordCount
+0825f124 g 00000054 VampireLordFieldDestroyed
+0825f178 g 0000002c VampireLordDestroyed
+0825f1a4 l 0000008c VampireLordStandbyStep
+0825f230 l 0000002a CliffBattleDamageToOpponent
+0825f25a l 00000002 free space
+0825f25c l 00000046 CliffAnySpellTrapOnField
+0825f2a2 l 00000002 free space
+0825f2a4 l 00000054 CliffMillDeckTop
+0825f2f8 l 00000064 CliffDestroyAt
+0825f35c g 00000238 EffectDarkScorpionCliffResolve
+0825f594 g 00000022 EffectCreatureSwapPrepare
+0825f5b6 l 00000002 free space
+0825f5b8 g 00000124 EffectCreatureSwapResolve
+0825f6dc l 00000044 BattleMonster
+0825f720 l 00000080 CanUseLily
+0825f7a0 l 0000011c CpuWantsLily
+0825f8bc l 00000074 ActivateLily
+0825f930 g 00000010 InjectionFairyLilyResetBattle
+0825f940 g 000000ca InjectionFairyLilyDamageStep
+0825fa0a l 00000002 free space
+0825fa0c g 000000e4 InjectionFairyLilyEndAttack
+0825faf0 g 0000003c AiShouldSkipSummonInjectionFairyLily
+0825fb2c l 00000068 AttackingExarion
+0825fb94 l 00000070 ExarionCanActivate
+0825fc04 l 00000044 CpuWantsExarion
+0825fc48 l 00000054 ActivateExarion
+0825fc9c g 00000024 ExarionUniverseClearTurnPenalty
+0825fcc0 g 00000014 ExarionUniverseResetBattle
+0825fcd4 g 000000ac ExarionUniverseDamageStep
+0825fd80 g 0000005c EffectPhoenixWingWindBlastCheck
+0825fddc g 0000005a EffectPhoenixWingWindBlastPrepare
+0825fe36 l 00000002 free space
+0825fe38 g 00000018 EffectPhoenixWingWindBlastChainA
+0825fe50 g 00000144 EffectPhoenixWingWindBlastChainB
+0825ff94 g 00000050 EffectPhoenixWingWindBlastResolve
+0825ffe4 g 0000003c IsMetamorphosisFusion
+08260020 l 0000004e HasFusionOfLevel
 0826006e l 00000002 free space
-08260070 g 00000150 EffectMetamorphosisChainB
-082601c0 g 000001f4 EffectMetamorphosisResolve
-082603b4 l 00000060 IsScientistFusion
-08260414 l 00000060 IsScientistSummoned
-08260474 g 000000d4 EffectMagicalScientistPrepare
-08260548 g 00000028 EffectMagicalScientistChainA
-08260570 g 000001c4 EffectMagicalScientistResolve
-08260734 g 0000003c EndPhase_ReturnMagicalScientist
-08260770 g 00000034 ModFieldCardId
-082607a4 l 00000058 HexSealedRecipe
-082607fc l 00000028 HexSealedNumber
-08260824 l 000000de HexSealedMaterials
-08260902 l 00000002 free space
-08260904 l 00000078 HexSealedFusionTarget
-0826097c g 000000d0 EffectHexSealedFusionPrepare
-08260a4c g 000001de EffectHexSealedFusionResolve
-08260c2a l 00000002 free space
-08260c2c l 00000028 NecroFusionNumber
-08260c54 l 0000008c NecroFusionRecipe
-08260ce0 l 000000cc NecroFusionMaterials
-08260dac l 00000070 NecroFusionTarget
-08260e1c g 00000078 EffectNecroFusionPrepare
-08260e94 g 000002a8 EffectNecroFusionResolve
-0826113c g 0000007c ModCannotAttackDirectly
-082611b8 g 00000030 IsReinforcementTarget
-082611e8 g 0000004e EffectReinforcementOfTheArmyPrepare
-08261236 l 00000002 free space
-08261238 g 0000008a IsToonTableDeckTarget
-082612c2 l 00000002 free space
-082612c4 l 00000028 TokenThanksgivingIsToken
-082612ec l 0000006c CountTokensOnField
-08261358 g 00000098 EffectTokenThanksgivingResolve
-082613f0 g 000000ea EffectCardDestructionResolve
-082614da l 00000002 free space
-082614dc g 00000014 EffectColdWavePrepare
-082614f0 l 0000002c IsDifferentDimensionCapsuleDeckTarget
-0826151c g 00000024 EffectDifferentDimensionCapsulePrepare
-08261540 l 000000fc DifferentDimensionCapsuleStandbyStep
-0826163c g 000001c4 EffectDifferentDimensionCapsuleResolve
-08261800 g 00000020 EffectJarOfGreedResolve
-08261820 g 0000004a IsNightAssailantTarget
-0826186a l 00000002 free space
-0826186c g 00000074 QueueNightAssailantTrigger
-082618e0 g 00000024 EffectNightAssailantCheck
-08261904 g 00000020 EffectNightAssailantChainB
-08261924 g 00000020 EffectNightAssailantResolve
-08261944 g 00000080 EffectExiledForcePrepare
-082619c4 g 00000032 EffectExiledForceCheck
-082619f6 l 00000002 free space
-082619f8 g 00000058 EffectExiledForceChainB
-08261a50 g 0000000a EffectExiledForceResolve
-08261a5a l 00000002 free space
-08261a5c g 00000046 EffectGolemSentryPrepare
-08261aa2 l 00000002 free space
-08261aa4 g 00000094 EffectGolemSentryCheck
-08261b38 g 000000c8 EffectGolemSentryChainB
-08261c00 g 000000d0 EffectGolemSentryResolve
-08261cd0 g 00000024 EffectPotOfAvaricePrepare
-08261cf4 l 00000044 AvariceTake
-08261d38 g 00000242 EffectPotOfAvariceResolve
-08261f7a l 00000002 free space
-08261f7c g 00000044 EffectMonsterReincarnationPrepare
-08261fc0 g 00000018 EffectMonsterReincarnationChainA
-08261fd8 g 00000012 EffectNewdoriaCheck
-08261fea l 00000002 free space
-08261fec g 0000000a EffectNewdoriaChainB
-08261ff6 l 00000002 free space
-08261ff8 g 0000000a EffectNewdoriaResolve
-08262002 l 00000002 free space
-08262004 l 00000050 BookOfLifeBestEntry
-08262054 g 00000046 EffectBookOfLifePrepare
-0826209a l 00000002 free space
-0826209c g 000001ec EffectBookOfLifeResolve
-08262288 g 00000028 CountActiveKycooOnField
-082622b0 l 00000030 IsKycooId
-082622e0 g 000000ce ModAiOrderAttackers
-082623ae l 00000002 free space
-082623b0 g 0000004a EffectKycooTheGhostDestroyerPrepare
-082623fa l 00000002 free space
-082623fc g 0000021c EffectKycooTheGhostDestroyerResolve
-08262618 g 00000074 IsBladeKnightCard
-0826268c g 000000c0 BladeKnightNegatesBattleFlipEffect
-0826274c g 00000064 HaDesNegatesBattleDestroyed
-082627b0 g 0000006c HaDesNegatesBattleFlipEffect
-0826281c g 00000014 FlipEffectsLockedForTurn
-08262830 g 00000010 LockFlipEffectsForTurn
-08262840 g 00000010 ClearFlipEffectsLockForTurn
-08262850 g 0000005c IsGravekeeperMonster
-082628ac g 0000003a SoulExchangeCpuChainB
-082628e6 l 00000002 free space
-082628e8 l 00000044 WeakestOwnTribute
-0826292c g 0000019c SoulExchangeCpuResolve
-08262ac8 l 00000078 BerserkGorillaMustAttackZone
-08262b40 g 00000032 BerserkGorillaBlocksBattleEnd
-08262b72 l 00000002 free space
-08262b74 g 00000020 BerserkGorillaBlocksTurnEnd
-08262b94 g 000000b0 AiPlanForcedAttack
-08262c44 g 00000038 ModAttacksBlocked
-08262c7c l 00000102 AiRoarBeforeBattle
-08262d7e l 00000002 free space
-08262d80 g 0000003c ModBattlePhaseStart
-08262dbc g 0000000c EffectThreateningRoarPrepare
-08262dc8 g 0000003c EffectThreateningRoarResolve
-08262e04 l 0000002c LevelLimitAreaBActive
-08262e30 g 00000144 ApplyLevelLimitAreaB
-08262f74 g 0000006c ModLevelLimitAreaBBlocksAtkPosition
-08262fe0 g 0000001e EffectLevelLimitAreaBResolve
-08262ffe l 00000002 free space
-08263000 g 0000002c FinalAttackOrdersActive
-0826302c g 000000f8 ApplyFinalAttackOrders
-08263124 g 0000001e EffectFinalAttackOrdersResolve
-08263142 l 00000002 free space
-08263144 l 00000044 MystikWokWeakestTribute
-08263188 l 00000034 MystikWokBestGainOnWeakestTribute
-082631bc l 0000003c AiWantsMystikWok
-082631f8 g 0000001e EffectMystikWokPrepare
-08263216 l 00000002 free space
-08263218 g 000000ec EffectMystikWokChainB
-08263304 g 000000ac EffectMystikWokResolve
-082633b0 l 00000070 AiTwoWeakestTributes
-08263420 g 00000054 ModTributeTwoCpuPick
-08263474 g 0000007e EffectHystericFairyPrepare
-082634f2 l 00000002 free space
-082634f4 g 0000000a EffectHystericFairyChainB
-082634fe l 00000002 free space
-08263500 g 00000090 EffectHystericFairyResolve
-08263590 g 00000004 EffectGravityBindResolve
-08263594 g 00000004 EffectMaskOfRestrictResolve
-08263598 l 00000088 AiHandCanTributeSummonNow
-08263620 l 00000058 AiWantsMaskOfRestrict
-08263678 g 00000026 EffectSecretBarrelPrepare
-0826369e l 00000002 free space
-082636a0 g 00000036 EffectSecretBarrelResolve
-082636d6 l 00000002 free space
-082636d8 g 00000014 OjamaTokenDestroyed
-082636ec g 00000028 EffectOjamaTrioPrepare
-08263714 g 00000060 EffectOjamaTrioResolve
-08263774 g 0000008c EffectThestalosResolve
-08263800 g 000000b0 ModAttackTargetLocked
-082638b0 g 0000005a EffectMaraudingCaptainPrepare
-0826390a l 00000002 free space
-0826390c g 00000198 EffectMaraudingCaptainResolve
-08263aa4 l 00000050 IsAsuraAttacker
-08263af4 l 0000007c AsuraAttackedMonster
-08263b70 l 0000012e AsuraEndAttack
-08263c9e l 00000002 free space
-08263ca0 g 00000040 ModAttackTargetBlocked
-08263ce0 g 000000a6 ModCipherBonus
-08263d86 l 00000002 free space
-08263d88 l 00000082 ModBattleStatBonus
-08263e0a l 00000002 free space
-08263e0c g 000000c0 ModStatBonus
-08263ecc g 000000a8 ModEndAttack
-08263f74 l 00000038 ModAddTarget
-08263fac l 00000036 ModAddPileTargets
-08263fe2 l 00000002 free space
-08263fe4 l 00000024 IsMonsterId
-08264008 l 0000002c IsNumberId
-08264034 l 00000024 IsTypeId
-08264058 l 0000000e IsManticoreCostTypeId
-08264066 l 00000002 free space
-08264068 l 00000034 IsWeakDragonId
-0826409c l 00000058 IsLowLevelMainDeckMonsterId
-082640f4 l 000000b8 IsSummoningTargetList
-082641ac g 000000ae ModFilterEffectTargets
-0826425a l 00000002 free space
-0826425c g 00000348 ModCollectEffectTargets
-082645a4 g 00000070 EffectMagicDrainPrepare
-08264614 g 0000019a EffectMagicDrainResolve
-082647ae l 00000002 free space
-082647b0 g 0000007c ModCardNameSealed
-0826482c l 00000068 HandSpellIndex
-08264894 g 0000007c EffectCursedSealPrepare
-08264910 g 000000c8 EffectCursedSealChainA
-082649d8 g 000000d0 EffectCursedSealResolve
-08264aa8 l 0000007c AiChainCursedSeal
-08264b24 g 00000090 EffectDivineWrathPrepare
-08264bb4 g 00000018 EffectDivineWrathChainA
-08264bcc g 000000a0 EffectDivineWrathResolve
-08264c6c l 00000024 AiWantsDivineWrathSet
-08264c90 l 00000050 AiMonsterEffectWorthDivineWrath
-08264ce0 g 0000009c AiChainDivineWrath
-08264d7c l 00000034 MyBodyListsCard
-08264db0 l 00000088 MyBodyHitsMonster
-08264e38 g 00000064 EffectMyBodyAsAShieldPrepare
-08264e9c g 00000028 EffectMyBodyAsAShieldChainA
-08264ec4 g 000000c4 EffectMyBodyAsAShieldResolve
-08264f88 l 00000050 AiChainMyBodyAsAShield
-08264fd8 g 000000e8 AiPickRitualSearch
-082650c0 g 00000088 SynchroCardsArrived
-08265148 g 00000040 JunkSynchronTargetId
-08265188 g 0000004e EffectJunkSynchronPrepare
-082651d6 l 00000002 free space
-082651d8 g 0000018e EffectJunkSynchronResolve
-08265366 l 00000002 free space
-08265368 l 0000005e ControlsFaceUpTuner
-082653c6 l 00000002 free space
-082653c8 l 00000064 QuillboltInGraveyard
-0826542c l 0000005c QuillboltCanActivate
-08265488 l 00000030 QuillboltActivate
-082654b8 g 00000052 EffectQuillboltHedgehogPrepare
-0826550a l 00000002 free space
-0826550c g 000000e2 EffectQuillboltHedgehogResolve
-082655ee l 00000002 free space
-082655f0 l 0000001c AiQuillbolt
-0826560c l 00000064 PlaguespreaderInGraveyard
-08265670 l 00000068 PlaguespreaderCanActivate
-082656d8 l 00000030 PlaguespreaderActivate
-08265708 g 0000005c EffectPlaguespreaderZombiePrepare
-08265764 l 0000005c PlaguespreaderCpuPick
-082657c0 g 000000a0 EffectPlaguespreaderZombieChainA
-08265860 g 000000d6 EffectPlaguespreaderZombieResolve
-08265936 l 00000002 free space
-08265938 l 00000072 AiPlaguespreader
-082659aa l 00000002 free space
-082659ac g 00000022 ModQuillboltAvailable
-082659ce l 00000002 free space
-082659d0 g 00000040 ModQuillboltMenuRun
-08265a10 g 00000040 ModBattleDestroyedBanished
-08265a50 g 00000054 QuillboltBanishedOnLeave
-08265aa4 g 00000036 EffectJunkWarriorPrepare
-08265ada l 00000002 free space
-08265adc g 00000118 EffectJunkWarriorResolve
-08265bf4 l 00000044 StardustListsCard
-08265c38 l 000000d0 StardustHitsCard
-08265d08 l 00000036 StardustCanAnswer
-08265d3e l 00000002 free space
-08265d40 l 00000064 IsStardustAt
-08265da4 g 00000026 ModMonsterCanRespond
-08265dca l 00000002 free space
-08265dcc g 00000028 ModMonsterCanChain
-08265df4 g 0000001a EffectStardustDragonPrepare
-08265e0e l 00000002 free space
-08265e10 g 00000020 EffectStardustDragonChainA
-08265e30 g 00000044 EffectStardustDragonResolve
-08265e74 g 000000ba EndPhase_StardustDragon
-08265f2e l 00000002 free space
-08265f30 l 0000009c AiChainStardustDragon
-08265fcc g 00000080 BigBangShotLeaves
-0826604c g 00000034 ModUnlinkReviver
-08266080 g 000000c4 ModCallOfTheHauntedLeaves
-08266144 g 000000c6 BigBangShotMonsterLeaving
-0826620a l 00000002 free space
-0826620c l 0000001c QueueBlastWithChainTrigger
-08266228 g 0000007c BlastWithChainDestroyed
-082662a4 g 00000050 BlastWithChainEquipDestroyed
-082662f4 l 000000a8 AiChainBlastWithChain
-0826639c l 00000034 IsFieldCard
-082663d0 g 00000060 EffectBlastWithChainPrepare
-08266430 g 00000078 EffectBlastWithChainCheck
-082664a8 l 00000100 AiBlastWithChainTarget
-082665a8 g 000000ce EffectBlastWithChainChainB
-08266676 l 00000002 free space
-08266678 g 000000d0 EffectBlastWithChainResolve
-08266748 l 0000001c AiPrintedMonsterAtk
-08266764 l 00000034 AiFlipEffectMonster
-08266798 l 00000018 AiNormalSummonTriggerMonster
-082667b0 l 00000020 AiWeakerStatSummonAllowed
-082667d0 l 00000012 AiSummonBeatsPlayerMonsters
-082667e2 l 00000002 free space
-082667e4 g 00000020 AiHumanSwordsActive
-08266804 l 00000098 AiWeakAtkWorthAttacking
-0826689c l 0000000e AiReturnsBeforeCounterattack
-082668aa l 00000002 free space
-082668ac l 00000056 AiWeakAttackerWorthIt
-08266902 l 00000002 free space
-08266904 g 00000056 AiSkipAttackSummon
-0826695a l 00000002 free space
-0826695c g 00000044 AiShouldTurnDefenseToAttack
-082669a0 g 0000007c AiSummonBetterWhenAttacksStopped
-08266a1c g 000000c2 AiSummonCandidatePreferred
-08266ade l 00000002 free space
-08266ae0 l 00000098 AiTributeMaskForHandIndex
-08266b78 l 0000002a AiHandSimSummonDamage
-08266ba2 l 00000002 free space
-08266ba4 g 000000b4 AiChooseBestNormalSummon
-08266c58 l 00000044 AiTributesBorrowed
-08266c9c g 0000014c AiStealForTributeSummon
-08266de8 g 00000088 AiTributeIsUpgrade
-08266e70 l 00000026 ModFusionRecipeOf
-08266e96 l 00000002 free space
-08266e98 g 00000022 IsModFusionResult
-08266eba l 00000002 free space
-08266ebc g 00000036 ModIsMaterialOfFusion
-08266ef2 l 00000002 free space
-08266ef4 g 000000de ModFindFusionMaterials
-08266fd2 l 00000002 free space
-08266fd4 g 0000004c ModHasPiercing
-08267020 g 0000006c AiRecruiterCopyEntry
-0826708c l 000000ba AiSummonFaceUpForEffect
-08267146 l 00000002 free space
-08267148 g 000000c8 AiSummonFaceUpOnOpenField
-08267210 g 0000001c SandMothDestroyed
-0826722c g 00000088 EffectSandMothResolve
-082672b4 g 00000060 SandMothSummoned
-08267314 g 00000062 ModHasSwappedStats
-08267376 l 00000002 free space
-08267378 l 00000050 TreebornFrogCanSummon
-082673c8 g 000000cc TreebornFrogStandbyStep
-08267494 l 000000a4 WaveMotionStandbyCount
-08267538 g 000000b8 EffectWaveMotionCannonPrepare
-082675f0 g 000000a8 EffectWaveMotionCannonResolve
-08267698 l 00000060 AiWantsWaveMotionIgnition
-082676f8 g 0000002c ModCanActivateFaceUpFieldCard
-08267724 g 00000018 ModFieldCardRequiresCanActivate
-0826773c g 00000040 ModTurnStartRefreshZoneCanActivate
-0826777c g 00000034 ModPlaceSpellZoneCanActivate
-082677b0 g 0000008c ModFaceUpSpellActivateMenuFlags
-0826783c g 00000004 EffectMirageOfNightmareResolve
-08267840 l 0000006c FaceUpMirageZone
-082678ac l 000000b8 MirageDiscardStep
-08267964 l 00000074 MirageDrawStep
-082679d8 l 00000098 NightmareWheelStandbyStep
-08267a70 g 000000ac ModStandbyStep
-08267b1c g 00000038 CanCyberDragonSpecialSummon
-08267b54 l 00000038 GilasaurusOpponentCanRevive
-08267b8c l 000000f0 AiWantsGilasaurus
-08267c7c l 00000058 AiGilasaurusSpecialSummon
-08267cd4 g 000000d8 AiSpecialSummonCyberDragon
-08267dac l 00000028 IsCannonSoldierNumber
-08267dd4 l 000000d4 AiCannonTributeRank
-08267ea8 g 00000084 AiCannonSoldierTribute
-08267f2c g 0000007c AiModPickEffectTribute
-08267fa8 l 00000024 IsScientistBurner
-08267fcc g 00000044 AiPickScientistTribute
-08268010 l 00000078 AiBestScientistFusionAtk
-08268088 l 0000005a AiScientistHasBattleTarget
-082680e2 l 00000002 free space
-082680e4 l 0000004c AiActivateMonsterAt
-08268130 g 00000136 AiUseMagicalScientist
-08268266 l 00000002 free space
-08268268 l 0000003c AiFlipEffectUnsafeBeforeTribute
-082682a4 l 000000a0 AiCpuHasTributeSummonInHand
-08268344 g 0000008a AiShouldFlipFaceDownForTribute
-082683ce l 00000002 free space
-082683d0 g 0000002e AiTryFlipSafeFlipEffectsForTribute
-082683fe l 00000002 free space
-08268400 l 00000030 AiSimClearMonsterOnField
-08268430 l 0000001c AiSimCpuBattleDamage
-0826844c l 00000114 AiSimFlipRemovalEffect
-08268560 l 00000034 AiFlipRemovalMonsterNumber
-08268594 g 000000aa AiShouldFlipRemovalForAttacks
-0826863e l 00000002 free space
-08268640 l 0000001c AiCpuHasFaceDownSpellTrap
-0826865c l 0000008a AiFieldHasFaceUpTrap
-082686e6 l 00000002 free space
-082686e8 l 0000001c AiHumanThreatensReaper
-08268704 g 0000006c AiShouldFlipReaperForTraps
-08268770 l 0000006c AiPlaysEquip
-082687dc l 00000088 AiApplyHandEquip
-08268864 l 000001c0 AiBestAtkWithHandEquip
-08268a24 l 00000060 HasFaceUpNonLightMonster
-08268a84 l 00000070 DoomedThunderNyanNyan
-08268af4 g 000000dc AiSimSummonBoosts
-08268bd0 g 00000048 AiProjectedAtk
-08268c18 l 0000009c AiHasSummonTrigger
-08268cb4 l 0000002c AiCostExcludedNumber
-08268ce0 l 00000048 AiBorrowedMonsterZone
-08268d28 g 00000040 AiPickTributeFor
-08268d68 g 00000054 AiTributeIsSameCard
-08268dbc l 00000134 AiSelfLpLoss
-08268ef0 g 0000004c AiActivationWouldLoseLp
-08268f3c l 00000030 AiPriorityDrawPhaseMarker
-08268f6c g 00000022 AiCpuRunPendingHandSpell
-08268f8e l 00000002 free space
-08268f90 g 000000b4 AiTryPlayCpuPriorityDrawSpells
-08269044 g 00000010 ModThunderDragonSearched
-08269054 g 000000f0 AiUseThunderDragon
-08269144 g 00000184 RyuKokkiAfterBattle
-082692c8 g 00000158 DrillroidBeforeDamageCalc
-08269420 l 00000048 CatastorFaceUpNonDarkMonster
-08269468 g 00000188 CatastorStartOfDamageStep
-082695f0 g 00000060 AiCatastorDestroysNonDark
-08269650 l 0000004c GoyoSpecialSummonStolen
-0826969c g 00000084 ModGoyoBattlePending
-08269720 g 00000104 ModGoyoBeforeGraveSend
-08269824 l 00000062 DeckHasCardNumber
-08269886 l 00000002 free space
-08269888 g 00000124 HydrogeddonAfterBattle
-082699ac l 00000056 MobiusHasOtherSpellTrap
-08269a02 l 00000002 free space
-08269a04 g 000001c4 EffectMobiusChainB
-08269bc8 g 00000098 EffectMobiusResolve
-08269c60 l 00000058 GranmargSetCardAt
-08269cb8 g 0000001a EffectGranmargCheck
-08269cd2 l 00000002 free space
-08269cd4 g 00000120 EffectGranmargChainB
-08269df4 g 0000001c ModPostHandLimitDiscard
-08269e10 g 00000070 QueueSillvaTrigger
-08269e80 g 00000036 EffectSillvaPrepare
-08269eb6 l 00000002 free space
-08269eb8 l 0000005c SillvaCpuReturnPick
-08269f14 g 000001b6 EffectSillvaResolve
-0826a0ca l 00000002 free space
-0826a0cc g 000000ac ArchfiendsCallSentToGrave
-0826a178 g 000000c4 ModCannotBeTargeted
-0826a23c g 0000004c EffectArchfiendsCallPrepare
-0826a288 g 00000218 EffectArchfiendsCallResolve
-0826a4a0 g 00000080 ModAttackDeclaredTriggers
-0826a520 g 0000008c ModChaosKingSwap
-0826a5ac g 0000008c EffectChaosKingArchfiendPrepare
-0826a638 l 00000078 ChaosKingSwitch
-0826a6b0 l 00000050 AiWantsChaosKingSwitch
-0826a700 g 0000007c EffectChaosKingArchfiendResolve
-0826a77c l 00000060 ShippingOverrideLive
-0826a7dc g 00000030 ModShippingType
-0826a80c g 00000034 ModShippingAttribute
-0826a840 g 00000040 ModShippingStats
-0826a880 l 0000003c ShippingFaceUpMonster
-0826a8bc l 00000078 ShippingPairAt
-0826a934 l 0000002c ShippingHasPartner
-0826a960 l 00000022 ShippingAnyPair
-0826a982 l 00000002 free space
-0826a984 l 0000007c QueueShippingTriggers
-0826aa00 g 000000f0 EffectShippingArchfiendPrepare
-0826aaf0 l 000000a6 ShippingCpuPair
-0826ab96 l 00000002 free space
-0826ab98 g 00000242 EffectShippingArchfiendChainB
-0826adda l 00000002 free space
-0826addc g 000001e4 EffectShippingArchfiendResolve
-0826afc0 g 00000028 QueueGolddTrigger
-0826afe8 l 00000078 GolddTargetAt
-0826b060 g 00000036 EffectGolddPrepare
-0826b096 l 00000002 free space
-0826b098 g 0000019c EffectGolddChainB
-0826b234 g 00000140 EffectGolddResolve
-0826b374 l 00000028 DarkWorldLightningHasTarget
-0826b39c g 00000044 EffectDarkWorldLightningPrepare
-0826b3e0 g 00000060 EffectDarkWorldLightningResolve
-0826b440 g 000000fa KingTigerWanghuOnSummon
-0826b53a l 00000002 free space
-0826b53c l 00000052 AiHasSetCard
-0826b58e l 00000002 free space
-0826b590 l 00000096 AiLinkDestroysSetCard
-0826b626 l 00000002 free space
-0826b628 l 00000054 AiRemovalTakes
-0826b67c l 000000fe AiChainDiscardRemoval
-0826b77a l 00000002 free space
-0826b77c g 000000e0 AiShouldActivateMagicCylinder
-0826b85c g 00000158 AiChainSummonTriggerResponse
-0826b9b4 g 00000108 ModDuelStateCheck
-0826babc l 00000040 CountFaceUpMonsters
-0826bafc l 0000003c CountSpellTrapCards
-0826bb38 l 0000005c StrongestFaceUpAtk
-0826bb94 l 000000a4 AiBestVirusType
-0826bc38 g 0000003e EffectTribeInfectingVirusChainB
-0826bc76 l 00000002 free space
-0826bc78 l 00000038 CountHandAndFieldCards
-0826bcb0 g 0000004c AiWantsSecretBarrel
-0826bcfc l 0000003c AiWantsChaosEmperorDragon
-0826bd38 l 00000042 AiOpponentHasFaceUpMonsterAtLeast
-0826bd7a l 00000002 free space
-0826bd7c l 0000020a AiWantsMonsterEffect
-0826bf86 l 00000002 free space
-0826bf88 l 0000005a AiMegamorphBestEquipZone
-0826bfe2 l 00000002 free space
-0826bfe4 l 000000a0 AiMegamorphSimBattleDamage
-0826c084 g 0000008e AiWantsMegamorph
-0826c112 l 00000002 free space
-0826c114 l 00000042 SnatchStealWeakestTribute
+08260070 l 00000060 IsMetamorphosisTribute
+082600d0 g 0000007e EffectMetamorphosisPrepare
+0826014e l 00000002 free space
+08260150 g 00000150 EffectMetamorphosisChainB
+082602a0 g 000001f4 EffectMetamorphosisResolve
+08260494 l 00000060 IsScientistFusion
+082604f4 l 00000060 IsScientistSummoned
+08260554 g 000000d4 EffectMagicalScientistPrepare
+08260628 g 00000028 EffectMagicalScientistChainA
+08260650 g 000001c4 EffectMagicalScientistResolve
+08260814 g 0000003c EndPhase_ReturnMagicalScientist
+08260850 g 00000034 ModFieldCardId
+08260884 l 00000058 HexSealedRecipe
+082608dc l 00000028 HexSealedNumber
+08260904 l 000000de HexSealedMaterials
+082609e2 l 00000002 free space
+082609e4 l 00000078 HexSealedFusionTarget
+08260a5c g 000000d0 EffectHexSealedFusionPrepare
+08260b2c g 000001de EffectHexSealedFusionResolve
+08260d0a l 00000002 free space
+08260d0c l 00000028 NecroFusionNumber
+08260d34 l 0000008c NecroFusionRecipe
+08260dc0 l 000000cc NecroFusionMaterials
+08260e8c l 00000070 NecroFusionTarget
+08260efc g 00000078 EffectNecroFusionPrepare
+08260f74 g 000002a8 EffectNecroFusionResolve
+0826121c g 0000007c ModCannotAttackDirectly
+08261298 g 00000030 IsReinforcementTarget
+082612c8 g 0000004e EffectReinforcementOfTheArmyPrepare
+08261316 l 00000002 free space
+08261318 g 0000008a IsToonTableDeckTarget
+082613a2 l 00000002 free space
+082613a4 l 00000028 TokenThanksgivingIsToken
+082613cc l 0000006c CountTokensOnField
+08261438 g 00000098 EffectTokenThanksgivingResolve
+082614d0 g 000000ea EffectCardDestructionResolve
+082615ba l 00000002 free space
+082615bc g 00000014 EffectColdWavePrepare
+082615d0 l 0000002c IsDifferentDimensionCapsuleDeckTarget
+082615fc g 00000024 EffectDifferentDimensionCapsulePrepare
+08261620 l 000000fc DifferentDimensionCapsuleStandbyStep
+0826171c g 000001c4 EffectDifferentDimensionCapsuleResolve
+082618e0 g 00000020 EffectJarOfGreedResolve
+08261900 g 0000004a IsNightAssailantTarget
+0826194a l 00000002 free space
+0826194c g 00000074 QueueNightAssailantTrigger
+082619c0 g 00000024 EffectNightAssailantCheck
+082619e4 g 00000020 EffectNightAssailantChainB
+08261a04 g 00000020 EffectNightAssailantResolve
+08261a24 g 00000080 EffectExiledForcePrepare
+08261aa4 g 00000032 EffectExiledForceCheck
+08261ad6 l 00000002 free space
+08261ad8 g 00000058 EffectExiledForceChainB
+08261b30 g 0000000a EffectExiledForceResolve
+08261b3a l 00000002 free space
+08261b3c g 00000046 EffectGolemSentryPrepare
+08261b82 l 00000002 free space
+08261b84 g 00000094 EffectGolemSentryCheck
+08261c18 g 000000c8 EffectGolemSentryChainB
+08261ce0 g 000000d0 EffectGolemSentryResolve
+08261db0 g 00000024 EffectPotOfAvaricePrepare
+08261dd4 l 00000044 AvariceTake
+08261e18 g 00000242 EffectPotOfAvariceResolve
+0826205a l 00000002 free space
+0826205c g 00000044 EffectMonsterReincarnationPrepare
+082620a0 g 00000018 EffectMonsterReincarnationChainA
+082620b8 g 00000012 EffectNewdoriaCheck
+082620ca l 00000002 free space
+082620cc g 0000000a EffectNewdoriaChainB
+082620d6 l 00000002 free space
+082620d8 g 0000000a EffectNewdoriaResolve
+082620e2 l 00000002 free space
+082620e4 l 00000050 BookOfLifeBestEntry
+08262134 g 00000046 EffectBookOfLifePrepare
+0826217a l 00000002 free space
+0826217c g 000001ec EffectBookOfLifeResolve
+08262368 g 00000028 CountActiveKycooOnField
+08262390 l 00000030 IsKycooId
+082623c0 g 000000ce ModAiOrderAttackers
+0826248e l 00000002 free space
+08262490 g 0000004a EffectKycooTheGhostDestroyerPrepare
+082624da l 00000002 free space
+082624dc g 0000021c EffectKycooTheGhostDestroyerResolve
+082626f8 g 00000074 IsBladeKnightCard
+0826276c g 000000c0 BladeKnightNegatesBattleFlipEffect
+0826282c g 00000064 HaDesNegatesBattleDestroyed
+08262890 g 0000006c HaDesNegatesBattleFlipEffect
+082628fc g 00000014 FlipEffectsLockedForTurn
+08262910 g 00000010 LockFlipEffectsForTurn
+08262920 g 00000010 ClearFlipEffectsLockForTurn
+08262930 g 0000005c IsGravekeeperMonster
+0826298c g 0000003a SoulExchangeCpuChainB
+082629c6 l 00000002 free space
+082629c8 l 00000044 WeakestOwnTribute
+08262a0c g 0000019c SoulExchangeCpuResolve
+08262ba8 l 00000078 BerserkGorillaMustAttackZone
+08262c20 g 00000032 BerserkGorillaBlocksBattleEnd
+08262c52 l 00000002 free space
+08262c54 g 00000020 BerserkGorillaBlocksTurnEnd
+08262c74 g 000000b0 AiPlanForcedAttack
+08262d24 g 00000038 ModAttacksBlocked
+08262d5c l 00000102 AiRoarBeforeBattle
+08262e5e l 00000002 free space
+08262e60 g 0000003c ModBattlePhaseStart
+08262e9c g 0000000c EffectThreateningRoarPrepare
+08262ea8 g 0000003c EffectThreateningRoarResolve
+08262ee4 l 0000002c LevelLimitAreaBActive
+08262f10 g 00000144 ApplyLevelLimitAreaB
+08263054 g 0000006c ModLevelLimitAreaBBlocksAtkPosition
+082630c0 g 0000001e EffectLevelLimitAreaBResolve
+082630de l 00000002 free space
+082630e0 g 0000002c FinalAttackOrdersActive
+0826310c g 000000f8 ApplyFinalAttackOrders
+08263204 g 0000001e EffectFinalAttackOrdersResolve
+08263222 l 00000002 free space
+08263224 l 00000044 MystikWokWeakestTribute
+08263268 l 00000034 MystikWokBestGainOnWeakestTribute
+0826329c l 0000003c AiWantsMystikWok
+082632d8 g 0000001e EffectMystikWokPrepare
+082632f6 l 00000002 free space
+082632f8 g 000000ec EffectMystikWokChainB
+082633e4 g 000000ac EffectMystikWokResolve
+08263490 l 00000070 AiTwoWeakestTributes
+08263500 g 00000054 ModTributeTwoCpuPick
+08263554 g 0000007e EffectHystericFairyPrepare
+082635d2 l 00000002 free space
+082635d4 g 0000000a EffectHystericFairyChainB
+082635de l 00000002 free space
+082635e0 g 00000090 EffectHystericFairyResolve
+08263670 g 00000004 EffectGravityBindResolve
+08263674 g 00000004 EffectMaskOfRestrictResolve
+08263678 l 00000088 AiHandCanTributeSummonNow
+08263700 l 00000058 AiWantsMaskOfRestrict
+08263758 g 00000026 EffectSecretBarrelPrepare
+0826377e l 00000002 free space
+08263780 g 00000036 EffectSecretBarrelResolve
+082637b6 l 00000002 free space
+082637b8 g 00000014 OjamaTokenDestroyed
+082637cc g 00000028 EffectOjamaTrioPrepare
+082637f4 g 00000060 EffectOjamaTrioResolve
+08263854 g 0000008c EffectThestalosResolve
+082638e0 g 000000b0 ModAttackTargetLocked
+08263990 g 0000005a EffectMaraudingCaptainPrepare
+082639ea l 00000002 free space
+082639ec g 00000198 EffectMaraudingCaptainResolve
+08263b84 l 00000050 IsAsuraAttacker
+08263bd4 l 0000007c AsuraAttackedMonster
+08263c50 l 0000012e AsuraEndAttack
+08263d7e l 00000002 free space
+08263d80 g 00000040 ModAttackTargetBlocked
+08263dc0 g 000000a6 ModCipherBonus
+08263e66 l 00000002 free space
+08263e68 l 00000082 ModBattleStatBonus
+08263eea l 00000002 free space
+08263eec g 000000c0 ModStatBonus
+08263fac g 000000a8 ModEndAttack
+08264054 l 00000038 ModAddTarget
+0826408c l 00000036 ModAddPileTargets
+082640c2 l 00000002 free space
+082640c4 l 00000024 IsMonsterId
+082640e8 l 0000002c IsNumberId
+08264114 l 00000024 IsTypeId
+08264138 l 0000000e IsManticoreCostTypeId
+08264146 l 00000002 free space
+08264148 l 00000034 IsWeakDragonId
+0826417c l 00000058 IsLowLevelMainDeckMonsterId
+082641d4 l 000000b8 IsSummoningTargetList
+0826428c g 000000ae ModFilterEffectTargets
+0826433a l 00000002 free space
+0826433c g 00000348 ModCollectEffectTargets
+08264684 g 00000070 EffectMagicDrainPrepare
+082646f4 g 0000019a EffectMagicDrainResolve
+0826488e l 00000002 free space
+08264890 g 0000007c ModCardNameSealed
+0826490c l 00000068 HandSpellIndex
+08264974 g 0000007c EffectCursedSealPrepare
+082649f0 g 000000c8 EffectCursedSealChainA
+08264ab8 g 000000d0 EffectCursedSealResolve
+08264b88 l 0000007c AiChainCursedSeal
+08264c04 g 00000090 EffectDivineWrathPrepare
+08264c94 g 00000018 EffectDivineWrathChainA
+08264cac g 000000a0 EffectDivineWrathResolve
+08264d4c l 00000024 AiWantsDivineWrathSet
+08264d70 l 00000050 AiMonsterEffectWorthDivineWrath
+08264dc0 g 0000009c AiChainDivineWrath
+08264e5c l 00000034 MyBodyListsCard
+08264e90 l 00000088 MyBodyHitsMonster
+08264f18 g 00000064 EffectMyBodyAsAShieldPrepare
+08264f7c g 00000028 EffectMyBodyAsAShieldChainA
+08264fa4 g 000000c4 EffectMyBodyAsAShieldResolve
+08265068 l 00000050 AiChainMyBodyAsAShield
+082650b8 g 000000e8 AiPickRitualSearch
+082651a0 g 00000088 SynchroCardsArrived
+08265228 g 00000040 JunkSynchronTargetId
+08265268 g 0000004e EffectJunkSynchronPrepare
+082652b6 l 00000002 free space
+082652b8 g 0000018e EffectJunkSynchronResolve
+08265446 l 00000002 free space
+08265448 l 0000005e ControlsFaceUpTuner
+082654a6 l 00000002 free space
+082654a8 l 00000064 QuillboltInGraveyard
+0826550c l 0000005c QuillboltCanActivate
+08265568 l 00000030 QuillboltActivate
+08265598 g 00000052 EffectQuillboltHedgehogPrepare
+082655ea l 00000002 free space
+082655ec g 000000e2 EffectQuillboltHedgehogResolve
+082656ce l 00000002 free space
+082656d0 l 0000001c AiQuillbolt
+082656ec l 00000064 PlaguespreaderInGraveyard
+08265750 l 00000068 PlaguespreaderCanActivate
+082657b8 l 00000030 PlaguespreaderActivate
+082657e8 g 0000005c EffectPlaguespreaderZombiePrepare
+08265844 l 0000005c PlaguespreaderCpuPick
+082658a0 g 000000a0 EffectPlaguespreaderZombieChainA
+08265940 g 000000d6 EffectPlaguespreaderZombieResolve
+08265a16 l 00000002 free space
+08265a18 l 00000072 AiPlaguespreader
+08265a8a l 00000002 free space
+08265a8c g 00000022 ModQuillboltAvailable
+08265aae l 00000002 free space
+08265ab0 g 00000040 ModQuillboltMenuRun
+08265af0 g 00000040 ModBattleDestroyedBanished
+08265b30 g 00000054 QuillboltBanishedOnLeave
+08265b84 g 00000036 EffectJunkWarriorPrepare
+08265bba l 00000002 free space
+08265bbc g 00000118 EffectJunkWarriorResolve
+08265cd4 l 00000044 StardustListsCard
+08265d18 l 000000d0 StardustHitsCard
+08265de8 l 00000036 StardustCanAnswer
+08265e1e l 00000002 free space
+08265e20 l 00000064 IsStardustAt
+08265e84 g 00000026 ModMonsterCanRespond
+08265eaa l 00000002 free space
+08265eac g 00000028 ModMonsterCanChain
+08265ed4 g 0000001a EffectStardustDragonPrepare
+08265eee l 00000002 free space
+08265ef0 g 00000020 EffectStardustDragonChainA
+08265f10 g 00000044 EffectStardustDragonResolve
+08265f54 g 000000ba EndPhase_StardustDragon
+0826600e l 00000002 free space
+08266010 l 0000009c AiChainStardustDragon
+082660ac g 00000080 BigBangShotLeaves
+0826612c g 00000034 ModUnlinkReviver
+08266160 g 000000c4 ModCallOfTheHauntedLeaves
+08266224 g 000000c6 BigBangShotMonsterLeaving
+082662ea l 00000002 free space
+082662ec l 0000001c QueueBlastWithChainTrigger
+08266308 g 0000007c BlastWithChainDestroyed
+08266384 g 00000050 BlastWithChainEquipDestroyed
+082663d4 l 000000a8 AiChainBlastWithChain
+0826647c l 00000034 IsFieldCard
+082664b0 g 00000060 EffectBlastWithChainPrepare
+08266510 g 00000078 EffectBlastWithChainCheck
+08266588 l 00000100 AiBlastWithChainTarget
+08266688 g 000000ce EffectBlastWithChainChainB
+08266756 l 00000002 free space
+08266758 g 000000d0 EffectBlastWithChainResolve
+08266828 l 0000001c AiPrintedMonsterAtk
+08266844 l 00000034 AiFlipEffectMonster
+08266878 l 00000018 AiNormalSummonTriggerMonster
+08266890 l 00000020 AiWeakerStatSummonAllowed
+082668b0 l 00000012 AiSummonBeatsPlayerMonsters
+082668c2 l 00000002 free space
+082668c4 g 00000020 AiHumanSwordsActive
+082668e4 l 00000098 AiWeakAtkWorthAttacking
+0826697c l 0000000e AiReturnsBeforeCounterattack
+0826698a l 00000002 free space
+0826698c l 00000056 AiWeakAttackerWorthIt
+082669e2 l 00000002 free space
+082669e4 g 00000056 AiSkipAttackSummon
+08266a3a l 00000002 free space
+08266a3c g 00000044 AiShouldTurnDefenseToAttack
+08266a80 g 0000007c AiSummonBetterWhenAttacksStopped
+08266afc g 000000c2 AiSummonCandidatePreferred
+08266bbe l 00000002 free space
+08266bc0 l 00000098 AiTributeMaskForHandIndex
+08266c58 l 0000002a AiHandSimSummonDamage
+08266c82 l 00000002 free space
+08266c84 g 000000b4 AiChooseBestNormalSummon
+08266d38 l 00000044 AiTributesBorrowed
+08266d7c l 0000004e AiPlayStealForTribute
+08266dca l 00000002 free space
+08266dcc g 00000186 AiStealForTributeSummon
+08266f52 l 00000002 free space
+08266f54 g 00000088 AiTributeIsUpgrade
+08266fdc l 00000026 ModFusionRecipeOf
+08267002 l 00000002 free space
+08267004 g 00000022 IsModFusionResult
+08267026 l 00000002 free space
+08267028 g 00000036 ModIsMaterialOfFusion
+0826705e l 00000002 free space
+08267060 g 000000de ModFindFusionMaterials
+0826713e l 00000002 free space
+08267140 g 0000004c ModHasPiercing
+0826718c g 0000006c AiRecruiterCopyEntry
+082671f8 l 000000ba AiSummonFaceUpForEffect
+082672b2 l 00000002 free space
+082672b4 g 000000c8 AiSummonFaceUpOnOpenField
+0826737c g 0000001c SandMothDestroyed
+08267398 g 00000088 EffectSandMothResolve
+08267420 g 00000060 SandMothSummoned
+08267480 g 00000062 ModHasSwappedStats
+082674e2 l 00000002 free space
+082674e4 l 00000050 TreebornFrogCanSummon
+08267534 g 000000cc TreebornFrogStandbyStep
+08267600 l 000000a4 WaveMotionStandbyCount
+082676a4 g 000000b8 EffectWaveMotionCannonPrepare
+0826775c g 000000a8 EffectWaveMotionCannonResolve
+08267804 l 00000060 AiWantsWaveMotionIgnition
+08267864 g 0000002c ModCanActivateFaceUpFieldCard
+08267890 g 00000018 ModFieldCardRequiresCanActivate
+082678a8 g 00000040 ModTurnStartRefreshZoneCanActivate
+082678e8 g 00000034 ModPlaceSpellZoneCanActivate
+0826791c g 0000008c ModFaceUpSpellActivateMenuFlags
+082679a8 g 00000004 EffectMirageOfNightmareResolve
+082679ac l 0000006c FaceUpMirageZone
+08267a18 l 000000b8 MirageDiscardStep
+08267ad0 l 00000074 MirageDrawStep
+08267b44 l 00000098 NightmareWheelStandbyStep
+08267bdc g 000000ac ModStandbyStep
+08267c88 g 00000038 CanCyberDragonSpecialSummon
+08267cc0 l 00000038 GilasaurusOpponentCanRevive
+08267cf8 l 000000f0 AiWantsGilasaurus
+08267de8 l 00000058 AiGilasaurusSpecialSummon
+08267e40 g 000000d8 AiSpecialSummonCyberDragon
+08267f18 l 00000028 IsCannonSoldierNumber
+08267f40 l 000000d4 AiCannonTributeRank
+08268014 g 00000084 AiCannonSoldierTribute
+08268098 g 0000007c AiModPickEffectTribute
+08268114 l 00000024 IsScientistBurner
+08268138 g 00000044 AiPickScientistTribute
+0826817c l 00000078 AiBestScientistFusionAtk
+082681f4 l 0000005a AiScientistHasBattleTarget
+0826824e l 00000002 free space
+08268250 l 0000004c AiActivateMonsterAt
+0826829c g 00000136 AiUseMagicalScientist
+082683d2 l 00000002 free space
+082683d4 l 0000003c AiFlipEffectUnsafeBeforeTribute
+08268410 l 000000a0 AiCpuHasTributeSummonInHand
+082684b0 g 0000008a AiShouldFlipFaceDownForTribute
+0826853a l 00000002 free space
+0826853c g 0000002e AiTryFlipSafeFlipEffectsForTribute
+0826856a l 00000002 free space
+0826856c l 00000030 AiSimClearMonsterOnField
+0826859c l 0000001c AiSimCpuBattleDamage
+082685b8 l 00000114 AiSimFlipRemovalEffect
+082686cc l 00000034 AiFlipRemovalMonsterNumber
+08268700 g 000000aa AiShouldFlipRemovalForAttacks
+082687aa l 00000002 free space
+082687ac l 0000001c AiCpuHasFaceDownSpellTrap
+082687c8 l 0000008a AiFieldHasFaceUpTrap
+08268852 l 00000002 free space
+08268854 l 0000001c AiHumanThreatensReaper
+08268870 g 0000006c AiShouldFlipReaperForTraps
+082688dc l 0000006c AiPlaysEquip
+08268948 l 00000088 AiApplyHandEquip
+082689d0 l 000001c0 AiBestAtkWithHandEquip
+08268b90 l 00000060 HasFaceUpNonLightMonster
+08268bf0 l 00000070 DoomedThunderNyanNyan
+08268c60 g 000000dc AiSimSummonBoosts
+08268d3c g 00000048 AiProjectedAtk
+08268d84 l 0000009c AiHasSummonTrigger
+08268e20 l 0000002c AiCostExcludedNumber
+08268e4c l 00000048 AiBorrowedMonsterZone
+08268e94 g 00000040 AiPickTributeFor
+08268ed4 g 00000054 AiTributeIsSameCard
+08268f28 l 00000134 AiSelfLpLoss
+0826905c g 0000004c AiActivationWouldLoseLp
+082690a8 l 00000030 AiPriorityDrawPhaseMarker
+082690d8 g 00000022 AiCpuRunPendingHandSpell
+082690fa l 00000002 free space
+082690fc l 0000001e AiReinforcementHasTarget
+0826911a l 00000002 free space
+0826911c g 000000f8 AiTryPlayCpuPriorityDrawSpells
+08269214 g 00000010 ModThunderDragonSearched
+08269224 g 000000f0 AiUseThunderDragon
+08269314 g 00000184 RyuKokkiAfterBattle
+08269498 g 00000158 DrillroidBeforeDamageCalc
+082695f0 l 00000048 CatastorFaceUpNonDarkMonster
+08269638 g 00000188 CatastorStartOfDamageStep
+082697c0 g 00000060 AiCatastorDestroysNonDark
+08269820 l 0000004c GoyoSpecialSummonStolen
+0826986c g 00000084 ModGoyoBattlePending
+082698f0 g 00000104 ModGoyoBeforeGraveSend
+082699f4 l 00000062 DeckHasCardNumber
+08269a56 l 00000002 free space
+08269a58 g 00000124 HydrogeddonAfterBattle
+08269b7c l 00000056 MobiusHasOtherSpellTrap
+08269bd2 l 00000002 free space
+08269bd4 g 000001c4 EffectMobiusChainB
+08269d98 g 00000098 EffectMobiusResolve
+08269e30 l 00000058 GranmargSetCardAt
+08269e88 g 0000001a EffectGranmargCheck
+08269ea2 l 00000002 free space
+08269ea4 g 00000120 EffectGranmargChainB
+08269fc4 g 0000001c ModPostHandLimitDiscard
+08269fe0 g 00000070 QueueSillvaTrigger
+0826a050 g 00000036 EffectSillvaPrepare
+0826a086 l 00000002 free space
+0826a088 l 0000005c SillvaCpuReturnPick
+0826a0e4 g 000001b6 EffectSillvaResolve
+0826a29a l 00000002 free space
+0826a29c g 000000ac ArchfiendsCallSentToGrave
+0826a348 g 000000c4 ModCannotBeTargeted
+0826a40c g 0000004c EffectArchfiendsCallPrepare
+0826a458 g 00000218 EffectArchfiendsCallResolve
+0826a670 g 00000080 ModAttackDeclaredTriggers
+0826a6f0 g 0000008c ModChaosKingSwap
+0826a77c g 0000008c EffectChaosKingArchfiendPrepare
+0826a808 l 00000078 ChaosKingSwitch
+0826a880 l 00000050 AiWantsChaosKingSwitch
+0826a8d0 g 0000007c EffectChaosKingArchfiendResolve
+0826a94c l 00000060 ShippingOverrideLive
+0826a9ac g 00000030 ModShippingType
+0826a9dc g 00000034 ModShippingAttribute
+0826aa10 g 00000040 ModShippingStats
+0826aa50 l 0000003c ShippingFaceUpMonster
+0826aa8c l 00000078 ShippingPairAt
+0826ab04 l 0000002c ShippingHasPartner
+0826ab30 l 00000022 ShippingAnyPair
+0826ab52 l 00000002 free space
+0826ab54 l 0000007c QueueShippingTriggers
+0826abd0 g 000000f0 EffectShippingArchfiendPrepare
+0826acc0 l 000000a6 ShippingCpuPair
+0826ad66 l 00000002 free space
+0826ad68 g 00000242 EffectShippingArchfiendChainB
+0826afaa l 00000002 free space
+0826afac g 000001e4 EffectShippingArchfiendResolve
+0826b190 g 00000028 QueueGolddTrigger
+0826b1b8 l 00000078 GolddTargetAt
+0826b230 g 00000036 EffectGolddPrepare
+0826b266 l 00000002 free space
+0826b268 g 0000019c EffectGolddChainB
+0826b404 g 00000140 EffectGolddResolve
+0826b544 l 00000028 DarkWorldLightningHasTarget
+0826b56c g 00000044 EffectDarkWorldLightningPrepare
+0826b5b0 g 00000060 EffectDarkWorldLightningResolve
+0826b610 g 000000fa KingTigerWanghuOnSummon
+0826b70a l 00000002 free space
+0826b70c l 00000052 AiHasSetCard
+0826b75e l 00000002 free space
+0826b760 l 00000096 AiLinkDestroysSetCard
+0826b7f6 l 00000002 free space
+0826b7f8 l 00000054 AiRemovalTakes
+0826b84c l 000000fe AiChainDiscardRemoval
+0826b94a l 00000002 free space
+0826b94c g 000000e0 AiShouldActivateMagicCylinder
+0826ba2c g 00000158 AiChainSummonTriggerResponse
+0826bb84 g 00000108 ModDuelStateCheck
+0826bc8c l 00000040 CountFaceUpMonsters
+0826bccc l 0000003c CountSpellTrapCards
+0826bd08 l 0000005c StrongestFaceUpAtk
+0826bd64 l 000000a4 AiBestVirusType
+0826be08 g 0000003e EffectTribeInfectingVirusChainB
+0826be46 l 00000002 free space
+0826be48 l 00000038 CountHandAndFieldCards
+0826be80 g 0000004c AiWantsSecretBarrel
+0826becc l 0000003c AiWantsChaosEmperorDragon
+0826bf08 l 00000042 AiOpponentHasFaceUpMonsterAtLeast
+0826bf4a l 00000002 free space
+0826bf4c l 0000020a AiWantsMonsterEffect
 0826c156 l 00000002 free space
-0826c158 l 00000062 SnatchStealBestTarget
-0826c1ba l 00000002 free space
-0826c1bc l 00000098 AiHandHasTributeSummonAfterSnatch
-0826c254 l 00000024 AiCanPlaySnatchStealNow
-0826c278 l 00000098 SnatchStealCpuCompareThreshold
-0826c310 l 00000026 SnatchStealWorthStealing
-0826c336 l 00000002 free space
-0826c338 g 00000080 AiSnatchStealIsLethal
-0826c3b8 g 00000010 AiSnatchStealCpuTargetZone
-0826c3c8 g 00000080 AiWantsSnatchSteal
-0826c448 l 00000054 IsEnemyControllerTarget
-0826c49c l 00000052 EnemyControllerBestTarget
-0826c4ee l 00000002 free space
-0826c4f0 l 00000042 EnemyControllerWeakestTribute
-0826c532 l 00000002 free space
-0826c534 g 00000018 EffectEnemyControllerPrepare
-0826c54c g 0000009c EffectEnemyControllerChainA
-0826c5e8 g 000001a8 EffectEnemyControllerChainB
-0826c790 l 0000006e IsZoneNamedByChain
-0826c7fe l 00000002 free space
-0826c800 l 0000003e EnemyControllerFreeZone
-0826c83e l 00000002 free space
-0826c840 g 00000090 EffectEnemyControllerResolve
-0826c8d0 l 00000064 AiWantsEnemyController
-0826c934 l 00000058 AiPoisonOfTheOldManChoice
-0826c98c g 00000084 EffectPoisonOfTheOldManChainA
-0826ca10 g 0000003c EffectPoisonOfTheOldManResolve
-0826ca4c g 00000034 ModTakesNoDamage
-0826ca80 g 00000054 ModTakesNoEffectDamage
-0826cad4 g 0000001c PlayerHasDesWombatOnField
-0826caf0 g 00000060 AiShouldSkipCpuEffectDamageVsDesWombat
-0826cb50 g 0000004a EffectLimiterRemovalPrepare
-0826cb9a l 00000002 free space
-0826cb9c g 00000090 EffectLimiterRemovalResolve
-0826cc2c g 0000005c EndPhase_LimiterRemoval
-0826cc88 l 00000036 AiWantsLimiterRemoval
-0826ccbe l 00000002 free space
-0826ccc0 g 0000002c EffectHallowedLifeBarrierPrepare
-0826ccec g 00000018 EffectHallowedLifeBarrierChainA
-0826cd04 g 00000038 EffectHallowedLifeBarrierResolve
-0826cd3c l 0000006c AiIncomingAttackDamage
-0826cda8 l 00000102 AiIncomingBurn
-0826ceaa l 00000002 free space
-0826ceac l 0000005c AiChainHallowedLifeBarrier
-0826cf08 g 00000038 EffectPikerusCircleResolve
-0826cf40 l 0000005c AiChainPikerusCircle
-0826cf9c l 00000040 IsProvisionsCost
-0826cfdc l 00000024 CountProvisionsCosts
-0826d000 l 00000084 ProvisionsOwnZone
-0826d084 g 00000034 EffectEmergencyProvisionsPrepare
-0826d0b8 l 0000004e TargetsProvisionsCost
-0826d106 l 00000002 free space
-0826d108 g 00000186 EffectEmergencyProvisionsChainA
-0826d28e l 00000002 free space
-0826d290 g 00000030 EffectEmergencyProvisionsResolve
-0826d2c0 l 0000006c AiChainEmergencyProvisions
-0826d32c l 00000038 AiWantsEmergencyProvisions
-0826d364 l 00000040 AiWantsMonsterReincarnation
-0826d3a4 l 00000020 AiWantsToonTableOfContents
-0826d3c4 l 00000014 AiWantsTokenThanksgiving
-0826d3d8 l 00000058 AiCpuFusionDeckHasThousandEyesForMetamorphosis
-0826d430 l 00000054 AiCpuHasLevel1MetamorphosisTributeOnField
-0826d484 l 00000024 AiCpuMetamorphosisThousandEyesWorthwhile
-0826d4a8 l 0000001e AiCpuMetamorphosisAllowed
-0826d4c6 l 00000002 free space
-0826d4c8 l 0000000a AiWantsMetamorphosis
-0826d4d2 l 00000002 free space
-0826d4d4 g 000000bc AiScapegoatEnablesMetamorphosis
-0826d590 l 0000003c AiScapegoatPreparePasses
-0826d5cc l 0000011a AiCpuHasMonsterToSummonThisTurn
-0826d6e6 l 00000002 free space
-0826d6e8 l 0000003c AiWantsScapegoatForCannon
-0826d724 g 00000064 AiWantsScapegoat
-0826d788 g 0000001a AiTryPlayScapegoat
-0826d7a2 l 00000002 free space
-0826d7a4 l 000000d8 AiWantsSteelcage
-0826d87c l 00000190 AiWantsSpell
-0826da0c l 00000078 WeakestGraveyardMonsterOf
-0826da84 l 00000150 AiLightDarkBanishSummon
-0826dbd4 g 00000068 AiPickSpellTrapToDestroy
-0826dc3c l 00000040 HasFaceDownMonster
-0826dc7c g 0000004c AiNoblemanOfCrossoutTarget
-0826dcc8 g 00000348 AiPlayAddedCards
-0826e010 g 000000b0 AiShouldRetreatToDefense
-0826e0c0 l 00000084 AiLinkTargetsOnlySolemn
-0826e144 g 000000c0 AiChainSolemnJudgment
-0826e204 g 0000049a AiShouldActivateAddedCard
-0826e69e l 00000002 free space
-0826e6a0 g 0000002c GetCardEffectRow
-0826e6cc g 000000d0 DetachRevivingCards
-0826e79c l 00000010 CardNumberOfId
-0826e7ac l 00000032 PickDeckChoice
-0826e7de l 00000002 free space
-0826e7e0 l 00000010 YugiKaibaDeck
-0826e7f0 l 00000010 CritterDeck
-0826e800 l 00000010 TreasureDeck
-0826e810 l 00000010 ImperialDeck
-0826e820 l 00000010 AndroidDeck
-0826e830 l 00000010 JoeyPegasusDeck
-0826e840 l 00000010 FiberDeck
-0826e850 l 00000010 YataDeck
-0826e860 l 00000010 ScientistDeck
-0826e870 l 00000010 VampireDeck
-0826e880 l 00000010 ChaosDeck
-0826e890 l 00000010 WarriorDeck
-0826e8a0 g 000000ac ModSetOpponentRecipe
-0826e94c g 0000001c ModRecipeBuilding
-0826e968 g 0000000c ModRecipeBuildLimit
-0826e974 g 000000fc ModRecipeBuildBegin
-0826ea70 g 00000030 ModRecipeBuildEnd
-0826eaa0 l 00000010 CyberDeck
-0826eab0 l 00000010 ReaperDeck
-0826eac0 l 00000010 GoatDeck
-0826ead0 l 0000011e PickOpponentDeckOverride
-0826ebee l 00000002 free space
-0826ebf0 g 00000004 GetRecipePreset
-0826ebf4 g 00000058 GiveStartingTrunk
-0826ec4c g 00000104 BuildModStarterDeck
-0826ed50 l 00000050 IsLaterMatchDuel
-0826eda0 g 00000010 ModMatchClearOpponentDeck
-0826edb0 g 00000040 GetOpponentDeckOverride
-0826edf0 l 00000054 AdjustSavedCopies
-0826ee44 g 00000044 ModMatchSavePlayerDeck
-0826ee88 g 000000b8 ModMatchRestorePlayerDeck
-0826ef40 g 0000001c GetTrunkDeckCopies
-0826ef5c g 0000001c GetTrunkSideCopies
-0826ef78 g 0000001c GetTrunkFusionCopies
-0826ef94 g 0000003c SetTrunkDeckCopies
-0826efd0 g 0000003c SetTrunkSideCopies
-0826f00c g 0000003c SetTrunkFusionCopies
-0826f048 g 000002a0 IsBelowCardCopyLimit
-0826f2e8 g 00000058 AddCardToSavedDeck
-0826f340 g 00000054 AddCardToSavedSideDeck
-0826f394 g 00000058 AddCardToSavedFusionDeck
-0826f3ec l 00000048 RemoveFromSavedList
-0826f434 g 00000034 RemoveCardFromSavedDeck
-0826f468 g 00000034 RemoveCardFromSavedSideDeck
-0826f49c g 00000034 RemoveCardFromSavedFusionDeck
-0826f4d0 l 00000080 TrimSavedListToCopyLimits
-0826f550 g 00000024 TrimSavedDecksToCopyLimits
-0826f574 l 00000134 CollectIllegalCards
-0826f6a8 l 00000026 AppendStr
-0826f6ce l 00000002 free space
-0826f6d0 l 00000018 TextLen
-0826f6e8 l 0000004c AppendNum
-0826f734 l 0000002c DrawLine
-0826f760 l 00000208 RenderView
-0826f968 g 00000014 CountIllegalCards
-0826f97c g 0000005c BanlistBlocksDuel
-0826f9d8 g 000000d8 BanlistView_Run
-0826fab0 l 0000003e SheetPixel
-0826faee l 00000002 free space
-0826faf0 l 00000036 GetPixel
-0826fb26 l 00000002 free space
-0826fb28 l 0000003c PutPixel
-0826fb64 l 0000006e ChunkPixel
-0826fbd2 l 00000002 free space
-0826fbd4 g 000002cc BuildMenuLabelEx
-0826fea0 g 0000000c BuildMenuLabel
-0826feac g 00000014 DeckRecipes_BuildLabel
-0826fec0 l 00000014 ReadHeader
-0826fed4 l 00000034 WriteActive
-0826ff08 l 00000020 ReadSlot
-0826ff28 l 00000040 WriteSlot
-0826ff68 l 00000094 CurrentDeckToBuf
-0826fffc l 00000014 SlotName
-08270010 l 00000018 SetActive
-08270028 l 000000f8 IsDeckUnsaved
-08270120 l 000000c8 ReturnDecksToTrunk
-082701e8 l 0000009c NoteLeftOut
-08270284 l 000000da TakeFromTrunk
-0827035e l 00000002 free space
-08270360 l 00000028 SwitchTo
-08270388 l 000000b0 LoadBuf
-08270438 l 0000012c PresetToBuf
-08270564 l 00000128 LoadRecipes
-0827068c g 00000020 DeckRecipes_OnNewGame
-082706ac l 00000018 AppendStr
-082706c4 l 00000066 AppendNum
-0827072a l 00000002 free space
-0827072c l 00000024 OpponentName
-08270750 l 00000038 BuildingOpponentDeck
-08270788 l 00000040 AppendOwner
-082707c8 l 00000024 StatusRecipe
-082707ec l 00000038 DrawText
-08270824 l 0000001c DrawLine
-08270840 l 0000043c RenderList
-08270c7c l 00000140 RenderNameEntry
-08270dbc l 00000238 RenderLeftOut
-08270ff4 l 00000040 Render
-08271034 l 00000060 DrawSprites
-08271094 l 00000044 MoveCursor
-082710d8 l 0000005c StartNameEntry
-08271134 l 000000b8 FinishNameEntry
-082711ec l 00000134 HandleNameEntry
-08271320 l 00000248 DoAction
-08271568 l 0000009a HandleMenu
-08271602 l 00000002 free space
-08271604 l 000000b8 ChallengerMayStart
-082716bc l 0000005c FinishPlayerPick
-08271718 l 00000050 FinishOpponentPick
-08271768 l 000003dc HandleInput
-08271b44 l 00000304 RunScene
-08271e48 g 00000012 CB_DeckRecipes
-08271e5a l 00000002 free space
-08271e5c g 000000c0 CB_OpponentRecipes
-08271f1c g 0000000e CB_ChallengerRecipes
-08271f2a l 00000002 free space
-08271f2c g 00000014 PackShop_BuildLabel
-08271f40 l 0000000e PackShop_Cost
-08271f4e l 00000002 free space
-08271f50 l 00000024 PackShop_CanOpen
-08271f74 l 00000012 PackShop_Pay
-08271f86 l 00000002 free space
-08271f88 g 00000014 PackShop_Start
-08271f9c l 00000030 CentrePack
-08271fcc g 0000001c ModPackShopIsOpen
-08271fe8 l 0000000c CentrePackId
-08271ff4 g 00000208 CB_PackShop
-082721fc g 00000080 CB_RewardPack
-0827227c g 00000022 FormatPackIndexFromId
-0827229e l 00000002 free space
-082722a0 g 00000038 ModFormatPackShopCost
-082722d8 l 00000078 FormatPackInfo
-08272350 g 0000002c ModGetSelectedPackId
-0827237c g 00000028 ModPackInfoAtRow
-082723a4 g 00000034 ModPackList_Count
-082723d8 l 0000003a ModPackList_RowForShopSlot
-08272412 l 00000002 free space
-08272414 g 0000007e ModPackList_RowAt
-08272492 l 00000002 free space
-08272494 g 00000018 ModPackShopList_Begin
-082724ac g 00000014 ModPackShopList_Reset
-082724c0 g 00000044 ModPackShopList_SyncSceneWork
-08272504 l 00000042 ModIsFormatPackUnlocked
-08272546 l 00000002 free space
-08272548 l 00000064 ModPackList_AppendFormatRow
-082725ac g 00000028 ModPackList_AddFormatPackById
-082725d4 g 00000020 ModCountUnlockedFormatPacks
-082725f4 g 00000034 ModPackList_AddUnlockedPacks
-08272628 g 0000007c ModFormatPackLoadCoverGfx
-082726a4 l 00000034 WeightForNumber
-082726d8 g 00000098 ModPackOpenCardNameShines
-08272770 l 00000026 CardAlreadyPicked
-08272796 l 00000002 free space
-08272798 l 00000030 RandomBelow
-082727c8 l 00000032 WeightedPick
-082727fa l 00000002 free space
-082727fc g 0000009a ModRewardPack
-08272896 l 00000002 free space
-08272898 g 000000e4 ModGenerateFormatPackCards
-0827297c l 00000034 SetDP
-082729b0 g 0000003c GetDP
-082729ec g 00000014 AddDP
-08272a00 g 0000001e SpendDP
-08272a1e l 00000002 free space
-08272a20 g 00000040 GetPackCost
-08272a60 l 0000003e TableCost
-08272a9e l 00000002 free space
-08272aa0 l 00000028 NormalizeCardNumberForCost
-08272ac8 g 0000002c GetCardUsagePriceInFormat
-08272af4 g 00000088 GetCardCost
-08272b7c g 00000038 AwardDuelDP
-08272bb4 l 00000018 AppendStr
-08272bcc l 0000004c AppendNum
-08272c18 l 00000068 DpText_Render
-08272c80 l 00000084 DpText_Draw
-08272d04 g 00000044 MainMenuDP_Render
-08272d48 g 00000024 MainMenuDP_Draw
-08272d6c l 0000014c PackListLines_Draw
-08272eb8 g 00000010 PackListDP_Draw
-08272ec8 g 00000010 PackListReward_Draw
-08272ed8 g 0000000c PackListDP_NotEnough
-08272ee4 g 00000020 PackListDP_Reset
-08272f04 g 00000044 CanBuyCard
-08272f48 g 00000080 PasswordDP_Draw
-08272fc8 g 00000058 PasswordDP_SetNotEnough
-08273020 l 00000038 TextWidth
-08273058 l 00000028 CanvasPixel
-08273080 l 0000008c RenderBoxLine
-0827310c g 000000f8 PasswordDP_SetConfirm
-08273204 g 0000004c PasswordDP_DrawConfirm
-08273250 g 0000000c PasswordDP_Reset
-0827325c g 00000024 PasswordDP_DrawNotEnough
-08273280 g 00000024 GetActiveBanlist
-082732a4 l 0000003e InBanlistPool
-082732e2 l 00000002 free space
-082732e4 g 000000a2 GetBanlistCopyLimit
-08273386 l 00000002 free space
-08273388 g 00000064 IsInActiveBanlistPool
-082733ec g 0000005e FormatCardLimit
-0827344a l 00000002 free space
-0827344c g 00000014 BanlistName
-08273460 g 00000014 BanlistDate
-08273474 l 0000005e DeckLimitIn
-082734d2 l 00000002 free space
-082734d4 l 00000050 OwnedCopies
-08273524 l 000000c0 MainDeckCapacity
-082735e4 l 000000d8 MainDeckCardsKept
-082736bc g 00000036 ModDeckEditMayLeave
-082736f2 l 00000002 free space
-082736f4 l 000000b8 SetActiveBanlist
-082737ac g 0000000a BanlistMainDeckCapacity
-082737b6 l 00000002 free space
-082737b8 g 0000000a SwitchToBanlist
-082737c2 l 00000002 free space
-082737c4 g 00000014 BanlistsMenu_BuildLabel
-082737d8 l 00000018 AppendStr
-082737f0 l 0000004c AppendNum
-0827383c l 00000038 DrawText
-08273874 l 00000144 Render
-082739b8 l 00000060 DrawSprites
-08273a18 l 00000034 MoveCursor
-08273a4c l 0000010c HandleInput
-08273b58 g 00000138 CB_Banlists
-08273c90 g 0000002c ModGetSpeedMode
-08273cbc g 00000034 ModSetSpeedMode
-08273cf0 g 0000001c ModDuelApplySpeedSettings
-08273d0c g 0000003c ModDuelFastForwardActive
-08273d48 g 00000030 ModHideCardAnimations
-08273d78 g 00000030 ModHideBattleScenes
-08273da8 g 00000010 ModDuelSkipResponsesActive
-08273db8 g 00000024 ModDuelFastTimerSkip
-08273ddc g 0000001a ModDuelFastAnimAdvance
-08273df6 l 00000002 free space
-08273df8 l 00000030 DeckReorderUsesShoulderButtons
-08273e28 g 0000007c ModDuelSettingsHandleInput
-08273ea4 g 000000b0 ModDuelSettingsRun
-08273f54 g 00000014 SettingsMenu_BuildLabel
-08273f68 l 00000038 DrawText
-08273fa0 l 000001a0 Render
-08274140 l 00000060 DrawSprites
-082741a0 l 0000005c SelectCursor
-082741fc l 0000006e HandleInput
-0827426a l 00000002 free space
-0827426c l 00000100 SettingsScene_Step
-0827436c g 00000034 CB_Settings
-082743a0 g 00000040 ModOpponentFrozen
-082743e0 g 00000004 ModTestingFreezeOpponentActive
-082743e4 g 00000004 ModTestingCpuCardBlocked
-082743e8 g 00000014 ModTestingCpuActivationBlocked
-082743fc g 00000046 ModTestingSkipCardShow
-08274442 l 00000002 free space
-08274444 g 00000014 ModTestingHideBattle
-08274458 g 00000004 ModTestingHidePrompts
-0827445c g 00000004 ModTestingHideChainList
-08274460 g 00000002 ModTestingTick
-08274462 l 00000002 free space
-08274464 g 00000004 ModTestingCpuSetLimitReached
-08274468 g 00000014 ModPageDuelist
-0827447c l 0000001c Opponent
-08274498 g 00000076 ModIsOpponentUnlocked
-0827450e l 00000002 free space
-08274510 g 0000002a ModFormatBanlist
-0827453a l 00000002 free space
-0827453c g 00000054 ModUnlockedFormatCount
-08274590 l 00000028 FormatDuelist
-082745b8 g 00000052 ModRecordDuelist
-0827460a l 00000002 free space
-0827460c g 0000002c ModRecordHasNextPage
-08274638 g 000001fc ModRecordDrawPage
-08274834 g 00000028 ModFormatWins
-0827485c g 00000012 ModIsFormatUnlocked
-0827486e l 00000002 free space
-08274870 g 0000005c ModEventChallenger
-082748cc g 0000001e ModSlotHidden
-082748ea l 00000002 free space
-082748ec g 0000000c ModNextPageOpen
-082748f8 g 00000050 ModOpponentSelectStart
-08274948 g 0000001a ModOpponentSelectName
-08274962 l 00000002 free space
-08274964 g 00000018 ModSkipsDuelDialogue
-0827497c g 0000002c ModOpponentPlaysRecipe
-082749a8 g 00000018 ModWinGivesPack
-082749c0 g 00000016 ModRecipeBuildCopies
-082749d6 l 00000002 free space
-082749d8 g 00000010 ModOpponentPicksPlayerDeck
-082749e8 g 00000030 ModDebugDuel
-08274a18 g 00000020 ModAlwaysWinRps
-08274a38 g 00000030 ModEmptyDeckDuel
-08274a68 g 00000004 ModTestDuel
-08274a6c g 0000002e ModDeckListVisible
-08274a9a l 00000002 free space
-08274a9c g 00000056 ModCardMenuDeckCommands
-08274af2 l 00000002 free space
-08274af4 g 00000060 ModCardMenuCloseForListView
-08274b54 g 00000032 ModCardMenuFirstCommand
-08274b86 l 00000002 free space
-08274b88 g 00000074 ModCardMenuCycleCommand
-08274bfc g 00000032 ModCardMenuDeckFirstCommand
-08274c2e l 00000002 free space
-08274c30 g 00000078 ModCardMenuDeckCycleCommand
-08274ca8 g 00000092 ModCardMenuDeckDrawIcons
-08274d3a l 00000002 free space
-08274d3c g 00000064 ModCardMenuDeckDrawLabel
-08274da0 g 0000001c ModOpponentFormat
-08274dbc l 00000040 ColorDist
-08274dfc l 00000050 ArtPixel
-08274e4c l 000000a4 PortraitColor
-08274ef0 l 0000005c PutPortraitPixel
-08274f4c l 0000002a DuelistPortraitPixel
-08274f76 l 00000002 free space
-08274f78 l 0000013c DrawSlotPortrait
-082750b4 l 00000134 DrawArtPortrait
-082751e8 l 00000036 RecordFace
-0827521e l 00000002 free space
-08275220 l 000000a8 DrawRecordFace
-082752c8 g 00000124 ModOpponentSelectPortraits
-082753ec l 00000010 Image
-082753fc l 00000084 LoadImage
-08275480 l 0000001a PoolStart
-0827549a l 00000002 free space
-0827549c l 00000146 PoolAdd
-082755e2 l 00000002 free space
-082755e4 l 00000078 LoadScreenImage
-0827565c l 0000002c DrawInfoText
-08275688 l 00000054 LoadInfoLines
-082756dc l 00000038 DrawInfoHalf
-08275714 g 00000148 ModTitle_Load
-0827585c g 00000034 ModTitle_LoadWave
-08275890 g 00000044 ModTitle_LoadCopyright
-082758d4 g 00000016 ModTitle_Draw
-082758ea l 00000002 free space
-082758ec l 0000004c Tiles4To8
-08275938 g 0000009c ModLoadFieldIconGfx
-082759d4 l 0000004a PutCellPixel
-08275a1e l 00000002 free space
-08275a20 l 0000000c ModFieldIconMiniColor
-08275a2c l 00000022 MiniByte
-08275a4e l 00000002 free space
-08275a50 g 00000184 ModFieldCardTile
-08275bd4 g 00000054 ModLoadCardSpriteGfx
-08275c28 l 00000180 BuildCardSprite
-08275da8 l 0000012c CardSpriteTile
-08275ed4 g 00000042 ModAddCardSprite
-08275f16 l 00000002 free space
-08275f18 g 00000046 ModAddHandCardSprite
-08275f5e l 00000002 free space
-08275f60 g 0000007c ModAddAffineCardSprite
-08275fdc l 000000be BuildCounterBadge
-0827609a l 00000002 free space
-0827609c g 00000098 ModDrawCounterBadges
-08276134 g 0000000c ModChainIconTile
-08276140 g 00000028 ModChainIconsClear
-08276168 l 00000056 PutSprite2dPixel
-082761be l 00000002 free space
-082761c0 g 0000010c ModChainIconBuild
-082762cc g 00000018 ModDeckRingSetCard
-082762e4 g 00000108 ModDeckRingBegin
-082763ec g 000001ac ModDeckRingArt
-08276598 l 00000040 ZoneCardShown
-082765d8 l 00000050 DrawPileLabel
-08276628 g 00000244 DuelScreen_DrawCursorInfo
-0827686c l 00000042 RaceKey
-082768ae l 00000002 free space
-082768b0 l 00000018 CardStatsWord
-082768c8 l 0000000e IsMonsterType
-082768d6 l 00000002 free space
-082768d8 l 00000016 AttributeOf
-082768ee l 00000002 free space
-082768f0 l 00000026 InPointsRange
-08276916 l 00000002 free space
-08276918 l 00000042 MatchesName
-0827695a l 00000002 free space
-0827695c l 0000003a LimitsSet
-08276996 l 00000002 free space
-08276998 l 000000d0 MatchesLimits
-08276a68 g 000000a4 ListRefine_ApplyToList
-08276b0c l 0000003c NameLess
-08276b48 l 00000034 RankedFirst
-08276b7c g 00000038 ModCompareCardsByType
-08276bb4 g 00000040 ModCompareCardsByAttribute
-08276bf4 l 00000024 OnlyNameRow
-08276c18 l 00000014 RowCount
-08276c2c l 00000020 ClearLimits
-08276c4c g 00000018 ListRefine_Reset
-08276c64 l 0000004a AppendNum
-08276cae l 00000002 free space
-08276cb0 l 000000c0 RowValueText
-08276d70 l 00000038 DrawText
-08276da8 l 000000bc Render
-08276e64 l 00000044 DrawListIcon
-08276ea8 l 00000050 RestorePages
-08276ef8 g 000000e8 ListRefine_Open
-08276fe0 l 0000007c ChangeValue
-0827705c l 00000088 Back
-082770e4 l 0000007c Confirm
-08277160 g 000000d4 ListRefine_Update
-08277234 l 00000050 HandRemoveAt
-08277284 l 00000064 MulliganRedrawDuelHand
-082772e8 g 0000000a ModMulliganAllowedInDuel
-082772f2 l 00000002 free space
-082772f4 g 0000003c ModMulliganAvailable
-08277330 g 00000030 ModLoadMulliganMenuGfx
-08277360 g 00000074 ModMulliganFromDeckMenu
-082773d4 l 00000028 ReturnDeckCopiesToTrunk
-082773fc g 000000e4 ModDeckEditEmptyMainAndSide
-082774e0 l 00000018 LevelOf
-082774f8 l 00000074 FaceUpMonster
-0827756c l 00000058 NonTunerMask
-082775c4 l 00000060 LevelsReachable
-08277624 l 00000038 RequiredTuner
-0827765c l 000000a8 TunerFits
-08277704 l 00000046 CanSynchroSummon
-0827774a l 00000002 free space
-0827774c g 00000038 ModSynchroListAccepts
-08277784 g 0000009e ModSynchroAvailable
-08277822 l 00000002 free space
-08277824 l 00000068 PerformSynchroSummon
-0827788c l 0000008c PickTunerInput
-08277918 l 000000fc PickMaterialInput
-08277a14 g 00000278 ModSynchroMenuRun
-08277c8c g 000001b6 AiTrySynchroSummon
-08277e42 l 00000002 free space
-08277e44 g 00000014 ModSynchroReset
-08277e58 g 0000000c ModSynchroSummoningId
-08277e64 g 0000004c ModSynchroArrived
-08277eb0 g 00000044 ModWasSynchroSummonedId
-08277ef4 g 00000054 ModWasSynchroSummoned
-08277f48 g 00000048 ModCardRaceName
-08277f90 g 00000108 ModCardTypeLine
-08278098 l 0000004c RuleOf
-082780e4 l 000000cc MaterialFits
-082781b0 l 00000038 FittingMask
-082781e8 l 00000016 CountBits
-082781fe l 00000002 free space
-08278200 g 00000046 ModXyzCanSummon
-08278246 l 00000002 free space
-08278248 l 00000020 FreeEntry
-08278268 l 0000001c ToGraveyard
-08278284 l 00000030 FlushPending
-082782b4 l 00000050 XyzSerial
-08278304 g 00000038 XyzMaterialCount
-0827833c g 00000044 ModXyzZoneCleared
-08278380 g 00000014 ModXyzReset
-08278394 g 00000070 ModXyzArrived
-08278404 l 00000060 BuildView
-08278464 g 00000018 ModXyzMaterialView
-0827847c l 00000050 DetachId
-082784cc g 000000d4 XyzDetachBegin
-082785a0 g 0000002c XyzDetachPicked
-082785cc g 00000070 ModXyzEffectUsed
-0827863c g 00000064 ModXyzMarkEffectUsed
-082786a0 l 00000108 PerformXyzSummon
-082787a8 l 00000074 BuildPrompt
-0827881c l 00000112 PickMaterialInput
-0827892e l 00000002 free space
-08278930 g 00000106 ModXyzMenuRun
-08278a36 l 00000002 free space
-08278a38 g 0000004e ModFusionKindFrame
-08278a86 l 00000002 free space
-08278a88 g 0000018a AiTryXyzSummon
-08278c12 l 00000002 free space
-08278c14 l 0000000c ObjTile
-08278c20 l 00000040 RenderLabel
-08278c60 l 00000084 AddRow
-08278ce4 l 00000084 AddLifePoints
-08278d68 l 000000ac DimHudPalettes
-08278e14 g 00000012 ModDrawDuelHud
-08278e26 l 00000002 free space
-08278e28 g 000001a8 ModDrawDuelHudPanel
-08278fd0 g 00000014 ModLinkReset
-08278fe4 g 00000080 ModEmzSlotOf
-08279064 l 0000003c EmzOccupant
-082790a0 l 00000030 HasEmzMonster
-082790d0 g 0000003c ModZoneFieldX
-0827910c g 00000030 ModZoneFieldY
-0827913c g 00000078 ModLinkZoneCleared
-082791b4 g 00000084 ModLinkArrived
-08279238 l 00000040 GridOf
-08279278 g 00000122 ModLinkPointsTo
-0827939a l 00000002 free space
-0827939c l 00000054 PlaceOccupant
-082793f0 g 0000003c ModLinkPointedMonsters
-0827942c l 00000058 RecordFree
-08279484 l 00000086 PointedZones
-0827950a l 00000002 free space
-0827950c g 00000040 ModLinkPointedFreeZones
-0827954c l 0000001a EmzRecordOf
-08279566 l 00000002 free space
-08279568 l 00000030 EmzRecord
-08279598 g 00000008 ModLinkProxyState
-082795a0 g 0000000c ModSummonRestrictZones
-082795ac g 0000001c ModSummonSetZone
-082795c8 l 00000064 ApplyPlace
-0827962c l 0000019c BuildCandidates
-082797c8 l 0000005c PlaceScreenXY
-08279824 l 00000068 PickPlaceInput
-0827988c l 00000070 CpuPlace
-082798fc g 000001b4 ModSummonZoneStep
-08279ab0 g 00000036 ModSummonDefenseChoice
-08279ae6 l 00000002 free space
-08279ae8 l 00000074 BuildArrowTiles
-08279b5c l 0000006c AddArrow
-08279bc8 g 00000158 ModDrawLinkArrows
-08279d20 l 00000094 FramePixel
-08279db4 l 00000016 Plot
-08279dca l 00000002 free space
-08279dcc l 0000010c PaintArrow
-08279ed8 g 00000088 ModLinkFrame
-08279f60 l 00000024 DarkFrame
-08279f84 g 0000003c ModCardStatPal
-08279fc0 g 0000002c ModCardViewStatColor
-08279fec l 0000004c RuleOf
-0827a038 l 00000164 MaterialFits
-0827a19c l 00000038 FittingMask
-0827a1d4 l 00000016 CountBits
-0827a1ea l 00000002 free space
-0827a1ec l 000000c8 ValuesAll
-0827a2b4 l 00000034 ValuesReach
-0827a2e8 l 000000e0 LinkPlaces
-0827a3c8 l 0000004c MaterialSetFits
-0827a414 l 00000084 AnyMaterialSet
-0827a498 g 0000004e ModLinkCanSummon
-0827a4e6 l 00000002 free space
-0827a4e8 l 000000ac PerformLinkSummon
-0827a594 l 00000030 BuildMaterialPrompt
-0827a5c4 l 000001c8 PickMaterialInput
-0827a78c g 0000016c ModLinkMenuRun
-0827a8f8 g 00000172 AiTryLinkSummon
-0827aa6a l 00000002 free space
-0827aa6c l 0000004c PreDuelEntryOf
-0827aab8 l 00000024 LzDecompress
-0827aadc l 00000018 ReadU32
-0827aaf4 l 00000042 QrModule
-0827ab36 l 00000002 free space
-0827ab38 l 00000070 UntilePicture
-0827aba8 l 000000d0 DrawQrCode
-0827ac78 l 00000088 DrawPreDuelText
-0827ad00 l 00000094 LoadScene
-0827ad94 l 000000b8 TickScene
-0827ae4c l 00000120 PreDuelLoad
-0827af6c g 000000d4 CB_ModPreDuelImage
-0827b040 g 00000038 DiceScreen_RunGraceful
-0827b078 g 00000038 DiceScreen_RunPlain
-0827b0b0 g 00000014 ExodiaScene_ResetPieceState
-0827b0c4 g 00000038 ExodiaScene_StartPieceFlight
-0827b0fc g 00000040 ExodiaScene_HBlank
-0827b13c g 0000009c ExodiaScene_DrawAffineAnim
-0827b1d8 g 000000cc ExodiaScene_Init
-0827b2a4 g 00000026 CopyObjTileBlock4x4
-0827b2ca l 00000002 free space
-0827b2cc g 00000018 LoadObjTileBlock4x4
-0827b2e4 g 0000010c ExodiaScene_LoadEye
-0827b3f0 g 000001d0 ExodiaScene_LoadFlames
-0827b5c0 g 00000240 ExodiaScene_AssemblePieces
-0827b800 g 00000118 ExodiaScene_GatherPieces
-0827b918 g 000000e4 ExodiaScene_DrawSprites
-0827b9fc g 000000c8 ExodiaScene_Finale
-0827bac4 g 00000028 ExodiaScene_FadeInEye
-0827baec g 00000068 ExodiaScene_FadeInFlames
-0827bb54 g 00000058 ExodiaScene_BlendFlames
-0827bbac g 00000038 ExodiaScene_Run
-0827bbe4 g 00000068 DestinyBoardScene_HBlank
-0827bc4c g 00000030 DestinyBoardScene_AdvanceWave
-0827bc7c g 00000024 ScrollLayer_Init
-0827bca0 g 00000042 ScrollLayer_Move
-0827bce2 l 00000002 free space
-0827bce4 g 00000048 ScrollLayer_StreamRow
-0827bd2c g 00000074 DestinyBoardScene_VBlank
-0827bda0 g 000006fc DestinyBoardScene_DrawFinalLetters
-0827c49c g 0000015c Password_RollAndCheck
-0827c5f8 g 000001ca Password_RevealAndGiveCard
-0827c7c2 l 00000002 free space
-0827c7c4 g 000000c4 Password_ShowError
-0827c888 g 00000010 Password_FadeOut
-0827c898 g 000000a4 Password_ShowUsed
-0827c93c g 00000094 CB_Password
-0827c9d0 g 00000034 CardTrading_LoadObjTiles
-0827ca04 g 000000f4 CardTrading_DrawMenu
-0827caf8 g 00000014 CardTrading_ClearState
-0827cb0c g 000001b8 CardTrading_InitVideo
-0827ccc4 g 0000003c CardTrading_FadeIn
-0827cd00 g 000000b6 CardTrading_HandleInput
-0827cdb6 l 00000002 free space
-0827cdb8 g 00000004 CardTrading_UnusedReturnFalse
-0827cdbc g 0000003a CardTrading_FadeOut
-0827cdf6 l 00000002 free space
-0827cdf8 g 00000078 CardTrading_SelectCard
-0827ce70 g 00000094 CardTrading_ThrowCard
-0827cf04 g 00000048 CardTrading_ReverseThrow
-0827cf4c g 000000dc CardTrading_Exchange
-0827d028 g 00000078 CardTrading_ShowReceivedCard
-0827d0a0 g 00000078 CB_CardTrading
-0827d118 g 0000000e CardTrading_UnusedCallbackWrapper
-0827d126 l 00000002 free space
-0827d128 g 0000004a CardListView_Exit
-0827d172 l 00000002 free space
-0827d174 g 00000120 CardListView_Update
-0827d294 g 000002aa CardListView_HandleInput
-0827d53e l 00000002 free space
-0827d540 g 0000005c CardListView_Run
-0827d59c g 00000284 CardListView_Open
-0827d820 g 000000fc CanCardTargetZone
-0827d91c g 00000070 IsZoneTargetable
-0827d98c g 00000174 EffectEquippedTributeCheck
-0827db00 g 00000074 EffectTrapTargetCheck
-0827db74 g 00000058 EffectOpponentMonsterCheck
-0827dbcc g 00000434 EffectEquipTargetCheck
-0827e000 g 00000060 EffectStopDefenseCheck
-0827e060 g 0000007c EffectBlastJugglerCheck
-0827e0dc g 00000068 EffectMagicTargetCheck
-0827e144 l 003a5cb0 free space
+0826c158 l 0000005a AiMegamorphBestEquipZone
+0826c1b2 l 00000002 free space
+0826c1b4 l 000000a0 AiMegamorphSimBattleDamage
+0826c254 g 0000008e AiWantsMegamorph
+0826c2e2 l 00000002 free space
+0826c2e4 l 00000042 SnatchStealWeakestTribute
+0826c326 l 00000002 free space
+0826c328 l 00000062 SnatchStealBestTarget
+0826c38a l 00000002 free space
+0826c38c l 00000098 AiHandHasTributeSummonAfterSnatch
+0826c424 l 00000024 AiCanPlaySnatchStealNow
+0826c448 l 00000098 SnatchStealCpuCompareThreshold
+0826c4e0 l 00000026 SnatchStealWorthStealing
+0826c506 l 00000002 free space
+0826c508 g 00000080 AiSnatchStealIsLethal
+0826c588 g 00000010 AiSnatchStealCpuTargetZone
+0826c598 g 00000080 AiWantsSnatchSteal
+0826c618 l 00000054 IsEnemyControllerTarget
+0826c66c l 00000052 EnemyControllerBestTarget
+0826c6be l 00000002 free space
+0826c6c0 l 00000042 EnemyControllerWeakestTribute
+0826c702 l 00000002 free space
+0826c704 g 00000018 EffectEnemyControllerPrepare
+0826c71c g 0000009c EffectEnemyControllerChainA
+0826c7b8 g 000001a8 EffectEnemyControllerChainB
+0826c960 l 0000006e IsZoneNamedByChain
+0826c9ce l 00000002 free space
+0826c9d0 l 0000003e EnemyControllerFreeZone
+0826ca0e l 00000002 free space
+0826ca10 g 00000090 EffectEnemyControllerResolve
+0826caa0 l 00000064 AiWantsEnemyController
+0826cb04 l 00000058 AiPoisonOfTheOldManChoice
+0826cb5c g 00000084 EffectPoisonOfTheOldManChainA
+0826cbe0 g 0000003c EffectPoisonOfTheOldManResolve
+0826cc1c g 00000034 ModTakesNoDamage
+0826cc50 g 00000054 ModTakesNoEffectDamage
+0826cca4 g 0000001c PlayerHasDesWombatOnField
+0826ccc0 g 00000060 AiShouldSkipCpuEffectDamageVsDesWombat
+0826cd20 g 0000004a EffectLimiterRemovalPrepare
+0826cd6a l 00000002 free space
+0826cd6c g 00000090 EffectLimiterRemovalResolve
+0826cdfc g 0000005c EndPhase_LimiterRemoval
+0826ce58 l 00000036 AiWantsLimiterRemoval
+0826ce8e l 00000002 free space
+0826ce90 g 0000002c EffectHallowedLifeBarrierPrepare
+0826cebc g 00000018 EffectHallowedLifeBarrierChainA
+0826ced4 g 00000038 EffectHallowedLifeBarrierResolve
+0826cf0c l 0000006c AiIncomingAttackDamage
+0826cf78 l 00000102 AiIncomingBurn
+0826d07a l 00000002 free space
+0826d07c l 0000005c AiChainHallowedLifeBarrier
+0826d0d8 g 00000038 EffectPikerusCircleResolve
+0826d110 l 0000005c AiChainPikerusCircle
+0826d16c l 00000040 IsProvisionsCost
+0826d1ac l 00000024 CountProvisionsCosts
+0826d1d0 l 00000084 ProvisionsOwnZone
+0826d254 g 00000034 EffectEmergencyProvisionsPrepare
+0826d288 l 0000004e TargetsProvisionsCost
+0826d2d6 l 00000002 free space
+0826d2d8 g 00000186 EffectEmergencyProvisionsChainA
+0826d45e l 00000002 free space
+0826d460 g 00000030 EffectEmergencyProvisionsResolve
+0826d490 l 0000006c AiChainEmergencyProvisions
+0826d4fc l 00000038 AiWantsEmergencyProvisions
+0826d534 l 00000040 AiWantsMonsterReincarnation
+0826d574 l 00000020 AiWantsToonTableOfContents
+0826d594 l 00000014 AiWantsTokenThanksgiving
+0826d5a8 l 00000058 AiCpuFusionDeckHasThousandEyesForMetamorphosis
+0826d600 l 00000054 AiCpuHasLevel1MetamorphosisTributeOnField
+0826d654 l 00000024 AiCpuMetamorphosisThousandEyesWorthwhile
+0826d678 l 0000001e AiCpuMetamorphosisAllowed
+0826d696 l 00000002 free space
+0826d698 l 0000000a AiWantsMetamorphosis
+0826d6a2 l 00000002 free space
+0826d6a4 g 000000bc AiScapegoatEnablesMetamorphosis
+0826d760 l 0000003c AiScapegoatPreparePasses
+0826d79c l 0000011a AiCpuHasMonsterToSummonThisTurn
+0826d8b6 l 00000002 free space
+0826d8b8 l 0000003c AiWantsScapegoatForCannon
+0826d8f4 g 00000064 AiWantsScapegoat
+0826d958 g 0000001a AiTryPlayScapegoat
+0826d972 l 00000002 free space
+0826d974 l 000000d8 AiWantsSteelcage
+0826da4c l 00000190 AiWantsSpell
+0826dbdc l 00000078 WeakestGraveyardMonsterOf
+0826dc54 l 00000150 AiLightDarkBanishSummon
+0826dda4 g 00000068 AiPickSpellTrapToDestroy
+0826de0c l 00000040 HasFaceDownMonster
+0826de4c g 0000004c AiNoblemanOfCrossoutTarget
+0826de98 g 00000348 AiPlayAddedCards
+0826e1e0 g 000000b0 AiShouldRetreatToDefense
+0826e290 l 00000084 AiLinkTargetsOnlySolemn
+0826e314 g 000000c0 AiChainSolemnJudgment
+0826e3d4 g 0000049a AiShouldActivateAddedCard
+0826e86e l 00000002 free space
+0826e870 g 0000002c GetCardEffectRow
+0826e89c g 000000d0 DetachRevivingCards
+0826e96c l 00000010 CardNumberOfId
+0826e97c l 00000032 PickDeckChoice
+0826e9ae l 00000002 free space
+0826e9b0 l 00000010 YugiKaibaDeck
+0826e9c0 l 00000010 CritterDeck
+0826e9d0 l 00000010 TreasureDeck
+0826e9e0 l 00000010 ImperialDeck
+0826e9f0 l 00000010 AndroidDeck
+0826ea00 l 00000010 JoeyPegasusDeck
+0826ea10 l 00000010 FiberDeck
+0826ea20 l 00000010 YataDeck
+0826ea30 l 00000010 ScientistDeck
+0826ea40 l 00000010 VampireDeck
+0826ea50 l 00000010 ChaosDeck
+0826ea60 l 00000010 WarriorDeck
+0826ea70 g 000000ac ModSetOpponentRecipe
+0826eb1c g 0000001c ModRecipeBuilding
+0826eb38 g 0000000c ModRecipeBuildLimit
+0826eb44 g 000000fc ModRecipeBuildBegin
+0826ec40 g 00000030 ModRecipeBuildEnd
+0826ec70 l 00000010 CyberDeck
+0826ec80 l 00000010 ReaperDeck
+0826ec90 l 00000010 GoatDeck
+0826eca0 l 0000011e PickOpponentDeckOverride
+0826edbe l 00000002 free space
+0826edc0 g 00000004 GetRecipePreset
+0826edc4 g 00000058 GiveStartingTrunk
+0826ee1c g 00000104 BuildModStarterDeck
+0826ef20 l 00000050 IsLaterMatchDuel
+0826ef70 g 00000010 ModMatchClearOpponentDeck
+0826ef80 g 00000040 GetOpponentDeckOverride
+0826efc0 l 00000054 AdjustSavedCopies
+0826f014 g 00000044 ModMatchSavePlayerDeck
+0826f058 g 000000b8 ModMatchRestorePlayerDeck
+0826f110 g 0000001c GetTrunkDeckCopies
+0826f12c g 0000001c GetTrunkSideCopies
+0826f148 g 0000001c GetTrunkFusionCopies
+0826f164 g 0000003c SetTrunkDeckCopies
+0826f1a0 g 0000003c SetTrunkSideCopies
+0826f1dc g 0000003c SetTrunkFusionCopies
+0826f218 g 000002a0 IsBelowCardCopyLimit
+0826f4b8 g 00000058 AddCardToSavedDeck
+0826f510 g 00000054 AddCardToSavedSideDeck
+0826f564 g 00000058 AddCardToSavedFusionDeck
+0826f5bc l 00000048 RemoveFromSavedList
+0826f604 g 00000034 RemoveCardFromSavedDeck
+0826f638 g 00000034 RemoveCardFromSavedSideDeck
+0826f66c g 00000034 RemoveCardFromSavedFusionDeck
+0826f6a0 l 00000080 TrimSavedListToCopyLimits
+0826f720 g 00000024 TrimSavedDecksToCopyLimits
+0826f744 l 00000134 CollectIllegalCards
+0826f878 l 00000026 AppendStr
+0826f89e l 00000002 free space
+0826f8a0 l 00000018 TextLen
+0826f8b8 l 0000004c AppendNum
+0826f904 l 0000002c DrawLine
+0826f930 l 00000208 RenderView
+0826fb38 g 00000014 CountIllegalCards
+0826fb4c g 0000005c BanlistBlocksDuel
+0826fba8 g 000000d8 BanlistView_Run
+0826fc80 l 0000003e SheetPixel
+0826fcbe l 00000002 free space
+0826fcc0 l 00000036 GetPixel
+0826fcf6 l 00000002 free space
+0826fcf8 l 0000003c PutPixel
+0826fd34 l 0000006e ChunkPixel
+0826fda2 l 00000002 free space
+0826fda4 g 000002cc BuildMenuLabelEx
+08270070 g 0000000c BuildMenuLabel
+0827007c g 00000014 DeckRecipes_BuildLabel
+08270090 l 00000014 ReadHeader
+082700a4 l 00000034 WriteActive
+082700d8 l 00000020 ReadSlot
+082700f8 l 00000040 WriteSlot
+08270138 l 00000094 CurrentDeckToBuf
+082701cc l 00000014 SlotName
+082701e0 l 00000018 SetActive
+082701f8 l 000000f8 IsDeckUnsaved
+082702f0 l 000000c8 ReturnDecksToTrunk
+082703b8 l 0000009c NoteLeftOut
+08270454 l 000000da TakeFromTrunk
+0827052e l 00000002 free space
+08270530 l 00000028 SwitchTo
+08270558 l 000000b0 LoadBuf
+08270608 l 0000012c PresetToBuf
+08270734 l 00000128 LoadRecipes
+0827085c g 00000020 DeckRecipes_OnNewGame
+0827087c l 00000018 AppendStr
+08270894 l 00000066 AppendNum
+082708fa l 00000002 free space
+082708fc l 00000024 OpponentName
+08270920 l 00000038 BuildingOpponentDeck
+08270958 l 00000040 AppendOwner
+08270998 l 00000024 StatusRecipe
+082709bc l 00000038 DrawText
+082709f4 l 0000001c DrawLine
+08270a10 l 0000043c RenderList
+08270e4c l 00000140 RenderNameEntry
+08270f8c l 00000238 RenderLeftOut
+082711c4 l 00000040 Render
+08271204 l 00000060 DrawSprites
+08271264 l 00000044 MoveCursor
+082712a8 l 0000005c StartNameEntry
+08271304 l 000000b8 FinishNameEntry
+082713bc l 00000134 HandleNameEntry
+082714f0 l 00000248 DoAction
+08271738 l 0000009a HandleMenu
+082717d2 l 00000002 free space
+082717d4 l 000000b8 ChallengerMayStart
+0827188c l 0000005c FinishPlayerPick
+082718e8 l 00000050 FinishOpponentPick
+08271938 l 000003dc HandleInput
+08271d14 l 00000304 RunScene
+08272018 g 00000012 CB_DeckRecipes
+0827202a l 00000002 free space
+0827202c g 000000c0 CB_OpponentRecipes
+082720ec g 0000000e CB_ChallengerRecipes
+082720fa l 00000002 free space
+082720fc g 00000014 PackShop_BuildLabel
+08272110 l 0000000e PackShop_Cost
+0827211e l 00000002 free space
+08272120 l 00000024 PackShop_CanOpen
+08272144 l 00000012 PackShop_Pay
+08272156 l 00000002 free space
+08272158 g 00000014 PackShop_Start
+0827216c l 00000030 CentrePack
+0827219c g 0000001c ModPackShopIsOpen
+082721b8 l 0000000c CentrePackId
+082721c4 g 00000208 CB_PackShop
+082723cc g 00000080 CB_RewardPack
+0827244c g 00000022 FormatPackIndexFromId
+0827246e l 00000002 free space
+08272470 g 00000038 ModFormatPackShopCost
+082724a8 l 00000078 FormatPackInfo
+08272520 g 0000002c ModGetSelectedPackId
+0827254c g 00000028 ModPackInfoAtRow
+08272574 g 00000034 ModPackList_Count
+082725a8 l 0000003a ModPackList_RowForShopSlot
+082725e2 l 00000002 free space
+082725e4 g 0000007e ModPackList_RowAt
+08272662 l 00000002 free space
+08272664 g 00000018 ModPackShopList_Begin
+0827267c g 00000014 ModPackShopList_Reset
+08272690 g 00000044 ModPackShopList_SyncSceneWork
+082726d4 l 00000042 ModIsFormatPackUnlocked
+08272716 l 00000002 free space
+08272718 l 00000064 ModPackList_AppendFormatRow
+0827277c g 00000028 ModPackList_AddFormatPackById
+082727a4 g 00000020 ModCountUnlockedFormatPacks
+082727c4 g 00000034 ModPackList_AddUnlockedPacks
+082727f8 g 0000007c ModFormatPackLoadCoverGfx
+08272874 l 00000034 WeightForNumber
+082728a8 g 00000098 ModPackOpenCardNameShines
+08272940 l 00000026 CardAlreadyPicked
+08272966 l 00000002 free space
+08272968 l 00000030 RandomBelow
+08272998 l 00000032 WeightedPick
+082729ca l 00000002 free space
+082729cc g 0000009a ModRewardPack
+08272a66 l 00000002 free space
+08272a68 g 000000e4 ModGenerateFormatPackCards
+08272b4c l 00000034 SetDP
+08272b80 g 0000003c GetDP
+08272bbc g 00000014 AddDP
+08272bd0 g 0000001e SpendDP
+08272bee l 00000002 free space
+08272bf0 g 00000040 GetPackCost
+08272c30 l 0000003e TableCost
+08272c6e l 00000002 free space
+08272c70 l 00000028 NormalizeCardNumberForCost
+08272c98 g 0000002c GetCardUsagePriceInFormat
+08272cc4 g 00000088 GetCardCost
+08272d4c g 00000038 AwardDuelDP
+08272d84 l 00000018 AppendStr
+08272d9c l 0000004c AppendNum
+08272de8 l 00000068 DpText_Render
+08272e50 l 00000084 DpText_Draw
+08272ed4 g 00000044 MainMenuDP_Render
+08272f18 g 00000024 MainMenuDP_Draw
+08272f3c l 0000014c PackListLines_Draw
+08273088 g 00000010 PackListDP_Draw
+08273098 g 00000010 PackListReward_Draw
+082730a8 g 0000000c PackListDP_NotEnough
+082730b4 g 00000020 PackListDP_Reset
+082730d4 g 00000044 CanBuyCard
+08273118 g 00000080 PasswordDP_Draw
+08273198 g 00000058 PasswordDP_SetNotEnough
+082731f0 l 00000038 TextWidth
+08273228 l 00000028 CanvasPixel
+08273250 l 0000008c RenderBoxLine
+082732dc g 000000f8 PasswordDP_SetConfirm
+082733d4 g 0000004c PasswordDP_DrawConfirm
+08273420 g 0000000c PasswordDP_Reset
+0827342c g 00000024 PasswordDP_DrawNotEnough
+08273450 g 00000024 GetActiveBanlist
+08273474 l 0000003e InBanlistPool
+082734b2 l 00000002 free space
+082734b4 g 000000a2 GetBanlistCopyLimit
+08273556 l 00000002 free space
+08273558 g 00000064 IsInActiveBanlistPool
+082735bc g 0000005e FormatCardLimit
+0827361a l 00000002 free space
+0827361c g 00000014 BanlistName
+08273630 g 00000014 BanlistDate
+08273644 l 0000005e DeckLimitIn
+082736a2 l 00000002 free space
+082736a4 l 00000050 OwnedCopies
+082736f4 l 000000c0 MainDeckCapacity
+082737b4 l 000000d8 MainDeckCardsKept
+0827388c g 00000036 ModDeckEditMayLeave
+082738c2 l 00000002 free space
+082738c4 l 000000b8 SetActiveBanlist
+0827397c g 0000000a BanlistMainDeckCapacity
+08273986 l 00000002 free space
+08273988 g 0000000a SwitchToBanlist
+08273992 l 00000002 free space
+08273994 g 00000014 BanlistsMenu_BuildLabel
+082739a8 l 00000018 AppendStr
+082739c0 l 0000004c AppendNum
+08273a0c l 00000038 DrawText
+08273a44 l 00000144 Render
+08273b88 l 00000060 DrawSprites
+08273be8 l 00000034 MoveCursor
+08273c1c l 0000010c HandleInput
+08273d28 g 00000138 CB_Banlists
+08273e60 g 0000002c ModGetSpeedMode
+08273e8c g 00000034 ModSetSpeedMode
+08273ec0 g 0000001c ModDuelApplySpeedSettings
+08273edc g 0000003c ModDuelFastForwardActive
+08273f18 g 00000030 ModHideCardAnimations
+08273f48 g 00000030 ModHideBattleScenes
+08273f78 g 00000010 ModDuelSkipResponsesActive
+08273f88 g 00000024 ModDuelFastTimerSkip
+08273fac g 0000001a ModDuelFastAnimAdvance
+08273fc6 l 00000002 free space
+08273fc8 l 00000030 DeckReorderUsesShoulderButtons
+08273ff8 g 0000007c ModDuelSettingsHandleInput
+08274074 g 000000b0 ModDuelSettingsRun
+08274124 g 00000014 SettingsMenu_BuildLabel
+08274138 l 00000038 DrawText
+08274170 l 000001a0 Render
+08274310 l 00000060 DrawSprites
+08274370 l 0000005c SelectCursor
+082743cc l 0000006e HandleInput
+0827443a l 00000002 free space
+0827443c l 00000100 SettingsScene_Step
+0827453c g 00000034 CB_Settings
+08274570 g 00000040 ModOpponentFrozen
+082745b0 g 00000004 ModTestingFreezeOpponentActive
+082745b4 g 00000004 ModTestingCpuCardBlocked
+082745b8 g 00000014 ModTestingCpuActivationBlocked
+082745cc g 00000046 ModTestingSkipCardShow
+08274612 l 00000002 free space
+08274614 g 00000014 ModTestingHideBattle
+08274628 g 00000004 ModTestingHidePrompts
+0827462c g 00000004 ModTestingHideChainList
+08274630 g 00000002 ModTestingTick
+08274632 l 00000002 free space
+08274634 g 00000004 ModTestingCpuSetLimitReached
+08274638 g 00000014 ModPageDuelist
+0827464c l 0000001c Opponent
+08274668 g 00000076 ModIsOpponentUnlocked
+082746de l 00000002 free space
+082746e0 g 0000002a ModFormatBanlist
+0827470a l 00000002 free space
+0827470c g 00000054 ModUnlockedFormatCount
+08274760 l 00000028 FormatDuelist
+08274788 g 00000052 ModRecordDuelist
+082747da l 00000002 free space
+082747dc g 0000002c ModRecordHasNextPage
+08274808 g 000001fc ModRecordDrawPage
+08274a04 g 00000028 ModFormatWins
+08274a2c g 00000012 ModIsFormatUnlocked
+08274a3e l 00000002 free space
+08274a40 g 0000005c ModEventChallenger
+08274a9c g 0000001e ModSlotHidden
+08274aba l 00000002 free space
+08274abc g 0000000c ModNextPageOpen
+08274ac8 g 00000050 ModOpponentSelectStart
+08274b18 g 0000001a ModOpponentSelectName
+08274b32 l 00000002 free space
+08274b34 g 00000018 ModSkipsDuelDialogue
+08274b4c g 0000002c ModOpponentPlaysRecipe
+08274b78 g 00000018 ModWinGivesPack
+08274b90 g 00000016 ModRecipeBuildCopies
+08274ba6 l 00000002 free space
+08274ba8 g 00000010 ModOpponentPicksPlayerDeck
+08274bb8 g 00000030 ModDebugDuel
+08274be8 g 00000020 ModAlwaysWinRps
+08274c08 g 00000030 ModEmptyDeckDuel
+08274c38 g 00000004 ModTestDuel
+08274c3c g 0000002e ModDeckListVisible
+08274c6a l 00000002 free space
+08274c6c g 00000056 ModCardMenuDeckCommands
+08274cc2 l 00000002 free space
+08274cc4 g 00000060 ModCardMenuCloseForListView
+08274d24 g 00000032 ModCardMenuFirstCommand
+08274d56 l 00000002 free space
+08274d58 g 00000074 ModCardMenuCycleCommand
+08274dcc g 00000032 ModCardMenuDeckFirstCommand
+08274dfe l 00000002 free space
+08274e00 g 00000078 ModCardMenuDeckCycleCommand
+08274e78 g 00000092 ModCardMenuDeckDrawIcons
+08274f0a l 00000002 free space
+08274f0c g 00000064 ModCardMenuDeckDrawLabel
+08274f70 g 0000001c ModOpponentFormat
+08274f8c l 00000040 ColorDist
+08274fcc l 00000050 ArtPixel
+0827501c l 000000a4 PortraitColor
+082750c0 l 0000005c PutPortraitPixel
+0827511c l 0000002a DuelistPortraitPixel
+08275146 l 00000002 free space
+08275148 l 0000013c DrawSlotPortrait
+08275284 l 00000134 DrawArtPortrait
+082753b8 l 00000036 RecordFace
+082753ee l 00000002 free space
+082753f0 l 000000a8 DrawRecordFace
+08275498 g 00000124 ModOpponentSelectPortraits
+082755bc l 00000010 Image
+082755cc l 00000084 LoadImage
+08275650 l 0000001a PoolStart
+0827566a l 00000002 free space
+0827566c l 00000146 PoolAdd
+082757b2 l 00000002 free space
+082757b4 l 00000078 LoadScreenImage
+0827582c l 0000002c DrawInfoText
+08275858 l 00000054 LoadInfoLines
+082758ac l 00000038 DrawInfoHalf
+082758e4 g 00000148 ModTitle_Load
+08275a2c g 00000034 ModTitle_LoadWave
+08275a60 g 00000044 ModTitle_LoadCopyright
+08275aa4 g 00000016 ModTitle_Draw
+08275aba l 00000002 free space
+08275abc l 0000004c Tiles4To8
+08275b08 g 0000009c ModLoadFieldIconGfx
+08275ba4 l 0000004a PutCellPixel
+08275bee l 00000002 free space
+08275bf0 l 0000000c ModFieldIconMiniColor
+08275bfc l 00000022 MiniByte
+08275c1e l 00000002 free space
+08275c20 g 00000184 ModFieldCardTile
+08275da4 g 00000054 ModLoadCardSpriteGfx
+08275df8 l 00000180 BuildCardSprite
+08275f78 l 0000012c CardSpriteTile
+082760a4 g 00000042 ModAddCardSprite
+082760e6 l 00000002 free space
+082760e8 g 00000046 ModAddHandCardSprite
+0827612e l 00000002 free space
+08276130 g 0000007c ModAddAffineCardSprite
+082761ac l 000000be BuildCounterBadge
+0827626a l 00000002 free space
+0827626c g 00000098 ModDrawCounterBadges
+08276304 g 0000000c ModChainIconTile
+08276310 g 00000028 ModChainIconsClear
+08276338 l 00000056 PutSprite2dPixel
+0827638e l 00000002 free space
+08276390 g 0000010c ModChainIconBuild
+0827649c g 00000018 ModDeckRingSetCard
+082764b4 g 00000108 ModDeckRingBegin
+082765bc g 000001ac ModDeckRingArt
+08276768 l 00000040 ZoneCardShown
+082767a8 l 00000050 DrawPileLabel
+082767f8 g 00000244 DuelScreen_DrawCursorInfo
+08276a3c l 00000042 RaceKey
+08276a7e l 00000002 free space
+08276a80 l 00000018 CardStatsWord
+08276a98 l 0000000e IsMonsterType
+08276aa6 l 00000002 free space
+08276aa8 l 00000016 AttributeOf
+08276abe l 00000002 free space
+08276ac0 l 00000026 InPointsRange
+08276ae6 l 00000002 free space
+08276ae8 l 00000042 MatchesName
+08276b2a l 00000002 free space
+08276b2c l 0000003a LimitsSet
+08276b66 l 00000002 free space
+08276b68 l 000000d0 MatchesLimits
+08276c38 g 000000a4 ListRefine_ApplyToList
+08276cdc l 0000003c NameLess
+08276d18 l 00000034 RankedFirst
+08276d4c g 00000038 ModCompareCardsByType
+08276d84 g 00000040 ModCompareCardsByAttribute
+08276dc4 l 00000024 OnlyNameRow
+08276de8 l 00000014 RowCount
+08276dfc l 00000020 ClearLimits
+08276e1c g 00000018 ListRefine_Reset
+08276e34 l 0000004a AppendNum
+08276e7e l 00000002 free space
+08276e80 l 000000c0 RowValueText
+08276f40 l 00000038 DrawText
+08276f78 l 000000bc Render
+08277034 l 00000044 DrawListIcon
+08277078 l 00000050 RestorePages
+082770c8 g 000000e8 ListRefine_Open
+082771b0 l 0000007c ChangeValue
+0827722c l 00000088 Back
+082772b4 l 0000007c Confirm
+08277330 g 000000d4 ListRefine_Update
+08277404 l 00000050 HandRemoveAt
+08277454 l 00000064 MulliganRedrawDuelHand
+082774b8 g 0000000a ModMulliganAllowedInDuel
+082774c2 l 00000002 free space
+082774c4 g 0000003c ModMulliganAvailable
+08277500 g 00000030 ModLoadMulliganMenuGfx
+08277530 g 00000074 ModMulliganFromDeckMenu
+082775a4 l 00000028 ReturnDeckCopiesToTrunk
+082775cc g 000000e4 ModDeckEditEmptyMainAndSide
+082776b0 l 00000018 LevelOf
+082776c8 l 00000074 FaceUpMonster
+0827773c l 00000058 NonTunerMask
+08277794 l 00000060 LevelsReachable
+082777f4 l 00000038 RequiredTuner
+0827782c l 000000a8 TunerFits
+082778d4 l 00000046 CanSynchroSummon
+0827791a l 00000002 free space
+0827791c g 00000038 ModSynchroListAccepts
+08277954 g 0000009e ModSynchroAvailable
+082779f2 l 00000002 free space
+082779f4 l 00000068 PerformSynchroSummon
+08277a5c l 0000008c PickTunerInput
+08277ae8 l 000000fc PickMaterialInput
+08277be4 g 00000278 ModSynchroMenuRun
+08277e5c g 000001b6 AiTrySynchroSummon
+08278012 l 00000002 free space
+08278014 g 00000014 ModSynchroReset
+08278028 g 0000000c ModSynchroSummoningId
+08278034 g 0000004c ModSynchroArrived
+08278080 g 00000044 ModWasSynchroSummonedId
+082780c4 g 00000054 ModWasSynchroSummoned
+08278118 g 00000048 ModCardRaceName
+08278160 g 00000108 ModCardTypeLine
+08278268 l 0000004c RuleOf
+082782b4 l 000000cc MaterialFits
+08278380 l 00000038 FittingMask
+082783b8 l 00000016 CountBits
+082783ce l 00000002 free space
+082783d0 g 00000046 ModXyzCanSummon
+08278416 l 00000002 free space
+08278418 l 00000020 FreeEntry
+08278438 l 0000001c ToGraveyard
+08278454 l 00000030 FlushPending
+08278484 l 00000050 XyzSerial
+082784d4 g 00000038 XyzMaterialCount
+0827850c g 00000044 ModXyzZoneCleared
+08278550 g 00000014 ModXyzReset
+08278564 g 00000070 ModXyzArrived
+082785d4 l 00000060 BuildView
+08278634 g 00000018 ModXyzMaterialView
+0827864c l 00000050 DetachId
+0827869c g 000000d4 XyzDetachBegin
+08278770 g 0000002c XyzDetachPicked
+0827879c g 00000070 ModXyzEffectUsed
+0827880c g 00000064 ModXyzMarkEffectUsed
+08278870 l 00000108 PerformXyzSummon
+08278978 l 00000074 BuildPrompt
+082789ec l 00000112 PickMaterialInput
+08278afe l 00000002 free space
+08278b00 g 00000106 ModXyzMenuRun
+08278c06 l 00000002 free space
+08278c08 g 0000004e ModFusionKindFrame
+08278c56 l 00000002 free space
+08278c58 g 0000018a AiTryXyzSummon
+08278de2 l 00000002 free space
+08278de4 l 0000000c ObjTile
+08278df0 l 00000040 RenderLabel
+08278e30 l 00000084 AddRow
+08278eb4 l 00000084 AddLifePoints
+08278f38 l 000000ac DimHudPalettes
+08278fe4 g 00000012 ModDrawDuelHud
+08278ff6 l 00000002 free space
+08278ff8 g 000001a8 ModDrawDuelHudPanel
+082791a0 g 00000014 ModLinkReset
+082791b4 g 00000080 ModEmzSlotOf
+08279234 l 0000003c EmzOccupant
+08279270 l 00000030 HasEmzMonster
+082792a0 g 0000003c ModZoneFieldX
+082792dc g 00000030 ModZoneFieldY
+0827930c g 00000078 ModLinkZoneCleared
+08279384 g 00000084 ModLinkArrived
+08279408 l 00000040 GridOf
+08279448 g 00000122 ModLinkPointsTo
+0827956a l 00000002 free space
+0827956c l 00000054 PlaceOccupant
+082795c0 g 0000003c ModLinkPointedMonsters
+082795fc l 00000058 RecordFree
+08279654 l 00000086 PointedZones
+082796da l 00000002 free space
+082796dc g 00000040 ModLinkPointedFreeZones
+0827971c l 0000001a EmzRecordOf
+08279736 l 00000002 free space
+08279738 l 00000030 EmzRecord
+08279768 g 00000008 ModLinkProxyState
+08279770 g 0000000c ModSummonRestrictZones
+0827977c g 0000001c ModSummonSetZone
+08279798 l 00000064 ApplyPlace
+082797fc l 0000019c BuildCandidates
+08279998 l 0000005c PlaceScreenXY
+082799f4 l 00000068 PickPlaceInput
+08279a5c l 00000070 CpuPlace
+08279acc g 000001b4 ModSummonZoneStep
+08279c80 g 00000036 ModSummonDefenseChoice
+08279cb6 l 00000002 free space
+08279cb8 l 00000074 BuildArrowTiles
+08279d2c l 0000006c AddArrow
+08279d98 g 00000158 ModDrawLinkArrows
+08279ef0 l 00000094 FramePixel
+08279f84 l 00000016 Plot
+08279f9a l 00000002 free space
+08279f9c l 0000010c PaintArrow
+0827a0a8 g 00000088 ModLinkFrame
+0827a130 l 00000024 DarkFrame
+0827a154 g 0000003c ModCardStatPal
+0827a190 g 0000002c ModCardViewStatColor
+0827a1bc l 0000004c RuleOf
+0827a208 l 00000164 MaterialFits
+0827a36c l 00000038 FittingMask
+0827a3a4 l 00000016 CountBits
+0827a3ba l 00000002 free space
+0827a3bc l 000000c8 ValuesAll
+0827a484 l 00000034 ValuesReach
+0827a4b8 l 000000e0 LinkPlaces
+0827a598 l 0000004c MaterialSetFits
+0827a5e4 l 00000084 AnyMaterialSet
+0827a668 g 0000004e ModLinkCanSummon
+0827a6b6 l 00000002 free space
+0827a6b8 l 000000ac PerformLinkSummon
+0827a764 l 00000030 BuildMaterialPrompt
+0827a794 l 000001c8 PickMaterialInput
+0827a95c g 0000016c ModLinkMenuRun
+0827aac8 g 00000172 AiTryLinkSummon
+0827ac3a l 00000002 free space
+0827ac3c l 0000004c PreDuelEntryOf
+0827ac88 l 00000024 LzDecompress
+0827acac l 00000018 ReadU32
+0827acc4 l 00000042 QrModule
+0827ad06 l 00000002 free space
+0827ad08 l 00000070 UntilePicture
+0827ad78 l 000000d0 DrawQrCode
+0827ae48 l 00000088 DrawPreDuelText
+0827aed0 l 00000094 LoadScene
+0827af64 l 000000b8 TickScene
+0827b01c l 00000120 PreDuelLoad
+0827b13c g 000000d4 CB_ModPreDuelImage
+0827b210 g 00000038 DiceScreen_RunGraceful
+0827b248 g 00000038 DiceScreen_RunPlain
+0827b280 g 00000014 ExodiaScene_ResetPieceState
+0827b294 g 00000038 ExodiaScene_StartPieceFlight
+0827b2cc g 00000040 ExodiaScene_HBlank
+0827b30c g 0000009c ExodiaScene_DrawAffineAnim
+0827b3a8 g 000000cc ExodiaScene_Init
+0827b474 g 00000026 CopyObjTileBlock4x4
+0827b49a l 00000002 free space
+0827b49c g 00000018 LoadObjTileBlock4x4
+0827b4b4 g 0000010c ExodiaScene_LoadEye
+0827b5c0 g 000001d0 ExodiaScene_LoadFlames
+0827b790 g 00000240 ExodiaScene_AssemblePieces
+0827b9d0 g 00000118 ExodiaScene_GatherPieces
+0827bae8 g 000000e4 ExodiaScene_DrawSprites
+0827bbcc g 000000c8 ExodiaScene_Finale
+0827bc94 g 00000028 ExodiaScene_FadeInEye
+0827bcbc g 00000068 ExodiaScene_FadeInFlames
+0827bd24 g 00000058 ExodiaScene_BlendFlames
+0827bd7c g 00000038 ExodiaScene_Run
+0827bdb4 g 00000068 DestinyBoardScene_HBlank
+0827be1c g 00000030 DestinyBoardScene_AdvanceWave
+0827be4c g 00000024 ScrollLayer_Init
+0827be70 g 00000042 ScrollLayer_Move
+0827beb2 l 00000002 free space
+0827beb4 g 00000048 ScrollLayer_StreamRow
+0827befc g 00000074 DestinyBoardScene_VBlank
+0827bf70 g 000006fc DestinyBoardScene_DrawFinalLetters
+0827c66c g 0000015c Password_RollAndCheck
+0827c7c8 g 000001ca Password_RevealAndGiveCard
+0827c992 l 00000002 free space
+0827c994 g 000000c4 Password_ShowError
+0827ca58 g 00000010 Password_FadeOut
+0827ca68 g 000000a4 Password_ShowUsed
+0827cb0c g 00000094 CB_Password
+0827cba0 g 00000034 CardTrading_LoadObjTiles
+0827cbd4 g 000000f4 CardTrading_DrawMenu
+0827ccc8 g 00000014 CardTrading_ClearState
+0827ccdc g 000001b8 CardTrading_InitVideo
+0827ce94 g 0000003c CardTrading_FadeIn
+0827ced0 g 000000b6 CardTrading_HandleInput
+0827cf86 l 00000002 free space
+0827cf88 g 00000004 CardTrading_UnusedReturnFalse
+0827cf8c g 0000003a CardTrading_FadeOut
+0827cfc6 l 00000002 free space
+0827cfc8 g 00000078 CardTrading_SelectCard
+0827d040 g 00000094 CardTrading_ThrowCard
+0827d0d4 g 00000048 CardTrading_ReverseThrow
+0827d11c g 000000dc CardTrading_Exchange
+0827d1f8 g 00000078 CardTrading_ShowReceivedCard
+0827d270 g 00000078 CB_CardTrading
+0827d2e8 g 0000000e CardTrading_UnusedCallbackWrapper
+0827d2f6 l 00000002 free space
+0827d2f8 g 0000004a CardListView_Exit
+0827d342 l 00000002 free space
+0827d344 g 00000120 CardListView_Update
+0827d464 g 000002aa CardListView_HandleInput
+0827d70e l 00000002 free space
+0827d710 g 0000005c CardListView_Run
+0827d76c g 00000284 CardListView_Open
+0827d9f0 g 000000fc CanCardTargetZone
+0827daec g 00000070 IsZoneTargetable
+0827db5c g 00000174 EffectEquippedTributeCheck
+0827dcd0 g 00000074 EffectTrapTargetCheck
+0827dd44 g 00000058 EffectOpponentMonsterCheck
+0827dd9c g 00000434 EffectEquipTargetCheck
+0827e1d0 g 00000060 EffectStopDefenseCheck
+0827e230 g 0000007c EffectBlastJugglerCheck
+0827e2ac g 00000068 EffectMagicTargetCheck
+0827e314 l 003a5ae0 free space
 08623df4 g 0000001c gCardNumberToId
 08623e10 g 0000000e gCardNumberToId_FlameSwordsman
 08623e1e g 0000001a gCardNumberToId_SummonedSkull
