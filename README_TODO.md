@@ -153,9 +153,9 @@ the ones README.md used to show are marked "was"). The game's screenshots can be
 ### Settings
 
 - **Have:** `Settings (Main Menu).png`, `Settings.png` (with the two Hide switches).
-- [ ] 🎬 **Duel speeds** · `duel-speed.mp4` · after the Settings paragraph. The same turn at DEFAULT, ALWAYS and SUPER,
+- [ ] 🎞️ **Duel speeds** · `screenshots/gifs/duel-speed.gif` · after the Settings paragraph. The same turn at DEFAULT, ALWAYS and SUPER,
   side by side or one after another.
-- [ ] 🎬 **Hide card animations** · `hide-anims.mp4` · after it. The same activation with the setting off, then on.
+- [ ] 🎞️ **Hide card animations** · `screenshots/gifs/hide-anims.gif` · after it. The same activation with the setting off, then on.
 - [ ] 🎞️ **Hide battle scenes** · `screenshots/gifs/hide-battle.gif` · after it. An attack played out on the field.
 
 ### Controls
@@ -164,7 +164,7 @@ the ones README.md used to show are marked "was"). The game's screenshots can be
 
 ### Smarter CPU
 
-- [ ] 🎬 **The CPU at work** · `cpu-play.mp4` · under the paragraph. A clever CPU turn: a well-timed Trap, a chain, or a
+- [ ] 🎞️ **The CPU at work** · `screenshots/gifs/cpu-play.gif` · under the paragraph. A clever CPU turn: a well-timed Trap, a chain, or a
   combo from one of the format decks. *(was `placeholders/cpu-play.svg`)*
 
 ### Fixes to the original game
@@ -192,7 +192,7 @@ the ones README.md used to show are marked "was"). The game's screenshots can be
 ## The new cards
 
 - **Have:** the six card images and the six more in "More cards".
-- [ ] 🎬 **New cards in action** · `new-cards.mp4` · after the gallery. A few effects resolving: Breaker destroying a
+- [ ] 🎞️ **New cards in action** · `screenshots/gifs/new-cards.gif` · after the gallery. A few effects resolving: Breaker destroying a
   Spell/Trap, Cyber Dragon's Special Summon, Thousand-Eyes Restrict absorbing a monster.
 
 ### How they're added
@@ -245,8 +245,6 @@ the ones README.md used to show are marked "was"). The game's screenshots can be
   TIMEOUT per script (a terminal screenshot).
 - [ ] 🖼️ **The video reviewer** · `screenshots/Video Reviewer.png` · next to it. `review_videos.py` with a video open
   and the Keep / Highlight / Throwaway buttons.
-- [ ] 🎬 **The card test reel** · `highlights_4x.mp4` · under them. The highlighted test videos at 4x speed
-  (`tools/testing_scenarios/highlights_4x.mp4`, about a minute).
 
 ---
 

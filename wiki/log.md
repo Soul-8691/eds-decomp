@@ -3238,3 +3238,6 @@ updated: 2026-09-29
 
 ## [2026-11-16] progress | README_WIP: placeholder GIFs for HMA-CE Import from YGOProDeck / Import .YDK
 - screenshots/placeholders/hma-import-ygoprodeck.svg, hma-import-ydk.svg; README_WIP.md (under "Opponents and their decks"); README_TODO.md slots.
+
+## [2026-11-16] progress | README_WIP: no MP4s; GIF placeholders instead
+- README_WIP.md: duel-speed, hide-anims, cpu-play and new-cards now show their placeholders (GIF) instead of linking the MP4s; the highlights_4x.mp4 test reel is gone. Placeholders say GIF NEEDED; README_TODO.md slots are GIFs in screenshots/gifs/, the reel slot removed.

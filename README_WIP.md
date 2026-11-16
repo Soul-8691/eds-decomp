@@ -429,13 +429,13 @@ with L+R. Every choice is saved.
 Pick one of the three speeds; the two Hide switches are ON/OFF with **A**. Both are off in a Link Battle.
 
 <p align="center">
-  <a href="screenshots/videos/duel-speed.mp4"><img src="screenshots/videos/posters/duel-speed.png" width="480" alt="The three duel speeds (video: click to play)"></a><br>
-  <sub>The three duel speeds (video)</sub>
+  <img src="screenshots/placeholders/duel-speed.svg" width="480" alt="Placeholder: The three duel speeds (GIF)"><br>
+  <sub>The three duel speeds (GIF)</sub>
 </p>
 
 <p align="center">
-  <a href="screenshots/videos/hide-anims.mp4"><img src="screenshots/videos/posters/hide-anims.png" width="480" alt="Hide card animations, off then on (video: click to play)"></a><br>
-  <sub>Hide card animations, off then on (video)</sub>
+  <img src="screenshots/placeholders/hide-anims.svg" width="480" alt="Placeholder: Hide card animations, off then on (GIF)"><br>
+  <sub>Hide card animations, off then on (GIF)</sub>
 </p>
 
 <table>
@@ -466,8 +466,8 @@ shortcomings that were fixed (original-roster cards only), and [AI_IMPROVEMENTS.
 current CPU behavior in full.
 
 <p align="center">
-  <a href="screenshots/videos/cpu-play.mp4"><img src="screenshots/videos/posters/cpu-play.png" width="480" alt="The CPU at work (video: click to play)"></a><br>
-  <sub>The CPU at work (video)</sub>
+  <img src="screenshots/placeholders/cpu-play.svg" width="480" alt="Placeholder: The CPU at work (GIF)"><br>
+  <sub>The CPU at work (GIF)</sub>
 </p>
 
 ### Rule changes
@@ -586,8 +586,8 @@ See [NEW_CARDS.md](NEW_CARDS.md) for all of them.
 </details>
 
 <p align="center">
-  <a href="screenshots/videos/new-cards.mp4"><img src="screenshots/videos/posters/new-cards.png" width="480" alt="New cards in action (video: click to play)"></a><br>
-  <sub>New cards in action (video)</sub>
+  <img src="screenshots/placeholders/new-cards.svg" width="480" alt="Placeholder: New cards in action (GIF)"><br>
+  <sub>New cards in action (GIF)</sub>
 </p>
 
 > [!NOTE]
@@ -815,11 +815,6 @@ python tools/testing_scenarios/review_videos.py                                 
 <td align="center"><img src="screenshots/placeholders/video-reviewer.svg" width="240" alt="Placeholder: The video reviewer"><br><sub>The video reviewer</sub></td>
 </tr>
 </table>
-
-<p align="center">
-  <a href="tools/testing_scenarios/highlights_4x.mp4"><img src="screenshots/videos/posters/highlights_4x.png" width="480" alt="The card test reel, 4x speed (video: click to play)"></a><br>
-  <sub>The card test reel, 4x speed (video)</sub>
-</p>
 
 ### README screenshots
 
