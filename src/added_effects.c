@@ -12649,6 +12649,17 @@ int AiCpuRunPendingHandSpell(void)
     return 1;
 }
 
+#ifdef HAS_CARD_REINFORCEMENT_OF_THE_ARMY
+/* 1 if the CPU's Deck holds a Level 4 or lower Warrior for Reinforcement of the Army. */
+static int AiReinforcementHasTarget(void)
+{
+    struct ChainEntry ref;
+
+    ref.player = AI_PLAYER;
+    return EffectReinforcementOfTheArmyPrepare(&ref, NULL, 1);
+}
+#endif
+
 int AiTryPlayCpuPriorityDrawSpells(void)
 {
     u16 marker = AiPriorityDrawPhaseMarker();
@@ -12665,13 +12676,27 @@ int AiTryPlayCpuPriorityDrawSpells(void)
     if (CountActivatableSetCards(AI_PLAYER, CARD_JAR_OF_GREED) > 0 && (u16)AiTryPlaySpellTrap(CARD_JAR_OF_GREED))
         return 1;
 #endif
-    /* Done for this phase only in a Main Phase with neither in hand. A refusal with one in hand is tried again next
+    /* Upstart Goblin draws too (the human's 1000 LP matter less than the card); Reinforcement of the Army last, so
+     * its search sees what the draws brought. Both before the summon (AI_MAIN_SUMMON calls this first). Reinforcement
+     * is refused without a Level 4 or lower Warrior in the Deck (EffectReinforcementOfTheArmyPrepare). */
+    if ((u16)AiTryPlaySpellTrap(CARD_UPSTART_GOBLIN))
+        return 1;
+#ifdef HAS_CARD_REINFORCEMENT_OF_THE_ARMY
+    if ((u16)AiTryPlaySpellTrap(CARD_REINFORCEMENT_OF_THE_ARMY))
+        return 1;
+#endif
+    /* Done for this phase only in a Main Phase with none of them in hand. A refusal with one in hand is tried again next
      * call: the step's first call comes before Main Phase 1 has begun (AiStepStartMainPhase only queues it), where
      * the activation is refused; marking it done there left Pot of Greed / Graceful Charity to AiPlaySpells, after the
      * summon and the other Spells. */
     if ((gDuel.phase == PHASE_MAIN1 || gDuel.phase == PHASE_MAIN2)
         && FindHandCardByNumber(AI_PLAYER, CARD_POT_OF_GREED) < 0
         && FindHandCardByNumber(AI_PLAYER, CARD_GRACEFUL_CHARITY) < 0
+        && FindHandCardByNumber(AI_PLAYER, CARD_UPSTART_GOBLIN) < 0
+#ifdef HAS_CARD_REINFORCEMENT_OF_THE_ARMY
+        && (FindHandCardByNumber(AI_PLAYER, CARD_REINFORCEMENT_OF_THE_ARMY) < 0
+            || !AiReinforcementHasTarget())
+#endif
 #ifdef HAS_CARD_JAR_OF_GREED
         && CountActivatableSetCards(AI_PLAYER, CARD_JAR_OF_GREED) == 0
 #endif

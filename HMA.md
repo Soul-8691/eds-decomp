@@ -46,7 +46,7 @@ built from source, `upcoming` branch). [README_TODO.md](README_TODO.md) says wha
 HMA-CE can also fill in a card's stats and art from YGOProDeck: **Import from YGOProDeck**.
 
 <p align="center">
-  <img src="screenshots/gifs/hma-import-ygoprodeck.gif" width="240" alt="HMA-CE's Import from YGOProDeck filling a blank card slot with Red Gadget: the prompt, the result, its stats, art and Deck Edit icon"><br>
+  <img src="screenshots/gifs/hma-import-ygoprodeck.gif" width="240" alt="HMA-CE's Import from YGOProDeck importing Red Gadget over an added card (ID 1127): the prompt, the result, its stats, art and Deck Edit icon"><br>
   <sub>Import from YGOProDeck (GIF)</sub>
 </p>
 
@@ -63,7 +63,7 @@ HMA-CE can also fill in a card's stats and art from YGOProDeck: **Import from YG
 HMA-CE can also fill a deck table from a `.ydk` deck file: **Import .YDK**.
 
 <p align="center">
-  <img src="screenshots/placeholders/hma-import-ydk.svg" width="240" alt="Placeholder: HMA: Import .YDK"><br>
+  <img src="screenshots/gifs/hma-import-ydk.gif" width="240" alt="HMA-CE's Import .ydk loading a .ydk file into an opponent's deck table"><br>
   <sub>Import .YDK (GIF)</sub>
 </p>
 

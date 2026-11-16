@@ -3251,3 +3251,7 @@ updated: 2026-09-29
 - tools/media: gen_duel_media.py (Duel GIF with Reaper staples, Duel Board with Goat staples, a 3-card Chain List, Link from two Normal Monsters, Xyz shows Utopia's Card View, Witch Call replaces Graverobber, new Hold R / Hold L set-ups); list_filter.lua (Effect, ATK sort, DARK, ATK 1000-2000, Level 1-4); pack_pull.lua (no scrolling, five Goat staples written over the pulls); new pack_list.lua; debug_duel.lua no longer records rps.gif; new_packs.lua, Graverobber_Media_Player.lua, New Packs.png and graverobber.gif deleted.
 - tools/testing_scenarios/lib_steps.lua: a `view` step (a pile's Card View on one card); lib_eds.lua no longer says "no ffmpeg on PATH" when a script turns the scenario MP4 off.
 - All re-captured (run_tests.ps1 -Media) and checked on contact sheets. [[readme-media]].
+
+## [2026-11-16] progress | CPU: Upstart Goblin and Reinforcement of the Army first too
+- src/added_effects.c AiTryPlayCpuPriorityDrawSpells: after Pot of Greed, Graceful Charity and Jar of Greed, Upstart Goblin then Reinforcement of the Army, before the summon (AiReinforcementHasTarget for the done marker).
+- [[added-cards]], AI_IMPROVEMENTS.md. Built (demo).

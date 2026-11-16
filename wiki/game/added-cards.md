@@ -3140,6 +3140,10 @@ handler (`EffectDarkHoleResolve`), which destroys every monster, the opponent's 
 - **Jar of Greed.** A Set one that can be activated (`CountActivatableSetCards`, so not one Set this turn) is now tried
   third, through `AiTryPlaySpellTrap`'s Set-card path. Before, the CPU used it only in response windows
   (`AiShouldActivateAddedCard`) or through `AiPlayAddedCards`, after other plays.
+- **Upstart Goblin and Reinforcement of the Army (2026-11-16).** Tried after Jar of Greed, in that order (the search
+  last, so it sees what the draws brought), still before the summon. The marker also waits for neither to be in hand;
+  a Reinforcement with no Level 4 or lower Warrior in the Deck (`AiReinforcementHasTarget`, its prepare) does not
+  hold it back. Built (demo); not tested in an emulator.
 - Checked in the source and the build; not tested in an emulator.
 
 ### Tribe-Infecting Virus (2026-10-25)
