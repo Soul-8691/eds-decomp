@@ -216,6 +216,11 @@ the ones README.md used to show are marked "was"). The game's screenshots can be
 - [ ] 🧰 **The opponents table** · `screenshots/hma/Opponents.png`. `data.opponents`: kind, format, portrait.
 - [ ] 🧰 **An opponent's portrait** · `screenshots/hma/Portrait.png`. `graphics.opponents.<name>` in the image editor.
 - [ ] 🧰 **An opponent's deck** · `screenshots/hma/Opponent Deck.png`. `data.decks.mod.<deck>`: its card list.
+- [ ] 🎞️ **Import from YGOProDeck** · `screenshots/gifs/hma-import-ygoprodeck.gif` · under the row above. HMA-CE's
+  "Import from YGOProDeck" filling a deck table (e.g. `data.decks.mod.<deck>`) from a YGOProDeck deck. An HMA window,
+  not mGBA.
+- [ ] 🎞️ **Import .YDK** · `screenshots/gifs/hma-import-ydk.gif` · next to it. HMA-CE's "Import .YDK" loading a
+  `.ydk` file into a deck table. An HMA window, not mGBA.
 
 ### Screens and art (after the table)
 

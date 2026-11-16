@@ -717,6 +717,15 @@ for every anchor.
 </tr>
 </table>
 
+HMA-CE can also fill a deck table for you: **Import from YGOProDeck** and **Import .YDK**.
+
+<table>
+<tr>
+<td align="center"><img src="screenshots/placeholders/hma-import-ygoprodeck.svg" width="240" alt="Placeholder: HMA: Import from YGOProDeck"><br><sub>HMA-CE: Import from YGOProDeck (GIF)</sub></td>
+<td align="center"><img src="screenshots/placeholders/hma-import-ydk.svg" width="240" alt="Placeholder: HMA: Import .YDK"><br><sub>HMA-CE: Import .YDK (GIF)</sub></td>
+</tr>
+</table>
+
 #### Screens and art
 
 <table>

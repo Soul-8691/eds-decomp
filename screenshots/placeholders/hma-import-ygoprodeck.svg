@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 160" width="480" height="320" role="img" aria-label="Placeholder: HMA: Import from YGOProDeck">
+  <rect width="240" height="160" fill="#1b2433"/>
+  <rect x="5" y="5" width="230" height="150" rx="3" fill="none" stroke="#6f86a8" stroke-width="1" stroke-dasharray="4 3"/>
+  <text x="120" y="30" text-anchor="middle" font-family="Verdana, sans-serif" font-size="8" letter-spacing="1.5" fill="#f2c14e">GIF NEEDED</text>
+  <text x="120" y="66" text-anchor="middle" font-family="Verdana, sans-serif" font-size="12" font-weight="bold" fill="#ffffff">HMA: Import from</text>
+  <text x="120" y="81" text-anchor="middle" font-family="Verdana, sans-serif" font-size="12" font-weight="bold" fill="#ffffff">YGOProDeck</text>
+  <text x="120" y="104" text-anchor="middle" font-family="Verdana, sans-serif" font-size="8.5" fill="#c9d4e5">A deck pulled from YGOProDeck</text>
+  <text x="120" y="117" text-anchor="middle" font-family="Verdana, sans-serif" font-size="8.5" fill="#c9d4e5">into a deck table in HMA-CE</text>
+  <text x="120" y="142" text-anchor="middle" font-family="Verdana, sans-serif" font-size="7" fill="#8a9bb5">GIF: replaces hma-import-ygoprodeck.svg</text>
+</svg>

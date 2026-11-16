@@ -3235,3 +3235,6 @@ updated: 2026-09-29
 - tools/format_packs.py: PACK_SCORE_BASE 1000 (was cardprices.BASE) so the usage packs' pull weights stay the same; packs_md.py uses it.
 - Regenerated CARD_PRICES.md and PACKS.md (only the price section changed). Built (demo; .text 0x0807F52C, unchanged).
 - README.md, README_WIP.md; [[duelist-points]].
+
+## [2026-11-16] progress | README_WIP: placeholder GIFs for HMA-CE Import from YGOProDeck / Import .YDK
+- screenshots/placeholders/hma-import-ygoprodeck.svg, hma-import-ydk.svg; README_WIP.md (under "Opponents and their decks"); README_TODO.md slots.
