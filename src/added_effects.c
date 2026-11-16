@@ -4794,11 +4794,43 @@ int AiFlipEffectPreferredTarget(struct ChainEntry *link, int skipZone)
     return best;
 }
 
+/* Thousand-Eyes Restrict and Relinquished (absorb a monster: they take its printed ATK and DEF): the human's face-up
+ * monster with the highest printed ATK that the card may target, -1 for none. Never a face-down one: the CPU sees its
+ * stats, but absorbing an unknown monster is not a play a player would make (2026-11-16). */
+static int AiPrintedMonsterAtk(u16 cardId);
+
+static int AiAbsorbTarget(struct ChainEntry *link, int skipZone)
+{
+    int side = 1 - (link->player & 1), zone, best = -1;
+    u32 bestAtk = 0;
+
+    for (zone = ZONE_MONSTER_0; zone <= ZONE_MONSTER_4; zone++) {
+        struct DuelZone *z = ZoneOf(side, zone);
+        u16 id = DUEL_CARD_ID(&z->card);
+
+        if (zone == skipZone || id == 0 || !z->isFaceUp || !CanCardTargetZone(link->card, side, zone))
+            continue;
+        if (best < 0 || (u32)AiPrintedMonsterAtk(id) > bestAtk) {
+            best = zone;
+            bestAtk = AiPrintedMonsterAtk(id);
+        }
+    }
+    return best;
+}
+
 /* The CPU's pick among the human's monsters: the preferred one, else the strongest (AiFindStrongestMonster). */
 int AiFlipEffectTarget(struct ChainEntry *link, int skipZone)
 {
-    int zone = AiManEaterBugTargetYugiKaiba(link, skipZone);
+    int zone;
 
+    switch (CARD_NUMBER(link->card)) {
+    case CARD_RELINQUISHED:
+#ifdef HAS_CARD_THOUSAND_EYES_RESTRICT
+    case CARD_THOUSAND_EYES_RESTRICT:
+#endif
+        return AiAbsorbTarget(link, skipZone);
+    }
+    zone = AiManEaterBugTargetYugiKaiba(link, skipZone);
     if (zone < 0)
         zone = AiFlipEffectPreferredTarget(link, skipZone);
     return zone >= 0 ? zone : AiFindStrongestMonster(0, skipZone, 1, 1);

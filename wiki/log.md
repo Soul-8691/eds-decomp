@@ -3259,3 +3259,7 @@ updated: 2026-09-29
 ## [2026-11-16] progress | CPU: steal a Tribute rather than Tribute its own
 - src/added_effects.c: AiStealForTributeSummon also with monsters of its own (when its summon is a Tribute Summon); AiPlayStealForTribute: Change of Heart, Brain Control, Snatch Steal, Soul Exchange.
 - [[added-cards]], AI_IMPROVEMENTS.md. Built (demo).
+
+## [2026-11-16] progress | CPU: Thousand-Eyes Restrict and Relinquished absorb face-up monsters only
+- src/added_effects.c: AiAbsorbTarget, from AiFlipEffectTarget (EffectOpponentMonsterChainB).
+- [[added-cards]], AI_IMPROVEMENTS.md. Built (demo).

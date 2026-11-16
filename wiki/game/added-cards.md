@@ -846,6 +846,16 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
   human's monsters. The no-monster case is as before, with the same four cards.
 - Built (demo); not tested in an emulator.
 
+### The CPU absorbs only face-up monsters (2026-11-16)
+- **Before.** Thousand-Eyes Restrict (engine key 1334) and Relinquished take their target through
+  `EffectOpponentMonsterChainB` (effect_targets1.c), whose CPU branch asks `AiFlipEffectTarget`: with no preferred
+  target, `AiFindStrongestMonster` over all the human's monsters, face-down ones included (the CPU reads their
+  stats).
+- **Now.** `AiFlipEffectTarget` sends both cards to `AiAbsorbTarget`: the human's face-up monster with the highest
+  printed ATK that the card may target (`CanCardTargetZone`), else no target. The CPU only wants Thousand-Eyes
+  Restrict's effect with a strong face-up monster to take anyway (`AiWantsMonsterEffect`).
+- Built (demo); not tested in an emulator.
+
 ### The CPU never Tributes a copy of what it summons (2026-10-29)
 - **Rule.** The CPU doesn't Tribute a monster with the same card number as the one it summons, unless the summoned
   card has a summon trigger (`AiHasSummonTrigger`), which makes the swap worth it. It applies to:
