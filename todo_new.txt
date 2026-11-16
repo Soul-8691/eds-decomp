@@ -4,9 +4,9 @@ Highlights section should be a TLDR paragraph
 Highlights GIF needs to be curated
 Play it should be at the end of the non-code sections
 Get rid of pre-duel screen (GIF) - not focused on the placeholder duelists
-HMA screenshots should be saved for the HMA section
+HMA screenshots should be saved for HMA.md
 Curate Deck Edit list-filter.gif filter (sort by ATK, Effect Monsters, DARK, 1000-2000 ATK)
-Password screenshot needs updating
+Password.png screenshot needs updating
 pack-pull.gif should not include scrolling and should have the correct pack contents
 Get rid of New Packs.png
 Booster Packs section should have a GIF of scrolling through the packs

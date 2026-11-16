@@ -769,6 +769,40 @@ local function opListPick(op)
     return false
 end
 
+-- Card View's list (a pile's Card View, README media): to the entry, then A opens its details (no Decide button).
+local function opListView(op)
+    local ok, v = listReady()
+    if op.opened then
+        return true
+    end
+    if not ok then
+        op.idle = (op.idle or 0) + 1
+        if op.idle > 240 then
+            EDS.log("steps: " .. op.text .. ": the Card View list did not open")
+            return true
+        end
+        return false
+    end
+    if op.target == nil then
+        local id = cardId(op.place.key)
+        for i = 0, v.count - 1 do
+            if listCardId(i) == id then
+                op.target = i
+                break
+            end
+        end
+        op.target = op.target or 0
+    end
+    local at = v.top + v.row
+    if at ~= op.target then
+        press(at < op.target and EDS.KEY_DOWN or EDS.KEY_UP)
+        return false
+    end
+    press(EDS.KEY_A)
+    op.opened = true
+    return false
+end
+
 -- The summon zone picker (mod_link.c): Right until the candidate is the zone, then A. Done at once when the
 -- picker does not open (one fitting zone) and the summon has finished.
 local function opZone(op)
@@ -1110,6 +1144,7 @@ end
 
 local RUN = {
     cursor = opCursor, menu = opMenuCommand, result = opMenuResult, yesno = opYesNo, list = opListPick,
+    listview = opListView,
     zone = opZone, phase = opPhaseMenu, target = opTarget, fieldpick = opFieldPick, draw = opDraw, other_turn = opOtherTurn,
     media_shot = opMediaShot, media_rec = opMediaRec, media_stop = opMediaStop,
     when = opWhen, settle = opSettle,
@@ -1368,6 +1403,18 @@ buildOps = function(step, inResponse, fs)
             add({ kind = "result", value = pos == "def" and 1 or 0, optional = true, timeout = 90 })
         end
         add({ kind = "settle" })
+    elseif verb == "view" then
+        -- `view you.extra[<Card>]`: the pile's Card View, its details shown for `frames` (default 150), then back
+        local place, frames = args:match("^(.-)%s+(%d+)$")
+        place = parsePlace(place or args)
+        add({ kind = "cursor", place = { player = place.player, kind = place.kind } })
+        add({ kind = "menu", cmd = CMD.card_view })
+        add({ kind = "listview", place = place })
+        add({ kind = "wait", frames = tonumber(frames) or 150 })
+        add({ kind = "press", key = EDS.KEY_B })
+        add({ kind = "wait", frames = 20 })
+        add({ kind = "press", key = EDS.KEY_B })
+        add({ kind = "wait", frames = 30 })
     elseif verb == "await" or verb == "await_resolve" then
         -- `await <card>`: until that card's chain link has come and resolved (a clip that ends on the CPU's play);
         -- `await_resolve <card>`: only until it starts resolving (Hold R: let go of R there, or the chain list waits)

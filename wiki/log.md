@@ -3244,3 +3244,10 @@ updated: 2026-09-29
 
 ## [2026-11-16] progress | README_WIP: Import from YGOProDeck is for card stats and art
 - Its GIF slot moved under the added cards' HMA row (stats, text, Link Arrows); Import .YDK stays under the opponents' decks. README_TODO.md and the placeholder text follow.
+
+## [2026-11-16] progress | README restructure and re-captured media
+- README.md, README_WIP.md: TLDR replaces Highlights; Play it moved before Building from source; Link Battle mentions and the 308-cards sentence removed; Planned lists the OCG formats first; the header shows screenshots/gifs/duel.gif; a link to the new HMA.md.
+- README_WIP.md only: no trailer, pre-duel GIF, New Packs.png or rps.gif; witch-call.gif replaces graverobber.gif; pack-list.gif under Booster Packs; a test_duel_ydk.png placeholder (EDOPro; screenshots/placeholders/test-duel-ydk.svg); every HMA placeholder moved to HMA.md. README_TODO.md follows (an HMA.md section).
+- tools/media: gen_duel_media.py (Duel GIF with Reaper staples, Duel Board with Goat staples, a 3-card Chain List, Link from two Normal Monsters, Xyz shows Utopia's Card View, Witch Call replaces Graverobber, new Hold R / Hold L set-ups); list_filter.lua (Effect, ATK sort, DARK, ATK 1000-2000, Level 1-4); pack_pull.lua (no scrolling, five Goat staples written over the pulls); new pack_list.lua; debug_duel.lua no longer records rps.gif; new_packs.lua, Graverobber_Media_Player.lua, New Packs.png and graverobber.gif deleted.
+- tools/testing_scenarios/lib_steps.lua: a `view` step (a pile's Card View on one card); lib_eds.lua no longer says "no ffmpeg on PATH" when a script turns the scenario MP4 off.
+- All re-captured (run_tests.ps1 -Media) and checked on contact sheets. [[readme-media]].

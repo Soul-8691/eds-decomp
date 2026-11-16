@@ -1525,3 +1525,60 @@ START format_check
 PASS format_check
 START unlock
 PASS unlock
+START Chain_List_Media_Player
+PASS Chain_List_Media_Player duel_main=true reason= play_done=true
+START debug_duel
+PASS debug_duel
+START Duel_Board_Media_Player
+PASS Duel_Board_Media_Player duel_main=true reason= play_done=true
+START Duel_Media_Player
+PASS Duel_Media_Player duel_main=true reason= play_done=true
+START Hold_L_Media_Player
+PASS Hold_L_Media_Player duel_main=false reason= play_done=true
+START Hold_R_Media_Player
+PASS Hold_R_Media_Player duel_main=false reason= play_done=true
+START Link_Media_Player
+PASS Link_Media_Player duel_main=true reason= play_done=true
+START list_filter
+PASS list_filter
+START pack_list
+FAIL pack_list ...ers\pswan\Downloads\eds-decomp\tools\media/lib_media.lua:836: ffmpeg wrote nothing: tools\media\..\..\screenshots\gifs\pack-list.gif
+START pack_pull
+START Chain_List_Media_Player
+PASS Chain_List_Media_Player duel_main=true reason= play_done=true
+START debug_duel
+PASS debug_duel
+START Duel_Board_Media_Player
+PASS Duel_Board_Media_Player duel_main=true reason= play_done=true
+START Duel_Media_Player
+PASS Duel_Media_Player duel_main=true reason= play_done=true
+START Hold_L_Media_Player
+PASS Hold_L_Media_Player duel_main=false reason= play_done=true
+START Hold_R_Media_Player
+PASS Hold_R_Media_Player duel_main=false reason= play_done=true
+START Link_Media_Player
+PASS Link_Media_Player duel_main=true reason= play_done=true
+START list_filter
+PASS list_filter
+START pack_list
+PASS pack_list
+START pack_pull
+PASS pack_pull
+START password
+PASS password
+START Witch_Call_Media_Player
+PASS Witch_Call_Media_Player duel_main=false reason= play_done=true
+START Xyz_Media_Player
+PASS Xyz_Media_Player duel_main=true reason= play_done=true
+START Duel_Media_Player
+PASS Duel_Media_Player duel_main=true reason= play_done=true
+START Hold_L_Media_Player
+PASS Hold_L_Media_Player duel_main=false reason= play_done=true
+START Witch_Call_Media_Player
+PASS Witch_Call_Media_Player duel_main=false reason= play_done=true
+START Duel_Media_Player
+PASS Duel_Media_Player duel_main=true reason= play_done=true
+START list_filter
+PASS list_filter
+START Witch_Call_Media_Player
+PASS Witch_Call_Media_Player duel_main=true reason= play_done=true

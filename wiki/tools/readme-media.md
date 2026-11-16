@@ -4,7 +4,7 @@ type: tool
 status: draft
 confidence: medium
 sources: [rom-analysis]
-updated: 2026-11-13
+updated: 2026-11-16
 ---
 
 # README media capture scripts
@@ -44,25 +44,25 @@ powershell -ExecutionPolicy Bypass -File tools\testing_scenarios\run_tests.ps1 -
 | `duelists.lua` | Duelists (Screen 1-3), cursor on each page's first format | demo | verified |
 | `duelists_debug.lua` | Duelists (Screen 4), cursor on Debug (top right) | release | verified |
 | `password.lua` | Password.png: Breaker's password typed on the keypad (a path over `gPasswordKeypad`'s links), then the "Buy …?" question | demo | verified |
-| `*_Media_Player.lua` (from `gen_duel_media.py`) | Card Icons, Card Icons (Up Close), Activate-Set Order, Counters, Duel, Duel Board (cards side by side), Chain List | demo | Duel Board verified 2026-11-13; the rest run before |
-| `*_Media_Player.lua` (2026-11-13) | GIFs: synchro, xyz, link, zone-pick, call-trunade, graverobber, hide-battle, hold-r, hold-l. Videos: new-cards, cpu-play, hide-anims, duel-speed-default/always/super | demo | verified (contact sheets) |
+| `*_Media_Player.lua` (from `gen_duel_media.py`) | Card Icons, Card Icons (Up Close), Activate-Set Order, Counters, Duel Board (Goat staples), Chain List (Mystical Space Typhoon, Dust Tornado, Book of Moon: three links); duel.gif (the header, Reaper staples: Breaker's counter on a Set Torrential Tribute, Cyber Dragon over Kycoo) | demo | redone 2026-11-16, checked on contact sheets |
+| `*_Media_Player.lua` (2026-11-13, redone 2026-11-16) | GIFs: synchro, xyz (Utopia's Card View first: `view`), link (Proxy Dragon from Gemini Elf and Vorse Raider), zone-pick, call-trunade, witch-call (replaced graverobber: Witch revived by Call attacks, the CPU's Sakuretsu Armor destroys it, one search, the Call goes too), hide-battle, hold-r (your five Set Spells/Traps shown, then the CPU's turn with R held), hold-l (the CPU's five Set Spells/Traps shown, then its turn with L held). Videos: new-cards, cpu-play, hide-anims, duel-speed-default/always/super | demo | verified (contact sheets) |
 | `pre_duel.lua` / `pre_duel_picture.lua` | pre-duel.gif (Weevil's bust-up, page 2 top left, then A) / Pre-duel (Yugi-Kaiba).png (page 1 top left) | demo | verified |
-| `debug_duel.lua` | Debug Picker.png, rps.gif (a forced win: the CPU's card set once it answers), mulligan.gif (two Mulligans, then Draw), Debug Duel.png (cursor on Debug's face-up hand) | demo | verified |
+| `debug_duel.lua` | Debug Picker.png, mulligan.gif (two Mulligans, then Draw), Debug Duel.png (cursor on Debug's face-up hand); rps.gif is no longer recorded (2026-11-16) | demo | verified |
 | `empty_deck.lua` | Empty Deck.png (loads Chaos Turbo first: a fresh save has no deck) | demo | verified |
 | `records_practice.lua` | Records (Practice).png (R three times) | demo | verified |
-| `pack_pull.lua` | pack-pull.gif (the list browsed, the Goat pack opened, a card's details) | demo | verified |
-| `empty_main_side.lua` / `list_filter.lua` | empty-main-side.gif / list-filter.gif (every card in the trunk; D, Warrior, ATK from 1000: 12 cards) | demo | verified |
+| `pack_pull.lua` / `pack_list.lua` | pack-pull.gif (no scrolling: the Goat usage pack opened; five Goat staples from its pool are written over `gPackOpenWork.cardNumbers` once `openPackId` is set, as the pool favours low-usage cards; then a card's details) / pack-list.gif (Right through the list from the first pack) | demo | verified 2026-11-16 |
+| `empty_main_side.lua` / `list_filter.lua` | empty-main-side.gif / list-filter.gif (every card in the trunk; Effect Monsters sorted by ATK, then DARK, ATK 1000-2000, Level 1-4) | demo | verified 2026-11-16 |
 | `left_out.lua` | Left Out.png (three Chaos Turbo cards taken out of the trunk, then the recipe loaded: make ignores the banlist when loading) | demo | verified |
 | `format_check.lua` | Format Check.png (cards Yugi-Kaiba lacks added to the saved Deck, then its duelist picked) | **release** (make has no format check) | verified |
 | `banlist_refused.lua` | Banlist Refused.png (the collection shrunk, then Goat: "only 34 (40 needed)") | **release** (make has no check) | verified |
 | `siding.lua` | siding.gif (game 1 won at once, then Bell of Destruction out, Kycoo in) | demo | verified |
-| `new_packs.lua` | New Packs.png (one duel counted played and won, the new-packs notice bit set, the match won) | demo | verified |
+| ~~`new_packs.lua`~~ | removed 2026-11-16 with New Packs.png (no longer in the README) | | |
 | `unlock.lua` | unlock.gif (Tristan at 19 wins, the 20th, then Critter's portrait open on the select screen; the reward screens paused out) | **release** (make opens every format) | verified |
 | `event_challenger.lua` | Event Challenger.png (a Duel Ceremony day: `gSaveData.days` 12, Saturday 13 January 2001) | demo | verified |
 | `stitch_media.py` | duel-speed.mp4 (the three speeds side by side), trailer.mp4 (git-ignored), highlights.gif | ffmpeg | verified |
 
 Duel captures are written as test scenarios (setup and steps, the format of `tools/testing_scenarios/exact.py`) by
-`tools/media/gen_duel_media.py`, with media steps: `point`, `open_menu`, `close`, `wait`, `shot`, `gif_start` /
+`tools/media/gen_duel_media.py`, with media steps: `point`, `view <pile>[<card>] [frames]` (a pile's Card View opened on that card, 2026-11-16), `open_menu`, `close`, `wait`, `shot`, `gif_start` /
 `mp4_start` … `rec_stop`, all in `lib_steps.lua`. Added 2026-11-13:
 - `extra_summon <Card> from <materials> -> <m0..m4|emz0|emz1> [atk|def]`: the Extra Deck pile's Special Summon list, the
   material picks (`fieldpick`: the cursor moves with the summon's prompt open), the zone and the position.

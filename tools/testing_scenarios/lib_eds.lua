@@ -298,6 +298,9 @@ function EDS.startRecording(card, effect, actor, opts)
     end
     if useCapture and EDS.ffmpegAvailable() then
         EDS.log("MP4: scripted capture (emu:screenshot PNG sequence + ffmpeg). See captureMp4 in README.")
+    elseif opts.captureMp4 == false then
+        -- (the README media scripts: their gif_start/mp4_start steps find and run ffmpeg themselves)
+        EDS.log("MP4: the scenario capture is off (captureMp4 = false)")
     else
         EDS.log("MP4: no ffmpeg on PATH — use mGBA Tools -> Record A/V -> MPEG-4 (Lua has no encoder API).")
         if useCapture then

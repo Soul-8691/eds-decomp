@@ -1,10 +1,7 @@
 ﻿
-Script          Result Seconds Detail
-------          ------ ------- ------
-banlist_refused PASS         5       
-duelists_debug  PASS         8       
-format_check    PASS         5       
-unlock          PASS        19       
+Script                  Result Seconds Detail                               
+------                  ------ ------- ------                               
+Witch_Call_Media_Player PASS        35 duel_main=true reason= play_done=true
 
 
 

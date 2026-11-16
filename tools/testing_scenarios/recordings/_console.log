@@ -22967,3 +22967,786 @@
    3638 MP4: ffmpeg found through the registry PATH: C:\Users\pswan\Downloads\ffmpeg-2026-11-11-git-23c4540053-full_build\ffmpeg-2026-11-11-git-23c4540053-full_build\bin\ffmpeg.exe
    3638 [unlock] encoding 458 frames -> tools\media\..\..\screenshots\gifs\unlock.gif
    3638 [unlock] done
+     15 MP4 target: tools\testing_scenarios\recordings\Chain_List_Media_Player.mp4
+     15 emu recording API: screenshot, screenshotToImage
+     15 MP4: no ffmpeg on PATH — use mGBA Tools -> Record A/V -> MPEG-4 (Lua has no encoder API).
+     15 Chain List / media / Player
+     15 activate you.hand[Mystical Space Typhoon]; target opp.st0; when prompt response: activate you.st0; target opp.st1; when 
+    796 Main menu (callback 0x08003B15).
+    919 Campaign selected (callback 0x0801D6C9).
+   1112 Turn order: forced RPS lose (CPU goes first).
+   1122 Turn order: A (lost RPS; CPU chooses first).
+   1160 Turn order: A (lost RPS; CPU chooses first).
+   1352 Opponent's turn (waiting for your Main Phase 1).
+   1354 Usage deck goat / Chaos Turbo: main=40 extra=15; P0 shuffled=true (top 719->522) P1 shuffled=true (top 719->838), hands cleared.
+   2252 cpu_turn f=900 duel_step=8 turn_player=1 ai=4/0 textbox=0
+   2332 Player Draw Phase.
+   2513 Opening draw complete (hand=6 deck=34 want=6).
+   2653 Exact setup: P0 hand=1 deck=34 gy=0, P1 hand=0 deck=34 gy=0, LP 8000/8000, turnCount 2.
+   2653 Player Main Phase 1.
+   2653 steps: unknown card Chain List
+   2653 steps: 8 steps, 16 ops
+   2653 step: activate you.hand[Mystical Space Typhoon]
+   2846 steps: capture starts (cursor on activate you.hand[Mystical Space Typhoon])
+   2892 step: target opp.st0
+   2984 steps: target opp.st0: taken on press 1
+   2991 step: when prompt response: activate you.st0
+   3253 steps: event: when prompt response: activate you.st0
+   3320 step: target opp.st1
+   3436 steps: target opp.st1: taken on press 1
+   3443 step: when prompt response: activate you.st1
+   3707 steps: event: when prompt response: activate you.st1
+   3812 step: target opp.m0
+   3899 steps: target opp.m0: A again (not taken)
+   3923 steps: target opp.m0: taken on press 2
+   3930 step: wait 100
+   4036 step: shot Chain List
+   4036 media: shot Chain List.png
+   4946 Play sequence done; ending capture (no recording tail).
+   4946 Finished — PASS (play sequence + tail). Stop mGBA Record A/V to finalize MP4.
+     12 [debug_duel] start (symbols: tools/media/../../eds_demo.sym)
+   1454 [debug_duel] shot Debug Picker.png
+   2726 [debug_duel] recording mulligan (gif)
+   3390 [debug_duel] encoding 628 frames -> tools\media\..\..\screenshots\gifs\mulligan.gif
+   3703 [debug_duel] shot Debug Duel.png
+   3704 [debug_duel] done
+     13 MP4 target: tools\testing_scenarios\recordings\Duel_Board_Media_Player.mp4
+     13 emu recording API: screenshot, screenshotToImage
+     13 MP4: no ffmpeg on PATH — use mGBA Tools -> Record A/V -> MPEG-4 (Lua has no encoder API).
+     13 Duel Board / media / Player
+     13 point you.m0; wait 30; shot Duel Board
+    914 Main menu (callback 0x08003B15).
+   1037 Campaign selected (callback 0x0801D6C9).
+   1230 Turn order: forced RPS lose (CPU goes first).
+   1240 Turn order: A (lost RPS; CPU chooses first).
+   1278 Turn order: A (lost RPS; CPU chooses first).
+   1470 Opponent's turn (waiting for your Main Phase 1).
+   1472 Usage deck goat / Chaos Turbo: main=40 extra=15; P0 shuffled=true (top 719->886) P1 shuffled=true (top 719->648), hands cleared.
+   1823 Player Draw Phase.
+   2004 Opening draw complete (hand=6 deck=34 want=6).
+   2142 Exact setup: P0 hand=0 deck=34 gy=0, P1 hand=0 deck=35 gy=0, LP 6400/5100, turnCount 2.
+   2142 Player Main Phase 1.
+   2142 steps: unknown card Duel Board
+   2142 steps: 3 steps, 7 ops
+   2142 step: point you.m0
+   2279 steps: capture starts (cursor on point you.m0)
+   2286 step: wait 30
+   2322 step: shot Duel Board
+   2322 media: shot Duel Board.png
+   2339 Play sequence done; ending capture (no recording tail).
+   2339 Finished — PASS (play sequence + tail). Stop mGBA Record A/V to finalize MP4.
+     12 MP4 target: tools\testing_scenarios\recordings\Duel_Media_Player.mp4
+     12 emu recording API: screenshot, screenshotToImage
+     12 MP4: no ffmpeg on PATH — use mGBA Tools -> Record A/V -> MPEG-4 (Lua has no encoder API).
+     12 Duel / media / Player
+     12 point you.hand[Breaker the Magical Warrior]; wait 30; gif_start duel; summon you.hand[Breaker the Magical Warrior] -> m1
+    913 Main menu (callback 0x08003B15).
+   1036 Campaign selected (callback 0x0801D6C9).
+   1229 Turn order: forced RPS lose (CPU goes first).
+   1239 Turn order: A (lost RPS; CPU chooses first).
+   1277 Turn order: A (lost RPS; CPU chooses first).
+   1469 Opponent's turn (waiting for your Main Phase 1).
+   1471 Usage deck reaper / Stein Monarch: main=40 extra=15; P0 shuffled=true (top 953->845) P1 shuffled=true (top 953->920), hands cleared.
+   1823 Player Draw Phase.
+   2004 Opening draw complete (hand=6 deck=34 want=6).
+   2144 Exact setup: P0 hand=3 deck=34 gy=0, P1 hand=0 deck=35 gy=0, LP 5600/3900, turnCount 2.
+   2144 Player Main Phase 1.
+   2144 steps: unknown card Duel
+   2144 steps: 11 steps, 30 ops
+   2144 step: point you.hand[Breaker the Magical Warrior]
+   2345 step: wait 30
+   2381 step: gif_start duel
+   2381 media: recording duel (gif)
+   2388 step: summon you.hand[Breaker the Magical Warrior] -> m1 atk
+   2525 step: activate you.m1
+   2544 steps: capture starts (cursor on activate you.m1)
+   2868 steps: activate you.m1: command 6 not in the menu; closed
+   2893 step: target opp.st0
+   4413 steps: target opp.st0: cursor stuck at 0/5/0 (want 1/5/0; box false kind 1 step 3; effect step 0x00; summon false)
+   4420 step: battle
+   5320 steps: phase timed out (battle) [box active=false kind=1 step=3; list=false; chain=true; summon=false; cmds=false; prompt=0]
+   5327 step: attack you.m0 -> opp.m0
+   5670 steps: attack you.m0 -> opp.m0: command 7 not in the menu; closed
+   7209 steps: attack you.m0 -> opp.m0: cursor stuck at 0/5/0 (want 1/0/0; box false kind 1 step 3; effect step 0x00; summon false)
+   8110 steps: settle timed out (attack you.m0 -> opp.m0) [box active=false kind=1 step=3; list=false; chain=true; summon=false; cmds=false; prompt=0]
+   8117 step: settle
+   9017 steps: settle timed out (settle) [box active=false kind=1 step=3; list=false; chain=true; summon=false; cmds=false; prompt=0]
+   9024 step: wait 20
+   9050 step: rec_stop
+   9050 media: 1830 still frames trimmed from the end
+   9050 media: encoding 4785 frames -> tools\testing_scenarios\..\..\screenshots\gifs\duel.gif
+  10557 steps: settle timed out (end) [box active=false kind=1 step=3; list=false; chain=true; summon=false; cmds=false; prompt=0]
+  10558 Play sequence done; ending capture (no recording tail).
+  10558 Finished — PASS (play sequence + tail). Stop mGBA Record A/V to finalize MP4.
+     15 MP4 target: tools\testing_scenarios\recordings\Hold_L_Media_Player.mp4
+     15 emu recording API: screenshot, screenshotToImage
+     15 MP4: no ffmpeg on PATH — use mGBA Tools -> Record A/V -> MPEG-4 (Lua has no encoder API).
+     15 Hold L / media / Player
+     15 point opp.hand[0]; gif_start hold-l; wait 35; point opp.hand[1]; wait 35; point opp.hand[2]; wait 35; point opp.hand[3];
+    916 Main menu (callback 0x08003B15).
+   1039 Campaign selected (callback 0x0801D6C9).
+   1232 Turn order: forced RPS lose (CPU goes first).
+   1242 Turn order: A (lost RPS; CPU chooses first).
+   1280 Turn order: A (lost RPS; CPU chooses first).
+   1472 Opponent's turn (waiting for your Main Phase 1).
+   1474 Usage deck goat / Chaos Turbo: main=40 extra=15; P0 shuffled=true (top 719->902) P1 shuffled=true (top 719->920), hands cleared.
+   2372 cpu_turn f=900 duel_step=8 turn_player=1 ai=4/0 textbox=0
+   2489 Player Draw Phase.
+   2670 Opening draw complete (hand=6 deck=34 want=6).
+   2810 Exact setup: P0 hand=0 deck=34 gy=0, P1 hand=5 deck=35 gy=0, LP 8000/8000, turnCount 2.
+   2810 Player Main Phase 1.
+   2810 steps: unknown card Hold L
+   2810 steps: 26 steps, 51 ops
+   2810 step: point opp.hand[0]
+   3003 steps: capture starts (cursor on point opp.hand[0])
+   3010 step: gif_start hold-l
+   3010 media: recording hold-l (gif)
+   3017 step: wait 35
+   3058 step: point opp.hand[1]
+   3084 step: wait 35
+   3125 step: point opp.hand[2]
+   3151 step: wait 35
+   3192 step: point opp.hand[3]
+   3218 step: wait 35
+   3259 step: point opp.hand[4]
+   3285 step: wait 35
+   3326 step: point opp.st0
+   3352 step: wait 35
+   3393 step: point opp.st1
+   3419 step: wait 35
+   3460 step: point opp.st2
+   3486 step: wait 35
+   3527 step: point opp.st3
+   3553 step: wait 35
+   3594 step: point opp.st4
+   3620 step: wait 35
+   3661 step: pass
+   3774 step: hold L
+   3781 step: cpu_turn
+   4351 step: release L
+   4358 step: rec_stop
+   4358 media: encoding 1244 frames -> tools\testing_scenarios\..\..\screenshots\gifs\hold-l.gif
+   4459 Play sequence done; ending capture (no recording tail).
+   4459 Finished — PASS (play sequence + tail). Stop mGBA Record A/V to finalize MP4.
+     11 MP4 target: tools\testing_scenarios\recordings\Hold_R_Media_Player.mp4
+     11 emu recording API: screenshot, screenshotToImage
+     11 MP4: no ffmpeg on PATH — use mGBA Tools -> Record A/V -> MPEG-4 (Lua has no encoder API).
+     11 Hold R / media / Player
+     11 point you.st0; gif_start hold-r; wait 40; point you.st1; wait 40; point you.st2; wait 40; point you.st3; wait 40; point 
+    912 Main menu (callback 0x08003B15).
+   1035 Campaign selected (callback 0x0801D6C9).
+   1228 Turn order: forced RPS lose (CPU goes first).
+   1238 Turn order: A (lost RPS; CPU chooses first).
+   1276 Turn order: A (lost RPS; CPU chooses first).
+   1468 Opponent's turn (waiting for your Main Phase 1).
+   1470 Usage deck goat / Chaos Turbo: main=40 extra=15; P0 shuffled=true (top 719->434) P1 shuffled=true (top 719->952), hands cleared.
+   2368 cpu_turn f=900 duel_step=8 turn_player=1 ai=4/0 textbox=0
+   2485 Player Draw Phase.
+   2666 Opening draw complete (hand=6 deck=34 want=6).
+   2806 Exact setup: P0 hand=0 deck=34 gy=0, P1 hand=3 deck=38 gy=0, LP 8000/8000, turnCount 2.
+   2806 Player Main Phase 1.
+   2806 steps: unknown card Hold R
+   2806 steps: 16 steps, 31 ops
+   2806 step: point you.st0
+   2923 steps: capture starts (cursor on point you.st0)
+   2930 step: gif_start hold-r
+   2930 media: recording hold-r (gif)
+   2937 step: wait 40
+   2983 step: point you.st1
+   3009 step: wait 40
+   3055 step: point you.st2
+   3081 step: wait 40
+   3127 step: point you.st3
+   3153 step: wait 40
+   3199 step: point you.st4
+   3225 step: wait 40
+   3271 step: pass
+   3310 step: hold R
+   3317 step: cpu_turn
+   7203 step: release R
+   7210 step: rec_stop
+   7210 media: encoding 4280 frames -> tools\testing_scenarios\..\..\screenshots\gifs\hold-r.gif
+   7311 Play sequence done; ending capture (no recording tail).
+   7311 Finished — PASS (play sequence + tail). Stop mGBA Record A/V to finalize MP4.
+     11 MP4 target: tools\testing_scenarios\recordings\Link_Media_Player.mp4
+     11 emu recording API: screenshot, screenshotToImage
+     11 MP4: no ffmpeg on PATH — use mGBA Tools -> Record A/V -> MPEG-4 (Lua has no encoder API).
+     11 Link / media / Player
+     11 point you.m0; wait 50; gif_start link; extra_summon Proxy Dragon from you.m0, you.m1 -> emz0; settle; wait 20; rec_stop
+    912 Main menu (callback 0x08003B15).
+   1035 Campaign selected (callback 0x0801D6C9).
+   1228 Turn order: forced RPS lose (CPU goes first).
+   1238 Turn order: A (lost RPS; CPU chooses first).
+   1276 Turn order: A (lost RPS; CPU chooses first).
+   1468 Opponent's turn (waiting for your Main Phase 1).
+   1470 Usage deck goat / Chaos Turbo: main=40 extra=15; P0 shuffled=true (top 719->838) P1 shuffled=true (top 719->908), hands cleared.
+   1822 Player Draw Phase.
+   2003 Opening draw complete (hand=6 deck=34 want=6).
+   2143 Exact setup: P0 hand=0 deck=34 gy=0, P1 hand=0 deck=35 gy=0, LP 8000/8000, turnCount 2.
+   2143 Player Main Phase 1.
+   2143 steps: unknown card Link
+   2143 steps: 7 steps, 21 ops
+   2143 step: point you.m0
+   2279 steps: capture starts (cursor on point you.m0)
+   2286 step: wait 50
+   2342 step: gif_start link
+   2342 media: recording link (gif)
+   2349 step: extra_summon Proxy Dragon from you.m0, you.m1 -> emz0
+   2936 step: settle
+   2962 step: wait 20
+   2988 step: rec_stop
+   2988 media: 55 still frames trimmed from the end
+   2988 media: encoding 591 frames -> tools\testing_scenarios\..\..\screenshots\gifs\link.gif
+   3005 Play sequence done; ending capture (no recording tail).
+   3005 Finished — PASS (play sequence + tail). Stop mGBA Record A/V to finalize MP4.
+     14 [list_filter] start (symbols: tools/media/../../eds_demo.sym)
+   1156 [list_filter] recording list-filter (gif)
+   2264 [list_filter] encoding 1108 frames -> tools\media\..\..\screenshots\gifs\list-filter.gif
+   2264 [list_filter] done
+     16 [pack_list] start (symbols: tools/media/../../eds_demo.sym)
+   1291 [pack_list] recording pack-list (gif)
+   2043 [pack_list] encoding 716 frames -> tools\media\..\..\screenshots\gifs\pack-list.gif
+   2043 [pack_list] FAIL: ...ers\pswan\Downloads\eds-decomp\tools\media/lib_media.lua:836: ffmpeg wrote nothing: tools\media\..\..\screenshots\gifs\pack-list.gif
+     17 [pack_pull] start (symbols: tools/media/../../eds_demo.sym)
+     20 MP4 target: tools\testing_scenarios\recordings\Chain_List_Media_Player.mp4
+     20 emu recording API: screenshot, screenshotToImage
+     20 MP4: no ffmpeg on PATH — use mGBA Tools -> Record A/V -> MPEG-4 (Lua has no encoder API).
+     20 Chain List / media / Player
+     20 activate you.hand[Mystical Space Typhoon]; target opp.st0; when prompt response: activate you.st0; target opp.st1; when 
+    801 Main menu (callback 0x08003B15).
+    924 Campaign selected (callback 0x0801D6C9).
+   1117 Turn order: forced RPS lose (CPU goes first).
+   1127 Turn order: A (lost RPS; CPU chooses first).
+   1165 Turn order: A (lost RPS; CPU chooses first).
+   1357 Opponent's turn (waiting for your Main Phase 1).
+   1359 Usage deck goat / Chaos Turbo: main=40 extra=15; P0 shuffled=true (top 719->719) P1 shuffled=true (top 719->838), hands cleared.
+   2257 cpu_turn f=900 duel_step=8 turn_player=1 ai=3/2 textbox=0
+   3157 cpu_turn f=1800 duel_step=8 turn_player=1 ai=4/0 textbox=0
+   3261 Player Draw Phase.
+   3442 Opening draw complete (hand=6 deck=34 want=6).
+   3583 Exact setup: P0 hand=1 deck=34 gy=0, P1 hand=0 deck=33 gy=0, LP 8000/8000, turnCount 2.
+   3583 Player Main Phase 1.
+   3583 steps: unknown card Chain List
+   3583 steps: 8 steps, 16 ops
+   3583 step: activate you.hand[Mystical Space Typhoon]
+   3776 steps: capture starts (cursor on activate you.hand[Mystical Space Typhoon])
+   3822 step: target opp.st0
+   3914 steps: target opp.st0: taken on press 1
+   3921 step: when prompt response: activate you.st0
+   4183 steps: event: when prompt response: activate you.st0
+   4250 step: target opp.st1
+   4367 steps: target opp.st1: taken on press 1
+   4374 step: when prompt response: activate you.st1
+   4639 steps: event: when prompt response: activate you.st1
+   4744 step: target opp.m0
+   4831 steps: target opp.m0: A again (not taken)
+   4855 steps: target opp.m0: taken on press 2
+   4862 step: wait 100
+   4968 step: shot Chain List
+   4968 media: shot Chain List.png
+   5878 Play sequence done; ending capture (no recording tail).
+   5878 Finished — PASS (play sequence + tail). Stop mGBA Record A/V to finalize MP4.
+     11 [debug_duel] start (symbols: tools/media/../../eds_demo.sym)
+   1453 [debug_duel] shot Debug Picker.png
+   2723 [debug_duel] recording mulligan (gif)
+   3387 MP4: ffmpeg found through the registry PATH: C:\Users\pswan\Downloads\ffmpeg-2026-11-16-git-d35e13b9e0-full_build\ffmpeg-2026-11-16-git-d35e13b9e0-full_build\bin\ffmpeg.exe
+   3387 [debug_duel] encoding 628 frames -> tools\media\..\..\screenshots\gifs\mulligan.gif
+   3700 [debug_duel] shot Debug Duel.png
+   3701 [debug_duel] done
+     15 MP4 target: tools\testing_scenarios\recordings\Duel_Board_Media_Player.mp4
+     15 emu recording API: screenshot, screenshotToImage
+     15 MP4: no ffmpeg on PATH — use mGBA Tools -> Record A/V -> MPEG-4 (Lua has no encoder API).
+     15 Duel Board / media / Player
+     15 point you.m0; wait 30; shot Duel Board
+    916 Main menu (callback 0x08003B15).
+   1039 Campaign selected (callback 0x0801D6C9).
+   1232 Turn order: forced RPS lose (CPU goes first).
+   1242 Turn order: A (lost RPS; CPU chooses first).
+   1280 Turn order: A (lost RPS; CPU chooses first).
+   1472 Opponent's turn (waiting for your Main Phase 1).
+   1474 Usage deck goat / Chaos Turbo: main=40 extra=15; P0 shuffled=true (top 719->648) P1 shuffled=true (top 719->908), hands cleared.
+   1825 Player Draw Phase.
+   2006 Opening draw complete (hand=6 deck=34 want=6).
+   2146 Exact setup: P0 hand=0 deck=34 gy=0, P1 hand=0 deck=35 gy=0, LP 6400/5100, turnCount 2.
+   2146 Player Main Phase 1.
+   2146 steps: unknown card Duel Board
+   2146 steps: 3 steps, 7 ops
+   2146 step: point you.m0
+   2283 steps: capture starts (cursor on point you.m0)
+   2290 step: wait 30
+   2326 step: shot Duel Board
+   2326 media: shot Duel Board.png
+   2343 Play sequence done; ending capture (no recording tail).
+   2343 Finished — PASS (play sequence + tail). Stop mGBA Record A/V to finalize MP4.
+     17 MP4 target: tools\testing_scenarios\recordings\Duel_Media_Player.mp4
+     17 emu recording API: screenshot, screenshotToImage
+     17 MP4: no ffmpeg on PATH — use mGBA Tools -> Record A/V -> MPEG-4 (Lua has no encoder API).
+     17 Duel / media / Player
+     17 point you.hand[Breaker the Magical Warrior]; wait 30; gif_start duel; summon you.hand[Breaker the Magical Warrior] -> m1
+    918 Main menu (callback 0x08003B15).
+   1041 Campaign selected (callback 0x0801D6C9).
+   1234 Turn order: forced RPS lose (CPU goes first).
+   1244 Turn order: A (lost RPS; CPU chooses first).
+   1282 Turn order: A (lost RPS; CPU chooses first).
+   1474 Opponent's turn (waiting for your Main Phase 1).
+   1476 Usage deck reaper / Stein Monarch: main=40 extra=15; P0 shuffled=true (top 953->920) P1 shuffled=true (top 953->192), hands cleared.
+   1827 Player Draw Phase.
+   2008 Opening draw complete (hand=6 deck=34 want=6).
+   2148 Exact setup: P0 hand=3 deck=34 gy=0, P1 hand=0 deck=35 gy=0, LP 5600/3900, turnCount 2.
+   2148 Player Main Phase 1.
+   2148 steps: unknown card Duel
+   2148 steps: 11 steps, 30 ops
+   2148 step: point you.hand[Breaker the Magical Warrior]
+   2349 step: wait 30
+   2385 step: gif_start duel
+   2385 media: recording duel (gif)
+   2392 step: summon you.hand[Breaker the Magical Warrior] -> m1 atk
+   2529 step: activate you.m1
+   2548 steps: capture starts (cursor on activate you.m1)
+   2872 steps: activate you.m1: command 6 not in the menu; closed
+   2897 step: target opp.st0
+   4417 steps: target opp.st0: cursor stuck at 0/5/0 (want 1/5/0; box false kind 1 step 3; effect step 0x00; summon false)
+   4424 step: battle
+   5324 steps: phase timed out (battle) [box active=false kind=1 step=3; list=false; chain=true; summon=false; cmds=false; prompt=0]
+   5331 step: attack you.m0 -> opp.m0
+   5674 steps: attack you.m0 -> opp.m0: command 7 not in the menu; closed
+   7213 steps: attack you.m0 -> opp.m0: cursor stuck at 0/5/0 (want 1/0/0; box false kind 1 step 3; effect step 0x00; summon false)
+   8114 steps: settle timed out (attack you.m0 -> opp.m0) [box active=false kind=1 step=3; list=false; chain=true; summon=false; cmds=false; prompt=0]
+   8121 step: settle
+   9021 steps: settle timed out (settle) [box active=false kind=1 step=3; list=false; chain=true; summon=false; cmds=false; prompt=0]
+   9028 step: wait 20
+   9054 step: rec_stop
+   9054 media: 1830 still frames trimmed from the end
+   9054 MP4: ffmpeg found through the registry PATH: C:\Users\pswan\Downloads\ffmpeg-2026-11-16-git-d35e13b9e0-full_build\ffmpeg-2026-11-16-git-d35e13b9e0-full_build\bin\ffmpeg.exe
+   9054 media: encoding 4785 frames -> tools\testing_scenarios\..\..\screenshots\gifs\duel.gif
+  10561 steps: settle timed out (end) [box active=false kind=1 step=3; list=false; chain=true; summon=false; cmds=false; prompt=0]
+  10562 Play sequence done; ending capture (no recording tail).
+  10562 Finished — PASS (play sequence + tail). Stop mGBA Record A/V to finalize MP4.
+     14 MP4 target: tools\testing_scenarios\recordings\Hold_L_Media_Player.mp4
+     14 emu recording API: screenshot, screenshotToImage
+     14 MP4: no ffmpeg on PATH — use mGBA Tools -> Record A/V -> MPEG-4 (Lua has no encoder API).
+     14 Hold L / media / Player
+     14 point opp.hand[0]; gif_start hold-l; wait 35; point opp.hand[1]; wait 35; point opp.hand[2]; wait 35; point opp.hand[3];
+    915 Main menu (callback 0x08003B15).
+   1038 Campaign selected (callback 0x0801D6C9).
+   1231 Turn order: forced RPS lose (CPU goes first).
+   1241 Turn order: A (lost RPS; CPU chooses first).
+   1279 Turn order: A (lost RPS; CPU chooses first).
+   1471 Opponent's turn (waiting for your Main Phase 1).
+   1473 Usage deck goat / Chaos Turbo: main=40 extra=15; P0 shuffled=true (top 719->910) P1 shuffled=true (top 719->878), hands cleared.
+   2371 cpu_turn f=900 duel_step=8 turn_player=1 ai=3/2 textbox=0
+   2729 Player Draw Phase.
+   2910 Opening draw complete (hand=6 deck=34 want=6).
+   3048 Exact setup: P0 hand=0 deck=34 gy=0, P1 hand=5 deck=33 gy=0, LP 8000/8000, turnCount 2.
+   3048 Player Main Phase 1.
+   3048 steps: unknown card Hold L
+   3048 steps: 26 steps, 51 ops
+   3048 step: point opp.hand[0]
+   3241 steps: capture starts (cursor on point opp.hand[0])
+   3248 step: gif_start hold-l
+   3248 media: recording hold-l (gif)
+   3255 step: wait 35
+   3296 step: point opp.hand[1]
+   3322 step: wait 35
+   3363 step: point opp.hand[2]
+   3389 step: wait 35
+   3430 step: point opp.hand[3]
+   3456 step: wait 35
+   3497 step: point opp.hand[4]
+   3523 step: wait 35
+   3564 step: point opp.st0
+   3590 step: wait 35
+   3631 step: point opp.st1
+   3657 step: wait 35
+   3698 step: point opp.st2
+   3724 step: wait 35
+   3765 step: point opp.st3
+   3791 step: wait 35
+   3832 step: point opp.st4
+   3858 step: wait 35
+   3899 step: pass
+   4012 step: hold L
+   4019 step: cpu_turn
+   4589 step: release L
+   4596 step: rec_stop
+   4596 MP4: ffmpeg found through the registry PATH: C:\Users\pswan\Downloads\ffmpeg-2026-11-16-git-d35e13b9e0-full_build\ffmpeg-2026-11-16-git-d35e13b9e0-full_build\bin\ffmpeg.exe
+   4596 media: encoding 1244 frames -> tools\testing_scenarios\..\..\screenshots\gifs\hold-l.gif
+   4697 Play sequence done; ending capture (no recording tail).
+   4697 Finished — PASS (play sequence + tail). Stop mGBA Record A/V to finalize MP4.
+     60 MP4 target: tools\testing_scenarios\recordings\Hold_R_Media_Player.mp4
+     60 emu recording API: screenshot, screenshotToImage
+     60 MP4: the scenario capture is off (captureMp4 = false)
+     60 Hold R / media / Player
+     60 point you.st0; gif_start hold-r; wait 40; point you.st1; wait 40; point you.st2; wait 40; point you.st3; wait 40; point 
+    961 Main menu (callback 0x08003B15).
+   1084 Campaign selected (callback 0x0801D6C9).
+   1277 Turn order: forced RPS lose (CPU goes first).
+   1287 Turn order: A (lost RPS; CPU chooses first).
+   1325 Turn order: A (lost RPS; CPU chooses first).
+   1517 Opponent's turn (waiting for your Main Phase 1).
+   1519 Usage deck goat / Chaos Turbo: main=40 extra=15; P0 shuffled=true (top 719->908) P1 shuffled=true (top 719->910), hands cleared.
+   2417 cpu_turn f=900 duel_step=8 turn_player=1 ai=4/0 textbox=0
+   2498 Player Draw Phase.
+   2679 Opening draw complete (hand=6 deck=34 want=6).
+   2818 Exact setup: P0 hand=0 deck=34 gy=0, P1 hand=3 deck=38 gy=0, LP 8000/8000, turnCount 2.
+   2818 Player Main Phase 1.
+   2818 steps: unknown card Hold R
+   2818 steps: 16 steps, 31 ops
+   2818 step: point you.st0
+   2935 steps: capture starts (cursor on point you.st0)
+   2942 step: gif_start hold-r
+   2942 media: recording hold-r (gif)
+   2949 step: wait 40
+   2995 step: point you.st1
+   3021 step: wait 40
+   3067 step: point you.st2
+   3093 step: wait 40
+   3139 step: point you.st3
+   3165 step: wait 40
+   3211 step: point you.st4
+   3237 step: wait 40
+   3283 step: pass
+   3322 step: hold R
+   3329 step: cpu_turn
+   6615 step: release R
+   6622 step: rec_stop
+   6622 MP4: ffmpeg found through the registry PATH: C:\Users\pswan\Downloads\ffmpeg-2026-11-16-git-d35e13b9e0-full_build\ffmpeg-2026-11-16-git-d35e13b9e0-full_build\bin\ffmpeg.exe
+   6622 media: encoding 3680 frames -> tools\testing_scenarios\..\..\screenshots\gifs\hold-r.gif
+   6723 Play sequence done; ending capture (no recording tail).
+   6723 Finished — PASS (play sequence + tail). Stop mGBA Record A/V to finalize MP4.
+     17 MP4 target: tools\testing_scenarios\recordings\Link_Media_Player.mp4
+     17 emu recording API: screenshot, screenshotToImage
+     17 MP4: the scenario capture is off (captureMp4 = false)
+     17 Link / media / Player
+     17 point you.m0; wait 50; gif_start link; extra_summon Proxy Dragon from you.m0, you.m1 -> emz0; settle; wait 20; rec_stop
+    918 Main menu (callback 0x08003B15).
+   1041 Campaign selected (callback 0x0801D6C9).
+   1234 Turn order: forced RPS lose (CPU goes first).
+   1244 Turn order: A (lost RPS; CPU chooses first).
+   1282 Turn order: A (lost RPS; CPU chooses first).
+   1474 Opponent's turn (waiting for your Main Phase 1).
+   1476 Usage deck goat / Chaos Turbo: main=40 extra=15; P0 shuffled=true (top 719->886) P1 shuffled=true (top 719->859), hands cleared.
+   1829 Player Draw Phase.
+   2010 Opening draw complete (hand=6 deck=34 want=6).
+   2149 Exact setup: P0 hand=0 deck=34 gy=0, P1 hand=0 deck=35 gy=0, LP 8000/8000, turnCount 2.
+   2149 Player Main Phase 1.
+   2149 steps: unknown card Link
+   2149 steps: 7 steps, 21 ops
+   2149 step: point you.m0
+   2285 steps: capture starts (cursor on point you.m0)
+   2292 step: wait 50
+   2348 step: gif_start link
+   2348 media: recording link (gif)
+   2355 step: extra_summon Proxy Dragon from you.m0, you.m1 -> emz0
+   2942 step: settle
+   2968 step: wait 20
+   2994 step: rec_stop
+   2994 media: 44 still frames trimmed from the end
+   2994 MP4: ffmpeg found through the registry PATH: C:\Users\pswan\Downloads\ffmpeg-2026-11-16-git-d35e13b9e0-full_build\ffmpeg-2026-11-16-git-d35e13b9e0-full_build\bin\ffmpeg.exe
+   2994 media: encoding 602 frames -> tools\testing_scenarios\..\..\screenshots\gifs\link.gif
+   3011 Play sequence done; ending capture (no recording tail).
+   3011 Finished — PASS (play sequence + tail). Stop mGBA Record A/V to finalize MP4.
+     13 [list_filter] start (symbols: tools/media/../../eds_demo.sym)
+   1187 [list_filter] recording list-filter (gif)
+   2295 MP4: ffmpeg found through the registry PATH: C:\Users\pswan\Downloads\ffmpeg-2026-11-16-git-d35e13b9e0-full_build\ffmpeg-2026-11-16-git-d35e13b9e0-full_build\bin\ffmpeg.exe
+   2295 [list_filter] encoding 1108 frames -> tools\media\..\..\screenshots\gifs\list-filter.gif
+   2295 [list_filter] done
+     17 [pack_list] start (symbols: tools/media/../../eds_demo.sym)
+   1292 [pack_list] recording pack-list (gif)
+   2044 MP4: ffmpeg found through the registry PATH: C:\Users\pswan\Downloads\ffmpeg-2026-11-16-git-d35e13b9e0-full_build\ffmpeg-2026-11-16-git-d35e13b9e0-full_build\bin\ffmpeg.exe
+   2044 [pack_list] encoding 716 frames -> tools\media\..\..\screenshots\gifs\pack-list.gif
+   2044 [pack_list] done
+     24 [pack_pull] start (symbols: tools/media/../../eds_demo.sym)
+   1269 [pack_pull] recording pack-pull (gif)
+   1699 MP4: ffmpeg found through the registry PATH: C:\Users\pswan\Downloads\ffmpeg-2026-11-16-git-d35e13b9e0-full_build\ffmpeg-2026-11-16-git-d35e13b9e0-full_build\bin\ffmpeg.exe
+   1699 [pack_pull] encoding 343 frames -> tools\media\..\..\screenshots\gifs\pack-pull.gif
+   1699 [pack_pull] done
+     13 [password] start (symbols: tools/media/../../eds_demo.sym)
+   2042 [password] shot Password.png
+   2043 [password] done
+     19 MP4 target: tools\testing_scenarios\recordings\Witch_Call_Media_Player.mp4
+     19 emu recording API: screenshot, screenshotToImage
+     19 MP4: the scenario capture is off (captureMp4 = false)
+     19 Witch Call / media / Player
+     19 activate you.st0; pick you.gy[Witch of the Black Forest]; settle; point you.m0; wait 30; gif_start witch-call; unfreeze;
+    920 Main menu (callback 0x08003B15).
+   1043 Campaign selected (callback 0x0801D6C9).
+   1236 Turn order: forced RPS lose (CPU goes first).
+   1246 Turn order: A (lost RPS; CPU chooses first).
+   1284 Turn order: A (lost RPS; CPU chooses first).
+   1476 Opponent's turn (waiting for your Main Phase 1).
+   1478 Usage deck goat / Chaos Turbo: main=40 extra=15; P0 shuffled=true (top 719->886) P1 shuffled=true (top 719->902), hands cleared.
+   1831 Player Draw Phase.
+   2012 Opening draw complete (hand=6 deck=34 want=6).
+   2152 Exact setup: P0 hand=0 deck=36 gy=1, P1 hand=0 deck=36 gy=0, LP 8000/8000, turnCount 2.
+   2152 Player Main Phase 1.
+   2152 steps: unknown card Witch Call
+   2152 steps: 12 steps, 25 ops
+   2152 step: activate you.st0
+   2269 steps: capture starts (cursor on activate you.st0)
+   2315 step: pick you.gy[Witch of the Black Forest]
+   2429 step: settle
+   2462 step: point you.m0
+   2521 step: wait 30
+   2557 step: gif_start witch-call
+   2557 media: recording witch-call (gif)
+   2564 step: unfreeze
+   2571 step: pass
+   2684 step: pick you.deck[Sangan]
+   3584 steps: list timed out (pick you.deck[Sangan]) [box active=false kind=5 step=3; list=false; chain=false; summon=false; cmds=true; prompt=0]
+   3591 step: settle
+   4126 step: wait 20
+   4152 step: rec_stop
+   4152 media: 14 still frames trimmed from the end
+   4152 MP4: ffmpeg found through the registry PATH: C:\Users\pswan\Downloads\ffmpeg-2026-11-16-git-d35e13b9e0-full_build\ffmpeg-2026-11-16-git-d35e13b9e0-full_build\bin\ffmpeg.exe
+   4152 media: encoding 1448 frames -> tools\testing_scenarios\..\..\screenshots\gifs\witch-call.gif
+   5659 steps: settle timed out (end) [box active=false kind=0 step=3; list=true; chain=true; summon=false; cmds=false; prompt=0]
+   5660 Play sequence done; ending capture (no recording tail).
+   5660 Finished — PASS (play sequence + tail). Stop mGBA Record A/V to finalize MP4.
+     13 MP4 target: tools\testing_scenarios\recordings\Xyz_Media_Player.mp4
+     13 emu recording API: screenshot, screenshotToImage
+     13 MP4: the scenario capture is off (captureMp4 = false)
+     13 Xyz / media / Player
+     13 point you.m0; wait 50; gif_start xyz; view you.extra[Number 39: Utopia] 150; extra_summon Number 39: Utopia from you.m0,
+    914 Main menu (callback 0x08003B15).
+   1037 Campaign selected (callback 0x0801D6C9).
+   1230 Turn order: forced RPS lose (CPU goes first).
+   1240 Turn order: A (lost RPS; CPU chooses first).
+   1278 Turn order: A (lost RPS; CPU chooses first).
+   1470 Opponent's turn (waiting for your Main Phase 1).
+   1472 Usage deck goat / Chaos Turbo: main=40 extra=15; P0 shuffled=true (top 719->930) P1 shuffled=true (top 719->878), hands cleared.
+   1824 Player Draw Phase.
+   2005 Opening draw complete (hand=6 deck=34 want=6).
+   2142 Exact setup: P0 hand=0 deck=34 gy=0, P1 hand=0 deck=35 gy=0, LP 8000/8000, turnCount 2.
+   2142 Player Main Phase 1.
+   2142 steps: unknown card Xyz
+   2142 steps: 9 steps, 33 ops
+   2142 step: point you.m0
+   2278 steps: capture starts (cursor on point you.m0)
+   2285 step: wait 50
+   2341 step: gif_start xyz
+   2341 media: recording xyz (gif)
+   2348 step: view you.extra[Number 39: Utopia] 150
+   2717 step: extra_summon Number 39: Utopia from you.m0, you.m1 -> m0 atk
+   2839 steps: extra_summon Number 39: Utopia from you.m0, you.m1 -> m0 atk: no material pick (taken by the game)
+   2879 steps: extra_summon Number 39: Utopia from you.m0, you.m1 -> m0 atk: no material pick (taken by the game)
+   3165 step: point you.m0
+   3172 step: settle
+   3198 step: wait 20
+   3224 step: rec_stop
+   3224 MP4: ffmpeg found through the registry PATH: C:\Users\pswan\Downloads\ffmpeg-2026-11-16-git-d35e13b9e0-full_build\ffmpeg-2026-11-16-git-d35e13b9e0-full_build\bin\ffmpeg.exe
+   3224 media: encoding 883 frames -> tools\testing_scenarios\..\..\screenshots\gifs\xyz.gif
+   3241 Play sequence done; ending capture (no recording tail).
+   3241 Finished — PASS (play sequence + tail). Stop mGBA Record A/V to finalize MP4.
+     12 MP4 target: tools\testing_scenarios\recordings\Duel_Media_Player.mp4
+     12 emu recording API: screenshot, screenshotToImage
+     12 MP4: the scenario capture is off (captureMp4 = false)
+     12 Duel / media / Player
+     12 point you.hand[Breaker the Magical Warrior]; wait 30; gif_start duel; summon you.hand[Breaker the Magical Warrior] -> m1
+    793 Main menu (callback 0x08003B15).
+    916 Campaign selected (callback 0x0801D6C9).
+   1109 Turn order: forced RPS lose (CPU goes first).
+   1119 Turn order: A (lost RPS; CPU chooses first).
+   1157 Turn order: A (lost RPS; CPU chooses first).
+   1349 Opponent's turn (waiting for your Main Phase 1).
+   1351 Usage deck reaper / Stein Monarch: main=40 extra=15; P0 shuffled=true (top 953->946) P1 shuffled=true (top 953->192), hands cleared.
+   1703 Player Draw Phase.
+   1884 Opening draw complete (hand=6 deck=34 want=6).
+   2024 Exact setup: P0 hand=3 deck=34 gy=0, P1 hand=0 deck=35 gy=0, LP 5600/3900, turnCount 2.
+   2024 Player Main Phase 1.
+   2024 steps: unknown card Duel
+   2024 steps: 15 steps, 38 ops
+   2024 step: point you.hand[Breaker the Magical Warrior]
+   2225 step: wait 30
+   2261 step: gif_start duel
+   2261 media: recording duel (gif)
+   2268 step: summon you.hand[Breaker the Magical Warrior] -> m1 atk
+   2405 step: settle
+   2435 step: wait 20
+   2461 step: activate you.m1
+   2461 steps: capture starts (cursor on activate you.m1)
+   2507 step: target opp.st0
+   2567 steps: target opp.st0: A again (not taken)
+   2591 steps: target opp.st0: taken on press 2
+   2598 step: settle
+   2739 step: wait 20
+   2765 step: battle
+   2865 step: attack you.m0 -> opp.m0
+   3288 steps: attack you.m0 -> opp.m0: taken on press 1
+   3437 step: settle
+   3463 step: wait 20
+   3489 step: rec_stop
+   3489 MP4: ffmpeg found through the registry PATH: C:\Users\pswan\Downloads\ffmpeg-2026-11-16-git-d35e13b9e0-full_build\ffmpeg-2026-11-16-git-d35e13b9e0-full_build\bin\ffmpeg.exe
+   3489 media: encoding 1070 frames -> tools\testing_scenarios\..\..\screenshots\gifs\duel.gif
+   3506 Play sequence done; ending capture (no recording tail).
+   3506 Finished — PASS (play sequence + tail). Stop mGBA Record A/V to finalize MP4.
+     24 MP4 target: tools\testing_scenarios\recordings\Hold_L_Media_Player.mp4
+     24 emu recording API: screenshot, screenshotToImage
+     24 MP4: the scenario capture is off (captureMp4 = false)
+     24 Hold L / media / Player
+     24 point opp.st0; gif_start hold-l; wait 35; point opp.st1; wait 35; point opp.st2; wait 35; point opp.st3; wait 35; point 
+    925 Main menu (callback 0x08003B15).
+   1048 Campaign selected (callback 0x0801D6C9).
+   1241 Turn order: forced RPS lose (CPU goes first).
+   1251 Turn order: A (lost RPS; CPU chooses first).
+   1289 Turn order: A (lost RPS; CPU chooses first).
+   1481 Opponent's turn (waiting for your Main Phase 1).
+   1483 Usage deck goat / Chaos Turbo: main=40 extra=15; P0 shuffled=true (top 719->859) P1 shuffled=true (top 719->434), hands cleared.
+   2381 cpu_turn f=900 duel_step=8 turn_player=1 ai=4/0 textbox=0
+   2478 Player Draw Phase.
+   2659 Opening draw complete (hand=6 deck=34 want=6).
+   2797 Exact setup: P0 hand=0 deck=34 gy=0, P1 hand=5 deck=35 gy=0, LP 8000/8000, turnCount 2.
+   2797 Player Main Phase 1.
+   2797 steps: unknown card Hold L
+   2797 steps: 16 steps, 31 ops
+   2797 step: point opp.st0
+   3047 steps: capture starts (cursor on point opp.st0)
+   3054 step: gif_start hold-l
+   3054 media: recording hold-l (gif)
+   3061 step: wait 35
+   3102 step: point opp.st1
+   3128 step: wait 35
+   3169 step: point opp.st2
+   3195 step: wait 35
+   3236 step: point opp.st3
+   3262 step: wait 35
+   3303 step: point opp.st4
+   3329 step: wait 35
+   3370 step: pass
+   3483 step: hold L
+   3490 step: cpu_turn
+   4060 step: release L
+   4067 step: rec_stop
+   4067 MP4: ffmpeg found through the registry PATH: C:\Users\pswan\Downloads\ffmpeg-2026-11-16-git-d35e13b9e0-full_build\ffmpeg-2026-11-16-git-d35e13b9e0-full_build\bin\ffmpeg.exe
+   4067 media: encoding 909 frames -> tools\testing_scenarios\..\..\screenshots\gifs\hold-l.gif
+   4168 Play sequence done; ending capture (no recording tail).
+   4168 Finished — PASS (play sequence + tail). Stop mGBA Record A/V to finalize MP4.
+     31 MP4 target: tools\testing_scenarios\recordings\Witch_Call_Media_Player.mp4
+     31 emu recording API: screenshot, screenshotToImage
+     31 MP4: the scenario capture is off (captureMp4 = false)
+     31 Witch Call / media / Player
+     31 activate you.st0; pick you.gy[Witch of the Black Forest]; settle; point you.m0; wait 30; gif_start witch-call; unfreeze;
+    812 Main menu (callback 0x08003B15).
+    935 Campaign selected (callback 0x0801D6C9).
+   1128 Turn order: forced RPS lose (CPU goes first).
+   1138 Turn order: A (lost RPS; CPU chooses first).
+   1176 Turn order: A (lost RPS; CPU chooses first).
+   1368 Opponent's turn (waiting for your Main Phase 1).
+   1370 Usage deck goat / Chaos Turbo: main=40 extra=15; P0 shuffled=true (top 719->859) P1 shuffled=true (top 719->760), hands cleared.
+   2268 cpu_turn f=900 duel_step=8 turn_player=1 ai=3/2 textbox=0
+   2861 Player Draw Phase.
+   3042 Opening draw complete (hand=6 deck=34 want=6).
+   3183 Exact setup: P0 hand=0 deck=36 gy=1, P1 hand=0 deck=32 gy=0, LP 8000/8000, turnCount 2.
+   3183 Player Main Phase 1.
+   3183 steps: unknown card Witch Call
+   3183 steps: 12 steps, 24 ops
+   3183 step: activate you.st0
+   3300 steps: capture starts (cursor on activate you.st0)
+   3346 step: pick you.gy[Witch of the Black Forest]
+   3459 step: settle
+   3492 step: point you.m0
+   3551 step: wait 30
+   3587 step: gif_start witch-call
+   3587 media: recording witch-call (gif)
+   3594 step: unfreeze
+   3601 step: pass
+   3714 step: when prompt list: pick you.deck[Sangan]
+  12714 steps: when prompt list: pick you.deck[Sangan]: the event did not happen
+  12715 step: settle
+  12764 step: wait 90
+  12860 step: rec_stop
+  12860 media: 84 still frames trimmed from the end
+  12860 MP4: ffmpeg found through the registry PATH: C:\Users\pswan\Downloads\ffmpeg-2026-11-16-git-d35e13b9e0-full_build\ffmpeg-2026-11-16-git-d35e13b9e0-full_build\bin\ffmpeg.exe
+  12860 media: encoding 1448 frames -> tools\testing_scenarios\..\..\screenshots\gifs\witch-call.gif
+  14367 steps: settle timed out (end) [box active=false kind=0 step=3; list=true; chain=true; summon=false; cmds=false; prompt=0]
+  14368 Play sequence done; ending capture (no recording tail).
+  14368 Finished — PASS (play sequence + tail). Stop mGBA Record A/V to finalize MP4.
+     45 MP4 target: tools\testing_scenarios\recordings\Duel_Media_Player.mp4
+     45 emu recording API: screenshot, screenshotToImage
+     45 MP4: the scenario capture is off (captureMp4 = false)
+     45 Duel / media / Player
+     45 point you.hand[Breaker the Magical Warrior]; wait 30; gif_start duel; summon you.hand[Breaker the Magical Warrior] -> m1
+    826 Main menu (callback 0x08003B15).
+    949 Campaign selected (callback 0x0801D6C9).
+   1142 Turn order: forced RPS lose (CPU goes first).
+   1152 Turn order: A (lost RPS; CPU chooses first).
+   1190 Turn order: A (lost RPS; CPU chooses first).
+   1382 Opponent's turn (waiting for your Main Phase 1).
+   1384 Usage deck reaper / Stein Monarch: main=40 extra=15; P0 shuffled=true (top 953->192) P1 shuffled=true (top 953->505), hands cleared.
+   1735 Player Draw Phase.
+   1916 Opening draw complete (hand=6 deck=34 want=6).
+   2056 Exact setup: P0 hand=3 deck=34 gy=0, P1 hand=0 deck=35 gy=0, LP 5600/3900, turnCount 2.
+   2056 Player Main Phase 1.
+   2056 steps: unknown card Duel
+   2056 steps: 15 steps, 38 ops
+   2056 step: point you.hand[Breaker the Magical Warrior]
+   2257 step: wait 30
+   2293 step: gif_start duel
+   2293 media: recording duel (gif)
+   2300 step: summon you.hand[Breaker the Magical Warrior] -> m1 atk
+   2437 step: settle
+   2467 step: wait 20
+   2493 step: activate you.m1
+   2493 steps: capture starts (cursor on activate you.m1)
+   2539 step: target opp.st0
+   2599 steps: target opp.st0: A again (not taken)
+   2623 steps: target opp.st0: taken on press 2
+   2630 step: settle
+   2767 step: wait 20
+   2793 step: battle
+   2893 step: attack you.m0 -> opp.m0
+   3158 steps: attack you.m0 -> opp.m0: taken on press 1
+   3307 step: settle
+   3333 step: wait 20
+   3359 step: rec_stop
+   3359 MP4: ffmpeg found through the registry PATH: C:\Users\pswan\Downloads\ffmpeg-2026-11-16-git-d35e13b9e0-full_build\ffmpeg-2026-11-16-git-d35e13b9e0-full_build\bin\ffmpeg.exe
+   3359 media: encoding 908 frames -> tools\testing_scenarios\..\..\screenshots\gifs\duel.gif
+   3376 Play sequence done; ending capture (no recording tail).
+   3376 Finished — PASS (play sequence + tail). Stop mGBA Record A/V to finalize MP4.
+     11 [list_filter] start (symbols: tools/media/../../eds_demo.sym)
+   1185 [list_filter] recording list-filter (gif)
+   2509 MP4: ffmpeg found through the registry PATH: C:\Users\pswan\Downloads\ffmpeg-2026-11-16-git-d35e13b9e0-full_build\ffmpeg-2026-11-16-git-d35e13b9e0-full_build\bin\ffmpeg.exe
+   2509 [list_filter] encoding 1324 frames -> tools\media\..\..\screenshots\gifs\list-filter.gif
+   2509 [list_filter] done
+     11 MP4 target: tools\testing_scenarios\recordings\Witch_Call_Media_Player.mp4
+     11 emu recording API: screenshot, screenshotToImage
+     11 MP4: the scenario capture is off (captureMp4 = false)
+     11 Witch Call / media / Player
+     11 activate you.st0; pick you.gy[Witch of the Black Forest]; settle; point you.m0; wait 30; gif_start witch-call; unfreeze;
+    792 Main menu (callback 0x08003B15).
+    915 Campaign selected (callback 0x0801D6C9).
+   1108 Turn order: forced RPS lose (CPU goes first).
+   1118 Turn order: A (lost RPS; CPU chooses first).
+   1156 Turn order: A (lost RPS; CPU chooses first).
+   1348 Opponent's turn (waiting for your Main Phase 1).
+   1350 Usage deck goat / Chaos Turbo: main=40 extra=15; P0 shuffled=true (top 719->878) P1 shuffled=true (top 719->886), hands cleared.
+   2248 cpu_turn f=900 duel_step=8 turn_player=1 ai=3/2 textbox=0
+   2689 Player Draw Phase.
+   2870 Opening draw complete (hand=6 deck=34 want=6).
+   3008 Exact setup: P0 hand=0 deck=36 gy=1, P1 hand=0 deck=33 gy=0, LP 8000/8000, turnCount 2.
+   3008 Player Main Phase 1.
+   3008 steps: unknown card Witch Call
+   3008 steps: 14 steps, 32 ops
+   3008 step: activate you.st0
+   3125 steps: capture starts (cursor on activate you.st0)
+   3171 step: pick you.gy[Witch of the Black Forest]
+   3423 step: settle
+   3570 step: point you.m0
+   3771 step: wait 30
+   3807 step: gif_start witch-call
+   3807 media: recording witch-call (gif)
+   3814 step: unfreeze
+   3821 step: battle
+   3921 step: attack you.m0 -> opp.m0
+   4182 steps: attack you.m0 -> opp.m0: taken on press 1
+   4702 step: when prompt list: pick you.deck[Sangan]
+   4702 steps: event: when prompt list: pick you.deck[Sangan]
+   4733 step: settle
+   4948 step: point you.st0
+   4974 step: wait 90
+   5070 step: rec_stop
+   5070 media: 41 still frames trimmed from the end
+   5070 MP4: ffmpeg found through the registry PATH: C:\Users\pswan\Downloads\ffmpeg-2026-11-16-git-d35e13b9e0-full_build\ffmpeg-2026-11-16-git-d35e13b9e0-full_build\bin\ffmpeg.exe
+   5070 media: encoding 1086 frames -> tools\testing_scenarios\..\..\screenshots\gifs\witch-call.gif
+   5087 Play sequence done; ending capture (no recording tail).
+   5087 Finished — PASS (play sequence + tail). Stop mGBA Record A/V to finalize MP4.

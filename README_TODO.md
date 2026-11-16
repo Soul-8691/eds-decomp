@@ -4,6 +4,7 @@ What each planned picture, GIF and video of [README.md](README.md) should show. 
 README.md with a placeholder in every slot listed here, in place. Each section below matches a README section. **Have**
 lists the media the README already uses there. Each slot gives a suggested file name, where it goes, and what to
 capture. When a slot is filled: replace its placeholder in README_WIP.md, copy it into README.md, and tick it here.
+The HMA screenshots are in [HMA.md](HMA.md), not the README (their slots are under "HMA.md" below).
 
 Slot types:
 
@@ -22,20 +23,13 @@ the ones README.md used to show are marked "was"). The game's screenshots can be
 
 ## Header
 
-- **Have:** `screenshots/Title Screen.png` and `screenshots/Duel.png` (centred, width 400).
-- [ ] 🎬 **Trailer** · `trailer.mp4` · under the two header images. 30-60 s: title screen, picking a format duelist, the
-  pre-duel screen, a duel with a Synchro or Link Summon, opening a pack.
-- [x] 🖼️ **A duel in progress** · `screenshots/Duel.png` · beside the title screen. *(was `placeholders/duel-field.svg`)*
+- **Have:** `screenshots/Title Screen.png` (centred, width 400).
+- [ ] 🎞️ **A duel in progress** · `screenshots/gifs/duel.gif` · beside the title screen. Reaper staples only
+  (usage/reaper.json): Breaker clears a Set card, then Cyber Dragon attacks. *(was `Duel.png`)*
 
-## Highlights
+## TLDR
 
-- [ ] 🎞️ **Highlights strip** · `screenshots/gifs/highlights.gif` · under the table. 4-6 one-second clips: a format
-  duelist, a Synchro Summon, a pack opening, Deck Recipes, the CPU chaining a Trap.
-
-## Play it
-
-- [ ] 🖼️ **Rom Patcher JS, ready to patch** · `screenshots/Rom Patcher.png` · after step 4. Both files chosen, the
-  Apply button showing (a browser screenshot, not mGBA).
+- No media: a summary of the README's sections.
 
 ## The Campaign
 
@@ -47,14 +41,10 @@ the ones README.md used to show are marked "was"). The game's screenshots can be
 
 - [ ] 🖼️ **Format check warning** · `screenshots/Format Check.png` · after the Portraits bullet. The message for a deck
   that isn't legal in the format. *(was `placeholders/format-check.svg`)*
-- [ ] 🧰 **A format's deck chances** · `screenshots/hma/Deck Choices.png` · next to it. `data.decks.choices.goat` in
-  HMA: the 10 deck slots and their chances out of 100.
 
 ### The pre-duel screen
 
-- [ ] 🎞️ **Pre-duel screen** · `screenshots/gifs/pre-duel.gif` · under the paragraph. A bust-up scene with blinking
-  eyes, the dialogue text and the QR code; then **A**.
-- [ ] 🖼️ **Format picture pre-duel screen** · `screenshots/Pre-duel (Yugi-Kaiba).png` · next to the GIF. A format
+- [ ] 🖼️ **Format picture pre-duel screen** · `screenshots/Pre-duel (Yugi-Kaiba).png` · under the paragraph. A format
   picture (Yugi-Kaiba through Android) with the QR code.
 
 ### Best-of-3 matches
@@ -97,11 +87,6 @@ the ones README.md used to show are marked "was"). The game's screenshots can be
 - [ ] 🖼️ **Cards a recipe left out** · `screenshots/Left Out.png` · the empty sixth cell of the table.
   *(was `placeholders/left-out.svg`)*
 
-### Deck Recipes
-
-- [ ] 🧰 **The premade Deck Recipes** · `screenshots/hma/Deck Recipes.png` · after the bullets. `data.decks.recipes`
-  with `text.decks.recipes` (the names).
-
 ### Banlists
 
 - [ ] 🖼️ **A refused switch** · `screenshots/Banlist Refused.png` · under the paragraph. The message when your cards
@@ -109,32 +94,21 @@ the ones README.md used to show are marked "was"). The game's screenshots can be
 
 ### Deck Edit
 
-- [ ] 🎞️ **List Filter** · `screenshots/gifs/list-filter.gif` · after the bullets. Choosing a letter, a Type and an ATK
-  range; the list narrowing.
+- [ ] 🎞️ **List Filter** · `screenshots/gifs/list-filter.gif` · after the bullets. Effect Monsters sorted by ATK,
+  then DARK, ATK 1000-2000 and Level 1-4; the list narrowing.
 - [ ] 🎞️ **Empty Main/Side** · `screenshots/gifs/empty-main-side.gif` · next to it. A full deck emptied into the trunk
   in one press.
 
 ## Cards, packs and DP
 
 - **Have:** `Booster Packs (Main Menu).png`, `Pack Opener.png`, `Password.png` (a row of three).
-- [ ] 🎞️ **Opening a pack** · `screenshots/gifs/pack-pull.gif` · a second row of the table. Buying a usage-weighted pack
-  and the pulls. *(was `placeholders/pack-pull.svg`)*
-- [ ] 🖼️ **The free pack reward** · `screenshots/New Packs.png` · beside the GIF. The "new packs are available" message
-  after a win. *(was `placeholders/new-packs.svg`)*
-
-### Duelist Points (DP)
-
-- [ ] 🧰 **A format's card prices** · `screenshots/hma/Prices.png` · after the bullets. `data.prices.cards` for one
-  format.
+- [ ] 🎞️ **Opening a pack** · `screenshots/gifs/pack-pull.gif` · a second row of the table. The Goat usage pack, no
+  scrolling: five Goat staples from its pool, then the first card's details. *(was `placeholders/pack-pull.svg`)*
 
 ### Booster Packs
 
-- [ ] 🧰 **A pack's cards and weights** · `screenshots/hma/Pack Pools.png` · after the bullets.
-  `data.packs.format.pools` with one usage pack open.
-- [ ] 🧰 **Pack names and covers** · `screenshots/hma/Pack Covers.png` · next to it. `graphics.packs.format` and
-  `data.packs.format.names`.
-- [ ] 🧰 **The unlock wins** · `screenshots/hma/Unlocks.png` · next to it. `data.constants.formats.unlock` and
-  `data.constants.packs.format.usagewins`.
+- [ ] 🎞️ **Scrolling through the packs** · `screenshots/gifs/pack-list.gif` · after the bullets. Right through the pack
+  list from the first pack: each set's cover and price.
 
 ### Usage stats and Mobius
 
@@ -147,8 +121,10 @@ the ones README.md used to show are marked "was"). The game's screenshots can be
 
 - **Have:** `Card Icons.png`, `Card Icons (Up Close) - Summon-Set Order.png`, `Activate-Set Order.png`, `Counters.png`,
   `Duel Board.png`, `Chain List.png` (two rows of three).
-- [x] 🖼️ **The chain list** · `screenshots/Chain List.png`. *(was `placeholders/chain-list.svg`)*
-- [x] 🖼️ **The full board** · `screenshots/Duel Board.png`. *(was `placeholders/duel-board.svg`)*
+- [x] 🖼️ **The chain list** · `screenshots/Chain List.png`. Three different cards: Mystical Space Typhoon, Dust
+  Tornado, Book of Moon. *(was `placeholders/chain-list.svg`)*
+- [x] 🖼️ **The full board** · `screenshots/Duel Board.png`. Goat staples only (usage/goat.json).
+  *(was `placeholders/duel-board.svg`)*
 
 ### Settings
 
@@ -160,7 +136,8 @@ the ones README.md used to show are marked "was"). The game's screenshots can be
 
 ### Controls
 
-- [ ] 🎞️ **Hold R** · `screenshots/gifs/hold-r.gif` · after the table. An opponent's chain going by with no prompt.
+- [ ] 🎞️ **Hold R** · `screenshots/gifs/hold-r.gif` · after the table. Your five Set Spells/Traps shown one by one
+  first, then the CPU's whole turn (Pot of Greed, Graceful Charity, Breaker) with R held: no response prompt.
 
 ### Smarter CPU
 
@@ -171,18 +148,18 @@ the ones README.md used to show are marked "was"). The game's screenshots can be
 
 - [ ] 🎞️ **Call of the Haunted and Giant Trunade** · `screenshots/gifs/call-trunade.gif` · after the note. Trunade
   returns Call to the hand; its monster goes to the Graveyard, the Call only to the hand.
-- [ ] 🎞️ **Graverobber's cost** · `screenshots/gifs/graverobber.gif` · next to it. A stolen Spell, Set, then activated:
-  2000 LP paid.
+- [ ] 🎞️ **Witch of the Black Forest and Call of the Haunted** · `screenshots/gifs/witch-call.gif` · next to it.
+  Witch revived by Call, then destroyed by the CPU's attack: one search, not two. *(was `graverobber.gif`)*
 
 ## Synchro, Xyz and Link
 
 - **Have:** `cards/Brionac, Dragon of the Ice Barrier.png`, `cards/Number 39_ Utopia.png`, `cards/Proxy Dragon.png`.
 - [ ] 🎞️ **A Synchro Summon** · `screenshots/gifs/synchro.gif` · a row of three GIFs under the card images. The Special
   Summon list, the Tuner and non-Tuner picks, Stardust Dragon arriving.
-- [ ] 🎞️ **An Xyz Summon** · `screenshots/gifs/xyz.gif` · next to it. Two Level 4s becoming Utopia; "MAT 2" in the info
-  bar.
-- [ ] 🎞️ **A Link Summon** · `screenshots/gifs/link.gif` · next to it. Picking the materials, then an Extra Monster Zone;
-  the arrows on the field.
+- [ ] 🎞️ **An Xyz Summon** · `screenshots/gifs/xyz.gif` · next to it. Number 39: Utopia's card text first (the
+  Extra Deck's Card View), then two Level 4s becoming Utopia; "MAT 2" in the info bar.
+- [ ] 🎞️ **A Link Summon** · `screenshots/gifs/link.gif` · next to it. Proxy Dragon from two Normal Monsters (Gemini
+  Elf, Vorse Raider), then an Extra Monster Zone; the arrows on the field.
 
 ### Extra Monster Zones and choosing zones
 
@@ -195,8 +172,27 @@ the ones README.md used to show are marked "was"). The game's screenshots can be
 - [ ] 🎞️ **New cards in action** · `screenshots/gifs/new-cards.gif` · after the gallery. A few effects resolving: Breaker destroying a
   Spell/Trap, Cyber Dragon's Special Summon, Thousand-Eyes Restrict absorbing a monster.
 
-### How they're added
+## Play it
 
+- [ ] 🖼️ **Rom Patcher JS, ready to patch** · `screenshots/Rom Patcher.png` · after step 4. Both files chosen, the
+  Apply button showing (a browser screenshot, not mGBA).
+
+## HMA.md
+
+Every HMA screenshot and GIF goes in [HMA.md](HMA.md), in the section that matches it.
+
+- [ ] 🧰 **A format's deck chances** · `screenshots/hma/Deck Choices.png`. `data.decks.choices.goat` in HMA: the 10 deck
+  slots and their chances out of 100.
+- [ ] 🧰 **The premade Deck Recipes** · `screenshots/hma/Deck Recipes.png` · after the bullets. `data.decks.recipes`
+  with `text.decks.recipes` (the names).
+- [ ] 🧰 **A format's card prices** · `screenshots/hma/Prices.png` · after the bullets. `data.prices.cards` for one
+  format.
+- [ ] 🧰 **A pack's cards and weights** · `screenshots/hma/Pack Pools.png` · after the bullets.
+  `data.packs.format.pools` with one usage pack open.
+- [ ] 🧰 **Pack names and covers** · `screenshots/hma/Pack Covers.png` · next to it. `graphics.packs.format` and
+  `data.packs.format.names`.
+- [ ] 🧰 **The unlock wins** · `screenshots/hma/Unlocks.png` · next to it. `data.constants.formats.unlock` and
+  `data.constants.packs.format.usagewins`.
 - [ ] 🧰 **The added cards' stats** · `screenshots/hma/Card Stats.png` · after the bullets. `data.cards.stats` on an
   added card.
 - [ ] 🧰 **Card names and text** · `screenshots/hma/Card Text.png` · next to it. `data.cards.names` and
@@ -205,24 +201,15 @@ the ones README.md used to show are marked "was"). The game's screenshots can be
   `data.cards.typeex` on Proxy Dragon.
 - [ ] 🎞️ **Import from YGOProDeck** · `screenshots/gifs/hma-import-ygoprodeck.gif` · under the row above. HMA-CE's
   "Import from YGOProDeck" filling in an added card's stats and art from YGOProDeck. An HMA window, not mGBA.
-
-## Editing with Hex Maniac Advance
-
 - [ ] 🧰 **HMA with the TOML** · `screenshots/hma/HMA.png` · after the first paragraph. The patched ROM open in HMA with
   a labelled table.
 - [ ] 🧰 **The anchors in Goto** · `screenshots/hma/Goto.png` · next to it. Goto showing the `data`, `graphics` and
   `text` folders.
-
-### Opponents and their decks (after the table)
-
 - [ ] 🧰 **The opponents table** · `screenshots/hma/Opponents.png`. `data.opponents`: kind, format, portrait.
 - [ ] 🧰 **An opponent's portrait** · `screenshots/hma/Portrait.png`. `graphics.opponents.<name>` in the image editor.
 - [ ] 🧰 **An opponent's deck** · `screenshots/hma/Opponent Deck.png`. `data.decks.mod.<deck>`: its card list.
 - [ ] 🎞️ **Import .YDK** · `screenshots/gifs/hma-import-ydk.gif` · under the row above. HMA-CE's "Import .YDK" loading a
   `.ydk` file into a deck table. An HMA window, not mGBA.
-
-### Screens and art (after the table)
-
 - [ ] 🧰 **Pre-duel text** · `screenshots/hma/Pre-duel Text.png`. `data.preduel.text`: one opponent's five lines.
 - [ ] 🧰 **A pre-duel picture** · `screenshots/hma/Pre-duel Picture.png`. `graphics.preduel.<format>` in the image
   editor.
@@ -234,9 +221,13 @@ the ones README.md used to show are marked "was"). The game's screenshots can be
 
 ### Debug controls
 
-- [ ] 🎞️ **Hold L** · `screenshots/gifs/hold-l.gif` · after the bullets. The CPU's turn passing with nothing played.
-- [ ] 🎞️ **Rock-paper-scissors** · `screenshots/gifs/rps.gif` · next to it. Winning the rock-paper-scissors against
-  Debug.
+- [ ] 🎞️ **Hold L** · `screenshots/gifs/hold-l.gif` · after the bullets. The CPU's five hand cards and five Set
+  Spells/Traps shown one by one, then its turn with L held: it plays none of them.
+
+### Test Duel
+
+- [ ] 🖼️ **The Test Duel's deck in EDOPro** · `screenshots/test_duel_ydk.png` · after the paragraph. The `TEST_YDK`
+  deck (`test.ydk`) open in EDOPro's deck editor (an EDOPro screenshot, not mGBA).
 
 ### Card test scripts and videos
 

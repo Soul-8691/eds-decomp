@@ -22,7 +22,7 @@ EDS.run({
     effect = "media",
     actor = "Player",
     format = "Goat",
-    scenarioText = "point you.m0; wait 50; gif_start xyz; extra_summon Number 39: Utopia from you.m0, you.m1 -> m0 atk; point you.m0; settle; wait 20; rec_stop",
+    scenarioText = "point you.m0; wait 50; gif_start xyz; view you.extra[Number 39: Utopia] 150; extra_summon Number 39: Utopia from you.m0, you.m1 -> m0 atk; point you.m0; settle; wait 20; rec_stop",
     start = { turn = "you", turnCount = 2, lp = { 8000, 8000 } },
     setupCards = {
         { player = 0, zone = "monster", slot = 0, name = "Gemini Elf" },
@@ -35,6 +35,7 @@ EDS.run({
         "point you.m0",
         "wait 50",
         "gif_start xyz",
+        "view you.extra[Number 39: Utopia] 150",
         "extra_summon Number 39: Utopia from you.m0, you.m1 -> m0 atk",
         "point you.m0",
         "settle",

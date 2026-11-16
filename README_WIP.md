@@ -11,12 +11,7 @@
 
 <p align="center">
   <img src="screenshots/Title%20Screen.png" width="400" alt="The title screen">
-  <img src="screenshots/Duel.png" width="400" alt="A duel in progress: Jinzo under the cursor, card art on the field">
-</p>
-
-<p align="center">
-  <img src="screenshots/placeholders/trailer.svg" width="480" alt="Placeholder: Trailer (video)"><br>
-  <sub>Trailer (video)</sub>
+  <img src="screenshots/gifs/duel.gif" width="400" alt="A Reaper-format duel: Breaker clears a Set card, then Cyber Dragon attacks">
 </p>
 
 <p align="center">
@@ -32,41 +27,24 @@
   <a href="#debug-and-testing-builds">Debug</a>
 </p>
 
-## Highlights
+## TLDR
 
-|  |  |
-|---|---|
-| **15 formats** | Follows the [Format Library](https://www.formatlibrary.com/) pantheon of historical TCG formats, May 2002 to October 2005. Each one is a Campaign duelist with its own card pool and decks. |
-| **New cards** | The demo adds **308** cards. See [NEW_CARDS.md](NEW_CARDS.md). |
-| **Synchro, Xyz and Link** | Summoned from the Fusion Deck (the Extra Deck), with Tuners, Xyz Materials, Link Arrows and Extra Monster Zones. You pick the Monster Zone for every summon. See [Synchro, Xyz and Link](#synchro-xyz-and-link). |
-| **Smarter CPU** | Opponents play much stronger than in vanilla EDS. See [AI_IMPROVEMENTS.md](AI_IMPROVEMENTS.md) and [AI_QUIRKS.md](AI_QUIRKS.md). |
-| **Best-of-3 matches** | Every Campaign duel is a match, with siding between games. |
-| **A real economy** | Earn Duelist Points, buy cards by password, and open TCG sets and usage-weighted packs. |
-| **Deck tools** | 60 Deck Recipes, a choice of banlists, and practice opponents that play decks you pick. |
-| **Editable** | Every build can come with a Hex Maniac Advance `.toml` that labels the mod's data: deck chances, packs, prices, cards, screens. Needs [HMA CE's `upcoming` branch](https://github.com/Soul-8691/HexManiacAdvance-CE/tree/upcoming), built from source. |
-
-<p align="center">
-  <img src="screenshots/gifs/highlights.gif" width="480" alt="Highlights"><br>
-  <sub>Highlights (GIF)</sub>
-</p>
-
-## Play it
-
-Ready-made **BPS** patches are in the [`patches/`](patches/) folder: a release build and a debug build (the demo, up to
-Reaper). You need your own USA ROM of *The Eternal Duelist Soul* (AY5E); it is never included.
-
-1. Open [Rom Patcher JS](https://www.marcrobledo.com/RomPatcher.js/) in your browser.
-2. Choose your ROM as the input file.
-3. Choose the `.bps` from `patches/`.
-4. Download the patched ROM.
-
-<p align="center">
-  <img src="screenshots/placeholders/rom-patcher.svg" width="400" alt="Placeholder: Rom Patcher JS, ready to patch"><br>
-  <sub>Rom Patcher JS, ready to patch</sub>
-</p>
-
-The title screen's top right says whether it's the Release or Debug build; demo builds show the demo version at the
-top left.
+- **15 classic TCG formats.** Each [Format Library](https://www.formatlibrary.com/) format from Yugi-Kaiba (May 2002)
+  to Reaper (October 2005) is a Campaign duelist with its own banlist, card pool and real tournament decks. Beat one
+  20 times to unlock the next. Every Campaign duel is a best-of-3 match with siding.
+- **Practice opponents.** Solomon and Debug play a Deck Recipe you pick or build, Empty Deck has no cards at all, and
+  testing builds add a Test Duel against a `.ydk` deck.
+- **Decks.** 60 Deck Recipe slots, a choice of banlist, and a List Filter page in Deck Edit (letter, Type,
+  Attribute, ATK, DEF and Level).
+- **Cards, packs and DP.** Earn Duelist Points, buy cards by password at prices set by tournament usage, and open TCG
+  sets and usage-weighted packs.
+- **In the duel.** Card art on the field and in your hand, a new board with Extra Monster Zones, duel speeds and
+  Hide switches, Hold R to skip response prompts, a much stronger CPU, and fixes to the original game's bugs.
+- **Synchro, Xyz and Link.** Summoned from the Extra Deck, with Tuners, Xyz Materials, Link Arrows, and a zone choice
+  for every summon.
+- **New cards.** Hundreds of cards added with working effects; see [NEW_CARDS.md](NEW_CARDS.md).
+- **Play it** with the BPS patches in [`patches/`](patches/) ([how](#play-it)), or build it from source. Edit its data
+  with Hex Maniac Advance CE ([HMA.md](HMA.md)).
 
 ## The Campaign
 
@@ -114,7 +92,6 @@ release to unlock the next one (every format is open in the debug build).
 <table>
 <tr>
 <td align="center"><img src="screenshots/Format%20Check.png" width="240" alt="The format check warning"><br><sub>The format check warning</sub></td>
-<td align="center"><img src="screenshots/placeholders/hma-deck-choices.svg" width="240" alt="Placeholder: HMA: a format's deck chances"><br><sub>HMA: a format's deck chances</sub></td>
 </tr>
 </table>
 
@@ -127,7 +104,6 @@ intro, and there is no post-duel dialogue.
 
 <table>
 <tr>
-<td align="center"><img src="screenshots/gifs/pre-duel.gif" width="240" alt="The pre-duel screen"><br><sub>The pre-duel screen (GIF)</sub></td>
 <td align="center"><img src="screenshots/Pre-duel%20(Yugi-Kaiba).png" width="240" alt="A format picture"><br><sub>A format picture</sub></td>
 </tr>
 </table>
@@ -254,12 +230,6 @@ the **release** build, mulligan is offered only in duels against **Debug**. In *
 - The release build starts with empty slots until you save your own. The deck recipes will eventually include all 15
   TCG formats in release too.
 
-<table>
-<tr>
-<td align="center"><img src="screenshots/placeholders/hma-recipes.svg" width="240" alt="Placeholder: HMA: the premade Deck Recipes"><br><sub>HMA: the premade Deck Recipes</sub></td>
-</tr>
-</table>
-
 ### Banlists
 
 Choose the banlist your deck is built under from the main menu. Cards your current deck can no longer hold go back to
@@ -290,12 +260,10 @@ new banlist, counting its limits and card pool. If they can't, the switch is ref
 <tr>
 <td align="center"><img src="screenshots/Booster%20Packs%20(Main%20Menu).png" width="240" alt="Booster Packs in the main menu"><br><sub>Booster Packs in the main menu</sub></td>
 <td align="center"><img src="screenshots/Pack%20Opener.png" width="240" alt="The pack list, showing a pack's price"><br><sub>The pack list</sub></td>
-<td align="center"><img src="screenshots/Password.png" width="240" alt="Buying Breaker the Magical Warrior with a password for 2773 DP"><br><sub>Buying a card by password</sub></td>
+<td align="center"><img src="screenshots/Password.png" width="240" alt="Buying Breaker the Magical Warrior with a password"><br><sub>Buying a card by password</sub></td>
 </tr>
 <tr>
 <td align="center"><img src="screenshots/gifs/pack-pull.gif" width="240" alt="An opened pack"><br><sub>An opened pack (GIF)</sub></td>
-<td align="center"><img src="screenshots/New%20Packs.png" width="240" alt="The free pack reward"><br><sub>The free pack reward</sub></td>
-<td></td>
 </tr>
 </table>
 
@@ -307,12 +275,6 @@ new banlist, counting its limits and card pool. If they can't, the switch is ref
   deck runs, with Limited/Semi-Limited multipliers: a staple three-of, a Limited one-of in every deck or a Semi-Limited
   two-of costs 5000). Cards with no usage entry cost **100 DP**; cards outside the newest format's card pool, or of a
   format not unlocked yet, cost **5000 DP**. Per-format prices are listed in [CARD_PRICES.md](CARD_PRICES.md).
-
-<table>
-<tr>
-<td align="center"><img src="screenshots/placeholders/hma-prices.svg" width="240" alt="Placeholder: HMA: a format's card prices"><br><sub>HMA: a format's card prices</sub></td>
-</tr>
-</table>
 
 ### Booster Packs
 
@@ -328,13 +290,10 @@ new banlist, counting its limits and card pool. If they can't, the switch is ref
 - When a win opens new packs (a usage pack at 10 wins in that format, or TCG sets when the next format unlocks at 20
   wins), the game shows the **"new packs are available"** message before the list.
 
-<table>
-<tr>
-<td align="center"><img src="screenshots/placeholders/hma-pack-pools.svg" width="240" alt="Placeholder: HMA: a pack's cards and weights"><br><sub>HMA: a pack's cards and weights</sub></td>
-<td align="center"><img src="screenshots/placeholders/hma-pack-covers.svg" width="240" alt="Placeholder: HMA: pack names and covers"><br><sub>HMA: pack names and covers</sub></td>
-<td align="center"><img src="screenshots/placeholders/hma-unlocks.svg" width="240" alt="Placeholder: HMA: the unlock wins"><br><sub>HMA: the unlock wins</sub></td>
-</tr>
-</table>
+<p align="center">
+  <img src="screenshots/gifs/pack-list.gif" width="240" alt="Scrolling through the packs"><br>
+  <sub>Scrolling through the packs (GIF)</sub>
+</p>
 
 ### Usage stats and Mobius
 
@@ -383,8 +342,8 @@ See Mobius's README for chart semantics and options.
 </tr>
 <tr>
 <td align="center"><img src="screenshots/Counters.png" width="240" alt="Breaker the Magical Warrior on the field, with the card's details in the info bar"><br><sub>Spell Counters</sub></td>
-<td align="center"><img src="screenshots/Duel%20Board.png" width="240" alt="The board: the phase panel between the Extra Monster Zones, both life points"><br><sub>The full board</sub></td>
-<td align="center"><img src="screenshots/Chain%20List.png" width="240" alt="The chain list: two Mystical Space Typhoons, with card art"><br><sub>The chain list</sub></td>
+<td align="center"><img src="screenshots/Duel%20Board.png" width="240" alt="The board with Goat staples: the phase panel between the Extra Monster Zones, both life points"><br><sub>The full board</sub></td>
+<td align="center"><img src="screenshots/Chain%20List.png" width="240" alt="The chain list: Mystical Space Typhoon, Dust Tornado and Book of Moon, with card art"><br><sub>The chain list</sub></td>
 </tr>
 </table>
 
@@ -426,7 +385,7 @@ with L+R. Every choice is saved.
 | **Hide card animations** | The big card that zooms, flashes or unrolls when a card is activated or its effect applies is skipped |
 | **Hide battle scenes** | The full-screen battle between the two cards is skipped; the attack plays out on the field |
 
-Pick one of the three speeds; the two Hide switches are ON/OFF with **A**. Both are off in a Link Battle.
+Pick one of the three speeds; the two Hide switches are ON/OFF with **A**.
 
 <p align="center">
   <img src="screenshots/placeholders/duel-speed.svg" width="480" alt="Placeholder: The three duel speeds (GIF)"><br>
@@ -493,7 +452,7 @@ current CPU behavior in full.
 <table>
 <tr>
 <td align="center"><img src="screenshots/gifs/call-trunade.gif" width="240" alt="Call of the Haunted and Giant Trunade"><br><sub>Call of the Haunted and Giant Trunade (GIF)</sub></td>
-<td align="center"><img src="screenshots/gifs/graverobber.gif" width="240" alt="Graverobber's cost"><br><sub>Graverobber's cost (GIF)</sub></td>
+<td align="center"><img src="screenshots/gifs/witch-call.gif" width="240" alt="Witch of the Black Forest, revived by Call of the Haunted, destroyed"><br><sub>Witch of the Black Forest and Call of the Haunted: one search (GIF)</sub></td>
 </tr>
 </table>
 
@@ -539,16 +498,12 @@ now. Pick the monster, then its materials.
 ### Not yet
 
 - Pendulum Monsters.
-- Link Summons in Link Battles.
 - The original game's Level-based cards still see an Xyz Monster's Rank or a Link Monster's Link Rating as its Level.
 
 ## The new cards
 
-The demo build adds **308** cards: the 175 listed above `------` in [`new_cards.txt`](new_cards.txt), and 133 cards of
-the engine's leftover effects ([`config/leftover_cards.txt`](config/leftover_cards.txt)). All of them are in
-[`demo_cards.txt`](demo_cards.txt), in alphabetical order. **[NEW_CARDS.md](NEW_CARDS.md)** shows each of them in Deck
-Edit's Card View (alphabetical, by Campaign format, and other groupings), and
-**[ADDING_NEW_CARDS.md](ADDING_NEW_CARDS.md)** explains how to add and code more.
+**[NEW_CARDS.md](NEW_CARDS.md)** shows every card the demo adds in Deck Edit's Card View (alphabetical, by Campaign
+format, and other groupings), and **[ADDING_NEW_CARDS.md](ADDING_NEW_CARDS.md)** explains how to add and code more.
 
 <table>
 <tr>
@@ -606,21 +561,6 @@ See [NEW_CARDS.md](NEW_CARDS.md) for all of them.
   gets the same handlers the game's own cards use: activation check, cost, targeting, resolution. Small hooks in the
   engine cover timings it doesn't already have, and each card gets a rule for when the computer should use it.
 
-<table>
-<tr>
-<td align="center"><img src="screenshots/placeholders/hma-card-stats.svg" width="240" alt="Placeholder: HMA: the added cards' stats"><br><sub>HMA: the added cards' stats</sub></td>
-<td align="center"><img src="screenshots/placeholders/hma-card-text.svg" width="240" alt="Placeholder: HMA: card names and text"><br><sub>HMA: card names and text</sub></td>
-<td align="center"><img src="screenshots/placeholders/hma-linkmarkers.svg" width="240" alt="Placeholder: HMA: Link Arrows"><br><sub>HMA: Link Arrows</sub></td>
-</tr>
-</table>
-
-HMA-CE can also fill in a card's stats and art from YGOProDeck: **Import from YGOProDeck**.
-
-<p align="center">
-  <img src="screenshots/placeholders/hma-import-ygoprodeck.svg" width="240" alt="Placeholder: HMA: Import from YGOProDeck"><br>
-  <sub>HMA-CE: Import from YGOProDeck (GIF)</sub>
-</p>
-
 ### Engine leftovers
 
 The engine already contains several cards that never made it into EDS, such as Magic Cylinder, Soul Exchange, Fairy Box
@@ -641,8 +581,26 @@ from `build/new_cards.tsv`) and [NEW_CARDS.md](NEW_CARDS.md) from it, and lists 
 
 ## Planned
 
-- 8 actual duelists: Yugi Muto, Joey, Kaiba, Pegasus, Marik, Yami Marik, Yami Bakura and Yami Yugi.
 - The OCG formats up to Victory, unlocked after beating Reaper.
+- 8 actual duelists: Yugi Muto, Joey, Kaiba, Pegasus, Marik, Yami Marik, Yami Bakura and Yami Yugi.
+
+## Play it
+
+Ready-made **BPS** patches are in the [`patches/`](patches/) folder: a release build and a debug build (the demo, up to
+Reaper). You need your own USA ROM of *The Eternal Duelist Soul* (AY5E); it is never included.
+
+1. Open [Rom Patcher JS](https://www.marcrobledo.com/RomPatcher.js/) in your browser.
+2. Choose your ROM as the input file.
+3. Choose the `.bps` from `patches/`.
+4. Download the patched ROM.
+
+<p align="center">
+  <img src="screenshots/placeholders/rom-patcher.svg" width="400" alt="Placeholder: Rom Patcher JS, ready to patch"><br>
+  <sub>Rom Patcher JS, ready to patch</sub>
+</p>
+
+The title screen's top right says whether it's the Release or Debug build; demo builds show the demo version at the
+top left.
 
 ## Building from source
 
@@ -692,13 +650,6 @@ for every anchor.
 > [Soul-8691/Complete-Fire-Red-Upgrade @ eternal-duelist-soul](https://github.com/Soul-8691/Complete-Fire-Red-Upgrade/tree/eternal-duelist-soul). Use it to add or change code in the compiled
 > ROM, while HMA edits its data.
 
-<table>
-<tr>
-<td align="center"><img src="screenshots/placeholders/hma.svg" width="240" alt="Placeholder: HMA with the TOML"><br><sub>HMA with the TOML</sub></td>
-<td align="center"><img src="screenshots/placeholders/hma-goto.svg" width="240" alt="Placeholder: HMA: the anchors in Goto"><br><sub>HMA: the anchors in Goto</sub></td>
-</tr>
-</table>
-
 | What you can edit | Anchors |
 |---|---|
 | Added cards: stats, names, text, passwords, effect rows | `data.cards.stats`, `data.cards.names`, `data.cards.descriptions`, `data.cards.passwords`, `data.cards.addedeffects` |
@@ -714,36 +665,7 @@ for every anchor.
 | The title screen and its version lines | `graphics.titlescreen.*`, `text.title.*` |
 | In-duel card art and Deck Edit ring art | `graphics.cards.fieldicons.miniatures`, `graphics.cards.icons.images` |
 
-#### Opponents and their decks
-
-<table>
-<tr>
-<td align="center"><img src="screenshots/placeholders/hma-opponents.svg" width="240" alt="Placeholder: HMA: the opponents table"><br><sub>HMA: the opponents table</sub></td>
-<td align="center"><img src="screenshots/placeholders/hma-portrait.svg" width="240" alt="Placeholder: HMA: an opponent's portrait"><br><sub>HMA: an opponent's portrait</sub></td>
-<td align="center"><img src="screenshots/placeholders/hma-opponent-deck.svg" width="240" alt="Placeholder: HMA: an opponent's deck"><br><sub>HMA: an opponent's deck</sub></td>
-</tr>
-</table>
-
-HMA-CE can also fill a deck table from a `.ydk` deck file: **Import .YDK**.
-
-<p align="center">
-  <img src="screenshots/placeholders/hma-import-ydk.svg" width="240" alt="Placeholder: HMA: Import .YDK"><br>
-  <sub>HMA-CE: Import .YDK (GIF)</sub>
-</p>
-
-#### Screens and art
-
-<table>
-<tr>
-<td align="center"><img src="screenshots/placeholders/hma-preduel-text.svg" width="240" alt="Placeholder: HMA: pre-duel text"><br><sub>HMA: pre-duel text</sub></td>
-<td align="center"><img src="screenshots/placeholders/hma-preduel-picture.svg" width="240" alt="Placeholder: HMA: a pre-duel picture"><br><sub>HMA: a pre-duel picture</sub></td>
-<td align="center"><img src="screenshots/placeholders/hma-title.svg" width="240" alt="Placeholder: HMA: the title screen"><br><sub>HMA: the title screen</sub></td>
-</tr>
-<tr>
-<td align="center"><img src="screenshots/placeholders/hma-miniatures.svg" width="240" alt="Placeholder: HMA: in-duel card art"><br><sub>HMA: in-duel card art</sub></td>
-<td align="center"><img src="screenshots/placeholders/hma-ring-art.svg" width="240" alt="Placeholder: HMA: Deck Edit ring art"><br><sub>HMA: Deck Edit ring art</sub></td>
-</tr>
-</table>
+Screenshots of these tables in HMA-CE are in **[HMA.md](HMA.md)**.
 
 ## Debug and testing builds
 
@@ -763,8 +685,7 @@ Testing builds (`make`, `make demo`) use debug mode; the release builds don't, a
 
 ### Duels
 
-- **Deck-out is off** in every Campaign duel, format opponents included. Link Battles still use normal deck-out rules.
-  In the **release** build, deck-out is blocked only against **Debug** and **Empty Deck**, and **Test Duel** is not
+- **Deck-out is off** in every Campaign duel, format opponents included. In the **release** build, deck-out is blocked only against **Debug** and **Empty Deck**, and **Test Duel** is not
   offered.
 - The opponent's hand is shown face up, and the cursor shows the info of all their cards (face-down ones too), with Card
   View.
@@ -783,7 +704,6 @@ In a testing build, or against Debug in the release:
 <table>
 <tr>
 <td align="center"><img src="screenshots/gifs/hold-l.gif" width="240" alt="Hold L"><br><sub>Hold L (GIF)</sub></td>
-<td align="center"><img src="screenshots/gifs/rps.gif" width="240" alt="Rock-paper-scissors"><br><sub>Rock-paper-scissors (GIF)</sub></td>
 </tr>
 </table>
 
@@ -794,6 +714,11 @@ The practice page's middle-left slot has **Test Duel**, whose deck is the `.ydk`
 every passcode in the deck must be among the coded cards in repo-root `new_cards.txt` above `------`. Passcodes that are
 missing are dropped, and if none remain the opponent starts with **no deck** (not the vanilla Duel Computer deck). An
 empty `.ydk` does the same.
+
+<p align="center">
+  <img src="screenshots/placeholders/test-duel-ydk.svg" width="240" alt="Placeholder: the Test Duel deck in EDOPro"><br>
+  <sub>The Test Duel's <code>.ydk</code> in EDOPro</sub>
+</p>
 
 ### Card test scripts and videos
 

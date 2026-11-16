@@ -22,14 +22,13 @@ EDS.run({
     effect = "media",
     actor = "Player",
     format = "Goat",
-    scenarioText = "point you.m0; wait 50; gif_start link; extra_summon Proxy Dragon from you.m0, you.m1 -> emz0; pick you.deck[Night Assailant]; pick you.deck[Spirit Reaper]; settle; wait 20; rec_stop",
+    scenarioText = "point you.m0; wait 50; gif_start link; extra_summon Proxy Dragon from you.m0, you.m1 -> emz0; settle; wait 20; rec_stop",
     start = { turn = "you", turnCount = 2, lp = { 8000, 8000 } },
     setupCards = {
-        { player = 0, zone = "monster", slot = 0, name = "Sangan", specialSummoned = true },
-        { player = 0, zone = "monster", slot = 1, name = "Witch of the Black Forest", specialSummoned = true },
+        { player = 0, zone = "monster", slot = 0, name = "Gemini Elf" },
+        { player = 0, zone = "monster", slot = 1, name = "Vorse Raider" },
     },
     setupPiles = {
-        { player = 0, pile = "deck", names = { "Night Assailant", "Spirit Reaper" } },
         { player = 0, pile = "extra", names = { "Proxy Dragon" } },
     },
     steps = {
@@ -37,8 +36,6 @@ EDS.run({
         "wait 50",
         "gif_start link",
         "extra_summon Proxy Dragon from you.m0, you.m1 -> emz0",
-        "pick you.deck[Night Assailant]",
-        "pick you.deck[Spirit Reaper]",
         "settle",
         "wait 20",
         "rec_stop",
