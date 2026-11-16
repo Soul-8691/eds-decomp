@@ -614,6 +614,13 @@ See [NEW_CARDS.md](NEW_CARDS.md) for all of them.
 </tr>
 </table>
 
+HMA-CE can also fill in a card's stats and art from YGOProDeck: **Import from YGOProDeck**.
+
+<p align="center">
+  <img src="screenshots/placeholders/hma-import-ygoprodeck.svg" width="240" alt="Placeholder: HMA: Import from YGOProDeck"><br>
+  <sub>HMA-CE: Import from YGOProDeck (GIF)</sub>
+</p>
+
 ### Engine leftovers
 
 The engine already contains several cards that never made it into EDS, such as Magic Cylinder, Soul Exchange, Fairy Box
@@ -717,14 +724,12 @@ for every anchor.
 </tr>
 </table>
 
-HMA-CE can also fill a deck table for you: **Import from YGOProDeck** and **Import .YDK**.
+HMA-CE can also fill a deck table from a `.ydk` deck file: **Import .YDK**.
 
-<table>
-<tr>
-<td align="center"><img src="screenshots/placeholders/hma-import-ygoprodeck.svg" width="240" alt="Placeholder: HMA: Import from YGOProDeck"><br><sub>HMA-CE: Import from YGOProDeck (GIF)</sub></td>
-<td align="center"><img src="screenshots/placeholders/hma-import-ydk.svg" width="240" alt="Placeholder: HMA: Import .YDK"><br><sub>HMA-CE: Import .YDK (GIF)</sub></td>
-</tr>
-</table>
+<p align="center">
+  <img src="screenshots/placeholders/hma-import-ydk.svg" width="240" alt="Placeholder: HMA: Import .YDK"><br>
+  <sub>HMA-CE: Import .YDK (GIF)</sub>
+</p>
 
 #### Screens and art
 

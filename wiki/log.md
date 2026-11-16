@@ -3241,3 +3241,6 @@ updated: 2026-09-29
 
 ## [2026-11-16] progress | README_WIP: no MP4s; GIF placeholders instead
 - README_WIP.md: duel-speed, hide-anims, cpu-play and new-cards now show their placeholders (GIF) instead of linking the MP4s; the highlights_4x.mp4 test reel is gone. Placeholders say GIF NEEDED; README_TODO.md slots are GIFs in screenshots/gifs/, the reel slot removed.
+
+## [2026-11-16] progress | README_WIP: Import from YGOProDeck is for card stats and art
+- Its GIF slot moved under the added cards' HMA row (stats, text, Link Arrows); Import .YDK stays under the opponents' decks. README_TODO.md and the placeholder text follow.
