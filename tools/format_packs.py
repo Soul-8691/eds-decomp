@@ -17,7 +17,11 @@ import sys
 
 sys.path.insert(0, 'tools')
 import banlist  # noqa: E402
-from cardprices import BASE, EXTRA_DIVISOR, LIMIT_FACTOR, share  # noqa: E402
+from cardprices import EXTRA_DIVISOR, LIMIT_FACTOR, share  # noqa: E402
+
+# The usage-pack score's scale (a card in every deck = this, before banlist factors). It was cardprices.BASE until
+# the prices moved to 5000 DP (2026-11-16); kept at 1000 so the pull weights did not change.
+PACK_SCORE_BASE = 1000
 
 FORMAT_PACK_ID_FIRST = 601
 VANILLA_PACK_INFO_COUNT = 23
@@ -303,7 +307,7 @@ def card_weight(number, total, extra, decks, limits):
     s = total.get(number, 0.0) + extra.get(number, 0.0) / EXTRA_DIVISOR
     if s <= 0.0:
         return None
-    score = s * BASE * LIMIT_FACTOR.get(limits.get(number), 1.0)
+    score = s * PACK_SCORE_BASE * LIMIT_FACTOR.get(limits.get(number), 1.0)
     skew = WEIGHT_SCALE / (score ** USAGE_PACK_SCORE_POWER)
     w = int((1.0 - USAGE_PACK_UNIFORM_WEIGHT / WEIGHT_SCALE) * skew + USAGE_PACK_UNIFORM_WEIGHT + 0.5)
     return max(1, min(w, 65535))

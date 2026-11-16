@@ -3229,3 +3229,9 @@ updated: 2026-09-29
 ## [2026-11-15] progress | READMEs: companion C injection template (CFRU eternal-duelist-soul)
 - README.md, README_WIP.md: a NOTE in "Editing with Hex Maniac Advance" linking Soul-8691/Complete-Fire-Red-Upgrade @ eternal-duelist-soul, for code edits to the compiled ROM alongside HMA.
 - [[hma-toml]].
+
+## [2026-11-16] progress | Card prices scaled to 200-5000 DP
+- tools/cardprices.py: PRICE_MAX 5000, BASE = PRICE_MAX / 3, NON_CARD_POOL_COST 5000; src/mod_dp.c NON_CARD_POOL_COST 5000.
+- tools/format_packs.py: PACK_SCORE_BASE 1000 (was cardprices.BASE) so the usage packs' pull weights stay the same; packs_md.py uses it.
+- Regenerated CARD_PRICES.md and PACKS.md (only the price section changed). Built (demo; .text 0x0807F52C, unchanged).
+- README.md, README_WIP.md; [[duelist-points]].

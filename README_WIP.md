@@ -303,9 +303,10 @@ new banlist, counting its limits and card pool. If they can't, the switch is ref
 
 - You start with **5000 DP** and earn more by winning duels.
 - The card password machine now sells cards: it shows the price and asks before buying.
-- Cards that appear in a format's usage statistics cost **200 to 3000 DP** within that format (usage share, with
-  Limited/Semi-Limited multipliers, then linearly scaled). Cards with no usage entry cost **100 DP**. Per-format prices
-  are listed in [CARD_PRICES.md](CARD_PRICES.md).
+- Cards that appear in a format's usage statistics cost **200 to 5000 DP** within that format (the copies an average
+  deck runs, with Limited/Semi-Limited multipliers: a staple three-of, a Limited one-of in every deck or a Semi-Limited
+  two-of costs 5000). Cards with no usage entry cost **100 DP**; cards outside the newest format's card pool, or of a
+  format not unlocked yet, cost **5000 DP**. Per-format prices are listed in [CARD_PRICES.md](CARD_PRICES.md).
 
 <table>
 <tr>

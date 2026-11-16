@@ -105,7 +105,7 @@ def static_intro() -> list[str]:
         '### Usage-weighted packs (one per Campaign format)',
         '',
         'The pool is every card listed in `usage/<stem>.json` (main, side, or extra), not the full legal pool. '
-        f'For each card, share = decks running it / `decks_processed`. Score = `(share_main + share_extra/{EXTRA_DIVISOR}) × {BASE}` '
+        f'For each card, share = decks running it / `decks_processed`. Score = `(share_main + share_extra/{EXTRA_DIVISOR}) × {fp.PACK_SCORE_BASE}` '
         '× Limited (×3) or Semi-Limited (×1.5) from that format\'s banlist. Pull weight:',
         '',
         f'`weight = max(1, min(65535, round((1 - {fp.USAGE_PACK_UNIFORM_WEIGHT}/{fp.WEIGHT_SCALE}) × '
@@ -214,10 +214,11 @@ def pack_prices_section() -> list[str]:
         'usage file mentions. At runtime, **GetCardCost** charges a card outside the newest format\'s card pool '
         f'**{PRICE_MAX} DP**; otherwise it uses the newest unlocked format whose decks use the card.',
         '',
-        f'- **Usage score:** main+side copies per deck × {BASE} + extra copies per deck × {BASE}/{EXTRA_DIVISOR}; '
+        f'- **Usage score:** main+side copies per deck × {PRICE_MAX}/3 (≈{BASE:.0f}) + extra copies per deck × '
+        f'{PRICE_MAX}/3/{EXTRA_DIVISOR}; '
         f'×3 if Limited, ×1.5 if Semi-Limited.',
         f'- **Price:** the score, kept between **{PRICE_MIN} DP** and **{PRICE_MAX} DP** (a Limited one-of in '
-        'every deck: 1000 × 3 = 3000; a Semi-Limited two-of: 2000 × 1.5 = 3000).',
+        'every deck: 1667 × 3 = 5000; a Semi-Limited two-of: 3333 × 1.5 = 5000).',
         f'- **In an unlocked pool, in no unlocked usage table:** **{DEFAULT_CARD_COST} DP** (`DEFAULT_CARD_COST`).',
         f'- **In no unlocked pool, or outside the newest pool:** **{NON_CARD_POOL_COST} DP** (`NON_CARD_POOL_COST`).',
         '',
