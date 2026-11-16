@@ -3255,3 +3255,7 @@ updated: 2026-09-29
 ## [2026-11-16] progress | CPU: Upstart Goblin and Reinforcement of the Army first too
 - src/added_effects.c AiTryPlayCpuPriorityDrawSpells: after Pot of Greed, Graceful Charity and Jar of Greed, Upstart Goblin then Reinforcement of the Army, before the summon (AiReinforcementHasTarget for the done marker).
 - [[added-cards]], AI_IMPROVEMENTS.md. Built (demo).
+
+## [2026-11-16] progress | CPU: steal a Tribute rather than Tribute its own
+- src/added_effects.c: AiStealForTributeSummon also with monsters of its own (when its summon is a Tribute Summon); AiPlayStealForTribute: Change of Heart, Brain Control, Snatch Steal, Soul Exchange.
+- [[added-cards]], AI_IMPROVEMENTS.md. Built (demo).

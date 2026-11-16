@@ -11017,21 +11017,63 @@ static int AiTributesBorrowed(u16 tributeMask)
     return 0;
 }
 
-/* AiStepMainPhase, before the Normal Summon: with no monster of its own to Tribute, the CPU takes one of the human's
- * (Change of Heart, else Snatch Steal) when its hand holds a Level 5-6 monster stronger than the best monster it could
- * summon without a Tribute; the summon then Tributes the human's monster (AiPickTributeFor, AiChooseBestNormalSummon).
- * Before this, it summoned the weaker monster first, and the steal came after, in its Spells step. */
+static int AiBorrowedMonsterZone(int excludeZone);
+
+/* The steal cards AiStealForTributeSummon plays, in order: Change of Heart and Brain Control give the monster back at
+ * the End Phase anyway, Snatch Steal would keep it, and Soul Exchange (which Tributes it where it is) costs the Battle
+ * Phase. */
+static int AiPlayStealForTribute(void)
+{
+    if (CountFreeMonsterZones(AI_PLAYER) > 0) {
+        if (AiTryPlaySpellTrap(CARD_CHANGE_OF_HEART))
+            return 1;
+#ifdef HAS_CARD_BRAIN_CONTROL
+        if (AiTryPlaySpellTrap(CARD_BRAIN_CONTROL))
+            return 1;
+#endif
+        if (AiTryPlaySpellTrap(CARD_SNATCH_STEAL))
+            return 1;
+    }
+#ifdef HAS_CARD_SOUL_EXCHANGE
+    if (AiTryPlaySpellTrap(CARD_SOUL_EXCHANGE))
+        return 1;
+#endif
+    return 0;
+}
+
+/* AiStepMainPhase, before the Normal Summon: the CPU Tributes the human's monster rather than its own. It plays a steal
+ * card (AiPlayStealForTribute) first:
+ *  - with monsters of its own, when the summon it would make (AiChooseBestNormalSummon) is a Tribute Summon: the
+ *    stolen monster is then the first Tribute (AiPickTributeFor takes a borrowed monster first), and for a Level 7+
+ *    monster one of its own is the second (2026-11-16; before, it Tributed its own monsters);
+ *  - with none, when its hand holds a Level 5-6 monster stronger than the best monster it could summon without a
+ *    Tribute. Before this, it summoned the weaker monster first, and the steal came after, in its Spells step.
+ * Not when it already controls a monster of the human's (that one is Tributed first anyway). */
 int AiStealForTributeSummon(void)
 {
     int i, best = -1, bestAtk = 0, idxN;
     int noTributeAtk = 0;
 
-    if (!CanNormalSummon(AI_PLAYER) || CountMonsters(AI_HUMAN) == 0 || CountMonsters(AI_PLAYER) > 0
-        || AiHumanSwordsActive() || CountFreeMonsterZones(AI_PLAYER) == 0)
+    if (!CanNormalSummon(AI_PLAYER) || CountMonsters(AI_HUMAN) == 0 || AiHumanSwordsActive()
+        || AiBorrowedMonsterZone(-1) >= 0)
         return 0;
     if (FindHandCardByNumber(AI_PLAYER, CARD_CHANGE_OF_HEART) < 0
-        && FindHandCardByNumber(AI_PLAYER, CARD_SNATCH_STEAL) < 0)
+        && FindHandCardByNumber(AI_PLAYER, CARD_SNATCH_STEAL) < 0
+#ifdef HAS_CARD_BRAIN_CONTROL
+        && FindHandCardByNumber(AI_PLAYER, CARD_BRAIN_CONTROL) < 0
+#endif
+#ifdef HAS_CARD_SOUL_EXCHANGE
+        && FindHandCardByNumber(AI_PLAYER, CARD_SOUL_EXCHANGE) < 0
+#endif
+        )
         return 0;
+    if (CountMonsters(AI_PLAYER) > 0) {
+        int idx = AiChooseBestNormalSummon();
+
+        if (idx < 0 || CARD_STATS_LEVEL(gCardStats[DUEL_CARD_ID(&gDuelPlayers[AI_PLAYER].hand[idx]) & CARD_ID_MASK]) < 5)
+            return 0;
+        return AiPlayStealForTribute();
+    }
     for (i = 0; i < gDuelPlayers[AI_PLAYER].handCount; i++) {
         u16 id = DUEL_CARD_ID(&gDuelPlayers[AI_PLAYER].hand[i]);
         u32 stats = gCardStats[id & CARD_ID_MASK];
@@ -11051,9 +11093,7 @@ int AiStealForTributeSummon(void)
         noTributeAtk = AiPrintedMonsterAtk(DUEL_CARD_ID(&gDuelPlayers[AI_PLAYER].hand[idxN]));
     if (bestAtk <= noTributeAtk)
         return 0;
-    if (AiTryPlaySpellTrap(CARD_CHANGE_OF_HEART))
-        return 1;
-    return AiTryPlaySpellTrap(CARD_SNATCH_STEAL) != 0;
+    return AiPlayStealForTribute();
 }
 
 /* ---- The CPU's Tribute Summon upgrades ----------------------------------------------------------------------------

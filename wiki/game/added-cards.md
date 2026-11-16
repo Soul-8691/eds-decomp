@@ -835,6 +835,17 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
   - Quick-Play boosts such as Rush Recklessly are not counted.
 - Checked in the source and the build; not tested in an emulator.
 
+### The CPU Tributes the human's monsters first (2026-11-16)
+- **Before.** `AiStealForTributeSummon` (added_effects.c, AiStepMainPhase before the Normal Summon) stole only when
+  the CPU had no monster of its own, and only with Change of Heart or Snatch Steal; with monsters of its own it
+  Tributed them.
+- **Now.** With monsters of its own, when `AiChooseBestNormalSummon` picks a Level 5+ monster (a Tribute Summon), it
+  first plays `AiPlayStealForTribute`: Change of Heart, Brain Control, Snatch Steal (each needs a free zone), then Soul
+  Exchange (no Battle Phase that turn; `SoulExchangeCpuResolve` summons, with its own weakest as the second Tribute
+  for a Level 7+). `AiPickTributeFor` already takes a borrowed monster first. Not when it already controls one of the
+  human's monsters. The no-monster case is as before, with the same four cards.
+- Built (demo); not tested in an emulator.
+
 ### The CPU never Tributes a copy of what it summons (2026-10-29)
 - **Rule.** The CPU doesn't Tribute a monster with the same card number as the one it summons, unless the summoned
   card has a summon trigger (`AiHasSummonTrigger`), which makes the swap worth it. It applies to:
