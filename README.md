@@ -42,6 +42,11 @@
 - **Play it** with the BPS patches in [`patches/`](patches/) ([how](#play-it)), or build it from source. Edit its data
   with Hex Maniac Advance CE ([HMA.md](HMA.md)).
 
+<p align="center">
+  <img src="screenshots/gifs/highlights.gif" width="240" alt="Twenty card effects from the card tests at 2x speed: Chaos Emperor Dragon, Thousand-Eyes Restrict, Torrential Tribute, Limiter Removal and more"><br>
+  <sub>Card effects at 2× speed (GIF)</sub>
+</p>
+
 ## The Campaign
 
 > [!NOTE]
@@ -70,6 +75,11 @@ release to unlock the next one (every format is open in the debug build).
 | 7 | Fiber | July 2003 | | 15 | Reaper | October 2005 |
 | 8 | Yata | August 2003 | | | | |
 
+<p align="center">
+  <img src="screenshots/gifs/unlock.gif" width="240" alt="Unlocking the next format"><br>
+  <sub>Unlocking the next format (GIF)</sub>
+</p>
+
 ### Format duelists
 
 - **Their decks.** Each format duelist picks one of 2-3 (sometimes more) strong decks from its format, at weighted
@@ -80,18 +90,32 @@ release to unlock the next one (every format is open in the debug build).
 - **Portraits.** Each duelist's portrait is its format's namesake card, or the Format Library picture when the format
   isn't named after a card.
 
+<table>
+<tr>
+<td align="center"><img src="screenshots/Format%20Check.png" width="240" alt="The format check warning"><br><sub>The format check warning</sub></td>
+</tr>
+</table>
+
 ### The pre-duel screen
 
 Campaign opponents (and Solomon and Debug, after you pick their deck) get a pre-duel screen instead of vanilla
 dialogue: custom text in the dialogue box, a Format Library QR code, and either a format picture (Yugi-Kaiba through
-Android) or the opponent's original bust-up scene with blinking eyes. A New Game skips Tea's
+Android) or the opponent's original bust-up scene with blinking eyes. Press **A** to continue. A New Game skips Tea's
 intro, and there is no post-duel dialogue.
+
+<table>
+<tr>
+<td align="center"><img src="screenshots/Pre-duel%20(Yugi-Kaiba).png" width="240" alt="A format picture"><br><sub>A format picture</sub></td>
+</tr>
+</table>
 
 ### Best-of-3 matches
 
 Every Campaign duel against the CPU is a best-of-3 match, not only on match days. Between games you can side, swapping
 cards between your Main Deck and Side Deck, and your deck goes back to how it was once the match ends. The CPU uses the
 same deck for every game of the match. Records, DP and the pack reward count the match, not each game.
+
+<img src="screenshots/gifs/siding.gif" width="240" alt="siding between games">
 
 ### Event challengers
 
@@ -102,6 +126,8 @@ dialogue.
 After the dialogue, your banlist switches to the challenger's format and the Deck Recipes screen opens: load a recipe,
 press SELECT for Deck Edit, or press B to duel. In the release, a deck that isn't legal in the format (or is under 40
 cards) can't duel until you fix it.
+
+<img src="screenshots/Event%20Challenger.png" width="240" alt="Deck Recipes before an event duel">
 
 ## Practice opponents
 
@@ -120,6 +146,7 @@ screen has a page for them too.
 <table>
 <tr>
 <td align="center"><img src="screenshots/Duelists%20(Screen%204).png" width="240" alt="The practice opponents' page, with Debug selected"><br><sub>The practice opponents' page</sub></td>
+<td align="center"><img src="screenshots/Records%20(Practice).png" width="240" alt="Records: the practice page"><br><sub>Records: the practice page</sub></td>
 </tr>
 </table>
 
@@ -138,6 +165,13 @@ Before the duel you pick one of your own Deck Recipes for them to play.
   face-down cards (info bar and Card View), you can open its main and fusion deck piles in order, and neither side can
   deck out. The [debug controls](#debug-controls) work too.
 
+<table>
+<tr>
+<td align="center"><img src="screenshots/Debug%20Picker.png" width="240" alt="Picking your deck"><br><sub>Picking your deck</sub></td>
+<td align="center"><img src="screenshots/Debug%20Duel.png" width="240" alt="A duel with Debug"><br><sub>A duel with Debug</sub></td>
+</tr>
+</table>
+
 Back on the recipe list:
 
 | Button | What it does |
@@ -152,11 +186,24 @@ Back on the recipe list:
 A CPU with no cards at all (Ultimate Offering's picture), in the release too. Any deck may challenge it, and neither
 player decks out, so you can try your deck's combos against an open board.
 
+<table>
+<tr>
+<td align="center"><img src="screenshots/Empty%20Deck.png" width="240" alt="A duel against Empty Deck"><br><sub>A duel against Empty Deck</sub></td>
+</tr>
+</table>
+
 ### Mulligan
 
 In your first Draw Phase, your Main Deck menu offers **Mulligan** next to **Draw**: your hand goes to the bottom of the
 Main Deck, the deck shuffles, and you draw five again. Repeat until you **Draw**, which ends mulligan for that duel. In
-the **release** build, mulligan is offered only in duels against **Debug**. In **testing** builds, every Campaign duel offers it.
+the **release** build, mulligan is offered only in duels against **Debug**. In **testing** builds (`make`, `make demo`,
+…), every Campaign duel offers it.
+
+<table>
+<tr>
+<td align="center"><img src="screenshots/gifs/mulligan.gif" width="240" alt="Mulligan"><br><sub>Mulligan (GIF)</sub></td>
+</tr>
+</table>
 
 ## Decks and banlists
 
@@ -169,7 +216,7 @@ the **release** build, mulligan is offered only in duels against **Debug**. In *
 <tr>
 <td align="center"><img src="screenshots/Banlists%20(Main%20Menu).png" width="240" alt="Banlists in the main menu"><br><sub>Banlists in the main menu</sub></td>
 <td align="center"><img src="screenshots/Banlists.png" width="240" alt="The Banlists screen"><br><sub>Choosing a banlist</sub></td>
-<td></td>
+<td align="center"><img src="screenshots/Left%20Out.png" width="240" alt="Cards a recipe left out"><br><sub>Cards a recipe left out</sub></td>
 </tr>
 </table>
 
@@ -178,7 +225,7 @@ the **release** build, mulligan is offered only in duels against **Debug**. In *
 - Save up to **60** decks.
 - Loading a recipe takes the cards from your trunk. Any you don't have are left out, and the game tells you which and
   why.
-- In the debug build, the first slots are premade staple decks of the first fifteen formats (including Goat),
+- In the debug build (`make`), the first slots are premade staple decks of the first fifteen formats (including Goat),
   named after their `.ydk` files. Premade recipes include Side and Extra Decks from those files.
 - The release build starts with empty slots until you save your own. The deck recipes will eventually include all 15
   TCG formats in release too.
@@ -189,6 +236,8 @@ Choose the banlist your deck is built under from the main menu. Cards your curre
 the trunk. Before switching, the game checks that your cards can still make a Main Deck of at least 40 cards under the
 new banlist, counting its limits and card pool. If they can't, the switch is refused.
 
+<img src="screenshots/Banlist%20Refused.png" width="240" alt="a refused banlist switch">
+
 ### Deck Edit
 
 - **List Filter.** After you choose a card category and sort order, a new page narrows the list by the name's first
@@ -198,13 +247,20 @@ new banlist, counting its limits and card pool. If they can't, the switch is ref
   Deck, Side Deck and Fusion Deck goes back to the trunk, and you stay in Deck Edit.
 - **Card art.** The column of cards beside the list shows each card's art.
 
+<table>
+<tr>
+<td align="center"><img src="screenshots/gifs/list-filter.gif" width="240" alt="List Filter"><br><sub>List Filter (GIF)</sub></td>
+<td align="center"><img src="screenshots/gifs/empty-main-side.gif" width="240" alt="Empty Main/Side"><br><sub>Empty Main/Side (GIF)</sub></td>
+</tr>
+</table>
+
 ## Cards, packs and DP
 
 <table>
 <tr>
 <td align="center"><img src="screenshots/Booster%20Packs%20(Main%20Menu).png" width="240" alt="Booster Packs in the main menu"><br><sub>Booster Packs in the main menu</sub></td>
-<td align="center"><img src="screenshots/Pack%20Opener.png" width="240" alt="The pack list, showing a pack's price"><br><sub>The pack list</sub></td>
 <td align="center"><img src="screenshots/Password.png" width="240" alt="Buying Breaker the Magical Warrior with a password"><br><sub>Buying a card by password</sub></td>
+<td align="center"><img src="screenshots/gifs/pack-pull.gif" width="240" alt="An opened pack"><br><sub>An opened pack (GIF)</sub></td>
 </tr>
 </table>
 
@@ -231,12 +287,22 @@ new banlist, counting its limits and card pool. If they can't, the switch is ref
 - When a win opens new packs (a usage pack at 10 wins in that format, or TCG sets when the next format unlocks at 20
   wins), the game shows the **"new packs are available"** message before the list.
 
+<p align="center">
+  <img src="screenshots/gifs/pack-list.gif" width="240" alt="Scrolling through the packs"><br>
+  <sub>Scrolling through the packs (GIF)</sub>
+</p>
+
 ### Usage stats and Mobius
 
 Card DP and the usage-weighted booster pools come from [Format Library](https://www.formatlibrary.com/) tournament usage
 data, gathered **with the site's creator's permission**. **[Mobius](https://github.com/Soul-8691/Mobius)** is a
 companion Python app for exploring those stats in a table (ban-weighted counts, Limited/Semi-Limited multipliers,
 YGOPRODeck names and art).
+
+<p align="center">
+  <img src="screenshots/Mobius%20(Main).png" width="480" alt="Mobius: the Goat format's card usage table, with the deck type list open"><br>
+  <sub>Mobius: a format's card usage</sub>
+</p>
 
 <details>
 <summary>Running Mobius</summary>
@@ -259,6 +325,11 @@ python main.py
 - **Charts.** For one card's usage across formats as a line chart, run `python graph_card_usage.py "Monster Reborn"`
   (optional `--start yugi-kaiba --end goat` and `-o chart.png`; format stems match the pool filenames, e.g. `yugi-kaiba`,
   `cat`).
+
+<p align="center">
+  <img src="screenshots/Mobius%20(Graph).png" width="480" alt="Mobius: Mystic Tomato's weighted usage across the formats, by ban status"><br>
+  <sub>A card's usage across formats</sub>
+</p>
 
 See Mobius's README for chart semantics and options.
 
@@ -319,6 +390,19 @@ with L+R. Every choice is saved.
 
 Pick one of the three speeds; the two Hide switches are ON/OFF with **A**.
 
+<table>
+<tr>
+<td align="center"><img src="screenshots/gifs/duel-speed.gif" width="720" alt="The same turn at DEFAULT, ALWAYS and SUPER speed, side by side"><br><sub>The three duel speeds (GIF)</sub></td>
+</tr>
+</table>
+
+<table>
+<tr>
+<td align="center"><img src="screenshots/gifs/hide-anims.gif" width="240" alt="Pot of Greed with its card animation, then again with Hide card animations on"><br><sub>Hide card animations, off then on (GIF)</sub></td>
+<td align="center"><img src="screenshots/gifs/hide-battle.gif" width="240" alt="Hide battle scenes"><br><sub>Hide battle scenes (GIF)</sub></td>
+</tr>
+</table>
+
 ### Controls
 
 | Button | In a duel |
@@ -328,11 +412,22 @@ Pick one of the three speeds; the two Hide switches are ON/OFF with **A**.
 | **L+R** | Opens Settings |
 | **L** (held), debug only | The CPU does nothing (see [Debug controls](#debug-controls)) |
 
+<table>
+<tr>
+<td align="center"><img src="screenshots/gifs/hold-r.gif" width="240" alt="Hold R"><br><sub>Hold R (GIF)</sub></td>
+</tr>
+</table>
+
 ### Smarter CPU
 
 Campaign opponents play much stronger than in vanilla EDS. [AI_QUIRKS.md](AI_QUIRKS.md) lists the vanilla AI
 shortcomings that were fixed (original-roster cards only), and [AI_IMPROVEMENTS.md](AI_IMPROVEMENTS.md) describes the
 current CPU behavior in full.
+
+<p align="center">
+  <img src="screenshots/gifs/cpu-play.gif" width="240" alt="The CPU answers a direct attack with Magic Cylinder"><br>
+  <sub>The CPU at work (GIF)</sub>
+</p>
 
 ### Rule changes
 
@@ -356,6 +451,13 @@ current CPU behavior in full.
 > [!NOTE]
 > The fixes after Deck Edit's are recent and not yet play-tested.
 
+<table>
+<tr>
+<td align="center"><img src="screenshots/gifs/call-trunade.gif" width="240" alt="Call of the Haunted and Giant Trunade"><br><sub>Call of the Haunted and Giant Trunade (GIF)</sub></td>
+<td align="center"><img src="screenshots/gifs/witch-call.gif" width="240" alt="Witch of the Black Forest, revived by Call of the Haunted, destroyed"><br><sub>Witch of the Black Forest and Call of the Haunted: one search (GIF)</sub></td>
+</tr>
+</table>
+
 ## Synchro, Xyz and Link
 
 Three newer summoning mechanics are in, each with a few cards so far. In your Main Phase, press A on your Fusion Deck
@@ -376,6 +478,14 @@ now. Pick the monster, then its materials.
 </tr>
 </table>
 
+<table>
+<tr>
+<td align="center"><img src="screenshots/gifs/synchro.gif" width="240" alt="A Synchro Summon"><br><sub>A Synchro Summon (GIF)</sub></td>
+<td align="center"><img src="screenshots/gifs/xyz.gif" width="240" alt="An Xyz Summon"><br><sub>An Xyz Summon (GIF)</sub></td>
+<td align="center"><img src="screenshots/gifs/link.gif" width="240" alt="A Link Summon"><br><sub>A Link Summon (GIF)</sub></td>
+</tr>
+</table>
+
 ### Extra Monster Zones and choosing zones
 
 - **Extra Monster Zones** sit at the two ends of the board's middle row. You can have one monster in them, and it uses
@@ -384,6 +494,8 @@ now. Pick the monster, then its materials.
 - **Choosing zones.** Every summon now asks which Monster Zone to use (Control Pad, then A) when more than one fits.
 - **New Types.** Psychic, Wyrm, Cyberse, Illusion and Creator God monsters can be added; they use the closest existing
   Type icon for now.
+
+<img src="screenshots/gifs/zone-pick.gif" width="240" alt="choosing a zone">
 
 ### Not yet
 
@@ -429,6 +541,11 @@ format, and other groupings), and **[ADDING_NEW_CARDS.md](ADDING_NEW_CARDS.md)**
 See [NEW_CARDS.md](NEW_CARDS.md) for all of them.
 
 </details>
+
+<p align="center">
+  <img src="screenshots/gifs/new-cards.gif" width="240" alt="Cyber Dragon, Breaker the Magical Warrior and Thousand-Eyes Restrict in action"><br>
+  <sub>New cards in action (GIF)</sub>
+</p>
 
 > [!NOTE]
 > These demo-list Fusion Monsters are **not** fully implemented yet (no fusion effects, and they do not behave like their
@@ -478,6 +595,11 @@ Reaper). You need your own USA ROM of *The Eternal Duelist Soul* (AY5E); it is n
 2. Choose your ROM as the input file.
 3. Choose the `.bps` from `patches/`.
 4. Download the patched ROM.
+
+<p align="center">
+  <img src="screenshots/ROM%20Patcher%20JS.png" width="480" alt="Rom Patcher JS with the ROM and the release patch chosen, ready to apply"><br>
+  <sub>Rom Patcher JS, ready to patch</sub>
+</p>
 
 The title screen's top right says whether it's the Release or Debug build; demo builds show the demo version at the
 top left.
@@ -530,6 +652,11 @@ for every anchor.
 > [Soul-8691/Complete-Fire-Red-Upgrade @ eternal-duelist-soul](https://github.com/Soul-8691/Complete-Fire-Red-Upgrade/tree/eternal-duelist-soul). Use it to add or change code in the compiled
 > ROM, while HMA edits its data.
 
+<p align="center">
+  <img src="screenshots/C%20Injection.png" width="480" alt="The C injection template open in VS Code, with EDS.ld listing the game's RAM symbols"><br>
+  <sub>The C injection template (CFRU, eternal-duelist-soul branch)</sub>
+</p>
+
 | What you can edit | Anchors |
 |---|---|
 | Added cards: stats, names, text, passwords, effect rows | `data.cards.stats`, `data.cards.names`, `data.cards.descriptions`, `data.cards.passwords`, `data.cards.addedeffects` |
@@ -581,6 +708,12 @@ In a testing build, or against Debug in the release:
   Phase (a play already under way finishes first).
 - **Rock-paper-scissors.** You always win the rock-paper-scissors before a duel, so you choose who goes first.
 
+<table>
+<tr>
+<td align="center"><img src="screenshots/gifs/hold-l.gif" width="240" alt="Hold L"><br><sub>Hold L (GIF)</sub></td>
+</tr>
+</table>
+
 ### Test Duel
 
 The practice page's middle-left slot has **Test Duel**, whose deck is the `.ydk` in `TEST_YDK` (default
@@ -588,6 +721,11 @@ The practice page's middle-left slot has **Test Duel**, whose deck is the `.ydk`
 every passcode in the deck must be among the coded cards in repo-root `new_cards.txt` above `------`. Passcodes that are
 missing are dropped, and if none remain the opponent starts with **no deck** (not the vanilla Duel Computer deck). An
 empty `.ydk` does the same.
+
+<p align="center">
+  <img src="screenshots/Test%20Duel%20(YDK).png" width="480" alt="EDOPro's deck editor with the test deck (test.ydk) open, empty here"><br>
+  <sub>The Test Duel's <code>.ydk</code> in EDOPro</sub>
+</p>
 
 ### Card test scripts and videos
 
@@ -607,6 +745,11 @@ python tools/testing_scenarios/review_videos.py                                 
 - **The video reviewer** plays the videos in TESTING.md order and sorts them: **Keep** (K), **Highlight** (H) and
   **Throwaway** (T) move a video to its folder, and the runner skips those scripts afterwards. **Copy title** (C) copies
   a video's script name, and **F5** reloads the videos that changed.
+
+<p align="center">
+  <img src="screenshots/Video%20Reviewer.png" width="480" alt="The video reviewer: the highlighted test videos listed, Card Destruction's open, with the Keep, Unhighlight and Throwaway buttons"><br>
+  <sub>The video reviewer</sub>
+</p>
 
 ### README screenshots
 

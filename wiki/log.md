@@ -3339,3 +3339,6 @@ updated: 2026-09-29
 ## [2026-11-17] progress | Bell of Destruction / Shining Fairy shown as Ring of Destruction / Shining Angel
 - tools/newcards.py ORIGINAL_RENAMES: the two original cards' names in gCardNames (so Deck Edit sorts them as such); constants unchanged. tools/banlist.py: the Ring -> Bell alias is gone (the name now matches); Shining Angel is now found in the usage and card-pool lists (priced, in pack pools).
 - Regenerated CARD_PRICES.md, PACKS.md; DECKS.md, AI_IMPROVEMENTS.md, AI_QUIRKS.md, LEFTOVER_EFFECTS.md, tools/media/siding.lua comments; [[added-cards]], [[banlists-menu]], [[readme-media]]. Built (demo).
+
+## [2026-11-17] progress | HMA.md: back up the .toml before opening the ROM
+- HMA.md: a "Back up the .toml first" section (HMA rewrites the .toml on opening and drops its comments, the anchor notes): copy it under another name first; recover with make demo or tomls/.

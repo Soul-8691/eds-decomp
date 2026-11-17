@@ -9,6 +9,22 @@ built from source, `upcoming` branch). [README_TODO.md](README_TODO.md) says wha
   <sub>The build's <code>.toml</code>: every anchor, and what it holds</sub>
 </p>
 
+## Back up the `.toml` first
+
+> [!WARNING]
+> When HMA opens a ROM, it rewrites the `.toml` next to it, and the rewrite **drops every comment**. That includes
+> the header shown above, which explains each anchor. Keep a copy of the original before you open the ROM.
+
+1. Put the `.toml` next to the ROM, with the same name as the ROM (for example `eds_demo.gba` and `eds_demo.toml`,
+   or a patched ROM and the matching `.toml` from [`tomls/`](tomls/)).
+2. **Before opening the ROM in HMA**, copy the `.toml` and give the copy a name HMA won't pick up, such as
+   `eds_demo (original).toml`. In File Explorer, select it, then Ctrl+C and Ctrl+V; Windows names the copy
+   `eds_demo - Copy.toml`. Any name that differs from the ROM's works.
+3. Open the ROM in HMA. Read the anchor notes in your copy, not in the `.toml` HMA has rewritten.
+
+If you've already opened the ROM, get the comments back by rebuilding (`make demo` writes the `.toml` again) or from
+the copy in [`tomls/`](tomls/).
+
 ## The patched ROM in HMA
 
 <table>
