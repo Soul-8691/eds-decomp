@@ -129,9 +129,9 @@ the ones README.md used to show are marked "was"). The game's screenshots can be
 ### Settings
 
 - **Have:** `Settings (Main Menu).png`, `Settings.png` (with the two Hide switches).
-- [ ] 🎞️ **Duel speeds** · `screenshots/gifs/duel-speed.gif` · after the Settings paragraph. The same turn at DEFAULT, ALWAYS and SUPER,
+- [x] 🎞️ **Duel speeds** · `screenshots/gifs/duel-speed.gif` · after the Settings paragraph. The same turn at DEFAULT, ALWAYS and SUPER,
   side by side or one after another.
-- [ ] 🎞️ **Hide card animations** · `screenshots/gifs/hide-anims.gif` · after it. The same activation with the setting off, then on.
+- [x] 🎞️ **Hide card animations** · `screenshots/gifs/hide-anims.gif` · after it. The same activation with the setting off, then on.
 - [ ] 🎞️ **Hide battle scenes** · `screenshots/gifs/hide-battle.gif` · after it. An attack played out on the field.
 
 ### Controls
@@ -141,7 +141,7 @@ the ones README.md used to show are marked "was"). The game's screenshots can be
 
 ### Smarter CPU
 
-- [ ] 🎞️ **The CPU at work** · `screenshots/gifs/cpu-play.gif` · under the paragraph. A clever CPU turn: a well-timed Trap, a chain, or a
+- [x] 🎞️ **The CPU at work** · `screenshots/gifs/cpu-play.gif` · under the paragraph. A clever CPU turn: a well-timed Trap, a chain, or a
   combo from one of the format decks. *(was `placeholders/cpu-play.svg`)*
 
 ### Fixes to the original game
@@ -169,7 +169,7 @@ the ones README.md used to show are marked "was"). The game's screenshots can be
 ## The new cards
 
 - **Have:** the six card images and the six more in "More cards".
-- [ ] 🎞️ **New cards in action** · `screenshots/gifs/new-cards.gif` · after the gallery. A few effects resolving: Breaker destroying a
+- [x] 🎞️ **New cards in action** · `screenshots/gifs/new-cards.gif` · after the gallery. A few effects resolving: Breaker destroying a
   Spell/Trap, Cyber Dragon's Special Summon, Thousand-Eyes Restrict absorbing a monster.
 
 ## Play it

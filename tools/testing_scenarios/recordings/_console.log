@@ -23750,3 +23750,234 @@
    5070 media: encoding 1086 frames -> tools\testing_scenarios\..\..\screenshots\gifs\witch-call.gif
    5087 Play sequence done; ending capture (no recording tail).
    5087 Finished — PASS (play sequence + tail). Stop mGBA Record A/V to finalize MP4.
+     17 MP4 target: tools\testing_scenarios\recordings\CPU_Play_Media_Player.mp4
+     17 emu recording API: screenshot, screenshotToImage
+     17 MP4: the scenario capture is off (captureMp4 = false)
+     17 CPU Play / media / Player
+     17 point you.m0; wait 30; gif_start cpu-play; battle; attack you.m0 -> direct; settle; wait 20; rec_stop
+    918 Main menu (callback 0x08003B15).
+   1041 Campaign selected (callback 0x0801D6C9).
+   1234 Turn order: forced RPS lose (CPU goes first).
+   1244 Turn order: A (lost RPS; CPU chooses first).
+   1282 Turn order: A (lost RPS; CPU chooses first).
+   1474 Opponent's turn (waiting for your Main Phase 1).
+   1476 Usage deck goat / Chaos Turbo: main=40 extra=15; P0 shuffled=true (top 719->902) P1 shuffled=true (top 719->902), hands cleared.
+   2374 cpu_turn f=900 duel_step=8 turn_player=1 ai=3/2 textbox=0
+   2748 Player Draw Phase.
+   2929 Opening draw complete (hand=6 deck=34 want=6).
+   3070 Exact setup: P0 hand=0 deck=34 gy=0, P1 hand=1 deck=32 gy=0, LP 8000/8000, turnCount 2.
+   3070 Player Main Phase 1.
+   3070 steps: unknown card CPU Play
+   3070 steps: 8 steps, 20 ops
+   3070 step: point you.m0
+   3206 steps: capture starts (cursor on point you.m0)
+   3213 step: wait 30
+   3249 step: gif_start cpu-play
+   3249 media: recording cpu-play (gif)
+   3256 step: battle
+   3356 step: attack you.m0 -> direct
+   3798 step: settle
+   3824 step: wait 20
+   3850 step: rec_stop
+   3850 media: encoding 516 frames -> tools\testing_scenarios\..\..\screenshots\gifs\cpu-play.gif
+   3867 Play sequence done; ending capture (no recording tail).
+   3867 Finished — PASS (play sequence + tail). Stop mGBA Record A/V to finalize MP4.
+      8 MP4 target: tools\testing_scenarios\recordings\Duel_Speed_Always_Media_Player.mp4
+      8 emu recording API: screenshot, screenshotToImage
+      8 MP4: the scenario capture is off (captureMp4 = false)
+      8 Duel Speed Always / media / Player
+      8 options speed=always; point you.hand[Breaker the Magical Warrior]; wait 30; mp4_start duel-speed-always; summon you.hand
+    909 Main menu (callback 0x08003B15).
+   1032 Campaign selected (callback 0x0801D6C9).
+   1225 Turn order: forced RPS lose (CPU goes first).
+   1235 Turn order: A (lost RPS; CPU chooses first).
+   1273 Turn order: A (lost RPS; CPU chooses first).
+   1465 Opponent's turn (waiting for your Main Phase 1).
+   1467 Usage deck goat / Chaos Turbo: main=40 extra=15; P0 shuffled=true (top 719->908) P1 shuffled=true (top 719->886), hands cleared.
+   1819 Player Draw Phase.
+   2000 Opening draw complete (hand=6 deck=34 want=6).
+   2140 Exact setup: P0 hand=1 deck=34 gy=0, P1 hand=0 deck=35 gy=0, LP 8000/8000, turnCount 2.
+   2140 Player Main Phase 1.
+   2140 steps: unknown card Duel Speed Always
+   2140 steps: 11 steps, 30 ops
+   2140 step: options speed=always
+   2140 steps: options = 0x0007
+   2147 step: point you.hand[Breaker the Magical Warrior]
+   2263 step: wait 30
+   2299 step: mp4_start duel-speed-always
+   2299 media: recording duel-speed-always (mp4)
+   2306 step: summon you.hand[Breaker the Magical Warrior] -> m0 atk
+   2443 step: activate you.m0
+   2523 steps: capture starts (cursor on activate you.m0)
+   2569 step: target opp.st0
+   2665 steps: target opp.st0: A again (not taken)
+   2689 steps: target opp.st0: taken on press 2
+   2696 step: battle
+   2851 step: attack you.m0 -> opp.m0
+   3002 steps: attack you.m0 -> opp.m0: taken on press 1
+   3239 step: wait 30
+   3275 step: rec_stop
+   3275 media: encoding 820 frames -> tools\testing_scenarios\..\..\screenshots\videos\duel-speed-always.mp4
+   3292 Play sequence done; ending capture (no recording tail).
+   3292 Finished — PASS (play sequence + tail). Stop mGBA Record A/V to finalize MP4.
+     15 MP4 target: tools\testing_scenarios\recordings\Duel_Speed_Default_Media_Player.mp4
+     15 emu recording API: screenshot, screenshotToImage
+     15 MP4: the scenario capture is off (captureMp4 = false)
+     15 Duel Speed Default / media / Player
+     15 options speed=default; point you.hand[Breaker the Magical Warrior]; wait 30; mp4_start duel-speed-default; summon you.ha
+    916 Main menu (callback 0x08003B15).
+   1039 Campaign selected (callback 0x0801D6C9).
+   1232 Turn order: forced RPS lose (CPU goes first).
+   1242 Turn order: A (lost RPS; CPU chooses first).
+   1280 Turn order: A (lost RPS; CPU chooses first).
+   1472 Opponent's turn (waiting for your Main Phase 1).
+   1474 Usage deck goat / Chaos Turbo: main=40 extra=15; P0 shuffled=true (top 719->908) P1 shuffled=true (top 719->920), hands cleared.
+   1826 Player Draw Phase.
+   2007 Opening draw complete (hand=6 deck=34 want=6).
+   2144 Exact setup: P0 hand=1 deck=34 gy=0, P1 hand=0 deck=35 gy=0, LP 8000/8000, turnCount 2.
+   2144 Player Main Phase 1.
+   2144 steps: unknown card Duel Speed Default
+   2144 steps: 11 steps, 30 ops
+   2144 step: options speed=default
+   2144 steps: options = 0x0003
+   2151 step: point you.hand[Breaker the Magical Warrior]
+   2344 step: wait 30
+   2380 step: mp4_start duel-speed-default
+   2380 media: recording duel-speed-default (mp4)
+   2387 step: summon you.hand[Breaker the Magical Warrior] -> m0 atk
+   2524 step: activate you.m0
+   2802 steps: capture starts (cursor on activate you.m0)
+   2848 step: target opp.st0
+   3042 steps: target opp.st0: A again (not taken)
+   3066 steps: target opp.st0: taken on press 2
+   3073 step: battle
+   3286 step: attack you.m0 -> opp.m0
+   3551 steps: attack you.m0 -> opp.m0: taken on press 1
+   4108 step: wait 30
+   4144 step: rec_stop
+   4144 media: 29 still frames trimmed from the end
+   4144 media: encoding 1578 frames -> tools\testing_scenarios\..\..\screenshots\videos\duel-speed-default.mp4
+   4161 Play sequence done; ending capture (no recording tail).
+   4161 Finished — PASS (play sequence + tail). Stop mGBA Record A/V to finalize MP4.
+     10 MP4 target: tools\testing_scenarios\recordings\Duel_Speed_Super_Media_Player.mp4
+     10 emu recording API: screenshot, screenshotToImage
+     10 MP4: the scenario capture is off (captureMp4 = false)
+     10 Duel Speed Super / media / Player
+     10 options speed=super; point you.hand[Breaker the Magical Warrior]; wait 30; mp4_start duel-speed-super; summon you.hand[B
+    911 Main menu (callback 0x08003B15).
+   1034 Campaign selected (callback 0x0801D6C9).
+   1227 Turn order: forced RPS lose (CPU goes first).
+   1237 Turn order: A (lost RPS; CPU chooses first).
+   1275 Turn order: A (lost RPS; CPU chooses first).
+   1467 Opponent's turn (waiting for your Main Phase 1).
+   1469 Usage deck goat / Chaos Turbo: main=40 extra=15; P0 shuffled=true (top 719->886) P1 shuffled=true (top 719->910), hands cleared.
+   1821 Player Draw Phase.
+   2002 Opening draw complete (hand=6 deck=34 want=6).
+   2140 Exact setup: P0 hand=1 deck=34 gy=0, P1 hand=0 deck=35 gy=0, LP 8000/8000, turnCount 2.
+   2140 Player Main Phase 1.
+   2140 steps: unknown card Duel Speed Super
+   2140 steps: 11 steps, 30 ops
+   2140 step: options speed=super
+   2140 steps: options = 0x000B
+   2147 step: point you.hand[Breaker the Magical Warrior]
+   2256 step: wait 30
+   2292 step: mp4_start duel-speed-super
+   2292 media: recording duel-speed-super (mp4)
+   2299 step: summon you.hand[Breaker the Magical Warrior] -> m0 atk
+   2436 step: activate you.m0
+   2476 steps: capture starts (cursor on activate you.m0)
+   2522 step: target opp.st0
+   2605 steps: target opp.st0: A again (not taken)
+   2629 steps: target opp.st0: taken on press 2
+   2636 step: battle
+   2779 step: attack you.m0 -> opp.m0
+   2924 steps: attack you.m0 -> opp.m0: taken on press 1
+   3120 step: wait 30
+   3156 step: rec_stop
+   3156 media: encoding 706 frames -> tools\testing_scenarios\..\..\screenshots\videos\duel-speed-super.mp4
+   3173 Play sequence done; ending capture (no recording tail).
+   3173 Finished — PASS (play sequence + tail). Stop mGBA Record A/V to finalize MP4.
+     10 MP4 target: tools\testing_scenarios\recordings\Hide_Anims_Media_Player.mp4
+     10 emu recording API: screenshot, screenshotToImage
+     10 MP4: the scenario capture is off (captureMp4 = false)
+     10 Hide Anims / media / Player
+     10 options anims=show; point you.hand[0]; wait 30; gif_start hide-anims; activate you.hand[Pot of Greed]; wait 40; options 
+    911 Main menu (callback 0x08003B15).
+   1034 Campaign selected (callback 0x0801D6C9).
+   1227 Turn order: forced RPS lose (CPU goes first).
+   1237 Turn order: A (lost RPS; CPU chooses first).
+   1275 Turn order: A (lost RPS; CPU chooses first).
+   1467 Opponent's turn (waiting for your Main Phase 1).
+   1469 Usage deck goat / Chaos Turbo: main=40 extra=15; P0 shuffled=true (top 719->719) P1 shuffled=true (top 719->920), hands cleared.
+   1820 Player Draw Phase.
+   2001 Opening draw complete (hand=6 deck=34 want=6).
+   2139 Exact setup: P0 hand=2 deck=34 gy=0, P1 hand=0 deck=35 gy=0, LP 8000/8000, turnCount 2.
+   2139 Player Main Phase 1.
+   2139 steps: unknown card Hide Anims
+   2139 steps: 11 steps, 25 ops
+   2139 step: options anims=show
+   2139 steps: options = 0x0003
+   2146 step: point you.hand[0]
+   2339 step: wait 30
+   2375 step: gif_start hide-anims
+   2375 media: recording hide-anims (gif)
+   2382 step: activate you.hand[Pot of Greed]
+   2382 steps: capture starts (cursor on activate you.hand[Pot of Greed])
+   2428 step: wait 40
+   2474 step: options anims=hide
+   2474 steps: options = 0x0013
+   2481 step: activate you.hand[Pot of Greed]
+   2751 step: settle
+   2874 step: wait 20
+   2900 step: rec_stop
+   2900 media: 29 still frames trimmed from the end
+   2900 media: encoding 496 frames -> tools\testing_scenarios\..\..\screenshots\gifs\hide-anims.gif
+   2917 Play sequence done; ending capture (no recording tail).
+   2917 Finished — PASS (play sequence + tail). Stop mGBA Record A/V to finalize MP4.
+      6 MP4 target: tools\testing_scenarios\recordings\New_Cards_Media_Player.mp4
+      6 emu recording API: screenshot, screenshotToImage
+      6 MP4: the scenario capture is off (captureMp4 = false)
+      6 New Cards / media / Player
+      6 point you.hand[Cyber Dragon]; wait 30; gif_start new-cards; special_summon you.hand[Cyber Dragon] -> m0 atk; wait 40; su
+    907 Main menu (callback 0x08003B15).
+   1030 Campaign selected (callback 0x0801D6C9).
+   1223 Turn order: forced RPS lose (CPU goes first).
+   1233 Turn order: A (lost RPS; CPU chooses first).
+   1271 Turn order: A (lost RPS; CPU chooses first).
+   1463 Opponent's turn (waiting for your Main Phase 1).
+   1465 Usage deck goat / Chaos Turbo: main=40 extra=15; P0 shuffled=true (top 719->886) P1 shuffled=true (top 719->902), hands cleared.
+   1817 Player Draw Phase.
+   1998 Opening draw complete (hand=6 deck=34 want=6).
+   2136 Exact setup: P0 hand=5 deck=34 gy=0, P1 hand=0 deck=35 gy=0, LP 8000/8000, turnCount 2.
+   2136 Player Main Phase 1.
+   2136 steps: unknown card New Cards
+   2136 steps: 19 steps, 53 ops
+   2136 step: point you.hand[Cyber Dragon]
+   2338 step: wait 30
+   2374 step: gif_start new-cards
+   2374 media: recording new-cards (gif)
+   2381 step: special_summon you.hand[Cyber Dragon] -> m0 atk
+   2548 step: wait 40
+   2594 step: summon you.hand[Breaker the Magical Warrior] -> m1 atk
+   2769 step: wait 40
+   2815 step: activate you.m1
+   2815 steps: capture starts (cursor on activate you.m1)
+   2861 step: target opp.st0
+   2921 steps: target opp.st0: A again (not taken)
+   2945 steps: target opp.st0: taken on press 2
+   2952 step: wait 40
+   2998 step: fusion_summon Thousand-Eyes Restrict from you.hand[Relinquished], you.hand[Thousand-Eyes Idol] -> m2 atk
+   3461 steps: fusion_summon Thousand-Eyes Restrict from you.hand[Relinquished], you.hand[Thousand-Eyes Idol] -> m2 atk: taken on press 1
+   3586 step: wait 40
+   3632 step: activate you.m2
+   3678 step: target opp.m0
+   3733 steps: target opp.m0: A again (not taken)
+   3757 steps: target opp.m0: taken on press 2
+   3764 step: wait 40
+   3810 step: point you.m2
+   3931 step: settle
+   3957 step: wait 20
+   3983 step: rec_stop
+   3983 media: encoding 1304 frames -> tools\testing_scenarios\..\..\screenshots\gifs\new-cards.gif
+   4000 Play sequence done; ending capture (no recording tail).
+   4000 Finished — PASS (play sequence + tail). Stop mGBA Record A/V to finalize MP4.

@@ -22,7 +22,7 @@ EDS.run({
     effect = "media",
     actor = "Player",
     format = "Goat",
-    scenarioText = "options anims=show; point you.hand[0]; wait 30; mp4_start hide-anims; activate you.hand[Pot of Greed]; wait 40; options anims=hide; activate you.hand[Pot of Greed]; settle; wait 20; rec_stop",
+    scenarioText = "options anims=show; point you.hand[0]; wait 30; gif_start hide-anims; activate you.hand[Pot of Greed]; wait 40; options anims=hide; activate you.hand[Pot of Greed]; settle; wait 20; rec_stop",
     start = { turn = "you", turnCount = 2, lp = { 8000, 8000 } },
     setupCards = {
         { player = 0, zone = "hand", slot = 0, name = "Pot of Greed" },
@@ -34,7 +34,7 @@ EDS.run({
         "options anims=show",
         "point you.hand[0]",
         "wait 30",
-        "mp4_start hide-anims",
+        "gif_start hide-anims",
         "activate you.hand[Pot of Greed]",
         "wait 40",
         "options anims=hide",

@@ -3278,3 +3278,7 @@ updated: 2026-09-29
 
 ## [2026-11-17] progress | README_WIP: Video Reviewer screenshot; no test runner slot
 - README_WIP.md: Video Reviewer.png replaces the video-reviewer placeholder (width 480); the test runner placeholder and screenshots/placeholders/test-runner.svg removed. README_TODO.md follows.
+
+## [2026-11-17] progress | README_WIP: the four missing GIFs captured
+- gen_duel_media.py: hide-anims, cpu-play, new-cards now gif_start (were MP4); stitch_media.py duel-speed also writes screenshots/gifs/duel-speed.gif (the three speeds side by side, 240x160 each).
+- Captured (run_tests.ps1 -Media; New Cards hit the runner's timeout while encoding, its GIF is complete) and checked on contact sheets. README_WIP.md shows them in place of the placeholders; README_TODO.md ticks them. [[readme-media]].

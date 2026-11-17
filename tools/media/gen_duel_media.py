@@ -256,7 +256,7 @@ MEDIA = [
         opp.st0: Call of the Haunted set''',
      '''point you.hand[Cyber Dragon]
         wait 30
-        mp4_start new-cards
+        gif_start new-cards
         special_summon you.hand[Cyber Dragon] -> m0 atk
         wait 40
         summon you.hand[Breaker the Magical Warrior] -> m1 atk
@@ -281,7 +281,7 @@ MEDIA = [
         opp.hand: Sangan''',
      '''point you.m0
         wait 30
-        mp4_start cpu-play
+        gif_start cpu-play
         battle
         attack you.m0 -> direct
         settle
@@ -297,7 +297,7 @@ MEDIA = [
      '''options anims=show
         point you.hand[0]
         wait 30
-        mp4_start hide-anims
+        gif_start hide-anims
         activate you.hand[Pot of Greed]
         wait 40
         options anims=hide

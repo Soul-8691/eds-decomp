@@ -1582,3 +1582,14 @@ START list_filter
 PASS list_filter
 START Witch_Call_Media_Player
 PASS Witch_Call_Media_Player duel_main=true reason= play_done=true
+START CPU_Play_Media_Player
+PASS CPU_Play_Media_Player duel_main=true reason= play_done=true
+START Duel_Speed_Always_Media_Player
+PASS Duel_Speed_Always_Media_Player duel_main=true reason= play_done=true
+START Duel_Speed_Default_Media_Player
+PASS Duel_Speed_Default_Media_Player duel_main=true reason= play_done=true
+START Duel_Speed_Super_Media_Player
+PASS Duel_Speed_Super_Media_Player duel_main=true reason= play_done=true
+START Hide_Anims_Media_Player
+PASS Hide_Anims_Media_Player duel_main=true reason= play_done=true
+START New_Cards_Media_Player

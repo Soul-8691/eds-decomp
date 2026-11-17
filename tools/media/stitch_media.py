@@ -3,6 +3,8 @@
 
     python3 tools/media/stitch_media.py [duel-speed] [trailer] [highlights]      (all three when none is named)
 
+  screenshots/gifs/duel-speed.gif     the same, as a GIF (240x160 each), for README_WIP.md
+
   screenshots/videos/duel-speed.mp4   the same turn at DEFAULT, ALWAYS and SUPER side by side (each labelled; the
                                       shorter ones hold their last frame)
   screenshots/videos/trailer.mp4      about 45 s: the title screen, the duelist select, a pre-duel screen, rock-paper-
@@ -53,6 +55,22 @@ def duel_speed():
     graph = ';'.join(parts) + ';[v0][v1][v2]hstack=inputs=3[out]'
     out = VIDEOS / 'duel-speed.mp4'
     run(inputs + ['-filter_complex', graph, '-map', '[out]', '-pix_fmt', 'yuv420p', '-c:v', 'libx264', str(out)])
+    return out
+
+
+def duel_speed_gif():
+    """screenshots/gifs/duel-speed.gif (README_WIP.md): the three speeds side by side, each 240x160 and labelled, at
+    20 fps; the shorter ones hold their last frame."""
+    modes = ['default', 'always', 'super']
+    inputs, parts = [], []
+    for i, m in enumerate(modes):
+        inputs += ['-i', str(VIDEOS / f'duel-speed-{m}.mp4')]
+        parts.append(f"[{i}:v]scale=240:160:flags=neighbor,fps=20,drawtext=fontfile='{FONT}':text='{m.upper()}':"
+                     f"x=4:y=4:fontsize=12:fontcolor=white:borderw=2:bordercolor=black[v{i}]")
+    graph = (';'.join(parts) + ';[v0][v1][v2]hstack=inputs=3,split[a][b];[a]palettegen=stats_mode=diff[p];'
+             '[b][p]paletteuse=dither=none[out]')
+    out = GIFS / 'duel-speed.gif'
+    run(inputs + ['-filter_complex', graph, '-map', '[out]', str(out)])
     return out
 
 
@@ -112,6 +130,7 @@ def main():
     want = set(sys.argv[1:]) or {'duel-speed', 'trailer', 'highlights'}
     if 'duel-speed' in want:
         print('wrote', duel_speed())
+        print('wrote', duel_speed_gif())
     if 'trailer' in want:
         print('wrote', concat(TRAILER, 720, 480, 30, VIDEOS / 'trailer.mp4', gif=False))
     if 'highlights' in want:

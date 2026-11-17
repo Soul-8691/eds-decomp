@@ -1,2 +1,2 @@
-tools\testing_scenarios\recordings\Witch_Call_Media_Player.mp4
-tools/testing_scenarios/recordings/Witch_Call_Media_Player.mp4
+tools\testing_scenarios\recordings\New_Cards_Media_Player.mp4
+tools/testing_scenarios/recordings/New_Cards_Media_Player.mp4

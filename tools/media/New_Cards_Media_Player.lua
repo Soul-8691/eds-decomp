@@ -22,7 +22,7 @@ EDS.run({
     effect = "media",
     actor = "Player",
     format = "Goat",
-    scenarioText = "point you.hand[Cyber Dragon]; wait 30; mp4_start new-cards; special_summon you.hand[Cyber Dragon] -> m0 atk; wait 40; summon you.hand[Breaker the Magical Warrior] -> m1 atk; wait 40; activate you.m1; target opp.st0; wait 40; fusion_summon Thousand-Eyes Restrict from you.hand[Relinquished], you.hand[Thousand-Eyes Idol] -> m2 atk; wait 40; activate you.m2; target opp.m0; wait 40; point you.m2; settle; wait 20; rec_stop",
+    scenarioText = "point you.hand[Cyber Dragon]; wait 30; gif_start new-cards; special_summon you.hand[Cyber Dragon] -> m0 atk; wait 40; summon you.hand[Breaker the Magical Warrior] -> m1 atk; wait 40; activate you.m1; target opp.st0; wait 40; fusion_summon Thousand-Eyes Restrict from you.hand[Relinquished], you.hand[Thousand-Eyes Idol] -> m2 atk; wait 40; activate you.m2; target opp.m0; wait 40; point you.m2; settle; wait 20; rec_stop",
     start = { turn = "you", turnCount = 2, lp = { 8000, 8000 } },
     setupCards = {
         { player = 0, zone = "hand", slot = 0, name = "Cyber Dragon" },
@@ -40,7 +40,7 @@ EDS.run({
     steps = {
         "point you.hand[Cyber Dragon]",
         "wait 30",
-        "mp4_start new-cards",
+        "gif_start new-cards",
         "special_summon you.hand[Cyber Dragon] -> m0 atk",
         "wait 40",
         "summon you.hand[Breaker the Magical Warrior] -> m1 atk",

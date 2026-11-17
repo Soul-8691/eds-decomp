@@ -393,12 +393,12 @@ with L+R. Every choice is saved.
 Pick one of the three speeds; the two Hide switches are ON/OFF with **A**.
 
 <p align="center">
-  <img src="screenshots/placeholders/duel-speed.svg" width="480" alt="Placeholder: The three duel speeds (GIF)"><br>
+  <img src="screenshots/gifs/duel-speed.gif" width="720" alt="The same turn at DEFAULT, ALWAYS and SUPER speed, side by side"><br>
   <sub>The three duel speeds (GIF)</sub>
 </p>
 
 <p align="center">
-  <img src="screenshots/placeholders/hide-anims.svg" width="480" alt="Placeholder: Hide card animations, off then on (GIF)"><br>
+  <img src="screenshots/gifs/hide-anims.gif" width="480" alt="Pot of Greed with its card animation, then again with Hide card animations on"><br>
   <sub>Hide card animations, off then on (GIF)</sub>
 </p>
 
@@ -430,7 +430,7 @@ shortcomings that were fixed (original-roster cards only), and [AI_IMPROVEMENTS.
 current CPU behavior in full.
 
 <p align="center">
-  <img src="screenshots/placeholders/cpu-play.svg" width="480" alt="Placeholder: The CPU at work (GIF)"><br>
+  <img src="screenshots/gifs/cpu-play.gif" width="480" alt="The CPU answers a direct attack with Magic Cylinder"><br>
   <sub>The CPU at work (GIF)</sub>
 </p>
 
@@ -546,7 +546,7 @@ See [NEW_CARDS.md](NEW_CARDS.md) for all of them.
 </details>
 
 <p align="center">
-  <img src="screenshots/placeholders/new-cards.svg" width="480" alt="Placeholder: New cards in action (GIF)"><br>
+  <img src="screenshots/gifs/new-cards.gif" width="480" alt="Cyber Dragon, Breaker the Magical Warrior and Thousand-Eyes Restrict in action"><br>
   <sub>New cards in action (GIF)</sub>
 </p>
 
