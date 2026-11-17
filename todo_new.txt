@@ -1,5 +1,4 @@
 Update AI_QUIRKS.md
-Unlocking the next format should actually show a message
 The CPU at work (GIF) should be curated
 Old Kycoo/Bazoo/Skull Lair
 Bell of Destruction/Shining Fairy name changes

@@ -1593,3 +1593,5 @@ PASS Duel_Speed_Super_Media_Player duel_main=true reason= play_done=true
 START Hide_Anims_Media_Player
 PASS Hide_Anims_Media_Player duel_main=true reason= play_done=true
 START New_Cards_Media_Player
+START unlock
+PASS unlock

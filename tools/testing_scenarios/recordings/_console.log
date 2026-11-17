@@ -23981,3 +23981,7 @@
    3983 media: encoding 1304 frames -> tools\testing_scenarios\..\..\screenshots\gifs\new-cards.gif
    4000 Play sequence done; ending capture (no recording tail).
    4000 Finished — PASS (play sequence + tail). Stop mGBA Record A/V to finalize MP4.
+     16 [unlock] start (symbols: tools/media/../../eds_release_demo_extra.sym)
+   2472 [unlock] recording unlock (gif)
+   4035 [unlock] encoding 858 frames -> tools\media\..\..\screenshots\gifs\unlock.gif
+   4035 [unlock] done

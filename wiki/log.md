@@ -3298,3 +3298,9 @@ updated: 2026-09-29
 
 ## [2026-11-17] progress | README_WIP: the two Hide GIFs side by side
 - README_WIP.md Settings: hide-anims.gif moved into the Hide battle scenes row (its own centred line before).
+
+## [2026-11-17] progress | README_WIP: duel speeds GIF on the left
+- README_WIP.md Settings: duel-speed.gif in a table cell (left, caption centred under it) like the other GIF rows, not a centred paragraph.
+
+## [2026-11-17] progress | unlock.gif shows the new packs text
+- tools/media/unlock.lua: records through the rewards to REWARD_STEP_WAIT_TEXT (text 351, "Did you know that you can now select a new booster pack?"), holds it 150 frames, and pauses from REWARD_STEP_PICK_PACK (the free pack still left out). Re-captured with eds_release_demo_extra.gba, checked on a contact sheet. [[readme-media]], README_TODO.md.

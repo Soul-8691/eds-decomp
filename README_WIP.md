@@ -394,10 +394,11 @@ with L+R. Every choice is saved.
 
 Pick one of the three speeds; the two Hide switches are ON/OFF with **A**.
 
-<p align="center">
-  <img src="screenshots/gifs/duel-speed.gif" width="720" alt="The same turn at DEFAULT, ALWAYS and SUPER speed, side by side"><br>
-  <sub>The three duel speeds (GIF)</sub>
-</p>
+<table>
+<tr>
+<td align="center"><img src="screenshots/gifs/duel-speed.gif" width="720" alt="The same turn at DEFAULT, ALWAYS and SUPER speed, side by side"><br><sub>The three duel speeds (GIF)</sub></td>
+</tr>
+</table>
 
 <table>
 <tr>

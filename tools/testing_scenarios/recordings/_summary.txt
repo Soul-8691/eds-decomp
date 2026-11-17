@@ -1,12 +1,7 @@
 ﻿
-Script                          Result  Seconds Detail                               
-------                          ------  ------- ------                               
-CPU_Play_Media_Player           PASS         10 duel_main=true reason= play_done=true
-Duel_Speed_Always_Media_Player  PASS         14 duel_main=true reason= play_done=true
-Duel_Speed_Default_Media_Player PASS         23 duel_main=true reason= play_done=true
-Duel_Speed_Super_Media_Player   PASS         14 duel_main=true reason= play_done=true
-Hide_Anims_Media_Player         PASS          9 duel_main=true reason= play_done=true
-New_Cards_Media_Player          TIMEOUT     199                                      
+Script Result Seconds Detail
+------ ------ ------- ------
+unlock PASS        20       
 
 
 

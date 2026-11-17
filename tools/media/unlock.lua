@@ -25,7 +25,34 @@ M.run("unlock", function()
     M.wait(30)
     M.winDuel()
     M.wait(200)                     -- "YOU WIN"
-    M.pause()                       -- (the reward dialogue and the free pack are left out)
+    -- The rewards (src/campaign_steps.c, gMain +0x488A bits 4-11 the sub-step): the "new packs are available" text
+    -- (text 351: the next format's TCG sets open with it) stays in the GIF; the free pack after it is left out.
+    local function subStep() return (M.read16(G_MAIN + 0x488A) >> 4) & 0xFF end
+    local REWARD_WAIT_TEXT, REWARD_PICK_PACK = 3, 4
+    for _ = 1, 30 do
+        if subStep() == REWARD_WAIT_TEXT then
+            break
+        end
+        M.press(M.KEY.A, nil, 1)
+        for _ = 1, 60 do
+            if subStep() == REWARD_WAIT_TEXT then
+                break
+            end
+            M.wait(1)
+        end
+    end
+    if subStep() ~= REWARD_WAIT_TEXT then
+        error("the new packs text did not come")
+    end
+    M.wait(150)                     -- the text, drawn out
+    M.waitUntil(function()
+        if subStep() == REWARD_PICK_PACK then
+            return true
+        end
+        M.press(M.KEY.A, nil, 30)
+        return subStep() == REWARD_PICK_PACK
+    end, 600, "the pack list after the text")
+    M.pause()                       -- (the free pack is left out)
     local n = 0
     while not M.inCallback("CB_MainMenu") do
         n = n + 1

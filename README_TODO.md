@@ -35,8 +35,8 @@ the ones README.md used to show are marked "was"). The game's screenshots can be
 ## The Campaign
 
 - **Have:** `Duelists (Screen 1-3).png` (a row of three).
-- [ ] 🎞️ **Unlocking a format** · `screenshots/gifs/unlock.gif` · under the format table. The 20th win, then the next
-  format duelist appearing on the select screen.
+- [x] 🎞️ **Unlocking a format** · `screenshots/gifs/unlock.gif` · under the format table. The 20th win, the "new packs
+  are available" text (the next format's TCG sets), then the next format duelist on the select screen.
 
 ### Format duelists
 

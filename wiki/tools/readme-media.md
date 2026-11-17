@@ -57,7 +57,7 @@ powershell -ExecutionPolicy Bypass -File tools\testing_scenarios\run_tests.ps1 -
 | `banlist_refused.lua` | Banlist Refused.png (the collection shrunk, then Goat: "only 34 (40 needed)") | **release** (make has no check) | verified |
 | `siding.lua` | siding.gif (game 1 won at once, then Bell of Destruction out, Kycoo in) | demo | verified |
 | ~~`new_packs.lua`~~ | removed 2026-11-16 with New Packs.png (no longer in the README) | | |
-| `unlock.lua` | unlock.gif (Tristan at 19 wins, the 20th, then Critter's portrait open on the select screen; the reward screens paused out) | **release** (make opens every format) | verified |
+| `unlock.lua` | unlock.gif (Tristan at 19 wins, the 20th; the rewards' "new packs are available" text (text 351: the next format's TCG sets, since 2026-11-17), with the free pack paused out; then Critter's portrait open on the select screen) | **release** (make opens every format) | verified 2026-11-17 |
 | `event_challenger.lua` | Event Challenger.png (a Duel Ceremony day: `gSaveData.days` 12, Saturday 13 January 2001) | demo | verified |
 | `stitch_media.py` | duel-speed.mp4 (the three speeds side by side), trailer.mp4 (git-ignored), highlights.gif | ffmpeg | verified |
 
