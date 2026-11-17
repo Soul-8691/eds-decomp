@@ -471,6 +471,18 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
   is checked.
 - Checked in the source and the build; not tested in an emulator.
 
+### The old Graveyard-banish ruling: Bazoo, Kycoo, Skull Lair (2026-11-17)
+- **Rule.** In the formats before Yata (banlists 0-6, Yugi-Kaiba to Fiber), the three may banish any card from the
+  Graveyard, Spells and Traps too (the old ruling); from Yata on, only monsters. `ModGraveBanishAnyCard`
+  (added_effects.c): the duel's format is its format opponent's (`ModOpponentFormat(gMain.opponent)`), else the
+  player's banlist (`GetActiveBanlist`: practice duels, Link Battles).
+- **Where.** `CollectEffectTargets` (effect_target_collect.c): Kycoo's list (the opponent's Graveyard) and the key
+  1513 list (Bazoo's, and Skull Lair's); Bazoo's ACTIVATE check (card_command_menu.c, key 1513); Skull Lair's count
+  (`GraveMonsterCount`, its check and target filter). The CPU's picks (`BazooCpuResolve`,
+  `BanishWeakestGraveMonster`) banish Spells and Traps first, then the weakest monsters (`GraveBanishKey`); its Kycoo
+  still takes the strongest by ATK (Spells and Traps count 0), so monsters first. `.text` +0x24 (0x0807F588).
+- Built (demo); not tested in an emulator.
+
 ### Skull Lair (2026-10-26)
 - Continuous Trap: "Remove from play any number of Monster Cards in your Graveyard to destroy 1 face-up monster on the
   field whose Level is equal to the number of the cards you removed from play."

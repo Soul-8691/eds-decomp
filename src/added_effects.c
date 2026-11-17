@@ -3694,6 +3694,35 @@ int EffectXingZhenHuResolve(struct ChainEntry *link, struct ChainEntry *chainedT
 }
 #endif /* HAS_CARD_XING_ZHEN_HU */
 
+/* ---- The old Graveyard-banish ruling (2026-11-17) ---------------------------------------------------------------------
+ * Bazoo the Soul-Eater, Kycoo the Ghost Destroyer and Skull Lair could banish any card from the Graveyard (Spells and
+ * Traps too) until the rulings changed; in the formats before Yata (banlists Yugi-Kaiba to Fiber) they still do. The
+ * duel's format is its format opponent's (ModOpponentFormat), else the player's banlist (practice duels, Link
+ * Battles). Read by GraveMonsterCount and the CPU's picks below, CollectEffectTargets (effect_target_collect.c: Kycoo,
+ * Bazoo and Skull Lair's lists) and Bazoo's ACTIVATE check (card_command_menu.c, key 1513). */
+#define BANLIST_YATA 7
+
+int GetActiveBanlist(void);                 /* mod_banlists.c */
+int ModOpponentFormat(u16 duelist);         /* mod_opponents.c */
+
+int ModGraveBanishAnyCard(void)
+{
+    int f = ModOpponentFormat(gMain.opponent);
+
+    return (f >= 0 ? f : GetActiveBanlist()) < BANLIST_YATA;
+}
+
+/* The CPU's banish order key for a Graveyard card (lowest first): under the old ruling Spells and Traps go first (0),
+ * then monsters by ATK (+1); under the new one only monsters. -1: not banishable. */
+static int GraveBanishKey(u16 id)
+{
+    u32 stats = gCardStats[id & CARD_ID_MASK];
+
+    if (CARD_STATS_TYPE(stats) <= CARD_TYPE_REPTILE)
+        return (int)CARD_STATS_ATK(stats) + 1;
+    return ModGraveBanishAnyCard() ? 0 : -1;
+}
+
 #ifdef HAS_CARD_BAZOO_THE_SOUL_EATER
 /* ---- Bazoo the Soul-Eater ------------------------------------------------------------------------------------------
  * "Once per turn: You can banish up to 3 monsters from your Graveyard; this card gains 300 ATK for each, until the end
@@ -3713,14 +3742,14 @@ int BazooCpuResolve(struct ChainEntry *link)
     for (i = 0; i < p->graveCount && i < 80; i++)
         used[i] = 0;
     for (n = 0; n < 3; n++) {
-        int best = -1;
-        u32 bestAtk = 0;
+        int best = -1, bestKey = 0;
 
         for (i = 0; i < p->graveCount && i < 80; i++) {
-            u32 stats = gCardStats[DUEL_CARD_ID(&p->graveyard[i]) & CARD_ID_MASK];
-            if (!used[i] && CARD_STATS_TYPE(stats) <= CARD_TYPE_REPTILE && (best < 0 || CARD_STATS_ATK(stats) < bestAtk)) {
+            int key = GraveBanishKey(DUEL_CARD_ID(&p->graveyard[i]));   /* Spells/Traps first under the old ruling */
+
+            if (!used[i] && key >= 0 && (best < 0 || key < bestKey)) {
                 best = i;
-                bestAtk = CARD_STATS_ATK(stats);
+                bestKey = key;
             }
         }
         if (best < 0)
@@ -4450,14 +4479,15 @@ int EffectDimensionFusionResolve(struct ChainEntry *link, struct ChainEntry *cha
  *            human picks each one in the Graveyard list, as Bazoo's; the CPU banishes its weakest), then it is
  *            destroyed. */
 
-/* Monsters in the player's Graveyard. */
+/* The cards Skull Lair may banish from the player's Graveyard: its monsters, or every card under the old ruling
+ * (ModGraveBanishAnyCard). */
 static int GraveMonsterCount(int player)
 {
     struct DuelPlayer *p = &gDuelPlayers[player & 1];
     int i, n = 0;
 
     for (i = 0; i < p->graveCount; i++) {
-        if (CARD_STATS_TYPE(gCardStats[DUEL_CARD_ID(&p->graveyard[i]) & CARD_ID_MASK]) <= CARD_TYPE_REPTILE)
+        if (GraveBanishKey(DUEL_CARD_ID(&p->graveyard[i])) >= 0)
             n++;
     }
     return n;
@@ -4538,15 +4568,14 @@ int EffectSkullLairChainB(struct ChainEntry *link, struct ChainEntry *prevLink)
 static void BanishWeakestGraveMonster(int player)
 {
     struct DuelPlayer *p = &gDuelPlayers[player & 1];
-    int i, best = -1;
-    u32 bestAtk = 0;
+    int i, best = -1, bestKey = 0;
 
     for (i = 0; i < p->graveCount; i++) {
-        u32 stats = gCardStats[DUEL_CARD_ID(&p->graveyard[i]) & CARD_ID_MASK];
+        int key = GraveBanishKey(DUEL_CARD_ID(&p->graveyard[i]));     /* Spells/Traps first under the old ruling */
 
-        if (CARD_STATS_TYPE(stats) <= CARD_TYPE_REPTILE && (best < 0 || CARD_STATS_ATK(stats) < bestAtk)) {
+        if (key >= 0 && (best < 0 || key < bestKey)) {
             best = i;
-            bestAtk = CARD_STATS_ATK(stats);
+            bestKey = key;
         }
     }
     if (best >= 0) {

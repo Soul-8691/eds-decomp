@@ -358,6 +358,7 @@ static inline u32 CardSpellSubtypeNv(u16 id)
  * unit's code must stay inside the original .text, so new added cards' lists go there. */
 void ModCollectEffectTargets(int player, u16 cardNumber, int param);
 void ModFilterEffectTargets(u16 cardNumber);    /* added: src/added_effects.c */
+int ModGraveBanishAnyCard(void);                /* added: the old Graveyard-banish ruling (src/added_effects.c) */
 
 u16 CollectEffectTargets(int player, u16 cardNumber, int param)
 {
@@ -1051,12 +1052,12 @@ u16 CollectEffectTargets(int player, u16 cardNumber, int param)
     case CARD_KYCOO_THE_GHOST_DESTROYER:
 #endif
     {
-        /* Monsters in the opponent's graveyard. */
+        /* Monsters in the opponent's graveyard (any card under the old ruling, before Yata: added). */
         u32 *word;
 
         for (i = 0; i < PLAYER(1 - player).graveCount; i++) {
             word = PILE_WORD(PLAYERS_GRAVEYARD, i, 1 - player);
-            if (CardType(CARD_ID(*word)) <= CARD_TYPE_REPTILE)
+            if (CardType(CARD_ID(*word)) <= CARD_TYPE_REPTILE || ModGraveBanishAnyCard())
                 ADD_TARGET(*word, CARDLIST_SRC_GRAVEYARD);
         }
         break;
@@ -1066,13 +1067,13 @@ u16 CollectEffectTargets(int player, u16 cardNumber, int param)
 #endif
     case CARD_1513:
     {
-        /* Monsters in the graveyard; no Toon filter. */
+        /* Monsters in the graveyard (any card under the old ruling, before Yata: added); no Toon filter. */
         u32 *word;
 
         skipToonFilter = 1;
         for (i = 0; i < PLAYER(player).graveCount; i++) {
             word = PILE_WORD(PLAYERS_GRAVEYARD, i, player);
-            if (CardType(CARD_ID(*word)) <= CARD_TYPE_REPTILE)
+            if (CardType(CARD_ID(*word)) <= CARD_TYPE_REPTILE || ModGraveBanishAnyCard())
                 ADD_TARGET(*word, CARDLIST_SRC_GRAVEYARD);
         }
         break;

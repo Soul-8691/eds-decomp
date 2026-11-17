@@ -338,6 +338,8 @@ current CPU behavior in full.
 
 - **Cards can fail to find.** Cards like Thunder Dragon and Toon Table of Contents can be activated even with no copy
   left in the Deck; the search then finds nothing.
+- **Old Graveyard rulings.** In the formats before Yata (Yugi-Kaiba to Fiber), Bazoo the Soul-Eater, Kycoo the Ghost
+  Destroyer and Skull Lair can banish Spells and Traps from the Graveyard as well as monsters, as they could then.
 
 ### Fixes to the original game
 

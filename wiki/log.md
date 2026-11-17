@@ -3331,3 +3331,7 @@ updated: 2026-09-29
 ## [2026-11-17] progress | CPU Fiber Jar: Set and flipped only in a pinch
 - src/added_effects.c: AiFiberJarSetAllowed (no other CPU monster, at most 3 Traps / Quick-Play Spells), checked in AiShouldSkipSummonInjectionFairyLily (every summon/Set picker); AiShouldFlipFiberJar. src/ai_steps.c: a CARD_FIBER_JAR flip case in the position-change step; include/ai.h. Built (demo, .text 0x0807F564); untested.
 - [[added-cards]], AI_IMPROVEMENTS.md.
+
+## [2026-11-17] progress | Old Graveyard-banish ruling for Bazoo, Kycoo, Skull Lair before Yata
+- src/added_effects.c: ModGraveBanishAnyCard (duel format < Yata), GraveBanishKey; GraveMonsterCount, BazooCpuResolve, BanishWeakestGraveMonster use them. src/effect_target_collect.c (Kycoo / key 1513 lists), src/card_command_menu.c (Bazoo ACTIVATE): any card under the old ruling. Built (demo, .text 0x0807F588); untested.
+- README.md, README_WIP.md (Rule changes), AI_IMPROVEMENTS.md, [[added-cards]].

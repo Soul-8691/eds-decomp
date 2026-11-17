@@ -41,6 +41,7 @@ int ModLevelLimitAreaBBlocksAtkPosition(int player, int zone);
 #endif
 #ifdef HAS_CARD_FINAL_ATTACK_ORDERS
 int FinalAttackOrdersActive(void);
+int ModGraveBanishAnyCard(void);    /* added: the old Graveyard-banish ruling (src/added_effects.c) */
 #endif
 
 /* ROM data used only here. */
@@ -629,8 +630,9 @@ int CanActivateMonsterEffect(u16 id, int player, int zone)
         if (effectUnused == 0)
             return 0;
         for (i = 0; i < gDuelPlayers[player & 1].graveCount; i++) {
-            /* A monster (type 1-20) in the graveyard. */
-            if ((u32)CardTypeOfId((GRAVEYARD_CARD_WORD(player, i) << 20) >> 20) <= CARD_TYPE_REPTILE)
+            /* A monster (type 1-20) in the graveyard; any card under the old ruling (added: src/added_effects.c) */
+            if ((u32)CardTypeOfId((GRAVEYARD_CARD_WORD(player, i) << 20) >> 20) <= CARD_TYPE_REPTILE
+                || ModGraveBanishAnyCard())
                 return 1;
         }
         return 0;
