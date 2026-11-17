@@ -639,6 +639,15 @@ int AiStepChangePositions(void)
                                         return 0;
                                     }
                                     break;
+#ifdef HAS_CARD_FIBER_JAR
+                                case CARD_FIBER_JAR:    /* added: only in a pinch (src/added_effects.c) */
+                                    if (ZoneFace(savedMask, z) == 0 && AiShouldFlipFiberJar()
+                                        && AiQueueFlipSummonIfLegal(1, zone)) {
+                                        AI->subState++;
+                                        return 0;
+                                    }
+                                    break;
+#endif
                                 case CARD_REAPER_OF_THE_CARDS:
                                     if (ZoneFace(savedMask, z) == 0
                                         && AiShouldFlipReaperForTraps(1, zone) != 0

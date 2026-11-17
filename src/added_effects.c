@@ -4679,6 +4679,57 @@ int EffectFiberJarResolve(struct ChainEntry *link, struct ChainEntry *chainedTo)
     }
     return EFFECT_STEP_DONE;
 }
+
+/* ---- Fiber Jar (the CPU): a card for a pinch (the user's rules, 2026-11-17) -----------------------------------------
+ *   Set     only with no other monster on its field and at most FIBER_JAR_MAX_SET_ANSWERS Traps and Quick-Play Spells
+ *           in its Spell & Trap Zones (AiFiberJarSetAllowed, from AiShouldSkipSummonInjectionFairyLily: every summon
+ *           and Set picker): the reset costs it its board.
+ *   Flip    in its position-change step (ai_steps.c, AiStepChangePositions), only when AiShouldFlipFiberJar: never
+ *           while it controls more monsters than the human; otherwise when the human is ahead by at least
+ *           FIBER_JAR_PINCH_CARDS cards (hand + field), or has more LP and a monster while it has nothing else. */
+#define FIBER_JAR_MAX_SET_ANSWERS   3
+#define FIBER_JAR_PINCH_CARDS       2
+
+/* Cards of `player` in hand and on the field (monsters, Spells/Traps, Field Spell). */
+static int CardsInHandAndOnField(int player)
+{
+    int zone, n = gDuelPlayers[player].handCount;
+
+    for (zone = ZONE_MONSTER_0; zone <= ZONE_FIELD; zone++) {
+        if (DUEL_CARD_ID(&ZoneOf(player, zone)->card) != 0)
+            n++;
+    }
+    return n;
+}
+
+int AiFiberJarSetAllowed(void)
+{
+    int zone, answers = 0;
+
+    if (CountMonsters(1) > 0)                       /* the CPU is player 1 */
+        return 0;
+    for (zone = ZONE_SPELL_0; zone <= ZONE_SPELL_4; zone++) {
+        u16 id = DUEL_CARD_ID(&ZoneOf(1, zone)->card);
+        u32 stats = gCardStats[id & CARD_ID_MASK];
+
+        if (id != 0 && (CARD_STATS_TYPE(stats) == CARD_TYPE_TRAP
+                        || (CARD_STATS_TYPE(stats) == CARD_TYPE_MAGIC
+                            && CARD_STATS_SUBTYPE(stats) == SPELL_QUICK_PLAY)))
+            answers++;
+    }
+    return answers <= FIBER_JAR_MAX_SET_ANSWERS;
+}
+
+int AiShouldFlipFiberJar(void)
+{
+    int cpuMonsters = CountMonsters(1), humanMonsters = CountMonsters(0);
+
+    if (cpuMonsters > humanMonsters)
+        return 0;
+    if (CardsInHandAndOnField(0) >= CardsInHandAndOnField(1) + FIBER_JAR_PINCH_CARDS)
+        return 1;
+    return gDuelPlayers[0].lifePoints > gDuelPlayers[1].lifePoints && humanMonsters > 0 && cpuMonsters == 1;
+}
 #endif /* HAS_CARD_FIBER_JAR */
 
 /* ---- The CPU's flip-effect targets in the Battle Phase -------------------------------------------------------------
@@ -6035,8 +6086,19 @@ void InjectionFairyLilyEndAttack(int player)
 }
 
 /* Normal Summon pickers skip Lily when its battle cost cannot be paid (CanUseLily requires LP > LILY_COST). */
+#ifdef HAS_CARD_FIBER_JAR
+int AiFiberJarSetAllowed(void);
+#endif
+
+/* Every summon and Set picker of the CPU asks this (the attack-summon pickers, AiPickMonsterToSet's two scans in
+ * ai_turn_steps.c, the Special Summon scan), so it also carries the other "never summon this now" rules: Fiber Jar
+ * (2026-11-17, AiFiberJarSetAllowed). */
 int AiShouldSkipSummonInjectionFairyLily(u16 cardId)
 {
+#ifdef HAS_CARD_FIBER_JAR
+    if (CARD_NUMBER(cardId) == CARD_FIBER_JAR)
+        return !AiFiberJarSetAllowed();
+#endif
     if (CARD_NUMBER(cardId) != CARD_INJECTION_FAIRY_LILY)
         return 0;
     return gDuelPlayers[1].lifePoints <= LILY_COST;

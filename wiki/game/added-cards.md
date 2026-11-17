@@ -446,6 +446,13 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
 - **Then** both Decks are shuffled (`DUEL_CMD_SHUFFLE_DECK`) and both players draw 5 (`DrawCards`). Banished cards
   stay banished.
 - Checked in the source and the build; not tested in an emulator.
+- **CPU (2026-11-17).** A card for a pinch (the user's rules). It Sets Fiber Jar only with no other monster on its
+  field and at most 3 Traps and Quick-Play Spells in its Spell & Trap Zones (`AiFiberJarSetAllowed`, checked through
+  `AiShouldSkipSummonInjectionFairyLily`, which every summon and Set picker asks). In its position-change step
+  (ai_steps.c, a `CARD_FIBER_JAR` case beside Reaper of the Cards) it Flip Summons it only when
+  `AiShouldFlipFiberJar`: never while it controls more monsters than the human; otherwise when the human has at
+  least 2 more cards in hand and on the field, or more LP and a monster while Fiber Jar is the CPU's only monster.
+  It still never flips it to Tribute it. `.text` +0x38 (0x0807F564). Built (demo); not tested in an emulator.
 
 ### Dark Ruler Ha Des (fixed 2026-10-26)
 - Effect Monster: "Cannot be Special Summoned from the GY. Negate the effects of monsters destroyed by battle with

@@ -21,6 +21,7 @@ Campaign duelists in Yak's YGO Hack use a much stronger opponent AI than vanilla
 - In its position-change step, it **Flip Summons** face-down **Hane-Hane** or **Penguin Soldier** when a simulated Battle Phase would deal more damage after their effects return your strongest monster(s) to the hand (the same targets it would pick in play). It Flip Summons a face-down **4-Starred Ladybug of Doom** when its effect would destroy at least one of your face-up Level 4 monsters.
 - In that same step, it **Flip Summons** face-down **Reaper of the Cards** when any face-up **Trap** is on the field (even if your strongest face-up monster has more than **1380** ATK), or when your strongest face-up monster has at most **1380** ATK and it has a Set card in its Spell/Trap zones.
 - It still **Flip Summons** **Man-Eater Bug** in that step when you have monsters and it has its Normal Summon available (vanilla behavior).
+- It treats **Fiber Jar** as a card for a pinch: it Sets it only with no other monster on its field and at most 3 Traps and Quick-Play Spells Set, and Flip Summons it only when you are ahead (at least 2 more cards in hand and on the field, or more LP and a monster while Fiber Jar is its only monster), never while it controls more monsters than you.
 
 ## Card use
 
