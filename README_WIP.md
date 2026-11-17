@@ -258,10 +258,7 @@ new banlist, counting its limits and card pool. If they can't, the switch is ref
 <table>
 <tr>
 <td align="center"><img src="screenshots/Booster%20Packs%20(Main%20Menu).png" width="240" alt="Booster Packs in the main menu"><br><sub>Booster Packs in the main menu</sub></td>
-<td align="center"><img src="screenshots/Pack%20Opener.png" width="240" alt="The pack list, showing a pack's price"><br><sub>The pack list</sub></td>
 <td align="center"><img src="screenshots/Password.png" width="240" alt="Buying Breaker the Magical Warrior with a password"><br><sub>Buying a card by password</sub></td>
-</tr>
-<tr>
 <td align="center"><img src="screenshots/gifs/pack-pull.gif" width="240" alt="An opened pack"><br><sub>An opened pack (GIF)</sub></td>
 </tr>
 </table>
