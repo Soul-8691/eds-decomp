@@ -29,7 +29,8 @@ the ones README.md used to show are marked "was"). The game's screenshots can be
 
 ## TLDR
 
-- No media: a summary of the README's sections.
+- [x] 🎞️ **Card effect highlights** · `screenshots/gifs/highlights.gif` · under the bullets. About 2 minutes of
+  highlighted card-test videos at 2x speed, 60 s (`stitch_media.py highlights`).
 
 ## The Campaign
 

@@ -3285,3 +3285,10 @@ updated: 2026-09-29
 
 ## [2026-11-17] progress | HMA.md: the TOML screenshot at the top
 - HMA.md: HMA TOML.png (a generated .toml in VS Code) under the intro, width 480.
+
+## [2026-11-17] progress | TLDR GIF: card effect highlights at 2x
+- tools/media/stitch_media.py: HIGHLIGHTS is 20 highlighted card-test videos (about 120 s), concat with speed=2 at 240x160, 20 fps: screenshots/gifs/highlights.gif, 60 s, 3.2 MB.
+- README_WIP.md TLDR shows it; README_TODO.md slot. [[readme-media]].
+
+## [2026-11-17] progress | highlights.gif in card release order
+- tools/media/stitch_media.py HIGHLIGHTS: ordered by each card's first TCG set (packs/*_tcg.json, TCG_RELEASE_DATE), Card Destruction (Starter Deck Yugi, 2002) to Cyber End Dragon (Cybernetic Revolution, 2005). Rebuilt (60 s).

@@ -46,6 +46,11 @@
 - **Play it** with the BPS patches in [`patches/`](patches/) ([how](#play-it)), or build it from source. Edit its data
   with Hex Maniac Advance CE ([HMA.md](HMA.md)).
 
+<p align="center">
+  <img src="screenshots/gifs/highlights.gif" width="480" alt="Twenty card effects from the card tests at 2x speed: Chaos Emperor Dragon, Thousand-Eyes Restrict, Torrential Tribute, Limiter Removal and more"><br>
+  <sub>Card effects at 2× speed (GIF)</sub>
+</p>
+
 ## The Campaign
 
 > [!NOTE]
