@@ -7747,7 +7747,52 @@ static int IsKycooId(u16 id)
     return number == CARD_1511;
 }
 
+/* 1 if the CPU's monster in `zone` is equipped with a face-up Megamorph. */
+static int AiZoneHasMegamorph(int zone)
+{
+    struct DuelZone *z = ZoneOf(1, zone);                /* the CPU is player 1 */
+    int i;
+
+    for (i = 0; i < z->numLinks; i++) {
+        u16 loc = z->links[i];
+        struct DuelZone *src;
+
+        if ((z->linkKinds[i] & 0xFF) != ZONE_LINK_EQUIP)
+            continue;
+        src = ZoneOf(loc & 1, loc >> 8);
+        if (src->isFaceUp && CardNumberOfId(DUEL_CARD_ID(&src->card)) == CARD_MEGAMORPH)
+            return 1;
+    }
+    return 0;
+}
+
+static void AiOrderKycoo(u16 *attackers, int count);
+
+/* The CPU's attack order (AiStepBattle, ai_picks.c), after its weakest-first sort:
+ *  - Kycoo first when its attack deals damage (AiOrderKycoo);
+ *  - then, while the CPU has less LP than the human, a monster with Megamorph goes before all: Megamorph doubles it
+ *    only while the CPU is behind, and each hit before it closes the gap (2026-11-17: Sangan's 1000 brought the
+ *    human to the CPU's LP, so Vorse Raider hit for 1900, not 3800, and the lethal Megamorph line fell short). */
 void ModAiOrderAttackers(u16 *attackers, int count)
+{
+    int i, j;
+
+    AiOrderKycoo(attackers, count);
+    if ((int)gDuelPlayers[1].lifePoints >= (int)gDuelPlayers[0].lifePoints)
+        return;
+    for (i = 1; i < count; i++) {
+        if (AiZoneHasMegamorph(attackers[i])) {
+            u16 zone = attackers[i];
+
+            for (j = i; j > 0; j--)
+                attackers[j] = attackers[j - 1];
+            attackers[0] = zone;
+            return;
+        }
+    }
+}
+
+static void AiOrderKycoo(u16 *attackers, int count)
 {
     int i, j;
 
@@ -14672,7 +14717,10 @@ static int AiMegamorphSimBattleDamage(int morphZone)
     spell->card.id = morphId;
     spell->card.owner = AI_PLAYER;
     spell->isFaceUp = 1;
-    EquipCard(AI_PLAYER, DUEL_LOC(AI_PLAYER, stZone), DUEL_LOC(AI_PLAYER, morphZone));
+    /* The link itself, at once: EquipCard only queues DUEL_CMD_ADD_EQUIP_LINK (and the human's RESPONSE_EQUIP
+     * window), which ran after the AI step, so the simulated Battle Phase never saw Megamorph (the CPU never played
+     * it) and the queued command and response escaped the sandbox (fixed 2026-11-17). */
+    AddZoneLink(DUEL_LOC(AI_PLAYER, morphZone), DUEL_LOC(AI_PLAYER, stZone), ZONE_LINK_EQUIP);
     damage = AiSimBattlePhase();
     AiRestoreDuelState();
     return damage;

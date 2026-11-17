@@ -125,7 +125,7 @@ CPU_PLAY = [(VIDEOS / f'ai-{n}.mp4', None, None) if isinstance(n, str) else (VID
             for n in (
     'draw-first', 'thunder-dragon', 'dark-hole', 'nobleman', 'exiled-force', 'virus', 'enemy-controller',
     'steal-tribute', 'tribute-upgrade', 'hane-hane', 'face-down-attack', 'kycoo', 'chaos-emperor', 'recruiter',
-    'man-eater-bug', 'waboku', 'trap-hole', 'solemn', 'magic-cylinder', ('snatch-lethal', 14.5),
+    'man-eater-bug', 'waboku', 'trap-hole', 'solemn', 'magic-cylinder', ('megamorph', 12.0), ('snatch-lethal', 14.5),
 )]
 
 

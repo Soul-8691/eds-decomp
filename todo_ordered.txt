@@ -1,11 +1,10 @@
 1. Test
-2. Update README_TODO/README_WIP
-3. Update README to be README_WIP
-4. Tokyo Dome format
-5. Pre-Tokyo Dome OCG packs
-6. Synchro/XYZ/Link cards
-7. Chaos Return format
-8. Yugi Muto duelist
-9. Yugi Muto pack
-10. New cards
-11. Card priority orders
+2. Update README to be README_WIP
+3. Tokyo Dome format
+4. Pre-Tokyo Dome OCG packs
+5. Synchro/XYZ/Link cards
+6. Chaos Return format
+7. Yugi Muto duelist
+8. Yugi Muto pack
+9. New cards
+10. Card priority orders

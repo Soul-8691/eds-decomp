@@ -1653,3 +1653,11 @@ START AI_Tribute_Upgrade_Media_Player
 PASS AI_Tribute_Upgrade_Media_Player duel_main=false reason= play_done=true
 START AI_Thunder_Dragon_Media_Player
 PASS AI_Thunder_Dragon_Media_Player duel_main=false reason= play_done=true
+START AI_Megamorph_Probe_Media_Player
+PASS AI_Megamorph_Probe_Media_Player duel_main=false reason= play_done=true
+START AI_Megamorph_Probe_Media_Player
+PASS AI_Megamorph_Probe_Media_Player duel_main=false reason= play_done=true
+START AI_Megamorph_Probe_Media_Player
+START AI_Megamorph_Probe_Media_Player
+START AI_Megamorph_Probe_Media_Player
+PASS AI_Megamorph_Probe_Media_Player duel_main=false reason= play_done=true

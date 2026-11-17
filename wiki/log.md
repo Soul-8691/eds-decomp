@@ -3323,3 +3323,7 @@ updated: 2026-09-29
 
 ## [2026-11-17] progress | ai-thunder-dragon: exactly 3 Thunder Dragons
 - gen_duel_media.py: ai_turn takes the format; AI Thunder Dragon plays Warrior's usage deck (no Thunder Dragon), so the CPU has its hand copy and the two on top of its Deck only (Goat's deck runs three more). Re-recorded; cpu-play.gif restitched.
+
+## [2026-11-17] progress | CPU Megamorph: it plays it, and attacks with it first
+- src/added_effects.c: AiMegamorphSimBattleDamage adds the sandbox equip link with AddZoneLink (EquipCard only queued it, so the lethal check never saw Megamorph; the queued command and response escaped the sandbox). ModAiOrderAttackers: a Megamorph monster attacks first while the CPU has less LP (AiZoneHasMegamorph; the Kycoo rule is now AiOrderKycoo). Built (demo, .text 0x0807F52C); checked in the emulator (lethal, YOU LOSE).
+- tools/media: AI Megamorph clip (was the probe) back in cpu-play.gif (3:36, 11.5 MB). AI_IMPROVEMENTS.md, [[added-cards]], [[readme-media]], README_TODO.md.

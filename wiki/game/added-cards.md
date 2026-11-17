@@ -912,6 +912,15 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
 - **Before.** Only the Cyber Stein strategy played Megamorph, with fixed LP checks (human LP above 5099 and not below the CPU's).
 - **Now.** `AiWantsMegamorph`: CPU LP must be lower than the human's; simulated battle must reach lethal only after equipping Megamorph on its best face-up attacker (not already lethal without it). `AiPlayAddedCards`, `AiPlaySpells` equip pass, and Cyber Stein step 7 use the same gate. README.md.
 - Checked in the source; not tested in an emulator.
+- **Fixes (2026-11-17).** It never played Megamorph in practice. (1) `AiMegamorphSimBattleDamage` equipped its sandbox
+  Megamorph with `EquipCard`, which only queues `DUEL_CMD_ADD_EQUIP_LINK` (and the human's `RESPONSE_EQUIP` window):
+  the simulated Battle Phase ran without the link, so the lethal line was never found, and the queued command and
+  response ran after the sandbox was restored. Now `AddZoneLink(monster, equip, ZONE_LINK_EQUIP)` at once. (2) Once
+  played, the CPU attacked weakest first (ai_picks.c): Sangan's 1000 brought the human to the CPU's LP, so Megamorph
+  stopped doubling and Vorse Raider hit for 1900, then halved to 950. `ModAiOrderAttackers` now sends a monster with
+  a face-up Megamorph first while the CPU has less LP (`AiZoneHasMegamorph`; after the Kycoo rule, now
+  `AiOrderKycoo`). Checked in the emulator: 3000 vs 2000 LP, Vorse Raider and Megamorph, Sangan drawn: Megamorph,
+  Vorse Raider at 3800 first, YOU LOSE (the `ai-megamorph` clip of cpu-play.gif).
 
 ### The CPU's Snatch Steal (2026-11-01)
 - **Before.** The ROM never called `AiTryPlaySpellTrap(CARD_SNATCH_STEAL)` (Snatch is not in `gAiGenericSpells`). If it activated, `EffectTakeControlChainB` picked the human's strongest monster, including illegal targets.

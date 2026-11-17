@@ -396,6 +396,22 @@ MEDIA = [
                 opp.m0: Kycoo the Ghost Destroyer atk
                 opp.m1: Vorse Raider atk
                 opp.deck: Sangan'''),
+    # (its LP below yours, and Megamorph doubles Vorse Raider to 3800, which attacks before Sangan while it is
+    # doubled: a lethal line the CPU missed before the 2026-11-17 fixes, see added_effects.c AiMegamorphSimBattleDamage
+    # and ModAiOrderAttackers)
+    ('AI Megamorph', 'Goat', {'lp': (3000, 2000)},
+     '''opp.m0: Vorse Raider atk
+        opp.hand: Megamorph
+        opp.deck: Sangan''',
+     '''point opp.m0
+        wait 20
+        options speed=always anims=hide battle=hide
+        mp4_start ai-megamorph
+        pass
+        await Megamorph
+        wait 300
+        rec_stop''',
+     {'video': AI_SHOW, 'freeze': False}),
     ('AI Recruiter', 'Goat', None,
      '''you.m0: Vorse Raider atk
         opp.m0: Mystic Tomato atk

@@ -24951,3 +24951,156 @@
    3650 media: encoding 621 frames -> tools\testing_scenarios\..\..\screenshots\videos\ai-thunder-dragon.mp4
    3681 Play sequence done; ending capture (no recording tail).
    3681 Finished — PASS (play sequence + tail). Stop mGBA Record A/V to finalize MP4.
+     19 MP4 target: tools\testing_scenarios\recordings\AI_Megamorph_Probe_Media_Player.mp4
+     19 emu recording API: screenshot, screenshotToImage
+     19 MP4: the scenario capture is off (captureMp4 = false)
+     19 AI Megamorph Probe / media / Player
+     19 point opp.m0; wait 20; options speed=always anims=hide battle=hide; mp4_start ai-megamorph-probe; pass; cpu_turn; rec_st
+    920 Main menu (callback 0x08003B15).
+   1043 Campaign selected (callback 0x0801D6C9).
+   1236 Turn order: forced RPS lose (CPU goes first).
+   1246 Turn order: A (lost RPS; CPU chooses first).
+   1284 Turn order: A (lost RPS; CPU chooses first).
+   1476 Opponent's turn (waiting for your Main Phase 1).
+   1478 Usage deck goat / Chaos Turbo: main=40 extra=15; P0 shuffled=true (top 719->902) P1 shuffled=true (top 719->930), hands cleared.
+   2376 cpu_turn f=900 duel_step=8 turn_player=1 ai=3/2 textbox=0
+   2730 Player Draw Phase.
+   2911 Opening draw complete (hand=6 deck=34 want=6).
+   3053 Exact setup: P0 hand=0 deck=34 gy=0, P1 hand=1 deck=33 gy=0, LP 3000/2000, turnCount 2.
+   3053 Player Main Phase 1.
+   3053 steps: unknown card AI Megamorph Probe
+   3053 steps: 7 steps, 13 ops
+   3053 step: point opp.m0
+   3284 steps: capture starts (cursor on point opp.m0)
+   3291 step: wait 20
+   3317 step: options speed=always anims=hide battle=hide
+   3317 steps: options = 0x0037
+   3324 step: mp4_start ai-megamorph-probe
+   3324 media: recording ai-megamorph-probe (mp4)
+   3331 step: pass
+   3370 step: cpu_turn
+   3997 step: rec_stop
+   3997 media: encoding 649 frames -> tools\testing_scenarios\..\..\screenshots\videos\ai-megamorph-probe.mp4
+   4028 Play sequence done; ending capture (no recording tail).
+   4028 Finished — PASS (play sequence + tail). Stop mGBA Record A/V to finalize MP4.
+     16 MP4 target: tools\testing_scenarios\recordings\AI_Megamorph_Probe_Media_Player.mp4
+     16 emu recording API: screenshot, screenshotToImage
+     16 MP4: the scenario capture is off (captureMp4 = false)
+     16 AI Megamorph Probe / media / Player
+     16 point opp.m0; wait 20; options speed=always anims=hide battle=hide; mp4_start ai-megamorph-probe; pass; cpu_turn; rec_st
+    917 Main menu (callback 0x08003B15).
+   1040 Campaign selected (callback 0x0801D6C9).
+   1233 Turn order: forced RPS lose (CPU goes first).
+   1243 Turn order: A (lost RPS; CPU chooses first).
+   1281 Turn order: A (lost RPS; CPU chooses first).
+   1473 Opponent's turn (waiting for your Main Phase 1).
+   1475 Usage deck goat / Chaos Turbo: main=40 extra=15; P0 shuffled=true (top 719->522) P1 shuffled=true (top 719->838), hands cleared.
+   2373 cpu_turn f=900 duel_step=8 turn_player=1 ai=4/0 textbox=0
+   2453 Player Draw Phase.
+   2634 Opening draw complete (hand=6 deck=34 want=6).
+   2774 Exact setup: P0 hand=0 deck=34 gy=0, P1 hand=1 deck=35 gy=0, LP 3000/2000, turnCount 2.
+   2774 Player Main Phase 1.
+   2774 steps: unknown card AI Megamorph Probe
+   2774 steps: 7 steps, 13 ops
+   2774 step: point opp.m0
+   3005 steps: capture starts (cursor on point opp.m0)
+   3012 step: wait 20
+   3038 step: options speed=always anims=hide battle=hide
+   3038 steps: options = 0x0037
+   3045 step: mp4_start ai-megamorph-probe
+   3045 media: recording ai-megamorph-probe (mp4)
+   3052 step: pass
+   3091 step: cpu_turn
+   3810 step: rec_stop
+   3810 media: encoding 741 frames -> tools\testing_scenarios\..\..\screenshots\videos\ai-megamorph-probe.mp4
+   3841 Play sequence done; ending capture (no recording tail).
+   3841 Finished — PASS (play sequence + tail). Stop mGBA Record A/V to finalize MP4.
+     11 MP4 target: tools\testing_scenarios\recordings\AI_Megamorph_Probe_Media_Player.mp4
+     11 emu recording API: screenshot, screenshotToImage
+     11 MP4: the scenario capture is off (captureMp4 = false)
+     11 AI Megamorph Probe / media / Player
+     11 point opp.m0; wait 20; options speed=always anims=hide battle=hide; mp4_start ai-megamorph-probe; pass; cpu_turn; rec_st
+    912 Main menu (callback 0x08003B15).
+   1035 Campaign selected (callback 0x0801D6C9).
+   1228 Turn order: forced RPS lose (CPU goes first).
+   1238 Turn order: A (lost RPS; CPU chooses first).
+   1276 Turn order: A (lost RPS; CPU chooses first).
+   1468 Opponent's turn (waiting for your Main Phase 1).
+   1470 Usage deck goat / Chaos Turbo: main=40 extra=15; P0 shuffled=true (top 719->952) P1 shuffled=true (top 719->838), hands cleared.
+   2368 cpu_turn f=900 duel_step=8 turn_player=1 ai=4/0 textbox=0
+   2446 Player Draw Phase.
+   2627 Opening draw complete (hand=6 deck=34 want=6).
+   2765 Exact setup: P0 hand=0 deck=34 gy=0, P1 hand=1 deck=35 gy=0, LP 3000/2000, turnCount 2.
+   2765 Player Main Phase 1.
+   2765 steps: unknown card AI Megamorph Probe
+   2765 steps: 7 steps, 13 ops
+   2765 step: point opp.m0
+   2996 steps: capture starts (cursor on point opp.m0)
+   3003 step: wait 20
+   3029 step: options speed=always anims=hide battle=hide
+   3029 steps: options = 0x0037
+   3036 step: mp4_start ai-megamorph-probe
+   3036 media: recording ai-megamorph-probe (mp4)
+   3043 step: pass
+   3082 step: cpu_turn
+     11 MP4 target: tools\testing_scenarios\recordings\AI_Megamorph_Probe_Media_Player.mp4
+     11 emu recording API: screenshot, screenshotToImage
+     11 MP4: the scenario capture is off (captureMp4 = false)
+     11 AI Megamorph Probe / media / Player
+     11 point opp.m0; wait 20; options speed=always anims=hide battle=hide; mp4_start ai-megamorph-probe; pass; cpu_turn; rec_st
+    912 Main menu (callback 0x08003B15).
+   1035 Campaign selected (callback 0x0801D6C9).
+   1228 Turn order: forced RPS lose (CPU goes first).
+   1238 Turn order: A (lost RPS; CPU chooses first).
+   1276 Turn order: A (lost RPS; CPU chooses first).
+   1468 Opponent's turn (waiting for your Main Phase 1).
+   1470 Usage deck goat / Chaos Turbo: main=40 extra=15; P0 shuffled=true (top 719->522) P1 shuffled=true (top 719->910), hands cleared.
+   2368 cpu_turn f=900 duel_step=8 turn_player=1 ai=4/0 textbox=0
+   2427 Player Draw Phase.
+   2608 Opening draw complete (hand=6 deck=34 want=6).
+   2748 Exact setup: P0 hand=0 deck=34 gy=0, P1 hand=1 deck=35 gy=0, LP 3000/2000, turnCount 2.
+   2748 Player Main Phase 1.
+   2748 steps: unknown card AI Megamorph Probe
+   2748 steps: 7 steps, 13 ops
+   2748 step: point opp.m0
+   2979 steps: capture starts (cursor on point opp.m0)
+   2986 step: wait 20
+   3012 step: options speed=always anims=hide battle=hide
+   3012 steps: options = 0x0037
+   3019 step: mp4_start ai-megamorph-probe
+   3019 media: recording ai-megamorph-probe (mp4)
+   3026 step: pass
+   3065 step: cpu_turn
+      8 MP4 target: tools\testing_scenarios\recordings\AI_Megamorph_Probe_Media_Player.mp4
+      8 emu recording API: screenshot, screenshotToImage
+      8 MP4: the scenario capture is off (captureMp4 = false)
+      8 AI Megamorph Probe / media / Player
+      8 point opp.m0; wait 20; options speed=always anims=hide battle=hide; mp4_start ai-megamorph-probe; pass; await Megamorph;
+    909 Main menu (callback 0x08003B15).
+   1032 Campaign selected (callback 0x0801D6C9).
+   1225 Turn order: forced RPS lose (CPU goes first).
+   1235 Turn order: A (lost RPS; CPU chooses first).
+   1273 Turn order: A (lost RPS; CPU chooses first).
+   1465 Opponent's turn (waiting for your Main Phase 1).
+   1467 Usage deck goat / Chaos Turbo: main=40 extra=15; P0 shuffled=true (top 719->859) P1 shuffled=true (top 719->878), hands cleared.
+   2365 cpu_turn f=900 duel_step=8 turn_player=1 ai=4/0 textbox=0
+   2461 Player Draw Phase.
+   2642 Opening draw complete (hand=6 deck=34 want=6).
+   2782 Exact setup: P0 hand=0 deck=34 gy=0, P1 hand=1 deck=35 gy=0, LP 3000/2000, turnCount 2.
+   2782 Player Main Phase 1.
+   2782 steps: unknown card AI Megamorph Probe
+   2782 steps: 8 steps, 16 ops
+   2782 step: point opp.m0
+   3013 steps: capture starts (cursor on point opp.m0)
+   3020 step: wait 20
+   3046 step: options speed=always anims=hide battle=hide
+   3046 steps: options = 0x0037
+   3053 step: mp4_start ai-megamorph-probe
+   3053 media: recording ai-megamorph-probe (mp4)
+   3060 step: pass
+   3099 step: await Megamorph
+   3854 step: wait 300
+   4160 step: rec_stop
+   4160 media: encoding 1083 frames -> tools\testing_scenarios\..\..\screenshots\videos\ai-megamorph-probe.mp4
+   4177 Play sequence done; ending capture (no recording tail).
+   4177 Finished — PASS (play sequence + tail). Stop mGBA Record A/V to finalize MP4.

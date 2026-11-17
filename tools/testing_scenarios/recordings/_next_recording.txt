@@ -1,2 +1,2 @@
-tools\testing_scenarios\recordings\AI_Thunder_Dragon_Media_Player.mp4
-tools/testing_scenarios/recordings/AI_Thunder_Dragon_Media_Player.mp4
+tools\testing_scenarios\recordings\AI_Megamorph_Probe_Media_Player.mp4
+tools/testing_scenarios/recordings/AI_Megamorph_Probe_Media_Player.mp4
