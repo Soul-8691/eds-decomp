@@ -247,6 +247,8 @@ Every HMA screenshot and GIF goes in [HMA.md](HMA.md), in the section that match
 ## Layout notes
 
 - Keep image rows to **three across** (width 240 each) and the header to **two** (width 400), as now.
+- Every game GIF is shown at 240x160 (`width="240"`), the header's and the TLDR's included; duel-speed.gif is three
+  240x160 panels side by side (width 720).
 - Captions go under each image as `<br><sub>…</sub>`, matching the existing tables.
 - Every image gets real alt text describing what it shows.
 - A GIF in a table cell works like an image (`<img src="….gif" width="240">`). A video can't go in a table: give it its

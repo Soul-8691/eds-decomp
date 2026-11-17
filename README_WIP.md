@@ -11,7 +11,7 @@
 
 <p align="center">
   <img src="screenshots/Title%20Screen.png" width="400" alt="The title screen">
-  <img src="screenshots/gifs/duel.gif" width="400" alt="A Reaper-format duel: Breaker clears a Set card, then Cyber Dragon attacks">
+  <img src="screenshots/gifs/duel.gif" width="240" alt="A Reaper-format duel: Breaker clears a Set card, then Cyber Dragon attacks">
 </p>
 
 <p align="center">
@@ -47,7 +47,7 @@
   with Hex Maniac Advance CE ([HMA.md](HMA.md)).
 
 <p align="center">
-  <img src="screenshots/gifs/highlights.gif" width="480" alt="Twenty card effects from the card tests at 2x speed: Chaos Emperor Dragon, Thousand-Eyes Restrict, Torrential Tribute, Limiter Removal and more"><br>
+  <img src="screenshots/gifs/highlights.gif" width="240" alt="Twenty card effects from the card tests at 2x speed: Chaos Emperor Dragon, Thousand-Eyes Restrict, Torrential Tribute, Limiter Removal and more"><br>
   <sub>Card effects at 2× speed (GIF)</sub>
 </p>
 
@@ -400,7 +400,7 @@ Pick one of the three speeds; the two Hide switches are ON/OFF with **A**.
 </p>
 
 <p align="center">
-  <img src="screenshots/gifs/hide-anims.gif" width="480" alt="Pot of Greed with its card animation, then again with Hide card animations on"><br>
+  <img src="screenshots/gifs/hide-anims.gif" width="240" alt="Pot of Greed with its card animation, then again with Hide card animations on"><br>
   <sub>Hide card animations, off then on (GIF)</sub>
 </p>
 
@@ -432,7 +432,7 @@ shortcomings that were fixed (original-roster cards only), and [AI_IMPROVEMENTS.
 current CPU behavior in full.
 
 <p align="center">
-  <img src="screenshots/gifs/cpu-play.gif" width="480" alt="The CPU answers a direct attack with Magic Cylinder"><br>
+  <img src="screenshots/gifs/cpu-play.gif" width="240" alt="The CPU answers a direct attack with Magic Cylinder"><br>
   <sub>The CPU at work (GIF)</sub>
 </p>
 
@@ -548,7 +548,7 @@ See [NEW_CARDS.md](NEW_CARDS.md) for all of them.
 </details>
 
 <p align="center">
-  <img src="screenshots/gifs/new-cards.gif" width="480" alt="Cyber Dragon, Breaker the Magical Warrior and Thousand-Eyes Restrict in action"><br>
+  <img src="screenshots/gifs/new-cards.gif" width="240" alt="Cyber Dragon, Breaker the Magical Warrior and Thousand-Eyes Restrict in action"><br>
   <sub>New cards in action (GIF)</sub>
 </p>
 

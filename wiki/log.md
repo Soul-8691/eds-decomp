@@ -3292,3 +3292,6 @@ updated: 2026-09-29
 
 ## [2026-11-17] progress | highlights.gif in card release order
 - tools/media/stitch_media.py HIGHLIGHTS: ordered by each card's first TCG set (packs/*_tcg.json, TCG_RELEASE_DATE), Card Destruction (Starter Deck Yugi, 2002) to Cyber End Dragon (Cybernetic Revolution, 2005). Rebuilt (60 s).
+
+## [2026-11-17] progress | READMEs: every game GIF shown at 240x160
+- README.md, README_WIP.md: duel.gif (was 400), highlights, hide-anims, cpu-play, new-cards (were 480) now width 240; duel-speed.gif stays 720 (three 240x160 panels). README_TODO.md layout notes.

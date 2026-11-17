@@ -2,7 +2,6 @@ Update AI_QUIRKS.md
 Unlocking the next format should actually show a message
 Hide card animations, off then on (GIF) should be next to Hide battle scenes (GIF) and not be large
 The CPU at work (GIF) should be curated
-All GIFs should be the same size
 Old Kycoo/Bazoo/Skull Lair
 Bell of Destruction/Shining Fairy name changes
 Play Fiber correctly
