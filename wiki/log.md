@@ -3304,3 +3304,9 @@ updated: 2026-09-29
 
 ## [2026-11-17] progress | unlock.gif shows the new packs text
 - tools/media/unlock.lua: records through the rewards to REWARD_STEP_WAIT_TEXT (text 351, "Did you know that you can now select a new booster pack?"), holds it 150 frames, and pauses from REWARD_STEP_PICK_PACK (the free pack still left out). Re-captured with eds_release_demo_extra.gba, checked on a contact sheet. [[readme-media]], README_TODO.md.
+
+## [2026-11-17] progress | AI_QUIRKS.md compared with AI_IMPROVEMENTS.md
+- AI_QUIRKS.md: each section a table, the original CPU beside what it does now (from AI_IMPROVEMENTS.md). Added original-roster fixes it lacked: a second Swords of Revealing Light, Megamorph, Change of Heart before a Tribute Summon, Upstart Goblin first, Relinquished face-down absorbs, Sonic Bird / Senju asking the human. Dropped the wrong "Breaker the Dark Destruction" (Breaker is an added card) and the Dark Mimic LV1 example (added).
+
+## [2026-11-17] progress | AI_QUIRKS.md: "Suggested behavior" column
+- AI_QUIRKS.md: the right-hand column is "Suggested behavior", each cell a recommendation (imperative); the intro says the Campaign CPU follows them. Dates dropped from the cells.
