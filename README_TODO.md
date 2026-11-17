@@ -59,7 +59,7 @@ the ones README.md used to show are marked "was"). The game's screenshots can be
 
 ## Practice opponents
 
-- **Have:** `Duelists (Screen 4).png` (right-aligned, width 240).
+- **Have:** `Duelists (Screen 4).png` (in a row under the table, before the Records page; it was right-aligned).
 - [ ] 🖼️ **Records: the practice page** · `screenshots/Records (Practice).png` · under the table. The Records screen's
   page with Solomon, Debug, Empty Deck and Test Duel.
 

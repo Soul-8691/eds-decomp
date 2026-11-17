@@ -3263,3 +3263,6 @@ updated: 2026-09-29
 ## [2026-11-16] progress | CPU: Thousand-Eyes Restrict and Relinquished absorb face-up monsters only
 - src/added_effects.c: AiAbsorbTarget, from AiFlipEffectTarget (EffectOpponentMonsterChainB).
 - [[added-cards]], AI_IMPROVEMENTS.md. Built (demo).
+
+## [2026-11-17] progress | READMEs: the practice opponents' page screenshot in a row, not floated
+- README.md, README_WIP.md: Duelists (Screen 4).png no longer align="right" beside the table (it sat out of line on GitHub); a captioned cell under the table, next to Records (Practice).png in the WIP. README_TODO.md.

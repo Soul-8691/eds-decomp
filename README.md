@@ -105,8 +105,6 @@ cards) can't duel until you fix it.
 
 ## Practice opponents
 
-<img src="screenshots/Duelists%20(Screen%204).png" width="240" align="right" alt="The practice opponents' page, with Debug selected">
-
 The opponent page after the formats is open from the start:
 
 | Slot | Opponent | Deck | Rules |
@@ -118,6 +116,12 @@ The opponent page after the formats is open from the start:
 
 None of them give DP or a pack, and none check your deck's format: they're for practice and testing decks. The Records
 screen has a page for them too.
+
+<table>
+<tr>
+<td align="center"><img src="screenshots/Duelists%20(Screen%204).png" width="240" alt="The practice opponents' page, with Debug selected"><br><sub>The practice opponents' page</sub></td>
+</tr>
+</table>
 
 ### Solomon and Debug
 

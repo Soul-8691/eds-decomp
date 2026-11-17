@@ -130,8 +130,6 @@ cards) can't duel until you fix it.
 
 ## Practice opponents
 
-<img src="screenshots/Duelists%20(Screen%204).png" width="240" align="right" alt="The practice opponents' page, with Debug selected">
-
 The opponent page after the formats is open from the start:
 
 | Slot | Opponent | Deck | Rules |
@@ -146,6 +144,7 @@ screen has a page for them too.
 
 <table>
 <tr>
+<td align="center"><img src="screenshots/Duelists%20(Screen%204).png" width="240" alt="The practice opponents' page, with Debug selected"><br><sub>The practice opponents' page</sub></td>
 <td align="center"><img src="screenshots/Records%20(Practice).png" width="240" alt="Records: the practice page"><br><sub>Records: the practice page</sub></td>
 </tr>
 </table>
