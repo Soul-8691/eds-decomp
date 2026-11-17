@@ -3310,3 +3310,16 @@ updated: 2026-09-29
 
 ## [2026-11-17] progress | AI_QUIRKS.md: "Suggested behavior" column
 - AI_QUIRKS.md: the right-hand column is "Suggested behavior", each cell a recommendation (imperative); the intro says the Campaign CPU follows them. Dates dropped from the cells.
+
+## [2026-11-17] progress | The CPU at work: 20 AI behavior clips stitched at 2x
+- tools/media/gen_duel_media.py: ai_turn() and 19 AI scenarios (plus CPU Play as ai-magic-cylinder), MP4 each, options speed=always anims=hide battle=hide, recorded clean; tools/media/stitch_media.py cpu-play (20 clips at 2x, Snatch Steal cut at 14.5 s): screenshots/gifs/cpu-play.gif, 1:45, 8.3 MB. All checked on contact sheets.
+- README_TODO.md, [[readme-media]].
+
+## [2026-11-17] progress | cpu-play.gif at normal speed
+- tools/media/stitch_media.py CPU_PLAY_SPEED 1.0: cpu-play.gif 3:28.5, 11.5 MB (was 1:45 at 2x). README_TODO.md, [[readme-media]].
+
+## [2026-11-17] progress | cpu-play.gif at normal speed
+- tools/media/stitch_media.py CPU_PLAY_SPEED 1.0: cpu-play.gif 3:28.5, 11.5 MB (was 1:45 at 2x). README_TODO.md, [[readme-media]].
+
+## [2026-11-17] progress | ai-thunder-dragon: exactly 3 Thunder Dragons
+- gen_duel_media.py: ai_turn takes the format; AI Thunder Dragon plays Warrior's usage deck (no Thunder Dragon), so the CPU has its hand copy and the two on top of its Deck only (Goat's deck runs three more). Re-recorded; cpu-play.gif restitched.

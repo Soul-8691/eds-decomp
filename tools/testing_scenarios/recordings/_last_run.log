@@ -1595,3 +1595,61 @@ PASS Hide_Anims_Media_Player duel_main=true reason= play_done=true
 START New_Cards_Media_Player
 START unlock
 PASS unlock
+START AI_Dark_Hole_Media_Player
+PASS AI_Dark_Hole_Media_Player duel_main=false reason= play_done=true
+START AI_Draw_First_Media_Player
+PASS AI_Draw_First_Media_Player duel_main=false reason= play_done=true
+START AI_Face_Down_Attack_Media_Player
+START AI_Dark_Hole_Media_Player
+PASS AI_Dark_Hole_Media_Player duel_main=false reason= play_done=true
+START AI_Draw_First_Media_Player
+START AI_Dark_Hole_Media_Player
+PASS AI_Dark_Hole_Media_Player duel_main=false reason= play_done=true
+START AI_Draw_First_Media_Player
+PASS AI_Draw_First_Media_Player duel_main=false reason= play_done=true
+START AI_Face_Down_Attack_Media_Player
+FAIL AI_Face_Down_Attack_Media_Player duel_main=false reason=timeout_play play_done=false
+START AI_Nobleman_Media_Player
+PASS AI_Nobleman_Media_Player duel_main=false reason= play_done=true
+START AI_Recruiter_Media_Player
+PASS AI_Recruiter_Media_Player duel_main=true reason= play_done=true
+START AI_Snatch_Lethal_Media_Player
+PASS AI_Snatch_Lethal_Media_Player duel_main=false reason= play_done=true
+START AI_Solemn_Media_Player
+PASS AI_Solemn_Media_Player duel_main=true reason= play_done=true
+START AI_Steal_Tribute_Media_Player
+PASS AI_Steal_Tribute_Media_Player duel_main=false reason= play_done=true
+START AI_Thunder_Dragon_Media_Player
+PASS AI_Thunder_Dragon_Media_Player duel_main=false reason= play_done=true
+START AI_Trap_Hole_Media_Player
+PASS AI_Trap_Hole_Media_Player duel_main=true reason= play_done=true
+START AI_Waboku_Media_Player
+PASS AI_Waboku_Media_Player duel_main=true reason= play_done=true
+START CPU_Play_Media_Player
+PASS CPU_Play_Media_Player duel_main=true reason= play_done=true
+START AI_Chaos_Emperor_Media_Player
+PASS AI_Chaos_Emperor_Media_Player duel_main=false reason= play_done=true
+START AI_Enemy_Controller_Media_Player
+PASS AI_Enemy_Controller_Media_Player duel_main=false reason= play_done=true
+START AI_Exiled_Force_Media_Player
+PASS AI_Exiled_Force_Media_Player duel_main=false reason= play_done=true
+START AI_Face_Down_Attack_Media_Player
+PASS AI_Face_Down_Attack_Media_Player duel_main=false reason= play_done=true
+START AI_Hane_Hane_Media_Player
+PASS AI_Hane_Hane_Media_Player duel_main=false reason= play_done=true
+START AI_Man_Eater_Bug_Media_Player
+PASS AI_Man_Eater_Bug_Media_Player duel_main=true reason= play_done=true
+START AI_Megamorph_Media_Player
+PASS AI_Megamorph_Media_Player duel_main=false reason= play_done=true
+START AI_Snatch_Lethal_Media_Player
+PASS AI_Snatch_Lethal_Media_Player duel_main=false reason= play_done=true
+START AI_Virus_Media_Player
+PASS AI_Virus_Media_Player duel_main=false reason= play_done=true
+START AI_Megamorph_Media_Player
+PASS AI_Megamorph_Media_Player duel_main=false reason= play_done=true
+START AI_Kycoo_Media_Player
+PASS AI_Kycoo_Media_Player duel_main=false reason= play_done=true
+START AI_Tribute_Upgrade_Media_Player
+PASS AI_Tribute_Upgrade_Media_Player duel_main=false reason= play_done=true
+START AI_Thunder_Dragon_Media_Player
+PASS AI_Thunder_Dragon_Media_Player duel_main=false reason= play_done=true

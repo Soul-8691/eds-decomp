@@ -1,7 +1,7 @@
 ﻿
-Script Result Seconds Detail
------- ------ ------- ------
-unlock PASS        20       
+Script                         Result Seconds Detail                                
+------                         ------ ------- ------                                
+AI_Thunder_Dragon_Media_Player PASS        18 duel_main=false reason= play_done=true
 
 
 

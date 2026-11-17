@@ -1,2 +1,2 @@
-tools\testing_scenarios\recordings\New_Cards_Media_Player.mp4
-tools/testing_scenarios/recordings/New_Cards_Media_Player.mp4
+tools\testing_scenarios\recordings\AI_Thunder_Dragon_Media_Player.mp4
+tools/testing_scenarios/recordings/AI_Thunder_Dragon_Media_Player.mp4

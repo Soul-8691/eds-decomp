@@ -22,7 +22,7 @@ EDS.run({
     effect = "media",
     actor = "Player",
     format = "Goat",
-    scenarioText = "point you.m0; wait 30; gif_start cpu-play; battle; attack you.m0 -> direct; settle; wait 20; rec_stop",
+    scenarioText = "point you.m0; wait 30; options speed=always anims=hide battle=hide; mp4_start ai-magic-cylinder; battle; attack you.m0 -> direct; settle; wait 20; rec_stop",
     start = { turn = "you", turnCount = 2, lp = { 8000, 8000 } },
     setupCards = {
         { player = 0, zone = "monster", slot = 0, name = "Black Luster Soldier - Envoy of Beginning" },
@@ -34,7 +34,8 @@ EDS.run({
     steps = {
         "point you.m0",
         "wait 30",
-        "gif_start cpu-play",
+        "options speed=always anims=hide battle=hide",
+        "mp4_start ai-magic-cylinder",
         "battle",
         "attack you.m0 -> direct",
         "settle",

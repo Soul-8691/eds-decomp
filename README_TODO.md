@@ -142,11 +142,7 @@ the ones README.md used to show are marked "was"). The game's screenshots can be
 
 ### Smarter CPU
 
-- [x] 🎞️ **The CPU at work** · `screenshots/gifs/cpu-play.gif` · under the paragraph. A clever CPU turn: a well-timed Trap, a chain, or a
-  combo from one of the format decks. *(was `placeholders/cpu-play.svg`)*
-
-### Fixes to the original game
-
+- [x] 🎞️ **The CPU at work** · `screenshots/gifs/cpu-play.gif` · under the paragraph. About 3:30: 20 AI behaviors (AI_IMPROVEMENTS.md / AI_QUIRKS.md), one clip each (`AI_*_Media_Player.lua`, ALWAYS speed, Hide switches on), at normal speed (`stitch_media.py cpu-play`).
 - [ ] 🎞️ **Call of the Haunted and Giant Trunade** · `screenshots/gifs/call-trunade.gif` · after the note. Trunade
   returns Call to the hand; its monster goes to the Graveyard, the Call only to the hand.
 - [ ] 🎞️ **Witch of the Black Forest and Call of the Haunted** · `screenshots/gifs/witch-call.gif` · next to it.

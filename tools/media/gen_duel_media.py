@@ -37,6 +37,25 @@ CLEAN = None
 # Synchro, Xyz, Link: the list, the material prompts and the summoned monster's card
 SHOW_PICKS = {'prompts': 'show', 'lists': 'show', 'cards': 'show'}
 
+# The CPU at work: recorded like the card tests, expedited (no chain list, card-showing animations, prompts, lists'
+# frames or battle scenes) and with the duel speed at ALWAYS and both Hide settings on (the user's, 2026-11-17).
+AI_SHOW = CLEAN
+
+
+def ai_turn(name, clip, setup, fmt='Goat'):
+    """A CPU-turn clip: the set board, then the CPU's whole turn (its draw set by opp.deck); `fmt` is the format
+    whose usage deck the rest of the CPU's Deck comes from."""
+    return [(name, fmt, None, setup,
+             '''point you.m0
+                wait 20
+                options speed=always anims=hide battle=hide
+                mp4_start %s
+                pass
+                cpu_turn
+                rec_stop''' % clip,
+             {'video': AI_SHOW, 'freeze': False})]
+
+
 # Captures follow a few rules (the user's): the cards on a board sit next to each other; a monster attacks only a
 # weaker one; a recording starts once the cursor rests on the first card used (so it never crosses empty hand slots
 # showing the names of the hand the setup replaced); its still tail is trimmed when it stops (lib_steps.lua).
@@ -281,13 +300,168 @@ MEDIA = [
         opp.hand: Sangan''',
      '''point you.m0
         wait 30
-        gif_start cpu-play
+        options speed=always anims=hide battle=hide
+        mp4_start ai-magic-cylinder
         battle
         attack you.m0 -> direct
         settle
         wait 20
         rec_stop''',
-     {'video': CLEAN, 'freeze': False}),
+     {'video': AI_SHOW, 'freeze': False}),
+    # ---- The CPU at work (2026-11-17): one clip per behavior of AI_IMPROVEMENTS.md / AI_QUIRKS.md, each an MP4 in
+    # screenshots/videos/ai-*.mp4; stitch_media.py `cpu-play` joins them at 2x speed into screenshots/gifs/cpu-play.gif.
+    # The CPU plays for real (no freeze); its draws are set with opp.deck (the top card first). ----
+    *ai_turn('AI Draw First', 'ai-draw-first',
+             '''you.m0: Gemini Elf atk
+                opp.hand: Pot of Greed, Graceful Charity, Upstart Goblin, Vorse Raider
+                opp.deck: Sangan, Summoned Skull, Trap Hole, Mystic Tomato, Waboku, Dark Hole'''),
+    # (exactly 3 Thunder Dragons: one in hand, two on top of the Deck; the rest of the Deck is Warrior's usage deck,
+    # which runs none, where Goat's runs three more)
+    *ai_turn('AI Thunder Dragon', 'ai-thunder-dragon',
+             '''you.m0: Gemini Elf atk
+                opp.hand: Thunder Dragon, Mystic Tomato
+                opp.deck: Sangan, Thunder Dragon, Thunder Dragon''', fmt='Warrior'),
+    *ai_turn('AI Dark Hole', 'ai-dark-hole',
+             '''you.m0: Summoned Skull atk
+                you.m1: Jinzo atk
+                opp.m0: Mystic Tomato def
+                opp.hand: Dark Hole, Vorse Raider
+                opp.deck: Sangan'''),
+    *ai_turn('AI Nobleman', 'ai-nobleman',
+             '''you.m0: Gravekeeper's Spy set
+                opp.hand: Nobleman of Crossout, Gemini Elf
+                opp.deck: Sangan'''),
+    *ai_turn('AI Steal Tribute', 'ai-steal-tribute',
+             '''you.m0: Gemini Elf atk
+                opp.m0: Mystic Tomato def
+                opp.hand: Change of Heart, Summoned Skull
+                opp.deck: Sangan'''),
+    *ai_turn('AI Face Down Attack', 'ai-face-down-attack',
+             '''you.m0: Gemini Elf set
+                opp.m0: Vorse Raider atk
+                opp.deck: Gemini Elf'''),
+    *ai_turn('AI Exiled Force', 'ai-exiled-force',
+             '''you.m0: Jinzo atk
+                opp.hand: Exiled Force
+                opp.deck: Sangan'''),
+    *ai_turn('AI Virus', 'ai-virus',
+             '''you.m0: Gemini Elf atk
+                you.m1: Dark Magician atk
+                opp.hand: Tribe-Infecting Virus, Mystic Tomato
+                opp.deck: Sangan'''),
+    *ai_turn('AI Enemy Controller', 'ai-enemy-controller',
+             '''you.m0: Jinzo atk
+                opp.m0: Mystic Tomato atk
+                opp.hand: Enemy Controller
+                opp.deck: Sangan'''),
+    *ai_turn('AI Hane Hane', 'ai-hane-hane',
+             '''you.m0: Summoned Skull atk
+                opp.m0: Hane-Hane set
+                opp.m1: Vorse Raider def
+                opp.deck: Sangan'''),
+    *ai_turn('AI Chaos Emperor', 'ai-chaos-emperor',
+             '''you.hand: Gemini Elf, Vorse Raider, Dark Magician
+                you.m0: Summoned Skull atk
+                you.m1: Jinzo atk
+                you.st0: Waboku set
+                you.st1: Trap Hole set
+                opp.hand: Chaos Emperor Dragon - Envoy of the End
+                opp.gy: Sangan, Magician of Faith
+                opp.deck: Mystic Tomato'''),
+    # (you attack its face-down Man-Eater Bug with Gemini Elf: it destroys Summoned Skull, which has not attacked yet)
+    ('AI Man Eater Bug', 'Goat', None,
+     '''you.m0: Gemini Elf atk
+        you.m1: Summoned Skull atk
+        opp.m0: Man-Eater Bug set''',
+     '''point you.m0
+        wait 20
+        options speed=always anims=hide battle=hide
+        mp4_start ai-man-eater-bug
+        battle
+        attack you.m0 -> opp.m0
+        settle
+        wait 30
+        rec_stop''',
+     {'video': AI_SHOW, 'freeze': False}),
+    # (a Tribute upgrade that does not change its attacks: Gyakutenno Megami 1800/2000 over Aqua Madoor 1200/2000)
+    *ai_turn('AI Tribute Upgrade', 'ai-tribute-upgrade',
+             '''you.m0: Summoned Skull atk
+                opp.m0: Aqua Madoor def
+                opp.hand: Gyakutenno Megami
+                opp.deck: Sangan'''),
+    # (Kycoo attacks first while its attack deals damage, so its effect banishes from your Graveyard)
+    *ai_turn('AI Kycoo', 'ai-kycoo',
+             '''you.m0: Gemini Elf set
+                you.gy: Summoned Skull, Jinzo, Dark Magician
+                opp.m0: Kycoo the Ghost Destroyer atk
+                opp.m1: Vorse Raider atk
+                opp.deck: Sangan'''),
+    ('AI Recruiter', 'Goat', None,
+     '''you.m0: Vorse Raider atk
+        opp.m0: Mystic Tomato atk
+        opp.deck: Mystic Tomato, Mystic Tomato''',
+     '''point you.m0
+        wait 20
+        options speed=always anims=hide battle=hide
+        mp4_start ai-recruiter
+        battle
+        attack you.m0 -> opp.m0
+        settle
+        wait 30
+        rec_stop''',
+     {'video': AI_SHOW, 'freeze': False}),
+    ('AI Waboku', 'Goat', None,
+     '''you.m0: Summoned Skull atk
+        opp.m0: Gemini Elf atk
+        opp.st0: Waboku set''',
+     '''point you.m0
+        wait 20
+        options speed=always anims=hide battle=hide
+        mp4_start ai-waboku
+        battle
+        attack you.m0 -> opp.m0
+        settle
+        wait 30
+        rec_stop''',
+     {'video': AI_SHOW, 'freeze': False}),
+    ('AI Trap Hole', 'Goat', None,
+     '''you.hand: Breaker the Magical Warrior
+        opp.st0: Trap Hole set''',
+     '''point you.hand[Breaker the Magical Warrior]
+        wait 20
+        options speed=always anims=hide battle=hide
+        mp4_start ai-trap-hole
+        summon you.hand[Breaker the Magical Warrior] -> m0 atk
+        settle
+        wait 30
+        rec_stop''',
+     {'video': AI_SHOW, 'freeze': False}),
+    ('AI Solemn', 'Goat', {'lp': (8000, 4000)},
+     '''you.hand: Vorse Raider
+        opp.st0: Solemn Judgment set''',
+     '''point you.hand[Vorse Raider]
+        wait 20
+        options speed=always anims=hide battle=hide
+        mp4_start ai-solemn
+        summon you.hand[Vorse Raider] -> m0 atk
+        settle
+        wait 30
+        rec_stop''',
+     {'video': AI_SHOW, 'freeze': False}),
+    # (the last clip: the steal wins the duel, so the clip ends a set time after the CPU plays it)
+    ('AI Snatch Lethal', 'Goat', {'lp': (2400, 8000)},
+     '''you.m0: Jinzo atk
+        opp.hand: Snatch Steal
+        opp.deck: Sangan''',
+     '''point you.m0
+        wait 20
+        options speed=always anims=hide battle=hide
+        mp4_start ai-snatch-lethal
+        pass
+        await Snatch Steal
+        wait 240
+        rec_stop''',
+     {'video': AI_SHOW, 'freeze': False}),
     # ---- Settings (videos and a GIF) ----
     speed_turn('default'),
     speed_turn('always'),

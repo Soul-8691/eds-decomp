@@ -1,7 +1,10 @@
 #!/usr/bin/env python3
 """The README's stitched media (README_TODO.md), made with ffmpeg from the captures in screenshots/:
 
-    python3 tools/media/stitch_media.py [duel-speed] [trailer] [highlights]      (all three when none is named)
+    python3 tools/media/stitch_media.py [duel-speed] [trailer] [highlights] [cpu-play]   (all when none is named)
+
+  screenshots/gifs/cpu-play.gif       "The CPU at work": the ai-*.mp4 clips (gen_duel_media.py, one AI behavior each),
+                                      at normal speed
 
   screenshots/gifs/duel-speed.gif     the same, as a GIF (240x160 each), for README_WIP.md
 
@@ -115,6 +118,17 @@ HIGHLIGHTS = [(TESTS / f'{name}.mp4', None, None) for name in (
 )]
 
 
+# The CPU at work (2026-11-17): the AI behavior clips of gen_duel_media.py, at normal speed
+CPU_PLAY_SPEED = 1.0
+# (name, or (name, length in s) to cut a clip's tail: the lethal clips end on YOU LOSE, before the next screen)
+CPU_PLAY = [(VIDEOS / f'ai-{n}.mp4', None, None) if isinstance(n, str) else (VIDEOS / f'ai-{n[0]}.mp4', None, n[1])
+            for n in (
+    'draw-first', 'thunder-dragon', 'dark-hole', 'nobleman', 'exiled-force', 'virus', 'enemy-controller',
+    'steal-tribute', 'tribute-upgrade', 'hane-hane', 'face-down-attack', 'kycoo', 'chaos-emperor', 'recruiter',
+    'man-eater-bug', 'waboku', 'trap-hole', 'solemn', 'magic-cylinder', ('snatch-lethal', 14.5),
+)]
+
+
 def segment_inputs(segments):
     args = []
     for src, start, length in segments:
@@ -149,7 +163,7 @@ def concat(segments, width, height, fps, out, gif, speed=1.0):
 
 
 def main():
-    want = set(sys.argv[1:]) or {'duel-speed', 'trailer', 'highlights'}
+    want = set(sys.argv[1:]) or {'duel-speed', 'trailer', 'highlights', 'cpu-play'}
     if 'duel-speed' in want:
         print('wrote', duel_speed())
         print('wrote', duel_speed_gif())
@@ -157,6 +171,8 @@ def main():
         print('wrote', concat(TRAILER, 720, 480, 30, VIDEOS / 'trailer.mp4', gif=False))
     if 'highlights' in want:
         print('wrote', concat(HIGHLIGHTS, 240, 160, 20, GIFS / 'highlights.gif', gif=True, speed=HIGHLIGHT_SPEED))
+    if 'cpu-play' in want:
+        print('wrote', concat(CPU_PLAY, 240, 160, 20, GIFS / 'cpu-play.gif', gif=True, speed=CPU_PLAY_SPEED))
 
 
 if __name__ == '__main__':

@@ -23985,3 +23985,969 @@
    2472 [unlock] recording unlock (gif)
    4035 [unlock] encoding 858 frames -> tools\media\..\..\screenshots\gifs\unlock.gif
    4035 [unlock] done
+      8 MP4 target: tools\testing_scenarios\recordings\AI_Dark_Hole_Media_Player.mp4
+      8 emu recording API: screenshot, screenshotToImage
+      8 MP4: the scenario capture is off (captureMp4 = false)
+      8 AI Dark Hole / media / Player
+      8 point you.m0; wait 20; mp4_start ai-dark-hole; pass; cpu_turn; rec_stop
+    909 Main menu (callback 0x08003B15).
+   1032 Campaign selected (callback 0x0801D6C9).
+   1225 Turn order: forced RPS lose (CPU goes first).
+   1235 Turn order: A (lost RPS; CPU chooses first).
+   1273 Turn order: A (lost RPS; CPU chooses first).
+   1465 Opponent's turn (waiting for your Main Phase 1).
+   1467 Usage deck goat / Chaos Turbo: main=40 extra=15; P0 shuffled=true (top 719->859) P1 shuffled=true (top 719->920), hands cleared.
+   2365 cpu_turn f=900 duel_step=8 turn_player=1 ai=4/0 textbox=0
+   2442 Player Draw Phase.
+   2623 Opening draw complete (hand=6 deck=34 want=6).
+   2761 Exact setup: P0 hand=0 deck=34 gy=0, P1 hand=2 deck=35 gy=0, LP 8000/8000, turnCount 2.
+   2761 Player Main Phase 1.
+   2761 steps: unknown card AI Dark Hole
+   2761 steps: 6 steps, 11 ops
+   2761 step: point you.m0
+   2898 steps: capture starts (cursor on point you.m0)
+   2905 step: wait 20
+   2931 step: mp4_start ai-dark-hole
+   2931 media: recording ai-dark-hole (mp4)
+   2938 step: pass
+   3051 step: cpu_turn
+   4720 step: rec_stop
+   4720 media: encoding 1685 frames -> tools\testing_scenarios\..\..\screenshots\videos\ai-dark-hole.mp4
+   4828 Play sequence done; ending capture (no recording tail).
+   4828 Finished — PASS (play sequence + tail). Stop mGBA Record A/V to finalize MP4.
+     11 MP4 target: tools\testing_scenarios\recordings\AI_Draw_First_Media_Player.mp4
+     11 emu recording API: screenshot, screenshotToImage
+     11 MP4: the scenario capture is off (captureMp4 = false)
+     11 AI Draw First / media / Player
+     11 point you.m0; wait 20; mp4_start ai-draw-first; pass; cpu_turn; rec_stop
+    912 Main menu (callback 0x08003B15).
+   1035 Campaign selected (callback 0x0801D6C9).
+   1228 Turn order: forced RPS lose (CPU goes first).
+   1238 Turn order: A (lost RPS; CPU chooses first).
+   1276 Turn order: A (lost RPS; CPU chooses first).
+   1468 Opponent's turn (waiting for your Main Phase 1).
+   1470 Usage deck goat / Chaos Turbo: main=40 extra=15; P0 shuffled=true (top 719->930) P1 shuffled=true (top 719->952), hands cleared.
+   2368 cpu_turn f=900 duel_step=8 turn_player=1 ai=4/0 textbox=0
+   2448 Player Draw Phase.
+   2629 Opening draw complete (hand=6 deck=34 want=6).
+   2769 Exact setup: P0 hand=0 deck=34 gy=0, P1 hand=4 deck=40 gy=0, LP 8000/8000, turnCount 2.
+   2769 Player Main Phase 1.
+   2769 steps: unknown card AI Draw First
+   2769 steps: 6 steps, 11 ops
+   2769 step: point you.m0
+   2905 steps: capture starts (cursor on point you.m0)
+   2912 step: wait 20
+   2938 step: mp4_start ai-draw-first
+   2938 media: recording ai-draw-first (mp4)
+   2945 step: pass
+   3058 step: cpu_turn
+   5639 step: rec_stop
+   5639 media: encoding 2597 frames -> tools\testing_scenarios\..\..\screenshots\videos\ai-draw-first.mp4
+   5747 Play sequence done; ending capture (no recording tail).
+   5747 Finished — PASS (play sequence + tail). Stop mGBA Record A/V to finalize MP4.
+     13 MP4 target: tools\testing_scenarios\recordings\AI_Face_Down_Attack_Media_Player.mp4
+     13 emu recording API: screenshot, screenshotToImage
+     13 MP4: the scenario capture is off (captureMp4 = false)
+     13 AI Face Down Attack / media / Player
+     13 point you.m0; wait 20; mp4_start ai-face-down-attack; pass; cpu_turn; rec_stop
+    914 Main menu (callback 0x08003B15).
+   1037 Campaign selected (callback 0x0801D6C9).
+   1230 Turn order: forced RPS lose (CPU goes first).
+   1240 Turn order: A (lost RPS; CPU chooses first).
+   1278 Turn order: A (lost RPS; CPU chooses first).
+   1470 Opponent's turn (waiting for your Main Phase 1).
+   1472 Usage deck goat / Chaos Turbo: main=40 extra=15; P0 shuffled=true (top 719->910) P1 shuffled=true (top 719->930), hands cleared.
+   2370 cpu_turn f=900 duel_step=8 turn_player=1 ai=4/0 textbox=0
+   2465 Player Draw Phase.
+   2646 Opening draw complete (hand=6 deck=34 want=6).
+   2786 Exact setup: P0 hand=0 deck=34 gy=0, P1 hand=0 deck=35 gy=0, LP 8000/8000, turnCount 2.
+   2786 Player Main Phase 1.
+   2786 steps: unknown card AI Face Down Attack
+   2786 steps: 6 steps, 11 ops
+   2786 step: point you.m0
+   2922 steps: capture starts (cursor on point you.m0)
+   2929 step: wait 20
+   2955 step: mp4_start ai-face-down-attack
+   2955 media: recording ai-face-down-attack (mp4)
+   2962 step: pass
+   3001 step: cpu_turn
+     13 MP4 target: tools\testing_scenarios\recordings\AI_Dark_Hole_Media_Player.mp4
+     13 emu recording API: screenshot, screenshotToImage
+     13 MP4: the scenario capture is off (captureMp4 = false)
+     13 AI Dark Hole / media / Player
+     13 point you.m0; wait 20; mp4_start ai-dark-hole; pass; cpu_turn; rec_stop
+    914 Main menu (callback 0x08003B15).
+   1037 Campaign selected (callback 0x0801D6C9).
+   1230 Turn order: forced RPS lose (CPU goes first).
+   1240 Turn order: A (lost RPS; CPU chooses first).
+   1278 Turn order: A (lost RPS; CPU chooses first).
+   1470 Opponent's turn (waiting for your Main Phase 1).
+   1472 Usage deck goat / Chaos Turbo: main=40 extra=15; P0 shuffled=true (top 719->952) P1 shuffled=true (top 719->760), hands cleared.
+   2370 cpu_turn f=900 duel_step=8 turn_player=1 ai=3/2 textbox=0
+   2651 Player Draw Phase.
+   2832 Opening draw complete (hand=6 deck=34 want=6).
+   2973 Exact setup: P0 hand=0 deck=34 gy=0, P1 hand=2 deck=34 gy=0, LP 8000/8000, turnCount 2.
+   2973 Player Main Phase 1.
+   2973 steps: unknown card AI Dark Hole
+   2973 steps: 6 steps, 11 ops
+   2973 step: point you.m0
+   3110 steps: capture starts (cursor on point you.m0)
+   3117 step: wait 20
+   3143 step: mp4_start ai-dark-hole
+   3143 media: recording ai-dark-hole (mp4)
+   3150 step: pass
+   3263 step: cpu_turn
+   4657 step: rec_stop
+   4657 media: encoding 1410 frames -> tools\testing_scenarios\..\..\screenshots\videos\ai-dark-hole.mp4
+   4765 Play sequence done; ending capture (no recording tail).
+   4765 Finished — PASS (play sequence + tail). Stop mGBA Record A/V to finalize MP4.
+     12 MP4 target: tools\testing_scenarios\recordings\AI_Draw_First_Media_Player.mp4
+     12 emu recording API: screenshot, screenshotToImage
+     12 MP4: the scenario capture is off (captureMp4 = false)
+     12 AI Draw First / media / Player
+     12 point you.m0; wait 20; mp4_start ai-draw-first; pass; cpu_turn; rec_stop
+    913 Main menu (callback 0x08003B15).
+   1036 Campaign selected (callback 0x0801D6C9).
+   1229 Turn order: forced RPS lose (CPU goes first).
+   1239 Turn order: A (lost RPS; CPU chooses first).
+   1277 Turn order: A (lost RPS; CPU chooses first).
+   1469 Opponent's turn (waiting for your Main Phase 1).
+   1471 Usage deck goat / Chaos Turbo: main=40 extra=15; P0 shuffled=true (top 719->902) P1 shuffled=true (top 719->719), hands cleared.
+   2369 cpu_turn f=900 duel_step=8 turn_player=1 ai=3/2 textbox=0
+   2636 Player Draw Phase.
+   2817 Opening draw complete (hand=6 deck=34 want=6).
+   2958 Exact setup: P0 hand=0 deck=34 gy=0, P1 hand=4 deck=39 gy=0, LP 8000/8000, turnCount 2.
+   2958 Player Main Phase 1.
+   2958 steps: unknown card AI Draw First
+   2958 steps: 6 steps, 11 ops
+   2958 step: point you.m0
+   3094 steps: capture starts (cursor on point you.m0)
+   3101 step: wait 20
+   3127 step: mp4_start ai-draw-first
+   3127 media: recording ai-draw-first (mp4)
+   3134 step: pass
+   3247 step: cpu_turn
+   5127 step: rec_stop
+   5127 media: encoding 1896 frames -> tools\testing_scenarios\..\..\screenshots\videos\ai-draw-first.mp4
+     14 MP4 target: tools\testing_scenarios\recordings\AI_Dark_Hole_Media_Player.mp4
+     14 emu recording API: screenshot, screenshotToImage
+     14 MP4: the scenario capture is off (captureMp4 = false)
+     14 AI Dark Hole / media / Player
+     14 point you.m0; wait 20; options speed=always anims=hide battle=hide; mp4_start ai-dark-hole; pass; cpu_turn; rec_stop
+    915 Main menu (callback 0x08003B15).
+   1038 Campaign selected (callback 0x0801D6C9).
+   1231 Turn order: forced RPS lose (CPU goes first).
+   1241 Turn order: A (lost RPS; CPU chooses first).
+   1279 Turn order: A (lost RPS; CPU chooses first).
+   1471 Opponent's turn (waiting for your Main Phase 1).
+   1473 Usage deck goat / Chaos Turbo: main=40 extra=15; P0 shuffled=true (top 719->920) P1 shuffled=true (top 719->522), hands cleared.
+   2371 cpu_turn f=900 duel_step=8 turn_player=1 ai=3/2 textbox=0
+   2648 Player Draw Phase.
+   2829 Opening draw complete (hand=6 deck=34 want=6).
+   2970 Exact setup: P0 hand=0 deck=34 gy=0, P1 hand=2 deck=34 gy=0, LP 8000/8000, turnCount 2.
+   2970 Player Main Phase 1.
+   2970 steps: unknown card AI Dark Hole
+   2970 steps: 7 steps, 13 ops
+   2970 step: point you.m0
+   3107 steps: capture starts (cursor on point you.m0)
+   3114 step: wait 20
+   3140 step: options speed=always anims=hide battle=hide
+   3140 steps: options = 0x0037
+   3147 step: mp4_start ai-dark-hole
+   3147 media: recording ai-dark-hole (mp4)
+   3154 step: pass
+   3267 step: cpu_turn
+   3962 step: rec_stop
+   3962 media: encoding 711 frames -> tools\testing_scenarios\..\..\screenshots\videos\ai-dark-hole.mp4
+   3993 Play sequence done; ending capture (no recording tail).
+   3993 Finished — PASS (play sequence + tail). Stop mGBA Record A/V to finalize MP4.
+     14 MP4 target: tools\testing_scenarios\recordings\AI_Draw_First_Media_Player.mp4
+     14 emu recording API: screenshot, screenshotToImage
+     14 MP4: the scenario capture is off (captureMp4 = false)
+     14 AI Draw First / media / Player
+     14 point you.m0; wait 20; options speed=always anims=hide battle=hide; mp4_start ai-draw-first; pass; cpu_turn; rec_stop
+    915 Main menu (callback 0x08003B15).
+   1038 Campaign selected (callback 0x0801D6C9).
+   1231 Turn order: forced RPS lose (CPU goes first).
+   1241 Turn order: A (lost RPS; CPU chooses first).
+   1279 Turn order: A (lost RPS; CPU chooses first).
+   1471 Opponent's turn (waiting for your Main Phase 1).
+   1473 Usage deck goat / Chaos Turbo: main=40 extra=15; P0 shuffled=true (top 719->760) P1 shuffled=true (top 719->930), hands cleared.
+   2371 cpu_turn f=900 duel_step=8 turn_player=1 ai=3/2 textbox=0
+   2980 Player Draw Phase.
+   3161 Opening draw complete (hand=6 deck=34 want=6).
+   3302 Exact setup: P0 hand=0 deck=34 gy=0, P1 hand=4 deck=37 gy=0, LP 8000/8000, turnCount 2.
+   3302 Player Main Phase 1.
+   3302 steps: unknown card AI Draw First
+   3302 steps: 7 steps, 13 ops
+   3302 step: point you.m0
+   3438 steps: capture starts (cursor on point you.m0)
+   3445 step: wait 20
+   3471 step: options speed=always anims=hide battle=hide
+   3471 steps: options = 0x0037
+   3478 step: mp4_start ai-draw-first
+   3478 media: recording ai-draw-first (mp4)
+   3485 step: pass
+   3598 step: cpu_turn
+   4588 step: rec_stop
+   4588 media: encoding 1006 frames -> tools\testing_scenarios\..\..\screenshots\videos\ai-draw-first.mp4
+   4619 Play sequence done; ending capture (no recording tail).
+   4619 Finished — PASS (play sequence + tail). Stop mGBA Record A/V to finalize MP4.
+     12 MP4 target: tools\testing_scenarios\recordings\AI_Face_Down_Attack_Media_Player.mp4
+     12 emu recording API: screenshot, screenshotToImage
+     12 MP4: the scenario capture is off (captureMp4 = false)
+     12 AI Face Down Attack / media / Player
+     12 point you.m0; wait 20; options speed=always anims=hide battle=hide; mp4_start ai-face-down-attack; pass; cpu_turn; rec_s
+    913 Main menu (callback 0x08003B15).
+   1036 Campaign selected (callback 0x0801D6C9).
+   1229 Turn order: forced RPS lose (CPU goes first).
+   1239 Turn order: A (lost RPS; CPU chooses first).
+   1277 Turn order: A (lost RPS; CPU chooses first).
+   1469 Opponent's turn (waiting for your Main Phase 1).
+   1471 Usage deck goat / Chaos Turbo: main=40 extra=15; P0 shuffled=true (top 719->886) P1 shuffled=true (top 719->648), hands cleared.
+   2369 cpu_turn f=900 duel_step=8 turn_player=1 ai=3/2 textbox=0
+   2665 Player Draw Phase.
+   2846 Opening draw complete (hand=6 deck=34 want=6).
+   2986 Exact setup: P0 hand=0 deck=34 gy=0, P1 hand=0 deck=34 gy=0, LP 8000/8000, turnCount 2.
+   2986 Player Main Phase 1.
+   2986 steps: unknown card AI Face Down Attack
+   2986 steps: 7 steps, 13 ops
+   2986 step: point you.m0
+   3122 steps: capture starts (cursor on point you.m0)
+   3129 step: wait 20
+   3155 step: options speed=always anims=hide battle=hide
+   3155 steps: options = 0x0037
+   3162 step: mp4_start ai-face-down-attack
+   3162 media: recording ai-face-down-attack (mp4)
+   3169 step: pass
+   3208 step: cpu_turn
+  56986 Finished — FAIL: timeout_play (play step 1).
+     11 MP4 target: tools\testing_scenarios\recordings\AI_Nobleman_Media_Player.mp4
+     11 emu recording API: screenshot, screenshotToImage
+     11 MP4: the scenario capture is off (captureMp4 = false)
+     11 AI Nobleman / media / Player
+     11 point you.m0; wait 20; options speed=always anims=hide battle=hide; mp4_start ai-nobleman; pass; cpu_turn; rec_stop
+    912 Main menu (callback 0x08003B15).
+   1035 Campaign selected (callback 0x0801D6C9).
+   1228 Turn order: forced RPS lose (CPU goes first).
+   1238 Turn order: A (lost RPS; CPU chooses first).
+   1276 Turn order: A (lost RPS; CPU chooses first).
+   1468 Opponent's turn (waiting for your Main Phase 1).
+   1470 Usage deck goat / Chaos Turbo: main=40 extra=15; P0 shuffled=true (top 719->910) P1 shuffled=true (top 719->886), hands cleared.
+   2368 cpu_turn f=900 duel_step=8 turn_player=1 ai=3/2 textbox=0
+   2635 Player Draw Phase.
+   2816 Opening draw complete (hand=6 deck=34 want=6).
+   2956 Exact setup: P0 hand=0 deck=34 gy=0, P1 hand=2 deck=34 gy=0, LP 8000/8000, turnCount 2.
+   2956 Player Main Phase 1.
+   2956 steps: unknown card AI Nobleman
+   2956 steps: 7 steps, 13 ops
+   2956 step: point you.m0
+   3092 steps: capture starts (cursor on point you.m0)
+   3099 step: wait 20
+   3125 step: options speed=always anims=hide battle=hide
+   3125 steps: options = 0x0037
+   3132 step: mp4_start ai-nobleman
+   3132 media: recording ai-nobleman (mp4)
+   3139 step: pass
+   3178 step: cpu_turn
+   4062 step: rec_stop
+   4062 media: encoding 906 frames -> tools\testing_scenarios\..\..\screenshots\videos\ai-nobleman.mp4
+   4093 Play sequence done; ending capture (no recording tail).
+   4093 Finished — PASS (play sequence + tail). Stop mGBA Record A/V to finalize MP4.
+     17 MP4 target: tools\testing_scenarios\recordings\AI_Recruiter_Media_Player.mp4
+     17 emu recording API: screenshot, screenshotToImage
+     17 MP4: the scenario capture is off (captureMp4 = false)
+     17 AI Recruiter / media / Player
+     17 point you.m0; wait 20; options speed=always anims=hide battle=hide; mp4_start ai-recruiter; battle; attack you.m0 -> opp
+    918 Main menu (callback 0x08003B15).
+   1041 Campaign selected (callback 0x0801D6C9).
+   1234 Turn order: forced RPS lose (CPU goes first).
+   1244 Turn order: A (lost RPS; CPU chooses first).
+   1282 Turn order: A (lost RPS; CPU chooses first).
+   1474 Opponent's turn (waiting for your Main Phase 1).
+   1476 Usage deck goat / Chaos Turbo: main=40 extra=15; P0 shuffled=true (top 719->719) P1 shuffled=true (top 719->760), hands cleared.
+   2374 cpu_turn f=900 duel_step=8 turn_player=1 ai=3/2 textbox=0
+   2928 Player Draw Phase.
+   3109 Opening draw complete (hand=6 deck=34 want=6).
+   3250 Exact setup: P0 hand=0 deck=34 gy=0, P1 hand=0 deck=33 gy=0, LP 8000/8000, turnCount 2.
+   3250 Player Main Phase 1.
+   3250 steps: unknown card AI Recruiter
+   3250 steps: 9 steps, 22 ops
+   3250 step: point you.m0
+   3386 steps: capture starts (cursor on point you.m0)
+   3393 step: wait 20
+   3419 step: options speed=always anims=hide battle=hide
+   3419 steps: options = 0x0037
+   3426 step: mp4_start ai-recruiter
+   3426 media: recording ai-recruiter (mp4)
+   3433 step: battle
+   3533 step: attack you.m0 -> opp.m0
+   3681 steps: attack you.m0 -> opp.m0: taken on press 1
+   3847 step: settle
+   3873 step: wait 30
+   3909 step: rec_stop
+   3909 media: 55 still frames trimmed from the end
+   3909 media: encoding 321 frames -> tools\testing_scenarios\..\..\screenshots\videos\ai-recruiter.mp4
+   3926 Play sequence done; ending capture (no recording tail).
+   3926 Finished — PASS (play sequence + tail). Stop mGBA Record A/V to finalize MP4.
+     11 MP4 target: tools\testing_scenarios\recordings\AI_Snatch_Lethal_Media_Player.mp4
+     11 emu recording API: screenshot, screenshotToImage
+     11 MP4: the scenario capture is off (captureMp4 = false)
+     11 AI Snatch Lethal / media / Player
+     11 point you.m0; wait 20; options speed=always anims=hide battle=hide; mp4_start ai-snatch-lethal; pass; await Snatch Steal
+    912 Main menu (callback 0x08003B15).
+   1035 Campaign selected (callback 0x0801D6C9).
+   1228 Turn order: forced RPS lose (CPU goes first).
+   1238 Turn order: A (lost RPS; CPU chooses first).
+   1276 Turn order: A (lost RPS; CPU chooses first).
+   1468 Opponent's turn (waiting for your Main Phase 1).
+   1470 Usage deck goat / Chaos Turbo: main=40 extra=15; P0 shuffled=true (top 719->434) P1 shuffled=true (top 719->886), hands cleared.
+   2368 cpu_turn f=900 duel_step=8 turn_player=1 ai=4/0 textbox=0
+   2482 Player Draw Phase.
+   2663 Opening draw complete (hand=6 deck=34 want=6).
+   2803 Exact setup: P0 hand=0 deck=34 gy=0, P1 hand=1 deck=35 gy=0, LP 2400/8000, turnCount 2.
+   2803 Player Main Phase 1.
+   2803 steps: unknown card AI Snatch Lethal
+   2803 steps: 8 steps, 16 ops
+   2803 step: point you.m0
+   2939 steps: capture starts (cursor on point you.m0)
+   2946 step: wait 20
+   2972 step: options speed=always anims=hide battle=hide
+   2972 steps: options = 0x0037
+   2979 step: mp4_start ai-snatch-lethal
+   2979 media: recording ai-snatch-lethal (mp4)
+   2986 step: pass
+   3099 step: await Snatch Steal
+   3948 step: wait 420
+   4374 step: rec_stop
+   4374 media: encoding 1291 frames -> tools\testing_scenarios\..\..\screenshots\videos\ai-snatch-lethal.mp4
+   4391 Play sequence done; ending capture (no recording tail).
+   4391 Finished — PASS (play sequence + tail). Stop mGBA Record A/V to finalize MP4.
+     12 MP4 target: tools\testing_scenarios\recordings\AI_Solemn_Media_Player.mp4
+     12 emu recording API: screenshot, screenshotToImage
+     12 MP4: the scenario capture is off (captureMp4 = false)
+     12 AI Solemn / media / Player
+     12 point you.hand[Vorse Raider]; wait 20; options speed=always anims=hide battle=hide; mp4_start ai-solemn; summon you.hand
+    913 Main menu (callback 0x08003B15).
+   1036 Campaign selected (callback 0x0801D6C9).
+   1229 Turn order: forced RPS lose (CPU goes first).
+   1239 Turn order: A (lost RPS; CPU chooses first).
+   1277 Turn order: A (lost RPS; CPU chooses first).
+   1469 Opponent's turn (waiting for your Main Phase 1).
+   1471 Usage deck goat / Chaos Turbo: main=40 extra=15; P0 shuffled=true (top 719->859) P1 shuffled=true (top 719->930), hands cleared.
+   2369 cpu_turn f=900 duel_step=8 turn_player=1 ai=3/2 textbox=0
+   2629 Player Draw Phase.
+   2810 Opening draw complete (hand=6 deck=34 want=6).
+   2948 Exact setup: P0 hand=1 deck=34 gy=0, P1 hand=0 deck=33 gy=0, LP 8000/4000, turnCount 2.
+   2948 Player Main Phase 1.
+   2948 steps: unknown card AI Solemn
+   2948 steps: 8 steps, 20 ops
+   2948 step: point you.hand[Vorse Raider]
+   3141 steps: capture starts (cursor on point you.hand[Vorse Raider])
+   3148 step: wait 20
+   3174 step: options speed=always anims=hide battle=hide
+   3174 steps: options = 0x0037
+   3181 step: mp4_start ai-solemn
+   3181 media: recording ai-solemn (mp4)
+   3188 step: summon you.hand[Vorse Raider] -> m0 atk
+   3326 step: settle
+   3486 step: wait 30
+   3522 step: rec_stop
+   3522 media: 39 still frames trimmed from the end
+   3522 media: encoding 276 frames -> tools\testing_scenarios\..\..\screenshots\videos\ai-solemn.mp4
+   3539 Play sequence done; ending capture (no recording tail).
+   3539 Finished — PASS (play sequence + tail). Stop mGBA Record A/V to finalize MP4.
+     13 MP4 target: tools\testing_scenarios\recordings\AI_Steal_Tribute_Media_Player.mp4
+     13 emu recording API: screenshot, screenshotToImage
+     13 MP4: the scenario capture is off (captureMp4 = false)
+     13 AI Steal Tribute / media / Player
+     13 point you.m0; wait 20; options speed=always anims=hide battle=hide; mp4_start ai-steal-tribute; pass; cpu_turn; rec_stop
+    914 Main menu (callback 0x08003B15).
+   1037 Campaign selected (callback 0x0801D6C9).
+   1230 Turn order: forced RPS lose (CPU goes first).
+   1240 Turn order: A (lost RPS; CPU chooses first).
+   1278 Turn order: A (lost RPS; CPU chooses first).
+   1470 Opponent's turn (waiting for your Main Phase 1).
+   1472 Usage deck goat / Chaos Turbo: main=40 extra=15; P0 shuffled=true (top 719->648) P1 shuffled=true (top 719->760), hands cleared.
+   2370 cpu_turn f=900 duel_step=8 turn_player=1 ai=3/2 textbox=0
+   2706 Player Draw Phase.
+   2887 Opening draw complete (hand=6 deck=34 want=6).
+   3025 Exact setup: P0 hand=0 deck=34 gy=0, P1 hand=2 deck=33 gy=0, LP 8000/8000, turnCount 2.
+   3025 Player Main Phase 1.
+   3025 steps: unknown card AI Steal Tribute
+   3025 steps: 7 steps, 13 ops
+   3025 step: point you.m0
+   3161 steps: capture starts (cursor on point you.m0)
+   3168 step: wait 20
+   3194 step: options speed=always anims=hide battle=hide
+   3194 steps: options = 0x0037
+   3201 step: mp4_start ai-steal-tribute
+   3201 media: recording ai-steal-tribute (mp4)
+   3208 step: pass
+   3321 step: cpu_turn
+   4150 step: rec_stop
+   4150 media: encoding 845 frames -> tools\testing_scenarios\..\..\screenshots\videos\ai-steal-tribute.mp4
+   4181 Play sequence done; ending capture (no recording tail).
+   4181 Finished — PASS (play sequence + tail). Stop mGBA Record A/V to finalize MP4.
+     12 MP4 target: tools\testing_scenarios\recordings\AI_Thunder_Dragon_Media_Player.mp4
+     12 emu recording API: screenshot, screenshotToImage
+     12 MP4: the scenario capture is off (captureMp4 = false)
+     12 AI Thunder Dragon / media / Player
+     12 point you.m0; wait 20; options speed=always anims=hide battle=hide; mp4_start ai-thunder-dragon; pass; cpu_turn; rec_sto
+    913 Main menu (callback 0x08003B15).
+   1036 Campaign selected (callback 0x0801D6C9).
+   1229 Turn order: forced RPS lose (CPU goes first).
+   1239 Turn order: A (lost RPS; CPU chooses first).
+   1277 Turn order: A (lost RPS; CPU chooses first).
+   1469 Opponent's turn (waiting for your Main Phase 1).
+   1471 Usage deck goat / Chaos Turbo: main=40 extra=15; P0 shuffled=true (top 719->838) P1 shuffled=true (top 719->838), hands cleared.
+   2369 cpu_turn f=900 duel_step=8 turn_player=1 ai=4/0 textbox=0
+   2465 Player Draw Phase.
+   2646 Opening draw complete (hand=6 deck=34 want=6).
+   2786 Exact setup: P0 hand=0 deck=34 gy=0, P1 hand=2 deck=37 gy=0, LP 8000/8000, turnCount 2.
+   2786 Player Main Phase 1.
+   2786 steps: unknown card AI Thunder Dragon
+   2786 steps: 7 steps, 13 ops
+   2786 step: point you.m0
+   2922 steps: capture starts (cursor on point you.m0)
+   2929 step: wait 20
+   2955 step: options speed=always anims=hide battle=hide
+   2955 steps: options = 0x0037
+   2962 step: mp4_start ai-thunder-dragon
+   2962 media: recording ai-thunder-dragon (mp4)
+   2969 step: pass
+   3082 step: cpu_turn
+   3958 step: rec_stop
+   3958 media: encoding 892 frames -> tools\testing_scenarios\..\..\screenshots\videos\ai-thunder-dragon.mp4
+   3989 Play sequence done; ending capture (no recording tail).
+   3989 Finished — PASS (play sequence + tail). Stop mGBA Record A/V to finalize MP4.
+     11 MP4 target: tools\testing_scenarios\recordings\AI_Trap_Hole_Media_Player.mp4
+     11 emu recording API: screenshot, screenshotToImage
+     11 MP4: the scenario capture is off (captureMp4 = false)
+     11 AI Trap Hole / media / Player
+     11 point you.hand[Breaker the Magical Warrior]; wait 20; options speed=always anims=hide battle=hide; mp4_start ai-trap-hol
+    912 Main menu (callback 0x08003B15).
+   1035 Campaign selected (callback 0x0801D6C9).
+   1228 Turn order: forced RPS lose (CPU goes first).
+   1238 Turn order: A (lost RPS; CPU chooses first).
+   1276 Turn order: A (lost RPS; CPU chooses first).
+   1468 Opponent's turn (waiting for your Main Phase 1).
+   1470 Usage deck goat / Chaos Turbo: main=40 extra=15; P0 shuffled=true (top 719->920) P1 shuffled=true (top 719->952), hands cleared.
+   2368 cpu_turn f=900 duel_step=8 turn_player=1 ai=4/0 textbox=0
+   2485 Player Draw Phase.
+   2666 Opening draw complete (hand=6 deck=34 want=6).
+   2806 Exact setup: P0 hand=1 deck=34 gy=0, P1 hand=0 deck=34 gy=0, LP 8000/8000, turnCount 2.
+   2806 Player Main Phase 1.
+   2806 steps: unknown card AI Trap Hole
+   2806 steps: 8 steps, 20 ops
+   2806 step: point you.hand[Breaker the Magical Warrior]
+   2999 steps: capture starts (cursor on point you.hand[Breaker the Magical Warrior])
+   3006 step: wait 20
+   3032 step: options speed=always anims=hide battle=hide
+   3032 steps: options = 0x0037
+   3039 step: mp4_start ai-trap-hole
+   3039 media: recording ai-trap-hole (mp4)
+   3046 step: summon you.hand[Breaker the Magical Warrior] -> m0 atk
+   3183 step: settle
+   3322 step: wait 30
+   3358 step: rec_stop
+   3358 media: 39 still frames trimmed from the end
+   3358 media: encoding 255 frames -> tools\testing_scenarios\..\..\screenshots\videos\ai-trap-hole.mp4
+   3375 Play sequence done; ending capture (no recording tail).
+   3375 Finished — PASS (play sequence + tail). Stop mGBA Record A/V to finalize MP4.
+     10 MP4 target: tools\testing_scenarios\recordings\AI_Waboku_Media_Player.mp4
+     10 emu recording API: screenshot, screenshotToImage
+     10 MP4: the scenario capture is off (captureMp4 = false)
+     10 AI Waboku / media / Player
+     10 point you.m0; wait 20; options speed=always anims=hide battle=hide; mp4_start ai-waboku; battle; attack you.m0 -> opp.m0
+    911 Main menu (callback 0x08003B15).
+   1034 Campaign selected (callback 0x0801D6C9).
+   1227 Turn order: forced RPS lose (CPU goes first).
+   1237 Turn order: A (lost RPS; CPU chooses first).
+   1275 Turn order: A (lost RPS; CPU chooses first).
+   1467 Opponent's turn (waiting for your Main Phase 1).
+   1469 Usage deck goat / Chaos Turbo: main=40 extra=15; P0 shuffled=true (top 719->648) P1 shuffled=true (top 719->648), hands cleared.
+   2367 cpu_turn f=900 duel_step=8 turn_player=1 ai=3/2 textbox=0
+   2649 Player Draw Phase.
+   2830 Opening draw complete (hand=6 deck=34 want=6).
+   2968 Exact setup: P0 hand=0 deck=34 gy=0, P1 hand=0 deck=33 gy=0, LP 8000/8000, turnCount 2.
+   2968 Player Main Phase 1.
+   2968 steps: unknown card AI Waboku
+   2968 steps: 9 steps, 22 ops
+   2968 step: point you.m0
+   3104 steps: capture starts (cursor on point you.m0)
+   3111 step: wait 20
+   3137 step: options speed=always anims=hide battle=hide
+   3137 steps: options = 0x0037
+   3144 step: mp4_start ai-waboku
+   3144 media: recording ai-waboku (mp4)
+   3151 step: battle
+   3251 step: attack you.m0 -> opp.m0
+   3399 steps: attack you.m0 -> opp.m0: taken on press 1
+   3492 step: settle
+   3518 step: wait 30
+   3554 step: rec_stop
+   3554 media: 47 still frames trimmed from the end
+   3554 media: encoding 256 frames -> tools\testing_scenarios\..\..\screenshots\videos\ai-waboku.mp4
+   3571 Play sequence done; ending capture (no recording tail).
+   3571 Finished — PASS (play sequence + tail). Stop mGBA Record A/V to finalize MP4.
+     13 MP4 target: tools\testing_scenarios\recordings\CPU_Play_Media_Player.mp4
+     13 emu recording API: screenshot, screenshotToImage
+     13 MP4: the scenario capture is off (captureMp4 = false)
+     13 CPU Play / media / Player
+     13 point you.m0; wait 30; options speed=always anims=hide battle=hide; mp4_start ai-magic-cylinder; battle; attack you.m0 -
+    914 Main menu (callback 0x08003B15).
+   1037 Campaign selected (callback 0x0801D6C9).
+   1230 Turn order: forced RPS lose (CPU goes first).
+   1240 Turn order: A (lost RPS; CPU chooses first).
+   1278 Turn order: A (lost RPS; CPU chooses first).
+   1470 Opponent's turn (waiting for your Main Phase 1).
+   1472 Usage deck goat / Chaos Turbo: main=40 extra=15; P0 shuffled=true (top 719->859) P1 shuffled=true (top 719->902), hands cleared.
+   2370 cpu_turn f=900 duel_step=8 turn_player=1 ai=4/0 textbox=0
+   2451 Player Draw Phase.
+   2632 Opening draw complete (hand=6 deck=34 want=6).
+   2772 Exact setup: P0 hand=0 deck=34 gy=0, P1 hand=1 deck=34 gy=0, LP 8000/8000, turnCount 2.
+   2772 Player Main Phase 1.
+   2772 steps: unknown card CPU Play
+   2772 steps: 9 steps, 22 ops
+   2772 step: point you.m0
+   2908 steps: capture starts (cursor on point you.m0)
+   2915 step: wait 30
+   2951 step: options speed=always anims=hide battle=hide
+   2951 steps: options = 0x0037
+   2958 step: mp4_start ai-magic-cylinder
+   2958 media: recording ai-magic-cylinder (mp4)
+   2965 step: battle
+   3065 step: attack you.m0 -> direct
+   3326 step: settle
+   3352 step: wait 20
+   3378 step: rec_stop
+   3378 media: encoding 335 frames -> tools\testing_scenarios\..\..\screenshots\videos\ai-magic-cylinder.mp4
+   3395 Play sequence done; ending capture (no recording tail).
+   3395 Finished — PASS (play sequence + tail). Stop mGBA Record A/V to finalize MP4.
+     21 MP4 target: tools\testing_scenarios\recordings\AI_Chaos_Emperor_Media_Player.mp4
+     21 emu recording API: screenshot, screenshotToImage
+     21 MP4: the scenario capture is off (captureMp4 = false)
+     21 AI Chaos Emperor / media / Player
+     21 point you.m0; wait 20; options speed=always anims=hide battle=hide; mp4_start ai-chaos-emperor; pass; cpu_turn; rec_stop
+    922 Main menu (callback 0x08003B15).
+   1045 Campaign selected (callback 0x0801D6C9).
+   1238 Turn order: forced RPS lose (CPU goes first).
+   1248 Turn order: A (lost RPS; CPU chooses first).
+   1286 Turn order: A (lost RPS; CPU chooses first).
+   1478 Opponent's turn (waiting for your Main Phase 1).
+   1480 Usage deck goat / Chaos Turbo: main=40 extra=15; P0 shuffled=true (top 719->910) P1 shuffled=true (top 719->902), hands cleared.
+   2378 cpu_turn f=900 duel_step=8 turn_player=1 ai=3/2 textbox=0
+   2713 Player Draw Phase.
+   2894 Opening draw complete (hand=6 deck=34 want=6).
+   3034 Exact setup: P0 hand=3 deck=34 gy=0, P1 hand=1 deck=33 gy=2, LP 8000/8000, turnCount 2.
+   3034 Player Main Phase 1.
+   3034 steps: unknown card AI Chaos Emperor
+   3034 steps: 7 steps, 13 ops
+   3034 step: point you.m0
+   3171 steps: capture starts (cursor on point you.m0)
+   3178 step: wait 20
+   3204 step: options speed=always anims=hide battle=hide
+   3204 steps: options = 0x0037
+   3211 step: mp4_start ai-chaos-emperor
+   3211 media: recording ai-chaos-emperor (mp4)
+   3218 step: pass
+   3331 step: cpu_turn
+   4017 step: rec_stop
+   4017 media: encoding 702 frames -> tools\testing_scenarios\..\..\screenshots\videos\ai-chaos-emperor.mp4
+   4048 Play sequence done; ending capture (no recording tail).
+   4048 Finished — PASS (play sequence + tail). Stop mGBA Record A/V to finalize MP4.
+     15 MP4 target: tools\testing_scenarios\recordings\AI_Enemy_Controller_Media_Player.mp4
+     15 emu recording API: screenshot, screenshotToImage
+     15 MP4: the scenario capture is off (captureMp4 = false)
+     15 AI Enemy Controller / media / Player
+     15 point you.m0; wait 20; options speed=always anims=hide battle=hide; mp4_start ai-enemy-controller; pass; cpu_turn; rec_s
+    916 Main menu (callback 0x08003B15).
+   1039 Campaign selected (callback 0x0801D6C9).
+   1232 Turn order: forced RPS lose (CPU goes first).
+   1242 Turn order: A (lost RPS; CPU chooses first).
+   1280 Turn order: A (lost RPS; CPU chooses first).
+   1472 Opponent's turn (waiting for your Main Phase 1).
+   1474 Usage deck goat / Chaos Turbo: main=40 extra=15; P0 shuffled=true (top 719->838) P1 shuffled=true (top 719->886), hands cleared.
+   2372 cpu_turn f=900 duel_step=8 turn_player=1 ai=4/0 textbox=0
+   2486 Player Draw Phase.
+   2667 Opening draw complete (hand=6 deck=34 want=6).
+   2807 Exact setup: P0 hand=0 deck=34 gy=0, P1 hand=1 deck=35 gy=0, LP 8000/8000, turnCount 2.
+   2807 Player Main Phase 1.
+   2807 steps: unknown card AI Enemy Controller
+   2807 steps: 7 steps, 13 ops
+   2807 step: point you.m0
+   2943 steps: capture starts (cursor on point you.m0)
+   2950 step: wait 20
+   2976 step: options speed=always anims=hide battle=hide
+   2976 steps: options = 0x0037
+   2983 step: mp4_start ai-enemy-controller
+   2983 media: recording ai-enemy-controller (mp4)
+   2990 step: pass
+   3103 step: cpu_turn
+   3937 step: rec_stop
+   3937 media: encoding 850 frames -> tools\testing_scenarios\..\..\screenshots\videos\ai-enemy-controller.mp4
+   3968 Play sequence done; ending capture (no recording tail).
+   3968 Finished — PASS (play sequence + tail). Stop mGBA Record A/V to finalize MP4.
+     12 MP4 target: tools\testing_scenarios\recordings\AI_Exiled_Force_Media_Player.mp4
+     12 emu recording API: screenshot, screenshotToImage
+     12 MP4: the scenario capture is off (captureMp4 = false)
+     12 AI Exiled Force / media / Player
+     12 point you.m0; wait 20; options speed=always anims=hide battle=hide; mp4_start ai-exiled-force; pass; cpu_turn; rec_stop
+    913 Main menu (callback 0x08003B15).
+   1036 Campaign selected (callback 0x0801D6C9).
+   1229 Turn order: forced RPS lose (CPU goes first).
+   1239 Turn order: A (lost RPS; CPU chooses first).
+   1277 Turn order: A (lost RPS; CPU chooses first).
+   1469 Opponent's turn (waiting for your Main Phase 1).
+   1471 Usage deck goat / Chaos Turbo: main=40 extra=15; P0 shuffled=true (top 719->760) P1 shuffled=true (top 719->878), hands cleared.
+   2369 cpu_turn f=900 duel_step=8 turn_player=1 ai=4/0 textbox=0
+   2449 Player Draw Phase.
+   2630 Opening draw complete (hand=6 deck=34 want=6).
+   2770 Exact setup: P0 hand=0 deck=34 gy=0, P1 hand=1 deck=35 gy=0, LP 8000/8000, turnCount 2.
+   2770 Player Main Phase 1.
+   2770 steps: unknown card AI Exiled Force
+   2770 steps: 7 steps, 13 ops
+   2770 step: point you.m0
+   2906 steps: capture starts (cursor on point you.m0)
+   2913 step: wait 20
+   2939 step: options speed=always anims=hide battle=hide
+   2939 steps: options = 0x0037
+   2946 step: mp4_start ai-exiled-force
+   2946 media: recording ai-exiled-force (mp4)
+   2953 step: pass
+   3066 step: cpu_turn
+   3594 step: rec_stop
+   3594 media: encoding 544 frames -> tools\testing_scenarios\..\..\screenshots\videos\ai-exiled-force.mp4
+   3625 Play sequence done; ending capture (no recording tail).
+   3625 Finished — PASS (play sequence + tail). Stop mGBA Record A/V to finalize MP4.
+     12 MP4 target: tools\testing_scenarios\recordings\AI_Face_Down_Attack_Media_Player.mp4
+     12 emu recording API: screenshot, screenshotToImage
+     12 MP4: the scenario capture is off (captureMp4 = false)
+     12 AI Face Down Attack / media / Player
+     12 point you.m0; wait 20; options speed=always anims=hide battle=hide; mp4_start ai-face-down-attack; pass; cpu_turn; rec_s
+    913 Main menu (callback 0x08003B15).
+   1036 Campaign selected (callback 0x0801D6C9).
+   1229 Turn order: forced RPS lose (CPU goes first).
+   1239 Turn order: A (lost RPS; CPU chooses first).
+   1277 Turn order: A (lost RPS; CPU chooses first).
+   1469 Opponent's turn (waiting for your Main Phase 1).
+   1471 Usage deck goat / Chaos Turbo: main=40 extra=15; P0 shuffled=true (top 719->719) P1 shuffled=true (top 719->878), hands cleared.
+   2369 cpu_turn f=900 duel_step=8 turn_player=1 ai=3/2 textbox=0
+   2834 Player Draw Phase.
+   3015 Opening draw complete (hand=6 deck=34 want=6).
+   3155 Exact setup: P0 hand=0 deck=34 gy=0, P1 hand=0 deck=33 gy=0, LP 8000/8000, turnCount 2.
+   3155 Player Main Phase 1.
+   3155 steps: unknown card AI Face Down Attack
+   3155 steps: 7 steps, 13 ops
+   3155 step: point you.m0
+   3291 steps: capture starts (cursor on point you.m0)
+   3298 step: wait 20
+   3324 step: options speed=always anims=hide battle=hide
+   3324 steps: options = 0x0037
+   3331 step: mp4_start ai-face-down-attack
+   3331 media: recording ai-face-down-attack (mp4)
+   3338 step: pass
+   3377 step: cpu_turn
+   4004 step: rec_stop
+   4004 media: encoding 649 frames -> tools\testing_scenarios\..\..\screenshots\videos\ai-face-down-attack.mp4
+   4035 Play sequence done; ending capture (no recording tail).
+   4035 Finished — PASS (play sequence + tail). Stop mGBA Record A/V to finalize MP4.
+     13 MP4 target: tools\testing_scenarios\recordings\AI_Hane_Hane_Media_Player.mp4
+     13 emu recording API: screenshot, screenshotToImage
+     13 MP4: the scenario capture is off (captureMp4 = false)
+     13 AI Hane Hane / media / Player
+     13 point you.m0; wait 20; options speed=always anims=hide battle=hide; mp4_start ai-hane-hane; pass; cpu_turn; rec_stop
+    914 Main menu (callback 0x08003B15).
+   1037 Campaign selected (callback 0x0801D6C9).
+   1230 Turn order: forced RPS lose (CPU goes first).
+   1240 Turn order: A (lost RPS; CPU chooses first).
+   1278 Turn order: A (lost RPS; CPU chooses first).
+   1470 Opponent's turn (waiting for your Main Phase 1).
+   1472 Usage deck goat / Chaos Turbo: main=40 extra=15; P0 shuffled=true (top 719->859) P1 shuffled=true (top 719->719), hands cleared.
+   2370 cpu_turn f=900 duel_step=8 turn_player=1 ai=3/2 textbox=0
+   2742 Player Draw Phase.
+   2923 Opening draw complete (hand=6 deck=34 want=6).
+   3064 Exact setup: P0 hand=0 deck=34 gy=0, P1 hand=0 deck=33 gy=0, LP 8000/8000, turnCount 2.
+   3064 Player Main Phase 1.
+   3064 steps: unknown card AI Hane Hane
+   3064 steps: 7 steps, 13 ops
+   3064 step: point you.m0
+   3200 steps: capture starts (cursor on point you.m0)
+   3207 step: wait 20
+   3233 step: options speed=always anims=hide battle=hide
+   3233 steps: options = 0x0037
+   3240 step: mp4_start ai-hane-hane
+   3240 media: recording ai-hane-hane (mp4)
+   3247 step: pass
+   3360 step: cpu_turn
+   4110 step: rec_stop
+   4110 media: encoding 766 frames -> tools\testing_scenarios\..\..\screenshots\videos\ai-hane-hane.mp4
+   4141 Play sequence done; ending capture (no recording tail).
+   4141 Finished — PASS (play sequence + tail). Stop mGBA Record A/V to finalize MP4.
+     11 MP4 target: tools\testing_scenarios\recordings\AI_Man_Eater_Bug_Media_Player.mp4
+     11 emu recording API: screenshot, screenshotToImage
+     11 MP4: the scenario capture is off (captureMp4 = false)
+     11 AI Man Eater Bug / media / Player
+     11 point you.m0; wait 20; options speed=always anims=hide battle=hide; mp4_start ai-man-eater-bug; battle; attack you.m0 ->
+    912 Main menu (callback 0x08003B15).
+   1035 Campaign selected (callback 0x0801D6C9).
+   1228 Turn order: forced RPS lose (CPU goes first).
+   1238 Turn order: A (lost RPS; CPU chooses first).
+   1276 Turn order: A (lost RPS; CPU chooses first).
+   1468 Opponent's turn (waiting for your Main Phase 1).
+   1470 Usage deck goat / Chaos Turbo: main=40 extra=15; P0 shuffled=true (top 719->952) P1 shuffled=true (top 719->902), hands cleared.
+   2368 cpu_turn f=900 duel_step=8 turn_player=1 ai=4/0 textbox=0
+   2445 Player Draw Phase.
+   2626 Opening draw complete (hand=6 deck=34 want=6).
+   2766 Exact setup: P0 hand=0 deck=34 gy=0, P1 hand=0 deck=34 gy=0, LP 8000/8000, turnCount 2.
+   2766 Player Main Phase 1.
+   2766 steps: unknown card AI Man Eater Bug
+   2766 steps: 9 steps, 22 ops
+   2766 step: point you.m0
+   2902 steps: capture starts (cursor on point you.m0)
+   2909 step: wait 20
+   2935 step: options speed=always anims=hide battle=hide
+   2935 steps: options = 0x0037
+   2942 step: mp4_start ai-man-eater-bug
+   2942 media: recording ai-man-eater-bug (mp4)
+   2949 step: battle
+   3049 step: attack you.m0 -> opp.m0
+   3196 steps: attack you.m0 -> opp.m0: taken on press 1
+   3364 step: settle
+   3390 step: wait 30
+   3426 step: rec_stop
+   3426 media: 56 still frames trimmed from the end
+   3426 media: encoding 321 frames -> tools\testing_scenarios\..\..\screenshots\videos\ai-man-eater-bug.mp4
+   3443 Play sequence done; ending capture (no recording tail).
+   3443 Finished — PASS (play sequence + tail). Stop mGBA Record A/V to finalize MP4.
+     14 MP4 target: tools\testing_scenarios\recordings\AI_Megamorph_Media_Player.mp4
+     14 emu recording API: screenshot, screenshotToImage
+     14 MP4: the scenario capture is off (captureMp4 = false)
+     14 AI Megamorph / media / Player
+     14 point you.m0; wait 20; options speed=always anims=hide battle=hide; mp4_start ai-megamorph; pass; await Megamorph; wait 
+    915 Main menu (callback 0x08003B15).
+   1038 Campaign selected (callback 0x0801D6C9).
+   1231 Turn order: forced RPS lose (CPU goes first).
+   1241 Turn order: A (lost RPS; CPU chooses first).
+   1279 Turn order: A (lost RPS; CPU chooses first).
+   1471 Opponent's turn (waiting for your Main Phase 1).
+   1473 Usage deck goat / Chaos Turbo: main=40 extra=15; P0 shuffled=true (top 719->719) P1 shuffled=true (top 719->719), hands cleared.
+   2371 cpu_turn f=900 duel_step=8 turn_player=1 ai=3/2 textbox=0
+   2745 Player Draw Phase.
+   2926 Opening draw complete (hand=6 deck=34 want=6).
+   3068 Exact setup: P0 hand=0 deck=34 gy=0, P1 hand=2 deck=33 gy=0, LP 3000/2000, turnCount 2.
+   3068 Player Main Phase 1.
+   3068 steps: unknown card AI Megamorph
+   3068 steps: 8 steps, 16 ops
+   3068 step: point you.m0
+   3204 steps: capture starts (cursor on point you.m0)
+   3211 step: wait 20
+   3237 step: options speed=always anims=hide battle=hide
+   3237 steps: options = 0x0037
+   3244 step: mp4_start ai-megamorph
+   3244 media: recording ai-megamorph (mp4)
+   3251 step: pass
+   3290 step: await Megamorph
+   4247 step: wait 240
+   4493 step: rec_stop
+   4493 media: 7 still frames trimmed from the end
+   4493 media: encoding 1218 frames -> tools\testing_scenarios\..\..\screenshots\videos\ai-megamorph.mp4
+   4510 Play sequence done; ending capture (no recording tail).
+   4510 Finished — PASS (play sequence + tail). Stop mGBA Record A/V to finalize MP4.
+     12 MP4 target: tools\testing_scenarios\recordings\AI_Snatch_Lethal_Media_Player.mp4
+     12 emu recording API: screenshot, screenshotToImage
+     12 MP4: the scenario capture is off (captureMp4 = false)
+     12 AI Snatch Lethal / media / Player
+     12 point you.m0; wait 20; options speed=always anims=hide battle=hide; mp4_start ai-snatch-lethal; pass; await Snatch Steal
+    913 Main menu (callback 0x08003B15).
+   1036 Campaign selected (callback 0x0801D6C9).
+   1229 Turn order: forced RPS lose (CPU goes first).
+   1239 Turn order: A (lost RPS; CPU chooses first).
+   1277 Turn order: A (lost RPS; CPU chooses first).
+   1469 Opponent's turn (waiting for your Main Phase 1).
+   1471 Usage deck goat / Chaos Turbo: main=40 extra=15; P0 shuffled=true (top 719->434) P1 shuffled=true (top 719->838), hands cleared.
+   2369 cpu_turn f=900 duel_step=8 turn_player=1 ai=4/0 textbox=0
+   2466 Player Draw Phase.
+   2647 Opening draw complete (hand=6 deck=34 want=6).
+   2785 Exact setup: P0 hand=0 deck=34 gy=0, P1 hand=1 deck=35 gy=0, LP 2400/8000, turnCount 2.
+   2785 Player Main Phase 1.
+   2785 steps: unknown card AI Snatch Lethal
+   2785 steps: 8 steps, 16 ops
+   2785 step: point you.m0
+   2921 steps: capture starts (cursor on point you.m0)
+   2928 step: wait 20
+   2954 step: options speed=always anims=hide battle=hide
+   2954 steps: options = 0x0037
+   2961 step: mp4_start ai-snatch-lethal
+   2961 media: recording ai-snatch-lethal (mp4)
+   2968 step: pass
+   3081 step: await Snatch Steal
+   3930 step: wait 240
+   4176 step: rec_stop
+   4176 media: encoding 1111 frames -> tools\testing_scenarios\..\..\screenshots\videos\ai-snatch-lethal.mp4
+   4193 Play sequence done; ending capture (no recording tail).
+   4193 Finished — PASS (play sequence + tail). Stop mGBA Record A/V to finalize MP4.
+     13 MP4 target: tools\testing_scenarios\recordings\AI_Virus_Media_Player.mp4
+     13 emu recording API: screenshot, screenshotToImage
+     13 MP4: the scenario capture is off (captureMp4 = false)
+     13 AI Virus / media / Player
+     13 point you.m0; wait 20; options speed=always anims=hide battle=hide; mp4_start ai-virus; pass; cpu_turn; rec_stop
+    914 Main menu (callback 0x08003B15).
+   1037 Campaign selected (callback 0x0801D6C9).
+   1230 Turn order: forced RPS lose (CPU goes first).
+   1240 Turn order: A (lost RPS; CPU chooses first).
+   1278 Turn order: A (lost RPS; CPU chooses first).
+   1470 Opponent's turn (waiting for your Main Phase 1).
+   1472 Usage deck goat / Chaos Turbo: main=40 extra=15; P0 shuffled=true (top 719->838) P1 shuffled=true (top 719->920), hands cleared.
+   2370 cpu_turn f=900 duel_step=8 turn_player=1 ai=4/0 textbox=0
+   2465 Player Draw Phase.
+   2646 Opening draw complete (hand=6 deck=34 want=6).
+   2785 Exact setup: P0 hand=0 deck=34 gy=0, P1 hand=2 deck=35 gy=0, LP 8000/8000, turnCount 2.
+   2785 Player Main Phase 1.
+   2785 steps: unknown card AI Virus
+   2785 steps: 7 steps, 13 ops
+   2785 step: point you.m0
+   2921 steps: capture starts (cursor on point you.m0)
+   2928 step: wait 20
+   2954 step: options speed=always anims=hide battle=hide
+   2954 steps: options = 0x0037
+   2961 step: mp4_start ai-virus
+   2961 media: recording ai-virus (mp4)
+   2968 step: pass
+   3081 step: cpu_turn
+   3762 step: rec_stop
+   3762 media: encoding 697 frames -> tools\testing_scenarios\..\..\screenshots\videos\ai-virus.mp4
+   3793 Play sequence done; ending capture (no recording tail).
+   3793 Finished — PASS (play sequence + tail). Stop mGBA Record A/V to finalize MP4.
+     14 MP4 target: tools\testing_scenarios\recordings\AI_Megamorph_Media_Player.mp4
+     14 emu recording API: screenshot, screenshotToImage
+     14 MP4: the scenario capture is off (captureMp4 = false)
+     14 AI Megamorph / media / Player
+     14 point opp.m0; wait 20; options speed=always anims=hide battle=hide; mp4_start ai-megamorph; pass; await Megamorph; wait 
+    915 Main menu (callback 0x08003B15).
+   1038 Campaign selected (callback 0x0801D6C9).
+   1231 Turn order: forced RPS lose (CPU goes first).
+   1241 Turn order: A (lost RPS; CPU chooses first).
+   1279 Turn order: A (lost RPS; CPU chooses first).
+   1471 Opponent's turn (waiting for your Main Phase 1).
+   1473 Usage deck goat / Chaos Turbo: main=40 extra=15; P0 shuffled=true (top 719->952) P1 shuffled=true (top 719->838), hands cleared.
+   2371 cpu_turn f=900 duel_step=8 turn_player=1 ai=3/2 textbox=0
+   2728 Player Draw Phase.
+   2909 Opening draw complete (hand=6 deck=34 want=6).
+   3050 Exact setup: P0 hand=0 deck=34 gy=0, P1 hand=1 deck=33 gy=0, LP 3000/2000, turnCount 2.
+   3050 Player Main Phase 1.
+   3050 steps: unknown card AI Megamorph
+   3050 steps: 8 steps, 16 ops
+   3050 step: point opp.m0
+   3281 steps: capture starts (cursor on point opp.m0)
+   3288 step: wait 20
+   3314 step: options speed=always anims=hide battle=hide
+   3314 steps: options = 0x0037
+   3321 step: mp4_start ai-megamorph
+   3321 media: recording ai-megamorph (mp4)
+   3328 step: pass
+   3367 step: await Megamorph
+   6967 steps: await Megamorph: never came
+   6974 step: wait 240
+   7220 step: rec_stop
+   7220 media: 32 still frames trimmed from the end
+   7220 media: encoding 3843 frames -> tools\testing_scenarios\..\..\screenshots\videos\ai-megamorph.mp4
+   7237 Play sequence done; ending capture (no recording tail).
+   7237 Finished — PASS (play sequence + tail). Stop mGBA Record A/V to finalize MP4.
+     10 MP4 target: tools\testing_scenarios\recordings\AI_Kycoo_Media_Player.mp4
+     10 emu recording API: screenshot, screenshotToImage
+     10 MP4: the scenario capture is off (captureMp4 = false)
+     10 AI Kycoo / media / Player
+     10 point you.m0; wait 20; options speed=always anims=hide battle=hide; mp4_start ai-kycoo; pass; cpu_turn; rec_stop
+    911 Main menu (callback 0x08003B15).
+   1034 Campaign selected (callback 0x0801D6C9).
+   1227 Turn order: forced RPS lose (CPU goes first).
+   1237 Turn order: A (lost RPS; CPU chooses first).
+   1275 Turn order: A (lost RPS; CPU chooses first).
+   1467 Opponent's turn (waiting for your Main Phase 1).
+   1469 Usage deck goat / Chaos Turbo: main=40 extra=15; P0 shuffled=true (top 719->838) P1 shuffled=true (top 719->930), hands cleared.
+   2367 cpu_turn f=900 duel_step=8 turn_player=1 ai=4/0 textbox=0
+   2462 Player Draw Phase.
+   2643 Opening draw complete (hand=6 deck=34 want=6).
+   2782 Exact setup: P0 hand=0 deck=34 gy=3, P1 hand=0 deck=35 gy=0, LP 8000/8000, turnCount 2.
+   2782 Player Main Phase 1.
+   2782 steps: unknown card AI Kycoo
+   2782 steps: 7 steps, 13 ops
+   2782 step: point you.m0
+   2919 steps: capture starts (cursor on point you.m0)
+   2926 step: wait 20
+   2952 step: options speed=always anims=hide battle=hide
+   2952 steps: options = 0x0037
+   2959 step: mp4_start ai-kycoo
+   2959 media: recording ai-kycoo (mp4)
+   2966 step: pass
+   3005 step: cpu_turn
+   3804 step: rec_stop
+   3804 media: encoding 821 frames -> tools\testing_scenarios\..\..\screenshots\videos\ai-kycoo.mp4
+   3835 Play sequence done; ending capture (no recording tail).
+   3835 Finished — PASS (play sequence + tail). Stop mGBA Record A/V to finalize MP4.
+     12 MP4 target: tools\testing_scenarios\recordings\AI_Tribute_Upgrade_Media_Player.mp4
+     12 emu recording API: screenshot, screenshotToImage
+     12 MP4: the scenario capture is off (captureMp4 = false)
+     12 AI Tribute Upgrade / media / Player
+     12 point you.m0; wait 20; options speed=always anims=hide battle=hide; mp4_start ai-tribute-upgrade; pass; cpu_turn; rec_st
+    913 Main menu (callback 0x08003B15).
+   1036 Campaign selected (callback 0x0801D6C9).
+   1229 Turn order: forced RPS lose (CPU goes first).
+   1239 Turn order: A (lost RPS; CPU chooses first).
+   1277 Turn order: A (lost RPS; CPU chooses first).
+   1469 Opponent's turn (waiting for your Main Phase 1).
+   1471 Usage deck goat / Chaos Turbo: main=40 extra=15; P0 shuffled=true (top 719->760) P1 shuffled=true (top 719->838), hands cleared.
+   2369 cpu_turn f=900 duel_step=8 turn_player=1 ai=3/2 textbox=0
+   2747 Player Draw Phase.
+   2928 Opening draw complete (hand=6 deck=34 want=6).
+   3068 Exact setup: P0 hand=0 deck=34 gy=0, P1 hand=1 deck=33 gy=0, LP 8000/8000, turnCount 2.
+   3068 Player Main Phase 1.
+   3068 steps: unknown card AI Tribute Upgrade
+   3068 steps: 7 steps, 13 ops
+   3068 step: point you.m0
+   3204 steps: capture starts (cursor on point you.m0)
+   3211 step: wait 20
+   3237 step: options speed=always anims=hide battle=hide
+   3237 steps: options = 0x0037
+   3244 step: mp4_start ai-tribute-upgrade
+   3244 media: recording ai-tribute-upgrade (mp4)
+   3251 step: pass
+   3364 step: cpu_turn
+   3842 step: rec_stop
+   3842 media: encoding 494 frames -> tools\testing_scenarios\..\..\screenshots\videos\ai-tribute-upgrade.mp4
+   3873 Play sequence done; ending capture (no recording tail).
+   3873 Finished — PASS (play sequence + tail). Stop mGBA Record A/V to finalize MP4.
+     13 MP4 target: tools\testing_scenarios\recordings\AI_Thunder_Dragon_Media_Player.mp4
+     13 emu recording API: screenshot, screenshotToImage
+     13 MP4: the scenario capture is off (captureMp4 = false)
+     13 AI Thunder Dragon / media / Player
+     13 point you.m0; wait 20; options speed=always anims=hide battle=hide; mp4_start ai-thunder-dragon; pass; cpu_turn; rec_sto
+    914 Main menu (callback 0x08003B15).
+   1037 Campaign selected (callback 0x0801D6C9).
+   1230 Turn order: forced RPS lose (CPU goes first).
+   1240 Turn order: A (lost RPS; CPU chooses first).
+   1278 Turn order: A (lost RPS; CPU chooses first).
+   1470 Opponent's turn (waiting for your Main Phase 1).
+   1472 Usage deck warrior / Goat Control: main=38 extra=15; P0 shuffled=true (top 933->522) P1 shuffled=true (top 933->904), hands cleared.
+   2370 cpu_turn f=900 duel_step=8 turn_player=1 ai=4/0 textbox=0
+   2431 Player Draw Phase.
+   2612 Opening draw complete (hand=6 deck=32 want=6).
+   2749 Exact setup: P0 hand=0 deck=32 gy=0, P1 hand=2 deck=35 gy=0, LP 8000/8000, turnCount 2.
+   2749 Player Main Phase 1.
+   2749 steps: unknown card AI Thunder Dragon
+   2749 steps: 7 steps, 13 ops
+   2749 step: point you.m0
+   2885 steps: capture starts (cursor on point you.m0)
+   2892 step: wait 20
+   2918 step: options speed=always anims=hide battle=hide
+   2918 steps: options = 0x0037
+   2925 step: mp4_start ai-thunder-dragon
+   2925 media: recording ai-thunder-dragon (mp4)
+   2932 step: pass
+   3045 step: cpu_turn
+   3650 step: rec_stop
+   3650 media: encoding 621 frames -> tools\testing_scenarios\..\..\screenshots\videos\ai-thunder-dragon.mp4
+   3681 Play sequence done; ending capture (no recording tail).
+   3681 Finished — PASS (play sequence + tail). Stop mGBA Record A/V to finalize MP4.
