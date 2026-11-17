@@ -4,6 +4,11 @@ What the mod's data looks like in Hex Maniac Advance CE with the build's `.toml`
 anchors, is in the README's [Editing with Hex Maniac Advance](README.md#editing-with-hex-maniac-advance) (use HMA CE
 built from source, `upcoming` branch). [README_TODO.md](README_TODO.md) says what each picture should show.
 
+<p align="center">
+  <img src="screenshots/HMA%20TOML.png" width="480" alt="A build's generated .toml open in VS Code: its header lists each anchor and what it holds"><br>
+  <sub>The build's <code>.toml</code>: every anchor, and what it holds</sub>
+</p>
+
 ## The patched ROM in HMA
 
 <table>
