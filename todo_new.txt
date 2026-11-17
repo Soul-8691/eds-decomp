@@ -1,27 +1,6 @@
-Duel.png needs viable cards only and should be a GIF
-Trailer shouldn't be linked in the README
-Highlights section should be a TLDR paragraph
-Highlights GIF needs to be curated
-Play it should be at the end of the non-code sections
-Get rid of pre-duel screen (GIF) - not focused on the placeholder duelists
-HMA screenshots should be saved for HMA.md
-Curate Deck Edit list-filter.gif filter (sort by ATK, Effect Monsters, DARK, 1000-2000 ATK)
-Password.png screenshot needs updating
-pack-pull.gif should not include scrolling and should have the correct pack contents
-Get rid of New Packs.png
-Booster Packs section should have a GIF of scrolling through the packs
-Duel Board.png should have viable cards only
-Chain List.png should have at least 3 different cards on the chain
-hold-r.gif should make it more clear what it's trying to show
+TLDR GIF needs to be curated
 Update AI_QUIRKS.md
-cpu-play.gif Lua script should use a scenario based on AI_IMPROVEMENTS.md
-graverobber.gif should be replaced with a Witch of the Black Forest x Call of the Haunted destruction GIF
-link.gif should use non-Effect Monsters
-Show card description for Number 39: Utopia before xyz.gif summon
-Remove references to Link Battles
-"The demo build adds 308 cards: the 175 listed above ------ in new_cards.txt, and 133 cards of the engine's leftover effects (config/leftover_cards.txt). All of them are in demo_cards.txt, in alphabetical order." remove
-Separate HMA.md with all the previous screenshots/GIFs planned
-"The OCG formats up to Victory, unlocked after beating Reaper." should come before "8 actual duelists: Yugi Muto, Joey, Kaiba, Pegasus, Marik, Yami Marik, Yami Bakura and Yami Yugi."
-hold-l.gif should make it more clear what it's trying to show
-Remove rps.gif
-test_duel_ydk screenshot (EDOPro)
+Unlocking the next format should actually show a message
+Hide card animations, off then on (GIF) should be next to Hide battle scenes (GIF) and not be large
+The CPU at work (GIF) should be curated
+All GIFs should be the same size
