@@ -6,7 +6,7 @@
 </p>
 
 <p align="center">
-  <img src="screenshots/Title%20Screen.png" width="400" alt="The title screen">
+  <img src="screenshots/Title%20Screen.png" width="240" alt="The title screen">
   <img src="screenshots/gifs/duel.gif" width="240" alt="A Reaper-format duel: Breaker clears a Set card, then Cyber Dragon attacks">
 </p>
 
