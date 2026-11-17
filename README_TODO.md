@@ -112,10 +112,10 @@ the ones README.md used to show are marked "was"). The game's screenshots can be
 
 ### Usage stats and Mobius
 
-- [ ] 🖼️ **Mobius** · `screenshots/Mobius.png` · after the paragraph, before the details block. The usage table for one
-  format. *(was `placeholders/mobius.svg`)*
-- [ ] 🖼️ **A usage chart** · `screenshots/Mobius Chart.png` · inside "Running Mobius", after the Charts bullet. The
-  output of `graph_card_usage.py "Monster Reborn"`.
+- [x] 🖼️ **Mobius** · `screenshots/Mobius (Main).png` · after the paragraph, before the details block. The Goat usage
+  table, with the deck type list open (width 480). *(was `placeholders/mobius.svg`)*
+- [x] 🖼️ **A usage chart** · `screenshots/Mobius (Graph).png` · inside "Running Mobius", after the Charts bullet. Mystic
+  Tomato's usage across the formats (width 480). *(was `placeholders/mobius-chart.svg`)*
 
 ## In the duel
 
@@ -174,8 +174,13 @@ the ones README.md used to show are marked "was"). The game's screenshots can be
 
 ## Play it
 
-- [ ] 🖼️ **Rom Patcher JS, ready to patch** · `screenshots/Rom Patcher.png` · after step 4. Both files chosen, the
-  Apply button showing (a browser screenshot, not mGBA).
+- [x] 🖼️ **Rom Patcher JS, ready to patch** · `screenshots/ROM Patcher JS.png` · after step 4 (width 480). The ROM
+  and the release `.bps` chosen, Apply patch showing (a browser screenshot, not mGBA). *(was `placeholders/rom-patcher.svg`)*
+
+## Editing with Hex Maniac Advance
+
+- [x] 🖼️ **The C injection template** · `screenshots/C Injection.png` · after the C injection note (width 480). The
+  CFRU eternal-duelist-soul project in VS Code, `EDS.ld` open (a desktop screenshot, not mGBA).
 
 ## HMA.md
 
@@ -226,15 +231,15 @@ Every HMA screenshot and GIF goes in [HMA.md](HMA.md), in the section that match
 
 ### Test Duel
 
-- [ ] 🖼️ **The Test Duel's deck in EDOPro** · `screenshots/test_duel_ydk.png` · after the paragraph. The `TEST_YDK`
-  deck (`test.ydk`) open in EDOPro's deck editor (an EDOPro screenshot, not mGBA).
+- [x] 🖼️ **The Test Duel's deck in EDOPro** · `screenshots/Test Duel (YDK).png` · after the paragraph (width 480). The
+  `TEST_YDK` deck (`test.ydk`) open in EDOPro's deck editor (an EDOPro screenshot, not mGBA).
+  *(was `placeholders/test-duel-ydk.svg`)*
 
 ### Card test scripts and videos
 
-- [ ] 🖼️ **The test runner** · `screenshots/Test Runner.png` · after the bullets. `run_tests.ps1` output: PASS /
-  TIMEOUT per script (a terminal screenshot).
-- [ ] 🖼️ **The video reviewer** · `screenshots/Video Reviewer.png` · next to it. `review_videos.py` with a video open
-  and the Keep / Highlight / Throwaway buttons.
+- [x] 🖼️ **The video reviewer** · `screenshots/Video Reviewer.png` · after the bullets (width 480). `review_videos.py`
+  with a video open and the Keep / Highlight / Throwaway buttons. *(was `placeholders/video-reviewer.svg`; the test
+  runner slot beside it was dropped)*
 
 ---
 

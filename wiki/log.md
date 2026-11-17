@@ -3266,3 +3266,15 @@ updated: 2026-09-29
 
 ## [2026-11-17] progress | READMEs: the practice opponents' page screenshot in a row, not floated
 - README.md, README_WIP.md: Duelists (Screen 4).png no longer align="right" beside the table (it sat out of line on GitHub); a captioned cell under the table, next to Records (Practice).png in the WIP. README_TODO.md.
+
+## [2026-11-17] progress | README_WIP: Mobius and C injection screenshots
+- README_WIP.md: Mobius (Main).png and Mobius (Graph).png replace the mobius / mobius-chart placeholders (width 480); C Injection.png after the C injection note. README_TODO.md ticks them (a new Editing with Hex Maniac Advance section).
+
+## [2026-11-17] progress | README_WIP: ROM Patcher JS screenshot
+- README_WIP.md: ROM Patcher JS.png replaces the rom-patcher placeholder (width 480); README_TODO.md ticks it.
+
+## [2026-11-17] progress | README_WIP: Test Duel (YDK) screenshot
+- README_WIP.md: Test Duel (YDK).png replaces the test-duel-ydk placeholder (width 480); README_TODO.md ticks it.
+
+## [2026-11-17] progress | README_WIP: Video Reviewer screenshot; no test runner slot
+- README_WIP.md: Video Reviewer.png replaces the video-reviewer placeholder (width 480); the test runner placeholder and screenshots/placeholders/test-runner.svg removed. README_TODO.md follows.

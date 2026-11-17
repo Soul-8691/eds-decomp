@@ -301,7 +301,10 @@ data, gathered **with the site's creator's permission**. **[Mobius](https://gith
 companion Python app for exploring those stats in a table (ban-weighted counts, Limited/Semi-Limited multipliers,
 YGOPRODeck names and art).
 
-<img src="screenshots/placeholders/mobius.svg" width="240" alt="Placeholder: Mobius">
+<p align="center">
+  <img src="screenshots/Mobius%20(Main).png" width="480" alt="Mobius: the Goat format's card usage table, with the deck type list open"><br>
+  <sub>Mobius: a format's card usage</sub>
+</p>
 
 <details>
 <summary>Running Mobius</summary>
@@ -325,7 +328,10 @@ python main.py
   (optional `--start yugi-kaiba --end goat` and `-o chart.png`; format stems match the pool filenames, e.g. `yugi-kaiba`,
   `cat`).
 
-<img src="screenshots/placeholders/mobius-chart.svg" width="240" alt="Placeholder: a usage chart">
+<p align="center">
+  <img src="screenshots/Mobius%20(Graph).png" width="480" alt="Mobius: Mystic Tomato's weighted usage across the formats, by ban status"><br>
+  <sub>A card's usage across formats</sub>
+</p>
 
 See Mobius's README for chart semantics and options.
 
@@ -594,7 +600,7 @@ Reaper). You need your own USA ROM of *The Eternal Duelist Soul* (AY5E); it is n
 4. Download the patched ROM.
 
 <p align="center">
-  <img src="screenshots/placeholders/rom-patcher.svg" width="400" alt="Placeholder: Rom Patcher JS, ready to patch"><br>
+  <img src="screenshots/ROM%20Patcher%20JS.png" width="480" alt="Rom Patcher JS with the ROM and the release patch chosen, ready to apply"><br>
   <sub>Rom Patcher JS, ready to patch</sub>
 </p>
 
@@ -648,6 +654,11 @@ for every anchor.
 > **C injection alongside HMA:** a companion C injection template is set up for this game in
 > [Soul-8691/Complete-Fire-Red-Upgrade @ eternal-duelist-soul](https://github.com/Soul-8691/Complete-Fire-Red-Upgrade/tree/eternal-duelist-soul). Use it to add or change code in the compiled
 > ROM, while HMA edits its data.
+
+<p align="center">
+  <img src="screenshots/C%20Injection.png" width="480" alt="The C injection template open in VS Code, with EDS.ld listing the game's RAM symbols"><br>
+  <sub>The C injection template (CFRU, eternal-duelist-soul branch)</sub>
+</p>
 
 | What you can edit | Anchors |
 |---|---|
@@ -715,7 +726,7 @@ missing are dropped, and if none remain the opponent starts with **no deck** (no
 empty `.ydk` does the same.
 
 <p align="center">
-  <img src="screenshots/placeholders/test-duel-ydk.svg" width="240" alt="Placeholder: the Test Duel deck in EDOPro"><br>
+  <img src="screenshots/Test%20Duel%20(YDK).png" width="480" alt="EDOPro's deck editor with the test deck (test.ydk) open, empty here"><br>
   <sub>The Test Duel's <code>.ydk</code> in EDOPro</sub>
 </p>
 
@@ -738,12 +749,10 @@ python tools/testing_scenarios/review_videos.py                                 
   **Throwaway** (T) move a video to its folder, and the runner skips those scripts afterwards. **Copy title** (C) copies
   a video's script name, and **F5** reloads the videos that changed.
 
-<table>
-<tr>
-<td align="center"><img src="screenshots/placeholders/test-runner.svg" width="240" alt="Placeholder: The test runner"><br><sub>The test runner</sub></td>
-<td align="center"><img src="screenshots/placeholders/video-reviewer.svg" width="240" alt="Placeholder: The video reviewer"><br><sub>The video reviewer</sub></td>
-</tr>
-</table>
+<p align="center">
+  <img src="screenshots/Video%20Reviewer.png" width="480" alt="The video reviewer: the highlighted test videos listed, Card Destruction's open, with the Keep, Unhighlight and Throwaway buttons"><br>
+  <sub>The video reviewer</sub>
+</p>
 
 ### README screenshots
 
