@@ -3295,3 +3295,6 @@ updated: 2026-09-29
 
 ## [2026-11-17] progress | READMEs: every game GIF shown at 240x160
 - README.md, README_WIP.md: duel.gif (was 400), highlights, hide-anims, cpu-play, new-cards (were 480) now width 240; duel-speed.gif stays 720 (three 240x160 panels). README_TODO.md layout notes.
+
+## [2026-11-17] progress | README_WIP: the two Hide GIFs side by side
+- README_WIP.md Settings: hide-anims.gif moved into the Hide battle scenes row (its own centred line before).

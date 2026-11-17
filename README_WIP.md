@@ -399,13 +399,9 @@ Pick one of the three speeds; the two Hide switches are ON/OFF with **A**.
   <sub>The three duel speeds (GIF)</sub>
 </p>
 
-<p align="center">
-  <img src="screenshots/gifs/hide-anims.gif" width="240" alt="Pot of Greed with its card animation, then again with Hide card animations on"><br>
-  <sub>Hide card animations, off then on (GIF)</sub>
-</p>
-
 <table>
 <tr>
+<td align="center"><img src="screenshots/gifs/hide-anims.gif" width="240" alt="Pot of Greed with its card animation, then again with Hide card animations on"><br><sub>Hide card animations, off then on (GIF)</sub></td>
 <td align="center"><img src="screenshots/gifs/hide-battle.gif" width="240" alt="Hide battle scenes"><br><sub>Hide battle scenes (GIF)</sub></td>
 </tr>
 </table>
