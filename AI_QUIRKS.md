@@ -46,7 +46,7 @@ their AI was also improved; [AI_IMPROVEMENTS.md](AI_IMPROVEMENTS.md) covers them
 | Played a **second Swords of Revealing Light** while its first was still up. | Wait until the first runs out. |
 | Played **Megamorph** only in its Cyber Stein strategy, on fixed LP checks. | Play it in Main Phase 1 when its LP are lower than the opponent's and Megamorph makes a simulated Battle Phase lethal. |
 | **Mystical Space Typhoon**, **Gust** and **Driving Snow** did not reliably **target your face-up Traps** and could **hit its own** cards. | Target the opponent's face-up Traps too, and never its own cards. |
-| Its **recruiters** (**Mystic Tomato**, **Giant Rat**, **UFO Turtle**, **Shining Fairy**, **Mother Grizzly**, **Flying Kamakiri #1**, ...) did not **summon another copy of themselves**. | Summon another copy from the Deck when possible, so the next one recruits again. |
+| Its **recruiters** (**Mystic Tomato**, **Giant Rat**, **UFO Turtle**, **Shining Angel**, **Mother Grizzly**, **Flying Kamakiri #1**, ...) did not **summon another copy of themselves**. | Summon another copy from the Deck when possible, so the next one recruits again. |
 | While **Imperial Order** was face-up, still **activated Magic cards from its hand**. | Set them instead, as under Anti-Magic Fragrance. |
 | On its own **Standby Phase**, waited for **your cursor** before effects such as **Jigen Bakudan**'s. | Activate them without waiting for the human. |
 | **Sonic Bird** and **Senju of the Thousand Hands** showed **you** its Yes/No search question. | Search without asking the human: the Ritual card that matches one in hand, else the first. |

@@ -153,7 +153,7 @@ Almost all of them are card numbers 1210 and above. That range seems to be left 
 | 1448 | Scroll of Bewitchment | Equip Spell | Declare an Attribute: the equipped monster becomes that Attribute (shown with its icon on the duel screen). | Full |  |
 | 1449 | United We Stand | Equip Spell | +800 ATK/DEF for each face-up monster of the equipping player. | Full |  |
 | 1450 | Mage Power | Equip Spell | +500 ATK/DEF for each Magic/Trap card of the equipping player. | Full |  |
-| 1451 | Offerings to the Doomed | Quick-Play Spell | Destroy a targeted face-up card; you skip your next Draw Phase. | Full | Shares Bell of Destruction's handler. |
+| 1451 | Offerings to the Doomed | Quick-Play Spell | Destroy a targeted face-up card; you skip your next Draw Phase. | Full | Shares Ring of Destruction's handler (the original game's Bell of Destruction). |
 
 ### 1510-1552
 

@@ -72,6 +72,9 @@
 #   data.constants.fusion2 -- used: a Fusion constant of the original
 #   data.constants.cards.limit2 [3] -- used: the card ID count in GeneratePackCards (random pack cards): the
 #       last real card
+#   data.constants.cards.limit -- used (two sites are debug screens: DebugCardDetail_Browse, DebugGetAllCards):
+#       the card ID count limits in the code: now the build's count (or the last real card's, before make demo's
+#       blank slots); sites whose code no longer holds it are listed below
 #   data.constants.effects.limit -- used: the original effect table's row count
 #  Lists (the names of table rows and enum values):
 #   cardnumbers -- used: card names by card ID: the original cards, then the added ones (and make demo's blank
@@ -183,7 +186,6 @@
 #   data.constants.cards.limit at 0x070C38: TradeCardSelect_Init no longer holds the card count limit
 #   data.constants.cards.limit at 0x070D9A: TradeCardSelect_Init no longer holds the card count limit
 #   data.constants.cards.limit at 0x07715E: DebugGetAllCards no longer holds the card count limit
-#   data.constants.cards.limit at 0x07C362: FindCardByPassword no longer holds the card count limit
 [General]
 ApplicationVersion = '''0.5.7.1'''
 FreeSpaceSearch = '''000200'''
@@ -940,301 +942,301 @@ DefaultHash = '''0F69AA2C'''
 
 [[NamedAnchors]]
 Name = '''data.packs.format.pools'''
-Address = 0x24E12C
+Address = 0x24E148
 Format = '''[pool<[card:cardinternalnumbers weight:]/count> count: unused:]formatpacks'''
 DefaultHash = '''2FC28085'''
 
 [[NamedAnchors]]
 Name = '''data.packs.format.names'''
-Address = 0x24E28C
+Address = 0x24E2A8
 Format = '''[name<>]formatpacks'''
 DefaultHash = '''C948D9E4'''
 
 [[NamedAnchors]]
 Name = '''text.packs.format.pack0'''
-Address = 0x24E680
+Address = 0x24E69C
 Format = '''`asc`33'''
 DefaultHash = '''856DF726'''
 
 [[NamedAnchors]]
 Name = '''text.packs.format.pack1'''
-Address = 0x24E66C
+Address = 0x24E688
 Format = '''`asc`19'''
 DefaultHash = '''D9099174'''
 
 [[NamedAnchors]]
 Name = '''text.packs.format.pack2'''
-Address = 0x24E658
+Address = 0x24E674
 Format = '''`asc`20'''
 DefaultHash = '''15D86D51'''
 
 [[NamedAnchors]]
 Name = '''text.packs.format.pack3'''
-Address = 0x24E64C
+Address = 0x24E668
 Format = '''`asc`11'''
 DefaultHash = '''9CFD324B'''
 
 [[NamedAnchors]]
 Name = '''text.packs.format.pack4'''
-Address = 0x24E63C
+Address = 0x24E658
 Format = '''`asc`14'''
 DefaultHash = '''66086418'''
 
 [[NamedAnchors]]
 Name = '''text.packs.format.pack5'''
-Address = 0x24E634
+Address = 0x24E650
 Format = '''`asc`8'''
 DefaultHash = '''FB44E13F'''
 
 [[NamedAnchors]]
 Name = '''text.packs.format.pack6'''
-Address = 0x24E628
+Address = 0x24E644
 Format = '''`asc`12'''
 DefaultHash = '''662A937D'''
 
 [[NamedAnchors]]
 Name = '''text.packs.format.pack7'''
-Address = 0x24E61C
+Address = 0x24E638
 Format = '''`asc`9'''
 DefaultHash = '''823F019D'''
 
 [[NamedAnchors]]
 Name = '''text.packs.format.pack8'''
-Address = 0x24E608
+Address = 0x24E624
 Format = '''`asc`18'''
 DefaultHash = '''9E393CB1'''
 
 [[NamedAnchors]]
 Name = '''text.packs.format.pack9'''
-Address = 0x24E5FC
+Address = 0x24E618
 Format = '''`asc`9'''
 DefaultHash = '''823F019D'''
 
 [[NamedAnchors]]
 Name = '''text.packs.format.pack10'''
-Address = 0x24E5E4
+Address = 0x24E600
 Format = '''`asc`23'''
 DefaultHash = '''F7ACE04B'''
 
 [[NamedAnchors]]
 Name = '''text.packs.format.pack11'''
-Address = 0x24E5DC
+Address = 0x24E5F8
 Format = '''`asc`8'''
 DefaultHash = '''FB44E13F'''
 
 [[NamedAnchors]]
 Name = '''text.packs.format.pack12'''
-Address = 0x24E5C8
+Address = 0x24E5E4
 Format = '''`asc`19'''
 DefaultHash = '''D9099174'''
 
 [[NamedAnchors]]
 Name = '''text.packs.format.pack13'''
-Address = 0x24E5B0
+Address = 0x24E5CC
 Format = '''`asc`22'''
 DefaultHash = '''63E4DF2F'''
 
 [[NamedAnchors]]
 Name = '''text.packs.format.pack14'''
-Address = 0x24E5A0
+Address = 0x24E5BC
 Format = '''`asc`13'''
 DefaultHash = '''6A5BED9B'''
 
 [[NamedAnchors]]
 Name = '''text.packs.format.pack15'''
-Address = 0x24E58C
+Address = 0x24E5A8
 Format = '''`asc`19'''
 DefaultHash = '''D9099174'''
 
 [[NamedAnchors]]
 Name = '''text.packs.format.pack16'''
-Address = 0x24E584
+Address = 0x24E5A0
 Format = '''`asc`6'''
 DefaultHash = '''8FC4D28A'''
 
 [[NamedAnchors]]
 Name = '''text.packs.format.pack17'''
-Address = 0x24E570
+Address = 0x24E58C
 Format = '''`asc`19'''
 DefaultHash = '''D9099174'''
 
 [[NamedAnchors]]
 Name = '''text.packs.format.pack18'''
-Address = 0x24E568
+Address = 0x24E584
 Format = '''`asc`5'''
 DefaultHash = '''D0DBCAE6'''
 
 [[NamedAnchors]]
 Name = '''text.packs.format.pack19'''
-Address = 0x24E554
+Address = 0x24E570
 Format = '''`asc`17'''
 DefaultHash = '''77AFC927'''
 
 [[NamedAnchors]]
 Name = '''text.packs.format.pack20'''
-Address = 0x24E548
+Address = 0x24E564
 Format = '''`asc`10'''
 DefaultHash = '''17F0FB6F'''
 
 [[NamedAnchors]]
 Name = '''text.packs.format.pack21'''
-Address = 0x24E540
+Address = 0x24E55C
 Format = '''`asc`8'''
 DefaultHash = '''FB44E13F'''
 
 [[NamedAnchors]]
 Name = '''text.packs.format.pack22'''
-Address = 0x24E520
+Address = 0x24E53C
 Format = '''`asc`29'''
 DefaultHash = '''D84B74FF'''
 
 [[NamedAnchors]]
 Name = '''text.packs.format.pack23'''
-Address = 0x24E500
+Address = 0x24E51C
 Format = '''`asc`30'''
 DefaultHash = '''AB4BF199'''
 
 [[NamedAnchors]]
 Name = '''text.packs.format.pack24'''
-Address = 0x24E4EC
+Address = 0x24E508
 Format = '''`asc`18'''
 DefaultHash = '''9E393CB1'''
 
 [[NamedAnchors]]
 Name = '''text.packs.format.pack25'''
-Address = 0x24E4E4
+Address = 0x24E500
 Format = '''`asc`6'''
 DefaultHash = '''8FC4D28A'''
 
 [[NamedAnchors]]
 Name = '''text.packs.format.pack26'''
-Address = 0x24E4D0
+Address = 0x24E4EC
 Format = '''`asc`18'''
 DefaultHash = '''9E393CB1'''
 
 [[NamedAnchors]]
 Name = '''text.packs.format.pack27'''
-Address = 0x24E4BC
+Address = 0x24E4D8
 Format = '''`asc`17'''
 DefaultHash = '''77AFC927'''
 
 [[NamedAnchors]]
 Name = '''text.packs.format.pack28'''
-Address = 0x24E49C
+Address = 0x24E4B8
 Format = '''`asc`30'''
 DefaultHash = '''AB4BF199'''
 
 [[NamedAnchors]]
 Name = '''text.packs.format.pack29'''
-Address = 0x24E47C
+Address = 0x24E498
 Format = '''`asc`31'''
 DefaultHash = '''FA7F6AA5'''
 
 [[NamedAnchors]]
 Name = '''text.packs.format.pack30'''
-Address = 0x24E474
+Address = 0x24E490
 Format = '''`asc`8'''
 DefaultHash = '''FB44E13F'''
 
 [[NamedAnchors]]
 Name = '''text.packs.format.pack31'''
-Address = 0x24E460
+Address = 0x24E47C
 Format = '''`asc`17'''
 DefaultHash = '''77AFC927'''
 
 [[NamedAnchors]]
 Name = '''text.packs.format.pack32'''
-Address = 0x24E444
+Address = 0x24E460
 Format = '''`asc`25'''
 DefaultHash = '''F4D21624'''
 
 [[NamedAnchors]]
 Name = '''text.packs.format.pack33'''
-Address = 0x24E41C
+Address = 0x24E438
 Format = '''`asc`37'''
 DefaultHash = '''C2F872CB'''
 
 [[NamedAnchors]]
 Name = '''text.packs.format.pack34'''
-Address = 0x24E3F8
+Address = 0x24E414
 Format = '''`asc`35'''
 DefaultHash = '''E8A552C6'''
 
 [[NamedAnchors]]
 Name = '''text.packs.format.pack35'''
-Address = 0x24E3E4
+Address = 0x24E400
 Format = '''`asc`17'''
 DefaultHash = '''77AFC927'''
 
 [[NamedAnchors]]
 Name = '''text.packs.format.pack36'''
-Address = 0x24E3C8
+Address = 0x24E3E4
 Format = '''`asc`25'''
 DefaultHash = '''F4D21624'''
 
 [[NamedAnchors]]
 Name = '''text.packs.format.pack37'''
-Address = 0x24E3A4
+Address = 0x24E3C0
 Format = '''`asc`34'''
 DefaultHash = '''1E65FA05'''
 
 [[NamedAnchors]]
 Name = '''text.packs.format.pack38'''
-Address = 0x24E39C
+Address = 0x24E3B8
 Format = '''`asc`5'''
 DefaultHash = '''D0DBCAE6'''
 
 [[NamedAnchors]]
 Name = '''text.packs.format.pack39'''
-Address = 0x24E394
+Address = 0x24E3B0
 Format = '''`asc`6'''
 DefaultHash = '''8FC4D28A'''
 
 [[NamedAnchors]]
 Name = '''text.packs.format.pack40'''
-Address = 0x24E36C
+Address = 0x24E388
 Format = '''`asc`39'''
 DefaultHash = '''F38DDE39'''
 
 [[NamedAnchors]]
 Name = '''text.packs.format.pack41'''
-Address = 0x24E358
+Address = 0x24E374
 Format = '''`asc`19'''
 DefaultHash = '''D9099174'''
 
 [[NamedAnchors]]
 Name = '''text.packs.format.pack42'''
-Address = 0x24E344
+Address = 0x24E360
 Format = '''`asc`18'''
 DefaultHash = '''9E393CB1'''
 
 [[NamedAnchors]]
 Name = '''text.packs.format.pack43'''
-Address = 0x24E33C
+Address = 0x24E358
 Format = '''`asc`7'''
 DefaultHash = '''A3E37836'''
 
 [[NamedAnchors]]
 Name = '''data.packs.format.flags'''
-Address = 0x24DFCC
+Address = 0x24DFE8
 Format = '''[usage.]formatpacks'''
 DefaultHash = '''7771E2DF'''
 
 [[NamedAnchors]]
 Name = '''data.packs.format.formats'''
-Address = 0x24DFF8
+Address = 0x24E014
 Format = '''[format.formats]formatpacks'''
 DefaultHash = '''F539D35D'''
 
 [[NamedAnchors]]
 Name = '''data.packs.format.releasedates'''
-Address = 0x24E024
+Address = 0x24E040
 Format = '''[yyyymmdd::]formatpacks'''
 DefaultHash = '''033C9D46'''
 
 [[NamedAnchors]]
 Name = '''data.packs.format.portraits'''
-Address = 0x24E0D4
+Address = 0x24E0F0
 Format = '''[card:cardinternalnumbers]formatpacks'''
 DefaultHash = '''3F15B492'''
 
@@ -1504,7 +1506,7 @@ DefaultHash = '''CBE407BA'''
 
 [[NamedAnchors]]
 Name = '''data.prices.cards'''
-Address = 0x250700
+Address = 0x250730
 Format = '''[costs<[card:cardinternalnumbers price:]/count> count: unused:]formats'''
 DefaultHash = '''40D80AA0'''
 
@@ -2686,115 +2688,115 @@ DefaultHash = '''5BD1BB9D'''
 
 [[NamedAnchors]]
 Name = '''text.opponents.yugikaiba'''
-Address = 0x2564B0
+Address = 0x2564F0
 Format = '''`asc`11'''
 DefaultHash = '''9CFD324B'''
 
 [[NamedAnchors]]
 Name = '''text.opponents.critter'''
-Address = 0x2564BC
+Address = 0x2564FC
 Format = '''`asc`8'''
 DefaultHash = '''FB44E13F'''
 
 [[NamedAnchors]]
 Name = '''text.opponents.treasure'''
-Address = 0x2564D0
+Address = 0x256510
 Format = '''`asc`9'''
 DefaultHash = '''823F019D'''
 
 [[NamedAnchors]]
 Name = '''text.opponents.joeypegasus'''
-Address = 0x2564E4
+Address = 0x256524
 Format = '''`asc`13'''
 DefaultHash = '''6A5BED9B'''
 
 [[NamedAnchors]]
 Name = '''text.opponents.imperial'''
-Address = 0x2564C4
+Address = 0x256504
 Format = '''`asc`9'''
 DefaultHash = '''823F019D'''
 
 [[NamedAnchors]]
 Name = '''text.opponents.android'''
-Address = 0x2564DC
+Address = 0x25651C
 Format = '''`asc`8'''
 DefaultHash = '''FB44E13F'''
 
 [[NamedAnchors]]
 Name = '''text.opponents.fiber'''
-Address = 0x2564F4
+Address = 0x256534
 Format = '''`asc`6'''
 DefaultHash = '''8FC4D28A'''
 
 [[NamedAnchors]]
 Name = '''text.opponents.yata'''
-Address = 0x2564FC
+Address = 0x25653C
 Format = '''`asc`5'''
 DefaultHash = '''D0DBCAE6'''
 
 [[NamedAnchors]]
 Name = '''text.opponents.chaos'''
-Address = 0x256518
+Address = 0x256558
 Format = '''`asc`6'''
 DefaultHash = '''8FC4D28A'''
 
 [[NamedAnchors]]
 Name = '''text.opponents.scientist'''
-Address = 0x256504
+Address = 0x256544
 Format = '''`asc`10'''
 DefaultHash = '''17F0FB6F'''
 
 [[NamedAnchors]]
 Name = '''text.opponents.vampire'''
-Address = 0x256510
+Address = 0x256550
 Format = '''`asc`8'''
 DefaultHash = '''FB44E13F'''
 
 [[NamedAnchors]]
 Name = '''text.opponents.warrior'''
-Address = 0x256520
+Address = 0x256560
 Format = '''`asc`8'''
 DefaultHash = '''FB44E13F'''
 
 [[NamedAnchors]]
 Name = '''text.opponents.goat'''
-Address = 0x256528
+Address = 0x256568
 Format = '''`asc`5'''
 DefaultHash = '''D0DBCAE6'''
 
 [[NamedAnchors]]
 Name = '''text.opponents.cyber'''
-Address = 0x256530
+Address = 0x256570
 Format = '''`asc`6'''
 DefaultHash = '''8FC4D28A'''
 
 [[NamedAnchors]]
 Name = '''text.opponents.reaper'''
-Address = 0x256538
+Address = 0x256578
 Format = '''`asc`7'''
 DefaultHash = '''A3E37836'''
 
 [[NamedAnchors]]
 Name = '''text.opponents.emptydeck'''
-Address = 0x25655C
+Address = 0x25659C
 Format = '''`asc`11'''
 DefaultHash = '''9CFD324B'''
 
 [[NamedAnchors]]
 Name = '''text.opponents.debug'''
-Address = 0x256554
+Address = 0x256594
 Format = '''`asc`6'''
 DefaultHash = '''8FC4D28A'''
 
 [[NamedAnchors]]
 Name = '''text.opponents.solomon'''
-Address = 0x25654C
+Address = 0x25658C
 Format = '''`asc`8'''
 DefaultHash = '''FB44E13F'''
 
 [[NamedAnchors]]
 Name = '''data.opponents'''
-Address = 0x256568
+Address = 0x2565A8
 Format = '''[kind.opponentkinds order. format.formats unused. name<> portrait:cardinternalnumbers padding:]opponents'''
 DefaultHash = '''3FE2E882'''
 
@@ -3778,19 +3780,19 @@ DefaultHash = '''31CEBDF1'''
 
 [[NamedAnchors]]
 Name = '''text.title.version'''
-Address = 0x2566D4
+Address = 0x256714
 Format = '''`asc`16'''
 DefaultHash = '''EF7E1A14'''
 
 [[NamedAnchors]]
 Name = '''text.title.release'''
-Address = 0x2566E4
+Address = 0x256724
 Format = '''`asc`16'''
 DefaultHash = '''EF7E1A14'''
 
 [[NamedAnchors]]
 Name = '''text.title.debug'''
-Address = 0x2566F4
+Address = 0x256734
 Format = '''`asc`16'''
 DefaultHash = '''EF7E1A14'''
 
@@ -4606,7 +4608,7 @@ DefaultHash = '''33FCFF8E'''
 
 [[MatchedWords]]
 Name = '''data.constants.packs.rarities.total'''
-Address = 0x062C08
+Address = 0x062C64
 Length = 1
 
 [[MatchedWords]]
@@ -4651,42 +4653,42 @@ Length = 1
 
 [[MatchedWords]]
 Name = '''data.constants.packs.unlocks.2wins1'''
-Address = 0x063DB0
+Address = 0x063E0C
 Length = 1
 
 [[MatchedWords]]
 Name = '''data.constants.packs.unlocks.2wins2'''
-Address = 0x063DBE
+Address = 0x063E1A
 Length = 1
 
 [[MatchedWords]]
 Name = '''data.constants.packs.unlocks.2wins3'''
-Address = 0x063DCC
+Address = 0x063E28
 Length = 1
 
 [[MatchedWords]]
 Name = '''data.constants.packs.unlocks.2wins4'''
-Address = 0x063DDA
+Address = 0x063E36
 Length = 1
 
 [[MatchedWords]]
 Name = '''data.constants.packs.unlocks.2wins5'''
-Address = 0x063DE8
+Address = 0x063E44
 Length = 1
 
 [[MatchedWords]]
 Name = '''data.constants.packs.unlocks.10winseach'''
-Address = 0x064136
+Address = 0x064192
 Length = 1
 
 [[MatchedWords]]
 Name = '''data.constants.packs.unlocks.20wins'''
-Address = 0x06435A
+Address = 0x0643B6
 Length = 1
 
 [[MatchedWords]]
 Name = '''data.constants.packs.unlocks.10winstotal'''
-Address = 0x064256
+Address = 0x0642B2
 Length = 1
 
 [[MatchedWords]]
@@ -4695,115 +4697,120 @@ Address = 0x03B7D0
 Length = 1
 
 [[MatchedWords]]
+Name = '''data.constants.cards.limit'''
+Address = 0x07BBF8
+Length = 2
+
+[[MatchedWords]]
 Name = '''data.constants.effects.limit'''
-Address = 0x045F34
+Address = 0x045F54
 Length = 2
 
 [[MatchedWords]]
 Name = '''data.constants.cards.limit2'''
-Address = 0x062DC4
+Address = 0x062E20
 Length = 2
 
 [[MatchedWords]]
 Name = '''data.constants.cards.limit2'''
-Address = 0x062E88
+Address = 0x062EE4
 Length = 2
 
 [[MatchedWords]]
 Name = '''data.constants.cards.limit2'''
-Address = 0x062F60
+Address = 0x062FBC
 Length = 2
 
 #################################
 #################################
 [[MatchedWords]]
 Name = '''data.constants.packs.format.usagewins'''
-Address = 0x24E6A1
+Address = 0x24E6BD
 Length = 1
 
 [[MatchedWords]]
 Name = '''data.constants.title.flamewave'''
-Address = 0x256704
+Address = 0x256744
 Length = 1
 
 [[MatchedWords]]
 Name = '''data.constants.title.flamepriority'''
-Address = 0x256705
+Address = 0x256745
 Length = 1
 
 [[MatchedWords]]
 Name = '''data.constants.preduel.qrsquare'''
-Address = 0x256DE7
+Address = 0x256E27
 Length = 1
 
 [[MatchedWords]]
 Name = '''data.constants.formats.unlock.critter'''
-Address = 0x256694
+Address = 0x2566D4
 Length = 1
 
 [[MatchedWords]]
 Name = '''data.constants.formats.unlock.treasure'''
-Address = 0x256695
+Address = 0x2566D5
 Length = 1
 
 [[MatchedWords]]
 Name = '''data.constants.formats.unlock.imperial'''
-Address = 0x256696
+Address = 0x2566D6
 Length = 1
 
 [[MatchedWords]]
 Name = '''data.constants.formats.unlock.android'''
-Address = 0x256697
+Address = 0x2566D7
 Length = 1
 
 [[MatchedWords]]
 Name = '''data.constants.formats.unlock.joeypegasus'''
-Address = 0x256698
+Address = 0x2566D8
 Length = 1
 
 [[MatchedWords]]
 Name = '''data.constants.formats.unlock.fiber'''
-Address = 0x256699
+Address = 0x2566D9
 Length = 1
 
 [[MatchedWords]]
 Name = '''data.constants.formats.unlock.yata'''
-Address = 0x25669A
+Address = 0x2566DA
 Length = 1
 
 [[MatchedWords]]
 Name = '''data.constants.formats.unlock.scientist'''
-Address = 0x25669B
+Address = 0x2566DB
 Length = 1
 
 [[MatchedWords]]
 Name = '''data.constants.formats.unlock.vampire'''
-Address = 0x25669C
+Address = 0x2566DC
 Length = 1
 
 [[MatchedWords]]
 Name = '''data.constants.formats.unlock.chaos'''
-Address = 0x25669D
+Address = 0x2566DD
 Length = 1
 
 [[MatchedWords]]
 Name = '''data.constants.formats.unlock.warrior'''
-Address = 0x25669E
+Address = 0x2566DE
 Length = 1
 
 [[MatchedWords]]
 Name = '''data.constants.formats.unlock.goat'''
-Address = 0x25669F
+Address = 0x2566DF
 Length = 1
 
 [[MatchedWords]]
 Name = '''data.constants.formats.unlock.cyber'''
-Address = 0x2566A0
+Address = 0x2566E0
 Length = 1
 
 [[MatchedWords]]
 Name = '''data.constants.formats.unlock.reaper'''
-Address = 0x2566A1
+Address = 0x2566E1
 Length = 1
 
 [[List]]

@@ -55,7 +55,7 @@ powershell -ExecutionPolicy Bypass -File tools\testing_scenarios\run_tests.ps1 -
 | `left_out.lua` | Left Out.png (three Chaos Turbo cards taken out of the trunk, then the recipe loaded: make ignores the banlist when loading) | demo | verified |
 | `format_check.lua` | Format Check.png (cards Yugi-Kaiba lacks added to the saved Deck, then its duelist picked) | **release** (make has no format check) | verified |
 | `banlist_refused.lua` | Banlist Refused.png (the collection shrunk, then Goat: "only 34 (40 needed)") | **release** (make has no check) | verified |
-| `siding.lua` | siding.gif (game 1 won at once, then Bell of Destruction out, Kycoo in) | demo | verified |
+| `siding.lua` | siding.gif (game 1 won at once, then Ring of Destruction out, Kycoo in) | demo | verified |
 | ~~`new_packs.lua`~~ | removed 2026-11-16 with New Packs.png (no longer in the README) | | |
 | `unlock.lua` | unlock.gif (Tristan at 19 wins, the 20th; the rewards' "new packs are available" text (text 351: the next format's TCG sets, since 2026-11-17), with the free pack paused out; then Critter's portrait open on the select screen) | **release** (make opens every format) | verified 2026-11-17 |
 | `event_challenger.lua` | Event Challenger.png (a Duel Ceremony day: `gSaveData.days` 12, Saturday 13 January 2001) | demo | verified |

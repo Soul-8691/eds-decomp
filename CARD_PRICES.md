@@ -18,12 +18,12 @@ The DP the card password machine charges, per format, from the format's deck usa
 | [Fiber](#fiber) | 143 |
 | [Yata](#yata) | 136 |
 | [Scientist](#scientist) | 92 |
-| [Vampire](#vampire) | 114 |
-| [Chaos](#chaos) | 142 |
-| [Warrior](#warrior) | 191 |
-| [Goat](#goat) | 282 |
+| [Vampire](#vampire) | 115 |
+| [Chaos](#chaos) | 143 |
+| [Warrior](#warrior) | 192 |
+| [Goat](#goat) | 283 |
 | [Cyber](#cyber) | 142 |
-| [Reaper](#reaper) | 232 |
+| [Reaper](#reaper) | 233 |
 
 ## Yugi-Kaiba
 
@@ -776,7 +776,6 @@ The DP the card password machine charges, per format, from the format's deck usa
 
 | Card | DP | Limit |
 |---|---:|---|
-| Bell of Destruction | 5000 | Limited |
 | Change of Heart | 5000 | Limited |
 | Dark Hole | 5000 | Limited |
 | Graceful Charity | 5000 | Limited |
@@ -784,6 +783,7 @@ The DP the card password machine charges, per format, from the format's deck usa
 | Mirror Force | 5000 | Limited |
 | Pot of Greed | 5000 | Limited |
 | Raigeki | 5000 | Limited |
+| Ring of Destruction | 5000 | Limited |
 | Snatch Steal | 5000 | Limited |
 | The Forceful Sentry | 5000 | Limited |
 | Witch of the Black Forest | 5000 | Limited |
@@ -917,7 +917,6 @@ The DP the card password machine charges, per format, from the format's deck usa
 
 | Card | DP | Limit |
 |---|---:|---|
-| Bell of Destruction | 5000 | Limited |
 | Change of Heart | 5000 | Limited |
 | Dark Hole | 5000 | Limited |
 | Graceful Charity | 5000 | Limited |
@@ -927,6 +926,7 @@ The DP the card password machine charges, per format, from the format's deck usa
 | Painful Choice | 5000 | Limited |
 | Pot of Greed | 5000 | Limited |
 | Raigeki | 5000 | Limited |
+| Ring of Destruction | 5000 | Limited |
 | Sangan | 5000 | Limited |
 | Snatch Steal | 5000 | Limited |
 | Witch of the Black Forest | 5000 | Limited |
@@ -1026,11 +1026,11 @@ The DP the card password machine charges, per format, from the format's deck usa
 | Sangan | 5000 | Limited |
 | The Forceful Sentry | 5000 | Limited |
 | Witch of the Black Forest | 5000 | Limited |
-| Bell of Destruction | 4783 | Limited |
 | Confiscation | 4783 | Limited |
 | Exiled Force | 4783 | Limited |
 | Imperial Order | 4783 | Limited |
 | Mystical Space Typhoon | 4783 |  |
+| Ring of Destruction | 4783 | Limited |
 | Snatch Steal | 4783 | Limited |
 | Call Of The Haunted | 4565 | Limited |
 | Magical Scientist | 4565 | Limited |
@@ -1118,6 +1118,7 @@ The DP the card password machine charges, per format, from the format's deck usa
 | Raigeki Break | 200 |  |
 | Reaper on the Nightmare | 200 |  |
 | Roaring Ocean Snake | 200 |  |
+| Shining Angel | 200 |  |
 | Skull Knight | 200 |  |
 | Slate Warrior | 200 |  |
 | Spirit Reaper | 200 |  |
@@ -1139,10 +1140,10 @@ The DP the card password machine charges, per format, from the format's deck usa
 | Mystical Space Typhoon | 5000 |  |
 | Pot of Greed | 5000 | Limited |
 | Raigeki | 5000 | Limited |
-| Bell of Destruction | 4943 | Limited |
 | Black Luster Soldier - Envoy of Beginning | 4943 | Limited |
 | Change of Heart | 4943 | Limited |
 | Chaos Emperor Dragon - Envoy of the End | 4943 | Limited |
+| Ring of Destruction | 4943 | Limited |
 | Harpie's Feather Duster | 4885 | Limited |
 | Witch of the Black Forest | 4885 | Limited |
 | The Forceful Sentry | 4828 | Limited |
@@ -1176,6 +1177,7 @@ The DP the card password machine charges, per format, from the format's deck usa
 | Card Destruction | 1609 | Limited |
 | Exiled Force | 1552 | Limited |
 | Cyber Jar | 1034 | Limited |
+| Shining Angel | 1034 |  |
 | Raigeki Break | 843 |  |
 | Morphing Jar | 833 | Semi-Limited |
 | Reinforcement of the Army | 833 | Semi-Limited |
@@ -1282,7 +1284,7 @@ The DP the card password machine charges, per format, from the format's deck usa
 |---|---:|---|
 | Pot of Greed | 5000 | Limited |
 | Heavy Storm | 4868 | Limited |
-| Bell of Destruction | 4803 | Limited |
+| Ring of Destruction | 4803 | Limited |
 | Change of Heart | 4671 | Limited |
 | Mystical Space Typhoon | 4671 | Limited |
 | Snatch Steal | 4605 | Limited |
@@ -1370,6 +1372,7 @@ The DP the card password machine charges, per format, from the format's deck usa
 | Dark Blade the Dragon Knight | 252 |  |
 | Amazoness Archer | 241 |  |
 | Gigantes | 241 |  |
+| Shining Angel | 241 |  |
 | Ryu Senshi | 221 |  |
 | Compulsory Evacuation Device | 219 |  |
 | Divine Wrath | 219 |  |
@@ -1479,7 +1482,7 @@ The DP the card password machine charges, per format, from the format's deck usa
 | Pot of Greed | 4998 | Limited |
 | Graceful Charity | 4995 | Limited |
 | Heavy Storm | 4936 | Limited |
-| Bell of Destruction | 4879 | Limited |
+| Ring of Destruction | 4879 | Limited |
 | Snatch Steal | 4860 | Limited |
 | Mirror Force | 4766 | Limited |
 | Nobleman of Crossout | 4695 | Semi-Limited |
@@ -1712,6 +1715,7 @@ The DP the card password machine charges, per format, from the format's deck usa
 | Senju of the Thousand Hands | 200 |  |
 | Seven Tools of the Bandit | 200 |  |
 | Shield & Sword | 200 |  |
+| Shining Angel | 200 |  |
 | Skilled Dark Magician | 200 |  |
 | Skull Knight | 200 |  |
 | Skull Lair | 200 |  |
@@ -1767,7 +1771,7 @@ The DP the card password machine charges, per format, from the format's deck usa
 | Heavy Storm | 5000 | Limited |
 | Pot of Greed | 5000 | Limited |
 | Mirror Force | 4889 | Limited |
-| Bell of Destruction | 4778 | Limited |
+| Ring of Destruction | 4778 | Limited |
 | Snatch Steal | 4778 | Limited |
 | Torrential Tribute | 4778 | Limited |
 | Mystical Space Typhoon | 4556 | Limited |
@@ -2119,6 +2123,7 @@ The DP the card password machine charges, per format, from the format's deck usa
 | Sasuke Samurai | 200 |  |
 | Secret Barrel | 200 |  |
 | Seven Tools of the Bandit | 200 |  |
+| Shining Angel | 200 |  |
 | Sillva, Warlord of Dark World | 200 |  |
 | Skelengel | 200 |  |
 | Skilled Dark Magician | 200 |  |

@@ -1074,7 +1074,7 @@ Banlist: August 2003.
 - 1x Call Of The Haunted
 - 1x Imperial Order
 - 1x Mirror Force
-- 1x Bell of Destruction
+- 1x Ring of Destruction
 - 2x Torrential Tribute
 
 **Fusion Deck (15)**
@@ -1144,7 +1144,7 @@ Banlist: August 2003.
 - 1x Call Of The Haunted
 - 1x Imperial Order
 - 1x Mirror Force
-- 1x Bell of Destruction
+- 1x Ring of Destruction
 - 3x Torrential Tribute
 
 **Fusion Deck (12)**
@@ -1209,7 +1209,7 @@ Banlist: August 2003.
 - 2x Magic Drain
 - 1x Mirror Force
 - 1x Mirror Wall
-- 1x Bell of Destruction
+- 1x Ring of Destruction
 
 **Fusion Deck (2)**
 
@@ -1272,7 +1272,7 @@ Banlist: November 2003.
 
 **Traps (7)**
 
-- 1x Bell of Destruction
+- 1x Ring of Destruction
 - 1x Call Of The Haunted
 - 1x Imperial Order
 - 1x Jar of Greed
@@ -1340,7 +1340,7 @@ Banlist: November 2003.
 
 **Traps (3)**
 
-- 1x Bell of Destruction
+- 1x Ring of Destruction
 - 1x Call Of The Haunted
 - 1x Imperial Order
 
@@ -1418,7 +1418,7 @@ Banlist: February 2004.
 
 **Traps (6)**
 
-- 1x Bell of Destruction
+- 1x Ring of Destruction
 - 1x Call Of The Haunted
 - 1x Imperial Order
 - 1x Mirror Force
@@ -1484,7 +1484,7 @@ Banlist: February 2004.
 
 **Traps (5)**
 
-- 1x Bell of Destruction
+- 1x Ring of Destruction
 - 1x Call Of The Haunted
 - 1x Ceasefire
 - 1x Imperial Order
@@ -1608,7 +1608,7 @@ Banlist: April 2004.
 - 2x Kycoo the Ghost Destroyer
 - 1x Magical Scientist
 - 1x Sangan
-- 2x Shining Fairy
+- 2x Shining Angel
 - 1x Sinister Serpent
 - 1x Tribe-Infecting Virus
 - 1x Witch of the Black Forest
@@ -1633,7 +1633,7 @@ Banlist: April 2004.
 
 **Traps (6)**
 
-- 1x Bell of Destruction
+- 1x Ring of Destruction
 - 1x Call Of The Haunted
 - 1x Imperial Order
 - 1x Mirror Force
@@ -1703,7 +1703,7 @@ Banlist: April 2004.
 
 **Traps (6)**
 
-- 1x Bell of Destruction
+- 1x Ring of Destruction
 - 1x Call Of The Haunted
 - 1x Imperial Order
 - 1x Mirror Force
@@ -1778,7 +1778,7 @@ Banlist: October 2004.
 
 **Traps (4)**
 
-- 1x Bell of Destruction
+- 1x Ring of Destruction
 - 3x Royal Decree
 
 **Fusion Deck (14)**
@@ -1834,7 +1834,7 @@ Banlist: October 2004.
 
 **Traps (21)**
 
-- 1x Bell of Destruction
+- 1x Ring of Destruction
 - 3x Chain Disappearance
 - 3x Compulsory Evacuation Device
 - 1x Hallowed Life Barrier
@@ -1901,7 +1901,7 @@ Banlist: October 2004.
 
 **Traps (6)**
 
-- 1x Bell of Destruction
+- 1x Ring of Destruction
 - 1x Call Of The Haunted
 - 3x Sakuretsu Armor
 - 1x Torrential Tribute
@@ -1974,7 +1974,7 @@ Banlist: October 2004.
 
 **Traps (6)**
 
-- 1x Bell of Destruction
+- 1x Ring of Destruction
 - 1x Magic Cylinder
 - 2x Return from the Different Dimension
 - 1x Sakuretsu Armor
@@ -2041,7 +2041,7 @@ Chaos Turbo 40%, Warrior 20% and Goat Control 15% were the deck opponents' decks
 
 **Traps (8)**
 
-- 1x Bell of Destruction
+- 1x Ring of Destruction
 - 3x Jar of Greed
 - 1x Mirror Force
 - 2x Raigeki Break
@@ -2106,7 +2106,7 @@ Chaos Turbo 40%, Warrior 20% and Goat Control 15% were the deck opponents' decks
 
 **Traps (13)**
 
-- 1x Bell of Destruction
+- 1x Ring of Destruction
 - 1x Ceasefire
 - 1x Gravity Bind
 - 3x Just Desserts
@@ -2159,7 +2159,7 @@ Chaos Turbo 40%, Warrior 20% and Goat Control 15% were the deck opponents' decks
 - 3x Dekoichi the Battlechanted Locomotive
 - 3x Gravekeeper's Spy
 - 1x Sangan
-- 2x Shining Fairy
+- 2x Shining Angel
 - 2x Zaborg the Thunder Monarch
 
 **Spells (10)**
@@ -2175,7 +2175,7 @@ Chaos Turbo 40%, Warrior 20% and Goat Control 15% were the deck opponents' decks
 
 **Traps (12)**
 
-- 1x Bell of Destruction
+- 1x Ring of Destruction
 - 2x Dust Tornado
 - 1x Mirror Force
 - 2x Return from the Different Dimension
@@ -2267,7 +2267,7 @@ Chaos Turbo 40%, Warrior 20% and Goat Control 15% were the deck opponents' decks
 **Side Deck (15)**
 
 - 1x Airknight Parshath
-- 1x Bell of Destruction
+- 1x Ring of Destruction
 - 1x Mirror Force
 - 1x Raigeki Break
 - 2x Royal Decree
@@ -2369,7 +2369,7 @@ empty.
 
 **Traps (7)**
 
-- 1x Bell of Destruction
+- 1x Ring of Destruction
 - 1x Jar of Greed
 - 1x Mirror Force
 - 2x Phoenix Wing Wind Blast
@@ -2437,7 +2437,7 @@ empty.
 
 **Traps (16)**
 
-- 1x Bell of Destruction
+- 1x Ring of Destruction
 - 1x Call Of The Haunted
 - 2x Dust Tornado
 - 2x Jar of Greed
@@ -2500,7 +2500,7 @@ empty.
 
 **Traps (11)**
 
-- 1x Bell of Destruction
+- 1x Ring of Destruction
 - 3x Jar of Greed
 - 1x Mirror Force
 - 3x Solemn Judgment

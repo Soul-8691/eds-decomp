@@ -28,7 +28,6 @@ ALT_ART = 2000
 # TCG name -> EDS name, where the two differ beyond case and punctuation.
 ALIASES = {
     'Red-Eyes Black Dragon': 'Red-Eyes B. Dragon',
-    'Ring of Destruction': 'Bell of Destruction',  # not in the game; its stand-in takes its limit
     'Black Skull Dragon': 'B. Skull Dragon',
     'Kuwagata α': 'Kuwagata a',
 }

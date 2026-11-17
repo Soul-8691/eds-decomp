@@ -1,5 +1,5 @@
 -- Siding between games (README_TODO.md, Best-of-3 matches): screenshots/gifs/siding.gif. Game 1 against the
--- Yugi-Kaiba duelist is won at once (M.winDuel); then the side swap: Bell of Destruction out, Kycoo the Ghost
+-- Yugi-Kaiba duelist is won at once (M.winDuel); then the side swap: Ring of Destruction out, Kycoo the Ghost
 -- Destroyer in.
 local M = dofile((script and script.dir or "tools/media") .. "/lib_media.lua")
 
@@ -21,6 +21,6 @@ M.run("siding", function()
     M.wait(40)
     M.press(M.KEY.A, nil, 60)       -- the bar: Select A Swapping Card
     M.press(M.KEY.A, nil, 60)       -- the Side Deck
-    M.press(M.KEY.A, nil, 120)      -- its first card (Kycoo) for the Main Deck's Bell of Destruction
+    M.press(M.KEY.A, nil, 120)      -- its first card (Kycoo) for the Main Deck's Ring of Destruction
     M.stop()
 end)

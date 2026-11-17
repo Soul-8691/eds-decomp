@@ -81,7 +81,9 @@ Edit `config/new_cards.txt` and run `make`. That is the whole workflow:
 > [!warning] Ring of Destruction and Shining Angel are already in EDS
 > They are "Bell of Destruction" (ID 61) and "Shining Fairy" (ID 628), with the same passcodes (83555666,
 > 95956346). `FindCardByPassword` returns the first match, so those passwords give the original cards. Other
-> renamed EDS cards may also be in `missing.txt`.
+> renamed EDS cards may also be in `missing.txt`. Since 2026-11-17 the two show their TCG names in the game
+> (`ORIGINAL_RENAMES` in tools/newcards.py renames them in gCardNames; the constants keep the old names), which also
+> lets the usage and card-pool lists find Shining Angel.
 
 ## ROM layout
 - `gCardNames` (`0x0822C720`) grows in place into the unused second name bank (`CARD_ID_COUNT` × 0x40; the

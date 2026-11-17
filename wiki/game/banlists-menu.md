@@ -21,7 +21,7 @@ Warrior, Goat, Cyber, Reaper. Each has a card pool, `card_pools/<name>.txt`.
 - **Which arrays count.** Only "forbidden", "limited" and "semiLimited" (0/1/2 copies). "unlimited" lists cards
   that came off the list.
 - **Name matching.** Exact, then case/punctuation-insensitive, then `ALIASES` and the "TCG name | EDS name" lines of
-  `config/new_cards.txt`. Ring of Destruction, which the game doesn't have, maps to Bell of Destruction (`ALIASES`). Other cards the game doesn't have are reported and skipped (Fiber Jar, Yata-Garasu, Chaos
+  `config/new_cards.txt`. Ring of Destruction and Shining Angel are the game's Bell of Destruction and Shining Fairy, renamed in the build (`ORIGINAL_RENAMES`, tools/newcards.py, 2026-11-17), so they match directly. Other cards the game doesn't have are reported and skipped (Fiber Jar, Yata-Garasu, Chaos
   Emperor Dragon, ...); they're picked up when they're added.
 - **Not offered:** the game's own list (`gCardCopyLimits`).
 

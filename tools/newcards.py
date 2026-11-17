@@ -54,6 +54,12 @@ OLD_COUNT = 821                     # original tables: IDs 0..820
 NAME_SIZE, DESC_SIZE, ART_SIZE, PAL_SIZE = 0x40, 0x1E0, 0x10E0, 0x80
 FIRST_APPENDED = 814                # IDs 814..820 (Tickets, Gods, Token) are appended out of name order
 MAX_NAME = 41                       # a Deck Edit list row has 21 tiles of 2 characters (the longest original name)
+# Original cards shown under their TCG name (the game's localized or censored name -> the TCG one), in gCardNames and
+# so in Deck Edit's alphabetical order; the card constants (CARD_BELL_OF_DESTRUCTION, ...) keep the old names.
+ORIGINAL_RENAMES = {
+    'Bell of Destruction': 'Ring of Destruction',
+    'Shining Fairy': 'Shining Angel',
+}
 MAX_IDS = min(0xCD40 * 2 // NAME_SIZE,  # gCardNames grows in place into the unused name bank
               0x7FF + 1)            # card IDs are masked with 0x7FF
 # Card numbers for the added cards. Card Trading hides 1210-1899 (except added cards, which it lists by ID);
@@ -654,6 +660,10 @@ def cmd_build():
     total = OLD_COUNT + len(new)
 
     names, _ = read_old('names.json', NAME_SIZE)
+    for i in range(OLD_COUNT):                      # ORIGINAL_RENAMES
+        new_name = ORIGINAL_RENAMES.get(A.dec(names[i].split(b'\0')[0]))
+        if new_name:
+            names[i] = A.field_bytes(new_name, NAME_SIZE)
     descs, _ = read_old('descriptions.json', DESC_SIZE)
     _, art = read_old('art', 1)
     stats, _ = read_old('stats.csv', 4)
