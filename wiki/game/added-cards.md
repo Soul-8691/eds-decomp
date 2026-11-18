@@ -1722,6 +1722,22 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
   list (the position prompt, then 3000 ATK again).
 - The CPU Synchro Summons it with its generic rule (`AiTrySynchroSummon`).
 
+### The CPU's Metamorphosis takes the new effect Fusions (2026-11-18)
+- **Before.** The CPU played Metamorphosis only on a Level 1 monster, for Thousand-Eyes Restrict.
+- **Now.** `AiMetamorphosisFusionFor(level)` names the Fusion it wants, only among the Fusion Monsters with coded effects
+  (`AiIsMetamorphosisEffectFusion`): Level 1 Thousand-Eyes Restrict (the old rule: a face-up human monster with 1500+
+  ATK); Level 5 Fiend Skull Dragon when the human has more Set Spells/Traps than face-up Effect Monsters, else Dark
+  Balter the Terrible; Level 6 Ryu Senshi, else Ojama King (only for a monster with less than 2000 ATK: `AI_META_OJAMA_KING_MAX_ATK`, so never Jinzo); Level 7 The Last Warrior from Another Planet, only when
+  the Tribute is the CPU's only monster. `AiMetamorphosisTributeZone` takes the CPU monster with such a Fusion that it
+  gains the most over (printed ATK, Ojama King's DEF, against the monster's current ATK, or DEF for Ojama King),
+  never a stronger one; Thousand-Eyes Restrict always first.
+- The prepare (`AiCpuMetamorphosisAllowed`), the CPU's Tribute (chainB) and its pick in the Fusion Deck list (resolve)
+  all follow that plan; the list pick falls back to the strongest coded effect Fusion, and only then to the
+  strongest of all. The old Level 1 check (`AiCpuHasLevel1MetamorphosisTributeOnField`) is gone.
+- **Checked in the emulator** (two probe boards, the CPU's turn): with Airknight Parshath and Dark Balter / Fiend Skull
+  Dragon in its Fusion Deck, against the human's three Set cards, it took Fiend Skull Dragon; with Gyakutenno Megami
+  and Ojama King / Ryu Senshi, Ryu Senshi. Dark Balter's branch and The Last Warrior's were not driven.
+
 ### The Last Warrior from Another Planet (2026-11-18)
 - Fusion Monster (Level 7 EARTH Warrior, 2350/2300; "Zombyra the Dark" + "Maryokutai"). Card number 811 (ID 944). "If
   this card is Special Summoned: Destroy all other monsters you control. Neither player can Summon monsters."

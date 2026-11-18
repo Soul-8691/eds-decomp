@@ -3406,3 +3406,8 @@ updated: 2026-09-29
 - src/added_effects.c: its Special Summon trigger destroys its controller's other monsters; effect_hooks.c:
   `CanNormalSummon` / `CanSpecialSummon` refuse while it is face-up. Probe-checked.
 - [[added-cards]], [[yugi-kaiba-opponent]]; README.md, DECKS.md, card_pools/missing-fusion.txt.
+
+## [2026-11-18] progress | The CPU's Metamorphosis takes the new effect Fusions
+- src/added_effects.c: `AiMetamorphosisFusionFor` / `AiMetamorphosisTributeZone` (Dark Balter or Fiend Skull Dragon
+  by the human's board, Ryu Senshi over Ojama King, The Last Warrior alone); only coded effect Fusions. Probe-checked.
+- [[added-cards]]; AI_IMPROVEMENTS.md.

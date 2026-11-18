@@ -25625,3 +25625,73 @@
    6544 media: encoding 2890 frames -> tools\testing_scenarios\..\..\screenshots\videos\tlw-probe.mp4
    6586 Play sequence done; ending capture (no recording tail).
    6586 Finished — PASS (play sequence + tail). Stop mGBA Record A/V to finalize MP4.
+     10 MP4 target: tools\testing_scenarios\recordings\Meta5_Probe_Media_Player.mp4
+     10 emu recording API: screenshot, screenshotToImage
+     10 MP4: the scenario capture is off (captureMp4 = false)
+     10 Meta5 Probe / media / Player
+     10 point you.st0; wait 20; mp4_start meta5-probe; unfreeze; pass; cpu_turn; wait 60; rec_stop
+    791 Main menu (callback 0x08003B15).
+    914 Campaign selected (callback 0x0801D6F5).
+   1107 Turn order: forced RPS lose (CPU goes first).
+   1117 Turn order: A (lost RPS; CPU chooses first).
+   1155 Turn order: A (lost RPS; CPU chooses first).
+   1347 Opponent's turn (waiting for your Main Phase 1).
+   1349 Usage deck goat / Chaos Turbo: main=40 extra=15; P0 shuffled=true (top 719->920) P1 shuffled=true (top 719->930), hands cleared.
+   2247 cpu_turn f=900 duel_step=8 turn_player=1 ai=3/2 textbox=0
+   3147 cpu_turn f=1800 duel_step=8 turn_player=1 ai=3/2 textbox=0
+   4047 cpu_turn f=2700 duel_step=8 turn_player=1 ai=3/2 textbox=0
+   4868 Player Draw Phase.
+   5049 Opening draw complete (hand=6 deck=34 want=6).
+   5190 Exact setup: P0 hand=0 deck=34 gy=0, P1 hand=1 deck=31 gy=0, LP 8000/8000, turnCount 2.
+   5190 Player Main Phase 1.
+   5190 steps: unknown card Meta5 Probe
+   5190 steps: 8 steps, 15 ops
+   5190 step: point you.st0
+   5307 steps: capture starts (cursor on point you.st0)
+   5314 step: wait 20
+   5340 step: mp4_start meta5-probe
+   5340 media: recording meta5-probe (mp4)
+   5347 step: unfreeze
+   5354 step: pass
+   5393 step: cpu_turn
+   7519 step: wait 60
+   7585 step: rec_stop
+   7585 media: 28 still frames trimmed from the end
+   7585 media: encoding 2217 frames -> tools\testing_scenarios\..\..\screenshots\videos\meta5-probe.mp4
+   7627 Play sequence done; ending capture (no recording tail).
+   7627 Finished — PASS (play sequence + tail). Stop mGBA Record A/V to finalize MP4.
+     12 MP4 target: tools\testing_scenarios\recordings\Meta6_Probe_Media_Player.mp4
+     12 emu recording API: screenshot, screenshotToImage
+     12 MP4: the scenario capture is off (captureMp4 = false)
+     12 Meta6 Probe / media / Player
+     12 point opp.m0; wait 20; mp4_start meta6-probe; unfreeze; pass; cpu_turn; wait 60; rec_stop
+    913 Main menu (callback 0x08003B15).
+   1036 Campaign selected (callback 0x0801D6F5).
+   1229 Turn order: forced RPS lose (CPU goes first).
+   1239 Turn order: A (lost RPS; CPU chooses first).
+   1277 Turn order: A (lost RPS; CPU chooses first).
+   1469 Opponent's turn (waiting for your Main Phase 1).
+   1471 Usage deck goat / Chaos Turbo: main=40 extra=15; P0 shuffled=true (top 719->902) P1 shuffled=true (top 719->920), hands cleared.
+   2369 cpu_turn f=900 duel_step=8 turn_player=1 ai=3/2 textbox=0
+   3269 cpu_turn f=1800 duel_step=8 turn_player=1 ai=3/2 textbox=0
+   4169 cpu_turn f=2700 duel_step=8 turn_player=1 ai=3/2 textbox=0
+   4987 Player Draw Phase.
+   5168 Opening draw complete (hand=6 deck=34 want=6).
+   5307 Exact setup: P0 hand=0 deck=34 gy=0, P1 hand=1 deck=31 gy=0, LP 8000/8000, turnCount 2.
+   5307 Player Main Phase 1.
+   5307 steps: unknown card Meta6 Probe
+   5307 steps: 8 steps, 15 ops
+   5307 step: point opp.m0
+   5538 steps: capture starts (cursor on point opp.m0)
+   5545 step: wait 20
+   5571 step: mp4_start meta6-probe
+   5571 media: recording meta6-probe (mp4)
+   5578 step: unfreeze
+   5585 step: pass
+   5624 step: cpu_turn
+   7670 step: wait 60
+   7736 step: rec_stop
+   7736 media: 28 still frames trimmed from the end
+   7736 media: encoding 2137 frames -> tools\testing_scenarios\..\..\screenshots\videos\meta6-probe.mp4
+   7778 Play sequence done; ending capture (no recording tail).
+   7778 Finished — PASS (play sequence + tail). Stop mGBA Record A/V to finalize MP4.

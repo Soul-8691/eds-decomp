@@ -1,2 +1,2 @@
-tools\testing_scenarios\recordings\TLW_Probe_Media_Player.mp4
-tools/testing_scenarios/recordings/TLW_Probe_Media_Player.mp4
+tools\testing_scenarios\recordings\Meta6_Probe_Media_Player.mp4
+tools/testing_scenarios/recordings/Meta6_Probe_Media_Player.mp4

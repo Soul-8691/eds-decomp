@@ -6473,6 +6473,9 @@ static int HasFusionOfLevel(int player, int level)
 }
 
 static int AiCpuMetamorphosisAllowed(void);
+static int AiMetamorphosisTributeZone(void);       /* the CPU's plan (below, with its other Metamorphosis rules) */
+static int AiMetamorphosisFusionFor(int level);
+static int AiIsMetamorphosisEffectFusion(int number);
 
 /* 1 if the monster in (player, zone) may be Tributed for Metamorphosis. */
 static int IsMetamorphosisTribute(int player, int zone)
@@ -6489,12 +6492,10 @@ int EffectMetamorphosisPrepare(struct ChainEntry *card, struct ChainEntry *chain
 {
     int zone;
 
-    if (card->player == 1 && !AiCpuMetamorphosisAllowed())
-        return 0;
+    if (card->player == 1)
+        return AiCpuMetamorphosisAllowed();
     for (zone = ZONE_MONSTER_0; zone <= ZONE_MONSTER_4; zone++) {
-        if (IsMetamorphosisTribute(card->player, zone)
-            && (card->player != 1
-                || MonsterLevel(DUEL_CARD_ID(&ZoneOf(card->player, zone)->card)) == 1))
+        if (IsMetamorphosisTribute(card->player, zone))
             return 1;
     }
     return 0;
@@ -6505,21 +6506,9 @@ int EffectMetamorphosisChainB(struct ChainEntry *link, struct ChainEntry *prevLi
     int player, zone;
 
     if (link->player) {
-        int best = -1, bestAtk = 0x7FFFFFFF;
+        int best = AiMetamorphosisTributeZone();    /* the CPU's plan */
 
         link->numTargets = 0;
-        for (zone = ZONE_MONSTER_0; zone <= ZONE_MONSTER_4; zone++) {
-            u16 id = DUEL_CARD_ID(&ZoneOf(link->player, zone)->card);
-            int atk;
-
-            if (!IsMetamorphosisTribute(link->player, zone) || MonsterLevel(id) != 1)
-                continue;
-            atk = GetZoneCardAtk(link->player, zone);
-            if (best < 0 || atk < bestAtk) {
-                best = zone;
-                bestAtk = atk;
-            }
-        }
         if (best < 0 || !TryAddEffectTarget(link, link->player, best))
             return 1;
     } else {
@@ -6555,20 +6544,28 @@ int EffectMetamorphosisResolve(struct ChainEntry *link, struct ChainEntry *chain
             || CollectEffectTargets(link->player, CARD_METAMORPHOSIS, level) == 0)
             return EFFECT_STEP_DONE;
         if (link->player) {
-            int i, best = 0;
+            int i, best = 0, want = AiMetamorphosisFusionFor(level);
 
-#ifdef HAS_CARD_THOUSAND_EYES_RESTRICT
-            if (level == 1) {
-                for (i = 0; i < gCardListView.count; i++) {
-                    if (CARD_NUMBER(gCardListView.cards[i]) == CARD_THOUSAND_EYES_RESTRICT) {
-                        best = i;
-                        gCardListView.cursorRow = 0;
-                        gCardListView.top = best;
-                        return EFFECT_STEP_3;
-                    }
+            /* the CPU's plan (AiMetamorphosisFusionFor), else the highest ATK of the coded effect Fusions
+             * (AiIsMetamorphosisEffectFusion), else the highest ATK */
+            for (i = 0; want != 0 && i < gCardListView.count; i++) {
+                if (CARD_NUMBER(gCardListView.cards[i]) == want) {
+                    gCardListView.cursorRow = 0;
+                    gCardListView.top = i;
+                    return EFFECT_STEP_3;
                 }
             }
-#endif
+            for (i = 0, want = -1; i < gCardListView.count; i++) {
+                if (AiIsMetamorphosisEffectFusion(CARD_NUMBER(gCardListView.cards[i]))
+                    && (want < 0 || CARD_STATS_ATK(gCardStats[gCardListView.cards[i] & CARD_ID_MASK])
+                                        > CARD_STATS_ATK(gCardStats[gCardListView.cards[want] & CARD_ID_MASK])))
+                    want = i;
+            }
+            if (want >= 0) {
+                gCardListView.cursorRow = 0;
+                gCardListView.top = want;
+                return EFFECT_STEP_3;
+            }
             for (i = 1; i < gCardListView.count; i++) {
                 if (CARD_STATS_ATK(gCardStats[gCardListView.cards[i] & CARD_ID_MASK])
                     > CARD_STATS_ATK(gCardStats[gCardListView.cards[best] & CARD_ID_MASK]))
@@ -16401,25 +16398,6 @@ static int AiCpuFusionDeckHasThousandEyesForMetamorphosis(void)
 }
 #endif /* HAS_CARD_THOUSAND_EYES_RESTRICT */
 
-static int AiCpuHasLevel1MetamorphosisTributeOnField(void)
-{
-    int zone;
-
-#ifdef HAS_CARD_THOUSAND_EYES_RESTRICT
-    if (!AiCpuFusionDeckHasThousandEyesForMetamorphosis())
-        return 0;
-#else
-    return 0;
-#endif
-    for (zone = ZONE_MONSTER_0; zone <= ZONE_MONSTER_4; zone++) {
-        u16 id = DUEL_CARD_ID(&ZoneOf(AI_PLAYER, zone)->card);
-
-        if (id != 0 && (int)CARD_STATS_LEVEL(gCardStats[id & CARD_ID_MASK]) == 1)
-            return 1;
-    }
-    return 0;
-}
-
 /* Metamorphosis into Thousand-Eyes Restrict is worth it: Extra Deck has TER at Level 1 and a big target to absorb. */
 static int AiCpuMetamorphosisThousandEyesWorthwhile(void)
 {
@@ -16431,9 +16409,174 @@ static int AiCpuMetamorphosisThousandEyesWorthwhile(void)
 #endif
 }
 
+/* ---- The CPU's Metamorphosis plan (2026-11-18) ---------------------------------------------------------------------
+ * By the Tribute's Level, the Fusion Monster it takes from its Fusion Deck (AiMetamorphosisFusionFor):
+ *   1  Thousand-Eyes Restrict, when the human has a face-up monster with AI_META_CONTROL_ATK or more (as before)
+ *   5  Dark Balter the Terrible or Fiend Skull Dragon: Fiend Skull Dragon when the human has more Set Spells/Traps than
+ *      face-up Effect Monsters, else Dark Balter
+ *   6  Ryu Senshi, else Ojama King
+ *   7  The Last Warrior from Another Planet, only when the Tribute is the CPU's only monster (it destroys the others)
+ * AiMetamorphosisTributeZone: of the CPU's monsters with such a Fusion, the one the Fusion gains the most over (its
+ * printed ATK, Ojama King's DEF, against the monster's current ATK, or DEF for Ojama King); never a stronger one.
+ * Ojama King, a 0 ATK wall, only replaces a monster with less than AI_META_OJAMA_KING_MAX_ATK ATK (never Jinzo).
+ * Thousand-Eyes Restrict always comes first. */
+#define AI_META_OJAMA_KING_MAX_ATK 2000     /* Ojama King only replaces a monster weaker than this */
+
+static int AiFusionDeckHasNumber(int number)
+{
+    struct DuelPlayer *p = &gDuelPlayers[AI_PLAYER];
+    int i;
+
+    for (i = 0; i < p->fusionCount; i++) {
+        if (CardNumberOfId(DUEL_CARD_ID(&p->fusionDeck[i])) == number)
+            return 1;
+    }
+    return 0;
+}
+
+static int AiCountHumanFaceUpEffectMonsters(void)
+{
+    int zone, n = 0;
+
+    for (zone = ZONE_MONSTER_0; zone <= ZONE_MONSTER_4; zone++) {
+        struct DuelZone *z = ZoneOf(AI_HUMAN, zone);
+        u32 stats = gCardStats[DUEL_CARD_ID(&z->card) & CARD_ID_MASK];
+
+        n += DUEL_CARD_ID(&z->card) != 0 && z->isFaceUp && CARD_STATS_TYPE(stats) <= CARD_TYPE_REPTILE
+             && CARD_STATS_KIND(stats) == CARD_KIND_EFFECT;
+    }
+    return n;
+}
+
+static int AiCountHumanSetSpellTraps(void)
+{
+    int zone, n = 0;
+
+    for (zone = ZONE_SPELL_0; zone <= ZONE_SPELL_4; zone++) {
+        struct DuelZone *z = ZoneOf(AI_HUMAN, zone);
+
+        n += DUEL_CARD_ID(&z->card) != 0 && !z->isFaceUp;
+    }
+    return n;
+}
+
+/* The Fusion Monsters with coded effects the CPU's Metamorphosis may take (only these). */
+static int AiIsMetamorphosisEffectFusion(int number)
+{
+    switch (number) {
+#ifdef HAS_CARD_THOUSAND_EYES_RESTRICT
+    case CARD_THOUSAND_EYES_RESTRICT:
+#endif
+#ifdef HAS_CARD_DARK_BALTER_THE_TERRIBLE
+    case CARD_DARK_BALTER_THE_TERRIBLE:
+#endif
+#ifdef HAS_CARD_FIEND_SKULL_DRAGON
+    case CARD_FIEND_SKULL_DRAGON:
+#endif
+#ifdef HAS_CARD_RYU_SENSHI
+    case CARD_RYU_SENSHI:
+#endif
+#ifdef HAS_CARD_OJAMA_KING
+    case CARD_OJAMA_KING:
+#endif
+#ifdef HAS_CARD_THE_LAST_WARRIOR_FROM_ANOTHER_PLANET
+    case CARD_THE_LAST_WARRIOR_FROM_ANOTHER_PLANET:
+#endif
+        return 1;
+    }
+    return 0;
+}
+
+static int AiMetamorphosisFusionFor(int level)
+{
+    switch (level) {
+#ifdef HAS_CARD_THOUSAND_EYES_RESTRICT
+    case 1:
+        return AiCpuMetamorphosisThousandEyesWorthwhile() ? CARD_THOUSAND_EYES_RESTRICT : 0;
+#endif
+    case 5: {
+        int balter = 0, fiend = 0;
+
+#ifdef HAS_CARD_DARK_BALTER_THE_TERRIBLE
+        balter = AiFusionDeckHasNumber(CARD_DARK_BALTER_THE_TERRIBLE);
+#endif
+#ifdef HAS_CARD_FIEND_SKULL_DRAGON
+        fiend = AiFusionDeckHasNumber(CARD_FIEND_SKULL_DRAGON);
+        if (fiend && (!balter || AiCountHumanSetSpellTraps() > AiCountHumanFaceUpEffectMonsters()))
+            return CARD_FIEND_SKULL_DRAGON;
+#endif
+#ifdef HAS_CARD_DARK_BALTER_THE_TERRIBLE
+        if (balter)
+            return CARD_DARK_BALTER_THE_TERRIBLE;
+#endif
+        (void)balter;
+        (void)fiend;
+        return 0;
+    }
+    case 6:
+#ifdef HAS_CARD_RYU_SENSHI
+        if (AiFusionDeckHasNumber(CARD_RYU_SENSHI))
+            return CARD_RYU_SENSHI;
+#endif
+#ifdef HAS_CARD_OJAMA_KING
+        if (AiFusionDeckHasNumber(CARD_OJAMA_KING))
+            return CARD_OJAMA_KING;
+#endif
+        return 0;
+    case 7:
+#ifdef HAS_CARD_THE_LAST_WARRIOR_FROM_ANOTHER_PLANET
+        if (CountMonsters(AI_PLAYER) == 1 && AiFusionDeckHasNumber(CARD_THE_LAST_WARRIOR_FROM_ANOTHER_PLANET))
+            return CARD_THE_LAST_WARRIOR_FROM_ANOTHER_PLANET;
+#endif
+        return 0;
+    }
+    return 0;
+}
+
+static int AiMetamorphosisTributeZone(void)
+{
+    int zone, best = -1, bestGain = -1;
+
+    for (zone = ZONE_MONSTER_0; zone <= ZONE_MONSTER_4; zone++) {
+        u16 id = DUEL_CARD_ID(&ZoneOf(AI_PLAYER, zone)->card);
+        int number, gain;
+        u32 fusion;
+
+        if (id == 0)
+            continue;
+        number = AiMetamorphosisFusionFor(MonsterLevel(id));
+        if (number == 0 || !IsMetamorphosisTribute(AI_PLAYER, zone))
+            continue;
+        fusion = gCardStats[gCardNumberToId[number] & CARD_ID_MASK];
+#ifdef HAS_CARD_THOUSAND_EYES_RESTRICT
+        if (number == CARD_THOUSAND_EYES_RESTRICT)
+            gain = 0x7FFF;                                  /* always first */
+        else
+#endif
+#ifdef HAS_CARD_OJAMA_KING
+        if (number == CARD_OJAMA_KING) {
+            int wall = (int)CARD_STATS_DEF(gCardStats[id & CARD_ID_MASK]) * 10;
+
+            if (wall < GetZoneCardAtk(AI_PLAYER, zone))
+                wall = GetZoneCardAtk(AI_PLAYER, zone);
+            gain = (int)CARD_STATS_DEF(fusion) * 10 - wall;
+            /* a 0 ATK wall: never for an attacker (Jinzo, Dark Ruler Ha Des, ...) */
+            if (GetZoneCardAtk(AI_PLAYER, zone) >= AI_META_OJAMA_KING_MAX_ATK)
+                gain = -1;
+        } else
+#endif
+            gain = (int)CARD_STATS_ATK(fusion) * 10 - GetZoneCardAtk(AI_PLAYER, zone);
+        if (gain >= 0 && gain > bestGain) {
+            best = zone;
+            bestGain = gain;
+        }
+    }
+    return best;
+}
+
 static int AiCpuMetamorphosisAllowed(void)
 {
-    return AiCpuHasLevel1MetamorphosisTributeOnField() && AiCpuMetamorphosisThousandEyesWorthwhile();
+    return AiMetamorphosisTributeZone() >= 0;
 }
 
 static int AiWantsMetamorphosis(void)

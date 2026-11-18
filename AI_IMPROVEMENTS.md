@@ -47,7 +47,12 @@ Campaign duelists in Yak's YGO Hack use a much stronger opponent AI than vanilla
 - It doesn't summon Thunder Nyan Nyan next to its own face-up non-LIGHT monsters, or a non-LIGHT monster next to it, when that would just destroy Nyan Nyan.
 - It plays Megamorph in Main Phase 1 only when its LP are lower than yours and equipping it makes a simulated Battle Phase lethal (not when it would already win without Megamorph). It then attacks with the Megamorph monster first, while it is still doubled, before its other attacks close the LP gap.
 - It plays **Scapegoat** in Main Phase 1 when the tribute-burn setup is legal: four free monster zones and it has not summoned yet—for a face-up **Cannon Soldier** alone on the field, or when it has no monster it would Normal or Special Summon that turn and either you have monsters while it has none or **Metamorphosis** could use Sheep Tokens (see below). A Set Scapegoat chains only when you declare an attack, not during its Main Phase on an empty field.
-- It plays **Metamorphosis** only when it can Tribute a Level 1 monster (for example a Sheep Token), its Extra Deck has **Thousand-Eyes Restrict** at that Level, and you have a face-up monster with 1500 or more ATK for Restrict to absorb. It summons Restrict from the Metamorphosis list (not another Fusion) and activates Restrict’s effect when that target exists. It never Tributes higher-Level monsters for Metamorphosis.
+- It plays **Metamorphosis** only for a Fusion Monster with a coded effect, and only on a monster that Fusion is at least as strong as:
+  - Level 1 (for example a Sheep Token): **Thousand-Eyes Restrict**, when you have a face-up monster with 1500 or more ATK for Restrict to absorb (it then activates Restrict’s effect on it). This one always comes first.
+  - Level 5: **Fiend Skull Dragon** when you have more Set Spells/Traps than face-up Effect Monsters, else **Dark Balter the Terrible**.
+  - Level 6: **Ryu Senshi**, else **Ojama King** (only for a monster with less than 2000 ATK, so never Jinzo).
+  - Level 7: **The Last Warrior from Another Planet**, only when the Tributed monster is its only one.
+  - With several choices it Tributes the monster the Fusion gains the most ATK over (DEF for Ojama King).
 - **Thousand-Eyes Restrict** and **Relinquished** only absorb a face-up monster of yours (the one with the highest printed ATK), never a face-down one.
 - It plays Enemy Controller in Main Phase 1 to Tribute its weakest monster and take your strongest face-up one, when that has at least 500 more ATK.
 - Its Poison of the Old Man deals 800 damage when that wins the duel, gains 1200 LP while it has 3000 or less, and otherwise deals the damage; while you control a face-up **Des Wombat**, it always picks the LP gain.
