@@ -3363,3 +3363,7 @@ updated: 2026-09-29
 ## [2026-11-18] progress | CPU: Change of Heart to attack with (lethal)
 - src/added_effects.c: AiWantsChangeOfHeartAttack / AiDamageWithTaken (sandbox: the taken monster on its side, a simulated Battle Phase), asked in AiPlayAddedCards: lethal, or 1000+ more damage. Built (demo, .text unchanged 0x0807F598); checked in the emulator (lethal, YOU LOSE).
 - AI_IMPROVEMENTS.md, [[added-cards]].
+
+## [2026-11-18] progress | Ninja Grandmaster Sasuke: face-up Defense Position targets only
+- src/added_effects.c: DestroyTargetBeforeDamageStep and AiDestroysBeforeDamage need the target face up for Ninja Grandmaster Sasuke (face up at the start of the Damage Step); a face-down one is flipped and battled. Built (demo, .text 0x0807F598).
+- AI_IMPROVEMENTS.md, [[added-cards]].

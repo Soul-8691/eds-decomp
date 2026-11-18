@@ -1525,7 +1525,9 @@ void EndPhase_ReturnTsukuyomi(int player)
     || defined(HAS_CARD_SASUKE_SAMURAI)
 /* ---- Attackers that destroy the target before the Damage Step ---------------------------------------------------
  * Ninja Grandmaster Sasuke: "If this card attacks a Defense Position monster, destroy that monster immediately with
- * this card's effect without applying damage calculation."
+ * this card's effect without applying damage calculation." Only a face-up one (2026-11-18): the target must be face
+ * up at the start of the Damage Step; a face-down Defense Position monster is flipped and battled as usual, with no
+ * effect shown.
  * Mystic Swordsman LV2: "If this card attacks a face-down Defense Position monster: Destroy the monster immediately
  * with this card's effect without flipping it face-up or applying damage calculation."
  * Sasuke Samurai (2026-10-30): "At the start of the Damage Step, if this card attacks a face-down Defense Position
@@ -1552,7 +1554,7 @@ int DestroyTargetBeforeDamageStep(int player)
     switch (((const u16 *)CARD_ID_TO_NUMBER_ADDR)[id & CARD_ID_MASK]) {
 #ifdef HAS_CARD_NINJA_GRANDMASTER_SASUKE
     case CARD_NINJA_GRANDMASTER_SASUKE:
-        destroy = target->isDefense;
+        destroy = target->isDefense && target->isFaceUp;    /* face up at the start of the Damage Step */
         break;
 #endif
 #ifdef HAS_CARD_MYSTIC_SWORDSMAN_LV2
@@ -1590,7 +1592,7 @@ int AiDestroysBeforeDamage(int attackerZone, int targetZone)
     switch (((const u16 *)CARD_ID_TO_NUMBER_ADDR)[id & CARD_ID_MASK]) {
 #ifdef HAS_CARD_NINJA_GRANDMASTER_SASUKE
     case CARD_NINJA_GRANDMASTER_SASUKE:
-        return 1;
+        return target->isFaceUp;                            /* a face-up Defense Position monster only */
 #endif
 #ifdef HAS_CARD_MYSTIC_SWORDSMAN_LV2
     case CARD_MYSTIC_SWORDSMAN_LV2:

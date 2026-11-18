@@ -1664,8 +1664,8 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
   counts as made, and the battle skips to its end: no damage calculation, no battle damage. A face-up target battles
   normally.
 - **CPU.** `AiEvalAttack` (ai_picks.c) asks the new `AiDestroysBeforeDamage` first: an attack by Sasuke Samurai or
-  Mystic Swordsman LV2 on a face-down Defense Position monster, or by Ninja Grandmaster Sasuke on any Defense Position
-  monster, counts as a win with no damage, whatever the target's DEF (the CPU guesses 1400 for a face-down one). Before,
+  Mystic Swordsman LV2 on a face-down Defense Position monster, or by Ninja Grandmaster Sasuke on a face-up Defense
+  Position monster (any one until 2026-11-18), counts as a win with no damage, whatever the target's DEF (the CPU guesses 1400 for a face-down one). Before,
   the CPU never sent those weak attackers into a Set monster.
 - Release `.text` 0x08080560.
 - Checked in the source and the build; not tested in an emulator.
@@ -2803,8 +2803,9 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
   applying damage calculation."
 - **No effect row.** `BattleStage_RevealDefender` (battle_phase1.c) calls `DestroyTargetBeforeDamageStep` (shared
   with Mystic Swordsman LV2) at its
-  first step, before a face-down target is flipped, so the target's flip effect does not run. For a face-up Sasuke
-  attacking a monster in Defense Position (face up or down), it does three things:
+  first step, before a face-down target is flipped. For a face-up Sasuke attacking a **face-up** monster in Defense
+  Position (face-down ones too until 2026-11-18; now the target must be face up at the start of the Damage Step, and
+  a face-down one is flipped and battled as usual, with no effect shown), it does three things:
   - pushes `DUEL_CMD_MARK_ATTACKED`, which the skipped `DAMAGE_STEP_MARK_ATTACKER` would push;
   - shows the card and destroys the target by effect (`DestroyFieldCard` with triggers, so Sangan and Witch search;
     `OnCardDestroyedByEffect`);
