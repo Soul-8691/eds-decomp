@@ -611,7 +611,7 @@ is never included.
 
 ```
 (cd ../agbcc && ./build.sh)         # once: pret/agbcc checked out next to this repository
-make setup                          # once: baserom.gba in repo root or your ROM in roms/, then extract assets
+make setup                          # once: baserom.gba in repo root or your ROM in roms/, then extract assets and fetch the demo's cards
 make -j$(nproc)                     # eds.gba: the debug/testing build (config/new_cards.txt)
 make -j$(nproc) release             # eds_release.gba: the release build
 make -j$(nproc) demo                # eds_demo.gba: debug build, demo card pool (+ blank slots to 615 added cards)

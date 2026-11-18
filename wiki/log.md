@@ -3342,3 +3342,6 @@ updated: 2026-09-29
 
 ## [2026-11-17] progress | HMA.md: back up the .toml before opening the ROM
 - HMA.md: a "Back up the .toml first" section (HMA rewrites the .toml on opening and drops its comments, the anchor notes): copy it under another name first; recover with make demo or tomls/.
+
+## [2026-11-18] progress | make setup fetches only the demo's cards
+- Makefile setup: NEW_CARDS_LIST=demo_cards.txt tools/newcards.py fetch (308 cards; was config/new_cards.txt). Tested the fetch. README.md build comment; [[assets]].

@@ -9,6 +9,7 @@ updated: 2026-10-02
 # Asset extraction and the data build
 
 The repository holds no game data. `make setup` (`tools/setup.py`) finds the user's ROM in `roms/`, checks its SHA-1 and extracts every non-code byte into `assets/`, which is gitignored. From then on the build reads `assets/` and never the ROM.
+Its second step fetches the added cards' data and art from YGOPRODeck for the demo's list only, `demo_cards.txt` (`NEW_CARDS_LIST=demo_cards.txt tools/newcards.py fetch`, since 2026-11-18; before, the full `config/new_cards.txt`); `make` and `make release` fetch any other card of their list at build time.
 
 **State (2026-10-02, commit `2cf1b05`).** `config/assets.tsv` has 83 assets. Every one extracts to an editable format (JSON, CSV, text, PNG, WAV or JASC-PAL) and builds back byte-identical. `assets/fallback.txt` is empty, and no manifest row uses the raw `bin` type. The only raw file is `header.logo.bin`, the 156-byte Nintendo logo, which the BIOS checks. A fresh extraction writes 1,751 files.
 

@@ -92,9 +92,11 @@ compare: $(ROM)
 card-icons: $(ROM)
 	$(PYTHON) tools/cardicons.py build/card_icons
 
+# setup fetches the demo's added cards only (demo_cards.txt: the coded cards and the engine leftovers); a build of a
+# larger list (make, make release: config/new_cards.txt) fetches the cards it lacks itself.
 setup:
 	$(PYTHON) tools/setup.py
-	$(PYTHON) tools/newcards.py fetch
+	NEW_CARDS_LIST=demo_cards.txt $(PYTHON) tools/newcards.py fetch
 
 # agbcc, installed pokefirered-style: ../agbcc/install.sh copies the compilers, headers and
 # libgcc/libc into tools/agbcc. Every C object waits for it (order-only).
