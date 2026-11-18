@@ -1682,3 +1682,5 @@ START Fusilier_Probe_Media_Player
 PASS Fusilier_Probe_Media_Player duel_main=false reason= play_done=true
 START Fusilier_Probe_Media_Player
 PASS Fusilier_Probe_Media_Player duel_main=false reason= play_done=true
+START TLW_Probe_Media_Player
+PASS TLW_Probe_Media_Player duel_main=false reason= play_done=true

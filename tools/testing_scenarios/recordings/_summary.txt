@@ -1,7 +1,7 @@
 ﻿
-Script                      Result Seconds Detail                                
-------                      ------ ------- ------                                
-Fusilier_Probe_Media_Player PASS        27 duel_main=false reason= play_done=true
+Script                 Result Seconds Detail                                
+------                 ------ ------- ------                                
+TLW_Probe_Media_Player PASS        45 duel_main=false reason= play_done=true
 
 
 

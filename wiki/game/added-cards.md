@@ -1722,6 +1722,22 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
   list (the position prompt, then 3000 ATK again).
 - The CPU Synchro Summons it with its generic rule (`AiTrySynchroSummon`).
 
+### The Last Warrior from Another Planet (2026-11-18)
+- Fusion Monster (Level 7 EARTH Warrior, 2350/2300; "Zombyra the Dark" + "Maryokutai"). Card number 811 (ID 944). "If
+  this card is Special Summoned: Destroy all other monsters you control. Neither player can Summon monsters."
+- **Trigger.** Queued by `AddedCardsSummoned` for a face-up Special Summon (RESPONSE_SPECIAL_SUMMONED at its zone).
+  `EffectLastWarriorResolve` destroys every other monster of its controller (`DestroyFieldCardByEffect` +
+  `OnCardDestroyedByEffect`, so Sangan and the like still trigger).
+- **The lock.** `CanNormalSummon` and `CanSpecialSummon` (effect_hooks.c, `#ifdef` hooks at their start) answer 0
+  while a face-up, enabled one is on either field (`CountActiveCardsOnField`), as they do for the engine's key 1526.
+  That stops Normal, Flip (the card menu and `AiCanFlipSummon` ask `CanNormalSummon`) and Special Summons; the card
+  menu only takes Summon and Flip away, so Set stays (Setting is not a Summon). `.text` +0x3C (0x0807F6E0).
+- **Checked in the emulator** (a probe board): Metamorphosis (Tributing Dark Magician) summoned it, the trigger
+  destroyed Mechanicalchaser, Gravekeeper's Spy's card menu offered only Set, and in its turn the CPU (Breaker, Mystic
+  Tomato, Giant Rat in hand) summoned nothing and Set a monster.
+- Removed from `card_pools/missing-fusion.txt` and the "not fully implemented" notes (README, DECKS.md,
+  [[yugi-kaiba-opponent]]).
+
 ### Fusilier Dragon, the Dual-Mode Beast (2026-11-18)
 - Effect Monster (Level 7 EARTH Machine, 2800/2000). Card number 870 (ID 997 in the demo); moved above `------` in
   `new_cards.txt` (it was already in `config/new_cards.txt`) and out of `card_pools/missing-main.txt` and

@@ -176,7 +176,6 @@ Goyo Guardian
 Colossal Fighter
 Fusilier Dragon, the Dual-Mode Beast
 ------
-Skill Drain
 Dark End Dragon
 Red Dragon Archfiend
 Krebons
@@ -220,6 +219,7 @@ Gravekeeper's Guard
 Necrovalley
 Lava Golem
 Barrel Behind the Door
+Skill Drain
 Enraged Battle Ox
 Gravekeeper's Spear Soldier
 Slate Warrior
@@ -243,7 +243,6 @@ Bystial Druiswurm
 Gatling Dragon
 Dark Blade the Dragon Knight
 Reaper on the Nightmare
-The Last Warrior from Another Planet
 King Dragun
 Master of Oz
 Dark Flare Knight

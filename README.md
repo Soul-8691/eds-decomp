@@ -550,8 +550,7 @@ See [NEW_CARDS.md](NEW_CARDS.md) for all of them.
 > [!NOTE]
 > These demo-list Fusion Monsters are **not** fully implemented yet (no fusion effects, and they do not behave like their
 > real cards): Cyber Blader, Dark Blade the Dragon Knight, Dark Flare Knight, Dark Paladin,
-> Gatling Dragon, King Dragun, Master of Oz, Reaper on the Nightmare, and The Last
-> Warrior from Another Planet.
+> Gatling Dragon, King Dragun, Master of Oz, and Reaper on the Nightmare.
 
 ### How they're added
 

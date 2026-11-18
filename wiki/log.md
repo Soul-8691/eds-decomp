@@ -3401,3 +3401,8 @@ updated: 2026-09-29
   `AiFusilierSummon`. Probe-checked (human and CPU). Harness: setup names with a comma.
 - [[added-cards]]; AI_IMPROVEMENTS.md, new_cards.txt, card_pools/missing-main.txt, card_pools/missing.txt,
   NEW_CARDS.md, cards/.
+
+## [2026-11-18] progress | The Last Warrior from Another Planet coded
+- src/added_effects.c: its Special Summon trigger destroys its controller's other monsters; effect_hooks.c:
+  `CanNormalSummon` / `CanSpecialSummon` refuse while it is face-up. Probe-checked.
+- [[added-cards]], [[yugi-kaiba-opponent]]; README.md, DECKS.md, card_pools/missing-fusion.txt.

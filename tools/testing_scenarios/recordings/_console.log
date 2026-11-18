@@ -25581,3 +25581,47 @@
    6502 media: encoding 1764 frames -> tools\testing_scenarios\..\..\screenshots\videos\fusilier-probe.mp4
    6544 Play sequence done; ending capture (no recording tail).
    6544 Finished — PASS (play sequence + tail). Stop mGBA Record A/V to finalize MP4.
+     14 MP4 target: tools\testing_scenarios\recordings\TLW_Probe_Media_Player.mp4
+     14 emu recording API: screenshot, screenshotToImage
+     14 MP4: the scenario capture is off (captureMp4 = false)
+     14 TLW Probe / media / Player
+     14 point you.hand[Metamorphosis]; wait 20; mp4_start tlw-probe; activate you.hand[Metamorphosis]; target you.m0; pick you.e
+    795 Main menu (callback 0x08003B15).
+    918 Campaign selected (callback 0x0801D6F5).
+   1111 Turn order: forced RPS lose (CPU goes first).
+   1121 Turn order: A (lost RPS; CPU chooses first).
+   1159 Turn order: A (lost RPS; CPU chooses first).
+   1351 Opponent's turn (waiting for your Main Phase 1).
+   1353 Usage deck goat / Chaos Turbo: main=40 extra=15; P0 shuffled=true (top 719->930) P1 shuffled=true (top 719->760), hands cleared.
+   2251 cpu_turn f=900 duel_step=8 turn_player=1 ai=3/2 textbox=0
+   3077 Player Draw Phase.
+   3258 Opening draw complete (hand=6 deck=34 want=6).
+   3399 Exact setup: P0 hand=2 deck=34 gy=0, P1 hand=3 deck=33 gy=0, LP 8000/8000, turnCount 2.
+   3399 Player Main Phase 1.
+   3399 steps: unknown card TLW Probe
+   3399 steps: 17 steps, 37 ops
+   3399 step: point you.hand[Metamorphosis]
+   3600 step: wait 20
+   3626 step: mp4_start tlw-probe
+   3626 media: recording tlw-probe (mp4)
+   3633 step: activate you.hand[Metamorphosis]
+   3633 steps: capture starts (cursor on activate you.hand[Metamorphosis])
+   3679 step: target you.m0
+   3900 steps: target you.m0: A again (not taken)
+   3924 steps: target you.m0: taken on press 2
+   3931 step: pick you.extra[The Last Warrior from Another Planet]
+   4519 step: position atk
+   4554 step: settle
+   5314 step: wait 30
+   5350 step: open_menu you.hand[Gravekeeper's Spy]
+   5455 step: wait 90
+   5551 step: close
+   5597 step: unfreeze
+   5604 step: pass
+   5717 step: cpu_turn
+   6478 step: wait 60
+   6544 step: rec_stop
+   6544 media: 28 still frames trimmed from the end
+   6544 media: encoding 2890 frames -> tools\testing_scenarios\..\..\screenshots\videos\tlw-probe.mp4
+   6586 Play sequence done; ending capture (no recording tail).
+   6586 Finished — PASS (play sequence + tail). Stop mGBA Record A/V to finalize MP4.

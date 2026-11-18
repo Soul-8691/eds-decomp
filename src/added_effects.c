@@ -4056,6 +4056,13 @@ void AddedCardsSummoned(int player, int zone, u16 id, int kind, int faceUp)
                              | TRIGGER_EVENT(RESPONSE_FLIP_SUMMONED) | (id & CARD_ID_MASK),
                          DUEL_LOC(player, zone));
 #endif
+#ifdef HAS_CARD_THE_LAST_WARRIOR_FROM_ANOTHER_PLANET
+    if (((const u16 *)CARD_ID_TO_NUMBER_ADDR)[id & CARD_ID_MASK] == CARD_THE_LAST_WARRIOR_FROM_ANOTHER_PLANET && faceUp
+        && kind >= SUMMON_ACTION_SPECIAL)
+        Chain_AddPending(TRIGGER_PLAYER(player & 1) | TRIGGER_ZONE(zone) | TRIGGER_KIND(CHAIN_KIND_MONSTER)
+                             | TRIGGER_EVENT(RESPONSE_SPECIAL_SUMMONED) | (id & CARD_ID_MASK),
+                         DUEL_LOC(player, zone));
+#endif
 #ifdef HAS_CARD_OJAMA_KING
     if (((const u16 *)CARD_ID_TO_NUMBER_ADDR)[id & CARD_ID_MASK] == CARD_OJAMA_KING && faceUp
         && kind >= SUMMON_ACTION_SPECIAL)
@@ -10652,6 +10659,38 @@ static int AiFusilierSummon(void)
     return 1;
 }
 #endif /* HAS_CARD_FUSILIER_DRAGON_THE_DUAL_MODE_BEAST */
+
+#ifdef HAS_CARD_THE_LAST_WARRIOR_FROM_ANOTHER_PLANET
+/* ---- The Last Warrior from Another Planet (2026-11-18) -------------------------------------------------------------
+ * Fusion ("Zombyra the Dark" + "Maryokutai"; Level 7 EARTH Warrior 2350/2300): "If this card is Special Summoned:
+ * Destroy all other monsters you control. Neither player can Summon monsters."
+ *   trigger  AddedCardsSummoned queues it (RESPONSE_SPECIAL_SUMMONED at its zone) for a face-up Special Summon; the
+ *            resolve destroys every other monster of its controller by the effect (DestroyFieldCardByEffect, so
+ *            Sangan and the like still trigger), even if it has left the field by then ("If ... Special Summoned")
+ *   lock     CanNormalSummon / CanSpecialSummon (effect_hooks.c) answer 0 while a face-up, enabled one is on either
+ *            field, as for the engine's key 1526: no Normal, Flip or Special Summon (Fusion, Synchro, Xyz, Link and
+ *            the effects ask CanSpecialSummon); the card menu still offers Set, which is not a Summon */
+int EffectLastWarriorPrepare(struct ChainEntry *card, struct ChainEntry *chainLink, u16 fromHand)
+{
+    return !fromHand && card->event == RESPONSE_SPECIAL_SUMMONED && card->loc0 == DUEL_LOC(card->player, card->zone);
+}
+
+int EffectLastWarriorResolve(struct ChainEntry *link, struct ChainEntry *chainedTo)
+{
+    int zone;
+
+    (void)chainedTo;
+    if (link->negated)
+        return EFFECT_STEP_DONE;
+    for (zone = ZONE_MONSTER_0; zone <= ZONE_MONSTER_4; zone++) {
+        if (zone == link->zone || DUEL_CARD_ID(&ZoneOf(link->player, zone)->card) == 0)
+            continue;
+        DestroyFieldCardByEffect(link->player, zone);
+        OnCardDestroyedByEffect(link->player, link->player, zone);
+    }
+    return EFFECT_STEP_DONE;
+}
+#endif /* HAS_CARD_THE_LAST_WARRIOR_FROM_ANOTHER_PLANET */
 
 #ifdef HAS_CARD_OJAMA_KING
 /* ---- Ojama King (2026-11-18) ---------------------------------------------------------------------------------------
@@ -18150,6 +18189,16 @@ const struct CardEffect gAddedCardEffects[] = {
         NULL,
         EffectNormalNegatorPrepare,
         EffectNormalNegatorChainA,
+        NULL,
+    },
+#endif
+#ifdef HAS_CARD_THE_LAST_WARRIOR_FROM_ANOTHER_PLANET
+    {
+        CARD_THE_LAST_WARRIOR_FROM_ANOTHER_PLANET, 0,
+        EffectLastWarriorResolve,
+        NULL,
+        EffectLastWarriorPrepare,
+        NULL,
         NULL,
     },
 #endif

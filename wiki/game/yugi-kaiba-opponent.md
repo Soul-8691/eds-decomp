@@ -81,8 +81,8 @@ next to the one before it.
     deck, a slot with no deck is skipped. The odds stayed the same (Goat's twentieths became 40/20/15/10/5/5/5,
     Cyber's coin 50/50). HMA edits them: `data.decks.choices.<format>` ([[hma-toml]]).
   - The other 2 keep their original duelists' decks for now.
-  - Cards in these decks with no coded effect yet: The Last Warrior from Another Planet (Joey-Pegasus Vanilla Beat and both
-    Android decks). Skull Lair is coded ([[added-cards]], 2026-10-26).
+  - Every card in these decks has its effect coded: Skull Lair (2026-10-26) and The Last Warrior from Another Planet
+    (2026-11-18) were the last ([[added-cards]]).
   - The .ydk files are in `decks/`. Their passcodes resolve through the built password table, which stores each
     passcode as 4 BCD bytes in digit order.
 - **Portraits.** Yugi-Kaiba La Jinn, Critter Sangan, Imperial Imperial Order, Treasure Confiscation, Android Jinzo,

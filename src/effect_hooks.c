@@ -705,10 +705,16 @@ u16 CanEffectTargetZone(u16 *card, int player, int zone)
 
 /*
  * May `player` Normal Summon or Set a monster? Not if its noNormalSummon flag is set, key 1426 (no EDS card)
- * is active on its field, or key 1526 (no EDS card) is active on either field.
+ * is active on its field, or key 1526 (no EDS card) is active on either field. Added: nor while The Last Warrior
+ * from Another Planet is (the card menu only takes Summon and Flip away for this, so a Set stays allowed).
  */
 int CanNormalSummon(int player)
 {
+#ifdef HAS_CARD_THE_LAST_WARRIOR_FROM_ANOTHER_PLANET
+    /* added card: "Neither player can Summon monsters" while a face-up one is on either field */
+    if (CountActiveCardsOnField(0, CARD_THE_LAST_WARRIOR_FROM_ANOTHER_PLANET) != 0 || CountActiveCardsOnField(1, CARD_THE_LAST_WARRIOR_FROM_ANOTHER_PLANET) != 0)
+        return 0;
+#endif
     if (!gDuelPlayers[player & 1].noNormalSummon && CountActiveCardsOnField(player, CARD_1426) == 0
         && CountActiveCardsOnField(0, 1526) == 0 && CountActiveCardsOnField(1, 1526) == 0)
         return 1;
@@ -722,6 +728,11 @@ int CanNormalSummon(int player)
  */
 int CanSpecialSummon(int player)
 {
+#ifdef HAS_CARD_THE_LAST_WARRIOR_FROM_ANOTHER_PLANET
+    /* added card: "Neither player can Summon monsters" while a face-up one is on either field */
+    if (CountActiveCardsOnField(0, CARD_THE_LAST_WARRIOR_FROM_ANOTHER_PLANET) != 0 || CountActiveCardsOnField(1, CARD_THE_LAST_WARRIOR_FROM_ANOTHER_PLANET) != 0)
+        return 0;
+#endif
     if (gDuelPlayers[player & 1].noSpecialSummon)
         return 0;
     if (CountActiveCardsOnField(player, CARD_1426) != 0)

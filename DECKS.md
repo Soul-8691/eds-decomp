@@ -2002,7 +2002,7 @@ Banlist: October 2004.
 
 </details>
 
-Every card was already in the game. Cards here with no coded effect yet: the Fusion Monsters Dark Blade the Dragon Knight, Reaper on the Nightmare, The Last Warrior from Another Planet and Dark Flare Knight.
+Every card was already in the game. Cards here with no coded effect yet: the Fusion Monsters Dark Blade the Dragon Knight, Reaper on the Nightmare and Dark Flare Knight.
 
 ### 13. Goat
 
@@ -2279,7 +2279,7 @@ Chaos Turbo 40%, Warrior 20% and Goat Control 15% were the deck opponents' decks
 
 </details>
 
-Every card was already in the game. Cards in these seven decks with no coded effect yet: Mystik Wok, Level Limit - Area B, Secret Barrel, Ojama Trio, Gravity Bind, Spell Canceller, Des Koala, Toon Table of Contents, Token Thanksgiving, Monster Reincarnation, Roulette Barrel, Toon Cannon Soldier, Final Attack Orders, Dark Scorpion - Cliff the Trap Remover, Hysteric Fairy, Royal Oppression, and the Fusion Monsters Gatling Dragon, Dark Blade the Dragon Knight, Reaper on the Nightmare, The Last Warrior from Another Planet, King Dragun, Dark Flare Knight and Dark Paladin.
+Every card was already in the game. Cards in these seven decks with no coded effect yet: Mystik Wok, Level Limit - Area B, Secret Barrel, Ojama Trio, Gravity Bind, Spell Canceller, Des Koala, Toon Table of Contents, Token Thanksgiving, Monster Reincarnation, Roulette Barrel, Toon Cannon Soldier, Final Attack Orders, Dark Scorpion - Cliff the Trap Remover, Hysteric Fairy, Royal Oppression, and the Fusion Monsters Gatling Dragon, Dark Blade the Dragon Knight, Reaper on the Nightmare, King Dragun, Dark Flare Knight and Dark Paladin.
 
 ### 14. Cyber (Yami Bakura)
 
@@ -2290,7 +2290,7 @@ Dragon use the YGOPRODeck id aliases in `tools/testdeck.py`, same as other deck 
 Every card was already in the game. Cards in these two decks with **no coded effect yet**: Chiron the Mage,
 D.D. Assailant, Exarion Universe, Wave-Motion Cannon, and the Fusion Monsters
 Gatling Dragon, Dark Blade the Dragon Knight, Reaper on the Nightmare,
-The Last Warrior from Another Planet, King Dragun, and Master of Oz.
+King Dragun, and Master of Oz.
 
 ### 15. Reaper (Yami Yugi)
 
@@ -2303,8 +2303,8 @@ The Last Warrior from Another Planet, King Dragun, and Master of Oz.
 
 Cards with **no coded effect yet** across these five decks (union): **Manticore of Darkness** (new); **Magical Scientist**, **Chaos Emperor Dragon - Envoy of the End**, **Fiber Jar**, **Yata-Garasu**;
 **Mirage of Nightmare** (if still tracked in `missing-main.txt`; effect may be partially handled elsewhere); fusion
-materials **Reaper on the Nightmare**, **The Last
-Warrior from Another Planet**, **King Dragun**, **Gatling Dragon**, **Master of Oz**, **Dark Flare
+materials **Reaper on the Nightmare**,
+**King Dragun**, **Gatling Dragon**, **Master of Oz**, **Dark Flare
 Knight**; plus **Mystik Wok** and **Royal Oppression** (Warrior side). Many staples are fully implemented (e.g. Bazoo,
 Cyber Stein, Spirit Reaper, Bottomless Trap Hole, Enemy Controller, Wave-Motion Cannon in `src/added_effects.c`).
 
