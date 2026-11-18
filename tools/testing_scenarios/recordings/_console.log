@@ -25290,3 +25290,42 @@
    5209 media: encoding 2370 frames -> tools\testing_scenarios\..\..\screenshots\videos\ryu-probe.mp4
    5226 Play sequence done; ending capture (no recording tail).
    5226 Finished — PASS (play sequence + tail). Stop mGBA Record A/V to finalize MP4.
+     19 MP4 target: tools\testing_scenarios\recordings\FSD_Probe_Media_Player.mp4
+     19 emu recording API: screenshot, screenshotToImage
+     19 MP4: the scenario capture is off (captureMp4 = false)
+     19 FSD Probe / media / Player
+     19 point you.st0; wait 20; mp4_start fsd-probe; activate you.st0; target opp.m0; settle; wait 30; battle; attack you.m0 -> 
+    800 Main menu (callback 0x08003B15).
+    923 Campaign selected (callback 0x0801D6D5).
+   1116 Turn order: forced RPS lose (CPU goes first).
+   1126 Turn order: A (lost RPS; CPU chooses first).
+   1164 Turn order: A (lost RPS; CPU chooses first).
+   1357 Opponent's turn (waiting for your Main Phase 1).
+   1359 Usage deck goat / Chaos Turbo: main=40 extra=15; P0 shuffled=true (top 719->878) P1 shuffled=true (top 719->648), hands cleared.
+   2257 cpu_turn f=900 duel_step=8 turn_player=1 ai=4/0 textbox=0
+   2373 Player Draw Phase.
+   2554 Opening draw complete (hand=6 deck=34 want=6).
+   2692 Exact setup: P0 hand=0 deck=34 gy=0, P1 hand=0 deck=34 gy=0, LP 8000/8000, turnCount 2.
+   2692 Player Main Phase 1.
+   2692 steps: unknown card FSD Probe
+   2692 steps: 12 steps, 29 ops
+   2692 step: point you.st0
+   2816 step: wait 20
+   2842 step: mp4_start fsd-probe
+   2842 media: recording fsd-probe (mp4)
+   2849 step: activate you.st0
+   2849 steps: capture starts (cursor on activate you.st0)
+   2895 step: target opp.m0
+   3151 steps: target opp.m0: taken on press 1
+   3158 step: settle
+   3636 step: wait 30
+   3672 step: battle
+   3772 step: attack you.m0 -> opp.m1
+   4052 steps: attack you.m0 -> opp.m1: taken on press 1
+   4251 step: settle
+   4277 step: wait 60
+   4343 step: rec_stop
+   4343 media: 85 still frames trimmed from the end
+   4343 media: encoding 1416 frames -> tools\testing_scenarios\..\..\screenshots\videos\fsd-probe.mp4
+   4360 Play sequence done; ending capture (no recording tail).
+   4360 Finished — PASS (play sequence + tail). Stop mGBA Record A/V to finalize MP4.

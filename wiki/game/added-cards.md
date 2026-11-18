@@ -1722,6 +1722,25 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
   list (the position prompt, then 3000 ATK again).
 - The CPU Synchro Summons it with its generic rule (`AiTrySynchroSummon`).
 
+### Fiend Skull Dragon (2026-11-18)
+- Fusion Monster (Level 5 WIND Dragon, 2000/1200; "Cave Dragon" + "Lesser Fiend"). Card number 632 (ID 872). "Negate
+  the effects of Flip Effect Monsters. Negate any Trap effects that target this card on the field, and if you do,
+  destroy that Trap Card." Both effects are continuous, so it has no effect row.
+- **Flip effects.** `FlipEffectsLockedForTurn` (the dormant flip lock that every place a flip effect starts already
+  asks: summon_action.c, duel_field_moves.c, battle_phase1/2.c, effect_activation.c, effect_resolve2.c) also answers 1
+  while a face-up, undisabled Fiend Skull Dragon is on either field (`FiendSkullDragonOnField`). No original unit
+  changed.
+- **Traps that target it.** Ryu Senshi's check, renamed `ModTargetedLinkNegated`: a Spell aimed at Ryu Senshi or a
+  Trap aimed at Fiend Skull Dragon is negated and destroyed. Its call in `Chain_Resolve` (duel_main.c) moved from the
+  Magic case to after the type switch, covering both; `.text` unchanged (0x0807F5B0).
+- Not done: the CPU doesn't avoid Setting or flipping its Flip monsters while one is on the field, or aiming its
+  Traps at the human's.
+- **Checked in the emulator** (a probe board): the human's Compulsory Evacuation Device on the CPU's Fiend Skull
+  Dragon resolved with no effect (it stayed on the field); the CPU's Set Man-Eater Bug, flipped and destroyed by
+  Summoned Skull's attack, destroyed nothing.
+- Removed from `card_pools/missing-fusion.txt` and the "not fully implemented" notes (README, DECKS.md,
+  [[yugi-kaiba-opponent]]).
+
 ### Ryu Senshi (2026-11-18)
 - Fusion Monster (Level 6 EARTH Warrior, 2000/1200; "Warrior Dai Grepher" + "Spirit Ryu"). Card number 787 (ID 928).
   "When a Normal Trap Card is activated (Quick Effect): You can pay 1000 LP; negate that effect. This card must be
@@ -1732,7 +1751,8 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
   opponent's Normal Trap, 1000 LP; the resolve does nothing if Ryu Senshi is no longer face-up in its zone.
 - **Spells that target it.** `ModSpellTargetNegated` (added_effects.c), one call in `Chain_Resolve`'s Magic case
   (duel_main.c, beside `gDuel.magicNegated`; `.text` +0x18, 0x0807F5B0): a Spell link whose chosen targets
-  (`targets[]`, player | zone << 8) include a face-up Ryu Senshi is negated as Imperial Order negates it, with
+  (`targets[]`, player | zone << 8) include a face-up Ryu Senshi is negated as Imperial Order negates it
+  (renamed `ModTargetedLinkNegated` with Fiend Skull Dragon, above), with
   `destroyIfNegated` set so a Continuous or Equip Spell goes to the Graveyard as well. Graverobber, Call of the
   Haunted and Premature Burial keep a card word in `targets[]` and are skipped.
 - **CPU.** Its Ryu Senshi negates the human's Normal Traps above 2000 LP. Not done: the CPU doesn't avoid aiming its

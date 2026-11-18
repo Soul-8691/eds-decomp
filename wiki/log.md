@@ -3381,3 +3381,9 @@ updated: 2026-09-29
   (Spells targeting it), hooked in duel_main.c's `Chain_Resolve`. Probe-checked.
 - [[added-cards]], [[yugi-kaiba-opponent]]; README.md, DECKS.md, AI_IMPROVEMENTS.md,
   card_pools/missing-fusion.txt.
+
+## [2026-11-18] progress | Fiend Skull Dragon coded
+- src/added_effects.c: Flip effects negated through `FlipEffectsLockedForTurn`; Traps targeting it through
+  `ModTargetedLinkNegated` (Ryu Senshi's check, generalized; the duel_main.c call moved after the type switch).
+  Probe-checked.
+- [[added-cards]], [[yugi-kaiba-opponent]]; README.md, DECKS.md, card_pools/missing-fusion.txt.

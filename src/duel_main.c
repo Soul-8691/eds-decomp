@@ -164,7 +164,7 @@ enum ChainResolveStage {
  * Returns 0 right after a negated card was sent away, else 1.
  */
 void ModChainLinkResolved(struct ChainEntry *link);    /* mod: e.g. Skilled Dark Magician's Spell Counters */
-int ModSpellTargetNegated(struct ChainEntry *link);   /* mod: a Spell that targets Ryu Senshi (added_effects.c) */
+int ModTargetedLinkNegated(struct ChainEntry *link);  /* mod: Ryu Senshi, Fiend Skull Dragon (added_effects.c) */
 
 u32 Chain_Resolve(void)
 {
@@ -242,12 +242,15 @@ u32 Chain_Resolve(void)
                     disabled = 1;
                 break;
             case CARD_TYPE_MAGIC:
-                if (gDuel.magicNegated || ModSpellTargetNegated(&LAST_LINK))  /* added: Ryu Senshi */
+                if (gDuel.magicNegated)
                     disabled = 1;
                 if (CARD_STATS_SUBTYPE(stats) == SPELL_CONTINUOUS && gDuel.contMagicNegatedThisTurn)
                     disabled = 1;
                 break;
             }
+            /* added: a Spell/Trap that targets Ryu Senshi / Fiend Skull Dragon */
+            if (ModTargetedLinkNegated(&LAST_LINK))
+                disabled = 1;
             /* Key 1539 is never negated. */
             if (CARD_NUMBER_C(LAST_LINK.card) == CARD_1539) {
                 disabled = 0;

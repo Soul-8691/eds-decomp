@@ -1,2 +1,2 @@
-tools\testing_scenarios\recordings\Ryu_Probe_Media_Player.mp4
-tools/testing_scenarios/recordings/Ryu_Probe_Media_Player.mp4
+tools\testing_scenarios\recordings\FSD_Probe_Media_Player.mp4
+tools/testing_scenarios/recordings/FSD_Probe_Media_Player.mp4

@@ -1671,3 +1671,5 @@ START Balter_Probe_Media_Player
 PASS Balter_Probe_Media_Player duel_main=true reason= play_done=true
 START Ryu_Probe_Media_Player
 PASS Ryu_Probe_Media_Player duel_main=true reason= play_done=true
+START FSD_Probe_Media_Player
+PASS FSD_Probe_Media_Player duel_main=true reason= play_done=true

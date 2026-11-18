@@ -1,7 +1,7 @@
 ﻿
 Script                 Result Seconds Detail                               
 ------                 ------ ------- ------                               
-Ryu_Probe_Media_Player PASS        30 duel_main=true reason= play_done=true
+FSD_Probe_Media_Player PASS        24 duel_main=true reason= play_done=true
 
 
 

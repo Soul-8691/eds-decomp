@@ -8158,12 +8158,45 @@ int HaDesNegatesBattleFlipEffect(void)
 }
 #endif /* HAS_CARD_DARK_RULER_HA_DES */
 
+#ifdef HAS_CARD_FIEND_SKULL_DRAGON
+/* ---- Fiend Skull Dragon (2026-11-18) -------------------------------------------------------------------------------
+ * Fusion ("Cave Dragon" + "Lesser Fiend"; Level 5 WIND Dragon 2000/1200): "Negate the effects of Flip Effect Monsters.
+ * Negate any Trap effects that target this card on the field, and if you do, destroy that Trap Card."
+ *   flips     FlipEffectsLockedForTurn (below) answers 1 while a face-up, undisabled copy is on either field, so no
+ *             Flip effect is activated (Flip Summon, flipped by an attack or an effect)
+ *   targeted  ModTargetedLinkNegated (Chain_Resolve, duel_main.c): a Trap whose chosen targets include a face-up
+ *             Fiend Skull Dragon is negated and destroyed, as Ryu Senshi's Spells (beside Dark Balter's block)
+ *   No effect row: both are continuous. */
+static int FiendSkullDragonOnField(void)
+{
+    int player, zone;
+
+    for (player = 0; player < 2; player++) {
+        for (zone = ZONE_MONSTER_0; zone <= ZONE_MONSTER_4; zone++) {
+            struct DuelZone *z = ZoneOf(player, zone);
+
+            if (z->isFaceUp && !z->isDisabled && DUEL_CARD_ID(&z->card) != 0
+                && CardNumberOfId(DUEL_CARD_ID(&z->card)) == CARD_FIEND_SKULL_DRAGON)
+                return 1;
+        }
+    }
+    return 0;
+}
+#endif /* HAS_CARD_FIEND_SKULL_DRAGON */
+
 /* ---- Flip effects locked for the rest of a turn (gModDuel.flipEffectsLocked; nothing sets it at present: it was
  * a mistaken Dark Ruler Ha Des effect) ---- */
 
 
+/* Also 1 while a face-up Fiend Skull Dragon is on the field ("Negate the effects of Flip Effect Monsters"): every
+ * place a flip effect starts asks this (summon_action.c, duel_field_moves.c, battle_phase1/2.c, effect_activation.c,
+ * effect_resolve2.c). */
 int FlipEffectsLockedForTurn(void)
 {
+#ifdef HAS_CARD_FIEND_SKULL_DRAGON
+    if (FiendSkullDragonOnField())
+        return 1;
+#endif
     return gModDuel.flipEffectsLocked != 0;
 }
 
@@ -10576,7 +10609,7 @@ int EffectJunkWarriorResolve(struct ChainEntry *link, struct ChainEntry *chained
  *   battle    (Balter) HaDesNegatesBattleDestroyed (Dark Ruler Ha Des's hook in SendBattleDestroyedCardToGraveyard and
  *             the battle flip) also answers 1 when the monster that won the battle is Dark Balter: the destroyed
  *             monster's Graveyard trigger and flip effect do not run
- *   targeted  (Ryu Senshi) ModSpellTargetNegated, asked by Chain_Resolve (duel_main.c) for each Spell link as it
+ *   targeted  (Ryu Senshi) ModTargetedLinkNegated, asked by Chain_Resolve (duel_main.c) for each Spell link as it
  *             resolves: a Spell whose chosen targets include a face-up Ryu Senshi is negated (as Imperial Order
  *             negates it) and destroyed (destroyIfNegated: a Continuous or Equip Spell goes to the Graveyard too)
  *   CPU       AiChainNormalNegator (AiChainSummonTriggerResponse): the human's Normal Spells / Normal Traps while it
@@ -10673,15 +10706,25 @@ static int AiChainNormalNegator(struct ChainEntry *entry)
 }
 #endif /* HAS_CARD_DARK_BALTER_THE_TERRIBLE || HAS_CARD_RYU_SENSHI */
 
-/* Chain_Resolve (duel_main.c), for a Spell link about to resolve: 1 (and destroyIfNegated set) when one of its chosen
- * targets is a face-up Ryu Senshi, so the Spell is negated and destroyed. Graverobber, Call of the Haunted and
- * Premature Burial keep a card word in targets[], not a zone, and are skipped. */
-int ModSpellTargetNegated(struct ChainEntry *link)
+/* Chain_Resolve (duel_main.c), for a Spell or Trap link about to resolve: 1 (and destroyIfNegated set) when one of
+ * its chosen targets is a face-up monster that negates and destroys it: Ryu Senshi for a Spell, Fiend Skull Dragon for
+ * a Trap. Graverobber, Call of the Haunted and Premature Burial keep a card word in targets[], not a zone, and are
+ * skipped. */
+int ModTargetedLinkNegated(struct ChainEntry *link)
 {
-#ifdef HAS_CARD_RYU_SENSHI
-    int i, number = CardNumberOfId(link->card);
+#if defined(HAS_CARD_RYU_SENSHI) || defined(HAS_CARD_FIEND_SKULL_DRAGON)
+    int i, number = CardNumberOfId(link->card), guard = -1;
+    u32 type = CARD_STATS_TYPE(gCardStats[link->card & CARD_ID_MASK]);
 
-    if (link->negated || number == CARD_GRAVEROBBER || number == CARD_CALL_OF_THE_HAUNTED
+#ifdef HAS_CARD_RYU_SENSHI
+    if (type == CARD_TYPE_MAGIC)
+        guard = CARD_RYU_SENSHI;
+#endif
+#ifdef HAS_CARD_FIEND_SKULL_DRAGON
+    if (type == CARD_TYPE_TRAP)
+        guard = CARD_FIEND_SKULL_DRAGON;
+#endif
+    if (guard < 0 || link->negated || number == CARD_GRAVEROBBER || number == CARD_CALL_OF_THE_HAUNTED
         || number == CARD_PREMATURE_BURIAL)
         return 0;
     for (i = 0; i < link->numTargets && i < 3; i++) {
@@ -10691,7 +10734,7 @@ int ModSpellTargetNegated(struct ChainEntry *link)
         if (player > 1 || zone > ZONE_MONSTER_4)
             continue;
         z = ZoneOf(player, zone);
-        if (z->isFaceUp && !z->isDisabled && CardNumberOfId(DUEL_CARD_ID(&z->card)) == CARD_RYU_SENSHI) {
+        if (z->isFaceUp && !z->isDisabled && CardNumberOfId(DUEL_CARD_ID(&z->card)) == guard) {
             link->destroyIfNegated = 1;
             return 1;
         }
