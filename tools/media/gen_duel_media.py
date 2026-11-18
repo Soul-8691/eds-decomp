@@ -598,7 +598,8 @@ def main():
             '})',
         ]) + '\n'
         path = OUT / (entry['basename'] + '.lua')
-        path.write_text(body, encoding='utf-8')
+        with open(path, 'w', encoding='utf-8', newline='\n') as f:     # LF, as committed (not CRLF on Windows)
+            f.write(body)
         written.append(path.name)
     print('Wrote %d scripts: %s' % (len(written), ', '.join(written)))
 

@@ -201,9 +201,11 @@ def main() -> int:
     for entry in entries:
         fname = entry['basename'] + '.lua'
         poc = entry['card'] in POC_CARDS
-        (OUT_DIR / fname).write_text(lua_body(entry), encoding='utf-8')
+        with open(OUT_DIR / fname, 'w', encoding='utf-8', newline='\n') as f:    # LF, as committed
+            f.write(lua_body(entry))
         if poc:
-            (POC_DIR / fname).write_text(poc_lua_body(entry), encoding='utf-8')
+            with open(POC_DIR / fname, 'w', encoding='utf-8', newline='\n') as f:
+                f.write(poc_lua_body(entry))
         manifest.append({
             'card': entry['card'],
             'effect': entry['sc']['effect'],

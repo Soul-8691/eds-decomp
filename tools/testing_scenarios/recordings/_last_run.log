@@ -1661,3 +1661,5 @@ START AI_Megamorph_Probe_Media_Player
 START AI_Megamorph_Probe_Media_Player
 START AI_Megamorph_Probe_Media_Player
 PASS AI_Megamorph_Probe_Media_Player duel_main=false reason= play_done=true
+START Colossal_Probe_Media_Player
+PASS Colossal_Probe_Media_Player duel_main=true reason= play_done=true

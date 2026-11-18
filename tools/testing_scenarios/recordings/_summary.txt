@@ -1,7 +1,7 @@
 ﻿
-Script                          Result Seconds Detail                                
-------                          ------ ------- ------                                
-AI_Megamorph_Probe_Media_Player PASS        36 duel_main=false reason= play_done=true
+Script                      Result Seconds Detail                               
+------                      ------ ------- ------                               
+Colossal_Probe_Media_Player PASS        14 duel_main=true reason= play_done=true
 
 
 

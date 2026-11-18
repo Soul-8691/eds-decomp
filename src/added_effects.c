@@ -9180,6 +9180,10 @@ static int ModBattleStatBonus(int player, int zone)
 
 /* GetZoneCardStats (card_stats.c, step 4a, a face-up monster): the ATK it gains in the low halfword and the DEF in the
  * high one (signed): Gyaku-Gire Panda's ATK, and Cipher Soldier's battle bonus (ModBattleStatBonus). */
+#ifdef HAS_CARD_COLOSSAL_FIGHTER
+int ColossalFighterWarriors(void);              /* below (Colossal Fighter) */
+#endif
+
 int ModStatBonus(int player, int zone)
 {
     int atk = 0, def = 0, battle = ModBattleStatBonus(player, zone);
@@ -9196,6 +9200,10 @@ int ModStatBonus(int player, int zone)
 
         atk -= EXARION_ATK_COST * stacks;
     }
+#endif
+#ifdef HAS_CARD_COLOSSAL_FIGHTER
+    if (CardNumberOfId(DUEL_CARD_ID(&ZoneOf(player, zone)->card)) == CARD_COLOSSAL_FIGHTER)
+        atk += 100 * ColossalFighterWarriors();     /* COLOSSAL_ATK_PER_WARRIOR */
 #endif
     return (atk & 0xFFFF) | (def << 16);
 }
@@ -9360,6 +9368,9 @@ void ModFilterEffectTargets(u16 cardNumber)
 }
 
 int JunkSynchronTargetId(u16 id, int param);   /* below (the Synchro test cards) */
+#ifdef HAS_CARD_COLOSSAL_FIGHTER
+int ColossalFighterTargetId(u16 id, int param);    /* below (Colossal Fighter) */
+#endif
 
 void ModCollectEffectTargets(int player, u16 cardNumber, int param)
 {
@@ -9443,6 +9454,12 @@ void ModCollectEffectTargets(int player, u16 cardNumber, int param)
 #ifdef HAS_CARD_JUNK_SYNCHRON
     case CARD_JUNK_SYNCHRON:                /* the Graveyard's Level 2 or lower monsters */
         ModAddPileTargets(p->graveyard, p->graveCount, CARDLIST_SRC_GRAVEYARD, JunkSynchronTargetId, 0);
+        break;
+#endif
+#ifdef HAS_CARD_COLOSSAL_FIGHTER
+    case CARD_COLOSSAL_FIGHTER:             /* the Warrior monsters of both Graveyards */
+        ModAddPileTargets(p->graveyard, p->graveCount, CARDLIST_SRC_GRAVEYARD, ColossalFighterTargetId, 0);
+        ModAddPileTargets(o->graveyard, o->graveCount, CARDLIST_SRC_GRAVEYARD, ColossalFighterTargetId, 0);
         break;
 #endif
 #ifdef HAS_CARD_CURSED_SEAL_OF_THE_FORBIDDEN_SPELL
@@ -10125,6 +10142,105 @@ int EffectJunkSynchronResolve(struct ChainEntry *link, struct ChainEntry *chaine
     return EFFECT_STEP_DONE;
 }
 #endif /* HAS_CARD_JUNK_SYNCHRON */
+
+#ifdef HAS_CARD_COLOSSAL_FIGHTER
+/* ---- Colossal Fighter ----------------------------------------------------------------------------------------------
+ * Synchro (1 Tuner + 1+ non-Tuner monsters; Level 8 DARK Warrior 2800/1000): "Gains 100 ATK for each Warrior monster
+ * in the GYs. When this card is destroyed by battle and sent to the GY: You can target 1 Warrior monster in either
+ * GY; Special Summon it."
+ *   ATK      ModStatBonus: +COLOSSAL_ATK_PER_WARRIOR per Warrior monster in both Graveyards (ColossalFighterWarriors).
+ *   trigger  queued with Sangan's and Newdoria's (SendBattleDestroyedCardToGraveyard, duel_field_moves.c: destroyed by
+ *            battle and sent to the Graveyard, not banished), for its owner. The prepare wants a Warrior in either
+ *            Graveyard (Colossal Fighter itself counts: it may revive itself) and a free monster zone.
+ *   resolve  the human is asked (it is optional), then picks in the list of both Graveyards' Warriors
+ *            (ModCollectEffectTargets); the CPU always uses it, on the highest ATK one. The card leaves its owner's
+ *            Graveyard (the card word's owner bit) and is Special Summoned on the activating player's field, in the
+ *            position chosen (QueueSpecialSummonChoosePosition). */
+#define COLOSSAL_ATK_PER_WARRIOR 100
+
+static const u8 sStrColossalFighterPrompt[] = "Special Summon a Warrior monster from either Graveyard?";
+
+int ColossalFighterTargetId(u16 id, int param)
+{
+    u32 stats = gCardStats[id & CARD_ID_MASK];
+
+    (void)param;
+    return CARD_STATS_TYPE(stats) == CARD_TYPE_WARRIOR && !IsCannotSpecialSummon(id & CARD_ID_MASK);
+}
+
+/* Warrior monsters in both Graveyards (the ATK gain). */
+int ColossalFighterWarriors(void)
+{
+    int p, i, n = 0;
+
+    for (p = 0; p <= 1; p++) {
+        for (i = 0; i < gDuelPlayers[p].graveCount; i++) {
+            if (CARD_STATS_TYPE(gCardStats[DUEL_CARD_ID(&gDuelPlayers[p].graveyard[i]) & CARD_ID_MASK])
+                == CARD_TYPE_WARRIOR)
+                n++;
+        }
+    }
+    return n;
+}
+
+int EffectColossalFighterPrepare(struct ChainEntry *card, struct ChainEntry *chainLink, u16 fromHand)
+{
+    if (fromHand || card->event != RESPONSE_BATTLE_DESTROYED || CountFreeMonsterZones(card->player) == 0
+        || !CanSpecialSummon(card->player))
+        return 0;
+    return CollectEffectTargetsSyn(card->player, CARD_COLOSSAL_FIGHTER, 0) > 0;
+}
+
+int EffectColossalFighterResolve(struct ChainEntry *link, struct ChainEntry *chainedTo)
+{
+    int count, i, best;
+    u32 bestAtk;
+    u16 *picked;
+
+    if (link->negated)
+        return EFFECT_STEP_DONE;
+    switch (gChain.effectStep) {
+    case EFFECT_STEP_START:
+        count = CollectEffectTargetsSyn(link->player, CARD_COLOSSAL_FIGHTER, 0);
+        if (count == 0 || CountFreeMonsterZones(link->player) == 0)
+            return EFFECT_STEP_DONE;
+        if (link->player) {                         /* the CPU: always, its highest ATK Warrior */
+            best = 0;
+            bestAtk = 0;
+            for (i = 0; i < count; i++) {
+                u32 atk = CARD_STATS_ATK(gCardStats[gCardListView.cards[i] & CARD_ID_MASK]);
+
+                if (i == 0 || atk > bestAtk) {
+                    best = i;
+                    bestAtk = atk;
+                }
+            }
+            gCardListView.cursorRow = 0;
+            gCardListView.top = best;
+            return EFFECT_STEP_3;
+        }
+        TextBoxOpen(TEXTBOX_POS(5, 2), TEXTBOX_SIZE(20, 7), TEXTBOX_FLAGS_DEFAULT, sStrColossalFighterPrompt);
+        TextBoxSetMenu(TEXTBOX_MENU_YES_NO, NULL, NULL);
+        return EFFECT_STEP_2;
+    case EFFECT_STEP_2:
+        if (!gTextBox.result)
+            return EFFECT_STEP_DONE;
+        CardListView_Open(link->player, CARDLIST_AREA_EFFECT_TARGETS, CARD_COLOSSAL_FIGHTER, 0);
+        return EFFECT_STEP_3;
+    case EFFECT_STEP_3:
+        picked = (u16 *)&gCardListView.cards[gCardListView.cursorRow + gCardListView.top];
+        CopyDuelCard(&gChain.effectCard, (struct DuelCard *)picked);
+        /* out of its owner's Graveyard (either one) */
+        DuelCmd_Push(gChain.effectCard.owner ? DUEL_CMD_PLAYER | DUEL_CMD_REMOVE_CARD_FROM_GRAVEYARD
+                                             : DUEL_CMD_REMOVE_CARD_FROM_GRAVEYARD, picked[0], picked[1], 0);
+        return EFFECT_STEP_4;
+    case EFFECT_STEP_4:
+        QueueSpecialSummonChoosePosition(link->player, &gChain.effectCard, 1, 0);
+        return EFFECT_STEP_END;
+    }
+    return EFFECT_STEP_DONE;
+}
+#endif /* HAS_CARD_COLOSSAL_FIGHTER */
 
 #ifdef HAS_CARD_QUILLBOLT_HEDGEHOG
 /* ---- Quillbolt Hedgehog -------------------------------------------------------------------------------------------
@@ -17482,6 +17598,16 @@ const struct CardEffect gAddedCardEffects[] = {
         NULL,
         NULL,
         EffectNewdoriaChainB,
+    },
+#endif
+#ifdef HAS_CARD_COLOSSAL_FIGHTER
+    {
+        CARD_COLOSSAL_FIGHTER, 0,
+        EffectColossalFighterResolve,
+        NULL,
+        EffectColossalFighterPrepare,
+        NULL,
+        NULL,
     },
 #endif
 #ifdef HAS_CARD_MARAUDING_CAPTAIN

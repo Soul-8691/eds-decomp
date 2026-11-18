@@ -1694,6 +1694,23 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
   > left. New hooks in the original units should call into added_effects.c and stay small.
 - Checked in the source and the build; not tested in an emulator.
 
+### Colossal Fighter (2026-11-18)
+- Synchro Monster (Level 8 DARK Warrior, 2800/1000; "1 Tuner + 1+ non-Tuner monsters": any Tuner, `{ 869, 0 }` in
+  synchro_rules.h). Card number 869 (ID 996 in the demo). "Gains 100 ATK for each Warrior monster in the GYs. When this
+  card is destroyed by battle and sent to the GY: You can target 1 Warrior monster in either GY; Special Summon it."
+- **ATK.** `ModStatBonus` adds 100 per Warrior monster in both Graveyards (`ColossalFighterWarriors`).
+- **Trigger.** Queued with Sangan's, Newdoria's and Masked Dragon's (`SendBattleDestroyedCardToGraveyard`,
+  duel_field_moves.c: one `case` label, `.text` +0x10, 0x0807F598), for its owner. `EffectColossalFighterPrepare`: the
+  battle-destroyed event, a free monster zone, and a Warrior in either Graveyard (`ModCollectEffectTargets`: both
+  Graveyards' Warriors that may be Special Summoned; Colossal Fighter itself counts). `EffectColossalFighterResolve`:
+  the human answers Yes/No and picks in the list; the CPU always revives its highest ATK one. The card leaves its
+  owner's Graveyard (the word's owner bit) and is Special Summoned on the activating player's field in a chosen
+  position (`QueueSpecialSummonChoosePosition`).
+- **Checked in the emulator** (a probe board): with Exiled Force and D.D. Warrior Lady in the Graveyard it showed 3000
+  ATK; attacking Blue-Eyes Ultimate Dragon it was destroyed (-1500), the trigger asked, and it revived itself from the
+  list (the position prompt, then 3000 ATK again).
+- The CPU Synchro Summons it with its generic rule (`AiTrySynchroSummon`).
+
 ### Masked Dragon (2026-10-29)
 - Effect Monster (Level 3, FIRE Dragon, 1400/1100). ID 1147 (number 1195). The fetched text: "When this card is
   destroyed by battle and sent to the Graveyard: You can Special Summon 1 Dragon-Type monster with 1500 or less ATK

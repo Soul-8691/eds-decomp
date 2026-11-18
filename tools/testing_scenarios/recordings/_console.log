@@ -25104,3 +25104,40 @@
    4160 media: encoding 1083 frames -> tools\testing_scenarios\..\..\screenshots\videos\ai-megamorph-probe.mp4
    4177 Play sequence done; ending capture (no recording tail).
    4177 Finished — PASS (play sequence + tail). Stop mGBA Record A/V to finalize MP4.
+     13 MP4 target: tools\testing_scenarios\recordings\Colossal_Probe_Media_Player.mp4
+     13 emu recording API: screenshot, screenshotToImage
+     13 MP4: the scenario capture is off (captureMp4 = false)
+     13 Colossal Probe / media / Player
+     13 point you.m0; wait 60; mp4_start colossal-probe; battle; attack you.m0 -> opp.m0; when prompt yes_no: yes; pick you.gy[C
+    914 Main menu (callback 0x08003B15).
+   1037 Campaign selected (callback 0x0801D6D5).
+   1230 Turn order: forced RPS lose (CPU goes first).
+   1240 Turn order: A (lost RPS; CPU chooses first).
+   1278 Turn order: A (lost RPS; CPU chooses first).
+   1470 Opponent's turn (waiting for your Main Phase 1).
+   1472 Usage deck goat / Chaos Turbo: main=40 extra=15; P0 shuffled=true (top 719->878) P1 shuffled=true (top 719->719), hands cleared.
+   2370 cpu_turn f=900 duel_step=8 turn_player=1 ai=3/2 textbox=0
+   2706 Player Draw Phase.
+   2887 Opening draw complete (hand=6 deck=34 want=6).
+   3027 Exact setup: P0 hand=0 deck=34 gy=2, P1 hand=0 deck=32 gy=0, LP 8000/8000, turnCount 2.
+   3027 Player Main Phase 1.
+   3027 steps: unknown card Colossal Probe
+   3027 steps: 11 steps, 25 ops
+   3027 step: point you.m0
+   3164 steps: capture starts (cursor on point you.m0)
+   3171 step: wait 60
+   3237 step: mp4_start colossal-probe
+   3237 media: recording colossal-probe (mp4)
+   3244 step: battle
+   3344 step: attack you.m0 -> opp.m0
+   3605 steps: attack you.m0 -> opp.m0: taken on press 1
+   3778 step: when prompt yes_no: yes
+   3778 steps: event: when prompt yes_no: yes
+   3805 step: pick you.gy[Colossal Fighter]
+   3890 step: settle
+   3906 step: point you.m0
+   4058 step: wait 90
+   4154 step: rec_stop
+   4154 media: encoding 917 frames -> tools\testing_scenarios\..\..\screenshots\videos\colossal-probe.mp4
+   4171 Play sequence done; ending capture (no recording tail).
+   4171 Finished — PASS (play sequence + tail). Stop mGBA Record A/V to finalize MP4.

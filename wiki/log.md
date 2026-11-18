@@ -3349,3 +3349,13 @@ updated: 2026-09-29
 ## [2026-11-18] progress | Tsukuyomi: no End Phase return face-down; CPU Book of Moon / Tsukuyomi targets
 - src/added_effects.c: EndPhase_ReturnTsukuyomi needs it face up; AiFaceDownOpensAttack (in AiFlipEffectPreferredTarget) picks the human monster a CPU attacker beats only once it is face-down, never a flip-effect one.
 - AI_IMPROVEMENTS.md, [[added-cards]]. Not built: assets/ (only new_cards/) and roms/ were missing.
+
+## [2026-11-18] progress | Colossal Fighter coded
+- new_cards.txt (moved above ------), config/new_cards.txt; src/added_effects.c: ATK in ModStatBonus, the both-Graveyards list in ModCollectEffectTargets, EffectColossalFighterPrepare/Resolve and its row; src/duel_field_moves.c: the battle-destroyed trigger case (.text 0x0807F598). Built (demo); checked in the emulator with a probe board (ATK 3000 with two Warriors, the trigger, the revive).
+- demo_cards.txt, NEW_CARDS.md regenerated (309 cards; Colossal Fighter has no Card View screenshot yet). AI_IMPROVEMENTS.md, [[added-cards]].
+
+## [2026-11-18] progress | Colossal Fighter Card View screenshot
+- cards/Colossal Fighter.png (tools/card_screenshots.lua with cards/_capture_only.txt, then removed); NEW_CARDS.md regenerated: 309 cards, none without a screenshot.
+
+## [2026-11-18] progress | Generated Lua scripts written with LF
+- tools/media/gen_duel_media.py, tools/gen_testing_lua.py: open(..., newline=LF) instead of Path.write_text (CRLF on Windows), so the 42 tools/media/*_Media_Player.lua no longer show as modified (their only difference was the line endings). Regenerated; git status clean for *.lua.
