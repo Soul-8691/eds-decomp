@@ -3359,3 +3359,7 @@ updated: 2026-09-29
 
 ## [2026-11-18] progress | Generated Lua scripts written with LF
 - tools/media/gen_duel_media.py, tools/gen_testing_lua.py: open(..., newline=LF) instead of Path.write_text (CRLF on Windows), so the 42 tools/media/*_Media_Player.lua no longer show as modified (their only difference was the line endings). Regenerated; git status clean for *.lua.
+
+## [2026-11-18] progress | CPU: Change of Heart to attack with (lethal)
+- src/added_effects.c: AiWantsChangeOfHeartAttack / AiDamageWithTaken (sandbox: the taken monster on its side, a simulated Battle Phase), asked in AiPlayAddedCards: lethal, or 1000+ more damage. Built (demo, .text unchanged 0x0807F598); checked in the emulator (lethal, YOU LOSE).
+- AI_IMPROVEMENTS.md, [[added-cards]].

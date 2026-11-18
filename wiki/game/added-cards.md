@@ -864,6 +864,17 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
   - Quick-Play boosts such as Rush Recklessly are not counted.
 - Checked in the source and the build; not tested in an emulator.
 
+### The CPU's Change of Heart to attack with (2026-11-18)
+- **Before.** The CPU played Change of Heart only for a Tribute (AiPlaySpells' Level 5+ hand scans,
+  `AiStealForTributeSummon`), never to attack with the monster it took, so it passed up lethal.
+- **Now.** `AiPlayAddedCards` (after its Synchro, Xyz and Link Summons) asks `AiWantsChangeOfHeartAttack`: Main Phase
+  1, a free monster zone, not under the human's Swords of Revealing Light. In the sandbox (`AiDamageWithTaken`) the
+  monster its Change of Heart would take (`AiFindStrongestMonster`, as `EffectTakeControlChainB`) is copied to its free
+  zone and a Battle Phase is simulated; it plays the card when that is lethal or at least 1000 more than
+  `AiSimBattleDamage(1)` without it.
+- **Checked in the emulator.** The human at 3000 LP with Summoned Skull; the CPU with Vorse Raider, Change of Heart in
+  hand, Sangan drawn: it summoned Sangan, took Skull and attacked with all three: YOU LOSE.
+
 ### The CPU Tributes the human's monsters first (2026-11-16)
 - **Before.** `AiStealForTributeSummon` (added_effects.c, AiStepMainPhase before the Normal Summon) stole only when
   the CPU had no monster of its own, and only with Change of Heart or Snatch Steal; with monsters of its own it

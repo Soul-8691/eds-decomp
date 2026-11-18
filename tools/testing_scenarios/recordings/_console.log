@@ -25141,3 +25141,36 @@
    4154 media: encoding 917 frames -> tools\testing_scenarios\..\..\screenshots\videos\colossal-probe.mp4
    4171 Play sequence done; ending capture (no recording tail).
    4171 Finished — PASS (play sequence + tail). Stop mGBA Record A/V to finalize MP4.
+     56 MP4 target: tools\testing_scenarios\recordings\CoH_Probe_Media_Player.mp4
+     56 emu recording API: screenshot, screenshotToImage
+     56 MP4: the scenario capture is off (captureMp4 = false)
+     56 CoH Probe / media / Player
+     56 point you.m0; wait 20; options speed=always anims=hide battle=hide; mp4_start coh-probe; pass; await Change of Heart; wa
+    837 Main menu (callback 0x08003B15).
+    960 Campaign selected (callback 0x0801D6D5).
+   1153 Turn order: forced RPS lose (CPU goes first).
+   1163 Turn order: A (lost RPS; CPU chooses first).
+   1201 Turn order: A (lost RPS; CPU chooses first).
+   1395 Opponent's turn (waiting for your Main Phase 1).
+   1397 Usage deck goat / Chaos Turbo: main=40 extra=15; P0 shuffled=true (top 719->902) P1 shuffled=true (top 719->952), hands cleared.
+   2295 cpu_turn f=900 duel_step=8 turn_player=1 ai=4/0 textbox=0
+   2412 Player Draw Phase.
+   2593 Opening draw complete (hand=6 deck=34 want=6).
+   2734 Exact setup: P0 hand=0 deck=34 gy=0, P1 hand=1 deck=35 gy=0, LP 3000/8000, turnCount 2.
+   2734 Player Main Phase 1.
+   2734 steps: unknown card CoH Probe
+   2734 steps: 8 steps, 16 ops
+   2734 step: point you.m0
+   2870 steps: capture starts (cursor on point you.m0)
+   2877 step: wait 20
+   2903 step: options speed=always anims=hide battle=hide
+   2903 steps: options = 0x0037
+   2910 step: mp4_start coh-probe
+   2910 media: recording coh-probe (mp4)
+   2917 step: pass
+   3030 step: await Change of Heart
+   4004 step: wait 300
+   4310 step: rec_stop
+   4310 media: encoding 1296 frames -> tools\testing_scenarios\..\..\screenshots\videos\coh-probe.mp4
+   4327 Play sequence done; ending capture (no recording tail).
+   4327 Finished — PASS (play sequence + tail). Stop mGBA Record A/V to finalize MP4.

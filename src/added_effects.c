@@ -15182,6 +15182,49 @@ int AiWantsSnatchSteal(void)
     return 1;
 }
 
+/* ---- Change of Heart to attack with (2026-11-18) ---------------------------------------------------------------------
+ * The CPU played Change of Heart only for a Tribute (AiPlaySpells' Level 5+ scans, AiStealForTributeSummon), never to
+ * attack with the monster it takes, so it missed lethal. AiPlayAddedCards (its Main Phase 1, after its summons) now
+ * asks AiWantsChangeOfHeartAttack: in the sandbox the monster its Change of Heart would take (EffectTakeControlChainB:
+ * AiFindStrongestMonster) moves to a free zone of the CPU's, and a simulated Battle Phase runs. It plays the card when
+ * that wins the duel, or deals at least COH_ATTACK_MIN_GAIN more than without it (which also takes that monster out of
+ * the human's next attacks and blocks). */
+#define COH_ATTACK_MIN_GAIN 1000
+
+/* The CPU's simulated Battle Phase damage with the human's monster in `target` taken (in a free CPU zone), -1 if it
+ * has no free zone. */
+static int AiDamageWithTaken(int target)
+{
+    int freeZone = FindFreeMonsterZone(AI_PLAYER), damage;
+
+    if (freeZone < 0)
+        return -1;
+    AiBackupDuelState();
+    MemCopy16(ZoneOf(AI_PLAYER, freeZone), ZoneOf(AI_HUMAN, target), sizeof(struct DuelZone));
+    MemClear16(ZoneOf(AI_HUMAN, target), sizeof(struct DuelZone));
+    AiSimSetAttackPositions();
+    damage = AiSimBattlePhase();
+    AiRestoreDuelState();
+    return damage;
+}
+
+int AiWantsChangeOfHeartAttack(void)
+{
+    int target, lp, damage;
+
+    if (gAiState.step != AI_STEP_MAIN_PHASE_1 || CountMonsters(AI_HUMAN) == 0 || AiHumanSwordsActive()
+        || CountFreeMonsterZones(AI_PLAYER) == 0)
+        return 0;
+    if (FindHandCardByNumber(AI_PLAYER, CARD_CHANGE_OF_HEART) < 0 && !AiHasUsableSpellTrap(CARD_CHANGE_OF_HEART))
+        return 0;
+    target = AiFindStrongestMonster(AI_HUMAN, -1, 1, 1);
+    if (target < 0)
+        return 0;
+    lp = (int)gDuelPlayers[AI_HUMAN].lifePoints;
+    damage = AiDamageWithTaken(target);
+    return damage >= lp || damage >= AiSimBattleDamage(1) + COH_ATTACK_MIN_GAIN;
+}
+
 #ifdef HAS_CARD_ENEMY_CONTROLLER
 /* ---- Enemy Controller ----------------------------------------------------------------------------------------------
  * Quick-Play Spell: "Activate 1 of these effects.
@@ -16376,6 +16419,9 @@ int AiPlayAddedCards(void)
     if (AiTryXyzSummon())                   /* src/mod_xyz.c */
         return 1;
     if (AiTryLinkSummon())                  /* src/mod_link.c */
+        return 1;
+    /* Change of Heart to attack with: lethal, or 1000+ more battle damage (after its summons, so they count) */
+    if (AiWantsChangeOfHeartAttack() && AiTryPlaySpellTrap(CARD_CHANGE_OF_HEART))
         return 1;
     /* the card-menu effects of face-up added monsters */
     for (zone = ZONE_MONSTER_0; zone <= ZONE_MONSTER_4; zone++) {
