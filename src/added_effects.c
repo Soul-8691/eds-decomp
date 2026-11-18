@@ -1509,7 +1509,9 @@ void EndPhase_ReturnTsukuyomi(int player)
             struct DuelZone *z = ZoneOf(player, zone);
             u16 id = DUEL_CARD_ID(&z->card);
 
-            if (id != 0 && CARD_NUMBER(id) == CARD_TSUKUYOMI) {
+            /* face up only: a face-down Tsukuyomi (usually turned face down by its own effect, or Book of Moon) has
+             * no effect to activate, so it stays (2026-11-18) */
+            if (id != 0 && CARD_NUMBER(id) == CARD_TSUKUYOMI && z->isFaceUp) {
                 DuelCmd_Push(TsukuyomiPlayerCmd(player, DUEL_CMD_SHOW_CARD_EFFECT), id, 1, 0);
                 ReturnFieldCardToHand(player, zone, 0);
             }
@@ -4853,11 +4855,65 @@ static int IsBattleFlipRemoval(const struct ChainEntry *link)
     return 0;
 }
 
-/* The human's monster zone to prefer (see above), or -1 (not such a flip, or no monster that can still attack). */
+/* Book of Moon and Tsukuyomi on the CPU's Main Phase 1 (2026-11-18): the human's face-up monster that none of the
+ * CPU's face-up Attack Position monsters beats now but one beats once it is face-down in Defense Position (an
+ * attacker's ATK above its DEF), the strongest (ATK) such; never a flip-effect monster (turned face down, it gets its
+ * flip again). -1 for none. */
+static int AiFaceDownOpensAttack(struct ChainEntry *link, int skipZone)
+{
+    int zone, cz, best = -1, bestAtk = -1;
+
+    switch (CARD_NUMBER(link->card)) {
+#ifdef HAS_CARD_BOOK_OF_MOON
+    case CARD_BOOK_OF_MOON:
+#endif
+#ifdef HAS_CARD_TSUKUYOMI
+    case CARD_TSUKUYOMI:
+#endif
+        break;
+    default:
+        return -1;
+    }
+    if ((gDuel.turnPlayer & 1) != 1 || gDuel.phase != PHASE_MAIN1)
+        return -1;
+    for (zone = ZONE_MONSTER_0; zone <= ZONE_MONSTER_4; zone++) {
+        struct DuelZone *z = ZoneOf(0, zone);
+        u16 id = DUEL_CARD_ID(&z->card);
+        int atk, def, beatsNow = 0, beatsDown = 0;
+
+        if (zone == skipZone || id == 0 || !z->isFaceUp || HasFlipEffect(CARD_NUMBER(id), 0))
+            continue;
+        atk = (int)GetZoneCardAtk(0, zone);
+        def = (int)GetZoneCardDef(0, zone);
+        for (cz = ZONE_MONSTER_0; cz <= ZONE_MONSTER_4; cz++) {
+            struct DuelZone *c = ZoneOf(1, cz);
+            int cpuAtk;
+
+            if (DUEL_CARD_ID(&c->card) == 0 || !c->isFaceUp || c->isDefense)
+                continue;
+            cpuAtk = (int)GetZoneCardAtk(1, cz);
+            if (cpuAtk > (z->isDefense ? def : atk))
+                beatsNow = 1;
+            if (cpuAtk > def)
+                beatsDown = 1;
+        }
+        if (!beatsNow && beatsDown && atk > bestAtk) {
+            best = zone;
+            bestAtk = atk;
+        }
+    }
+    return best;
+}
+
+/* The human's monster zone to prefer (see above), or -1 (not such a flip, or no monster that can still attack).
+ * Book of Moon and Tsukuyomi on the CPU's turn: AiFaceDownOpensAttack. */
 int AiFlipEffectPreferredTarget(struct ChainEntry *link, int skipZone)
 {
     int zone, best = -1, bestAtk = -1;
 
+    best = AiFaceDownOpensAttack(link, skipZone);
+    if (best >= 0)
+        return best;
     if (!IsBattleFlipRemoval(link))
         return -1;
     for (zone = ZONE_MONSTER_0; zone <= ZONE_MONSTER_4; zone++) {

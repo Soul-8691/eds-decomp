@@ -268,6 +268,14 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
   to the hand (set-only Normal Summon still returns, without firing the field effect).
 - `HasFlipEffect` (card_detail.c).
 - Checked in the source; not tested in an emulator.
+- **Face-down: no return (2026-11-18).** `EndPhase_ReturnTsukuyomi` returns a marked Tsukuyomi only while it is face
+  up: turned face-down (by its own effect, or Book of Moon) it has no effect to activate, so it stays.
+- **CPU target (2026-11-18).** On the CPU's Main Phase 1, Book of Moon and Tsukuyomi (`AiFaceDownOpensAttack`, first in
+  `AiFlipEffectPreferredTarget`, which `EffectTargetableFaceUpMonsterChainB` asks) take the human's face-up monster
+  that none of the CPU's face-up Attack Position monsters beats now but one beats face-down (ATK above its DEF), the
+  strongest by ATK, never a flip-effect monster (`HasFlipEffect`); otherwise the old pick (the strongest, or in the
+  human's Battle Phase the strongest that can still attack).
+- Not built yet (assets/ and roms/ were missing at the time); not tested.
 
 ### Zombyra the Dark (2026-10-25)
 - "This card cannot attack directly. Each time this card destroys a monster by battle, it loses 200 ATK."

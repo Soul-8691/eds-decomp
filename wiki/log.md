@@ -3345,3 +3345,7 @@ updated: 2026-09-29
 
 ## [2026-11-18] progress | make setup fetches only the demo's cards
 - Makefile setup: NEW_CARDS_LIST=demo_cards.txt tools/newcards.py fetch (308 cards; was config/new_cards.txt). Tested the fetch. README.md build comment; [[assets]].
+
+## [2026-11-18] progress | Tsukuyomi: no End Phase return face-down; CPU Book of Moon / Tsukuyomi targets
+- src/added_effects.c: EndPhase_ReturnTsukuyomi needs it face up; AiFaceDownOpensAttack (in AiFlipEffectPreferredTarget) picks the human monster a CPU attacker beats only once it is face-down, never a flip-effect one.
+- AI_IMPROVEMENTS.md, [[added-cards]]. Not built: assets/ (only new_cards/) and roms/ were missing.

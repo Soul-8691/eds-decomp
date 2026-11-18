@@ -79,7 +79,7 @@ Campaign duelists in Yak's YGO Hack use a much stronger opponent AI than vanilla
 - It plays Card Destruction when you hold more cards in hand than it would discard after paying the cost.
 - It plays Creature Swap when it can trade its weakest monster for one of yours with higher ATK.
 - It plays Monster Gate when it can Tribute a monster with less than 1500 ATK.
-- It plays Book of Moon when you have a face-up monster and it has a monster on the field.
+- It plays Book of Moon when you have a face-up monster and it has a monster on the field. On its turn, its Book of Moon and Tsukuyomi turn face down the monster of yours (not a flip-effect monster) that its attackers can't beat face up but can beat face-down in Defense Position, the strongest such.
 - It never activates Hysteric Fairy's effect (two Tributes for 1000 LP).
 - It plays Cold Wave in its Main Phase and does not keep playing Spells or Traps while either player's Cold Wave lock is active.
 - While **Imperial Order** is face-up on either field, it does not activate Magic cards from its hand (including in its early heal-and-burn Spell step); it Sets them instead, like under Anti-Magic Fragrance.
