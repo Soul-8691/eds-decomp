@@ -1,7 +1,7 @@
 ﻿
-Script                 Result Seconds Detail                                
-------                 ------ ------- ------                                
-CoH_Probe_Media_Player PASS        29 duel_main=false reason= play_done=true
+Script                    Result Seconds Detail                               
+------                    ------ ------- ------                               
+Balter_Probe_Media_Player PASS        23 duel_main=true reason= play_done=true
 
 
 

@@ -25174,3 +25174,80 @@
    4310 media: encoding 1296 frames -> tools\testing_scenarios\..\..\screenshots\videos\coh-probe.mp4
    4327 Play sequence done; ending capture (no recording tail).
    4327 Finished — PASS (play sequence + tail). Stop mGBA Record A/V to finalize MP4.
+     15 MP4 target: tools\testing_scenarios\recordings\Balter_Probe_Media_Player.mp4
+     15 emu recording API: screenshot, screenshotToImage
+     15 MP4: the scenario capture is off (captureMp4 = false)
+     15 Balter Probe / media / Player
+     15 point you.hand[Pot of Greed]; wait 20; mp4_start balter-probe; activate you.hand[Pot of Greed]; settle; wait 30; battle;
+    796 Main menu (callback 0x08003B15).
+    919 Campaign selected (callback 0x0801D6D5).
+   1112 Turn order: forced RPS lose (CPU goes first).
+   1122 Turn order: A (lost RPS; CPU chooses first).
+   1160 Turn order: A (lost RPS; CPU chooses first).
+   1353 Opponent's turn (waiting for your Main Phase 1).
+   1355 Usage deck goat / Chaos Turbo: main=40 extra=15; P0 shuffled=true (top 719->859) P1 shuffled=true (top 719->760), hands cleared.
+   2253 cpu_turn f=900 duel_step=8 turn_player=1 ai=3/2 textbox=0
+   3153 cpu_turn f=1800 duel_step=8 turn_player=1 ai=3/2 textbox=0
+   4053 cpu_turn f=2700 duel_step=8 turn_player=1 ai=4/0 textbox=0
+   4126 Player Draw Phase.
+   4307 Opening draw complete (hand=6 deck=34 want=6).
+   4446 Exact setup: P0 hand=1 deck=34 gy=0, P1 hand=0 deck=32 gy=0, LP 8000/8000, turnCount 2.
+   4446 Player Main Phase 1.
+   4446 steps: unknown card Balter Probe
+   4446 steps: 11 steps, 27 ops
+   4446 step: point you.hand[Pot of Greed]
+   4647 step: wait 20
+   4673 step: mp4_start balter-probe
+   4673 media: recording balter-probe (mp4)
+   4680 step: activate you.hand[Pot of Greed]
+   4680 steps: capture starts (cursor on activate you.hand[Pot of Greed])
+   4726 step: settle
+   5362 step: wait 30
+   5398 step: battle
+   5498 step: attack you.m0 -> opp.m0
+   5761 steps: attack you.m0 -> opp.m0: taken on press 1
+   5919 step: settle
+   5945 step: wait 60
+   6011 step: rec_stop
+   6011 media: 88 still frames trimmed from the end
+   6011 media: encoding 1250 frames -> tools\testing_scenarios\..\..\screenshots\videos\balter-probe.mp4
+   6028 Play sequence done; ending capture (no recording tail).
+   6028 Finished — PASS (play sequence + tail). Stop mGBA Record A/V to finalize MP4.
+     19 MP4 target: tools\testing_scenarios\recordings\Balter_Probe_Media_Player.mp4
+     19 emu recording API: screenshot, screenshotToImage
+     19 MP4: the scenario capture is off (captureMp4 = false)
+     19 Balter Probe / media / Player
+     19 point you.hand[Pot of Greed]; wait 20; mp4_start balter-probe; activate you.hand[Pot of Greed]; settle; wait 30; battle;
+    800 Main menu (callback 0x08003B15).
+    923 Campaign selected (callback 0x0801D6D5).
+   1116 Turn order: forced RPS lose (CPU goes first).
+   1126 Turn order: A (lost RPS; CPU chooses first).
+   1164 Turn order: A (lost RPS; CPU chooses first).
+   1357 Opponent's turn (waiting for your Main Phase 1).
+   1359 Usage deck goat / Chaos Turbo: main=40 extra=15; P0 shuffled=true (top 719->902) P1 shuffled=true (top 719->886), hands cleared.
+   2257 cpu_turn f=900 duel_step=8 turn_player=1 ai=4/0 textbox=0
+   2318 Player Draw Phase.
+   2499 Opening draw complete (hand=6 deck=34 want=6).
+   2636 Exact setup: P0 hand=1 deck=34 gy=0, P1 hand=0 deck=34 gy=0, LP 8000/8000, turnCount 2.
+   2636 Player Main Phase 1.
+   2636 steps: unknown card Balter Probe
+   2636 steps: 11 steps, 27 ops
+   2636 step: point you.hand[Pot of Greed]
+   2837 step: wait 20
+   2863 step: mp4_start balter-probe
+   2863 media: recording balter-probe (mp4)
+   2870 step: activate you.hand[Pot of Greed]
+   2870 steps: capture starts (cursor on activate you.hand[Pot of Greed])
+   2916 step: settle
+   3816 steps: settle timed out (settle) [box active=false kind=0 step=0; list=false; chain=true; summon=false; cmds=false; prompt=0]
+   3823 step: wait 30
+   3859 step: battle
+   4302 step: attack you.m0 -> opp.m0
+   4565 steps: attack you.m0 -> opp.m0: taken on press 1
+   4722 step: settle
+   4748 step: wait 60
+   4814 step: rec_stop
+   4814 media: 88 still frames trimmed from the end
+   4814 media: encoding 1863 frames -> tools\testing_scenarios\..\..\screenshots\videos\balter-probe.mp4
+   4831 Play sequence done; ending capture (no recording tail).
+   4831 Finished — PASS (play sequence + tail). Stop mGBA Record A/V to finalize MP4.

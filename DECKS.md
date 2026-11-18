@@ -1372,7 +1372,7 @@ Banlist: November 2003.
 
 </details>
 
-Cards here with no coded effect yet: Dark Balter the Terrible, Fiend Skull Dragon and Ryu Senshi. St. Joan, Super
+Cards here with no coded effect yet: Fiend Skull Dragon and Ryu Senshi. St. Joan, Super
 Robolady and Super Roboyarou stay in the card pool but are omitted from format Fusion Deck lists until their fusion
 recipes work.
 
@@ -1734,7 +1734,7 @@ Banlist: April 2004.
 
 </details>
 
-Every card was already in the game (Black Skull Dragon is the original B. Skull Dragon). Cards here with no coded effect yet: Dark Balter the Terrible, Ryu Senshi, Fiend Skull Dragon, Dark Flare Knight and Dark Paladin.
+Every card was already in the game (Black Skull Dragon is the original B. Skull Dragon). Cards here with no coded effect yet: Ryu Senshi, Fiend Skull Dragon, Dark Flare Knight and Dark Paladin.
 
 ### 12. Warrior
 
@@ -2002,7 +2002,7 @@ Banlist: October 2004.
 
 </details>
 
-Every card was already in the game. Cards here with no coded effect yet: the Fusion Monsters Dark Balter the Terrible, Ryu Senshi, Dark Blade the Dragon Knight, Fiend Skull Dragon, Reaper on the Nightmare, The Last Warrior from Another Planet, Ojama King and Dark Flare Knight.
+Every card was already in the game. Cards here with no coded effect yet: the Fusion Monsters Ryu Senshi, Dark Blade the Dragon Knight, Fiend Skull Dragon, Reaper on the Nightmare, The Last Warrior from Another Planet, Ojama King and Dark Flare Knight.
 
 ### 13. Goat
 
@@ -2279,7 +2279,7 @@ Chaos Turbo 40%, Warrior 20% and Goat Control 15% were the deck opponents' decks
 
 </details>
 
-Every card was already in the game. Cards in these seven decks with no coded effect yet: Mystik Wok, Level Limit - Area B, Secret Barrel, Ojama Trio, Gravity Bind, Spell Canceller, Des Koala, Toon Table of Contents, Token Thanksgiving, Monster Reincarnation, Roulette Barrel, Toon Cannon Soldier, Final Attack Orders, Dark Scorpion - Cliff the Trap Remover, Hysteric Fairy, Royal Oppression, and the Fusion Monsters Dark Balter the Terrible, Ryu Senshi, Gatling Dragon, Dark Blade the Dragon Knight, Fiend Skull Dragon, Reaper on the Nightmare, The Last Warrior from Another Planet, King Dragun, Ojama King, Dark Flare Knight and Dark Paladin.
+Every card was already in the game. Cards in these seven decks with no coded effect yet: Mystik Wok, Level Limit - Area B, Secret Barrel, Ojama Trio, Gravity Bind, Spell Canceller, Des Koala, Toon Table of Contents, Token Thanksgiving, Monster Reincarnation, Roulette Barrel, Toon Cannon Soldier, Final Attack Orders, Dark Scorpion - Cliff the Trap Remover, Hysteric Fairy, Royal Oppression, and the Fusion Monsters Ryu Senshi, Gatling Dragon, Dark Blade the Dragon Knight, Fiend Skull Dragon, Reaper on the Nightmare, The Last Warrior from Another Planet, King Dragun, Ojama King, Dark Flare Knight and Dark Paladin.
 
 ### 14. Cyber (Yami Bakura)
 
@@ -2288,8 +2288,8 @@ Every card was already in the game. Cards in these seven decks with no coded eff
 Dragon use the YGOPRODeck id aliases in `tools/testdeck.py`, same as other deck imports). Deck Recipes presets 38-39.
 
 Every card was already in the game. Cards in these two decks with **no coded effect yet**: Chiron the Mage,
-D.D. Assailant, Exarion Universe, Wave-Motion Cannon, and the Fusion Monsters Dark Balter
-the Terrible, Ryu Senshi, Gatling Dragon, Dark Blade the Dragon Knight, Fiend Skull Dragon, Reaper on the Nightmare,
+D.D. Assailant, Exarion Universe, Wave-Motion Cannon, and the Fusion Monsters
+Ryu Senshi, Gatling Dragon, Dark Blade the Dragon Knight, Fiend Skull Dragon, Reaper on the Nightmare,
 The Last Warrior from Another Planet, King Dragun, Master of Oz, and Ojama King.
 
 ### 15. Reaper (Yami Yugi)
@@ -2303,7 +2303,7 @@ The Last Warrior from Another Planet, King Dragun, Master of Oz, and Ojama King.
 
 Cards with **no coded effect yet** across these five decks (union): **Manticore of Darkness** (new); **Magical Scientist**, **Chaos Emperor Dragon - Envoy of the End**, **Fiber Jar**, **Yata-Garasu**;
 **Mirage of Nightmare** (if still tracked in `missing-main.txt`; effect may be partially handled elsewhere); fusion
-materials **Dark Balter the Terrible**, **Ryu Senshi**, **Fiend Skull Dragon**, **Reaper on the Nightmare**, **The Last
+materials **Ryu Senshi**, **Fiend Skull Dragon**, **Reaper on the Nightmare**, **The Last
 Warrior from Another Planet**, **King Dragun**, **Gatling Dragon**, **Master of Oz**, **Ojama King**, **Dark Flare
 Knight**; plus **Mystik Wok** and **Royal Oppression** (Warrior side). Many staples are fully implemented (e.g. Bazoo,
 Cyber Stein, Spirit Reaper, Bottomless Trap Hole, Enemy Controller, Wave-Motion Cannon in `src/added_effects.c`).

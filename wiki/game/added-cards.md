@@ -1722,6 +1722,27 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
   list (the position prompt, then 3000 ATK again).
 - The CPU Synchro Summons it with its generic rule (`AiTrySynchroSummon`).
 
+### Dark Balter the Terrible (2026-11-18)
+- Fusion Monster (Level 5 DARK Fiend, 2000/1200; "Possessed Dark Soul" + "Frontier Wiseman"). Card number 514 (ID 851).
+  "When a Normal Spell Card is activated, negate the effect by paying 1000 Life Points. The effect of an Effect Monster
+  that this monster destroys as a result of battle is negated."
+- **Spell negation.** A face-up Dark Balter answers the opponent's Normal Spell from the field, like Stardust Dragon:
+  `ModMonsterCanRespond` (asked by `CanPlayerChain` and `Chain_GetResponseCommands`) now checks both cards
+  (`StardustCanRespondAt`, `IsBalterAt` + `BalterCanAnswer`). Its controller needs more than 1000 LP.
+  - The check goes by the card's type (Spell, Normal subtype), not `CHAIN_KIND_SPELL_TRAP`: a Spell played from the
+    hand is a link of kind 0 (as Dark Deal). The first build checked the kind and never fired.
+  - chainA pays 1000 (`DUEL_CMD_LOSE_LP`); resolve negates the Spell (`DUEL_CMD_NEGATE_ACTIVATION`, as Divine Wrath).
+- **Battle.** `HaDesNegatesBattleDestroyed` (Dark Ruler Ha Des's hook in `SendBattleDestroyedCardToGraveyard` and the
+  battle flip) also answers 1 when the monster that won the battle is Dark Balter, so the destroyed monster's Graveyard
+  trigger and flip effect don't run.
+- **CPU.** `AiChainDarkBalter` (`AiChainSummonTriggerResponse`): it negates every Normal Spell of the human's while it
+  has more than 2000 LP.
+- **Checked in the emulator** (a probe board): the human's Pot of Greed was chained by the CPU's Dark Balter, the CPU
+  paid 1000 (8000 to 7000) and Pot of Greed was shown negated with no draw; the human's Sangan, destroyed attacking
+  Dark Balter, searched nothing.
+- Removed from `card_pools/missing-fusion.txt` and the "not fully implemented" notes (README, DECKS.md,
+  [[yugi-kaiba-opponent]]).
+
 ### Masked Dragon (2026-10-29)
 - Effect Monster (Level 3, FIRE Dragon, 1400/1100). ID 1147 (number 1195). The fetched text: "When this card is
   destroyed by battle and sent to the Graveyard: You can Special Summon 1 Dragon-Type monster with 1500 or less ATK

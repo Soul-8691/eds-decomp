@@ -3370,3 +3370,8 @@ updated: 2026-09-29
 
 ## [2026-11-18] progress | README: three more Synchro Monsters listed
 - README.md (Synchro, Xyz and Link table, Synchro row): Ally of Justice Catastor, Goyo Guardian, Colossal Fighter.
+
+## [2026-11-18] progress | Dark Balter the Terrible coded
+- src/added_effects.c: Normal Spell negation as a face-up monster response (shared `ModMonsterCanRespond` with Stardust
+  Dragon), the battle negation through `HaDesNegatesBattleDestroyed`, the CPU's `AiChainDarkBalter`. Probe-checked.
+- [[added-cards]], [[yugi-kaiba-opponent]]; README.md, DECKS.md, AI_IMPROVEMENTS.md, card_pools/missing-fusion.txt.

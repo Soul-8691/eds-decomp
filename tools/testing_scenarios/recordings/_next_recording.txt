@@ -1,2 +1,2 @@
-tools\testing_scenarios\recordings\CoH_Probe_Media_Player.mp4
-tools/testing_scenarios/recordings/CoH_Probe_Media_Player.mp4
+tools\testing_scenarios\recordings\Balter_Probe_Media_Player.mp4
+tools/testing_scenarios/recordings/Balter_Probe_Media_Player.mp4

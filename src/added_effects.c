@@ -8132,6 +8132,10 @@ int HaDesNegatesBattleDestroyed(int player)
 
     if (gBattle.direct || killer == 0)
         return 0;
+#ifdef HAS_CARD_DARK_BALTER_THE_TERRIBLE
+    if (CardNumberOfId(killer) == CARD_DARK_BALTER_THE_TERRIBLE)  /* its own effect (Dark Balter, above) */
+        return 1;
+#endif
     if (CARD_STATS_TYPE(gCardStats[killer]) != CARD_TYPE_FIEND)
         return 0;
     return CountFaceUpMonstersByNumber(other, CARD_DARK_RULER_HA_DES) > 0;
@@ -10556,6 +10560,86 @@ int EffectJunkWarriorResolve(struct ChainEntry *link, struct ChainEntry *chained
 }
 #endif /* HAS_CARD_JUNK_WARRIOR */
 
+#ifdef HAS_CARD_DARK_BALTER_THE_TERRIBLE
+/* ---- Dark Balter the Terrible (2026-11-18) -------------------------------------------------------------------------
+ * Fusion ("Possessed Dark Soul" + "Frontier Wiseman"; Level 5 DARK Fiend 2000/1200): "When a Normal Spell Card is
+ * activated, negate the effect by paying 1000 Life Points. The effect of an Effect Monster that this monster destroys
+ * as a result of battle is negated."
+ *   answer    a face-up Dark Balter answers the opponent's Normal Spell (a Spell card's activation, subtype Normal) while
+ *             its controller has more than BALTER_COST LP, as Stardust Dragon answers a chain link: CanPlayerChain and
+ *             Chain_GetResponseCommands ask ModMonsterCanRespond (below Stardust Dragon's block)
+ *   chainA    pay BALTER_COST LP (DUEL_CMD_LOSE_LP)
+ *   resolve   negate the Spell (DUEL_CMD_NEGATE_ACTIVATION, as Divine Wrath; the Spell still goes to the Graveyard)
+ *   battle    HaDesNegatesBattleDestroyed (Dark Ruler Ha Des's hook in SendBattleDestroyedCardToGraveyard and the
+ *             battle flip) also answers 1 when the monster that won the battle is Dark Balter: the destroyed monster's
+ *             Graveyard trigger and flip effect do not run
+ *   CPU       AiChainDarkBalter (AiChainSummonTriggerResponse): the human's Normal Spells while it has more than
+ *             BALTER_CPU_MIN_LP. */
+#define BALTER_COST         1000
+#define BALTER_CPU_MIN_LP   2000
+
+static int BalterCanAnswer(struct ChainEntry *link, int player)
+{
+    u32 stats;
+
+    /* by the card's type, not link->kind: a Spell played from the hand is a link of kind 0 (as Dark Deal) */
+    if (link == NULL || link->negated || (link->player & 1) == (player & 1) || link->kind == CHAIN_KIND_OFF_FIELD)
+        return 0;
+    stats = gCardStats[link->card & CARD_ID_MASK];
+    return CARD_STATS_TYPE(stats) == CARD_TYPE_MAGIC && CARD_STATS_SUBTYPE(stats) == SPELL_NORMAL
+           && CardNumberOfId(link->card) != CARD_1539
+           && (int)gDuelPlayers[player & 1].lifePoints > BALTER_COST;
+}
+
+static int IsBalterAt(int player, int zone)
+{
+    struct DuelZone *z = ZoneOf(player, zone);
+
+    return zone <= ZONE_MONSTER_4 && z->isFaceUp && !z->isDisabled
+           && CardNumberOfId(DUEL_CARD_ID(&z->card)) == CARD_DARK_BALTER_THE_TERRIBLE
+           && !IsZoneInActionLists(player, zone);
+}
+
+int EffectDarkBalterPrepare(struct ChainEntry *card, struct ChainEntry *chainLink, u16 fromHand)
+{
+    return !fromHand && BalterCanAnswer(chainLink, card->player);
+}
+
+int EffectDarkBalterChainA(struct ChainEntry *link, struct ChainEntry *prevLink)
+{
+    (void)prevLink;
+    DuelCmd_Push(link->player ? DUEL_CMD_PLAYER | DUEL_CMD_LOSE_LP : DUEL_CMD_LOSE_LP, BALTER_COST, 1, 0);
+    return 1;
+}
+
+int EffectDarkBalterResolve(struct ChainEntry *link, struct ChainEntry *chainedTo)
+{
+    if (link->negated || chainedTo == NULL)
+        return EFFECT_STEP_DONE;
+    DuelCmd_Push(link->player ? DUEL_CMD_PLAYER | DUEL_CMD_NEGATE_ACTIVATION : DUEL_CMD_NEGATE_ACTIVATION, 1, 0, 0);
+    return EFFECT_STEP_DONE;
+}
+
+static int AiChainDarkBalter(struct ChainEntry *entry)
+{
+    int zone;
+
+    if (entry->player != AI_HUMAN || !BalterCanAnswer(entry, AI_PLAYER)
+        || (int)gDuelPlayers[AI_PLAYER].lifePoints <= BALTER_CPU_MIN_LP)
+        return 0;
+    for (zone = ZONE_MONSTER_0; zone <= ZONE_MONSTER_4; zone++) {
+        if (IsBalterAt(AI_PLAYER, zone)) {
+            DuelCmd_Push(DUEL_CMD_PLAYER | DUEL_CMD_CHAIN_BANNER, 0, 0, 0);
+            Chain_AddLink((1u << 31) | (entry->event << 25) | ((zone & 0x1F) << 16) | (CHAIN_KIND_SPELL_TRAP << 21)
+                              | DUEL_CARD_ID(&ZoneOf(AI_PLAYER, zone)->card),
+                          (entry->loc1 << 16) | entry->loc0);
+            return 1;
+        }
+    }
+    return 0;
+}
+#endif /* HAS_CARD_DARK_BALTER_THE_TERRIBLE */
+
 #if defined(HAS_CARD_STARDUST_DRAGON) && defined(HAS_CARD_MY_BODY_AS_A_SHIELD)
 /* ---- Stardust Dragon ----------------------------------------------------------------------------------------------
  * "1 Tuner + 1+ non-Tuner monsters. When a card or effect is activated that would destroy a card(s) on the field
@@ -10674,20 +10758,9 @@ static int IsStardustAt(int player, int zone)
            && !IsZoneInActionLists(player, zone);
 }
 
-int ModMonsterCanRespond(struct ChainEntry *link, int player, int zone)
+static int StardustCanRespondAt(struct ChainEntry *link, int player, int zone)
 {
     return IsStardustAt(player, zone) && StardustCanAnswer(link);
-}
-
-int ModMonsterCanChain(struct ChainEntry *link, int player)
-{
-    int zone;
-
-    for (zone = ZONE_MONSTER_0; zone <= ZONE_MONSTER_4; zone++) {
-        if (ModMonsterCanRespond(link, player, zone))
-            return 1;
-    }
-    return 0;
 }
 
 int EffectStardustDragonPrepare(struct ChainEntry *card, struct ChainEntry *chainLink, u16 fromHand)
@@ -10756,20 +10829,36 @@ static int AiChainStardustDragon(struct ChainEntry *entry)
     return 0;
 }
 #else
+void EndPhase_StardustDragon(int turnPlayer)
+{
+}
+#endif /* HAS_CARD_STARDUST_DRAGON && HAS_CARD_MY_BODY_AS_A_SHIELD */
+
+/* A face-up monster that answers a chain link from the field (CanPlayerChain, Chain_GetResponseCommands): Stardust
+ * Dragon, Dark Balter the Terrible. */
 int ModMonsterCanRespond(struct ChainEntry *link, int player, int zone)
 {
+#if defined(HAS_CARD_STARDUST_DRAGON) && defined(HAS_CARD_MY_BODY_AS_A_SHIELD)
+    if (StardustCanRespondAt(link, player, zone))
+        return 1;
+#endif
+#ifdef HAS_CARD_DARK_BALTER_THE_TERRIBLE
+    if (IsBalterAt(player, zone) && BalterCanAnswer(link, player))
+        return 1;
+#endif
     return 0;
 }
 
 int ModMonsterCanChain(struct ChainEntry *link, int player)
 {
+    int zone;
+
+    for (zone = ZONE_MONSTER_0; zone <= ZONE_MONSTER_4; zone++) {
+        if (ModMonsterCanRespond(link, player, zone))
+            return 1;
+    }
     return 0;
 }
-
-void EndPhase_StardustDragon(int turnPlayer)
-{
-}
-#endif /* HAS_CARD_STARDUST_DRAGON && HAS_CARD_MY_BODY_AS_A_SHIELD */
 
 /* ---- Big Bang Shot (engine key 1313, tools/newcards.py) -----------------------------------------------------------
  * Equip Spell: "The equipped monster gains 400 ATK. If the equipped monster attacks a Defense Position monster, inflict
@@ -14614,6 +14703,10 @@ int AiChainSummonTriggerResponse(struct ChainEntry *entry)
     if (AiChainStardustDragon(entry))
         return 1;
 #endif
+#ifdef HAS_CARD_DARK_BALTER_THE_TERRIBLE
+    if (AiChainDarkBalter(entry))
+        return 1;
+#endif
     if (entry->player != AI_HUMAN || (entry->event != RESPONSE_SUMMONED && entry->event != RESPONSE_FLIP_SUMMONED
                                       && entry->event != RESPONSE_SPECIAL_SUMMONED))
         return 0;
@@ -17745,6 +17838,16 @@ const struct CardEffect gAddedCardEffects[] = {
         NULL,
         EffectStardustDragonPrepare,
         EffectStardustDragonChainA,
+        NULL,
+    },
+#endif
+#ifdef HAS_CARD_DARK_BALTER_THE_TERRIBLE
+    {
+        CARD_DARK_BALTER_THE_TERRIBLE, 0,
+        EffectDarkBalterResolve,
+        NULL,
+        EffectDarkBalterPrepare,
+        EffectDarkBalterChainA,
         NULL,
     },
 #endif
