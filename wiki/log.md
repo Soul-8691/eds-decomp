@@ -3411,3 +3411,8 @@ updated: 2026-09-29
 - src/added_effects.c: `AiMetamorphosisFusionFor` / `AiMetamorphosisTributeZone` (Dark Balter or Fiend Skull Dragon
   by the human's board, Ryu Senshi over Ojama King, The Last Warrior alone); only coded effect Fusions. Probe-checked.
 - [[added-cards]]; AI_IMPROVEMENTS.md.
+
+## [2026-11-18] progress | CPU combo: Chaos Sorcerer's banish, then Metamorphosis into Ryu Senshi
+- src/added_effects.c: `AiMetamorphosisTributeZone` values a Chaos Sorcerer that cannot attack this turn at 0 ATK in
+  Main Phase 1; Ojama King never replaces a 2000+ ATK monster (Jinzo). Probe-checked (the combo).
+- [[added-cards]]; AI_IMPROVEMENTS.md.

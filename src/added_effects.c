@@ -16419,6 +16419,8 @@ static int AiCpuMetamorphosisThousandEyesWorthwhile(void)
  * AiMetamorphosisTributeZone: of the CPU's monsters with such a Fusion, the one the Fusion gains the most over (its
  * printed ATK, Ojama King's DEF, against the monster's current ATK, or DEF for Ojama King); never a stronger one.
  * Ojama King, a 0 ATK wall, only replaces a monster with less than AI_META_OJAMA_KING_MAX_ATK ATK (never Jinzo).
+ * Combo: a Chaos Sorcerer that banished this turn (cannotAttack) counts as 0 ATK in Main Phase 1, so it becomes
+ * Ryu Senshi, who can attack (AiWantsMonsterEffect uses the banish first; the Main Phase loop then plays Metamorphosis).
  * Thousand-Eyes Restrict always comes first. */
 #define AI_META_OJAMA_KING_MAX_ATK 2000     /* Ojama King only replaces a monster weaker than this */
 
@@ -16565,7 +16567,18 @@ static int AiMetamorphosisTributeZone(void)
                 gain = -1;
         } else
 #endif
-            gain = (int)CARD_STATS_ATK(fusion) * 10 - GetZoneCardAtk(AI_PLAYER, zone);
+        {
+            int atk = GetZoneCardAtk(AI_PLAYER, zone);
+
+#ifdef HAS_CARD_CHAOS_SORCERER
+            /* the combo: a Chaos Sorcerer that banished this turn cannot attack, so in Main Phase 1 it is worth
+             * nothing in battle and Ryu Senshi (who can attack) replaces it */
+            if (CardNumberOfId(id) == CARD_CHAOS_SORCERER && ZoneOf(AI_PLAYER, zone)->cannotAttack
+                && gDuel.phase != PHASE_MAIN2)
+                atk = 0;
+#endif
+            gain = (int)CARD_STATS_ATK(fusion) * 10 - atk;
+        }
         if (gain >= 0 && gain > bestGain) {
             best = zone;
             bestGain = gain;

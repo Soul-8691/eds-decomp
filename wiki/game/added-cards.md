@@ -1737,6 +1737,13 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
 - **Checked in the emulator** (two probe boards, the CPU's turn): with Airknight Parshath and Dark Balter / Fiend Skull
   Dragon in its Fusion Deck, against the human's three Set cards, it took Fiend Skull Dragon; with Gyakutenno Megami
   and Ojama King / Ryu Senshi, Ryu Senshi. Dark Balter's branch and The Last Warrior's were not driven.
+- **Ojama King** only replaces a monster with less than 2000 ATK (`AI_META_OJAMA_KING_MAX_ATK`), so never Jinzo.
+- **Combo: Chaos Sorcerer, then Metamorphosis into Ryu Senshi.** `AiMetamorphosisTributeZone` counts a Chaos Sorcerer
+  with `cannotAttack` set (its banish this turn, `EffectBanishTargetNoAttackResolve`) as 0 ATK outside Main Phase 2,
+  so Ryu Senshi (2000, can attack) now gains over it. `AiWantsMonsterEffect` already uses the banish on any face-up
+  human monster, and the Main Phase loop asks for Spells again after it. **Checked in the emulator:** the CPU's
+  Chaos Sorcerer banished the human's Summoned Skull, Metamorphosis made it Ryu Senshi, and Ryu Senshi attacked
+  directly for 2000.
 
 ### The Last Warrior from Another Planet (2026-11-18)
 - Fusion Monster (Level 7 EARTH Warrior, 2350/2300; "Zombyra the Dark" + "Maryokutai"). Card number 811 (ID 944). "If

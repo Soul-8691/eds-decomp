@@ -53,6 +53,7 @@ Campaign duelists in Yak's YGO Hack use a much stronger opponent AI than vanilla
   - Level 6: **Ryu Senshi**, else **Ojama King** (only for a monster with less than 2000 ATK, so never Jinzo).
   - Level 7: **The Last Warrior from Another Planet**, only when the Tributed monster is its only one.
   - With several choices it Tributes the monster the Fusion gains the most ATK over (DEF for Ojama King).
+  - Combo: after its **Chaos Sorcerer** banishes one of your monsters (so it cannot attack that turn), Metamorphosis turns the Sorcerer into **Ryu Senshi**, who can attack.
 - **Thousand-Eyes Restrict** and **Relinquished** only absorb a face-up monster of yours (the one with the highest printed ATK), never a face-down one.
 - It plays Enemy Controller in Main Phase 1 to Tribute its weakest monster and take your strongest face-up one, when that has at least 500 more ATK.
 - Its Poison of the Old Man deals 800 damage when that wins the duel, gains 1200 LP while it has 3000 or less, and otherwise deals the damage; while you control a face-up **Des Wombat**, it always picks the LP gain.

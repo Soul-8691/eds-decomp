@@ -1,8 +1,7 @@
 ﻿
 Script                   Result Seconds Detail                                
 ------                   ------ ------- ------                                
-Meta5_Probe_Media_Player PASS        38 duel_main=false reason= play_done=true
-Meta6_Probe_Media_Player PASS        43 duel_main=false reason= play_done=true
+Combo_Probe_Media_Player PASS        44 duel_main=false reason= play_done=true
 
 
 

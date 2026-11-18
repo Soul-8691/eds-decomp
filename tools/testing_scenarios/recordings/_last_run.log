@@ -1687,3 +1687,5 @@ PASS TLW_Probe_Media_Player duel_main=false reason= play_done=true
 START Meta5_Probe_Media_Player
 PASS Meta5_Probe_Media_Player duel_main=false reason= play_done=true
 PASS Meta6_Probe_Media_Player duel_main=false reason= play_done=true
+START Combo_Probe_Media_Player
+PASS Combo_Probe_Media_Player duel_main=false reason= play_done=true

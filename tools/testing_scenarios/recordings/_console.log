@@ -25695,3 +25695,38 @@
    7736 media: encoding 2137 frames -> tools\testing_scenarios\..\..\screenshots\videos\meta6-probe.mp4
    7778 Play sequence done; ending capture (no recording tail).
    7778 Finished — PASS (play sequence + tail). Stop mGBA Record A/V to finalize MP4.
+     14 MP4 target: tools\testing_scenarios\recordings\Combo_Probe_Media_Player.mp4
+     14 emu recording API: screenshot, screenshotToImage
+     14 MP4: the scenario capture is off (captureMp4 = false)
+     14 Combo Probe / media / Player
+     14 point you.m0; wait 20; mp4_start combo-probe; unfreeze; pass; cpu_turn; wait 60; rec_stop
+    795 Main menu (callback 0x08003B15).
+    918 Campaign selected (callback 0x0801D6F5).
+   1111 Turn order: forced RPS lose (CPU goes first).
+   1121 Turn order: A (lost RPS; CPU chooses first).
+   1159 Turn order: A (lost RPS; CPU chooses first).
+   1351 Opponent's turn (waiting for your Main Phase 1).
+   1353 Usage deck goat / Chaos Turbo: main=40 extra=15; P0 shuffled=true (top 719->920) P1 shuffled=true (top 719->760), hands cleared.
+   2251 cpu_turn f=900 duel_step=8 turn_player=1 ai=3/2 textbox=0
+   3151 cpu_turn f=1800 duel_step=8 turn_player=1 ai=3/2 textbox=0
+   4051 cpu_turn f=2700 duel_step=8 turn_player=1 ai=3/2 textbox=0
+   4839 Player Draw Phase.
+   5020 Opening draw complete (hand=6 deck=34 want=6).
+   5158 Exact setup: P0 hand=0 deck=34 gy=0, P1 hand=1 deck=31 gy=0, LP 8000/8000, turnCount 2.
+   5158 Player Main Phase 1.
+   5158 steps: unknown card Combo Probe
+   5158 steps: 8 steps, 15 ops
+   5158 step: point you.m0
+   5294 steps: capture starts (cursor on point you.m0)
+   5301 step: wait 20
+   5327 step: mp4_start combo-probe
+   5327 media: recording combo-probe (mp4)
+   5334 step: unfreeze
+   5341 step: pass
+   5454 step: cpu_turn
+   8275 step: wait 60
+   8341 step: rec_stop
+   8341 media: 28 still frames trimmed from the end
+   8341 media: encoding 2986 frames -> tools\testing_scenarios\..\..\screenshots\videos\combo-probe.mp4
+   8383 Play sequence done; ending capture (no recording tail).
+   8383 Finished — PASS (play sequence + tail). Stop mGBA Record A/V to finalize MP4.
