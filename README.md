@@ -466,7 +466,7 @@ now. Pick the monster, then its materials.
 
 | Mechanic | How it works here | Cards so far |
 |---|---|---|
-| **Synchro** (white frame) | 1 Tuner plus non-Tuners whose Levels add up exactly to the Synchro Monster's go to the Graveyard. | Junk Warrior, Stardust Dragon, Chaos King Archfiend, Archfiend's Call, Brionac, Dragon of the Ice Barrier; the Tuners Junk Synchron, Shipping Archfiend, Plaguespreader Zombie |
+| **Synchro** (white frame) | 1 Tuner plus non-Tuners whose Levels add up exactly to the Synchro Monster's go to the Graveyard. | Junk Warrior, Stardust Dragon, Chaos King Archfiend, Archfiend's Call, Brionac, Dragon of the Ice Barrier, Ally of Justice Catastor, Goyo Guardian, Colossal Fighter; the Tuners Junk Synchron, Shipping Archfiend, Plaguespreader Zombie |
 | **Xyz** (black frame) | Face-up monsters of the right Level become its Xyz Materials and stay under it ("MAT" and a count in the info bar); effects detach them, and they go to the Graveyard when it leaves the field. Its stars show its Rank. | Gem-Knight Pearl, Number 39: Utopia, Number 17: Leviathan Dragon |
 | **Link** (blue frame, arrows on the field) | Materials add up to its Link Rating; it goes to an Extra Monster Zone or a zone one of your Link Monsters points to. Always in Attack Position. | Link Spider, Proxy Dragon |
 

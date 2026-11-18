@@ -3367,3 +3367,6 @@ updated: 2026-09-29
 ## [2026-11-18] progress | Ninja Grandmaster Sasuke: face-up Defense Position targets only
 - src/added_effects.c: DestroyTargetBeforeDamageStep and AiDestroysBeforeDamage need the target face up for Ninja Grandmaster Sasuke (face up at the start of the Damage Step); a face-down one is flipped and battled. Built (demo, .text 0x0807F598).
 - AI_IMPROVEMENTS.md, [[added-cards]].
+
+## [2026-11-18] progress | README: three more Synchro Monsters listed
+- README.md (Synchro, Xyz and Link table, Synchro row): Ally of Justice Catastor, Goyo Guardian, Colossal Fighter.
