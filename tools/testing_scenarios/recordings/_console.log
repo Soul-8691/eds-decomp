@@ -25498,3 +25498,86 @@
    7516 media: encoding 4627 frames -> tools\testing_scenarios\..\..\screenshots\videos\ojama-probe.mp4
    7558 Play sequence done; ending capture (no recording tail).
    7558 Finished — PASS (play sequence + tail). Stop mGBA Record A/V to finalize MP4.
+     13 MP4 target: tools\testing_scenarios\recordings\Fusilier_Probe_Media_Player.mp4
+     13 emu recording API: screenshot, screenshotToImage
+     13 MP4: the scenario capture is off (captureMp4 = false)
+     13 Fusilier Probe / media / Player
+     13 point you.hand[Fusilier Dragon, the Dual-Mode Beast]; wait 20; mp4_start fusilier-probe; summon you.hand[Fusilier Dragon
+    794 Main menu (callback 0x08003B15).
+    917 Campaign selected (callback 0x0801D6F5).
+   1110 Turn order: forced RPS lose (CPU goes first).
+   1120 Turn order: A (lost RPS; CPU chooses first).
+   1158 Turn order: A (lost RPS; CPU chooses first).
+   1350 Opponent's turn (waiting for your Main Phase 1).
+   1352 Usage deck goat / Chaos Turbo: main=40 extra=15; P0 shuffled=true (top 719->930) P1 shuffled=true (top 719->859), hands cleared.
+   2250 cpu_turn f=900 duel_step=8 turn_player=1 ai=3/2 textbox=0
+   3150 cpu_turn f=1800 duel_step=8 turn_player=1 ai=3/2 textbox=0
+   4050 cpu_turn f=2700 duel_step=8 turn_player=1 ai=4/0 textbox=0
+   4203 Player Draw Phase.
+   4384 Opening draw complete (hand=6 deck=34 want=6).
+   4524 steps: unknown card Fusilier Dragon
+   4524 steps: unknown card the Dual-Mode Beast
+   4524 Exact setup: P0 hand=0 deck=34 gy=0, P1 hand=0 deck=32 gy=0, LP 8000/8000, turnCount 2.
+   4524 Player Main Phase 1.
+   4524 steps: unknown card Fusilier Probe
+   4524 steps: 12 steps, 26 ops
+   4524 step: point you.hand[Fusilier Dragon, the Dual-Mode Beast]
+   4742 steps: point you.hand[Fusilier Dragon, the Dual-Mode Beast]: not on the field/in the hand; skipped
+   4742 steps: capture starts (cursor on point you.hand[Fusilier Dragon, the Dual-Mode Beast])
+   4749 step: wait 20
+   4775 step: mp4_start fusilier-probe
+   4775 media: recording fusilier-probe (mp4)
+   4782 step: summon you.hand[Fusilier Dragon, the Dual-Mode Beast] -> m0 atk
+   4902 steps: summon you.hand[Fusilier Dragon, the Dual-Mode Beast] -> m0 atk: not on the field/in the hand; skipped
+   5226 steps: summon you.hand[Fusilier Dragon, the Dual-Mode Beast] -> m0 atk: command 5 not in the menu; closed
+   5463 step: settle
+   5489 step: point you.m0
+   5534 step: wait 90
+   5630 step: unfreeze
+   5637 step: pass
+   5676 step: cpu_turn
+   6412 step: wait 60
+   6478 step: rec_stop
+   6478 media: 28 still frames trimmed from the end
+   6478 media: encoding 1675 frames -> tools\testing_scenarios\..\..\screenshots\videos\fusilier-probe.mp4
+   6520 Play sequence done; ending capture (no recording tail).
+   6520 Finished — PASS (play sequence + tail). Stop mGBA Record A/V to finalize MP4.
+     16 MP4 target: tools\testing_scenarios\recordings\Fusilier_Probe_Media_Player.mp4
+     16 emu recording API: screenshot, screenshotToImage
+     16 MP4: the scenario capture is off (captureMp4 = false)
+     16 Fusilier Probe / media / Player
+     16 point you.hand[Fusilier Dragon, the Dual-Mode Beast]; wait 20; mp4_start fusilier-probe; summon you.hand[Fusilier Dragon
+    797 Main menu (callback 0x08003B15).
+    920 Campaign selected (callback 0x0801D6F5).
+   1113 Turn order: forced RPS lose (CPU goes first).
+   1123 Turn order: A (lost RPS; CPU chooses first).
+   1161 Turn order: A (lost RPS; CPU chooses first).
+   1353 Opponent's turn (waiting for your Main Phase 1).
+   1355 Usage deck goat / Chaos Turbo: main=40 extra=15; P0 shuffled=true (top 719->648) P1 shuffled=true (top 719->910), hands cleared.
+   2253 cpu_turn f=900 duel_step=8 turn_player=1 ai=3/2 textbox=0
+   3153 cpu_turn f=1800 duel_step=8 turn_player=1 ai=3/2 textbox=0
+   4053 cpu_turn f=2700 duel_step=8 turn_player=1 ai=4/0 textbox=0
+   4165 Player Draw Phase.
+   4346 Opening draw complete (hand=6 deck=34 want=6).
+   4484 Exact setup: P0 hand=1 deck=34 gy=0, P1 hand=1 deck=32 gy=0, LP 8000/8000, turnCount 2.
+   4484 Player Main Phase 1.
+   4484 steps: unknown card Fusilier Probe
+   4484 steps: 12 steps, 26 ops
+   4484 step: point you.hand[Fusilier Dragon, the Dual-Mode Beast]
+   4677 steps: capture starts (cursor on point you.hand[Fusilier Dragon, the Dual-Mode Beast])
+   4684 step: wait 20
+   4710 step: mp4_start fusilier-probe
+   4710 media: recording fusilier-probe (mp4)
+   4717 step: summon you.hand[Fusilier Dragon, the Dual-Mode Beast] -> m0 atk
+   4854 step: settle
+   4992 step: point you.m0
+   4999 step: wait 90
+   5095 step: unfreeze
+   5102 step: pass
+   5215 step: cpu_turn
+   6436 step: wait 60
+   6502 step: rec_stop
+   6502 media: 28 still frames trimmed from the end
+   6502 media: encoding 1764 frames -> tools\testing_scenarios\..\..\screenshots\videos\fusilier-probe.mp4
+   6544 Play sequence done; ending capture (no recording tail).
+   6544 Finished — PASS (play sequence + tail). Stop mGBA Record A/V to finalize MP4.

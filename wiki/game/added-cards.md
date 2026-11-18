@@ -1722,6 +1722,34 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
   list (the position prompt, then 3000 ATK again).
 - The CPU Synchro Summons it with its generic rule (`AiTrySynchroSummon`).
 
+### Fusilier Dragon, the Dual-Mode Beast (2026-11-18)
+- Effect Monster (Level 7 EARTH Machine, 2800/2000). Card number 870 (ID 997 in the demo); moved above `------` in
+  `new_cards.txt` (it was already in `config/new_cards.txt`) and out of `card_pools/missing-main.txt` and
+  `missing.txt`. The ROM's text: "You can Normal Summon/Set this card without Tributing, but its original ATK and DEF
+  become halved."
+- **Menu.** `CanSummonFromHand` (summon_checks.c, a `case` under `#ifdef`) offers Summon and Set with a free zone, not
+  only with two monsters to Tribute.
+- **Human.** `CardMenu_SummonMonster` (effect_hooks.c, two `#ifdef` hooks): with two monsters to Tribute it asks the
+  usual "Tribute 2?" question, and No summons it without Tributes (before, No cancelled); with fewer it is summoned
+  without asking. Both call `ModSummonWithoutTribute` (added_effects.c): `gModDuelExtra.fusilierPending`, then
+  `QueueNormalSummon` with no Tributes.
+- **Halved.** `AddedCardsSummoned` sets the new `DuelZone.modHalvedStats` bit (include/duel.h, the spare bit after
+  `levelCheckDone`) on the arriving copy when that summon was pending, and clears it for every other arrival.
+  `ClearZone` clears it when the card leaves. `ModStatBonus` takes half its printed ATK and DEF (the stats word keeps
+  tens): 1400/1000. A Set copy keeps the mark when flipped.
+- **CPU.** `AiFusilierSummon` (`AiPlayAddedCards`): when it has not Normal Summoned this turn and has fewer than two
+  monsters to Tribute, it Normal Summons it without Tributes in Attack Position. With two, its usual Level 7 Tribute
+  Summon logic applies.
+- `.text` +0xD8 (0x0807F6A4).
+- **Checked in the emulator** (a probe board): the human's Summon with no other monster took no Tribute and showed
+  1400/1000 on the field (the Card View keeps 2800/2000); the CPU, with Fusilier Dragon and Gravekeeper's Spy in its
+  hand, Normal Summoned Fusilier Dragon without Tributes at 1400/1000. The "Tribute 2?" No answer was not driven (the
+  harness's summon step does not answer that question).
+- **Harness.** `exact.parse_setup` (tools/testing_scenarios/exact.py) split pile lists at every comma, so a name with
+  one ("Fusilier Dragon, the Dual-Mode Beast") broke; it now splits only at a comma not followed by a lowercase word.
+- Card View screenshot: `cards/Fusilier Dragon, the Dual-Mode Beast.png` (card_screenshots.lua with
+  `cards/_capture_only.txt`); NEW_CARDS.md regenerated.
+
 ### Ojama King (2026-11-18)
 - Fusion Monster (Level 6 LIGHT Beast, 0/3000; "Ojama Green" + "Ojama Yellow" + "Ojama Black"; the materials are not
   in the game). Card number 767 (ID 912). "Select up to 3 of your opponent's Monster Card Zones. The selected zones

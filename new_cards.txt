@@ -174,8 +174,8 @@ Proxy Dragon
 Ally of Justice Catastor
 Goyo Guardian
 Colossal Fighter
-------
 Fusilier Dragon, the Dual-Mode Beast
+------
 Skill Drain
 Dark End Dragon
 Red Dragon Archfiend
@@ -222,6 +222,7 @@ Lava Golem
 Barrel Behind the Door
 Enraged Battle Ox
 Gravekeeper's Spear Soldier
+Slate Warrior
 Iron Blacksmith Kotetsu
 Armed Samurai - Ben Kei
 Ash Blossom & Joyous Spring

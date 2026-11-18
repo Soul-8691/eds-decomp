@@ -165,7 +165,8 @@ def parse_setup(lines):
         side, place, rest = m.groups()
         cards = []
         if place in PILES:
-            cards = [(c.strip(), None, False) for c in rest.split(',')]
+            # a comma before a lowercase word is inside a name ("Fusilier Dragon, the Dual-Mode Beast")
+            cards = [(c.strip(), None, False) for c in re.split(r',(?!\s*[a-z])', rest)]
         else:
             mm = re.fullmatch(r'(.+?) (atk|def|set|up)( ss)?', rest.strip())
             if not mm:

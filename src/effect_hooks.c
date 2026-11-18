@@ -1037,6 +1037,10 @@ enum TributePrompt {
  * Matching: the function carries many FAKEMATCH register pins and empty asm statements; each one makes the
  * compiler keep a temporary in the register that the ROM's reload and allocation rotation chose.
  */
+#ifdef HAS_CARD_FUSILIER_DRAGON_THE_DUAL_MODE_BEAST
+void ModSummonWithoutTribute(int player, int handIndex, int faceUp);   /* added card (src/added_effects.c) */
+#endif
+
 void CardMenu_SummonMonster(u16 faceUp, u16 special)
 {
     char text[0x80];
@@ -1147,6 +1151,15 @@ void CardMenu_SummonMonster(u16 faceUp, u16 special)
                 goto normal_summon;
             }
             break;
+#ifdef HAS_CARD_FUSILIER_DRAGON_THE_DUAL_MODE_BEAST
+        case CARD_FUSILIER_DRAGON_THE_DUAL_MODE_BEAST:
+            /* added card: with two Tributes the usual question (No: without Tributes, step 1), else without */
+            if (special || CountTributableMonsters(CM.player, -1) > 1)
+                goto normal_summon;
+            ModSummonWithoutTribute(CM.player, CM.index, faceUp);
+            CM.confirmed = 0;
+            break;
+#endif
         default:
         normal_summon:
             /* FAKEMATCH: consume the level so its constant arms still enter the switch head tests. */
@@ -1209,6 +1222,11 @@ void CardMenu_SummonMonster(u16 faceUp, u16 special)
     /* ---- Two Tributes (level 7 and up) ---- */
     case SUMMON_STEP_TWO_TRIBUTES_ASK:
         if (gTextBox.result == 0) {         /* answered No: cancel */
+#ifdef HAS_CARD_FUSILIER_DRAGON_THE_DUAL_MODE_BEAST
+            /* added card: No summons Fusilier Dragon without Tributes */
+            if (!special && CARD_NUMBER(CM.cardMenuCard) == CARD_FUSILIER_DRAGON_THE_DUAL_MODE_BEAST && CountFreeMonsterZones(CM.player) > 0)
+                ModSummonWithoutTribute(CM.player, CM.index, faceUp);
+#endif
             CM.confirmed = 0;
             break;
         }

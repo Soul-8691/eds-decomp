@@ -3394,3 +3394,10 @@ updated: 2026-09-29
   face-up. Probe-checked.
 - [[added-cards]]; README.md, DECKS.md, AI_IMPROVEMENTS.md, card_pools/missing-fusion.txt.
 - [[yugi-kaiba-opponent]]: Skull Lair is no longer listed as uncoded.
+
+## [2026-11-18] progress | Fusilier Dragon, the Dual-Mode Beast coded
+- Added to the demo list. Normal Summon/Set without Tributes (summon_checks.c, effect_hooks.c hooks;
+  `ModSummonWithoutTribute`), halved through the new `DuelZone.modHalvedStats` bit and `ModStatBonus`; the CPU's
+  `AiFusilierSummon`. Probe-checked (human and CPU). Harness: setup names with a comma.
+- [[added-cards]]; AI_IMPROVEMENTS.md, new_cards.txt, card_pools/missing-main.txt, card_pools/missing.txt,
+  NEW_CARDS.md, cards/.

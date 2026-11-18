@@ -464,6 +464,13 @@ int CanSummonFromHand(int player, u16 cardId)
             return 1;
         return 0;
 #endif
+#ifdef HAS_CARD_FUSILIER_DRAGON_THE_DUAL_MODE_BEAST
+    case CARD_FUSILIER_DRAGON_THE_DUAL_MODE_BEAST:
+        /* added card: Normal Summoned without Tributes (src/added_effects.c), or with two */
+        if (CountFreeMonsterZones(player) > 0 || CountTributableMonsters(player, -1) > 1)
+            return 1;
+        return 0;
+#endif
     case CARD_1350:
         if (CountMonsters(player) + 1 < CountMonsters(1 - player) && CountFreeMonsterZones(player) > 0)
             return 1;

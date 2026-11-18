@@ -148,6 +148,9 @@ struct ModDuelExtra {
      * serial of that copy's zone */
     u16 brionacTurn[2];
     u16 brionacSerial[2];
+    /* Fusilier Dragon: its Normal Summon without Tributes is queued (ModSummonWithoutTribute); AddedCardsSummoned
+     * marks the arriving copy (DuelZone.modHalvedStats) */
+    u8 fusilierPending;
 };
 extern struct ModDuelExtra gModDuelExtra;
 STATIC_ASSERT(sizeof(struct ModDuelExtra) <= 0x0202FF00 - 0x0202FEB0, ModDuelExtraFits);
@@ -3981,6 +3984,14 @@ static void QueueShippingTriggers(int player);              /* below */
 void AddedCardsSummoned(int player, int zone, u16 id, int kind, int faceUp)
 {
     int synchroSummoned = ModSynchroArrived(player, zone, id);     /* src/mod_synchro.c: marks a Synchro Summon */
+
+#ifdef HAS_CARD_FUSILIER_DRAGON_THE_DUAL_MODE_BEAST
+    /* Fusilier Dragon, the Dual-Mode Beast: halved while it stays (a card arriving another way is unmarked) */
+    if (zone <= ZONE_MONSTER_4)
+        ZoneOf(player, zone)->modHalvedStats
+            = gModDuelExtra.fusilierPending && CardNumberOfId(id) == CARD_FUSILIER_DRAGON_THE_DUAL_MODE_BEAST;
+    gModDuelExtra.fusilierPending = 0;
+#endif
 
     ModXyzArrived(player, zone, id);        /* src/mod_xyz.c: an Xyz Summon's materials attach */
     ModLinkArrived(player, zone, id);       /* src/mod_link.c: a summon to an Extra Monster Zone stands there */
@@ -9251,6 +9262,14 @@ int ModStatBonus(int player, int zone)
     if (CardNumberOfId(DUEL_CARD_ID(&ZoneOf(player, zone)->card)) == CARD_COLOSSAL_FIGHTER)
         atk += 100 * ColossalFighterWarriors();     /* COLOSSAL_ATK_PER_WARRIOR */
 #endif
+#ifdef HAS_CARD_FUSILIER_DRAGON_THE_DUAL_MODE_BEAST
+    if (ZoneOf(player, zone)->modHalvedStats) {    /* Fusilier Dragon: its original ATK and DEF halved */
+        u32 printed = gCardStats[DUEL_CARD_ID(&ZoneOf(player, zone)->card) & CARD_ID_MASK];
+
+        atk -= CARD_STATS_ATK(printed) * 5;          /* the stats word keeps tens */
+        def -= CARD_STATS_DEF(printed) * 5;
+    }
+#endif
     return (atk & 0xFFFF) | (def << 16);
 }
 
@@ -10599,6 +10618,40 @@ int EffectJunkWarriorResolve(struct ChainEntry *link, struct ChainEntry *chained
     return EFFECT_STEP_DONE;
 }
 #endif /* HAS_CARD_JUNK_WARRIOR */
+
+#ifdef HAS_CARD_FUSILIER_DRAGON_THE_DUAL_MODE_BEAST
+/* ---- Fusilier Dragon, the Dual-Mode Beast (2026-11-18) -------------------------------------------------------------
+ * Effect Monster (Level 7 EARTH Machine 2800/2000): "You can Normal Summon this card without Tributing. If Normal
+ * Summoned this way, its original ATK and DEF are halved."
+ *   menu     CanSummonFromHand (summon_checks.c) offers Summon/Set with a free zone, not only with two Tributes
+ *   human    CardMenu_SummonMonster (effect_hooks.c): with two monsters to Tribute, the usual "Tribute 2?" question,
+ *            and No summons it without Tributes; with fewer it is summoned without asking
+ *   halved   ModSummonWithoutTribute marks the summon pending; AddedCardsSummoned sets DuelZone.modHalvedStats on the
+ *            arriving copy (ClearZone clears it when it leaves; a Set copy keeps it when flipped); ModStatBonus takes
+ *            half its printed ATK and DEF
+ *   CPU      AiFusilierSummon (AiPlayAddedCards): when it has not Normal Summoned this turn and has fewer than two
+ *            monsters to Tribute, it Normal Summons it without Tributes in Attack Position (1400 ATK); with two it
+ *            Tribute Summons it through its usual Level 7 logic */
+void ModSummonWithoutTribute(int player, int handIndex, int faceUp)
+{
+    gModDuelExtra.fusilierPending = 1;
+    QueueNormalSummon(player, handIndex, FindFreeMonsterZone(player), 0, faceUp);
+}
+
+static int AiFusilierSummon(void)
+{
+    int idx;
+
+    if (gDuelPlayers[AI_PLAYER].normalSummonUsed || !CanNormalSummon(AI_PLAYER)
+        || CountFreeMonsterZones(AI_PLAYER) == 0 || CountTributableMonsters(AI_PLAYER, -1) > 1)
+        return 0;
+    idx = FindHandCardByNumber(AI_PLAYER, CARD_FUSILIER_DRAGON_THE_DUAL_MODE_BEAST);
+    if (idx < 0)
+        return 0;
+    ModSummonWithoutTribute(AI_PLAYER, idx, 1);
+    return 1;
+}
+#endif /* HAS_CARD_FUSILIER_DRAGON_THE_DUAL_MODE_BEAST */
 
 #ifdef HAS_CARD_OJAMA_KING
 /* ---- Ojama King (2026-11-18) ---------------------------------------------------------------------------------------
@@ -16750,6 +16803,10 @@ int AiPlayAddedCards(void)
         return 1;
     if (AiTryLinkSummon())                  /* src/mod_link.c */
         return 1;
+#ifdef HAS_CARD_FUSILIER_DRAGON_THE_DUAL_MODE_BEAST
+    if (AiFusilierSummon())                 /* without Tributes, when it has not Normal Summoned */
+        return 1;
+#endif
     /* Change of Heart to attack with: lethal, or 1000+ more battle damage (after its summons, so they count) */
     if (AiWantsChangeOfHeartAttack() && AiTryPlaySpellTrap(CARD_CHANGE_OF_HEART))
         return 1;

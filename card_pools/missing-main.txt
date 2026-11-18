@@ -2,8 +2,6 @@ Reckless Greed
 Rescue Cat
 Manju of the Ten Thousand Hands
 Skill Drain
-Des Wombat
-Fusilier Dragon, the Dual-Mode Beast
 Desert Sunlight
 Spell Reproduction
 Blowback Dragon
@@ -30,7 +28,6 @@ Spell Shield Type-8
 Spell Economics
 Skilled White Magician
 Iron Blacksmith Kotetsu
-Amazoness Archer
 Swift Gaia the Fierce Knight
 Protector of the Sanctuary
 Enraged Battle Ox
@@ -67,7 +64,6 @@ Dark Master - Zorc
 Terraforming
 Slate Warrior
 Royal Tribute
-Jowgen the Spiritualist
 Homunculus the Alchemic Being
 Curse of Royal
 Contract with the Dark Master
