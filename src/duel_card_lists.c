@@ -668,8 +668,10 @@ static inline struct DuelZone *ZoneAddrBaseFirst(int player, int zone)
 /*
  * 1 if a monster may be placed in zone `zone` of `player`, else 0: the zone is empty, not held for a monster
  * banished until the End Phase (removedMask), and none of its ZONE_LINK_CONTINUOUS links comes from a zone
- * holding card number 1320 (not an EDS card).
+ * holding card number 1320 (not an EDS card) or, added, a face-up Ojama King (ModZoneBlockerAt).
  */
+int ModZoneBlockerAt(int player, int zone);     /* mod: Ojama King's blocked zones (src/added_effects.c) */
+
 u32 IsMonsterZoneFree(int player, int zone)
 {
     struct DuelZone *z = ZoneAddr(player & 1, zone);
@@ -688,7 +690,7 @@ u32 IsMonsterZoneFree(int player, int zone)
         if ((u8)ZoneAddrBaseFirst(player & 1, zone)->linkKinds[i] == ZONE_LINK_CONTINUOUS) {
             u16 id = DUEL_CARD_ID(ZoneAddrBaseFirst(linkPlayer & 1, linkZone));
 
-            if (id != 0 && CARD_NUMBER_C(id) == CARD_1320)
+            if (id != 0 && (CARD_NUMBER_C(id) == CARD_1320 || ModZoneBlockerAt(linkPlayer, linkZone)))  /* added */
                 return FALSE;
         }
     }

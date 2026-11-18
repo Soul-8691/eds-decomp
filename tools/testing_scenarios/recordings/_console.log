@@ -25329,3 +25329,172 @@
    4343 media: encoding 1416 frames -> tools\testing_scenarios\..\..\screenshots\videos\fsd-probe.mp4
    4360 Play sequence done; ending capture (no recording tail).
    4360 Finished — PASS (play sequence + tail). Stop mGBA Record A/V to finalize MP4.
+     15 MP4 target: tools\testing_scenarios\recordings\Ojama_Probe_Media_Player.mp4
+     15 emu recording API: screenshot, screenshotToImage
+     15 MP4: the scenario capture is off (captureMp4 = false)
+     15 Ojama Probe / media / Player
+     15 point you.hand[Monster Reborn]; wait 20; mp4_start ojama-probe; activate you.hand[Monster Reborn]; pick you.gy[Ojama Kin
+    796 Main menu (callback 0x08003B15).
+    919 Campaign selected (callback 0x0801D6F1).
+   1112 Turn order: forced RPS lose (CPU goes first).
+   1122 Turn order: A (lost RPS; CPU chooses first).
+   1160 Turn order: A (lost RPS; CPU chooses first).
+   1353 Opponent's turn (waiting for your Main Phase 1).
+   1355 Usage deck goat / Chaos Turbo: main=40 extra=15; P0 shuffled=true (top 719->522) P1 shuffled=true (top 719->434), hands cleared.
+   2253 cpu_turn f=900 duel_step=8 turn_player=1 ai=4/0 textbox=0
+   2349 Player Draw Phase.
+   2530 Opening draw complete (hand=6 deck=34 want=6).
+   2668 Exact setup: P0 hand=1 deck=34 gy=1, P1 hand=3 deck=34 gy=0, LP 8000/8000, turnCount 2.
+   2668 Player Main Phase 1.
+   2668 steps: unknown card Ojama Probe
+   2668 steps: 16 steps, 32 ops
+   2668 step: point you.hand[Monster Reborn]
+   2869 step: wait 20
+   2895 step: mp4_start ojama-probe
+   2895 media: recording ojama-probe (mp4)
+   2902 step: activate you.hand[Monster Reborn]
+   2902 steps: capture starts (cursor on activate you.hand[Monster Reborn])
+   3226 steps: activate you.hand[Monster Reborn]: command 6 not in the menu; closed
+   3251 step: pick you.gy[Ojama King]
+   4151 steps: list timed out (pick you.gy[Ojama King]) [box active=false kind=0 step=0; list=false; chain=false; summon=false; cmds=false; prompt=0]
+   4158 step: settle
+   4184 step: target opp.m0
+   4347 steps: target opp.m0: A again (not taken)
+   4382 steps: target opp.m0: A again (not taken)
+   4417 steps: target opp.m0: A again (not taken)
+   4452 steps: target opp.m0: A again (not taken)
+   4487 steps: target opp.m0: A again (not taken)
+   4522 steps: target opp.m0: A again (not taken)
+   4557 steps: target opp.m0: A again (not taken)
+   4592 steps: target opp.m0: A again (not taken)
+   4627 steps: target opp.m0: A again (not taken)
+   4662 steps: target opp.m0: A again (not taken)
+   4697 steps: target opp.m0: A again (not taken)
+   4739 step: target opp.m1
+   4788 steps: target opp.m1: A again (not taken)
+   4823 steps: target opp.m1: A again (not taken)
+   4858 steps: target opp.m1: A again (not taken)
+   4893 steps: target opp.m1: A again (not taken)
+   4928 steps: target opp.m1: A again (not taken)
+   4963 steps: target opp.m1: A again (not taken)
+   4998 steps: target opp.m1: A again (not taken)
+   5033 steps: target opp.m1: A again (not taken)
+   5068 steps: target opp.m1: A again (not taken)
+   5103 steps: target opp.m1: A again (not taken)
+   5138 steps: target opp.m1: A again (not taken)
+   5180 step: target opp.m2
+   5229 steps: target opp.m2: A again (not taken)
+   5264 steps: target opp.m2: A again (not taken)
+   5299 steps: target opp.m2: A again (not taken)
+   5334 steps: target opp.m2: A again (not taken)
+   5369 steps: target opp.m2: A again (not taken)
+   5404 steps: target opp.m2: A again (not taken)
+   5439 steps: target opp.m2: A again (not taken)
+   5474 steps: target opp.m2: A again (not taken)
+   5509 steps: target opp.m2: A again (not taken)
+   5544 steps: target opp.m2: A again (not taken)
+   5579 steps: target opp.m2: A again (not taken)
+   5621 step: settle
+   5647 step: wait 30
+   5683 step: unfreeze
+   5690 step: pass
+   5729 step: cpu_turn
+   9932 step: wait 60
+   9998 step: rec_stop
+   9998 media: 28 still frames trimmed from the end
+   9998 media: encoding 7075 frames -> tools\testing_scenarios\..\..\screenshots\videos\ojama-probe.mp4
+  10040 Play sequence done; ending capture (no recording tail).
+  10040 Finished — PASS (play sequence + tail). Stop mGBA Record A/V to finalize MP4.
+     13 MP4 target: tools\testing_scenarios\recordings\Ojama_Probe_Media_Player.mp4
+     13 emu recording API: screenshot, screenshotToImage
+     13 MP4: the scenario capture is off (captureMp4 = false)
+     13 Ojama Probe / media / Player
+     13 point you.hand[Metamorphosis]; wait 20; mp4_start ojama-probe; activate you.hand[Metamorphosis]; target you.m0; when pro
+    794 Main menu (callback 0x08003B15).
+    917 Campaign selected (callback 0x0801D6F1).
+   1110 Turn order: forced RPS lose (CPU goes first).
+   1120 Turn order: A (lost RPS; CPU chooses first).
+   1158 Turn order: A (lost RPS; CPU chooses first).
+   1351 Opponent's turn (waiting for your Main Phase 1).
+   1353 Usage deck goat / Chaos Turbo: main=40 extra=15; P0 shuffled=true (top 719->434) P1 shuffled=true (top 719->648), hands cleared.
+   2251 cpu_turn f=900 duel_step=8 turn_player=1 ai=3/2 textbox=0
+   3151 cpu_turn f=1800 duel_step=8 turn_player=1 ai=3/2 textbox=0
+   4051 cpu_turn f=2700 duel_step=8 turn_player=1 ai=4/0 textbox=0
+   4161 Player Draw Phase.
+   4342 Opening draw complete (hand=6 deck=34 want=6).
+   4485 Exact setup: P0 hand=1 deck=34 gy=0, P1 hand=3 deck=32 gy=0, LP 8000/8000, turnCount 2.
+   4485 Player Main Phase 1.
+   4485 steps: unknown card Ojama Probe
+   4485 steps: 17 steps, 33 ops
+   4485 step: point you.hand[Metamorphosis]
+   4686 step: wait 20
+   4712 step: mp4_start ojama-probe
+   4712 media: recording ojama-probe (mp4)
+   4719 step: activate you.hand[Metamorphosis]
+   4719 steps: capture starts (cursor on activate you.hand[Metamorphosis])
+   4765 step: target you.m0
+   4985 steps: target you.m0: A again (not taken)
+   5009 steps: target you.m0: taken on press 2
+   5016 step: when prompt list: pick you.extra[Ojama King]
+  14016 steps: when prompt list: pick you.extra[Ojama King]: the event did not happen
+  14017 step: settle
+  14065 step: target opp.m0
+  14096 step: target opp.m1
+  14554 steps: target opp.m1: taken on press 1
+  14561 step: target opp.m2
+  14645 steps: target opp.m2: taken on press 1
+  14652 step: settle
+  15552 steps: settle timed out (settle) [box active=false kind=0 step=3; list=false; chain=true; summon=false; cmds=false; prompt=0]
+  15559 step: wait 30
+  15595 step: unfreeze
+  15602 step: pass
+  16502 steps: phase timed out (pass) [box active=false kind=0 step=3; list=false; chain=true; summon=false; cmds=false; prompt=0]
+  16503 step: cpu_turn
+     17 MP4 target: tools\testing_scenarios\recordings\Ojama_Probe_Media_Player.mp4
+     17 emu recording API: screenshot, screenshotToImage
+     17 MP4: the scenario capture is off (captureMp4 = false)
+     17 Ojama Probe / media / Player
+     17 point you.hand[Metamorphosis]; wait 20; mp4_start ojama-probe; activate you.hand[Metamorphosis]; target you.m0; pick you
+    798 Main menu (callback 0x08003B15).
+    921 Campaign selected (callback 0x0801D6F1).
+   1114 Turn order: forced RPS lose (CPU goes first).
+   1124 Turn order: A (lost RPS; CPU chooses first).
+   1162 Turn order: A (lost RPS; CPU chooses first).
+   1354 Opponent's turn (waiting for your Main Phase 1).
+   1356 Usage deck goat / Chaos Turbo: main=40 extra=15; P0 shuffled=true (top 719->952) P1 shuffled=true (top 719->522), hands cleared.
+   2254 cpu_turn f=900 duel_step=8 turn_player=1 ai=4/0 textbox=0
+   2311 Player Draw Phase.
+   2492 Opening draw complete (hand=6 deck=34 want=6).
+   2634 Exact setup: P0 hand=1 deck=34 gy=0, P1 hand=3 deck=34 gy=0, LP 8000/8000, turnCount 2.
+   2634 Player Main Phase 1.
+   2634 steps: unknown card Ojama Probe
+   2634 steps: 18 steps, 36 ops
+   2634 step: point you.hand[Metamorphosis]
+   2835 step: wait 20
+   2861 step: mp4_start ojama-probe
+   2861 media: recording ojama-probe (mp4)
+   2868 step: activate you.hand[Metamorphosis]
+   2868 steps: capture starts (cursor on activate you.hand[Metamorphosis])
+   2914 step: target you.m0
+   3134 steps: target you.m0: A again (not taken)
+   3158 steps: target you.m0: taken on press 2
+   3165 step: pick you.extra[Ojama King]
+   3752 step: position atk
+   3787 step: wait 60
+   3853 step: target opp.m0
+   4230 steps: target opp.m0: taken on press 1
+   4237 step: target opp.m1
+   4321 steps: target opp.m1: taken on press 1
+   4328 step: target opp.m2
+   4412 steps: target opp.m2: taken on press 1
+   4419 step: settle
+   4889 step: wait 30
+   4925 step: unfreeze
+   4932 step: pass
+   5045 step: cpu_turn
+   7450 step: wait 60
+   7516 step: rec_stop
+   7516 media: 28 still frames trimmed from the end
+   7516 media: encoding 4627 frames -> tools\testing_scenarios\..\..\screenshots\videos\ojama-probe.mp4
+   7558 Play sequence done; ending capture (no recording tail).
+   7558 Finished — PASS (play sequence + tail). Stop mGBA Record A/V to finalize MP4.

@@ -1722,6 +1722,29 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
   list (the position prompt, then 3000 ATK again).
 - The CPU Synchro Summons it with its generic rule (`AiTrySynchroSummon`).
 
+### Ojama King (2026-11-18)
+- Fusion Monster (Level 6 LIGHT Beast, 0/3000; "Ojama Green" + "Ojama Yellow" + "Ojama Black"; the materials are not
+  in the game). Card number 767 (ID 912). "Select up to 3 of your opponent's Monster Card Zones. The selected zones
+  cannot be used."
+- **The block.** The engine already had it: key 1320 (two unplayable Monster Zones, `EffectBlockTwoMonsterZonesResolve`)
+  links each zone with `ZONE_LINK_CONTINUOUS` from its own zone, and `IsMonsterZoneFree` (duel_card_lists.c) refuses a
+  zone so linked from a card number 1320. One added test there also refuses it while `ModZoneBlockerAt` says the link's
+  source zone holds a face-up, enabled Ojama King (`.text` +0x1C, 0x0807F5CC). Every summon's zone search
+  (`FindFreeMonsterZone`, `CountFreeMonsterZones`, the summon zone pick, the CPU) goes through it, and the field already
+  draws such a zone with the "unplayable" mark. The block ends when Ojama King leaves or is turned face-down.
+- **The selection.** A trigger, queued by `AddedCardsSummoned` for a face-up Special Summon (RESPONSE_SPECIAL_SUMMONED
+  at its zone), so it is made each time it arrives. `EffectOjamaKingChainB`: the human picks 1-3 of the opponent's empty
+  Monster Zones with the cursor (`DuelCursor_PickAny`; B ends after the first pick; it ends by itself at 3 or when
+  none is left); the CPU takes the human's first empty zones. The resolve links each still-empty target while Ojama
+  King is still face-up in its zone.
+- Not done: the CPU picks the first empty zones, not the ones that hurt most; a stale link stays on a zone after
+  Ojama King leaves (harmless: the source zone no longer holds Ojama King).
+- **Checked in the emulator** (a probe board): Metamorphosis (Tributing Summoned Skull) summoned Ojama King, the
+  trigger blocked the CPU's zones 0-2 (shown with the X mark), and in its turn the CPU, with zones 3 and 4 full,
+  Tributed Sangan and summoned Summoned Skull into zone 3. Monster Reborn cannot revive it, as it was never properly
+  summoned there.
+- Removed from `card_pools/missing-fusion.txt` and the "not fully implemented" notes (README, DECKS.md).
+
 ### Fiend Skull Dragon (2026-11-18)
 - Fusion Monster (Level 5 WIND Dragon, 2000/1200; "Cave Dragon" + "Lesser Fiend"). Card number 632 (ID 872). "Negate
   the effects of Flip Effect Monsters. Negate any Trap effects that target this card on the field, and if you do,

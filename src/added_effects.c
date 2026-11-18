@@ -4045,6 +4045,13 @@ void AddedCardsSummoned(int player, int zone, u16 id, int kind, int faceUp)
                              | TRIGGER_EVENT(RESPONSE_FLIP_SUMMONED) | (id & CARD_ID_MASK),
                          DUEL_LOC(player, zone));
 #endif
+#ifdef HAS_CARD_OJAMA_KING
+    if (((const u16 *)CARD_ID_TO_NUMBER_ADDR)[id & CARD_ID_MASK] == CARD_OJAMA_KING && faceUp
+        && kind >= SUMMON_ACTION_SPECIAL)
+        Chain_AddPending(TRIGGER_PLAYER(player & 1) | TRIGGER_ZONE(zone) | TRIGGER_KIND(CHAIN_KIND_MONSTER)
+                             | TRIGGER_EVENT(RESPONSE_SPECIAL_SUMMONED) | (id & CARD_ID_MASK),
+                         DUEL_LOC(player, zone));
+#endif
 #ifdef HAS_CARD_SACRED_CRANE
     if (((const u16 *)CARD_ID_TO_NUMBER_ADDR)[id & CARD_ID_MASK] == CARD_SACRED_CRANE
         && kind >= SUMMON_ACTION_SPECIAL)
@@ -10592,6 +10599,127 @@ int EffectJunkWarriorResolve(struct ChainEntry *link, struct ChainEntry *chained
     return EFFECT_STEP_DONE;
 }
 #endif /* HAS_CARD_JUNK_WARRIOR */
+
+#ifdef HAS_CARD_OJAMA_KING
+/* ---- Ojama King (2026-11-18) ---------------------------------------------------------------------------------------
+ * Fusion ("Ojama Green" + "Ojama Yellow" + "Ojama Black"; Level 6 LIGHT Beast 0/3000): "Select up to 3 of your
+ * opponent's Monster Card Zones. The selected zones cannot be used."
+ * As key 1320 (two unplayable Monster Zones; EffectBlockTwoMonsterZonesResolve): each selected empty zone gets a
+ * ZONE_LINK_CONTINUOUS link whose value is Ojama King's DUEL_LOC, and IsMonsterZoneFree (duel_card_lists.c) refuses a
+ * zone linked so while ModZoneBlockerAt says that zone holds a face-up, enabled Ojama King. So the block lasts while
+ * Ojama King stays face-up on the field, and every summon (FindFreeMonsterZone, the summon zone pick, the CPU) skips it.
+ *   trigger  AddedCardsSummoned queues it (RESPONSE_SPECIAL_SUMMONED at its zone) for a face-up Special Summon:
+ *            Fusion Summon, Monster Reborn, ... (the selection is made each time it arrives)
+ *   prepare  the opponent has an empty Monster Zone
+ *   chainB   the human picks 1-3 of the opponent's empty Monster Zones with the cursor (B ends after the first; it
+ *            ends by itself at 3 or when none is left); the CPU takes the human's first empty zones, up to 3
+ *   resolve  links each still-empty target (only while Ojama King is still face-up in its zone) */
+static const u8 sStrOjamaKingPick[] = "Select up to 3 of your opponent's Monster Zones. (B: done)";
+
+static int OjamaKingIsAt(int player, int zone)
+{
+    struct DuelZone *z = ZoneOf(player, zone);
+
+    return zone <= ZONE_MONSTER_4 && z->isFaceUp && !z->isDisabled && DUEL_CARD_ID(&z->card) != 0
+           && CardNumberOfId(DUEL_CARD_ID(&z->card)) == CARD_OJAMA_KING;
+}
+
+static int OjamaKingPicked(struct ChainEntry *link, int player, int zone)
+{
+    int i;
+
+    for (i = 0; i < link->numTargets && i < 3; i++) {
+        if (link->targets[i] == DUEL_LOC(player, zone))
+            return 1;
+    }
+    return 0;
+}
+
+/* The opponent's empty zones not picked yet. */
+static int OjamaKingFreeLeft(struct ChainEntry *link)
+{
+    int opp = 1 - (link->player & 1), zone, n = 0;
+
+    for (zone = ZONE_MONSTER_0; zone <= ZONE_MONSTER_4; zone++)
+        n += IsMonsterZoneFree(opp, zone) && !OjamaKingPicked(link, opp, zone);
+    return n;
+}
+
+int EffectOjamaKingPrepare(struct ChainEntry *card, struct ChainEntry *chainLink, u16 fromHand)
+{
+    return !fromHand && card->event == RESPONSE_SPECIAL_SUMMONED && card->loc0 == DUEL_LOC(card->player, card->zone)
+           && CountFreeMonsterZones(1 - (card->player & 1)) > 0;
+}
+
+int EffectOjamaKingChainB(struct ChainEntry *link, struct ChainEntry *prevLink)
+{
+    int opp = 1 - (link->player & 1), zone;
+
+    (void)prevLink;
+    if (link->player) {
+        /* the CPU: the human's first empty zones */
+        link->numTargets = 0;
+        for (zone = ZONE_MONSTER_0; zone <= ZONE_MONSTER_4 && link->numTargets < 3; zone++) {
+            if (IsMonsterZoneFree(opp, zone))
+                AddEffectTargetUnchecked(link, opp, zone);
+        }
+        return 1;
+    }
+    switch (gChain.targetStep) {
+    case 0:
+        link->numTargets = 0;
+        TextBoxOpen(TEXTBOX_POS(6, 2), TEXTBOX_SIZE(18, 7), TEXTBOX_FLAGS_DEFAULT, sStrOjamaKingPick);
+        gChain.targetStep++;
+        return 0;
+    default:
+        if (gMain.newKeys & B_BUTTON) {
+            if (link->numTargets > 0)
+                return 1;
+            PlaySE(SE_ERROR);
+            return 0;
+        }
+        if (DuelCursor_PickAny() != 0) {
+            int player = gDuelScreen.selPlayer & 1;
+
+            zone = gDuelScreen.selIndex;
+            if (gDuelScreen.selArea == DUEL_AREA_MONSTER && player == opp && zone <= ZONE_MONSTER_4
+                && IsMonsterZoneFree(player, zone) && !OjamaKingPicked(link, player, zone)) {
+                AddEffectTargetUnchecked(link, player, zone);
+                return link->numTargets >= 3 || OjamaKingFreeLeft(link) == 0;
+            }
+            PlaySE(SE_ERROR);
+        }
+        return 0;
+    }
+}
+
+int EffectOjamaKingResolve(struct ChainEntry *link, struct ChainEntry *chainedTo)
+{
+    int i;
+
+    (void)chainedTo;
+    if (link->negated || !OjamaKingIsAt(link->player, link->zone))
+        return EFFECT_STEP_DONE;
+    for (i = 0; i < link->numTargets && i < 3; i++) {
+        int player = (u8)link->targets[i], zone = link->targets[i] >> 8;
+
+        if (zone <= ZONE_MONSTER_4 && DUEL_CARD_ID(&ZoneOf(player, zone)->card) == 0)
+            QueueAddZoneLink(link->player, DUEL_LOC(link->player, link->zone), link->targets[i], ZONE_LINK_CONTINUOUS);
+    }
+    return EFFECT_STEP_DONE;
+}
+#endif /* HAS_CARD_OJAMA_KING */
+
+/* IsMonsterZoneFree (duel_card_lists.c): 1 if the ZONE_LINK_CONTINUOUS link source (player, zone) makes the linked
+ * Monster Zone unusable: a face-up, enabled Ojama King (the engine's own key 1320 is checked there). */
+int ModZoneBlockerAt(int player, int zone)
+{
+#ifdef HAS_CARD_OJAMA_KING
+    return OjamaKingIsAt(player & 1, zone);
+#else
+    return 0;
+#endif
+}
 
 #if defined(HAS_CARD_DARK_BALTER_THE_TERRIBLE) || defined(HAS_CARD_RYU_SENSHI)
 /* ---- Dark Balter the Terrible, Ryu Senshi (2026-11-18) -------------------------------------------------------------
@@ -17966,6 +18094,16 @@ const struct CardEffect gAddedCardEffects[] = {
         EffectNormalNegatorPrepare,
         EffectNormalNegatorChainA,
         NULL,
+    },
+#endif
+#ifdef HAS_CARD_OJAMA_KING
+    {
+        CARD_OJAMA_KING, 0,
+        EffectOjamaKingResolve,
+        NULL,
+        EffectOjamaKingPrepare,
+        NULL,
+        EffectOjamaKingChainB,
     },
 #endif
 #ifdef HAS_CARD_CURSED_SEAL_OF_THE_FORBIDDEN_SPELL

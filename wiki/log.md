@@ -3387,3 +3387,10 @@ updated: 2026-09-29
   `ModTargetedLinkNegated` (Ryu Senshi's check, generalized; the duel_main.c call moved after the type switch).
   Probe-checked.
 - [[added-cards]], [[yugi-kaiba-opponent]]; README.md, DECKS.md, card_pools/missing-fusion.txt.
+
+## [2026-11-18] progress | Ojama King coded; Skull Lair note
+- src/added_effects.c: Ojama King's summon trigger picks up to 3 of the opponent's empty Monster Zones;
+  `ModZoneBlockerAt`, asked by `IsMonsterZoneFree` (duel_card_lists.c, beside key 1320), blocks them while it is
+  face-up. Probe-checked.
+- [[added-cards]]; README.md, DECKS.md, AI_IMPROVEMENTS.md, card_pools/missing-fusion.txt.
+- [[yugi-kaiba-opponent]]: Skull Lair is no longer listed as uncoded.

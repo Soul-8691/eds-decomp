@@ -1,7 +1,7 @@
 ﻿
-Script                 Result Seconds Detail                               
-------                 ------ ------- ------                               
-FSD_Probe_Media_Player PASS        24 duel_main=true reason= play_done=true
+Script                   Result Seconds Detail                                
+------                   ------ ------- ------                                
+Ojama_Probe_Media_Player PASS        96 duel_main=false reason= play_done=true
 
 
 

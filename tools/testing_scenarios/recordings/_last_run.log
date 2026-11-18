@@ -1673,3 +1673,8 @@ START Ryu_Probe_Media_Player
 PASS Ryu_Probe_Media_Player duel_main=true reason= play_done=true
 START FSD_Probe_Media_Player
 PASS FSD_Probe_Media_Player duel_main=true reason= play_done=true
+START Ojama_Probe_Media_Player
+PASS Ojama_Probe_Media_Player duel_main=false reason= play_done=true
+START Ojama_Probe_Media_Player
+START Ojama_Probe_Media_Player
+PASS Ojama_Probe_Media_Player duel_main=false reason= play_done=true

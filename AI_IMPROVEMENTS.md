@@ -94,6 +94,7 @@ Campaign duelists in Yak's YGO Hack use a much stronger opponent AI than vanilla
   Summons Quillbolt Hedgehog from its Graveyard first when it controls a Tuner.
 - Its Stardust Dragon negates your cards and effects that would destroy one of its cards.
 - Its Dark Balter the Terrible negates your Normal Spells, and its Ryu Senshi your Normal Traps (paying 1000 LP), while it has more than 2000 LP.
+- When it Special Summons Ojama King, it blocks your first 3 empty Monster Zones.
 - When its Colossal Fighter is destroyed by battle, it always uses the trigger, reviving the Warrior with the highest ATK from either Graveyard (Colossal Fighter itself included).
 - It Link Summons when the Link Monster has more ATK than its strongest material, into an Extra Monster Zone when it
   can. Its Link Spider summons its strongest Normal Monster, and its Proxy Dragon always saves its card by
