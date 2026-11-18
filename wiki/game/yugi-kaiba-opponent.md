@@ -59,8 +59,7 @@ next to the one before it.
     again, so that Side Deck has 14 cards.
   - Scientist plays Aretos-Tomato Control (Scientist) 60% and DK-ZERO-Scientist FTK 40% (`ScientistDeck`, Umbra &
     Lumis' slot). Every card in both was already in the game. Magical Scientist and Gilasaurus are coded (2026-10-30,
-    [[added-cards]]); no coded effect yet: Super Robolady, Super Roboyarou (and Fiend Skull Dragon, Ryu Senshi
-    below).
+    [[added-cards]]); no coded effect yet: Super Robolady, Super Roboyarou (and Fiend Skull Dragon below).
   - Vampire plays Woawa-Warrior Control 80%, ellietincan-Scientist FTK 10% and AJTBLS-Warrior Tomato Control 10%
     (`VampireDeck`, Marik's slot). Sasuke Samurai (Warrior Control's Side Deck) was added to `config/new_cards.txt`
     for them (ID 1160) and coded the same day ([[added-cards]]).
@@ -82,7 +81,7 @@ next to the one before it.
     deck, a slot with no deck is skipped. The odds stayed the same (Goat's twentieths became 40/20/15/10/5/5/5,
     Cyber's coin 50/50). HMA edits them: `data.decks.choices.<format>` ([[hma-toml]]).
   - The other 2 keep their original duelists' decks for now.
-  - Cards in these decks with no coded effect yet: Fiend Skull Dragon, Ryu Senshi (Joey-
+  - Cards in these decks with no coded effect yet: Fiend Skull Dragon (Joey-
     Pegasus Tomato Control's Fusion Deck), Skull Lair and The Last Warrior from Another Planet (Joey-Pegasus Vanilla
     Beat and both Android decks).
   - The .ydk files are in `decks/`. Their passcodes resolve through the built password table, which stores each

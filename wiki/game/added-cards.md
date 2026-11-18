@@ -1722,6 +1722,27 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
   list (the position prompt, then 3000 ATK again).
 - The CPU Synchro Summons it with its generic rule (`AiTrySynchroSummon`).
 
+### Ryu Senshi (2026-11-18)
+- Fusion Monster (Level 6 EARTH Warrior, 2000/1200; "Warrior Dai Grepher" + "Spirit Ryu"). Card number 787 (ID 928).
+  "When a Normal Trap Card is activated (Quick Effect): You can pay 1000 LP; negate that effect. This card must be
+  face-up on the field to activate and to resolve this effect. Negate the effects of any Spell Card that targets this
+  card and destroy it."
+- **Trap negation.** Shares Dark Balter's code (below), now generic: `NegatorAnswersType` (Balter: Spells, Ryu Senshi:
+  Traps), `NegatorCanAnswer`, `NegatorAt`, `EffectNormalNegator{Prepare,ChainA,Resolve}`, `AiChainNormalNegator`. The
+  opponent's Normal Trap, 1000 LP; the resolve does nothing if Ryu Senshi is no longer face-up in its zone.
+- **Spells that target it.** `ModSpellTargetNegated` (added_effects.c), one call in `Chain_Resolve`'s Magic case
+  (duel_main.c, beside `gDuel.magicNegated`; `.text` +0x18, 0x0807F5B0): a Spell link whose chosen targets
+  (`targets[]`, player | zone << 8) include a face-up Ryu Senshi is negated as Imperial Order negates it, with
+  `destroyIfNegated` set so a Continuous or Equip Spell goes to the Graveyard as well. Graverobber, Call of the
+  Haunted and Premature Burial keep a card word in `targets[]` and are skipped.
+- **CPU.** Its Ryu Senshi negates the human's Normal Traps above 2000 LP. Not done: the CPU doesn't avoid aiming its
+  own targeting Spells at the human's Ryu Senshi.
+- **Checked in the emulator** (a probe board): the human's Jar of Greed was chained by the CPU's Ryu Senshi (8000 to
+  7000) and shown negated; the human's Book of Moon on Ryu Senshi, chained after it, resolved with no effect (Ryu
+  Senshi stayed face-up). The chain list does not mark that Spell "Invalidated".
+- Removed from `card_pools/missing-fusion.txt`, the "not fully implemented"
+  notes (README, DECKS.md, [[yugi-kaiba-opponent]]).
+
 ### Dark Balter the Terrible (2026-11-18)
 - Fusion Monster (Level 5 DARK Fiend, 2000/1200; "Possessed Dark Soul" + "Frontier Wiseman"). Card number 514 (ID 851).
   "When a Normal Spell Card is activated, negate the effect by paying 1000 Life Points. The effect of an Effect Monster

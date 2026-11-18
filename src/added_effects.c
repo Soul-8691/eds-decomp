@@ -10560,25 +10560,46 @@ int EffectJunkWarriorResolve(struct ChainEntry *link, struct ChainEntry *chained
 }
 #endif /* HAS_CARD_JUNK_WARRIOR */
 
-#ifdef HAS_CARD_DARK_BALTER_THE_TERRIBLE
-/* ---- Dark Balter the Terrible (2026-11-18) -------------------------------------------------------------------------
- * Fusion ("Possessed Dark Soul" + "Frontier Wiseman"; Level 5 DARK Fiend 2000/1200): "When a Normal Spell Card is
- * activated, negate the effect by paying 1000 Life Points. The effect of an Effect Monster that this monster destroys
- * as a result of battle is negated."
- *   answer    a face-up Dark Balter answers the opponent's Normal Spell (a Spell card's activation, subtype Normal) while
- *             its controller has more than BALTER_COST LP, as Stardust Dragon answers a chain link: CanPlayerChain and
- *             Chain_GetResponseCommands ask ModMonsterCanRespond (below Stardust Dragon's block)
- *   chainA    pay BALTER_COST LP (DUEL_CMD_LOSE_LP)
- *   resolve   negate the Spell (DUEL_CMD_NEGATE_ACTIVATION, as Divine Wrath; the Spell still goes to the Graveyard)
- *   battle    HaDesNegatesBattleDestroyed (Dark Ruler Ha Des's hook in SendBattleDestroyedCardToGraveyard and the
- *             battle flip) also answers 1 when the monster that won the battle is Dark Balter: the destroyed monster's
- *             Graveyard trigger and flip effect do not run
- *   CPU       AiChainDarkBalter (AiChainSummonTriggerResponse): the human's Normal Spells while it has more than
- *             BALTER_CPU_MIN_LP. */
-#define BALTER_COST         1000
-#define BALTER_CPU_MIN_LP   2000
+#if defined(HAS_CARD_DARK_BALTER_THE_TERRIBLE) || defined(HAS_CARD_RYU_SENSHI)
+/* ---- Dark Balter the Terrible, Ryu Senshi (2026-11-18) -------------------------------------------------------------
+ * Dark Balter the Terrible (Fusion, "Possessed Dark Soul" + "Frontier Wiseman"; Level 5 DARK Fiend 2000/1200): "When a
+ * Normal Spell Card is activated, negate the effect by paying 1000 Life Points. The effect of an Effect Monster that
+ * this monster destroys as a result of battle is negated."
+ * Ryu Senshi (Fusion, "Warrior Dai Grepher" + "Spirit Ryu"; Level 6 EARTH Warrior 2000/1200): "When a Normal Trap Card
+ * is activated (Quick Effect): You can pay 1000 LP; negate that effect. This card must be face-up on the field to
+ * activate and to resolve this effect. Negate the effects of any Spell Card that targets this card and destroy it."
+ *   answer    a face-up copy answers the opponent's Normal Spell (Balter) / Normal Trap (Ryu Senshi), by the card's type
+ *             and subtype, while its controller has more than NEGATOR_COST LP, as Stardust Dragon answers a chain
+ *             link: CanPlayerChain and Chain_GetResponseCommands ask ModMonsterCanRespond (below Stardust Dragon's)
+ *   chainA    pay NEGATOR_COST LP (DUEL_CMD_LOSE_LP)
+ *   resolve   negate the card (DUEL_CMD_NEGATE_ACTIVATION, as Divine Wrath); Ryu Senshi only while still face-up
+ *   battle    (Balter) HaDesNegatesBattleDestroyed (Dark Ruler Ha Des's hook in SendBattleDestroyedCardToGraveyard and
+ *             the battle flip) also answers 1 when the monster that won the battle is Dark Balter: the destroyed
+ *             monster's Graveyard trigger and flip effect do not run
+ *   targeted  (Ryu Senshi) ModSpellTargetNegated, asked by Chain_Resolve (duel_main.c) for each Spell link as it
+ *             resolves: a Spell whose chosen targets include a face-up Ryu Senshi is negated (as Imperial Order
+ *             negates it) and destroyed (destroyIfNegated: a Continuous or Equip Spell goes to the Graveyard too)
+ *   CPU       AiChainNormalNegator (AiChainSummonTriggerResponse): the human's Normal Spells / Normal Traps while it
+ *             has more than NEGATOR_CPU_MIN_LP. */
+#define NEGATOR_COST        1000
+#define NEGATOR_CPU_MIN_LP  2000
 
-static int BalterCanAnswer(struct ChainEntry *link, int player)
+/* The card type a negator answers: Dark Balter Spells, Ryu Senshi Traps; -1 for other cards. */
+static int NegatorAnswersType(int number)
+{
+#ifdef HAS_CARD_DARK_BALTER_THE_TERRIBLE
+    if (number == CARD_DARK_BALTER_THE_TERRIBLE)
+        return CARD_TYPE_MAGIC;
+#endif
+#ifdef HAS_CARD_RYU_SENSHI
+    if (number == CARD_RYU_SENSHI)
+        return CARD_TYPE_TRAP;
+#endif
+    return -1;
+}
+
+/* Whether `player`'s negator `number` may answer `link`: the opponent's Normal card of its type, and the LP to pay. */
+static int NegatorCanAnswer(struct ChainEntry *link, int player, int number)
 {
     u32 stats;
 
@@ -10586,49 +10607,61 @@ static int BalterCanAnswer(struct ChainEntry *link, int player)
     if (link == NULL || link->negated || (link->player & 1) == (player & 1) || link->kind == CHAIN_KIND_OFF_FIELD)
         return 0;
     stats = gCardStats[link->card & CARD_ID_MASK];
-    return CARD_STATS_TYPE(stats) == CARD_TYPE_MAGIC && CARD_STATS_SUBTYPE(stats) == SPELL_NORMAL
+    return (int)CARD_STATS_TYPE(stats) == NegatorAnswersType(number) && CARD_STATS_SUBTYPE(stats) == SPELL_NORMAL
            && CardNumberOfId(link->card) != CARD_1539
-           && (int)gDuelPlayers[player & 1].lifePoints > BALTER_COST;
+           && (int)gDuelPlayers[player & 1].lifePoints > NEGATOR_COST;
 }
 
-static int IsBalterAt(int player, int zone)
+/* The card number of a face-up, usable negator in `player`'s monster `zone`, else 0. */
+static int NegatorAt(int player, int zone)
 {
     struct DuelZone *z = ZoneOf(player, zone);
+    int number;
 
-    return zone <= ZONE_MONSTER_4 && z->isFaceUp && !z->isDisabled
-           && CardNumberOfId(DUEL_CARD_ID(&z->card)) == CARD_DARK_BALTER_THE_TERRIBLE
-           && !IsZoneInActionLists(player, zone);
+    if (zone > ZONE_MONSTER_4 || !z->isFaceUp || z->isDisabled || DUEL_CARD_ID(&z->card) == 0)
+        return 0;
+    number = CardNumberOfId(DUEL_CARD_ID(&z->card));
+    return NegatorAnswersType(number) >= 0 && !IsZoneInActionLists(player, zone) ? number : 0;
 }
 
-int EffectDarkBalterPrepare(struct ChainEntry *card, struct ChainEntry *chainLink, u16 fromHand)
+int EffectNormalNegatorPrepare(struct ChainEntry *card, struct ChainEntry *chainLink, u16 fromHand)
 {
-    return !fromHand && BalterCanAnswer(chainLink, card->player);
+    return !fromHand && NegatorCanAnswer(chainLink, card->player, CardNumberOfId(card->card));
 }
 
-int EffectDarkBalterChainA(struct ChainEntry *link, struct ChainEntry *prevLink)
+int EffectNormalNegatorChainA(struct ChainEntry *link, struct ChainEntry *prevLink)
 {
     (void)prevLink;
-    DuelCmd_Push(link->player ? DUEL_CMD_PLAYER | DUEL_CMD_LOSE_LP : DUEL_CMD_LOSE_LP, BALTER_COST, 1, 0);
+    DuelCmd_Push(link->player ? DUEL_CMD_PLAYER | DUEL_CMD_LOSE_LP : DUEL_CMD_LOSE_LP, NEGATOR_COST, 1, 0);
     return 1;
 }
 
-int EffectDarkBalterResolve(struct ChainEntry *link, struct ChainEntry *chainedTo)
+int EffectNormalNegatorResolve(struct ChainEntry *link, struct ChainEntry *chainedTo)
 {
     if (link->negated || chainedTo == NULL)
         return EFFECT_STEP_DONE;
+#ifdef HAS_CARD_RYU_SENSHI
+    if (CardNumberOfId(link->card) == CARD_RYU_SENSHI) {
+        /* "must be face-up on the field ... to resolve" */
+        struct DuelZone *z = ZoneOf(link->player, link->zone);
+
+        if (link->zone > ZONE_MONSTER_4 || !z->isFaceUp || CardNumberOfId(DUEL_CARD_ID(&z->card)) != CARD_RYU_SENSHI)
+            return EFFECT_STEP_DONE;
+    }
+#endif
     DuelCmd_Push(link->player ? DUEL_CMD_PLAYER | DUEL_CMD_NEGATE_ACTIVATION : DUEL_CMD_NEGATE_ACTIVATION, 1, 0, 0);
     return EFFECT_STEP_DONE;
 }
 
-static int AiChainDarkBalter(struct ChainEntry *entry)
+static int AiChainNormalNegator(struct ChainEntry *entry)
 {
-    int zone;
+    int zone, number;
 
-    if (entry->player != AI_HUMAN || !BalterCanAnswer(entry, AI_PLAYER)
-        || (int)gDuelPlayers[AI_PLAYER].lifePoints <= BALTER_CPU_MIN_LP)
+    if (entry->player != AI_HUMAN || (int)gDuelPlayers[AI_PLAYER].lifePoints <= NEGATOR_CPU_MIN_LP)
         return 0;
     for (zone = ZONE_MONSTER_0; zone <= ZONE_MONSTER_4; zone++) {
-        if (IsBalterAt(AI_PLAYER, zone)) {
+        number = NegatorAt(AI_PLAYER, zone);
+        if (number != 0 && NegatorCanAnswer(entry, AI_PLAYER, number)) {
             DuelCmd_Push(DUEL_CMD_PLAYER | DUEL_CMD_CHAIN_BANNER, 0, 0, 0);
             Chain_AddLink((1u << 31) | (entry->event << 25) | ((zone & 0x1F) << 16) | (CHAIN_KIND_SPELL_TRAP << 21)
                               | DUEL_CARD_ID(&ZoneOf(AI_PLAYER, zone)->card),
@@ -10638,7 +10671,34 @@ static int AiChainDarkBalter(struct ChainEntry *entry)
     }
     return 0;
 }
-#endif /* HAS_CARD_DARK_BALTER_THE_TERRIBLE */
+#endif /* HAS_CARD_DARK_BALTER_THE_TERRIBLE || HAS_CARD_RYU_SENSHI */
+
+/* Chain_Resolve (duel_main.c), for a Spell link about to resolve: 1 (and destroyIfNegated set) when one of its chosen
+ * targets is a face-up Ryu Senshi, so the Spell is negated and destroyed. Graverobber, Call of the Haunted and
+ * Premature Burial keep a card word in targets[], not a zone, and are skipped. */
+int ModSpellTargetNegated(struct ChainEntry *link)
+{
+#ifdef HAS_CARD_RYU_SENSHI
+    int i, number = CardNumberOfId(link->card);
+
+    if (link->negated || number == CARD_GRAVEROBBER || number == CARD_CALL_OF_THE_HAUNTED
+        || number == CARD_PREMATURE_BURIAL)
+        return 0;
+    for (i = 0; i < link->numTargets && i < 3; i++) {
+        int player = link->targets[i] & 0xFF, zone = link->targets[i] >> 8;
+        struct DuelZone *z;
+
+        if (player > 1 || zone > ZONE_MONSTER_4)
+            continue;
+        z = ZoneOf(player, zone);
+        if (z->isFaceUp && !z->isDisabled && CardNumberOfId(DUEL_CARD_ID(&z->card)) == CARD_RYU_SENSHI) {
+            link->destroyIfNegated = 1;
+            return 1;
+        }
+    }
+#endif
+    return 0;
+}
 
 #if defined(HAS_CARD_STARDUST_DRAGON) && defined(HAS_CARD_MY_BODY_AS_A_SHIELD)
 /* ---- Stardust Dragon ----------------------------------------------------------------------------------------------
@@ -10835,16 +10895,20 @@ void EndPhase_StardustDragon(int turnPlayer)
 #endif /* HAS_CARD_STARDUST_DRAGON && HAS_CARD_MY_BODY_AS_A_SHIELD */
 
 /* A face-up monster that answers a chain link from the field (CanPlayerChain, Chain_GetResponseCommands): Stardust
- * Dragon, Dark Balter the Terrible. */
+ * Dragon, Dark Balter the Terrible, Ryu Senshi. */
 int ModMonsterCanRespond(struct ChainEntry *link, int player, int zone)
 {
 #if defined(HAS_CARD_STARDUST_DRAGON) && defined(HAS_CARD_MY_BODY_AS_A_SHIELD)
     if (StardustCanRespondAt(link, player, zone))
         return 1;
 #endif
-#ifdef HAS_CARD_DARK_BALTER_THE_TERRIBLE
-    if (IsBalterAt(player, zone) && BalterCanAnswer(link, player))
-        return 1;
+#if defined(HAS_CARD_DARK_BALTER_THE_TERRIBLE) || defined(HAS_CARD_RYU_SENSHI)
+    {
+        int number = NegatorAt(player, zone);
+
+        if (number != 0 && NegatorCanAnswer(link, player, number))
+            return 1;
+    }
 #endif
     return 0;
 }
@@ -14703,8 +14767,8 @@ int AiChainSummonTriggerResponse(struct ChainEntry *entry)
     if (AiChainStardustDragon(entry))
         return 1;
 #endif
-#ifdef HAS_CARD_DARK_BALTER_THE_TERRIBLE
-    if (AiChainDarkBalter(entry))
+#if defined(HAS_CARD_DARK_BALTER_THE_TERRIBLE) || defined(HAS_CARD_RYU_SENSHI)
+    if (AiChainNormalNegator(entry))
         return 1;
 #endif
     if (entry->player != AI_HUMAN || (entry->event != RESPONSE_SUMMONED && entry->event != RESPONSE_FLIP_SUMMONED
@@ -17844,10 +17908,20 @@ const struct CardEffect gAddedCardEffects[] = {
 #ifdef HAS_CARD_DARK_BALTER_THE_TERRIBLE
     {
         CARD_DARK_BALTER_THE_TERRIBLE, 0,
-        EffectDarkBalterResolve,
+        EffectNormalNegatorResolve,
         NULL,
-        EffectDarkBalterPrepare,
-        EffectDarkBalterChainA,
+        EffectNormalNegatorPrepare,
+        EffectNormalNegatorChainA,
+        NULL,
+    },
+#endif
+#ifdef HAS_CARD_RYU_SENSHI
+    {
+        CARD_RYU_SENSHI, 0,
+        EffectNormalNegatorResolve,
+        NULL,
+        EffectNormalNegatorPrepare,
+        EffectNormalNegatorChainA,
         NULL,
     },
 #endif

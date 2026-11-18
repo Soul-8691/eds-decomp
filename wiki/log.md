@@ -3375,3 +3375,9 @@ updated: 2026-09-29
 - src/added_effects.c: Normal Spell negation as a face-up monster response (shared `ModMonsterCanRespond` with Stardust
   Dragon), the battle negation through `HaDesNegatesBattleDestroyed`, the CPU's `AiChainDarkBalter`. Probe-checked.
 - [[added-cards]], [[yugi-kaiba-opponent]]; README.md, DECKS.md, AI_IMPROVEMENTS.md, card_pools/missing-fusion.txt.
+
+## [2026-11-18] progress | Ryu Senshi coded
+- src/added_effects.c: Dark Balter's negation made generic for Ryu Senshi's Normal Traps; `ModSpellTargetNegated`
+  (Spells targeting it), hooked in duel_main.c's `Chain_Resolve`. Probe-checked.
+- [[added-cards]], [[yugi-kaiba-opponent]]; README.md, DECKS.md, AI_IMPROVEMENTS.md,
+  card_pools/missing-fusion.txt.

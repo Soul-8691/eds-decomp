@@ -25251,3 +25251,42 @@
    4814 media: encoding 1863 frames -> tools\testing_scenarios\..\..\screenshots\videos\balter-probe.mp4
    4831 Play sequence done; ending capture (no recording tail).
    4831 Finished — PASS (play sequence + tail). Stop mGBA Record A/V to finalize MP4.
+     19 MP4 target: tools\testing_scenarios\recordings\Ryu_Probe_Media_Player.mp4
+     19 emu recording API: screenshot, screenshotToImage
+     19 MP4: the scenario capture is off (captureMp4 = false)
+     19 Ryu Probe / media / Player
+     19 point you.st0; wait 20; mp4_start ryu-probe; activate you.st0; settle; wait 30; activate you.hand[Book of Moon]; target 
+    800 Main menu (callback 0x08003B15).
+    923 Campaign selected (callback 0x0801D6D5).
+   1116 Turn order: forced RPS lose (CPU goes first).
+   1126 Turn order: A (lost RPS; CPU chooses first).
+   1164 Turn order: A (lost RPS; CPU chooses first).
+   1357 Opponent's turn (waiting for your Main Phase 1).
+   1359 Usage deck goat / Chaos Turbo: main=40 extra=15; P0 shuffled=true (top 719->910) P1 shuffled=true (top 719->910), hands cleared.
+   2257 cpu_turn f=900 duel_step=8 turn_player=1 ai=4/0 textbox=0
+   2370 Player Draw Phase.
+   2551 Opening draw complete (hand=6 deck=34 want=6).
+   2689 Exact setup: P0 hand=1 deck=34 gy=0, P1 hand=0 deck=34 gy=0, LP 8000/8000, turnCount 2.
+   2689 Player Main Phase 1.
+   2689 steps: unknown card Ryu Probe
+   2689 steps: 12 steps, 27 ops
+   2689 step: point you.st0
+   2813 step: wait 20
+   2839 step: mp4_start ryu-probe
+   2839 media: recording ryu-probe (mp4)
+   2846 step: activate you.st0
+   2846 steps: capture starts (cursor on activate you.st0)
+   2892 step: settle
+   3792 steps: settle timed out (settle) [box active=true kind=1 step=0; list=false; chain=true; summon=false; cmds=false; prompt=0]
+   3799 step: wait 30
+   3835 step: activate you.hand[Book of Moon]
+   3919 step: target opp.m0
+   4138 steps: target opp.m0: A again (not taken)
+   4162 steps: target opp.m0: taken on press 2
+   4169 step: settle
+   5041 step: point opp.m0
+   5143 step: wait 60
+   5209 step: rec_stop
+   5209 media: encoding 2370 frames -> tools\testing_scenarios\..\..\screenshots\videos\ryu-probe.mp4
+   5226 Play sequence done; ending capture (no recording tail).
+   5226 Finished — PASS (play sequence + tail). Stop mGBA Record A/V to finalize MP4.

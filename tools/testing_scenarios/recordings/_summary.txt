@@ -1,7 +1,7 @@
 ﻿
-Script                    Result Seconds Detail                               
-------                    ------ ------- ------                               
-Balter_Probe_Media_Player PASS        23 duel_main=true reason= play_done=true
+Script                 Result Seconds Detail                               
+------                 ------ ------- ------                               
+Ryu_Probe_Media_Player PASS        30 duel_main=true reason= play_done=true
 
 
 
