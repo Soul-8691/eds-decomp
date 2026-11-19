@@ -26342,3 +26342,41 @@
    7223 media: encoding 1834 frames -> tools\testing_scenarios\..\..\screenshots\videos\nv-probe.mp4
    7265 Play sequence done; ending capture (no recording tail).
    7265 Finished — PASS (play sequence + tail). Stop mGBA Record A/V to finalize MP4.
+     17 MP4 target: tools\testing_scenarios\recordings\Ox_Probe_Media_Player.mp4
+     17 emu recording API: screenshot, screenshotToImage
+     17 MP4: the scenario capture is off (captureMp4 = false)
+     17 Ox Probe / media / Player
+     17 point you.m1; wait 20; mp4_start ox-probe; battle; attack you.m1 -> opp.m0; settle; wait 30; attack you.m0 -> opp.m1; se
+    798 Main menu (callback 0x08003B15).
+    921 Campaign selected (callback 0x0801D6F9).
+   1114 Turn order: forced RPS lose (CPU goes first).
+   1124 Turn order: A (lost RPS; CPU chooses first).
+   1162 Turn order: A (lost RPS; CPU chooses first).
+   1354 Opponent's turn (waiting for your Main Phase 1).
+   1356 Usage deck goat / Chaos Turbo: main=40 extra=15; P0 shuffled=true (top 719->920) P1 shuffled=true (top 719->930), hands cleared.
+   2254 cpu_turn f=900 duel_step=8 turn_player=1 ai=4/0 textbox=0
+   2350 Player Draw Phase.
+   2531 Opening draw complete (hand=6 deck=34 want=6).
+   2672 Exact setup: P0 hand=0 deck=34 gy=0, P1 hand=0 deck=34 gy=0, LP 8000/8000, turnCount 2.
+   2672 Player Main Phase 1.
+   2672 steps: unknown card Ox Probe
+   2672 steps: 11 steps, 29 ops
+   2672 step: point you.m1
+   2828 steps: capture starts (cursor on point you.m1)
+   2835 step: wait 20
+   2861 step: mp4_start ox-probe
+   2861 media: recording ox-probe (mp4)
+   2868 step: battle
+   2968 step: attack you.m1 -> opp.m0
+   3247 steps: attack you.m1 -> opp.m0: taken on press 1
+   4117 step: settle
+   4143 step: wait 30
+   4179 step: attack you.m0 -> opp.m1
+   4339 steps: attack you.m0 -> opp.m1: taken on press 1
+   5223 step: settle
+   5249 step: wait 90
+   5345 step: rec_stop
+   5345 media: 115 still frames trimmed from the end
+   5345 media: encoding 2369 frames -> tools\testing_scenarios\..\..\screenshots\videos\ox-probe.mp4
+   5362 Play sequence done; ending capture (no recording tail).
+   5362 Finished — PASS (play sequence + tail). Stop mGBA Record A/V to finalize MP4.

@@ -3439,3 +3439,8 @@ updated: 2026-09-29
   dropped from every effect list (`ModFilterEffectTargets`), the banish summon costs refused; effect_hooks.c: Sinister
   Serpent does not return. Probe-checked.
 - [[added-cards]]; new_cards.txt, card_pools/missing-main.txt, card_pools/missing.txt, NEW_CARDS.md, cards/.
+
+## [2026-11-19] progress | Enraged Battle Ox coded
+- Added to the demo list; `EnragedBattleOxPierces` in `ModHasPiercing` (its controller's Beast, Beast-Warrior and
+  Winged Beast attackers). Probe-checked.
+- [[added-cards]]; new_cards.txt, card_pools/missing-main.txt, card_pools/missing.txt, NEW_CARDS.md, cards/.

@@ -179,6 +179,7 @@ Skill Drain
 Gravekeeper's Spear Soldier
 Gravekeeper's Guard
 Necrovalley
+Enraged Battle Ox
 ------
 Dark End Dragon
 Red Dragon Archfiend
@@ -221,7 +222,6 @@ Silpheed
 Steamroid
 Lava Golem
 Barrel Behind the Door
-Enraged Battle Ox
 Slate Warrior
 Iron Blacksmith Kotetsu
 Armed Samurai - Ben Kei

@@ -1719,3 +1719,5 @@ START GG_Probe_Media_Player
 PASS GG_Probe_Media_Player duel_main=true reason= play_done=true
 START NV_Probe_Media_Player
 PASS NV_Probe_Media_Player duel_main=false reason= play_done=true
+START Ox_Probe_Media_Player
+PASS Ox_Probe_Media_Player duel_main=true reason= play_done=true

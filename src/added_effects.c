@@ -12180,8 +12180,42 @@ int ModFindFusionMaterials(int player, u16 fusionNum, u16 *slots)
 
 /* CalcBattle (campaign.c): 1 if the attacking card inflicts piercing battle damage by itself (Airknight Parshath,
  * Cyber End Dragon, Spear Dragon). */
+#ifdef HAS_CARD_ENRAGED_BATTLE_OX
+/* ---- Enraged Battle Ox (2026-11-19) ---------------------------------------------------------------------------------
+ * Effect Monster (Level 4 EARTH Beast-Warrior 1700/1000): "If a Beast, Beast-Warrior, or Winged Beast-Type monster you
+ * control attacks a Defense Position monster, inflict piercing battle damage to your opponent." ModHasPiercing (below)
+ * asks this for the attacking card: its controller (the side holding that card in a monster zone, the turn player's
+ * first, as CalcBattle also runs in the CPU's battle simulations) has a face-up, enabled Enraged Battle Ox, and the
+ * attacker's current Type (GetZoneCardType) is Beast, Beast-Warrior or Winged Beast. Itself included. */
+static int EnragedBattleOxPierces(u16 cardId)
+{
+    int round, zone;
+
+    for (round = 0; round <= 1; round++) {
+        int player = round ? 1 - (gDuel.turnPlayer & 1) : gDuel.turnPlayer & 1;
+
+        for (zone = ZONE_MONSTER_0; zone <= ZONE_MONSTER_4; zone++) {
+            struct DuelZone *z = ZoneOf(player, zone);
+            u32 type;
+
+            if (DUEL_CARD_ID(&z->card) != (cardId & CARD_ID_MASK) || !z->isFaceUp)
+                continue;
+            if (CountActiveCardsOnField(player, CARD_ENRAGED_BATTLE_OX) == 0)
+                return 0;
+            type = GetZoneCardType(player, zone);
+            return type == CARD_TYPE_BEAST || type == CARD_TYPE_BEAST_WARRIOR || type == CARD_TYPE_WINGED_BEAST;
+        }
+    }
+    return 0;
+}
+#endif /* HAS_CARD_ENRAGED_BATTLE_OX */
+
 int ModHasPiercing(u16 cardId)
 {
+#ifdef HAS_CARD_ENRAGED_BATTLE_OX
+    if (EnragedBattleOxPierces(cardId))
+        return 1;
+#endif
     switch (CardNumberOfId(cardId)) {
 #ifdef HAS_CARD_AIRKNIGHT_PARSHATH
     case CARD_AIRKNIGHT_PARSHATH:

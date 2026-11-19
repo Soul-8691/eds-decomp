@@ -1761,6 +1761,19 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
 - Removed from `card_pools/missing-fusion.txt` and the "not fully implemented" notes (README, DECKS.md,
   [[yugi-kaiba-opponent]]).
 
+### Enraged Battle Ox (2026-11-19)
+- Effect Monster (Level 4 EARTH Beast-Warrior, 1700/1000). Card number 875 (ID 1002 in the demo); moved above `------`
+  in `new_cards.txt` (already in `config/new_cards.txt`) and out of `card_pools/missing-main.txt` and `missing.txt`.
+  "If a Beast, Beast-Warrior, or Winged Beast-Type monster you control attacks a Defense Position monster, inflict
+  piercing battle damage to your opponent."
+- **Piercing.** `ModHasPiercing` (CalcBattle, campaign.c) asks `EnragedBattleOxPierces` first: the attacker's
+  controller (the side holding that card face-up in a monster zone, the turn player's first, as CalcBattle also runs
+  in the CPU's battle simulations) has an active Enraged Battle Ox, and the attacker's current Type
+  (`GetZoneCardType`) is Beast, Beast-Warrior or Winged Beast. The Ox itself counts.
+- **Checked in the emulator** (a probe board): with the Ox on the human's field, Giant Rat (Beast) attacking a
+  Defense Position Sangan dealt 800, and the Ox attacking a Defense Position Mystic Tomato dealt 600.
+- Card View screenshot `cards/Enraged Battle Ox.png`; NEW_CARDS.md regenerated.
+
 ### Necrovalley (2026-11-19)
 - Field Spell. Card number 874 (ID 1001 in the demo); moved above `------` in `new_cards.txt` (already in
   `config/new_cards.txt`) and out of `card_pools/missing-main.txt` and `missing.txt`. "All "Gravekeeper's" monsters
