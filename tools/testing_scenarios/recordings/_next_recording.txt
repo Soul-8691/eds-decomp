@@ -1,2 +1,2 @@
-tools\testing_scenarios\recordings\GG_Probe_Media_Player.mp4
-tools/testing_scenarios/recordings/GG_Probe_Media_Player.mp4
+tools\testing_scenarios\recordings\NV_Probe_Media_Player.mp4
+tools/testing_scenarios/recordings/NV_Probe_Media_Player.mp4

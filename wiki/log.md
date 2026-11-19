@@ -3433,3 +3433,9 @@ updated: 2026-09-29
 - Added to the demo list; Hane-Hane's flip handlers with an opponent-only check; the CPU flips it as Hane-Hane; a
   Gravekeeper's Spy target already. card_detail.c and ai_steps.c `#ifdef` cases. Probe-checked.
 - [[added-cards]]; new_cards.txt, card_pools/missing-main.txt, card_pools/missing.txt, NEW_CARDS.md, cards/.
+
+## [2026-11-19] progress | Necrovalley coded
+- Added to the demo list. src/added_effects.c: +500 for "Gravekeeper's" monsters (`ModStatBonus`), Graveyard entries
+  dropped from every effect list (`ModFilterEffectTargets`), the banish summon costs refused; effect_hooks.c: Sinister
+  Serpent does not return. Probe-checked.
+- [[added-cards]]; new_cards.txt, card_pools/missing-main.txt, card_pools/missing.txt, NEW_CARDS.md, cards/.

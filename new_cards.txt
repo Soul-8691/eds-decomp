@@ -178,6 +178,7 @@ Fusilier Dragon, the Dual-Mode Beast
 Skill Drain
 Gravekeeper's Spear Soldier
 Gravekeeper's Guard
+Necrovalley
 ------
 Dark End Dragon
 Red Dragon Archfiend
@@ -218,7 +219,6 @@ Yomi Ship
 Getsu Fuhma
 Silpheed
 Steamroid
-Necrovalley
 Lava Golem
 Barrel Behind the Door
 Enraged Battle Ox

@@ -26300,3 +26300,45 @@
    5922 media: encoding 3077 frames -> tools\testing_scenarios\..\..\screenshots\videos\gg-probe.mp4
    5939 Play sequence done; ending capture (no recording tail).
    5939 Finished — PASS (play sequence + tail). Stop mGBA Record A/V to finalize MP4.
+     13 MP4 target: tools\testing_scenarios\recordings\NV_Probe_Media_Player.mp4
+     13 emu recording API: screenshot, screenshotToImage
+     13 MP4: the scenario capture is off (captureMp4 = false)
+     13 NV Probe / media / Player
+     13 point you.m0; wait 30; mp4_start nv-probe; activate you.hand[Necrovalley]; settle; point you.m0; wait 60; open_menu you.
+    794 Main menu (callback 0x08003B15).
+    917 Campaign selected (callback 0x0801D6F9).
+   1110 Turn order: forced RPS lose (CPU goes first).
+   1120 Turn order: A (lost RPS; CPU chooses first).
+   1158 Turn order: A (lost RPS; CPU chooses first).
+   1350 Opponent's turn (waiting for your Main Phase 1).
+   1352 Usage deck goat / Chaos Turbo: main=40 extra=15; P0 shuffled=true (top 719->902) P1 shuffled=true (top 719->878), hands cleared.
+   2250 cpu_turn f=900 duel_step=8 turn_player=1 ai=3/2 textbox=0
+   3150 cpu_turn f=1800 duel_step=8 turn_player=1 ai=3/2 textbox=0
+   4050 cpu_turn f=2700 duel_step=8 turn_player=1 ai=3/2 textbox=0
+   4860 Player Draw Phase.
+   5041 Opening draw complete (hand=6 deck=34 want=6).
+   5181 Exact setup: P0 hand=2 deck=34 gy=1, P1 hand=1 deck=31 gy=1, LP 8000/8000, turnCount 2.
+   5181 Player Main Phase 1.
+   5181 steps: unknown card NV Probe
+   5181 steps: 15 steps, 33 ops
+   5181 step: point you.m0
+   5325 step: wait 30
+   5361 step: mp4_start nv-probe
+   5361 media: recording nv-probe (mp4)
+   5368 step: activate you.hand[Necrovalley]
+   5406 steps: capture starts (cursor on activate you.hand[Necrovalley])
+   5452 step: settle
+   6012 step: point you.m0
+   6038 step: wait 60
+   6104 step: open_menu you.hand[Monster Reborn]
+   6209 step: wait 60
+   6275 step: close
+   6321 step: unfreeze
+   6328 step: pass
+   6441 step: cpu_turn
+   7157 step: wait 60
+   7223 step: rec_stop
+   7223 media: 28 still frames trimmed from the end
+   7223 media: encoding 1834 frames -> tools\testing_scenarios\..\..\screenshots\videos\nv-probe.mp4
+   7265 Play sequence done; ending capture (no recording tail).
+   7265 Finished — PASS (play sequence + tail). Stop mGBA Record A/V to finalize MP4.

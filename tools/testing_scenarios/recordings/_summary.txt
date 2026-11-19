@@ -1,7 +1,7 @@
 ﻿
-Script                Result Seconds Detail                               
-------                ------ ------- ------                               
-GG_Probe_Media_Player PASS        34 duel_main=true reason= play_done=true
+Script                Result Seconds Detail                                
+------                ------ ------- ------                                
+NV_Probe_Media_Player PASS        31 duel_main=false reason= play_done=true
 
 
 

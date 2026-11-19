@@ -268,9 +268,18 @@ static int HasGraveyardMonsterOfAttribute(int player, int attribute)
     return 0;
 }
 
-/* The summon cost: a free monster zone and a LIGHT and a DARK monster in the Graveyard (CanSummonFromHand). */
+#ifdef HAS_CARD_NECROVALLEY
+int NecrovalleyActive(void);                /* Necrovalley (below) */
+#endif
+
+/* The summon cost: a free monster zone and a LIGHT and a DARK monster in the Graveyard (CanSummonFromHand). Not
+ * under Necrovalley ("Cards in the Graveyard cannot be banished"). */
 int CanPayLightDarkBanishCost(int player)
 {
+#ifdef HAS_CARD_NECROVALLEY
+    if (NecrovalleyActive())
+        return 0;
+#endif
     return CountFreeMonsterZones(player) > 0 && HasGraveyardMonsterOfAttribute(player, ATTRIBUTE_LIGHT)
            && HasGraveyardMonsterOfAttribute(player, ATTRIBUTE_DARK);
 }
@@ -278,6 +287,10 @@ int CanPayLightDarkBanishCost(int player)
 /* Gigantes' cost: a free monster zone and an EARTH monster in the Graveyard (CanSummonFromHand). */
 int CanPayEarthBanishCost(int player)
 {
+#ifdef HAS_CARD_NECROVALLEY
+    if (NecrovalleyActive())
+        return 0;
+#endif
     return CountFreeMonsterZones(player) > 0 && HasGraveyardMonsterOfAttribute(player, ATTRIBUTE_EARTH);
 }
 
@@ -9257,6 +9270,11 @@ static int ModBattleStatBonus(int player, int zone)
 int ColossalFighterWarriors(void);              /* below (Colossal Fighter) */
 #endif
 
+#ifdef HAS_CARD_NECROVALLEY
+#define NECROVALLEY_BONUS 500
+int IsGravekeeperMonster(u16 id);           /* below */
+#endif
+
 int ModStatBonus(int player, int zone)
 {
     int atk = 0, def = 0, battle;
@@ -9281,6 +9299,12 @@ int ModStatBonus(int player, int zone)
 #ifdef HAS_CARD_COLOSSAL_FIGHTER
     if (CardNumberOfId(DUEL_CARD_ID(&ZoneOf(player, zone)->card)) == CARD_COLOSSAL_FIGHTER)
         atk += 100 * ColossalFighterWarriors();     /* COLOSSAL_ATK_PER_WARRIOR */
+#endif
+#ifdef HAS_CARD_NECROVALLEY
+    if (NecrovalleyActive() && IsGravekeeperMonster(DUEL_CARD_ID(&ZoneOf(player, zone)->card))) {
+        atk += NECROVALLEY_BONUS;                   /* Necrovalley: "Gravekeeper's" monsters */
+        def += NECROVALLEY_BONUS;
+    }
 #endif
 #ifdef HAS_CARD_FUSILIER_DRAGON_THE_DUAL_MODE_BEAST
     if (ZoneOf(player, zone)->modHalvedStats) {    /* Fusilier Dragon: its original ATK and DEF halved */
@@ -9437,6 +9461,24 @@ void ModFilterEffectTargets(u16 cardNumber)
 {
     int i, j;
 
+#ifdef HAS_CARD_NECROVALLEY
+    /* Necrovalley: no effect takes a card from a Graveyard (the list's Graveyard entries go), so an effect that needs
+     * one has no target. (sources[] can be off by one after CollectEffectTargets' Toon / planted / Prohibition
+     * filters removed a card; those are rare.) */
+    if (NecrovalleyActive()) {
+        for (i = 0; i < gCardListView.count;) {
+            if (!(gCardListView.sources[i] & CARDLIST_SRC_GRAVEYARD)) {
+                i++;
+                continue;
+            }
+            for (j = i; j + 1 < gCardListView.count; j++) {
+                gCardListView.cards[j] = gCardListView.cards[j + 1];
+                gCardListView.sources[j] = gCardListView.sources[j + 1];
+            }
+            gCardListView.count--;
+        }
+    }
+#endif
     if (!IsSummoningTargetList(cardNumber))
         return;
     for (i = 0; i < gCardListView.count;) {
@@ -10638,6 +10680,32 @@ int EffectJunkWarriorResolve(struct ChainEntry *link, struct ChainEntry *chained
     return EFFECT_STEP_DONE;
 }
 #endif /* HAS_CARD_JUNK_WARRIOR */
+
+#ifdef HAS_CARD_NECROVALLEY
+/* ---- Necrovalley (2026-11-19) --------------------------------------------------------------------------------------
+ * Field Spell: "All "Gravekeeper's" monsters gain 500 ATK and DEF. Cards in the Graveyard cannot be banished. Negate any
+ * card effect that would move a card in the Graveyard to a different place. Negate any card effect that changes Types
+ * or Attributes in the Graveyard."
+ *   active    face-up and enabled in either Field zone (CountActiveCardsOnField); its activation does nothing else
+ *   stats     ModStatBonus: +NECROVALLEY_BONUS ATK and DEF for a face-up "Gravekeeper's" monster (IsGravekeeperMonster)
+ *   Graveyard ModFilterEffectTargets drops the Graveyard entries of every effect's list (CollectEffectTargets), so an
+ *             effect that would take a Graveyard card (Monster Reborn, Call of the Haunted, Premature Burial,
+ *             Graverobber, Bazoo, Kycoo, Book of Life, Pot of Avarice, ...) has no target: it cannot be activated, or
+ *             finds nothing when it resolves. The Light/Dark and EARTH banish summons (Black Luster Soldier, Chaos
+ *             Sorcerer, Chaos Emperor Dragon, Gigantes) cannot pay their cost, and Sinister Serpent does not return
+ *             (effect_hooks.c). Types and Attributes in the Graveyard are never changed in this game. */
+int NecrovalleyActive(void)
+{
+    return CountActiveCardsOnField(0, CARD_NECROVALLEY) > 0 || CountActiveCardsOnField(1, CARD_NECROVALLEY) > 0;
+}
+
+int EffectNecrovalleyResolve(struct ChainEntry *link, struct ChainEntry *chainedTo)
+{
+    (void)link;
+    (void)chainedTo;
+    return EFFECT_STEP_DONE;                    /* a Field Spell stays; its effects are the checks above */
+}
+#endif /* HAS_CARD_NECROVALLEY */
 
 #ifdef HAS_CARD_GRAVEKEEPERS_GUARD
 /* ---- Gravekeeper's Guard (2026-11-19) ------------------------------------------------------------------------------
@@ -18868,6 +18936,16 @@ const struct CardEffect gAddedCardEffects[] = {
     {
         CARD_DEKOICHI_THE_BATTLECHANTED_LOCOMOTIVE, 0,
         EffectDekoichiResolve,
+        NULL,
+        NULL,
+        NULL,
+        NULL,
+    },
+#endif
+#ifdef HAS_CARD_NECROVALLEY
+    {
+        CARD_NECROVALLEY, 0,
+        EffectNecrovalleyResolve,
         NULL,
         NULL,
         NULL,

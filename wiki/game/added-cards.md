@@ -1761,6 +1761,30 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
 - Removed from `card_pools/missing-fusion.txt` and the "not fully implemented" notes (README, DECKS.md,
   [[yugi-kaiba-opponent]]).
 
+### Necrovalley (2026-11-19)
+- Field Spell. Card number 874 (ID 1001 in the demo); moved above `------` in `new_cards.txt` (already in
+  `config/new_cards.txt`) and out of `card_pools/missing-main.txt` and `missing.txt`. "All "Gravekeeper's" monsters
+  gain 500 ATK and DEF. Cards in the Graveyard cannot be banished. Negate any card effect that would move a card in the
+  Graveyard to a different place. Negate any card effect that changes Types or Attributes in the Graveyard."
+- **Active** while face-up and enabled in either Field zone (`NecrovalleyActive`: `CountActiveCardsOnField`). Its
+  activation's resolve does nothing; it stays in the Field zone.
+- **Stats.** `ModStatBonus`: +500 ATK and DEF for a face-up "Gravekeeper's" monster (`IsGravekeeperMonster`).
+- **The Graveyard lock.** `ModFilterEffectTargets` (the end of `CollectEffectTargets`) drops every Graveyard entry of
+  an effect's list, so an effect that would take a Graveyard card (Monster Reborn, Call of the Haunted, Premature
+  Burial, Graverobber, Bazoo, Kycoo, Book of Life, Pot of Avarice, ...) has no target: it cannot be activated, or
+  finds nothing. `CanPayLightDarkBanishCost` and `CanPayEarthBanishCost` refuse (Black Luster Soldier, Chaos
+  Sorcerer, Chaos Emperor Dragon, Gigantes cannot be summoned), and Sinister Serpent does not return
+  (`SinisterSerpentStandbyStep`, effect_hooks.c, an `#ifdef` line). Nothing in this game changes Types or Attributes
+  in the Graveyard.
+- Limits: the effects are refused (no target) rather than activated and negated; `CollectEffectTargets`' sources[]
+  can be off after its Toon / planted / Prohibition filters remove a card (rare); an effect moving a Graveyard card
+  without a list (if any is left) is not covered. The CPU has no special rule for playing it.
+- `.text` +0x8 (0x0807F748).
+- **Checked in the emulator** (a probe board): after it resolved, Gravekeeper's Spy showed 1700/2500, the human's
+  Monster Reborn offered only Set (Summoned Skull in the Graveyard), and the CPU did not play its Monster Reborn
+  (Blue-Eyes White Dragon in its Graveyard).
+- Card View screenshot `cards/Necrovalley.png`; NEW_CARDS.md regenerated.
+
 ### Gravekeeper's Guard (2026-11-19)
 - Flip Effect Monster (Level 4 EARTH Spellcaster, 1000/1900). Card number 873 (ID 1000 in the demo); moved above
   `------` in `new_cards.txt` (already in `config/new_cards.txt`) and out of `card_pools/missing-main.txt` and

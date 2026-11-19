@@ -187,6 +187,10 @@ void ApplyDragonCaptureJar(int player)
  *   step 1  on Yes: show the card and return it to the hand.
  * Returns 0 while running, 1 when finished.
  */
+#ifdef HAS_CARD_NECROVALLEY
+int NecrovalleyActive(void);     /* added card (src/added_effects.c) */
+#endif
+
 int SinisterSerpentStandbyStep(int player)
 {
     char text[0x80];
@@ -199,6 +203,10 @@ int SinisterSerpentStandbyStep(int player)
 
         if (CountGraveyardCardsByNumber(player, cardNo) == 0)
             return 1;
+#ifdef HAS_CARD_NECROVALLEY
+        if (NecrovalleyActive())    /* added card: no card leaves the Graveyard */
+            return 1;
+#endif
         if (player != 0) {
             /* FAKEMATCH: materialize the base in r0 before loading the flag value. */
             register struct TextBox *answer __asm__("r0") = &gTextBox;
