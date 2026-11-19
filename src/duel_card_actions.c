@@ -203,8 +203,14 @@ int ModTakesNoDamage(int player);       /* added: Hallowed Life Barrier (src/add
 int ModRedirectBattleDamage(int player, int amount, u16 attackerLoc, u16 defenderLoc);    /* added: Dimension Wall */
 int ModTakesNoEffectDamage(int player); /* added: Hallowed Life Barrier, Pikeru's Circle, Des Wombat */
 
+#ifdef HAS_CARD_BARREL_BEHIND_THE_DOOR
+int ModEffectDamageTarget(int player);  /* mod: src/added_effects.c */
+#endif
 void LoseLifePoints(int player, int amount)
 {
+#ifdef HAS_CARD_BARREL_BEHIND_THE_DOOR
+    player = ModEffectDamageTarget(player);     /* added: Barrel Behind the Door sends it to the opponent */
+#endif
     if (ModTakesNoEffectDamage(player))     /* added: no effect damage this turn */
         return;
     if (amount != 0) {

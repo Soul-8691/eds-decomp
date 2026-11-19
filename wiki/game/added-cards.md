@@ -1761,6 +1761,26 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
 - Removed from `card_pools/missing-fusion.txt` and the "not fully implemented" notes (README, DECKS.md,
   [[yugi-kaiba-opponent]]).
 
+### Barrel Behind the Door (2026-11-19)
+- Counter Trap. Card number 876 (ID 1003 in the demo); moved above `------` in `new_cards.txt` (already in
+  `config/new_cards.txt`) and out of `card_pools/missing-main.txt` and `missing.txt`. "Activate only when a card's
+  effect that would inflict damage to you is activated. Your opponent takes the damage instead."
+- **When.** `EffectBarrelPrepare`: the opponent's link (not negated) of a card whose effect inflicts damage
+  (`IsBarrelBurnCard`: Sparks, Hinotama, Final Flame, Ookazi, Tremendous Fire, Raimei, Just Desserts, Restructer
+  Revolution, Ceasefire, Cannon Soldier, Catapult Turtle, Bell of Destruction, and the added Des Koala, Poison of the
+  Old Man, Secret Barrel, Toon Cannon Soldier, Wave-Motion Cannon, Magic Cylinder).
+- **The redirect.** The resolve records the link it answered (`gModDuel.barrelActive/Player/LinkPlayer/Card`). While
+  that link resolves, `LoseLifePoints` (the effect damage, duel_card_actions.c, an `#ifdef` line) asks
+  `ModEffectDamageTarget`, which turns damage to Barrel's player into damage to the opponent. `ModChainLinkResolved`
+  (its old body is now `SkilledDarkMagicianLinkResolved`) ends it with that link. LP paid as a cost does not go
+  through `LoseLifePoints`.
+- **CPU.** `AiChainBarrel` (`AiChainSummonTriggerResponse`, before its other burn answers): its Set copy answers the
+  human's burn card.
+- **Checked in the emulator** (a probe board): the human's Hinotama, answered by the CPU's Set Barrel, took 500 from the
+  human (8000 to 7500); the CPU stayed at 8000. Not explained yet: the "Chain" banner showed three times before the
+  CPU's Barrel was added (one link), so the chain is slow.
+- Card View screenshot `cards/Barrel Behind the Door.png`; NEW_CARDS.md regenerated.
+
 ### Enraged Battle Ox (2026-11-19)
 - Effect Monster (Level 4 EARTH Beast-Warrior, 1700/1000). Card number 875 (ID 1002 in the demo); moved above `------`
   in `new_cards.txt` (already in `config/new_cards.txt`) and out of `card_pools/missing-main.txt` and `missing.txt`.

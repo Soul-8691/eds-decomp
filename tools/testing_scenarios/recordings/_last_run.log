@@ -1721,3 +1721,9 @@ START NV_Probe_Media_Player
 PASS NV_Probe_Media_Player duel_main=false reason= play_done=true
 START Ox_Probe_Media_Player
 PASS Ox_Probe_Media_Player duel_main=true reason= play_done=true
+START Barrel_Probe_Media_Player
+PASS Barrel_Probe_Media_Player duel_main=true reason= play_done=true
+START BarrelC_Probe_Media_Player
+PASS BarrelC_Probe_Media_Player duel_main=true reason= play_done=true
+START Barrel_Probe_Media_Player
+PASS Barrel_Probe_Media_Player duel_main=true reason= play_done=true

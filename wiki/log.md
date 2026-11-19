@@ -3444,3 +3444,9 @@ updated: 2026-09-29
 - Added to the demo list; `EnragedBattleOxPierces` in `ModHasPiercing` (its controller's Beast, Beast-Warrior and
   Winged Beast attackers). Probe-checked.
 - [[added-cards]]; new_cards.txt, card_pools/missing-main.txt, card_pools/missing.txt, NEW_CARDS.md, cards/.
+
+## [2026-11-19] progress | Barrel Behind the Door coded
+- Added to the demo list; answers the opponent's burn cards; `ModEffectDamageTarget` (LoseLifePoints hook,
+  duel_card_actions.c) redirects the answered link's damage; CPU `AiChainBarrel`. Probe-checked.
+- [[added-cards]]; AI_IMPROVEMENTS.md, new_cards.txt, card_pools/missing-main.txt, card_pools/missing.txt,
+  NEW_CARDS.md, cards/.

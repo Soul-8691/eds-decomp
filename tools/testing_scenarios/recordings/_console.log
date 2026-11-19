@@ -26380,3 +26380,102 @@
    5345 media: encoding 2369 frames -> tools\testing_scenarios\..\..\screenshots\videos\ox-probe.mp4
    5362 Play sequence done; ending capture (no recording tail).
    5362 Finished — PASS (play sequence + tail). Stop mGBA Record A/V to finalize MP4.
+     13 MP4 target: tools\testing_scenarios\recordings\Barrel_Probe_Media_Player.mp4
+     13 emu recording API: screenshot, screenshotToImage
+     13 MP4: the scenario capture is off (captureMp4 = false)
+     13 Barrel Probe / media / Player
+     13 point you.hand[Hinotama]; wait 20; mp4_start barrel-probe; activate you.hand[Hinotama]; settle; wait 90; rec_stop
+    794 Main menu (callback 0x08003B15).
+    917 Campaign selected (callback 0x0801D6F9).
+   1110 Turn order: forced RPS lose (CPU goes first).
+   1120 Turn order: A (lost RPS; CPU chooses first).
+   1158 Turn order: A (lost RPS; CPU chooses first).
+   1350 Opponent's turn (waiting for your Main Phase 1).
+   1352 Usage deck goat / Chaos Turbo: main=40 extra=15; P0 shuffled=true (top 719->952) P1 shuffled=true (top 719->522), hands cleared.
+   2250 cpu_turn f=900 duel_step=8 turn_player=1 ai=5/0 textbox=0
+   2291 Player Draw Phase.
+   2472 Opening draw complete (hand=6 deck=34 want=6).
+   2609 Exact setup: P0 hand=1 deck=34 gy=0, P1 hand=0 deck=34 gy=0, LP 8000/8000, turnCount 2.
+   2609 Player Main Phase 1.
+   2609 steps: unknown card Barrel Probe
+   2609 steps: 7 steps, 16 ops
+   2609 step: point you.hand[Hinotama]
+   2809 step: wait 20
+   2835 step: mp4_start barrel-probe
+   2835 media: recording barrel-probe (mp4)
+   2842 step: activate you.hand[Hinotama]
+   2842 steps: capture starts (cursor on activate you.hand[Hinotama])
+   2888 step: settle
+   3788 steps: settle timed out (settle) [box active=false kind=0 step=0; list=false; chain=true; summon=false; cmds=false; prompt=0]
+   3795 step: wait 90
+   3891 step: rec_stop
+   3891 media: encoding 1056 frames -> tools\testing_scenarios\..\..\screenshots\videos\barrel-probe.mp4
+   4218 Play sequence done; ending capture (no recording tail).
+   4218 Finished — PASS (play sequence + tail). Stop mGBA Record A/V to finalize MP4.
+     13 MP4 target: tools\testing_scenarios\recordings\BarrelC_Probe_Media_Player.mp4
+     13 emu recording API: screenshot, screenshotToImage
+     13 MP4: the scenario capture is off (captureMp4 = false)
+     13 BarrelC Probe / media / Player
+     13 point you.hand[Hinotama]; wait 20; mp4_start barrelc-probe; activate you.hand[Hinotama]; settle; wait 90; rec_stop
+    794 Main menu (callback 0x08003B15).
+    917 Campaign selected (callback 0x0801D6F9).
+   1110 Turn order: forced RPS lose (CPU goes first).
+   1120 Turn order: A (lost RPS; CPU chooses first).
+   1158 Turn order: A (lost RPS; CPU chooses first).
+   1350 Opponent's turn (waiting for your Main Phase 1).
+   1352 Usage deck goat / Chaos Turbo: main=40 extra=15; P0 shuffled=true (top 719->859) P1 shuffled=true (top 719->930), hands cleared.
+   2250 cpu_turn f=900 duel_step=8 turn_player=1 ai=4/0 textbox=0
+   2310 Player Draw Phase.
+   2491 Opening draw complete (hand=6 deck=34 want=6).
+   2631 Exact setup: P0 hand=1 deck=34 gy=0, P1 hand=0 deck=34 gy=0, LP 8000/8000, turnCount 2.
+   2631 Player Main Phase 1.
+   2631 steps: unknown card BarrelC Probe
+   2631 steps: 7 steps, 16 ops
+   2631 step: point you.hand[Hinotama]
+   2831 step: wait 20
+   2857 step: mp4_start barrelc-probe
+   2857 media: recording barrelc-probe (mp4)
+   2864 step: activate you.hand[Hinotama]
+   2864 steps: capture starts (cursor on activate you.hand[Hinotama])
+   2910 step: settle
+   3583 step: wait 90
+   3679 step: rec_stop
+   3679 media: 10 still frames trimmed from the end
+   3679 media: encoding 812 frames -> tools\testing_scenarios\..\..\screenshots\videos\barrelc-probe.mp4
+   3696 Play sequence done; ending capture (no recording tail).
+   3696 Finished — PASS (play sequence + tail). Stop mGBA Record A/V to finalize MP4.
+     16 MP4 target: tools\testing_scenarios\recordings\Barrel_Probe_Media_Player.mp4
+     16 emu recording API: screenshot, screenshotToImage
+     16 MP4: the scenario capture is off (captureMp4 = false)
+     16 Barrel Probe / media / Player
+     16 point you.hand[Hinotama]; wait 20; mp4_start barrel-probe; activate you.hand[Hinotama]; settle; settle; wait 90; rec_sto
+    797 Main menu (callback 0x08003B15).
+    920 Campaign selected (callback 0x0801D6F9).
+   1113 Turn order: forced RPS lose (CPU goes first).
+   1123 Turn order: A (lost RPS; CPU chooses first).
+   1161 Turn order: A (lost RPS; CPU chooses first).
+   1353 Opponent's turn (waiting for your Main Phase 1).
+   1355 Usage deck goat / Chaos Turbo: main=40 extra=15; P0 shuffled=true (top 719->886) P1 shuffled=true (top 719->719), hands cleared.
+   2253 cpu_turn f=900 duel_step=8 turn_player=1 ai=3/2 textbox=0
+   3153 cpu_turn f=1800 duel_step=8 turn_player=1 ai=3/2 textbox=0
+   4053 cpu_turn f=2700 duel_step=8 turn_player=1 ai=3/2 textbox=0
+   4876 Player Draw Phase.
+   5057 Opening draw complete (hand=6 deck=34 want=6).
+   5198 Exact setup: P0 hand=1 deck=34 gy=0, P1 hand=0 deck=31 gy=0, LP 8000/8000, turnCount 2.
+   5198 Player Main Phase 1.
+   5198 steps: unknown card Barrel Probe
+   5198 steps: 8 steps, 18 ops
+   5198 step: point you.hand[Hinotama]
+   5398 step: wait 20
+   5424 step: mp4_start barrel-probe
+   5424 media: recording barrel-probe (mp4)
+   5431 step: activate you.hand[Hinotama]
+   5431 steps: capture starts (cursor on activate you.hand[Hinotama])
+   5477 step: settle
+   6377 steps: settle timed out (settle) [box active=false kind=0 step=0; list=false; chain=true; summon=false; cmds=false; prompt=0]
+   6824 step: wait 90
+   6920 step: rec_stop
+   6920 media: 92 still frames trimmed from the end
+   6920 media: encoding 1404 frames -> tools\testing_scenarios\..\..\screenshots\videos\barrel-probe.mp4
+   6937 Play sequence done; ending capture (no recording tail).
+   6937 Finished — PASS (play sequence + tail). Stop mGBA Record A/V to finalize MP4.

@@ -100,6 +100,7 @@ Campaign duelists in Yak's YGO Hack use a much stronger opponent AI than vanilla
   Summons Quillbolt Hedgehog from its Graveyard first when it controls a Tuner.
 - Its Stardust Dragon negates your cards and effects that would destroy one of its cards.
 - Its Dark Balter the Terrible negates your Normal Spells, and its Ryu Senshi your Normal Traps (paying 1000 LP), while it has more than 2000 LP.
+- Its Set **Barrel Behind the Door** answers your burn cards (Hinotama, Ookazi, Cannon Soldier, Magic Cylinder, ...), sending the damage back to you.
 - It activates **Skill Drain** when you have more face-up Effect Monsters than it does and it has more than 2000 LP.
 - When it has not Normal Summoned and has fewer than 2 monsters to Tribute, it Normal Summons Fusilier Dragon, the Dual-Mode Beast without Tributes (1400 ATK).
 - When it Special Summons Ojama King, it blocks your first 3 empty Monster Zones.

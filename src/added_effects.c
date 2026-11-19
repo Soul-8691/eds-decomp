@@ -124,6 +124,12 @@ struct ModDuelState {
     u8 goyoDestroyZone;         /* monster zone of the destroyed card */
     u8 goyoSkipDestroyPlayer;  /* 0xFF none; else skip SendBattleDestroyedCardToGraveyard for this player */
     struct DuelCard goyoCard;   /* copy of the destroyed monster's card word */
+    /* Barrel Behind the Door: while the link it answered (barrelCard of barrelLinkPlayer) resolves, effect damage to
+     * barrelPlayer goes to the opponent instead (ModEffectDamageTarget); barrelActive 0 none */
+    u8 barrelActive;
+    u8 barrelPlayer;
+    u8 barrelLinkPlayer;
+    u16 barrelCard;
 };
 extern struct ModDuelState gModDuel;
 /* gModDuel (0x0202FF04, symbols.ld) must end before gScratchBuffer (0x02030000). */
@@ -3920,7 +3926,20 @@ int EffectSkilledDarkMagicianResolve(struct ChainEntry *link, struct ChainEntry 
 #endif /* HAS_CARD_SKILLED_DARK_MAGICIAN */
 
 /* Chain_Resolve calls this as each chain link finishes resolving (its effect's commands have run). */
+static void SkilledDarkMagicianLinkResolved(struct ChainEntry *link);
+
 void ModChainLinkResolved(struct ChainEntry *link)
+{
+#ifdef HAS_CARD_BARREL_BEHIND_THE_DOOR
+    /* Barrel Behind the Door's redirect ends with the link it answered */
+    if (gModDuel.barrelActive && (link->card & CARD_ID_MASK) == gModDuel.barrelCard
+        && (link->player & 1) == gModDuel.barrelLinkPlayer)
+        gModDuel.barrelActive = 0;
+#endif
+    SkilledDarkMagicianLinkResolved(link);
+}
+
+static void SkilledDarkMagicianLinkResolved(struct ChainEntry *link)
 {
 #ifdef HAS_CARD_SKILLED_DARK_MAGICIAN
     int player, zone;
@@ -10681,6 +10700,91 @@ int EffectJunkWarriorResolve(struct ChainEntry *link, struct ChainEntry *chained
 }
 #endif /* HAS_CARD_JUNK_WARRIOR */
 
+#ifdef HAS_CARD_BARREL_BEHIND_THE_DOOR
+/* ---- Barrel Behind the Door (2026-11-19) ---------------------------------------------------------------------------
+ * Counter Trap: "Activate only when a card's effect that would inflict damage to you is activated. Your opponent takes
+ * the damage instead."
+ *   prepare   the opponent's link (not negated) of a card whose effect inflicts damage (IsBarrelBurnCard)
+ *   resolve   records the link it answered (gModDuel.barrel*): while that link resolves, LoseLifePoints (the effect
+ *             damage, duel_card_actions.c) asks ModEffectDamageTarget, which turns damage to Barrel's player into
+ *             damage to the opponent; ModChainLinkResolved ends it with that link. LP paid as a cost does not go
+ *             through LoseLifePoints and stays.
+ *   CPU       AiChainBarrel (AiChainSummonTriggerResponse): its Set copy answers the human's burn card. */
+static int IsBarrelBurnCard(u16 number)
+{
+    switch (number) {
+    case CARD_SPARKS:
+    case CARD_HINOTAMA:
+    case CARD_FINAL_FLAME:
+    case CARD_OOKAZI:
+    case CARD_TREMENDOUS_FIRE:
+    case CARD_RAIMEI:
+    case CARD_JUST_DESSERTS:
+    case CARD_RESTRUCTER_REVOLUTION:
+    case CARD_CEASEFIRE:
+    case CARD_CANNON_SOLDIER:
+    case CARD_CATAPULT_TURTLE:
+    case CARD_BELL_OF_DESTRUCTION:
+#ifdef HAS_CARD_DES_KOALA
+    case CARD_DES_KOALA:
+#endif
+#ifdef HAS_CARD_POISON_OF_THE_OLD_MAN
+    case CARD_POISON_OF_THE_OLD_MAN:
+#endif
+#ifdef HAS_CARD_SECRET_BARREL
+    case CARD_SECRET_BARREL:
+#endif
+#ifdef HAS_CARD_TOON_CANNON_SOLDIER
+    case CARD_TOON_CANNON_SOLDIER:
+#endif
+#ifdef HAS_CARD_WAVE_MOTION_CANNON
+    case CARD_WAVE_MOTION_CANNON:
+#endif
+#ifdef HAS_CARD_MAGIC_CYLINDER
+    case CARD_MAGIC_CYLINDER:
+#endif
+        return 1;
+    }
+    return 0;
+}
+
+int EffectBarrelPrepare(struct ChainEntry *card, struct ChainEntry *chainLink, u16 fromHand)
+{
+    return !fromHand && chainLink != NULL && !chainLink->negated && (chainLink->player & 1) != (card->player & 1)
+           && IsBarrelBurnCard(CardNumberOfId(chainLink->card));
+}
+
+int EffectBarrelResolve(struct ChainEntry *link, struct ChainEntry *chainedTo)
+{
+    if (link->negated || chainedTo == NULL)
+        return EFFECT_STEP_DONE;
+    gModDuel.barrelActive = 1;
+    gModDuel.barrelPlayer = link->player & 1;
+    gModDuel.barrelLinkPlayer = chainedTo->player & 1;
+    gModDuel.barrelCard = chainedTo->card & CARD_ID_MASK;
+    return EFFECT_STEP_DONE;
+}
+
+int ModEffectDamageTarget(int player)
+{
+    struct ChainEntry *now;
+
+    if (!gModDuel.barrelActive || (player & 1) != gModDuel.barrelPlayer || gChain.linkCount == 0)
+        return player;
+    now = &gChain.links[gChain.linkCount - 1];
+    if ((now->card & CARD_ID_MASK) != gModDuel.barrelCard || (now->player & 1) != gModDuel.barrelLinkPlayer)
+        return player;
+    return 1 - (player & 1);
+}
+
+static int AiChainBarrel(struct ChainEntry *entry)
+{
+    if (entry->player != AI_HUMAN || entry->negated || !IsBarrelBurnCard(CardNumberOfId(entry->card)))
+        return 0;
+    return AiChainSetCard(entry, CARD_BARREL_BEHIND_THE_DOOR) != 0;
+}
+#endif /* HAS_CARD_BARREL_BEHIND_THE_DOOR */
+
 #ifdef HAS_CARD_NECROVALLEY
 /* ---- Necrovalley (2026-11-19) --------------------------------------------------------------------------------------
  * Field Spell: "All "Gravekeeper's" monsters gain 500 ATK and DEF. Cards in the Graveyard cannot be banished. Negate any
@@ -15286,6 +15390,10 @@ int AiChainSummonTriggerResponse(struct ChainEntry *entry)
     if (AiChainDarkDeal(entry))
         return 1;
 #endif
+#ifdef HAS_CARD_BARREL_BEHIND_THE_DOOR
+    if (AiChainBarrel(entry))
+        return 1;
+#endif
 #if defined(HAS_CARD_STARDUST_DRAGON) && defined(HAS_CARD_MY_BODY_AS_A_SHIELD)
     if (AiChainStardustDragon(entry))
         return 1;
@@ -18972,6 +19080,16 @@ const struct CardEffect gAddedCardEffects[] = {
         EffectDekoichiResolve,
         NULL,
         NULL,
+        NULL,
+        NULL,
+    },
+#endif
+#ifdef HAS_CARD_BARREL_BEHIND_THE_DOOR
+    {
+        CARD_BARREL_BEHIND_THE_DOOR, 0,
+        EffectBarrelResolve,
+        NULL,
+        EffectBarrelPrepare,
         NULL,
         NULL,
     },

@@ -1,7 +1,7 @@
 ﻿
-Script                Result Seconds Detail                               
-------                ------ ------- ------                               
-Ox_Probe_Media_Player PASS        33 duel_main=true reason= play_done=true
+Script                    Result Seconds Detail                               
+------                    ------ ------- ------                               
+Barrel_Probe_Media_Player PASS        16 duel_main=true reason= play_done=true
 
 
 

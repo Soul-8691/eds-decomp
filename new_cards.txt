@@ -180,6 +180,7 @@ Gravekeeper's Spear Soldier
 Gravekeeper's Guard
 Necrovalley
 Enraged Battle Ox
+Barrel Behind the Door
 ------
 Dark End Dragon
 Red Dragon Archfiend
@@ -221,7 +222,6 @@ Getsu Fuhma
 Silpheed
 Steamroid
 Lava Golem
-Barrel Behind the Door
 Slate Warrior
 Iron Blacksmith Kotetsu
 Armed Samurai - Ben Kei
