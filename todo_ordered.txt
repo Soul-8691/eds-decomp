@@ -1,4 +1,4 @@
-1. Test
+1. Remove uncoded Fusions
 2. New cards
 3. Card priority orders
 4. Tokyo Dome format
