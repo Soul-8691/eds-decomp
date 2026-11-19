@@ -175,6 +175,7 @@ Ally of Justice Catastor
 Goyo Guardian
 Colossal Fighter
 Fusilier Dragon, the Dual-Mode Beast
+Skill Drain
 ------
 Dark End Dragon
 Red Dragon Archfiend
@@ -219,7 +220,6 @@ Gravekeeper's Guard
 Necrovalley
 Lava Golem
 Barrel Behind the Door
-Skill Drain
 Enraged Battle Ox
 Gravekeeper's Spear Soldier
 Slate Warrior

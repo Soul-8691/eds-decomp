@@ -112,7 +112,8 @@ struct DuelZone {
     u8 levelCheckDone:1;            /* +0x08 bit 0 */
     u8 modHalvedStats:1;            /* +0x08 bit 1: mod: original ATK/DEF halved (Fusilier Dragon summoned without
                                      * Tributes, src/added_effects.c) */
-    u8 unk8_2:6;
+    u8 modSkillDrained:1;           /* +0x08 bit 2: mod: isDisabled was set by Skill Drain (src/added_effects.c) */
+    u8 unk8_3:5;
     u8 unk9;
     u16 links[32];                  /* +0x0A: DUEL_LOC of a card affecting this one, or a value / card ID,
                                      * depending on the kind */

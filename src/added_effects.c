@@ -8210,13 +8210,22 @@ static int FiendSkullDragonOnField(void)
  * a mistaken Dark Ruler Ha Des effect) ---- */
 
 
-/* Also 1 while a face-up Fiend Skull Dragon is on the field ("Negate the effects of Flip Effect Monsters"): every
+/* Also 1 while a face-up Fiend Skull Dragon is on the field ("Negate the effects of Flip Effect Monsters") or Skill
+ * Drain is active (its Flip effects are negated, also a monster flipped and destroyed by battle): every
  * place a flip effect starts asks this (summon_action.c, duel_field_moves.c, battle_phase1/2.c, effect_activation.c,
  * effect_resolve2.c). */
+#ifdef HAS_CARD_SKILL_DRAIN
+int SkillDrainActive(void);                 /* Skill Drain (below) */
+#endif
+
 int FlipEffectsLockedForTurn(void)
 {
 #ifdef HAS_CARD_FIEND_SKULL_DRAGON
     if (FiendSkullDragonOnField())
+        return 1;
+#endif
+#ifdef HAS_CARD_SKILL_DRAIN
+    if (SkillDrainActive())                 /* Skill Drain negates Flip effects (a battle flip's too) */
         return 1;
 #endif
     return gModDuel.flipEffectsLocked != 0;
@@ -9247,7 +9256,11 @@ int ColossalFighterWarriors(void);              /* below (Colossal Fighter) */
 
 int ModStatBonus(int player, int zone)
 {
-    int atk = 0, def = 0, battle = ModBattleStatBonus(player, zone);
+    int atk = 0, def = 0, battle;
+
+    if (ZoneOf(player, zone)->isDisabled)       /* its effects negated (Skill Drain, Junk Synchron) */
+        return 0;
+    battle = ModBattleStatBonus(player, zone);
 
     atk += battle;
     def += battle;
@@ -10622,6 +10635,128 @@ int EffectJunkWarriorResolve(struct ChainEntry *link, struct ChainEntry *chained
     return EFFECT_STEP_DONE;
 }
 #endif /* HAS_CARD_JUNK_WARRIOR */
+
+#ifdef HAS_CARD_SKILL_DRAIN
+/* ---- Skill Drain (2026-11-18) -------------------------------------------------------------------------------------
+ * Continuous Trap: "Activate by paying 1000 LP. Negate the effects of all face-up monsters while they are face-up on the
+ * field (but their effects can still be activated)."
+ *   activate   prepare: its controller has more than SKILL_DRAIN_COST LP; chainA pays it; it stays face-up
+ *   negation   SkillDrainUpdate (ModDuelStateCheck, every frame) sets DuelZone.isDisabled on every face-up monster
+ *              while SkillDrainActive, marking it modSkillDrained, and clears the ones it marked when it ends or the
+ *              monster turns face-down (another negation, Junk Synchron's, is left alone). isDisabled is what the
+ *              continuous effects ask (CountActiveCardsOnField: Jinzo, Last Warrior, ...; the added cards' checks;
+ *              ModStatBonus), and a disabled monster's ACTIVATE is not offered (a difference: the text lets it activate)
+ *   resolve    ModMonsterLinkNegated (Chain_Resolve, duel_main.c): a monster's effect resolving while that monster is
+ *              face-up on the field (summon triggers, ...) is negated; one from the Graveyard or the hand (Sangan,
+ *              Witch of the Black Forest) is not
+ *   flips      FlipEffectsLockedForTurn answers 1 while it is active: no Flip effect starts, even for a monster
+ *              flipped and destroyed by battle (Man-Eater Bug)
+ *   Jinzo      Skill Drain negates Jinzo: a face-up one counts as active whatever its isDisabled (Jinzo's Trap
+ *              negation) unless Royal Decree is active; once Jinzo is disabled, UpdateSpellTrapNegation enables it
+ *              again. With Jinzo already face-up it cannot be activated (prepare)
+ *   CPU        AiWantsSkillDrain: more of the human's face-up Effect Monsters than its own, and more than
+ *              SKILL_DRAIN_CPU_MIN_LP LP (AiPlayAddedCards and its Set copy's activation) */
+#define SKILL_DRAIN_COST        1000
+#define SKILL_DRAIN_CPU_MIN_LP  2000
+
+int SkillDrainActive(void)
+{
+    int player, zone;
+
+    for (player = 0; player <= 1; player++) {
+        for (zone = ZONE_SPELL_0; zone <= ZONE_SPELL_4; zone++) {
+            struct DuelZone *z = ZoneOf(player, zone);
+
+            if (DUEL_CARD_ID(&z->card) == 0 || !z->isFaceUp || CardNumberOfId(DUEL_CARD_ID(&z->card)) != CARD_SKILL_DRAIN)
+                continue;
+            /* Its isDisabled is Jinzo's Trap negation (UpdateSpellTrapNegation), which it negates in turn: only Royal
+             * Decree stops it. (Reading trapsNegated instead made the two flip each other every frame: Jinzo
+             * disabled, trapsNegated cleared, Skill Drain off, Jinzo back, Skill Drain disabled, ...) */
+            if (!z->isDisabled || (CountActiveCardsOnField(0, CARD_ROYAL_DECREE) == 0
+                                   && CountActiveCardsOnField(1, CARD_ROYAL_DECREE) == 0))
+                return 1;
+        }
+    }
+    return 0;
+}
+
+static void SkillDrainUpdate(void)
+{
+    int active = SkillDrainActive(), player, zone;
+
+    for (player = 0; player <= 1; player++) {
+        for (zone = ZONE_MONSTER_0; zone <= ZONE_MONSTER_4; zone++) {
+            struct DuelZone *z = ZoneOf(player, zone);
+            int drain = active && DUEL_CARD_ID(&z->card) != 0 && z->isFaceUp;
+
+            if (drain && !z->isDisabled) {
+                z->isDisabled = 1;
+                z->modSkillDrained = 1;
+            } else if (!drain && z->modSkillDrained) {
+                z->isDisabled = 0;
+                z->modSkillDrained = 0;
+            }
+        }
+    }
+}
+
+int ModMonsterLinkNegated(struct ChainEntry *link)
+{
+    struct DuelZone *z;
+
+    if (link->kind == CHAIN_KIND_OFF_FIELD || link->zone > ZONE_MONSTER_4 || !SkillDrainActive())
+        return 0;
+    z = ZoneOf(link->player, link->zone);
+    return z->isFaceUp && DUEL_CARD_ID(&z->card) == (link->card & CARD_ID_MASK);
+}
+
+int EffectSkillDrainPrepare(struct ChainEntry *card, struct ChainEntry *chainLink, u16 fromHand)
+{
+    (void)chainLink;
+    /* a face-up one is already applying (a Continuous Trap is activated once) */
+    if (card->zone >= ZONE_SPELL_0 && card->zone <= ZONE_SPELL_4 && ZoneOf(card->player, card->zone)->isFaceUp
+        && DUEL_CARD_ID(&ZoneOf(card->player, card->zone)->card) == (card->card & CARD_ID_MASK))
+        return 0;
+    /* not while a (not negated) Jinzo is face-up: "If Jinzo is already face-up on the field, Skill Drain cannot be
+     * activated"; a Jinzo summoned later is negated by it (SkillDrainActive) */
+    return !fromHand && (int)gDuelPlayers[card->player & 1].lifePoints > SKILL_DRAIN_COST
+           && CountActiveCardsOnField(0, CARD_JINZO) == 0 && CountActiveCardsOnField(1, CARD_JINZO) == 0;
+}
+
+int EffectSkillDrainChainA(struct ChainEntry *link, struct ChainEntry *prevLink)
+{
+    (void)prevLink;
+    DuelCmd_Push(link->player ? DUEL_CMD_PLAYER | DUEL_CMD_LOSE_LP : DUEL_CMD_LOSE_LP, SKILL_DRAIN_COST, 1, 0);
+    return 1;
+}
+
+int EffectSkillDrainResolve(struct ChainEntry *link, struct ChainEntry *chainedTo)
+{
+    (void)link;
+    (void)chainedTo;
+    return EFFECT_STEP_DONE;                    /* the negation is SkillDrainUpdate's, while it stays face-up */
+}
+
+static int CountFaceUpEffectMonsters(int player)
+{
+    int zone, n = 0;
+
+    for (zone = ZONE_MONSTER_0; zone <= ZONE_MONSTER_4; zone++) {
+        struct DuelZone *z = ZoneOf(player, zone);
+        u32 stats = gCardStats[DUEL_CARD_ID(&z->card) & CARD_ID_MASK];
+
+        n += DUEL_CARD_ID(&z->card) != 0 && z->isFaceUp && CARD_STATS_TYPE(stats) <= CARD_TYPE_REPTILE
+             && CARD_STATS_KIND(stats) == CARD_KIND_EFFECT;
+    }
+    return n;
+}
+
+static int AiWantsSkillDrain(void)
+{
+    return !SkillDrainActive() && (int)gDuelPlayers[AI_PLAYER].lifePoints > SKILL_DRAIN_CPU_MIN_LP
+           && CountFaceUpEffectMonsters(AI_HUMAN) > CountFaceUpEffectMonsters(AI_PLAYER);
+}
+#endif /* HAS_CARD_SKILL_DRAIN */
 
 #ifdef HAS_CARD_FUSILIER_DRAGON_THE_DUAL_MODE_BEAST
 /* ---- Fusilier Dragon, the Dual-Mode Beast (2026-11-18) -------------------------------------------------------------
@@ -15063,7 +15198,21 @@ int AiChainSummonTriggerResponse(struct ChainEntry *entry)
 
 /* Checks of the added cards' continuous rules, once per idle frame of the duel (DuelMainStep). 1 if one queued
  * something (the duel step waits for it). */
+#ifdef HAS_CARD_SKILL_DRAIN
+static void SkillDrainUpdate(void);         /* Skill Drain (below) */
+#endif
+
+static int ModDuelStateRules(void);
+
 int ModDuelStateCheck(void)
+{
+#ifdef HAS_CARD_SKILL_DRAIN
+    SkillDrainUpdate();                     /* every frame, before the rules below */
+#endif
+    return ModDuelStateRules();
+}
+
+static int ModDuelStateRules(void)
 {
 #if defined(HAS_CARD_BERSERK_GORILLA) || defined(HAS_CARD_THUNDER_NYAN_NYAN) \
     || defined(HAS_CARD_LEVEL_LIMIT_AREA_B) || defined(HAS_CARD_FINAL_ATTACK_ORDERS)
@@ -17052,6 +17201,10 @@ int AiPlayAddedCards(void)
     if (AiTryPlaySpellTrap(CARD_FINAL_ATTACK_ORDERS))
         return 1;
 #endif
+#ifdef HAS_CARD_SKILL_DRAIN
+    if (AiWantsSkillDrain() && AiTryPlaySpellTrap(CARD_SKILL_DRAIN))
+        return 1;
+#endif
 #ifdef HAS_CARD_ROYAL_OPPRESSION
     if (AiTryPlaySpellTrap(CARD_ROYAL_OPPRESSION))
         return 1;
@@ -17320,6 +17473,10 @@ int AiShouldActivateAddedCard(struct ChainEntry *entry)
         zone = SkullLairBestTarget(&probe);
         return zone >= 0 && GetZoneCardAtk(1 - AI_PLAYER, zone) >= 1000;
     }
+#endif
+#ifdef HAS_CARD_SKILL_DRAIN
+    case CARD_SKILL_DRAIN:                      /* the human has more face-up Effect Monsters */
+        return AiWantsSkillDrain();
 #endif
 #ifdef HAS_CARD_XING_ZHEN_HU
     case CARD_XING_ZHEN_HU:                     /* only on two of the human's Set cards */
@@ -17784,6 +17941,16 @@ const struct CardEffect gAddedCardEffects[] = {
         NULL,
         NULL,
         NULL,
+        NULL,
+    },
+#endif
+#ifdef HAS_CARD_SKILL_DRAIN
+    {
+        CARD_SKILL_DRAIN, 0,
+        EffectSkillDrainResolve,
+        NULL,
+        EffectSkillDrainPrepare,
+        EffectSkillDrainChainA,
         NULL,
     },
 #endif

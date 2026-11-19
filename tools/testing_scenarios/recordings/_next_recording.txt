@@ -1,2 +1,2 @@
-tools\testing_scenarios\recordings\Combo_Probe_Media_Player.mp4
-tools/testing_scenarios/recordings/Combo_Probe_Media_Player.mp4
+tools\testing_scenarios\recordings\SDJ_Probe_Media_Player.mp4
+tools/testing_scenarios/recordings/SDJ_Probe_Media_Player.mp4

@@ -25730,3 +25730,445 @@
    8341 media: encoding 2986 frames -> tools\testing_scenarios\..\..\screenshots\videos\combo-probe.mp4
    8383 Play sequence done; ending capture (no recording tail).
    8383 Finished — PASS (play sequence + tail). Stop mGBA Record A/V to finalize MP4.
+     14 MP4 target: tools\testing_scenarios\recordings\SD_Probe_Media_Player.mp4
+     14 emu recording API: screenshot, screenshotToImage
+     14 MP4: the scenario capture is off (captureMp4 = false)
+     14 SD Probe / media / Player
+     14 point opp.m0; wait 60; mp4_start sd-probe; activate you.st0; settle; point opp.m0; wait 90; battle; attack you.m0 -> opp
+    795 Main menu (callback 0x08003B15).
+    918 Campaign selected (callback 0x0801D6F1).
+   1111 Turn order: forced RPS lose (CPU goes first).
+   1121 Turn order: A (lost RPS; CPU chooses first).
+   1159 Turn order: A (lost RPS; CPU chooses first).
+   1351 Opponent's turn (waiting for your Main Phase 1).
+   1353 Usage deck goat / Chaos Turbo: main=40 extra=15; P0 shuffled=true (top 719->910) P1 shuffled=true (top 719->886), hands cleared.
+   2251 cpu_turn f=900 duel_step=8 turn_player=1 ai=4/0 textbox=0
+   2349 Player Draw Phase.
+   2530 Opening draw complete (hand=6 deck=34 want=6).
+   2670 Exact setup: P0 hand=0 deck=34 gy=0, P1 hand=0 deck=34 gy=0, LP 8000/8000, turnCount 2.
+   2670 Player Main Phase 1.
+   2670 steps: unknown card SD Probe
+   2670 steps: 12 steps, 29 ops
+   2670 step: point opp.m0
+   2908 step: wait 60
+   2974 step: mp4_start sd-probe
+   2974 media: recording sd-probe (mp4)
+   2981 step: activate you.st0
+   3095 steps: capture starts (cursor on activate you.st0)
+   3141 step: settle
+   3824 step: point opp.m0
+   3945 step: wait 90
+   4041 step: battle
+   4141 step: attack you.m0 -> opp.m1
+   4420 steps: attack you.m0 -> opp.m1: taken on press 1
+   5268 step: settle
+   5294 step: wait 90
+   5390 step: rec_stop
+   5390 media: 53 still frames trimmed from the end
+   5390 media: encoding 2363 frames -> tools\testing_scenarios\..\..\screenshots\videos\sd-probe.mp4
+   5407 Play sequence done; ending capture (no recording tail).
+   5407 Finished — PASS (play sequence + tail). Stop mGBA Record A/V to finalize MP4.
+     14 MP4 target: tools\testing_scenarios\recordings\SDJ_Probe_Media_Player.mp4
+     14 emu recording API: screenshot, screenshotToImage
+     14 MP4: the scenario capture is off (captureMp4 = false)
+     14 SDJ Probe / media / Player
+     14 point you.m0; wait 20; mp4_start sdj-probe; battle; attack you.m0 -> opp.m0; settle; point opp.m0; wait 60; main2; activ
+    795 Main menu (callback 0x08003B15).
+    918 Campaign selected (callback 0x0801D6F1).
+   1111 Turn order: forced RPS lose (CPU goes first).
+   1121 Turn order: A (lost RPS; CPU chooses first).
+   1159 Turn order: A (lost RPS; CPU chooses first).
+   1351 Opponent's turn (waiting for your Main Phase 1).
+   1353 Usage deck goat / Chaos Turbo: main=40 extra=15; P0 shuffled=true (top 719->859) P1 shuffled=true (top 719->648), hands cleared.
+   2251 cpu_turn f=900 duel_step=8 turn_player=1 ai=4/0 textbox=0
+   2346 Player Draw Phase.
+   2527 Opening draw complete (hand=6 deck=34 want=6).
+   2665 Exact setup: P0 hand=0 deck=34 gy=0, P1 hand=0 deck=34 gy=0, LP 8000/8000, turnCount 2.
+   2665 Player Main Phase 1.
+   2665 steps: unknown card SDJ Probe
+   2665 steps: 13 steps, 31 ops
+   2665 step: point you.m0
+   2808 step: wait 20
+   2834 step: mp4_start sdj-probe
+   2834 media: recording sdj-probe (mp4)
+   2841 step: battle
+   2941 step: attack you.m0 -> opp.m0
+   3200 steps: attack you.m0 -> opp.m0: taken on press 1
+   3220 step: settle
+   3227 step: point opp.m0
+   4766 steps: point opp.m0: cursor stuck at 0/5/0 (want 1/0/0; box false kind 1 step 3; effect step 0x00; summon false)
+   4773 step: wait 60
+   4839 step: main2
+   5739 steps: phase timed out (main2) [box active=false kind=1 step=3; list=false; chain=true; summon=false; cmds=false; prompt=0]
+   5746 step: activate you.st1
+   5765 steps: capture starts (cursor on activate you.st1)
+   5811 step: settle
+   6711 steps: settle timed out (settle) [box active=false kind=1 step=3; list=false; chain=true; summon=false; cmds=true; prompt=0]
+   6718 step: wait 60
+   6784 step: rec_stop
+   6784 media: encoding 3950 frames -> tools\testing_scenarios\..\..\screenshots\videos\sdj-probe.mp4
+   8291 steps: settle timed out (end) [box active=false kind=1 step=3; list=false; chain=false; summon=false; cmds=true; prompt=0]
+   8292 Play sequence done; ending capture (no recording tail).
+   8292 Finished — PASS (play sequence + tail). Stop mGBA Record A/V to finalize MP4.
+     14 MP4 target: tools\testing_scenarios\recordings\SD_Probe_Media_Player.mp4
+     14 emu recording API: screenshot, screenshotToImage
+     14 MP4: the scenario capture is off (captureMp4 = false)
+     14 SD Probe / media / Player
+     14 point opp.m0; wait 60; mp4_start sd-probe; activate you.st0; settle; point opp.m0; wait 90; battle; attack you.m0 -> opp
+    795 Main menu (callback 0x08003B15).
+    918 Campaign selected (callback 0x0801D6F1).
+   1111 Turn order: forced RPS lose (CPU goes first).
+   1121 Turn order: A (lost RPS; CPU chooses first).
+   1159 Turn order: A (lost RPS; CPU chooses first).
+   1351 Opponent's turn (waiting for your Main Phase 1).
+   1353 Usage deck goat / Chaos Turbo: main=40 extra=15; P0 shuffled=true (top 719->886) P1 shuffled=true (top 719->886), hands cleared.
+   2251 cpu_turn f=900 duel_step=8 turn_player=1 ai=3/2 textbox=0
+   3151 cpu_turn f=1800 duel_step=8 turn_player=1 ai=3/2 textbox=0
+   4051 cpu_turn f=2700 duel_step=8 turn_player=1 ai=4/0 textbox=0
+   4162 Player Draw Phase.
+   4343 Opening draw complete (hand=6 deck=34 want=6).
+   4484 Exact setup: P0 hand=0 deck=34 gy=0, P1 hand=0 deck=32 gy=0, LP 8000/8000, turnCount 2.
+   4484 Player Main Phase 1.
+   4484 steps: unknown card SD Probe
+   4484 steps: 12 steps, 29 ops
+   4484 step: point opp.m0
+   4722 step: wait 60
+   4788 step: mp4_start sd-probe
+   4788 media: recording sd-probe (mp4)
+   4795 step: activate you.st0
+   4909 steps: capture starts (cursor on activate you.st0)
+   4955 step: settle
+   5639 step: point opp.m0
+   5760 step: wait 90
+   5856 step: battle
+   5956 step: attack you.m0 -> opp.m1
+   6236 steps: attack you.m0 -> opp.m1: taken on press 1
+   7084 step: settle
+   7110 step: wait 90
+   7206 step: rec_stop
+   7206 media: encoding 2418 frames -> tools\testing_scenarios\..\..\screenshots\videos\sd-probe.mp4
+   7223 Play sequence done; ending capture (no recording tail).
+   7223 Finished — PASS (play sequence + tail). Stop mGBA Record A/V to finalize MP4.
+     11 MP4 target: tools\testing_scenarios\recordings\SDJ_Probe_Media_Player.mp4
+     11 emu recording API: screenshot, screenshotToImage
+     11 MP4: the scenario capture is off (captureMp4 = false)
+     11 SDJ Probe / media / Player
+     11 point you.m0; wait 20; mp4_start sdj-probe; battle; attack you.m0 -> opp.m0; settle; point opp.m0; wait 60; main2; activ
+    912 Main menu (callback 0x08003B15).
+   1035 Campaign selected (callback 0x0801D6F1).
+   1228 Turn order: forced RPS lose (CPU goes first).
+   1238 Turn order: A (lost RPS; CPU chooses first).
+   1276 Turn order: A (lost RPS; CPU chooses first).
+   1468 Opponent's turn (waiting for your Main Phase 1).
+   1470 Usage deck goat / Chaos Turbo: main=40 extra=15; P0 shuffled=true (top 719->920) P1 shuffled=true (top 719->719), hands cleared.
+   2368 cpu_turn f=900 duel_step=8 turn_player=1 ai=3/2 textbox=0
+   3268 cpu_turn f=1800 duel_step=8 turn_player=1 ai=3/2 textbox=0
+   4168 cpu_turn f=2700 duel_step=8 turn_player=1 ai=4/0 textbox=0
+   4288 Player Draw Phase.
+   4469 Opening draw complete (hand=6 deck=34 want=6).
+   4610 Exact setup: P0 hand=0 deck=34 gy=0, P1 hand=0 deck=32 gy=0, LP 8000/8000, turnCount 2.
+   4610 Player Main Phase 1.
+   4610 steps: unknown card SDJ Probe
+   4610 steps: 13 steps, 31 ops
+   4610 step: point you.m0
+   4753 step: wait 20
+   4779 step: mp4_start sdj-probe
+   4779 media: recording sdj-probe (mp4)
+   4786 step: battle
+   4886 step: attack you.m0 -> opp.m0
+   5146 steps: attack you.m0 -> opp.m0: taken on press 1
+   5166 step: settle
+   5173 step: point opp.m0
+   6712 steps: point opp.m0: cursor stuck at 0/5/0 (want 1/0/0; box false kind 1 step 3; effect step 0x00; summon false)
+   6719 step: wait 60
+   6785 step: main2
+   7685 steps: phase timed out (main2) [box active=false kind=1 step=3; list=false; chain=true; summon=false; cmds=false; prompt=0]
+   7692 step: activate you.st1
+   7711 steps: capture starts (cursor on activate you.st1)
+   7757 step: settle
+   8657 steps: settle timed out (settle) [box active=false kind=1 step=3; list=false; chain=false; summon=false; cmds=false; prompt=0]
+   8664 step: wait 60
+   8730 step: rec_stop
+   8730 media: 47 still frames trimmed from the end
+   8730 media: encoding 3904 frames -> tools\testing_scenarios\..\..\screenshots\videos\sdj-probe.mp4
+   8747 Play sequence done; ending capture (no recording tail).
+   8747 Finished — PASS (play sequence + tail). Stop mGBA Record A/V to finalize MP4.
+     13 MP4 target: tools\testing_scenarios\recordings\SD_Probe_Media_Player.mp4
+     13 emu recording API: screenshot, screenshotToImage
+     13 MP4: the scenario capture is off (captureMp4 = false)
+     13 SD Probe / media / Player
+     13 point opp.m0; wait 60; mp4_start sd-probe; activate you.st0; settle; point opp.m0; wait 90; battle; attack you.m0 -> opp
+    794 Main menu (callback 0x08003B15).
+    917 Campaign selected (callback 0x0801D6F1).
+   1110 Turn order: forced RPS lose (CPU goes first).
+   1120 Turn order: A (lost RPS; CPU chooses first).
+   1158 Turn order: A (lost RPS; CPU chooses first).
+   1350 Opponent's turn (waiting for your Main Phase 1).
+   1352 Usage deck goat / Chaos Turbo: main=40 extra=15; P0 shuffled=true (top 719->434) P1 shuffled=true (top 719->878), hands cleared.
+   2250 cpu_turn f=900 duel_step=8 turn_player=1 ai=3/2 textbox=0
+   3150 cpu_turn f=1800 duel_step=8 turn_player=1 ai=3/2 textbox=0
+   4050 cpu_turn f=2700 duel_step=8 turn_player=1 ai=4/0 textbox=0
+   4140 Player Draw Phase.
+   4321 Opening draw complete (hand=6 deck=34 want=6).
+   4461 Exact setup: P0 hand=0 deck=34 gy=0, P1 hand=0 deck=32 gy=0, LP 8000/8000, turnCount 2.
+   4461 Player Main Phase 1.
+   4461 steps: unknown card SD Probe
+   4461 steps: 12 steps, 29 ops
+   4461 step: point opp.m0
+   4699 step: wait 60
+   4765 step: mp4_start sd-probe
+   4765 media: recording sd-probe (mp4)
+   4772 step: activate you.st0
+   4886 steps: capture starts (cursor on activate you.st0)
+   4932 step: settle
+   5616 step: point opp.m0
+   5737 step: wait 90
+   5833 step: battle
+   5933 step: attack you.m0 -> opp.m1
+   6213 steps: attack you.m0 -> opp.m1: taken on press 1
+   7061 step: settle
+   7087 step: wait 90
+   7183 step: rec_stop
+   7183 media: encoding 2418 frames -> tools\testing_scenarios\..\..\screenshots\videos\sd-probe.mp4
+   7200 Play sequence done; ending capture (no recording tail).
+   7200 Finished — PASS (play sequence + tail). Stop mGBA Record A/V to finalize MP4.
+     12 MP4 target: tools\testing_scenarios\recordings\SDJ_Probe_Media_Player.mp4
+     12 emu recording API: screenshot, screenshotToImage
+     12 MP4: the scenario capture is off (captureMp4 = false)
+     12 SDJ Probe / media / Player
+     12 point you.m0; wait 20; mp4_start sdj-probe; battle; attack you.m0 -> opp.m0; settle; point opp.m0; wait 60; main2; activ
+    913 Main menu (callback 0x08003B15).
+   1036 Campaign selected (callback 0x0801D6F1).
+   1229 Turn order: forced RPS lose (CPU goes first).
+   1239 Turn order: A (lost RPS; CPU chooses first).
+   1277 Turn order: A (lost RPS; CPU chooses first).
+   1469 Opponent's turn (waiting for your Main Phase 1).
+   1471 Usage deck goat / Chaos Turbo: main=40 extra=15; P0 shuffled=true (top 719->719) P1 shuffled=true (top 719->434), hands cleared.
+   2369 cpu_turn f=900 duel_step=8 turn_player=1 ai=4/0 textbox=0
+   2448 Player Draw Phase.
+   2629 Opening draw complete (hand=6 deck=34 want=6).
+   2769 Exact setup: P0 hand=0 deck=34 gy=0, P1 hand=0 deck=34 gy=0, LP 8000/8000, turnCount 2.
+   2769 Player Main Phase 1.
+   2769 steps: unknown card SDJ Probe
+   2769 steps: 13 steps, 31 ops
+   2769 step: point you.m0
+   2912 step: wait 20
+   2938 step: mp4_start sdj-probe
+   2938 media: recording sdj-probe (mp4)
+   2945 step: battle
+   3045 step: attack you.m0 -> opp.m0
+   3305 steps: attack you.m0 -> opp.m0: taken on press 1
+   3325 step: settle
+   3332 step: point opp.m0
+   4871 steps: point opp.m0: cursor stuck at 0/5/0 (want 1/0/0; box false kind 1 step 3; effect step 0x00; summon false)
+   4878 step: wait 60
+   4944 step: main2
+   5844 steps: phase timed out (main2) [box active=false kind=1 step=3; list=false; chain=true; summon=false; cmds=false; prompt=0]
+   5851 step: activate you.st1
+   5870 steps: capture starts (cursor on activate you.st1)
+   5916 step: settle
+   6816 steps: settle timed out (settle) [box active=false kind=1 step=3; list=false; chain=false; summon=false; cmds=false; prompt=0]
+   6823 step: wait 60
+   6889 step: rec_stop
+   6889 media: 46 still frames trimmed from the end
+   6889 media: encoding 3905 frames -> tools\testing_scenarios\..\..\screenshots\videos\sdj-probe.mp4
+   6906 Play sequence done; ending capture (no recording tail).
+   6906 Finished — PASS (play sequence + tail). Stop mGBA Record A/V to finalize MP4.
+     11 MP4 target: tools\testing_scenarios\recordings\SD_Probe_Media_Player.mp4
+     11 emu recording API: screenshot, screenshotToImage
+     11 MP4: the scenario capture is off (captureMp4 = false)
+     11 SD Probe / media / Player
+     11 point opp.m0; wait 60; mp4_start sd-probe; activate you.st0; settle; point opp.m0; wait 90; battle; attack you.m0 -> opp
+    792 Main menu (callback 0x08003B15).
+    915 Campaign selected (callback 0x0801D6F1).
+   1108 Turn order: forced RPS lose (CPU goes first).
+   1118 Turn order: A (lost RPS; CPU chooses first).
+   1156 Turn order: A (lost RPS; CPU chooses first).
+   1348 Opponent's turn (waiting for your Main Phase 1).
+   1350 Usage deck goat / Chaos Turbo: main=40 extra=15; P0 shuffled=true (top 719->878) P1 shuffled=true (top 719->719), hands cleared.
+   2248 cpu_turn f=900 duel_step=8 turn_player=1 ai=3/2 textbox=0
+   3148 cpu_turn f=1800 duel_step=8 turn_player=1 ai=3/2 textbox=0
+   3481 Player Draw Phase.
+   3662 Opening draw complete (hand=6 deck=34 want=6).
+   3802 Exact setup: P0 hand=0 deck=34 gy=0, P1 hand=0 deck=33 gy=0, LP 8000/8000, turnCount 2.
+   3802 Player Main Phase 1.
+   3802 steps: unknown card SD Probe
+   3802 steps: 12 steps, 29 ops
+   3802 step: point opp.m0
+   4040 step: wait 60
+   4106 step: mp4_start sd-probe
+   4106 media: recording sd-probe (mp4)
+   4113 step: activate you.st0
+   4227 steps: capture starts (cursor on activate you.st0)
+   4273 step: settle
+   4957 step: point opp.m0
+   5078 step: wait 90
+   5174 step: battle
+   5274 step: attack you.m0 -> opp.m1
+   5553 steps: attack you.m0 -> opp.m1: taken on press 1
+   5752 step: settle
+   5778 step: wait 90
+   5874 step: rec_stop
+   5874 media: 115 still frames trimmed from the end
+   5874 media: encoding 1653 frames -> tools\testing_scenarios\..\..\screenshots\videos\sd-probe.mp4
+   5891 Play sequence done; ending capture (no recording tail).
+   5891 Finished — PASS (play sequence + tail). Stop mGBA Record A/V to finalize MP4.
+     10 MP4 target: tools\testing_scenarios\recordings\SDC_Probe_Media_Player.mp4
+     10 emu recording API: screenshot, screenshotToImage
+     10 MP4: the scenario capture is off (captureMp4 = false)
+     10 SDC Probe / media / Player
+     10 point you.m0; wait 20; mp4_start sdc-probe; battle; attack you.m0 -> opp.m0; settle; wait 60; rec_stop
+    911 Main menu (callback 0x08003B15).
+   1034 Campaign selected (callback 0x0801D6F1).
+   1227 Turn order: forced RPS lose (CPU goes first).
+   1237 Turn order: A (lost RPS; CPU chooses first).
+   1275 Turn order: A (lost RPS; CPU chooses first).
+   1467 Opponent's turn (waiting for your Main Phase 1).
+   1469 Usage deck goat / Chaos Turbo: main=40 extra=15; P0 shuffled=true (top 719->952) P1 shuffled=true (top 719->838), hands cleared.
+   2367 cpu_turn f=900 duel_step=8 turn_player=1 ai=4/0 textbox=0
+   2424 Player Draw Phase.
+   2605 Opening draw complete (hand=6 deck=34 want=6).
+   2745 Exact setup: P0 hand=0 deck=34 gy=0, P1 hand=0 deck=34 gy=0, LP 8000/8000, turnCount 2.
+   2745 Player Main Phase 1.
+   2745 steps: unknown card SDC Probe
+   2745 steps: 8 steps, 20 ops
+   2745 step: point you.m0
+   2881 steps: capture starts (cursor on point you.m0)
+   2888 step: wait 20
+   2914 step: mp4_start sdc-probe
+   2914 media: recording sdc-probe (mp4)
+   2921 step: battle
+   3021 step: attack you.m0 -> opp.m0
+   3281 steps: attack you.m0 -> opp.m0: taken on press 1
+   3301 step: settle
+   3308 step: wait 60
+   3374 step: rec_stop
+   3374 media: encoding 460 frames -> tools\testing_scenarios\..\..\screenshots\videos\sdc-probe.mp4
+   4881 steps: settle timed out (end) [box active=true kind=1 step=1; list=false; chain=true; summon=false; cmds=false; prompt=0]
+   4882 Play sequence done; ending capture (no recording tail).
+   4882 Finished — PASS (play sequence + tail). Stop mGBA Record A/V to finalize MP4.
+      9 MP4 target: tools\testing_scenarios\recordings\SD_Probe_Media_Player.mp4
+      9 emu recording API: screenshot, screenshotToImage
+      9 MP4: the scenario capture is off (captureMp4 = false)
+      9 SD Probe / media / Player
+      9 point opp.m0; wait 60; mp4_start sd-probe; activate you.st0; settle; point opp.m0; wait 90; battle; attack you.m0 -> opp
+    790 Main menu (callback 0x08003B15).
+    913 Campaign selected (callback 0x0801D6F1).
+   1106 Turn order: forced RPS lose (CPU goes first).
+   1116 Turn order: A (lost RPS; CPU chooses first).
+   1154 Turn order: A (lost RPS; CPU chooses first).
+   1346 Opponent's turn (waiting for your Main Phase 1).
+   1348 Usage deck goat / Chaos Turbo: main=40 extra=15; P0 shuffled=true (top 719->902) P1 shuffled=true (top 719->910), hands cleared.
+   2246 cpu_turn f=900 duel_step=8 turn_player=1 ai=3/2 textbox=0
+   3146 cpu_turn f=1800 duel_step=8 turn_player=1 ai=3/2 textbox=0
+   4046 cpu_turn f=2700 duel_step=8 turn_player=1 ai=4/0 textbox=0
+   4158 Player Draw Phase.
+   4339 Opening draw complete (hand=6 deck=34 want=6).
+   4480 Exact setup: P0 hand=0 deck=34 gy=0, P1 hand=0 deck=32 gy=0, LP 8000/8000, turnCount 2.
+   4480 Player Main Phase 1.
+   4480 steps: unknown card SD Probe
+   4480 steps: 14 steps, 33 ops
+   4480 step: point opp.m0
+   4718 step: wait 60
+   4784 step: mp4_start sd-probe
+   4784 media: recording sd-probe (mp4)
+   4791 step: activate you.st0
+   4905 steps: capture starts (cursor on activate you.st0)
+   4951 step: settle
+   5635 step: point opp.m0
+   5756 step: wait 90
+   5852 step: battle
+   5952 step: attack you.m0 -> opp.m1
+   6232 steps: attack you.m0 -> opp.m1: taken on press 1
+   6431 step: settle
+   6457 step: wait 240
+   6703 step: point you.m0
+   6710 step: wait 60
+   6776 step: rec_stop
+   6776 media: 338 still frames trimmed from the end
+   6776 media: encoding 1654 frames -> tools\testing_scenarios\..\..\screenshots\videos\sd-probe.mp4
+   6793 Play sequence done; ending capture (no recording tail).
+   6793 Finished — PASS (play sequence + tail). Stop mGBA Record A/V to finalize MP4.
+     12 MP4 target: tools\testing_scenarios\recordings\SDJ_Probe_Media_Player.mp4
+     12 emu recording API: screenshot, screenshotToImage
+     12 MP4: the scenario capture is off (captureMp4 = false)
+     12 SDJ Probe / media / Player
+     12 point you.m0; wait 20; mp4_start sdj-probe; battle; attack you.m0 -> opp.m0; no; settle; point opp.m0; wait 60; main2; a
+    913 Main menu (callback 0x08003B15).
+   1036 Campaign selected (callback 0x0801D6F1).
+   1229 Turn order: forced RPS lose (CPU goes first).
+   1239 Turn order: A (lost RPS; CPU chooses first).
+   1277 Turn order: A (lost RPS; CPU chooses first).
+   1469 Opponent's turn (waiting for your Main Phase 1).
+   1471 Usage deck goat / Chaos Turbo: main=40 extra=15; P0 shuffled=true (top 719->859) P1 shuffled=true (top 719->952), hands cleared.
+   2369 cpu_turn f=900 duel_step=8 turn_player=1 ai=3/2 textbox=0
+   3269 cpu_turn f=1800 duel_step=8 turn_player=1 ai=3/2 textbox=0
+   4169 cpu_turn f=2700 duel_step=8 turn_player=1 ai=3/2 textbox=0
+   5007 Player Draw Phase.
+   5188 Opening draw complete (hand=6 deck=34 want=6).
+   5325 Exact setup: P0 hand=0 deck=34 gy=0, P1 hand=0 deck=31 gy=0, LP 8000/8000, turnCount 2.
+   5325 Player Main Phase 1.
+   5325 steps: unknown card SDJ Probe
+   5325 steps: 14 steps, 33 ops
+   5325 step: point you.m0
+   5468 step: wait 20
+   5494 step: mp4_start sdj-probe
+   5494 media: recording sdj-probe (mp4)
+   5501 step: battle
+   5601 step: attack you.m0 -> opp.m0
+   5861 steps: attack you.m0 -> opp.m0: taken on press 1
+   5881 step: no
+   5907 step: settle
+   6215 step: point opp.m0
+   7754 steps: point opp.m0: cursor stuck at 0/5/0 (want 1/0/0; box false kind 1 step 3; effect step 0x00; summon false)
+   7761 step: wait 60
+   7827 step: main2
+   8727 steps: phase timed out (main2) [box active=false kind=1 step=3; list=false; chain=true; summon=false; cmds=false; prompt=0]
+   8734 step: activate you.st1
+   8753 steps: capture starts (cursor on activate you.st1)
+   8799 step: settle
+   9417 step: wait 60
+   9483 step: rec_stop
+   9483 media: 53 still frames trimmed from the end
+   9483 media: encoding 3936 frames -> tools\testing_scenarios\..\..\screenshots\videos\sdj-probe.mp4
+   9500 Play sequence done; ending capture (no recording tail).
+   9500 Finished — PASS (play sequence + tail). Stop mGBA Record A/V to finalize MP4.
+      9 MP4 target: tools\testing_scenarios\recordings\SDJ_Probe_Media_Player.mp4
+      9 emu recording API: screenshot, screenshotToImage
+      9 MP4: the scenario capture is off (captureMp4 = false)
+      9 SDJ Probe / media / Player
+      9 point you.m0; wait 20; mp4_start sdj-probe; battle; attack you.m0 -> opp.m0; no; no; settle; point opp.m0; wait 60; main
+    790 Main menu (callback 0x08003B15).
+    913 Campaign selected (callback 0x0801D6F1).
+   1106 Turn order: forced RPS lose (CPU goes first).
+   1116 Turn order: A (lost RPS; CPU chooses first).
+   1154 Turn order: A (lost RPS; CPU chooses first).
+   1346 Opponent's turn (waiting for your Main Phase 1).
+   1348 Usage deck goat / Chaos Turbo: main=40 extra=15; P0 shuffled=true (top 719->838) P1 shuffled=true (top 719->434), hands cleared.
+   2246 cpu_turn f=900 duel_step=8 turn_player=1 ai=4/0 textbox=0
+   2342 Player Draw Phase.
+   2523 Opening draw complete (hand=6 deck=34 want=6).
+   2661 Exact setup: P0 hand=0 deck=34 gy=0, P1 hand=0 deck=34 gy=0, LP 8000/8000, turnCount 2.
+   2661 Player Main Phase 1.
+   2661 steps: unknown card SDJ Probe
+   2661 steps: 15 steps, 35 ops
+   2661 step: point you.m0
+   2804 step: wait 20
+   2830 step: mp4_start sdj-probe
+   2830 media: recording sdj-probe (mp4)
+   2837 step: battle
+   2937 step: attack you.m0 -> opp.m0
+   3196 steps: attack you.m0 -> opp.m0: taken on press 1
+   3216 step: no
+   3569 step: settle
+   3595 step: point opp.m0
+   3697 step: wait 60
+   3763 step: main2
+   3863 step: activate you.st1
+   4056 steps: capture starts (cursor on activate you.st1)
+   4102 step: settle
+   4718 step: wait 60
+   4784 step: rec_stop
+   4784 media: encoding 1954 frames -> tools\testing_scenarios\..\..\screenshots\videos\sdj-probe.mp4
+   4801 Play sequence done; ending capture (no recording tail).
+   4801 Finished — PASS (play sequence + tail). Stop mGBA Record A/V to finalize MP4.

@@ -1,9 +1,9 @@
 1. Test
-2. Tokyo Dome format
-3. Pre-Tokyo Dome OCG packs
-4. Synchro/XYZ/Link cards
-5. Chaos Return format
-6. Yugi Muto duelist
-7. Yugi Muto pack
-8. New cards
-9. Card priority orders
+2. New cards
+3. Card priority orders
+4. Tokyo Dome format
+5. Pre-Tokyo Dome OCG packs
+6. Synchro/XYZ/Link cards
+7. Chaos Return format
+8. Yugi Muto duelist
+9. Yugi Muto pack

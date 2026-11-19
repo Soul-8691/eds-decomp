@@ -3416,3 +3416,10 @@ updated: 2026-09-29
 - src/added_effects.c: `AiMetamorphosisTributeZone` values a Chaos Sorcerer that cannot attack this turn at 0 ATK in
   Main Phase 1; Ojama King never replaces a 2000+ ATK monster (Jinzo). Probe-checked (the combo).
 - [[added-cards]]; AI_IMPROVEMENTS.md.
+
+## [2026-11-18] progress | Skill Drain coded
+- Added to the demo list. src/added_effects.c: `SkillDrainUpdate` (isDisabled on face-up monsters, `modSkillDrained`
+  bit), `ModMonsterLinkNegated` (duel_main.c hook), Flip effects locked, Jinzo handled both ways; CPU
+  `AiWantsSkillDrain`. Probe-checked (Panda, Man-Eater Bug, Jinzo + Jar of Greed).
+- [[added-cards]]; AI_IMPROVEMENTS.md, new_cards.txt, card_pools/missing-main.txt, card_pools/missing.txt,
+  NEW_CARDS.md, cards/.

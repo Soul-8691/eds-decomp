@@ -165,6 +165,9 @@ enum ChainResolveStage {
  */
 void ModChainLinkResolved(struct ChainEntry *link);    /* mod: e.g. Skilled Dark Magician's Spell Counters */
 int ModTargetedLinkNegated(struct ChainEntry *link);  /* mod: Ryu Senshi, Fiend Skull Dragon (added_effects.c) */
+#ifdef HAS_CARD_SKILL_DRAIN
+int ModMonsterLinkNegated(struct ChainEntry *link);   /* mod: Skill Drain (added_effects.c) */
+#endif
 
 u32 Chain_Resolve(void)
 {
@@ -266,6 +269,11 @@ u32 Chain_Resolve(void)
                 LAST_LINK.negated = 1;
             }
         } else {
+#ifdef HAS_CARD_SKILL_DRAIN
+            /* added: Skill Drain negates the effect of a monster face-up on the field */
+            if (ModMonsterLinkNegated(&LAST_LINK))
+                LAST_LINK.negated = 1;
+#endif
             /* A monster: a negated flip effect does not resolve. */
             if ((HasFlipEffect(CARD_NUMBER_C(LAST_LINK.card), 1)
                  || HasFlipEffect(CARD_NUMBER_C(LAST_LINK.card), 0))

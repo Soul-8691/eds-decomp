@@ -1,7 +1,7 @@
 ﻿
-Script                   Result Seconds Detail                                
-------                   ------ ------- ------                                
-Combo_Probe_Media_Player PASS        44 duel_main=false reason= play_done=true
+Script                 Result Seconds Detail                               
+------                 ------ ------- ------                               
+SDJ_Probe_Media_Player PASS        25 duel_main=true reason= play_done=true
 
 
 

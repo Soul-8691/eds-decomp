@@ -1689,3 +1689,25 @@ PASS Meta5_Probe_Media_Player duel_main=false reason= play_done=true
 PASS Meta6_Probe_Media_Player duel_main=false reason= play_done=true
 START Combo_Probe_Media_Player
 PASS Combo_Probe_Media_Player duel_main=false reason= play_done=true
+START SD_Probe_Media_Player
+PASS SD_Probe_Media_Player duel_main=true reason= play_done=true
+START SDJ_Probe_Media_Player
+PASS SDJ_Probe_Media_Player duel_main=true reason= play_done=true
+START SD_Probe_Media_Player
+PASS SD_Probe_Media_Player duel_main=true reason= play_done=true
+START SDJ_Probe_Media_Player
+PASS SDJ_Probe_Media_Player duel_main=true reason= play_done=true
+START SD_Probe_Media_Player
+PASS SD_Probe_Media_Player duel_main=true reason= play_done=true
+START SDJ_Probe_Media_Player
+PASS SDJ_Probe_Media_Player duel_main=true reason= play_done=true
+START SD_Probe_Media_Player
+PASS SD_Probe_Media_Player duel_main=true reason= play_done=true
+START SDC_Probe_Media_Player
+PASS SDC_Probe_Media_Player duel_main=true reason= play_done=true
+START SD_Probe_Media_Player
+PASS SD_Probe_Media_Player duel_main=true reason= play_done=true
+START SDJ_Probe_Media_Player
+PASS SDJ_Probe_Media_Player duel_main=true reason= play_done=true
+START SDJ_Probe_Media_Player
+PASS SDJ_Probe_Media_Player duel_main=true reason= play_done=true

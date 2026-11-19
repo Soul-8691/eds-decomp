@@ -1761,6 +1761,39 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
 - Removed from `card_pools/missing-fusion.txt` and the "not fully implemented" notes (README, DECKS.md,
   [[yugi-kaiba-opponent]]).
 
+### Skill Drain (2026-11-18)
+- Continuous Trap. Card number 871 (ID 998 in the demo); moved above `------` in `new_cards.txt` (already in
+  `config/new_cards.txt`) and out of `card_pools/missing-main.txt` and `missing.txt`. "Activate by paying 1000 LP.
+  Negate the effects of all face-up monsters while they are face-up on the field (but their effects can still be
+  activated)."
+- **Activation.** `EffectSkillDrainPrepare`: more than 1000 LP, not already face-up in its zone, and no active Jinzo
+  ("If Jinzo is already face-up on the field, Skill Drain cannot be activated"). ChainA pays 1000; the resolve does
+  nothing (it stays face-up).
+- **The negation.** `SkillDrainUpdate`, first thing in `ModDuelStateCheck` (each idle frame), sets `isDisabled` on every
+  face-up monster while `SkillDrainActive`, marking it with the new `DuelZone.modSkillDrained` bit (include/duel.h,
+  after `modHalvedStats`), and clears only the ones it marked when it ends or the monster turns face-down (Junk
+  Synchron's negation is left alone). `isDisabled` is what the continuous effects read (`CountActiveCardsOnField`:
+  Jinzo, The Last Warrior, ...; the added cards' own checks; `ModStatBonus`, which now returns 0 for a disabled
+  monster: Gyaku-Gire Panda's bonus, Fusilier Dragon's halving). A disabled monster's ACTIVATE is not offered (a
+  difference from the text, which lets it activate).
+- **Resolving effects.** `ModMonsterLinkNegated` (`Chain_Resolve`, duel_main.c, an `#ifdef` hook in the monster
+  branch): an effect of a monster face-up on the field negates when it resolves; one from the Graveyard or the hand
+  (Sangan, Witch of the Black Forest) does not.
+- **Flip effects.** `FlipEffectsLockedForTurn` answers 1 while it is active, so no Flip effect starts, also for a
+  monster flipped and destroyed by battle (Man-Eater Bug).
+- **Jinzo.** A face-up Skill Drain counts as active whatever its `isDisabled` (Jinzo's Trap negation through
+  `UpdateSpellTrapNegation`) unless Royal Decree is active; once Jinzo is disabled, Traps work again. The first
+  version read `trapsNegated` instead, and the two disabled each other every frame (the duel hung).
+- **CPU.** `AiWantsSkillDrain`: the human has more face-up Effect Monsters than it, and it has more than 2000 LP
+  (`AiPlayAddedCards`, and its Set copy's activation in `AiShouldActivateAddedCard`). Not driven in a probe.
+- `.text` +0x54 and a few bytes (the hooks); `ModDuelStateCheck` now calls `SkillDrainUpdate`, then
+  `ModDuelStateRules` (its old body).
+- **Checked in the emulator** (probe boards): activating it cost 1000 LP; Gyaku-Gire Panda showed its printed 800 ATK;
+  a Set Man-Eater Bug flipped and destroyed by Summoned Skull destroyed nothing; with it face-up, a Set Jinzo flipped
+  by an attack, and the human's Jar of Greed was then activated and drew. The harness now answers the attack's "Do
+  you wish to activate a Quick-play Magic or Trap card?" prompts with `no` steps.
+- Card View screenshot `cards/Skill Drain.png`; NEW_CARDS.md regenerated.
+
 ### Fusilier Dragon, the Dual-Mode Beast (2026-11-18)
 - Effect Monster (Level 7 EARTH Machine, 2800/2000). Card number 870 (ID 997 in the demo); moved above `------` in
   `new_cards.txt` (it was already in `config/new_cards.txt`) and out of `card_pools/missing-main.txt` and

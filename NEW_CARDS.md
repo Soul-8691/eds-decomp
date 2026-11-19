@@ -1,6 +1,6 @@
 # New cards
 
-The 310 cards the demo build adds ([`demo_cards.txt`](demo_cards.txt): the repo-root `new_cards.txt` above `------`, and the cards of the engine's leftover effects in `config/leftover_cards.txt`), as the game shows them in Deck Edit's Card View. The screenshots are taken by [`tools/card_screenshots.lua`](tools/card_screenshots.lua) in mGBA.
+The 311 cards the demo build adds ([`demo_cards.txt`](demo_cards.txt): the repo-root `new_cards.txt` above `------`, and the cards of the engine's leftover effects in `config/leftover_cards.txt`), as the game shows them in Deck Edit's Card View. The screenshots are taken by [`tools/card_screenshots.lua`](tools/card_screenshots.lua) in mGBA.
 
 ## Alphabetical
 
@@ -191,55 +191,55 @@ Every added card, A–Z.
 <td align="center"><img src="cards/Shadow%20Spell.png" alt="Shadow Spell" width="240"></td><td align="center"><img src="cards/Sheep%20Token.png" alt="Sheep Token" width="240"></td><td align="center"><img src="cards/Shift.png" alt="Shift" width="240"></td><td align="center"><img src="cards/Shipping%20Archfiend.png" alt="Shipping Archfiend" width="240"></td>
 </tr>
 <tr>
-<td align="center"><img src="cards/Sillva%2C%20Warlord%20of%20Dark%20World.png" alt="Sillva, Warlord of Dark World" width="240"></td><td align="center"><img src="cards/Skilled%20Dark%20Magician.png" alt="Skilled Dark Magician" width="240"></td><td align="center"><img src="cards/Skull%20Invitation.png" alt="Skull Invitation" width="240"></td><td align="center"><img src="cards/Skull%20Lair.png" alt="Skull Lair" width="240"></td>
+<td align="center"><img src="cards/Sillva%2C%20Warlord%20of%20Dark%20World.png" alt="Sillva, Warlord of Dark World" width="240"></td><td align="center"><img src="cards/Skill%20Drain.png" alt="Skill Drain" width="240"></td><td align="center"><img src="cards/Skilled%20Dark%20Magician.png" alt="Skilled Dark Magician" width="240"></td><td align="center"><img src="cards/Skull%20Invitation.png" alt="Skull Invitation" width="240"></td>
 </tr>
 <tr>
-<td align="center"><img src="cards/Slate%20Warrior.png" alt="Slate Warrior" width="240"></td><td align="center"><img src="cards/Smashing%20Ground.png" alt="Smashing Ground" width="240"></td><td align="center"><img src="cards/Solemn%20Wishes.png" alt="Solemn Wishes" width="240"></td><td align="center"><img src="cards/Soul%20Exchange.png" alt="Soul Exchange" width="240"></td>
+<td align="center"><img src="cards/Skull%20Lair.png" alt="Skull Lair" width="240"></td><td align="center"><img src="cards/Slate%20Warrior.png" alt="Slate Warrior" width="240"></td><td align="center"><img src="cards/Smashing%20Ground.png" alt="Smashing Ground" width="240"></td><td align="center"><img src="cards/Solemn%20Wishes.png" alt="Solemn Wishes" width="240"></td>
 </tr>
 <tr>
-<td align="center"><img src="cards/Soul%20of%20Purity%20and%20Light.png" alt="Soul of Purity and Light" width="240"></td><td align="center"><img src="cards/Spear%20Dragon.png" alt="Spear Dragon" width="240"></td><td align="center"><img src="cards/Spell%20Canceller.png" alt="Spell Canceller" width="240"></td><td align="center"><img src="cards/Spirit%20Elimination.png" alt="Spirit Elimination" width="240"></td>
+<td align="center"><img src="cards/Soul%20Exchange.png" alt="Soul Exchange" width="240"></td><td align="center"><img src="cards/Soul%20of%20Purity%20and%20Light.png" alt="Soul of Purity and Light" width="240"></td><td align="center"><img src="cards/Spear%20Dragon.png" alt="Spear Dragon" width="240"></td><td align="center"><img src="cards/Spell%20Canceller.png" alt="Spell Canceller" width="240"></td>
 </tr>
 <tr>
-<td align="center"><img src="cards/Spirit%20Message%20_A_.png" alt="Spirit Message "A"" width="240"></td><td align="center"><img src="cards/Spirit%20Message%20_I_.png" alt="Spirit Message "I"" width="240"></td><td align="center"><img src="cards/Spirit%20Message%20_L_.png" alt="Spirit Message "L"" width="240"></td><td align="center"><img src="cards/Spirit%20Message%20_N_.png" alt="Spirit Message "N"" width="240"></td>
+<td align="center"><img src="cards/Spirit%20Elimination.png" alt="Spirit Elimination" width="240"></td><td align="center"><img src="cards/Spirit%20Message%20_A_.png" alt="Spirit Message "A"" width="240"></td><td align="center"><img src="cards/Spirit%20Message%20_I_.png" alt="Spirit Message "I"" width="240"></td><td align="center"><img src="cards/Spirit%20Message%20_L_.png" alt="Spirit Message "L"" width="240"></td>
 </tr>
 <tr>
-<td align="center"><img src="cards/Spirit%20of%20Flames.png" alt="Spirit of Flames" width="240"></td><td align="center"><img src="cards/Spirit%20of%20the%20Breeze.png" alt="Spirit of the Breeze" width="240"></td><td align="center"><img src="cards/Spirit%20Reaper.png" alt="Spirit Reaper" width="240"></td><td align="center"><img src="cards/Spiritualism.png" alt="Spiritualism" width="240"></td>
+<td align="center"><img src="cards/Spirit%20Message%20_N_.png" alt="Spirit Message "N"" width="240"></td><td align="center"><img src="cards/Spirit%20of%20Flames.png" alt="Spirit of Flames" width="240"></td><td align="center"><img src="cards/Spirit%20of%20the%20Breeze.png" alt="Spirit of the Breeze" width="240"></td><td align="center"><img src="cards/Spirit%20Reaper.png" alt="Spirit Reaper" width="240"></td>
 </tr>
 <tr>
-<td align="center"><img src="cards/St.%20Joan.png" alt="St. Joan" width="240"></td><td align="center"><img src="cards/Stardust%20Dragon.png" alt="Stardust Dragon" width="240"></td><td align="center"><img src="cards/Stealth%20Bird.png" alt="Stealth Bird" width="240"></td><td align="center"><img src="cards/Summoner%20of%20Illusions.png" alt="Summoner of Illusions" width="240"></td>
+<td align="center"><img src="cards/Spiritualism.png" alt="Spiritualism" width="240"></td><td align="center"><img src="cards/St.%20Joan.png" alt="St. Joan" width="240"></td><td align="center"><img src="cards/Stardust%20Dragon.png" alt="Stardust Dragon" width="240"></td><td align="center"><img src="cards/Stealth%20Bird.png" alt="Stealth Bird" width="240"></td>
 </tr>
 <tr>
-<td align="center"><img src="cards/Supply.png" alt="Supply" width="240"></td><td align="center"><img src="cards/Swarm%20of%20Locusts.png" alt="Swarm of Locusts" width="240"></td><td align="center"><img src="cards/Swift%20Gaia%20the%20Fierce%20Knight.png" alt="Swift Gaia the Fierce Knight" width="240"></td><td align="center"><img src="cards/Sword%20Hunter.png" alt="Sword Hunter" width="240"></td>
+<td align="center"><img src="cards/Summoner%20of%20Illusions.png" alt="Summoner of Illusions" width="240"></td><td align="center"><img src="cards/Supply.png" alt="Supply" width="240"></td><td align="center"><img src="cards/Swarm%20of%20Locusts.png" alt="Swarm of Locusts" width="240"></td><td align="center"><img src="cards/Swift%20Gaia%20the%20Fierce%20Knight.png" alt="Swift Gaia the Fierce Knight" width="240"></td>
 </tr>
 <tr>
-<td align="center"><img src="cards/The%20Dark%20-%20Hex-Sealed%20Fusion.png" alt="The Dark - Hex-Sealed Fusion" width="240"></td><td align="center"><img src="cards/The%20Dark%20Door.png" alt="The Dark Door" width="240"></td><td align="center"><img src="cards/The%20Emperor%27s%20Holiday.png" alt="The Emperor's Holiday" width="240"></td><td align="center"><img src="cards/The%20Fiend%20Megacyber.png" alt="The Fiend Megacyber" width="240"></td>
+<td align="center"><img src="cards/Sword%20Hunter.png" alt="Sword Hunter" width="240"></td><td align="center"><img src="cards/The%20Dark%20-%20Hex-Sealed%20Fusion.png" alt="The Dark - Hex-Sealed Fusion" width="240"></td><td align="center"><img src="cards/The%20Dark%20Door.png" alt="The Dark Door" width="240"></td><td align="center"><img src="cards/The%20Emperor%27s%20Holiday.png" alt="The Emperor's Holiday" width="240"></td>
 </tr>
 <tr>
-<td align="center"><img src="cards/The%20Forgiving%20Maiden.png" alt="The Forgiving Maiden" width="240"></td><td align="center"><img src="cards/The%20Last%20Warrior%20from%20Another%20Planet.png" alt="The Last Warrior from Another Planet" width="240"></td><td align="center"><img src="cards/The%20Legendary%20Fisherman.png" alt="The Legendary Fisherman" width="240"></td><td align="center"><img src="cards/The%20Mask%20of%20Remnants.png" alt="The Mask of Remnants" width="240"></td>
+<td align="center"><img src="cards/The%20Fiend%20Megacyber.png" alt="The Fiend Megacyber" width="240"></td><td align="center"><img src="cards/The%20Forgiving%20Maiden.png" alt="The Forgiving Maiden" width="240"></td><td align="center"><img src="cards/The%20Last%20Warrior%20from%20Another%20Planet.png" alt="The Last Warrior from Another Planet" width="240"></td><td align="center"><img src="cards/The%20Legendary%20Fisherman.png" alt="The Legendary Fisherman" width="240"></td>
 </tr>
 <tr>
-<td align="center"><img src="cards/The%20Masked%20Beast.png" alt="The Masked Beast" width="240"></td><td align="center"><img src="cards/The%20Rock%20Spirit.png" alt="The Rock Spirit" width="240"></td><td align="center"><img src="cards/The%20Unfriendly%20Amazon.png" alt="The Unfriendly Amazon" width="240"></td><td align="center"><img src="cards/Thestalos%20the%20Firestorm%20Monarch.png" alt="Thestalos the Firestorm Monarch" width="240"></td>
+<td align="center"><img src="cards/The%20Mask%20of%20Remnants.png" alt="The Mask of Remnants" width="240"></td><td align="center"><img src="cards/The%20Masked%20Beast.png" alt="The Masked Beast" width="240"></td><td align="center"><img src="cards/The%20Rock%20Spirit.png" alt="The Rock Spirit" width="240"></td><td align="center"><img src="cards/The%20Unfriendly%20Amazon.png" alt="The Unfriendly Amazon" width="240"></td>
 </tr>
 <tr>
-<td align="center"><img src="cards/Thousand%20Knives.png" alt="Thousand Knives" width="240"></td><td align="center"><img src="cards/Thousand-Eyes%20Idol.png" alt="Thousand-Eyes Idol" width="240"></td><td align="center"><img src="cards/Thousand-Eyes%20Restrict.png" alt="Thousand-Eyes Restrict" width="240"></td><td align="center"><img src="cards/Threatening%20Roar.png" alt="Threatening Roar" width="240"></td>
+<td align="center"><img src="cards/Thestalos%20the%20Firestorm%20Monarch.png" alt="Thestalos the Firestorm Monarch" width="240"></td><td align="center"><img src="cards/Thousand%20Knives.png" alt="Thousand Knives" width="240"></td><td align="center"><img src="cards/Thousand-Eyes%20Idol.png" alt="Thousand-Eyes Idol" width="240"></td><td align="center"><img src="cards/Thousand-Eyes%20Restrict.png" alt="Thousand-Eyes Restrict" width="240"></td>
 </tr>
 <tr>
-<td align="center"><img src="cards/Thunder%20Nyan%20Nyan.png" alt="Thunder Nyan Nyan" width="240"></td><td align="center"><img src="cards/Token%20Thanksgiving.png" alt="Token Thanksgiving" width="240"></td><td align="center"><img src="cards/Toon%20Cannon%20Soldier.png" alt="Toon Cannon Soldier" width="240"></td><td align="center"><img src="cards/Toon%20Table%20of%20Contents.png" alt="Toon Table of Contents" width="240"></td>
+<td align="center"><img src="cards/Threatening%20Roar.png" alt="Threatening Roar" width="240"></td><td align="center"><img src="cards/Thunder%20Nyan%20Nyan.png" alt="Thunder Nyan Nyan" width="240"></td><td align="center"><img src="cards/Token%20Thanksgiving.png" alt="Token Thanksgiving" width="240"></td><td align="center"><img src="cards/Toon%20Cannon%20Soldier.png" alt="Toon Cannon Soldier" width="240"></td>
 </tr>
 <tr>
-<td align="center"><img src="cards/Tornado%20Bird.png" alt="Tornado Bird" width="240"></td><td align="center"><img src="cards/Tornado%20Wall.png" alt="Tornado Wall" width="240"></td><td align="center"><img src="cards/Torrential%20Tribute.png" alt="Torrential Tribute" width="240"></td><td align="center"><img src="cards/Trap%20Dustshoot.png" alt="Trap Dustshoot" width="240"></td>
+<td align="center"><img src="cards/Toon%20Table%20of%20Contents.png" alt="Toon Table of Contents" width="240"></td><td align="center"><img src="cards/Tornado%20Bird.png" alt="Tornado Bird" width="240"></td><td align="center"><img src="cards/Tornado%20Wall.png" alt="Tornado Wall" width="240"></td><td align="center"><img src="cards/Torrential%20Tribute.png" alt="Torrential Tribute" width="240"></td>
 </tr>
 <tr>
-<td align="center"><img src="cards/Treeborn%20Frog.png" alt="Treeborn Frog" width="240"></td><td align="center"><img src="cards/Tribe-Infecting%20Virus.png" alt="Tribe-Infecting Virus" width="240"></td><td align="center"><img src="cards/Tsukuyomi.png" alt="Tsukuyomi" width="240"></td><td align="center"><img src="cards/Type%20Zero%20Magic%20Crusher.png" alt="Type Zero Magic Crusher" width="240"></td>
+<td align="center"><img src="cards/Trap%20Dustshoot.png" alt="Trap Dustshoot" width="240"></td><td align="center"><img src="cards/Treeborn%20Frog.png" alt="Treeborn Frog" width="240"></td><td align="center"><img src="cards/Tribe-Infecting%20Virus.png" alt="Tribe-Infecting Virus" width="240"></td><td align="center"><img src="cards/Tsukuyomi.png" alt="Tsukuyomi" width="240"></td>
 </tr>
 <tr>
-<td align="center"><img src="cards/United%20We%20Stand.png" alt="United We Stand" width="240"></td><td align="center"><img src="cards/Vampire%20Baby.png" alt="Vampire Baby" width="240"></td><td align="center"><img src="cards/Vampire%20Lord.png" alt="Vampire Lord" width="240"></td><td align="center"><img src="cards/Vengeful%20Bog%20Spirit.png" alt="Vengeful Bog Spirit" width="240"></td>
+<td align="center"><img src="cards/Type%20Zero%20Magic%20Crusher.png" alt="Type Zero Magic Crusher" width="240"></td><td align="center"><img src="cards/United%20We%20Stand.png" alt="United We Stand" width="240"></td><td align="center"><img src="cards/Vampire%20Baby.png" alt="Vampire Baby" width="240"></td><td align="center"><img src="cards/Vampire%20Lord.png" alt="Vampire Lord" width="240"></td>
 </tr>
 <tr>
-<td align="center"><img src="cards/Wave-Motion%20Cannon.png" alt="Wave-Motion Cannon" width="240"></td><td align="center"><img src="cards/Worm%20Drake.png" alt="Worm Drake" width="240"></td><td align="center"><img src="cards/Xing%20Zhen%20Hu.png" alt="Xing Zhen Hu" width="240"></td><td align="center"><img src="cards/Yata-Garasu.png" alt="Yata-Garasu" width="240"></td>
+<td align="center"><img src="cards/Vengeful%20Bog%20Spirit.png" alt="Vengeful Bog Spirit" width="240"></td><td align="center"><img src="cards/Wave-Motion%20Cannon.png" alt="Wave-Motion Cannon" width="240"></td><td align="center"><img src="cards/Worm%20Drake.png" alt="Worm Drake" width="240"></td><td align="center"><img src="cards/Xing%20Zhen%20Hu.png" alt="Xing Zhen Hu" width="240"></td>
 </tr>
 <tr>
-<td align="center"><img src="cards/Zaborg%20the%20Thunder%20Monarch.png" alt="Zaborg the Thunder Monarch" width="240"></td><td align="center"><img src="cards/Zombyra%20the%20Dark.png" alt="Zombyra the Dark" width="240"></td><td></td><td></td>
+<td align="center"><img src="cards/Yata-Garasu.png" alt="Yata-Garasu" width="240"></td><td align="center"><img src="cards/Zaborg%20the%20Thunder%20Monarch.png" alt="Zaborg the Thunder Monarch" width="240"></td><td align="center"><img src="cards/Zombyra%20the%20Dark.png" alt="Zombyra the Dark" width="240"></td><td></td>
 </tr>
 </table>
 
@@ -444,7 +444,7 @@ includes it.
 <td align="center"><img src="cards/Vampire%20Lord.png" alt="Vampire Lord" width="240"></td><td align="center"><img src="cards/Gyaku-Gire%20Panda.png" alt="Gyaku-Gire Panda" width="240"></td><td align="center"><img src="cards/Final%20Attack%20Orders.png" alt="Final Attack Orders" width="240"></td><td align="center"><img src="cards/Interdimensional%20Matter%20Transporter.png" alt="Interdimensional Matter Transporter" width="240"></td>
 </tr>
 <tr>
-<td align="center"><img src="cards/Thousand%20Knives.png" alt="Thousand Knives" width="240"></td><td align="center"><img src="cards/Token%20Thanksgiving.png" alt="Token Thanksgiving" width="240"></td><td align="center"><img src="cards/Tsukuyomi.png" alt="Tsukuyomi" width="240"></td><td></td>
+<td align="center"><img src="cards/Skill%20Drain.png" alt="Skill Drain" width="240"></td><td align="center"><img src="cards/Thousand%20Knives.png" alt="Thousand Knives" width="240"></td><td align="center"><img src="cards/Token%20Thanksgiving.png" alt="Token Thanksgiving" width="240"></td><td align="center"><img src="cards/Tsukuyomi.png" alt="Tsukuyomi" width="240"></td>
 </tr>
 </table>
 
