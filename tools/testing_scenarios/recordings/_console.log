@@ -26259,3 +26259,44 @@
    5427 media: encoding 2571 frames -> tools\testing_scenarios\..\..\screenshots\videos\gss-probe.mp4
    5444 Play sequence done; ending capture (no recording tail).
    5444 Finished — PASS (play sequence + tail). Stop mGBA Record A/V to finalize MP4.
+     18 MP4 target: tools\testing_scenarios\recordings\GG_Probe_Media_Player.mp4
+     18 emu recording API: screenshot, screenshotToImage
+     18 MP4: the scenario capture is off (captureMp4 = false)
+     18 GG Probe / media / Player
+     18 point you.m1; wait 20; mp4_start gg-probe; flip_summon you.m1; target opp.m0; settle; wait 30; flip_summon you.m0; yes; 
+    799 Main menu (callback 0x08003B15).
+    922 Campaign selected (callback 0x0801D6F9).
+   1115 Turn order: forced RPS lose (CPU goes first).
+   1125 Turn order: A (lost RPS; CPU chooses first).
+   1163 Turn order: A (lost RPS; CPU chooses first).
+   1355 Opponent's turn (waiting for your Main Phase 1).
+   1357 Usage deck goat / Chaos Turbo: main=40 extra=15; P0 shuffled=true (top 719->878) P1 shuffled=true (top 719->859), hands cleared.
+   2255 cpu_turn f=900 duel_step=8 turn_player=1 ai=4/0 textbox=0
+   2336 Player Draw Phase.
+   2517 Opening draw complete (hand=6 deck=34 want=6).
+   2657 Exact setup: P0 hand=0 deck=35 gy=0, P1 hand=0 deck=34 gy=0, LP 8000/8000, turnCount 2.
+   2657 Player Main Phase 1.
+   2657 steps: unknown card GG Probe
+   2657 steps: 14 steps, 31 ops
+   2657 step: point you.m1
+   2812 steps: capture starts (cursor on point you.m1)
+   2819 step: wait 20
+   2845 step: mp4_start gg-probe
+   2845 media: recording gg-probe (mp4)
+   2852 step: flip_summon you.m1
+   2898 step: target opp.m0
+   3266 steps: target opp.m0: taken on press 1
+   3273 step: settle
+   3759 step: wait 30
+   3795 step: flip_summon you.m0
+   3936 step: yes
+   4658 step: pick you.deck[Gravekeeper's Guard]
+   4738 step: position def
+   5507 steps: position def: menu value 1 not reached (at 0)
+   5549 steps: position def: menu A again (not taken)
+   5627 step: settle
+   5856 step: wait 60
+   5922 step: rec_stop
+   5922 media: encoding 3077 frames -> tools\testing_scenarios\..\..\screenshots\videos\gg-probe.mp4
+   5939 Play sequence done; ending capture (no recording tail).
+   5939 Finished — PASS (play sequence + tail). Stop mGBA Record A/V to finalize MP4.

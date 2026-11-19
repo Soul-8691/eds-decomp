@@ -177,6 +177,7 @@ Colossal Fighter
 Fusilier Dragon, the Dual-Mode Beast
 Skill Drain
 Gravekeeper's Spear Soldier
+Gravekeeper's Guard
 ------
 Dark End Dragon
 Red Dragon Archfiend
@@ -217,7 +218,6 @@ Yomi Ship
 Getsu Fuhma
 Silpheed
 Steamroid
-Gravekeeper's Guard
 Necrovalley
 Lava Golem
 Barrel Behind the Door

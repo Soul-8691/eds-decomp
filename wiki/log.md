@@ -3428,3 +3428,8 @@ updated: 2026-09-29
 - Added to the demo list; piercing (`ModHasPiercing`); a Gravekeeper's Spy target already (its list is by name).
   Probe-checked.
 - [[added-cards]]; new_cards.txt, card_pools/missing-main.txt, card_pools/missing.txt, NEW_CARDS.md, cards/.
+
+## [2026-11-19] progress | Gravekeeper's Guard coded
+- Added to the demo list; Hane-Hane's flip handlers with an opponent-only check; the CPU flips it as Hane-Hane; a
+  Gravekeeper's Spy target already. card_detail.c and ai_steps.c `#ifdef` cases. Probe-checked.
+- [[added-cards]]; new_cards.txt, card_pools/missing-main.txt, card_pools/missing.txt, NEW_CARDS.md, cards/.

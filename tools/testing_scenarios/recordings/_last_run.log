@@ -1715,3 +1715,5 @@ START GSS_Probe_Media_Player
 PASS GSS_Probe_Media_Player duel_main=true reason= play_done=true
 START GSS_Probe_Media_Player
 PASS GSS_Probe_Media_Player duel_main=true reason= play_done=true
+START GG_Probe_Media_Player
+PASS GG_Probe_Media_Player duel_main=true reason= play_done=true

@@ -631,6 +631,9 @@ int AiStepChangePositions(void)
 #ifdef HAS_CARD_4_STARRED_LADYBUG_OF_DOOM
                                 case CARD_4_STARRED_LADYBUG_OF_DOOM:    /* added: flip-removal, as these two */
 #endif
+#ifdef HAS_CARD_GRAVEKEEPERS_GUARD
+                                case CARD_GRAVEKEEPERS_GUARD:  /* added: flip-removal, as Hane-Hane */
+#endif
                                     if (ZoneFace(savedMask, z) == 0 && CountMonsters(0) > 0
                                         && AiShouldFlipRemovalForAttacks(1, zone) != 0
                                         && AiShouldTurnDefenseToAttack(1, zone)

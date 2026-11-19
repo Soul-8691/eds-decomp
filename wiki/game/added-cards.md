@@ -1761,6 +1761,23 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
 - Removed from `card_pools/missing-fusion.txt` and the "not fully implemented" notes (README, DECKS.md,
   [[yugi-kaiba-opponent]]).
 
+### Gravekeeper's Guard (2026-11-19)
+- Flip Effect Monster (Level 4 EARTH Spellcaster, 1000/1900). Card number 873 (ID 1000 in the demo); moved above
+  `------` in `new_cards.txt` (already in `config/new_cards.txt`) and out of `card_pools/missing-main.txt` and
+  `missing.txt`. "FLIP: Target 1 monster your opponent controls; return that target to the hand."
+- **Effect.** Hane-Hane's handlers, as Compulsory Evacuation Device uses them (`EffectTargetableMonsterChainB`,
+  `EffectReturnTargetToHandResolve`), with `EffectGravekeepersGuardCheck`: the opponent's monsters only. It is in
+  card_detail.c's Flip monster list (an `#ifdef` case beside Gravekeeper's Spy).
+- **CPU.** Treated as Hane-Hane: the flip-removal Flip Summon (ai_steps.c, an `#ifdef` case), its battle simulation
+  (`AiSimFlipRemovalEffect`, `AiFlipRemovalMonsterNumber`) and `IsBattleFlipRemoval`; its target is the human's
+  monster `AiFlipEffectTarget` picks.
+- **Gravekeeper's Spy.** A target with no change (its Deck list takes "Gravekeeper's" monsters with 1500 or less ATK
+  by name).
+- `.text` +0xC (0x0807F740).
+- **Checked in the emulator** (a probe board): the human's flipped Guard returned the CPU's Summoned Skull to its hand,
+  and a flipped Gravekeeper's Spy summoned a Guard from the Deck.
+- Card View screenshot `cards/Gravekeeper's Guard.png`; NEW_CARDS.md regenerated.
+
 ### Gravekeeper's Spear Soldier (2026-11-19)
 - Effect Monster (Level 4 DARK Spellcaster, 1500/1000). Card number 872 (ID 999 in the demo); moved above `------` in
   `new_cards.txt` (already in `config/new_cards.txt`) and out of `card_pools/missing-main.txt` and `missing.txt`. "If

@@ -4868,6 +4868,9 @@ static int IsBattleFlipRemoval(const struct ChainEntry *link)
     case CARD_HANE_HANE:
     case CARD_PENGUIN_SOLDIER:
     case CARD_DARK_EYES_ILLUSIONIST:
+#ifdef HAS_CARD_GRAVEKEEPERS_GUARD
+    case CARD_GRAVEKEEPERS_GUARD:
+#endif
 #ifdef HAS_CARD_NIGHT_ASSAILANT
     case CARD_NIGHT_ASSAILANT:
 #endif
@@ -10636,6 +10639,19 @@ int EffectJunkWarriorResolve(struct ChainEntry *link, struct ChainEntry *chained
 }
 #endif /* HAS_CARD_JUNK_WARRIOR */
 
+#ifdef HAS_CARD_GRAVEKEEPERS_GUARD
+/* ---- Gravekeeper's Guard (2026-11-19) ------------------------------------------------------------------------------
+ * Flip Effect Monster (Level 4 EARTH Spellcaster 1000/1900): "FLIP: Target 1 monster your opponent controls; return
+ * that target to the hand." Hane-Hane's effect (EffectTargetableMonsterChainB, EffectReturnTargetToHandResolve, as
+ * Compulsory Evacuation Device) with this check: the opponent's monsters only. A Flip monster in card_detail.c's list;
+ * the CPU flips it as Hane-Hane (ai_steps.c, AiSimFlipRemovalEffect, IsBattleFlipRemoval). With 1000 ATK it is a
+ * Gravekeeper's Spy target (its list takes the "Gravekeeper's" monsters by name). */
+u16 EffectGravekeepersGuardCheck(struct ChainEntry *card, u16 pos)
+{
+    return (u8)pos != (card->player & 1) && EffectTargetableMonsterCheck(card, pos);
+}
+#endif /* HAS_CARD_GRAVEKEEPERS_GUARD */
+
 #ifdef HAS_CARD_SKILL_DRAIN
 /* ---- Skill Drain (2026-11-18) -------------------------------------------------------------------------------------
  * Continuous Trap: "Activate by paying 1000 LP. Negate the effects of all face-up monsters while they are face-up on the
@@ -13056,7 +13072,11 @@ static void AiSimFlipRemovalEffect(int cpuZone, u16 number)
     z->positionLocked = 0;
     gDuelPlayers[AI_PLAYER].attackedMask &= ~(1 << cpuZone);
 
-    if (number == CARD_HANE_HANE) {
+    if (number == CARD_HANE_HANE
+#ifdef HAS_CARD_GRAVEKEEPERS_GUARD
+        || number == CARD_GRAVEKEEPERS_GUARD                 /* the human's monster too */
+#endif
+    ) {
         first = AiFindStrongestMonster(0, -1, 1, 1);
         if (first >= 0)
             AiSimClearMonsterOnField(0, first);
@@ -13096,6 +13116,9 @@ static int AiFlipRemovalMonsterNumber(u16 id)
     case CARD_PENGUIN_SOLDIER:
 #ifdef HAS_CARD_4_STARRED_LADYBUG_OF_DOOM
     case CARD_4_STARRED_LADYBUG_OF_DOOM:
+#endif
+#ifdef HAS_CARD_GRAVEKEEPERS_GUARD
+    case CARD_GRAVEKEEPERS_GUARD:
 #endif
         return (int)number;
     default:
@@ -18849,6 +18872,16 @@ const struct CardEffect gAddedCardEffects[] = {
         NULL,
         NULL,
         NULL,
+    },
+#endif
+#ifdef HAS_CARD_GRAVEKEEPERS_GUARD
+    {
+        CARD_GRAVEKEEPERS_GUARD, 0,
+        (int (*)(struct ChainEntry *, struct ChainEntry *))EffectReturnTargetToHandResolve,
+        EffectGravekeepersGuardCheck,
+        NULL,
+        NULL,
+        (int (*)(struct ChainEntry *, struct ChainEntry *))EffectTargetableMonsterChainB,
     },
 #endif
 #ifdef HAS_CARD_GRAVEKEEPERS_SPY
