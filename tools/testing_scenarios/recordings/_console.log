@@ -26172,3 +26172,90 @@
    4784 media: encoding 1954 frames -> tools\testing_scenarios\..\..\screenshots\videos\sdj-probe.mp4
    4801 Play sequence done; ending capture (no recording tail).
    4801 Finished — PASS (play sequence + tail). Stop mGBA Record A/V to finalize MP4.
+     13 MP4 target: tools\testing_scenarios\recordings\GSS_Probe_Media_Player.mp4
+     13 emu recording API: screenshot, screenshotToImage
+     13 MP4: the scenario capture is off (captureMp4 = false)
+     13 GSS Probe / media / Player
+     13 point you.m0; wait 20; mp4_start gss-probe; flip_summon you.m0; pick you.deck[Gravekeeper's Spear Soldier]; position atk
+    794 Main menu (callback 0x08003B15).
+    917 Campaign selected (callback 0x0801D6F5).
+   1110 Turn order: forced RPS lose (CPU goes first).
+   1120 Turn order: A (lost RPS; CPU chooses first).
+   1158 Turn order: A (lost RPS; CPU chooses first).
+   1350 Opponent's turn (waiting for your Main Phase 1).
+   1352 Usage deck goat / Chaos Turbo: main=40 extra=15; P0 shuffled=true (top 719->522) P1 shuffled=true (top 719->859), hands cleared.
+   2250 cpu_turn f=900 duel_step=8 turn_player=1 ai=3/2 textbox=0
+   3150 cpu_turn f=1800 duel_step=8 turn_player=1 ai=3/2 textbox=0
+   4050 cpu_turn f=2700 duel_step=8 turn_player=1 ai=4/0 textbox=0
+   4168 Player Draw Phase.
+   4349 Opening draw complete (hand=6 deck=34 want=6).
+   4486 Exact setup: P0 hand=0 deck=35 gy=0, P1 hand=0 deck=32 gy=0, LP 8000/8000, turnCount 2.
+   4486 Player Main Phase 1.
+   4486 steps: unknown card GSS Probe
+   4486 steps: 12 steps, 29 ops
+   4486 step: point you.m0
+   4622 steps: capture starts (cursor on point you.m0)
+   4629 step: wait 20
+   4655 step: mp4_start gss-probe
+   4655 media: recording gss-probe (mp4)
+   4662 step: flip_summon you.m0
+   4708 step: pick you.deck[Gravekeeper's Spear Soldier]
+   5608 steps: list timed out (pick you.deck[Gravekeeper's Spear Soldier]) [box active=true kind=1 step=1; list=false; chain=true; summon=false; cmds=false; prompt=0]
+   5615 step: position atk
+   6515 steps: result timed out (position atk) [box active=true kind=1 step=1; list=false; chain=true; summon=false; cmds=false; prompt=0]
+   6522 step: settle
+   6529 step: battle
+   7429 steps: phase timed out (battle) [box active=true kind=1 step=1; list=false; chain=true; summon=false; cmds=false; prompt=0]
+   7436 step: attack you.m1 -> opp.m0
+   8372 steps: cursor timed out (attack you.m1 -> opp.m0) [box active=false kind=0 step=3; list=true; chain=true; summon=false; cmds=false; prompt=0]
+   9291 steps: menu timed out (attack you.m1 -> opp.m0) [box active=true kind=5 step=1; list=false; chain=true; summon=true; cmds=false; prompt=0]
+   9693 steps: attack you.m1 -> opp.m0: taken on press 1
+  10594 steps: settle timed out (attack you.m1 -> opp.m0) [box active=false kind=5 step=3; list=false; chain=false; summon=false; cmds=false; prompt=0]
+  10601 step: settle
+  11501 steps: settle timed out (settle) [box active=false kind=5 step=3; list=false; chain=false; summon=false; cmds=false; prompt=0]
+  11508 step: wait 90
+  11604 step: rec_stop
+  11604 media: encoding 6949 frames -> tools\testing_scenarios\..\..\screenshots\videos\gss-probe.mp4
+  13111 steps: settle timed out (end) [box active=false kind=5 step=3; list=false; chain=false; summon=false; cmds=false; prompt=0]
+  13112 Play sequence done; ending capture (no recording tail).
+  13112 Finished — PASS (play sequence + tail). Stop mGBA Record A/V to finalize MP4.
+     13 MP4 target: tools\testing_scenarios\recordings\GSS_Probe_Media_Player.mp4
+     13 emu recording API: screenshot, screenshotToImage
+     13 MP4: the scenario capture is off (captureMp4 = false)
+     13 GSS Probe / media / Player
+     13 point you.m0; wait 20; mp4_start gss-probe; flip_summon you.m0; yes; pick you.deck[Gravekeeper's Spear Soldier]; positio
+    794 Main menu (callback 0x08003B15).
+    917 Campaign selected (callback 0x0801D6F5).
+   1110 Turn order: forced RPS lose (CPU goes first).
+   1120 Turn order: A (lost RPS; CPU chooses first).
+   1158 Turn order: A (lost RPS; CPU chooses first).
+   1350 Opponent's turn (waiting for your Main Phase 1).
+   1352 Usage deck goat / Chaos Turbo: main=40 extra=15; P0 shuffled=true (top 719->920) P1 shuffled=true (top 719->434), hands cleared.
+   2250 cpu_turn f=900 duel_step=8 turn_player=1 ai=4/0 textbox=0
+   2349 Player Draw Phase.
+   2530 Opening draw complete (hand=6 deck=34 want=6).
+   2669 Exact setup: P0 hand=0 deck=35 gy=0, P1 hand=0 deck=34 gy=0, LP 8000/8000, turnCount 2.
+   2669 Player Main Phase 1.
+   2669 steps: unknown card GSS Probe
+   2669 steps: 13 steps, 31 ops
+   2669 step: point you.m0
+   2805 steps: capture starts (cursor on point you.m0)
+   2812 step: wait 20
+   2838 step: mp4_start gss-probe
+   2838 media: recording gss-probe (mp4)
+   2845 step: flip_summon you.m0
+   2891 step: yes
+   3613 step: pick you.deck[Gravekeeper's Spear Soldier]
+   3695 step: position atk
+   3747 steps: position atk: menu A again (not taken)
+   3825 step: settle
+   4055 step: battle
+   4155 step: attack you.m1 -> opp.m0
+   4435 steps: attack you.m1 -> opp.m0: taken on press 1
+   5305 step: settle
+   5331 step: wait 90
+   5427 step: rec_stop
+   5427 media: 18 still frames trimmed from the end
+   5427 media: encoding 2571 frames -> tools\testing_scenarios\..\..\screenshots\videos\gss-probe.mp4
+   5444 Play sequence done; ending capture (no recording tail).
+   5444 Finished — PASS (play sequence + tail). Stop mGBA Record A/V to finalize MP4.

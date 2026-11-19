@@ -176,6 +176,7 @@ Goyo Guardian
 Colossal Fighter
 Fusilier Dragon, the Dual-Mode Beast
 Skill Drain
+Gravekeeper's Spear Soldier
 ------
 Dark End Dragon
 Red Dragon Archfiend
@@ -221,7 +222,6 @@ Necrovalley
 Lava Golem
 Barrel Behind the Door
 Enraged Battle Ox
-Gravekeeper's Spear Soldier
 Slate Warrior
 Iron Blacksmith Kotetsu
 Armed Samurai - Ben Kei

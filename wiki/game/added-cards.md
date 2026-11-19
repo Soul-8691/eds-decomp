@@ -1761,6 +1761,19 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
 - Removed from `card_pools/missing-fusion.txt` and the "not fully implemented" notes (README, DECKS.md,
   [[yugi-kaiba-opponent]]).
 
+### Gravekeeper's Spear Soldier (2026-11-19)
+- Effect Monster (Level 4 DARK Spellcaster, 1500/1000). Card number 872 (ID 999 in the demo); moved above `------` in
+  `new_cards.txt` (already in `config/new_cards.txt`) and out of `card_pools/missing-main.txt` and `missing.txt`. "If
+  this card attacks a Defense Position monster, inflict piercing Battle Damage to your opponent."
+- **Piercing.** A case in `ModHasPiercing` (beside Spear Dragon and Airknight Parshath).
+- **Gravekeeper's Spy.** Its Deck list (`CollectEffectTargets`, effect_target_collect.c) already takes every
+  "Gravekeeper's" monster (`IsGravekeeperMonster`, by name) with 1500 or less ATK that is not a Fusion or Ritual
+  Monster, so Spear Soldier is a target with no change. The CPU's Spy takes another Spy first
+  (`AiRecruiterCopyEntry`), else its usual list pick.
+- **Checked in the emulator** (a probe board): the human's flipped Gravekeeper's Spy summoned it from the Deck, and
+  its attack on a Defense Position Sangan (600 DEF) dealt 900.
+- Card View screenshot `cards/Gravekeeper's Spear Soldier.png`; NEW_CARDS.md regenerated.
+
 ### Skill Drain (2026-11-18)
 - Continuous Trap. Card number 871 (ID 998 in the demo); moved above `------` in `new_cards.txt` (already in
   `config/new_cards.txt`) and out of `card_pools/missing-main.txt` and `missing.txt`. "Activate by paying 1000 LP.

@@ -12111,6 +12111,9 @@ int ModHasPiercing(u16 cardId)
 #ifdef HAS_CARD_GYAKU_GIRE_PANDA
     case CARD_GYAKU_GIRE_PANDA:
 #endif
+#ifdef HAS_CARD_GRAVEKEEPERS_SPEAR_SOLDIER
+    case CARD_GRAVEKEEPERS_SPEAR_SOLDIER:  /* its own text: the difference as Battle Damage (piercing) */
+#endif
         return 1;
 #ifdef HAS_CARD_EXARION_UNIVERSE
     case CARD_EXARION_UNIVERSE:
