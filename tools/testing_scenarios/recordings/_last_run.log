@@ -1727,3 +1727,7 @@ START BarrelC_Probe_Media_Player
 PASS BarrelC_Probe_Media_Player duel_main=true reason= play_done=true
 START Barrel_Probe_Media_Player
 PASS Barrel_Probe_Media_Player duel_main=true reason= play_done=true
+START Golem_Probe_Media_Player
+PASS Golem_Probe_Media_Player duel_main=false reason= play_done=true
+START Golem_Probe_Media_Player
+PASS Golem_Probe_Media_Player duel_main=false reason= play_done=true

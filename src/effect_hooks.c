@@ -883,6 +883,7 @@ enum SummonStep {
     SUMMON_STEP_BLS_PROMPT = 90,            /* added: Black Luster Soldier - Envoy of the Beginning banishes one */
     SUMMON_STEP_BLS_PICK = 91,              /* LIGHT (summonSeq 0), then one DARK (1) Graveyard monster */
     SUMMON_STEP_BLS_BANISH = 92,
+    SUMMON_STEP_LAVA_GOLEM = 100,           /* added card: ModLavaGolemSummonStep (src/added_effects.c) */
 };
 
 /* The level of a card ID as the Tribute rules see it: Trap, Magic and Ticket cards 0, Divine-Beasts 10,
@@ -1060,6 +1061,10 @@ enum TributePrompt {
 void ModSummonWithoutTribute(int player, int handIndex, int faceUp);   /* added card (src/added_effects.c) */
 #endif
 
+#ifdef HAS_CARD_LAVA_GOLEM
+int ModLavaGolemSummonStep(int player, int handIndex);     /* added card (src/added_effects.c) */
+#endif
+
 void CardMenu_SummonMonster(u16 faceUp, u16 special)
 {
     char text[0x80];
@@ -1085,6 +1090,11 @@ void CardMenu_SummonMonster(u16 faceUp, u16 special)
             OPEN_PROMPT(text);
             CM.step = SUMMON_STEP_NAMED_TRIBUTE_PICK;
             break;
+#ifdef HAS_CARD_LAVA_GOLEM
+        case CARD_LAVA_GOLEM:      /* added card: Tribute two of the opponent's monsters, to their field */
+            CM.step = SUMMON_STEP_LAVA_GOLEM;
+            break;
+#endif
         case CARD_GATE_GUARDIAN:
             CM.summonTributes = 0;
             CM.summonSeq = 0;
@@ -1714,6 +1724,12 @@ void CardMenu_SummonMonster(u16 faceUp, u16 special)
         } else {
             CM.step = SUMMON_STEP_BANISH_SUMMON;
         }
+        break;
+#endif
+#ifdef HAS_CARD_LAVA_GOLEM
+    case SUMMON_STEP_LAVA_GOLEM:
+        if (ModLavaGolemSummonStep(CM.player, CM.index))
+            CM.confirmed = 0;
         break;
 #endif
     case SUMMON_STEP_BANISH_SUMMON:

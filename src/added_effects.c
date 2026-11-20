@@ -130,6 +130,10 @@ struct ModDuelState {
     u8 barrelPlayer;
     u8 barrelLinkPlayer;
     u16 barrelCard;
+    /* Lava Golem: the summon's step (ModLavaGolemSummonStep, the CPU's AiLavaGolem: 1 Tributes done), its picks */
+    u8 lavaStep;
+    u8 lavaPicks;
+    u8 lavaPick[2];
 };
 extern struct ModDuelState gModDuel;
 /* gModDuel (0x0202FF04, symbols.ld) must end before gScratchBuffer (0x02030000). */
@@ -12797,6 +12801,10 @@ static int NightmareWheelStandbyStep(int player)
 }
 #endif /* HAS_CARD_NIGHTMARE_WHEEL */
 
+#ifdef HAS_CARD_LAVA_GOLEM
+static int LavaGolemStandbyStep(int player);
+#endif
+
 int ModStandbyStep(int player)
 {
     int done;
@@ -12818,10 +12826,12 @@ int ModStandbyStep(int player)
         break;
     case 2:
 #ifdef HAS_CARD_NIGHTMARE_WHEEL
-        done = NightmareWheelStandbyStep(player);
-#else
-        done = 1;
+        NightmareWheelStandbyStep(player);
 #endif
+#ifdef HAS_CARD_LAVA_GOLEM
+        LavaGolemStandbyStep(player);           /* defined below */
+#endif
+        done = 1;
         break;
 #ifdef HAS_CARD_MIRAGE_OF_NIGHTMARE
     case 3:
@@ -12844,6 +12854,147 @@ int ModStandbyStep(int player)
     }
     return 0;
 }
+
+#ifdef HAS_CARD_LAVA_GOLEM
+/* ---- Lava Golem (2026-11-20) ---------------------------------------------------------------------------------------
+ * Effect Monster (Level 8 FIRE Fiend 3000/2500): "Cannot be Normal Summoned/Set. Must first be Special Summoned (from
+ * your hand) to your opponent's field by Tributing 2 monsters they control. You cannot Normal Summon/Set the turn you
+ * Special Summon this card. Once per turn, during your Standby Phase: Take 1000 damage."
+ *   menu     IsSpecialSummonOnly (card_detail.c) and CanSummonFromHand (summon_checks.c: CanLavaGolemSummon): the
+ *            player has not Normal Summoned this turn, may Special Summon, and the opponent has 2 monsters to Tribute
+ *   human    CardMenu_SummonMonster (effect_hooks.c) runs ModLavaGolemSummonStep: pick 2 of the opponent's monsters
+ *            with the cursor (B cancels), Tribute them, then (once both zones are empty) the card leaves the hand
+ *            and is Special Summoned face-up on the opponent's field (QueueSpecialSummon for the opponent; its owner
+ *            stays the summoner); the summoner's Normal Summon of the turn is used up
+ *   standby  ModStandbyStep (StandbyDamageStep, with Nightmare Wheel): 1000 damage to the turn player for each face-up,
+ *            enabled Lava Golem they control
+ *   CPU      AiLavaGolem (AiSpecialSummonCyberDragon, before its Normal Summon): the human's two strongest monsters to
+ *            Tribute total LAVA_GOLEM_CPU_MIN_ATK or more */
+#define LAVA_GOLEM_DAMAGE       1000
+#define LAVA_GOLEM_CPU_MIN_ATK  3500
+
+static const u8 sStrLavaGolemPick[] = "Select 2 of your opponent's monsters to Tribute.";
+
+int CanLavaGolemSummon(int player)
+{
+    return !gDuelPlayers[player & 1].normalSummonUsed && CanSpecialSummon(player)
+           && CountTributableMonsters(1 - (player & 1), -1) >= 2;
+}
+
+/* Both picks Tributed (their zones empty): the card leaves `player`'s hand and arrives on the opponent's field. */
+static int LavaGolemSummonOnto(int player, int handIndex)
+{
+    int opp = 1 - (player & 1);
+    struct DuelCard card;
+
+    if (DUEL_CARD_ID(&ZoneOf(opp, gModDuel.lavaPick[0])->card) != 0
+        || DUEL_CARD_ID(&ZoneOf(opp, gModDuel.lavaPick[1])->card) != 0)
+        return 0;                               /* the Tributes are still on their way */
+    card = gDuelPlayers[player & 1].hand[handIndex];
+    RemoveCardFromHand(player, &card);
+    QueueSpecialSummon(opp, &card, 1, 0, 0);
+    gDuelPlayers[player & 1].normalSummonUsed = 1;
+    return 1;
+}
+
+int ModLavaGolemSummonStep(int player, int handIndex)
+{
+    int opp = 1 - (player & 1);
+
+    switch (gModDuel.lavaStep) {
+    case 0:
+        gModDuel.lavaPicks = 0;
+        TextBoxOpen(TEXTBOX_POS(6, 2), TEXTBOX_SIZE(18, 7), TEXTBOX_FLAGS_DEFAULT, sStrLavaGolemPick);
+        gModDuel.lavaStep = 1;
+        return 0;
+    case 1:
+        if (gMain.newKeys & B_BUTTON) {
+            gModDuel.lavaStep = 0;
+            return 1;                           /* cancelled */
+        }
+        if (DuelCursor_PickTarget(opp ? PICK_PLAYER1(PICK_ANY_MONSTER) : PICK_ANY_MONSTER) != 0) {
+            int zone = gDuelScreen.selIndex;
+
+            if ((gDuelScreen.selPlayer & 1) == opp && zone <= ZONE_MONSTER_4 && IsTributableMonster(opp, zone)
+                && (gModDuel.lavaPicks == 0 || gModDuel.lavaPick[0] != zone)) {
+                PlaySE(SE_CONFIRM);
+                gModDuel.lavaPick[gModDuel.lavaPicks++] = zone;
+                if (gModDuel.lavaPicks == 2)
+                    gModDuel.lavaStep = 2;
+            } else {
+                PlaySE(SE_ERROR);
+            }
+        }
+        return 0;
+    case 2:
+        TributeMonster(opp, gModDuel.lavaPick[0]);
+        TributeMonster(opp, gModDuel.lavaPick[1]);
+        gModDuel.lavaStep = 3;
+        return 0;
+    default:
+        if (!LavaGolemSummonOnto(player, handIndex))
+            return 0;
+        gModDuel.lavaStep = 0;
+        return 1;
+    }
+}
+
+static int LavaGolemStandbyStep(int player)
+{
+    int zone;
+
+    for (zone = ZONE_MONSTER_0; zone <= ZONE_MONSTER_4; zone++) {
+        struct DuelZone *z = ZoneOf(player, zone);
+
+        if (z->isFaceUp && !z->isDisabled && DUEL_CARD_ID(&z->card) != 0
+            && CardNumberOfId(DUEL_CARD_ID(&z->card)) == CARD_LAVA_GOLEM) {
+            ShowCardEffect(player, DUEL_CARD_ID(&z->card));
+            LoseLifePoints(player, LAVA_GOLEM_DAMAGE);
+        }
+    }
+    return 1;
+}
+
+/* The CPU: Tribute the human's two strongest monsters when they total LAVA_GOLEM_CPU_MIN_ATK or more; the next call
+ * (once they are gone) summons it onto the human's field. */
+static int AiLavaGolem(void)
+{
+    int idx = FindHandCardByNumber(AI_PLAYER, CARD_LAVA_GOLEM), zone, a = -1, b = -1;
+
+    if (gModDuel.lavaStep == 1 && gModDuel.lavaPicks == 0xFF) {
+        if (idx < 0) {
+            gModDuel.lavaStep = 0;
+            return 0;
+        }
+        if (!LavaGolemSummonOnto(AI_PLAYER, idx))
+            return 1;                           /* wait for the Tributes */
+        gModDuel.lavaStep = 0;
+        gModDuel.lavaPicks = 0;
+        return 1;
+    }
+    if (idx < 0 || !CanLavaGolemSummon(AI_PLAYER))
+        return 0;
+    for (zone = ZONE_MONSTER_0; zone <= ZONE_MONSTER_4; zone++) {
+        if (DUEL_CARD_ID(&ZoneOf(AI_HUMAN, zone)->card) == 0 || !IsTributableMonster(AI_HUMAN, zone))
+            continue;
+        if (a < 0 || GetZoneCardAtk(AI_HUMAN, zone) > GetZoneCardAtk(AI_HUMAN, a)) {
+            b = a;
+            a = zone;
+        } else if (b < 0 || GetZoneCardAtk(AI_HUMAN, zone) > GetZoneCardAtk(AI_HUMAN, b)) {
+            b = zone;
+        }
+    }
+    if (a < 0 || b < 0 || (int)GetZoneCardAtk(AI_HUMAN, a) + (int)GetZoneCardAtk(AI_HUMAN, b) < LAVA_GOLEM_CPU_MIN_ATK)
+        return 0;
+    TributeMonster(AI_HUMAN, a);
+    TributeMonster(AI_HUMAN, b);
+    gModDuel.lavaPick[0] = a;
+    gModDuel.lavaPick[1] = b;
+    gModDuel.lavaStep = 1;
+    gModDuel.lavaPicks = 0xFF;                  /* the CPU's: summon on the next call */
+    return 1;
+}
+#endif /* HAS_CARD_LAVA_GOLEM */
 
 #ifdef HAS_CARD_CYBER_DRAGON
 /* ---- Cyber Dragon -------------------------------------------------------------------------------------------------
@@ -12935,6 +13086,11 @@ int AiSpecialSummonCyberDragon(void)
 {
     struct DuelPlayer *p = &gDuelPlayers[AI_PLAYER];
     int i;
+
+#ifdef HAS_CARD_LAVA_GOLEM
+    if (AiLavaGolem())                      /* before its Normal Summon: Lava Golem forbids it */
+        return 1;
+#endif
 
     if (CountFreeMonsterZones(AI_PLAYER) == 0 || !CanSpecialSummon(AI_PLAYER))
         return 0;

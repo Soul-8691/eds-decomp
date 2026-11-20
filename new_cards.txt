@@ -181,6 +181,7 @@ Gravekeeper's Guard
 Necrovalley
 Enraged Battle Ox
 Barrel Behind the Door
+Lava Golem
 ------
 Dark End Dragon
 Red Dragon Archfiend
@@ -221,7 +222,6 @@ Yomi Ship
 Getsu Fuhma
 Silpheed
 Steamroid
-Lava Golem
 Slate Warrior
 Iron Blacksmith Kotetsu
 Armed Samurai - Ben Kei

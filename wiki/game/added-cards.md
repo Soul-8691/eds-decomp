@@ -1761,6 +1761,32 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
 - Removed from `card_pools/missing-fusion.txt` and the "not fully implemented" notes (README, DECKS.md,
   [[yugi-kaiba-opponent]]).
 
+### Lava Golem (2026-11-20)
+- Effect Monster (Level 8 FIRE Fiend, 3000/2500). Card number 877 (ID 1004 in the demo); moved above `------` in
+  `new_cards.txt` (already in `config/new_cards.txt`) and out of `card_pools/missing-main.txt` and `missing.txt`.
+  "Cannot be Normal Summoned/Set. Must first be Special Summoned (from your hand) to your opponent's field by Tributing
+  2 monsters they control. You cannot Normal Summon/Set the turn you Special Summon this card. Once per turn, during
+  your Standby Phase: Take 1000 damage."
+- **Menu.** `IsSpecialSummonOnly` (card_detail.c) and `CanSummonFromHand` (summon_checks.c: `CanLavaGolemSummon`,
+  `#ifdef` cases): the player has not Normal Summoned this turn, may Special Summon, and the opponent has two monsters
+  to Tribute.
+- **The summon.** `CardMenu_SummonMonster` (effect_hooks.c: a new step `SUMMON_STEP_LAVA_GOLEM = 100`) runs
+  `ModLavaGolemSummonStep`: a prompt, two of the opponent's monsters picked with the cursor (B cancels), both Tributed,
+  then (once both zones are empty, as `QueueSpecialSummon` takes its zone when queued) the card leaves the hand
+  (`RemoveCardFromHand`) and is Special Summoned face-up on the opponent's field (`QueueSpecialSummon` for the
+  opponent; the owner stays the summoner). The summoner's `normalSummonUsed` is set, so Summon and Set are gone for
+  the turn.
+- **Standby.** `ModStandbyStep`'s Nightmare Wheel slot also runs `LavaGolemStandbyStep`: 1000 damage to the turn
+  player for each face-up, enabled Lava Golem they control.
+- **CPU.** `AiLavaGolem`, first in `AiSpecialSummonCyberDragon` (before its Normal Summon): when the human's two
+  strongest monsters to Tribute total 3500 ATK or more, it Tributes them, and on the next call summons the Golem onto
+  the human's field.
+- `.text` +0xB4 (0x0807F7F8).
+- **Checked in the emulator** (a probe board): the human's Lava Golem Tributed the CPU's Summoned Skull and Dark
+  Magician and arrived on the CPU's field; the human's Sangan then offered no Summon or Set; in its Standby Phase the
+  CPU took 1000. The CPU's own use was not driven.
+- Card View screenshot `cards/Lava Golem.png`; NEW_CARDS.md regenerated.
+
 ### Barrel Behind the Door (2026-11-19)
 - Counter Trap. Card number 876 (ID 1003 in the demo); moved above `------` in `new_cards.txt` (already in
   `config/new_cards.txt`) and out of `card_pools/missing-main.txt` and `missing.txt`. "Activate only when a card's

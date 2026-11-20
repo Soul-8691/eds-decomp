@@ -716,6 +716,9 @@ u32 IsSpecialSummonOnly(u16 cardId)
 #ifdef HAS_CARD_BLACK_LUSTER_SOLDIER_ENVOY_OF_THE_BEGINNING
     case CARD_BLACK_LUSTER_SOLDIER_ENVOY_OF_THE_BEGINNING:   /* added card */
 #endif
+#ifdef HAS_CARD_LAVA_GOLEM
+    case CARD_LAVA_GOLEM:                    /* added card */
+#endif
 #ifdef HAS_CARD_CHAOS_SORCERER
     case CARD_CHAOS_SORCERER:                                /* added card */
 #endif

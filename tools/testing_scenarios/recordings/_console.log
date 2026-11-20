@@ -26479,3 +26479,119 @@
    6920 media: encoding 1404 frames -> tools\testing_scenarios\..\..\screenshots\videos\barrel-probe.mp4
    6937 Play sequence done; ending capture (no recording tail).
    6937 Finished — PASS (play sequence + tail). Stop mGBA Record A/V to finalize MP4.
+     17 MP4 target: tools\testing_scenarios\recordings\Golem_Probe_Media_Player.mp4
+     17 emu recording API: screenshot, screenshotToImage
+     17 MP4: the scenario capture is off (captureMp4 = false)
+     17 Golem Probe / media / Player
+     17 point you.hand[Lava Golem]; wait 20; mp4_start golem-probe; open_menu you.hand[Lava Golem]; menu sp_summon; target opp.m
+    918 Main menu (callback 0x08003B15).
+   1041 Campaign selected (callback 0x0801D709).
+   1234 Turn order: forced RPS lose (CPU goes first).
+   1244 Turn order: A (lost RPS; CPU chooses first).
+   1282 Turn order: A (lost RPS; CPU chooses first).
+   1474 Opponent's turn (waiting for your Main Phase 1).
+   1476 Usage deck goat / Chaos Turbo: main=40 extra=15; P0 shuffled=true (top 719->859) P1 shuffled=true (top 719->920), hands cleared.
+   2374 cpu_turn f=900 duel_step=8 turn_player=1 ai=4/0 textbox=0
+   2468 Player Draw Phase.
+   2649 Opening draw complete (hand=6 deck=34 want=6).
+   2788 Exact setup: P0 hand=2 deck=34 gy=0, P1 hand=0 deck=34 gy=0, LP 8000/8000, turnCount 2.
+   2788 Player Main Phase 1.
+   2788 steps: unknown card Golem Probe
+   2788 steps: 17 steps, 38 ops
+   2788 step: point you.hand[Lava Golem]
+   2982 steps: capture starts (cursor on point you.hand[Lava Golem])
+   2989 step: wait 20
+   3015 step: mp4_start golem-probe
+   3015 media: recording golem-probe (mp4)
+   3022 step: open_menu you.hand[Lava Golem]
+   3089 step: menu sp_summon
+   3115 step: target opp.m0
+   3167 steps: target opp.m0: A again (not taken)
+   3202 steps: target opp.m0: A again (not taken)
+   3237 steps: target opp.m0: A again (not taken)
+   3272 steps: target opp.m0: A again (not taken)
+   3307 steps: target opp.m0: A again (not taken)
+   3342 steps: target opp.m0: A again (not taken)
+   3377 steps: target opp.m0: A again (not taken)
+   3412 steps: target opp.m0: A again (not taken)
+   3447 steps: target opp.m0: A again (not taken)
+   3482 steps: target opp.m0: A again (not taken)
+   3517 steps: target opp.m0: A again (not taken)
+   3559 step: target opp.m1
+   3608 steps: target opp.m1: A again (not taken)
+   3643 steps: target opp.m1: A again (not taken)
+   3678 steps: target opp.m1: A again (not taken)
+   3713 steps: target opp.m1: A again (not taken)
+   3737 steps: target opp.m1: taken on press 5
+   3744 step: settle
+   3903 step: wait 30
+   3939 step: open_menu you.hand[Sangan]
+   4063 step: wait 60
+   4129 step: close
+   4175 step: unfreeze
+   4182 step: pass
+   4221 step: cpu_turn
+   5658 step: wait 60
+   5724 step: rec_stop
+   5724 media: 28 still frames trimmed from the end
+   5724 media: encoding 2681 frames -> tools\testing_scenarios\..\..\screenshots\videos\golem-probe.mp4
+   5766 Play sequence done; ending capture (no recording tail).
+   5766 Finished — PASS (play sequence + tail). Stop mGBA Record A/V to finalize MP4.
+     12 MP4 target: tools\testing_scenarios\recordings\Golem_Probe_Media_Player.mp4
+     12 emu recording API: screenshot, screenshotToImage
+     12 MP4: the scenario capture is off (captureMp4 = false)
+     12 Golem Probe / media / Player
+     12 point you.hand[Lava Golem]; wait 20; mp4_start golem-probe; open_menu you.hand[Lava Golem]; menu sp_summon; target opp.m
+    913 Main menu (callback 0x08003B15).
+   1036 Campaign selected (callback 0x0801D709).
+   1229 Turn order: forced RPS lose (CPU goes first).
+   1239 Turn order: A (lost RPS; CPU chooses first).
+   1277 Turn order: A (lost RPS; CPU chooses first).
+   1469 Opponent's turn (waiting for your Main Phase 1).
+   1471 Usage deck goat / Chaos Turbo: main=40 extra=15; P0 shuffled=true (top 719->838) P1 shuffled=true (top 719->902), hands cleared.
+   2369 cpu_turn f=900 duel_step=8 turn_player=1 ai=4/0 textbox=0
+   2430 Player Draw Phase.
+   2611 Opening draw complete (hand=6 deck=34 want=6).
+   2748 Exact setup: P0 hand=2 deck=34 gy=0, P1 hand=0 deck=34 gy=0, LP 8000/8000, turnCount 2.
+   2748 Player Main Phase 1.
+   2748 steps: unknown card Golem Probe
+   2748 steps: 17 steps, 38 ops
+   2748 step: point you.hand[Lava Golem]
+   2942 steps: capture starts (cursor on point you.hand[Lava Golem])
+   2949 step: wait 20
+   2975 step: mp4_start golem-probe
+   2975 media: recording golem-probe (mp4)
+   2982 step: open_menu you.hand[Lava Golem]
+   3049 step: menu sp_summon
+   3075 step: target opp.m0
+   3127 steps: target opp.m0: A again (not taken)
+   3162 steps: target opp.m0: A again (not taken)
+   3197 steps: target opp.m0: A again (not taken)
+   3232 steps: target opp.m0: A again (not taken)
+   3267 steps: target opp.m0: A again (not taken)
+   3302 steps: target opp.m0: A again (not taken)
+   3337 steps: target opp.m0: A again (not taken)
+   3372 steps: target opp.m0: A again (not taken)
+   3407 steps: target opp.m0: A again (not taken)
+   3442 steps: target opp.m0: A again (not taken)
+   3477 steps: target opp.m0: A again (not taken)
+   3519 step: target opp.m1
+   3568 steps: target opp.m1: A again (not taken)
+   3603 steps: target opp.m1: A again (not taken)
+   3638 steps: target opp.m1: A again (not taken)
+   3673 steps: target opp.m1: A again (not taken)
+   3697 steps: target opp.m1: taken on press 5
+   3704 step: settle
+   3863 step: wait 30
+   3899 step: open_menu you.hand[Sangan]
+   4023 step: wait 60
+   4089 step: close
+   4135 step: unfreeze
+   4142 step: pass
+   4181 step: cpu_turn
+   5631 step: wait 60
+   5697 step: rec_stop
+   5697 media: 28 still frames trimmed from the end
+   5697 media: encoding 2694 frames -> tools\testing_scenarios\..\..\screenshots\videos\golem-probe.mp4
+   5739 Play sequence done; ending capture (no recording tail).
+   5739 Finished — PASS (play sequence + tail). Stop mGBA Record A/V to finalize MP4.

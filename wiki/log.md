@@ -3450,3 +3450,9 @@ updated: 2026-09-29
   duel_card_actions.c) redirects the answered link's damage; CPU `AiChainBarrel`. Probe-checked.
 - [[added-cards]]; AI_IMPROVEMENTS.md, new_cards.txt, card_pools/missing-main.txt, card_pools/missing.txt,
   NEW_CARDS.md, cards/.
+
+## [2026-11-20] progress | Lava Golem coded
+- Added to the demo list. Its summon procedure (effect_hooks.c step 100, `ModLavaGolemSummonStep`), the Standby
+  damage (`LavaGolemStandbyStep`), the CPU's `AiLavaGolem`; card_detail.c and summon_checks.c cases. Probe-checked.
+- [[added-cards]]; AI_IMPROVEMENTS.md, new_cards.txt, card_pools/missing-main.txt, card_pools/missing.txt,
+  NEW_CARDS.md, cards/.

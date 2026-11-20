@@ -385,6 +385,9 @@ int CanPayBanishSummonCost(int player, u16 cardId)
  * The result is a zero-extended halfword as the ROM callers consume it.
  */
 int CanCyberDragonSpecialSummon(int player);   /* mod: src/added_effects.c */
+#ifdef HAS_CARD_LAVA_GOLEM
+int CanLavaGolemSummon(int player);            /* mod: src/added_effects.c */
+#endif
 
 int CanSummonFromHand(int player, u16 cardId)
 {
@@ -436,6 +439,10 @@ int CanSummonFromHand(int player, u16 cardId)
         if (CanSpecialSummon(player) == 0)
             return 0;
         return (u16)CanPayEarthBanishCost(player);
+#endif
+#ifdef HAS_CARD_LAVA_GOLEM
+    case CARD_LAVA_GOLEM:                                     /* added card: two of the opponent's monsters */
+        return (u16)CanLavaGolemSummon(player);
 #endif
     case CARD_RED_EYES_BLACK_METAL_DRAGON:
     case CARD_HARPIE_LADY_SISTERS:

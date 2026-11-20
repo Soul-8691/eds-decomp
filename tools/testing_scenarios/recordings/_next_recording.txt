@@ -1,2 +1,2 @@
-tools\testing_scenarios\recordings\Barrel_Probe_Media_Player.mp4
-tools/testing_scenarios/recordings/Barrel_Probe_Media_Player.mp4
+tools\testing_scenarios\recordings\Golem_Probe_Media_Player.mp4
+tools/testing_scenarios/recordings/Golem_Probe_Media_Player.mp4
