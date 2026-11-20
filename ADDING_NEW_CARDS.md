@@ -14,7 +14,8 @@ almost all card code lives, and the cards already in it are the best examples to
 6. [Level 4: new mechanics](#6-level-4-new-mechanics)
 7. [The CPU](#7-the-cpu)
 8. [Toolbox: functions for common effects](#8-toolbox-functions-for-common-effects)
-9. [Checklist](#9-checklist)
+9. [Testing in the emulator](#9-testing-in-the-emulator)
+10. [Checklist](#10-checklist)
 
 ---
 
@@ -144,6 +145,10 @@ Many rows need no new handler at all. Ready-made handlers (cast them to the row'
 | Lock 1 opponent's monster | `EffectOpponentMonsterCheck` | `EffectOpponentMonsterChainB` | `EffectSpellbindingCircleResolve` |
 
 Examples: Old Vindictive Magician and Zaborg are rows made only of these; Nightmare Wheel reuses Spellbinding Circle's.
+When a ready-made row is almost right, keep its ChainB and resolve and write only a check: Gravekeeper's Guard is
+Hane-Hane's flip (`EffectTargetableMonsterChainB`, `EffectReturnTargetToHandResolve`) with
+`EffectGravekeepersGuardCheck`, which allows the opponent's monsters only. The CPU's ChainB picks through
+`TryAddEffectTarget`, which asks the check, so it follows the new rule too.
 
 ### Typical shapes (copy the named card)
 
@@ -158,9 +163,23 @@ Examples: Old Vindictive Magician and Zaborg are rows made only of these; Nightm
 | Equip | Blast with Chain, Big Bang Shot |
 | Monster with a card-menu ACTIVATE (ignition) | Magical Scientist, Stealth Bird, Roulette Barrel |
 | Pick cards from a pile | Magical Scientist, Marauding Captain (`CollectEffectTargets` + `CardListView_Open`) |
+| Continuous Trap / Field Spell that stays on the field | Skill Drain, Necrovalley (a resolve that only returns `EFFECT_STEP_DONE`; the effect is a check elsewhere, Level 3) |
+| Face-up monster that answers a chain link (Quick Effect) | Stardust Dragon, Dark Balter the Terrible, Ryu Senshi (`ModMonsterCanRespond`) |
+| Summon trigger that picks something | Ojama King (picks the opponent's empty zones in ChainB with `DuelCursor_PickAny`) |
 
 **Flip effects:** add the card to `HasFlipEffect` (`src/card_detail.c`); the engine then queues the link on every flip.
 Old Vindictive Magician is the simplest example.
+
+**Pitfalls**
+
+- **A Spell played from the hand is a link of kind 0**, not `CHAIN_KIND_SPELL_TRAP`: test the card's type
+  (`CARD_STATS_TYPE`, `CARD_STATS_SUBTYPE`), never `link->kind`, to recognise "a Spell" or "a Normal Spell" (Dark
+  Deal, Dark Balter). Use `link->kind != CHAIN_KIND_OFF_FIELD` to leave out Graveyard effects.
+- **A Continuous card's prepare must refuse its own face-up copy.** The engine asks the prepare of face-up cards in
+  response windows too, so a prepare that only checks the cost offers to activate the card again (Skill Drain:
+  `card->zone` already holds it face-up -> return 0).
+- **C89:** the compiler is agbcc, so declarations come before statements in a block. To run something first in a
+  function that declares variables, move the old body into a helper (`ModDuelStateCheck` -> `ModDuelStateRules`).
 
 ---
 
@@ -182,10 +201,10 @@ Where to queue it (most likely first):
 
 | When | Where |
 |---|---|
-| Summoned (Normal / Flip / Special) | `AddedCardsSummoned` (`src/added_effects.c`): `kind` is the summon kind, `faceUp` its position. Junk Synchron, Marauding Captain, Golem Sentry. |
+| Summoned (Normal / Flip / Special) | `AddedCardsSummoned` (`src/added_effects.c`): `kind` is the summon kind (`kind >= SUMMON_ACTION_SPECIAL` for a Special Summon), `faceUp` its position. Junk Synchron, Marauding Captain, Golem Sentry, Ojama King, The Last Warrior from Another Planet. |
 | Tribute / Normal Summoned (engine list) | The two Normal Summon paths in `src/summon_checks.c` (Zaborg, Mobius, Granmarg). |
 | Synchro / Xyz / Link Summoned | `AddedCardsSummoned`: `ModSynchroArrived` returns whether it was a Synchro Summon (Junk Warrior); `ModXyzArrived` attaches an Xyz Summon's materials and `ModLinkArrived` stands a monster in its Extra Monster Zone there, so a trigger for those goes after them. |
-| Your Standby Phase | `ModStandbyStep` (a part of its switch, `gModDuel.standbyPart`): Vampire Lord, Treeborn Frog, Nightmare Wheel. |
+| Your Standby Phase | `ModStandbyStep` (a part of its switch, `gModDuel.standbyPart`): Vampire Lord, Treeborn Frog, Nightmare Wheel; Lava Golem's 1000 damage shares Nightmare Wheel's part. |
 | End Phase | The `EndPhase_*` calls in `DuelPhase_End` (`src/battle_phase3.c`): Stardust Dragon, Limiter Removal. |
 | Destroyed by battle | `SendBattleDestroyedCardToGraveyard` (`src/duel_field_moves.c`), `src/battle_phase2.c`. |
 | Destroyed by an effect | `DestroyFieldCard` (`src/duel_field_moves.c`) and `OnCardDestroyedByEffect` (`src/effect_hooks.c`): Vampire Lord. |
@@ -203,21 +222,41 @@ in `src/added_effects.c`, so the original files only get one call each.
 
 | Rule | Ask in / existing hook |
 |---|---|
+| ATK/DEF of a face-up monster | `ModStatBonus` (`GetZoneCardStats`): returns ATK in the low half, DEF in the high half. Gyaku-Gire Panda, Colossal Fighter, Necrovalley (+500 for "Gravekeeper's"), Fusilier Dragon (half its printed stats). Returns 0 for a negated monster (`isDisabled`). |
+| A monster's effects negated | Set `isDisabled` on its zone: `CountActiveCardsOnField` and most checks skip it. A monster effect that resolves on the field: `ModMonsterLinkNegated` (`Chain_Resolve`). Skill Drain, Junk Synchron. |
+| Flip effects do not start | `FlipEffectsLockedForTurn` (asked wherever a Flip effect starts): Fiend Skull Dragon, Skill Drain. |
+| A Spell/Trap that targets a card is negated | `ModTargetedLinkNegated` (`Chain_Resolve`): Ryu Senshi (Spells), Fiend Skull Dragon (Traps). |
+| A monster destroyed by battle has its effects negated | `HaDesNegatesBattleDestroyed`: Dark Ruler Ha Des, Dark Balter the Terrible. |
+| Cannot Summon | `CanNormalSummon` / `CanSpecialSummon` (`src/effect_hooks.c`): The Last Warrior from Another Planet. The card menu only takes Summon and Flip away for `CanNormalSummon`, so Set stays. |
+| A Monster Zone cannot be used | `IsMonsterZoneFree` asks `ModZoneBlockerAt` for a `ZONE_LINK_CONTINUOUS` link on the empty zone: Ojama King (the engine's key 1320 works the same way). |
+| Cards cannot leave the Graveyard | `ModFilterEffectTargets` (end of `CollectEffectTargets`) drops the Graveyard entries of every effect's list: Necrovalley. |
+| Summon or Set without Tributes | `CanSummonFromHand` (`src/summon_checks.c`) and `CardMenu_SummonMonster` (`src/effect_hooks.c`): Fusilier Dragon. |
+| Special Summon procedure from the hand | `IsSpecialSummonOnly` (`src/card_detail.c`), `CanSummonFromHand`, and a step of `CardMenu_SummonMonster` that calls a step function in `src/added_effects.c`: Lava Golem (`SUMMON_STEP_LAVA_GOLEM`), Black Luster Soldier. |
 | Cannot attack / change position | `CountZoneLinksFromCard` (`src/duel_piles.c`): Nightmare Wheel counts as Spellbinding Circle. `ModAttacksBlocked`, `ModCannotAttackDirectly`, `ModAttackTargetLocked`. |
 | Cannot activate | `CanActivateEffect` (`src/effect_activation.c`): `ModCardNameSealed` (Cursed Seal), Spell Canceller, Imperial Order. |
 | Battle damage changed | `InflictBattleDamage` (`src/duel_card_actions.c`): `ModTakesNoDamage`, `ModRedirectBattleDamage` (Dimension Wall). |
-| Effect damage changed | `LoseLifePoints`: `ModTakesNoEffectDamage`. |
+| Effect damage changed | `LoseLifePoints`: `ModTakesNoEffectDamage`; redirected: `ModEffectDamageTarget` (Barrel Behind the Door). LP paid as a cost does not go through `LoseLifePoints`. |
 | Piercing | `ModHasPiercing` (`CalcBattle`, `src/campaign.c`). |
 | ATK/DEF changes | `GetZoneCardStats` (`src/card_stats.c`: the Equip and link cases), or a `ZONE_LINK_ATK_BONUS` link (see Toolbox). |
 | Banished instead of leaving | `IsFaceUpDarkMagicianOfChaos` (asked by every way off the field): Quillbolt Hedgehog. |
 | Leaving the field does something | `BigBangShotLeaves` / `BigBangShotMonsterLeaving` pattern (Big Bang Shot). |
 | Destroyed when its target leaves | `DestroyLinkedCards` (`src/duel_send_to_grave.c`). |
-| Checked every idle frame | `ModDuelStateCheck` (Berserk Gorilla, Level Limit - Area B). |
+| Checked every idle frame | `ModDuelStateCheck` (Berserk Gorilla, Level Limit - Area B, Skill Drain's `SkillDrainUpdate`). It runs only when the duel is idle (no chain, summon or prompt), before response windows open. |
 | Turn-start reset of "once per turn" | `DuelCmd_TurnStart` (`src/duel_cmd_turn.c`) sets `effectUnused`. |
+| After each chain link | `ModChainLinkResolved` (Barrel Behind the Door ends its redirect; Skilled Dark Magician's counters). |
 
 **State.** Anything a card must remember during a duel goes in `struct ModDuelState gModDuel` (top of
 `src/added_effects.c`), cleared in `ModDuelInit`. It is small (it must end before 0x02030000; the build fails with
-`ModDuelStateFits` if not), so use bytes and bit masks.
+`ModDuelStateFits` if not), so use bytes and bit masks. `struct ModDuelExtra gModDuelExtra` (80 bytes, nearly full)
+holds the overflow.
+
+A mark that belongs to one monster can go in a spare bit of its `struct DuelZone` (`include/duel.h`): `ClearZone`
+wipes the whole zone when the card leaves, and a control change copies it with the card. `modHalvedStats` (Fusilier
+Dragon) and `modSkillDrained` (Skill Drain) are taken; `unk8_3:5` is free.
+
+**Two rules that undo each other.** If your check reads a state that the engine recomputes from the card your rule
+changes, the two can flip each other every frame and hang the duel (Skill Drain first read Jinzo's `trapsNegated`).
+Decide from the cards on the field, not from the engine's derived flags.
 
 ---
 
@@ -243,7 +282,7 @@ goes in its `mod_anchors` (found by its symbol, so it follows every build) with 
 the data in a layout HMA can show (one array per kind of data, images as plain or tiled pixels).
 
 **Size limit.** The release build's `.text` must end at or before `0x08080A20`
-(`grep '^\.text ' build/eds.map`; the demo build's ends at 0x0807F31C as of 2026-11-07). Code in `src/added_effects.c` and other `@farcode` units does not count; every line
+(`grep '^\.text ' build/eds.map`; the demo build's ends at 0x0807F7F8 as of 2026-11-20). Code in `src/added_effects.c` and other `@farcode` units does not count; every line
 added to an **original** unit does. Keep hooks in original files to one call or one `case` label.
 
 ---
@@ -261,6 +300,9 @@ The CPU only plays added cards through these, all in `src/added_effects.c`:
 | `AiWantsMonsterEffect` | A face-up added monster's ACTIVATE | A `case` with the condition. |
 | `AiHasSummonTrigger` | Summon choice | Add monsters with a summon trigger, so the CPU values them. |
 | `IsBattleFlipRemoval` | Flip removal planning | Flip monsters that destroy an attacker. |
+| `AiFlipRemovalMonsterNumber`, `AiSimFlipRemovalEffect`, the `CARD_HANE_HANE` case in `src/ai_steps.c` | Flip Summoning a Flip monster that removes a blocker | Flip monsters that remove one of the human's monsters (Gravekeeper's Guard is Hane-Hane here). |
+| `AiSpecialSummonCyberDragon` | Its Main Phase, **before** it picks a Normal Summon | Special Summons from the hand that a Normal Summon would block (Cyber Dragon, Gilasaurus, Lava Golem). |
+| `AiMetamorphosisFusionFor` | Metamorphosis | Which Fusion Monster with a coded effect it takes for a Tribute of each Level. |
 
 Chain a Set card with `AiChainSetCard(entry, CARD_X)`, play a card with `AiTryPlaySpellTrap(CARD_X)`. In a handler, the
 CPU is `link->player == 1` (`AI_PLAYER`); it does not answer prompts, so pick its choice in code (set
@@ -292,7 +334,7 @@ Players are 0 (the human) and 1 (the CPU); zones 0-4 monsters, 5-9 Spell/Trap, 1
 
 | Effect | Function |
 |---|---|
-| Destroy | `DestroyFieldCard(player, zone, 1)` (call `OnCardDestroyedByEffect(src, player, zone)` for "destroyed by an effect" triggers) |
+| Destroy | `DestroyFieldCard(player, zone, 1)` (call `OnCardDestroyedByEffect(src, player, zone)` for "destroyed by an effect" triggers); `DestroyFieldCardByEffect(player, zone)` also flags Sangan and Witch of the Black Forest so their Graveyard triggers run |
 | Banish from the field | `BanishFieldCard(player, zone, 0)` |
 | Banish from the Graveyard | `DuelCmd_Push(DUEL_CMD_BANISH_GRAVEYARD_CARD, word halves)` |
 | Send to the Graveyard | `SendFieldCardToGrave(player, zone, destroyed, runTriggers)` |
@@ -302,7 +344,7 @@ Players are 0 (the human) and 1 (the CPU); zones 0-4 monsters, 5-9 Spell/Trap, 1
 | Draw | `DrawCards(player, count)` |
 | Search | `AddDeckCardToHand(player, number)` |
 | Damage / heal | `LoseLifePoints(player, n)`, `GainLifePoints(player, n)`; LP cost: `DuelCmd_Push(DUEL_CMD_LOSE_LP, n, 1, 0)` |
-| Special Summon | `QueueSpecialSummon(player, &card, faceUp, isDefense, 0)`, `QueueSpecialSummonChoosePosition(player, &card, 1, 0)` |
+| Special Summon | `QueueSpecialSummon(player, &card, faceUp, isDefense, 0)`, `QueueSpecialSummonChoosePosition(player, &card, 1, 0)`. It takes its zone when queued, so after Tributes wait until their zones are empty. To the opponent's field: `RemoveCardFromHand` then `QueueSpecialSummon(opponent, ...)` (Lava Golem; the owner stays). |
 | Take a card out of a pile first | `DUEL_CMD_REMOVE_CARD_FROM_GRAVEYARD / _DECK / _FUSION_DECK / _HAND` with the card word |
 | Negate a chain link | `DuelCmd_Push(DUEL_CMD_NEGATE_ACTIVATION, 1, 0, 0)`; destroy its Spell/Trap: `DUEL_CMD_SET_SPELL_TRAP_DISABLED` |
 | Negate an attack | `DuelCmd_Push(DUEL_CMD_NEGATE_ATTACK, attackerZone, 0, 0)` |
@@ -316,18 +358,50 @@ For the opponent's side, OR `DUEL_CMD_PLAYER` into the command (`player ? DUEL_C
 | What | How |
 |---|---|
 | Yes / No | `TextBoxOpen(TEXTBOX_POS(5, 2), TEXTBOX_SIZE(20, 7), TEXTBOX_FLAGS_DEFAULT, text)`, `TextBoxSetMenu(TEXTBOX_MENU_YES_NO, NULL, NULL)`; next step reads `gTextBox.result` |
-| Pick a card on the field | `DuelCursor_PickTarget(mask)` (monsters need a face bit and a position bit), then `TryAddEffectTarget(link, player, zone)` |
+| Pick a card on the field | `DuelCursor_PickTarget(mask)` (monsters need a face bit and a position bit; `PICK_PLAYER1(mask)` is player 1's side, `PICK_BOTH_SIDES(mask)` both), then `TryAddEffectTarget(link, player, zone)`. An empty zone: `DuelCursor_PickAny` (Ojama King). |
 | Pick from a pile | Add a `case` to `ModCollectEffectTargets` (`ModAddPileTargets(pile, count, source, accept, param)`), then `CollectEffectTargets(player, CARD_X, 0)` and `CardListView_Open(player, CARDLIST_AREA_EFFECT_TARGETS, CARD_X, 0)`; the pick is `gCardListView.cards[gCardListView.cursorRow + gCardListView.top]` |
 | Custom prompt | `TextBoxSetMenu(TEXTBOX_MENU_CUSTOM, draw, input)` (the Synchro picks) |
 
 ---
 
-## 9. Checklist
+## 9. Testing in the emulator
+
+A quick way to see a card work is a **probe**: a temporary scenario that sets up the board, plays it and records a
+video.
+
+1. Add an entry to the `MEDIA` list in `tools/media/gen_duel_media.py` (copy one), with the board (`you.hand: ...`,
+   `opp.m0: Sangan def`, `you.st0: Mirror Force set`, `you.gy: ...`, `you.extra: ...`) and the steps.
+2. `python tools/media/gen_duel_media.py` writes `tools/media/<Name>_Media_Player.lua`.
+3. Run it: `tools/testing_scenarios/run_tests.ps1 -Media -Names @('<Name>_Media_Player')`. The step log is
+   `tools/testing_scenarios/recordings/_console.log`; the video is `screenshots/videos/<clip>.mp4` (ffmpeg must be on
+   PATH, or no video is written).
+4. Look at frames (`ffmpeg -i clip.mp4 -vf "fps=1,scale=400:-1,tile=6x4" -frames:v 1 sheet.png`), then delete the
+   entry, its `.lua` and the video.
+
+Steps worth knowing:
+
+| Situation | Step |
+|---|---|
+| A Yes/No the card asks (Gravekeeper's Spy's "Special Summon a monster?") | `yes` / `no` right after the step that opens it |
+| "Do you wish to activate a Quick-play Magic or Trap card?" after an attack (you have a Set Trap) | `no` once after the declaration and once after the battle, or the harness picks Yes and waits |
+| A card list (Deck, Graveyard, Extra Deck) | `pick you.deck[Name]` |
+| The summon position menu | `position atk` / `position def` |
+| A hand card's Special Summon procedure | `open_menu you.hand[Name]`, then `menu sp_summon` (`special_summon` adds optional zone and position steps, which can get in the way of a procedure that picks on the field) |
+| A slow chain | a second `settle` (each waits up to 15 seconds) |
+| The CPU's turn | `unfreeze`, `pass`, `cpu_turn` |
+
+A Fusion Monster has to be properly summoned before Monster Reborn can revive it, so in a probe bring one out with
+Metamorphosis (Tribute a monster of its Level) or Polymerization. Card names with a comma ("Fusilier Dragon, the
+Dual-Mode Beast") work in the board lists.
+
+---
+
+## 10. Checklist
 
 1. Name in `config/new_cards.txt` and above `------` in `new_cards.txt` (or, for a working leftover effect, only
    `number | name` in `config/leftover_cards.txt`).
 2. Code under `#ifdef HAS_CARD_<NAME>`: the row in `gAddedCardEffects`, handlers, hooks, CPU policy.
-3. `make -j8 demo` (and `make release` now and then for the size limit).
+3. `make -j8 demo` (and `make release` now and then for the size limit). Try it in the emulator (Testing).
 4. Remove the name from every `card_pools/missing*.txt`.
 5. Docs: a section in `wiki/game/added-cards.md`, `wiki/log.md`, the card count in `README.md`, CPU behaviour in
    `AI_IMPROVEMENTS.md`; run `PYTHONUTF8=1 python3 scripts/wiki_lint.py`.
