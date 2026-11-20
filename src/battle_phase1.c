@@ -611,6 +611,7 @@ struct LinkCardPromptByte {
  *           the attacker into a free zone of the defender, make it the target, flip it, CalcBattle
  */
 int DrillroidBeforeDamageCalc(int player);  /* mod: src/added_effects.c */
+int ReflectBounderBeforeDamageCalc(int player);  /* mod: src/added_effects.c */
 int ModTestingHideBattle(void);             /* mod: test videos without the battle scene (src/mod_testing_automation.c) */
 #ifdef HAS_CARD_ALLY_OF_JUSTICE_CATASTOR
 int CatastorStartOfDamageStep(int player); /* mod: src/added_effects.c */
@@ -694,6 +695,10 @@ int BattleStage_DamageCalc(int player)
 #endif
 #ifdef HAS_CARD_DRILLROID
         if (DrillroidBeforeDamageCalc(player))      /* added card: it destroys a Defense Position target */
+            return 0;
+#endif
+#ifdef HAS_CARD_REFLECT_BOUNDER
+        if (ReflectBounderBeforeDamageCalc(player)) /* added card: the attacker's ATK as damage first */
             return 0;
 #endif
         CalcBattle(player, 0);

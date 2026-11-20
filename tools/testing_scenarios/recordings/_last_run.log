@@ -1731,3 +1731,7 @@ START Golem_Probe_Media_Player
 PASS Golem_Probe_Media_Player duel_main=false reason= play_done=true
 START Golem_Probe_Media_Player
 PASS Golem_Probe_Media_Player duel_main=false reason= play_done=true
+START RB_Probe_Media_Player
+PASS RB_Probe_Media_Player duel_main=true reason= play_done=true
+START RBC_Probe_Media_Player
+PASS RBC_Probe_Media_Player duel_main=false reason= play_done=true

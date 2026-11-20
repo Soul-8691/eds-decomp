@@ -1761,6 +1761,29 @@ The rest goes through `DestroyLinkedCards` as before. Checked in the source and 
 - Removed from `card_pools/missing-fusion.txt` and the "not fully implemented" notes (README, DECKS.md,
   [[yugi-kaiba-opponent]]).
 
+### Reflect Bounder (2026-11-20)
+- Effect Monster (Level 4 LIGHT Machine, 1700/1000). Card number 878 (ID 1005 in the demo); moved above `------` in
+  `new_cards.txt` (already in `config/new_cards.txt`) and out of `card_pools/missing-main.txt` and `missing.txt`.
+  "Before damage calculation, if this card is being attacked by an opponent's monster, and was in face-up Attack
+  Position at the start of the Damage Step: Inflict damage to your opponent equal to the attacking monster's ATK. If
+  you do, after damage calculation: Destroy this card."
+- **No effect row** (as Drillroid). `BattleStage_DamageCalc` (battle_phase1.c, one `#ifdef` call at
+  `DAMAGE_STEP_CALC`, after Catastor and Drillroid, before `CalcBattle`) calls `ReflectBounderBeforeDamageCalc`: an
+  attack target that is a face-up, enabled (`isDisabled` clear: Skill Drain) Reflect Bounder in Attack Position shows
+  its effect and the attacking player loses the attacker's current ATK (`LoseLifePoints`, so damage redirects apply).
+  A face-down one flipped by the attack is in Defense Position and does not count. `gModDuel.reflectBounder` keeps
+  its player and zone for the attack; an attacker with 0 ATK deals nothing, so it is not destroyed either.
+- **Destroy.** `ModEndAttack` -> `ReflectBounderEndAttack`: if it is still in that zone (not destroyed by the battle),
+  it is destroyed by its own effect (`DestroyFieldCardByEffect`, `OnCardDestroyedByEffect`).
+- **CPU.** `ModAttackTargetBlocked` -> `AiAvoidsReflectBounder` (CPU attacker only): it attacks one only when the
+  battle damage finishes the human and the reflected damage does not finish the CPU first.
+- `.text` +0x10 (0x0807F808).
+- **Checked in the emulator** (a probe board): Mystical Elf (800) attacked it: 800 reflected plus 900 battle damage,
+  Elf destroyed, then Reflect Bounder destroyed by its effect; Summoned Skull attacked a second one: 2500 reflected,
+  the CPU took 800 and Bounder was destroyed in battle. The CPU's Summoned Skull did not attack the human's Reflect
+  Bounder (8000 LP).
+- Card View screenshot `cards/Reflect Bounder.png`; NEW_CARDS.md regenerated.
+
 ### Lava Golem (2026-11-20)
 - Effect Monster (Level 8 FIRE Fiend, 3000/2500). Card number 877 (ID 1004 in the demo); moved above `------` in
   `new_cards.txt` (already in `config/new_cards.txt`) and out of `card_pools/missing-main.txt` and `missing.txt`.

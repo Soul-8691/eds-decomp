@@ -3456,3 +3456,10 @@ updated: 2026-09-29
   damage (`LavaGolemStandbyStep`), the CPU's `AiLavaGolem`; card_detail.c and summon_checks.c cases. Probe-checked.
 - [[added-cards]]; AI_IMPROVEMENTS.md, new_cards.txt, card_pools/missing-main.txt, card_pools/missing.txt,
   NEW_CARDS.md, cards/.
+
+## [2026-11-20] progress | Reflect Bounder coded
+- Added to the demo list. Its damage before damage calculation (`ReflectBounderBeforeDamageCalc`, one call in
+  battle_phase1.c), its self-destruction (`ReflectBounderEndAttack` in `ModEndAttack`), the CPU's
+  `AiAvoidsReflectBounder`. Probe-checked.
+- [[added-cards]]; AI_IMPROVEMENTS.md, new_cards.txt, demo_cards.txt, card_pools/missing-main.txt,
+  card_pools/missing.txt, NEW_CARDS.md, cards/.

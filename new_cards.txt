@@ -182,6 +182,7 @@ Necrovalley
 Enraged Battle Ox
 Barrel Behind the Door
 Lava Golem
+Reflect Bounder
 ------
 Dark End Dragon
 Red Dragon Archfiend
@@ -217,12 +218,10 @@ Shield Crush
 Soul Taker
 Goblin Zombie
 D.D. Designator
-Reflect Bounder
 Yomi Ship
 Getsu Fuhma
 Silpheed
 Steamroid
-Slate Warrior
 Iron Blacksmith Kotetsu
 Armed Samurai - Ben Kei
 Ash Blossom & Joyous Spring

@@ -22,7 +22,6 @@ Protector of the Sanctuary
 Giant Orc
 Wall of Revealing Light
 Royal Command
-Reflect Bounder
 Byser Shock
 Possessed Dark Soul
 A Feather of the Phoenix
@@ -74,7 +73,6 @@ Offerings to the Doomed
 Elephant Statue of Disaster
 Dark Master - Zorc
 The Creator
-Slate Warrior
 Homunculus the Alchemic Being
 Gravekeeper's Watcher
 D.D. Survivor

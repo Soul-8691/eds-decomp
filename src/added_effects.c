@@ -134,6 +134,9 @@ struct ModDuelState {
     u8 lavaStep;
     u8 lavaPicks;
     u8 lavaPick[2];
+    /* Reflect Bounder: this attack's damage went off (bit 7; bit 6: with 0 damage), its player (bit 3) and zone
+     * (bits 0-2); 0 none */
+    u8 reflectBounder;
 };
 extern struct ModDuelState gModDuel;
 /* gModDuel (0x0202FF04, symbols.ld) must end before gScratchBuffer (0x02030000). */
@@ -1662,6 +1665,7 @@ int AiDDWarriorLadyBanishTrade(int attackerZone, int targetZone, struct AttackPl
 
 void ModDuelInit(void)
 {
+    gModDuel.reflectBounder = 0;
     gModDuel.battleKills = 0;
     gModDuel.chaosSummoned = 0;
     gModDuel.tsukuyomiEndReturn[0] = 0;
@@ -9227,10 +9231,19 @@ static void AsuraEndAttack(int player)
 
 /* The attacker in (attacker, attackerZone) may not target the monster in (1 - attacker, zone): Marauding Captain's lock
  * (ModAttackTargetLocked) or a zone Asura Priest already attacked this Battle Phase. */
+#ifdef HAS_CARD_REFLECT_BOUNDER
+static void ReflectBounderEndAttack(void);     /* Reflect Bounder (below) */
+static int AiAvoidsReflectBounder(int attackerZone, int zone);
+#endif
+
 int ModAttackTargetBlocked(int attacker, int attackerZone, int zone)
 {
     if (ModAttackTargetLocked(1 - (attacker & 1), zone))
         return 1;
+#ifdef HAS_CARD_REFLECT_BOUNDER
+    if (attacker == AI_PLAYER && AiAvoidsReflectBounder(attackerZone, zone))
+        return 1;
+#endif
 #ifdef HAS_CARD_ASURA_PRIEST
     if (attackerZone >= ZONE_MONSTER_0 && attackerZone <= ZONE_MONSTER_4 && IsAsuraAttacker(attacker, attackerZone)
         && AsuraAttackedMonster(attacker, attackerZone, zone))
@@ -9356,6 +9369,9 @@ void ModEndAttack(int player)
 #endif
 
     gModDuel.dimensionWall = 0;             /* Dimension Wall lasts for this battle only */
+#ifdef HAS_CARD_REFLECT_BOUNDER
+    ReflectBounderEndAttack();              /* "after damage calculation, destroy this card" */
+#endif
 
 #ifdef HAS_CARD_EXARION_UNIVERSE
     gModDuel.exarionPierce = 0;
@@ -12995,6 +13011,86 @@ static int AiLavaGolem(void)
     return 1;
 }
 #endif /* HAS_CARD_LAVA_GOLEM */
+
+#ifdef HAS_CARD_REFLECT_BOUNDER
+/* ---- Reflect Bounder ----------------------------------------------------------------------------------------------
+ * "Before damage calculation, if this card is being attacked by an opponent's monster, and was in face-up Attack
+ * Position at the start of the Damage Step: Inflict damage to your opponent equal to the attacking monster's ATK. If
+ * you do, after damage calculation: Destroy this card." (An attacker with 0 ATK: no damage, so no destruction.)
+ * No effect row (as Drillroid):
+ *   damage   BattleStage_DamageCalc (battle_phase1.c) calls ReflectBounderBeforeDamageCalc at DAMAGE_STEP_CALC, before
+ *            CalcBattle: an attack target that is a face-up, enabled Reflect Bounder in Attack Position (a face-down
+ *            one flipped by the attack is in Defense Position, so it does not count) shows its effect and the
+ *            attacking player loses the attacker's current ATK (LoseLifePoints: Barrel Behind the Door style
+ *            redirects apply). gModDuel.reflectBounder remembers it for this attack.
+ *   destroy  ModEndAttack -> ReflectBounderEndAttack: if it is still in that zone (not destroyed by the battle), it
+ *            is destroyed by its own effect (DestroyFieldCardByEffect, OnCardDestroyedByEffect).
+ *   CPU      ModAttackTargetBlocked -> AiAvoidsReflectBounder: the CPU attacks one only when the battle damage
+ *            finishes the human and the reflected damage does not finish the CPU first. */
+#define REFLECT_FIRED   0x80
+#define REFLECT_PLAYER  0x08
+#define REFLECT_NO_DAMAGE 0x40
+
+static int IsActiveReflectBounder(int player, int zone)
+{
+    struct DuelZone *z = ZoneOf(player, zone);
+    u16 id = DUEL_CARD_ID(&z->card);
+
+    return id != 0 && z->isFaceUp && !z->isDefense && !z->isDisabled && CardNumberOfId(id) == CARD_REFLECT_BOUNDER;
+}
+
+int ReflectBounderBeforeDamageCalc(int player)
+{
+    int opponent = 1 - player;
+    int atk;
+
+    if (gBattle.direct || (gModDuel.reflectBounder & REFLECT_FIRED) || !IsActiveReflectBounder(opponent, gBattle.defSlot)
+        || DUEL_CARD_ID(&ZoneOf(player, gBattle.atkSlot)->card) == 0)
+        return 0;
+    atk = GetZoneCardAtk(player, gBattle.atkSlot);
+    if (atk <= 0) {
+        gModDuel.reflectBounder = REFLECT_FIRED | REFLECT_NO_DAMAGE;    /* no damage: it is not destroyed either */
+        return 0;
+    }
+    gModDuel.reflectBounder = REFLECT_FIRED | (opponent ? REFLECT_PLAYER : 0) | gBattle.defSlot;
+    ShowCardEffect(opponent, DUEL_CARD_ID(&ZoneOf(opponent, gBattle.defSlot)->card));
+    LoseLifePoints(player, atk);
+    return 1;                                   /* the damage shows first; the next frame goes on to CalcBattle */
+}
+
+static void ReflectBounderEndAttack(void)
+{
+    u8 mark = gModDuel.reflectBounder;
+    int player = (mark & REFLECT_PLAYER) ? 1 : 0;
+    int zone = mark & 7;
+    struct DuelZone *z;
+    u16 id;
+
+    gModDuel.reflectBounder = 0;
+    if (!(mark & REFLECT_FIRED) || (mark & REFLECT_NO_DAMAGE))
+        return;
+    z = ZoneOf(player, zone);
+    id = DUEL_CARD_ID(&z->card);
+    if (id == 0 || !z->isFaceUp || CardNumberOfId(id) != CARD_REFLECT_BOUNDER)
+        return;
+    ShowCardEffect(player, id);
+    DestroyFieldCardByEffect(player, zone);
+    OnCardDestroyedByEffect(player, player, zone);
+}
+
+static int AiAvoidsReflectBounder(int attackerZone, int zone)
+{
+    int atk, bounderAtk;
+
+    if (!IsActiveReflectBounder(AI_HUMAN, zone))
+        return 0;
+    atk = GetZoneCardAtk(AI_PLAYER, attackerZone);
+    bounderAtk = GetZoneCardAtk(AI_HUMAN, zone);
+    if (atk >= (int)gDuelPlayers[AI_PLAYER].lifePoints)
+        return 1;                               /* the reflected damage would end the duel first */
+    return atk <= bounderAtk || atk - bounderAtk < (int)gDuelPlayers[AI_HUMAN].lifePoints;
+}
+#endif /* HAS_CARD_REFLECT_BOUNDER */
 
 #ifdef HAS_CARD_CYBER_DRAGON
 /* ---- Cyber Dragon -------------------------------------------------------------------------------------------------

@@ -26595,3 +26595,75 @@
    5697 media: encoding 2694 frames -> tools\testing_scenarios\..\..\screenshots\videos\golem-probe.mp4
    5739 Play sequence done; ending capture (no recording tail).
    5739 Finished — PASS (play sequence + tail). Stop mGBA Record A/V to finalize MP4.
+     19 MP4 target: tools\testing_scenarios\recordings\RB_Probe_Media_Player.mp4
+     19 emu recording API: screenshot, screenshotToImage
+     19 MP4: the scenario capture is off (captureMp4 = false)
+     19 RB Probe / media / Player
+     19 point you.m0; wait 20; mp4_start rb-probe; battle; attack you.m0 -> opp.m0; settle; wait 60; attack you.m1 -> opp.m1; se
+    800 Main menu (callback 0x08003B15).
+    923 Campaign selected (callback 0x0801D70D).
+   1116 Turn order: forced RPS lose (CPU goes first).
+   1126 Turn order: A (lost RPS; CPU chooses first).
+   1164 Turn order: A (lost RPS; CPU chooses first).
+   1356 Opponent's turn (waiting for your Main Phase 1).
+   1358 Usage deck goat / Chaos Turbo: main=40 extra=15; P0 shuffled=true (top 719->760) P1 shuffled=true (top 719->648), hands cleared.
+   2256 cpu_turn f=900 duel_step=8 turn_player=1 ai=3/2 textbox=0
+   3156 cpu_turn f=1800 duel_step=8 turn_player=1 ai=3/2 textbox=0
+   4056 cpu_turn f=2700 duel_step=8 turn_player=1 ai=3/2 textbox=0
+   4881 Player Draw Phase.
+   5062 Opening draw complete (hand=6 deck=34 want=6).
+   5203 Exact setup: P0 hand=0 deck=34 gy=0, P1 hand=0 deck=31 gy=0, LP 8000/8000, turnCount 2.
+   5203 Player Main Phase 1.
+   5203 steps: unknown card RB Probe
+   5203 steps: 11 steps, 29 ops
+   5203 step: point you.m0
+   5340 steps: capture starts (cursor on point you.m0)
+   5347 step: wait 20
+   5373 step: mp4_start rb-probe
+   5373 media: recording rb-probe (mp4)
+   5380 step: battle
+   5480 step: attack you.m0 -> opp.m0
+   5741 steps: attack you.m0 -> opp.m0: taken on press 1
+   6332 step: settle
+   6358 step: wait 60
+   6424 step: attack you.m1 -> opp.m1
+   6602 steps: attack you.m1 -> opp.m1: taken on press 1
+   7020 step: settle
+   7046 step: wait 60
+   7112 step: rec_stop
+   7112 media: encoding 1739 frames -> tools\testing_scenarios\..\..\screenshots\videos\rb-probe.mp4
+   7129 Play sequence done; ending capture (no recording tail).
+   7129 Finished — PASS (play sequence + tail). Stop mGBA Record A/V to finalize MP4.
+     12 MP4 target: tools\testing_scenarios\recordings\RBC_Probe_Media_Player.mp4
+     12 emu recording API: screenshot, screenshotToImage
+     12 MP4: the scenario capture is off (captureMp4 = false)
+     12 RBC Probe / media / Player
+     12 point you.m0; wait 20; mp4_start rbc-probe; pass; cpu_turn; wait 30; rec_stop
+    913 Main menu (callback 0x08003B15).
+   1036 Campaign selected (callback 0x0801D70D).
+   1229 Turn order: forced RPS lose (CPU goes first).
+   1239 Turn order: A (lost RPS; CPU chooses first).
+   1277 Turn order: A (lost RPS; CPU chooses first).
+   1469 Opponent's turn (waiting for your Main Phase 1).
+   1471 Usage deck goat / Chaos Turbo: main=40 extra=15; P0 shuffled=true (top 719->719) P1 shuffled=true (top 719->838), hands cleared.
+   2369 cpu_turn f=900 duel_step=8 turn_player=1 ai=3/2 textbox=0
+   3269 cpu_turn f=1800 duel_step=8 turn_player=1 ai=3/2 textbox=0
+   4169 cpu_turn f=2700 duel_step=8 turn_player=1 ai=3/2 textbox=0
+   4994 Player Draw Phase.
+   5175 Opening draw complete (hand=6 deck=34 want=6).
+   5312 Exact setup: P0 hand=0 deck=34 gy=0, P1 hand=0 deck=32 gy=0, LP 8000/8000, turnCount 2.
+   5312 Player Main Phase 1.
+   5312 steps: unknown card RBC Probe
+   5312 steps: 7 steps, 13 ops
+   5312 step: point you.m0
+   5448 steps: capture starts (cursor on point you.m0)
+   5455 step: wait 20
+   5481 step: mp4_start rbc-probe
+   5481 media: recording rbc-probe (mp4)
+   5488 step: pass
+   5601 step: cpu_turn
+   6567 step: wait 30
+   6603 step: rec_stop
+   6603 media: encoding 1122 frames -> tools\testing_scenarios\..\..\screenshots\videos\rbc-probe.mp4
+   6675 Play sequence done; ending capture (no recording tail).
+   6675 Finished — PASS (play sequence + tail). Stop mGBA Record A/V to finalize MP4.

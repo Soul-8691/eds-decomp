@@ -1,7 +1,8 @@
 ﻿
-Script                   Result Seconds Detail                                
-------                   ------ ------- ------                                
-Golem_Probe_Media_Player PASS        34 duel_main=false reason= play_done=true
+Script                 Result Seconds Detail                                
+------                 ------ ------- ------                                
+RB_Probe_Media_Player  PASS        33 duel_main=true reason= play_done=true 
+RBC_Probe_Media_Player PASS        27 duel_main=false reason= play_done=true
 
 
 
